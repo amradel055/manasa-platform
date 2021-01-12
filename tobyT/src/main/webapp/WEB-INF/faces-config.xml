@@ -1,0 +1,201 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<faces-config version="2.2"
+              xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
+
+    <managed-bean>
+        <managed-bean-name>UserProfileFormBean</managed-bean-name>
+        <managed-bean-class>com.toby.userprofile.UserProfileFormBean</managed-bean-class>
+    
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
+
+    <managed-bean>
+        <managed-bean-name>loginBean</managed-bean-name>
+        <managed-bean-class>com.toby.toby.LoginBean</managed-bean-class>
+    
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>userData</managed-bean-name>
+        <managed-bean-class>com.toby.toby.UserData</managed-bean-class>
+    
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+ 
+    <managed-bean>
+        <managed-bean-name>companyListBean</managed-bean-name>
+        <managed-bean-class>com.toby.company.CompanyListBean</managed-bean-class>
+    
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>companyFormBean</managed-bean-name>
+        <managed-bean-class>com.toby.company.CompanyFormBean</managed-bean-class>
+    
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>RoleFormBean</managed-bean-name>
+        <managed-bean-class>com.toby.roles.RoleFormBean</managed-bean-class>
+    
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>RoleListBean</managed-bean-name>
+        <managed-bean-class>com.toby.roles.RoleListBean</managed-bean-class>
+    
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>userFormBean</managed-bean-name>
+        <managed-bean-class>com.toby.user.UserFormBean</managed-bean-class>
+    
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
+    
+    <managed-bean>
+        <managed-bean-name>userListBean</managed-bean-name>
+        <managed-bean-class>com.toby.user.UserListBean</managed-bean-class>
+    
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>privilegeListBean</managed-bean-name>
+        <managed-bean-class>com.toby.privilege.PrivilegeListBean</managed-bean-class>
+    
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>currencyListBean</managed-bean-name>
+        <managed-bean-class>com.toby.currency.CurrencyListBean</managed-bean-class>
+    
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
+        <navigation-case>
+            <from-outcome>error</from-outcome>
+            <to-view-id>/views/base/error.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
+        <navigation-case>
+            <from-outcome>login</from-outcome>
+            <to-view-id>/login.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
+        <navigation-case>
+            <from-outcome>home</from-outcome>
+            <to-view-id>/views/base/home.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
+        <navigation-case>
+            <from-outcome>exit</from-outcome>
+            <to-view-id>views/base/home.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <managed-bean>
+        <managed-bean-name>generalSymbolBean</managed-bean-name>
+        <managed-bean-class>com.toby.symbol.GeneralSymbolBean</managed-bean-class>
+    
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>branchListBean</managed-bean-name>
+        <managed-bean-class>com.toby.branch.BranchListBean</managed-bean-class>
+    
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>userRoleFormBean</managed-bean-name>
+        <managed-bean-class>com.toby.userrole.UserRoleFormBean</managed-bean-class>
+    
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>createAccountListBean</managed-bean-name>
+        <managed-bean-class>com.toby.createaccount.CreateAccountListBean</managed-bean-class>
+    
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>costCenterBean</managed-bean-name>
+        <managed-bean-class>com.toby.costcenter.CostCenterBean</managed-bean-class>
+    
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
+
+    
+    <managed-bean>
+        <managed-bean-name>dataDictionaryBean</managed-bean-name>
+        <managed-bean-class>com.toby.datadictionary.DataDictionaryBean</managed-bean-class>
+    
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>glyearFormBean</managed-bean-name>
+        <managed-bean-class>com.toby.glyear.GlyearFormBean</managed-bean-class>
+    
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>glyearListBean</managed-bean-name>
+        <managed-bean-class>com.toby.glyear.GlyearListBean</managed-bean-class>
+    
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>glAccountBean</managed-bean-name>
+        <managed-bean-class>com.toby.glaccount.GlAccountBean</managed-bean-class>
+    
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
+
+    <converter id="companyConverter" >
+        <converter-id>companyConverter</converter-id>
+        <converter-class>com.toby.converter.CompanyConverter</converter-class>
+    </converter>
+
+    <managed-bean>
+        <managed-bean-name>accountsSystemSettingsBean</managed-bean-name>
+        <managed-bean-class>com.toby.accountssystemsettings.AccountsSystemSettingsBean</managed-bean-class>
+    
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
+
+    <managed-bean>
+        <managed-bean-name>accountReportBean</managed-bean-name>
+        <managed-bean-class>com.toby.report.entity.AccountReportBean</managed-bean-class>
+    
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
+    
+    <factory>
+        <exception-handler-factory>com.toby.common.GeneralErrorHandlerFactory</exception-handler-factory>
+    </factory>
+    <managed-bean>
+        <managed-bean-name>purchaseNumberBean</managed-bean-name>
+        <managed-bean-class>com.toby.PurchaseNumber.PurchaseNumberBean</managed-bean-class>
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>closeMonthBean</managed-bean-name>
+        <managed-bean-class>com.toby.CloseMonth.CloseMonthBean</managed-bean-class>
+    
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>generalBudgetGuideListBean</managed-bean-name>
+        <managed-bean-class>com.toby.generalbudgetguide.GeneralBudgetGuideListBean</managed-bean-class>
+    
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
+     
+</faces-config>

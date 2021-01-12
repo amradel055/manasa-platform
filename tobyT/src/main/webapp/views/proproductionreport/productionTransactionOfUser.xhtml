@@ -1,0 +1,223 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+
+        <h:form dir="RTL" style="margin-right: 20px" id="form" >
+            <p:fieldset  legend="بيان انتاج العمال لفتره" id="stages"  style=" position: relative">
+                <p:messages id="messages" showDetail="true" closable="true"/> 
+
+                <div class="ui-g-6 ui-xl-6">
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
+
+                            <p:calendar style="width: 50%"  id="dateFrom"
+                                        value="#{productionTransactionOfUserMB.printProductionDTO.fromDate}"
+                                        pattern="dd/MM/yyyy"  showButtonPanel="true" >
+
+                            </p:calendar>
+
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+
+
+                            <p:outputLabel style="width: 50px"  value="من تاريخ" />
+
+
+                        </div>
+                    </div>
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:calendar style="width: 50%"  id="dateFrom1"
+                                        value="#{productionTransactionOfUserMB.printProductionDTO.toDate}"
+                                        pattern="dd/MM/yyyy"  showButtonPanel="true" >
+
+                            </p:calendar>
+
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+
+                            <p:outputLabel style="width: 50px"  value="الى تاريخ" />
+
+
+
+                        </div>
+                    </div>
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
+
+
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+
+                            <p:commandButton     class="searchButton" id="searchB" 
+                                                 value="search" 
+                                                 icon="fa fa-fw fa-search"
+                                                 action="#{productionTransactionOfUserMB.search()}"
+                                                 update="data messages"
+                                                 >
+
+                            </p:commandButton>
+
+
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ui-g-6 ui-xl-6">
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
+
+                            <p:autoComplete style="width:85%" id="Cost_Center_from" 
+                                            dropdown="true"
+
+                                            value="#{productionTransactionOfUserMB.printProductionDTO.fromStatus}" 
+                                            var="fromStatus"
+                                            itemLabel="#{fromStatus.name}"
+                                            itemValue="#{fromStatus.id}" 
+                                            forceSelection="true" 
+                                            completeMethod="#{productionTransactionOfUserMB.completeProProductionId}" >
+                            </p:autoComplete>
+
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+
+                            <p:outputLabel style="width: 50px;margin-right: 1%" value="من مرحلة"/>
+
+
+
+                        </div>
+                    </div>
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:autoComplete style="width:85%" id="Cost_Center_to" 
+                                            dropdown="true"
+
+                                            value="#{productionTransactionOfUserMB.printProductionDTO.toStatus}" 
+                                            var="toStatus"
+                                            itemLabel="#{toStatus.name}"
+                                            itemValue="#{toStatus.id}" 
+                                            forceSelection="true" 
+                                            completeMethod="#{productionTransactionOfUserMB.completeProProductionId}" >
+                            </p:autoComplete>
+
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+
+                            <p:outputLabel style="width: 50px;margin-right: 1%" value="الى مرحلة"/>
+
+
+
+                        </div>
+                    </div>
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:autoComplete style="width:85%" id="User-code_from" 
+                                            dropdown="true"
+                                            converter="#{productionTransactionOfUserMB.tobyUserDTOConverter}"
+                                            value="#{productionTransactionOfUserMB.printProductionDTO.fromUser}" 
+                                            var="fromUser"
+                                            itemLabel="#{fromUser.userCode}"
+                                            itemValue="#{fromUser}" 
+                                            forceSelection="true" 
+                                            completeMethod="#{productionTransactionOfUserMB.completusercode}" >
+                            </p:autoComplete>
+
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+
+                            <p:outputLabel style="width: 50px;margin-right: 1%" value="من عامل"/>
+
+
+
+                        </div>
+                    </div>
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
+
+                            <p:autoComplete style="width:85%" id="User-code_to" 
+                                            dropdown="true"
+                                            converter="#{productionTransactionOfUserMB.tobyUserDTOConverter}"
+                                            value="#{productionTransactionOfUserMB.printProductionDTO.toUser}" 
+                                            var="toUser"
+                                            itemLabel="#{toUser.userCode}"
+                                            itemValue="#{toUser}" 
+                                            forceSelection="true" 
+                                            completeMethod="#{productionTransactionOfUserMB.completusercode}" >
+                            </p:autoComplete>
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+
+                            <p:outputLabel style="width: 50px;margin-right: 1%" value="الي عامل"/>
+
+
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+            </p:fieldset>
+            <p:fieldset  legend="البيانات"   style="margin-bottom:20px">
+                <p:dataTable  id="data"
+                              var="data"
+                              value="#{productionTransactionOfUserMB.productionTransactionOfUserList}"
+                              draggableColumns="true"
+                              paginator="true"
+                              widgetVar="data" 
+                              rowIndexVar="index" 
+                              emptyMessage="EMPTY_TABLE"
+                              >
+
+                    <p:column headerText="الرقم" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                        <h:outputText value="#{data.productionStagesId}" />
+                    </p:column>
+                    <p:column headerText="المرحلة " style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                        <h:outputText value="#{data.stageName}" />
+                    </p:column>
+                    <p:column headerText="الرقم" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                        <h:outputText value="#{data.userId}" />
+                    </p:column>
+                    <p:column headerText="الموظف" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                        <h:outputText value="#{data.userName}" />
+                    </p:column>
+                    <p:column headerText="السعر" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                        <h:outputText value="#{data.price}" />
+                    </p:column>
+                    <p:column headerText="الكمية" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                        <h:outputText value="#{data.numberExcute}" />
+                    </p:column>
+                    <p:column headerText="الاجمالي" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                        <h:outputText value="#{data.totalNumber}" />
+                    </p:column>
+                    <p:column headerText="الكمية" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                        <h:outputText value="#{data.avarage}" />
+                    </p:column>
+
+
+
+                </p:dataTable>
+                <div class="ui-g-12 ui-md-6">
+                    <p:commandButton class="printButton"  icon="fa fa-fw fa-print"
+                                     onclick="form.target = '_blank'" ajax="false"
+                                     value="#{userData.userDDs['PRINT']}"
+                                     actionListener="#{productionTransactionOfUserMB.exportPDF(actionEvent)}"/>
+                </div>
+            </p:fieldset>
+
+        </h:form>
+
+    </ui:define>
+</ui:composition>
+

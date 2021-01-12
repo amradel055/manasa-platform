@@ -1,0 +1,484 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+
+    <link rel="stylesheet" type="text/css" href="../../resources/css/main.css" /> 
+    <link rel="stylesheet" type="text/css" href="./../../resources/css/custom.css" /> 
+    <ui:define name="content">
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+
+
+        <h:head>
+            <title>#{userData.userDDs['COMPLEX_REVISION_REPORT']}</title>
+        </h:head>
+        <h:body>
+            <style >
+                .Colored {                
+                    background: #CCCCCC ;
+                    color: #fff ;
+                    font-size: 12px;
+                }
+                .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+                    border: 1px solid #c5dbec;
+                    background:#fff;
+                }
+                .searchButton{
+
+                    background-color: #148dc2!important;
+                    color:#fff!important;
+                    width: 65px;
+                    height: 25px;
+                    font-size: 13px!important;
+
+                }
+                .newButton{
+
+                    background-color: #f6b444!important;
+                    color:#fff!important;
+                    width: 65px;
+                    height: 25px;
+                    font-size: 13px!important;
+
+                }
+                .printButton{
+
+                    background-color: #2692ed!important;
+                    color:#fff!important;
+                    width: 65px;
+                    height: 25px;
+                    font-size: 13px!important;
+
+                }
+                
+            </style>
+            <f:event listener="#{userData.authorize}" type="preRenderView"/>
+
+            <h:form id ="form" style="margin-right: 20px"  dir="#{userData.dir}">
+                <div style=" position: absolute;left: 20px"> 
+
+                    <p:commandButton  style="width: 90px;background-image: none!important;z-index: 2" 
+                                      class="viewButton searchButton"
+                                      value="Hide/Show"/>  
+                </div>
+
+                <div >
+                    <p:messages   id="msg" rendered="true" showDetail="true" closable="true" />
+                </div>
+                <p:fieldset id="head" legend="#{userData.userDDs['MAIN_ACCOUNT_STAT']}"  
+                            style=" position: relative">
+                    <div class="ui-g-12 ui-g-nopad  firstset">
+                        <div class="ui-g">
+
+                            <div class="ui-g-12 ui-md-6">
+
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width:65px;" value="#{userData.userDDs['ACCOUNT_NAME']}"/>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:autoComplete style="width: 75%" id="GlAccount_ID" 
+
+                                                        dropdown="true"
+                                                        converter="#{mainTransactionStatementMB.accountConverter}"
+                                                        value="#{mainTransactionStatementMB.glAccountSelected}"
+                                                        var="p"
+                                                        itemLabel="#{p}" 
+                                                        itemValue="#{p}" 
+                                                        forceSelection="true" 
+                                                        completeMethod="#{mainTransactionStatementMB.completeGlAccount}" >
+
+                                        </p:autoComplete>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup></h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>
+                                    <h:panelGroup> 
+                                        <p:outputLabel style="width: 65px" value="#{userData.userDDs['FROM_COST_CENTER']}" for="Cost_Center_From"/>
+
+                                    </h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:autoComplete style="width:75%" id="Cost_Center_From" 
+                                                        dropdown="true"
+                                                        converter="#{mainTransactionStatementMB.costCenterConverter}"
+                                                        value="#{mainTransactionStatementMB.costCenterFromSelected}"
+
+                                                        var="cost"
+                                                        itemLabel="#{cost}" 
+                                                        itemValue="#{cost}" 
+                                                        forceSelection="true" 
+                                                        completeMethod="#{mainTransactionStatementMB.completeCostCenter}" >
+                                        </p:autoComplete>
+                                    </h:panelGroup>
+
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+
+
+                                <h:panelGroup> 
+
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 65px" value="#{userData.userDDs['COST_CENTER_TO']}" for="COST_CENTER_TO"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:autoComplete style="width:75%" id="COST_CENTER_TO" 
+                                                        dropdown="true"
+                                                        converter="#{mainTransactionStatementMB.costCenterConverter}"
+                                                        value="#{mainTransactionStatementMB.costCenterToSelected}"
+
+                                                        var="cost"
+                                                        itemLabel="#{cost}" 
+                                                        itemValue="#{cost}" 
+                                                        forceSelection="true" 
+                                                        completeMethod="#{mainTransactionStatementMB.completeCostCenter}" >
+
+
+                                        </p:autoComplete>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 65px" value="#{userData.userDDs['FROM_ADMIN_UNIT']}" for="ADMIN_UNIT_FROM"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:autoComplete style="width:75%" id="ADMIN_UNIT_FROM" 
+                                                        dropdown="true"
+                                                        converter="#{mainTransactionStatementMB.glAdminUnitConverter}"
+                                                        value="#{mainTransactionStatementMB.glAdminUnitFromSelected}"
+
+                                                        var="admin"
+                                                        itemLabel="#{admin}" 
+                                                        itemValue="#{admin}" 
+                                                        forceSelection="true" 
+                                                        completeMethod="#{mainTransactionStatementMB.completeAdminUnit}" >
+
+
+                                        </p:autoComplete>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 65px" 
+                                                       value="#{userData.userDDs['TO_ADMIN_UNIT']}" for="ADMIN_UNIT_TO"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:autoComplete style="width:75%" id="ADMIN_UNIT_TO" 
+                                                        dropdown="true"
+                                                        converter="#{mainTransactionStatementMB.glAdminUnitConverter}"
+                                                        value="#{mainTransactionStatementMB.glAdminUnitToSelected}"
+
+                                                        var="admin"
+                                                        itemLabel="#{admin}" 
+                                                        itemValue="#{admin}" 
+                                                        forceSelection="true" 
+                                                        completeMethod="#{mainTransactionStatementMB.completeAdminUnit}" >
+
+
+                                        </p:autoComplete>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </div>
+                            
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>   
+
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 65px;" value="#{userData.userDDs['YEAR_FROM']}"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:calendar style="width: 57%" id="dateFrom" value="#{mainTransactionStatementMB.commonSearchBean.dateFrom}" pattern="dd/MM/yyyy" >
+                                            <p:ajax listener="#{mainTransactionStatementMB.checkDate(true)}" event="dateSelect" update="dateFrom"/>
+                                        </p:calendar>
+
+                                    </h:panelGroup>
+
+                                </h:panelGroup>   
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup> 
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 65px;" value="#{userData.userDDs['YEAR_TO']}"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:calendar style="width:57%" id="dateTo" value="#{mainTransactionStatementMB.commonSearchBean.dateTo}" pattern="dd/MM/yyyy" >
+                                            <p:ajax listener="#{mainTransactionStatementMB.checkDate(false)}" event="dateSelect" update="dateTo"/>
+                                        </p:calendar>
+
+                                    </h:panelGroup>  
+                                </h:panelGroup>   
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel  style="width:65px"
+                                                        value="#{userData.userDDs['ZERO_BALANCE']}"/>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:selectBooleanCheckbox style="width:57%;" value="#{mainTransactionStatementMB.zeroes}">
+                                            <p:ajax  listener="#{mainTransactionStatementMB.loadChilds()}" update="dataTable" />
+                                        </p:selectBooleanCheckbox>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>   
+
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 65px;" value="#{userData.userDDs['FINANCE_YEAR']}"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:selectOneMenu style="width:57%" id="year" filter="true" filterMatchMode="contains"   value="#{mainTransactionStatementMB.glYearSelection}" converter="#{mainTransactionStatementMB.glYearConverter}"   >
+                                            <p:ajax update="dateFrom dateTo" listener="#{mainTransactionStatementMB.pushGlYearSelection()}" />
+                                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"  itemValue="" />
+                                            <f:selectItems value="#{mainTransactionStatementMB.glYearList}"  var="year" itemLabel="#{year.name}" itemValue="#{year}"/>
+                                        </p:selectOneMenu>
+                                    </h:panelGroup>
+
+                                </h:panelGroup> 
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>
+
+                                    <p:selectOneRadio id="paymentType" 
+                                                      value="#{mainTransactionStatementMB.multipleOrDirectLevel}"  >                                                             
+                                        <f:selectItem itemLabel="#{userData.userDDs['MULT_LEVELS']}"  itemValue="0"  />
+                                        <f:selectItem itemLabel="#{userData.userDDs['MIN_LEVEL']}"  itemValue="1"  />
+                                        <p:ajax listener="#{mainTransactionStatementMB.loadChilds()}" update="dataTable"/>
+                                    </p:selectOneRadio>
+
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>                             
+                                    <h:panelGroup>
+                                        <p:commandButton value="رسم بياني" update="@form" oncomplete="PF('dlg1').show()" />
+                                    </h:panelGroup> 
+                                </h:panelGroup>
+                            </div>
+                        </div>
+                        <p:dialog class="ui-dialog"
+                                  position='center,center'
+                                  resizable="false"
+                                  responsive=" true"
+                                  header="رسم بياني" widgetVar="dlg1">
+
+                            <div  id="donutchart" style="width: 75vw; height: 650px;"></div>
+                            
+                            <h:panelGroup  class="centerButtons">
+                                
+                                 <p:commandButton  class="printButton"
+                                              id="PrintC"
+                                              ajax="false"
+                                              
+                                              onclick="form.target = '_blank'"  
+                                              icon="fa fa-fw fa-print"
+                                              value="#{userData.userDDs['PRINT']}" 
+                                              actionListener="#{mainTransactionStatementMB.exportChartPDF}"
+                                              title="#{userData.userDDs['PRINT']}"
+                                              immediate="true" />
+                                
+                            </h:panelGroup>
+
+                           
+                        </p:dialog> 
+                    </div>
+
+                    <h:panelGrid class="centerButtons col-md-12" columns="1">
+
+                        <h:panelGroup>
+
+                            <p:commandButton  style=" background-color: #148dc2!important;color:#fff!important;width: 65px;height: 25px;font-size: 13px!important;"
+                                              class="searchButton"  
+                                              icon="fa fa-fw fa-search-plus"
+                                              id="savbtn"
+                                              value="#{userData.userDDs['SEARCH']}"
+                                              action="#{mainTransactionStatementMB.search()}" 
+                                              update="dataTable" />
+                            <p:commandButton  class="newButton"   icon="fa fa-fw fa-plus"
+                                              style=" background-color: #f6b444!important;color:#fff!important;width: 65px;height: 25px;font-size: 13px!important;"
+                                              value="#{userData.userDDs['NEW']}" 
+                                              action="#{mainTransactionStatementMB.resetAllData()}"
+                                              update="dataTable" />
+                            <p:commandButton class="printButton"  icon="fa fa-fw fa-print"  
+                                             style=" background-color: #2692ed!important;color:#fff!important;width: 65px;height: 25px;font-size: 13px!important;"
+                                             ajax="false" onclick="form.target = '_blank'" value="#{userData.userDDs['PRINT']}"
+                                             actionListener="#{mainTransactionStatementMB.exportPDF}"/>
+                            <h:commandLink class="sdcreenimg">  
+                                <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                                <p:dataExporter type="xls"
+                                                target="dataTable" 
+                                                fileName="حساب رئيسى"
+                                                postProcessor="#{mainTransactionStatementMB.postProcessXLS}" />  
+                            </h:commandLink>
+
+                            <p:blockUI block="head"  trigger="savbtn" animate="true" >
+                                LOADING<br />
+                                <p:graphicImage library="img" name="3.gif" ></p:graphicImage>
+                            </p:blockUI>
+
+                        </h:panelGroup>
+                    </h:panelGrid>
+                </p:fieldset>
+
+
+                <p:fieldset id="fieldset2" legend="#{userData.userDDs['MAIN_ACCOUNTT']}   #{mainTransactionStatementMB.glAccountSelected.name} - #{mainTransactionStatementMB.glAccountSelected.accNumber}"  style="margin-bottom:20px;font-size:5px;">
+
+
+                    <p:dataTable       
+
+                        rows="20"
+                        paginator="true"
+                        id="dataTable"  
+                        value="#{mainTransactionStatementMB.mainTransactionStatementBeanList}"
+                        widgetVar="statement"
+                        var="statement" 
+                        rowStyleClass= "#{(statement.level eq null) ? 'Colored' : null}">
+
+                        <f:facet name="header" class="col-md-12">
+
+                            <p:outputPanel>
+                                <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large;" />
+                                <p:inputText   id="globalFilter"   onkeyup="PF('statement').filter()" style="width: 57%important" />
+                            </p:outputPanel>
+
+                        </f:facet>
+
+                        <p:column style="width:1%">
+                            <p:rowToggler rendered="#{statement.subAccountSummaryReportList.size() gt 0}"  />
+                        </p:column>
+                        <p:column headerText="#{userData.userDDs['ACCOUNT_COD']}" 
+                                  filterBy="#{statement.accountNumber}"  filterMatchMode="contains" sortBy="#{statement.accountNumber}" filterable="false"
+                                  style="width:5vh;font-size: 1.5vh" >
+                            <h:outputText value="#{statement.accountNumber}" />
+                        </p:column>
+                        <p:column headerText="#{userData.userDDs['ACCOUNT_NAME']}"
+                                  filterBy="#{statement.accountName}"  filterMatchMode="contains" sortBy="#{statement.accountName}" filterable="false"
+                                  style="width:10vh;font-size: 1.5vh" >
+                            <h:outputText value="#{statement.accountName}"/>
+                        </p:column>
+                        <p:column  headerText="#{userData.userDDs['LEVEL']}"
+                                   filterBy="#{statement.level}"  filterMatchMode="contains" sortBy="#{statement.level}" filterable="false"
+                                   style="width:3vh;font-size: 1.5vh">
+                            <h:outputText value="#{statement.level}" style="font-size:12px"/>
+                        </p:column>
+                        <p:column headerText="#{userData.userDDs['DEBIT']}" 
+                                  filterBy="#{statement.debit}"  filterMatchMode="contains" sortBy="#{statement.debit}" filterable="false"
+                                  style="width:8vh;font-size: 1.5vh">
+                            <p:inputNumber readonly="true" value="#{statement.debit}" style="font-size: 12px; width: 95%" />
+                        </p:column>
+                        <p:column headerText="#{userData.userDDs['CREDIT']}"  
+                                  filterBy="#{statement.credit}"  filterMatchMode="contains" sortBy="#{statement.credit}" filterable="false"
+                                  style="width:8vh;font-size: 1.5vh">
+                            <p:inputNumber readonly="true" value="#{statement.credit}" style="font-size: 12px; width: 95%" />
+                        </p:column>
+
+                        <p:column headerText="#{userData.userDDs['BALANCE']}"  
+                                  filterBy="#{statement.value}"  filterMatchMode="contains" sortBy="#{statement.value}" filterable="false"
+                                  style="width:8vh;font-size: 1.5vh">
+                            <p:inputNumber readonly="true" value="#{statement.value}" style="font-size: 12px; width: 95%" />
+                        </p:column>
+                        <p:column headerText="#{userData.userDDs['PERCENTAGE']}" 
+                                  filterBy="#{statement.ratio}"  filterMatchMode="contains" sortBy="#{statement.ratio}" filterable="false"
+                                  style="width:4vh;font-size: 1.5vh">
+                            <h:outputText value="% #{statement.ratio}"/>
+                        </p:column>
+                        <p:column  headerText="#{userData.userDDs['TRANSACTION']}" style="width:4vh;font-size: 1.5vh">
+                            <p:commandButton   ajax="false" onclick="form.target = '_blank'" 
+                                               icon="fa fa-fw fa-print"
+                                               class="sprintButton"
+                                               actionListener="#{mainTransactionStatementMB.exportSummary}" 
+                                               rendered="#{statement.subAccountSummaryReportList.size() gt 0}">
+                                <f:attribute name="varValue" value="#{statement}" />
+                            </p:commandButton>
+                        </p:column>
+
+
+                        <p:rowExpansion >
+                            <p:dataTable id="dataTableInside" 
+                                         style="background-color: #2e6e9e"
+                                         draggableColumns="true" 
+                                         value="#{statement.subAccountSummaryReportList}"
+                                         var="subAccountSummary">
+
+                                <p:column style="width:10vh ;text-align: -webkit-auto;font-size:1.8vh;color:#fff" headerText="#{userData.userDDs['DATEE']}">
+                                    <h:outputText value="#{subAccountSummary.date}" style="font-size: 1.2vh;color: #000">
+                                        <f:convertDateTime id="datee"  pattern="dd-MM-yyyy" />
+                                    </h:outputText>
+                                </p:column>
+
+                                <p:column style="width:8vh ;text-align: -webkit-auto;font-size:1.8vh;color:#fff"  headerText="#{userData.userDDs['GENERAL_NUMBER']}">
+                                    <h:outputText value="#{subAccountSummary.serial}" style="font-size: 12px;color: #000"/>
+                                </p:column>
+
+                                <p:column style="width:12vh ;text-align: -webkit-auto;font-size:1.8vh;color:#fff"  headerText="#{userData.userDDs['DOCUMENT_NUMBER']}">
+                                    <h:outputText value="#{subAccountSummary.generalDecument}" style="font-size: 12px;color: #000"/>
+                                </p:column>
+
+                                <p:column style="width:15vh ;text-align: -webkit-auto;font-size:1.8vh;color:#fff" headerText="#{userData.userDDs['JOURNAL_TYPE']}">
+                                    <h:outputText value="#{subAccountSummary.symbolName}" style="font-size: 12px;color: #000"/>
+                                </p:column>
+
+                                <p:column style="width:25vh ;text-align: -webkit-auto;font-size:1.8vh;color:#fff" headerText="#{userData.userDDs['GERNAL_STATEMENT']}">
+                                    <h:outputText value="#{subAccountSummary.generalStatement}" style="font-size: 12px;color: #000"/>
+                                </p:column>
+
+                                <p:column style="width:10vh ;text-align: -webkit-auto;font-size:1.8vh;color:#fff" headerText="#{userData.userDDs['DEBIT']}">
+                                    <p:inputNumber readonly="true" value="#{subAccountSummary.debitAmount}" style="font-size: 12px ; width: 95%"/>
+                                </p:column>
+
+                                <p:column style="width:10vh ;text-align: -webkit-auto;font-size:1.8vh;color:#fff"  headerText="#{userData.userDDs['CREDIT']}">
+                                    <p:inputNumber readonly="true" value="#{subAccountSummary.creditAmount}" style="font-size: 12px; width: 95%"/>
+                                </p:column>
+
+                                <p:column style="width:10vh ;text-align: -webkit-auto;font-size:1.8vh;color:#fff" headerText="#{userData.userDDs['BALANCE']}">
+                                    <p:inputNumber readonly="true" value="#{subAccountSummary.balance}" style="font-size: 12px; width: 95%"/>
+                                </p:column>                     
+
+                            </p:dataTable>
+                        </p:rowExpansion>
+                    </p:dataTable>
+                </p:fieldset>
+
+                <script type="text/javascript">
+                    google.charts.load("current", {packages: ["corechart"]});
+                    google.charts.setOnLoadCallback(drawChart);
+                    function drawChart() {
+                        var data = google.visualization.arrayToDataTable(
+                    #{mainTransactionStatementMB.pieChartsRows}
+                        );
+
+                        var options = {
+                            title: 'كشف حساب رئيسي',
+                        };
+
+                        var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
+                        chart.draw(data, options);
+                    }
+                </script>
+
+            </h:form>
+        </h:body>
+    </ui:define>
+</ui:composition>

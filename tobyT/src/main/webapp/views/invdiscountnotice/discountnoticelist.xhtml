@@ -1,0 +1,123 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml" >
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:body>
+            <p:fieldset legend="اشعار خصم" style="margin-bottom:20px">
+                <h:form id="form">
+                    <div >
+                        <p:messages id="curmsg" showDetail="true" rendered="true" closable="true"/>   
+                    </div>
+
+                    <p:dataTable id="invNotice"
+                                 draggableColumns="true" 
+                                 var="invNotice" 
+                                 widgetVar="invNotice" 
+                                 rowIndexVar="index" 
+                                 value="#{invNoticeListMB.invNoticeEntityList}" 
+                                 paginator="true"
+                                 emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                                 rowKey="#{invNotice}" 
+                                 selection="#{invNoticeListMB.invNoticeEntitySelected}"  >
+
+                        <f:facet name="header">
+                            <p:commandButton icon="fa fa-plus" 
+                                             title="#{userData.userDDs['ADD']}"
+                                             action="#{invNoticeListMB.goToAdd()}"
+                                             style="float:right" 
+                                             />
+
+                            <p:outputPanel  >
+                                <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                                <p:inputText id="globalFilter" onkeyup="PF('invNotice').filter()" style="width:150px" />
+                            </p:outputPanel>
+                        </f:facet>
+
+                        <p:column headerText="#" style="width: 5%" >
+                            <p:outputLabel value="#{index + 1}" />
+                        </p:column>
+
+                        <p:column filterStyle="display:none"
+                                  filterBy="#{invNotice.accountId}" 
+                                  filterMatchMode="contains" 
+                                  headerText="الحساب" 
+                                  sortBy="#{invNotice.accountId}">
+                            <p:outputLabel value="#{invNotice.accountId}" />
+                        </p:column>
+
+                        <p:column filterStyle="display:none"
+                                  filterBy="#{invNotice.customerId}" 
+                                  filterMatchMode="contains" 
+                                  headerText="العميل"
+                                  sortBy="#{invNotice.customerId}">
+                            <p:outputLabel value="#{invNotice.customerId}" />
+                        </p:column>
+
+                        <p:column filterStyle="display:none"
+                                  filterBy="#{invNotice.date}" 
+                                  filterMatchMode="contains" 
+                                  headerText="التاريخ"
+                                  sortBy="#{invNotice.date}">
+                            <p:outputLabel value="#{invNotice.date}" >
+                                <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                            </p:outputLabel> 
+                        </p:column>
+
+                        <p:column filterStyle="display:none"
+                                  filterBy="#{invNotice.amount}" 
+                                  filterMatchMode="contains" 
+                                  headerText="الكمية"
+                                  sortBy="#{invNotice.amount}">
+                            <p:outputLabel value="#{invNotice.amount}" />
+                        </p:column>
+
+                        <p:column filterStyle="display:none"
+                                  filterBy="#{invNotice.remarks}" 
+                                  filterMatchMode="contains" 
+                                  headerText="ملاحظات"
+                                  sortBy="#{invNotice.remarks}">
+                            <p:outputLabel value="#{invNotice.remarks}" />
+                        </p:column>
+
+
+                        <p:column headerText="#{userData.userDDs['TRANSACTION']}">
+                            <p:commandButton update="@form" icon="fa fa-fw fa-edit"
+                                             title="#{userData.userDDs['EDIT']}" 
+                                             action="#{invNoticeListMB.goToEdit()}" 
+                                             >
+                                <f:setPropertyActionListener value="#{invNotice}" 
+                                                             target="#{invNoticeListMB.invNoticeEntitySelected}" />
+                            </p:commandButton>
+
+                            <p:commandButton update="form" 
+                                             icon="fa fa-remove" 
+                                             title="#{userData.userDDs['DELETE']}" 
+                                             action="#{invNoticeListMB.delete}"
+                                             >
+
+                                <f:setPropertyActionListener value="#{invNotice}"
+                                                             target="#{invNoticeListMB.invNoticeEntitySelected}" />
+                                <p:confirm header="Confirmation" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                            </p:commandButton>
+                        </p:column>
+
+                    </p:dataTable>
+
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                        <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog>
+
+                </h:form>
+            </p:fieldset>
+        </h:body>
+    </ui:define>
+</ui:composition>
+
+

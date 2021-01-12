@@ -1,0 +1,160 @@
+﻿<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form  style="margin-right: 20px" dir="#{userData.dir}">
+            <p:fieldset legend="إذن قبض " style="margin-bottom:20px">
+                <div class="col-xs-12">
+                    <p:messages id="curmsg" showDetail="true" rendered="true" closable="true"/>   
+                </div>
+                <div >
+                    <p:dataTable id="glBankTransactionTable"
+                                 draggableColumns="true" 
+                                 var="glBankTransactionTable"
+                                 widgetVar="bTable"  
+                                 rowIndexVar="index" 
+                                 value="#{notesReceivablesListMB.glBankTransactionEntityList}"
+                                 rows="#{userData.rowListCount}" 
+                                 paginator="true"
+                                 emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" >
+
+                        <f:facet name="header">
+                            <p:commandButton class="saddButton" id="b2" icon="fa fa-plus" title="#{userData.userDDs['ADD']}" action="#{notesReceivablesListMB.goToAdd()}" 
+                                             style="float:right" 
+                                             rendered="#{userData.userScreens['notesreceivablespre'].add or userData.isAdmin}"/>
+
+                            <p:commandButton class="scloseButton"  icon="fa fa-fw fa-backward"  style="float: left" action="exit" />
+                            <p:outputPanel>
+                                <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                                <p:inputText id="globalFilter" a:autofocus="true" onkeyup="PF('bTable').filter()" style="width:150px" />
+                            </p:outputPanel>
+                        </f:facet>
+
+
+                        <p:column style="width: 11vh; text-align: right;font-size:1.8vh" filterStyle="display:none"
+                                  filterBy="#{glBankTransactionTable.serial}" 
+                                  filterMatchMode="contains"
+                                  headerText="#{userData.userDDs['DOCUMENT_NUMBER']}" 
+                                  sortBy="#{glBankTransactionTable.serial}" 
+                                  >
+                            <p:outputLabel value="#{glBankTransactionTable.serial}" />
+                        </p:column>
+
+
+                        <p:column style="width: 11vh; text-align: right;font-size:1.8vh" filterStyle="display:none"
+                                  filterBy="#{glBankTransactionTable.glBank.name}" 
+                                  filterMatchMode="contains"
+                                  headerText="#{userData.userDDs['SAFE']}" 
+                                  sortBy="#{glBankTransactionTable.glBank.name}" 
+                                  >
+                            <p:outputLabel value="#{glBankTransactionTable.glBank.name}" />
+                        </p:column>
+
+                        <p:column style="width: 13vh; text-align: right;font-size:1.8vh" filterStyle="display:none"
+                                  filterBy="#{glBankTransactionTable.paymentTypeName}" 
+                                  filterMatchMode="contains"
+                                  headerText="#{userData.userDDs['PAYMENT_METHOD']}" 
+                                  sortBy="#{glBankTransactionTable.paymentTypeName}" 
+                                  >
+                            <p:outputLabel value="#{glBankTransactionTable.paymentTypeName}" />
+                        </p:column>
+
+
+                        <p:column  style="width: 10vh; text-align: right;font-size:1.8vh" filterStyle="display:none"
+                                   filterBy="#{glBankTransactionTable.date}" 
+                                   filterMatchMode="contains"
+                                   headerText="#{userData.userDDs['DATEE']}" 
+                                   sortBy="#{glBankTransactionTable.date}" 
+                                   >
+                            <p:outputLabel value="#{glBankTransactionTable.date}" >
+                                <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                            </p:outputLabel>
+                        </p:column>
+
+
+                        <p:column style="width: 9vh; text-align: right;font-size:1.8vh" filterStyle="display:none"
+                                  filterBy="#{glBankTransactionTable.value}" 
+                                  filterMatchMode="contains"
+                                  headerText="#{userData.userDDs['AMOUNT']}" 
+                                  sortBy="#{glBankTransactionTable.value}" 
+                                  >
+                            <p:outputLabel value="#{glBankTransactionTable.value}" />
+                        </p:column>
+
+
+                        <p:column style="width: 13vh; text-align: right;font-size:1.8vh" filterStyle="display:none"
+                                  filterBy="#{glBankTransactionTable.valueLocal}" 
+                                  filterMatchMode="contains"
+                                  headerText="#{userData.userDDs['LOCAL_AMOUNT']}" 
+                                  sortBy="#{glBankTransactionTable.valueLocal}" 
+                                  >
+                            <p:outputLabel value="#{glBankTransactionTable.valueLocal}" />
+                        </p:column>
+
+                        <p:column style="width: 12vh; text-align: right;font-size:1.8vh"  filterStyle="display:none"
+                                  filterBy="#{glBankTransactionTable.remark}" 
+                                  filterMatchMode="contains"
+                                  headerText="#{userData.userDDs['STATEMENT']}" 
+                                  sortBy="#{glBankTransactionTable.remark}" 
+                                  >
+                            <p:outputLabel value="#{glBankTransactionTable.remark}" />
+                        </p:column>
+                        
+                        <p:column style="width: 12vh; text-align: right;font-size:1.8vh"  filterStyle="display:none"
+                                  filterBy="#{glBankTransactionTable.remark2}" 
+                                  filterMatchMode="contains"
+                                  headerText="مناولة" 
+                                  sortBy="#{glBankTransactionTable.remark2}" 
+                                  >
+                            <p:outputLabel value="#{glBankTransactionTable.remark2}" />
+                        </p:column>
+
+
+
+
+
+                        <p:column style="width: 13vh; text-align: right;font-size:1.8vh" headerText="#{userData.userDDs['TRANSACTION']}" >
+                            <p:commandButton class="seditButton" update="@form"
+                                             icon="fa fa-fw fa-edit"
+                                             title="#{userData.userDDs['EDIT']}" 
+                                             action="#{notesReceivablesListMB.goToEdit()}" >
+
+                                <f:setPropertyActionListener value="#{glBankTransactionTable.id}" 
+                                                             target="#{notesReceivablesListMB.glBankTransactionIdSeclected}" />
+                            </p:commandButton>
+                            <p:commandButton class="sdeleteButton" update="@form" 
+                                             icon="fa fa-remove" 
+                                             title="#{userData.userDDs['DELETE']}" 
+                                             action="#{notesReceivablesListMB.delete}"
+                                             disabled="#{glBankTransactionTable.postFlag == 1}"
+                                             >
+                                <f:setPropertyActionListener value="#{glBankTransactionTable}"
+                                                             target="#{notesReceivablesListMB.glBankTransactionEntitySelected}" />
+                                <p:confirm header="Confirmation" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                            </p:commandButton>
+                            <p:commandButton   class="sprintButton" ajax="false" onclick="form.target = '_blank'" 
+                                               icon="fa fa-fw fa-print"
+                                               actionListener="#{notesReceivablesListMB.exportPDF}" >
+                                 <f:attribute name="varValue" value="#{glBankTransactionTable}" />
+                            </p:commandButton>
+                        </p:column>
+
+                    </p:dataTable> 
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                        <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog>
+                </div>
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>
+
+

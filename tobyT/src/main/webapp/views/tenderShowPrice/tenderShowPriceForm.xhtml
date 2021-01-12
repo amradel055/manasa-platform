@@ -1,0 +1,439 @@
+﻿<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+
+        <style>
+
+            .ui-tabs.ui-tabs-top>.ui-tabs-nav {
+                padding: 0;
+            }
+            .ui-tabs .ui-tabs-nav li a {
+                border-radius: 5px;}
+            .ui-tabs.ui-tabs-top>.ui-tabs-nav li {
+                border-radius: 5px;
+                top: 0;
+            }
+            .ui-tabs .ui-tabs-panel {
+                padding: 10px 5px;
+                overflow: auto;
+            }
+            .ui-widget-content {
+
+                background: inherit;}
+            .ui-treetable table {
+                border-collapse: collapse;
+
+                table-layout: inherit;}
+            .ui-treetable thead th, .ui-treetable tbody td, .ui-treetable tfoot td {
+                padding: 3px;
+                overflow: hidden;
+                white-space: inherit;}
+            </style>
+            <h:form  style="margin-right: 15px" dir="#{userData.dir}"  id="form">
+            <div class="ui-g-12 ui-g-nopad">
+
+                <div class="ui-g">
+
+                    <div class="ui-g-12 ui-md-6">
+
+                        <p:fieldset legend="عرض السعر">
+
+                            <div class="ui-g-12">
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width:55px" value="رقم العرض"/>
+                                    </h:panelGroup> 
+
+                                    <h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:outputLabel style="width: 60%!important"/>
+                                        </h:panelGroup> 
+
+
+                                    </h:panelGroup> 
+                                </h:panelGroup>
+
+                            </div>
+
+                            <div class="ui-g-12">
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 55px" value="الرقم الدفترى"/>
+                                    </h:panelGroup> 
+
+                                    <h:panelGroup>
+
+                                        <h:panelGroup>
+                                            <p:inputText   style="width: 60%!important" value=""/>
+                                        </h:panelGroup> 
+
+
+                                    </h:panelGroup> 
+                                </h:panelGroup>
+
+                            </div>
+
+                            <div class="ui-g-12">
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width:55px" value="تاريخ التحرير"/>
+                                    </h:panelGroup> 
+
+                                    <h:panelGroup>
+
+                                        <h:panelGroup>
+                                            <p:calendar style="width: 60%"   />
+                                        </h:panelGroup> 
+
+
+                                    </h:panelGroup> 
+                                </h:panelGroup>
+
+                            </div>
+
+                            <div class="ui-g-12">
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width:55px" value="حالة العرض"/>
+                                    </h:panelGroup> 
+
+
+                                    <h:panelGroup>
+                                        <p:selectOneMenu  style="width:60%">
+
+                                            <f:selectItem itemLabel="Select Country" 
+                                                          itemValue="" noSelectionOption="true" />
+                                            <f:selectItems  />
+                                        </p:selectOneMenu>
+                                    </h:panelGroup>
+
+                                </h:panelGroup>
+
+                            </div>
+
+                            <div class="ui-g-12">
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width:55px" value="حالة المراجعة"/>
+                                    </h:panelGroup> 
+
+
+                                    <h:panelGroup>
+                                        <p:selectOneMenu  style="width:60%">
+
+                                            <f:selectItem itemLabel="Select Country" 
+                                                          itemValue="" noSelectionOption="true" />
+                                            <f:selectItems  />
+                                        </p:selectOneMenu>
+                                    </h:panelGroup>
+
+                                </h:panelGroup>
+
+
+
+                            </div>
+                            <div class="ui-g-12">
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width:55px" value="سبب حالة المراجعه"/>
+                                    </h:panelGroup> 
+
+
+                                    <h:panelGroup>
+                                        <p:selectOneMenu  style="width:60%">
+
+                                            <f:selectItem itemLabel="Select Country" 
+                                                          itemValue="" noSelectionOption="true" />
+                                            <f:selectItems  />
+                                        </p:selectOneMenu>
+                                    </h:panelGroup>
+
+                                </h:panelGroup>
+
+                            </div>
+
+                            <div class="ui-g-12">
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width:55px" value="تقريب القيمة"/>
+                                    </h:panelGroup> 
+
+
+                                    <h:panelGroup>
+                                        <p:spinner style=" width:45%!important;"  
+                                                   min="0" max="100" />
+
+                                        <p:commandButton  class="printbutton"
+                                                          title="تنفيذ" >
+
+                                        </p:commandButton>
+                                    </h:panelGroup>
+
+
+                                </h:panelGroup>
+
+                            </div>
+
+
+                        </p:fieldset> 
+
+                    </div>
+
+                    <div class="ui-g-12 ui-md-6">
+
+                        <p:fieldset legend=" العطاء">
+
+                            <div class="ui-g-12">
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width:60px" value="رقم العطاء"/>
+                                    </h:panelGroup> 
+
+                                    <h:panelGroup>
+
+                                        <h:panelGroup>
+                                            <p:inputText   style="width: 60%!important" />
+                                        </h:panelGroup> 
+
+
+                                    </h:panelGroup> 
+                                </h:panelGroup>
+
+                            </div>
+                            <div class="ui-g-12">
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width:60px" value="الرقم الدفترى للعطاء"/>
+                                    </h:panelGroup> 
+
+                                    <h:panelGroup>
+
+                                        <h:panelGroup>
+                                            <p:inputText   style="width: 60%!important" value=""/>
+                                        </h:panelGroup> 
+
+
+                                    </h:panelGroup> 
+                                </h:panelGroup>
+
+                            </div>
+                            <div class="ui-g-12">
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 60px" value="المالك"/>
+                                    </h:panelGroup> 
+
+                                    <h:panelGroup>
+
+                                        <h:panelGroup>
+                                            <p:outputLabel style="width: 60%!important"/>
+                                        </h:panelGroup> 
+
+
+                                    </h:panelGroup> 
+                                </h:panelGroup>
+
+                            </div>
+
+
+
+                            <div class="ui-g-12">
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width:60px" value="وصف العطاء"/>
+                                    </h:panelGroup> 
+
+                                    <h:panelGroup>
+
+                                        <h:panelGroup>
+                                            <p:inputText   style="width: 60%!important" value=""/>
+                                        </h:panelGroup> 
+
+
+
+                                    </h:panelGroup> 
+                                </h:panelGroup>
+
+                            </div>
+
+                            <div class="ui-g-12">
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width:60px" value="السبب"/>
+                                    </h:panelGroup> 
+
+
+                                    <h:panelGroup>
+                                        <p:selectOneMenu  style="width:60%">
+
+                                            <f:selectItem itemLabel="Select Country" 
+                                                          itemValue="" noSelectionOption="true" />
+                                            <f:selectItems  />
+                                        </p:selectOneMenu>
+                                    </h:panelGroup>
+
+                                </h:panelGroup>
+
+                            </div>
+
+                            <p:fieldset  legend="التسعير"> 
+
+                                <div class="ui-g-12">
+
+                                    <h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:outputLabel style="width:60px" value="وصف العطاء"/>
+                                        </h:panelGroup> 
+
+                                        <h:panelGroup>
+
+                                            <h:panelGroup>
+                                                <p:inputText   style="width: 60%!important" value=""/>
+                                            </h:panelGroup> 
+
+
+
+                                        </h:panelGroup> 
+                                    </h:panelGroup>
+
+                                </div>
+                                
+                                <div class="ui-g-12">
+
+                                    <h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:outputLabel style="width:60px" value="الرقم الدفترى للتسعير"/>
+                                        </h:panelGroup> 
+
+                                        <h:panelGroup>
+
+                                            <h:panelGroup>
+                                                <p:inputText   style="width: 60%!important" value=""/>
+                                            </h:panelGroup> 
+
+
+
+                                        </h:panelGroup> 
+                                    </h:panelGroup>
+
+                                </div>
+
+
+                            </p:fieldset> 
+
+
+                        </p:fieldset> 
+
+                    </div>
+                </div>  
+            </div>
+
+
+
+            <p:fieldset style=' margin-top: 25px'>
+
+
+                <p:tabView>
+                    <p:tab title="بنود العطاء">
+                        <p:treeTable value="#{adminUnitBean.adminUnitsHierarchy}"  var="doc">
+                            <f:facet name="header" class="col-md-12">
+
+                                <p:commandButton icon="fa fa-plus" 
+                                                 title="#{userData.userDDs['ADD']}" 
+                                                 class="saddButton"
+                                                 action="#{branchListBean.goToAdd()}" 
+                                                 style="float:right;margin: 0"/>
+                                <p:outputPanel>
+                                    <h:outputText value="#{userData.userDDs['SEARCH']} : " 
+                                                  style="font-size: large" />
+                                    <p:inputText id="globalFilter" 
+                                                 onkeyup="PF('bTable').filter()" 
+                                                 style="width:150px" />
+
+                                </p:outputPanel>
+
+
+                            </f:facet>
+                            <p:column headerText="البند"  style=" width: 15vh">
+                                <h:outputText />
+                            </p:column>
+                            <p:column headerText="الكود"  style=" width: 10vh">
+                                <h:outputText  />
+                            </p:column>
+                            <p:column headerText="الوحده" style=" width: 10vh">
+                                <h:outputText  />
+                            </p:column>
+
+                            <p:column headerText="الكميه" style=" width: 10vh">
+                                <h:outputText  />
+                            </p:column>
+
+                            <p:column headerText="السعر" style=" width: 10vh">
+                                <h:outputText  />
+                            </p:column>
+                            <p:column headerText="القيمة" style=" width: 10vh">
+                                <h:outputText  />
+                            </p:column>
+                            <p:column headerText="حالة النبذ" style=" width: 10vh">
+                                <h:outputText  />
+                            </p:column>
+                           
+                            <p:column headerText="الملاحظات" style=" width: 10vh">
+                                <h:outputText  />
+                            </p:column>
+                            
+
+                            <p:column headerText="العمليات" style=" width: 15vh">
+                                <p:commandButton class="saddButton" update="@form"
+                                                 icon="fa fa-fw fa-plus"
+                                                 title="#{userData.userDDs['ADD']}" 
+                                                 />
+                                <p:commandButton  class="sdeleteButton" 
+                                                  icon="fa fa-remove"
+                                                  title="#{userData.userDDs['DELETE']}" 
+                                                  >
+
+                                </p:commandButton>
+                            </p:column>
+
+
+                        </p:treeTable>
+
+                    </p:tab>
+
+                    <p:tab title="المستندات">
+
+
+                    </p:tab>
+                    
+                </p:tabView>
+            </p:fieldset>
+
+
+
+
+        </h:form>
+
+
+
+    </ui:define>
+
+
+</ui:composition>

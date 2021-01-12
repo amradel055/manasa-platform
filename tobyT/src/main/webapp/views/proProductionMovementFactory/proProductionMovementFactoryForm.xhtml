@@ -1,0 +1,190 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <link rel="stylesheet" type="text/css" href="../../resources/css/main.css" /> 
+    <link rel="stylesheet" type="text/css" href="./../../resources/css/custom.css" /> 
+    <script src="../../resources/jscustom/custom.js"></script>
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form  style="margin-right: 20px" id="form" dir="RTL">
+
+            <div>
+                <p:messages id="curmsg" autoUpdate="true" showDetail="true" rendered="true" closable="true"/>  
+
+            </div>
+
+            <p:fieldset legend="مرحلة التسليم للمشغل" id="whole"
+
+                        style=" position: relative">
+
+                <div class="firstset">
+
+                    <div  id="firstLine" class="ui-g-12 ui-g-nopad ">
+                        <div class="ui-g">
+                            <div class="ui-g-6 ui-xl-6">
+                                <div class="ui-g-12 ui-xl-12">
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:autoComplete id="galary" dropdown="true" 
+                                                        converter="#{proProductionMovementFactoryFormMB.invInventoryDTOConverter}"
+                                                        value="#{proProductionMovementFactoryFormMB.proProductMovementDTO.invGalary}" 
+                                                        var="galary"
+                                                        itemLabel="#{galary}" 
+                                                        itemValue="#{galary}" 
+                                                        forceSelection="true"
+                                                        completeMethod="#{proProductionMovementFactoryFormMB.complete}"
+                                                        widgetVar="galary"
+
+                                                        >
+
+                                            <p:ajax event="itemSelect" listener="#{proProductionMovementFactoryFormMB.changeGalary()}"  update="proProductMovement" />
+
+                                        </p:autoComplete>
+
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+
+                                        <p:outputLabel style="width: 65px" value="المعرض"/>
+
+
+
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-xl-12">
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:autoComplete id="factor" dropdown="true" 
+                                                        converter="#{proProductionMovementFactoryFormMB.invInventoryDTOConverter1}"
+                                                        value="#{proProductionMovementFactoryFormMB.proProductMovementDTO.inventory}" 
+                                                        var="factor"
+                                                        itemLabel="#{factor}" 
+                                                        itemValue="#{factor}" 
+                                                        forceSelection="true"
+                                                        completeMethod="#{proProductionMovementFactoryFormMB.complete1}"
+                                                        widgetVar="factor"
+                                                        >
+
+                                        </p:autoComplete>
+
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 65px" value="المشغل"/>
+
+
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+                              <div class="ui-g-6 ui-xl-6">
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+   <p:calendar style="width: 50%"  id="dateFrom"
+                                                    value="#{proProductionMovementFactoryFormMB.proProductMovementDTO.date}"
+                                                    pattern="dd/MM/yyyy"  showButtonPanel="true" >
+
+                                        </p:calendar>
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+
+                                        <p:outputLabel style="width: 50px"  value="التاريخ" />
+
+
+
+                                </div>
+                            </div>
+                                   <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                        <p:calendar id="time" value="#{proProductionMovementFactoryFormMB.proProductMovementDTO.time}" pattern="HH:mm" timeOnly="true"  />
+
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+
+                                        <p:outputLabel style="width: 50px"  value="الوقت" />
+
+
+
+                                </div>
+                            </div>
+                        </div>
+                            
+                         
+                           
+
+                        </div>
+                    </div>
+                </div>
+
+            </p:fieldset>
+            <p:fieldset legend="الفواتير">
+                <p:dataTable id="proProductMovement"
+                             draggableColumns="true" 
+                             var="proProductMovement" 
+                             widgetVar="proProductMovement" 
+                             editable="true"
+                             editMode="cell"
+                             rowIndexVar="index" 
+                             sortBy="#{1}"
+                             rowKey="#{proProductMovement.index}"
+                             value="#{proProductionMovementFactoryFormMB.proProductMovementDTO.proProductMovementDetailDTOList}" 
+                             selection="#{proProductionMovementFactoryFormMB.proProductMovementDetailDTOSelected}"
+
+                             paginator="true"
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                             >
+                    <f:facet name="header" class="col-md-12">
+                        <p:commandButton class="saddButton" icon="fa fa-plus" 
+                                         title="#{userData.userDDs['ADD']}"
+                                         action="#{proProductionMovementFactoryFormMB.addRow()}"
+                                         style="float:right"
+                                         update="proProductMovement"
+                                         />
+                    </f:facet>
+                    <p:column  style="width:12vh;font-size: 1.4vh;text-align: center"  headerText="رقم الفاتورة">
+                        <p:selectOneMenu id="acc" filter="true" style="width:100%"  
+                                         value="#{proProductMovement.invPurchesInvoiceId}"
+                                         converter="#{proProductionMovementFactoryFormMB.proProductMovementDetailDTOConvertor}"
+                                         >
+                            <f:selectItem itemLabel="#{proProductMovement.invPurchesInvoiceSerial}" />
+                            <f:selectItems value="#{proProductionMovementFactoryFormMB.proProductMovementDetailDTOs1}" 
+                                           var="invpurchase" 
+                                           itemValue="#{invpurchase.invPurchesInvoiceId}" 
+                                           itemLabel="#{invpurchase.invPurchesInvoiceSerial}" />
+                            <p:ajax event="itemSelect" listener="#{proProductionMovementFactoryFormMB.selectValue()}"  update="proProductMovement" />
+                        </p:selectOneMenu>
+                    </p:column>
+                    <p:column headerText="#{userData.userDDs['TRANSACTION']}"
+                              style="width: 5vh;text-align: center;font-size:1.8vh">
+                        <p:commandButton class="sdeleteButton" update="proProductMovement"
+                                         icon="fa fa-remove" 
+                                         title="#{userData.userDDs['DELETE']}" 
+                                         action="#{proProductionMovementFactoryFormMB.delete()}"
+                                         >
+                            <f:setPropertyActionListener value="#{proProductMovement}"
+                                                         target="#{proProductionMovementFactoryFormMB.proProductMovementDetailDTOSelected}" />
+                            <p:confirm header="Confirmation" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                    <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:confirmDialog>
+            </p:fieldset>
+            <p:commandButton     class="saveButton" id="saveB" 
+                                 title="#{userData.userDDs['SAVE']}"
+                                 value="#{userData.userDDs['SAVE']}" 
+                                 icon="fa fa-fw fa-save"
+                                 update="@form"
+                                 action="#{proProductionMovementFactoryFormMB.save()}"
+                                 >
+            </p:commandButton>
+        </h:form>
+    </ui:define>
+</ui:composition>

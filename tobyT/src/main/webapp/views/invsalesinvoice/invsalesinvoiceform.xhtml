@@ -1,0 +1,477 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition 
+
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    template="./../../template/newTemplate.xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <h:form id="form"  enctype="multipart/form-data"  dir="#{userData.dir}" style="margin-right: 20px"  >
+            <p:messages id="messages" showDetail="true" closable="true"/>
+            <p:fieldset id="test" legend="#{userData.userDDs['SALES_INVOICES']}" style="margin-bottom:20px"> 
+                
+                <div  id="firstSegment" class="ui-g-12 ui-g-nopad">
+
+                    <div class="ui-g">
+                        <h:panelGroup>
+                            <p:outputLabel value="تحديد السعر" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:selectOneMenu value="#{invsalesinvoiceformMB.invPurchaseInvoiceDTO.detectPrice}" >
+                                <f:selectItem itemLabel="رجالى" itemValue="1" />
+                                <f:selectItem itemLabel="ولادى" itemValue="0" />
+                        
+                                <p:ajax event="itemSelect" update="@form"  listener="#{invsalesinvoiceformMB.validateItem()}"/>
+                                <p:ajax event="change" update="@form" listener="#{invsalesinvoiceformMB.validateItem()}"/>
+                            </p:selectOneMenu>
+                        </h:panelGroup>
+                        
+                        <div class="ui-g-12 ui-md-6">
+                            <br></br>
+                            <h:panelGroup >
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 65px" value="السريال :"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel id="serial" style="width:48%" value="#{invsalesinvoiceformMB.invPurchaseInvoiceDTO.serial}" />
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 65px" value="#{userData.userDDs['DATEE']}*"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:calendar  value="#{invsalesinvoiceformMB.invPurchaseInvoiceDTO.date}"
+                                                 id="dateFrom" 
+                                                 pattern="dd/MM/yyyy"
+                                                 style="width: 47%">
+                                        <p:ajax event="dateSelect" update="duedate"  listener="#{invsalesinvoiceformMB.sumDateToDueDate()}"  />
+                                    </p:calendar>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup >
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 65px" value="مدة الإستحقاق"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText id="duePeriod" style="width:48%" value="#{invsalesinvoiceformMB.invPurchaseInvoiceDTO.dueperiod}" >
+                                        <p:ajax event="blur" update="duedate duePeriod messages"  listener="#{invsalesinvoiceformMB.sumDateToDueDate()}"  />
+                                    </p:inputText>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup >
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 65px" value="#{userData.userDDs['DUE_DATE']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:calendar id="duedate" pattern="dd/MM/yyyy" style="width:48%" value="#{invsalesinvoiceformMB.invPurchaseInvoiceDTO.dueDate}" >
+                                        <p:ajax event="dateSelect" update="duePeriod duedate messages"  listener="#{invsalesinvoiceformMB.subtractDatefromDueDate()}"  />
+                                    </p:calendar>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+
+                        </div>
+
+
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 65px" value=" إسم العميل"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:95%!important" id="customers"
+                                                    converter="#{invsalesinvoiceformMB.invOrganizationSiteDTOConverter}"
+                                                    value="#{invsalesinvoiceformMB.invPurchaseInvoiceDTO.organizationSiteIdDTO}"
+                                                    var="cust"
+                                                    itemLabel="#{cust}" 
+                                                    itemValue="#{cust}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{invsalesinvoiceformMB.completeCustomer}"
+                                                    widgetVar="cust"
+                                                    >
+                                       <p:ajax update="mobile" event="itemSelect"  />
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 65px" value=" رقم المحمول"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel id="mobile" style="width: 65px" value="#{invsalesinvoiceformMB.invPurchaseInvoiceDTO.organizationSiteIdDTO.mobile}"/>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <p:dialog header="إضافة عميل جديد" widgetVar="dlg3" showEffect="explode" hideEffect="bounce" height="500" width="500">
+
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 100px" value=" الإســم "/>
+                                    </h:panelGroup> 
+                                    <h:panelGroup>
+                                        <p:inputText value="#{invsalesinvoiceformMB.invOrganizationSiteDTO.name}"/>  
+                                    </h:panelGroup>
+                                    <br/>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 100px" value=" التليفون "/>
+                                    </h:panelGroup> 
+                                    <h:panelGroup>
+                                        <p:inputText value="#{invsalesinvoiceformMB.invOrganizationSiteDTO.mobile}"/>  
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <br/>
+                                        <p:commandButton     class="saveButton"  
+                                                             title="#{userData.userDDs['SAVE']}"
+                                                             value="#{userData.userDDs['SAVE']}" 
+                                                             icon="fa fa-fw fa-save" 
+                                                             action="#{invsalesinvoiceformMB.addNewCustomer()}"
+                                                             update="@form"
+                                                             >
+                                        </p:commandButton>
+                                    </h:panelGroup>
+
+                                </p:dialog>
+
+                            </h:panelGroup>
+                            <p:commandButton  value="إضافة" type="button" onclick="PF('dlg3').show();"> 
+
+                            </p:commandButton>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 65px" value="#{userData.userDDs['ADMIN_UNIT']}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:95%!important" 
+                                                    converter="#{invsalesinvoiceformMB.glAdminUnitDTOConverter}"
+                                                    value="#{invsalesinvoiceformMB.invPurchaseInvoiceDTO.adminUnitDTO}"
+                                                    var="adminunit"
+                                                    itemLabel="#{adminunit}" 
+                                                    itemValue="#{adminunit}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{invsalesinvoiceformMB.completeAdminUnit}"
+                                                    widgetVar="adminunit"
+                                                    >
+                                    </p:autoComplete>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 65px" value="مركز التكلفة"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:95%!important" 
+                                                    converter="#{invsalesinvoiceformMB.costCenterDTOConverter}"
+                                                    value="#{invsalesinvoiceformMB.invPurchaseInvoiceDTO.costCenterDTO}"
+                                                    var="ccenter"
+                                                    itemLabel="#{ccenter}" 
+                                                    itemValue="#{ccenter}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{invsalesinvoiceformMB.completeCostCenter}"
+                                                    widgetVar="ccenter"
+                                                    >
+                                    </p:autoComplete>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup >
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 65px" value="#{userData.userDDs['TREASURY']}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:selectOneMenu value="#{invsalesinvoiceformMB.invPurchaseInvoiceDTO.glBankId}" 
+                                                     converter="#{invsalesinvoiceformMB.glBankDTOConverter}" >
+                                       
+                                        <f:selectItems  var="glbank" value="#{invsalesinvoiceformMB.glBankList}"
+                                                        itemLabel="#{glbank}"
+                                                        itemValue="#{glbank}" />
+                                    </p:selectOneMenu>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 65px" value="#{userData.userDDs['DEPOSITORY']}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+
+                                    <p:autoComplete style="width:95%!important" 
+                                                    converter="#{invsalesinvoiceformMB.invInventoryDTOConverter}"
+                                                    value="#{invsalesinvoiceformMB.invPurchaseInvoiceDTO.invInventoryDTO}"
+                                                    var="inv"
+                                                    itemLabel="#{inv}" 
+                                                    itemValue="#{inv}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{invsalesinvoiceformMB.completeInvInventoty}"
+                                                    widgetVar="inv"
+                                                    >
+                                        <p:ajax event="itemSelect" listener="#{invsalesinvoiceformMB.changeInventory()}"/>
+                                    </p:autoComplete>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 65px" value="المعرض"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+
+                                    <p:autoComplete style="width:95%!important" 
+                                                    converter="#{invsalesinvoiceformMB.invInventoryDTOConverter1}"
+                                                    value="#{invsalesinvoiceformMB.invPurchaseInvoiceDTO.gallary}"
+                                                    var="gallary"
+                                                    itemLabel="#{gallary}" 
+                                                    itemValue="#{gallary}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{invsalesinvoiceformMB.completeGallary}"
+                                                    widgetVar="gallary"
+                                                    >
+                                       
+                                    </p:autoComplete>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                    <p:outputLabel style="width: 65px" value="منتج تام"/>
+                                </h:panelGroup>
+                            <h:panelGroup>
+                                <p:selectOneMenu style="width: 48%"   value="#{invsalesinvoiceformMB.invPurchaseInvoiceDetailDTO1.invItemParentId}" converter="#{invsalesinvoiceformMB.itemDTOConverter1}">                                                             
+                                    <f:selectItems  value="#{invsalesinvoiceformMB.invItemDTOCompletedList}" var="itemCompleted" itemValue="#{itemCompleted}" itemLabel="#{itemCompleted}"/>
+                                </p:selectOneMenu>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 65px" value="#{userData.userDDs['SALESPERSON']}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:95%!important" 
+                                                    converter="#{invsalesinvoiceformMB.invDelegatorDTOConvertor}"
+                                                    value="#{invsalesinvoiceformMB.invPurchaseInvoiceDTO.inventoryDelegatorDTO}"
+                                                    var="deleg"
+                                                    itemLabel="#{deleg}" 
+                                                    itemValue="#{deleg}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{invsalesinvoiceformMB.completeInventotyDelegator}"
+                                                    widgetVar="deleg"
+                                                    >
+                                    </p:autoComplete>
+                                </h:panelGroup>   
+                            </h:panelGroup>
+                        </div>
+                        <p:outputLabel value="ملاحظات" />
+                        <p:inputText value="#{invsalesinvoiceformMB.invPurchaseInvoiceDTO.remarks}"/>
+                    </div>
+                </div>
+
+                <p:commandButton     class="saveButton" id="saveB" 
+                                     title="#{userData.userDDs['SAVE']}"
+                                     value="#{userData.userDDs['SAVE']}" 
+                                     icon="fa fa-fw fa-save" update="@form"
+                                     action="#{invsalesinvoiceformMB.save()}"
+                                     >
+                </p:commandButton>
+                <p:commandButton value="فاتورة جديدة"  update="@form" process="@parent" action="#{invsalesinvoiceformMB.newInvoice()}"/>
+                <p:commandButton value="رجوع"   action="#{invsalesinvoiceformMB.backToList()}"/>
+            </p:fieldset>
+
+
+
+            <p:fieldset id="fieldSetId" legend="#{userData.userDDs['DET_SALE_INVO']}"  style="margin-bottom:20px">
+                <p:dataTable id="detail"         
+                             widgetVar="detail"
+                             style="margin-bottom:20px"
+                             var="detail"
+                             rowIndexVar="index" 
+                             dir="rtl" 
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                             editable="true"
+                             editMode="cell"
+                             selectionMode="single"
+                             sortBy="#{1}"
+                             rowKey="#{detail.index}"
+                             selection="#{invsalesinvoiceformMB.invPurchaseInvoiceDetailDTOSelected}"
+                             value="#{invsalesinvoiceformMB.invPurchaseInvoiceDTO.invPurchaseInvoiceDetailDTOList}"
+                             >
+
+                    <f:facet name="header" >
+                        <h:commandLink  style="float:left" class="sdcreenimg">  
+                            <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                            <p:dataExporter type="xls"
+                                            target="detail" 
+                                            fileName="فاتورة المبيعات"  preProcessor="#{SalesInvoiceFormMB.preProcessXLS()}"
+                                            postProcessor="#{SalesInvoiceFormMB.postProcessXLS}" />  
+                        </h:commandLink>
+                        <p:commandButton class="saddButton" id="addnew"
+                                         icon="fa fa-plus"
+                                         action="#{invsalesinvoiceformMB.addrow()}"
+                                         title="#{userData.userDDs['ADD']}" 
+                                         style="float:right"
+                                         update="@form"
+                                         />
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('detail').filter()" style="width:150px" />
+                        </p:outputPanel>
+                    </f:facet>
+                    <p:messages id="messagesDetails" showDetail="true" closable="true"/>
+                    <p:column headerText="السريال" style="width: 5vh;text-align: -webkit-auto" >
+                        <p:outputLabel  value="#{detail.serial}" />
+                    </p:column>
+                    <p:column headerText="إسم الصــنف" style="width: 5vh;text-align: -webkit-auto"  >
+
+                        <p:autoComplete style="width:95%!important" 
+                                        converter="#{invsalesinvoiceformMB.itemDTOConverter}"
+                                        value="#{detail.itemId}"
+                                        var="item"
+                                        itemLabel="#{item}" 
+                                        itemValue="#{item}" 
+                                        forceSelection="true" 
+                                        completeMethod="#{invsalesinvoiceformMB.completeInvItem}"
+                                        widgetVar="item"
+                                        >
+                            <p:ajax update="unit totalRow sumQuantity sellprice sumTotal availableQuantity invInventory number totalQuantityRow" event="itemSelect" listener="#{invsalesinvoiceformMB.validateItem()}" />
+                        </p:autoComplete>
+                    </p:column>
+                    <p:column headerText="منتج تام" style="width: 5vh;text-align: -webkit-auto" >
+                        <p:outputLabel value="#{detail.invItemParentId.name}" />
+                    </p:column>
+                    <p:column headerText="وحدة الصــنف" style="width: 5vh;text-align: -webkit-auto" >
+                        <p:selectOneMenu style="width: 48%" id="unit"   value="#{detail.unitsItemsSelected}" >                                                             
+                            <f:selectItem itemLabel=" اخترالوحدة"/>
+                            <f:selectItems  value="#{detail.unitsItemseList}" var="unitDetail" itemValue="#{unitDetail.unitId}" itemLabel="#{unitDetail.unitName}"/>
+                            <p:ajax event="valueChange"  update="unit totalRow sumQuantity sellprice sumTotal availableQuantity invInventory  totalQuantityRow" listener="#{invsalesinvoiceformMB.validateItem()}"/>
+                        </p:selectOneMenu> 
+                    </p:column>
+                    <p:column headerText="ثوب رقم" style="width: 5vh;text-align: -webkit-auto" >
+                        <p:inputText value="#{detail.clothNumber}"/>
+                    </p:column>
+                    
+                    <p:column headerText="الكمية " style="width: 5vh;text-align: -webkit-auto" >
+                        <p:inputText id="quantity" value="#{detail.quantity}">
+                            <p:ajax update="totalRow sumQuantity sumTotal   totalQuantityRow " event="blur" listener="#{invsalesinvoiceformMB.validateItem()}"   />
+                        </p:inputText>
+                    </p:column>
+                    <p:column headerText="العدد " style="width: 5vh;text-align: -webkit-auto" >
+                        <p:inputText id="number" value="#{detail.number}">
+                            <p:ajax update="totalRow sumQuantity sumTotal   totalQuantityRow" event="blur" listener="#{invsalesinvoiceformMB.validateItem()}"   />
+                        </p:inputText>
+                    </p:column>
+                    <p:column headerText="الكمية الكلية " style="width: 5vh;text-align: -webkit-auto" >
+                        <p:outputLabel id="totalQuantityRow" value="#{detail.totalQuantityRow}"/>
+                    </p:column>
+                    <p:column headerText="الكمية المتاحة " style="width: 5vh;text-align: -webkit-auto" >
+                        <p:outputLabel id="availableQuantity" value="#{detail.availableQuantity}"/>
+                    </p:column>
+                    <p:column headerText="التكلفة" style="width: 5vh;text-align: -webkit-auto" >
+                        <p:inputText id="sellprice" value="#{detail.cost}" >
+                        <p:ajax update="totalRow sumQuantity sumTotal  sellprice  totalQuantityRow" event="blur" listener="#{invsalesinvoiceformMB.validateItem()}"  />
+                        </p:inputText>
+                    </p:column>
+
+                    <p:column headerText="الخصم " style="width: 5vh;text-align: -webkit-auto" >
+                        <p:inputText id="discountScreen" value="#{detail.discount}" >
+                            <p:ajax update="unit totalRow sumQuantity sumTotal discountScreen sellprice  totalQuantityRow" event="blur" listener="#{invsalesinvoiceformMB.validateItem()}"  />
+                        </p:inputText>
+                    </p:column>
+                    <p:column headerText="المخزن " style="width: 5vh;text-align: -webkit-auto" >
+                        <p:outputLabel id="invInventory" value="#{detail.invInventoryDTO.name}" >
+                        </p:outputLabel>
+                    </p:column>
+                    <p:column headerText="اضافى " style="width: 5vh;text-align: -webkit-auto" >
+                        <p:inputText  value="#{detail.bounse}" >
+                            <p:ajax update="unit totalRow sumQuantity sumTotal  totalQuantityRow" event="blur" listener="#{invsalesinvoiceformMB.validateItem()}"  />
+                        </p:inputText>
+                    </p:column>
+                    <p:column headerText="الإجمالى " style="width: 5vh;text-align: -webkit-auto" >
+                        <p:outputLabel id="totalRow" value="#{detail.total}" />
+                    </p:column>
+                    <p:column headerText="الحركة " style="width: 5vh;text-align: -webkit-auto" >
+                        <p:commandButton class="sdeleteButton" update="detail" 
+                                         icon="fa fa-remove" 
+                                         title="#{userData.userDDs['DELETE']}" 
+                                         action="#{invsalesinvoiceformMB.removeRow()}" >
+
+                            <f:setPropertyActionListener value="#{detail}" target="#{invsalesinvoiceformMB.invPurchaseInvoiceDetailDTOSelected}" />
+                        </p:commandButton>
+                    </p:column>
+
+                    <p:summaryRow>
+                        <p:column colspan="3" style="text-align:right" >
+                            <h:outputText style="text-align:right" value="#{userData.userDDs['TOTAL']}  :" />
+                        </p:column>
+
+                        <p:column>
+                            <h:outputText id="sumQuantity" value="#{invsalesinvoiceformMB.invPurchaseInvoiceDTO.sumQuantity}"/>
+                        </p:column>
+                        <p:column />
+                        <p:column />
+                        <p:column />
+                        <p:column>
+                            <h:outputText id="sumTotal" value="#{invsalesinvoiceformMB.invPurchaseInvoiceDTO.sumTotal}"/>
+                        </p:column>
+
+                    </p:summaryRow>
+
+                </p:dataTable>
+                 <div class="ui-g-12 ui-md-6">
+                        <p:commandButton class="printButton"  icon="fa fa-fw fa-print"
+                                     onclick="form.target = '_blank'" ajax="false"
+                                     value="#{userData.userDDs['PRINT']}"
+                                     actionListener="#{invsalesinvoiceformMB.exportPDF(actionEvent)}"/>
+                 </div>
+            </p:fieldset>
+        </h:form>
+        <script>
+
+            document.addEventListener("keydown", function (e) {
+                console.log(e.which);
+                if (e.which === 13) {
+                    e.preventDefault();
+                    return false;
+                }
+                ;
+            });
+
+        </script>
+
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,126 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml">
+
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form id="form"  enctype="multipart/form-data"  dir="#{userData.dir}">
+            <p:fieldset legend="#{userData.userDDs['GENERAL_BUDGET_GUIDE']}" style="margin-bottom:20px">
+                <p:messages autoUpdate="true" rendered="true" id="messages" showDetail="true" closable="true"/>
+                <div class="ui-g-12 ui-g-nopad" id="pnl">
+                    <div class="ui-g">
+
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup> 
+
+                                <h:panelGroup> 
+                                    <p:outputLabel  style="width: 75px" value="#{userData.userDDs['CS_COD']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width: 50%!important"  id="SER" a:autofocus="true" value="#{generalBudgetFormBean.serial}" required="true" requiredMessage="#{userData.userDDs['REQUIRED']}" >
+                                        <p:ajax event="keyup" update="msgSER" />
+                                    </p:inputText>
+                                    <p:message id="msgSER" for="SER"/>
+
+                                </h:panelGroup>
+
+
+                            </h:panelGroup> 
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup> 
+
+                                <h:panelGroup> 
+                                    <p:outputLabel  style="width: 75px"  value="#{userData.userDDs['ITEM_NAME_ARABIC']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width: 50%!important"  id="nameAr" value="#{generalBudgetFormBean.nameAr}" required="true" requiredMessage="#{userData.userDDs['REQUIRED']}" >
+                                        <p:ajax event="keyup" update="msgnameAr" />
+                                    </p:inputText>
+                                    <p:message id="msgnameAr" for="nameAr"/>
+
+                                </h:panelGroup>
+
+
+                            </h:panelGroup> 
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 75px"  value="#{userData.userDDs['ITEM_NAME_EN']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width: 50%!important"  id="nameEn" value="#{generalBudgetFormBean.nameEn}" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:message for="nameEn"/>
+                                </h:panelGroup>
+
+                            </h:panelGroup> 
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+
+                                    <p:outputLabel style="width: 75px"  value="#{userData.userDDs['ITEM_SET']}" />
+
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:selectOneMenu  style="width: 50%;margin-right: 5px;height: 22px"  id="accgrp"  value="#{generalBudgetFormBean.groupItemEnum}" >
+                                        <f:selectItems value="#{generalBudgetFormBean.accountGroups}" var="grop" itemLabel="#{userData.userDDs[''+= grop]}" itemValue="#{grop}" /> 
+                                    </p:selectOneMenu>
+                                </h:panelGroup>                              
+
+                            </h:panelGroup>
+                        </div>
+                    </div>
+                </div>
+
+                <h:panelGrid  class=" col-sm-12 centerButtons" columns="1"  style="margin-top: 2%">
+
+                    <h:panelGroup>
+
+
+                        <p:commandButton  class="editButton" id="editB" title="#{userData.userDDs['EDIT']}" 
+                                          value="#{userData.userDDs['EDIT']}" 
+                                          icon="fa fa-fw fa-edit"
+                                          rendered="#{userData.userScreens['generalbudget'].view 
+                                                      or userData.isAdmin}"
+                                          action="#{generalBudgetFormBean.save}"
+                                          update="form"/>
+
+
+                        <p:commandButton  class="cancelButton" 
+                                          title="#{userData.userDDs['CANCEL']}" 
+                                          immediate="true"
+                                          value="#{userData.userDDs['CANCEL']}"
+                                          icon="fa fa-fw fa-backward" 
+                                          action="#{generalBudgetFormBean.cancel}"   />
+
+                        <p:commandButton  class="closeButton"  icon="fa fa-fw fa-close"   value="#{userData.userDDs['CLOSE']}" action="exit" />
+
+
+                    </h:panelGroup>
+
+                </h:panelGrid>
+
+
+            </p:fieldset>
+            <p:blockUI block="form" trigger="editB" animate="true" >
+
+                <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+            </p:blockUI>
+        </h:form>
+    </ui:define>
+</ui:composition>

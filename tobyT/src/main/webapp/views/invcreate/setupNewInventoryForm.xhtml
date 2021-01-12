@@ -1,0 +1,173 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form style="margin-right: 20px" id="form"  enctype="multipart/form-data"  dir="#{userData.dir}">
+            <p:fieldset  style="margin-bottom:20px;">                           
+
+                <div class="col-xs-12">
+                    <p:messages autoUpdate="true"  id="msgopp" showDetail="true" closable="true" rendered="#{setupNewInventoryFormMB.showGeneralMessage}"/>
+                </div>
+                <h:panelGrid id="firstSegment" columns="2"  class="col-md-12" cellspacing="10" cellpadding="0" >
+
+
+
+                    <h:panelGroup>   
+                        <h:panelGroup>
+                            <p:outputLabel for="invtype" value="نوع المخزن" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:selectOneRadio id="invtype" value="#{setupNewInventoryFormMB.invInventoryDTO.invType}"  >
+                                <f:selectItem itemLabel="مخزن" itemValue="0" />
+                                <f:selectItem itemLabel="معرض" itemValue="2" />                                
+                                <f:selectItem itemLabel="مشغل" itemValue="1" />
+                                
+                            </p:selectOneRadio>
+                        </h:panelGroup>
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 55px" value="#{userData.userDDs['CODE']}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:inputText style="width: 49%!important" id="ad1"  value="#{setupNewInventoryFormMB.invInventoryDTO.code}">
+                                <p:ajax event="blur" listener="#{setupNewInventoryFormMB.validateCode()}"  />
+                            </p:inputText>
+                        </h:panelGroup>
+
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 65px" value="#{userData.userDDs['REPOSITORY_NAME']}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:inputText style="width: 49%!important" id="ad2" value="#{setupNewInventoryFormMB.invInventoryDTO.name}">
+                                <p:ajax event="blur" listener="#{setupNewInventoryFormMB.validateName()}"  update="@form"/>
+                            </p:inputText>
+                        </h:panelGroup>
+
+                    </h:panelGroup>
+
+
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 65px" value="#{userData.userDDs['CS_NAME']}"/>
+                        </h:panelGroup>
+
+
+                        <h:panelGroup>
+                            <p:autoComplete style="width:85%" id="Cost_Center_From" 
+                                            dropdown="true"
+                                            converter="#{setupNewInventoryFormMB.costCenterDTOConverter}"
+                                            value="#{setupNewInventoryFormMB.invInventoryDTO.costCenterId}"
+
+                                            var="cost"
+                                            itemLabel="#{cost}" 
+                                            itemValue="#{cost}" 
+                                            forceSelection="true" 
+                                            completeMethod="#{setupNewInventoryFormMB.completeCostCenter}" >
+                            </p:autoComplete>
+                        </h:panelGroup> 
+
+                    </h:panelGroup>
+
+
+                    <h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel style="width:55px" value="#{userData.userDDs['ADMIN_UNIT']}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:autoComplete style="width:85%" id="ADMIN_UNIT_FROM" 
+                                            dropdown="true"
+                                            converter="#{setupNewInventoryFormMB.adminUnitDTOConverter}"
+                                            value="#{setupNewInventoryFormMB.invInventoryDTO.glAdminUnitId}"
+                                            
+                                            var="admin"
+                                            itemLabel="#{admin}" 
+                                            itemValue="#{admin}" 
+                                            forceSelection="true" 
+                                            completeMethod="#{setupNewInventoryFormMB.completeAdminUnit}" >
+                            </p:autoComplete>
+                        </h:panelGroup> 
+
+                    </h:panelGroup>
+
+
+
+                    <h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 65px" value="#{userData.userDDs['ACCOUNT_NUMBER']}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:autoComplete style="width: 85%" id="GlAccount_ID_to" 
+
+                                            dropdown="true"
+                                            converter="#{setupNewInventoryFormMB.accountDTOConverter}"
+                                            value="#{setupNewInventoryFormMB.invInventoryDTO.accountId}"
+                                            var="p"
+                                            itemLabel="#{p}" 
+                                            itemValue="#{p}" 
+                                            forceSelection="false" 
+                                            completeMethod="#{setupNewInventoryFormMB.completeGlAccount}" >
+                            </p:autoComplete>
+                        </h:panelGroup>
+
+                    </h:panelGroup>
+
+
+                </h:panelGrid>
+
+                <h:panelGrid columns="2"  class="col-md-12 centerButtons" style="margin-top: 2%">
+
+                    <h:panelGroup>
+                        <p:commandButton  class="saveButton"  
+                                          id="saveB" 
+                                          title="#{userData.userDDs['SAVE']}"
+                                          value="#{userData.userDDs['SAVE']}" 
+                                          icon="fa fa-fw fa-save" 
+                                          action="#{setupNewInventoryFormMB.save()}" 
+                                          update="@form"/>
+
+                        <p:commandButton  class="newButton" 
+                                          id="newN"
+                                          ajax="false"
+                                          icon="fa fa-fw fa-plus"
+                                          value="#{userData.userDDs['NEW']}" 
+                                          title="#{userData.userDDs['NEW']}"
+                                          onclick="form.target = ''" 
+                                          actionListener="#{setupNewInventoryFormMB.reset()}"/>
+
+                        <p:commandButton class="closeButton" 
+                                         title="#{userData.userDDs['CANCEL']}" 
+                                         immediate="true" 
+                                         value="#{userData.userDDs['CANCEL']}" 
+                                         icon="fa fa-fw fa-backward" 
+                                         action="#{setupNewInventoryFormMB.exit()}"   />
+
+                    </h:panelGroup>
+
+                    <p:blockUI block="form" trigger="saveB" animate="true" >
+
+                        <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                    </p:blockUI> 
+
+                </h:panelGrid>
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>

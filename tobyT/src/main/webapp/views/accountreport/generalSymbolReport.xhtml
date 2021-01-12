@@ -1,0 +1,192 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+
+                xmlns="http://www.w3.org/1999/xhtml">
+    <link rel="stylesheet" type="text/css" href="../../resources/css/main.css" /> 
+
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+
+        <h:form id="form" dir="#{userData.dir}" class='formmargin'>
+            <div style=" position: absolute;left: 20px"> 
+
+                <p:commandButton  style="z-index: 2;
+                                  margin-top: 12%;
+                                  color: #035c70!important; 
+                                  background-color: #223238!important;
+                                  border: 1px solid #22323a!important;
+                                  background: #22323a 50% 50% repeat-x!important;"
+                                  icon="fa fa-fw fa-home"
+                                  title="#{userData.userDDs['HOME']}"
+                                  class="smhomeButton" 
+                                  action="exit" />  
+            </div>
+            <p:fieldset legend="#{userData.userDDs['GENE_SYMB_DIREC']}" >
+
+                <div class="ui-g" id="firstSegment">
+                    <div class="ui-g-12 ui-md-6">
+                        <h:panelGroup>  
+
+                            <h:panelGroup>
+                                <p:outputLabel   value="#{userData.userDDs['SYMBOL_FROM']}" style="width:75px;margin-bottom: 5%;margin-right: 25px;"/>
+                            </h:panelGroup>
+                            <h:panelGroup >
+                                <p:selectOneMenu id="symbolNameFrom" a:autofocus="true" filter="true"
+                                                 filterMatchMode="contains" 
+                                                 value="#{generalSymbolReportMB.generalSymbolSearchBean.serialFrom}"
+                                                 style="width: 60% " >
+
+                                    <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" id="cost1"  />
+                                    <f:selectItems value="#{generalSymbolReportMB.generalSymbolList}" 
+                                                   var="symbol"
+                                                   itemLabel="#{symbol.serial} #{userData.userDDs[''+= symbol.name]}" 
+                                                   itemValue="#{symbol.serial}"/>
+                                </p:selectOneMenu>
+                            </h:panelGroup>
+
+                        </h:panelGroup>         
+                    </div>
+                    <div class="ui-g-12 ui-md-6">
+
+                        <h:panelGroup>  
+
+                            <h:panelGroup>
+                                <p:outputLabel value="#{userData.userDDs['SYMBOL_TO']}" style="width:75px;margin-bottom: 5%;margin-right: 25px;"/>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:selectOneMenu id="symbolNameTo" filter="true" filterMatchMode="contains" 
+                                                 value="#{generalSymbolReportMB.generalSymbolSearchBean.serialTo}" 
+                                                 style="width: 60%;" >
+
+                                    <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" id="cost3"  />
+                                    <f:selectItems value="#{generalSymbolReportMB.generalSymbolList}" 
+                                                   var="symbol" 
+                                                   itemLabel="#{symbol.serial} #{userData.userDDs[''+= symbol.name]}" 
+                                                   itemValue="#{symbol.serial}"/>
+                                </p:selectOneMenu>
+                            </h:panelGroup>
+
+
+                        </h:panelGroup>   
+
+                    </div>
+
+
+                </div>
+
+                <h:panelGrid class="centerButtons col-md-12" columns="1" style="margin-top: 2%;margin-bottom: 2%;">
+                    <h:panelGroup>      
+                        <h:panelGroup>          
+
+                            <p:commandButton  class="searchButton"
+                                              style="color: #f3f4f5!important;border-radius: 5px;background-color: #3F51B5!important;margin-left: 5px;"
+                                              id="saveB" value="#{userData.userDDs['SEARCH']}" 
+                                              action="#{generalSymbolReportMB.search()}" update="table" 
+                                              rendered="#{userData.userScreens['generalSymbolReport'].view or userData.isAdmin}"
+                                              /> 
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+
+                            <p:commandButton  class="newButton"    
+                                              style="color: #f3f4f5!important;border-radius: 5px;background-color: #9C27B0!important;margin-left: 5px;"
+                                              value="#{userData.userDDs['NEW']}" 
+                                              action="#{generalSymbolReportMB.reset()}" update="form" />
+
+                        </h:panelGroup>
+
+                        <h:panelGroup> 
+
+                            <p:commandButton class="printButton"  
+                                             style="color: #f3f4f5!important;border-radius: 5px;background-color: #009688!important;margin-left: 5px;"
+                                             ajax="false" onclick="form.target = '_blank'" 
+                                             value="#{userData.userDDs['PRINT']}" actionListener="#{generalSymbolReportMB.exportPDF}"/>
+
+                        </h:panelGroup>
+
+                        <h:panelGroup> 
+                            <h:commandLink  class="sdcreenimg" >  
+                                <p:graphicImage name="/img/excel.jpg" width="25"/>  
+                                <p:dataExporter type="xls"
+                                                target="table" 
+                                                fileName="دليل الرموز العامة"
+                                                postProcessor="#{generalSymbolReportMB.postProcessXLS}" />  
+                            </h:commandLink>
+                        </h:panelGroup> 
+                    </h:panelGroup>  
+
+                </h:panelGrid>
+
+
+
+
+                <p:blockUI block="form" trigger="saveB" animate="true" >
+
+                    <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                </p:blockUI>
+
+
+                <p:fieldset style="margin-bottom:20px">
+
+                    <p:dataTable 
+                        draggableColumns="true" 
+                        widgetVar="generaltable" id="table" var="gsymbol" style="margin-bottom:20px"  rowIndexVar="index" paginator="true" 
+                        value="#{generalSymbolReportMB.generalSymbolBeanListForShow}" >
+
+                        <f:facet name="header" class="col-md-12">
+
+                            <p:outputPanel>
+                                <h:outputText value="#{userData.userDDs['SEARCH']} : " 
+                                              style="font-size: large;" />
+                                <p:inputText id="globalFilter" a:autofocus="true"
+                                             onkeyup="PF('generaltable').filter()"
+                                             style="width: 18%!important;border-radius: 5px;"/>
+                            </p:outputPanel>
+                        </f:facet>
+                        <p:column style="width:3vh;font-size: 1.8vh;text-align: right;border-radius: 0px">
+                            <p:rowToggler />
+                        </p:column>
+                        <p:column  style="width:4vh;text-align:right;font-size: 1.9vh;border-radius: 0px" headerText="#">
+                            <h:outputText style="font-size: 1.5vh" value="#{index +1}" />
+                        </p:column>
+                        <p:column  style="width:12vh;text-align:right;font-size: 1.9vh;border-radius: 0px"  filterStyle="display:none"  filterBy="#{gsymbol.generalName}"  filterMatchMode="contains" headerText="#{userData.userDDs['GENERAL_SYMBOLS']} ">
+                            <h:outputText value="#{gsymbol.generalName}" style="font-size: 1.5vh;border-radius: 5px;"  />
+                        </p:column>
+                        <p:column   
+                            style="width:10vh;text-align:right;font-size: 1.9vh ;border-radius: 0px " 
+                            headerText="#{userData.userDDs['GENERAL_SYMBOL_NUMBER']}" filterBy="#{gsymbol.generalSerial}"  filterMatchMode="contains" sortBy="#{gsymbol.generalSerial} "
+                            >
+                            <h:outputText 
+                                value="#{gsymbol.generalSerial}" style="font-size: 1.5vh; " 
+                                />
+
+                        </p:column>                  
+
+                        <p:rowExpansion>
+                            <p:dataTable id="dataTable2" 
+                                         style="background-color: #0064bc;"
+                                         draggableColumns="true"
+                                         value="#{gsymbol.generalSymbolDetailReportBeanList}"
+                                         var="generalDetail">
+                                <p:column   style="width:8vh;text-align:right;font-size: 1.8vh;color:#fff!important"  headerText="#{userData.userDDs['SYMBOL_NUMBER']}">
+                                    <h:outputText value="#{generalDetail.symbolSerial}" style="font-size: 1.5vh;color:#000!important"  />
+                                </p:column>
+                                <p:column   style="width:15vh;text-align:right;font-size: 1.8vh;color:#fff!important"  headerText="#{userData.userDDs['SYMBOL_NAME']}">
+                                    <h:outputText value="#{generalDetail.symbolName}" style="font-size: 1.5vh;color:#000!important"  />
+                                </p:column>
+                            </p:dataTable>
+                        </p:rowExpansion>
+                    </p:dataTable>
+                </p:fieldset>
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>

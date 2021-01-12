@@ -1,0 +1,134 @@
+﻿<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+
+        <h:form  style="margin-right: 20px" id="form" dir="#{userData.dir}">
+            <p:fieldset legend="#{userData.userDDs['ADD_DISCOUNT_NOTI']}" id="whole"  style="margin-bottom:20px; margin-right: 15">
+                <div>
+                    <p:messages id="curmsg" showDetail="true" rendered="true" closable="true"/>   
+                </div>
+
+                <p:dataTable id="invNotice"
+                             draggableColumns="true" 
+
+                             var="invNotice" 
+                             widgetVar="bTable" 
+                             rowIndexVar="index" 
+                             value="#{invNoticeListMB.invNoticeEntityList}" 
+                             paginator="true"
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}">
+
+                    <f:facet name="header" >
+                        <p:commandButton class="saddButton" icon="fa fa-plus" 
+                                         title="#{userData.userDDs['ADD']}"
+                                         action="#{invNoticeListMB.goToAdd()}"
+                                         style="float:right" 
+                                         />
+                         <p:commandButton class="scloseButton"  icon="fa fa-fw fa-backward"  style="float: left" action="exit" />
+                        <p:outputPanel  >
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('bTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:column headerText="#" style="width: 5%" >
+                        <p:outputLabel value="#{invNotice.serial}" />
+                    </p:column>
+
+                    <p:column filterStyle="display:none"
+                              
+                              filterBy="#{invNotice.accountId}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{invNotice.accountId}"
+                              headerText="#{userData.userDDs['ACCOUNT_NUMBER']}" 
+                              style="width: 12vh;text-align: right;font-size: 1.8vh"
+                              
+                              >
+                        <p:outputLabel value="#{invNotice.accountId}" />
+                    </p:column>
+
+                    <p:column style="width: 14vh;text-align: right;font-size: 1.8vh" filterStyle="display:none"
+                              filterBy="#{invNotice.organizationSiteId}" 
+                              filterMatchMode="contains" 
+                              headerText="#{userData.userDDs['CUSTOMER']}"
+                              sortBy="#{invNotice.organizationSiteId}"
+                              >
+                        <p:outputLabel value="#{invNotice.organizationSiteId}" />
+                    </p:column>
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh" filterStyle="display:none"
+                              filterBy="#{invNotice.date}" 
+                              filterMatchMode="contains" 
+                              headerText="#{userData.userDDs['DATEE']}"
+                              sortBy="#{invNotice.date}"
+                              >
+                        <p:outputLabel value="#{invNotice.date}" >
+                            <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                        </p:outputLabel> 
+                    </p:column>
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh" filterStyle="display:none"
+                              filterBy="#{invNotice.amount}" 
+                              filterMatchMode="contains" 
+                              headerText="#{userData.userDDs['AMOUNT']}"
+                              sortBy="#{invNotice.amount}"
+                              >
+                        <p:outputLabel value="#{invNotice.amount}" />
+                    </p:column>
+
+                    <p:column style="width: 14vh;text-align: right;font-size: 1.8vh" filterStyle="display:none"
+                              filterBy="#{invNotice.typeName}" 
+                              filterMatchMode="contains" 
+                              headerText="#{userData.userDDs['TYPE']}"
+                              sortBy="#{invNotice.typeName}"
+                              >
+                        <p:outputLabel value="#{invNotice.typeName}" />
+                    </p:column>
+                    
+                    <p:column style="width: 14vh;text-align: right;font-size: 1.8vh" filterStyle="display:none"
+                              filterBy="#{invNotice.remarks}" 
+                              filterMatchMode="contains" 
+                              headerText="#{userData.userDDs['NOTE']}"
+                              sortBy="#{invNotice.remarks}"
+                              >
+                        <p:outputLabel value="#{invNotice.remarks}" />
+                    </p:column>
+
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh" headerText="#{userData.userDDs['TRANSACTION']}">
+                        <p:commandButton  class="seditButton" update="@form" icon="fa fa-fw fa-edit"
+                                         title="#{userData.userDDs['EDIT']}" 
+                                         action="#{invNoticeListMB.goToEdit()}" 
+                                         >
+                            <f:setPropertyActionListener value="#{invNotice}" 
+                                                         target="#{invNoticeListMB.invNoticeEntitySelected}" />
+                        </p:commandButton>
+
+                        <p:commandButton  class="sdeleteButton" update="form" 
+                                         icon="fa fa-remove" 
+                                         title="#{userData.userDDs['DELETE']}" 
+                                         action="#{invNoticeListMB.delete}"
+                                         >
+
+                            <f:setPropertyActionListener value="#{invNotice}"
+                                                         target="#{invNoticeListMB.invNoticeEntitySelected}" />
+                            <p:confirm header="Confirmation" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                    <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:confirmDialog>
+
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>

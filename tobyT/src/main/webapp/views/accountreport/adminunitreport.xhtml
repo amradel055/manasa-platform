@@ -1,0 +1,228 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <link rel="stylesheet" type="text/css" href="../../resources/css/main.css" /> 
+    <ui:define name="content">
+        <div class="col-xs-12">
+            <p:messages id="curmsg" showDetail="true" rendered="true" closable="true"/>   
+        </div>
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:head>
+            <title>#{userData.userDDs['ADMIN_UNIT_REPORT']}</title>
+        </h:head>
+        <style>
+
+            .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+                border: 1px solid #c5dbec;
+                background:#fff;
+            }
+
+        </style>
+        <h:body> 
+            <h:form id="form" target="_blank" style="margin-right: 20px"  dir="#{userData.dir}">
+
+                <div style=" position: absolute;left: 20px;z-index: 2"> 
+                    <p:commandButton  style="width: 90px;background-image: none!important;" 
+                                      class="viewButton searchButton"
+                                      value="Hide/Show"/>  
+                </div>
+
+                <p:fieldset style="position: relative" legend="#{userData.userDDs['ADMIN_UNIT_REPORT']}">
+
+
+
+                    <div class="firstset">
+
+                        <div class="ui-g">
+
+                            <div class="ui-g-12 ui-md-6">
+
+                                <h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 40px;margin-bottom: 3%" value="#{userData.userDDs['UNIT_NAME']}"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:inputText  style="width: 55%!important"  value="#{adminUnitMBean.adminUnitSearchBean.unitName}" />
+                                    </h:panelGroup>
+
+                                </h:panelGroup>
+                            </div>
+
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup></h:panelGroup>
+
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 40px" value="#{userData.userDDs['CODE_FROM']}"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:autoComplete style="width:75%!important" id="ADMIN_UNIT_FROM" 
+                                                        dropdown="true"
+                                                        converter="#{adminUnitMBean.glAdminUnitConverter}"
+                                                        value="#{adminUnitMBean.adminUnitSearchBean.unitCodeFrom}"
+
+                                                        var="admin"
+                                                        itemLabel="#{admin}" 
+                                                        itemValue="#{admin}" 
+                                                        forceSelection="true" 
+                                                        completeMethod="#{adminUnitMBean.completeAdminUnit}" >
+                                        </p:autoComplete>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 40px" value="#{userData.userDDs['CODE_TO']}" />
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:autoComplete style="width:75%" id="ADMIN_UNIT_TO" 
+                                                        dropdown="true"
+                                                        converter="#{adminUnitMBean.glAdminUnitConverter}"
+                                                        value="#{adminUnitMBean.adminUnitSearchBean.unitCodeTo}"
+
+                                                        var="admin"
+                                                        itemLabel="#{admin}" 
+                                                        itemValue="#{admin}" 
+                                                        forceSelection="true" 
+                                                        completeMethod="#{adminUnitMBean.completeAdminUnit}" >
+                                        </p:autoComplete>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </p:fieldset>
+
+                <p:fieldset style=" margin: 10px 0">
+                    <h:panelGrid class="col-md-12 centerButtons"  columns="1" style="margin-top: 2%">
+                        <h:panelGroup>
+
+
+                            <p:commandButton class="searchButton"  
+                                             icon="fa fa-fw fa-search-plus"  
+                                             id="searchA"
+                                             value="#{userData.userDDs['SEARCH']}"
+                                             action="#{adminUnitMBean.search()}" 
+                                             update="adminUnitTable" />
+                            
+                            <p:commandButton class="newButton" 
+                                             icon="fa fa-fw fa-plus"
+                                             id="newN"
+                                             value="#{userData.userDDs['NEW']}"  
+                                             update="adminUnitTable" />
+                            <p:commandButton class="printButton"
+                                             icon="fa fa-fw fa-print"
+                                             ajax="false" 
+                                             value="#{userData.userDDs['PRINT']}"  actionListener="#{adminUnitMBean.exportPDF}" />
+                            <h:commandLink  class="sdcreenimg">  
+                                <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                                <p:dataExporter type="xls"
+                                                target="adminUnitTable" 
+                                                fileName="الوحدات الأدارية"
+                                                postProcessor="#{adminUnitMBean.postProcessXLS}" />  
+                            </h:commandLink> 
+                        </h:panelGroup>
+                    </h:panelGrid>
+
+                    <p:blockUI block="form" trigger="searchA  newN" animate="true" >
+
+                        <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                    </p:blockUI> 
+
+                </p:fieldset>
+
+                <p:fieldset>
+
+                    <p:dataTable  id="adminUnitTable" 
+                                  paginator="true"
+                                   rows="20"
+                                  value="#{adminUnitMBean.allAdminUnitsReport}" 
+                                  var="admin" 
+                                  widgetVar="adminUnitReport">
+                                 
+                        <f:facet name="header">
+
+
+                            <p:outputPanel>
+                                <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                                <p:inputText id="globalFilter" onkeyup="PF('adminUnitReport').filter()" style="width:150px" />
+                            </p:outputPanel>
+
+                        </f:facet>
+
+                        <p:column style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto"  
+                                  headerText="#{userData.userDDs['UNIT_CODE']}"
+
+                                  filterBy="#{admin.code}" 
+                                  filterMatchMode="contains" 
+                                  sortBy="#{admin.code}"
+                                  filterable="false">
+                            <h:outputText value="#{admin.code}" style="font-size: 1.5vh"/>
+                        </p:column>
+
+                        <p:column style="width: 30vh;font-size: 1.8vh;text-align: -webkit-auto"  
+                                  headerText="#{userData.userDDs['UNIT_NAME']}"
+
+                                  filterBy="#{admin.name}" 
+                                  filterMatchMode="contains" 
+                                  sortBy="#{admin.name}"
+                                  filterable="false">
+
+                            <h:outputText value="#{admin.name}" style="font-size: 1.5vh"/>
+                        </p:column>
+
+
+                        <p:column  style="width: 30vh;font-size: 1.8vh;text-align: -webkit-auto"  
+                                   headerText="#{userData.userDDs['UNIT_PARENT']}"
+
+                                   filterBy="#{admin.parentName}" 
+                                   filterMatchMode="contains" 
+                                   sortBy="#{admin.parentName}"
+                                   filterable="false">
+
+                            <h:outputText value="#{admin.parentName}" style="font-size: 1.5vh"/>
+                        </p:column>
+
+                        <p:column style="width: 7vh;font-size: 1.8vh;text-align: -webkit-auto" 
+                                  headerText="#{userData.userDDs['LEVEL']}"
+
+                                  filterBy="#{admin.level}" 
+                                  filterMatchMode="contains" 
+                                  sortBy="#{admin.level}"
+                                  filterable="false">
+
+                            <h:outputText value="#{admin.level}" style="font-size: 1.5vh"/>
+                        </p:column>
+
+                        <p:column style="width: 7vh;font-size: 1.8vh;text-align: -webkit-auto"  
+                                  headerText="#{userData.userDDs['STATUS']}"
+
+                                  filterBy="#{admin.status}" 
+                                  filterMatchMode="contains" 
+                                  sortBy="#{admin.status}"
+                                  filterable="false">
+
+                            <h:outputText value="#{admin.status}" style="font-size: 1.5vh"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:fieldset>
+            </h:form>
+        </h:body>
+    </ui:define>
+</ui:composition>
+

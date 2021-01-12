@@ -1,0 +1,483 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <h:form id="form"  enctype="multipart/form-data"  dir="#{userData.dir}">
+            <p:fieldset  style="margin-bottom:20px"> 
+
+
+                <div class="col-xs-12">
+                    <p:messages id="curmsg" autoUpdate="true" showDetail="true" rendered="#{SalesInvoiceFormMB.showMessageGeneral}" closable="true"/>   
+                </div>
+
+                <h:panelGrid id="firstSegment" columns="2" cellspacing="10" cellpadding="0" >
+
+                    <h:panelGroup>
+                        <p:outputLabel value="رقم الفاتورة"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:outputLabel id="purchId" value="#{SalesInvoiceFormMB.salesInvoiceEntity.id}" />
+                    </h:panelGroup>
+
+
+                    <h:panelGroup>
+                        <p:outputLabel value="#{userData.userDDs['DATE']}*"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:calendar id="dateFrom" 
+                                    value="#{SalesInvoiceFormMB.salesInvoiceEntity.date}"
+                                    pattern="MM/dd/yyyy"
+                                    required="true"
+                                    style="width:100%"/>
+                    </h:panelGroup>
+                </h:panelGrid>
+
+
+                <h:panelGrid id="thirdSegment" columns="7" cellspacing="10" cellpadding="0">
+
+                    <h:panelGroup>
+                        <p:outputLabel value="مندوب المبيعات"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+
+                        <p:autoComplete style="width: fit-content" 
+                                        dropdown="true"
+                                        converter="#{SalesInvoiceFormMB.salesConverter}"
+                                        value="#{SalesInvoiceFormMB.salesInvoiceEntity.salesPerson}"
+
+                                        var="person"
+                                        itemLabel="#{person}" 
+                                        itemValue="#{person}" 
+                                        forceSelection="true" 
+                                        completeMethod="#{SalesInvoiceFormMB.completeSalesPerson}" >
+
+                        </p:autoComplete>
+
+                    </h:panelGroup>   
+
+
+                    <h:panelGroup>
+                        <p:outputLabel value="#{userData.userDDs['SINGLE_COST_CENTER']}"/>                        
+                    </h:panelGroup>
+                    <h:panelGroup>
+
+                        <p:autoComplete id="invItemCodeOut" 
+                                        style="width: fit-content" 
+                                        dropdown="true"
+                                        converter="#{SalesInvoiceFormMB.costCenterConverter}"
+                                        value="#{SalesInvoiceFormMB.salesInvoiceEntity.costCenterId}"
+
+                                        var="costCenter"
+                                        itemLabel="#{costCenter}" 
+                                        itemValue="#{costCenter}" 
+                                        forceSelection="true" 
+                                        completeMethod="#{SalesInvoiceFormMB.completeCostCenters}" >
+
+                        </p:autoComplete>
+
+                    </h:panelGroup>
+
+                </h:panelGrid>
+
+                <h:panelGrid id="sexSegment" columns="10" cellspacing="10" cellpadding="5">
+
+                    <h:panelGroup>
+                        <p:outputLabel value="نوع الخصم"/>
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <p:fieldset>
+                            <p:selectOneRadio id="PURCHASE_NUMBER" 
+                                              style="width:100%"
+                                              value="#{SalesInvoiceFormMB.salesInvoiceEntity.discountType}"  >                        
+                                <f:selectItem itemLabel="قيمة" itemValue="0"   />
+                                <f:selectItem itemLabel="نسبة"  itemValue="1"/>
+
+                                <p:ajax update="invPurchaseInvoiceDetailsTable" listener="#{SalesInvoiceFormMB.calculateTotalNetAfterDiscount()}" />
+                            </p:selectOneRadio> 
+                        </p:fieldset>
+                    </h:panelGroup>  
+
+
+                    <h:panelGroup></h:panelGroup>
+
+                    <h:panelGroup>
+                        <p:outputLabel value="قيمة الخصم"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:inputText id="discount" value="#{SalesInvoiceFormMB.salesInvoiceEntity.headDiscount}" >
+                            <p:ajax event="blur" listener="#{SalesInvoiceFormMB.calculateTotalNetAfterDiscount()}" update="invPurchaseInvoiceDetailsTable"/>
+                        </p:inputText>
+                    </h:panelGroup>
+
+
+                    <h:panelGroup></h:panelGroup>
+                    <h:panelGroup></h:panelGroup>
+
+                    <h:panelGroup></h:panelGroup>
+                    <h:panelGroup></h:panelGroup>
+                    <h:panelGroup></h:panelGroup>
+                    <h:panelGroup></h:panelGroup>
+
+                    <h:panelGroup>
+                        <p:outputLabel value="الخزينة"/>
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+
+                        <p:autoComplete style="width: fit-content" 
+                                        dropdown="true"
+                                        converter="#{SalesInvoiceFormMB.glBankConverter}"
+                                        value="#{SalesInvoiceFormMB.salesInvoiceEntity.glBank}"
+
+                                        var="bank" 
+                                        itemLabel="#{bank}"
+                                        itemValue="#{bank}"
+                                        forceSelection="true" 
+                                        completeMethod="#{SalesInvoiceFormMB.completeGlBank(query)}" >
+
+                        </p:autoComplete>
+
+                    </h:panelGroup>
+
+
+
+                    <h:panelGroup></h:panelGroup>
+                    <h:panelGroup></h:panelGroup>
+                    <h:panelGroup>
+                        <p:outputLabel value="ملاحظات"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:inputText id="remarks" value="#{SalesInvoiceFormMB.salesInvoiceEntity.remarks}" />
+                    </h:panelGroup>
+
+
+                </h:panelGrid>
+
+
+            </p:fieldset>
+
+
+
+            <!-- begin table -->
+            <p:fieldset  style="margin-bottom:20px">
+                <div class="col-xs-12">
+                    <p:messages id="curmsg2" autoUpdate="true" showDetail="true" rendered="#{SalesInvoiceFormMB.showMessageDetails}" closable="true"/>   
+                </div>
+
+                <p:remoteCommand name="onCellEdit" update="invPurchaseInvoiceDetailsTable" />
+
+                <p:dataTable id="invPurchaseInvoiceDetailsTable"
+                             widgetVar="invPurchaseInvoiceDetailsTable"
+                             style="margin-bottom:20px"
+                             var="invPurchaseInvoiceDetailsTable"
+                             rowIndexVar="index" 
+                             dir="rtl" 
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                             editable="true"
+                             editMode="cell"
+                             selectionMode="single"
+                             rowKey="#{invPurchaseInvoiceDetailsTable}"
+                             selection="#{SalesInvoiceFormMB.invPurchaseInvoiceDetailsUpdatedSelected}"
+                             value="#{SalesInvoiceFormMB.invPurchaseInvoiceDetailsEntityList}" >
+
+
+                    <f:facet name="header" class="col-md-12">
+                        <p:commandButton id="addnew"
+                                         icon="fa fa-plus"
+                                         title="#{userData.userDDs['ADD']}" 
+                                         actionListener="#{SalesInvoiceFormMB.addInvPurchaseInvoiceDetail()}" 
+                                         update="invPurchaseInvoiceDetailsTable" 
+                                         ajax="true"
+                                         style="float:right"/>
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('bTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:ajax event="cellEdit" listener="#{SalesInvoiceFormMB.onCellEdit}" oncomplete="onCellEdit()"  />
+
+                    <p:column headerText="#" style="width: 3px" class="col-xs-1">
+                        <h:outputText value="#{index + 1}"  />
+                    </p:column>
+
+
+                    <p:column id="itemNumber" headerText="#{userData.userDDs['ITEM_NUMBER']}">
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <p:autoComplete id="invItemCodeOut" 
+                                                style="width: fit-content" 
+                                                dropdown="true"
+                                                converter="#{SalesInvoiceFormMB.itemConverter}"
+                                                value="#{invPurchaseInvoiceDetailsTable.invItem}"
+
+                                                var="item"
+                                                itemLabel="#{item}" 
+                                                itemValue="#{item}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{SalesInvoiceFormMB.completeItemsData}" >
+
+                                    <p:ajax update="invPurchaseInvoiceDetailsTable"
+                                            event="itemSelect"
+                                            listener="#{SalesInvoiceFormMB.validateItems(invPurchaseInvoiceDetailsTable)}" />
+                                    <p:ajax update="invPurchaseInvoiceDetailsTable"
+                                            event="change"
+                                            listener="#{SalesInvoiceFormMB.validateItems(invPurchaseInvoiceDetailsTable)}" />
+                                </p:autoComplete>
+                            </f:facet>
+
+                            <f:facet name="input">
+                                <p:autoComplete id="invItemCodeIn" 
+                                                style="width: fit-content"
+                                                dropdown="true"
+                                                converter="#{SalesInvoiceFormMB.itemConverter}"
+                                                value="#{invPurchaseInvoiceDetailsTable.invItem}"
+
+                                                var="item"
+                                                itemLabel="#{item}" 
+                                                itemValue="#{item}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{SalesInvoiceFormMB.completeItemsData}" >
+
+                                    <p:ajax update="invPurchaseInvoiceDetailsTable"
+                                            event="itemSelect"
+                                            listener="#{SalesInvoiceFormMB.validateItems(invPurchaseInvoiceDetailsTable)}" />
+                                    <p:ajax update="invPurchaseInvoiceDetailsTable"
+                                            event="change"
+                                            listener="#{SalesInvoiceFormMB.validateItems(invPurchaseInvoiceDetailsTable)}" />
+                                </p:autoComplete>
+                            </f:facet>
+                        </p:cellEditor>
+                    </p:column>
+
+                    <p:column id="itemName" headerText="#{userData.userDDs['ITEM_NAME']}">
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <p:autoComplete id="invItemNameOut" 
+                                                dropdown="true"
+                                                style="width: fit-content"
+                                                converter="#{SalesInvoiceFormMB.itemConverter}"
+                                                value="#{invPurchaseInvoiceDetailsTable.invItem}"
+
+                                                var="item"
+                                                itemLabel="#{item}" 
+                                                itemValue="#{item}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{SalesInvoiceFormMB.completeItemsData}" >
+
+                                    <p:ajax update="invPurchaseInvoiceDetailsTable"
+                                            event="itemSelect"
+                                            listener="#{SalesInvoiceFormMB.validateItems(invPurchaseInvoiceDetailsTable)}" />
+                                    <p:ajax update="invPurchaseInvoiceDetailsTable"
+                                            event="change"
+                                            listener="#{SalesInvoiceFormMB.validateItems(invPurchaseInvoiceDetailsTable)}" />
+                                </p:autoComplete>
+                            </f:facet>
+
+                            <f:facet name="input">
+                                <p:autoComplete id="invItemNameIn" 
+                                                dropdown="true"
+                                                style="width: fit-content"
+                                                converter="#{SalesInvoiceFormMB.itemConverter}"
+                                                value="#{invPurchaseInvoiceDetailsTable.invItem}"
+
+                                                var="item"
+                                                itemLabel="#{item}" 
+                                                itemValue="#{item}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{SalesInvoiceFormMB.completeItemsData}" >
+
+                                    <p:ajax update="invPurchaseInvoiceDetailsTable"
+                                            event="itemSelect"
+                                            listener="#{SalesInvoiceFormMB.validateItems(invPurchaseInvoiceDetailsTable)}" />
+                                    <p:ajax update="invPurchaseInvoiceDetailsTable"
+                                            event="change"
+                                            listener="#{SalesInvoiceFormMB.validateItems(invPurchaseInvoiceDetailsTable)}" />
+
+                                </p:autoComplete>
+                            </f:facet>
+                        </p:cellEditor>              
+                    </p:column>
+
+                    <p:column id="Unit" headerText="#{userData.userDDs['UNIT_NUMBER']}">
+
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <p:autoComplete id="UnitOut" 
+                                                disabled="#{invPurchaseInvoiceDetailsTable.invItem eq null}"
+                                                dropdown="true"
+                                                style="width: fit-content"
+                                                converter="#{SalesInvoiceFormMB.unitConverter}"
+                                                value="#{invPurchaseInvoiceDetailsTable.unit}"
+
+                                                var="unit"
+                                                itemLabel="#{unit}" 
+                                                itemValue="#{unit}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{SalesInvoiceFormMB.completeSymbolUnit}" >
+
+                                    <f:attribute name="unitName" value="#{invPurchaseInvoiceDetailsTable}"/>
+
+                                    <p:ajax update="invPurchaseInvoiceDetailsTable"
+                                            event="itemSelect"
+                                            listener="#{SalesInvoiceFormMB.validateUnit(invPurchaseInvoiceDetailsTable)}" />
+                                    <p:ajax update="invPurchaseInvoiceDetailsTable"
+                                            event="change"
+                                            listener="#{SalesInvoiceFormMB.validateUnit(invPurchaseInvoiceDetailsTable)}" />
+
+
+                                </p:autoComplete>
+                            </f:facet>
+
+                            <f:facet name="input">
+                                <p:autoComplete id="UnitIn" 
+                                                dropdown="true"
+                                                disabled="#{invPurchaseInvoiceDetailsTable.invItem eq null}"
+                                                style="width: fit-content"
+                                                converter="#{SalesInvoiceFormMB.unitConverter}"
+                                                value="#{invPurchaseInvoiceDetailsTable.unit}"
+
+                                                var="unit"
+                                                itemLabel="#{unit}" 
+                                                itemValue="#{unit}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{SalesInvoiceFormMB.completeSymbolUnit}" >
+
+                                    <p:ajax update="invPurchaseInvoiceDetailsTable"
+                                            event="itemSelect"
+                                            listener="#{SalesInvoiceFormMB.validateUnit(invPurchaseInvoiceDetailsTable)}" />
+                                    <p:ajax update="invPurchaseInvoiceDetailsTable"
+                                            event="change"
+                                            listener="#{SalesInvoiceFormMB.validateUnit(invPurchaseInvoiceDetailsTable)}" />
+
+                                </p:autoComplete>
+                            </f:facet>
+                        </p:cellEditor> 
+
+
+                    </p:column>
+
+
+                    <p:column id="Quantity" headerText="#{userData.userDDs['QUANTITY']}">
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <h:outputText value="#{invPurchaseInvoiceDetailsTable.quantity}"  />
+                            </f:facet>
+
+                            <f:facet name="input">
+                                <p:inputText id="QuantityT" 
+                                             disabled="#{invPurchaseInvoiceDetailsTable.invItem eq null}"
+                                             value="#{invPurchaseInvoiceDetailsTable.quantity}" 
+                                             style="width:100%"/>
+
+                            </f:facet>
+                        </p:cellEditor>        
+
+                    </p:column>
+
+                    <p:column id="COST" headerText="السعر">
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <h:outputText value="#{invPurchaseInvoiceDetailsTable.cost}"  />
+                            </f:facet>
+
+                            <f:facet name="input">
+                                <p:inputText id="costT"
+                                             disabled="#{invPurchaseInvoiceDetailsTable.invItem eq null}"
+                                             value="#{invPurchaseInvoiceDetailsTable.cost}"
+                                             style="width:100%"/>
+
+                            </f:facet>
+                        </p:cellEditor>        
+                    </p:column>
+
+                    <p:column id="DISCOUNT" headerText="#{userData.userDDs['DISCOUNT']}">
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <h:outputText value="#{invPurchaseInvoiceDetailsTable.discount} %"  />
+                            </f:facet>
+
+                            <f:facet name="input">
+                                <p:inputText id="discountT" value="#{invPurchaseInvoiceDetailsTable.discount}" style="width:100%"/>
+
+                            </f:facet>
+                        </p:cellEditor>        
+                    </p:column>
+
+                    <p:column id="TOTAL" headerText="الاجمالى">
+                        <p:outputLabel  value="#{invPurchaseInvoiceDetailsTable.total}"  />
+                    </p:column>
+
+                    <p:column id="net" headerText="الصافي">
+                        <p:outputLabel  value="#{invPurchaseInvoiceDetailsTable.net}"  />
+                    </p:column>
+
+
+                    <p:columnGroup type="footer">
+                        <p:row>
+                            <p:column colspan="4" style="text-align:right" footerText="#{userData.userDDs['TOTAL']}  :" />
+                            <p:column id="totalQuantity" footerText="#{SalesInvoiceFormMB.totalQuatity}" />
+                            <p:column />
+                            <p:column />
+                            <p:column id="totalSum" footerText="#{SalesInvoiceFormMB.totalSum}" />
+                            <p:column id="totalNet" footerText="#{SalesInvoiceFormMB.totalNet}" />
+
+                        </p:row>
+
+                        <p:row>
+                            <p:column colspan="8" style="text-align:right" footerText="الأجمالى بعد الخصم الكلي : " />
+                            <p:column id="totalNetAfterDiscount" footerText="#{SalesInvoiceFormMB.totalNetAfterDiscount}" />
+                        </p:row>
+                    </p:columnGroup>
+
+                    <p:column style="width: 14%" headerText="#{userData.userDDs['TRANSACTION']}">
+
+                        <p:commandButton id="b7" icon="fa fa-plus"
+                                         title="#{userData.userDDs['ADD']}" 
+                                         actionListener="#{SalesInvoiceFormMB.addInvPurchaseInvoiceDetail}" 
+                                         update="invPurchaseInvoiceDetailsTable"
+                                         ajax="true" />
+
+                        <p:commandButton update="invPurchaseInvoiceDetailsTable"
+                                         title="#{userData.userDDs['DELETE']}" 
+                                         action="#{SalesInvoiceFormMB.deleteInvPurchaseInvoiceDetail()}"
+                                         icon="fa fa-remove" >
+
+                            <f:setPropertyActionListener value="#{invPurchaseInvoiceDetailsTable}"
+                                                         target="#{SalesInvoiceFormMB.invPurchaseInvoiceDetailsEntitySelected}"/>
+                            <p:confirm header="#{userData.userDDs['COFIGRATION']}" 
+                                       message="#{userData.userDDs['ARE_YOU_SURE']}"
+                                       icon="ui-icon-alert" />
+                        </p:commandButton>
+
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column >
+
+                </p:dataTable>
+
+            </p:fieldset> 
+
+            <p:commandButton id="saveB" 
+                             title="#{userData.userDDs['SAVE']}"
+                             value="#{userData.userDDs['SAVE']}" 
+                             icon="fa fa-fw fa-save"
+                             action="#{SalesInvoiceFormMB.save()}"
+                             update="@form"/>
+            <p:commandButton id="cancel" title="#{userData.userDDs['CANCEL']}" 
+                             value="#{userData.userDDs['CANCEL']}" 
+                             icon="fa fa-fw fa-save"
+                             action="#{SalesInvoiceFormMB.exit()}" update="@form"/>
+
+        </h:form>
+    </ui:define>
+</ui:composition>

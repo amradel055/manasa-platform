@@ -1,0 +1,209 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <link rel="stylesheet" type="text/css" href="../../resources/css/main.css" /> 
+    <link rel="stylesheet" type="text/css" href="./../../resources/css/custom.css" /> 
+    <ui:define name="content">
+        <style >
+            .colored {                
+                background: #0064bc ;
+                color: #fff ;
+                font-size: 12px;
+            }
+        </style>
+        <style >
+            .lossColored {                
+                background: #A20404 ;
+                color: #fff ;
+                font-size: 12px;
+            }
+        </style>
+        <style >
+            .profitColor{                
+                background: #61F645  ;
+                color: #000000 ;
+                font-size: 12px;
+            }
+        </style>
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form  class='formmargin' id="form" dir="#{userData.dir}">
+            <div class="col-xs-12">
+                <p:messages autoUpdate="true"  id="msg2" showDetail="true" 
+                            closable="true" rendered="true" />
+            </div>
+            <div style=" position: absolute;left: 20px"> 
+
+                <p:commandButton  style="z-index: 2;
+                                      margin-top: 13%;
+                                      color: #035c70!important; 
+                                      background-color: #223238!important;
+                                      border: 1px solid #22323a!important;
+                                      background: #22323a 50% 50% repeat-x!important;"
+                                      icon="fa fa-fw fa-home"
+                                      title="#{userData.userDDs['HOME']}"
+                                      class="smhomeButton" 
+                                      action="exit" />
+                     
+                    <p:commandButton  style="z-index: 2;
+                                      margin-top: 12%!important;
+                                      color: #035c70!important; 
+                                      background-color: #223238!important;
+                                      border: 1px solid #22323a!important;
+                                      background: #22323a 50% 50% repeat-x!important;" 
+                                      class="viewButton sminimize"
+                                      icon="fa fa-window-minimize"
+                                      title="إظهار/إخفاء"/>  
+            </div>
+            <p:fieldset legend="#{userData.userDDs['INCOM_MEN']}"
+                        style=" position: relative">
+
+
+                <div class="ui-g-12 ui-g-nopad back firstset">
+                    <div class="ui-g">
+
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:85px;margin-right: 4%;" value="#{userData.userDDs['LEVEL']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width:50%!important" value="#{incomeMenuMB.level}"/>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div> 
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width:85px;margin-right: 4%;"  value="#{userData.userDDs['UNTIL_DATE']}"/>
+                                </h:panelGroup>
+                                <p:calendar  style="width:50%!important" id="dateTo" value="#{incomeMenuMB.dateTo}" pattern="dd/MM/yyyy">
+                                    <p:ajax listener="#{incomeMenuMB.checkDate(true)}" event="dateSelect" update="dateTo"/>
+                                </p:calendar>
+
+
+                            </h:panelGroup>
+                        </div> 
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>   
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:90px;margin-right: 4%;" value="#{userData.userDDs['FINANCE_YEAR']}"/>
+
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:selectOneMenu style="width:50%" id="year" filter="true" filterMatchMode="contains"   value="#{incomeMenuMB.glYearSelection}" converter="#{incomeMenuMB.glYearConverter}"   >
+                                        <p:ajax update=" dateTo" listener="#{incomeMenuMB.pushGlYearSelection()}" />
+                                        <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"  itemValue="" />
+                                        <f:selectItems value="#{incomeMenuMB.glYearList}"  var="year" itemLabel="#{year.name}" itemValue="#{year}"/>
+                                    </p:selectOneMenu>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width:90px;margin-right: 4%;" value="#{userData.userDDs['ZERO_BALANCE']}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:selectBooleanCheckbox style="width:55%;" value="#{incomeMenuMB.zeroAmount}">
+                                        <p:ajax  listener="#{incomeMenuMB.deleteZeroRecords}" update="@form" />
+                                    </p:selectBooleanCheckbox>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div> 
+                    </div> 
+                </div> 
+                <h:panelGrid  class="col-md-12 centerButtons"  columns="1">
+
+                    <h:panelGroup>
+                        <p:commandButton class="searchButtons"   style="background-color: #148dc2!important;color: #fff!important;margin-left: 5px"
+                                         value="#{userData.userDDs['SEARCH']}" action="#{incomeMenuMB.search()}"
+                                         id="serachS"
+                                         update="dataTable"/>
+                        <p:commandButton class="printButtons"  style=" background-color: #030570de !important;color: #fff!important;margin-left: 5px" 
+                                         ajax="false" onclick="form.target = '_blank'" value="#{userData.userDDs['PRINT']} "
+                                         actionListener="#{incomeMenuMB.exportPDF}"/>
+                        <h:commandLink class="sdcreenimg">  
+                            <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                            <p:dataExporter type="xls"
+                                            target="dataTable" 
+                                            fileName="قائمة الدخل"
+                                            postProcessor="#{incomeMenuMB.postProcessXLS}" />  
+                        </h:commandLink>
+                        <p:blockUI block="form" trigger="serachS" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI> 
+                    </h:panelGroup>
+
+                </h:panelGrid>
+
+            </p:fieldset>
+
+            <p:fieldset>
+
+                <p:dataTable 
+                    
+                    paginator="true"
+                    rows="20"
+                    id="dataTable"  value="#{incomeMenuMB.incomeMenuBeanViewList}" 
+                    var="menu" 
+                    widgetVar="incMenue"
+                    rowStyleClass="#{(menu.level eq 1 or menu.level eq null) ? '' : null} " >
+                    <f:facet name="header" class="col-md-12">
+
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large;" />
+                            <p:inputText   id="globalFilter"   onkeyup="PF('incMenue').filter()" style="width:30%!important;" />
+                        </p:outputPanel>
+
+                    </f:facet>
+
+                    <p:column headerText="#{userData.userDDs['ACCOUNT_COD']}"
+                              filterBy="#{menu.accountNumber}"  filterMatchMode="contains" sortBy="#{menu.accountNumber}" filterable="false"
+                              style="width:12vh;font-size: 1.5vh;text-align: -webkit-auto;border-radius: 0px" >
+                        <h:outputText value="#{menu.accountNumber}" style="font-size:12px"/>
+                    </p:column>
+
+                    <p:column headerText="#{userData.userDDs['ACCOUNT_NAME']}" 
+                              filterBy="#{menu.accountName}"  filterMatchMode="contains" sortBy="#{menu.accountName}" filterable="false"
+                              style="width:12vh;font-size: 1.5vh;text-align: -webkit-auto;border-radius: 0px">
+                        <h:outputText value="#{menu.accountName}" style="font-size:12px"/>
+                    </p:column>
+
+                    <p:column  headerText="#{userData.userDDs['LEVEL']}"
+                               filterBy="#{menu.level}"  filterMatchMode="contains" sortBy="#{menu.level}" filterable="false"
+                               style="width:10vh;font-size: 1.5vh;text-align: -webkit-auto;border-radius: 0px">
+                        <h:outputText value="#{menu.level}" style="font-size:12px" rendered="#{menu.appearenceOfTotal eq false}"/>
+                    </p:column>
+
+                    <p:column headerText="#{userData.userDDs['AMOUNT']}"
+                              filterBy="#{menu.value}"  filterMatchMode="contains" sortBy="#{menu.value}" filterable="false"
+                              style="width:10vh;font-size: 1.5vh;text-align: -webkit-auto;border-radius: 0px" >
+                        <h:outputText value="#{menu.value}" style="font-size:12px;color: #fff"/>
+                    </p:column>
+
+                    <p:column headerText="#{userData.userDDs['PERCENTAGE']}" 
+                              filterBy="#{menu.ratio}"  filterMatchMode="contains" sortBy="#{menu.ratio}" filterable="false"
+                              style="width:12vh;font-size: 1.5vh;text-align: -webkit-auto;border-radius: 0px">
+                        <h:outputText value="% #{menu.ratio}" rendered="#{menu.appearenceOfTotal eq false}" style="font-size:12px"/>
+                    </p:column>
+                </p:dataTable> 
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>

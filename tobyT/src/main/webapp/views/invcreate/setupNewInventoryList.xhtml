@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form  style="margin-right: 20px" dir="#{userData.dir}">
+            <p:fieldset legend="#{userData.userDDs['CREATE_INVENTORY']}"  style="margin-bottom:20px">
+
+                <div class="col-xs-12">
+                    <p:messages autoUpdate="true"  id="msgopp" showDetail="true" closable="true" rendered="true"/>
+                </div>
+
+                <div >
+                    <p:dataTable 
+                        draggableColumns="true" draggableRows="true"
+                        var="invInventoryTable" widgetVar="bTable"  rowIndexVar="index" 
+                        value="#{setupNewInventoryListMB.invInventories}" rows="#{userData.rowListCount}" 
+                        paginator="true" emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                        id="invInventoryDataTable">
+
+                        <f:facet name="header" class="col-md-12">
+                            <p:commandButton class="saddButton" icon="fa fa-plus" title="#{userData.userDDs['ADD']}"
+                                             action="#{setupNewInventoryListMB.goToAdd()}" 
+                                             style="float:right"
+                                             rendered="#{userData.userScreens['invcreate'].add or userData.isAdmin}"/>
+                            <p:outputPanel  >
+                                <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                                <p:inputText id="globalFilter" a:autofocus="true" onkeyup="PF('bTable').filter()" style="width:150px" />
+                            </p:outputPanel>
+                        </f:facet>
+
+                        <p:column style="width: 8vh;text-align: right;font-size: 1.8vh"  
+                                  filterStyle="display:none" filterBy="#{invInventoryTable.code}"  
+                                  filterMatchMode="contains" headerText="#{userData.userDDs['CODE']}" sortBy="#{invInventoryTable.code}">
+                            <p:outputLabel  value="#{invInventoryTable.code}" />
+                        </p:column>
+
+                        <p:column  style="width: 10vh;text-align: right;font-size: 1.8vh"  
+                                   filterStyle="display:none" filterBy="#{invInventoryTable.name}"  
+                                   filterMatchMode="contains" headerText="#{userData.userDDs['INVENT_NAM']}" sortBy="#{invInventoryTable.name}" >
+                            <p:outputLabel value="#{invInventoryTable.name}" />
+                        </p:column>
+                        <p:column  style="width: 10vh;text-align: right;font-size: 1.8vh"  
+                                   filterStyle="display:none" filterBy="#{invInventoryTable.typeItem}"  
+                                   filterMatchMode="contains" headerText="#{userData.userDDs['PRODUCT_TYPE']}" sortBy="#{invInventoryTable.typeItem}" >
+                            <p:outputLabel value="#{invInventoryTable.typeItem}" />
+                        </p:column>
+
+                        <p:column  style="width: 14vh;text-align: right;font-size: 1.8vh"  
+                                   filterStyle="display:none" filterBy="#{invInventoryTable.adminUnitId}"  
+                                   filterMatchMode="contains" headerText="#{userData.userDDs['ADMIN_UNIT']}" sortBy="#{invInventoryTable.adminUnitId}" >
+                            <p:outputLabel value="#{invInventoryTable.adminUnitId.name}" />
+                        </p:column>
+
+                        <p:column  style="width: 14vh;text-align: right;font-size: 1.8vh"  
+                                   filterStyle="display:none" filterBy="#{invInventoryTable.costCenterId}"  
+                                   filterMatchMode="contains" headerText="#{userData.userDDs['SINGLE_COST_CENTER']}" 
+                                   sortBy="#{invInventoryTable.costCenterId}" >
+                            <p:outputLabel value="#{invInventoryTable.costCenterId.name}" />
+                        </p:column>
+
+
+                        <p:column style="width: 10vh;text-align: right;font-size: 1.8vh"  headerText="#{userData.userDDs['TRANSACTION']}" >
+                            <p:commandButton class="seditButton" update="@form" 
+                                             icon="fa fa-fw fa-edit"
+                                             title="#{userData.userDDs['EDIT']}"
+                                             action="#{setupNewInventoryListMB.goToEdit()}" 
+                                             rendered="#{userData.userScreens['invcreate'].edit or userData.isAdmin}">
+                                <f:setPropertyActionListener value="#{invInventoryTable.id}"
+                                                             target="#{setupNewInventoryListMB.invInventorySelected}" />
+                            </p:commandButton>
+                            <p:commandButton class="sdeleteButton" update="@form"
+                                             icon="fa fa-remove"
+                                             title="#{userData.userDDs['DELETE']}" 
+                                             action="#{setupNewInventoryListMB.delete()}" 
+                                             rendered="#{userData.userScreens['invcreate'].delete or userData.isAdmin}">
+
+                                <f:setPropertyActionListener value="#{invInventoryTable}" 
+                                                             target="#{setupNewInventoryListMB.invInventory}" />
+                                <p:confirm header="Confirmation" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                            </p:commandButton>
+                        </p:column>
+
+                    </p:dataTable> 
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                        <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog>
+                </div>
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>
+
+

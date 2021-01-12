@@ -1,0 +1,401 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <link rel="stylesheet" type="text/css" href="../../resources/css/main.css"/>
+    <ui:define name="content">
+        <div class="col-xs-12">
+            <p:messages autoUpdate="true"  showDetail="true" closable="true" rendered="true" />
+        </div>
+        <f:event listener="#{userData.authorize}" type="preRenderView"/>
+        <h:head>
+            <title>#{userData.userDDs['ACCOUNT_REPORT']}</title>
+        </h:head>
+        <style>
+
+            .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+                border: 1px solid #c5dbec;
+                background:#fff;
+            }
+
+        </style>
+        <h:body>
+            <h:form style="margin-right: 20px"  id="form"  dir="#{userData.dir}">
+
+                <div style=" position: absolute;left: 20px"> 
+
+                    <p:commandButton  style="width: 90px;background-image: none!important;z-index: 2" 
+                                      class="viewButton searchButton"
+                                      value="Hide/Show"/>  
+                </div>
+
+                <p:fieldset id="TopFieldSet"   
+                            legend="#{userData.userDDs['STATEMENT_MONTH_ACCOUNT']}" 
+                            style=" position: relative">
+
+                    <div class="firstset">
+
+                        <p:remoteCommand name="rc" update="subaccc" />
+                        <div class="ui-g-12 ui-g-nopad">
+                            <div class="ui-g">
+
+                                <div class="ui-g-12 ui-md-6">
+                                    <h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:outputLabel style="width: 65px" value="#{userData.userDDs['FROM_ACCOUNT']}" for="GlAccount_ID_from" />
+                                        </h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:autoComplete style="width: 75%" id="GlAccount_ID_from" 
+
+                                                            dropdown="true"
+                                                            converter="#{balanceAccountMonthlyMB.accountConverter}"
+                                                            value="#{balanceAccountMonthlyMB.glAccountSelectedFrom}"
+                                                            var="p"
+                                                            itemLabel="#{p}" 
+                                                            itemValue="#{p}" 
+                                                            forceSelection="false" 
+                                                            completeMethod="#{balanceAccountMonthlyMB.completeGlAccount}" >
+                                            </p:autoComplete>
+                                        </h:panelGroup>
+                                    </h:panelGroup>
+                                </div>
+                                <div class="ui-g-12 ui-md-6">
+                                    <h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:outputLabel style="width: 65px" value="#{userData.userDDs['TO_ACCOUNT']}" for="GlAccount_ID_to"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:autoComplete style="width: 75%" id="GlAccount_ID_to" 
+
+                                                            dropdown="true"
+                                                            converter="#{balanceAccountMonthlyMB.accountConverter}"
+                                                            value="#{balanceAccountMonthlyMB.glAccountSelectedTo}"
+                                                            var="p"
+                                                            itemLabel="#{p}" 
+                                                            itemValue="#{p}" 
+                                                            forceSelection="false" 
+                                                            completeMethod="#{balanceAccountMonthlyMB.completeGlAccount}" >
+                                            </p:autoComplete>
+                                        </h:panelGroup>
+                                    </h:panelGroup>
+                                </div>
+                                <div class="ui-g-12 ui-md-6">
+                                    <h:panelGroup>
+                                        <h:panelGroup> 
+                                            <p:outputLabel style="width: 65px" value="#{userData.userDDs['FROM_COST_CENTER']}" for="Cost_Center_From"/>
+                                        </h:panelGroup>
+
+                                        <h:panelGroup>
+                                            <p:autoComplete style="width:75%" id="Cost_Center_From" 
+                                                            dropdown="true"
+                                                            converter="#{balanceAccountMonthlyMB.costCenterConverter}"
+                                                            value="#{balanceAccountMonthlyMB.costCenterFromSelected}"
+
+                                                            var="cost"
+                                                            itemLabel="#{cost}" 
+                                                            itemValue="#{cost}" 
+                                                            forceSelection="true" 
+                                                            completeMethod="#{balanceAccountMonthlyMB.completeCostCenter}" >
+                                            </p:autoComplete>
+                                        </h:panelGroup>
+                                    </h:panelGroup>
+                                </div>
+                                <div class="ui-g-12 ui-md-6">
+                                    <h:panelGroup> 
+                                        <h:panelGroup>
+                                            <p:outputLabel style="width: 65px" value="#{userData.userDDs['COST_CENTER_TO']}" for="COST_CENTER_TO"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:autoComplete style="width:75%" id="COST_CENTER_TO" 
+                                                            dropdown="true"
+                                                            converter="#{balanceAccountMonthlyMB.costCenterConverter}"
+                                                            value="#{balanceAccountMonthlyMB.costCenterToSelected}"
+
+                                                            var="cost"
+                                                            itemLabel="#{cost}" 
+                                                            itemValue="#{cost}" 
+                                                            forceSelection="true" 
+                                                            completeMethod="#{balanceAccountMonthlyMB.completeCostCenter}" >
+                                            </p:autoComplete>
+                                        </h:panelGroup>
+                                    </h:panelGroup>
+                                </div>
+                                <div class="ui-g-12 ui-md-6">
+                                    <h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:outputLabel style="width: 65px" value="#{userData.userDDs['FROM_ADMIN_UNIT']}" for="ADMIN_UNIT_FROM"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:autoComplete style="width:75%" id="ADMIN_UNIT_FROM" 
+                                                            dropdown="true"
+                                                            converter="#{balanceAccountMonthlyMB.glAdminUnitConverter}"
+                                                            value="#{balanceAccountMonthlyMB.glAdminUnitFromSelected}"
+                                                            var="admin"
+                                                            itemLabel="#{admin}" 
+                                                            itemValue="#{admin}" 
+                                                            forceSelection="true" 
+                                                            completeMethod="#{balanceAccountMonthlyMB.completeAdminUnit}" >
+                                            </p:autoComplete>
+                                        </h:panelGroup>
+                                    </h:panelGroup>
+                                </div>
+                                <div class="ui-g-12 ui-md-6">
+
+                                    <h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:outputLabel style="width: 65px" value="#{userData.userDDs['TO_ADMIN_UNIT']}" for="ADMIN_UNIT_TO"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:autoComplete style="width:75%" id="ADMIN_UNIT_TO" 
+                                                            dropdown="true"
+                                                            converter="#{balanceAccountMonthlyMB.glAdminUnitConverter}"
+                                                            value="#{balanceAccountMonthlyMB.glAdminUnitToSelected}"
+                                                            var="admin"
+                                                            itemLabel="#{admin}" 
+                                                            itemValue="#{admin}" 
+                                                            forceSelection="true" 
+                                                            completeMethod="#{balanceAccountMonthlyMB.completeAdminUnit}" >
+
+
+                                            </p:autoComplete>
+                                        </h:panelGroup>
+                                    </h:panelGroup>
+                                </div>
+                                <div class="ui-g-12 ui-md-6">
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 65px; margin-bottom: 2%"
+                                                       value="#{userData.userDDs['FROM_MONTH']}"/>
+                                        <p:selectOneMenu value="#{balanceAccountMonthlyMB.fromMonth}" style="width:57%">
+                                            <f:selectItem itemLabel="#{userData.userDDs['JAN']}" itemValue="1" />
+                                            <f:selectItem itemLabel="#{userData.userDDs['FEB']}" itemValue="2" />
+                                            <f:selectItem itemLabel="#{userData.userDDs['MARCH']}" itemValue="3" />
+                                            <f:selectItem itemLabel="#{userData.userDDs['APRIL']}" itemValue="4" />
+                                            <f:selectItem itemLabel="#{userData.userDDs['MAY']}" itemValue="5" />
+                                            <f:selectItem itemLabel="#{userData.userDDs['JUN']}" itemValue="6" />
+                                            <f:selectItem itemLabel="#{userData.userDDs['JUL']}" itemValue="7" />
+                                            <f:selectItem itemLabel="#{userData.userDDs['AUG']}" itemValue="8" />
+                                            <f:selectItem itemLabel="#{userData.userDDs['SEPT']}" itemValue="9" />
+                                            <f:selectItem itemLabel="#{userData.userDDs['OCT']}" itemValue="10" />
+                                            <f:selectItem itemLabel="#{userData.userDDs['NOV']}" itemValue="11" />
+                                            <f:selectItem itemLabel="#{userData.userDDs['DEC']}" itemValue="12" />
+                                            <p:ajax event="change" listener="#{balanceAccountMonthlyMB.hideAndShow}" update="form" />
+                                        </p:selectOneMenu> 
+                                    </h:panelGroup>
+                                </div>
+                                <div class="ui-g-12 ui-md-6">
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 65px; margin-bottom: 2%" 
+                                                       value="#{userData.userDDs['TO_MONTH']}"/>
+                                        <p:selectOneMenu value="#{balanceAccountMonthlyMB.toMonth}" 
+                                                         style="width:57%">
+                                            <f:selectItem itemLabel="#{userData.userDDs['JAN']}" itemValue="1" />
+                                            <f:selectItem itemLabel="#{userData.userDDs['FEB']}" itemValue="2" />
+                                            <f:selectItem itemLabel="#{userData.userDDs['MARCH']}" itemValue="3" />
+                                            <f:selectItem itemLabel="#{userData.userDDs['APRIL']}" itemValue="4" />
+                                            <f:selectItem itemLabel="#{userData.userDDs['MAY']}" itemValue="5" />
+                                            <f:selectItem itemLabel="#{userData.userDDs['JUN']}" itemValue="6" />
+                                            <f:selectItem itemLabel="#{userData.userDDs['JUL']}" itemValue="7" />
+                                            <f:selectItem itemLabel="#{userData.userDDs['AUG']}" itemValue="8" />
+                                            <f:selectItem itemLabel="#{userData.userDDs['SEPT']}" itemValue="9" />
+                                            <f:selectItem itemLabel="#{userData.userDDs['OCT']}" itemValue="10" />
+                                            <f:selectItem itemLabel="#{userData.userDDs['NOV']}" itemValue="11" />
+                                            <f:selectItem itemLabel="#{userData.userDDs['DEC']}" itemValue="12" />
+                                            <p:ajax event="change" listener="#{balanceAccountMonthlyMB.hideAndShow}" update="form" />
+                                        </p:selectOneMenu> 
+                                    </h:panelGroup>
+                                </div>
+                                <div class="ui-g-12 ui-md-6">
+                                    <h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:outputLabel value="#{userData.userDDs['ZERO_BALANCE']}"
+                                                           style="width:65px"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:selectBooleanCheckbox value="#{balanceAccountMonthlyMB.zeroAmount}" 
+                                                                     style="margin-right:1%">
+                                                <p:ajax  listener="#{balanceAccountMonthlyMB.deleteZeroRecords}" update="@form" />
+                                            </p:selectBooleanCheckbox>
+                                        </h:panelGroup>
+                                    </h:panelGroup>
+                                </div>
+                                <div class="ui-g-12 ui-md-6">
+                                    <h:panelGroup></h:panelGroup>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                   
+
+                </p:fieldset>
+                
+                <p:fieldset style="margin: 10px 0">
+                    
+                     <h:panelGrid class="col-md-12 centerButtons" columns="1" style="margin-top:2%">
+
+                        <h:panelGroup>
+
+                            <p:commandButton class="searchButton"   icon="fa fa-fw fa-search-plus"
+                                             id="searchS"
+                                             value="#{userData.userDDs['SEARCH']}" 
+                                             action="#{balanceAccountMonthlyMB.search()}" update="subaccc"/>
+                            <p:commandButton class="newButton"   
+                                             icon="fa fa-fw fa-plus"
+                                             id="newN"
+                                             value="#{userData.userDDs['NEW']}" 
+                                             process="@this" actionListener="#{balanceAccountMonthlyMB.reset}" 
+                                             update="subaccc" />
+                            
+                            <p:commandButton class="printButton" 
+                                             icon="fa fa-fw fa-print"
+                                             ajax="false" onclick="form.target = '_blank'" 
+                                             value="#{userData.userDDs['PRINT']} "
+                                             actionListener="#{balanceAccountMonthlyMB.exportPDF}"/>
+
+                            <h:commandLink class="sdcreenimg">  
+                                <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                                <p:dataExporter type="xls"
+                                                target="subaccc" 
+                                                fileName="كشف حساب شهري"
+                                                postProcessor="#{balanceAccountMonthlyMB.postProcessXLS}" />  
+                            </h:commandLink >
+                            <p:blockUI block="TopFieldSet" trigger="searchS  newN" animate="true" >
+
+                                <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                            </p:blockUI> 
+
+
+                        </h:panelGroup>
+
+                    </h:panelGrid>
+                    
+                </p:fieldset>
+
+                <p:fieldset>
+
+
+                    <p:dataTable id="subaccc" 
+                                 draggableColumns="true"
+                                 value="#{balanceAccountMonthlyMB.balanceAccountMonthlyBeanList}"
+                                 widgetVar="monthaccount"
+                                 var="monthlyAccount"
+                                  rows="20"
+                                  paginator="true">
+
+                        <f:facet name="header" class="col-md-12">
+
+                            <p:outputPanel>
+                                <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large;" />
+                                <p:inputText   id="globalFilter"   onkeyup="PF('monthaccount').filter()" style="width: 50%important" />
+                            </p:outputPanel>
+
+                        </f:facet>
+
+
+                        <p:column style="width:10vh;font-size: 1.5vh;text-align: -webkit-auto"
+                                  filterBy="#{monthlyAccount.accountNumber}"  filterMatchMode="contains" sortBy="#{monthlyAccount.accountNumber}" filterable="false"
+                                  headerText="#{userData.userDDs['ACCOUNT_COD']}">
+                            <h:outputText value="#{monthlyAccount.accountNumber}" style="font-size: 10px"/>
+                        </p:column>
+
+                        <p:column style="width:10vh;font-size: 1.5vh;text-align: -webkit-auto" 
+                                  filterBy="#{monthlyAccount.accountName}"  filterMatchMode="contains" sortBy="#{monthlyAccount.accountName}" filterable="false"
+                                  headerText="#{userData.userDDs['ACCOUNT_NAME']}">
+                            <h:outputText value="#{monthlyAccount.accountName}" style="font-size: 10px"/>
+                        </p:column>
+
+
+                        <p:column style="width:7vh;font-size: 1.5vh;text-align: -webkit-auto"
+                                  filterBy="#{monthlyAccount.janValue}"  filterMatchMode="contains" sortBy="#{monthlyAccount.janValue}" filterable="false"
+                                  headerText="#{userData.userDDs['JAN']}" 
+                                  rendered="#{balanceAccountMonthlyMB.showMonths.get(0) == 1}">
+                            <p:inputNumber readonly="true" value="#{monthlyAccount.janValue}" style="font-size: 10px; width: 95%"/>
+                        </p:column>
+                        <p:column style="width:7vh;font-size: 1.5vh;text-align: -webkit-auto" 
+                                  filterBy="#{monthlyAccount.febValue}"  filterMatchMode="contains" sortBy="#{monthlyAccount.febValue}" filterable="false"
+                                  headerText="#{userData.userDDs['FEB']}" 
+                                  rendered="#{balanceAccountMonthlyMB.showMonths.get(1) == 1}">
+                            <p:inputNumber readonly="true" value="#{monthlyAccount.febValue}" style="font-size: 10px; width: 95%"/>
+                        </p:column>
+
+                        <p:column style="width:7vh;font-size: 1.5vh;text-align: -webkit-auto" 
+                                  filterBy="#{monthlyAccount.marValue}"  filterMatchMode="contains" sortBy="#{monthlyAccount.marValue}" filterable="false"
+                                  headerText="#{userData.userDDs['MARCH']}"
+                                  rendered="#{balanceAccountMonthlyMB.showMonths.get(2) == 1}">
+                            <p:inputNumber readonly="true" value="#{monthlyAccount.marValue}" style="font-size: 10px; width: 95%"/>
+                        </p:column>
+
+                        <p:column style="width:7vh;font-size: 1.5vh;text-align: -webkit-auto" 
+                                  filterBy="#{monthlyAccount.aprValue}"  filterMatchMode="contains" sortBy="#{monthlyAccount.aprValue}" filterable="false"
+                                  headerText="#{userData.userDDs['APRIL']}" 
+                                  rendered="#{balanceAccountMonthlyMB.showMonths.get(3) == 1}">
+                            <p:inputNumber readonly="true" value="#{monthlyAccount.aprValue}" style="font-size: 10px; width: 95%"/>
+                        </p:column>
+
+                        <p:column style="width:7vh;font-size: 1.5vh;text-align: -webkit-auto"
+                                  filterBy="#{monthlyAccount.mayValue}"  filterMatchMode="contains" sortBy="#{monthlyAccount.mayValue}" filterable="false"
+                                  headerText="#{userData.userDDs['MAY']}" rendered="#{balanceAccountMonthlyMB.showMonths.get(4) == 1}">
+                            <p:inputNumber readonly="true" value="#{monthlyAccount.mayValue}" style="font-size: 10px; width: 95%"/>
+                        </p:column>
+
+                        <p:column style="width:7vh;font-size: 1.5vh;text-align: -webkit-auto"
+                                  filterBy="#{monthlyAccount.juneValue}"  filterMatchMode="contains" sortBy="#{monthlyAccount.juneValue}" filterable="false"
+                                  headerText="#{userData.userDDs['JUN']}" rendered="#{balanceAccountMonthlyMB.showMonths.get(5) == 1}">
+                            <p:inputNumber readonly="true" value="#{monthlyAccount.juneValue}" style="font-size: 10px; width: 95%"/>
+                        </p:column>
+
+                        <p:column style="width:7vh;font-size: 1.5vh;text-align: -webkit-auto"
+                                  filterBy="#{monthlyAccount.julValue}"  filterMatchMode="contains" sortBy="#{monthlyAccount.julValue}" filterable="false"
+                                  headerText="#{userData.userDDs['JUL']}" rendered="#{balanceAccountMonthlyMB.showMonths.get(6) == 1}">
+                            <p:inputNumber readonly="true" value="#{monthlyAccount.julValue}" style="font-size: 10px; width: 95%"/>
+                        </p:column>
+
+                        <p:column style="width:7vh;font-size: 1.5vh;text-align: -webkit-auto"
+                                  filterBy="#{monthlyAccount.augValue}"  filterMatchMode="contains" sortBy="#{monthlyAccount.augValue}" filterable="false"
+                                  headerText="#{userData.userDDs['AUG']}" rendered="#{balanceAccountMonthlyMB.showMonths.get(7) == 1}">
+                            <p:inputNumber readonly="true" value="#{monthlyAccount.augValue}" style="font-size: 10px; width: 95%"/>
+                        </p:column>
+
+                        <p:column style="width:7vh;font-size: 1.5vh;text-align: -webkit-auto" 
+                                  filterBy="#{monthlyAccount.sepValue}"  filterMatchMode="contains" sortBy="#{monthlyAccount.sepValue}" filterable="false"
+                                  headerText="#{userData.userDDs['SEPT']}" rendered="#{balanceAccountMonthlyMB.showMonths.get(8) == 1}">
+                            <p:inputNumber readonly="true" value="#{monthlyAccount.sepValue}" style="font-size: 10px; width: 95%"/>
+                        </p:column>
+
+                        <p:column style="width:7vh;font-size: 1.5vh;text-align: -webkit-auto" 
+                                  filterBy="#{monthlyAccount.octValue}"  filterMatchMode="contains" sortBy="#{monthlyAccount.octValue}" filterable="false"
+                                  headerText="#{userData.userDDs['OCT']}" rendered="#{balanceAccountMonthlyMB.showMonths.get(9) == 1}">
+                            <p:inputNumber readonly="true" value="#{monthlyAccount.octValue}" style="font-size: 10px; width: 95%"/>
+                        </p:column>
+
+                        <p:column style="width:7vh;font-size: 1.5vh;text-align: -webkit-auto"
+                                  filterBy="#{monthlyAccount.novValue}"  filterMatchMode="contains" sortBy="#{monthlyAccount.novValue}" filterable="false"
+                                  headerText="#{userData.userDDs['NOV']}" rendered="#{balanceAccountMonthlyMB.showMonths.get(10) == 1}">
+                            <p:inputNumber readonly="true" value="#{monthlyAccount.novValue}" style="font-size: 10px; width: 95%"/>
+                        </p:column>
+
+                        <p:column style="width:7vh;font-size: 1.5vh;text-align: -webkit-auto"
+                                  filterBy="#{monthlyAccount.decValue}"  filterMatchMode="contains" sortBy="#{monthlyAccount.decValue}" filterable="false"
+                                  headerText="#{userData.userDDs['DEC']}" rendered="#{balanceAccountMonthlyMB.showMonths.get(11) == 1}">
+                            <p:inputNumber readonly="true" value="#{monthlyAccount.decValue}" style="font-size: 10px; width: 95%"/>
+                        </p:column>
+
+                        <p:column style="width:7vh;font-size: 1.5vh;text-align: -webkit-auto;" 
+                                  filterBy="#{monthlyAccount.totalValue}"  filterMatchMode="contains" sortBy="#{monthlyAccount.totalValue}" filterable="false"
+                                  headerText="#{userData.userDDs['TOTAL']}" >
+                            <p:inputNumber readonly="true" value="#{monthlyAccount.totalValue}" style="font-size: 10px; width: 95%"/>
+                        </p:column>
+
+                    </p:dataTable>
+                </p:fieldset>
+            </h:form>
+        </h:body>
+    </ui:define>
+</ui:composition>
+

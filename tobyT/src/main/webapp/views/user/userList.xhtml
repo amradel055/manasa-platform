@@ -1,0 +1,90 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form id="screenActionForm" dir="#{userData.dir}" style="margin-right: 15px"> 
+            <p:fieldset legend="#{userData.userDDs['USER_MANAGEMENT']}" style="margin-bottom:20px"> 
+
+                <div>
+                    <p:messages autoUpdate="true"  id="messages" showDetail="true" closable="true"/>   
+                </div>
+                 <p:commandButton icon="fa fa-fw fa-backward"  
+                                 class="scloseButton"  style="float: left;margin: 1px 0"
+                                  action="exit" />
+                <div >
+                    <p:dataTable 
+                        
+                        widgetVar="usertable"
+                        paginator="true" var="user" 
+                        value="#{userListBean.users}" 
+                        rowIndexVar="index" emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" rows="15">
+                        <f:facet name="header" >
+                            <p:commandButton id="b2" title="#{userData.userDDs['ADD']}" 
+                                             class="saddButton"
+                                             icon="fa fa-plus"  style="float:right;margin: 0"
+                                             action="#{userListBean.goToAdd()}" 
+                                             rendered="#{userData.userScreens['user'].add or userData.isAdmin}" />
+                            <p:outputPanel >
+                                <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                                <p:inputText id="globalFilter" a:autofocus="true" onkeyup="PF('usertable').filter()" style="width:150px" />
+                            </p:outputPanel>
+                        </f:facet>
+
+                        <p:column headerText="#" style="width: 5vh;font-size: 1.8vh;text-align: right">
+                            <h:outputText value="#{index + 1}" style="font-size: 1.5vh;" />
+                        </p:column>   
+                        <p:column style="width: 20vh;font-size: 1.8vh;text-align: right" filterStyle="display:none"  filterBy="#{user.userCode}"  filterMatchMode="contains" headerText="#{userData.userDDs['USER_CODE']}" >
+                            <h:outputText value="#{user.userCode}" style="font-size: 1.5vh"  />
+                        </p:column>
+                        <p:column filterStyle="display:none" style="width: 20vh;font-size: 1.8vh;text-align: right"  filterBy="#{user.name}"  filterMatchMode="contains" headerText="#{userData.userDDs['USER_NAME']}" >
+                            <h:outputText value="#{user.name}" style="font-size: 1.5vh;"  />
+                        </p:column>
+                        
+                        <p:column filterStyle="display:none"  style="width: 20vh;font-size: 1.8vh;text-align: right" filterBy="#{user.lang.name}"  filterMatchMode="contains" headerText="#{userData.userDDs['USER_LANGUAGE']}" >
+                            <h:outputText value="#{user.lang.name}" style="font-size: 1.5vh;font-weight: 100;"  />
+                        </p:column>
+                        
+                        <p:column style="width: 20vh;font-size: 1.8vh;text-align: right" filterStyle="display:none" sortBy="#{user.companyId.name}" filterBy="#{user.companyId.name}" filterMatchMode="contains" headerText="#{userData.userDDs['COMPANY_NAME']}" rendered="#{userData.isAdmin}"  >
+                            <h:outputText value="#{user.companyId.name}" />
+                        </p:column>
+                         
+                        <p:column headerText="#{userData.userDDs['TRANSACTION']}" 
+                                  style="width: 8vh;font-size: 1.8vh;text-align: right">
+                            
+                            <p:commandButton class="seditButton"
+                                             update=":screenActionForm" 
+                                             icon="fa fa-fw fa-edit" 
+                                             title="#{userData.userDDs['EDIT']}"
+                                             action="#{userListBean.goToEdit()}" 
+                                             rendered="#{userData.userScreens['user'].view or userData.isAdmin}" >
+                                <f:setPropertyActionListener value="#{user.id}" target="#{userListBean.selecteduser}" />
+                            </p:commandButton>
+                            
+                            <p:commandButton  class="scloseButton"
+                                update="@form" title="#{userData.userDDs['DELETE']}"
+                                icon="fa fa-remove"  action="#{userListBean.delete()}" 
+                                rendered="#{userData.userScreens['user'].delete or userData.isAdmin}" >
+                                <f:setPropertyActionListener value="#{user.id}" target="#{userListBean.selecteduser}" />
+                                <p:confirm header="#{userData.userDDs['COFIGRATION']}" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                            </p:commandButton>
+                            
+                        </p:column>
+
+                    </p:dataTable>
+                </div>
+            </p:fieldset>
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
+
+        </h:form>
+    </ui:define>
+</ui:composition>

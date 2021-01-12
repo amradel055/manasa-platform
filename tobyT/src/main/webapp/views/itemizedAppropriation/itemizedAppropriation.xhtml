@@ -1,0 +1,184 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:head>
+            <title>222</title>
+        </h:head>
+        <style>
+
+            .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+                border: 1px solid #c5dbec;
+                background:#fff;
+            }
+
+        </style>
+
+        <h:form id="form"  enctype="multipart/form-data"  dir="#{userData.dir}">
+
+            <p:fieldset legend="#{userData.userDDs['CUST_FINANCIAL_STAT_ITEM']}"  style="margin-bottom:20px">
+
+                <h:panelGroup >
+
+
+
+                </h:panelGroup>
+            </p:fieldset>
+            <!-- begin table -->
+            <p:fieldset  style="margin-bottom:20px">
+                <div>
+                    <p:messages id="curmsg" showDetail="true" rendered="#{AllocationGeneralItemListMB.showMessageGeneral}" closable="true"/>   
+                </div>
+
+                <p:remoteCommand name="onCellEdit" update="glAccountEntityTable" />
+                <p:commandButton class="scloseButton" icon="fa fa-fw fa-backward"  style="float: left;margin: 0" action="exit" />
+
+                <p:dataTable id="glAccountEntityTable"
+                             widgetVar="glAccountEntityTable"
+                             var="glAccountEntityTable"
+                             rowIndexVar="index" 
+                             dir="rtl" 
+                             rows="25"
+                             paginator="true"
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                             editable="true"
+                             editMode="cell"
+                             selectionMode="single"
+                             selection="#{AllocationGeneralItemListMB.glAccountEntitySelected}" 
+                             rowKey="#{glAccountEntityTable}"
+                             value="#{AllocationGeneralItemListMB.glAccountEntityList}" >
+
+                    <f:facet name="header">
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('glAccountEntityTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:ajax event="cellEdit" listener="#{AllocationGeneralItemListMB.onCellEdit}" oncomplete="onCellEdit()"  />
+
+                    <p:column style="width:5 ;font-size:15px;text-align: right;font-size: 15px" 
+                              filterMatchMode="contains" 
+                              filterStyle="display:none"
+                              filterable="true"
+                              filterBy="#{index}"
+                              headerText="#">
+                        <h:outputText value="#{index + 1}"  style="font-size: 12px" />
+                    </p:column>
+
+
+                    <p:column  style="width:10%;font-size:15px;text-align: right;font-size: 15px"
+                               filterBy="#{glAccountEntityTable.glAccount.accNumber}"
+                               filterStyle="display:none"
+                               filterMatchMode="contains"
+                               filterable="true"
+                               id="glAccount" 
+                               headerText="#{userData.userDDs['ACCOUNT_CODE']}" >
+                        <h:outputText value="#{glAccountEntityTable.glAccount.accNumber}" style="font-size: 12px" />
+                    </p:column>
+
+
+                    <p:column  style="font-size:15px;text-align: right;font-size: 15px" 
+                               filterMatchMode="contains"
+                               filterStyle="display:none"
+                               filterable="true"
+                               filterBy="#{glAccountEntityTable.glAccount.name}"
+                               id="accName"
+                               headerText="#{userData.userDDs['ACCOUNT_NAME']}">
+
+                        <h:outputText value="#{glAccountEntityTable.glAccount.name}" style="font-size: 12px"/>
+                    </p:column>
+
+
+                    <p:column  style="font-size:15px;text-align: right;font-size: 15px;width: 15%" 
+                               filterMatchMode="contains"
+                               filterStyle="display:none"
+                               filterable="true"
+                               id="generalBudgetIdDebit"
+                               headerText="#{userData.userDDs['DEBIT_ITEM']}" >
+
+                        <p:selectOneMenu style="width: 99%;margin: px 0"   
+                                         filter="true"
+                                         filterMatchMode="startsWith"
+                                         value="#{glAccountEntityTable.generalBudgetDebitId}" > 
+
+                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"    /> 
+                            <f:selectItems  value="#{AllocationGeneralItemListMB.generalBudgetList}"
+                                            var="genBudgGuide"
+                                            itemLabel="#{genBudgGuide.nameAr}"
+                                            itemValue="#{genBudgGuide.id}" />
+
+                        </p:selectOneMenu>
+                    </p:column>
+
+
+                    <p:column   style="font-size:15px;width: 15%"
+                                headerText="#{userData.userDDs['CREDIT_ITEM']}"
+                                filterMatchMode="contains"
+                                filterStyle="display:none"
+                                filterable="true">
+
+                        <p:selectOneMenu  style="width: 99%" 
+                                          filter="true"
+                                          filterMatchMode="contains"
+                                          value="#{glAccountEntityTable.generalBudgetCreditId}">
+                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"    /> 
+                            <f:selectItems value="#{AllocationGeneralItemListMB.generalBudgetList}"
+                                           var="genBudgGuide"
+                                           itemLabel="#{genBudgGuide.nameAr}" 
+                                           itemValue="#{genBudgGuide.id}" />
+
+                        </p:selectOneMenu>
+                    </p:column>
+
+
+                </p:dataTable>
+                <h:panelGrid  class="centerButtons col-md-12"  style="margin-top:2%">               
+
+
+                     <h:panelGroup>
+
+
+                    <p:commandButton class="saveButton"  id="saveB" 
+                                     title="#{userData.userDDs['SAVE']}"
+                                     value="#{userData.userDDs['SAVE']}" 
+                                     icon="fa fa-fw fa-save"
+                                     rendered="#{userData.userScreens['itemizedAppropriation'].add
+                                                 or userData.isAdmin}"
+                                     action="#{AllocationGeneralItemListMB.save()}"
+                                     update="@form"/>
+                    <p:commandButton class="cancelButton" 
+                                     id="cancel"
+                                     title="#{userData.userDDs['CANCEL']}" 
+                                     value="#{userData.userDDs['CANCEL']}" 
+                                     icon="fa fa-fw fa-backward"
+                                     action="#{AllocationGeneralItemListMB.exit()}" update="@form"/>
+
+                </h:panelGroup>
+
+
+
+
+            </h:panelGrid>
+
+            <p:blockUI block="form" trigger="saveB cancel" animate="true" >
+
+                <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+            </p:blockUI>
+            </p:fieldset> 
+
+           
+
+        </h:form>
+    </ui:define>
+</ui:composition>

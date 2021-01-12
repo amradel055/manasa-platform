@@ -1,0 +1,312 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <link rel="stylesheet" type="text/css" href="../../resources/css/main.css" />
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}"  type="preRenderView" />
+        <h:head>
+            <title>#{userData.userDDs['ACCOUNT_REPORT']}</title>
+        </h:head>
+        <style>
+
+            .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+                border: 1px solid #c5dbec;
+                background:#fff;
+            }
+
+        </style>
+        <h:body>
+            <h:form class='formmargin' id="form"  dir="#{userData.dir}" >
+
+                <div style=" position: absolute;left: 20px"> 
+                    <p:commandButton  style="z-index: 2;
+                                      margin-top: 13%;
+                                      color: #035c70!important; 
+                                      background-color: #223238!important;
+                                      border: 1px solid #22323a!important;
+                                      background: #22323a 50% 50% repeat-x!important;"
+                                      icon="fa fa-fw fa-home"
+                                      title="#{userData.userDDs['HOME']}"
+                                      class="smhomeButton" 
+                                      action="exit" />
+                     
+                    <p:commandButton  style="z-index: 2;
+                                      margin-top: 12%!important;
+                                      color: #035c70!important; 
+                                      background-color: #223238!important;
+                                      border: 1px solid #22323a!important;
+                                      background: #22323a 50% 50% repeat-x!important;" 
+                                      class="viewButton sminimize"
+                                      icon="fa fa-window-minimize"
+                                      title="إظهار/إخفاء"/>  
+                </div>
+                <p:fieldset legend="#{userData.userDDs['JOURN_ENTR_REPORT']}" 
+                            style=" position: relative">
+
+
+                    <div class="firstset">
+
+                        <div class="ui-g">
+
+                            <div class="ui-g-12 ui-md-6">
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 130px;margin-right: 4%;"  value="#{userData.userDDs['FROM_DAILY_TYPE']}" />
+                                    </h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:selectOneMenu style="width: 51%" id="accountNameFrom" filter="true"
+                                                         filterMatchMode="contains"
+                                                         value="#{journalDocumentReportMB.journalDocumentsReportSearchBean.documentTypeFrom}"
+                                                         >
+                                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"
+                                                          id="accFrom2" />
+                                            <f:selectItems
+                                                value="#{journalDocumentReportMB.symbolsList}"
+                                                var="accList"
+                                                itemLabel="#{accList.serial} #{accList.name}"
+                                                itemValue="#{accList.id}" />
+                                        </p:selectOneMenu>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 130px;margin-right: 4%;" value="#{userData.userDDs['TO_DAILY_TYPE']}" />
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:selectOneMenu style="width: 51%" id="documentTypeTo" filter="true"
+                                                         filterMatchMode="contains"
+                                                         value="#{journalDocumentReportMB.journalDocumentsReportSearchBean.documentTypeTo}"
+                                                         >
+                                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"
+                                                          id="accFrom3" />
+                                            <f:selectItems
+                                                value="#{journalDocumentReportMB.symbolsList}"
+                                                var="accList"
+                                                itemLabel="#{accList.serial} #{accList.name}"
+                                                itemValue="#{accList.id}" />
+                                        </p:selectOneMenu>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel  style="width: 125px;margin-right: 4%;"  value="#{userData.userDDs['FROM_JOURNAL_NUMBER']}" />
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:inputText style="width: 51%"  value="#{journalDocumentReportMB.journalDocumentsReportSearchBean.journalNumForm}"/>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:outputLabel  style="width: 125px;margin-right: 4%;"  value="#{userData.userDDs['TO_JOURNAL_NUMBER']}" />
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:inputText  style="width: 51%"  value="#{journalDocumentReportMB.journalDocumentsReportSearchBean.journalNumTo}"/>
+                                    </h:panelGroup>
+
+                                </h:panelGroup>
+
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 125px;margin-right: 4%;"  value="#{userData.userDDs['YEAR_FROM']}" />
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:calendar   id="dateFrom" style="width:50%!important;"
+                                                    value="#{journalDocumentReportMB.journalDocumentsReportSearchBean.periodFrom}"
+                                                    pattern="dd/MM/yyyy" showButtonPanel="true" >
+                                            <p:ajax listener="#{journalDocumentReportMB.checkDate(true)}" event="dateSelect" update="dateFrom" />
+                                        </p:calendar>
+
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 125px;margin-right: 4%;" value="#{userData.userDDs['YEAR_TO']}" />
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:calendar id="dateTo" style="width:50%!important;"
+                                                    value="#{journalDocumentReportMB.journalDocumentsReportSearchBean.periodTo}"
+                                                    pattern="dd/MM/yyyy"
+                                                    
+                                                    showButtonPanel="true">
+                                            <p:ajax listener="#{journalDocumentReportMB.checkDate(false)}" event="dateSelect" update="dateTo"/>
+                                        </p:calendar>
+
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 130px;margin-right: 4%;" value="#{userData.userDDs['ENTRY_REVISION']}" />
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:selectOneMenu  style="width: 51%" filter="true" filterMatchMode="startsWith"  value="#{journalDocumentReportMB.journalDocumentsReportSearchBean.postFlag}"   >
+                                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" itemValue="" noSelectionOption="true" />
+                                            <f:selectItem itemLabel="روجع" itemValue="1"/>
+                                            <f:selectItem itemLabel="لم يراجع" itemValue="0"/>
+                                        </p:selectOneMenu>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 130px;margin-right: 4%;margin-bottom: 2%" value="#{userData.userDDs['JOURNALS_DAILY_BALANCED']}" />
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:selectOneMenu  style="width: 51%" filter="true" filterMatchMode="startsWith"  value="#{journalDocumentReportMB.journalDocumentsReportSearchBean.posting}"   >
+                                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"  itemValue="" noSelectionOption="true" />
+                                            <f:selectItem itemLabel="موزون" itemValue="موزون"/>
+                                            <f:selectItem itemLabel="غير موزون" itemValue="غير موزون"/>
+                                        </p:selectOneMenu>
+                                    </h:panelGroup>
+                                </h:panelGroup> 
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 130px;margin-right: 4%;" value="#{userData.userDDs['FINANAC_YEAR']}"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:selectOneMenu style="width: 51%;" id="year" filter="true" filterMatchMode="startsWith" 
+                                                         value="#{journalDocumentReportMB.glYearSelection}" converter="#{journalDocumentReportMB.glYearConverter}"  >
+                                            <p:ajax update="dateFrom dateTo" listener="#{journalDocumentReportMB.pushGlYearSelection()}" />
+                                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"  itemValue="" />
+                                            <f:selectItems value="#{journalDocumentReportMB.glYearList}"  var="year" itemLabel="#{year.name}" itemValue="#{year}"/>
+                                        </p:selectOneMenu>
+                                    </h:panelGroup>
+                                </h:panelGroup>   
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <h:panelGrid  class="col-md-12 centerButtons" columns="1">
+
+                        <h:panelGroup>
+
+
+
+                            <p:commandButton  class="searchButtons"
+                                               style="background-color: #148dc2!important;color: #fff!important;margin-left: 5px"
+                                              id="searchS"
+                                              value="#{userData.userDDs['SEARCH']}" action="#{journalDocumentReportMB.search2()}" update="dataTable" />
+
+                            <p:commandButton  class="newButtons"
+                                               style="background-color: #0a7516  !important;color: #fff!important;margin-left: 5px"
+                                              id="newN"
+                                              value="#{userData.userDDs['NEW']}" action="#{journalDocumentReportMB.reset}" update="form" />
+
+                            <p:commandButton  class="printButtons"
+                                             style=" background-color: #030570de !important;color: #fff!important;margin-left: 5px"
+                                              ajax="false" onclick="form.target = '_blank'"  value="#{userData.userDDs['PRINT']} " immediate="true" actionListener="#{journalDocumentReportMB.exportPDF}"/>
+
+                            <h:commandLink class="sdcreenimg">  
+                                <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                                <p:dataExporter type="xls"
+                                                target="dataTable" 
+                                                fileName="ملخص سندات القيود"
+                                                postProcessor="#{journalDocumentReportMB.postProcessXLS}" />  
+                            </h:commandLink> 
+
+                            <p:blockUI block="form" trigger="searchS  newN" animate="true" >
+
+                                <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                            </p:blockUI> 
+
+                        </h:panelGroup>
+
+                    </h:panelGrid>
+
+                </p:fieldset>
+
+                <p:fieldset>
+
+
+                    <p:dataTable id="dataTable" 
+                                 widgetVar="journal"
+                                 draggableColumns="true" 
+                                  paginator="true"
+                                  rows="20"
+                                 value="#{journalDocumentReportMB.journalDocumentReportBeanList}" var="journal">
+                        <f:facet name="header" class="col-md-12">
+
+                            <p:outputPanel>
+                                <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large;" />
+                                <p:inputText id="globalFilter" a:autofocus="true" onkeyup="PF('journal').filter()" style="width:30%!important;" />
+                            </p:outputPanel>
+                        </f:facet>
+                        <p:column style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px"   headerText="#{userData.userDDs['GENERAL_NUMBER']}"
+                                  filterBy="#{journal.journalNum}"  filterMatchMode="contains" sortBy="#{journal.journalNum}" filterable="false">
+                            <h:outputText value="#{journal.journalNum}" style="font-size: 12px"/>
+                        </p:column>
+                        <p:column style="width: 12vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px"  
+                                  headerText="#{userData.userDDs['DOCUMENT_NUMBER']}"
+                                  filterBy="#{journal.documentNum}"  filterMatchMode="contains" sortBy="#{journal.documentNum}" filterable="false">
+                            <h:outputText value="#{journal.documentNum}" style="font-size: 12px"/>
+                        </p:column>
+                        <p:column style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px" 
+                                  headerText="#{userData.userDDs['DATEE']}"
+                                  filterBy="#{journal.journalDate}"  filterMatchMode="contains" sortBy="#{journal.journalDate}" filterable="false">
+                            <h:outputText value="#{journal.journalDate}" style="font-size: 12px">
+                                <f:convertDateTime id="datee"  pattern="yyyy-MM-dd"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column style="width: 14vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px"
+                                  headerText="#{userData.userDDs['REVISION_ENTRIES']}"
+                                  filterBy="#{journal.postFlag}"  filterMatchMode="contains" sortBy="#{journal.postFlag}" filterable="false">
+                            <h:outputText value="#{journal.postFlag}" style="font-size: 12px"/>
+                        </p:column>
+
+
+                        <p:column style="width: 12vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px"  
+                                  filterBy="#{journal.posting}"  filterMatchMode="contains" sortBy="#{journal.posting}" filterable="false"
+                                  headerText="#{userData.userDDs['ENTRY_WEIGH']}">
+                            <h:outputText value="#{journal.posting}" style="font-size: 12px"/>
+                        </p:column>
+                        <p:column style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px"
+                                  filterBy="#{journal.amount}"  filterMatchMode="contains" sortBy="#{journal.amount}" filterable="false"
+                                  headerText="#{userData.userDDs['AMOUNT']}">
+                            <h:outputText    value="#{journal.amount}" style="font-size: 12px;width: 95%"/>
+                        </p:column>
+                        <p:column style="width: 17vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px" 
+                                  filterBy="#{journal.user}"  filterMatchMode="contains" sortBy="#{journal.user}" filterable="false"
+                                  headerText="#{userData.userDDs['JOURNAL_ADDED_BY']}">
+                            <h:outputText value="#{journal.user}" style="font-size: 12px"/>
+                        </p:column>
+                        <p:column style="width: 15vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px" 
+                                  filterBy="#{journal.remarks}"  filterMatchMode="contains" sortBy="#{journal.remarks}" filterable="false"
+                                  headerText="#{userData.userDDs['GERNAL_STATEMENT']}">
+                            <h:outputText value="#{journal.remarks}" style="font-size: 12px"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:fieldset>
+            </h:form>
+        </h:body>
+    </ui:define>
+</ui:composition>

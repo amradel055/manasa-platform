@@ -1,0 +1,200 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <div class="col-xs-12">
+            <p:messages autoUpdate="true"  showDetail="true" closable="true" rendered="true" />
+        </div>
+        <h:head>
+            <title>#{userData.userDDs['ACCOUNT_REPORT']}</title>
+        </h:head>
+        <style>
+
+            .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+                border: 1px solid #c5dbec;
+                background:#fff;
+            }
+
+        </style>
+        <h:form  style="margin-right: 20px"  target="_blank" id="branchListForm" dir="#{userData.dir}">
+
+            <div style=" position: absolute;left: 20px"> 
+                <p:commandButton  style="width: 90px;background-image: none!important;z-index: 2" 
+                                  class="viewButton searchButton"
+                                  value="Hide/Show"/>  
+            </div>
+
+            <p:fieldset legend="#{userData.userDDs['FINAN_STAT_ITEM_REPORT']}" 
+                        style=" position: relative">
+
+
+                <div class="firstset">
+                    
+                    <div class="ui-g">
+
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 40px" value="#{userData.userDDs['UNIT_NAME']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText a:autofocus="true"  style="width: 50%"
+                                                 value="#{generalBudgetReportMB.generalBudgetReportSearchBean.itemName}" />
+                                </h:panelGroup>      
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup></h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+
+
+
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 40px;margin-bottom: 5%" value="#{userData.userDDs['SERIAL_FROM']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText  style="width: 50%" value="#{generalBudgetReportMB.generalBudgetReportSearchBean.serialNumberFrom}" />
+                                </h:panelGroup> 
+
+                            </h:panelGroup>
+
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 40px;margin-bottom: 5%" value="#{userData.userDDs['SERIAL_TO']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width: 50%" value="#{generalBudgetReportMB.generalBudgetReportSearchBean.serialNumberTo}" />
+                                </h:panelGroup> 
+
+                            </h:panelGroup>
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+            </p:fieldset>
+
+            <p:fieldset style="margin: 10px 0">
+
+                <h:panelGrid  class="col-md-12 centerButtons"  columns="1" style="margin-top: 2%">
+
+                    <h:panelGroup>
+
+                        <p:commandButton class="searchButton" 
+                                         icon="fa fa-fw fa-search-plus"
+                                         id="searchS"
+                                         value="#{userData.userDDs['SEARCH']}" 
+                                         action="#{generalBudgetReportMB.search()}" update="dataTable"  />                   
+
+                        <p:commandButton class="newButton"  icon="fa fa-fw fa-plus"
+                                         id="newN"
+                                         value="#{userData.userDDs['NEW']}" action="#{generalBudgetReportMB.reset()}" update="branchListForm"  /> 
+
+                        <p:commandButton  class="printButton"
+                                          icon="fa fa-fw fa-print"
+                                          ajax="false" value="#{userData.userDDs['PRINT']}" actionListener="#{generalBudgetReportMB.exportPDF}" />    
+
+                        <h:commandLink class="sdcreenimg">  
+
+                            <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                            <p:dataExporter type="xls"
+                                            target="dataTable" 
+                                            fileName="بنود الميزانية"
+                                            postProcessor="#{generalBudgetReportMB.postProcessXLS}" />  
+                        </h:commandLink> 
+
+                        <p:blockUI block="branchListForm" trigger="searchS  newN" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI> 
+                    </h:panelGroup>
+
+                </h:panelGrid>
+
+            </p:fieldset>
+
+            <p:fieldset>
+
+                <p:dataTable  
+                    draggableColumns="true" draggableRows="true"
+                    id="dataTable"  var="detail" widgetVar="detail"  
+                    rows="25"
+                    rowIndexVar="index" 
+                    value="#{generalBudgetReportMB.generalBudgetBeanList}" 
+                    paginator="true">
+
+                    <f:facet name="header">
+
+
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('detail').filter()" style="width:150px" />
+                        </p:outputPanel>
+
+                    </f:facet>
+
+                    <p:column   style="width: 6vh;font-size: 1.8vh;text-align: -webkit-auto" headerText="#"
+
+                                filterBy="#{detail.number}" 
+                                filterMatchMode="contains" 
+                                sortBy="#{detail.number}"
+                                filterable="false">
+
+                        <p:outputLabel value="#{detail.number}" style="font-size: 12px"/>
+                    </p:column>
+
+                    <p:column  style="width: 30vh;font-size: 1.8vh;text-align: -webkit-auto"  headerText="#{userData.userDDs['ITEM_NAME']}" 
+
+                               filterBy="#{detail.nameAr}" 
+                               filterMatchMode="contains" 
+                               sortBy="#{detail.nameAr}"
+                               filterable="false">
+
+                        <p:outputLabel value="#{detail.nameAr}" style="font-size: 12px" />
+                    </p:column>
+
+                    <p:column style="width: 30vh;font-size: 1.8vh;text-align: -webkit-auto" headerText="#{userData.userDDs['ITEM_NAM_EN']}"
+
+                              filterBy="#{detail.nameEn}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{detail.nameEn}"
+                              filterable="false">
+                        <p:outputLabel value="#{detail.nameEn}"  style="font-size: 12px"/>
+
+                    </p:column>    
+
+                    <p:column  style="width: 30vh;font-size: 1.8vh;text-align: -webkit-auto"
+                               headerText="#{userData.userDDs['ITEM_GROUPP']}"
+
+                               filterBy="#{detail.accGroup}" 
+                               filterMatchMode="contains" 
+                               sortBy="#{detail.accGroup}"
+                               filterable="false">
+
+                        <p:outputLabel value="#{detail.accGroup}" style="font-size: 12px"/>
+                    </p:column>
+
+                </p:dataTable>
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>
+
+

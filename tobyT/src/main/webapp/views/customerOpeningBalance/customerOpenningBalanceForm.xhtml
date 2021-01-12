@@ -1,0 +1,147 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <h:form style="margin-right: 20px"  id="form" enctype="multipart/form-data" dir="#{userData.dir}">
+            <p:fieldset legend="#{userData.userDDs['EDIT_BALA']}" style="margin-bottom:20px">
+                <p:messages autoUpdate="true"
+                            id="messages"
+                            showDetail="true" closable="true" />
+
+              
+                <div class="ui-g-12 ui-g-nopad">
+                    <div class="ui-g">
+
+                       
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 60px" value="#{userData.userDDs['ORGAN_SIDE_NA']}" />
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel
+                                        value="#{organizationSiteOpeningBalanceFormMB.organizationSiteOpeningBalanceEntity.organizationSiteName}" />
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        
+                         <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <p:fieldset legend="#{userData.userDDs['ORGANIZATION SITE TYPE']}" 
+                                            style="width: 61%">
+                                    <p:selectOneRadio id="console" value ="#{organizationSiteOpeningBalanceFormMB.organizationSiteOpeningBalanceEntity.type}"  disabled="true">
+                                        <f:selectItem itemLabel="#{userData.userDDs['CUSTOMER']}"
+                                                      itemValue="0" />
+                                        <f:selectItem itemLabel="#{userData.userDDs['SUPPLIER']}"
+                                                      itemValue="1" />
+                                        <f:selectItem
+                                            itemLabel="#{userData.userDDs['CUSTOMER_SUPPLIER']}"
+                                            itemValue="2" />
+                                    </p:selectOneRadio>
+                                </p:fieldset>
+                            </h:panelGroup>
+                        </div>
+                        
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 60px" value="#{userData.userDDs['Debit_BALANC']}" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText a:autofocus="true"
+                                                 style="width:50%!important" disabled="#{organizationSiteOpeningBalanceFormMB.organizationSiteOpeningBalanceEntity.openBalanceCredit  gt 0}"
+                                                 value="#{organizationSiteOpeningBalanceFormMB.organizationSiteOpeningBalanceEntity.openBalanceDebit}" >
+                                        <p:ajax update="form"/>
+                                    </p:inputText>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 60px"  value="#{userData.userDDs['CREDIT_BALANC']}" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width:50%!important" disabled="#{organizationSiteOpeningBalanceFormMB.organizationSiteOpeningBalanceEntity.openBalanceDebit  gt 0}"
+                                                 value="#{organizationSiteOpeningBalanceFormMB.organizationSiteOpeningBalanceEntity.openBalanceCredit}" >
+                                        <p:ajax update="form"/>
+                                    </p:inputText>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 60px" value="#{userData.userDDs['DATEE']}" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:calendar id="dateFrom"
+                                                value="#{organizationSiteOpeningBalanceFormMB.organizationSiteOpeningBalanceEntity.organizationBalanceDate}"
+                                                pattern="MM/dd/yyyy"
+                                                style="width:50%"
+                                                showButtonPanel="true" />
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                    </div>
+                </div>
+
+                <h:panelGrid id="pnl" columns="1"  class="col-md-12">
+
+                </h:panelGrid>
+
+                <h:panelGrid  class="col-md-12"  columns="1">
+
+                    <h:panelGroup  class="centerButtons">
+                        
+                        <p:commandButton class="saveButton" 
+                                         id="saveB" 
+                                         title="#{userData.userDDs['SAVE']}"
+                                         value="#{userData.userDDs['SAVE']}" 
+                                         icon="fa fa-fw fa-save"
+                                         action="#{organizationSiteOpeningBalanceFormMB.save()}"
+                                         update="@form" />
+                        
+                        <p:commandButton  class="newButton" 
+                                          id="newN"
+                                          ajax="false"
+                                          icon="fa fa-fw fa-plus"
+                                          value="#{userData.userDDs['NEW']}" 
+                                          title="#{userData.userDDs['NEW']}" 
+                                          onclick="form.target = ''" 
+                                          actionListener="#{organizationSiteOpeningBalanceFormMB.reset()}"/>
+                        
+                        <p:commandButton class="closeButton"  
+                                         title="#{userData.userDDs['CANCEL']}"
+                                         immediate="true" 
+                                         value="#{userData.userDDs['CANCEL']}"
+                                         icon="fa fa-fw fa-close"
+                                         action="#{organizationSiteOpeningBalanceFormMB.exit}" />
+
+                    </h:panelGroup>
+                    <p:blockUI block="pnl" trigger="saveB" animate="true" >
+
+                        <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                    </p:blockUI> 
+
+                </h:panelGrid>
+            </p:fieldset>
+        </h:form>
+
+    </ui:define>
+</ui:composition>

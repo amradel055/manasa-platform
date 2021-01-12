@@ -1,0 +1,649 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form id="form" dir="#{userData.dir}" class='formmargin'>
+            <div style=" position: absolute;left: 20px"> 
+
+                <p:commandButton  style="z-index: 2;
+                                      margin-top: 22%;
+                                      color: #035c70!important; 
+                                      background-color: #223238!important;
+                                      border: 1px solid #22323a!important;
+                                      background: #22323a 50% 50% repeat-x!important;"
+                                      icon="fa fa-fw fa-home"
+                                      title="#{userData.userDDs['HOME']}"
+                                      class="smhomeButton" 
+                                      action="exit" />  
+            </div>
+            <p:fieldset legend="#{userData.userDDs['GENERAL_JOURNAL_DETAILS']}" >
+                <div>
+                    <p:messages autoUpdate="true"  id="msg" showDetail="true" closable="true" rendered="false" />
+                </div>
+                
+                <script>
+                    window.thisPage = window.thisPage || {};
+                    window.thisPage.isDirty = false;
+
+                    window.thisPage.closeEditorWarning = function (event) {
+                        if (window.thisPage.isDirty)
+                            return 'It looks like you have been editing something' +
+                                    ' - if you leave before saving, then your changes will be lost.'
+                        else
+                            return undefined;
+                    };
+
+                    $("form").on('keyup', 'textarea', 'itemSelect', // You can use input[type=text] here as well.
+                            function () {
+                                window.thisPage.isDirty = true;
+                            });
+
+                    $("form").on('keyup', 'input[type=text]', 'select', // You can use input[type=text] here as well.
+                            function () {
+                                window.thisPage.isDirty = true;
+                            });
+
+                    $("form").submit(function () {
+                        QC.thisPage.isDirty = false;
+                    });
+                    window.onbeforeunload = window.thisPage.closeEditorWarning;
+                </script>
+
+                <p:dialog class="deleteOptionDialogue" modal="true"
+                          position='center,center'
+                          minHeight="40" minWidth="100"
+                          header="نحذير" widgetVar="dlg1"  
+                          dynamic="true">
+
+                    <h:outputText value="هل تريد تجاهل التغييرات"  />
+
+                    <p:panelGrid></p:panelGrid>
+
+
+                    <p:commandButton  class="" title="#{userData.userDDs['NO']}" 
+                                      value="#{userData.userDDs['NO']}" 
+                                      action="#{generalJournalBean.changeRowSelectedCancel()}"
+                                      icon="fa fa-fw fa-cancel" 
+                                      update="@form"
+                                      onclick="PF('dlg1').hide();" />
+
+                    <p:commandButton  class="ssaveButton" id="saveIm"
+                                      title="#{userData.userDDs['YES']}" 
+                                      value="#{userData.userDDs['YES']}"
+                                      action ="#{generalJournalBean.changeRowSelectedOk()}"
+                                      icon="fa fa-fw fa-save"
+                                      validateClient="true" 
+                                      onclick="PF('dlg1').hide();"
+                                      update="@form" />
+                </p:dialog> 
+
+                <p:dataTable 
+                    draggableColumns="true" 
+                    widgetVar="generalJournaltable" 
+                    id="generallist" 
+                    rows="#{userData.rowListMasterDetails}"  
+
+                    var="general" 
+                    dir="#{userData.dir}" 
+                    selection="#{generalJournalBean.selectedGeneralJournal}" 
+                    selectionMode="single"   
+                    rowKey="#{general}" 
+                    value="#{generalJournalBean.generalList}"                    
+                    paginator="true" 
+                    emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" >
+
+                    <p:ajax  event="rowSelect"   listener="#{generalJournalBean.onRowSelect}"  update="@form"/>
+
+
+                    <f:facet name="header" class="col-md-12">
+                        <p:commandButton class="saddButton" id="b2" icon="fa fa-plus"
+                                         title="#{userData.userDDs['ADD']}"
+                                         actionListener="#{generalJournalBean.add}"
+                                         style="float:right" update=":form" 
+                                         rendered="#{(userData.userScreens['generaljournal'].add or userData.isAdmin)
+                                                     and (generalJournalBean.glYearSelection.openning eq 0 or generalJournalBean.glYearSelection.openning eq null)}" />
+
+                        <p:selectOneMenu id="com" value="#{generalJournalBean.selectedCompany}"  
+                                         style="float:right;width: 40%!important;color: #fff" rendered="#{userData.isAdmin}">
+                            <p:ajax listener="#{generalJournalBean.onCompanyChange}" update=":form:generallist" />
+                            <f:selectItem    itemLabel="Select Company"  noSelectionOption="true" />
+                            <f:selectItems value="#{generalJournalBean.companies}"  var="com" itemLabel="#{com.name}" itemValue="#{com.id}"/>
+                        </p:selectOneMenu>
+
+                        <p:selectOneMenu id="year" value="#{generalJournalBean.glYearSelection}"
+                                         converter="#{generalJournalBean.glYearConverter}" 
+                                         style="float: right;
+
+ 
+
+color: #fff;
+
+height: 26px !important;
+
+margin-right: 1%;
+
+margin-top: 0.3%;
+
+margin-left: 20px;">
+
+                            <p:ajax listener="#{generalJournalBean.loadgeneraljournalList()}" update="form" />
+
+                            <f:selectItems value="#{generalJournalBean.glYearList}" 
+                                           var="year" itemLabel="#{year.name}"
+                                           itemValue="#{year}"/> 
+                        </p:selectOneMenu>
+                        <p:selectOneMenu filter="true" filterMatchMode="contains" 
+                                         style=" 
+
+float: right;
+
+color:
+#fff !important;
+
+margin-top: .3%;
+
+height: 26px !important;
+
+margin-left: 20px;"
+                                         value="#{generalJournalBean.printType}"  
+                                         >
+                            <f:selectItem  itemLabel="#{userData.userDDs['HORIZONTAL_PRINT']}" itemValue="1" />
+                            <f:selectItem  itemLabel="#{userData.userDDs['VERTICAL_PRINT']}" itemValue="2" />
+                        </p:selectOneMenu>
+
+                        <p:outputPanel >
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large"/>
+                            <p:inputText id="globalFilter" a:autofocus="true" onkeyup="PF('generalJournaltable').filter()" style="height: 25px!important;width:30%!important;" />
+                        </p:outputPanel>
+
+
+
+                    </f:facet>
+
+                    <p:column headerText="#{userData.userDDs['GENERAL_NUMBER']}" style="width: 7vh;font-size: 1.4vh;border-radius: 0px "  
+                              filterStyle="display:none" sortBy="#{general.serial}"  
+                              filterBy="#{general.serial}"  filterMatchMode="contains">
+                        <h:outputText style="font-size: 1.2vh;width: 7vh;" value="#{general.serial}" />
+
+                    </p:column>
+                    <p:column style="width: 13vh;font-size: 1.4vh;text-align: center;border-radius: 0px" 
+                              filterFunction="#{generalJournalBean.filterByDate}" filterStyle="display:none" 
+                              sortBy="#{general.generalData}"  filterBy="#{general.generalData}"  
+                              filterMatchMode="contains" headerText=" #{userData.userDDs['GENERAL_DATE']} " >
+                        <h:outputText   style="font-size: 1.2vh;"  id="datee" 
+                                        value="#{general.generalData}" rendered="#{not general.markEdit}" > 
+                            <f:convertDateTime   id="datee"  pattern="yyyy-MM-dd"   /> 
+                        </h:outputText>                        
+                        <p:calendar  style="display:block;width: 100% " id="date"  value="#{general.generalData}" pattern="dd/MM/yyyy" rendered="#{general.markEdit}" />                        
+                    </p:column>
+                    
+                    <p:column  style="width:11vh;font-size: 1.4vh;text-align: center;border-radius: 0px"  
+                               filterStyle="display:none" sortBy="#{general.generalType.name}" 
+                               filterBy="#{general.generalType.name}"  filterMatchMode="contains" 
+                               headerText="#{userData.userDDs['GERNAL_TYPE']}">
+                        <h:outputText value="#{general.generalType.name}" rendered="#{not general.markEdit}"/>
+                        <p:selectOneMenu id="acc" filter="true" filterMatchMode="contains" value="#{generalJournalBean.selectedDocumentsType}"  
+                                         rendered="#{general.markEdit}" style="width:100%" >
+                            <p:ajax listener="#{generalJournalBean.ondocumentsTypesChange}" update="generaldocument" />
+                            <f:selectItems value="#{generalJournalBean.documentsTypes}"  var="doc" itemLabel="#{doc.name}" itemValue="#{doc.id}"/>
+                        </p:selectOneMenu>
+                    </p:column>
+                    
+                    <p:column style="width: 9vh;font-size: 1.4vh;text-align: center;border-radius: 0px" filterStyle="display:none" 
+                              sortBy="#{general.generalDecument}" filterBy="#{general.generalDecument}"  
+                              filterMatchMode="contains" headerText="#{userData.userDDs['GERNAL_DECUMENT']}">
+                        <h:outputText id="generaldocument" value="#{generalJournalBean.generalDocument}" rendered="#{ general.markEdit}"/>
+                        <h:outputText value="#{general.generalDecument}" rendered="#{ not general.markEdit}"/>
+                    </p:column>
+
+                    <p:column style="width: 8vh;font-size: 1.4vh;text-align: center;border-radius: 0px"  
+                              headerText=" #{userData.userDDs['ENTRY_ENTRANCE']}" >
+                        <h:outputText value="#{general.createdBy.name}" rendered="#{ not general.markEdit}"/>
+                    </p:column>
+
+                    <p:column style="width: 12vh;font-size: 1.4vh;text-align: center;border-radius: 0px" 
+                              headerText="#{userData.userDDs['GERNAL_STATEMENT']}" filterStyle="display:none" 
+                              filterBy="#{general.generalStatement}" filterMatchMode="contains">
+                        <h:outputText value="#{general.generalStatement}" rendered="#{not general.markEdit}" style="width: 100%"/>
+                        <p:inputTextarea style="width: 100%" rows="5" cols="33" value="#{general.generalStatement}" autoResize="true" rendered="#{general.markEdit}" />
+                    </p:column>
+
+                    <p:column style="width: 11vh;font-size: 1.4vh;text-align: center;border-radius: 0px" >
+                        <p:commandButton   class="ssaveButtons" update="@form" 
+                                           title="#{userData.userDDs['SAVE']}"
+                                           rendered="#{general.markEdit  
+                                                       and (userData.userScreens['generaljournal'].add 
+                                                       or userData.isAdmin)}"
+                                           action="#{generalJournalBean.save()}" 
+                                           icon="fa fa-fw fa-save" style="background-color:#193cc4;margin-bottom:3px" disabled="#{general.post_flag eq TRUE or generalJournalBean.glYearSelection.openning eq 1 }">
+                            <f:setPropertyActionListener value="#{general}" target="#{generalJournalBean.selectedGeneralJournal}" />
+
+                        </p:commandButton>
+
+                        <p:commandButton class="sreloadButtons"
+                                         update="@form" title="#{userData.userDDs['RELOAD']}" 
+                                         style="size: auto;background-color:#46ae17;border-radius: 3px;margin-bottom:3px"
+                                         rendered="#{general.markEdit  
+                                                     and (userData.userScreens['generaljournal'].add or userData.isAdmin)}"
+                                         action="#{generalJournalBean.reload()}" icon="fa fa-fw fa-undo"  disabled="#{general.post_flag eq TRUE or generalJournalBean.glYearSelection.openning eq 1 }">
+                            <f:setPropertyActionListener value="#{general}" target="#{generalJournalBean.selectedGeneralJournal}" />
+                        </p:commandButton>
+
+                        <p:commandButton  class="seditButtons" update="@form" title="#{userData.userDDs['EDIT']}" 
+                                           style="background-color: #6a6967;border-radius: 3px;margin-bottom:3px"
+                                          action="#{generalJournalBean.edit()}"
+                                          icon="fa fa-fw fa-edit" 
+                                          rendered="#{not general.markEdit  
+                                                      and (userData.userScreens['generaljournal'].edit 
+                                                      or userData.isAdmin)}"  disabled="#{general.post_flag 
+                                                      or generalJournalBean.glYearSelection.openning eq 1 or general.userModifyAbility eq true}">
+                            <f:setPropertyActionListener value="#{general}" target="#{generalJournalBean.selectedGeneralJournal}" />
+                        </p:commandButton>
+
+                        <p:commandButton   class="sdeleteButtons" update="@form" title="#{userData.userDDs['DELETE']}"
+                                           style="background-color: red;border-radius: 3px;margin-bottom:3px "
+                                           action="#{generalJournalBean.delete}" icon="fa fa-remove" rendered="#{not general.markEdit  and (userData.userScreens['generaljournal'].delete or userData.isAdmin)}" disabled="#{general.post_flag or generalJournalBean.glYearSelection.openning eq 1 or general.userModifyAbility eq true}">
+                            <f:setPropertyActionListener value="#{general}" target="#{generalJournalBean.selectedGeneralJournal}" />
+                            <p:confirm header="#{userData.userDDs['COFIGRATION']}" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                        </p:commandButton>
+
+                        <p:commandButton class="scobyButtons" update="@form" title="نسخ"
+                                         action="#{generalJournalBean.repeatGeneralJournal()}" 
+                                         style="background-color: rgb(3, 92, 112);border-radius: 3px;margin-bottom:3px"
+                                         icon="fa fa-fw fa-copy"  disabled="#{general.post_flag 
+                                                      or generalJournalBean.glYearSelection.openning eq 1}"
+                                         rendered="#{not general.markEdit  and (userData.userScreens['generaljournal'].delete or userData.isAdmin)}">
+                            <f:setPropertyActionListener value="#{general}" target="#{generalJournalBean.selectedGeneralJournal}" />
+                            <p:confirm header="#{userData.userDDs['COFIGRATION']}" message="#{userData.userDDs['ARE_YOU_SU_REPRETE_GE_JO']}" icon="ui-icon-alert" />
+
+                        </p:commandButton>
+
+                        <p:commandButton   class="sprintButtons" ajax="false" onclick="form.target = '_blank'" 
+                                           icon="fa fa-fw fa-print"
+                                            style="background-color:#084dbb;border-radius: 3px;margin-bottom:3px"
+                                           actionListener="#{generalJournalBean.exportPDF}" 
+                                           rendered="#{not general.markEdit  and (userData.userScreens['generaljournal'].delete or userData.isAdmin)}"/>
+
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column>
+
+
+
+                </p:dataTable>
+            </p:fieldset>
+            <p:fieldset id="generalDetailsFeildSet" legend="#{userData.userDDs['GENERAL_JOURNAL_DETAILS']}">
+                <div class="col-xs-12">
+                    <p:messages autoUpdate="true"  id="msg2" showDetail="true" closable="true" rendered="true" />
+                </div>
+
+                <p:dataTable id="generalDetails" 
+                             draggableColumns="true" 
+                             widgetVar="generalJournalDetailstable"                         
+
+                             rowIndexVar="index"
+                             var="gendetails" 
+                             dir="rtl" 
+                             selection="#{generalJournalBean.details}"
+                             rowKey="#{gendetails.id} #{gendetails.index}" 
+                             value="#{generalJournalBean.detailsList}" 
+                             stickyHeader="#{generalJournalBean.stickyHeader}"
+
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}">
+
+                    <p:ajax event="rowSelectCheckbox"
+                            process="@form"
+                            listener="#{generalJournalBean.onRowSelectDetails}"
+                            update="form"/>
+
+                    <p:ajax event="rowUnselectCheckbox"
+                            process="@form"
+                            listener="#{generalJournalBean.onRowUnselect()}"
+                            update="form"/>
+
+                    <f:facet name="header">
+                        <p:commandButton id="b2" icon="fa fa-plus"
+                                         
+                                         class="saddButton"
+                                         title="#{userData.userDDs['ADD']}"
+                                         actionListener="#{generalJournalBean.adddetails}"
+                                         style="float:right" 
+                                         update="generalDetails" ajax="true" 
+                                         rendered="#{generalJournalBean.glYearSelection.openning eq 0 
+                                                     or generalJournalBean.glYearSelection.openning eq null}"
+                                         disabled="#{generalJournalBean.selectedGeneralJournal.post_flag or generalJournalBean.modifyJournalAbility}"/>
+
+
+
+                        <p:commandButton class="deleteButtons" id="b4" 
+                                         value="#{userData.userDDs['DELETE']}" 
+                                          
+                                         style=" float:left;width: 60px;background-color:#cc294a!important;color: #eef2f3!important;margin-left: 5px;margin-top: 4px;"
+                                         rendered="#{(userData.userScreens['generaljournal'].add or userData.isAdmin) and (generalJournalBean.glYearSelection.openning eq 0 or generalJournalBean.glYearSelection.openning eq null)}" 
+                                         action="#{generalJournalBean.deleteAll}"   update="@form"
+                                         disabled="#{generalJournalBean.selectedGeneralJournal.post_flag or  generalJournalBean.modifyJournalAbility}">
+
+                            <p:confirm header="#{userData.userDDs['COFIGRATION']}" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                        </p:commandButton>
+
+
+                        <p:outputPanel >
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large"/>
+                            <p:inputText id="globalFilter" onkeyup="PF('generalJournalDetailstable').filter()" style="height: 25px!important;width: 30%!important;" />
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:column  selectionMode="multiple" toggleable="false" style="width:.5vh;background-color: #fff;"  />
+
+                    <p:column style="width: .5vh;font-size: 1.4vh;text-align: center;border-radius: 0px" headerText="#" >
+                        <h:outputText value="#{gendetails.serial}" style="font-size: 1.2vh" />
+                    </p:column>
+
+                    <p:column style="width: 8vh;font-size: 1.2vh;text-align: center;border-radius: 0px"
+                              filterStyle="display:none" 
+                              filterBy="#{gendetails.glACCOUNTId.accNumber}"  filterable="true"
+                              filterMatchMode="contains" 
+                              headerText="#{userData.userDDs['ACCOUNT']}">
+
+                        <h:outputText style="font-size: 1.1vh;font-weight:bold"
+                                      value="#{gendetails.glACCOUNTId.accNumber} #{gendetails.glACCOUNTId.name}" 
+                                      rendered="#{not gendetails.markEdit}"/>                    
+
+                        <p:selectOneMenu style="width: 100%"
+                                         filter="true" filterMatchMode="contains"
+                                         id="acc" value="#{gendetails.glACCOUNTId.id}"
+                                         rendered="#{gendetails.markEdit}">
+
+                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" 
+                                          itemValue="" 
+                                          noSelectionOption="true" />
+                            <f:selectItems value="#{generalJournalBean.glAccounts}" 
+                                           var="acc" 
+                                           itemLabel="#{acc}" 
+                                           itemValue="#{acc.id}"/>
+
+                        </p:selectOneMenu>
+                    </p:column>
+
+                    <p:column id="com2" filterStyle="display:none" 
+                              style="width: 9vh;font-size: 1.4vh;text-align: center;border-radius: 0px"
+
+                              filterBy="#{gendetails.costCenterId.code}"
+                              filterMatchMode="contains" 
+                              headerText="#{userData.userDDs['SINGLE_COST_CENTER']}">
+
+                        <h:outputText
+                            value="#{gendetails.costCenterId.code}"
+                            rendered="#{not gendetails.markEdit}"/>
+
+                        <p:selectOneMenu style="width:70px; float:right"
+                                         filter="true" filterMatchMode="contains" 
+                                         id="cost1" 
+                                         value="#{gendetails.costCenterId.id}" 
+                                         rendered="#{ gendetails.markEdit}">
+
+                            <p:ajax listener="#{generalJournalBean.onCostCenterChange()}" />
+
+                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" id="cost" 
+                                          itemDisabled="#{not generalJournalBean.disableCC}"
+                                          itemValue="#{-1}" noSelectionOption="true" />
+
+                            <f:selectItems value="#{generalJournalBean.costCenterList}" 
+                                           var="cost" itemLabel="#{cost.name}"
+                                           itemValue="#{cost.id}"/>
+                        </p:selectOneMenu>
+                    </p:column>
+
+                    <p:column filterStyle="display:none"
+                              style="width: 8vh;font-size: 1.4vh;text-align: center;border-radius: 0px"
+
+                              filterBy="#{gendetails.adminUnitId.code}" 
+                              filterMatchMode="contains" 
+                              headerText="#{userData.userDDs['ADMIN_UNIT']}">
+
+                        <h:outputText style="width: 100%"
+                                      value="#{gendetails.adminUnitId.code}"
+                                      rendered="#{not gendetails.markEdit}"/> 
+                        <p:selectOneMenu filter="true" 
+                                         filterMatchMode="contains"
+                                         id="com1"  
+                                         value="#{gendetails.adminUnitId.id}" 
+                                         style="width:65px"
+                                         rendered="#{gendetails.markEdit}">
+                            <p:ajax listener="#{generalJournalBean.onAdminUnitChange()}" />
+                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" id="com"
+                                          itemDisabled="#{not generalJournalBean.disableAdminU}"
+                                          itemValue="#{-1}" noSelectionOption="true"  />
+
+                            <f:selectItems value="#{generalJournalBean.glAdminunitlist}"  
+                                           var="Admin" itemLabel="#{Admin.name}"
+                                           itemValue="#{Admin.id}"/>
+                        </p:selectOneMenu>
+                    </p:column>
+
+                    <p:column style="width: 6vh;font-size: 1.4vh;text-align: center;border-radius: 0px" filterStyle="display:none" 
+
+                              filterBy="#{gendetails.debitAmount}" 
+                              filterMatchMode="contains"
+                              headerText="#{userData.userDDs['DEBIT_AMOUNT']}">
+
+                        <h:outputText style="width: 90%"
+                                      value="#{gendetails.debitAmount}" rendered="#{not gendetails.markEdit}"/>
+
+                        <p:inputNumber style="width:70%"
+                                       id="debit" 
+                                       value="#{gendetails.debitAmount}"
+                                       valueChangeListener="#{generalJournalBean.debitRender}"
+                                       disabled="#{generalJournalBean.debitDisabled}" 
+                                       rendered="#{ gendetails.markEdit}" 
+                                       >
+                            <p:ajax update="credit" />
+                        </p:inputNumber>
+                    </p:column>
+
+                    <p:column style="width: 6vh;font-size: 1.4vh;text-align: center;border-radius: 0px"  filterStyle="display:none"
+                              filterBy="#{gendetails.creditamount}" 
+                              filterMatchMode="contains" 
+                              headerText="#{userData.userDDs['CREDIT_AMOUNT']}">
+
+                        <h:outputText   value="#{gendetails.creditamount}"
+
+                                        rendered="#{not gendetails.markEdit}"/>
+
+                        <p:inputNumber 
+                            style="width:100%"
+                            id="credit"
+                            value="#{gendetails.creditamount}" 
+                            disabled="#{generalJournalBean.creditDisabled}"
+                            valueChangeListener="#{generalJournalBean.creditRender}" 
+                            rendered="#{gendetails.markEdit}"  >
+                            <p:ajax update="debit" />
+
+                        </p:inputNumber>
+                    </p:column>
+
+                    <p:column style="width: 12vh;font-size: 1.4vh;text-align: center;border-radius: 0px"  headerText="#{userData.userDDs['DESCRIBTION']}">
+                        <h:outputText style="width: 100%" value="#{gendetails.discribtion}" rendered="#{not gendetails.markEdit}"/>
+                        <p:inputText style="width: 100%"  onclick="myFunction()" id="Desc" value="#{gendetails.discribtion}" rendered="#{gendetails.markEdit}"/>
+                    </p:column>
+
+                    <p:columnGroup type="footer">
+                        <p:row>
+                            <p:column   footerText=""  style="width:2vh;background-color: #fff;padding-left:2.5vh;padding-right:0px;border-radius: 0px"  />
+                            <p:column   footerText=""  style=";border-radius: 0px"/> 
+                            <p:column   footerText="" style=";border-radius: 0px"/> 
+                            <p:column  style=";border-radius: 0px" footerText="#{userData.userDDs['TOTAL']} " />
+
+
+                            <p:column  style=";border-radius: 0px" footerText="" />
+                            <p:column   footerText="#{generalJournalBean.summaryCreditString}"  style="font-size: 1.2vh !important;border-radius: 0px"/>
+                            <p:column   footerText="#{generalJournalBean.summaryDebitString}" style="font-size: 1.2vh !important;border-radius: 0px" />
+                            <p:column   style=";border-radius: 0px" footerText="#{userData.userDDs['DIFFERENCE']}"  />
+                            <p:column   style=";border-radius: 0px" footerText="#{generalJournalBean.difference}"  />
+
+                        </p:row>
+                    </p:columnGroup>
+
+                    <p:column style="width: 8vh;font-size: 1.4vh;text-align: center;border-radius: 0px" >
+
+                        <p:commandButton  class="ssaveButtons" id="b5" icon="fa fa-check " 
+                                          title="#{userData.userDDs['SAVE']}" style="background-color:#193cc4;margin-bottom:3px" 
+                                          action="#{generalJournalBean.confirm}"
+                                          update="generalDetails"
+                                          rendered="#{(gendetails.markEdit)
+                                                      and ( generalJournalBean.glYearSelection.openning eq 0 
+                                                      or generalJournalBean.glYearSelection.openning eq null)}" 
+                                          disabled="#{generalJournalBean.selectedGeneralJournal.post_flag or generalJournalBean.modifyJournalAbility}" >
+                            <f:setPropertyActionListener value="#{gendetails}"
+                                                         target="#{generalJournalBean.detail}"  />
+                        </p:commandButton>
+
+                        <p:commandButton   class="sreloadButtons" update="generalDetails" title="#{userData.userDDs['RELOAD']}" 
+                                           rendered="#{(gendetails.markEdit) and (generalJournalBean.glYearSelection.openning eq 0 or generalJournalBean.glYearSelection.openning eq null)}"
+                                           action="#{generalJournalBean.reloadDetails()}" icon="fa fa-fw fa-undo" style="background-color:#46ae17;margin-bottom:3px"  
+                                           disabled="#{generalJournalBean.selectedGeneralJournal.post_flag}">
+                            <f:setPropertyActionListener value="#{gendetails}" target="#{generalJournalBean.detail}" />
+                        </p:commandButton>
+
+                        <p:commandButton   class="seditButtons"  title="#{userData.userDDs['EDIT']}"
+                                             style="background-color: #6a6967;border-radius: 3px;margin-bottom:3px"
+                                           rendered="#{(not gendetails.markEdit ) and (generalJournalBean.glYearSelection.openning eq 0 or generalJournalBean.glYearSelection.openning eq null)}"
+                                           action="#{generalJournalBean.editgeneraldetails()}" icon="fa fa-fw fa-edit" 
+                                           update="generalDetails" 
+                                           disabled="#{(gendetails.markDisable) or generalJournalBean.selectedGeneralJournal.post_flag or generalJournalBean.modifyJournalAbility}" >
+                            <f:setPropertyActionListener value="#{gendetails}" target="#{generalJournalBean.detail}"  />
+                        </p:commandButton>
+
+                        <p:commandButton class="saddButtons" id="b7" icon="fa fa-plus" title="#{userData.userDDs['ADD']}"
+                                                                                        style="background-color:#37b10b;border-radius: 3px;margin-bottom:3px"
+
+                                         rendered="#{(not gendetails.markEdit) and( generalJournalBean.glYearSelection.openning eq 0 or generalJournalBean.glYearSelection.openning eq null)}"
+                                         actionListener="#{generalJournalBean.adddetails}" 
+                                         update=":form:generalDetails" ajax="true" 
+                                         disabled="#{(gendetails.markDisable) or generalJournalBean.selectedGeneralJournal.post_flag or generalJournalBean.modifyJournalAbility}" />
+
+
+                        <p:commandButton  class="sreloadButtons" update=":form" title="نسخ"
+                                          action="#{generalJournalBean.repeatGeneralJournalDetail}"
+                                            style="background-color:rgb(162, 46, 247);border-radius: 3px;margin-bottom:3px"
+                                          icon="fa fa-fw fa-copy" ajax="true" 
+                                          rendered="#{(not gendetails.markEdit) and (generalJournalBean.glYearSelection.openning eq 0 or generalJournalBean.glYearSelection.openning eq null)}"                                       
+                                          disabled="#{(gendetails.markDisable) or generalJournalBean.selectedGeneralJournal.post_flag or generalJournalBean.modifyJournalAbility}">
+                            <f:setPropertyActionListener value="#{gendetails}" target="#{generalJournalBean.journalDetailSelected}" />
+                        </p:commandButton>
+
+                    </p:column >
+
+                    <f:facet name="footer"  >
+                        <p:commandButton  icon="fa fa-plus"
+                                           class="saddButtons"
+                                          title="#{userData.userDDs['ADD']}"
+                                          actionListener="#{generalJournalBean.adddetails}"
+                                          update="generalDetails" ajax="true" 
+                                          rendered="#{(generalJournalBean.stickyHeader) and ( generalJournalBean.glYearSelection.openning eq 0 or generalJournalBean.glYearSelection.openning eq null)}"
+                                          disabled="#{generalJournalBean.selectedGeneralJournal.post_flag or generalJournalBean.modifyJournalAbility}" />
+
+                        <p:commandButton  title="#{userData.userDDs['SAVE_ALL']}"  value="#{userData.userDDs['SAVE_ALL']}" style="float:left;background-color:#193cc4;margin-bottom:3px"
+                                          rendered="#{(userData.userScreens['generaljournal'].add and generalJournalBean.stickyHeader) and ( generalJournalBean.glYearSelection.openning eq 0 or generalJournalBean.glYearSelection.openning eq null)}" actionListener="#{generalJournalBean.info()}" 
+                                          action="#{generalJournalBean.savegeneraljournaldetails()}" icon="fa fa-fw fa-save"  
+                                          update="@form" disabled="#{generalJournalBean.selectedGeneralJournal.post_flag or generalJournalBean.modifyJournalAbility}"/>
+
+                        <p:commandButton  class="sdeleteButton" title="حذف"  value="حذف" style="float:left;background-color: red" 
+                                          rendered="#{(userData.userScreens['generaljournal'].add  and generalJournalBean.stickyHeader)  and (generalJournalBean.glYearSelection.openning eq 0 or generalJournalBean.glYearSelection.openning eq null)}" 
+                                          action="#{generalJournalBean.deleteAll}" icon="fa fa-fw fa-remove" update="@form"
+                                          disabled="#{generalJournalBean.selectedGeneralJournal.post_flag or generalJournalBean.modifyJournalAbility}">
+
+                            <p:confirm header="#{userData.userDDs['COFIGRATION']}" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+
+                        </p:commandButton>
+
+
+                        <p:outputPanel rendered="#{generalJournalBean.stickyHeader}">
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large"/>
+                            <p:inputText  onkeyup="PF('generalJournalDetailstable').filter()" style="width:150px" />
+                        </p:outputPanel>
+                    </f:facet>
+
+                </p:dataTable>
+
+
+                <h:panelGroup class="centerButtons"  style="margin-top: 1%;">
+
+                    <p:commandButton  class="saveallButtons" id="b3" title="#{userData.userDDs['SAVE_ALL']}"  value="#{userData.userDDs['SAVE_ALL']}" 
+                                      
+                                      style=" float:left;width: 95px;background-color: rgba(15, 18, 160, 0.92) !important;color: #eef2f3!important;margin-left: 5px;"
+                                      rendered="#{(userData.userScreens['generaljournal'].add ) and ( userData.isAdmin or generalJournalBean.glYearSelection.openning eq 0 or generalJournalBean.glYearSelection.openning eq null)}"  
+                                      action="#{generalJournalBean.savegeneraljournaldetails()}"   
+                                      update="@form" disabled="#{generalJournalBean.selectedGeneralJournal.post_flag or  generalJournalBean.modifyJournalAbility}"/>
+                     <p:commandButton 
+
+                            class="closeButtons"
+                            title="#{userData.userDDs['CANCEL']}"
+                            immediate="true" 
+                            value="#{userData.userDDs['CANCEL']}" 
+                           style=" background-color:#035C70 !important;color: #eef2f3!important;margin-left: 5px;" 
+                            action="exit" 
+                             />
+                    
+                    
+                </h:panelGroup>
+
+
+                <p:panelGrid id="footerDetails" columns="10" rendered="#{generalJournalBean.view}" >
+                    <h:outputLabel  value="#{userData.userDDs['ADMIN_UNIT']}"  />
+                    <h:outputLabel value="#{generalJournalBean.journalDetailSelected.adminUnitId.name}"  /> 
+                    <h:outputLabel  value="#{userData.userDDs['CS_NAME']}"  />
+                    <h:outputLabel value="#{generalJournalBean.journalDetailSelected.costCenterId.name}" /> 
+
+                    <h:outputLabel value="العملة المحلية"   />
+                    <h:outputLabel value="#{generalJournalBean.journalDetailSelected.creditamountLocal}" 
+                                   rendered="#{generalJournalBean.viewCredit}"  /> 
+
+                    <h:outputLabel value="#{generalJournalBean.journalDetailSelected.debitAmountLocal}" 
+                                   rendered="#{generalJournalBean.viewDebit}" /> 
+
+                    <h:outputLabel value="المعدل"  />
+                    <h:outputLabel value="#{generalJournalBean.journalDetailSelected.rate}" 
+                                   style="width:100%" /> 
+
+                    <h:outputLabel  value="#{userData.userDDs['NAME_CURRENCY']}"   />
+                    <h:outputLabel value="#{generalJournalBean.journalDetailSelected.glACCOUNTId.currencyId.name}"  /> 
+                </p:panelGrid>
+            </p:fieldset>
+        </h:form>
+        <script>
+            function insert(str, index, value) {
+                return str.substr(index) + value + str.substr(0, index);
+            }
+            ;
+
+            $(document).on('keydown', function (event) {
+                if (event.keyCode === 32) {
+
+                    var elem = document.getElementById(event.target.id);
+                    var insertPos = elem.selectionEnd;
+
+                    event.target.value = insert(event.target.value, insertPos, ' ');
+                }
+            });
+
+            function  myFunction() {
+
+                var val = document.getElementById("Desc").value = "5555555";
+                alert(val);
+
+
+            }
+            ;
+        </script>
+    </ui:define>
+</ui:composition>

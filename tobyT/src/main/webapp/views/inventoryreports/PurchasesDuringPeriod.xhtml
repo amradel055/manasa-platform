@@ -1,0 +1,394 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+
+
+        <div style=" position: absolute;left: 20px"> 
+
+            <p:commandButton  style="width: 90px;background-image: none!important;z-index: 2" 
+                              class="viewButton searchButton"
+                              value="Hide/Show"/>  
+        </div>
+        <h:form  id="form" dir="#{userData.dir}"  style="margin-right: 20px">
+
+
+
+
+            <p:fieldset  legend="#{userData.userDDs['PURCHASES_DUR_PER']}" style=" position: relative"> 
+
+
+                <div  id="firstSegment" class="ui-g-12 ui-g-nopad firstset">
+                    <div class="ui-g">
+
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['FROM_SUPPLIER']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:75%!important"
+                                                    dropdown="true"
+                                                    converter="#{purchasesDuringPeriodReportMB.invOrgSiteConverter}"
+                                                    value="#{purchasesDuringPeriodReportMB.purchasesDuringPeriodSearchBean.fromorganizationName}"
+                                                    var="organization"
+                                                    itemLabel="#{organization}" 
+                                                    itemValue="#{organization}"
+                                                    forceSelection="true" 
+                                                    completeMethod="#{purchasesDuringPeriodReportMB.completOrgSite}"
+
+                                                    >
+
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['TO_SUPPLIER']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:75%!important" 
+
+                                                    dropdown="true"
+
+                                                    converter="#{purchasesDuringPeriodReportMB.invOrgSiteConverter}"
+                                                    value="#{purchasesDuringPeriodReportMB.purchasesDuringPeriodSearchBean.toorganizationName}"
+                                                    var="organization"
+                                                    itemLabel="#{organization}" 
+                                                    itemValue="#{organization}"
+                                                    forceSelection="true" 
+                                                    completeMethod="#{purchasesDuringPeriodReportMB.completOrgSite}" >
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 70px" value="#{userData.userDDs['FROM_DATE']}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:calendar pattern="dd/MM/yyyy" 
+                                                value="#{purchasesDuringPeriodReportMB.purchasesDuringPeriodSearchBean.dateFrom}"
+                                                style="width: 56%">
+
+                                    </p:calendar>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 70px" value="#{userData.userDDs['TO_DATE']}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:calendar pattern="dd/MM/yyyy" 
+                                                value="#{purchasesDuringPeriodReportMB.purchasesDuringPeriodSearchBean.dateTo}"
+                                                style="width: 56%">
+
+                                    </p:calendar>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['FROM_REPOS_NO']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:75%!important"
+                                                    dropdown="true"
+                                                    converter="#{purchasesDuringPeriodReportMB.invInventoryConverter}"
+                                                    value="#{purchasesDuringPeriodReportMB.purchasesDuringPeriodSearchBean.fromInventoryName}"
+                                                    var="inventory"
+                                                    itemLabel="#{inventory}" 
+                                                    itemValue="#{inventory}"
+                                                    forceSelection="true" 
+                                                    completeMethod="#{purchasesDuringPeriodReportMB.completInventory}"
+                                                    >
+
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['TO_REPOS_NO']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:75%!important" 
+
+                                                    dropdown="true"
+                                                    converter="#{purchasesDuringPeriodReportMB.invInventoryConverter}"
+                                                    value="#{purchasesDuringPeriodReportMB.purchasesDuringPeriodSearchBean.toInventoryName}"
+                                                    var="inventory"
+                                                    itemLabel="#{inventory}" 
+                                                    itemValue="#{inventory}"
+                                                    forceSelection="true" 
+                                                    completeMethod="#{purchasesDuringPeriodReportMB.completInventory}">
+                                    </p:autoComplete>
+
+                                </h:panelGroup> 
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['FROM_INVOI_NO']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:autoComplete id="purchaseIdFrom"
+                                                    style="width:75%!important " 
+                                                    dropdown="true"
+
+                                                    converter="#{purchasesDuringPeriodReportMB.invInvoicePurchaseConverter}"
+                                                    value="#{purchasesDuringPeriodReportMB.purchasesDuringPeriodSearchBean.fromserial}"
+
+                                                    var="purchasePerson"
+                                                    itemLabel="#{purchasePerson}" 
+                                                    itemValue="#{purchasePerson}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{purchasesDuringPeriodReportMB.completePurchaseInvoice}">
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['TO_INVOI_NO']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:autoComplete id="purchaseIdTo"
+                                                    style="width:75%!important " 
+                                                    dropdown="true"
+
+                                                    converter="#{purchasesDuringPeriodReportMB.invInvoicePurchaseConverter}"
+                                                    value="#{purchasesDuringPeriodReportMB.purchasesDuringPeriodSearchBean.toserial}"
+
+                                                    var="purchasePerson"
+                                                    itemLabel="#{purchasePerson}" 
+                                                    itemValue="#{purchasePerson}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{purchasesDuringPeriodReportMB.completePurchaseInvoice}">
+                                    </p:autoComplete>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['FROM_INVOI_TYP']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:selectOneMenu style="width:56%;margin-top:5px"  filter="true" filterMatchMode="contains"   value="#{purchasesDuringPeriodReportMB.purchasesDuringPeriodSearchBean.frompaymentType}" >
+                                        <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" itemValue="0"/>
+                                        <f:selectItem itemLabel="#{userData.userDDs['CASH']}"  itemValue="1" />
+                                        <f:selectItem itemLabel="#{userData.userDDs['POSTPONE']}"  itemValue="2" />
+                                        <f:selectItem itemLabel="#{userData.userDDs['DECOM_CREDIT']}"  itemValue="3" />
+                                    </p:selectOneMenu>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['TO_INVOI_TYP']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:selectOneMenu style="width:56%;margin-top:5px" filter="true" filterMatchMode="contains"   value="#{purchasesDuringPeriodReportMB.purchasesDuringPeriodSearchBean.topaymentType}"  >
+                                        <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" itemValue="0"/>
+                                        <f:selectItem itemLabel="#{userData.userDDs['CASH']}"  itemValue="1" />
+                                        <f:selectItem itemLabel="#{userData.userDDs['POSTPONE']}"  itemValue="2" />
+                                        <f:selectItem itemLabel="#{userData.userDDs['DECOM_CREDIT']}"  itemValue="3" />
+                                    </p:selectOneMenu>
+
+                                </h:panelGroup> 
+
+                            </h:panelGroup>
+                        </div>
+                    </div>
+                </div>
+
+                <h:panelGrid  columns="1"  class="col-md-12">
+
+                    <h:panelGroup  class="centerButtons" style="margin-top: 2%">
+
+
+                        <p:commandButton   class="searchbutton"
+                                           title="#{userData.userDDs['SEARCH']}"
+                                           action="#{purchasesDuringPeriodReportMB.search()}"
+                                           id="saveB"
+                                           value="#{userData.userDDs['SEARCH']}"
+                                           update="PurchasesDuringPeriodViewTable" 
+                                           icon="fa fa-search"  />
+
+                        <p:commandButton   class="newbutton"
+                                           title="#{userData.userDDs['NEW']}" 
+                                           id="NewB"
+                                           immediate="true" 
+                                           action="#{purchasesDuringPeriodReportMB.reset()}"
+                                           update="form"
+                                           value="#{userData.userDDs['NEW']}"
+                                           icon="fa fa-plus"/>
+
+                        <p:commandButton    class="printbutton"
+                                            ajax="false"
+                                            id="PrintB"
+                                            onclick="form.target = '_blank'"  
+                                            icon="fa fa-fw fa-print"
+                                            value="#{userData.userDDs['PRINT']}" 
+                                            actionListener="#{purchasesDuringPeriodReportMB.exportPDF}"
+                                            title="#{userData.userDDs['PRINT']}"
+                                            immediate="true" />
+
+                        <p:commandButton  class="closeButton"
+                                          icon="fa fa-fw fa-backward"  
+                                          value="#{userData.userDDs['BACK']}"
+                                          id="CloseB"
+                                          title="#{userData.userDDs['BACK']}"
+                                          action="exit"/>
+
+                        <h:commandLink  class="sdcreenimg">  
+                            <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                            <p:dataExporter type="xls"
+                                            target="PurchasesDuringPeriodViewTable" 
+                                            fileName="مشتريات خلال الفترة"
+                                            postProcessor="#{purchasesDuringPeriodReportMB.postProcessXLS}" />  
+                        </h:commandLink>
+
+
+                        <p:blockUI block="form" trigger="saveB NewB PrintB CloseB" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI> 
+
+                    </h:panelGroup>
+
+                </h:panelGrid>
+
+            </p:fieldset>
+
+            <p:fieldset  style="margin-top: 2%">
+                <p:dataTable 
+                    paginator="true"
+                    rows="20"
+                    draggableColumns="true" 
+                    var="PurchasesDuringPeriodViewTable" 
+                    widgetVar="PurchasesDuringPeriodViewTable"  
+                    rowKey="#{PurchasesDuringPeriodViewTable}"
+                    rowIndexVar="index" 
+                    value="#{purchasesDuringPeriodReportMB.purchasesDuringPeriodBeanList}" 
+                    dir="rtl" 
+                    emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                    id="PurchasesDuringPeriodViewTable">
+
+                    <f:facet name="header">
+
+
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('PurchasesDuringPeriodViewTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+
+                    </f:facet>
+
+                    <p:column   style="width: 10vh;text-align: right;font-size: 1.8vh;text-align: center" headerText="#{userData.userDDs['INVOICE_NO']}" 
+
+                                filterBy="#{PurchasesDuringPeriodViewTable.serial}" 
+                                filterMatchMode="contains" 
+                                sortBy="#{PurchasesDuringPeriodViewTable.serial}"
+                                filterable="false">
+
+                        <h:outputText value="#{PurchasesDuringPeriodViewTable.serial}" style="font-size: 1.5vh"/>
+                    </p:column>
+
+                    <p:column style="width: 6vh;text-align: right;font-size: 1.8vh;text-align: center" filterStyle="display:none"
+                              headerText="#{userData.userDDs['DATEE']}" 
+
+                              filterBy="#{PurchasesDuringPeriodViewTable.date}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{PurchasesDuringPeriodViewTable.date}"
+                              filterable="false">
+
+                        <p:outputLabel value="#{PurchasesDuringPeriodViewTable.date}">
+                            <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                        </p:outputLabel>
+                    </p:column>
+
+
+                    <p:column style="width: 6vh;text-align: right;font-size: 1.8vh;text-align: center" filterStyle="display:none"
+                              headerText="#{userData.userDDs['TYPE']}" 
+
+
+                              filterBy="#{PurchasesDuringPeriodViewTable.paymentTypeText}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{PurchasesDuringPeriodViewTable.paymentTypeText}"
+                              filterable="false">
+
+                        <h:outputText value="#{PurchasesDuringPeriodViewTable.paymentTypeText}" style="font-size: 1.5vh;width: 95%"/>
+                    </p:column>
+
+                    <p:column style="width: 15vh;text-align: right;font-size: 1.8vh;text-align: center" 
+                              headerText="#{userData.userDDs['SUPPLIER']}" 
+
+                              filterBy="#{PurchasesDuringPeriodViewTable.organizationName}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{PurchasesDuringPeriodViewTable.organizationName}"
+                              filterable="false">
+
+                        <h:outputText value="#{PurchasesDuringPeriodViewTable.organizationName}" style="font-size: 1.5vh;width: 95%"/>
+                    </p:column>
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh;text-align: center" 
+                              headerText="#{userData.userDDs['TOTAL']}" 
+
+                              filterBy="#{PurchasesDuringPeriodViewTable.net}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{PurchasesDuringPeriodViewTable.net}"
+                              filterable="false">
+
+                        <p:inputNumber readonly="true" value="#{PurchasesDuringPeriodViewTable.net}" style="font-size: 1.5vh;width: 90%"/>
+                    </p:column>
+                    <p:columnGroup type="footer">
+                        <p:row>
+                            <p:column colspan="4" footerText="#{userData.userDDs['TOTAL']}  :" />
+                            <p:column footerText="#{purchasesDuringPeriodReportMB.totalString}"  style="font-size: 1.4vh" />
+                        </p:row>
+                    </p:columnGroup>
+
+                </p:dataTable>
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>
+
+

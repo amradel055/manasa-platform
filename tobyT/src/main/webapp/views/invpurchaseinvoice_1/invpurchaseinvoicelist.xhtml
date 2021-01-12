@@ -1,0 +1,184 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form id="form"  dir="#{userData.dir}" class='formmargin'>
+            <div style=" position: absolute;left: 20px"> 
+
+                <p:commandButton  style="z-index: 2;
+                                  margin-top: 24%;
+                                  color: #035c70!important; 
+                                  background-color: #223238!important;
+                                  border: 1px solid #22323a!important;
+                                  background: #22323a 50% 50% repeat-x!important;"
+                                  icon="fa fa-fw fa-home"
+                                  title="#{userData.userDDs['HOME']}"
+                                  class="smhomeButton" 
+                                  action="exit" />
+
+            </div>
+            <div class="col-xs-12">
+                <p:messages id="curmsg" showDetail="true" rendered="true" closable="true"/>   
+            </div>
+            <p:fieldset   legend="#{userData.userDDs['PURCHASE_INVOICES']}" >
+
+
+                <p:dataTable id="invInvoicePurchaseTable"
+                             draggableColumns="true"
+                             draggableRows="true"
+                             var="invInvoicePurchaseTable" 
+                             widgetVar="bTable" 
+                             rowIndexVar="index" 
+                             value="#{invPurchaseInvoiceListDTOMB.dataModel}"
+                             paginator="true"
+                             rows="10" 
+                             lazy="true" 
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink}
+                             {PreviousPageLink} {PageLinks} {NextPageLink}
+                             {LastPageLink} {RowsPerPageDropdown}" 
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" 
+                             >
+
+                    <f:facet name="header" >
+                        <p:commandButton  icon="fa fa-plus" 
+                                          class="saddButton"
+                                          title="#{userData.userDDs['ADD']}" 
+                                          action="#{invPurchaseInvoiceListDTOMB.goToAdd()}" 
+                                          style="float:right" 
+                                          rendered="#{userData.userScreens['invpurchaseinvoice_1'].add or userData.isAdmin}"/>
+
+                        <p:selectOneMenu id="inventory" value="#{invPurchaseInvoiceListDTOMB.invInventorySelection}"
+                                         converter="#{invPurchaseInvoiceListDTOMB.invInventoryConverter}" 
+                                         style="float:right;width: 20%!important;color:#fff;height: 30px!important;margin-right: 0.5%;">
+
+                            <p:ajax listener="#{invPurchaseInvoiceListDTOMB.loadInventoryList()}" update="form" />
+                            <f:selectItem itemLabel="#{userData.userDDs['ALL']}" itemValue="" />
+
+                            <f:selectItems value="#{invPurchaseInvoiceListDTOMB.inventoryList}" 
+                                           var="inventory" itemLabel="#{inventory.name}"
+                                           itemValue="#{inventory}"/> 
+                        </p:selectOneMenu>
+
+
+                        <p:outputPanel  >
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('bTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px;"  filterStyle="display:none" 
+                               filterBy="#{invInvoicePurchaseTable.serial}" 
+                               filterMatchMode="contains" 
+                               headerText="#{userData.userDDs['INVOICE_NO']}"
+                               sortBy="#{invInvoicePurchaseTable.serial}"
+                               >
+                        <p:outputLabel value="#{invInvoicePurchaseTable.serial}" />
+                    </p:column>
+
+
+                    <p:column style="width: 9vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" filterStyle="display:none" 
+                              filterBy="#{invInvoicePurchaseTable.date}" 
+                              filterMatchMode="contains"
+                              headerText="#{userData.userDDs['DATEE']}"
+                              sortBy="#{invInvoicePurchaseTable.date}" 
+                              >
+                        <p:outputLabel value="#{invInvoicePurchaseTable.date}" >
+                            <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                        </p:outputLabel>                           
+                    </p:column>
+
+                    <p:column style="width: 9vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
+                              filterBy="#{invInvoicePurchaseTable.invInventoryId.name}"
+                              filterMatchMode="contains" 
+                              headerText="#{userData.userDDs['DEPOSITORY']}"
+                              sortBy="#{invInvoicePurchaseTable.invInventoryId.name}" 
+                              >
+                        <p:outputLabel value="#{invInvoicePurchaseTable.invInventoryId.name}" />
+                    </p:column>
+
+                    <p:column style="width: 8vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
+                              filterBy="#{invInvoicePurchaseTable.organizationSiteName}"
+                              filterMatchMode="contains" 
+                              headerText="#{userData.userDDs['SUPPLIER']}"
+                              sortBy="#{invInvoicePurchaseTable.organizationSiteName}" 
+                              >
+                        <p:outputLabel value="#{invInvoicePurchaseTable.organizationSiteName}" />
+                    </p:column>
+
+                    <p:column style="width: 9vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
+                              filterBy="#{invInvoicePurchaseTable.invDelegatorName}"
+                              filterMatchMode="contains" 
+                              headerText="#{userData.userDDs['DELEGATOR']}"
+                              sortBy="#{invInvoicePurchaseTable.invDelegatorName}" 
+                              >
+                        <p:outputLabel value="#{invInvoicePurchaseTable.invDelegatorName}" />
+                    </p:column>
+                    <p:column style="width: 10vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
+                              filterBy="#{invInvoicePurchaseTable.paymentType}"
+                              filterMatchMode="contains" 
+                              headerText="#{userData.userDDs['INVO_TYP']}"
+                              sortBy="#{invInvoicePurchaseTable.paymentType}" >
+                        <p:outputLabel value="#{invInvoicePurchaseTable.paymentType == 0 ? userData.userDDs['CASH'] : invInvoicePurchaseTable.paymentType == 1 ? userData.userDDs['POSTPONE']  :  invInvoicePurchaseTable.paymentType == 2 ? userData.userDDs['CREDIT_DOCUMENT'] : invInvoicePurchaseTable.paymentType}"  />
+                    </p:column> 
+                    <p:column style="width: 10vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
+                              filterBy="#{invInvoicePurchaseTable.createdByName}"
+                              filterMatchMode="contains" 
+                              headerText="#{userData.userDDs['INVOI_ENTR']}"
+                              sortBy="#{invInvoicePurchaseTable.createdByName}" >
+                        <p:outputLabel value="#{invInvoicePurchaseTable.createdByName}" />
+                    </p:column>
+                    <p:column style="width: 10vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
+                              filterBy="#{invInvoicePurchaseTable.remarks}"
+                              filterMatchMode="contains" 
+                              headerText="#{userData.userDDs['NOTE']}"
+                              sortBy="#{invInvoicePurchaseTable.remarks}" >
+                        <p:outputLabel value="#{invInvoicePurchaseTable.remarks}" />
+                    </p:column>
+                    <p:column  style="width: 12vh;font-size: 1.8vh;text-align:center;border-radius: 0px;" headerText="#{userData.userDDs['TRANSACTION']}" >
+                        <p:commandButton  
+                            update="@form" 
+                            class="smsearchButtons"
+                            icon="fa fa-fw fa-search-plus"  style="background-color: rgba(63, 81, 181, 0.88);border-radius: 3px;"
+                            title="#{userData.userDDs['VIEW']}" 
+                            action="#{invPurchaseInvoiceListDTOMB.goToEdit()}" 
+                            rendered="#{userData.userScreens['invpurchaseinvoice_1'].edit or userData.isAdmin}" >
+
+                            <f:setPropertyActionListener value="#{invInvoicePurchaseTable}" 
+                                                         target="#{invPurchaseInvoiceListDTOMB.invInvoiceDTOSelected}" />
+                        </p:commandButton>
+                        <p:commandButton 
+                            class="sprintButtons"
+                            update="@form" onclick="form.target = '_blank'"  ajax="false"
+                            icon="fa fa-fw fa-print" style="background-color: rgb(0, 74, 128);border-radius: 3px;"
+                            title="print" 
+                            action="#{invPurchaseInvoiceListDTOMB.printList()}" 
+                            rendered="#{userData.userScreens['invpurchaseinvoice_1'].edit or userData.isAdmin}" >
+
+                            <f:setPropertyActionListener value="#{invInvoicePurchaseTable}" 
+                                                         target="#{invPurchaseInvoiceListDTOMB.invInvoiceDTOSelected}" />
+                        </p:commandButton>
+
+                    </p:column>
+                    <f:facet name="footer"   >
+
+
+
+                    </f:facet>
+                </p:dataTable> 
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                    <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:confirmDialog>
+
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>
+
+

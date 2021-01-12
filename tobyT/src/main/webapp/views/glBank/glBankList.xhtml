@@ -1,0 +1,122 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form id="form" dir="#{userData.dir}" style="margin-right: 20px">
+            
+            <p:fieldset  legend="#{userData.userDDs['EST_SAF_BANK']}" id="whole"  style="margin-bottom:20px">
+                <div class="col-xs-12">
+                    <p:messages id="curmsg" showDetail="true" rendered="true" closable="true"/>   
+                </div>
+
+                <p:dataTable id="glBank"
+                             draggableColumns="true" 
+                            
+                             var="glBank" 
+                             widgetVar="bTable" 
+                             rowIndexVar="index" 
+                             value="#{glBankListMB.glBankEntityList}" 
+                             paginator="true"
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}">
+
+                    <f:facet name="header" class="col-md-12">
+                        <p:commandButton  icon="fa fa-plus" 
+                                          class="saddButton"
+                                         title="#{userData.userDDs['ADD']}"
+                                         action="#{glBankListMB.goToAdd()}"
+                                         style="float:right" 
+                                         rendered="#{userData.userScreens['glBank'].add or userData.isAdmin}"/>
+                        <p:commandButton   class="scloseButton"  icon="fa fa-fw fa-backward"  style="float: left;" action="exit" />
+
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('bTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:column headerText="#" style="width: 3vh; text-align: center!important;font-size: 1.8vh" >
+                        <p:outputLabel value="#{index + 1}" />
+                    </p:column>
+
+                    <p:column filterStyle="display:none"
+                              filterBy="#{glBank.code}" 
+                              filterMatchMode="contains" 
+                              headerText="#{userData.userDDs['CODE']}" 
+                              sortBy="#{glBank.code}"
+                              style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                        <p:outputLabel value="#{glBank.code}" />
+                    </p:column>
+
+                    <p:column filterStyle="display:none"
+                              filterBy="#{glBank.name}" 
+                              filterMatchMode="contains" 
+                              headerText="#{userData.userDDs['NAME']}"
+                              sortBy="#{glBank.name}"
+                              style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                        <p:outputLabel value="#{glBank.name}" />
+                    </p:column>
+
+                    <p:column filterStyle="display:none"
+                              filterBy="#{glBank.accountId.accNumber}" 
+                              filterMatchMode="contains" 
+                              headerText="#{userData.userDDs['ACCOUNT_COD']}"
+                              sortBy="#{glBank.accountId.accNumber}"
+                             style="width: 12vh;text-align: center!important;font-size: 1.8vh">
+                        <p:outputLabel value="#{glBank.accountId.accNumber}" />
+                    </p:column>
+
+
+                    <p:column filterStyle="display:none"
+                              filterBy="#{glBank.accountId.name}" 
+                              filterMatchMode="contains" 
+                              headerText="#{userData.userDDs['ACCOUNT_NAME']}"
+                              sortBy="#{glBank.accountId.name}"
+                              style="width: 12vh;text-align: center!important;font-size: 1.8vh">
+                        <p:outputLabel value="#{glBank.accountId.name}" />
+                    </p:column>
+
+                    <p:column filterStyle="display:none"
+                              filterBy="#{glBank.currencyId.name}" 
+                              filterMatchMode="contains" 
+                              headerText="#{userData.userDDs['CURRENCY']}"
+                              sortBy="#{glBank.currencyId.name}"
+                              style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                        <p:outputLabel value="#{glBank.currencyId.name}" />
+                    </p:column>
+
+                    <p:column headerText="#{userData.userDDs['TRANSACTION']}" style="width: 8vh;text-align: center!important;font-size: 1.8vh">
+                        <p:commandButton   class="seditButton" update="@form" icon="fa fa-fw fa-edit"
+                                         title="#{userData.userDDs['EDIT']}" 
+                                         action="#{glBankListMB.goToEdit()}" 
+                                         rendered="#{userData.userScreens['glBank'].edit or userData.isAdmin}">
+                            <f:setPropertyActionListener value="#{glBank}" 
+                                                         target="#{glBankListMB.glBankSelected}" />
+                        </p:commandButton>
+
+                        <p:commandButton class="sdeleteButton" update="form" 
+                                         icon="fa fa-remove" 
+                                         title="#{userData.userDDs['DELETE']}" 
+                                         action="#{glBankListMB.delete}"
+                                         rendered="#{userData.userScreens['glBank'].delete or userData.isAdmin}">
+
+                            <f:setPropertyActionListener value="#{glBank}"
+                                                         target="#{glBankListMB.glBankEntitySelected}" />
+                            <p:confirm header="Confirmation" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                    <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:confirmDialog>
+
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>

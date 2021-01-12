@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml" >
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+
+    <ui:define name="content">
+        <style>
+            .ui-selectcheckboxmenu .ui-selectcheckboxmenu-trigger {
+
+                width: 24px;
+            }
+            .navbar-top-links li:last-child{
+
+                margin-top: 25px!important
+            }
+        </style>
+
+        <div class="col-xs-12">
+            <p:messages autoUpdate="true"  showDetail="true" closable="true" rendered="true" />
+        </div>
+
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+
+        <h:form id="form" dir="#{userData.dir}" style="margin-right: 20px">
+
+
+            <div style=" position: absolute;left: 20px"> 
+
+                <p:commandButton  style="width: 90px;background-image: none!important;z-index: 2" 
+                                  class="viewButton searchButton"
+                                  value="Hide/Show"/>  
+            </div>
+
+            <p:fieldset legend="#{userData.userDDs['REPORT_DATA_ITEM']}" 
+                        
+                        style=" position: relative">
+
+
+
+                <div  id="pnl" class="ui-g-12 ui-g-nopad firstset">
+                    <div class="ui-g">
+
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 45px"  value="#{userData.userDDs['GROUP']}"/>
+                                </h:panelGroup> 
+
+                                <p:selectCheckboxMenu  style="width: 60%;height: 25px" id="groups" 
+                                                       value="#{invItemMainDataByGroupReportMB.itemMainDataByGroupSearchBean.groupSelected}" 
+                                                       label="#{userData.userDDs['GROUPS']}"
+                                                       filter="true" filterMatchMode="startsWith" >
+                                    <f:selectItems value="#{invItemMainDataByGroupReportMB.invGroupList}" 
+                                                   var="group" itemLabel="#{group}" itemValue="#{group.id}" />
+                                </p:selectCheckboxMenu>
+                            </h:panelGroup> 
+                        </div>
+                        <div class="ui-g-12 ui-md-6"></div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 45px" value="#{userData.userDDs['FROM_ITEM']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:77%!important " 
+                                                    dropdown="true"
+                                                    converter="#{invItemMainDataByGroupReportMB.itemConverter}"
+                                                    value="#{invItemMainDataByGroupReportMB.itemMainDataByGroupSearchBean.fromItem}"
+                                                    var="item"
+                                                    itemLabel="#{item}" 
+                                                    itemValue="#{item}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{invItemMainDataByGroupReportMB.completItem}" 
+                                                    id="fromItem">
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 45px" value="#{userData.userDDs['TO_ITEM']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:77%!important " 
+                                                    dropdown="true"
+                                                    converter="#{invItemMainDataByGroupReportMB.itemConverter}"
+                                                    value="#{invItemMainDataByGroupReportMB.itemMainDataByGroupSearchBean.toItem}"
+                                                    var="item"
+                                                    itemLabel="#{item}" 
+                                                    itemValue="#{item}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{invItemMainDataByGroupReportMB.completItem}"
+                                                    id="toItem">
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+
+                        </div>
+                    </div>
+                </div>
+                <h:panelGrid  columns="1" class="col-md-12">
+
+                    <h:panelGroup  class="centerButtons" style="margin-top: 2%"> 
+
+
+                        <p:commandButton   class="searchButton"
+                                           title="#{userData.userDDs['SEARCH']}"
+                                           action="#{invItemMainDataByGroupReportMB.search()}"
+                                           id="saveB"
+                                           value="#{userData.userDDs['SEARCH']}"
+                                           update="ItemMainDataByGroupViewTable" 
+                                           icon="fa fa-search"  />
+
+                        <p:commandButton  class="newButton"
+                                          id="NewB"
+                                          title="#{userData.userDDs['NEW']}" 
+                                          immediate="true" 
+                                          action="#{invItemMainDataByGroupReportMB.reset()}"
+                                          update="form"
+                                          value="#{userData.userDDs['NEW']}"
+                                          icon="fa fa-plus"
+                                          onclick="selectAll();"/>
+
+                        <p:commandButton  class="printButton" 
+                                          id="PrintB"
+                                          ajax="false"
+                                          onclick="form.target = '_blank'"  
+                                          icon="fa fa-fw fa-print"
+                                          value="#{userData.userDDs['PRINT']}" 
+                                          actionListener="#{invItemMainDataByGroupReportMB.exportPDF}"
+
+                                          title="#{userData.userDDs['PRINT']}"
+                                          immediate="true" />
+
+                        <p:commandButton  class="closeButton"
+                                          icon="fa fa-fw fa-backward"  
+                                          id="CloseB"
+                                          title="#{userData.userDDs['BACK']}"
+                                          action="exit"
+                                          value="#{userData.userDDs['BACK']}"/>
+                        <h:commandLink  class="sdcreenimg">  
+
+                            <p:graphicImage name="/img/excel.jpg" width="24"/>  
+
+                            <p:dataExporter type="xls"
+                                            target="ItemMainDataByGroupViewTable" 
+                                            fileName=" تقرير البيانات الأساسية للأصناف حسب المجموعات"
+                                            postProcessor="#{invItemMainDataByGroupReportMB.postProcessXLS}" />  
+                        </h:commandLink>
+
+                        <p:blockUI block="form" trigger="saveB NewB PrintB CloseB" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI> 
+
+
+                    </h:panelGroup> 
+
+                </h:panelGrid>
+
+
+            </p:fieldset>
+
+            <p:fieldset style=" margin: 10px 0">
+                <p:dataTable 
+
+                    draggableColumns="true" 
+                    var="ItemMainDataByGroupViewTable" 
+                    widgetVar="ItemMainDataByGroupViewTable"  
+                    rowKey="#{ItemMainDataByGroupViewTable}"
+                    rowIndexVar="index" 
+                    value="#{invItemMainDataByGroupReportMB.getitemMainDataByGroupBeanList()}" 
+                    dir="rtl" 
+                    paginator="true"
+                     rows="20"
+                    emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                    id="ItemMainDataByGroupViewTable" >
+
+                    <f:facet name="header">
+
+
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('ItemMainDataByGroupViewTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+
+                    </f:facet>
+
+                    <p:column   style="width: 8vh;text-align: right;font-size: 1.8vh" headerText="#{userData.userDDs['ITEM_NUMBER']}" 
+
+                                filterBy="#{ItemMainDataByGroupViewTable.itemCode}" 
+                                filterMatchMode="contains" 
+                                sortBy="#{ItemMainDataByGroupViewTable.itemCode}"
+                                filterable="false">
+
+                        <p:outputLabel value="#{ItemMainDataByGroupViewTable.itemCode}" />
+                    </p:column>
+
+                    <p:column   style="width: 8vh;text-align: right;font-size: 1.8vh" headerText="#{userData.userDDs['ITEM_NAME']}" 
+
+
+                                filterBy="#{ItemMainDataByGroupViewTable.itemName}" 
+                                filterMatchMode="contains" 
+                                sortBy="#{ItemMainDataByGroupViewTable.itemName}"
+                                filterable="false">
+
+                        <p:outputLabel value="#{ItemMainDataByGroupViewTable.itemName}" />
+                    </p:column>
+
+
+                    <p:column style="width: 12vh;text-align: right;font-size: 1.8vh" filterStyle="display:none"
+                              headerText="#{userData.userDDs['UNIT']}" 
+
+                              filterBy="#{ItemMainDataByGroupViewTable.itemUnitName}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{ItemMainDataByGroupViewTable.itemUnitName}"
+                              filterable="false">
+
+                        <p:outputLabel value="#{ItemMainDataByGroupViewTable.itemUnitName}" />
+                    </p:column>
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh" 
+                              headerText="#{userData.userDDs['COST']}" 
+
+                              filterBy="#{ItemMainDataByGroupViewTable.costAverage}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{ItemMainDataByGroupViewTable.costAverage}"
+                              filterable="false">
+
+                        <p:outputLabel value="#{ItemMainDataByGroupViewTable.costAverage}" />
+                    </p:column>
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh" 
+                              headerText="#{userData.userDDs['SELLING_PRICE']}" 
+
+                              filterBy="#{ItemMainDataByGroupViewTable.cost}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{ItemMainDataByGroupViewTable.cost}"
+                              filterable="false">
+
+                        <p:outputLabel value="#{ItemMainDataByGroupViewTable.cost}" />
+                    </p:column>
+
+                </p:dataTable>
+
+            </p:fieldset>
+            <script>
+                function selectAll() {
+                     $(':checkbox[id*="groups"]').prop('checked', true);
+                     document.getElementById("form:fromItem_hinput").value=null;
+                     document.getElementById("form:toItem_hinput").value=null; 
+                       }
+                
+            </script>
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,218 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <link rel="stylesheet" type="text/css" href="../../resources/css/main.css" /> 
+
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form id="form" dir="#{userData.dir}" style="margin-right: 15px">
+            <p:fieldset legend="#{userData.userDDs['GENERAL_SYMBOLS']} " style="margin-bottom:20px">
+                <p:commandButton  icon="fa fa-fw fa-backward"   
+                                  class="scloseButton" 
+                                  style="float: left;margin: 0" action="exit" />
+
+                <p:dataTable id="table"
+                             draggableColumns="true" 
+                             widgetVar="generaltable"
+                             var="gsymbol" style="margin-bottom:20px"  
+                             rowIndexVar="index" paginator="true" 
+                             value="#{generalSymbolBean.generalSymbol}"  
+                             rows="7"
+
+                             selection="#{generalSymbolBean.generalSymbolSelected}"
+                             selectionMode="single"
+                             rowKey="#{gsymbol.id}" >
+
+                    <p:ajax event="rowSelect"  listener="#{generalSymbolBean.selectGSymbol}" update="@form" />
+                    <p:ajax event="rowUnselect"  listener="#{generalSymbolBean.cancel}" update="@form" />
+                    <f:facet name="header">   
+                        <p:outputPanel  >
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" a:autofocus="true" onkeyup="PF('generaltable').filter()" style="width:150px" />
+                        </p:outputPanel>
+                    </f:facet>
+                    <p:column headerText="#" style="width: 5vh;font-size: 1.8vh;text-align: -webkit-auto;">
+                        <h:outputText value="#{index +1}" style="font-size: 1.5vh;" />
+                    </p:column>
+                    <p:column  headerText="#{userData.userDDs['CS_CODE']}" style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto;"   >
+                        <h:outputText value="#{gsymbol.serial}" style="font-size: 1.5vh;" />
+                    </p:column>
+                    <p:column filterStyle="display:none" style="width: 85vh;font-size: 1.8vh;text-align: -webkit-auto;"  sortBy="#{userData.userDDs[''+= gsymbol.name]}" filterBy="#{userData.userDDs[''+= gsymbol.name]}"  filterMatchMode="contains" headerText="#{userData.userDDs['GENERAL_SYMBOLS']} ">
+                        <h:outputText value="#{userData.userDDs[''+= gsymbol.name]}" style="font-size: 1.5vh" />
+                    </p:column>
+
+                </p:dataTable>
+            </p:fieldset>
+
+
+            <p:fieldset legend="#{userData.userDDs['SYMBOLS']}" style="margin-bottom:20px">
+                <p:messages autoUpdate="true"  id="messages" showDetail="true" closable="true"/>  
+
+                <p:dataTable id="table2"
+                             draggableColumns="true" 
+                             widgetVar="symboltable" 
+                             var="symbol"
+
+                             rowIndexVar="index" 
+                             value="#{generalSymbolBean.symbols}"
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+
+
+                             selection="#{generalSymbolBean.selectedSymbol}"
+                             selectionMode="single"   
+                             rowKey="#{symbol}"
+                             scrollRows="20"
+                             scrollable="true"
+                             liveScroll="true"
+                             scrollHeight="400">
+
+                    <f:facet name="header">
+                        <p:commandButton id="b2" 
+                                         class="saddButton"
+
+                                         title="#{userData.userDDs['ADD']}" 
+                                         icon="fa fa-plus"
+                                         actionListener="#{generalSymbolBean.addRow()}" 
+                                         style="float:right;margin: 0" 
+                                         rendered="#{userData.userScreens['symbol'].add or userData.isAdmin}"
+                                         update=":form:table2" />
+
+                        <p:selectOneMenu id="com" value="#{generalSymbolBean.selectedCompany}"  
+                                         style="float:right" rendered="#{userData.isAdmin}">
+                            <p:ajax listener="#{generalSymbolBean.onCompanyChange()}" update=":form:table2" />
+                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" itemValue="" noSelectionOption="true"/>
+                            <f:selectItems value="#{generalSymbolBean.company}" var="com" itemLabel="#{com.name}" itemValue="#{com.id}"/> 
+                        </p:selectOneMenu>
+
+                        <p:outputPanel >
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('symboltable').filter()" style="width:150px" />
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:column headerText="#" style="width: 5vh;font-size: 1.8vh;text-align: -webkit-auto;" >
+                        <h:outputText value="#{index +1}" style="font-size: 1.5vh; "/>
+                    </p:column>
+
+                    <p:column filterStyle="display:none" 
+                              sortBy="#{symbol.serial}" 
+                              filterBy="#{symbol.serial}" 
+                              filterMatchMode="contains"  
+                              style="width: 8vh;font-size: 1.8vh;text-align: -webkit-auto;"
+                              headerText="#{userData.userDDs['CS_CODE']}">
+
+                        <h:outputText value="#{symbol.serial}"
+                                      rendered="#{not symbol.markEdit}" style="font-size:1.5vh;"/>
+
+                        <p:inputText id="SER" 
+                                     value="#{symbol.serial}"
+                                     rendered="#{symbol.markEdit}"  
+                                     style="width:100%">
+                            <p:ajax event="keyup" update="msgSER" />
+                        </p:inputText>
+                        <p:message id="msgSER" for="SER"/>
+                    </p:column>
+
+                    <p:column filterStyle="display:none" 
+                              style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto;"
+                              sortBy="#{symbol.name}"
+                              filterBy="#{symbol.name}" 
+                              filterMatchMode="contains"
+                              headerText="#{userData.userDDs['SYMBOLS']} ">
+
+                        <h:outputText value="#{symbol.name}" 
+                                      rendered="#{not symbol.markEdit}"  style="font-size: 1.5vh;" />
+
+                        <p:inputText  id="Input2" 
+                                      value="#{symbol.name}"
+                                      style="width:100%;font-size: 1.5vh"
+                                      rendered="#{symbol.markEdit}" />
+                    </p:column>
+
+                    <p:column style="width: 15vh;font-size: 1.8vh;text-align: -webkit-auto;" filterStyle="display:none" 
+                              sortBy="#{symbol.accountId.name}" filterBy="#{symbol.accountId.name}"  
+                              filterMatchMode="contains" id="accid" headerText="#{userData.userDDs['ACCOUNT_NUMBER']}">
+                        <h:outputText  value="#{symbol.accountId.name}" 
+                                       rendered="#{not symbol.markEdit}" style="width: 25vh;font-size: 1.8vh;text-align: -webkit-auto;"/>
+
+                        <p:selectOneMenu id="accname" 
+                                         style="width:50%;"
+                                         value="#{symbol.accountId}"  converter="#{generalSymbolBean.glaccountConverter}"
+                                         filter="true" filterMatchMode="contains" 
+                                         rendered="#{symbol.markEdit}"  >
+
+                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"
+                                          itemValue="" noSelectionOption="true" />
+
+                            <f:selectItems value="#{generalSymbolBean.glaccountList}"
+                                           var="account" 
+                                           itemLabel="#{account.name} - #{account.accNumber}"
+                                           itemValue="#{account}" />
+                        </p:selectOneMenu> 
+                    </p:column>
+                    <p:column filterStyle="display:none" 
+                              sortBy="#{symbol.arrange}" 
+                              filterBy="#{symbol.arrange}" 
+                              filterMatchMode="contains"  
+                              style="width: 8vh;font-size: 1.8vh;text-align: -webkit-auto;"
+                              headerText="الترتيب">
+
+                        <h:outputText value="#{symbol.arrange}"
+                                      rendered="#{not symbol.markEdit}" style="font-size:1.5vh;"/>
+
+                        <p:inputText id="Arrange" 
+                                     value="#{symbol.arrange}"
+                                     rendered="#{symbol.markEdit}"  
+                                     style="width:100%">
+                        </p:inputText>
+                    </p:column>
+
+                    <p:column style="width: 10vh;font-size:1.8vh">
+
+                        <p:commandButton class="ssaveButton" update="@form" 
+                                         title="#{userData.userDDs['SAVE']}"
+                                         rendered="#{symbol.markEdit and (userData.userScreens['symbol'].add or userData.isAdmin)}"
+                                         action="#{generalSymbolBean.onEditedRow()}"
+                                         icon="fa fa-fw fa-save" >
+                            <f:setPropertyActionListener value="#{symbol}" target="#{generalSymbolBean.selectedSymbol}" />
+                        </p:commandButton>
+
+                        <p:commandButton   class="sreloadButton" update="@form" title="#{userData.userDDs['RELOAD']}" rendered="#{symbol.markEdit and (userData.userScreens['symbol'].add or userData.isAdmin) }"
+                                           action="#{generalSymbolBean.reload()}" icon="fa fa-fw fa-undo" style="size: auto" >
+                            <f:setPropertyActionListener value="#{symbol}" target="#{generalSymbolBean.selectedSymbol}" />
+                        </p:commandButton>
+
+                        <p:commandButton  class="seditButton" update="@form" 
+                                          title="#{userData.userDDs['EDIT']}"
+                                          rendered="#{not symbol.markEdit and (userData.userScreens['symbol'].view or userData.isAdmin)}"
+                                          action="#{generalSymbolBean.edit()}"
+                                          icon="fa fa-fw fa-edit"  >
+                            <f:setPropertyActionListener value="#{symbol}" target="#{generalSymbolBean.selectedSymbol}" />
+                        </p:commandButton>
+
+                        <p:commandButton  class="sdeleteButton" update="@form" 
+                                          title="#{userData.userDDs['DELETE']}" 
+                                          rendered="#{not symbol.markEdit and (userData.userScreens['symbol'].delete or userData.isAdmin)}"
+                                          action="#{generalSymbolBean.delete()}" icon="fa fa-fw fa-remove"   >
+                            <f:setPropertyActionListener value="#{symbol}" target="#{generalSymbolBean.selectedSymbol}" />
+                            <p:confirm header="#{userData.userDDs['COFIGRATION']}" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                        </p:commandButton>
+                    </p:column>
+
+                </p:dataTable>
+
+                <p:confirmDialog style="width: 100px; height: 100px" global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                    <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:confirmDialog>   
+
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>

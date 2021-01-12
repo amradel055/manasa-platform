@@ -1,0 +1,168 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml" >
+
+    <ui:define name="content">
+        <h:form id="form" dir="#{userData.dir}" style="margin-right: 20px">
+            <p:fieldset legend="تفاصيل #{userData.userDDs['USER']}" style="margin-bottom:20px">
+
+                <div >
+                    <p:messages id="curmsg"
+                                autoUpdate="true" 
+                                showDetail="true" 
+                                rendered="true" 
+                                closable="true"/>   
+                </div>
+
+                <h:panelGrid id="pnl" columns="2" class="col-md-12" columnClasses="ui-grid-col-6,ui-grid-col-6">
+
+
+
+                    <h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 60px" value="#{userData.userDDs['USER_NAME']}*"/>
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 70%" id="userName"
+                                           value="#{UserProfileFormBean.userName}"/>
+                        </h:panelGroup>
+
+                    </h:panelGroup>
+
+
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel style="width:60px" value="#{userData.userDDs['USER_CODE']}"/>
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel value="#{UserProfileFormBean.userCode}" />
+                        </h:panelGroup>
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 60px" value="#{userData.userDDs['USER_LANGUAGE']}* "/>
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 50%" value="#{UserProfileFormBean.userLang}"/>
+                        </h:panelGroup>
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 60px" value="الايميل"/>
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel value="#{UserProfileFormBean.email}" />
+                        </h:panelGroup>
+                    </h:panelGroup>
+                </h:panelGrid>
+
+
+                <h:panelGrid  columns="2"  columnClasses="ui-grid-col-6,ui-grid-col-6"       styleClass="ui-panelgrid-blank ui-fluid">
+
+
+
+                    <h:panelGroup id="currentPanelPasswordId" rendered="#{UserProfileFormBean.showPassInput}">
+
+
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 60px" value="الباسورد الحالى"/>
+                        </h:panelGroup>
+                        <p:password   style="width: 50%"  value="#{UserProfileFormBean.oldPassword}">
+                        </p:password>
+
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 60px" value="الباسورد الجديد"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+
+                            <p:password  style="width: 50%" value="#{UserProfileFormBean.newUserPassword}">
+                                <p:ajax event="blur" update="curmsg"/>
+                            </p:password>
+
+                        </h:panelGroup>
+                    </h:panelGroup>
+
+
+                    <h:panelGroup>
+
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 60px" value="تأكيد الباسورد "/>
+                        </h:panelGroup>
+
+                        <p:password  style="width: 50%" value="#{UserProfileFormBean.newPasswordConfirm}">
+                            <p:ajax event="blur" update="curmsg" listener="#{UserProfileFormBean.validateNewPasswordConfirm}" />
+                        </p:password>
+                    </h:panelGroup>
+
+
+
+                </h:panelGrid>
+
+
+
+                <h:panelGrid  columns="1" class="col-md-12 centerButtons" 
+                             >
+                    <h:panelGroup>
+                        <div style="margin-top: 15px" >
+
+                            <p:commandButton style=""
+                                             class="cancelButton"
+                                             title="#{userData.userDDs['CANCEL']}" 
+                                             immediate="true" 
+                                             value="#{userData.userDDs['CANCEL']}" 
+                                             icon="fa fa-fw fa-cancel"
+                                             action="#{UserProfileFormBean.cancel}"   />
+
+                            <p:commandButton style=""
+                                             class="saveButton"
+                                             id="saveB" 
+                                             title="#{userData.userDDs['SAVE']}"
+                                             value="#{userData.userDDs['SAVE']}" 
+                                             icon="fa fa-fw fa-save" 
+                                             action="#{UserProfileFormBean.save}"
+                                             update="curmsg"/>
+
+                            <p:commandButton style="" 
+                                             class="closeButton" icon="fa fa-fw fa-close"   
+                                             title="#{userData.userDDs['EXIT']}" 
+                                             action="exit" value="اغلاق"/>
+
+
+
+                        </div>
+                    </h:panelGroup>
+                </h:panelGrid>
+
+
+
+
+                <p:blockUI block="pnl" trigger="saveB"/>
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

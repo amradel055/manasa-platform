@@ -1,0 +1,266 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <link rel="stylesheet" type="text/css" href="../../resources/css/main.css" /> 
+    <ui:define name="content">
+
+        <h:head>
+            <title>#{userData.userDDs['ACCOUNT_REPORT']}</title>
+        </h:head>
+        <h:body> 
+            <h:form id="form">     
+                <div class="col-xs-12">
+                    <p:messages autoUpdate="true" 
+                                id="msg"
+                                showDetail="true"
+                                closable="true" 
+                                rendered="#{bankSymboleReportMB.showMessageGeneral}"/>
+                </div>
+
+                <h:panelGrid  columns="2"  columnClasses="ui-grid-col-6,ui-grid-col-6">
+
+                    <h:panelGrid columns="1">
+                        <h:panelGroup> 
+                            <h:panelGroup rendered="#{bankSymboleReportMB.store}"> 
+                                <p:outputLabel value="من خزنة" />
+                            </h:panelGroup>
+
+                            <h:panelGroup rendered="#{bankSymboleReportMB.bank}"> 
+                                <p:outputLabel value="من بنك" />
+                            </h:panelGroup>
+
+                            <h:panelGroup rendered="#{bankSymboleReportMB.bankStore}"> 
+                                <p:outputLabel value="من خزينة شيكات خطية" />
+                            </h:panelGroup>
+
+                            <h:panelGroup>
+
+                                <p:autoComplete dropdown="true"
+                                                converter="#{bankSymboleReportMB.glBankConverter}"
+                                                value="#{bankSymboleReportMB.glBankEntitySearch.bankFrom}"
+
+                                                var="bank"
+                                                itemLabel="#{bank}" 
+                                                itemValue="#{bank}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{bankSymboleReportMB.completeGlBankTo}" >
+
+                                </p:autoComplete>
+
+                            </h:panelGroup>   
+                        </h:panelGroup>
+
+                        <h:panelGroup></h:panelGroup>
+
+
+                        <h:panelGroup> 
+                            <h:panelGroup rendered="#{bankSymboleReportMB.store}"> 
+                                <p:outputLabel value="الى خزنة" />
+                            </h:panelGroup>
+
+                            <h:panelGroup rendered="#{bankSymboleReportMB.bank}"> 
+                                <p:outputLabel value="الى بنك" />
+                            </h:panelGroup>
+
+                            <h:panelGroup rendered="#{bankSymboleReportMB.bankStore}"> 
+                                <p:outputLabel value="الى خزينة شيكات خطية" />
+                            </h:panelGroup>
+
+                            <h:panelGroup>
+
+                                <p:autoComplete dropdown="true"
+                                                converter="#{bankSymboleReportMB.glBankConverter}"
+                                                value="#{bankSymboleReportMB.glBankEntitySearch.bankTo}"
+
+                                                var="bank"
+                                                itemLabel="#{bank}" 
+                                                itemValue="#{bank}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{bankSymboleReportMB.completeGlBankTo}" >
+
+                                </p:autoComplete>
+
+                            </h:panelGroup>   
+                        </h:panelGroup>
+                    </h:panelGrid>
+
+                    <h:panelGroup></h:panelGroup>
+
+
+                    <h:panelGrid columns="1">
+                        <h:panelGroup> 
+                            <h:panelGroup> 
+                                <p:outputLabel value="من عملة" />
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:autoComplete dropdown="true"
+                                                converter="#{bankSymboleReportMB.currencyConverter}"
+                                                value="#{bankSymboleReportMB.glBankEntitySearch.currencyTypeFrom}"
+
+                                                var="currency"
+                                                itemLabel="#{currency}" 
+                                                itemValue="#{currency}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{bankSymboleReportMB.completeCurrenecy}" >
+
+                                </p:autoComplete>
+                            </h:panelGroup>   
+                        </h:panelGroup>
+
+                        <h:panelGroup></h:panelGroup>
+
+
+                        <h:panelGroup> 
+                            <h:panelGroup> 
+                                <p:outputLabel value="الى عملة" />
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:autoComplete dropdown="true"
+                                                converter="#{bankSymboleReportMB.currencyConverter}"
+                                                value="#{bankSymboleReportMB.glBankEntitySearch.currencyTypeTo}"
+
+                                                var="currency"
+                                                itemLabel="#{currency}" 
+                                                itemValue="#{currency}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{bankSymboleReportMB.completeCurrenecy}" >
+
+                                </p:autoComplete>
+
+                            </h:panelGroup>   
+                        </h:panelGroup>
+                    </h:panelGrid>
+
+
+                    <h:panelGroup></h:panelGroup>
+
+                    <h:panelGrid columns="1">
+                        <h:panelGroup> 
+                            <h:panelGroup> 
+                                <p:outputLabel value="من حساب" />
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:autoComplete dropdown="true"
+                                                converter="#{bankSymboleReportMB.accountConverter}"
+                                                value="#{bankSymboleReportMB.glBankEntitySearch.accountFrom}"
+
+                                                var="account"
+                                                itemLabel="#{account}" 
+                                                itemValue="#{account}"  
+                                                forceSelection="true" 
+                                                completeMethod="#{bankSymboleReportMB.completeGlAccount}" >
+
+                                </p:autoComplete>
+                            </h:panelGroup>   
+                        </h:panelGroup>
+
+                        <h:panelGroup></h:panelGroup>
+
+
+                        <h:panelGroup> 
+                            <h:panelGroup> 
+                                <p:outputLabel value="الى حساب" />
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:autoComplete dropdown="true"
+                                                converter="#{bankSymboleReportMB.accountConverter}"
+                                                value="#{bankSymboleReportMB.glBankEntitySearch.accountTo}"
+
+                                                var="account"
+                                                itemLabel="#{account}" 
+                                                itemValue="#{account}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{bankSymboleReportMB.completeGlAccount}" >
+
+                                </p:autoComplete>
+
+                            </h:panelGroup>   
+                        </h:panelGroup>
+                    </h:panelGrid>
+
+                    <h:panelGroup></h:panelGroup>
+
+                    <h:panelGroup>
+                        <p:fieldset legend="النوع" style="margin-bottom:20px">
+                            <p:selectOneRadio value="#{bankSymboleReportMB.glBankEntitySearch.type}" >                                                             
+                                <f:selectItem itemLabel="الكل"  itemValue="3"  />
+                                <f:selectItem itemLabel="خزنة"  itemValue="0"  />
+                                <f:selectItem itemLabel="بنك"  itemValue="1"  />
+                                <f:selectItem itemLabel="خزينة شيكات خطية" itemValue="2"  />
+
+
+                                <p:ajax update="form" listener="#{bankSymboleReportMB.search()}" />
+
+                            </p:selectOneRadio>  
+                        </p:fieldset>
+                    </h:panelGroup>
+                </h:panelGrid>
+
+
+                <h:panelGroup>
+                    <h:commandLink>  
+                        <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                        <p:dataExporter type="xls"
+                                        target="banks" 
+                                        fileName="تقرير دليل الخزائن"
+                                        postProcessor="#{bankSymboleReportMB.postProcessXLS}" />  
+                    </h:commandLink>
+
+                    <p:commandButton style="margin-left:.1%;margin-right: .1%;width: 50px;"
+                                     value="#{userData.userDDs['SEARCH']}"
+                                     action="#{bankSymboleReportMB.search()}" 
+                                     update="form" />
+
+                    <p:commandButton style="margin-left:.1%;margin-right: .1%;width: 50px;"
+                                     value="جديد" action="#{bankSymboleReportMB.reset}"
+                                     update="form" />
+                    <p:commandButton  style="margin-left:.1%;margin-right: .1%;width: 50px;" 
+                                      ajax="false" 
+                                      onclick="form.target = '_blank'" 
+                                      value="#{userData.userDDs['PRINT']}"
+                                      actionListener="#{bankSymboleReportMB.exportPDF}"/>
+
+
+                </h:panelGroup>
+                <p:dataTable id="banks" 
+                             draggableColumns="true"
+                             draggableRows="true" 
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                             value="#{bankSymboleReportMB.glBankReportList}"
+                             var="bankReport">
+
+                    <p:column style="width: 7%;text-align: right;font-size:15px" headerText="الكود">
+                        <h:outputText value="#{bankReport.code}" style="font-size: 12px"/>
+                    </p:column>
+
+                    <p:column style="width:15%; text-align: right;font-size:15px" headerText="الاسم">
+                        <h:outputText value="#{bankReport.bankName}" style="font-size: 12px"/>
+                    </p:column>
+
+                    <p:column style="width: 10%;text-align: right;font-size:15px" headerText="كود الحساب">
+                        <h:outputText value="#{bankReport.accounntCode}" style="font-size: 12px"/>
+                    </p:column>
+
+                    <p:column style="width: 10%;text-align: right;font-size:15px" headerText="اسم الحساب">
+                        <h:outputText value="#{bankReport.accounntName}" style="font-size: 12px"/>
+                    </p:column>
+
+                    <p:column style="width: 10%;text-align: right;font-size:15px" headerText="العملة">
+                        <h:outputText value="#{bankReport.currencyName}" style="font-size: 12px"/>
+                    </p:column>
+
+                    <p:column style="width: 10%;text-align: right;font-size:15px" headerText="النوع">
+                        <h:outputText value="#{bankReport.typeName}" style="font-size: 12px"/>
+                    </p:column>
+
+                </p:dataTable>
+            </h:form>
+        </h:body>
+    </ui:define>
+</ui:composition>
+

@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml" >
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form id="form" dir="#{userData.dir}}" style="margin-right: 15px">
+            <p:fieldset legend="#{userData.userDDs['ROLE_MANAGEMENT']}" style="margin-bottom:20px">
+                    <p:messages autoUpdate="true"  id="messages" showDetail="true" closable="true"/>  
+                    <p:commandButton   icon="fa fa-fw fa-backward"  class="scloseButton"  style="float: left;margin: 1px 5px"  action="exit" />
+                
+                <div>
+                    <p:dataTable 
+                        draggableColumns="true" 
+                        widgetVar="roletable" var="role" value="#{RoleListBean.roles}" rowIndexVar="index" 
+                                  paginator="true" rows="15"
+                                 emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" style="padding: 0px 5px">
+                        <f:facet name="header" >
+                            <p:commandButton title="#{userData.userDDs['ADD']}"   class="saddButton" 
+                                             id="b2" icon="fa fa-fw fa-plus" action="#{RoleListBean.goToAdd()}"
+                                             style="float:right;margin: 0" rendered="#{userData.userScreens['role'].add or userData.isAdmin}"  />
+                        <p:outputPanel  >
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" a:autofocus="true" onkeyup="PF('roletable').filter()" style="width:150px" />
+                        </p:outputPanel>
+                        </f:facet>
+                        <p:column headerText="#" style="width: 6vh;font-size: 1.8vh;text-align: -webkit-auto" >
+                            <h:outputText value="#{index + 1}" style="font-size: 1.5vh;"  />
+                        </p:column>
+                        
+                        <p:column filterStyle="display:none" style="width: 85vh;font-size: 1.8vh;text-align: -webkit-auto" sortBy="#{role.name}" filterBy="#{role.name}"  filterMatchMode="contains" headerText="#{userData.userDDs['ROLE_NAME']}" >
+                            <h:outputText value="#{role.name}" style="font-size: 1.5vh;"  />
+                        </p:column>
+                       
+                        <p:column headerText="#{userData.userDDs['TRANSACTION']}" style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto" >
+                           
+                            <p:commandButton  class="seditButton" update="form" 
+                                              title="#{userData.userDDs['EDIT']}" 
+                                             action="#{RoleListBean.goToEdit()}" 
+                                             icon="fa fa-fw fa-edit"
+                                             rendered="#{userData.userScreens['role'].view or userData.isAdmin}">
+                                <f:setPropertyActionListener value="#{role.id}" target="#{RoleListBean.selectedRole}" />
+                           
+                            </p:commandButton>
+                            
+                            <p:commandButton  class="scloseButton" update="@form"
+                                              title="#{userData.userDDs['DELETE']}" 
+                                              action="#{RoleListBean.delete()}" 
+                                              icon="fa fa-fw fa-remove" 
+                                              rendered="#{userData.userScreens['role'].delete or userData.isAdmin}">
+                                <f:setPropertyActionListener value="#{role.id}" target="#{RoleListBean.selectedRole}" />
+                                <p:confirm header="#{userData.userDDs['COFIGRATION']}" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                            </p:commandButton>
+                            
+                            
+                            
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </p:fieldset>
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
+
+        </h:form>
+    </ui:define>
+</ui:composition>

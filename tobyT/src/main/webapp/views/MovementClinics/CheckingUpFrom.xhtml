@@ -1,0 +1,432 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+
+        <h:form style="margin-right: 20px"  id="form" dir="#{userData.dir}">
+            <p:fieldset legend="شاشة الحجز" id="whole" style="margin-bottom:20px">
+
+                <div class="col-xs-12">
+                    <p:messages id="curmsg" showDetail="true" rendered="true" closable="true"/>   
+                </div>
+
+                <div class="ui-g-12 ui-g-nopad" id="firstSegment" >
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 60px" value="الرقـــم"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel id="settelmentId" value="#{checkingUpFormMB.hosCheckingUpEntity.serial}"/>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 60px" value="#{userData.userDDs['DATE']}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:calendar  style="width:49%!important"  id="date" 
+                                                 value="#{checkingUpFormMB.hosCheckingUpEntity.date}"
+                                                 pattern="dd/MM/yyyy" >
+                                    </p:calendar>
+                                </h:panelGroup>
+
+                            </h:panelGroup>             
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+
+                                <h:panelGroup> 
+                                    <p:outputLabel style="width: 50px" value="رقم الخزينة" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:autoComplete style="width: 85%" id="bankacc" 
+                                                    dropdown="true"
+                                                    converter="#{checkingUpFormMB.glBankConverter}"
+                                                    value="#{checkingUpFormMB.hosCheckingUpEntity.glBank}"
+
+                                                    var="banknum"
+                                                    itemLabel="#{banknum}" 
+                                                    itemValue="#{banknum}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{checkingUpFormMB.completeGlBank}" >
+
+                                    </p:autoComplete>    
+
+                                </h:panelGroup>   
+
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup > 
+                                    <p:outputLabel style="width: 60px" value=" العيادة"  />
+                                </h:panelGroup>
+                                <h:panelGroup  >
+                                    <p:autoComplete style="width: 85%" id="cli" 
+                                                    dropdown="true"
+                                                    converter="#{checkingUpFormMB.hosClinicConverter}"
+                                                    value="#{checkingUpFormMB.hosCheckingUpEntity.hosClinic}"
+
+                                                    var="clinic"
+                                                    itemLabel="#{clinic}" 
+                                                    itemValue="#{clinic}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{checkingUpFormMB.completeClinicHosDoctor}" >
+
+                                        <p:ajax update=":form:Doc"
+                                                event="change"
+                                                listener="#{checkingUpFormMB.showOrHideDialogForClinics()}" />
+                                        <p:ajax update=":form:Doc"
+                                                listener="#{checkingUpFormMB.showOrHideDialogForClinics()}"
+                                                event="itemSelect"/>
+
+                                    </p:autoComplete>
+                                </h:panelGroup>
+
+                            </h:panelGroup>  
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup > 
+                                    <p:outputLabel style="width: 60px" value=" الطبيب المعالج"  />
+                                </h:panelGroup>
+                                <h:panelGroup  >
+                                    <p:autoComplete style="width: 85%" id="Doc" 
+                                                    dropdown="true"
+                                                    converter="#{checkingUpFormMB.hosDoctorConverter}"
+                                                    value="#{checkingUpFormMB.hosCheckingUpEntity.hosDoctor}"
+
+                                                    var="doctor"
+                                                    itemLabel="#{doctor}" 
+                                                    itemValue="#{doctor}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{checkingUpFormMB.completeDoctorHosDoctor}" >
+
+                                        <p:ajax 
+                                            event="change"
+                                            listener="#{checkingUpFormMB.showOrHideDialog()}" />
+                                        <p:ajax 
+                                            listener="#{checkingUpFormMB.showOrHideDialog()}"
+                                            event="itemSelect"/>
+
+                                    </p:autoComplete>
+                                </h:panelGroup>
+
+                            </h:panelGroup>  
+
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup > 
+                                    <p:outputLabel style="width: 60px" value="المريض"  />
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width: 85%" id="MACUCode" 
+                                                    dropdown="true"
+                                                    converter="#{checkingUpFormMB.hosPatientRegistrationConvertor}"
+                                                    value="#{checkingUpFormMB.hosCheckingUpEntity.hosPatientRegistration}"
+
+                                                    var="bank"
+                                                    itemLabel="#{bank}" 
+                                                    itemValue="#{bank}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{checkingUpFormMB.completeHosPatientRegistration}" >
+
+                                        <p:ajax 
+                                            event="change"
+                                    
+                                            listener="#{checkingUpFormMB.calculateTotalAfterDiscountsPerServiceForEach()}" />
+                                        <!--                                            update="footerDetails"-->
+
+                                        <p:ajax 
+                                            listener="#{checkingUpFormMB.calculateTotalAfterDiscountsPerServiceForEach()}"
+
+                                            event="itemSelect"/>
+<!--                                            update="footerDetails"-->
+                                    </p:autoComplete>                      
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 60px" value="نوع الدفع" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:selectOneMenu   style="width: 49%"  id="paymentType"  
+                                                       value="#{checkingUpFormMB.hosCheckingUpEntity.paymentType}" >                                                             
+                                        <f:selectItem itemLabel="نقدي" itemValue="0"  />
+                                        <f:selectItem itemLabel="بطاقة" itemValue="1"  />
+                                    </p:selectOneMenu>  
+
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 60px" value="#{userData.userDDs['NOTE']}"/>
+                                </h:panelGroup>                   
+                                <h:panelGroup>
+                                    <p:inputText style="width: 49%" value="#{checkingUpFormMB.hosCheckingUpEntity.remark}"/>
+                                </h:panelGroup>
+
+                            </h:panelGroup>  
+                        </div>
+                    </div>
+                </div>
+
+                <p:panelGrid id="footerDetails" columns="4" style="margin-bottom: 2%" >
+                    <h:outputLabel  value="السن" style="width: 6vh"  />
+                    <h:outputLabel value="#{checkingUpFormMB.hosCheckingUpEntity.hosPatientRegistration.age}" style="width: 10vh"  /> 
+                    <h:outputLabel  value="الوزن"  style="width: 6vh"/>
+                    <h:outputLabel value="#{checkingUpFormMB.hosCheckingUpEntity.hosPatientRegistration.weight}"  style="width: 10vh" /> 
+                    <h:outputLabel value="الطول"  style="width: 6vh" />
+                    <h:outputLabel value="#{checkingUpFormMB.hosCheckingUpEntity.hosPatientRegistration.height}" style="width: 10vh"  />
+                    <h:outputLabel value="النوع"   style="width: 6vh"/>
+                    <h:outputLabel value="#{checkingUpFormMB.hosCheckingUpEntity.literalGender}" style="width: 10vh"  /> 
+                    <h:outputLabel value="التليفون"  style="width: 6vh"/>
+                    <h:outputLabel value="#{checkingUpFormMB.hosCheckingUpEntity.hosPatientRegistration.phone}" style="width: 10vh"  /> 
+                    <h:outputLabel value="الرقم القومي" style="width: 6vh" />
+                    <h:outputLabel value="#{checkingUpFormMB.hosCheckingUpEntity.hosPatientRegistration.nationalId}"  style="width: 10vh" /> 
+                    <h:outputLabel value="الجنسية" style="width: 6vh" />
+                    <h:outputLabel value="#{checkingUpFormMB.hosCheckingUpEntity.hosPatientRegistration.nationalityId.name}"  style="width: 10vh" /> 
+                </p:panelGrid>
+                <p:remoteCommand name="onCellEdit"  update="hosCheckDetail" />
+                <div> 
+                    <p:dataTable 
+
+                        id="hosCheckDetail" 
+                        dir="#{userData.dir}" 
+                        value="#{checkingUpFormMB.hosCheckingUpDetailEntityList}"
+                        var="hosCheckDetail"
+                        rowIndexVar="index" 
+                        paginator="true" 
+                        editable="true"
+                        editMode="cell"
+                        sortBy="#{1}"
+                        selectionMode="single"
+                        selection="#{checkingUpFormMB.hosCheckingUpDetailEntitySelected}"
+                        widgetVar="hosCheckDetail"
+                        rowKey="#{hosCheckDetail}"
+                        emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" >
+
+
+
+                        <f:facet name="header">
+
+                            <p:commandButton  class="saddButton"  
+                                              id="plus2"
+                                              icon="fa fa-plus"
+                                              title="#{userData.userDDs['ADD']}" 
+                                              action="#{checkingUpFormMB.addClosingAccounts()}"
+                                              update="form"
+                                              ajax="true"
+
+                                              style="float:right"/> 
+
+
+                            <p:outputPanel>
+                                <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                                <p:inputText id="globalFilter" onkeyup="PF('hosCheckDetail').filter()" style="width:150px" />
+                            </p:outputPanel>
+
+                        </f:facet>
+
+                        <p:ajax  event="cellEdit" listener="#{checkingUpFormMB.onCellEdit}" />
+
+                        <p:column style="width: 5vh;font-size: 1.5vh"  id="serail" headerText="#">
+                            <h:outputText value="#{index + 1}"  />
+                        </p:column> 
+                        <p:column style="width: 20vh;font-size: 1.5vh" headerText="اسم الخدمة"
+
+                                  filterBy="#{PurchasesDuringPeriodViewTable.serial}" 
+                                  filterMatchMode="contains" 
+                                  sortBy="#{PurchasesDuringPeriodViewTable.serial}"
+                                  filterable="false">
+
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <p:outputLabel value="#{hosCheckDetail.hosDoctor.name}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:autoComplete style="width: 95%" id="serviceId" 
+                                                    dropdown="true"
+                                                    converter="#{checkingUpFormMB.hosDoctorServiceConverter}"
+                                                    value="#{hosCheckDetail.hosDoctor}"
+                                                    var="p"
+                                                    itemLabel="#{p}" 
+                                                    itemValue="#{p}" 
+                                                    forceSelection="false" 
+                                                    completeMethod="#{checkingUpFormMB.completeHosDoctorService}">
+                                        <f:attribute name="varValue" value="#{hosCheckDetail}" />
+
+                                        <p:ajax update="form"
+                                                event="change"
+                                                listener="#{checkingUpFormMB.updateServicePrice}" />
+                                        <p:ajax update="form"
+                                                listener="#{checkingUpFormMB.updateServicePrice}"
+                                                event="itemSelect"/>
+                                    </p:autoComplete>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column style="width: 15vh;font-size: 1.5vh" id="value" headerText="#{userData.userDDs['VALUE']}">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText  value="#{hosCheckDetail.value}"  />
+                                </f:facet>
+                                <f:facet name="input">
+                                    <h:outputText   style="width: 95%!important"
+                                                    value="#{hosCheckDetail.value}">
+                                    </h:outputText>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column style="width: 15vh;font-size: 1.5vh" id="DISCOUNT_VALUE" headerText="نسبة الخصم">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText  value="#{hosCheckDetail.discountRatio}"  />
+                                </f:facet>
+                                <f:facet name="input">
+                                    <h:outputText   style="width: 95%!important"
+                                                    value="#{hosCheckDetail.discountRatio}">
+                                    </h:outputText>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column style="width: 15vh;font-size: 1.5vh" id="BEAR_VALUE" headerText="نسبة التحمل">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText  value="#{hosCheckDetail.bearReatio}"  />
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputNumber   style="width: 95%!important"
+                                                     value="#{hosCheckDetail.bearReatio}">
+                                        <f:attribute name="varValue" value="#{hosCheckDetail}" />
+                                        <p:ajax event="blur" process="@this" listener="#{checkingUpFormMB.calculateTotalAfterDiscountsPerService}" update="form"/>
+                                    </p:inputNumber>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column style="width: 15vh;font-size: 1.5vh" id="ONE_TOTAL" headerText="الاجمالي">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText  value="#{hosCheckDetail.total}"  />
+                                </f:facet>
+                                <f:facet name="input">
+                                    <h:outputText   style="width: 95%!important"
+                                                    value="#{hosCheckDetail.total}">
+                                    </h:outputText>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column   style="width:15vh;font-size:1.6vh;text-align: right"  headerText="العمليات"  >
+
+                            <p:commandButton  class="saddButton" icon="fa fa-plus" title="#{userData.userDDs['ADD']}" 
+                                              action="#{checkingUpFormMB.addClosingAccounts()}"
+                                              id="plus"
+                                              update="form"
+                                              ajax="true"
+                                              />  
+
+                            <p:commandButton  class="sdeleteButton" update="hosCheckDetail" title="#{userData.userDDs['DELETE']}" 
+                                              action="#{checkingUpFormMB.deleteCheckingUpDetail()}" icon="fa fa-remove" >
+                                <f:setPropertyActionListener value="#{hosCheckDetail}" 
+                                                             target="#{checkingUpFormMB.hosCheckingUpDetailEntitySelected}"/>
+                                <p:confirm header="#{userData.userDDs['COFIGRATION']}"
+                                           message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                            </p:commandButton>
+
+                            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" 
+                                                 icon="ui-icon-check" />
+                                <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" 
+                                                 icon="ui-icon-close" />
+                            </p:confirmDialog>
+                        </p:column >
+                        <p:columnGroup type="footer">
+
+                            <p:column colspan="5"  footerText="الاجمالي" /> 
+                            <p:column colspan="2"  footerText="#{checkingUpFormMB.totalCach}" /> 
+                        </p:columnGroup>
+                    </p:dataTable>
+
+                </div>
+
+                <h:panelGroup  class="centerButtons" style="margin-top: 2%">
+
+
+                    <p:commandButton  class="editButton"
+                                      style="width: 155px"
+                                      title="اضافة بيانات مريض جديد"
+                                      immediate="true" 
+                                      value="اضافة بيانات مريض جديد" 
+                                      icon="fa fa-fw fa-plus"
+                                      action="#{checkingUpFormMB.cancel}"   />
+
+
+
+                    <p:commandButton  class="saveButton"  id="saveB" 
+                                      title="#{userData.userDDs['SAVE']}" 
+                                      value="#{userData.userDDs['SAVE']}" 
+                                      icon="fa fa-fw fa-save"
+                                      action="#{checkingUpFormMB.save()}"
+                                      update="@form"/>
+
+              
+                    <p:commandButton  class="PrintButton"
+                                          id="PrintB"
+                                          ajax="false"
+                                          onclick="form.target = '_blank'"  
+                                          icon="fa fa-fw fa-print"
+                                          value="#{userData.userDDs['PRINT']}"  
+                                          actionListener="#{checkingUpFormMB.exportPDF}"
+                                          title="#{userData.userDDs['PRINT']}"
+                                          />
+
+                    <p:commandButton  class="newButton" title="#{userData.userDDs['RESET']}" 
+                                      immediate="true"
+                                      id="newA"
+                                      icon="fa fa-plus"
+                                      value="#{userData.userDDs['NEW']}" 
+                                      update="@form"
+                                      actionListener="#{checkingUpFormMB.reset()}"
+                                      resetValues="true"/>
+
+                    <p:commandButton  class="deleteButton" id="cancel" title="#{userData.userDDs['CANCEL']}"
+                                      value="#{userData.userDDs['CANCEL']}" icon="fa fa-fw fa-backward"
+                                      action="#{checkingUpFormMB.exit()}"
+                                      update="form"/>
+
+                </h:panelGroup>
+
+            </p:fieldset>
+        </h:form>
+
+
+
+    </ui:define>
+</ui:composition>

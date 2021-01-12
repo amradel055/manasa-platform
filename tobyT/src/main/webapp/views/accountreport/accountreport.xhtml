@@ -1,0 +1,266 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <link rel="stylesheet" type="text/css" href="../../resources/css/main.css" /> 
+    <ui:define name="content">
+        <div class="col-xs-12">
+            <p:messages autoUpdate="true"  showDetail="true" closable="true" rendered="true" />
+        </div>
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:head>
+            <title>#{userData.userDDs['ACCOUNT_REPORT']}</title>
+        </h:head>
+        <style>
+
+            .ui-widget-content .ui-state-default, 
+            .ui-widget-header .ui-state-default {
+                border: 1px solid #c5dbec;
+                background:#fff;
+            }
+
+        </style>
+        <h:body> 
+            <h:form id="form" style="margin-right: 20px;" dir="#{userData.dir}">
+
+                <div style=" position: absolute;left: 20px;z-index: 2"> 
+                    <p:commandButton  style="width: 90px;background-image: none!important;" 
+                                      class="viewButton searchButton"
+                                      value="Hide/Show"/>  
+                </div>
+
+
+                <p:fieldset legend="#{userData.userDDs['ACCOUNT_MANUAL_REPORT']}" 
+                            style="position: relative">
+
+
+
+                    <div class="firstset">
+
+                        <div class="ui-g">
+
+                            <div class="ui-g-12 ui-md-6">
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 50px" value="#{userData.userDDs['FROM_ACCOUNT']}" for="GlAccount_ID_from" />
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:autoComplete style="width: 75%" id="GlAccount_ID_from" 
+                                                        dropdown="true"
+                                                        converter="#{accountReportBean.accountConverter}"
+                                                        value="#{accountReportBean.glAccountSelectedFrom}"
+                                                        var="p"
+                                                        itemLabel="#{p}" 
+                                                        itemValue="#{p}" 
+                                                        forceSelection="false" 
+                                                        completeMethod="#{accountReportBean.completeGlAccount}" >
+                                        </p:autoComplete>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 50px" value="#{userData.userDDs['TO_ACCOUNT']}" for="GlAccount_ID_to"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:autoComplete style="width: 75%" id="GlAccount_ID_to" 
+
+                                                        dropdown="true"
+                                                        converter="#{accountReportBean.accountConverter}"
+                                                        value="#{accountReportBean.glAccountSelectedTo}"
+                                                        var="p"
+                                                        itemLabel="#{p}" 
+                                                        itemValue="#{p}" 
+                                                        forceSelection="false" 
+                                                        completeMethod="#{accountReportBean.completeGlAccount}" >
+                                        </p:autoComplete>
+                                    </h:panelGroup>
+
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 50px;" value="#{userData.userDDs['FROM_LEVEL']}"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:inputText style="width: 55%!important;" value="#{accountReportBean.glAccountReportSearchBean.levelFrom}"/>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 50px;" value="#{userData.userDDs['TO_LEVEL']}"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:inputText style="width: 55%!important;" value="#{accountReportBean.glAccountReportSearchBean.levelTo}"/>
+                                    </h:panelGroup>
+
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 50px;" value="#{userData.userDDs['SEARCH_BY_NAME']}"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:inputText style="width:55%!important;" value="#{accountReportBean.glAccountReportSearchBean.accountName}"/>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+
+                            </div>
+                        </div>
+
+
+
+
+                    </div>
+
+                </p:fieldset>
+
+                <p:fieldset style=" margin: 10px 0">
+
+                    <h:panelGrid  class="col-md-12 centerButtons" columns="1">
+
+                        <h:panelGroup>
+
+
+                            <p:commandButton  class="searchButton" 
+                                              icon="fa fa-fw fa-search-plus"
+                                              value="#{userData.userDDs['SEARCH']}"
+                                              action="#{accountReportBean.search()}"
+                                              id="searchS"
+                                              update="accc" />
+
+                            <p:commandButton  class="newButton"  icon="fa fa-fw fa-plus"
+                                              id="newN"
+                                              value="#{userData.userDDs['NEW']}" action="#{accountReportBean.reset()}" update="form" />
+                            <p:commandButton  class="printButton"
+                                              icon="fa fa-fw fa-print"
+                                              ajax="false" onclick="form.target = '_blank'"  value="#{userData.userDDs['PRINT']} " actionListener="#{accountReportBean.exportPDF}"/>
+
+                            <h:commandLink  class="sdcreenimg">  
+                                <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                                <p:dataExporter type="xls"
+                                                target="accc" 
+                                                fileName="دليل الحسابات"
+                                                postProcessor="#{accountReportBean.postProcessXLS}" />  
+                            </h:commandLink> 
+
+                            <p:blockUI block="form" trigger="searchS  newN" animate="true" >
+
+                                <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                            </p:blockUI> 
+
+                        </h:panelGroup>
+
+                    </h:panelGrid>
+
+                </p:fieldset>
+
+                <p:fieldset>
+
+                    <p:dataTable id="accc" 
+                                 draggableColumns="true" 
+                                 value="#{accountReportBean.glAccountReportList}"
+                                 rows="25"
+                                 paginator="true"
+                                 var="acc"
+                                 widgetVar="AccountReport">
+                                    
+                        <f:facet name="header">
+
+
+                            <p:outputPanel>
+                                <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                                <p:inputText id="globalFilter" onkeyup="PF('AccountReport').filter()" style="width:150px" />
+                            </p:outputPanel>
+
+                        </f:facet>
+
+                        <p:column style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto" headerText="#{userData.userDDs['ACCOUNT_COD']}"
+
+                                  filterBy="#{acc.accNumber}" 
+                                  filterMatchMode="contains" 
+                                  sortBy="#{acc.accNumber}"
+                                  filterable="false">
+
+                            <h:outputText value="#{acc.accNumber}" style="font-size: 1.5vh"/>
+                        </p:column>
+
+                        <p:column style="width: 20vh;font-size: 1.8vh;text-align: -webkit-auto" headerText="#{userData.userDDs['ACCOUNT_NAME']}"
+
+                                  filterBy="#{acc.lname}" 
+                                  filterMatchMode="contains" 
+                                  sortBy="#{acc.lname}"
+                                  filterable="false">
+
+                            <h:outputText value="#{acc.lname}" style="font-size: 1.5vh"/>
+                        </p:column>
+
+                        <p:column style="width: 15vh;font-size: 1.8vh;text-align: -webkit-auto" headerText="#{userData.userDDs['ACCOUNT_MAIN']}"
+
+                                  filterBy="#{acc.parentNumber}" 
+                                  filterMatchMode="contains" 
+                                  sortBy="#{acc.parentNumber}"
+                                  filterable="false">
+
+                            <h:outputText value="#{acc.parentNumber}"  style="font-size: 1.5vh"/>
+                        </p:column>
+
+                        <p:column style="width: 15vh;font-size: 1.8vh;text-align: -webkit-auto"  headerText="#{userData.userDDs['ACCOUNT_GROUP']}"
+
+                                  filterBy="#{acc.lgroup}" 
+                                  filterMatchMode="contains" 
+                                  sortBy="#{acc.lgroup}"
+                                  filterable="false">
+
+                            <h:outputText value="#{acc.lgroup}"  style="font-size: 1.5vh"/>
+                        </p:column>
+
+                        <p:column style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto" headerText="#{userData.userDDs['LEVEL']}"
+
+                                  filterBy="#{acc.llevel}" 
+                                  filterMatchMode="contains" 
+                                  sortBy="#{acc.llevel}"
+                                  filterable="false">
+
+                            <h:outputText value="#{acc.llevel}"  style="font-size: 1.5vh"/>
+                        </p:column>
+
+                        <p:column style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto"   headerText="#{userData.userDDs['ACCOUNT_TYPE']}"
+
+                                  filterBy="#{acc.type}" 
+                                  filterMatchMode="contains" 
+                                  sortBy="#{acc.type}"
+                                  filterable="false">
+
+                            <h:outputText value="#{acc.type}"  style="font-size: 1.5vh"/>
+                        </p:column>
+
+                        <p:column style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto" headerText="#{userData.userDDs['ACCOUNT_STATUS']}"
+
+                                  filterBy="#{acc.status}" 
+                                  filterMatchMode="contains" 
+                                  sortBy="#{acc.status}"
+                                  filterable="false">
+
+                            <h:outputText value="#{acc.status}"  style="font-size: 1.5vh"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:fieldset>
+            </h:form>
+        </h:body>
+    </ui:define>
+</ui:composition>
+

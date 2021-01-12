@@ -1,0 +1,209 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <link rel="stylesheet" type="text/css" href="../../resources/css/main.css" /> 
+    <link rel="stylesheet" type="text/css" href="./../../resources/css/custom.css" /> 
+    <ui:define name="content">
+
+
+        <p:fieldset id="whole" style="margin-bottom:20px">
+
+
+            <p:messages id="curmsg" autoUpdate="true" showDetail="true" showSummary="true" rendered="true" closable="true"/>   
+            <f:event listener="#{userData.authorize}" type="preRenderView" />
+
+            <h:form  style="margin-right: 20px" id="form" dir="#{userData.dir}">
+
+                <div style=" position: absolute;left: 20px"> 
+
+                    <p:commandButton  style="width: 90px;background-image: none!important;z-index: 2" 
+                                      class="viewButton searchButton"
+                                      value="Hide/Show"/>  
+                </div>
+
+                <p:fieldset legend="#{userData.userDDs['SAFE_TRANSFER_REPORT']}" 
+                            id="whole"  style=" position: relative">
+
+                    <div  id="firstLine" class="ui-g-12 ui-g-nopad firstset">
+                        <div class="ui-g">
+
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 50px"  value="#{userData.userDDs['YEAR_FROM']}" />
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:calendar style="width: 55%"   id="dateFrom"
+                                                    value="#{bankTransactionReportMB.dateFrom}"
+                                                    pattern="dd/MM/yyyy" showButtonPanel="true" >
+                                            <p:ajax listener="#{bankTransactionReportMB.checkDate(true)}" event="dateSelect" update="dateFrom"/>
+                                        </p:calendar>
+                                    </h:panelGroup>
+
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 50px"  value="#{userData.userDDs['YEAR_TO']}" />
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:calendar style="width: 55%"  id="dateTo"
+                                                    value="#{bankTransactionReportMB.dateTo}"
+                                                    pattern="dd/MM/yyyy"  showButtonPanel="true" >
+                                            <p:ajax listener="#{bankTransactionReportMB.checkDate(false)}" event="dateSelect" update="dateTo"/>
+                                        </p:calendar>
+
+                                    </h:panelGroup>
+
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:outputLabel  style="width:50px" value="#{userData.userDDs['SAFES']}"/>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:autoComplete style="width: 75%" id="MACUCode" 
+                                                        dropdown="true"
+                                                        converter="#{bankTransactionReportMB.glBankConverter}"
+                                                        value="#{bankTransactionReportMB.glBank}"
+
+                                                        var="bank"
+                                                        itemLabel="#{bank}" 
+                                                        itemValue="#{bank}" 
+                                                        forceSelection="true" 
+                                                        completeMethod="#{bankTransactionReportMB.completeGlBank}" >
+                                        </p:autoComplete>
+                                    </h:panelGroup>
+
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>   
+
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 50px;margin-top: 10px;margin-right: 3px" value="#{userData.userDDs['Gl_year']}"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:selectOneMenu style="width:55%" id="year" filter="true" filterMatchMode="contains"   value="#{bankTransactionReportMB.glYearSelection}" converter="#{bankTransactionReportMB.glYearConverter}"   >
+                                            <p:ajax update=" dateTo" listener="#{bankTransactionReportMB.pushGlYearSelection()}" />
+                                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"  itemValue="" />
+                                            <f:selectItems value="#{bankTransactionReportMB.glYearList}"  var="year" itemLabel="#{year.name}" itemValue="#{year}"/>
+                                        </p:selectOneMenu>
+                                    </h:panelGroup>
+
+                                </h:panelGroup>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </p:fieldset>
+
+                <p:fieldset style=" margin: 10px 0">
+
+                    <h:panelGrid  columns="2" class="col-md-12">
+
+                        <h:panelGroup class="centerButtons" style="margin-top: 2%">
+
+                            <p:commandButton class="searchButton"  icon="fa fa-fw fa-search-plus"  
+                                             value="#{userData.userDDs['SEARCH']}" action="#{bankTransactionReportMB.search()}"
+                                             id="searchS"
+                                             update="dataTable"/>
+
+                            <p:commandButton  class="printButton"  
+                                              icon="fa fa-fw fa-print"  ajax="false"
+                                              onclick="form.target = '_blank'"
+                                              value="#{userData.userDDs['PRINT']}"
+                                              actionListener="#{bankTransactionReportMB.exportPDF}"/>
+                            
+                            <h:commandLink class="sdcreenimg">  
+                                <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                                <p:dataExporter    type="xls"
+                                                   target="dataTable" 
+                                                   fileName="#{userData.userDDs['SAFE_TRANSFER_REPORT']}"
+                                                   postProcessor="#{bankTransactionReportMB.postProcessXLS}" />  
+                            </h:commandLink>
+
+                        </h:panelGroup>
+                        <p:blockUI block="form" trigger="searchS" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI> 
+
+                    </h:panelGrid>
+
+
+                </p:fieldset>
+
+                <p:fieldset>
+
+                    <p:dataTable 
+                        id="dataTable"  value="#{bankTransactionReportMB.bankTransactionReportEntityList}"
+                        widgetVar="bankTrans"
+                        paginator="true"
+                         rows="20"
+                        var="menu" >
+
+                        <f:facet name="header" class="col-md-12">
+
+                            <p:outputPanel>
+                                <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large;" />
+                                <p:inputText   id="globalFilter"   onkeyup="PF('bankTrans').filter()" style="width: 50%important" />
+                            </p:outputPanel>
+
+                        </f:facet>
+
+                        <p:columnGroup type="header">
+                            <p:row>
+                                <p:column rowspan="2" headerText="#{userData.userDDs['DATEE']}" 
+                                          filterBy="#{menu.date}"  filterMatchMode="contains" sortBy="#{menu.date}" filterable="false"/>
+                                <p:column colspan="2" headerText="#{userData.userDDs['TRANS_TYPE']}"
+                                          />
+                                <p:column rowspan="2" headerText="#{userData.userDDs['FUNDING_SOURCE']}" 
+                                          filterBy="#{menu.source}" filterMatchMode="contains" sortBy="#{menu.source}" filterable="false"/>
+                                <p:column rowspan="2" headerText="#{userData.userDDs['STATEMENT']}"
+                                          filterBy="#{menu.remark}"  filterMatchMode="contains" sortBy="#{menu.remark}" filterable="false" />
+                            </p:row>
+                            <p:row>
+                                <p:column headerText="#{userData.userDDs['IMPORT']}" 
+                                          filterBy="#{menu.valueLocalImported}"  filterMatchMode="contains" sortBy="#{menu.valueLocalImported}" filterable="false"/>
+                                <p:column headerText="#{userData.userDDs['EXPORT']}" 
+                                          filterBy="#{menu.valueLocalExported}"  filterMatchMode="contains" sortBy="#{menu.valueLocalExported}" filterable="false"/>
+                            </p:row>
+                        </p:columnGroup>
+
+                        <p:column style="width: 20vh;font-size: 1.8vh;text-align: -webkit-auto" >
+                            <p:outputLabel value="#{menu.date}" >
+                                <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                            </p:outputLabel>
+                        </p:column>
+                        <p:column style="width: 20vh;font-size: 1.8vh;text-align: -webkit-auto">
+                            <h:outputText value="#{menu.valueLocalImported}" style="font-size:12px"/>
+                        </p:column>
+                        <p:column  style="width: 20vh;font-size: 1.8vh;text-align: -webkit-auto">
+                            <h:outputText value="#{menu.valueLocalExported}" style="font-size:12px"/>
+                        </p:column>
+                        <p:column style="width: 20vh;font-size: 1.8vh;text-align: -webkit-auto" 
+                                  filterBy="#{menu.source}"  >
+                            <h:outputText value="#{menu.source}" style="font-size:12px"/>
+                        </p:column>
+                        <p:column  style="width: 20vh;font-size: 1.8vh;text-align: -webkit-auto">
+                            <h:outputText value=" #{menu.remark}" style="font-size:12px"/>
+                        </p:column>
+                    </p:dataTable> 
+                </p:fieldset>
+            </h:form>
+        </p:fieldset>
+    </ui:define>
+</ui:composition>

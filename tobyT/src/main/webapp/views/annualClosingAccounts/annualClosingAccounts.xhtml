@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml" >
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+
+        <div class="col-xs-12">
+            <p:messages autoUpdate="true"  showDetail="true" closable="true" rendered="true" />
+        </div>
+        <h:form id="form" dir="#{userData.dir}" style="margin-right: 20px">
+            <p:fieldset legend="#{userData.userDDs['ANNUAL_CLOSING_ACCOUNT']}" style="margin-bottom:20px">
+                <div class="ui-g-12 ui-g-nopad" id="pnl">
+                    <div class="ui-g">
+
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>  
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 75px" value="#{userData.userDDs['FINANCE_YEAR']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:selectOneMenu  style="width: 50%!important" value="#{annualClosingAccountsMB.glYearSelection}" converter="#{annualClosingAccountsMB.glYearConverter}"   >
+                                        <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"  itemValue="" />
+                                        <f:selectItems value="#{annualClosingAccountsMB.glYearList}"  var="year" itemLabel="#{year.name}" itemValue="#{year}"/>
+                                        <p:ajax listener="#{annualClosingAccountsMB.loadData()}" update="form" />
+                                    </p:selectOneMenu>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>   
+
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 75px"  value="#{userData.userDDs['DATE_OPENING_ENTRY']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:calendar  style="width: 50% !important" id="dateFrom" value="#{annualClosingAccountsMB.dateOfOpeneingJournal}" pattern="dd/MM/yyyy" >
+                                        <p:ajax listener="#{annualClosingAccountsMB.checkDate(true)}" event="dateSelect" update="dateFrom"/>
+                                    </p:calendar>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 75px"  value="#{userData.userDDs['PERIOD_NET_INCOME']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 60%!important"  value="  #{annualClosingAccountsMB.netProfit}"  />
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel   style="width: 75px"  value="#{userData.userDDs['YEAR_OPEN']}"/>
+
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 50%!important;" value="#{annualClosingAccountsMB.nextOpeningYear}"  />
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup> 
+                                <h:panelGroup rendered="#{annualClosingAccountsMB.glYearSelection.openning eq 0 or annualClosingAccountsMB.glYearSelection.openning eq null}" >
+                                    <p:outputLabel  value="#{userData.userDDs['IS_OPEN_ENTRY']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{annualClosingAccountsMB.glYearSelection.openning eq 0 or annualClosingAccountsMB.glYearSelection.openning eq null}">
+                                    <p:selectBooleanCheckbox value="#{annualClosingAccountsMB.journalExist}" style ="margin-right: 2%">
+                                        <p:ajax   update="@form" />
+                                    </p:selectBooleanCheckbox>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+
+
+                            <h:panelGroup>
+                                <h:panelGroup   id="questionText" 
+                                                rendered="#{annualClosingAccountsMB.journalExist}">
+                                    <p:outputLabel style="width: 80px"  value="#{userData.userDDs['ENTER_ENTRY_SERIAL']}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup id="journalSerial" rendered="#{annualClosingAccountsMB.journalExist}">
+                                    <p:inputText  style="width: 50%!important;"  value="#{annualClosingAccountsMB.journalSerial}">
+                                        <p:ajax event="blur" listener="#{annualClosingAccountsMB.fetchTheGneralJounralRow}"  />
+                                    </p:inputText>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+
+                    </div>
+                </div>
+                <h:panelGrid class="col-md-12 centerButtons" columns="1">
+
+                    <h:panelGroup> 
+
+                        <p:commandButton 
+                            class="saveButton"
+                            action="#{annualClosingAccountsMB.prepareGeneralJournalHeadAndDetails}"
+                            rendered="#{userData.userScreens['annualClosingAccounts'].add or userData.isAdmin}"
+                            icon="fa fa-fw fa-save"
+                            id="saveB"
+                            value="#{userData.userDDs['SAVE']}"
+                            update="@form"
+                            disabled="#{annualClosingAccountsMB.glYearSelection.openning eq 1}"/>
+
+                        
+                        <p:commandButton class="closeButton" 
+                                         title="#{userData.userDDs['CANCEL']}" 
+                                         immediate="true" 
+                                         value="#{userData.userDDs['CANCEL']}" 
+                                         icon="fa fa-fw fa-backward" 
+                                         action="exit"   />
+                    </h:panelGroup> 
+                    
+
+                </h:panelGrid>
+
+                <p:remoteCommand name="onCellEdit"  update="accountsDetails" />
+
+
+
+                <p:blockUI block="form" trigger="saveB " animate="true" >
+
+                    <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                </p:blockUI>
+
+            </p:fieldset>
+
+            <p:fieldset>
+
+                <p:dataTable 
+                    id="accountsDetails" 
+                    dir="#{userData.dir}" 
+                    value="#{annualClosingAccountsMB.annualClosingAccountsBeanList}"
+                    var="annual"
+                    rowIndexVar="index" 
+                    paginator="true" 
+                    editable="true"
+                    editMode="cell"
+                    sortBy="#{1}"
+                    selectionMode="single"
+                    selection="#{annualClosingAccountsMB.annualClosingAccountsBeanSelection}"
+                    widgetVar="annual"
+                    rowKey="#{annual}"
+                    emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" >
+
+
+                    <f:facet name="header" class="col-md-12">
+
+                        <p:commandButton   class="addButton" icon="fa fa-plus" 
+                                           style="float: right"     
+                                           title="#{userData.userDDs['ADD']}" 
+                                           value="#{userData.userDDs['ADD']}"
+                                           action="#{annualClosingAccountsMB.addClosingAccounts()}"
+                                           id="plus"
+                                           update="accountsDetails"
+                                           disabled="#{annualClosingAccountsMB.glYearSelection.openning eq 1}"
+                                           ajax="true"
+
+                                           />   
+                        <p:commandButton    style="float: left" class="saveButton" title="#{userData.userDDs['SAVE']}" 
+                                            action="#{annualClosingAccountsMB.saveClosingAccounts()}"
+                                            id="saveing"
+                                            value="#{userData.userDDs['SAVE']}"
+                                            icon="fa fa-fw fa-save"
+                                            update="accountsDetails"
+                                            disabled="#{annualClosingAccountsMB.glYearSelection.openning eq 1}"
+                                            ajax="true"
+                                            />   
+
+                        <p:outputPanel >
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" a:autofocus="true"
+                                         onkeyup="PF('closetable').filter()" style="width:150px" />
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:ajax event="cellEdit" listener="#{annualClosingAccountsMB.onCellEdit}" />
+                    <p:column style="width: 5vh;font-size: 1.5vh"  id="serail" headerText="#">
+                        <h:outputText value="#{index + 1}"  />
+                    </p:column> 
+                    <p:column style="width: 27vh;font-size: 1.5vh" headerText="#{userData.userDDs['ACCOUNT_NAME']}" 
+
+                              filterBy="#{annual.account.name}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{annual.account.name}"
+                              filterable="false">
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <p:outputLabel value="#{annual.account.name}"/>
+                            </f:facet>
+                            <f:facet name="input">
+                                <p:autoComplete style="width: 95%" id="GlAccount_ID" 
+                                                dropdown="true"
+                                                converter="#{annualClosingAccountsMB.accountConverter}"
+                                                value="#{annual.account}"
+                                                var="p"
+                                                itemLabel="#{p}" 
+                                                itemValue="#{p}" 
+                                                forceSelection="false" 
+                                                completeMethod="#{annualClosingAccountsMB.completeGlAccount}"
+                                                rendered="#{ annualClosingAccountsMB.glYearSelection.openning eq null or annualClosingAccountsMB.glYearSelection.openning eq 0 }">
+                                </p:autoComplete>
+                                <h:outputText value="#{annual.account.name}" rendered="#{annualClosingAccountsMB.glYearSelection.openning eq 1}"/>
+                            </f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <p:column style="width: 27vh;font-size: 1.5vh" id="ratio" headerText="#{userData.userDDs['PERCENTAGE']}"
+
+                              filterBy="#{annual.ratio}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{annual.ratio}"
+                              filterable="false">
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <h:outputText  value="#{annual.ratio}"  />
+                            </f:facet>
+                            <f:facet name="input">
+                                <p:inputText   style="width: 95%!important"
+                                               value="#{annual.ratio}" 
+                                               rendered="#{ annualClosingAccountsMB.glYearSelection.openning eq null or annualClosingAccountsMB.glYearSelection.openning eq 0 }">                                  
+                                    <p:ajax event="blur" process="@this" listener="#{annualClosingAccountsMB.calculateAmountByRatioForList}" update="form"/>
+                                </p:inputText>
+                            </f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <p:column  style="width: 27vh;font-size: 1.5vh" headerText="#{userData.userDDs['APPROPRIATION_NET_INCOME']}" id="amount" 
+                               filterBy="#{annual.amount}" 
+                               filterMatchMode="contains" 
+                               sortBy="#{annual.amount}"
+                               filterable="false">
+                        <p:outputLabel  id="amount1" value="#{annual.amount}"  />
+                    </p:column>
+                    <p:columnGroup type="footer">
+                        <p:row id="totalsum">
+                            <p:column colspan="2" footerText=" #{userData.userDDs['NET_INCOME']} :  #{annualClosingAccountsMB.netProfit}" />
+                            <p:column id="totalRatio" footerText="#{annualClosingAccountsMB.totalRetio}" />
+                            <p:column footerText=""  />
+                            <p:column footerText=""  />
+                        </p:row>
+                    </p:columnGroup>
+                    <p:column style="width: 8vh;text-align: right;font-size: 1.8vh" headerText="#{userData.userDDs['TRANSACTION']}">
+                        <p:commandButton class="scloseButton" update="accountsDetails" title="#{userData.userDDs['DELETE']}" 
+                                         disabled="#{annualClosingAccountsMB.glYearSelection.openning eq 1}"
+                                         action="#{annualClosingAccountsMB.deleteAll}" icon="fa fa-remove" >
+                            <f:setPropertyActionListener value="#{annual}" target="#{annualClosingAccountsMB.annualClosingAccountsBeanDeleteSelection}"/>
+                        </p:commandButton>
+                    </p:column>
+
+                </p:dataTable>
+
+            </p:fieldset>
+        </h:form>
+
+    </ui:define>
+</ui:composition>

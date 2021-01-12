@@ -1,0 +1,639 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+        <style >
+            .colored {                
+                background: #0064bc ;
+                color: #fff ;
+                font-size: 12px;
+            }
+            
+
+         
+            </style>
+            <f:event listener="#{userData.authorize}" type="preRenderView" />
+            <h:form  id="form" dir="#{userData.dir}"  style="margin-right: 20px">
+
+            <div style=" position: absolute;left: 20px"> 
+
+                <p:commandButton  style="width: 90px;background-image: none!important;z-index: 2" 
+                                  class="viewButton searchButton"
+                                  value="Hide/Show"/>  
+            </div>
+
+
+
+            <p:fieldset legend="#{userData.userDDs['PURCHASES_ITM_DELE']}"
+
+
+                        style=" position: relative"> 
+
+
+
+                <div  id="firstSegment" class="ui-g-12 ui-g-nopad firstset">
+                    <div class="ui-g">
+
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['FROM_DELE']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:75%!important"
+                                                    dropdown="true"
+                                                    converter="#{purchaseOfItemsByDelegatorReportMB.delegatesPurchaseConverter}"
+                                                    value="#{purchaseOfItemsByDelegatorReportMB.purchaseOfItemsByDelegatorSearchBean.fromDelegatorName}"
+                                                    var="delegator"
+                                                    itemLabel="#{delegator}" 
+                                                    itemValue="#{delegator}"
+                                                    forceSelection="true" 
+                                                    completeMethod="#{purchaseOfItemsByDelegatorReportMB.completeDelegatesPurchase}"
+
+                                                    >
+
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['TO_DELE']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:75%!important" 
+
+                                                    dropdown="true"
+
+                                                    converter="#{purchaseOfItemsByDelegatorReportMB.delegatesPurchaseConverter}"
+                                                    value="#{purchaseOfItemsByDelegatorReportMB.purchaseOfItemsByDelegatorSearchBean.toDelegatorName}"
+                                                    var="delegator"
+                                                    itemLabel="#{delegator}" 
+                                                    itemValue="#{delegator}"
+                                                    forceSelection="true" 
+                                                    completeMethod="#{purchaseOfItemsByDelegatorReportMB.completeDelegatesPurchase}" >
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 70px" value="#{userData.userDDs['FROM_DATE']}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:calendar pattern="dd/MM/yyyy" 
+                                                value="#{purchaseOfItemsByDelegatorReportMB.purchaseOfItemsByDelegatorSearchBean.dateFrom}"
+                                                style="width: 56%">
+
+                                    </p:calendar>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 70px" value="#{userData.userDDs['TO_DATE']}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:calendar pattern="dd/MM/yyyy" 
+                                                value="#{purchaseOfItemsByDelegatorReportMB.purchaseOfItemsByDelegatorSearchBean.dateTo}"
+                                                style="width: 56%">
+
+                                    </p:calendar>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['FROM_ITEM']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:75%!important"
+                                                    dropdown="true"
+                                                    converter="#{purchaseOfItemsByDelegatorReportMB.itemDTOFromConverter}"
+                                                    value="#{purchaseOfItemsByDelegatorReportMB.purchaseOfItemsByDelegatorSearchBean.fromItemName}"
+                                                    var="item"
+                                                    itemLabel="#{item}" 
+                                                    itemValue="#{item}"
+                                                    forceSelection="true" 
+                                                    completeMethod="#{purchaseOfItemsByDelegatorReportMB.completInvItemDTOFrom}"
+
+                                                    >
+
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['TO_ITEM']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:75%!important" 
+
+                                                    dropdown="true"
+
+                                                    converter="#{purchaseOfItemsByDelegatorReportMB.itemDTOToConverter}"
+                                                    value="#{purchaseOfItemsByDelegatorReportMB.purchaseOfItemsByDelegatorSearchBean.toItemName}"
+                                                    var="item"
+                                                    itemLabel="#{item}" 
+                                                    itemValue="#{item}"
+                                                    forceSelection="true" 
+                                                    completeMethod="#{purchaseOfItemsByDelegatorReportMB.completInvItemDTOTo}" >
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['FROM_REPOS_NO']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:75%!important"
+                                                    dropdown="true"
+                                                    converter="#{purchaseOfItemsByDelegatorReportMB.invInventoryConverter}"
+                                                    value="#{purchaseOfItemsByDelegatorReportMB.purchaseOfItemsByDelegatorSearchBean.fromInventoryName}"
+                                                    var="inventory"
+                                                    itemLabel="#{inventory}" 
+                                                    itemValue="#{inventory}"
+                                                    forceSelection="true" 
+                                                    completeMethod="#{purchaseOfItemsByDelegatorReportMB.completeInventory}"
+                                                    >
+
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['TO_REPOS_NO']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:75%!important" 
+
+                                                    dropdown="true"
+                                                    converter="#{purchaseOfItemsByDelegatorReportMB.invInventoryConverter}"
+                                                    value="#{purchaseOfItemsByDelegatorReportMB.purchaseOfItemsByDelegatorSearchBean.toInventoryName}"
+                                                    var="inventory"
+                                                    itemLabel="#{inventory}" 
+                                                    itemValue="#{inventory}"
+                                                    forceSelection="true" 
+                                                    completeMethod="#{purchaseOfItemsByDelegatorReportMB.completeInventory}">
+                                    </p:autoComplete>
+
+                                </h:panelGroup> 
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['FROM_INVOI_NO']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:autoComplete id="purchaseIdFrom"
+                                                    style="width:75%!important " 
+                                                    dropdown="true"
+
+                                                    converter="#{purchaseOfItemsByDelegatorReportMB.invInvoicePurchaseConverter}"
+                                                    value="#{purchaseOfItemsByDelegatorReportMB.purchaseOfItemsByDelegatorSearchBean.salesInvoiceFrom}"
+
+                                                    var="purchasePerson"
+                                                    itemLabel="#{purchasePerson}" 
+                                                    itemValue="#{purchasePerson}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{purchaseOfItemsByDelegatorReportMB.completePurchaseInvoice}">
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['TO_INVOI_NO']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:autoComplete id="purchaseIdTo"
+                                                    style="width:75%!important " 
+                                                    dropdown="true"
+
+                                                    converter="#{purchaseOfItemsByDelegatorReportMB.invInvoicePurchaseConverter}"
+                                                    value="#{purchaseOfItemsByDelegatorReportMB.purchaseOfItemsByDelegatorSearchBean.salesInvoiceTo}"
+
+                                                    var="purchasePerson"
+                                                    itemLabel="#{purchasePerson}" 
+                                                    itemValue="#{purchasePerson}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{purchaseOfItemsByDelegatorReportMB.completePurchaseInvoice}">
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+                            </h:panelGroup>                  
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['FROM_INVOI_TYP']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:selectOneMenu style="width:56%;margin-top:5px"  filter="true" filterMatchMode="contains"   value="#{purchaseOfItemsByDelegatorReportMB.purchaseOfItemsByDelegatorSearchBean.frompaymentType}" >
+                                        <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" itemValue="0"/>
+                                        <f:selectItem itemLabel="#{userData.userDDs['CASH']}"  itemValue="1" />
+                                        <f:selectItem itemLabel="#{userData.userDDs['POSTPONE']}"  itemValue="2" />
+                                        <f:selectItem itemLabel="#{userData.userDDs['DECOM_CREDIT']}"  itemValue="3" />
+                                    </p:selectOneMenu>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['TO_INVOI_TYP']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:selectOneMenu style="width:56%;margin-top:5px" filter="true" filterMatchMode="contains"   value="#{purchaseOfItemsByDelegatorReportMB.purchaseOfItemsByDelegatorSearchBean.topaymentType}"  >
+                                        <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" itemValue="0"/>
+                                        <f:selectItem itemLabel="#{userData.userDDs['CASH']}"  itemValue="1" />
+                                        <f:selectItem itemLabel="#{userData.userDDs['POSTPONE']}"  itemValue="2" />
+                                        <f:selectItem itemLabel="#{userData.userDDs['DECOM_CREDIT']}"  itemValue="3" />
+                                    </p:selectOneMenu>
+
+                                </h:panelGroup> 
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['TOTAL_SALE_REP']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup id="showReport">
+
+                                    <p:selectBooleanCheckbox id="showReportCheck" value="#{purchaseOfItemsByDelegatorReportMB.purchaseOfItemsByDelegatorSearchBean.showReport}">
+                                        <p:ajax update="reportDB" listener="#{purchaseOfItemsByDelegatorReportMB.showItemReport()}" />
+                                    </p:selectBooleanCheckbox>
+
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 70px" value="مندوب مختصر"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup id="shortReport">
+
+                                    <p:selectBooleanCheckbox id="shortReportCheck" value="#{purchaseOfItemsByDelegatorReportMB.purchaseOfItemsByDelegatorSearchBean.shortReport}">
+                                        <p:ajax update="reportDB" listener="#{purchaseOfItemsByDelegatorReportMB.shortReportListing()}" />
+                                    </p:selectBooleanCheckbox>
+
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>                             
+                                <h:panelGroup>
+                                    <p:commandButton value="رسم بياني" update="@form" oncomplete="PF('dlg1').show()" />
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                    </div>
+                    <p:dialog     class="ui-dialog"
+                                  position='center,center'
+                                  resizable="false"
+                                  responsive=" true"
+                              header="رسم بياني" widgetVar="dlg1"
+                              >
+
+                        <div  id="donutchart" style="width: 75vw; height: 650px;"></div>
+                        
+                        <h:panelGroup class=" centerButtons">
+                            
+                        <p:commandButton  class="printButton"
+                                          id="PrintC"
+                                          ajax="false"
+                                          onclick="form.target = '_blank'"  
+                                          icon="fa fa-fw fa-print"
+                                          value="#{userData.userDDs['PRINT']}" 
+                                          actionListener="#{purchaseOfItemsByDelegatorReportMB.exportChartPDF}"
+                                          title="#{userData.userDDs['PRINT']}"
+                                          immediate="true" />
+                        </h:panelGroup>
+                    </p:dialog> 
+                </div>
+
+
+                <h:panelGrid  columns="2"  class="col-md-12">
+
+                    <h:panelGroup  class="centerButtons" style="margin-top: 2%">
+
+
+                        <p:commandButton   class="searchButton"
+                                           title="#{userData.userDDs['SEARCH']}"
+                                           action="#{purchaseOfItemsByDelegatorReportMB.search()}"
+                                           id="saveB"
+                                           value="#{userData.userDDs['SEARCH']}"
+                                           update="PurchaseOfItemsByDelegatorViewTable PurchaseOfItemsByDelegatorViewTable2 @form" 
+                                           icon="fa fa-search"  />
+
+                        <p:commandButton  class="newButton"
+                                          title="#{userData.userDDs['NEW']}" 
+                                          id="NewB"
+                                          immediate="true" 
+                                          action="#{purchaseOfItemsByDelegatorReportMB.reset()}"
+                                          update="PurchaseOfItemsByDelegatorViewTable"
+                                          value="#{userData.userDDs['NEW']}"
+                                          icon="fa fa-plus"/>
+
+                        <p:commandButton  class="printButton"
+                                          ajax="false"
+                                          onclick="form.target = '_blank'"  
+                                          icon="fa fa-fw fa-print"
+                                          value="#{userData.userDDs['PRINT']}" 
+                                          actionListener="#{purchaseOfItemsByDelegatorReportMB.exportPDF}"
+                                          id="PrintB"
+                                          title="#{userData.userDDs['PRINT']}"
+                                          immediate="true" />
+
+                        <p:commandButton    class="closeButton"
+                                            id="CloseB"
+                                            title="#{userData.userDDs['BACK']}"
+                                            action="exit"
+                                            icon="fa fa-fw fa-backward"  
+                                            value="#{userData.userDDs['BACK']}"/>
+                        <h:commandLink charset="sdcreenimg">  
+                            <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                            <p:dataExporter type="xls"
+                                            target="PurchaseOfItemsByDelegatorViewTable" 
+                                            fileName="مشتريات حسب المندوبين"
+                                            postProcessor="#{purchaseOfItemsByDelegatorReportMB.postProcessXLS}" />  
+                        </h:commandLink>
+
+                        <p:blockUI block="form" trigger="saveB NewB PrintB CloseB shortReportCheck showReportCheck" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI> 
+
+
+
+                    </h:panelGroup>
+
+                </h:panelGrid>
+
+            </p:fieldset>
+
+            <p:fieldset id="reportDB"  style="margin-top:2%">
+                <p:dataTable
+                    rendered="#{purchaseOfItemsByDelegatorReportMB.purchaseOfItemsByDelegatorSearchBean.showReport eq false}"
+                    draggableColumns="true" 
+                    var="PurchaseOfItemsByDelegatorViewTable" 
+                    widgetVar="PurchaseOfItemsByDelegatorViewTable2"  
+                    rowKey="#{PurchaseOfItemsByDelegatorViewTable}"
+                    rowIndexVar="index" 
+                    value="#{purchaseOfItemsByDelegatorReportMB.purchaseOfItemsByDelegatorViewBeanList}" 
+                    dir="rtl" 
+                    paginator="true"
+                    rows="20"
+                    emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                    id="PurchaseOfItemsByDelegatorViewTable"
+                    rowStyleClass="#{not ( PurchaseOfItemsByDelegatorViewTable.groupName eq null) and purchaseOfItemsByDelegatorReportMB.purchaseOfItemsByDelegatorSearchBean.shortReport eq false  ? 'colored' : null} ">
+
+                    <f:facet name="header">
+
+
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('PurchaseOfItemsByDelegatorViewTable2').filter()" style="width:150px" />
+                        </p:outputPanel>
+
+                    </f:facet>
+
+                    <p:column style="width: 12vh;text-align: right;font-size: 1.8vh" filterStyle="display:none"
+                              headerText="#{userData.userDDs['DELEGATOR_NAME']}" 
+
+                              filterBy="#{PurchaseOfItemsByDelegatorViewTable.groupName}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{PurchaseOfItemsByDelegatorViewTable.groupName}"
+                              filterable="false">
+                        <p:outputLabel value="#{PurchaseOfItemsByDelegatorViewTable.groupName}" />
+                    </p:column>
+                    <p:column   style="width: 12vh;text-align: right;font-size: 1.8vh;text-align: center" headerText="#{userData.userDDs['INVOICE_NO']}" 
+
+                                filterBy="#{PurchaseOfItemsByDelegatorViewTable.serial}" 
+                                filterMatchMode="contains" 
+                                sortBy="#{PurchaseOfItemsByDelegatorViewTable.serial}"
+                                filterable="false">
+                        <h:outputText value="#{PurchaseOfItemsByDelegatorViewTable.serial}" style="font-size: 1.5vh"/>
+                    </p:column>
+                    <p:column style="width: 12vh;text-align: right;font-size: 1.8vh;text-align: center" filterStyle="display:none"
+                              headerText="#{userData.userDDs['INVOICE_DATE']}" 
+
+                              filterBy="#{PurchaseOfItemsByDelegatorViewTable.date}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{PurchaseOfItemsByDelegatorViewTable.date}"
+                              filterable="false">
+
+                        <p:outputLabel value="#{PurchaseOfItemsByDelegatorViewTable.date}">
+                            <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                        </p:outputLabel>
+                    </p:column>
+
+
+                    <p:column style="width: 9vh;text-align: right;font-size: 1.8vh;text-align: center" filterStyle="display:none"
+                              headerText="#{userData.userDDs['ITEM_NUMBER']}" >
+                        <h:outputText value="#{PurchaseOfItemsByDelegatorViewTable.itemCode}" style="font-size: 1.5vh;width: 95%"/>
+                    </p:column>
+
+                    <p:column style="width: 15vh;text-align: right;font-size: 1.8vh;text-align: center" 
+                              headerText="#{userData.userDDs['ITEM_NAME']}" 
+
+                              filterBy="#{PurchaseOfItemsByDelegatorViewTable.itemName}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{PurchaseOfItemsByDelegatorViewTable.itemName}"
+                              filterable="false">
+
+                        <h:outputText value="#{PurchaseOfItemsByDelegatorViewTable.itemName}" style="font-size: 1.5vh;width: 95%"/>
+                    </p:column>
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh;text-align: center" 
+                              headerText="#{userData.userDDs['UNIT']}" 
+
+                              filterBy="#{PurchaseOfItemsByDelegatorViewTable.itemUnitName}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{PurchaseOfItemsByDelegatorViewTable.itemUnitName}"
+                              filterable="false">
+
+                        <h:outputText value="#{PurchaseOfItemsByDelegatorViewTable.itemUnitName}" style="font-size: 1.5vh;width: 95%"/>
+                    </p:column>
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh;text-align: center" 
+                              headerText="#{userData.userDDs['QUANTITY']}" 
+
+                              filterBy="#{PurchaseOfItemsByDelegatorViewTable.itemQuantity}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{PurchaseOfItemsByDelegatorViewTable.itemQuantity}"
+                              filterable="false">
+
+                        <h:outputText value="#{PurchaseOfItemsByDelegatorViewTable.itemQuantity}" style="font-size: 1.5vh;width: 95%"/>
+                    </p:column>
+
+                    <p:column style="width: 12vh;text-align: right;font-size: 1.8vh;text-align: center" 
+                              headerText="#{userData.userDDs['PURCHASE_COST']}" 
+
+                              filterBy="#{PurchaseOfItemsByDelegatorViewTable.cost}}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{PurchaseOfItemsByDelegatorViewTable.cost}"
+                              filterable="false">
+
+                        <h:outputText value="#{PurchaseOfItemsByDelegatorViewTable.cost}" style="font-size: 1.5vh;width: 95%"/>
+                    </p:column>
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh;text-align: center" 
+                              headerText="#{userData.userDDs['DISCOUNT']}"  
+
+                              filterBy="#{PurchaseOfItemsByDelegatorViewTable.discount}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{PurchaseOfItemsByDelegatorViewTable.discount}"
+                              filterable="false">
+
+                        <h:outputText value="#{PurchaseOfItemsByDelegatorViewTable.discount}" style="font-size: 1.5vh;width: 95%"/>
+                    </p:column>
+                    <p:column style="width: 13vh;text-align: right;font-size: 1.8vh;text-align: center" 
+                              headerText="#{userData.userDDs['TOTAL']}" 
+
+                              filterBy="#{PurchaseOfItemsByDelegatorViewTable.net}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{PurchaseOfItemsByDelegatorViewTable.net}"
+                              filterable="false">
+
+                        <p:inputNumber readonly="true" value="#{PurchaseOfItemsByDelegatorViewTable.net}" style="font-size: 1.5vh;width: 90%"/>
+                    </p:column>
+                    <p:columnGroup type="footer">
+                        <p:row>
+                            <p:column colspan="9" style="text-align:right" footerText="#{userData.userDDs['TOTAL']}  :" />
+
+                            <p:column footerText="#{purchaseOfItemsByDelegatorReportMB.total}"  style="font-size: 1.4vh"/>
+
+
+                        </p:row>
+                    </p:columnGroup>
+
+                </p:dataTable>
+
+                <p:dataTable style="margin-top: 2%"
+                             rendered="#{purchaseOfItemsByDelegatorReportMB.purchaseOfItemsByDelegatorSearchBean.showReport eq true}"
+                             var="PurchaseOfItemsByDelegatorViewTable2" 
+                             widgetVar="PurchaseOfItemsByDelegatorViewTable2"  
+                             rowKey="#{PurchaseOfItemsByDelegatorViewTable2}"
+                             rowIndexVar="index" 
+                             value="#{purchaseOfItemsByDelegatorReportMB.purchaseOfItemsByDelegatorViewBeanList}" 
+                             dir="rtl" 
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                             id="PurchaseOfItemsByDelegatorViewTable2"
+                             rowStyleClass="#{not ( PurchaseOfItemsByDelegatorViewTable2.groupName eq null) and purchaseOfItemsByDelegatorReportMB.purchaseOfItemsByDelegatorSearchBean.shortReport eq false ? 'colored' : null} ">
+                    <p:column style="width: 12vh;text-align: right;font-size: 1.8vh" filterStyle="display:none"
+                              headerText="#{userData.userDDs['GROUP_NAME']}" >
+                        <p:outputLabel value="#{PurchaseOfItemsByDelegatorViewTable2.groupName}" />
+                    </p:column>
+                    <p:column   style="width: 8vh;text-align: right;font-size: 1.8vh" headerText="#{userData.userDDs['INVOICE_NO']}" >
+                        <p:outputLabel value="#{PurchaseOfItemsByDelegatorViewTable2.serial}" />
+                    </p:column>
+
+                    <p:column style="width: 12vh;text-align: right;font-size: 1.8vh" filterStyle="display:none"
+                              headerText="#{userData.userDDs['ITEM_NUMBER']}" >
+                        <p:outputLabel value="#{PurchaseOfItemsByDelegatorViewTable2.itemCode}" />
+                    </p:column>
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh" 
+                              headerText="#{userData.userDDs['ITEM_NAME']}" >
+                        <p:outputLabel value="#{PurchaseOfItemsByDelegatorViewTable2.itemName}" />
+                    </p:column>
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh" 
+                              headerText="#{userData.userDDs['UNIT']}" >
+                        <p:outputLabel value="#{PurchaseOfItemsByDelegatorViewTable2.itemUnitName}" >
+
+                        </p:outputLabel>
+                    </p:column>  
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh" 
+                              headerText="#{userData.userDDs['QUANTITY']}">
+                        <p:outputLabel value="#{PurchaseOfItemsByDelegatorViewTable2.itemQuantity}" >
+                        </p:outputLabel>                           
+                    </p:column>
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh"  headerText="#{userData.userDDs['TOTAL']}">
+                        <p:outputLabel value="#{PurchaseOfItemsByDelegatorViewTable2.net}" />
+                    </p:column>
+                    <p:columnGroup type="footer">
+                        <p:row>
+                            <p:column colspan="6" style="text-align:right" footerText="#{userData.userDDs['TOTAL']}  :" />
+
+                            <p:column footerText="#{purchaseOfItemsByDelegatorReportMB.total}"  style="font-size: 1.4vh"/>
+
+
+                        </p:row>
+                    </p:columnGroup>
+                </p:dataTable>
+            </p:fieldset>
+            <script type="text/javascript">
+                google.load("visualization", "1", {packages: ["corechart"]});
+                google.charts.setOnLoadCallback(drawChart);
+                function drawChart() {
+                    var data = google.visualization.arrayToDataTable(
+                #{purchaseOfItemsByDelegatorReportMB.pieChartsRows}
+                    );
+                    var options = {
+                        title: 'مشتريات اصناف حسب المندوبين',
+                        height: 800,
+                        seriesType: "bars",
+                        vAxis: {
+                            title: "الاجمالي"
+                        },
+                        hAxis: {
+                            title: "اسم المندوب",
+                            slantedText: true, /* Enable slantedText for horizontal axis */
+                            slantedTextAngle: 90 /* Define slant Angle */
+                        },
+                        'chartArea': {'width': '100%', height: '100%', top: '9%', left: '15%', right: '3%', bottom: '30%'} /* Adjust chart alignment to fit vertical labels for horizontal axis*/
+                    };
+
+                    var chart = new google.visualization.ComboChart(document.getElementById('donutchart'));
+                    chart.draw(data, options);
+                }
+            </script>           
+        </h:form>
+    </ui:define>
+</ui:composition>

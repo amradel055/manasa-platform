@@ -1,0 +1,196 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+
+        <h:form style="margin-right: 20px" id="form" dir="#{userData.dir}">
+            <p:fieldset id="whole" legend="#{userData.userDDs['EST_SAF_BANK']}" style="margin-bottom:20px">
+
+                <div class="col-xs-12">
+                    <p:messages id="curmsg" showDetail="true" rendered="true" closable="true"/>   
+                </div>
+
+                <div  id="firstLine" class="ui-g-12 ui-g-nopad">
+                    <div class="ui-g">
+
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 65px" value="#{userData.userDDs['NAME']}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:inputText style="width: 49%!important" value="#{glBankFromMB.glBankEntity.name}"/>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 65px" value="#{userData.userDDs['CODE']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width: 49%!important" value="#{glBankFromMB.glBankEntity.code}">
+                                        <p:ajax event="blur" listener="#{glBankFromMB.validateSave()}" update="curmsg" />
+                                    </p:inputText>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 65px"
+                                                   value="#{userData.userDDs['CURRENCY']}"
+                                                   for="Currency_ID"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:autoComplete id="Currency_ID" 
+                                                    style="width: 85%" 
+                                                    dropdown="true"
+                                                    converter="#{glBankFromMB.currencyConverter}"
+                                                    value="#{glBankFromMB.glBankEntity.currencyId}"
+
+                                                    var="p"
+                                                    itemLabel="#{p}" 
+                                                    itemValue="#{p}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{glBankFromMB.completeCurrency}">
+
+                                        <p:ajax update="@form"
+                                                event="itemSelect"
+                                                listener="#{glBankFromMB.updateGlAccounts}" />
+                                        <p:ajax update="@form"
+                                                event="change"
+                                                listener="#{glBankFromMB.updateGlAccounts}" />
+
+
+                                    </p:autoComplete>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 65px"
+                                                   value="#{userData.userDDs['ACCOUNT_NAME']}"
+                                                   for="GlAccount_ID"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:autoComplete id="GlAccount_ID" 
+                                                    style="width: 85%" 
+                                                    dropdown="true"
+                                                    converter="#{glBankFromMB.accountConverter}"
+                                                    value="#{glBankFromMB.glBankEntity.accountId}"
+
+                                                    var="p"
+                                                    itemLabel="#{p}" 
+                                                    itemValue="#{p}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{glBankFromMB.completeGlAccount}" >
+
+
+                                    </p:autoComplete>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 65px" value="#{userData.userDDs['INITIAL_BALAN']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width: 49%!important" value="#{glBankFromMB.glBankEntity.openingBalance}">
+                                        <p:ajax event="blur" listener="#{glBankFromMB.validateSave()}" update="curmsg" />
+                                    </p:inputText>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 65px" value="#{userData.userDDs['INIT_BALA_DATE']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:calendar style="width: 50%!important"  value="#{glBankFromMB.glBankEntity.openingBalanceDate}" 
+                                                pattern="dd/MM/yyyy" >
+
+                                    </p:calendar>
+                                </h:panelGroup> 
+
+                            </h:panelGroup>
+
+
+
+                        </div>
+                    </div>
+                </div>
+
+                <div  class="ui-g-12 ui-g-nopad">
+                    <div class="ui-g">
+
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:fieldset style="margin-bottom:20px;width: 65%"
+                                                legend="#{userData.userDDs['TYPE']}">
+                                        <p:selectOneRadio id="paymentType" 
+                                                          value="#{glBankFromMB.glBankEntity.type}"  >                                                             
+                                            <f:selectItem itemValue="0" itemLabel="#{userData.userDDs['SAFE']}"/>
+                                            <f:selectItem itemValue="1" itemLabel="#{userData.userDDs['BANK']}" />
+                                            <f:selectItem itemValue="2" itemLabel="#{userData.userDDs['CHECK_WRITTEN']}"/>
+                                        </p:selectOneRadio>
+                                    </p:fieldset>  
+                                </h:panelGroup> 
+                            </h:panelGroup>
+
+
+                        </div>
+                    </div>
+                </div>
+
+                <panelGrid class="centerButtons col-md-12">
+
+                    <h:panelGroup>
+
+                        <p:commandButton  class="saveButton" id="saveB" 
+                                          title="#{userData.userDDs['SAVE']}" 
+                                          value="#{userData.userDDs['SAVE']}" 
+                                          icon="fa fa-fw fa-save" 
+                                          action="#{glBankFromMB.save()}" 
+                                          disabled="#{glBankFromMB.disableSave}"
+                                          update="@form"
+                                          />
+                        <p:commandButton  class="closeButton" id="cancelC" 
+                                          title="#{userData.userDDs['CANCEL']}" 
+                                          value="#{userData.userDDs['CANCEL']}" 
+                                          icon="fa fa-fw fa-backward" 
+                                          action="#{glBankFromMB.exit()}" 
+                                          update="@form"/>
+
+                        <p:blockUI block="form" trigger="saveB" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI> 
+
+
+                    </h:panelGroup>
+                </panelGrid>
+
+            </p:fieldset>
+
+
+
+        </h:form>
+    </ui:define>
+</ui:composition>

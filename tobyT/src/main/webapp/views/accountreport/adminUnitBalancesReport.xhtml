@@ -1,0 +1,317 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <link rel="stylesheet" type="text/css" href="../../resources/css/main.css" />
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+
+        <p:messages autoUpdate="true"  showDetail="true" closable="true" rendered="true" />
+
+        <h:form id ="form" style="margin-right: 20px"  dir="#{userData.dir}" >
+
+            <div style=" position: absolute;left: 20px"> 
+
+                <p:commandButton  style="width: 90px;background-image: none!important;z-index: 2" 
+                                  class="viewButton searchButton"
+                                  value="Hide/Show"/>  
+            </div>
+
+            <p:fieldset id="head"  legend="#{userData.userDDs['ADMIN_UNIT_BALANC_REPORT']}"
+
+                        style=" position: relative">
+
+
+                <div class="ui-g-12 ui-g-nopad firstset">
+                    
+                    <div class="ui-g">
+
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+                                <h:panelGroup> 
+                                    <p:outputLabel  style="width: 60px"  value="#{userData.userDDs['FROM_ADMIN_UNIT']}" for="Cost_Center_From"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup >
+                                    <p:autoComplete  style="width: 75%"  id="Cost_Center_From" 
+                                                     dropdown="true"
+                                                     converter="#{adminUnitBalancesReportMB.adminUnitConverterFrom}"
+                                                     value="#{adminUnitBalancesReportMB.glAdminUnitFromSelected}"
+
+                                                     var="cost"
+                                                     itemLabel="#{cost}" 
+                                                     itemValue="#{cost}" 
+                                                     forceSelection="true" 
+                                                     completeMethod="#{adminUnitBalancesReportMB.completeAdminUnitFrom}" >
+
+                                        <p:ajax update="@form"
+                                                event="itemSelect"
+                                                listener="#{adminUnitBalancesReportMB.updateAdminUnitTo}" />
+                                        <p:ajax update="@form"
+                                                event="change"
+                                                listener="#{adminUnitBalancesReportMB.updateAdminUnitTo}" />
+                                    </p:autoComplete>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup> 
+                                <h:panelGroup >
+                                    <p:outputLabel  style="width: 60px"  value="#{userData.userDDs['TO_ADMIN_UNIT']}" for="COST_CENTER_TO"/>
+                                </h:panelGroup>
+                                <h:panelGroup >
+                                    <p:autoComplete  style="width: 75%"  
+                                                     id="COST_CENTER_TO" 
+                                                     dropdown="true"
+                                                     converter="#{adminUnitBalancesReportMB.adminUnitConverterTo}"
+                                                     value="#{adminUnitBalancesReportMB.glAdminUnitToSelected}"
+
+                                                     var="cost"
+                                                     itemLabel="#{cost}" 
+                                                     itemValue="#{cost}" 
+                                                     forceSelection="true" 
+                                                     completeMethod="#{adminUnitBalancesReportMB.completeAdminUnitTo}" >
+
+
+                                    </p:autoComplete>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 60px" value="#{userData.userDDs['FROM_ACCOUNT']}" for="GlAccount_ID_from" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:autoComplete  style="width: 75%"  
+                                                     id="GlAccount_ID_from" 
+
+                                                     dropdown="true"
+                                                     converter="#{adminUnitBalancesReportMB.accountConverter}"
+                                                     value="#{adminUnitBalancesReportMB.glAccountSelectedFrom}"
+                                                     var="p"
+                                                     itemLabel="#{p}" 
+                                                     itemValue="#{p}" 
+                                                     forceSelection="false" 
+                                                     completeMethod="#{adminUnitBalancesReportMB.completeGlAccount}" >
+                                    </p:autoComplete>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 60px" value="#{userData.userDDs['TO_ACCOUNT']}" for="GlAccount_ID_to"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:autoComplete  id="GlAccount_ID_to" 
+                                                     style="width: 75%"
+                                                     dropdown="true"
+                                                     converter="#{adminUnitBalancesReportMB.accountConverter}"
+                                                     value="#{adminUnitBalancesReportMB.glAccountSelectedTo}"
+                                                     var="p"
+                                                     itemLabel="#{p}" 
+                                                     itemValue="#{p}" 
+                                                     forceSelection="false" 
+                                                     completeMethod="#{adminUnitBalancesReportMB.completeGlAccount}" >
+                                    </p:autoComplete>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>   
+
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 60px" value="#{userData.userDDs['YEAR_FROM']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:calendar  style="width: 57%!important" id="dateFrom" value="#{adminUnitBalancesReportMB.complexRevisionBalanceSearchBeanA.periodFrom}" pattern="dd/MM/yyyy" >
+                                        <p:ajax listener="#{adminUnitBalancesReportMB.checkDate(true)}" event="dateSelect" update="dateFrom"/>
+                                    </p:calendar>
+
+                                </h:panelGroup>
+
+                            </h:panelGroup>   
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup> 
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 60px" value="#{userData.userDDs['YEAR_TO']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:calendar  style="width: 57%!important" 
+                                                 id="dateTo" value="#{adminUnitBalancesReportMB.complexRevisionBalanceSearchBeanA.periodTo}" pattern="dd/MM/yyyy" >
+                                        <p:ajax listener="#{adminUnitBalancesReportMB.checkDate(false)}" event="dateSelect" update="dateTo"/>
+                                    </p:calendar>
+
+                                </h:panelGroup>  
+                            </h:panelGroup> 
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>  
+
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 60px" value="#{userData.userDDs['FROM_LEVEL']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText  style="width: 57%!important" 
+                                                  value="#{adminUnitBalancesReportMB.complexRevisionBalanceSearchBeanA.levelFrom}"/>
+                                </h:panelGroup>
+
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>   
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 60px"  value="#{userData.userDDs['TO_LEVEL']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText  style="width: 57%!important"  
+                                                  value="#{adminUnitBalancesReportMB.complexRevisionBalanceSearchBeanA.levelTo}"/>
+                                </h:panelGroup>
+                            </h:panelGroup> 
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>   
+
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 60px" value="#{userData.userDDs['FINANAC_YEAR']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:selectOneMenu   style="width: 57%!important" 
+                                                       id="year" filter="true" filterMatchMode="contains"   value="#{adminUnitBalancesReportMB.glYearSelection}" converter="#{adminUnitBalancesReportMB.glYearConverter}"   >
+                                        <p:ajax update="dateFrom dateTo" listener="#{adminUnitBalancesReportMB.pushGlYearSelection()}" />
+                                        <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"  itemValue="" />
+                                        <f:selectItems value="#{adminUnitBalancesReportMB.glYearList}"  var="year" itemLabel="#{year.name}" itemValue="#{year}"/>
+                                    </p:selectOneMenu>
+                                </h:panelGroup>
+
+                            </h:panelGroup> 
+                        </div>
+                    </div>
+                </div>
+
+
+            </p:fieldset>
+
+            <p:fieldset style="margin: 10px 0">
+
+                <h:panelGrid class="col-md-12 centerButtons" columns="1" style="margin-top: 2%">
+                    <h:panelGroup>          
+                        <p:commandButton class="searchButton"  
+                                         icon="fa fa-fw fa-search-plus" id="savbtn"  
+                                         value="#{userData.userDDs['SEARCH']}"
+                                         action="#{adminUnitBalancesReportMB.startSearch}" 
+                                         update="dataTable "/>                   
+
+
+                        <p:commandButton class="newButton" 
+                                         icon="fa fa-fw fa-plus"  
+                                         value="#{userData.userDDs['NEW']}" 
+                                         action="#{adminUnitBalancesReportMB.resetSome}"
+                                         id="newN"
+                                         update="dataTable"  />                   
+
+
+                        <p:commandButton class="printButton" 
+                                         icon="fa fa-fw fa-print" ajax="false" 
+                                         onclick="form.target = '_blank'"  
+                                         value="#{userData.userDDs['PRINT']}"
+                                         actionListener="#{adminUnitBalancesReportMB.exportPDF}"/>
+
+                        <h:commandLink  class="sdcreenimg">  
+                            <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                            <p:dataExporter type="xls"
+                                            target="dataTable" 
+                                            fileName="تقرير ارصدة الوحدات الادارية"
+                                            postProcessor="#{adminUnitBalancesReportMB.postProcessXLS}" />  
+                        </h:commandLink>
+
+                    </h:panelGroup>
+
+                    <p:blockUI block="form" trigger="savbtn  newN" animate="true" >
+
+                        <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                    </p:blockUI> 
+
+                </h:panelGrid>
+            </p:fieldset>
+            
+            <p:fieldset>
+
+                <p:dataTable 
+                    id="dataTable"  value="#{adminUnitBalancesReportMB.incomeMenuBeanCombinedViewList}"
+                    var="menu" 
+                    rows="20"
+                    paginator="true"
+                    widgetVar="adminUnit"
+                    sortBy="#{menu.parent}" expandableRowGroups="true">
+
+                    <f:facet name="header" class="col-md-12">
+
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large;" />
+                            <p:inputText   id="globalFilter"   onkeyup="PF('adminUnit').filter()" style="width: 50%important" />
+                        </p:outputPanel>
+
+                    </f:facet>
+                    <p:headerRow>
+                        <p:column colspan="3">
+                            <h:outputText value="#{menu.accountGroup}" />
+                        </p:column>
+                        <p:column colspan="3">
+                            <h:outputText value="#{menu.parent}" />
+                        </p:column>
+                    </p:headerRow>
+                    <p:column headerText="#{userData.userDDs['ACCOUNT_COD']}"  
+                              filterBy="#{menu.accountNumber}"  filterMatchMode="contains" sortBy="#{menu.accountNumber}" filterable="false">
+                        <h:outputText value="#{menu.accountNumber}" />
+                    </p:column>
+                    <p:column headerText="#{userData.userDDs['ACCOUNT_NAME']}"
+                              filterBy="#{menu.accountName}"  filterMatchMode="contains" sortBy="#{menu.accountName}" filterable="false">
+                        <h:outputText value="#{menu.accountName}" />
+                    </p:column>
+                    <p:column  headerText="#{userData.userDDs['LEVEL']}" 
+                               filterBy="#{menu.level}"  filterMatchMode="contains" sortBy="#{menu.level}" filterable="false">
+                        <h:outputText value="#{menu.level}" style="font-size:12px" rendered="#{menu.appearenceOfTotal eq false}"/>
+                    </p:column>
+                    <p:column headerText="#{userData.userDDs['DEBIT']}" >
+                        <p:inputNumber readonly="true" value=" #{menu.debit}"  />
+                    </p:column>
+                    <p:column headerText="#{userData.userDDs['CREDIT']}" >
+                        <p:inputNumber readonly="true" value=" #{menu.credit}" />
+                    </p:column>
+                    <p:column headerText="#{userData.userDDs['BALANCE']}"  >
+                        <p:inputNumber readonly="true" value="#{menu.balance}" />
+                    </p:column>
+                    <p:summaryRow>
+                        <p:column colspan="3" filterBy="#{userData.userDDs['TOTAL']}"  filterMatchMode="contains" sortBy="#{userData.userDDs['TOTAL']}" filterable="false">
+                            <h:outputText value="#{userData.userDDs['TOTAL']}"/>
+                        </p:column>   
+
+                        <p:column  >
+                            <h:outputText value="#{menu.debitBalance}"/>
+                        </p:column>     
+                        <p:column  >
+                            <h:outputText value="#{menu.creditBalance}"/>
+                        </p:column>                   
+                        <p:column  >
+                            <h:outputText value="#{menu.firstDurationBalance}"/>
+                        </p:column>                   
+                    </p:summaryRow>
+
+                </p:dataTable> 
+
+            </p:fieldset>
+
+        </h:form>
+
+    </ui:define>
+</ui:composition>

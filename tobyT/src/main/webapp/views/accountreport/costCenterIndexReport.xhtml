@@ -1,0 +1,229 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <link rel="stylesheet" type="text/css" href="../../resources/css/main.css" />
+    <link rel="stylesheet" type="text/css" href="../../resources/customcss/custom.css" />
+    <script src="../../resources/jscustom/custom.js"></script>
+    <ui:define name="content">
+        <div class="col-xs-12">
+            <p:messages id="curmsg" showDetail="true" rendered="true" closable="true"/>   
+        </div>
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:head>
+            <title>#{userData.userDDs['COST_CENTER']}</title>
+        </h:head>
+        <style>
+
+            .ui-widget-content .ui-state-default, 
+            .ui-widget-header .ui-state-default {
+                border: 1px solid #c5dbec;
+                background:#fff
+            }
+
+
+        </style>
+        <h:body>
+            <h:form id="form" style="margin-right: 15px"   dir="#{userData.dir}">
+
+                <div style=" position: absolute;left: 20px"> 
+
+                    <p:commandButton  style="width: 90px;background-image: none!important;z-index: 2" 
+                                      class="viewButton searchButton"
+                                      value="Hide/Show"/>  
+                </div>
+
+                <p:fieldset  style=" position: relative" 
+                             legend="#{userData.userDDs['COST_CENTER_REPORT']}">
+
+                    <div class="firstset">
+
+                        <div class="ui-g">
+
+                            <div class="ui-g-12 ui-md-6">
+
+                                <h:panelGroup>
+                                    <h:panelGroup> 
+                                        <p:outputLabel style="width: 60px" value="#{userData.userDDs['FROM_COST_CENTER']}" />
+                                    </h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:autoComplete  id="Cost_Center_From" 
+                                                         dropdown="true"
+                                                         converter="#{costCenterIndexMB.costCenterConverter}"
+                                                         value="#{costCenterIndexMB.costCenterSearchBean.costCenterIdFrom}"
+                                                         style="width: 85%!important"
+                                                         var="cost"
+                                                         itemLabel="#{cost}" 
+                                                         itemValue="#{cost}" 
+                                                         forceSelection="true" 
+                                                         completeMethod="#{costCenterIndexMB.completeCostCenter}" >
+                                        </p:autoComplete>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+
+                                <h:panelGroup> 
+
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 60px" value="#{userData.userDDs['COST_CENTER_TO']}" for="COST_CENTER_TO"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:autoComplete  style="width: 85%!important" id="COST_CENTER_TO" 
+                                                         dropdown="true"
+                                                         converter="#{costCenterIndexMB.costCenterConverter}"
+                                                         value="#{costCenterIndexMB.costCenterSearchBean.costCenterIdTo}"
+
+                                                         var="cost"
+                                                         itemLabel="#{cost}" 
+                                                         itemValue="#{cost}" 
+                                                         forceSelection="true" 
+                                                         completeMethod="#{costCenterIndexMB.completeCostCenter}" >
+                                        </p:autoComplete>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </p:fieldset>
+
+                <p:fieldset style=" margin: 10px 0">
+
+                    <h:panelGrid  columns="1" class="col-md-12 centerButtons" style="margin-top: 2%">
+
+                        <h:panelGroup>
+
+                            <h:panelGroup>          
+                                <p:commandButton  class="searchButton" 
+                                                  icon="fa fa-fw fa-search-plus"
+                                                  value="#{userData.userDDs['SEARCH']}" 
+                                                  id="searchA"
+                                                  action="#{costCenterIndexMB.search()}"
+                                                  update="costCenterDataTable"  />              
+                            </h:panelGroup>
+
+                            <h:panelGroup>
+                                <p:commandButton class="newButton"  icon="fa fa-fw fa-plus" id="newB"
+                                                 value="#{userData.userDDs['NEW']}" action="#{costCenterIndexMB.reset()}" update="form" />
+                            </h:panelGroup>
+
+                            <h:panelGroup>
+                                <p:commandButton  class="printButton"
+                                                  icon="fa fa-fw fa-print"
+                                                  ajax="false" onclick="form.target = '_blank'"  value="#{userData.userDDs['PRINT']}"
+                                                  actionListener="#{costCenterIndexMB.exportPDF}"  id="printC"/>
+                            </h:panelGroup>
+
+                            <h:commandLink  class="sdcreenimg">  
+                                <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                                <p:dataExporter type="xls"
+                                                target="costCenterDataTable" 
+                                                fileName="مراكز التكلفة"
+                                                postProcessor="#{costCenterIndexMB.postProcessXLS}" />  
+                            </h:commandLink> 
+
+                        </h:panelGroup>
+
+                    </h:panelGrid>
+
+                    <p:blockUI block="form" trigger="searchA  newB  printC" animate="true" >
+
+                        <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                    </p:blockUI> 
+                </p:fieldset>
+                <p:fieldset>
+
+                    <p:dataTable 
+                        draggableColumns="true" draggableRows="true"
+                        id="costCenterDataTable"  
+                        value="#{costCenterIndexMB.costCenterIndexBeanList}" 
+                        var="costCenterDTB" 
+                        rows="15" 
+                        widgetVar="costCenterIndex"
+                        paginator="true"
+                        paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" 
+                        rowsPerPageTemplate="5, 10, 15">
+
+                        <f:facet name="header">
+
+
+                            <p:outputPanel>
+                                <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                                <p:inputText id="globalFilter" onkeyup="PF('costCenterIndex').filter()" style="width:150px" />
+                            </p:outputPanel>
+
+                        </f:facet>
+
+                        <p:column style="width: 7vh;font-size: 1.8vh;text-align: -webkit-auto" headerText="#{userData.userDDs['CS_CODE']}" 
+
+                                  filterBy="#{costCenterDTB.code}" 
+                                  filterMatchMode="contains" 
+                                  sortBy="#{costCenterDTB.code}"
+                                  filterable="false">
+
+                            <h:outputText style="font-size: 1.5vh;" value="#{costCenterDTB.code}"/>
+                        </p:column>
+
+                        <p:column style="width: 30vh;font-size: 1.8vh;text-align: -webkit-auto"
+                                  headerText="#{userData.userDDs['SINGLE_COST_CENTER']}"
+
+                                  filterBy="#{costCenterDTB.name}" 
+                                  filterMatchMode="contains" 
+                                  sortBy="#{costCenterDTB.name}"
+                                  filterable="false">
+
+                            <h:outputText style="font-size: 1.5vh;"  value="#{costCenterDTB.name}"/>
+                        </p:column>
+
+                        <p:column style="width: 30vh;font-size: 1.8vh;text-align: -webkit-auto" 
+                                  headerText="#{userData.userDDs['MAIN_COST_CENTER']}"
+
+                                  filterBy="#{costCenterDTB.parent}" 
+                                  filterMatchMode="contains" 
+                                  sortBy="#{costCenterDTB.parent}"
+                                  filterable="false">
+
+                            <h:outputText style="font-size: 1.5vh;"  value="#{costCenterDTB.parent}"/>
+                        </p:column>
+
+                        <p:column style="width: 8vh;font-size: 1.8vh;text-align: -webkit-auto"
+                                  headerText="#{userData.userDDs['LEVEL']}"
+
+                                  filterBy="#{costCenterDTB.level}" 
+                                  filterMatchMode="contains" 
+                                  sortBy="#{costCenterDTB.level}"
+                                  filterable="false">
+
+                            <h:outputText style="font-size: 1.5vh;" value="#{costCenterDTB.level}"/>
+                        </p:column>
+
+                        <p:column style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto" 
+                                  headerText="#{userData.userDDs['ACCOUNT_STATUS']}"
+
+                                  filterBy="#{costCenterDTB.active}" 
+                                  filterMatchMode="contains" 
+                                  sortBy="#{costCenterDTB.active}"
+                                  filterable="false">
+
+                            <h:outputText style="font-size: 1.5vh;"  value="#{costCenterDTB.active}"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:fieldset>
+            </h:form>
+
+        </h:body>
+
+    </ui:define>
+
+</ui:composition>
+

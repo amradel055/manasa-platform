@@ -1,0 +1,95 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <link rel="stylesheet" type="text/css" href="../../resources/css/main.css" /> 
+    <link rel="stylesheet" type="text/css" href="./../../resources/css/custom.css" /> 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css"/>
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form  style="margin-right: 15px"  id="form" dir="#{userData.dir}">
+            <div>
+
+                <p:messages autoUpdate="true"  id="cupmsg" showDetail="true" closable="true" rendered="true" />   
+            </div>
+
+
+
+            <p:fieldset legend="#{userData.userDDs['FINANCIAL_ANALUSIS_SETTING']}" style="margin-bottom:20px">
+
+                <p:dataTable id="subaccc" 
+                             value="#{analyticalReportsMB.glAnalyticsList}"
+                             var="glAnalytic"
+                             selection="#{analyticalReportsMB.glAnalyticsAccounts}" 
+                             selectionMode="single"
+                             rowKey="#{glAnalytic}"
+                             rows="18"
+                             paginator="true"
+                             widgetVar="glAnalytic">
+                    <f:facet name="header" class="col-md-12">
+
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large;" />
+                            <p:inputText   id="globalFilter"   onkeyup="PF('glAnalytic').filter()" style="width: 50%important" />
+                        </p:outputPanel>
+
+
+                    </f:facet>
+                    <p:column style="width:40vh;font-size: 1.5vh;text-align: -webkit-auto "
+                              headerText="#{userData.userDDs['CODE']}"
+                              filterBy="#{userData.userDDs[''+= glAnalytic.code]}"  filterMatchMode="contains" sortBy="#{userData.userDDs[''+= glAnalytic.code]}" filterable="false"
+                              >
+                        <h:outputLabel value="#{userData.userDDs[''+= glAnalytic.code]}"   style="font-size: 1.2vh"/>
+                    </p:column>
+                    <p:column style="width:40vh;font-size: 1.8vh;text-align: -webkit-auto"  headerText="#{userData.userDDs['ACCOUNT_NUMBER']}">
+                        <p:autoComplete id="GlAccount_ID" 
+                                        style="width: 95%" 
+                                        dropdown="true"
+                                        converter="#{analyticalReportsMB.glaccountConverter}"
+                                        value="#{glAnalytic.accountId}"
+                                        var="p"
+                                        itemLabel="#{p}" 
+                                        itemValue="#{p}" 
+                                        forceSelection="true" 
+                                        completeMethod="#{analyticalReportsMB.completeGlAccount}" >
+                            <f:attribute name="varValue" value="#{glAnalytic}" />
+                            <p:ajax event="itemSelect" listener="#{analyticalReportsMB.selectAccountNumber}" /> 
+
+
+                        </p:autoComplete>
+                    </p:column>
+
+                </p:dataTable>
+
+                <h:panelGroup  class="centerButtons">
+
+
+                    <p:commandButton class="saveallButton" id="b3" title="#{userData.userDDs['SAVE_ALL']}"  value="#{userData.userDDs['SAVE_ALL']}" 
+                                     icon="fa fa-fw fa-save" 
+                                     actionListener="#{analyticalReportsMB.saveAll}" >
+                    </p:commandButton>
+
+                    <p:blockUI block="form" trigger="b3" animate="true" >
+
+                        <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                    </p:blockUI> 
+
+                </h:panelGroup>
+
+            </p:fieldset>
+
+
+
+
+
+
+        </h:form>
+    </ui:define>
+</ui:composition>
+

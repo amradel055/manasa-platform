@@ -1,0 +1,227 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form  id="form" dir="#{userData.dir}"  style="margin-right: 20px">
+
+              <div style=" position: absolute;left: 20px"> 
+
+                <p:commandButton  style="width: 90px;background-image: none!important;z-index: 2" 
+                                  class="viewButton searchButton"
+                                  value="Hide/Show"/>  
+            </div>
+            
+            <p:fieldset  legend="#{userData.userDDs['BASIC_DATA_SUPPLIER']}"
+                         
+                            style=" position: relative"> 
+
+                <div  id="firstSegment" class="ui-g-12 ui-g-nopad firstset">
+                    <div class="ui-g">
+
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 40px" value="#{userData.userDDs['FROM_SUPPLIER']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:83%!important"
+                                                    dropdown="true"
+                                                    converter="#{supplierDataReportMB.invOrgSiteConverter}"
+                                                    value="#{supplierDataReportMB.supplierDataReportSearchBean.fromorganizationName}"
+                                                    var="organization"
+                                                    itemLabel="#{organization}" 
+                                                    itemValue="#{organization}"
+                                                    forceSelection="true" 
+                                                    completeMethod="#{supplierDataReportMB.completOrgSite}"
+                                                    >
+
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 40px" value="#{userData.userDDs['TO_SUPPLIER']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:83%!important" 
+
+                                                    dropdown="true"
+                                                    converter="#{supplierDataReportMB.invOrgSiteConverter}"
+                                                    value="#{supplierDataReportMB.supplierDataReportSearchBean.toorganizationName}"
+                                                    var="organization"
+                                                    itemLabel="#{organization}" 
+                                                    itemValue="#{organization}"
+
+                                                    forceSelection="true"
+                                                    completeMethod="#{supplierDataReportMB.completOrgSite}" >
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                    </div>
+                </div>
+
+                <h:panelGrid  columns="1" class="col-md-12" >
+
+                    <h:panelGroup  class="centerButtons"  style="margin-top: 2%">
+
+
+                        <p:commandButton   class="searchButton"
+                                           title="#{userData.userDDs['SEARCH']}"
+                                           action="#{supplierDataReportMB.search()}"
+                                           id="saveB"
+                                           value="#{userData.userDDs['SEARCH']}"
+                                           update="SupplierDataViewTable" 
+                                           icon="fa fa-search"  />
+
+                        <p:commandButton  class="newButton"
+                                          id="NewB"
+                                          title="#{userData.userDDs['NEW']}" 
+                                          immediate="true" 
+                                          action="#{supplierDataReportMB.reset()}"
+                                          update="@form"
+                                          value="#{userData.userDDs['NEW']}"
+                                          icon="fa fa-plus"/>
+
+                        <p:commandButton  class="printButton" 
+                                          id="PrintB"
+                                          ajax="false"
+                                          onclick="form.target = '_blank'"  
+                                          icon="fa fa-fw fa-print"
+                                          value="#{userData.userDDs['PRINT']}" 
+                                          actionListener="#{supplierDataReportMB.exportPDF}"
+                                          title="#{userData.userDDs['PRINT']}"
+                                          immediate="true" />
+
+                        <p:commandButton  class="cancelButton"
+                                          icon="fa fa-fw fa-backward"  
+                                          id="CloseB"
+                                          title="#{userData.userDDs['BACK']}"
+                                          action="exit"
+                                          value="#{userData.userDDs['BACK']}"/>
+
+                        <h:commandLink class="sdcreenimg">  
+                            <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                            <p:dataExporter type="xls"
+                                            target="SupplierDataViewTable" 
+                                            fileName=" تقرير بيانات الموردين الأساسية"
+                                            postProcessor="#{supplierDataReportMB.postProcessXLS}" />  
+                        </h:commandLink>
+                        
+                         <p:blockUI block="form" trigger="saveB NewB PrintB CloseB" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI> 
+
+
+                    </h:panelGroup>
+
+                </h:panelGrid>
+
+            </p:fieldset>
+
+            <p:fieldset style="margin-top: 2%">
+
+                <p:dataTable 
+                    paginator="true"
+                    rows="20"
+                    draggableColumns="true" 
+                    var="SupplierDataViewTable" 
+                    widgetVar="SupplierDataViewTable"  
+                    rowKey="#{SupplierDataViewTable}"
+                    rowIndexVar="index" 
+                    value="#{supplierDataReportMB.supplierDataReportViewBeanList}" 
+                    dir="rtl" 
+                    emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                    id="SupplierDataViewTable">
+
+                    <f:facet name="header">
+
+
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('SupplierDataViewTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+
+                    </f:facet>
+
+                    <p:column   style="width: 8vh;text-align: right;font-size: 1.8vh" headerText="#{userData.userDDs['SUPPL_CODE']}"  
+
+                                filterBy="#{SupplierDataViewTable.code}" 
+                                filterMatchMode="contains" 
+                                sortBy="#{SupplierDataViewTable.code}"
+                                filterable="false">
+                        <h:outputText value="#{SupplierDataViewTable.code}" style="font-size: 1.5vh"/>
+                    </p:column>
+
+
+
+                    <p:column style="width: 12vh;text-align: right;font-size: 1.8vh" filterStyle="display:none"
+                              headerText="#{userData.userDDs['NAME']}" 
+
+                              filterBy="#{SupplierDataViewTable.name}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{SupplierDataViewTable.name}"
+                              filterable="false">
+                        <h:outputText value="#{SupplierDataViewTable.name}" style="font-size: 1.5vh;width: 95%"/>
+                    </p:column>
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh" 
+                              headerText="#{userData.userDDs['PHONE']}" 
+
+                              filterBy="#{SupplierDataViewTable.phone}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{SupplierDataViewTable.phone}"
+                              filterable="false">
+                        <h:outputText value="#{SupplierDataViewTable.phone}" style="font-size: 1.5vh;width: 95%"/>
+                    </p:column>
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh" 
+                              headerText="#{userData.userDDs['CREDIT_LIMIT']}" 
+
+                              filterBy="#{SupplierDataViewTable.balanceLimit}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{SupplierDataViewTable.balanceLimit}"
+                              filterable="false">
+
+                        <h:outputText value="#{SupplierDataViewTable.balanceLimit}" style="font-size: 1.5vh;width: 95%"/>
+                    </p:column>
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh" 
+                              headerText="#{userData.userDDs['ACCOUNT_NUMBER']}" 
+
+                              filterBy="#{SupplierDataViewTable.delegator}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{SupplierDataViewTable.delegator}"
+                              filterable="false">
+                        <h:outputText value="#{SupplierDataViewTable.accountId.name}" style="font-size: 1.5vh;width: 95%"/>
+
+                    </p:column>  
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh" 
+                              headerText="#{userData.userDDs['DELEGATOR']}" 
+
+                              filterBy="#{SupplierDataViewTable.delegator}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{SupplierDataViewTable.delegator}"
+                              filterable="false">
+                        <h:outputText value="#{SupplierDataViewTable.delegator}" style="font-size: 1.5vh;width: 95%"/>
+
+                    </p:column>
+                </p:dataTable>
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>
+
+

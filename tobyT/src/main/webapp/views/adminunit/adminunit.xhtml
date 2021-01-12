@@ -1,0 +1,260 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml" >
+
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:head>
+            <title>#{userData.userDDs['ADMIN_UNITS']}</title>
+        </h:head>
+        <style>
+
+            .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+                border: 1px solid #c5dbec;
+                background:none;
+            </style>
+
+            <p:fieldset  legend="#{userData.userDDs['ADMIN_UNITS']}" style="margin-top:1px;margin-right: 30px" styleClass="panelColumns" >
+                    <h:form id="form" style="margin-right: 15px">
+                        <p:messages autoUpdate="true"  id="messages" showDetail="true" rendered="#{adminUnitBean.showMessage}" closable="true"/>   
+                        <div class="ui-g-12 ui-g-nopad" id="pnl">
+                            <div class="ui-g">
+
+                                <div class="ui-g-12 ui-md-4">
+                                    <h:panelGroup style="display: block;float: right">
+                                        <p:tree value="#{adminUnitBean.adminUnitsHierarchy}" var="doc" dir="#{userData.dir}"
+                                                selectionMode="single" selection="#{adminUnitBean.selectedAdminUnits}"
+                                                dynamic="false" id="auTree" >
+                                            <p:ajax event="select" listener="#{adminUnitBean.onNodeSelected}" update=":form:grid "/>
+                                            <p:treeNode expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
+                                                <h:outputText value="#{doc.name}"/>
+                                            </p:treeNode>
+                                        </p:tree> 
+                                    </h:panelGroup>
+                                </div>
+                                <div class="ui-g-12 ui-md-8">
+                                    <h:panelGroup>
+                                        <p:fieldset  id="data"  legend="#{userData.userDDs['ADMIN_UNIT']}" >
+                                            <h:panelGrid  id="grid" class="col-md-12" columns="1" rendered="#{userData.userScreens['adminunit'].add or userData.userScreens['adminunit'].edit or userData.isAdmin}" style="width: 100%"   cellspacing="10" cellpadding="0"  >
+
+
+                                                <h:panelGroup>
+
+                                                    <h:panelGroup>
+                                                        <p:outputLabel   style="width: 85px" value=" #{userData.userDDs['UNIT_CODE']}*" />
+                                                    </h:panelGroup>
+
+                                                    <h:panelGroup>
+                                                        <p:inputText  style="width: 50%!important"  id="unitcode" a:autofocus="true" value="#{adminUnitBean.selectedAU.code}" required="true" requiredMessage="#{userData.userDDs['REQUIRED']}" >
+                                                            <p:ajax  event="keyup" update=":form:msgSER" />
+                                                        </p:inputText>  
+                                                        <p:message id="msgSER" for="unitcode"/>
+                                                    </h:panelGroup>
+
+                                                </h:panelGroup>
+
+
+                                                <h:panelGroup>
+
+                                                    <h:panelGroup>
+                                                        <p:outputLabel style="width: 85px" id="un"  value="#{userData.userDDs['UNIT_NAME']}*" />
+                                                    </h:panelGroup>
+                                                    <h:panelGroup> 
+                                                        <p:inputText style="width: 50%!important" id="unitname"  value="#{adminUnitBean.selectedAU.name}" required="true" requiredMessage="#{userData.userDDs['REQUIRED']}" >
+                                                            <p:ajax  event="keyup" update=":form:msgname " />
+                                                        </p:inputText>
+                                                        <p:message id="msgname" for="unitname"/>
+                                                    </h:panelGroup>
+
+                                                </h:panelGroup>
+
+
+
+
+
+                                                <h:panelGroup>
+
+                                                    <h:panelGroup>
+                                                        <p:outputLabel   value="#{userData.userDDs['ADMAIN_UNIT_MAIN']}" 
+                                                                         style="width: 85px" />
+                                                    </h:panelGroup>
+                                                    <h:panelGroup>
+                                                        <p:selectOneMenu style="width: 50%!important;margin: 5px 0;height: 22px;vertical-align: middle;" id="parentname" value="#{adminUnitBean.selectedParent}"               
+                                                                     required="false" filterMatchMode="contains" filter="true" >
+                                                        <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" itemValue="" noSelectionOption="true" />
+                                                        <p:ajax listener="#{adminUnitBean.selectParent}" update="level"  />
+                                                        <f:selectItems value="#{adminUnitBean.allAdminUnits}" var="au" itemLabel="#{au.name}" itemValue="#{au.id}" />
+                                                    </p:selectOneMenu>
+                                                    <p:message for="parentname"/>
+                                                </h:panelGroup>
+
+                                            </h:panelGroup>
+
+
+                                            <h:panelGroup>
+
+                                                <h:panelGroup>
+                                                    <p:outputLabel  value="#{userData.userDDs['STATUS']}" style="width: 85px" />
+                                                </h:panelGroup>
+                                                <h:panelGroup>
+                                                    <h:selectBooleanCheckbox id="active" value="#{adminUnitBean.selectedAU.active}"
+                                                                             style="margin:1%" />
+                                                        <p:message for="active"/>
+                                                    </h:panelGroup> 
+
+
+                                                </h:panelGroup>
+
+
+                                                <h:panelGroup>
+
+                                                    <h:panelGroup>
+                                                        <p:outputLabel id="level"  value="#{userData.userDDs['LEVEL']}" style="margin:1.5% 0"/>
+                                                    </h:panelGroup>
+
+                                                    <h:panelGroup>
+                                                        <p:outputLabel  style="margin: 0 12%" value="#{adminUnitBean.selectedAU.level}"/>
+                                                    </h:panelGroup>
+
+
+                                                </h:panelGroup>
+
+
+                                                <h:panelGroup>
+                                                    <h:panelGroup>
+                                                        <p:outputLabel   value="#{userData.userDDs['BRANCH']}*" style="margin:1.5% 0"/>
+                                                    </h:panelGroup>
+                                                    <h:panelGroup>  
+                                                        <p:outputLabel style="margin: 0 12%" id="branc" value="#{adminUnitBean.selectedAU.branchId.nameAr}"  />
+                                                    </h:panelGroup>
+
+                                                </h:panelGroup>
+
+
+
+
+                                                <h:panelGroup> </h:panelGroup>
+
+                                                <h:panelGroup>
+
+                                                    <h:panelGroup rendered="#{userData.isAdmin}">
+                                                        <p:outputLabel  value="#{userData.userDDs['COMPANY_NAME']} " rendered="#{userData.isAdmin}" />
+                                                    </h:panelGroup>
+                                                    <h:panelGroup rendered="#{userData.isAdmin}">
+                                                        <p:outputLabel style="width: 100%" id="com" value="#{adminUnitBean.selectedAU.companyId.name}" rendered="#{userData.isAdmin}" />
+                                                        <p:message for="com"/>
+                                                    </h:panelGroup>
+
+                                                </h:panelGroup>
+
+
+
+                                            </h:panelGrid>
+
+                                            <h:panelGrid  class="centerButtons col-md-12" columns="1">
+
+                                                <h:panelGroup>
+
+
+                                                    <p:commandButton class="saveButton"
+                                                                     value="#{userData.userDDs['SAVE']}"
+                                                                     id="saveB" title="#{userData.userDDs['SAVE']}" 
+                                                                     rendered="#{userData.userScreens['adminunit'].add or userData.isAdmin}" 
+                                                                     icon="fa fa-fw fa-save"  action="#{adminUnitBean.save}"
+                                                                     validateClient="true" update="@form"  /> 
+
+                                                    <p:commandButton  value="#{userData.userDDs['ADD']}"  
+                                                                      class="addButton" style="" 
+                                                                      title="#{userData.userDDs['ADD']}"
+                                                                      rendered="#{userData.userScreens['adminunit'].add 
+                                                                                  or userData.isAdmin}" 
+                                                                      actionListener="#{adminUnitBean.add}" 
+                                                                      icon="fa fa-fw fa-plus" process="@this" 
+                                                                      update=":form:grid" 
+                                                                      id="plus" />
+
+                                                    <p:blockUI block="form" trigger="saveB plus" animate="true" >
+
+                                                        <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                                                    </p:blockUI>
+
+                                                    <p:commandButton  value="#{userData.userDDs['DELETE']}"  
+                                                                      class="deleteButton" style="" title="#{userData.userDDs['DELETE']}"  
+                                                                      rendered="#{userData.userScreens['adminunit'].delete or userData.isAdmin}"  action="#{adminUnitBean.delete()}"  icon="fa fa-fw fa-remove"  update="@form" >
+                                                        <p:confirm header="#{userData.userDDs['COFIGRATION']}" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                                                    </p:commandButton>
+                                                    
+                                                    <p:commandButton    class="closeButton" 
+                                                                        title="#{userData.userDDs['CANCEL']}" 
+                                                                        immediate="true" 
+                                                                        value="#{userData.userDDs['CANCEL']}" 
+                                                                        icon="fa fa-fw fa-backward" 
+                                                                        action="exit"   />
+
+                                                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                                        <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                                        <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                                                    </p:confirmDialog>
+
+                                                </h:panelGroup>
+
+
+
+
+                                                <p:blockUI block="saveB" trigger="saveB"/>
+
+                                            </h:panelGrid>
+
+                                            <h:panelGrid id="pnlview" style="width: 100%" rendered="#{not( userData.userScreens['adminunit'].edit or userData.isAdmin)}"  columns="2" cellspacing="2" cellpadding="0" >
+                                                <h:panelGroup>
+                                                    <p:outputLabel for="bname" value="#{userData.userDDs['BRANCH']}  "/>
+                                                </h:panelGroup>
+                                                <h:panelGroup>
+                                                    <p:inputText id="bname"  value="#{adminUnitBean.selectedAU.branchId.nameAr}" readonly="true"  />
+                                                </h:panelGroup>
+                                                <h:panelGroup>
+                                                    <p:outputLabel for="pname" value="#{userData.userDDs['UNIT_PARENT']}  "/>
+                                                </h:panelGroup>
+                                                <h:panelGroup>
+                                                    <p:inputText id="pname"  value="#{adminUnitBean.selectedAU.parent.name}" readonly="true"  />
+                                                </h:panelGroup>
+                                                <h:panelGroup>
+                                                    <p:outputLabel for="uname" value="#{userData.userDDs['UNIT_NAME']}"/>
+                                                </h:panelGroup>
+                                                <h:panelGroup> 
+                                                    <p:inputText id="uname" value="#{adminUnitBean.selectedAU.name}" readonly="true" />
+                                                </h:panelGroup>
+                                                <h:panelGroup>
+                                                    <p:outputLabel for="ucode" value=" #{userData.userDDs['UNIT_CODE']}"/>
+                                                </h:panelGroup>
+                                                <h:panelGroup>
+                                                    <p:inputText id="ucode" value="#{adminUnitBean.selectedAU.code}"  readonly="true"/>  
+                                                </h:panelGroup>
+                                                <h:panelGroup>
+                                                    <p:outputLabel for="act" value="#{userData.userDDs['ACTIVE']}  "/>
+                                                </h:panelGroup>
+                                                <h:panelGroup>
+                                                    <h:selectBooleanCheckbox id="act" value="#{adminUnitBean.selectedAU.active}"  />
+                                                </h:panelGroup> 
+
+
+
+                                            </h:panelGrid>
+                                        </p:fieldset>
+                                    </h:panelGroup>
+                                </div>
+                            </div>
+                        </div>
+
+                    </h:form>
+                </p:fieldset>
+            </ui:define>
+        </ui:composition>
+

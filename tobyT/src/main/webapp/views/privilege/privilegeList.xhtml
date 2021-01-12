@@ -1,0 +1,191 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+       
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+  
+        <h:form id="screenActionForm" dir="RTL" style="margin-right: 15px">
+          
+            <p:fieldset legend="#{userData.userDDs['PRIVILEGE_MANAGEMENT']}" style="margin-bottom:20px">
+                <p:commandButton  class="scloseButton"  icon="fa fa-fw fa-backward"  style="float: left;margin: 0" action="exit" />
+                <p:dataTable 
+                    draggableColumns="true" 
+                    widgetVar="ptable" 
+                    var="role" 
+                    value="#{privilegeListBean.roles}" 
+                    rowIndexVar="index" 
+                    rows="7"
+                    emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" 
+                    paginator="true"  
+                    selectionMode="single" 
+                    selection="#{privilegeListBean.selectedRoleId}" 
+                    rowKey="#{role.id}" 
+                    id="roleList">
+                    <p:ajax event="rowSelect" listener="#{privilegeListBean.selectRole}" update="@form" />
+                    <p:ajax event="rowUnselect" listener="#{privilegeListBean.unselectRole}" update="@form" />
+
+                    <f:facet name="header">
+                        <p:outputPanel  >
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large"/>
+                            <p:inputText id="globalFilter" onkeyup="PF('ptable').filter()"  a:autofocus="true"  style="width:150px" />
+                        </p:outputPanel>
+                    </f:facet>
+                   
+                    <p:column headerText="#" style="width: 5vh;font-size: 1.8vh;text-align: -webkit-auto;" >
+                        <h:outputText value="#{index + 1}" style="font-size:12px"  />
+                    </p:column>
+                  
+                    <p:column filterStyle="display:none"  
+                              style="width: 35vh;font-size: 1.8vh;text-align: -webkit-auto;" 
+                              sortBy="#{role.name}" filterBy="#{role.name}"  filterMatchMode="contains" headerText="#{userData.userDDs['ROLE_NAME']}" >
+                        <h:outputText value="#{role.name}"  style="font-size:12px"  />
+                    </p:column>
+                   
+                    <p:column filterStyle="display:none"  
+                              style="width: 35vh;font-size: 1.8vh;text-align: -webkit-auto;" 
+                              sortBy="#{role.companyId.name}" filterBy="#{role.companyId.name}"  filterMatchMode="contains" headerText="#{userData.userDDs['COMPANY_NAME']} " >
+                        <h:outputText value="#{role.companyId.name}" style="font-size:12px"/>
+                    </p:column>
+                   
+                    <p:column  filterStyle="display:none" style="font-size:15px ; width: 12vh;" sortBy="#{role.companyId.code}" filterBy="#{role.companyId.code}"  filterMatchMode="contains"  headerText=" #{userData.userDDs['COMPANY_CODE']}" >
+                        <h:outputText value="#{role.companyId.code}" style="font-size:12px "/>
+                    </p:column>
+               
+                </p:dataTable>
+           
+            </p:fieldset> 
+
+
+            <p:fieldset  id="pnl" legend="#{userData.userDDs['PRIVILEGES']}" style="margin-bottom:20px">
+                <div>
+                    <p:messages autoUpdate="true"  id="cupmsg" showDetail="true" closable="true" rendered="true" />   
+                </div>
+                <p:dataTable  
+                    var="privilege"
+                    widgetVar="pritable" 
+                    value="#{privilegeListBean.privileges}" 
+                    rowIndexVar="index" 
+                    scrollable="true"
+                    scrollRows="7"
+                    scrollHeight="99%"
+                    rowKey="#{privilege.screenId}"
+                    emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                    editable="true"
+                    selection="#{privilegeListBean.tobyPrivilegeSelected}" 
+                    selectionMode="single"
+                    id="privList"  >
+
+                    <p:ajax event="rowSelect" 
+                            listener="#{privilegeListBean.selectRolePrevelage}" 
+                             />
+
+
+                    <f:facet name="header" >
+
+                        <p:commandButton class="saveButton" id="save" value="#{userData.userDDs['SAVE']}"
+                                         icon="fa fa-save" 
+                                         actionListener="#{privilegeListBean.updateAll}"
+                                         style="float:left" 
+                                         update=":screenActionForm:privList"
+                                         rendered="#{userData.userScreens['privilege'].add or userData.isAdmin}"/>
+
+                        <p:commandButton  class="reloadButton" id="grant" value="#{userData.userDDs['GRANT_ALL']}" 
+                                         icon="fa fa-plus"
+                                         actionListener="#{privilegeListBean.grantAll}"
+                                         style="float:right;width: 105px"
+                                         update=":screenActionForm:privList"
+                                         rendered="#{userData.userScreens['privilege'].add or userData.isAdmin}"/>
+
+                        <p:commandButton  class="deleteButton" id="revoke" value="#{userData.userDDs['REVOKE_ALL']}"
+                                         icon="fa fa-minus" 
+                                         actionListener="#{privilegeListBean.revokeAll}"
+                                         style="float:left;width: 135px" 
+                                         update=":screenActionForm:privList"
+                                         rendered="#{userData.userScreens['privilege'].add or userData.isAdmin}"/>
+                          <p:blockUI block="screenActionForm" trigger="save  grant  revoke" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI> 
+
+                        <p:outputPanel >
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: 15px;width: 50%!important" />
+                            <p:inputText   id="globalFilter" onkeyup="PF('pritable').filter()" />
+                        </p:outputPanel>
+
+                    </f:facet>
+
+                    <p:column sortBy="#{privilege.screenId.serial}"
+                              style="font-size: 1.8vh;width: 15vh;text-align: center!important" 
+                              filterBy="#{privilege.screenId.serial}"  filterMatchMode="startsWith" headerText="#{userData.userDDs['CODE']}">
+                        <h:outputText value="#{privilege.screenId.serial}"  style="width: 90vw!important"  />
+                    </p:column>
+                    
+                    <p:column sortBy="#{privilege.screenId.moduleAr}" 
+                              style="font-size: 15px;width: 20vh;text-align: center!important"
+                              filterBy="#{privilege.screenId.moduleAr}"  
+                              filterMatchMode="contains" headerText="#{userData.userDDs['MODULE_NAME']}">
+                        <h:outputText value="#{privilege.screenId.moduleAr}"    style="width: 90vw!important"  />
+                    </p:column>
+                    
+                    <p:column sortBy="#{privilege.screenId.tabAr}" 
+                              style="font-size: 15px;width: 20vh;text-align: center!important"  filterBy="#{privilege.screenId.tabAr}"  filterMatchMode="contains" headerText="#{userData.userDDs['SUB-MODULE_NAME']}">
+                        <h:outputText value="#{privilege.screenId.tabAr}"    
+                                      style="width: 90vw!important"  />
+                    </p:column>
+
+                    <p:column sortBy="#{privilege.screenId.name}"  style="font-size: 15px;width: 20vh;text-align: center!important"  filterBy="#{privilege.screenId.name}"  filterMatchMode="contains" headerText=" #{userData.userDDs['SCREEN_NAME']}">
+                        <h:outputText value="#{privilege.screenId.name}"    style="width: 90vw!important"  />
+                    </p:column>
+                    
+                    <p:column sortBy="#{privilege.screenId.namear}"  style="font-size: 15px;width: 20vh;text-align: center!important"  filterBy="#{privilege.screenId.namear}"  filterMatchMode="contains" headerText=" #{userData.userDDs['SCREEN_NAME']}">
+                        <h:outputText value="#{privilege.screenId.namear}"    style="width: 90vw!important"  />
+                    </p:column>
+
+                    <p:column id="View" headerText="#{userData.userDDs['VIEW']}"  style="font-size: 15px;width: 8vh;text-align: center!important">
+                        <h:selectBooleanCheckbox value="#{privilege.view}" >
+                            <p:ajax  event="click"  listener="#{privilegeListBean.unSelectALL()}" update="privList"/>
+                        </h:selectBooleanCheckbox>
+                    </p:column>
+
+                    <p:column id="Add" headerText="#{userData.userDDs['ADD']}" style="font-size: 15px;width: 8vh;text-align: center!important"  >
+                        <h:selectBooleanCheckbox value="#{privilege.add}" >
+                            <p:ajax  event="click"  listener="#{privilegeListBean.behindAdd}" update="privList"/>
+                           
+                        </h:selectBooleanCheckbox>
+                    </p:column>
+
+                    <p:column  id="Edit" headerText=" #{userData.userDDs['EDIT']}" style="font-size: 15px;width: 8vh;text-align: center!important" >
+                        <h:selectBooleanCheckbox value="#{privilege.edit}" >
+                            <p:ajax  event="click"  listener="#{privilegeListBean.behindEdit}" update="privList"/>
+                            
+                        </h:selectBooleanCheckbox>
+                        
+                        
+                    </p:column>
+
+                    <p:column id="Delete" headerText=" #{userData.userDDs['DELETE']}" style="font-size: 15px;width: 8vh;text-align: center!important" >
+                        <h:selectBooleanCheckbox value="#{privilege.delete}" >
+                            <p:ajax  event="click"  listener="#{privilegeListBean.behindDelete}" update="privList"/>
+                        </h:selectBooleanCheckbox>
+                    </p:column>
+
+                    <p:blockUI block="pnl" trigger="grant"/>
+                    <p:blockUI block="privList" trigger="revoke"/>
+                    
+                </p:dataTable>
+
+            </p:fieldset> 
+
+        </h:form>
+    </ui:define>
+
+
+</ui:composition>

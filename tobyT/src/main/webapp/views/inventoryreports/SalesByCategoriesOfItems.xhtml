@@ -1,0 +1,354 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <ui:define name="content">
+       
+ 
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+
+        <div style=" position: absolute;left: 20px"> 
+
+            <p:commandButton  style="width: 90px;background-image: none!important;z-index: 2" 
+                              class="viewButton searchButton"
+                              value="Hide/Show"/>  
+        </div>
+
+
+
+        <h:form  id="form" dir="#{userData.dir}"  style="margin-right: 20px">
+
+            <p:fieldset id="head"  style=" position: relative" legend="#{userData.userDDs['MONTHLY_SALES']}"> 
+
+
+                <div  id="firstSegment" class="ui-g-12 ui-g-nopad firstset">
+                    <div class="ui-g">
+
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['FROM_ITEM']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:75%!important"
+                                                    dropdown="true"
+                                                    converter="#{purchasesByCategoriesOfItemsMB.itemDTOFromConverter}"
+                                                    value="#{purchasesByCategoriesOfItemsMB.purchaseItemsGroupViewSearchBean.invItemForm}"
+                                                    var="item"
+                                                    itemLabel="#{item}" 
+                                                    itemValue="#{item}"
+                                                    forceSelection="true" 
+                                                    completeMethod="#{purchasesByCategoriesOfItemsMB.completInvItemDTOFrom}"
+
+                                                    >
+
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['TO_ITEM']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:75%!important" 
+
+                                                    dropdown="true"
+
+                                                    converter="#{purchasesByCategoriesOfItemsMB.itemDTOToConverter}"
+                                                    value="#{purchasesByCategoriesOfItemsMB.purchaseItemsGroupViewSearchBean.invItemTo}"
+                                                    var="item"
+                                                    itemLabel="#{item}" 
+                                                    itemValue="#{item}"
+                                                    forceSelection="true" 
+                                                    completeMethod="#{purchasesByCategoriesOfItemsMB.completInvItemDTOTo}" >
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 70px" value="#{userData.userDDs['FROM_DATE']}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:calendar pattern="dd/MM/yyyy" 
+                                                value="#{purchasesByCategoriesOfItemsMB.purchaseItemsGroupViewSearchBean.dateFrom}"
+                                                style="width: 56%">
+
+                                    </p:calendar>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 70px" value="#{userData.userDDs['TO_DATE']}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:calendar pattern="dd/MM/yyyy" 
+                                                value="#{purchasesByCategoriesOfItemsMB.purchaseItemsGroupViewSearchBean.dateTo}"
+                                                style="width: 56%">
+
+                                    </p:calendar>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['FROM_REPOS_NO']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:75%!important"
+                                                    dropdown="true"
+                                                    converter="#{purchasesByCategoriesOfItemsMB.invInventoryConverter}"
+                                                    value="#{purchasesByCategoriesOfItemsMB.purchaseItemsGroupViewSearchBean.inventoryIdFrom}"
+                                                    var="inventory"
+                                                    itemLabel="#{inventory}" 
+                                                    itemValue="#{inventory}"
+                                                    forceSelection="true" 
+                                                    completeMethod="#{purchasesByCategoriesOfItemsMB.completeInventory}"
+                                                    >
+
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['TO_REPOS_NO']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:75%!important" 
+
+                                                    dropdown="true"
+                                                    converter="#{purchasesByCategoriesOfItemsMB.invInventoryConverter}"
+                                                    value="#{purchasesByCategoriesOfItemsMB.purchaseItemsGroupViewSearchBean.inventoryIdTo}"
+                                                    var="inventory"
+                                                    itemLabel="#{inventory}" 
+                                                    itemValue="#{inventory}"
+                                                    forceSelection="true" 
+                                                    completeMethod="#{purchasesByCategoriesOfItemsMB.completeInventory}">
+                                    </p:autoComplete>
+
+                                </h:panelGroup> 
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['FROM_INVOI_NO']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:autoComplete id="purchaseIdFrom"
+                                                    style="width:75%!important " 
+                                                    dropdown="true"
+
+                                                    converter="#{purchasesByCategoriesOfItemsMB.invInvoiceSalesConverter}"
+                                                    value="#{purchasesByCategoriesOfItemsMB.purchaseItemsGroupViewSearchBean.salesInvoiceFrom}"
+
+                                                    var="purchasePerson"
+                                                    itemLabel="#{purchasePerson}" 
+                                                    itemValue="#{purchasePerson}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{purchasesByCategoriesOfItemsMB.completeSalesInvoice}">
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['TO_INVOI_NO']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:autoComplete id="purchaseIdTo"
+                                                    style="width:75%!important " 
+                                                    dropdown="true"
+
+                                                    converter="#{purchasesByCategoriesOfItemsMB.invInvoiceSalesConverter}"
+                                                    value="#{purchasesByCategoriesOfItemsMB.purchaseItemsGroupViewSearchBean.salesInvoiceTo}"
+
+                                                    var="purchasePerson"
+                                                    itemLabel="#{purchasePerson}" 
+                                                    itemValue="#{purchasePerson}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{purchasesByCategoriesOfItemsMB.completeSalesInvoice}">
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+                            </h:panelGroup>            
+
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>                             
+                                <h:panelGroup>
+                                    <p:commandButton value="رسم بياني" update="@form" oncomplete="PF('dlg1').show()" />
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                    </div>
+                    <p:dialog class="ui-dialog"
+                              modal="true"
+                              position='center,center'
+                              minHeight="40" minWidth="220"
+                              header="رسم بياني" widgetVar="dlg1">
+
+                        <div  id="curve_chart"  style="width: 75vw; height: 650px;"></div>
+
+                        <p:commandButton  class="printButton"
+                                          id="PrintC"
+                                          ajax="false"
+                                          onclick="form.target = '_blank'"  
+                                          icon="fa fa-fw fa-print"
+                                          value="#{userData.userDDs['PRINT']}" 
+                                          actionListener="#{purchasesByCategoriesOfItemsMB.exportChartPDF}"
+                                          title="#{userData.userDDs['PRINT']}"
+                                          immediate="true" />
+                    </p:dialog> 
+
+                </div>
+
+                <h:panelGrid class="col-md-12 "  columns="1">
+
+                    <h:panelGroup class="centerButtons" style="margin-top: 2%">
+
+
+                        <p:commandButton    class="searchButton" 
+                                            id="search"
+                                            title="#{userData.userDDs['SEARCH']}"
+                                            action="#{purchasesByCategoriesOfItemsMB.search()}"
+                                            value="#{userData.userDDs['SEARCH']}"
+                                            update="form" 
+                                            icon="fa fa-search" 
+                                            oncomplete="PF('generaltable').clearFilters()"/>
+
+                        <p:commandButton  class="newButton"
+                                          id="NewB"
+                                          title="#{userData.userDDs['NEW']}" 
+                                          immediate="true" 
+                                          action="#{purchasesByCategoriesOfItemsMB.reset()}"
+                                          update="form"
+                                          value="#{userData.userDDs['NEW']}"
+                                          icon="fa fa-plus"/>
+
+
+                        <p:commandButton  class="printButton"
+                                          id="PrintB"
+                                          icon="fa fa-print" 
+                                          title="#{userData.userDDs['PRINT']}"
+                                          ajax="false" onclick="form.target = '_blank'"  value="#{userData.userDDs['PRINT']}" 
+                                          actionListener="#{purchasesByCategoriesOfItemsMB.exportPDF}"/>
+
+                        <p:commandButton   class="closeButton"
+                                           id="CloseB"
+                                           icon="fa fa-fw fa-backward"  
+                                           title="#{userData.userDDs['BACK']}"
+                                           action="exit"
+                                           value="#{userData.userDDs['BACK']}"/>
+
+                        <h:commandLink  class="sdcreenimg">  
+                            <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                            <p:dataExporter type="xls"
+                                            target="table" 
+                                            fileName="مشتريات حسب مجموعات الأصناف"
+                                            postProcessor="#{purchasesByCategoriesOfItemsMB.postProcessXLS}" />  
+                        </h:commandLink>
+
+
+
+                    </h:panelGroup>
+
+                </h:panelGrid>
+
+                <p:blockUI block="form" trigger="search NewB PrintB CloseB" animate="true" >
+
+                    <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                </p:blockUI> 
+
+
+
+            </p:fieldset>
+
+            <p:fieldset  style="margin-top: 2%">
+                <p:dataTable 
+                    rows="20"
+                    widgetVar="generaltable" id="table"
+                    var="generaltable"
+                    style="margin-bottom:20px"  
+                    rowIndexVar="index" 
+                    paginator="true" 
+                    value="#{purchasesByCategoriesOfItemsMB.purchaseByCategoriesOfItemsBeanList}" >
+                    <f:facet name="header">
+
+
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('generaltable').filter()" style="width:150px" />
+                        </p:outputPanel>
+
+                    </f:facet>
+
+                    <p:columns value="#{purchasesByCategoriesOfItemsMB.columns}"
+                               var="column" columnIndexVar="colIndex" 
+
+                               sortBy="#{generaltable[column.property]}"
+                               filterBy="#{generaltable[column.property]}" 
+                               filterMatchMode="contains" 
+
+                               filterable="false">
+                        <f:facet name="header">
+                            <h:outputText value="#{column.header}" />
+                        </f:facet>
+                        <h:outputText value="#{generaltable[column.property]}" />
+                    </p:columns>
+
+                </p:dataTable>
+            </p:fieldset>
+
+            <script type="text/javascript">
+                google.charts.load('current', {'packages': ['corechart']});
+                google.charts.setOnLoadCallback(drawChart);
+
+                function drawChart() {
+                    var data = google.visualization.arrayToDataTable(
+                #{purchasesByCategoriesOfItemsMB.pieChartsRows}
+                    );
+
+                    var options = {
+                        title: 'المبيعات الشهرية',
+                        curveType: 'none',
+                        legend: {position: 'bottom'}
+                    };
+
+                    var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+
+                    chart.draw(data, options);
+                }
+            </script>
+        </h:form>
+    </ui:define>
+</ui:composition>
+
+

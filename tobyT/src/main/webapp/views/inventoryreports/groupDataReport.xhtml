@@ -1,0 +1,202 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+
+        <h:form  id="form" dir="#{userData.dir}"  style="margin-right: 20px">
+
+
+            <div style=" position: absolute;left: 20px"> 
+
+                <p:commandButton  style="width: 90px;background-image: none!important;z-index: 2" 
+                                  class="viewButton searchButton"
+                                  value="Hide/Show"/>  
+            </div>
+
+            <p:fieldset  legend="#{userData.userDDs['GROUP_ITEMS']}"  
+                         style=" position: relative"> 
+
+
+                <div  id="firstSegment" class="ui-g-12 ui-g-nopad firstset">
+                    
+                    <div class="ui-g">
+
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 45px" value="#{userData.userDDs['FROM_GROUP']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:75%!important"
+                                                    dropdown="true"
+                                                    converter="#{groupDataReportMB.invGroupConverter}"
+                                                    value="#{groupDataReportMB.groupDataReportSearchBean.fromGroupName}"
+                                                    var="group"
+                                                    itemLabel="#{group}" 
+                                                    itemValue="#{group}"
+                                                    forceSelection="true" 
+                                                    completeMethod="#{groupDataReportMB.completGroup}"
+                                                    >
+
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 45px" value="#{userData.userDDs['TO_GROUP']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:75%!important" 
+                                                    dropdown="true"
+                                                    converter="#{groupDataReportMB.invGroupConverter}"
+                                                    value="#{groupDataReportMB.groupDataReportSearchBean.toGroupName}"
+                                                    var="groupto"
+                                                    itemLabel="#{groupto}" 
+                                                    itemValue="#{groupto}"                                            
+                                                    forceSelection="true"
+                                                    completeMethod="#{groupDataReportMB.completGroup}" >
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+
+                        </div>
+                    </div>
+                </div>
+                <h:panelGrid  columns="1" class="col-md-12" >
+
+                    <h:panelGroup class="centerButtons" style="margin-top: 2%">
+
+
+                        <p:commandButton   class="searchButton"
+                                           title="#{userData.userDDs['SEARCH']}"
+                                           action="#{groupDataReportMB.search()}"
+                                           id="saveB"
+                                           value="#{userData.userDDs['SEARCH']}"
+                                           update="GroupDataViewTable" 
+                                           icon="fa fa-search"  />
+
+                        <p:commandButton   class="newButton"
+                                           title="#{userData.userDDs['NEW']}" 
+                                           id="NewB"
+                                           immediate="true" 
+                                           action="#{groupDataReportMB.reset()}"
+                                           update="GroupDataViewTable"
+                                           value="#{userData.userDDs['NEW']}"
+                                           icon="fa fa-plus"/>
+
+                        <p:commandButton  class="printButton"
+                                          id="PrintB"
+                                          ajax="false"
+                                          onclick="form.target = '_blank'"  
+                                          icon="fa fa-fw fa-print"
+                                          value="#{userData.userDDs['PRINT']}" 
+                                          actionListener="#{groupDataReportMB.exportPDF}"
+                                          title="#{userData.userDDs['PRINT']}"
+                                          immediate="true" />
+
+                        <p:commandButton  class="closeButton"
+                                          icon="fa fa-fw fa-close"  
+                                          title="#{userData.userDDs['BACK']}"
+                                          id="CloseB"
+                                          action="exit"
+                                          value="#{userData.userDDs['BACK']}"/>
+
+                        <h:commandLink class="sdcreenimg">  
+                            <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                            <p:dataExporter type="xls"
+                                            target="GroupDataViewTable" 
+                                            fileName=" تقرير بيانات المجموعة الأساسية"
+                                            postProcessor="#{groupDataReportMB.postProcessXLS}" />  
+                        </h:commandLink>
+
+                        <p:blockUI block="form" trigger="saveB NewB PrintB CloseB" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI> 
+
+
+                    </h:panelGroup>
+
+                </h:panelGrid>
+
+
+            </p:fieldset>
+
+            <p:fieldset style="margin: 10px 0">
+
+                <p:dataTable 
+                    draggableColumns="true" 
+                    var="GroupDataViewTable" 
+                    widgetVar="GroupDataViewTable"  
+                    rowKey="#{GroupDataViewTable}"
+                    rowIndexVar="index" 
+                    value="#{groupDataReportMB.groupDataReportViewBeanList}" 
+                    dir="rtl" 
+                    emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                    id="GroupDataViewTable">
+
+                    <f:facet name="header">
+
+
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('GroupDataViewTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+
+                    </f:facet>
+
+                    <p:column   style="width: 8vh;text-align: right;font-size: 1.8vh" headerText="#{userData.userDDs['GROP_COD']}"  
+
+                                filterBy="#{GroupDataViewTable.code}" 
+                                filterMatchMode="contains" 
+                                sortBy="#{GroupDataViewTable.code}"
+                                filterable="false">
+                        <h:outputText value="#{GroupDataViewTable.code}" style="font-size: 1.5vh"/>
+                    </p:column>
+
+
+
+                    <p:column style="width: 12vh;text-align: right;font-size: 1.8vh" filterStyle="display:none"
+                              headerText="#{userData.userDDs['NAME']}" 
+
+
+                              filterBy="#{GroupDataViewTable.name}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{GroupDataViewTable.name}"
+                              filterable="false">
+
+                        <h:outputText value="#{GroupDataViewTable.name}" style="font-size: 1.5vh;width: 95%"/>
+                    </p:column>
+
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh" 
+                              headerText="#{userData.userDDs['MAIN_GROP']}"
+
+                              filterBy="#{GroupDataViewTable.parent}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{GroupDataViewTable.parent}"
+                              filterable="false">
+                        <h:outputText value="#{GroupDataViewTable.parent}" style="font-size: 1.5vh;width: 95%"/>
+
+                    </p:column>  
+
+                </p:dataTable>
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>
+
+

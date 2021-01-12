@@ -1,0 +1,407 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <link rel="stylesheet" type="text/css" href="../../resources/css/main.css" />
+    <ui:define name="content">
+        <div class="col-xs-12">
+            <p:messages autoUpdate="true"  showDetail="true" closable="true" rendered="true" />
+        </div>
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:head>
+            <title>#{userData.userDDs['COMPLEX_REVISION_REPORT']}</title>
+        </h:head>
+
+        <style>
+
+            .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+                border: 1px solid #c5dbec;
+                background:none;
+            }
+
+        </style>
+        <h:body>
+            <h:form id ="form" style="margin-right: 20px" dir="#{userData.dir}">
+
+                <div style=" position: absolute;left: 20px"> 
+
+                    <p:commandButton  style="width: 90px;background-image: none!important;z-index: 2" 
+                                      class="viewButton searchButton"
+                                      value="Hide/Show"/>  
+                </div>
+
+                <p:fieldset id="head" legend="#{userData.userDDs['BALANC_REV_LEVEL']}" 
+                            style=" position: relative">
+
+                    <div class="ui-g-12 ui-g-nopad firstset">
+                        <div class="ui-g">
+
+                            <div class="ui-g-12 ui-md-6">
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 65px" value="#{userData.userDDs['FROM_ACCOUNT']}" for="GlAccount_ID_from" />
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:autoComplete style="width: 75%" id="GlAccount_ID_from" 
+
+                                                        dropdown="true"
+                                                        converter="#{complexRevisionBalanceMB.accountConverter}"
+                                                        value="#{complexRevisionBalanceMB.glAccountSelectedFrom}"
+                                                        var="p"
+                                                        itemLabel="#{p}" 
+                                                        itemValue="#{p}" 
+                                                        forceSelection="false" 
+                                                        completeMethod="#{complexRevisionBalanceMB.completeGlAccount}" >
+                                        </p:autoComplete>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 65px" value="#{userData.userDDs['TO_ACCOUNT']}" for="GlAccount_ID_to"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:autoComplete style="width: 75%" id="GlAccount_ID_to" 
+
+                                                        dropdown="true"
+                                                        converter="#{complexRevisionBalanceMB.accountConverter}"
+                                                        value="#{complexRevisionBalanceMB.glAccountSelectedTo}"
+                                                        var="p"
+                                                        itemLabel="#{p}" 
+                                                        itemValue="#{p}" 
+                                                        forceSelection="false" 
+                                                        completeMethod="#{complexRevisionBalanceMB.completeGlAccount}" >
+                                        </p:autoComplete>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>
+                                    <h:panelGroup> 
+                                        <p:outputLabel style="width: 65px" value="#{userData.userDDs['FROM_COST_CENTER']}" for="Cost_Center_From"/>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:autoComplete style="width:75%" id="Cost_Center_From" 
+                                                        dropdown="true"
+                                                        converter="#{complexRevisionBalanceMB.costCenterConverter}"
+                                                        value="#{complexRevisionBalanceMB.costCenterFromSelected}"
+
+                                                        var="cost"
+                                                        itemLabel="#{cost}" 
+                                                        itemValue="#{cost}" 
+                                                        forceSelection="true" 
+                                                        completeMethod="#{complexRevisionBalanceMB.completeCostCenter}" >
+                                        </p:autoComplete>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup> 
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 65px" value="#{userData.userDDs['TO_COST_CENTER']}" for="COST_CENTER_TO"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:autoComplete style="width:75%" id="COST_CENTER_TO" 
+                                                        dropdown="true"
+                                                        converter="#{complexRevisionBalanceMB.costCenterConverter}"
+                                                        value="#{complexRevisionBalanceMB.costCenterToSelected}"
+
+                                                        var="cost"
+                                                        itemLabel="#{cost}" 
+                                                        itemValue="#{cost}" 
+                                                        forceSelection="true" 
+                                                        completeMethod="#{complexRevisionBalanceMB.completeCostCenter}" >
+                                        </p:autoComplete>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 65px" value="#{userData.userDDs['FROM_ADMIN_UNIT']}" for="ADMIN_UNIT_FROM"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:autoComplete style="width:75%" id="ADMIN_UNIT_FROM" 
+                                                        dropdown="true"
+                                                        converter="#{complexRevisionBalanceMB.glAdminUnitConverter}"
+                                                        value="#{complexRevisionBalanceMB.glAdminUnitFromSelected}"
+
+                                                        var="admin"
+                                                        itemLabel="#{admin}" 
+                                                        itemValue="#{admin}" 
+                                                        forceSelection="true" 
+                                                        completeMethod="#{complexRevisionBalanceMB.completeAdminUnit}" >
+                                        </p:autoComplete>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 65px" value="#{userData.userDDs['TO_ADMIN_UNIT']}" for="ADMIN_UNIT_TO"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:autoComplete style="width:75%" id="ADMIN_UNIT_TO" 
+                                                        dropdown="true"
+                                                        converter="#{complexRevisionBalanceMB.glAdminUnitConverter}"
+                                                        value="#{complexRevisionBalanceMB.glAdminUnitToSelected}"
+
+                                                        var="admin"
+                                                        itemLabel="#{admin}" 
+                                                        itemValue="#{admin}" 
+                                                        forceSelection="true" 
+                                                        completeMethod="#{complexRevisionBalanceMB.completeAdminUnit}" >
+
+
+                                        </p:autoComplete>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>  
+
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 65px" value="#{userData.userDDs['FROM_LEVEL']}"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:inputText style="width:55%!important"  value="#{complexRevisionBalanceMB.complexRevisionBalanceSearchBeanA.levelFrom}"/>
+                                    </h:panelGroup>
+
+
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>   
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 65px" value="#{userData.userDDs['TO_LEVEL']}"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:inputText style="width:55%!important" value="#{complexRevisionBalanceMB.complexRevisionBalanceSearchBeanA.levelTo}"/>
+                                    </h:panelGroup>
+                                </h:panelGroup>   
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+
+                                <h:panelGroup>   
+
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 65px;;margin-bottom:2%" value="#{userData.userDDs['YEAR_FROM']}"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:calendar style="width: 55%!important" id="dateFrom" value="#{complexRevisionBalanceMB.complexRevisionBalanceSearchBeanA.periodFrom}" pattern="dd/MM/yyyy" >
+                                            <p:ajax listener="#{complexRevisionBalanceMB.checkDate(true)}" event="dateSelect" update="dateFrom"/>
+                                        </p:calendar>
+
+                                    </h:panelGroup>
+
+                                </h:panelGroup>   
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+
+                                <h:panelGroup> 
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 65px;;margin-bottom:2%" value="#{userData.userDDs['YEAR_TO']}"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:calendar style="width:55%!important" id="dateTo" value="#{complexRevisionBalanceMB.complexRevisionBalanceSearchBeanA.periodTo}" pattern="dd/MM/yyyy" >
+                                            <p:ajax listener="#{complexRevisionBalanceMB.checkDate(false)}" event="dateSelect" update="dateTo"/>
+                                        </p:calendar>
+
+                                    </h:panelGroup>  
+                                </h:panelGroup>   
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>   
+
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 65px;;margin-bottom:7%;margin-right: 1%" value="#{userData.userDDs['FINANAC_YEAR']}"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:selectOneMenu style="width:55%" id="year" filter="true" filterMatchMode="contains"   value="#{complexRevisionBalanceMB.glYearSelection}" converter="#{complexRevisionBalanceMB.glYearConverter}"   >
+                                            <p:ajax update="dateFrom dateTo" listener="#{complexRevisionBalanceMB.pushGlYearSelection()}" />
+                                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"  itemValue="" />
+                                            <f:selectItems value="#{complexRevisionBalanceMB.glYearList}"  var="year" itemLabel="#{year.name}" itemValue="#{year}"/>
+                                        </p:selectOneMenu>
+                                    </h:panelGroup>
+
+                                </h:panelGroup>   
+
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel value="#{userData.userDDs['ZERO_BALANCE']}" style="width:65px"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:selectBooleanCheckbox value="#{complexRevisionBalanceMB.zeroAmount}" style="margin-right:1%">
+                                            <p:ajax  listener="#{complexRevisionBalanceMB.deleteZeroRecords}" update="@form" />
+                                        </p:selectBooleanCheckbox>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </div>
+                        </div>
+                    </div>
+                </p:fieldset>
+
+                <p:fieldset style=" margin: 20px 0" >
+
+
+                    <h:panelGrid class="col-md-12 centerButtons" columns="1" style="margin-top:2%">
+
+                        <h:panelGroup>          
+                            <p:commandButton class="searchButton"   icon="fa fa-fw fa-search-plus" id="savbtn" 
+                                             value="#{userData.userDDs['SEARCH']}" 
+                                             action="#{complexRevisionBalanceMB.search()}" 
+                                             update="dataTable "/>                   
+
+                            <p:commandButton class="newButton"   icon="fa fa-fw fa-plus" 
+                                             id="newN"
+                                             value="#{userData.userDDs['NEW']}"
+                                             action="#{complexRevisionBalanceMB.reset()}" update="dataTable"  />                   
+
+                            <p:commandButton class="printButton"  icon="fa fa-fw fa-print" 
+                                             ajax="false" onclick="form.target = '_blank'"  value="#{userData.userDDs['PRINT']}" actionListener="#{complexRevisionBalanceMB.exportPDF}"/>
+
+                            <h:commandLink class="sdcreenimg">  
+                                <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                                <p:dataExporter type="xls"
+                                                target="dataTable" 
+                                                fileName="ميزان المراجعة الجذري"
+                                                postProcessor="#{complexRevisionBalanceMB.postProcessXLS}" />  
+                            </h:commandLink>
+                        </h:panelGroup>
+
+                    </h:panelGrid>
+
+                    <p:blockUI block="head" trigger="savbtn  newN" animate="true" >
+
+                        <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                    </p:blockUI> 
+                </p:fieldset>
+
+                <style >
+                    .colored {                
+                        background: #0064bc;
+                        color: #fff!important ;
+                    }
+                    .colored2 {                
+                        background: #fff;
+                        color: #fff!important ;
+                    }
+
+                    .ui-widget-content .ui-state-default{
+                        border: 1px solid #c5dbec;
+                        background:#fff
+                    }
+
+                </style>
+                <p:fieldset >
+                    <p:dataTable        
+                        paginator="true"
+                        rows="20"
+                        id="dataTable"  value="#{complexRevisionBalanceMB.incomeMenuBeanViewList}" 
+                        var="complex"
+                        widgetVar="complexRevision"
+                        rowStyleClass="#{(complex.level eq 1) ? 'colored' : null}"
+                        style="font-style:#{(complex.level eq 1) ? 'colored2' : null} ">
+
+                        <f:facet name="header" class="col-md-12">
+
+                            <p:outputPanel>
+                                <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large;" />
+                                <p:inputText   id="globalFilter"   onkeyup="PF('complexRevision').filter()" style="width: 50%important" />
+                            </p:outputPanel>
+
+                        </f:facet>
+
+                        <p:columnGroup type="header">
+                            <p:row>
+                                <p:column rowspan="2" headerText="#{userData.userDDs['ACCOUNT_COD']}" 
+                                          filterBy="#{complex.accountNumber}"  
+                                          filterMatchMode="contains" sortBy="#{complex.accountNumber}" 
+                                          filterable="false"
+                                          style="width:12vh;font-size: 1.5vh;
+                                          text-align: -webkit-auto"/>
+                                <p:column rowspan="2" headerText="#{userData.userDDs['ACCOUNT_NAME']}"
+                                          filterBy="#{complex.accountName}"  filterMatchMode="contains" sortBy="#{complex.accountName}" filterable="false"
+                                          style="width:15vh;font-size: 1.5vh;text-align: -webkit-auto"/>
+                                <p:column rowspan="2" headerText="#{userData.userDDs['LEVEL']}" 
+                                          filterBy="#{complex.level}"  filterMatchMode="contains" sortBy="#{complex.level}" filterable="false"
+                                          style="width:10vh;font-size: 1.5vh;text-align: -webkit-auto"/>
+
+                                <p:column rowspan="2" headerText="#{userData.userDDs['BALANC_FIRST_PERIOD']}" 
+                                          filterBy="#{complex.firstDurationBalance}" 
+                                          filterMatchMode="contains" sortBy="#{complex.firstDurationBalance}" 
+                                          filterable="false"
+                                          style="width:15vh;font-size: 1.5vh;text-align: -webkit-auto"/>
+
+                                <p:column colspan="2" headerText="#{userData.userDDs['TOTAL_MOVE_PERIOD']}"
+                                          style="width:20vh;font-size: 1.5vh;text-align: -webkit-auto"/>
+                                <p:column colspan="2" headerText="#{userData.userDDs['BALANC_LAST_PERIOD']}"
+                                          style="width:20vh;font-size: 1.5vh;text-align: -webkit-auto"/>
+
+                            </p:row>
+                            <p:row>
+                                <p:column headerText="#{userData.userDDs['DEBIT']}" />
+                                <p:column headerText="#{userData.userDDs['CREDIT']}" />
+                                <p:column headerText="#{userData.userDDs['Debit_BALANC']}" />
+                                <p:column headerText="#{userData.userDDs['CREDIT_BALANC']}" />
+                            </p:row>
+                        </p:columnGroup>
+
+                        <p:column  style="width:12vh;font-size: 1.5vh;text-align: -webkit-auto">
+                            <h:outputText value="#{complex.accountNumber}" style="font-size: 1.5vh;font-style:#{(complex.level eq 1) ? 'colored2' : null}"/>
+                        </p:column>
+                        <p:column   style="width:12vh;font-size: 1.5vh;text-align: -webkit-auto">
+                            <h:outputText value="#{complex.accountName}" style="font-size: 1.5vh"/>
+                        </p:column>    
+                        <p:column  style="width:6vh;font-size: 1.5vh;text-align: -webkit-auto" >
+                            <h:outputText value="#{complex.level}" style="font-size: 1.5vh;width: 95%"/>
+                        </p:column>
+                        <p:column  style="width:12vh;font-size: 1.5vh;text-align: -webkit-auto" >
+                            <p:inputNumber readonly="true" value="#{complex.firstDurationBalance}" style="font-size: 1.5vh;width: 90%;color: #000important"/>
+                        </p:column>
+                        <p:column  style="width:8vh;font-size: 1.5vh;text-align: -webkit-auto">
+                            <p:inputNumber readonly="true" value="#{complex.debit}" style="font-size: 1.5vh;width: 95%;color: #000!important"/>
+                        </p:column>
+                        <p:column  style="width:8vh;font-size: 1.5vh;text-align: -webkit-auto">
+                            <p:inputNumber readonly="true" value="#{complex.credit}" style="font-size: 1.5vh;width: 95%"/>
+                        </p:column>
+                        <p:column  style="width:12vh;font-size: 1.5vh;text-align: -webkit-auto" >
+                            <p:inputNumber readonly="true" value="#{complex.debitBalance}" style="font-size: 1.5vh;width: 95%"/>
+                        </p:column>
+                        <p:column  style="width:12vh;font-size: 1.5vh;text-align: -webkit-auto"  >
+                            <p:inputNumber readonly="true" value="#{complex.creditBalance}" style="font-size: 1.5vh;width: 95%"/>
+                        </p:column>
+
+
+                        <p:columnGroup type="footer">
+                            <p:row>
+                                <p:column colspan="2" style="text-align:right" footerText="#{userData.userDDs['TOTAL']}  :" />
+                                <p:column footerText="" style="font-size: 1.4vh" />
+
+                                <p:column footerText="#{complexRevisionBalanceMB.totalFirstBalance}" style="font-size: 1.4vh" />
+                                <p:column footerText="#{complexRevisionBalanceMB.totalDebit}"  style="font-size: 1.4vh"/>
+                                <p:column footerText="#{complexRevisionBalanceMB.totalCredit}" style="font-size: 1.4vh"/>
+                                <p:column footerText="#{complexRevisionBalanceMB.totalBalanceDebit}" style="font-size: 1.4vh" />
+                                <p:column footerText="#{complexRevisionBalanceMB.totalBalanceCredit}" style="font-size: 1.4vh" />
+
+                            </p:row>
+                        </p:columnGroup>
+                    </p:dataTable>
+                </p:fieldset>
+            </h:form>
+          
+        </h:body>
+    </ui:define>
+</ui:composition>
+

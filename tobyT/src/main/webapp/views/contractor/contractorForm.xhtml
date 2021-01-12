@@ -1,0 +1,410 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+
+        <h:form id="form" dir="#{userData.dir}">
+            <p:fieldset id="whole" legend="بيانات المقاولين" style="margin-bottom:20px; margin-right: 30px">
+
+                <div class="col-xs-12">
+                    <p:messages autoUpdate="true"  id="msg" showDetail="true" closable="true" />
+                </div>
+
+                <div  id="firstSegment" class="ui-g-12 ui-g-nopad">
+
+                    <div class="ui-g">
+
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 80px" value="#{userData.userDDs['SYMBOL_NAME_ORGANIZATION_SIDE']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width: 25%"
+                                                 id="SNOSName"
+                                                 a:autofocus="true"
+                                                 required="true"
+                                                 requiredMessage="يجب ادخال كود المقاول"
+                                                 value="#{organizationSiteFormMB.invOrganizationSiteEntity.code}">
+                                        <p:ajax event="blur" listener="#{organizationSiteFormMB.validateCode()}"/>
+                                    </p:inputText>
+                                </h:panelGroup> 
+                                <h:panelGroup>
+                                    <p:inputText style="width: 25%" 
+                                                 id="SNOSCode"
+                                                 required="true"
+                                                 requiredMessage="يجب ادخال اسم المقاول"
+                                                 value="#{organizationSiteFormMB.invOrganizationSiteEntity.name}" />
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                       
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 80px"
+                                                   value="نوع المقاول"
+                                                   rendered="#{organizationSiteFormMB.contractor}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup rendered="#{organizationSiteFormMB.contractor}">
+
+                                    <p:autoComplete style="width: 75%" 
+
+                                                    dropdown="true"
+                                                    converter="#{organizationSiteFormMB.contractorTypeConverter}"
+                                                    value="#{organizationSiteFormMB.invOrganizationSiteEntity.contractorType}"
+
+                                                    var="contractor"
+                                                    itemLabel="#{contractor}" 
+                                                    itemValue="#{contractor}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{organizationSiteFormMB.completeContractorType}" >
+
+                                    </p:autoComplete>
+                                </h:panelGroup>   
+
+
+                            </h:panelGroup>
+
+                        </div>
+                       
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 80px" value="#{userData.userDDs['AREA']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:75%" 
+                                                    dropdown="true"
+                                                    converter="#{organizationSiteFormMB.regionConverter}"
+                                                    value="#{organizationSiteFormMB.invOrganizationSiteEntity.regionId}"
+
+                                                    var="region"
+                                                    itemLabel="#{region}" 
+                                                    itemValue="#{region}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{organizationSiteFormMB.completeRegion}" >
+
+                                    </p:autoComplete>
+
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:80px" value="#{userData.userDDs['POST_BOX']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width: 75%" id="POST_BOX" value="#{organizationSiteFormMB.invOrganizationSiteEntity.postBox}"/>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6">       
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:80px" value="#{userData.userDDs['P.B']}"/>
+                                </h:panelGroup>                  
+                                <h:panelGroup>
+                                    <p:inputText style="width:75%" id="zip" value="#{organizationSiteFormMB.invOrganizationSiteEntity.zip}"/>
+                                </h:panelGroup>
+                            </h:panelGroup>
+
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width:80px" value="#{userData.userDDs['PHONE1']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText  style="width:75%" id="PHONE1" value="#{organizationSiteFormMB.invOrganizationSiteEntity.phone1}"/>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 80px" value="#{userData.userDDs['ADDRESS']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width: 75%" id="ADDRESS" value="#{organizationSiteFormMB.invOrganizationSiteEntity.address}"/>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 80px" value="#{userData.userDDs['PHONE2']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width: 75%" id="PHONEt" value="#{organizationSiteFormMB.invOrganizationSiteEntity.phone2}"/>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 80px"  value="#{userData.userDDs['EMAIL']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width: 75%" id="EMAIL" value="#{organizationSiteFormMB.invOrganizationSiteEntity.email}"/>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 80px" value="#{userData.userDDs['FAX']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width: 75%" id="FAX" value="#{organizationSiteFormMB.invOrganizationSiteEntity.fax}"/>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 80px"  value="#{userData.userDDs['NAME_OF THE_MANAGER']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width: 75%"  id="NOTM" value="#{organizationSiteFormMB.invOrganizationSiteEntity.contactPerson}"/>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 80px" value="#{userData.userDDs['MOBILE']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width: 75%" id="MOBILE" value="#{organizationSiteFormMB.invOrganizationSiteEntity.mobile}"/>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+
+
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 80px" value="#{userData.userDDs['ACCOUNT_NUMBER']}" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+
+                                    <p:autoComplete id="GlAccount_ID" 
+                                                    style="width: 75%" 
+                                                    dropdown="true"
+                                                    converter="#{organizationSiteFormMB.accountConverter}"
+                                                    value="#{organizationSiteFormMB.invOrganizationSiteEntity.accountId}"
+
+                                                    var="account"
+                                                    itemLabel="#{account}" 
+                                                    itemValue="#{account}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{organizationSiteFormMB.completeGlAccount}" >
+
+                                    </p:autoComplete>
+
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 80px" value="#{userData.userDDs['CURRENCY']}"
+                                                   />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:autoComplete id="Currency_ID" 
+                                                    style="width: 75%" 
+                                                    dropdown="true"
+                                                    converter="#{organizationSiteFormMB.currencyConverter}"
+                                                    value="#{organizationSiteFormMB.invOrganizationSiteEntity.currencyId}"
+
+                                                    var="currency"
+                                                    itemLabel="#{currency}" 
+                                                    itemValue="#{currency}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{organizationSiteFormMB.completeCurrency}">
+
+                                    </p:autoComplete>
+
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6">
+
+
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 80px" value="#{userData.userDDs['CREDIT_LIMIT']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width: 75%" id="crdtLmt" 
+                                                 value="#{organizationSiteFormMB.invOrganizationSiteEntity.balanceLimit}"/>
+                                </h:panelGroup>
+
+
+
+                            </h:panelGroup>
+
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:80px" value="#{userData.userDDs['OPENING_BALANCE_CREDIT']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 75%" id="OPBACR"
+                                                   value="#{organizationSiteFormMB.invOrganizationSiteEntity.openBalanceCredit}"/>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6">
+
+
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:80px"  value="#{userData.userDDs['OPENING_BALANCE_DEBIT']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 75%" id="OPBD"
+                                                   value="#{organizationSiteFormMB.invOrganizationSiteEntity.openBalanceDebit}"/>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 80px" value="#{userData.userDDs['NOTE']}" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width: 75%" id="NOTE" value="#{organizationSiteFormMB.invOrganizationSiteEntity.remarks}"/>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+
+
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 85px" value="#{userData.userDDs['CS_ACTIVE']}" />
+
+                                </h:panelGroup>  
+
+                                <h:panelGroup>   
+                                    <p:selectOneMenu style="width: 75%"  id="active" 
+                                                     value="#{organizationSiteFormMB.invOrganizationSiteEntity.active}" >
+                                        <f:selectItem itemLabel="#{userData.userDDs['INACTIVE']}" itemValue="0" />
+                                        <f:selectItem itemLabel="#{userData.userDDs['CS_ACTIVE']}" itemValue="1" />
+                                        <f:selectItem itemLabel="#{userData.userDDs['BLACK_LIST']}" itemValue="2" />
+                                    </p:selectOneMenu>
+                                </h:panelGroup>   
+
+                            </h:panelGroup>
+                        </div>
+                    </div>
+                </div>
+
+               
+
+                    <h:panelGrid id="secondSegment" columns="1" cellspacing="20" cellpadding="0" >
+
+
+                    </h:panelGrid>
+
+                    <h:panelGrid id="thirdSegment" columns="1" cellspacing="20" cellpadding="0" >
+
+                    </h:panelGrid>
+
+                    <h:panelGrid  id="fourthSegment" columns="1" cellspacing="2" cellpadding="0" >
+
+
+
+                    </h:panelGrid>
+
+                    <h:panelGrid class="centerButtons col-md-12" columns="1">
+
+                        <h:panelGroup>
+                            <p:commandButton  class="newButton" 
+                                              id="newN"
+                                              ajax="false"
+                                              icon="fa fa-fw fa-plus"
+                                              value="#{userData.userDDs['NEW']}" 
+
+                                              onclick="form.target = ''" 
+                                              actionListener="#{organizationSiteFormMB.reset()}"/>
+                            <p:commandButton class="saveButton" id="saveB" title="#{userData.userDDs['SAVE']}" value="#{userData.userDDs['SAVE']}"
+                                             icon="fa fa-fw fa-save" action="#{organizationSiteFormMB.save()}" update="@form"/>
+                            <p:commandButton class="cancelButton"
+                                             title="#{userData.userDDs['CANCEL']}" 
+                                             immediate="true" value="#{userData.userDDs['CANCEL']}" 
+                                             icon="fa fa-fw fa-backward" action="#{organizationSiteFormMB.exit()}"   />`
+
+
+                        </h:panelGroup>
+
+                    </h:panelGrid>
+
+
+            </p:fieldset>          
+        </h:form>
+    </ui:define>
+</ui:composition>

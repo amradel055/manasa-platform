@@ -1,0 +1,120 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <link rel="stylesheet" type="text/css" href="../../resources/css/main.css" /> 
+    <ui:define name="content">
+        <h:body> 
+            <f:event listener="#{userData.authorize}" type="preRenderView" />
+            <div class="col-xs-12">
+                <p:messages autoUpdate="true"  showDetail="true" closable="true" rendered="true" />
+            </div>
+            <h:form  id="form" target="_blank" style="margin-right: 15px">
+                <p:fieldset legend="#{userData.userDDs['USERS_REPORT']}" style="margin-bottom:20px">
+
+                    <div class="ui-g" id="firstSegment">
+                        <div class="ui-g-12 ui-md-6">
+
+
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:50px" value="#{userData.userDDs['USER_NAME']}"/>
+
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:inputText  style="width: 50%!important" id="userN" a:autofocus="true" value="#{reportsManagedBean.userName}" />
+
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+
+                                    <p:outputLabel style="width:50px" value="#{userData.userDDs['USER_CODE']} "/>
+
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:inputText style="width:50%!important" id="usercode" value="#{reportsManagedBean.userCode}"/>
+
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                    </div>
+
+                    <h:panelGrid  class="col-md-12 centerButtons" columns="1" style="margin-top: 2%">
+
+                        <h:panelGroup>
+
+                            <p:commandButton  class="searchButton" icon="fa fa-search"
+                                              id="saveB" 
+                                              value="#{userData.userDDs['SEARCH']}" 
+                                              rendered="#{userData.userScreens['userreport'].view or userData.isAdmin}"
+                                              action="#{reportsManagedBean.filter}" update="users" />
+                            <p:commandButton  class="newButton" id="new"  value="#{userData.userDDs['NEW']}"  
+                                              icon="fa fa-plus" action="#" update=""/>
+                            <p:commandButton  class="printButton"  icon="fa fa-print" ajax="false"
+                                              value="#{userData.userDDs['PRINT']}"  actionListener="#{reportsManagedBean.exportPDF}"/>
+
+                            <h:commandLink  class="sdcreenimg"  >  
+                                <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                                <p:dataExporter type="xls"
+                                                target="users" 
+                                                fileName="تقرير المستخدمين"
+                                                postProcessor="#{reportsManagedBean.postProcessXLS}" />  
+                            </h:commandLink>
+
+
+                            <p:blockUI block="form" trigger="saveB new" animate="true" >
+
+                                <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                            </p:blockUI>
+
+                        </h:panelGroup>
+
+                    </h:panelGrid>
+
+                </p:fieldset>
+
+                <p:fieldset>
+
+                    <p:dataTable  id="users" value="#{reportsManagedBean.users}" var="user" >
+
+                        <f:facet name="header" class="col-md-12">
+                            <p:commandButton icon="fa fa-plus" 
+                                             title="#{userData.userDDs['ADD']}" 
+                                             class="saddButton"
+                                             action="#{branchListBean.goToAdd()}" 
+                                             style="float:right;margin: 0"
+                                             rendered="#{userData.userScreens['branch'].add or userData.isAdmin}"/>
+                            <p:outputPanel  >
+                                <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large;" />
+                                <p:inputText id="globalFilter" a:autofocus="true" onkeyup="PF('user').filter()" style="width: 50%important" />
+                            </p:outputPanel>
+                        </f:facet>
+
+                        <p:column style="text-align: right;font-size: 15px"  headerText="#{userData.userDDs['USER_NAME']}">
+                            <h:outputText style="text-align: right;font-size: 12px"  value="#{user.name}"/>
+                        </p:column>
+                        <p:column style="text-align: right;font-size: 15px"  headerText="#{userData.userDDs['USER_CODE']}">
+                            <h:outputText style="text-align: right;font-size: 12px" value="#{user.userCode}"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:fieldset>
+            </h:form>
+        </h:body>
+    </ui:define>
+</ui:composition>
+

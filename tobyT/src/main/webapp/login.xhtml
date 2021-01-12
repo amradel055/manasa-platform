@@ -1,0 +1,223 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html class="fullheight" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html" 
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" lang="ar"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <title>TOBY</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+
+        <!-- <meta name="viewport" content="width=device-width, initial-scale=0" /> -->
+        <meta name="viewport" content="initial-scale=0" />
+        <meta name="msapplication-TileColor" content="#da532c" />
+        <meta name="theme-color" content="#ffffff" />
+        <meta name="_csrf" content="7fc4e0f0-40f0-443e-a7d7-c880a87ed501" />
+        <meta name="_csrf_header" content="X-CSRF-TOKEN" />
+        <link rel="stylesheet" type="text/css" href="resources/css/main.css" />	
+        <link rel="stylesheet" href="resources/css/style-rtl.css" />
+        <script async="" src="resources/js/analytics.js"></script><script type="text/javascript" src="resources/js/main.js"></script>
+        <link rel="stylesheet" type="text/css" href="./css/main.css" />	
+        <link rel="stylesheet" href="./css/style-rtl.css" />
+        <script async="" src="js/analytics.js"></script><script type="text/javascript" src="./js/main.js"></script>
+
+
+        <script type="text/javascript">
+
+            var msgrequired = '\u062D\u0642\u0644 \u0625\u0644\u0632\u0627\u0645\u064A';
+            var msgremote = '\u0627\u0644\u0631\u062C\u0627\u0621 \u062A\u0639\u062F\u064A\u0644 \u0647\u0630\u0627 \u0627\u0644\u062D\u0642\u0644.';
+            var msgemail = '\u0627\u0644\u0631\u062C\u0627\u0621 \u0625\u062F\u062E\u0627\u0644 \u0639\u0646\u0648\u0627\u0646 \u0628\u0631\u064A\u062F \u0625\u0644\u0643\u062A\u0631\u0648\u0646\u064A \u0635\u0627\u0644\u062D';
+            var msgurl = '\u0627\u0644\u0631\u062C\u0627\u0621 \u0625\u062F\u062E\u0627\u0644 \u0639\u0646\u0648\u0627\u0646 URL \u0635\u0627\u0644\u062D.';
+            var msgdate = '\u0627\u0644\u0631\u062C\u0627\u0621 \u0625\u062F\u062E\u0627\u0644 \u062A\u0627\u0631\u064A\u062E \u0635\u0627\u0644\u062D.';
+            var msgdateiso = '\u0627\u0644\u0631\u062C\u0627\u0621 \u0625\u062F\u062E\u0627\u0644 \u062A\u0627\u0631\u064A\u062E \u0635\u0627\u0644\u062D (ISO)';
+            var msgnumber = '\u0627\u0644\u0631\u062C\u0627\u0621 \u0625\u062F\u062E\u0627\u0644 \u0639\u062F\u062F \u0635\u062D\u064A\u062D';
+            var msgdigits = '\u0627\u0644\u0631\u062C\u0627\u0621 \u0625\u062F\u062E\u0627\u0644 \u0623\u0631\u0642\u0627\u0645 \u0641\u0642\u0637';
+            var msgcreditcard = '\u0627\u0644\u0631\u062C\u0627\u0621 \u0625\u062F\u062E\u0627\u0644 \u0631\u0642\u0645 \u0628\u0637\u0627\u0642\u0629 \u0627\u0626\u062A\u0645\u0627\u0646 \u0635\u062D\u064A\u062D';
+            var msgiban = '\u0627\u0644\u0631\u062C\u0627\u0621 \u0625\u062F\u062E\u0627\u0644 \u0631\u0642\u0645 \u0622\u064A\u0628\u0627\u0646 \u0635\u062D\u064A\u062D.';
+            var msgequalto = '\u0627\u0644\u0631\u062C\u0627\u0621 \u0625\u062F\u062E\u0627\u0644 \u0646\u0641\u0633 \u0627\u0644\u0642\u064A\u0645\u0629 \u0645\u0631\u0629 \u0623\u062E\u0631\u0649';
+            var msgaccept = '\u0627\u0644\u0631\u062C\u0627\u0621 \u0625\u062F\u062E\u0627\u0644 \u0631\u0642\u0645 \u0627\u0644\u062A\u062D\u0648\u064A\u0644\u0629 \u0628\u0634\u0643\u0644 \u0635\u062D\u064A\u062D';
+            var msgmaxlength = '\u0627\u0644\u0631\u062C\u0627\u0621 \u0625\u062F\u062E\u0627\u0644 \u0642\u064A\u0645\u0629 \u0623\u0642\u0644 \u0645\u0646 \u0623\u0648 \u062A\u0633\u0627\u0648\u0649 {0} \u062E\u0627\u0646\u0627\u062A';
+            var msgminlength = '\u0627\u0644\u0631\u062C\u0627\u0621 \u0625\u062F\u062E\u0627\u0644 \u0642\u064A\u0645\u0629 \u0623\u0643\u0628\u0631 \u0645\u0646 \u0623\u0648 \u062A\u0633\u0627\u0648\u0649 {0} \u062E\u0627\u0646\u0627\u062A';
+            var msgrangelength = '\u0627\u0644\u0631\u062C\u0627\u0621 \u0625\u062F\u062E\u0627\u0644 \u0642\u064A\u0645\u0629 \u0628\u064A\u0646 {0} \u0627\u0648 {1} \u062D\u0631\u0648\u0641';
+            var msgrange = '\u0627\u0644\u0631\u062C\u0627\u0621 \u0625\u062F\u062E\u0627\u0644 \u0642\u064A\u0645\u0629 \u0628\u064A\u0646 {0} \u0627\u0648 {1} \u062D\u0631\u0648\u0641';
+            var msgmin = '\u0627\u0644\u0631\u062C\u0627\u0621 \u0625\u062F\u062E\u0627\u0644 \u0642\u064A\u0645\u0629 \u0623\u0643\u0628\u0631 \u0645\u0646 \u0623\u0648 \u062A\u0633\u0627\u0648\u0649 {0}';
+            var msgmax = '\u0627\u0644\u0631\u062C\u0627\u0621 \u0625\u062F\u062E\u0627\u0644 \u0642\u064A\u0645\u0629 \u0623\u0643\u0628\u0631 \u0645\u0646 \u0623\u0648 \u062A\u0633\u0627\u0648\u0649 {0}';
+            var msgexact = '\u0627\u0644\u0631\u062C\u0627\u0621 \u0625\u062F\u062E\u0627\u0644 {0} \u062D\u0631\u0648\u0641 \u0628\u0627\u0644\u0636\u0628\u0637';
+            var msgselectlist = '\u0627\u0644\u0631\u062C\u0627\u0621 \u062A\u062D\u062F\u064A\u062F \u0639\u0646\u0635\u0631 \u0645\u0646 \u0642\u0627\u0626\u0645\u0629';
+            var msgNumberMinLenght = '\u0627\u0644\u0631\u062C\u0627\u0621 \u0625\u062F\u062E\u0627\u0644 \u0642\u064A\u0645\u0629 \u0623\u0643\u0628\u0631 \u0645\u0646 \u0623\u0648 \u062A\u0633\u0627\u0648\u0649 {0} \u062E\u0627\u0646\u0627\u062A';
+            var msgNumberMaxLenght = '\u0627\u0644\u0631\u062C\u0627\u0621 \u0625\u062F\u062E\u0627\u0644 \u0642\u064A\u0645\u0629 \u0623\u0642\u0644 \u0645\u0646 \u0623\u0648 \u062A\u0633\u0627\u0648\u0649 {0} \u062E\u0627\u0646\u0627\u062A';
+            var msgNumberExactLenght = '\u0627\u0644\u0631\u062C\u0627\u0621 \u0625\u062F\u062E\u0627\u0644 {0} \u062D\u0631\u0648\u0641 \u0628\u0627\u0644\u0636\u0628\u0637';
+            var msgBootstrapEditableEmpty = '\u0641\u0627\u0631\u063A';
+            var msgCapsLock = '\u0632\u0631 CapsLock  \u0646\u0634\u0637';
+            var msgSpecialChars = '\u0644\u0627 \u064A\u0633\u0645\u062D \u0628\u0627\u0644\u0623\u062D\u0631\u0641 \u0627\u0644\u062E\u0627\u0635\u0629.';
+
+
+            jQuery.validator.addMethod("exactlength", function (value, element, param) {
+                return this.optional(element) || value.length == param;
+            }, jQuery.format(""));
+
+            jQuery.validator.addMethod("specialChars", function (value, element, param) {
+                return containSpecialChars(value);
+            }, jQuery.format(""));
+
+
+            function containSpecialChars($v) {
+                return /^([\u0621-\u064Aa-zA-Z0-9\s]*)$/.test($v);
+            }
+
+
+            jQuery.validator.addMethod("iban", function (value, element, param) {
+                return isValidIBAN(value);
+            }, jQuery.format(""));
+
+            function isValidIBAN($v) {
+                $v = $v.replace(/^(.{4})(.*)$/, "$2$1");
+                $v = $v.replace(/[A-Z]/g, function ($e) {
+                    return $e.charCodeAt(0) - 'A'.charCodeAt(0) + 10
+                });
+                var $sum = 0;
+                var $ei = 1;
+                for (var $i = $v.length - 1; $i >= 0; $i--) {
+                    $sum += $ei * parseInt($v.charAt($i), 10);
+                    $ei = ($ei * 10) % 97;
+                }
+                ;
+                return $sum % 97 == 1;
+            }
+
+            jQuery.extend(jQuery.validator.messages, {
+                required: msgrequired,
+                remote: msgremote,
+                email: msgemail,
+                url: msgurl,
+                date: msgdate,
+                dateISO: msgdateiso,
+                number: msgnumber,
+                digits: msgdigits,
+                creditcard: msgcreditcard,
+                equalTo: msgequalto,
+                accept: msgaccept,
+                maxlength: jQuery.validator.format(msgmaxlength),
+                minlength: jQuery.validator.format(msgminlength),
+                rangelength: jQuery.validator.format(msgrangelength),
+                range: jQuery.validator.format(msgrange),
+                max: jQuery.validator.format(msgmax),
+                min: jQuery.validator.format(msgmin),
+                exactlength: jQuery.validator.format(msgexact),
+                iban: msgiban,
+                specialChars: msgSpecialChars
+            });
+        </script>	
+        <script type="text/javascript">
+            var loaderImg = '/online/resources/normal/images/wait.gif';
+            var globalError = '/online/globalError'
+            var connectionError = '\u062E\u0637\u0623 \u0641\u0649 \u0627\u0644\u0627\u062A\u0635\u0627\u0644';
+            var connectionError = '\u062E\u0637\u0623 \u0641\u0649 \u0627\u0644\u0627\u062A\u0635\u0627\u0644';
+            var chartNoMovementLastMonth = '\u0644\u0627 \u064A\u0648\u062C\u062F \u0639\u0645\u0644\u064A\u0627\u062A \u062E\u0644\u0627\u0644 \u0622\u062E\u0631 \u0634\u0647\u0631';
+        </script>
+        <script type="text/javascript">
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                        m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+            ga('create', 'UA-49826716-1', 'alahlionline.com');
+            ga('send', 'pageview');
+        </script>
+    </head>
+    <f:view contentType="text/html">
+        <h:body id="loginAlahli" class="fullheight lang_ar" style="">
+            <div id="login-wrap">
+                <header id="top-header" data-lang="ar">
+                    <div id="top">
+                        <nav class="navbar navbar-static-top navbar-custom">
+                            <div class="container-fluid">
+                                <div class="navbar-collapse" id="bs-example-navbar-collapse-1">
+                                    <ul class="nav navbar-nav navbar-left">
+                                        <li>
+
+                                        </li>
+                                    </ul>
+                                    <ul class="nav navbar-nav navbar-right">
+                                        <li>
+
+
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </nav>
+                    </div>
+                </header>
+                <nav id="tabs-bar" class="navbar navbar-static-top menu-header">
+                    <ul class="nav nav-pills nav-justified">
+                        <li class="login-logo">
+                        </li>
+                    </ul>
+                </nav>
+                <div id="wrap" class="login-content">
+                    <div id="status" class="container custom-container nopaddings" style="max-width: 520px;">
+                        <div class="content-status">
+                        </div>
+                    </div>
+                    <div id="login-body">
+                        <div id="reference" style="float:right"></div>
+                        <div id="contentHead" class="container"></div>
+                        <div id="content" class="container custom-container special-content">
+                            <div class="clearfix">
+                                <div id="fullLoginSelect">
+                                    <h:form id="userForm" class="login-form form-inline">
+                                        <div class="col-xs-12 spacer-md">
+                                            <div class="col-xs-3 group-valign">
+                                                <span class="login-label valign">User Code</span>
+                                            </div>
+                                            <div class="col-xs-9">
+                                                <h:inputText class="login-input" required="true" autocomplete="off" id="username" value="#{loginBean.userCode}"  />
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 spacer-md">
+                                            <div class="col-xs-3 group-valign">
+                                                <span class="login-label valign">Password</span>
+                                            </div>
+                                            <div class="col-xs-9">
+                                                <h:inputHidden  id="passwordEncrypted" />
+                                                <h:inputSecret class="login-input"  id="password" required="true" autocomplete="off" value="#{loginBean.password}"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 spacer-md">
+                                            <div class="col-xs-12">
+                                                <p:commandButton   style="color: #fff;background-color: #0064bc;margin-right: 50%" action="#{loginBean.login()}"
+                                                                   id="go" value="Go" update="@form" />
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12">
+                                            <div class="col-xs-9">
+                                                <p:outputLabel class="login-input" rendered="#{loginBean.errorMsg ne null}" id="error" value="#{loginBean.errorMsg}"  />
+                                            </div> 
+                                        </div>
+                                    </h:form>
+
+                                </div>	
+                            </div>
+                        </div>
+                    </div>
+                    <div id="contentFooter" class="container"></div>
+                </div>
+            </div>
+            <footer class="footerAlahli">
+
+                <div class="container-fluid">
+
+                    <ul class="nav navbar-nav navbar-left footer-leftlist">
+                        <li><a>Toby 2020</a></li>
+                    </ul>
+                </div>
+            </footer>
+        </h:body>
+    </f:view>
+</html>

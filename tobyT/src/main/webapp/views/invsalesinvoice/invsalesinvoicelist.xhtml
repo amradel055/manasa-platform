@@ -1,0 +1,211 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+
+        <h:form  dir="#{userData.dir}"  id="form" style="margin-right: 15px">
+            <p:fieldset   legend="#{userData.userDDs['SALES_INVOICES']}" style="margin-bottom:20px">
+                <div >
+                    <p:messages id="curmsg" 
+                                autoUpdate="true"
+                                showDetail="true" 
+                                rendered="true" closable="true"/>   
+                </div>
+
+
+                <p:dataTable id="invInvoicePurchaseTable"
+                             draggableColumns="true"
+                             draggableRows="true"
+                             var="invInvoicePurchaseTable" 
+                             widgetVar="bTable" 
+                             rowIndexVar="index" 
+                             value="#{invsalesinvoicelistMB.invPurchaseInvoiceDTOList}"
+                             rows="#{userData.rowListCount}" 
+                             paginator="true"
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" 
+                             rowKey="#{invInvoicePurchaseTable.index}"
+                             selection="#{invsalesinvoicelistMB.invPurchaseInvoiceDTO}"
+                             sortBy="#{1}"
+                            >
+                    <f:facet name="header">
+                        <p:commandButton  class="saddButton" icon="fa fa-plus" 
+                                          id="addA"
+                                          title="#{userData.userDDs['ADD']}" 
+                                          action="#{invsalesinvoicelistMB.goToAdd()}"
+                                          style="float:right" 
+                                          rendered="#{userData.userScreens['invsalesinvoice'].add or userData.isAdmin}"/>
+
+                        <p:commandButton class="scloseButton"  icon="fa fa-fw fa-backward"  style="float: left" action="exit" />
+                        <p:selectOneMenu id="inventory"  
+                                         style="float:right;width: 20%!important;color:#fff">
+
+                            <p:ajax  update="form" />
+                            <f:selectItem itemLabel="#{userData.userDDs['ALL']}" itemValue="" />
+
+                            <f:selectItems /> 
+                        </p:selectOneMenu>
+
+
+
+                        <p:blockUI block="form" trigger="addA" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI> 
+
+                        <p:outputPanel  >
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('bTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+
+
+
+                    </f:facet>
+
+                    
+
+                    <p:column style="width: 8vh;text-align: -webkit-auto;font-size: 1.4vh" filterStyle="display:none" 
+                              filterBy="#{invInvoicePurchaseTable.serial}" 
+                              filterMatchMode="contains" 
+                              headerText="#{userData.userDDs['INVOICE_NO']}"
+                              sortBy="#{invInvoicePurchaseTable.serial}"
+                              >
+                        <p:outputLabel value="#{invInvoicePurchaseTable.serial}" />
+                    </p:column>
+
+                    <p:column style="width: 8vh;text-align: -webkit-auto;font-size: 1.4vh" filterStyle="display:none" 
+                              filterBy="#{invInvoicePurchaseTable.serialTax}" 
+                              filterMatchMode="contains" 
+                              headerText="#{userData.userDDs['TAX_INV_NO']}"
+                              sortBy="#{invInvoicePurchaseTable.serialTax}"
+                              >
+                        <p:outputLabel value="#{invInvoicePurchaseTable.serialTax}" />
+                    </p:column>
+
+                    <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.4vh" filterStyle="display:none" 
+                              filterBy="#{invInvoicePurchaseTable.date}" 
+                              filterMatchMode="contains"
+                              headerText="#{userData.userDDs['DATEE']}"
+                              sortBy="#{invInvoicePurchaseTable.date}" 
+                              >
+                        <p:outputLabel value="#{invInvoicePurchaseTable.date}" >
+                            <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                        </p:outputLabel>                           
+                    </p:column>
+
+
+                    <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.6vh" filterStyle="display:none"
+                              filterBy="#{invInvoicePurchaseTable}"
+                              filterMatchMode="contains" 
+                              headerText="#{userData.userDDs['DEPOSITORY']}"
+                              sortBy="#{invInvoicePurchaseTable.gallary.name}" 
+                              >
+                        <p:outputLabel value="#{invInvoicePurchaseTable.gallary.name}" />
+                    </p:column>
+
+                    <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.6vh" filterStyle="display:none"
+                              filterBy="#{invInvoicePurchaseTable}"
+                              filterMatchMode="contains" 
+                              headerText="#{userData.userDDs['SAFE']}"
+                              sortBy="#{invInvoicePurchaseTable.glBankId.id}" 
+                              >
+                        <p:outputLabel value="#{invInvoicePurchaseTable.glBankId.id}" />
+                    </p:column>
+
+                    <p:column style="width: 15vh;text-align: -webkit-auto;font-size: 1.6vh" filterStyle="display:none" 
+                              filterBy="#{invInvoicePurchaseTable.organizationSiteIdDTO.name}" 
+                              filterMatchMode="contains" 
+                              headerText="#{userData.userDDs['CUSTOMER']}"
+                              sortBy="#{invInvoicePurchaseTable.organizationSiteIdDTO.name}" 
+                              >
+                        <p:outputLabel value="#{invInvoicePurchaseTable.organizationSiteIdDTO.name}" />
+                    </p:column>
+
+                    
+                    
+                    <p:column style="width: 5vh;text-align: -webkit-auto;font-size: 1.6vh" filterStyle="display:none"
+                              filterBy="#{invInvoicePurchaseTable.paymentType}"
+                              filterMatchMode="contains" 
+                              headerText="#{userData.userDDs['TYPE']}"
+                              sortBy="#{invInvoicePurchaseTable.paymentType}" 
+                              >
+                        <p:outputLabel value="#{invInvoicePurchaseTable.paymentType}" />
+                    </p:column>
+                    <p:column style="width: 10vh;font-size: 1.8vh" filterStyle="display:none"
+                              filterBy="#{invInvoicePurchaseTable.createdByName}"
+                              filterMatchMode="contains" 
+                              headerText="#{userData.userDDs['INVOI_ENTR']}"
+                              sortBy="#{invInvoicePurchaseTable.createdByName}" >
+                        <p:outputLabel value="#{invInvoicePurchaseTable.createdByName}" />
+                    </p:column>
+
+
+
+
+                    <p:column style="width: 13vh;text-align: -webkit-auto;font-size: 1.6vh" headerText="#{userData.userDDs['TRANSACTION']}" >
+                         <p:commandButton  class="seditButton" update="@form" 
+                                          icon="fa fa-fw fa-edit" 
+                                          title="#{userData.userDDs['EDIT']}" 
+                                          action="#{invsalesinvoicelistMB.goToEdit()}"
+                                           >
+
+                             <f:setPropertyActionListener value="#{invInvoicePurchaseTable.id}" 
+                                                          target="#{invsalesinvoicelistMB.invPurchaseInvoiceId}" />
+                        </p:commandButton>
+
+                        <p:commandButton  class="sdeleteButton" update="@form" 
+                                          icon="fa fa-remove" 
+                                          title="#{userData.userDDs['DELETE']}" 
+                                          action="#{invsalesinvoicelistMB.removeRow()}" 
+                                          rendered="#{userData.userScreens['invsalesinvoice'].delete or userData.isAdmin}">
+                            <f:setPropertyActionListener value="#{invInvoicePurchaseTable}" target="#{invsalesinvoicelistMB.invPurchaseInvoiceDTO}" />
+                            <p:confirm header="Confirmation" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                        </p:commandButton>
+
+                        <p:commandButton   class="sprintButton"
+                                           update="@form"  onclick="form.target = '_blank'"  ajax="false"
+                                           icon="fa fa-fw fa-print" 
+                                           title="print" 
+                                           action="#{SalesInvoiceListMB.printA4()}" 
+                                           rendered="#{userData.userScreens['invsalesinvoice'].edit or userData.isAdmin}" >
+
+                            <f:setPropertyActionListener value="#{invInvoicePurchaseTable}" 
+                                                         target="#{SalesInvoiceListMB.salesInvoiceIdSeclected}" />
+                        </p:commandButton>
+
+
+
+                    </p:column>
+
+                    <f:facet name="footer"  class="fontSiz" >
+                        
+                       
+                        
+                    </f:facet>
+
+
+
+                </p:dataTable> 
+
+
+
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                    <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:confirmDialog>
+
+
+
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>
+
+

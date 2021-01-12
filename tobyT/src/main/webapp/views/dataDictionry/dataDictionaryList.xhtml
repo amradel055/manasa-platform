@@ -1,0 +1,202 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml" >
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form id="form" dir="rtl">
+
+
+            <p:fieldset legend="#{userData.userDDs['DATA_DICTIONARY']}" style="margin-bottom:20px"  rendered="#{userData.isAdmin}">
+                <h:panelGrid id="pnl"  class="col-md-12" columns="2" rendered="#{userData.isAdmin}" >
+
+                    <h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 50px" value="#{userData.userDDs['KEY']}"/>
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:inputText style="width: 50%!important" id="user" 
+                                         value="#{dataDictionaryBean.propertyKey}"
+                                         required="true" 
+                                         requiredMessage="#{userData.userDDs['REQUIRED']}" >
+                                <p:ajax event="keyup" update="msguserName" />
+                            </p:inputText>
+
+                            <p:message id="msguserName" for="user"/>
+
+                        </h:panelGroup>
+
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 50px" value="#{userData.userDDs['NATIVE_LANG']}"/>
+
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+
+                            <p:inputText id="pass" 
+                                         style="width: 50%!important"
+                                         value="#{dataDictionaryBean.propertyValueMother}"
+                                         required="true"
+                                         requiredMessage="#{userData.userDDs['REQUIRED']}" >
+                                <p:ajax event="keyup" update="msgpass" />
+                            </p:inputText>
+
+                            <p:message id="msgpass" for="pass"/>
+
+                        </h:panelGroup>
+
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 50px" value="#{userData.userDDs['FOREIGN_LANG']}"/>
+
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+
+                            <p:inputText id="foriegn" 
+                                         style="width: 50%!important"
+                                         value="#{dataDictionaryBean.propertyValueForiegn}"
+                                         required="true"
+                                         requiredMessage="#{userData.userDDs['REQUIRED']}" >
+                                <p:ajax event="keyup" update="msgforiegn" />
+                            </p:inputText>
+
+                            <p:message id="msgforiegn" for="pass"/>
+
+                        </h:panelGroup>
+
+                    </h:panelGroup>
+
+                    <h:panelGroup>   </h:panelGroup>
+
+
+
+                </h:panelGrid>
+
+                <h:panelGrid class="centerButtons col-md-12" columns="1">
+
+                    <h:panelGroup>
+
+
+
+                        <p:commandButton  class="saveButton" id="saveB" 
+                                          title="#{userData.userDDs['SAVE']}"
+                                          value="#{userData.userDDs['SAVE']}" 
+                                          icon="fa fa-fw fa-save" 
+                                          action="#{dataDictionaryBean.save}"
+                                          update="@form"/>
+
+                    </h:panelGroup>
+
+                </h:panelGrid>
+
+
+
+
+
+
+                <p:blockUI block="pnl" trigger="saveB"/>
+            </p:fieldset>
+
+
+
+            <p:fieldset legend="#{userData.userDDs['DATA_DICTIONARY']}">
+
+                <p:commandButton icon="fa fa-fw fa-backward"  
+                                 class="scloseButton"
+                                 style="float: left;margin: 0 " action="exit" />
+                <p:messages autoUpdate="true"  id="msg" showDetail="true" closable="true"/>   
+                <p:dataTable id="dd"
+                             widgetVar="ddtable" 
+                             rows="15"
+
+                             rowIndexVar="index" 
+                             var="dat" 
+                             dir="rtl" 
+                             selection="#{dataDictionaryBean.dataDicionarySelected}" 
+                             selectionMode="single"  
+                             rowKey="#{dat}"
+                             value="#{dataDictionaryBean.dataDictionaryList}" 
+
+                             editable="true" 
+                             paginator="true" 
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}">
+
+                    <p:ajax event="rowEdit" listener="#{dataDictionaryBean.onRowEdit}"   />
+                    <p:ajax event="rowEditCancel" listener="#{dataDictionaryBean.onRowCancel}"  />
+                    <f:facet name="header" >
+                        <p:selectOneMenu id="comp" value="#{dataDictionaryBean.companyId}"  style="float:right" rendered="#{userData.isAdmin}" >
+                            <p:ajax listener="#{dataDictionaryBean.onCompanyChange()}" update="@form" />
+                            <f:selectItem itemLabel="Select Company"  noSelectionOption="true" />
+                            <f:selectItems value="#{dataDictionaryBean.listCompanies}"  var="com" itemLabel="#{com.name}" itemValue="#{com.id}"/>
+                        </p:selectOneMenu>
+                        <p:outputPanel >
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large"/>
+                            <p:inputText id="globalFilter" a:autofocus="true" onkeyup="PF('ddtable').filter()" style="width:150px" />
+                        </p:outputPanel>
+
+                    </f:facet>
+                    <p:column headerText="#" style="width: 5vh;font-size: 1.8vh;text-align: -webkit-auto" >
+                        <h:outputText  value="#{index+1}" style="font-size: 1.5vh"/>
+                    </p:column>
+                    <p:column style="width: 15vh;font-size: 1.8vh;text-align: -webkit-auto" filterStyle="display:none" sortBy="#{dat.lang.name}" filterBy="#{dat.lang.name}"  filterMatchMode="contains" headerText="#{userData.userDDs['LANGUAGE']}">
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <h:outputText value="#{dat.lang.name}" style="font-size: 1.5vh"/>
+                            </f:facet>
+                            <f:facet name="input">
+                                <h:outputText value="#{dat.lang.name}"  style="font-size: 1.5vh"/>
+                            </f:facet>
+                        </p:cellEditor>
+                    </p:column>
+
+                    <p:column style="width: 15vh;font-size: 1.8vh;text-align: -webkit-auto" filterStyle="display:none" sortBy="#{dat.propertyKey}" filterBy="#{dat.propertyKey}"  filterMatchMode="contains" headerText="#{userData.userDDs['KEY']}">
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <h:outputText value="#{dat.propertyKey}"  style="font-size: 1.5vh"/>
+                            </f:facet>
+                            <f:facet name="input">
+                                <h:outputText value="#{dat.propertyKey}" style="width:100%;font-size: 1.5vh"/>
+                            </f:facet>
+                        </p:cellEditor>
+                    </p:column>
+
+                    <p:column style="width: 15vh;font-size: 1.8vh;text-align: -webkit-auto" filterStyle="display:none" sortBy="#{dat.propertyValue}" filterBy="#{dat.propertyValue}"  filterMatchMode="contains" headerText=" #{userData.userDDs['VALUE']} ">
+                        <p:cellEditor>
+                            <f:facet name="output"> 
+                                <h:outputText value="#{dat.propertyValue}"/>
+                            </f:facet>
+                            <f:facet name="input">
+                                <p:inputText value="#{dat.propertyValue}" style="width:100%"/>
+                            </f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <p:column style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto" >
+                        
+                       
+                        
+                        <p:rowEditor
+                            editTitle="#{userData.userDDs['EDIT']}" 
+                            cancelTitle="#{userData.userDDs['CANCEL']}" 
+                            saveTitle="#{userData.userDDs['SAVE']}" />  
+
+                    </p:column>
+                </p:dataTable>
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>

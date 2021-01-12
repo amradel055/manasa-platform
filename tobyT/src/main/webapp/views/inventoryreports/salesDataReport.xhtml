@@ -1,0 +1,216 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+
+         <div style=" position: absolute;left: 20px"> 
+
+                <p:commandButton  style="width: 90px;background-image: none!important;z-index: 2" 
+                                  class="viewButton searchButton"
+                                  value="Hide/Show"/>  
+            </div>
+			
+        <h:form  id="form" dir="#{userData.dir}"  style="margin-right: 20px">
+          
+            <f:event listener="#{userData.authorize}" type="preRenderView" />
+            
+            <p:fieldset  legend="#{userData.userDDs['BASIC_DATA_SALES_REPRESENTATIVES']}"
+                         
+                         style=" position: relative">
+			
+			
+
+                <div  id="firstSegment" class="ui-g-12 ui-g-nopad firstset">
+                    <div class="ui-g">
+
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 40px" value="#{userData.userDDs['FROM_DELE']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:75%!important"
+                                                    dropdown="true"
+                                                    converter="#{salesDataReportMB.invDelegatorConvertor}"
+                                                    value="#{salesDataReportMB.salesDataReportSearchBean.fromName}"
+                                                    var="sales"
+                                                    itemLabel="#{sales}" 
+                                                    itemValue="#{sales}"
+                                                    forceSelection="true" 
+                                                    completeMethod="#{salesDataReportMB.completDelegator}"
+                                                    >
+
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 40px" value="#{userData.userDDs['TO_DELE']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:75%!important" 
+
+                                                    dropdown="true"
+                                                    converter="#{salesDataReportMB.invDelegatorConvertor}"
+                                                    value="#{salesDataReportMB.salesDataReportSearchBean.toName}"
+                                                    var="sales"
+                                                    itemLabel="#{sales}" 
+                                                    itemValue="#{sales}"
+
+                                                    forceSelection="true"
+                                                    completeMethod="#{salesDataReportMB.completDelegator}" >
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+
+                        </div>
+                    </div>
+                </div>
+
+                <h:panelGrid class="col-md-12" columns="">
+
+                    <h:panelGroup  class="centerButtons"  style="margin-top: 2%">
+
+                          <p:commandButton   class="searchButton"
+                                           id="saveB"
+                                           title="#{userData.userDDs['SEARCH']}"
+                                           action="#{salesDataReportMB.search()}"
+                                           value="#{userData.userDDs['SEARCH']}"
+                                           update="SalesDataViewTable" 
+                                           icon="fa fa-search"  />
+
+                        <p:commandButton   class="newButton"
+                                           id="NewB"
+                                           title="#{userData.userDDs['NEW']}" 
+                                           immediate="true" 
+                                           action="#{salesDataReportMB.reset()}"
+                                           update="form"
+                                           value="#{userData.userDDs['NEW']}"
+                                           icon="fa fa-plus"/>
+
+
+
+
+                        <p:commandButton     class="printButton"
+                                             id="PrintB"
+                                             ajax="false"
+                                             onclick="form.target = '_blank'"  
+                                             icon="fa fa-fw fa-print"
+                                             value="#{userData.userDDs['PRINT']}" 
+                                             actionListener="#{salesDataReportMB.exportPDF}"
+                                             title="#{userData.userDDs['PRINT']}"
+                                             immediate="true" />
+
+                        <p:commandButton    class="closeButton"
+                                            id="CloseB"
+                                            icon="fa fa-fw fa-backward"  
+                                            value="#{userData.userDDs['BACK']}" 
+                                            title="#{userData.userDDs['BACK']}"
+                                            action="exit"/>
+
+                        <h:commandLink  class="sdcreenimg">  
+                            <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                            <p:dataExporter type="xls"
+                                            target="SalesDataViewTable" 
+                                            fileName=" تقرير بيانات الموردين الأساسية"
+                                            postProcessor="#{salesDataReportMB.postProcessXLS}" />  
+                        </h:commandLink>
+
+                        <p:blockUI block="form" trigger="saveB NewB PrintB CloseB" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI> 
+
+
+                    </h:panelGroup>
+
+                </h:panelGrid>
+
+            </p:fieldset>
+
+            <p:fieldset  style="margin-top: 2%">
+
+                <p:dataTable 
+                    draggableColumns="true" 
+                    var="SalesDataViewTable" 
+                    widgetVar="SalesDataViewTable"  
+                    rowKey="#{SalesDataViewTable}"
+                    rowIndexVar="index" 
+                    value="#{salesDataReportMB.salesDataReportViewBeanList}" 
+                    dir="rtl" 
+                    emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                    id="SalesDataViewTable">
+                    <f:facet name="header">
+
+
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('SalesDataViewTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+
+                    </f:facet>
+
+                    <p:column   style="width: 8vh;text-align: center!important;font-size: 1.8vh" headerText="#{userData.userDDs['CS_COD']}" 
+
+                                filterBy="#{SalesDataViewTable.code}" 
+                                filterMatchMode="contains" 
+                                sortBy="#{SalesDataViewTable.code}"
+                                filterable="false">
+
+                        <h:outputText value="#{SalesDataViewTable.code}" style="font-size: 1.5vh"/>
+                    </p:column>
+
+
+
+                    <p:column style="width: 12vh;text-align: center!important;font-size: 1.8vh" filterStyle="display:none"
+                              headerText="#{userData.userDDs['NAME']}" 
+
+                              filterBy="#{SalesDataViewTable.name}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{SalesDataViewTable.name}"
+                              filterable="false">
+
+                        <h:outputText value="#{SalesDataViewTable.name}" style="font-size: 1.5vh;width: 95%"/>
+                    </p:column>
+
+                    <p:column style="width: 10vh;text-align: center!important;font-size: 1.8vh" 
+                              headerText="#{userData.userDDs['PHONE']}" 
+
+                              filterBy="#{SalesDataViewTable.mobile}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{SalesDataViewTable.mobile}"
+                              filterable="false">
+
+                        <h:outputText value="#{SalesDataViewTable.mobile}" style="font-size: 1.5vh;width: 95%"/>
+                    </p:column>
+                    <p:column style="width: 10vh;text-align: center!important;font-size: 1.8vh" 
+                              headerText="#{userData.userDDs['COMMISSION']}" 
+                              filterBy="#{SalesDataViewTable.mobile}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{SalesDataViewTable.mobile}"
+                              filterable="false">
+
+                        <h:outputText value="%#{SalesDataViewTable.commission}" style="font-size: 1.5vh;width: 95%"/>
+                    </p:column>
+
+                </p:dataTable>
+
+            </p:fieldset>
+
+        </h:form>
+    </ui:define>
+</ui:composition>
+
+

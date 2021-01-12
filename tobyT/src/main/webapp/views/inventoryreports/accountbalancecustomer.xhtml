@@ -1,0 +1,332 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+    
+         <div style=" position: absolute;left: 20px"> 
+
+                <p:commandButton  style="width: 90px;background-image: none!important;z-index: 2" 
+                                  class="viewButton searchButton"
+                                  value="Hide/Show"/>  
+            </div>
+	
+        
+        <h:form  id="form" dir="#{userData.dir}"  style="margin-right: 20px">
+          
+           
+                   
+                
+            
+            <p:fieldset  legend="#{userData.userDDs['CUSTOM_ACC_BALA']}"
+                         
+                         style=" position: relative">
+			
+ <p:messages autoUpdate="true"  id="msg" showDetail="true" closable="true" rendered="false"/>
+                
+                <div  id="firstSegment" class="ui-g-12 ui-g-nopad firstset">
+                    <div class="ui-g">
+
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 60px" value="#{userData.userDDs['FROM_CUST_NO']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:75%!important"
+                                                    dropdown="true"
+                                                    converter="#{accountbalancesupplierMB.invOrgSiteConverter}"
+                                                    value="#{accountbalancesupplierMB.organizationSiteStatementSearchBean.fromorganizationName}"
+                                                    var="p"
+                                                    itemLabel="#{p}" 
+                                                    itemValue="#{p}" 
+                                                    forceSelection="false" 
+                                                    completeMethod="#{accountbalancesupplierMB.completOrgSite}" >
+
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 60px" value="#{userData.userDDs['TO_CUST_NO']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:75%!important"
+                                                    dropdown="true"
+                                                    converter="#{accountbalancesupplierMB.invOrgSiteConverter}"
+                                                    value="#{accountbalancesupplierMB.organizationSiteStatementSearchBean.toorganizationName}"
+                                                    var="p"
+                                                    itemLabel="#{p}" 
+                                                    itemValue="#{p}" 
+                                                    forceSelection="false" 
+                                                    completeMethod="#{accountbalancesupplierMB.completOrgSite}" >
+
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 60px" value="#{userData.userDDs['FROM_DATE']}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:calendar pattern="dd/MM/yyyy" 
+                                                value="#{accountbalancesupplierMB.organizationSiteStatementSearchBean.dateFrom}"
+                                                style="width: 56%" 
+                                                id="dateFrom">
+
+                                    </p:calendar>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 60px" value="#{userData.userDDs['TO_DATE']}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:calendar pattern="dd/MM/yyyy" 
+                                                value="#{accountbalancesupplierMB.organizationSiteStatementSearchBean.dateTo}"
+                                                style="width: 56%" 
+                                                id="dateTo">
+
+                                    </p:calendar>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 80px" value="#{userData.userDDs['WITHOUT_O_BALA']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+
+                                    <p:selectBooleanCheckbox id="check" value="#{accountbalancesupplierMB.zeroAmount}" style="margin-right:1%">
+                                        <p:ajax  listener="#{accountbalancesupplierMB.deleteZeroRecords}" update="@form" />
+                                    </p:selectBooleanCheckbox> 
+                                </h:panelGroup>
+
+
+                            </h:panelGroup>
+
+                        </div>
+                    </div>
+                </div>
+
+                <h:panelGrid  columns="1" class="col-md-12" >
+
+                    <h:panelGroup  class="centerButtons" style="margin-top: 2%">
+
+
+                        <p:commandButton   class="searchButton"
+                                           title="#{userData.userDDs['SEARCH']}"
+                                           action="#{accountbalancesupplierMB.search()}"
+                                           id="search"
+                                           value="#{userData.userDDs['SEARCH']}"
+                                           update="accountbalancesupplierTable msg" 
+                                           icon="fa fa-search"  />
+
+
+                        <p:commandButton  class="newButton"
+                                          id="NewB"
+                                          title="#{userData.userDDs['NEW']}" 
+                                          immediate="true"  
+                                          update="@form"
+                                          value="#{userData.userDDs['NEW']}"
+                                          icon="fa fa-plus"
+                                          action="#{accountbalancesupplierMB.reset}"
+                                          onclick="clearDate();"/>
+                        <p:commandButton   class="printButton"
+                                           id="PrintB"
+                                           ajax="false" 
+                                           icon="fa fa-print" 
+                                           onclick="form.target = '_blank'"  
+                                           value="#{userData.userDDs['PRINT']}" 
+                                           title="#{userData.userDDs['PRINT']}"
+                                           actionListener="#{accountbalancesupplierMB.exportPDF}"/>
+
+
+
+                        <p:commandButton     class="closeButton"
+                                             id="CloseB"
+                                             icon="fa fa-fw fa-backward"  
+                                             value="#{userData.userDDs['BACK']}" 
+                                             title="#{userData.userDDs['BACK']}"
+                                             action="exit"/>
+
+                        <h:commandLink  class="sdcreenimg">  
+
+                            <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                            <p:dataExporter type="xls"
+                                            target="accountbalancesupplierTable" 
+                                            fileName="أرصده حساب العملاء"
+                                            postProcessor="#{accountbalancesupplierMB.postProcessXLS}" />  
+                        </h:commandLink>
+
+                        <p:blockUI block="form" trigger="search NewB PrintB CloseB" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI> 
+
+
+
+                    </h:panelGroup>
+
+                </h:panelGrid>
+            </p:fieldset>
+            <p:fieldset style="margin-top: 2%">
+
+                <p:dataTable 
+                    var="accountbalancesupplierTable" 
+                    widgetVar="accountbalancesupplierTable"  
+                    rowKey="#{accountbalancesupplierTable}"
+                    rowIndexVar="index" 
+                    value="#{accountbalancesupplierMB.organizationSiteStatementBeanList}" 
+                    dir="rtl"
+                    paginator="true"
+                    rows="20"
+                    emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                    id="accountbalancesupplierTable">
+                    <f:facet name="header">
+
+
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('accountbalancesupplierTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+
+                    </f:facet>
+
+                    <p:columnGroup type="header">
+                        <p:row>
+                            <p:column rowspan="2" headerText="#{userData.userDDs['CUSTOM_CODE']}" style="width: 9vh;text-align: right;font-size: 1.8vh;text-align: center"
+
+                                      filterBy="#{accountbalancesupplierTable.organizationCode}" 
+                                      filterMatchMode="contains" 
+                                      sortBy="#{accountbalancesupplierTable.organizationCode}"
+                                      filterable="false"/>
+
+                            <p:column rowspan="2" headerText="#{userData.userDDs['CUSTOM_NAME']}" style="width: 12vh;text-align: right;font-size: 1.8vh;text-align: center"
+
+                                      filterBy="#{accountbalancesupplierTable.organizationName}" 
+                                      filterMatchMode="contains" 
+                                      sortBy="#{accountbalancesupplierTable.organizationName}"
+                                      filterable="false"/>
+
+                            <p:column rowspan="2" headerText="#{userData.userDDs['INITIAL_BALAN']}"  style="width: 9vh;text-align: right;font-size: 1.8vh;text-align: center" 
+
+                                      filterBy="#{accountbalancesupplierTable.openningBalance}" 
+                                      filterMatchMode="contains" 
+                                      sortBy="#{accountbalancesupplierTable.openningBalance}"
+                                      filterable="false"/>
+
+                            <p:column colspan="2" headerText="#{userData.userDDs['TOTA_TRANSACT']}" style="width: 12vh;text-align: right;font-size: 1.8vh;text-align: center"/>
+
+                            <p:column rowspan="2" headerText="#{userData.userDDs['BALANCE']}" style="width: 9vh;text-align: right;font-size: 1.8vh;text-align: center" 
+
+                                      filterBy="#{accountbalancesupplierTable.balance}" 
+                                      filterMatchMode="contains" 
+                                      sortBy="#{accountbalancesupplierTable.balance}"
+                                      filterable="false"/>
+
+                            <p:column rowspan="2" headerText="#{userData.userDDs['BALA_LOCA_CURRE']}" style="width: 9vh;text-align: right;font-size: 1.8vh;text-align: center" 
+
+                                      filterBy="#{accountbalancesupplierTable.localBalance}" 
+                                      filterMatchMode="contains" 
+                                      sortBy="#{accountbalancesupplierTable.localBalance}"
+                                      filterable="false"/>
+                        </p:row>
+                        <p:row>
+                            <p:column headerText="#{userData.userDDs['DEBIT']}" style="width: 6vh;text-align: right;font-size: 1.8vh;text-align: center" 
+
+                                      filterBy="#{accountbalancesupplierTable.exitt}" 
+                                      filterMatchMode="contains" 
+                                      sortBy="#{accountbalancesupplierTable.exitt}"
+                                      filterable="false"/>
+
+                            <p:column headerText="#{userData.userDDs['CREDIT']}" style="width: 6vh;text-align: right;font-size: 1.8vh;text-align: center" 
+
+                                      filterBy="#{accountbalancesupplierTable.adding}" 
+                                      filterMatchMode="contains" 
+                                      sortBy="#{accountbalancesupplierTable.adding}"
+                                      filterable="false"/>
+                        </p:row>
+
+                    </p:columnGroup>
+
+
+                    <p:column style="width: 12vh;text-align: right;font-size: 1.8vh;text-align: center">
+
+                        <h:outputText value="#{accountbalancesupplierTable.organizationCode}" style="font-size: 1.5vh"/>
+                    </p:column>
+
+                    <p:column style="width: 12vh;text-align: right;font-size: 1.8vh;text-align: center">
+
+                        <h:outputText value="#{accountbalancesupplierTable.organizationName}" style="font-size: 1.5vh"/>
+                    </p:column>
+
+                    <p:column style="width: 12vh;text-align: right;font-size: 1.8vh;text-align: center" filterStyle="display:none">
+
+                        <p:inputNumber readonly="true" value="#{accountbalancesupplierTable.openningBalance}" style="font-size: 1.5vh;width: 95%"/>
+                    </p:column>
+
+                    <p:column style="width: 6vh;text-align: right;font-size: 1.8vh;text-align: center"   >
+                        <p:inputNumber readonly="true" value="#{accountbalancesupplierTable.exitt}" style="font-size: 1.5vh;width: 95%"/>
+
+                    </p:column> 
+
+                    <p:column style="width: 6vh;text-align: right;font-size: 1.8vh;text-align: center"  >
+                        <p:inputNumber readonly="true" value="#{accountbalancesupplierTable.adding}" style="font-size: 1.5vh;width: 90%"/>
+                    </p:column>
+
+                    <p:column style="width: 9vh;text-align: right;font-size: 1.8vh;text-align: center" >
+                        <p:inputNumber readonly="true" value="#{accountbalancesupplierTable.balance}" style="font-size: 1.5vh;width: 95%"/>
+
+                    </p:column>
+
+                    <p:column style="width: 16vh;text-align: right;font-size: 1.8vh;text-align: center"  >
+                        <p:inputNumber readonly="true" value="#{accountbalancesupplierTable.localBalance}" style="font-size: 1.5vh;width: 95%"/>
+                    </p:column>
+                    <p:columnGroup type="footer">
+                        <p:row>
+                            <p:column colspan="2" style="text-align:right" footerText="#{userData.userDDs['TOTAL']}  :" />
+                            <p:column footerText="" style="font-size: 1.4vh" />
+
+                            <p:column footerText="#{accountbalancesupplierMB.totalexitt}" style="font-size: 1.4vh" />
+                            <p:column footerText="#{accountbalancesupplierMB.totaladding}"  style="font-size: 1.4vh"/>
+                            <p:column footerText="#{accountbalancesupplierMB.totalbalance}" style="font-size: 1.4vh"/>
+                            <p:column footerText="" style="font-size: 1.4vh" />
+                        </p:row>
+                    </p:columnGroup>
+
+
+                </p:dataTable>
+            </p:fieldset>
+            <script>
+                function clearDate() {
+               document.getElementById("form:dateFrom_input").value = null;
+               document.getElementById("form:dateTo_input").value = null; 
+               document.getElementById("form:check_input").value = false; 
+               }
+            </script>
+        </h:form>
+    </ui:define>
+</ui:composition>

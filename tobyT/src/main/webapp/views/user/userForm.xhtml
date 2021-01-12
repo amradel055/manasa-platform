@@ -1,0 +1,181 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml" >
+
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form id="form" dir="#{userData.dir}" style="margin-right: 20px">
+            <p:fieldset legend="#{userData.userDDs['USER']}" style="margin-bottom:20px">
+                <h:panelGrid id="pnl"  class="col-md-12" columns="2" columnClasses="">
+
+                    <h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 55px" value="#{userData.userDDs['USER_NAME']}*"/>
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:inputText style="width: 50%!important" id="user" a:autofocus="true" 
+                                         value="#{userFormBean.userName}"
+                                         required="true" 
+                                         requiredMessage="#{userData.userDDs['REQUIRED']}" >
+                                <p:ajax event="keyup" update="msguserName" />
+                            </p:inputText>
+
+                            <p:message id="msguserName" for="user"/>
+
+                        </h:panelGroup>
+
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 55px" value=" #{userData.userDDs['PASSWORD']} *"/>
+
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+
+                            <p:password id="pass"  feedback="true" inline="true" redisplay="true" 
+                                        style="width: 50%!important"
+                                        value="#{userFormBean.userPassword}"
+                                        required="true"
+                                        requiredMessage="#{userData.userDDs['REQUIRED']}" >
+                                <p:ajax event="keyup" update="msgpass" />
+                            </p:password>
+
+
+                            <p:message id="msgpass" for="pass"/>
+
+                        </h:panelGroup>
+
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+
+                        <h:panelGroup>
+
+                            <p:outputLabel style="width: 55px" value="#{userData.userDDs['USER_CODE']}* "/>
+
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+
+                            <p:inputText style="width: 50%!important" id="usercode" value="#{userFormBean.userCode}" required="true" maxlength="3" 
+                                         requiredMessage="#{userData.userDDs['REQUIRED']}" >
+                                <p:ajax event="keyup" update="msgcode" />
+                            </p:inputText>
+                            <p:outputLabel value="#{UserFormBean.userCompanyCode}" />
+
+                            <p:message id="msgcode" for="usercode"/>
+
+                        </h:panelGroup>
+
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 55px" value="#{userData.userDDs['USER_LANGUAGE']}* "/>
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+
+                            <p:selectOneMenu style="width: 50%!important;margin-right: 1%" id="lan" value="#{userFormBean.selectedLangId}"
+                                             required="true" requiredMessage="#{userData.userDDs['REQUIRED']}" >
+                                <p:ajax listener="#{userFormBean.onLanguageListChange()}" update="msglang" />
+                                <f:selectItems value="#{userFormBean.languages}" var="language" itemLabel="#{language.name}" itemValue="#{language.id}"/> 
+                            </p:selectOneMenu>
+
+                            <p:message  id="msglang" for="lan"/>
+
+                        </h:panelGroup>
+
+                    </h:panelGroup>
+                    
+
+
+                    <h:panelGroup>
+
+                        <h:panelGroup>
+
+                            <p:outputLabel value="#{userData.userDDs['COMPANY_NAME']}* " rendered="#{userData.isAdmin}" />
+
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:selectOneMenu id="com" value="#{userFormBean.selectedCompanyId}" required="true" 
+                                             requiredMessage="#{userData.userDDs['REQUIRED']}" rendered="#{userData.isAdmin}" >
+                                <p:ajax listener="#{userFormBean.onCompanyListChange()}" update="msgcom" />
+                                <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" itemValue="" noSelectionOption="true" />
+                                <f:selectItems value="#{userFormBean.userCompany}" var="com" itemLabel="#{com.name}" itemValue="#{com.id}"/> 
+                            </p:selectOneMenu>
+                            <p:message id="msgcom" for="com"/>
+                        </h:panelGroup>
+
+                    </h:panelGroup>
+
+
+                    <h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel value="#{userData.userDDs['COMPANY_CODE']} " rendered="#{userData.isAdmin}" />
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel id="code" value="#{userFormBean.userCompanyCode}" rendered="#{userData.isAdmin}" />
+
+                            <p:message for="code"/>
+                        </h:panelGroup>
+
+                    </h:panelGroup>
+
+
+                </h:panelGrid>
+
+                <h:panelGrid  class="centerButtons col-md-12"  columns="1">
+
+
+                    <h:panelGroup>
+
+                     
+                        <p:commandButton class="saveButton" 
+                                         id="saveB" 
+                                         title="#{userData.userDDs['SAVE']}"
+                                         value="#{userData.userDDs['SAVE']}" 
+                                         icon="fa fa-fw fa-save" 
+                                         action="#{userFormBean.save}"
+                                         update="@form"/>
+                        <p:commandButton class="closeButton"  
+                                         title="#{userData.userDDs['CANCEL']}" 
+                                         immediate="true" 
+                                         value="#{userData.userDDs['CANCEL']}" 
+                                         icon="fa fa-fw fa-backward" 
+                                         action="#{userFormBean.cancel}"   />
+                            
+                        
+
+                         
+                    </h:panelGroup>
+                        
+                   
+                </h:panelGrid>
+
+                <p:blockUI block="pnl" trigger="saveB" animate="true" >
+
+                    <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+                </p:blockUI>
+
+
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

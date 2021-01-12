@@ -1,0 +1,202 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form id="glyearform"  enctype="multipart/form-data" dir="#{userData.dir}" class='formmargin'>
+            <p:fieldset legend="#{userData.userDDs['Gl_year']}" >
+                <div class="row">
+                    <p:messages autoUpdate="true" rendered="false"  id="messages" showDetail="true" closable="true"/>   
+
+                    <div class="col-sm-6">
+
+
+                        <h:panelGrid id="pnl"  columns="2" class="col-md-12">
+
+                            <h:panelGroup>
+
+                                <h:panelGroup> 
+                                    <p:outputLabel  style="width: 70px;margin-right: 25px;" value="#{userData.userDDs['NAME']}" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText  id="name" class="inputtextwidth" a:autofocus="true" 
+                                                  value="#{glyearFormBean.newGLYear.name}" required="true" requiredMessage="#{userData.userDDs['REQUIRED']}" >
+                                        <p:ajax event="keyup" update="msgpass" />
+                                    </p:inputText>
+                                    <p:message id="msgpass" for="name"/>
+                                </h:panelGroup>
+
+
+                            </h:panelGroup>
+                        </h:panelGrid>
+                    </div>
+
+
+
+                    <div class="col-sm-6">
+                        <h:panelGrid> 
+                            <h:panelGroup>
+
+                                <h:panelGroup> 
+                                    <p:outputLabel style="width:70px;margin-right: 25px;" value="#{userData.userDDs['YEAR']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText class="inputtextwidth" id="year" value="#{glyearFormBean.newGLYear.year}" required="true" requiredMessage="#{userData.userDDs['REQUIRED']}" maxlength="4" >
+                                    </p:inputText>  
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </h:panelGrid>
+                    </div>
+                    
+                    <div class="col-sm-6">
+                        <h:panelGrid> 
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 70px;margin-right: 25px;" value="#{userData.userDDs['YEAR_TO']}" />
+                                </h:panelGroup>                    
+                                <h:panelGroup>
+                                    <p:calendar   id="to" 
+                                                  value="#{glyearFormBean.newGLYear.dateTo}"   
+                                                  pattern="dd-MM-yyyy"
+                                                  style="width: 80%!important"
+                                                  mask="true" 
+                                                  required="true" 
+                                                  requiredMessage="#{userData.userDDs['REQUIRED']}" >
+                                        <p:ajax  update="msto" />
+                                    </p:calendar> 
+                                    <p:message id="msto" for="to"/>
+                                </h:panelGroup>
+
+
+                            </h:panelGroup>
+                        </h:panelGrid>
+                    </div>
+
+
+                    <div class="col-sm-6">
+                        <h:panelGrid> 
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:70px;margin-right: 25px;" value="#{userData.userDDs['YEAR_FROM']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:calendar   id="from" 
+                                                  value="#{glyearFormBean.newGLYear.dateFrom}" 
+                                                  pattern="dd-MM-yyyy" 
+                                                  style="width: 80%!important"
+                                                  mask="true"
+                                                  required="true" 
+                                                  requiredMessage="#{userData.userDDs['REQUIRED']}" >
+                                        <p:ajax  update="msfrom" />
+                                    </p:calendar> 
+                                    <p:message id="msfrom" for="from"/>
+
+
+                                </h:panelGroup>
+
+
+                            </h:panelGroup>
+                        </h:panelGrid>
+                    </div>
+
+                    
+
+
+                    <div class="col-sm-6">
+                        <h:panelGrid> 
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 75px;margin-right: 25px;margin-top: 5px!important;" 
+                                                   value="#{userData.userDDs['DEFAULT']}" />
+                                </h:panelGroup>     
+                                <p:selectBooleanCheckbox value="#{glyearFormBean.newGLYear.isDefault}" style="background-color: #FFFFFF!important;" />
+
+
+                            </h:panelGroup>
+                        </h:panelGrid>
+                    </div>
+
+
+                    <div class="col-sm-6">
+                        <h:panelGrid> 
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 50px;margin-right: 25px;" value="#{userData.userDDs['COMPANY_NAME']}* " rendered="#{userData.isAdmin}" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:selectOneMenu  style="width: 51%" id="com" value="#{glyearFormBean.selectedCompanyId}" 
+                                                      rendered="#{userData.isAdmin}" required="true" 
+                                                      requiredMessage="#{userData.userDDs['REQUIRED']}" >
+                                        <p:ajax  update="mscom" />
+                                        <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" itemValue="" noSelectionOption="true" />
+                                        <f:selectItems value="#{glyearFormBean.companies}" var="COM" itemLabel="#{COM.name}" itemValue="#{COM.id}"/> 
+                                    </p:selectOneMenu>
+                                    <p:message id="mscom" for="com"/>
+
+                                </h:panelGroup> 
+
+
+                            </h:panelGroup> 
+                        </h:panelGrid>
+                    </div>
+
+                </div>
+
+
+
+
+
+                <h:panelGrid class="centerButtons col-md-12" columns="1" >
+
+
+                    <h:panelGroup>
+
+                        <p:commandButton  class="saveButtons" 
+                                          style="margin-top:15px;background-color: #2692ed!important;color: #eef2f3!important;margin-left: 5px;"
+                                          id="saveB" 
+                                          title="#{userData.userDDs['SAVE']}"
+                                          value="#{userData.userDDs['SAVE']}"
+
+                                          rendered="#{(userData.userScreens['Glyear'].add or userData.isAdmin)}" 
+                                          action="#{glyearFormBean.save()}"
+                                          update="@form" />
+
+
+
+                        <p:commandButton class="closeButtons" 
+                                         style="margin-top:15px;background-color: #9c27b0d1!important;color: #eef2f3!important;margin-left: 5px;"
+                                         title="#{userData.userDDs['CANCEL']}" 
+                                         value="#{userData.userDDs['CANCEL']}" 
+                                         action="#{glyearFormBean.exit()}" 
+                                         immediate="true" />
+
+                        <p:blockUI block="glyearform" trigger="saveB" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI>
+
+                    </h:panelGroup>     
+
+
+
+                </h:panelGrid>
+
+
+
+                <p:blockUI block="pnl" trigger="saveB"/>
+            </p:fieldset>
+
+        </h:form>
+
+    </ui:define>
+</ui:composition>

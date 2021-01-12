@@ -1,0 +1,394 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+
+        <h:form  style="margin-right: 20px" id="form" dir="#{userData.dir}">
+            <p:fieldset id="whole" style="margin-bottom:20px">
+                <div class="col-xs-12">
+                    <p:messages autoUpdate="true"  id="msg" showDetail="true" closable="true" />
+                </div>
+
+                <div  id="firstSegment" class="ui-g-12 ui-g-nopad">
+
+                    <div class="ui-g">
+
+                        <div class="ui-g-12 ui-md-6">
+                            <p:fieldset style="width: 65%">
+                                <p:selectOneRadio id="console"  value ="#{organizationSiteFormMB.invOrganizationSiteDTO.type}" >
+                                    <f:selectItem itemLabel="#{userData.userDDs['CUSTOMER']}"  itemValue="0"  />   
+                                    <f:selectItem itemLabel="#{userData.userDDs['CUSTOMER_SUPPLIER']}" itemValue="2" />
+                                    <p:ajax  listener="#{organizationSiteFormMB.checkVisability}" update="form" />
+                                </p:selectOneRadio>
+                            </p:fieldset>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 85px" value="#{userData.userDDs['SYMBOL_NAME_ORGANIZATION_SIDE']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width: 22%!important"
+                                                 id="SNOSName"
+                                                 a:autofocus="true"
+                                                 required="true"
+                                                 value="#{organizationSiteFormMB.invOrganizationSiteDTO.code}" >
+                                        <p:ajax event="blur" listener="#{organizationSiteFormMB.validateCode()}"/>
+                                    </p:inputText>
+                                </h:panelGroup> 
+                                <h:panelGroup>
+                                    <p:inputText required="true"
+                                                 style="width: 22%!important" 
+                                                 id="custName"
+                                                 value="#{organizationSiteFormMB.invOrganizationSiteDTO.name}" />
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:85px " value="#{userData.userDDs['PURCHASES_REPRESENTATIVE_NUMBER']}" rendered="#{organizationSiteFormMB.supplier and not organizationSiteFormMB.supplierAndCustomer}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:85px " value="#{userData.userDDs['DELEGATE_CUSTOMER']}" rendered="#{organizationSiteFormMB.customer and not organizationSiteFormMB.supplierAndCustomer}" />
+                                </h:panelGroup> 
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:85px " value="#{userData.userDDs['CUSTOMER/SUPPLIER']}" rendered="#{organizationSiteFormMB.supplierAndCustomer}"/>
+                                </h:panelGroup> 
+                                <h:panelGroup >
+                                    <p:autoComplete style="width: 80%" 
+
+                                                    dropdown="true"
+                                                    converter="#{organizationSiteFormMB.salesConverter}"
+                                                    value="#{organizationSiteFormMB.invOrganizationSiteDTO.delegatorId}" required="true"
+
+                                                    var="person"
+                                                    itemLabel="#{person}" 
+                                                    itemValue="#{person}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{organizationSiteFormMB.completeSalesPerson}" >
+
+                                    </p:autoComplete>
+                                </h:panelGroup>    
+                            </h:panelGroup>
+                        </div>
+                        
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 85px" value="#{userData.userDDs['AREA']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:80%" 
+                                                    dropdown="true"
+                                                    converter="#{organizationSiteFormMB.regionConverter}"
+                                                    value="#{organizationSiteFormMB.invOrganizationSiteDTO.regionId}"
+
+                                                    var="region"
+                                                    itemLabel="#{region}" 
+                                                    itemValue="#{region}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{organizationSiteFormMB.completeRegion}" >
+
+                                    </p:autoComplete>
+                                </h:panelGroup>
+                            </h:panelGroup>
+
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:85px" value="#{userData.userDDs['POST_BOX']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width: 46%!important" id="POST_BOX" value="#{organizationSiteFormMB.invOrganizationSiteDTO.postBox}"/>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:85px" value="#{userData.userDDs['P.B']}"/>
+                                </h:panelGroup>                  
+                                <h:panelGroup>
+                                    <p:inputText style="width:46%!important"  id="zip" value="#{organizationSiteFormMB.invOrganizationSiteDTO.zip}"/>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width:85px" value="#{userData.userDDs['PHONE1']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText  style="width:46%!important" id="PHONE1" value="#{organizationSiteFormMB.invOrganizationSiteDTO.phone}"/>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 85px" value="#{userData.userDDs['ADDRESS']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width: 46%!important" id="ADDRESS" value="#{organizationSiteFormMB.invOrganizationSiteDTO.address}"/>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 85px" value="#{userData.userDDs['PHONE2']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width: 46%!important" id="PHONEt" value="#{organizationSiteFormMB.invOrganizationSiteDTO.phone2}"/>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 85px"  value="#{userData.userDDs['EMAIL']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width: 46%!important" id="EMAIL" value="#{organizationSiteFormMB.invOrganizationSiteDTO.email}"/>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 85px" value="#{userData.userDDs['FAX']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width: 46%!important" id="FAX" value="#{organizationSiteFormMB.invOrganizationSiteDTO.fax}"/>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 85px"  value="#{userData.userDDs['NAME_OF THE_MANAGER']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width: 46%!important"  id="NOTM" value="#{organizationSiteFormMB.invOrganizationSiteDTO.contactPerson}"/>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 85px" value="#{userData.userDDs['MOBILE']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width: 46%!important" id="MOBILE" value="#{organizationSiteFormMB.invOrganizationSiteDTO.mobile}"/>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 85px"
+                                                   value="#{userData.userDDs['ACCOUNT_NUMBER']}" 
+                                                   />
+                                </h:panelGroup>
+
+                                <h:panelGroup >
+                                    <p:autoComplete id="GlAccount_ID" 
+                                                    style="width: 80%" 
+                                                    dropdown="true"
+                                                    converter="#{organizationSiteFormMB.glAccountDTOConverter}"
+                                                    value="#{organizationSiteFormMB.invOrganizationSiteDTO.accountId}"
+
+                                                    var="account"
+                                                    itemLabel="#{account}" 
+                                                    itemValue="#{account}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{organizationSiteFormMB.completeGlAccount}" >
+
+                                    </p:autoComplete>
+                                </h:panelGroup>
+                            </h:panelGroup>
+
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 85px" value="#{userData.userDDs['CURRENCY']}" 
+                                                   />
+                                </h:panelGroup>
+                                <h:panelGroup >
+                                    <p:autoComplete id="Currency_ID" 
+                                                    style="width: 80%" 
+                                                    dropdown="true"
+                                                    converter="#{organizationSiteFormMB.currencyDTOConverter}"
+                                                    value="#{organizationSiteFormMB.invOrganizationSiteDTO.currencyId}"
+
+                                                    var="currency"
+                                                    itemLabel="#{currency}" 
+                                                    itemValue="#{currency}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{organizationSiteFormMB.completeCurrency}">
+
+                                    </p:autoComplete>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 85px"
+                                                   value="#{userData.userDDs['CREDIT_LIMIT']}" 
+                                                   />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width: 46%!important" id="crdtLmt"
+                                                 value="#{organizationSiteFormMB.invOrganizationSiteDTO.balanceLimit}"
+                                                 />
+                                </h:panelGroup>
+
+
+
+                            </h:panelGroup>
+
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:85px"
+                                                   value="#{userData.userDDs['OPENING_BALANCE_CREDIT']}"
+                                                   />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 46%!important" id="OPBACR"  
+                                                   value="#{organizationSiteFormMB.invOrganizationSiteDTO.openBalanceCredit}"
+                                                   />
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:85px" 
+                                                   value="#{userData.userDDs['OPENING_BALANCE_DEBIT']}" 
+                                                   />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 46%!important" id="OPBD"
+                                                   value="#{organizationSiteFormMB.invOrganizationSiteDTO.openBalanceDebit}" 
+                                                   />
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 85px" value="#{userData.userDDs['NOTE']}" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width: 46%!important" id="NOTE" value="#{organizationSiteFormMB.invOrganizationSiteDTO.remark}"/>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 85px" value="#{userData.userDDs['CS_ACTIVE']}" />
+
+                                </h:panelGroup>  
+
+                                <h:panelGroup>   
+                                    <p:selectOneMenu  id="active" value="#{organizationSiteFormMB.invOrganizationSiteDTO.active}"
+                                                      style="width:46%">
+                                        <f:selectItem itemLabel="#{userData.userDDs['INACTIVE']}" itemValue="0" />
+                                        <f:selectItem itemLabel="#{userData.userDDs['CS_ACTIVE']}" itemValue="1" />
+                                        <f:selectItem itemLabel="#{userData.userDDs['BLACK_LIST']}" itemValue="2" />
+                                    </p:selectOneMenu>
+                                </h:panelGroup>   
+
+                            </h:panelGroup>
+                        </div>
+                    </div>
+                </div>
+
+                <h:panelGrid  class="col-md-12" columns="1">
+
+                    <h:panelGroup class="centerButtons" style="margin-top: 2%">
+                        <p:commandButton   class="saveButton" 
+                                           id="saveB" 
+                                           title="#{userData.userDDs['SAVE']}" 
+                                           value="#{userData.userDDs['SAVE']}" 
+                                           icon="fa fa-fw fa-save"
+                                           action="#{organizationSiteFormMB.save()}" 
+                                           update="@form"/>
+
+                        <p:commandButton  class="newButton" 
+                                          id="newN"
+                                          ajax="false"
+                                          icon="fa fa-fw fa-plus"
+                                          value="#{userData.userDDs['NEW']}" 
+                                          title="#{userData.userDDs['NEW']}"
+                                          onclick="form.target = ''" 
+                                          actionListener="#{organizationSiteFormMB.reset()}"/>
+                        
+                        
+                        <p:commandButton  class="closeButton" 
+                                          title="#{userData.userDDs['CANCEL']}"
+                                          immediate="true"
+                                          value="#{userData.userDDs['CANCEL']}"
+                                          icon="fa fa-fw fa-backward"
+                                          action="#{organizationSiteFormMB.exit()}"   />`
+
+                        <p:blockUI block="form" trigger="saveB" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI> 
+
+                    </h:panelGroup>
+
+
+                </h:panelGrid>
+            </p:fieldset>          
+        </h:form>
+    </ui:define>
+</ui:composition>

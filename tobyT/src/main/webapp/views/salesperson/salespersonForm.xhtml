@@ -1,0 +1,160 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+
+        <h:form style="margin-right: 20px" id="form"  enctype="multipart/form-data"  dir="#{userData.dir}">
+            <p:fieldset legend="#{userData.userDDs['SALESPERSON_DATA']}" style="margin-bottom:20px">    
+
+                <div class="col-xs-12">
+                    <p:messages autoUpdate="true" id="curmsg" showDetail="true" closable="true"/>   
+                </div>
+
+                <div  id="firstSegment" class="ui-g-12 ui-g-nopad">
+
+                    <div class="ui-g">
+
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:50px;font-size: 20vh" value="#{userData.userDDs['DELEGATOR_NUMBER']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 50%!important"
+                                                   id="ad1" 
+                                                   value="#{inventoryDelegatorFormBean.inventoryDelegatorDTO.id}"/>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup></h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:50px;font-size: 20vh" value="#{userData.userDDs['DELEGATOR_COD']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width: 50%!important"
+                                                 id="code" 
+                                                 value="#{inventoryDelegatorFormBean.inventoryDelegatorDTO.code}">
+                                        <p:ajax event="blur" listener="#{inventoryDelegatorFormBean.checkCodeExistence()}" update="form" />
+                                    </p:inputText>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:50px;font-size: 20vh" value="#{userData.userDDs['DELEGATOR_NAME']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width:50%!important" 
+                                                 id="ad2"
+                                                 a:autofocus="true"  
+                                                 value="#{inventoryDelegatorFormBean.inventoryDelegatorDTO.name}"/>
+                                </h:panelGroup>
+                            </h:panelGroup>
+
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 50px;font-size: 20vh" value="#{userData.userDDs['PHONE']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width:50%!important"  id="ad3" value="#{inventoryDelegatorFormBean.inventoryDelegatorDTO.mobile}"/>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 50px;font-size: 20vh" value="#{userData.userDDs['COMMISSION']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width:50%!important"  
+                                                 id="ad4"
+                                                 value="#{inventoryDelegatorFormBean.inventoryDelegatorDTO.commission}"/>
+                                    <p:outputLabel value="%"/>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+
+                        </div>
+                        
+                        <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 100px;margin-right: 6%;" value="المعرض"/>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:autoComplete style="width:37%"  id="gallaryDTO" widgetVar="gallaryDTO"
+                                                        dropdown="true"
+                                                        converter="#{autoComplete.invInventoryDTOConverter}"
+                                                        value="#{inventoryDelegatorFormBean.inventoryDelegatorDTO.gallaryDTO}"
+                                                        var="gallaryDTO" 
+                                                        itemLabel="#{gallaryDTO}" 
+                                                        itemValue="#{gallaryDTO}" 
+                                                        forceSelection="true" 
+                                                        completeMethod="#{autoComplete.completeGallaryDTO}" >
+                                        </p:autoComplete>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </div>
+                    </div>
+                </div>
+
+
+
+
+                <h:panelGrid id="secondSegment" columns="1"  class="col-md-12"  >
+
+                    <h:panelGroup class="centerButtons" style="margin-top: 1%">
+                        <p:commandButton  class="saveButton" 
+                                          id="saveB"
+                                          title="#{userData.userDDs['SAVE']}"
+                                          value="#{userData.userDDs['SAVE']}" 
+                                          icon="fa fa-fw fa-save"
+                                          action="#{inventoryDelegatorFormBean.save()}" 
+                                          update="@form"/>
+
+                        <p:commandButton  class="newButton" 
+                                          id="newN"
+                                          ajax="false"
+                                          icon="fa fa-fw fa-plus"
+                                          value="#{userData.userDDs['NEW']}" 
+                                          title="#{userData.userDDs['NEW']}" 
+                                          onclick="form.target = ''" 
+                                          actionListener="#{inventoryDelegatorFormBean.reset()}"/>
+                        
+                        
+                        <p:commandButton class="closeButton" 
+                                         title="#{userData.userDDs['CANCEL']}"
+                                         immediate="true" 
+                                         value="#{userData.userDDs['CANCEL']}"
+                                         icon="fa fa-fw fa-backward"
+                                         action="#{inventoryDelegatorFormBean.exit()}"   />
+
+                        <p:blockUI block="form" trigger="saveB" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI> 
+                    </h:panelGroup>
+
+                </h:panelGrid>
+
+            </p:fieldset>
+        </h:form>
+
+    </ui:define>
+</ui:composition>

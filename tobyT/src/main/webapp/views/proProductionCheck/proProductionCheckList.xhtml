@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+<f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:body>
+
+            <h:form id="form" dir="RTL" style="margin-right: 20px">
+                <p:fieldset  legend="الفواتير التي تم التشيك عليها" id="whole"  style="margin-bottom:20px">
+                    <p:dataTable id="table" var="productionCheck" 
+                                 value="#{proProductionCheckListMB.dataModel}" lazy="true" 
+                                 rows="10"
+                                 draggableColumns="true"
+                                 paginator="true"
+                                 widgetVar="productionCheck" 
+                                 rowIndexVar="index" 
+                                 emptyMessage="EMPTY_TABLE"
+                                 >
+                        <f:facet name="header" class="col-md-12">
+                            <p:commandButton  icon="fa fa-plus" 
+                                              class="saddButton"
+                                              title="goToForm"
+                                              action="#{proProductionCheckListMB.goToForm()}"
+
+                                              style="float:right" 
+
+                                              />
+                            <p:outputPanel>
+                                <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large"/>
+                                <p:inputText id="globalFilter" a:autofocus="true" onkeyup="PF('productionCheck').filter()" style="width:150px" />
+                            </p:outputPanel>
+                        </f:facet>
+
+                        <p:column headerText="الفاتورة" style="width: 5vh;font-size: 1.8vh;text-align: -webkit-auto;"
+                                  filterStyle="display:none"
+                                  filterBy="#{productionCheck.invPurchaseInvoiceSerial}"
+                                  filterMatchMode="contains"
+                                  sortBy="#{productionCheck.invPurchaseInvoiceSerial}"
+                                  >
+                            <h:outputText value="#{productionCheck.invPurchaseInvoiceSerial}" />
+                        </p:column>
+                        <p:column headerText="تاريخ التشيك" style="width: 5vh;font-size: 1.8vh;text-align: -webkit-auto;"
+                                  filterStyle="display:none"
+                                  filterBy="#{productionCheck.createdDate}"
+                                  filterMatchMode="contains"
+                                  sortBy="#{productionCheck.createdDate}"
+                                  >
+                            <p:outputLabel value="#{productionCheck.createdDate}" >
+                                <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                            </p:outputLabel> 
+                        </p:column>
+                        
+                        <p:column headerText="الحركة" style="width: 5vh;text-align: center!important;font-size: 1.8vh">
+                            <p:commandButton class="sdeleteButton"   icon="fa fa-remove" 
+                                             title="DELETE" action="#{proProductionCheckListMB.delete()}"
+                                             update="table"
+                                             >
+                                <f:setPropertyActionListener value="#{productionCheck}" 
+                                                             target="#{proProductionCheckListMB.proProductionTransactionDTOSelected}" />
+                                <p:confirm header="Confirmation" message="ARE_YOU_SURE" icon="ui-icon-alert" />
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton title="YES" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                        <p:commandButton title="NO" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog>
+                </p:fieldset>
+            </h:form>
+        </h:body>
+    </ui:define>
+</ui:composition>
+

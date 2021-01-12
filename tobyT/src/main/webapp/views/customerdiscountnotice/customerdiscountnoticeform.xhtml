@@ -1,0 +1,122 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml" >
+    <ui:define name="content">
+        <div >
+            <p:messages id="curmsg" showDetail="true" rendered="true" closable="true"/>   
+        </div>
+        <h:form id="form"  enctype="multipart/form-data"  dir="#{userData.dir}" style="margin-right: 20px">
+
+            <p:fieldset legend="اشعار خصم عملاء"  style="margin-bottom:20px">
+                <h:panelGrid id="firstLine" columns="2" class="col-md-12" columnClasses="ui-grid-col-6,ui-grid-col-6" >
+
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 50px" value="الرقم"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <h:outputLabel value="#{invNoticeFormMB.invNoticeEntity.serial}"/>
+                        </h:panelGroup>
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 50px" value="#{userData.userDDs['DATE']}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:calendar required="true"
+                                        value="#{invNoticeFormMB.invNoticeEntity.date}"
+                                        pattern="dd/MM/yyyy" 
+                                        style="width:50%"/>
+                        </h:panelGroup>
+
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 50px" value="الكمية"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:inputText  style="width: 50%!important" required="true" value="#{invNoticeFormMB.invNoticeEntity.amount}" />
+                        </h:panelGroup>
+
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 50px" value="جهة التعامل"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:autoComplete style="width:69%!important" 
+                                            dropdown="true"
+                                            required="true"
+                                            converter="#{invNoticeFormMB.organizationSiteConvertor}"
+                                            value="#{invNoticeFormMB.invNoticeEntity.organizationSiteId}"
+
+                                            var="supplier"
+                                            itemLabel="#{supplier}" 
+                                            itemValue="#{supplier}" 
+                                            forceSelection="true" 
+                                            completeMethod="#{invNoticeFormMB.completeOrganizationSite}">
+                            </p:autoComplete>
+                        </h:panelGroup>
+
+                    </h:panelGroup>
+
+
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 50px" value="الحسابات" />
+                        </h:panelGroup>
+                        <h:panelGroup >
+                            <p:autoComplete style="width: 71%" id="GlAccount_ID_to" 
+
+                                            dropdown="true"
+                                            converter="#{invNoticeFormMB.glAccountConverter}"
+                                            value="#{invNoticeFormMB.invNoticeEntity.accountId}"
+                                            var="account"
+                                            itemLabel="#{account}" 
+                                            itemValue="#{account}" 
+                                            forceSelection="false" 
+                                            completeMethod="#{invNoticeFormMB.completeGlAccount}" >
+                            </p:autoComplete>
+                        </h:panelGroup>
+
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 50px" value="#{userData.userDDs['REMARK']}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:inputText  style="width: 50%!important" value="#{invNoticeFormMB.invNoticeEntity.remarks}" />
+                        </h:panelGroup>
+
+                    </h:panelGroup>
+
+
+
+                </h:panelGrid>             
+            </p:fieldset>
+            <p:commandButton style="margin-right: 40%" id="saveB" title="#{userData.userDDs['SAVE']}" value="#{userData.userDDs['SAVE']}" icon="fa fa-fw fa-save" action="#{invNoticeFormMB.save()}" update="@form"/>
+            <p:commandButton id="cancel" title="#{userData.userDDs['CANCEL']}" value="#{userData.userDDs['CANCEL']}" icon="fa fa-fw fa-save" action="#{invNoticeFormMB.exit()}" update="@form"/>
+
+            <p:blockUI block="form" trigger="saveB" animate="true" >
+
+                <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+            </p:blockUI> 
+        </h:form>
+    </ui:define>
+</ui:composition>
+
+

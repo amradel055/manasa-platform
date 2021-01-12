@@ -1,0 +1,329 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <link rel="stylesheet" type="text/css" href="../../resources/css/main.css" />
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <div class="col-xs-12">
+            <p:messages autoUpdate="true"  showDetail="true" closable="true" rendered="true" />
+        </div>
+        <h:form id ="form" style="margin-right: 20px"  dir="#{userData.dir}">
+
+            <div style=" position: absolute;left: 20px"> 
+
+                <p:commandButton  style="width: 90px;background-image: none!important;z-index: 2" 
+                                  class="viewButton searchButton"
+                                  value="Hide/Show"/>  
+            </div>
+
+            <p:fieldset id="head" legend="#{userData.userDDs['COST_CENTER_BALANC']}" 
+                        style=" position: relative">
+
+                <div class="ui-g-12 ui-g-nopad firstset">
+                    <div class="ui-g">
+
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+                                <h:panelGroup> 
+                                    <p:outputLabel  style="width: 60px" value="#{userData.userDDs['FROM_COST_CENTER']}" for="Cost_Center_From"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:autoComplete  id="Cost_Center_From" 
+                                                     dropdown="true"
+                                                     converter="#{costCenterBalancesReportMB.costCenterConverterFrom}"
+                                                     value="#{costCenterBalancesReportMB.costCenterFromSelected}"
+                                                     style="width: 75%!important"
+                                                     var="cost"
+                                                     itemLabel="#{cost}" 
+                                                     itemValue="#{cost}" 
+                                                     forceSelection="true" 
+                                                     completeMethod="#{costCenterBalancesReportMB.completeCostCenterFrom}" >
+
+                                        <p:ajax update="@form"
+                                                event="itemSelect"
+                                                listener="#{costCenterBalancesReportMB.updateCostCenterTo}" />
+                                        <p:ajax update="@form"
+                                                event="change"
+                                                listener="#{costCenterBalancesReportMB.updateCostCenterTo}" />
+                                    </p:autoComplete>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup> 
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 60px" value="#{userData.userDDs['COST_CENTER_TO']}" for="COST_CENTER_TO"/>
+                                </h:panelGroup>
+                                <h:panelGroup >
+                                    <p:autoComplete  id="COST_CENTER_TO" 
+                                                     dropdown="true"
+                                                     converter="#{costCenterBalancesReportMB.costCenterConverterTo}"
+                                                     value="#{costCenterBalancesReportMB.costCenterToSelected}"
+                                                     style="width: 75%"
+                                                     var="cost"
+                                                     itemLabel="#{cost}" 
+                                                     itemValue="#{cost}" 
+                                                     forceSelection="true" 
+                                                     completeMethod="#{costCenterBalancesReportMB.completeCostCenterTo}" >
+
+
+                                    </p:autoComplete>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 60px"  value="#{userData.userDDs['FROM_ACCOUNT']}" for="GlAccount_ID_from" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:autoComplete  id="GlAccount_ID_from" 
+                                                     style="width: 75%"
+                                                     dropdown="true"
+                                                     converter="#{costCenterBalancesReportMB.accountConverter}"
+                                                     value="#{costCenterBalancesReportMB.glAccountSelectedFrom}"
+                                                     var="p"
+                                                     itemLabel="#{p}" 
+                                                     itemValue="#{p}" 
+                                                     forceSelection="false" 
+                                                     completeMethod="#{costCenterBalancesReportMB.completeGlAccount}" >
+                                    </p:autoComplete>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 60px" value="#{userData.userDDs['TO_ACCOUNT']}" for="GlAccount_ID_to"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:autoComplete  id="GlAccount_ID_to" 
+                                                     style="width: 75%"
+                                                     dropdown="true"
+                                                     converter="#{costCenterBalancesReportMB.accountConverter}"
+                                                     value="#{costCenterBalancesReportMB.glAccountSelectedTo}"
+                                                     var="p"
+                                                     itemLabel="#{p}" 
+                                                     itemValue="#{p}" 
+                                                     forceSelection="false" 
+                                                     completeMethod="#{costCenterBalancesReportMB.completeGlAccount}" >
+                                    </p:autoComplete>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>   
+
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 60px" value="#{userData.userDDs['YEAR_FROM']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:calendar  style="width: 55%!important" id="dateFrom" value="#{costCenterBalancesReportMB.complexRevisionBalanceSearchBeanA.periodFrom}" pattern="dd/MM/yyyy" >
+                                    </p:calendar>
+
+                                </h:panelGroup>
+
+                            </h:panelGroup>   
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup> 
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 60px" value="#{userData.userDDs['YEAR_TO']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:calendar  style="width: 55%!important" id="dateTo" value="#{costCenterBalancesReportMB.complexRevisionBalanceSearchBeanA.periodTo}" pattern="dd/MM/yyyy" >
+                                    </p:calendar>
+
+                                </h:panelGroup>  
+                            </h:panelGroup> 
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>  
+
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 60px" value="#{userData.userDDs['FROM_LEVEL']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText  style="width: 55%!important" value="#{costCenterBalancesReportMB.complexRevisionBalanceSearchBeanA.levelFrom}"/>
+                                </h:panelGroup>
+
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>   
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 60px"  value="#{userData.userDDs['TO_LEVEL']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText  style="width: 55%!important" value="#{costCenterBalancesReportMB.complexRevisionBalanceSearchBeanA.levelTo}"/>
+                                </h:panelGroup>
+                            </h:panelGroup>  
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>   
+
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 60px!important" value="#{userData.userDDs['FINANAC_YEAR']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:selectOneMenu  id="year" filter="true" 
+                                                      style="width: 55%!important"
+                                                      filterMatchMode="contains"   
+                                                      value="#{costCenterBalancesReportMB.glYearSelection}" 
+                                                      converter="#{costCenterBalancesReportMB.glYearConverter}"   >
+                                        <p:ajax update="dateFrom dateTo" listener="#{costCenterBalancesReportMB.pushGlYearSelection()}" />
+                                        <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"  itemValue="" />
+                                        <f:selectItems value="#{costCenterBalancesReportMB.glYearList}"  var="year" itemLabel="#{year.name}" itemValue="#{year}"/>
+                                    </p:selectOneMenu>
+                                </h:panelGroup>
+
+                            </h:panelGroup> 
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </p:fieldset>
+
+            <p:fieldset style=" margin: 10px 0">
+
+                <h:panelGrid  class="col-md-12 centerButtons" columns="1" style="margin-top: 2%">
+                    <h:panelGroup>    
+
+
+                        <p:commandButton class="searchButton" 
+                                         icon="fa fa-fw fa-search-plus"
+                                         id="savbtn"  value="#{userData.userDDs['SEARCH']}" 
+                                         action="#{costCenterBalancesReportMB.startSearch}"
+                                         update="dataTable "/>                   
+
+                        <p:commandButton  class="newButton"   icon="fa fa-fw fa-plus"
+                                          value="#{userData.userDDs['NEW']}"
+                                          action="#{costCenterBalancesReportMB.resetSome}" 
+                                          id="newB"  update="dataTable"  />                   
+
+                        <p:commandButton class="printButton"  icon="fa fa-fw fa-print"
+                                         ajax="false" onclick="form.target = '_blank'"  value="#{userData.userDDs['PRINT']}" actionListener="#{costCenterBalancesReportMB.exportPDF}"/>
+
+                        <h:commandLink class="sdcreenimg">  
+                            <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                            <p:dataExporter type="xls"
+                                            target="dataTable" 
+                                            fileName="تقرير مراكز التكاليف"
+                                            postProcessor="#{costCenterBalancesReportMB.postProcessXLS}" />  
+                        </h:commandLink>
+
+
+                        <p:blockUI block="form" trigger="savbtn  newB" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI> 
+
+                    </h:panelGroup>   
+
+                </h:panelGrid>
+
+            </p:fieldset>
+
+            <p:fieldset>
+
+
+                <p:dataTable 
+                    id="dataTable" 
+                    value="#{costCenterBalancesReportMB.incomeMenuBeanCombinedViewList}"
+                    widgetVar="costCenter"
+                    var="menu" 
+                    rows="20"
+                    paginator="true"
+                    sortBy="#{menu.parent}" expandableRowGroups="true">
+
+                    <f:facet name="header" class="col-md-12">
+
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large;" />
+                            <p:inputText   id="globalFilter"   onkeyup="PF('costCenter').filter()" style="width: 50%important" />
+                        </p:outputPanel>
+
+                    </f:facet>
+
+                    <p:headerRow>
+                        <p:column  style="width: 15vh;font-size: 1.8vh;" >
+                            <h:outputText value="#{menu.accountGroup}" />
+                        </p:column>
+
+                        <p:column>
+
+                        </p:column>
+
+                        <p:column >
+
+                        </p:column>
+
+                        <p:column colspan="3">
+                            <h:outputText  value="#{menu.parent}" />
+                        </p:column>
+                    </p:headerRow>
+
+                    <p:column style="width: 15vh;font-size: 1.8vh;" 
+                              filterBy="#{menu.accountNumber}"  filterMatchMode="contains" sortBy="#{menu.accountNumber}" filterable="false"
+                              headerText="#{userData.userDDs['ACCOUNT_COD']}"  >
+                        <h:outputText value="#{menu.accountNumber}"   style="width: 15vh;font-size: 1.8vh;text-align: center!important" />
+                    </p:column>
+                    <p:column  style="width: 15vh;font-size: 1.8vh;" 
+                               filterBy="#{menu.accountName}"  filterMatchMode="contains" sortBy="#{menu.accountName}" filterable="false"
+                               headerText="#{userData.userDDs['ACCOUNT_NAME']}" >#{userData.userDDs['']}
+                        <h:outputText value="#{menu.accountName}" />
+                    </p:column>
+                    <p:column   style="width: 8vh;font-size: 1.8vh;"
+                                filterBy="#{menu.level}"  filterMatchMode="contains" sortBy="#{menu.level}" filterable="false"
+                                headerText="#{userData.userDDs['LEVEL']}" >#{userData.userDDs['']}
+                        <h:outputText value="#{menu.level}" style="font-size:12px" rendered="#{menu.appearenceOfTotal eq false}"/>
+                    </p:column>
+                    <p:column style="width: 15vh;font-size: 1.8vh;" 
+                              filterBy="#{menu.debit}"  filterMatchMode="contains" sortBy="#{menu.debit}" filterable="false"
+                              headerText="#{userData.userDDs['DEBIT']}" >
+                        <p:inputNumber readonly="true" value=" #{menu.debit}"   style="width: 90%;" />
+                    </p:column>
+                    <p:column style="width: 15vh;font-size: 1.8vh;"
+                              filterBy="#{menu.CREDIT}"  filterMatchMode="contains" sortBy="#{menu.CREDIT}" filterable="false"
+                              headerText="#{userData.userDDs['CREDIT']}" >
+                        <p:inputNumber readonly="true" value=" #{menu.credit}" style="width: 90%;"/>
+                    </p:column>
+                    <p:column style="width: 15vh;font-size: 1.8vh;" 
+                              headerText="#{userData.userDDs['BALANCE']}" 
+                              filterBy="#{menu.balance}"  filterMatchMode="contains" sortBy="#{menu.balance}" filterable="false"
+                              >
+                        <p:inputNumber readonly="true" value="#{menu.balance}" style="width: 90%;"/>
+                    </p:column>
+                    <p:summaryRow>
+                        <p:column colspan="3" >
+                            <h:outputText value="#{userData.userDDs['TOTAL']}"/>
+                        </p:column>   
+
+                        <p:column  >
+                            <h:outputText value="#{menu.debitBalance}"/>
+                        </p:column>     
+                        <p:column  >
+                            <h:outputText value="#{menu.creditBalance}"/>
+                        </p:column>                   
+                        <p:column  >
+                            <h:outputText value="#{menu.firstDurationBalance}"/>
+                        </p:column>                   
+                    </p:summaryRow>
+                </p:dataTable> 
+
+            </p:fieldset>
+
+        </h:form>
+    </ui:define>
+</ui:composition>

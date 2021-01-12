@@ -1,0 +1,443 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <link rel="stylesheet" type="text/css" href="../../resources/css/main.css" />
+    <ui:define name="content">
+        <div class="col-xs-12">
+            <p:messages autoUpdate="true"  showDetail="true" closable="true" rendered="true"/>
+        </div>
+        <f:event listener="#{userData.authorize}"  type="preRenderView" />
+        <h:head>
+            <title>#{userData.userDDs['ACCOUNT_REPORT']}</title>
+        </h:head>
+        <style>
+
+            .ui-widget-content .ui-state-default,
+            .ui-widget-header .ui-state-default {
+                border: 1px solid #c5dbec;
+                background:#fff;
+            }
+
+        </style>
+        <h:body>
+            <h:form  style="margin-right: 20px" id="form">
+
+                <div style=" position: absolute;left: 20px"> 
+
+                    <p:commandButton  style="width: 90px;background-image: none!important;z-index: 2" 
+                                      class="viewButton searchButton"
+                                      value="Hide/Show"/>  
+                </div>
+
+                <p:fieldset legend="#{userData.userDDs['JOURN_ENT_DET']}"
+                            style=" position: relative">
+                  
+                    <div class="firstset">
+                       
+                        <div class="ui-g">
+
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 70px" value="#{userData.userDDs['FROM_JOURNAL_DOCUMENT_TYPE']}" />
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:inputText style="width: 57%!important;" a:autofocus="true" value="#{journalDocumentReportMB.journalDocumentsReportSearchBean.documentNumForm}"/>
+                                    </h:panelGroup>
+
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 70px"  value="#{userData.userDDs['TO_JOURNAL_DOCUMENT_TYPE']}" />
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:inputText style="width: 57%!important;"  value="#{journalDocumentReportMB.journalDocumentsReportSearchBean.documentNumTo}"/>
+                                    </h:panelGroup>
+
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 70px" value="#{userData.userDDs['FROM_JOURNAL_NUMBER']}" />
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:inputText style="width: 57%!important;" value="#{journalDocumentReportMB.journalDocumentsReportSearchBean.journalNumForm}"/>
+                                    </h:panelGroup>
+
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 70px" value="#{userData.userDDs['TO_JOURNAL_NUMBER']}" />
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:inputText style="width: 57%!important;" value="#{journalDocumentReportMB.journalDocumentsReportSearchBean.journalNumTo}"/>
+                                    </h:panelGroup>
+
+                                </h:panelGroup>
+
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 70px" value="#{userData.userDDs['YEAR_FROM']}" />
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:calendar style="width: 57%!important;" id="dateFrom"
+                                                    value="#{journalDocumentReportMB.journalDocumentsReportSearchBean.periodFrom}"
+                                                    pattern="dd/MM/yyyy" 
+                                                    showButtonPanel="true">
+                                            <p:ajax listener="#{journalDocumentReportMB.checkDate(true)}" event="dateSelect" update="dateFrom"/>
+                                        </p:calendar>
+
+                                    </h:panelGroup>
+
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+
+
+                                <h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 70px" value="#{userData.userDDs['YEAR_TO']}" />
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:calendar style="width: 57%!important;" id="dateTo"
+                                                    value="#{journalDocumentReportMB.journalDocumentsReportSearchBean.periodTo}"
+                                                    pattern="dd/MM/yyyy"  
+                                                    showButtonPanel="true">
+                                            <p:ajax listener="#{journalDocumentReportMB.checkDate(false)}" event="dateSelect" update="dateTo"/>
+                                        </p:calendar>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 70px" value="#{userData.userDDs['FROM_ACCOUNT']}" for="GlAccount_ID_from" />
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:autoComplete style="width: 75%!important;;margin-right:.5%;margin-right:.5%" id="GlAccount_ID_from" 
+
+                                                        dropdown="true"
+                                                        converter="#{journalDocumentReportMB.accountConverter}"
+                                                        value="#{journalDocumentReportMB.glAccountSelectedFrom}"
+                                                        var="p"
+                                                        itemLabel="#{p}" 
+                                                        itemValue="#{p}" 
+                                                        forceSelection="false" 
+                                                        completeMethod="#{journalDocumentReportMB.completeGlAccount}" >
+                                        </p:autoComplete>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 70px" value="#{userData.userDDs['TO_ACCOUNT']}" for="GlAccount_ID_to"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:autoComplete style="width: 75%!important;;margin-right:.5%;margin-right:.5%" id="GlAccount_ID_to" 
+
+                                                        dropdown="true"
+                                                        converter="#{journalDocumentReportMB.accountConverter}"
+                                                        value="#{journalDocumentReportMB.glAccountSelectedTo}"
+                                                        var="p"
+                                                        itemLabel="#{p}" 
+                                                        itemValue="#{p}" 
+                                                        forceSelection="false" 
+                                                        completeMethod="#{journalDocumentReportMB.completeGlAccount}" >
+                                        </p:autoComplete>
+                                    </h:panelGroup>
+
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>
+                                    <h:panelGroup> 
+                                        <p:outputLabel style="width: 70px" value="#{userData.userDDs['FROM_COST_CENTER']}" for="Cost_Center_From"/>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:autoComplete style="width:75%!important;" id="Cost_Center_From" 
+                                                        dropdown="true"
+                                                        converter="#{journalDocumentReportMB.costCenterConverter}"
+                                                        value="#{journalDocumentReportMB.costCenterFromSelected}"
+
+                                                        var="cost"
+                                                        itemLabel="#{cost}" 
+                                                        itemValue="#{cost}" 
+                                                        forceSelection="true" 
+                                                        completeMethod="#{journalDocumentReportMB.completeCostCenter}" >
+                                        </p:autoComplete>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup> 
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 70px" value="#{userData.userDDs['COST_CENTER_TO']}" for="COST_CENTER_TO"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:autoComplete style="width:75%!important;" id="COST_CENTER_TO" 
+                                                        dropdown="true"
+                                                        converter="#{journalDocumentReportMB.costCenterConverter}"
+                                                        value="#{journalDocumentReportMB.costCenterToSelected}"
+
+                                                        var="cost"
+                                                        itemLabel="#{cost}" 
+                                                        itemValue="#{cost}" 
+                                                        forceSelection="true" 
+                                                        completeMethod="#{journalDocumentReportMB.completeCostCenter}" >
+                                        </p:autoComplete>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 70px" value="#{userData.userDDs['FROM_ADMIN_UNIT']}" for="ADMIN_UNIT_FROM"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:autoComplete style="width:75%!important;" id="ADMIN_UNIT_FROM" 
+                                                        dropdown="true"
+                                                        converter="#{journalDocumentReportMB.glAdminUnitConverter}"
+                                                        value="#{journalDocumentReportMB.glAdminUnitFromSelected}"
+
+                                                        var="admin"
+                                                        itemLabel="#{admin}" 
+                                                        itemValue="#{admin}" 
+                                                        forceSelection="true" 
+                                                        completeMethod="#{journalDocumentReportMB.completeAdminUnit}" >
+
+
+                                        </p:autoComplete>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 70px" value="#{userData.userDDs['TO_ADMIN_UNIT']}" for="ADMIN_UNIT_TO"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:autoComplete style="width:75%!important;" id="ADMIN_UNIT_TO" 
+                                                        dropdown="true"
+                                                        converter="#{journalDocumentReportMB.glAdminUnitConverter}"
+                                                        value="#{journalDocumentReportMB.glAdminUnitToSelected}"
+
+                                                        var="admin"
+                                                        itemLabel="#{admin}" 
+                                                        itemValue="#{admin}" 
+                                                        forceSelection="true" 
+                                                        completeMethod="#{journalDocumentReportMB.completeAdminUnit}" >
+
+
+                                        </p:autoComplete>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 60px;margin-bottom: 5%;margin-right: 1%" value="#{userData.userDDs['FINANCE_YEAR']}"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:selectOneMenu style="width: 57%!important;;margin-right: 1%" id="year" filter="true" filterMatchMode="contains"  
+                                                         value="#{journalDocumentReportMB.glYearSelection}"
+                                                         converter="#{journalDocumentReportMB.glYearConverter}"  >
+                                            <p:ajax update="dateFrom dateTo" listener="#{journalDocumentReportMB.pushGlYearSelection()}" />
+                                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"  itemValue="" />
+                                            <f:selectItems value="#{journalDocumentReportMB.glYearList}"  var="year" itemLabel="#{year.name}" itemValue="#{year}"/>
+                                        </p:selectOneMenu>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 70px" value="قيمة المبلغ" />
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:inputText style="width: 57%!important;" a:autofocus="true" value="#{journalDocumentReportMB.journalDocumentsReportSearchBean.value}"/>
+                                    </h:panelGroup>
+
+                                </h:panelGroup>
+                            </div>
+                        </div>
+
+                    </div>
+                </p:fieldset>
+
+                <p:fieldset  style=" margin: 10px 0">
+
+                    <h:panelGrid class="col-md-12 centerButtons" columns="1">
+                        <h:panelGroup>
+
+
+                            <p:commandButton  class="searchButton"  icon="fa fa-fw fa-search-plus" 
+                                              id="searchS"
+                                              value="#{userData.userDDs['SEARCH']}" action="#{journalDocumentReportMB.search2()}" 
+                                              update="dataTable" />
+                            <p:commandButton  class="newButton"   icon="fa fa-fw fa-plus"
+                                              id="newN"
+                                              value="#{userData.userDDs['NEW']}" action="#{journalDocumentReportMB.reset}" update="form" />
+                            <p:commandButton  class="printButton"  icon="fa fa-fw fa-print"
+                                              ajax="false" onclick="form.target = '_blank'"  value="#{userData.userDDs['PRINT']}" 
+                                              actionListener="#{journalDocumentReportMB.exportPDF}"/>
+
+                            <h:commandLink class="sdcreenimg">  
+                                <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                                <p:dataExporter type="xls"
+                                                target="dataTable" 
+                                                fileName="قيد اليومية تفصيلي"
+                                                postProcessor="#{journalDocumentReportMB.postProcessXLS}" />  
+                            </h:commandLink>
+
+                            <p:blockUI block="form" trigger="searchS  newN" animate="true" >
+
+                                <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                            </p:blockUI> 
+
+                        </h:panelGroup>
+
+                    </h:panelGrid>
+
+                </p:fieldset>
+
+                <p:fieldset>
+
+                    <p:dataTable id="dataTable" 
+                                 widgetVar="journal"
+                                 draggableColumns="true" 
+                                 paginator="true"
+                                  rows="20"
+                                 value="#{journalDocumentReportMB.journalDocumentReportBeanList}" var="journal">
+
+                        <f:facet name="header" class="col-md-12">
+
+                            <p:outputPanel>
+                                <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large;" />
+                                <p:inputText id="globalFilter" a:autofocus="true" onkeyup="PF('journal').filter()" style="width: 50%important" />
+                            </p:outputPanel>
+                        </f:facet>
+
+                        <p:column style="width: 4vh;font-size: 1.8vh;text-align: -webkit-auto" >
+                            <p:rowToggler />
+                        </p:column>
+                        <p:column style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto" 
+                                  filterBy="#{journal.journalNum}"  filterMatchMode="contains" sortBy="#{journal.journalNum}" filterable="false"
+                                  headerText="#{userData.userDDs['GENERAL_NUMBER']}">
+                            <h:outputText value="#{journal.journalNum}" style="font-size: 12px"/>
+                        </p:column>
+                        <p:column style="width: 8vh;font-size: 1.8vh;text-align: -webkit-auto" 
+                                  filterBy="#{journal.documentNum}"  filterMatchMode="contains" sortBy="#{journal.documentNum}" filterable="false"
+                                  headerText="#{userData.userDDs['DOCUMENT_NUMBER']}">
+                            <h:outputText value="#{journal.documentNum}" style="font-size: 12px"/>
+                        </p:column>
+                        <p:column style="width: 12vh;font-size: 1.8vh;text-align: -webkit-auto" 
+                                  filterBy="#{journal.journalDate}"  filterMatchMode="contains" sortBy="#{journal.journalDate}" filterable="false"
+                                  headerText="#{userData.userDDs['DATEE']}">
+                            <h:outputText value="#{journal.journalDate}" style="font-size: 12px">
+                                <f:convertDateTime id="datee"  pattern="yyyy-MM-dd"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column style="width: 12vh;font-size: 1.8vh;text-align: -webkit-auto" 
+                                  filterBy="#{journal.postFlag}"  filterMatchMode="contains" sortBy="#{journal.postFlag}" filterable="false"
+                                  headerText="#{userData.userDDs['REVISION_ENTRIES']}">
+                            <h:outputText value="#{journal.postFlag}" style="font-size: 12px"/>
+                        </p:column>
+                        <p:column style="width: 12vh;font-size: 1.8vh;text-align: -webkit-auto"
+                                  filterBy="#{journal.posting}"  filterMatchMode="contains" sortBy="#{journal.posting}" filterable="false"
+                                  headerText="#{userData.userDDs['ENTRY_WEIGHT']}">
+                            <h:outputText value="#{journal.posting}" style="font-size: 12px"/>
+                        </p:column>
+
+                        <p:column style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto"
+                                  filterBy="#{journal.user}"  filterMatchMode="contains" sortBy="#{journal.user}" filterable="false"
+                                  headerText="#{userData.userDDs['JOURNAL_ADDED_BY']}">
+                            <h:outputText value="#{journal.user}" style="font-size: 12px"/>
+                        </p:column>
+                        <p:column style="width: 15vh;font-size: 1.8vh;text-align: -webkit-auto" 
+                                  filterBy="#{journal.remarks}"  filterMatchMode="contains" sortBy="#{journal.remarks}" filterable="false"
+                                  headerText="#{userData.userDDs['GERNAL_STATEMENT']}">
+                            <h:outputText value="#{journal.remarks}" style="font-size: 12px"/>
+                        </p:column>
+
+                        <p:rowExpansion>
+                            <p:dataTable id="dataTable2" 
+                                         style="background-color:#2e6e9e "
+                                         draggableColumns="true" 
+                                         value="#{journal.journalDocumentDailyReportBeanList}"
+                                         var="journalDetail">
+
+                                <f:facet name="header" class="col-md-12">
+                                    <h:commandLink style="">  
+                                        <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                                        <p:dataExporter type="xls"
+                                                        target="dataTable2" 
+                                                        fileName="قيد اليومية تفصيلي"
+                                                        postProcessor="#{journalDocumentReportMB.postProcessXLS}" />  
+                                    </h:commandLink>
+                                </f:facet>
+
+                                <p:column style="width: 10vh;font-size: 1.6vh;text-align: -webkit-auto;color: #fff"  headerText="#{userData.userDDs['DEBIT']}">
+                                    <p:inputNumber  style="width: 95%;color: #000" readonly="true"  value="#{journalDetail.debitAmount}"/>
+                                </p:column>
+
+                                <p:column style="width: 14vh;font-size: 1.6vh;text-align: -webkit-auto;color: #fff"  headerText="#{userData.userDDs['CREDIT']}">
+                                    <p:inputNumber readonly="true"  value="#{journalDetail.creditAmount}"/>
+                                </p:column>
+
+                                <p:column style="width: 14vh;font-size: 1.6vh;text-align: -webkit-auto;color: #fff"  headerText="#{userData.userDDs['ACCOUNT_NUMBER']}">
+                                    <h:outputText  style=";color: #000" value="#{journalDetail.accountNumber}"/>
+                                </p:column>
+
+                                <p:column style="width: 10vh;font-size: 1.6vh;text-align: -webkit-auto;color: #fff"  headerText="#{userData.userDDs['ACCOUNT_NAME']}">
+                                    <h:outputText style="color: #000" value="#{journalDetail.accountName}"/>
+                                </p:column>
+
+                                <p:column style="width: 15vh;font-size: 1.6vh;text-align: -webkit-auto;color: #fff"  headerText="#{userData.userDDs['SINGLE_COST_CENTER']}">
+                                    <h:outputText style="color: #000" value="#{journalDetail.costCenterName}"/>
+                                </p:column>
+
+                                <p:column style="width: 10vh;font-size: 1.6vh;text-align: -webkit-auto;color: #fff"  headerText="#{userData.userDDs['ADMIN_UNIT']}">
+                                    <h:outputText  style="color: #000" value="#{journalDetail.adminUnitName}"/>
+                                </p:column>
+
+                                <p:column style="width: 10vh;font-size: 1.6vh;text-align: -webkit-auto;color: #fff"  headerText="#{userData.userDDs['NOTE']}">
+                                    <h:outputText  style="color: #000"  value="#{journalDetail.discribtion}"/>
+                                </p:column>
+
+                            </p:dataTable>
+                        </p:rowExpansion>
+
+                    </p:dataTable>
+                </p:fieldset>
+            </h:form>
+        </h:body>
+    </ui:define>
+</ui:composition>

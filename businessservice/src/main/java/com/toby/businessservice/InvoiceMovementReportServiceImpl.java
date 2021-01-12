@@ -1,0 +1,137 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.toby.businessservice;
+
+import com.toby.core.GenericDAO;
+import com.toby.dto.PrintProductionDTO;
+import com.toby.views.InvoiceMovementReport;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+
+/**
+ *
+ * @author Toby
+ */
+@Stateless
+public class InvoiceMovementReportServiceImpl implements InvoiceMovementReportService {
+
+    @EJB
+    private GenericDAO dao;
+
+    @Override
+    public List<InvoiceMovementReport> searchReport(PrintProductionDTO printProductionDTO, Integer branchId) {
+        StringBuilder query = new StringBuilder();
+        query.append("select ipi.serial as serial , ios.name as customerName , inv.name as inventoryName , pfd.date , pfd.type from pro_factory_delivery pfd \n").
+                append(" left join inv_purchase_invoice ipi on ipi.id = pfd.inv_purchase_invoice_id\n").
+                append(" left join inv_organization_site ios on ios.id = ipi.organization_site_id\n").
+                append(" left join inv_inventory inv on inv.id = ipi.inv_inventory_id ").append(" left join inv_inventory inv2 on inv2.id = ipi.galary_Id ").
+                append(" where ipi.branch_id = \n ").
+                append(branchId).append(" ").
+                append(appendProProductionInvoice(printProductionDTO)).
+                append(appendGallary(printProductionDTO)).
+                append(appendDateInvoice(printProductionDTO)).
+                append(" union all select ipi.serial as serial , ios.name as customerName , inv.name as inventoryName , ipi.date , 3 from inv_purchase_invoice ipi\n").
+                append(" left join inv_organization_site ios on ios.id = ipi.organization_site_id\n").
+                append(" left join inv_inventory inv on inv.id = ipi.inv_inventory_id ").
+                append(" left join inv_inventory inv2 on inv2.id = ipi.galary_Id  ").
+                append(" where ipi.type = 1 AND ipi.branch_id = \n ").
+                append(branchId).append(" ").
+                append(appendProProductionInvoice(printProductionDTO)).
+                append(appendGallary(printProductionDTO)).
+                append(appendDateInvoice(printProductionDTO));
+
+        List<Object[]> res = dao.executeNativeQuery(query.toString());
+        List<InvoiceMovementReport> list = new ArrayList<>();
+        Map<Integer, InvoiceMovementReport> mapList = new HashMap<>();
+        InvoiceMovementReport invoiceMovementReport;
+        for (Object[] object : res) {
+            Integer invoiceSerial = (Integer) object[0];
+            Long type = (Long) object[4];
+            Date date = (Date) object[3];
+
+            if (mapList.containsKey(invoiceSerial)) {
+                invoiceMovementReport = mapList.get(invoiceSerial);
+            } else {
+                invoiceMovementReport = new InvoiceMovementReport();
+                invoiceMovementReport.setInvoiceSerial((Integer) object[0]);
+                invoiceMovementReport.setClientName((String) object[1]);
+                invoiceMovementReport.setInventoryName((String) object[2]);
+            }
+
+            if (type == 0) {
+                invoiceMovementReport.setFactoryDate(date);
+            } else if (type == 1) {
+                invoiceMovementReport.setDeliveryDate(date);
+            }
+            if (type == 2) {
+                invoiceMovementReport.setGalaryDate(date);
+            }
+            if (type == 3) {
+                invoiceMovementReport.setClientDate(date);
+            }
+
+            mapList.put(invoiceSerial, invoiceMovementReport);
+
+        }
+        list = new ArrayList(mapList.values());
+        return list;
+    }
+
+    private String appendProProductionInvoice(PrintProductionDTO productionDTO) {
+        StringBuilder query = new StringBuilder();
+        if (productionDTO.getFromInvoice() != null) {
+            query.append(" and ipi.serial >=  ").append(productionDTO.getFromInvoice().getSerial());
+        }
+
+        if (productionDTO.getToInvoice() != null) {
+            query.append(" and ipi.serial <=  ").append(productionDTO.getToInvoice().getSerial());
+        }
+        if (!query.toString().isEmpty()) {
+            return query.toString();
+        }
+        return "";
+    }
+    private String appendGallary(PrintProductionDTO productionDTO) {
+        StringBuilder query = new StringBuilder();
+        if (productionDTO.getGallaryFrom() != null) {
+            query.append(" and inv2.code >=  '").append(productionDTO.getGallaryFrom().getCode()).append("'");
+        }
+
+        if (productionDTO.getGallaryTo() != null) {
+            query.append(" and inv2.code <=  '").append(productionDTO.getGallaryTo().getCode()).append("'");
+        }
+        
+        if (!query.toString().isEmpty()) {
+            return query.toString();
+        }
+        
+        return "";
+    }
+    
+    private String appendDateInvoice(PrintProductionDTO productionDTO) {
+        StringBuilder query = new StringBuilder();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        if (productionDTO.getFromDate() != null) {
+            query.append(" and ipi.date >=  '").append( dateFormat.format(productionDTO.getFromDate())).append("'");
+        }
+
+        if (productionDTO.getToDate() != null) {
+            query.append(" and ipi.date <=  '").append( dateFormat.format(productionDTO.getToDate())).append("'");
+        }
+        if (!query.toString().isEmpty()) {
+            return query.toString();
+        }
+        return "";
+    }
+
+}

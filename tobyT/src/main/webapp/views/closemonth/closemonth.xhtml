@@ -1,0 +1,170 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml" >
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form id="form" dir="#{userData.dir}}" style="margin-right: 15px">
+
+            <p:fieldset legend="#{userData.userDDs['CLOSE_MONTHS']}" style="margin-bottom:20px">
+                <p:messages autoUpdate="true"  id="messages" showDetail="true" closable="true"/> 
+                <p:commandButton  class="scloseButton" icon="fa fa-fw fa-backward"  style="float: left;margin: 0; " action="exit" />
+                <p:dataTable id="table2" 
+                             draggableColumns="true" draggableRows="true"
+                             var="closemonth" 
+                             widgetVar="closetable"
+                             editable="true" 
+                             rowIndexVar="index" 
+                             selection="#{closeMonthBean.selectedCloseMonth}"
+                             selectionMode="single" 
+                             rowKey="#{closemonth}"
+                             value="#{closeMonthBean.closeMonths}"
+                             rows="#{userData.rowListMasterDetails}"
+                             paginator="true" 
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}">
+
+                    <f:facet name="header" class="col-md-12">
+                        <p:commandButton  class="saddButton" id="add" title="#{userData.userDDs['ADD']}"  
+                                         icon="fa fa-plus" actionListener="#{closeMonthBean.addRow()}"
+                                         style="float:right;margin: 0" update=":form:table2"
+                                         rendered="#{userData.userScreens['closemonth'].add or 
+                                                     userData.isAdmin}"/>
+                        <p:outputPanel >
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" a:autofocus="true"
+                                         onkeyup="PF('closetable').filter()" style="width:150px" />
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:column headerText="#" style="width: 5vh;text-align: -webkit-auto;font-size: 1.8vh">
+                        <h:outputText  value="#{index + 1}" style="font-size: 1.5vh"/>
+                    </p:column>
+
+                    <p:column filterStyle="display:none" 
+                              style="width: 10vh;text-align: -webkit-auto;font-size: 1.8vh"
+                              sortBy="#{closemonth.monthNumber}"
+                              filterBy="#{closemonth.monthNumber}" 
+                              filterMatchMode="contains"
+                              headerText="#{userData.userDDs['MONTH_NUMBER']}"  >
+
+                        <h:outputText  value="#{closemonth.monthNumber}" 
+                                       rendered="#{not closemonth.markEdit}" style="font-size: 1.5vh"/>
+
+                        <p:selectOneMenu  style="width: 100%" 
+                                          value="#{closeMonthBean.monthNumber}"
+                                          filter="true" filterMatchMode="startsWith" required="true" 
+                                          rendered="#{closemonth.markEdit}"  >
+                            <p:ajax listener="#{closeMonthBean.setMonthName}" update="month" />
+                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" noSelectionOption="true" />
+                            <f:selectItems value="#{closeMonthBean.monthsNumbers}"
+                                           var="number"
+                                           itemLabel="#{number}"
+                                           itemValue="#{number}" />
+                        </p:selectOneMenu>  
+                    </p:column>
+
+                    <p:column filterStyle="display:none" 
+                              style="width: 12vh;text-align: -webkit-auto;font-size: 1.8vh"
+                              sortBy="#{closemonth.monthName}"
+                              filterBy="#{closemonth.monthName}"  
+                              filterMatchMode="contains" 
+                              headerText="#{userData.userDDs['MONTH_NAME']}">
+
+                        <h:outputText value="#{closemonth.monthName}"
+                                      rendered="#{not closemonth.markEdit}" style="font-size: 1.5vh" />  
+                        <h:outputText id="month" 
+                                      value="#{closeMonthBean.monthNameValue}"
+                                      rendered="#{closemonth.markEdit}" />
+
+                    </p:column>
+
+                    <p:column filterStyle="display:none" style="width: 10vh;text-align: -webkit-auto;font-size: 1.8vh" 
+                              sortBy="#{closemonth.year.year}" 
+                              filterBy="#{closemonth.year.year}"  
+                              filterMatchMode="contains" 
+                              headerText="#{userData.userDDs['YEAR']}">
+
+                        <h:outputText  value="#{closemonth.year.year}"
+                                       rendered="#{not closemonth.markEdit}" 
+                                       style="font-size: 1.5vh " />
+
+                        <p:selectOneMenu style="width:100%" 
+                                         value="#{closemonth.year.id}"
+                                         required="true"
+                                         filter="true"
+                                         filterMatchMode="startsWith"  
+                                         rendered="#{closemonth.markEdit}"  >
+
+                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" 
+                                          itemValue="" 
+                                          noSelectionOption="true" />
+
+                            <f:selectItems value="#{closeMonthBean.glYears}"
+                                           var="gyear" 
+                                           itemLabel="#{gyear.year}"
+                                           itemValue="#{gyear.id}" />
+                        </p:selectOneMenu> 
+
+                    </p:column>
+
+                    <p:column headerText="#{userData.userDDs['CLOSE_MONTH']}" 
+                              style="width: 35vh;text-align: -webkit-auto;font-size: 1.8vh" >
+                        <h:selectBooleanCheckbox value="#{closemonth.status}" rendered="#{not closemonth.markEdit}" disabled="true" />
+                        <h:selectBooleanCheckbox value="#{closemonth.status}" rendered="#{ closemonth.markEdit}"/>
+                    </p:column>
+
+                    <p:column style="width: 8vh;text-align: -webkit-auto;font-size: 1.8vh">
+                        <p:commandButton  class="ssaveButton" update="@form"  id="saveB"
+                                         title="#{userData.userDDs['SAVE']}"
+                                          rendered="#{closemonth.markEdit and (userData.userScreens['closemonth'].add or userData.isAdmin)}"
+                                         action="#{closeMonthBean.save()}" icon="fa fa-fw fa-save" >
+                            <f:setPropertyActionListener value="#{closemonth}" target="#{closeMonthBean.selectedCloseMonth}" />
+                        </p:commandButton>
+                        
+                         <p:blockUI block="form" trigger="saveB" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI>
+                        
+                        <p:commandButton   class="sreloadButton" update="@form" title="#{userData.userDDs['RELOAD']}" rendered="#{closemonth.markEdit and (userData.userScreens['closemonth'].add or userData.isAdmin)}"
+                                           action="#{closeMonthBean.reload()}" icon="fa fa-fw fa-undo" style="size: auto" >
+                            <f:setPropertyActionListener value="#{closemonth}" target="#{closeMonthBean.selectedCloseMonth}" />
+                   
+                        </p:commandButton>
+                        
+                        <p:commandButton   class="seditButton" update="@form" 
+                                           title="#{userData.userDDs['EDIT']}" 
+                                           rendered="#{ not closemonth.markEdit and 
+                                                        (userData.userScreens['closemonth'].edit or userData.isAdmin)}"
+                                          action="#{closeMonthBean.edit()}" icon="fa fa-fw fa-edit"   >
+                            <f:setPropertyActionListener value="#{closemonth}" 
+                                                         target="#{closeMonthBean.selectedCloseMonth}" />
+                        </p:commandButton>
+                        
+                        <p:commandButton class="scloseButton" update="@form" 
+                                         title="#{userData.userDDs['DELETE']}" 
+                                         rendered="#{not closemonth.markEdit 
+                                                     and (userData.userScreens['closemonth'].delete 
+                                                     or userData.isAdmin)}"
+                                         action="#{closeMonthBean.delete()}" 
+                                         icon="fa fa-fw fa-remove" >
+                            <f:setPropertyActionListener value="#{closemonth}" target="#{closeMonthBean.selectedCloseMonth}"/>
+                            <p:confirm header="#{userData.userDDs['COFIGRATION']}" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                        </p:commandButton>
+                        
+                    </p:column>
+                </p:dataTable>
+                <p:confirmDialog style="width: 100px; height: 100px" global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                    <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:confirmDialog>  
+            </p:fieldset>     
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,204 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml" >
+    <ui:define name="content">
+        <h:head>
+            <title>#{userData.userDDs['CURRENCY_MANAGEMENT']}</title>
+            <style>
+                
+                .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+                    border: 1px solid #c5dbec;
+                    background:none;
+                }
+                
+                .ui-widget-content .ui-state-default{
+                        border: 1px solid #c5dbec;
+                        background:#fff
+                    }
+                    
+                
+            </style>
+        </h:head>
+        <h:form id="form" dir="#{userData.dir}" style="margin-right: 15px">
+            <p:fieldset legend="#{userData.userDDs['CURRENCY_MANAGEMENT']}">
+                <div class="col-xs-12">
+                    <p:messages id="curmsg" showDetail="true" rendered="#{currencyListBean.currencyMsg}" closable="true"/>   
+                </div>
+                <div >
+                    <p:commandButton class="scloseButton" icon="fa fa-fw fa-backward"  
+                                     
+                                     onclick="PF('dlg1').show();" style="float: left;"
+                                     title="#{userData.userDDs['EXIT']}" action="#{currencyListBean.exit}" immediate="true"/>
+                </div>
+                <f:event listener="#{userData.authorize}" type="preRenderView" />
+                <p:dataTable 
+                    draggableColumns="true" 
+                    widgetVar="curTable" id="currencylist" rows="#{userData.rowListMasterDetails}"   rowIndexVar="index" var="cur" 
+                             selection="#{currencyListBean.currencyselected}"
+                             selectionMode="single"   rowKey="#{cur}" value="#{currencyListBean.currencylist}"   paginator="true" emptyMessage="#{userData.userDDs['EMPTY_TABLE']}">
+
+                    <p:ajax  event="rowSelect"   listener="#{currencyListBean.onRowSelect}"  update=":form:currencyOperation"/>
+                    <p:ajax event="rowUnselect" listener="#{currencyListBean.onRowUnselect}"  />
+                    <f:facet name="header" class="col-md-12">
+                        <p:commandButton id="b2" icon="fa fa-plus"  class="saddButton" 
+                                         title="#{userData.userDDs['ADD']}" 
+                                         actionListener="#{currencyListBean.add}"
+                                         style="float:right" update="@form" ajax="true" 
+                                         rendered="#{userData.userScreens['currency'].add or userData.isAdmin}" />
+                        <p:selectOneMenu id="com" value="#{currencyListBean.selectedCompany}"  style="float:right" rendered="#{userData.isAdmin}" >
+                            <p:ajax listener="#{currencyListBean.onCompanyChange()}" update="currencylist" />
+                            <f:selectItem itemLabel="Select Company"  noSelectionOption="true" />
+                            <f:selectItems value="#{currencyListBean.companies}"  var="com" itemLabel="#{com.name}" itemValue="#{com.id}"/>
+                        </p:selectOneMenu>
+                        <p:outputPanel  >
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" a:autofocus="true" onkeyup="PF('curTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+                    </f:facet>
+                    <p:column   headerText="#" style="width: 4vh;text-align: -webkit-auto;font-size: 1.8vh">
+                        <h:outputText  value="#{index+1}" style="font-size: 1.5vh"/>
+                    </p:column>
+                    <p:column  filterStyle="display:none"  style="width: 12vh;text-align: -webkit-auto;font-size: 1.8vh"   sortBy="#{cur.serial}" filterBy="#{cur.serial}"  filterMatchMode="contains" headerText="#{userData.userDDs['CURRENCY_CODE']}">
+                        <h:outputText  value="#{cur.serial}" rendered="#{not cur.markEdit}" style="font-size: 1.5vh"/>
+                        <p:inputText value="#{cur.serial}" rendered="#{cur.markEdit}" style="width:100%" />
+                    </p:column>
+                    <p:column style="width: 25vh;text-align: -webkit-auto;font-size: 1.8vh" filterStyle="display:none" sortBy="#{cur.name}" filterBy="#{cur.name}"  filterMatchMode="contains" headerText=" #{userData.userDDs['NAME']} ">
+                        <h:outputText value="#{cur.name}" rendered="#{not cur.markEdit}"/>
+                        <p:inputText value="#{cur.name}" rendered="#{cur.markEdit}" style="width:100%"/>
+                    </p:column>
+                    <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.8vh" filterStyle="display:none" sortBy="#{cur.code}"
+                              filterBy="#{cur.code}"  filterMatchMode="contains"  headerText="#{userData.userDDs['CODE']}">
+                        <h:outputText value="#{cur.code}" rendered="#{not cur.markEdit}" style="font-size: 1.5vh"/>
+                        <p:inputText value="#{cur.code}" rendered="#{cur.markEdit}" style="width:100%"/>
+                    </p:column>
+                    <p:column style="width: 8vh;text-align: -webkit-auto;font-size: 1.8vh">
+                        <p:commandButton  class="ssaveButton" update=":form" title="#{userData.userDDs['SAVE']}" 
+                                          rendered="#{cur.markEdit and (userData.userScreens['currency'].add or userData.isAdmin)}"
+                                          action="#{currencyListBean.addCurrency()}" icon="fa fa-fw fa-save" 
+                                          id="saveB">
+                            <f:setPropertyActionListener value="#{cur}" target="#{currencyListBean.currencyselected}" />
+                        </p:commandButton>
+                        
+                        <p:blockUI block="form" trigger="saveB" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI>
+                        
+                         <p:commandButton  update=":form"  class="seditButton" title="#{userData.userDDs['EDIT']}" 
+                                          rendered="#{not cur.markEdit and (userData.userScreens['currency'].edit or userData.isAdmin)}"
+                                          action="#{currencyListBean.editCurrency()}" icon="fa fa-fw fa-edit" >
+                            <f:setPropertyActionListener value="#{cur}" target="#{currencyListBean.currencyselected}" />
+                        </p:commandButton>
+                        
+                        <p:commandButton  update=":form" class="scloseButton" title="#{userData.userDDs['DELETE']}" 
+                                          rendered="#{not cur.markEdit and (userData.userScreens['currency'].delete or userData.isAdmin)}"
+                                          action="#{currencyListBean.deleteCurrency()}" icon="fa fa-remove" >
+                            <f:setPropertyActionListener value="#{cur}" target="#{currencyListBean.currencyselected}" />
+                            <p:confirm header="#{userData.userDDs['COFIGRATION']}"  icon="ui-icon-alert"  message="#{userData.userDDs['ARE_YOU_SURE']}"/>
+                        </p:commandButton>
+                        
+                        <p:commandButton  update=":form" class="sreloadButton" title="#{userData.userDDs['RELOAD']}" 
+                                          rendered="#{cur.markEdit and (userData.userScreens['currency'].add or userData.isAdmin)}"
+                                         action="#{currencyListBean.reload()}" icon="fa fa-fw fa-undo" style="size: auto" >
+                            <f:setPropertyActionListener value="#{cur}" target="#{currencyListBean.currencyselected}" />
+                        </p:commandButton>
+                        
+                       
+                        
+                        <p:confirmDialog  global="true" showEffect="fade" hideEffect="fade" >
+                            <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton  title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column>
+                </p:dataTable>
+            </p:fieldset>
+
+            <p:fieldset legend="#{userData.userDDs['CURRENCY_OPERATION']}">
+                <div class="col-xs-12">
+                    <p:messages autoUpdate="true"  id="cupmsg" showDetail="true" closable="true" rendered="#{currencyListBean.operationMsg}" />   
+                </div>
+
+                <p:dataTable widgetVar="curopTable" id="currencyOperation" rows="#{userData.rowListMasterDetails}"  style="margin-bottom:20px" rowIndexVar="index" var="currOp" 
+                             selection="#{currencyListBean.selectedCurrencyOperation}" 
+                             selectionMode="single"   rowKey="#{currOp}" value="#{currencyListBean.currencyOperations}"   paginator="true" emptyMessage="#{userData.userDDs['EMPTY_TABLE']}">
+                    <f:facet name="header">
+                        <p:commandButton id="b2"  class="saddButton"  icon="fa fa-plus" 
+                                         title="#{userData.userDDs['ADD']}" actionListener="#{currencyListBean.addOperation}"
+                                         style="float:right" update="@form" 
+                                         rendered="#{userData.userScreens['currency'].add or userData.isAdmin}"  />
+                        <p:outputPanel  >
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('curopTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:column   headerText="#" style="width: 4vh;text-align: -webkit-auto;font-size: 1.8vh">
+                        <h:outputText  value="#{index+1}" style="font-size: 1.5vh"/>
+                    </p:column>
+                    <p:column filterStyle="display:none" style="width: 12vh;text-align: -webkit-auto;font-size: 1.8vh" sortBy="#{currOp.currencyId.name}" filterBy="#{currOp.currencyId.name}"  filterMatchMode="contains"  headerText="#{userData.userDDs['NAME_CURRENCY']}">
+                        <h:outputText value="#{currOp.currencyId.name}" style="font-size: 1.5vh" />
+                    </p:column>
+                    <p:column filterStyle="display:none" style="width: 12vh;text-align: -webkit-auto;font-size: 1.8vh" sortBy="#{currOp.operationDate}" filterBy="#{currOp.operationDate}"  filterMatchMode="contains" headerText="#{userData.userDDs['OPERATION_DATE']}" >
+                        <h:outputText id="datee" value="#{currOp.operationDate}" rendered="#{not currOp.markEdit}" style="font-size: 1.5vh" > 
+                            <f:convertDateTime id="datee"  pattern="yyyy-MM-dd"/> 
+                        </h:outputText>
+                        <p:calendar id="date" value="#{currOp.operationDate}" pattern="MM/dd/yyyy" rendered="#{currOp.markEdit}" style="width:100%"/>
+                    </p:column>
+                    <p:column filterStyle="display:none" style="width: 15vh;text-align: -webkit-auto;font-size: 1.8vh" sortBy="#{currOp.rate}" filterBy="#{currOp.rate}"  filterMatchMode="contains"  headerText="#{userData.userDDs['RATE']}">
+                        <h:outputText value="#{currOp.rate}" rendered="#{not currOp.markEdit}" style="font-size: 1.5vh" />
+                        <p:inputText value="#{currOp.rate}" rendered="#{currOp.markEdit}" style="width:100%"/>
+                    </p:column>
+
+                    <p:column headerText="#{userData.userDDs['NOTE']}" style="width: 10vh;text-align: -webkit-auto;font-size: 1.8vh">
+                        <h:outputText value="#{currOp.notes}" rendered="#{not currOp.markEdit}" style="font-size: 1.5vh"/>
+                        <p:inputText value="#{currOp.notes}" rendered="#{currOp.markEdit}" style="width:100%"/>
+                    </p:column>
+                   
+                    <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.8vh" >
+                        <p:commandButton  class="ssaveButton" update="@form"  title="#{userData.userDDs['SAVE']}" rendered="#{currOp.markEdit and (userData.userScreens['currency'].add or userData.isAdmin)}"
+                                         action="#{currencyListBean.addCurrencyOperation()}" icon="fa fa-fw fa-save" >
+                            <f:setPropertyActionListener value="#{currOp}" target="#{currencyListBean.selectedCurrencyOperation}" />
+                        </p:commandButton>
+                       
+                        <p:commandButton  class="sreloadButton" immediate="true"   update="@form" title="#{userData.userDDs['RELOAD']}" rendered="#{currOp.markEdit and (userData.userScreens['currency'].add or userData.isAdmin)}"
+                                         action="#{currencyListBean.reloadOpretions}" icon="fa fa-fw fa-undo" style="size: auto" >
+                            <f:setPropertyActionListener value="#{currOp}" target="#{currencyListBean.selectedCurrencyOperation}" />
+                        </p:commandButton>
+                       
+                        <p:commandButton  class="seditButton" update="@form" title="#{userData.userDDs['EDIT']}" 
+                                          rendered="#{not currOp.markEdit and (userData.userScreens['currency'].edit or userData.isAdmin)}"
+                                          action="#{currencyListBean.editCurrencyOperation()}" icon="fa fa-fw fa-edit"  >
+                            <f:setPropertyActionListener value="#{currOp}" target="#{currencyListBean.selectedCurrencyOperation}" />
+                        </p:commandButton>
+                  
+                        <p:commandButton   class="sdeleteButton" update="@form" title="#{userData.userDDs['DELETE']}" 
+                                           rendered="#{not currOp.markEdit and (userData.userScreens['currency'].delete or userData.isAdmin)}" 
+                                         action="#{currencyListBean.deleteCurrencyOperation()}" icon="fa fa-remove" >
+                            <f:setPropertyActionListener value="#{currOp}" target="#{currencyListBean.selectedCurrencyOperation}"/>
+                            <p:confirm header="#{userData.userDDs['COFIGRATION']}" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+                
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                   
+                    <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                   
+                    <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:confirmDialog>
+            </p:fieldset>
+        </h:form>
+
+
+
+    </ui:define>
+
+</ui:composition>

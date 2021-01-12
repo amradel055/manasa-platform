@@ -1,0 +1,248 @@
+﻿<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml" >
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:head>
+            <title>#{userData.userDDs['COST_CENTER']}</title>
+        </h:head>
+        <style>
+
+
+            .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+                border: 1px solid #c5dbec;
+                background:none;
+
+            </style>
+
+            <f:event listener="#{userData.authorize}" type="preRenderView" />
+            <p:fieldset styleClass="panelColumns" legend="#{userData.userDDs['COST_CENTER']}" style="margin-bottom:2px;margin-right: 17px">
+                    <h:form id="form">
+                        <p:messages autoUpdate="true"  id="messages" showDetail="true" closable="true" rendered="#{costCenterBean.showMessage}"/>   
+                       
+                            <div class="ui-g-12 ui-g-nopad" >
+                                <div class="ui-g">
+
+                                    <div class="ui-g-12 ui-md-4">
+                                        <h:panelGroup style="font-size: 35px">
+                                            <p:tree  value="#{costCenterBean.costCenterHierarchy}" var="doc" dir="#{userData.dir}"
+                                                     selectionMode="single" selection="#{costCenterBean.selectedCostCenter}"
+                                                     dynamic="false" id="csTree">
+                                                <p:ajax  event="select" update=":form:costCenterDetails" listener="#{costCenterBean.onNodeSelect}" />
+                                                <p:treeNode expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed" >
+                                                    <h:outputText value="#{doc.name}"/>
+                                                </p:treeNode>
+                                            </p:tree>  
+                                        </h:panelGroup>
+                                    </div>
+                                    <div class="ui-g-12 ui-md-8">
+                                        <h:panelGroup>
+                                            <p:fieldset legend="#{userData.userDDs['SINGLE_COST_CENTER']}" style="margin-bottom:20px">
+                                                <h:panelGrid id="costCenterDetails" columns="1"  class="col-md-12" rendered="#{userData.userScreens['costcenter'].add or userData.userScreens['costcenter'].edit or userData.isAdmin}">
+
+
+                                                    <h:panelGroup>
+
+                                                        <h:panelGroup>
+                                                            <p:outputLabel style="width: 70px" value="#{userData.userDDs['CCCODE']}*"  />  
+                                                        </h:panelGroup>
+                                                        <h:panelGroup>
+                                                            <p:inputText style="width: 50%!important"  id="costCode" a:autofocus="true" value="#{costCenterBean.selectedCS.code}" required="true" requiredMessage="#{userData.userDDs['REQUIRED']}">
+                                                                <p:ajax  event="keyup" update=":form:msgcode "  />
+                                                            </p:inputText>
+                                                            <p:message id="msgcode" for="costCode"/>
+
+                                                        </h:panelGroup>
+
+
+                                                    </h:panelGroup>
+
+
+                                                    <h:panelGroup>
+
+                                                        <h:panelGroup>
+                                                            <p:outputLabel style="width: 75px" value="#{userData.userDDs['CCNAME']}*" />  
+                                                        </h:panelGroup>
+                                                        <h:panelGroup>
+                                                            <p:inputText style="width: 50%!important"  id="costName" value="#{costCenterBean.selectedCS.name}" required="true" requiredMessage="#{userData.userDDs['REQUIRED']}">
+                                                                <p:ajax  event="keyup" update=":form:msgname " />
+                                                            </p:inputText>  
+                                                            <p:message id="msgname" for="costName"/>
+                                                        </h:panelGroup>
+
+
+                                                    </h:panelGroup>
+
+                                                    <h:panelGroup>
+
+                                                        <h:panelGroup>
+                                                            <p:outputLabel style="width: 75px" id="parentAcc" value="#{userData.userDDs['CS_PARENT_NAME']}" />  
+                                                        </h:panelGroup>
+                                                        <h:panelGroup>
+                                                            <p:selectOneMenu style="width: 50%!important;margin-right: 1%;margin-top: 1%" 
+                                                                             id="parentCenter" value="#{costCenterBean.selectedParentId}"               
+                                                                             required="false"  filterMatchMode="contains" filter="true" >
+                                                                <p:ajax listener="#{costCenterBean.selectParent}" update="level"  />
+                                                                <f:selectItem itemLabel="#{userData.userDDs['ROOT']}" />
+                                                                <f:selectItems value="#{costCenterBean.allCostCenters}" var="cs" itemLabel="#{cs.name}" itemValue="#{cs.id}" />
+                                                            </p:selectOneMenu>
+                                                        </h:panelGroup>
+
+                                                    </h:panelGroup>
+
+
+
+                                                    <h:panelGroup>
+
+                                                        <h:panelGroup>
+                                                            <p:outputLabel style="width: 80px" value="#{userData.userDDs['STATUS']}"/>
+                                                        </h:panelGroup>
+                                                        <h:panelGroup>
+                                                            <h:selectBooleanCheckbox style=""  id="active" value="#{costCenterBean.selectedCS.active}" />
+                                                        </h:panelGroup> 
+                                                        <h:panelGroup>
+                                                            <p:message for="active"/>
+                                                        </h:panelGroup>
+
+
+                                                    </h:panelGroup>
+
+
+                                                    <h:panelGroup>
+
+                                                        <h:panelGroup>
+                                                            <p:outputLabel  style="width: 75px;margin:1% 0" value="#{userData.userDDs['LEVEL']}"/>
+                                                        </h:panelGroup>
+
+                                                        <h:panelGroup>
+                                                            <p:outputLabel style="width: 50%;margin: 0 2% " id="level" 
+                                                                           value="#{costCenterBean.selectedCS.level}" 
+                                                                           />
+                                                        </h:panelGroup>
+
+                                                    </h:panelGroup>
+
+
+
+
+                                                    <h:panelGroup>
+                                                        <h:panelGroup>
+                                                            <p:outputLabel  value="#{userData.userDDs['BRANCH']} "  style="width: 75px;;margin:1.5% 0"/>
+                                                        </h:panelGroup>
+                                                        <h:panelGroup>  
+                                                            <p:outputLabel style="margin: 0 2%" id="branc" value="#{costCenterBean.selectedCS.branchId.nameAr}"  />
+                                                        </h:panelGroup>
+
+                                                    </h:panelGroup>
+
+                                                    <h:panelGroup>
+
+                                                        <h:panelGroup rendered="#{userData.isAdmin}">                       
+                                                            <p:outputLabel  value="#{userData.userDDs['COMPANY_NAME']} " rendered="#{userData.isAdmin}" />
+                                                        </h:panelGroup>
+                                                        <h:panelGroup rendered="#{userData.isAdmin}" >
+                                                            <p:outputLabel style="width: 100%" id="com" value="#{costCenterBean.selectedCS.companyId.name}"  />
+                                                            <p:message for="com"/>
+                                                        </h:panelGroup>
+
+
+                                                    </h:panelGroup>
+
+                                                </h:panelGrid>
+
+                                                <h:panelGrid class="centerButtons col-md-12" columns="1">
+
+                                                    <h:panelGroup> 
+
+
+
+                                                        <p:commandButton  value="#{userData.userDDs['SAVE']}" 
+                                                                          class="saveButton"  id="saveB"
+                                                                          title="#{userData.userDDs['SAVE']}"   
+                                                                          icon="fa fa-fw fa-save" 
+                                                                          action="#{costCenterBean.save()}" 
+                                                                          update="@form" 
+                                                                          rendered="#{userData.userScreens['costcenter'].add 
+                                                                                      or userData.isAdmin}"
+                                                                          validateClient="true"/>    
+
+                                                        <p:commandButton   value="#{userData.userDDs['ADD']}" class="addButton" 
+                                                                           title="#{userData.userDDs['ADD']}"
+                                                                           update=":form:costCenterDetails" actionListener="#{costCenterBean.add()}" 
+                                                                           icon="fa fa-fw fa-plus"  id="plus"
+                                                                           rendered="#{userData.userScreens['costcenter'].add or userData.isAdmin}"/>
+
+                                                        <p:blockUI block="form" trigger="saveB plus" animate="true" >
+
+                                                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                                                        </p:blockUI>
+
+                                                        <p:commandButton  value="#{userData.userDDs['DELETE']}" class="deleteButton"
+                                                                          title="#{userData.userDDs['DELETE']}"  update="@form" 
+                                                                          action="#{costCenterBean.delete()}" 
+                                                                          icon="fa fa-fw fa-remove" 
+                                                                          rendered="#{userData.userScreens['costcenter'].delete or userData.isAdmin}">
+                                                            <p:confirm header="#{userData.userDDs['COFIGRATION']}" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                                                        </p:commandButton>
+                                                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                                            <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                                            <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                                                        </p:confirmDialog>
+                                                        
+                                                        <p:commandButton class="closeButton" 
+                                                                         title="#{userData.userDDs['CANCEL']}" 
+                                                                         immediate="true" 
+                                                                         value="#{userData.userDDs['CANCEL']}" 
+                                                                         icon="fa fa-fw fa-backward" 
+                                                                         action="exit"   />
+
+                                                    </h:panelGroup>
+                                                    <p:blockUI block="saveB" trigger="saveB"/>
+
+
+                                                </h:panelGrid>
+
+                                                <h:panelGrid  columns="2" cellspacing="2" cellpadding="0" rendered="#{not (userData.userScreens['costcenter'].add or userData.userScreens['costcenter'].edit or userData.isAdmin)}">
+                                                    <h:panelGroup>
+                                                        <p:outputLabel value="#{userData.userDDs['CS_CODE']}" />  
+                                                    </h:panelGroup>
+                                                    <h:panelGroup>
+                                                        <p:inputText value="#{costCenterBean.selectedCS.code}" readonly="true" />
+                                                    </h:panelGroup>
+                                                    <h:panelGroup>
+                                                        <p:outputLabel value="#{userData.userDDs['CS_NAME']}" />  
+                                                    </h:panelGroup>
+                                                    <h:panelGroup>
+                                                        <p:inputText value="#{costCenterBean.selectedCS.name}" readonly="true" />  
+                                                    </h:panelGroup>
+                                                    <h:panelGroup>
+                                                        <p:outputLabel value="#{userData.userDDs['CS_PARENT_NAME']}" />  
+                                                    </h:panelGroup>
+                                                    <h:panelGroup>
+                                                        <p:inputText value="#{costCenterBean.selectedCS.parent.name}" readonly="true" />  
+                                                    </h:panelGroup>
+                                                    <h:panelGroup>
+                                                        <p:outputLabel for="bname" value="#{userData.userDDs['BRANCH']}  "/>
+                                                    </h:panelGroup>
+                                                    <h:panelGroup>
+                                                        <p:inputText id="bname"  value="#{costCenterBean.selectedCS.branchId.nameAr}" readonly="true" />
+                                                    </h:panelGroup>     
+
+                                                </h:panelGrid>
+
+                                            </p:fieldset>
+                                        </h:panelGroup>
+                                    </div>    
+                                </div>
+                            </div>
+                    </h:form>
+                </p:fieldset>
+            </ui:define>
+        </ui:composition>
