@@ -2,10 +2,12 @@ package com.toby.businessservice;
 
 import com.toby.core.GenericDAO;
 import com.toby.dto.InvItemDTO;
+import com.toby.dto.ProGroupDTO;
 import com.toby.dto.ProItemProductionStagesDTO;
 import com.toby.dto.ProProductionStagesDTO;
 import com.toby.entity.Branch;
 import com.toby.entity.InvItem;
+import com.toby.entity.ProGroup;
 import com.toby.entity.ProItemProductionStages;
 import com.toby.entity.ProProductionStages;
 import com.toby.entity.TobyCompany;
@@ -51,11 +53,11 @@ public class ProItemProductionStagesServiceImpl implements ProItemProductionStag
     }
 
     @Override
-    public List<ProItemProductionStagesDTO> getAll(TobyUser tobyUser, InvItemDTO invItemDTO) {
+    public List<ProItemProductionStagesDTO> getAll(TobyUser tobyUser, Integer proGroupId) {
         Map<String, Object> params = new HashMap<>();
-        params.put("branchId", tobyUser.getBranchId().getId());
-        params.put("invItemId", invItemDTO.getId());
-        List<ProItemProductionStages> proItemProductionStageses = dao.findListByQuery("SELECT p FROM ProItemProductionStages p WHERE p.branchId.id = :branchId and p.invItemId.id =:invItemId", params);
+        params.put("proGroupId", proGroupId);
+        List<ProItemProductionStages> proItemProductionStageses = dao.findListByQuery("SELECT p FROM ProItemProductionStages p WHERE p.proGroupId.id =:proGroupId", params);
+//        List<ProItemProductionStages> proItemProductionStageses = dao.findListByQuery("SELECT p FROM ProItemProductionStages p WHERE p.branchId.id = :branchId and p.invItemId.id =:invItemId", params);
         return mapToDTOList(proItemProductionStageses, tobyUser);
     }
 
@@ -75,6 +77,12 @@ public class ProItemProductionStagesServiceImpl implements ProItemProductionStag
             invItem.setId(proItemProductionStagesDTO.getInvItemId().getId());
             proItemProductionStages.setInvItemId(invItem);
         }
+        if (proItemProductionStagesDTO.getProGroupId() != null) {
+            ProGroup proGroup = new ProGroup();
+            proGroup.setId(proItemProductionStagesDTO.getProGroupId().getId());
+            proItemProductionStages.setProGroupId(proGroup);
+        }
+        
         if (proItemProductionStagesDTO.getProProductionStagesId() != null) {
             ProProductionStages productionStages = new ProProductionStages();
             productionStages.setId(proItemProductionStagesDTO.getProProductionStagesId().getId());
@@ -117,6 +125,12 @@ public class ProItemProductionStagesServiceImpl implements ProItemProductionStag
             InvItemDTO invItem = new InvItemDTO();
             invItem.setId(proItemProductionStages.getInvItemId().getId());
             proItemProductionStagesDTO.setInvItemId(invItem);
+        }
+        
+        if (proItemProductionStages.getProGroupId() != null) {
+            ProGroupDTO proGroupDTO = new ProGroupDTO();
+            proGroupDTO.setId(proItemProductionStages.getProGroupId().getId());
+            proItemProductionStagesDTO.setProGroupId(proGroupDTO);
         }
 
         if (proItemProductionStages.getProProductionStagesId() != null) {

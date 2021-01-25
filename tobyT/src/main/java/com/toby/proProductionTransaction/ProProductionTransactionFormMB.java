@@ -82,6 +82,11 @@ public class ProProductionTransactionFormMB extends BaseListBean {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        } else {
+            if (getProProductionStagesDTOs() != null && !getProProductionStagesDTOs().isEmpty()) {
+                setProProductionId(getProProductionStagesDTOs().get(0));
+                check();
+            }            
         }
     }
 
@@ -248,8 +253,9 @@ public class ProProductionTransactionFormMB extends BaseListBean {
         proProductionProductNumberDTO = null;
         proProductionTransactionDetailViewDTO = null;
         proProductionTransactionDetailDetailViewDTOSelected = null;
-
-        proProductionTransactionDTOList = proProductionTransactionService.getProProductionTransactionDTOofViewList(getProProductionId(), getUserData().getUser());
+        if (getProProductionId() != null) {
+            proProductionTransactionDTOList = proProductionTransactionService.getProProductionTransactionDTOofViewList(getProProductionId(), getUserData().getUser());
+        }
     }
 
     @Override

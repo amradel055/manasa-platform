@@ -91,5 +91,7 @@ public interface InvItemService {
      public List<InvItemDTO> getInvItemListByBranchIdForOpeningBalanceItemFormDTO(TobyUser tobyUser);
      
      public void updateInvItem2(Map<String, InvItem> invItemMap, TobyUser tobyUser);
+     
+     public void findInvItemMap(Integer branchId,List<InvItemDTO> invItemDTOList) ;
 
 }

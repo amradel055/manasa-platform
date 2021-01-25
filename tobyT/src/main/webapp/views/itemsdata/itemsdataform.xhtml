@@ -91,6 +91,26 @@
 
                         </div>
                     </div>
+                    
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:autoComplete style="width:85%" id="progroup"  
+                                            dropdown="true"
+                                            converter="#{itemDataFormMB.proGroupDTOConverter}"
+                                            value="#{itemDataFormMB.itemDataEntity.proGroupId}"
+                                            var="proGroup"
+                                            itemLabel="#{proGroup}" 
+                                            itemValue="#{proGroup}" 
+                                            forceSelection="true" 
+                                            completeMethod="#{itemDataFormMB.completeproGroups}" >
+                            </p:autoComplete>
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel  style="width: 70px" value="#{userData.userDDs['MEASUR_UNIT']}"/>
+                        </div>
+                    </div>
+                    
+                    
                     <div class="ui-g-12 ui-xl-12">
                         <div class="ui-g-6 ui-xl-6">
                             <p:selectOneMenu style="width: 50.5%"  id="typeCat" filter="true" filterMatchMode="startsWith" 

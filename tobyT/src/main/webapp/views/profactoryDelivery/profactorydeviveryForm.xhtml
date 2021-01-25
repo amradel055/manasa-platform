@@ -281,14 +281,15 @@
                 <h:panelGroup>
 
 
-                    <p:dialog id="loaddlg" header="#{userData.userDDs['PURCHASE_OR_NO']}" 
-                              widgetVar="loaddlg" modal="true">
+                    <p:dialog id="loaddlg" header="أوامر الشغل"  
+                              widgetVar="loaddlg" modal="true"
+                              width="auto" height="400PX" >
 
                         <div class="ui-g-12 ui-md-6">
 
                             <h:panelGroup>
 
-                                <p:outputLabel style="width: 95px;margin-right: 6%;" id="loadedSerial1" value="رقم طلب الشراء المطلوب استكماله" />
+                                <p:outputLabel style="width: 95px;margin-right: 6%;" id="loadedSerial1" value="رقم أمر الشغل المطلوب استكماله" />
                                 <p:inputText style="width: 37%" 
                                              id="loadedSerial" 
                                              value="#{proFactoryDeliveryFormDTOMB.invInvoiceDTO.needLoadedSerial}" />
@@ -322,12 +323,12 @@
                                          >
                                 <f:facet name="header" >
                                     <p:outputPanel  >
-                                        <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                                        <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: small" />
                                         <p:inputText id="globalFilter" onkeyup="PF('dlgTable').filter()" style="width:150px" />
                                     </p:outputPanel>
                                 </f:facet>
                                 <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
-                                <p:column style="width:15vw;font-size:1.8vw;text-align: right;border-radius: 0px" 
+                                <p:column style="width:15vw;font-size:1vw;text-align: right;border-radius: 0px" 
                                           filterStyle="display:none"
                                           filterBy="#{dlgTable.serial}" 
                                           filterMatchMode="contains"
@@ -337,7 +338,7 @@
                                     <p:outputLabel value="#{dlgTable.serial}" />
                                 </p:column>
 
-                                <p:column style="width:15vw;font-size:1.8vw;text-align: right;border-radius: 0px"
+                                <p:column style="width:15vw;font-size:1vw;text-align: right;border-radius: 0px"
                                           filterStyle="display:none"
                                           filterBy="#{dlgTable.organizationSiteName}"
                                           filterMatchMode="contains"
@@ -347,14 +348,14 @@
                                     <p:outputLabel value="#{dlgTable.organizationSiteName}" />
                                 </p:column>  
 
-                                <p:column style="width:15vw;font-size:1.8vw;text-align: right;border-radius: 0px"
+                                <p:column style="width:15vw;font-size:1vw;text-align: right;border-radius: 0px"
                                           filterStyle="display:none" filterBy="#{dlgTable.remarks}"
                                           filterMatchMode="contains"
                                           headerText="#{userData.userDDs['REMARK']}" 
                                           sortBy="#{dlgTable.remarks}" >
                                     <p:outputLabel value="#{dlgTable.remarks}" />
                                 </p:column>  
-                                <p:column style="width:15vw;font-size:1.8vw;text-align: right;border-radius: 0px"
+                                <p:column style="width:15vw;font-size:1vw;text-align: right;border-radius: 0px"
                                           filterStyle="display:none"
                                           filterBy="#{dlgTable.date}" 
                                           filterMatchMode="contains" 
@@ -370,13 +371,17 @@
 
 
                         </div>
+                        <div style="text-align: center;size: 200px; padding-top: 20px ;">
                         <p:commandButton  update="invPurchaseInvoiceDetailsTable test "  
                                           class="reloadButtons"
+                                         
 
                                           action="#{proFactoryDeliveryFormDTOMB.loadMultiSelection()}" 
-                                          title="#{userData.userDDs['UPLOAD']}"  >
+                                          title="#{userData.userDDs['UPLOAD']}" 
+                                          style=" font-size: 20px;	width: 100px;height: 40px; background-color: orange ;color: white; size: 200px">
 
                         </p:commandButton>
+                        </div>
 
                     </p:dialog>
 

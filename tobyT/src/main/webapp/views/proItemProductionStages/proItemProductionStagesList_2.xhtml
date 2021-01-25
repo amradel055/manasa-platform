@@ -1,0 +1,143 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+<f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:body>
+
+            <h:form id="form" dir="RTL" style="margin-right: 20px">
+                <div>
+                    <p:messages id="curmsg" autoUpdate="true" showDetail="true" rendered="true" closable="true"/>   
+                </div>
+                <p:fieldset  legend="العناصر " id="whole"  style="margin-bottom:20px">
+                    <p:dataTable  id="invItem"
+                                  var="invItem"
+                                  value="#{proItemProductionStagesMB.proGroupDTOList}"
+                                  draggableColumns="true"
+                                  draggableRows="true"
+                                  paginator="true"
+                                  widgetVar="invItem"
+                                  rows="7"
+                                  rowIndexVar="index" 
+                                  emptyMessage="EMPTY_TABLE"
+                                  selection="#{proItemProductionStagesMB.proGroupDTOSelected}" 
+                                  selectionMode="single"
+                                  rowKey="#{invItem.id}"
+                                  >
+                        <p:ajax event="rowSelect"  listener="#{proItemProductionStagesMB.selectUserRole}" update="@form" />
+                        <f:facet name="header" class="col-md-12">
+                            <p:outputPanel >
+                                <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large"/>
+
+                                <p:inputText id="globalFilter" onkeyup="PF('invItem').filter()" style="width:150px" />
+                            </p:outputPanel>
+                        </f:facet>
+                        <p:column headerText="كود المجموعة" style="width: 5vh;font-size: 1.8vh;text-align: -webkit-auto;" 
+                                  filterStyle="display:none"
+                                  filterMatchMode="contains" 
+                                  filterBy="#{invItem.code}"
+                                  sortBy="#{invItem.code}"
+                                  >
+                            <h:outputText value="#{invItem.code}" style="font-size: 1.5vh" />
+                        </p:column>
+                        <p:column  style="width: 5vh;font-size: 1.8vh;text-align: -webkit-auto;" 
+                                   headerText="اسم المجموعة"
+                                   filterStyle="display:none"
+                                   filterMatchMode="contains" 
+                                   filterBy="#{invItem.name}"
+                                   sortBy="#{invItem.name}"
+                                   >
+                            <h:outputText value="#{invItem.name}" style="font-size: 1.5vh" />
+                        </p:column>
+                    </p:dataTable>
+                </p:fieldset>
+                <p:fieldset  legend="مراحل الانتاج"   style="margin-bottom:20px">
+
+                    <p:dataTable  id="stages"
+                                  var="stages"
+                                  value="#{proItemProductionStagesMB.proItemProductionStagesDTOs}"
+                                  draggableColumns="true"
+                                  paginator="true"
+                                  widgetVar="stages"
+                                  rows="7"
+                                  rowIndexVar="index" 
+                                  emptyMessage="EMPTY_TABLE"
+                                  selection="#{proItemProductionStagesMB.proItemProductionStagesDTOSelected}" 
+                                  selectionMode="single"
+                                  rowKey="#{stages.index}"
+
+                                  >
+                        <f:facet name="header" class="col-md-12">
+                            <p:commandButton id="add" class="saddButton" icon="fa fa-plus" 
+                                             title="#{userData.userDDs['ADD']}"
+                                             actionListener="#{proItemProductionStagesMB.addRow()}"
+                                             style="float:right;margin: 0" update=":form:stages"
+                                             />
+                            <p:outputPanel>
+                                <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                                <p:inputText id="globalFilter" onkeyup="PF('stages').filter()" style="width:150px" />
+                            </p:outputPanel>
+                        </f:facet>
+                        <p:column headerText="رقم المرحلة" style="width: 5vh;font-size: 1.8vh;text-align: -webkit-auto;" 
+                                  filterStyle="display:none"
+                                  filterMatchMode="contains" 
+                                  filterBy="#{stages.proProductionStagesId}"
+                                  sortBy="#{stages.proProductionStagesId}"
+                                  >
+
+                            <h:panelGroup>
+                                <p:autoComplete style="width:75%!important" 
+                                                dropdown="true"
+                                                converter="#{proItemProductionStagesMB.productionStagesDTOConverter}"
+                                                value="#{stages.proProductionStagesId}"
+                                                var="productionStages"
+                                                itemLabel="#{productionStages}" 
+                                                itemValue="#{productionStages}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{proItemProductionStagesMB.complete}" >
+                                    
+                                     <p:ajax event="itemSelect" listener="#{proItemProductionStagesMB.validateProItemProductionStagesDTO()}"/>
+                           
+                                </p:autoComplete>
+                            </h:panelGroup> 
+                        </p:column>
+                        <p:column headerText="#{userData.userDDs['TRANSACTION']}"
+                                  style="width: 5vh;text-align: center;font-size:1.8vh">
+                            <p:commandButton class="sdeleteButton"
+                                             icon="fa fa-remove" 
+                                             title="#{userData.userDDs['DELETE']}" 
+                                             action="#{proItemProductionStagesMB.remove()}"
+                                             update=":form:stages"
+                                             >
+                                <f:setPropertyActionListener value="#{stages}" 
+                                                             target="#{proItemProductionStagesMB.proItemProductionStagesDTOSelected}" />
+                                <p:confirm header="Confirmation" message="ARE_YOU_SURE" icon="ui-icon-alert" />
+                            </p:commandButton>
+                        </p:column>
+
+                    </p:dataTable>
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton title="YES" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                        <p:commandButton title="NO" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog>
+                </p:fieldset>
+                <p:commandButton     class="saveButton" id="saveB" 
+                                     title="#{userData.userDDs['SAVE']}"
+                                     value="#{userData.userDDs['SAVE']}" 
+                                     icon="fa fa-fw fa-save"
+                                     action="#{proItemProductionStagesMB.save()}"
+                                     update="@form"
+                                     >
+
+                </p:commandButton>
+            </h:form>
+        </h:body>
+    </ui:define>
+</ui:composition>
+

@@ -8,6 +8,7 @@ package com.toby.businessservice;
 import com.toby.core.GenericDAO;
 import com.toby.dto.QuantityItemsStoreDTO;
 import com.toby.entity.Branch;
+import com.toby.entity.InventorySetup;
 import com.toby.entity.QuantityItemsStoreAddExit;
 import com.toby.entity.TobyCompany;
 import com.toby.entity.TobyUser;
@@ -31,7 +32,13 @@ import ma.glasnost.orika.impl.DefaultMapperFactory;
 public class QuantityItemsStoreServiceImpl implements QuantityItemsStoreService {
 
     @EJB
-    private GenericDAO dao ;
+    private GenericDAO dao;
+    @EJB
+    InventorySetupService inventorySetupService;
+    @EJB
+    InvItemService itemService;
+    @EJB
+    QuantityItemsStoreByDateService itemsStoreByDateService;
 
     @Override
     public List<QuantityItemsStore> findInventoryItemsList(Integer inventoryId, Integer branchId, Boolean sellBuy) {
@@ -42,11 +49,11 @@ public class QuantityItemsStoreServiceImpl implements QuantityItemsStoreService 
         params.put("branchId", branchId);
         StringBuilder sql = new StringBuilder();
         if (sellBuy) {
-            quantityItemsStores=new ArrayList<>();
+            quantityItemsStores = new ArrayList<>();
             sql.append("SELECT inv FROM QuantityItemsStore inv WHERE inv.inventoryId = :inventoryId AND inv.branchId = :branchId");
             quantityItemsStores = dao.findListByQuery(sql.toString(), params);
         } else {
-            quantityItemsStores=new ArrayList<>();
+            quantityItemsStores = new ArrayList<>();
             sql.append("SELECT inv FROM QuantityItemsStoreAddExit inv WHERE inv.inventoryId = :inventoryId AND inv.branchId = :branchId");
             itemsStoreAddExits = dao.findListByQuery(sql.toString(), params);
             MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
@@ -61,10 +68,9 @@ public class QuantityItemsStoreServiceImpl implements QuantityItemsStoreService 
 
     }
 
-    
-      public QuantityItemsStore mapToEntity(QuantityItemsStoreDTO quantityItemsStoreDTO, TobyUser tobyUser) {
+    public QuantityItemsStore mapToEntity(QuantityItemsStoreDTO quantityItemsStoreDTO, TobyUser tobyUser) {
         QuantityItemsStore quantityItemsStore = new QuantityItemsStore();
- 
+
         quantityItemsStore.setCostAverage(quantityItemsStoreDTO.getCostAverage());
         quantityItemsStore.setInventoryCode(quantityItemsStoreDTO.getInventoryCode());
         quantityItemsStore.setInventoryId(quantityItemsStoreDTO.getInventoryId());
@@ -73,14 +79,13 @@ public class QuantityItemsStoreServiceImpl implements QuantityItemsStoreService 
         quantityItemsStore.setItemId(quantityItemsStoreDTO.getItemId());
         quantityItemsStore.setItemName(quantityItemsStoreDTO.getItemName());
         quantityItemsStore.setQty(quantityItemsStoreDTO.getQty());
-       
+
         return quantityItemsStore;
-      }
-      
-      
-      public QuantityItemsStoreDTO mapToDTO(QuantityItemsStore quantityItemsStore, TobyUser tobyUser) {
+    }
+
+    public QuantityItemsStoreDTO mapToDTO(QuantityItemsStore quantityItemsStore, TobyUser tobyUser) {
         QuantityItemsStoreDTO quantityItemsStoreDTO = new QuantityItemsStoreDTO();
-       
+
         quantityItemsStoreDTO.setCostAverage(quantityItemsStore.getCostAverage());
         quantityItemsStoreDTO.setInventoryCode(quantityItemsStore.getInventoryCode());
         quantityItemsStoreDTO.setInventoryId(quantityItemsStore.getInventoryId());
@@ -89,18 +94,19 @@ public class QuantityItemsStoreServiceImpl implements QuantityItemsStoreService 
         quantityItemsStoreDTO.setItemId(quantityItemsStore.getItemId());
         quantityItemsStoreDTO.setItemName(quantityItemsStore.getItemName());
         quantityItemsStoreDTO.setQty(quantityItemsStore.getQty());
-      
-      
-      return quantityItemsStoreDTO;
 
-}
-       public List<QuantityItemsStoreDTO> mapToDTOList(List<QuantityItemsStore> quantityItemsStoreList, TobyUser tobyUser) {
+        return quantityItemsStoreDTO;
+
+    }
+
+    public List<QuantityItemsStoreDTO> mapToDTOList(List<QuantityItemsStore> quantityItemsStoreList, TobyUser tobyUser) {
         List<QuantityItemsStoreDTO> quantityItemsStoreDTOList = new ArrayList<>();
         for (QuantityItemsStore quantityItemsStore : quantityItemsStoreList) {
-            quantityItemsStoreDTOList.add(mapToDTO(quantityItemsStore,tobyUser));
+            quantityItemsStoreDTOList.add(mapToDTO(quantityItemsStore, tobyUser));
         }
         return quantityItemsStoreDTOList;
     }
+
     @Override
     public synchronized QuantityItemsStore findInventoryItem(Integer inventoryId, Integer branchId, Integer itemId, Boolean sellBuy) {
         Map<String, Object> params = new HashMap();
@@ -129,19 +135,20 @@ public class QuantityItemsStoreServiceImpl implements QuantityItemsStoreService 
     }
 
     @Override
-    public List<QuantityItemsStore> findItemsForBranchList(Integer itemId, Integer branchId, Boolean sellBuy) {
+    public List<QuantityItemsStore> findItemsForBranchList(Integer itemId, Integer branchId) {
         Map<String, Object> params = new HashMap();
         StringBuilder sql = new StringBuilder();
+        InventorySetup setup = inventorySetupService.getInventoryByBranchId(branchId);
         params.put("itemId", itemId);
         params.put("branchId", branchId);
         List<QuantityItemsStore> quantityItemsStores = null;
         List<QuantityItemsStoreAddExit> itemsStoreAddExits;
-        if (sellBuy) {
-            quantityItemsStores=new ArrayList<>();
+        if (setup.getSellBuy()) {
+            quantityItemsStores = new ArrayList<>();
             sql.append("SELECT inv FROM QuantityItemsStore inv WHERE inv.itemId = :itemId AND inv.branchId = :branchId AND inv.inventoryId != null");
             quantityItemsStores = dao.findListByQuery(sql.toString(), params);
         } else {
-            quantityItemsStores=new ArrayList<>();
+            quantityItemsStores = new ArrayList<>();
             sql.append("SELECT inv FROM QuantityItemsStoreAddExit inv WHERE inv.itemId = :itemId AND inv.branchId = :branchId AND inv.inventoryId != null");
             itemsStoreAddExits = dao.findListByQuery(sql.toString(), params);
             MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
@@ -182,7 +189,7 @@ public class QuantityItemsStoreServiceImpl implements QuantityItemsStoreService 
 
     @Override
     public List<QuantityItemsStoreDTO> findInventoryItemsListDTO(Integer inventoryId, TobyUser tobyUser, Boolean sellBuy) {
-          Map<String, Object> params = new HashMap();
+        Map<String, Object> params = new HashMap();
         List<QuantityItemsStore> quantityItemsStores = new ArrayList<>();
         List<QuantityItemsStoreAddExit> itemsStoreAddExits;
         params.put("inventoryId", inventoryId);
@@ -192,7 +199,7 @@ public class QuantityItemsStoreServiceImpl implements QuantityItemsStoreService 
             sql.append("SELECT inv FROM QuantityItemsStore inv WHERE inv.inventoryId = :inventoryId AND inv.branchId = :branchId");
             quantityItemsStores = dao.findListByQuery(sql.toString(), params);
         } else {
-           
+
             sql.append("SELECT inv FROM QuantityItemsStoreAddExit inv WHERE inv.inventoryId = :inventoryId AND inv.branchId = :branchId");
             itemsStoreAddExits = dao.findListByQuery(sql.toString(), params);
             MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();

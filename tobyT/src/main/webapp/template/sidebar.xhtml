@@ -784,216 +784,42 @@
                                                 />
                                 </p:submenu>
                             </p:submenu>
-                            <p:submenu id="sr_sm7" label="#{userData.userDDs['INSTALLMENT_MANAG']}" icon="&#xE8D2;"
-                                       rendered="#{userData.userScreens['instprojectguide'].view 
-                                                                 or userData.userScreens['instprofitrate'].view 
-                                                                 or userData.userScreens['instContract'].view 
-                                                                 or userData.userScreens['instProjectStatusList'].view 
-                                                                 or userData.userScreens['instPurchaseInvoice'].view 
+                            
+                            <p:submenu id="sr_sm333" label="إدارة الانتاج" icon="&#xE8D2;"
+                                       rendered="#{userData.userScreens['proProductionTransaction'].view 
+                                                                 or userData.userScreens['invoiceProductionStageReport'].view 
+                                                                 or userData.userScreens['progroup'].view 
+                                                                 or userData.userScreens[''].view 
+                                                                 or userData.userScreens[''].view 
                                                                  or userData.isAdmin}"
                                        >
-                                <p:submenu id="sr_sm71" label="#{userData.userDDs['MAIN_DATA']}" icon="&#xE8D2;"                                           
-                                           rendered="#{userData.userScreens['instprojectguide'].view 
-                                                                            or userData.userScreens['instprofitrate'].view 
+                                <p:submenu id="sr_sm3331" label="إدارة الانتاج" icon="&#xE8D2;"
+                                           rendered="#{userData.userScreens['proProductionTransaction'].view 
                                                                             or userData.userScreens[''].view 
                                                                             or userData.isAdmin}"
                                            >
-                                    <p:menuitem id="sr_lnk711" value="#{userData.userDDs['PROJ_GUIDE']}" icon="&#xE8D2;" url="/faces/views/instprojectguide/projectguide.xhtml"
-                                                rendered="#{userData.userScreens['instprojectguide'].view or userData.isAdmin}"
+                                    <p:menuitem id="sr_lnk33311" value="مجموعات المراحل" icon="&#xE8D2;" url="/faces/views/progroup/progroupList.xhtml" 
+                                                rendered="#{userData.userScreens['progroup'].view or userData.isAdmin}"
                                                 />
-                                    <p:menuitem id="sr_lnk712" value="#{userData.userDDs['Inst_Profit_Rate']}" icon="&#xE8D2;" url="/faces/views/instprofitrate/instprofitrate.xhtml" 
-                                                rendered="#{userData.userScreens['instprofitrate'].view or userData.isAdmin}"
+                                    <p:menuitem id="sr_lnk33312" value="مراحل الانتاج" icon="&#xE8D2;" url="/faces/views/proproductionstages/proProductionList.xhtml" 
+                                                rendered="#{userData.userScreens['proproductionstages'].view or userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="sr_lnk33313" value="حركة أوامر الشغل" icon="&#xE8D2;" url="/faces/views/proProductionTransaction/proProductionTransactionList1.xhtml" 
+                                                rendered="#{userData.userScreens['proProductionTransaction'].view or userData.isAdmin}"
                                                 />
                                 </p:submenu>
-                                <p:submenu id="sr_sm72" label="#{userData.userDDs['INSTALL_TRANSAC']}" icon="&#xE8D2;"
-                                           rendered="#{userData.userScreens['instContract'].view 
-                                                                            or userData.userScreens['instPurchaseInvoice'].view 
-                                                                            or userData.userScreens['instprojectstatus'].view                                        
+                                <p:submenu id="sr_sm332" label="تقارير الانتاج" icon="&#xE8D2;"
+                                           rendered="#{userData.userScreens['invoiceProductionStageReport'].view 
+                                                                            or userData.userScreens[''].view 
+                                                                            or userData.userScreens[''].view 
                                                                             or userData.isAdmin}"
                                            >
-                                    <p:menuitem id="sr_lnk721" value="#{userData.userDDs['Purchases_Invoice']}" icon="&#xE8D2;" url="/faces/views/instPurchaseInvoice/instPurchaseInvoiceList.xhtml" 
-                                                rendered="#{userData.userScreens['instPurchaseInvoice'].view or userData.isAdmin}"
-                                                />
-                                    <p:menuitem id="sr_lnk722" value="#{userData.userDDs['INSTALL_SCREEN']}" icon="&#xE8D2;" url="/faces/views/instContract/instContractList.xhtml" 
-                                                rendered="#{userData.userScreens['instContract'].view or userData.isAdmin}"
-                                                />
-                                    <p:menuitem id="sr_lnk723" value="#{userData.userDDs['QUREY_STATUS_PROJ']}" icon="&#xE8D2;" url="/faces/views/instprojectstatus/instProjectStatusList.xhtml" 
-                                                rendered="#{userData.userScreens['instprojectstatus'].view or userData.isAdmin}"
+                                    <p:menuitem id="sr_lnk33321" value="بيان مراحل وموظفين الفاتورة" icon="&#xE8D2;" url="/faces/views/proproductionreport/invoiceProductionStageReport.xhtml" 
+                                                rendered="#{userData.userScreens['invoiceProductionStageReport'].view or userData.isAdmin}"
                                                 />
                                 </p:submenu>
                             </p:submenu>
-                            <p:submenu id="sr_sm8" label="#{userData.userDDs['INSTALL_REP']}" icon="&#xE8D2;"
-                                       rendered="#{userData.userScreens['projectGuideReport'].view 
-                                                                 or userData.userScreens['CollectionAndPaymentReport'].view 
-                                                                 or userData.userScreens['CollectionAndPaymentReport_1'].view 
-                                                                 or userData.userScreens['instDelayed'].view 
-                                                                 or userData.userScreens['instMaturity'].view 
-                                                                 or userData.userScreens['instMonthlyPayments'].view 
-                                                                 or userData.userScreens[''].view 
-                                                                 or userData.userScreens[''].view 
-
-                                                                 or userData.userScreens[''].view
-                                                                 or userData.userScreens[''].view
-                                                                 or userData.userScreens[''].view
-                                                                 or userData.userScreens[''].view
-                                                                 or userData.userScreens[''].view
-                                                                 or userData.userScreens[''].view
-                                                                 or userData.userScreens[''].view
-                                                                 or userData.isAdmin}"
-                                       >
-                                <p:submenu id="sr_sm81" label="#{userData.userDDs['Installment_Management_Reports']}" icon="&#xE8D2;"
-                                           rendered="#{userData.userScreens['projectGuideReport'].view 
-                                                                            or userData.userScreens['CollectionAndPaymentReport'].view 
-                                                                            or userData.userScreens['CollectionAndPaymentReport_1'].view 
-                                                                            or userData.userScreens[''].view 
-                                                                            or userData.userScreens[''].view 
-
-                                                                            or userData.isAdmin}"
-                                           >
-                                    <p:menuitem id="sr_lnk811" value="#{userData.userDDs['PROJ_GUID_REP']}" icon="&#xE8D2;" url="/faces/views/instReport/projectGuideReport.xhtml" 
-                                                rendered="#{userData.userScreens['projectGuideReport'].view or userData.isAdmin}"
-                                                />
-                                    <p:menuitem id="sr_lnk812" value="#{userData.userDDs['COLL_PAY_REP']}" icon="&#xE8D2;" url="/faces/views/instReport/CollectionAndPaymentReport.xhtml" 
-                                                rendered="#{userData.userScreens['CollectionAndPaymentReport'].view or userData.isAdmin}"
-                                                />
-                                    <p:menuitem id="sr_lnk813" value="#{userData.userDDs['COLL_PAY_REP']}" icon="&#xE8D2;" url="/faces/views/instReport/CollectionAndPaymentReport_1.xhtml" 
-                                                rendered="#{userData.userScreens['CollectionAndPaymentReport_1'].view or userData.isAdmin}"
-                                                />
-                                </p:submenu>
-                                <p:submenu id="sr_sm82" label="#{userData.userDDs['Installment_Transaction_Reports']}" icon="&#xE8D2;"
-                                           rendered="#{userData.userScreens['instDelayed'].view 
-                                                                            or userData.userScreens['instMaturity'].view 
-                                                                            or userData.userScreens['instMonthlyPayments'].view 
-                                                                            or userData.isAdmin}"
-                                           >
-                                    <p:menuitem id="sr_lnk821" value="#{userData.userDDs['OVERDUE_AMOUNT']}" icon="&#xE8D2;" url="/faces/views/instReport/instDelayed.xhtml"
-                                                rendered="#{userData.userScreens['instDelayed'].view or userData.isAdmin}"
-                                                />
-                                    <p:menuitem id="sr_lnk822" value="#{userData.userDDs['PREMIU_ACCU_PERI']}" icon="&#xE8D2;" url="/faces/views/instReport/instMaturity.xhtml"
-                                                rendered="#{userData.userScreens['instMaturity'].view or userData.isAdmin}"
-                                                />
-                                    <p:menuitem id="sr_lnk823" value="#{userData.userDDs['MONTH_PAY_REP']}" icon="&#xE8D2;" url="/faces/views/instReport/instMonthlyPayments.xhtml" 
-                                                rendered="#{userData.userScreens['instMonthlyPayments'].view or userData.isAdmin}"
-                                                />
-                                </p:submenu>
-                            </p:submenu>
-                            <p:submenu id="sr_sm9" label="#{userData.userDDs['PROJECTS_MANAG']}" icon="&#xE8D2;"
-                                       rendered="#{userData.userScreens['rscworkunit'].view 
-                                                                 or userData.userScreens['contractor'].view 
-                                                                 or userData.userScreens['rscAccrualDeduction'].view 
-                                                                 or userData.userScreens['rscTenderPrice'].view 
-                                                                 or userData.userScreens['rscTender'].view 
-                                                                 or userData.userScreens['rscQotationPriceTender'].view 
-                                                                 or userData.userScreens['rscContractRegistering'].view 
-                                                                 or userData.userScreens['rscRestrictionQuantities'].view 
-                                                                 or userData.userScreens['rscExtract'].view
-                                                                 or userData.isAdmin}"
-                                       >
-                                <p:submenu id="sr_sm91" label="#{userData.userDDs['MAIN_DATA']}" icon="&#xE8D2;"
-                                           rendered="#{userData.userScreens['rscworkunit'].view 
-                                                                            or userData.userScreens['contractor'].view 
-                                                                            or userData.userScreens['rscAccrualDeduction'].view 
-                                                                            or userData.isAdmin}"
-                                           >
-                                    <p:menuitem id="sr_lnk911" value="#{userData.userDDs['BUSINESS_ITE_GUI']}" icon="&#xE8D2;" url="/faces/views/rscworkunit/rscworkunitsguide.xhtml" 
-                                                rendered="#{userData.userScreens['rscworkunit'].view or userData.isAdmin}"
-                                                />
-                                    <p:menuitem id="sr_lnk912" value="#{userData.userDDs['Contractors_Data']}" icon="&#xE8D2;" url="/faces/views/contractor/contractorList.xhtml" 
-                                                rendered="#{userData.userScreens['contractor'].view or userData.isAdmin}"
-                                                />
-                                    <p:menuitem id="sr_lnk913" value="#{userData.userDDs['Earnings_Deduction']}" icon="&#xE8D2;" url="/faces/views/rscAccrualDeduction/rscAccrualDeductiontList.xhtml"
-                                                rendered="#{userData.userScreens['rscAccrualDeduction'].view or userData.isAdmin}"
-                                                />
-                                </p:submenu>
-                                <p:submenu id="sr_sm92" label="#{userData.userDDs['EXTRACTS_TRANS']}" icon="&#xE8D2;"
-                                           rendered="#{userData.userScreens['rscTenderPrice'].view 
-                                                                            or userData.userScreens['rscTender'].view 
-                                                                            or userData.userScreens['rscQotationPriceTender'].view 
-                                                                            or userData.userScreens['rscContractRegistering'].view 
-                                                                            or userData.userScreens['rscRestrictionQuantities'].view 
-                                                                            or userData.userScreens['rscExtract'].view 
-                                                                            or userData.isAdmin}"
-                                           >
-                                    <p:menuitem id="sr_lnk921" value="#{userData.userDDs['TENDER']}" icon="&#xE8D2;" url="/faces/views/rscTender/rscTenderList.xhtml" 
-                                                rendered="#{userData.userScreens['rscTender'].view or userData.isAdmin}"
-                                                />
-                                    <p:menuitem id="sr_lnk922" value="#{userData.userDDs['TENDER_PRICING']}" icon="&#xE8D2;" url="/faces/views/rscTenderPrice/rscTenderPriceList.xhtml"
-                                                rendered="#{userData.userScreens['rscTenderPrice'].view or userData.isAdmin}"
-                                                />
-                                    <p:menuitem id="sr_lnk923" value="#{userData.userDDs['OFFER_PRICE']}" icon="&#xE8D2;" url="/faces/views/rscQotationPriceTender/rscQotationPriceTenderList.xhtml" 
-                                                rendered="#{userData.userScreens['rscQotationPriceTender'].view or userData.isAdmin}"
-                                                />
-                                    <p:menuitem id="sr_lnk924" value="#{userData.userDDs['REG_OF_CONTRACT']}" icon="&#xE8D2;" url="/faces/views/rscContractRegistering/rscContractregisterlist.xhtml" 
-                                                rendered="#{userData.userScreens['rscContractRegistering'].view or userData.isAdmin}"
-                                                />
-                                    <p:menuitem id="sr_lnk925" value="#{userData.userDDs['RESTRICTION_QUANT']}" icon="&#xE8D2;" url="/faces/views/rscRestrictionQuantities/rscRestrictionQuantitiesList.xhtml" 
-                                                rendered="#{userData.userScreens['rscRestrictionQuantities'].view or userData.isAdmin}"
-                                                />
-                                    <p:menuitem id="sr_lnk926" value="#{userData.userDDs['EXTRACT']}" icon="&#xE8D2;" url="/faces/views/rscExtractSummary/rscExtractSummaryList.xhtml"
-                                                rendered="#{userData.userScreens['rscExtractSummary'].view or userData.isAdmin}"
-                                                />
-                                </p:submenu>
-                            </p:submenu>
-                            <p:submenu id="sr_sm10" label="#{userData.userDDs['PROJ_MANAG_REPO']}" icon="&#xE8D2;"
-                                       rendered="#{userData.userScreens['contractormaindatareport'].view   
-                                                                 or userData.userScreens['extractionreport'].view
-                                                                 or userData.userScreens['completionRateReport'].view
-                                                                 or userData.userScreens['workunitsGuideReport'].view
-                                                                 or userData.userScreens['contractoraccount'].view
-                                                                 or userData.userScreens['accountbalancecontractor'].view 
-                                                                 or userData.userScreens[''].view 
-                                                                 or userData.userScreens[''].view 
-
-                                                                 or userData.userScreens[''].view
-                                                                 or userData.userScreens[''].view
-                                                                 or userData.userScreens[''].view
-                                                                 or userData.userScreens[''].view
-                                                                 or userData.userScreens[''].view
-                                                                 or userData.userScreens[''].view
-                                                                 or userData.userScreens[''].view
-                                                                 or userData.isAdmin}"
-                                       >
-                                <p:submenu id="sr_sm101" label="#{userData.userDDs['BASIC_REPORT']}" icon="&#xE8D2;"
-                                           rendered="#{userData.userScreens['contractormaindatareport'].view   
-                                                                            or userData.userScreens[''].view
-                                                                            or userData.userScreens[''].view 
-                                                                            or userData.userScreens[''].view 
-                                                                            or userData.userScreens[''].view 
-                                                                            or userData.isAdmin}"
-                                           >
-                                    <p:menuitem id="sr_lnk1011" value="#{userData.userDDs['Basic_Data_For_Contractors']}" icon="&#xE8D2;" url="/faces/views/rscReports/contractormaindatareport.xhtml" 
-                                                rendered="#{userData.userScreens['contractormaindatareport'].view or userData.isAdmin}"
-                                                />
-                                </p:submenu>
-                                <p:submenu id="sr_sm102" label="#{userData.userDDs['Projects_Transaction_Reports']}" icon="&#xE8D2;"
-                                           rendered="#{userData.userScreens['extractionreport'].view
-                                                                            or userData.userScreens['completionRateReport'].view
-                                                                            or userData.userScreens['projectAccount'].view
-                                                                            or userData.userScreens['contractoraccount'].view
-                                                                            or userData.userScreens['accountbalancecontractor'].view
-                                                                            or userData.userScreens['workunitsGuideReport'].view  
-                                                                            or userData.isAdmin}"
-                                           >
-                                    <p:menuitem id="sr_lnk1021" value="#{userData.userDDs['Contractor_Statement']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/contractoraccount.xhtml" 
-                                                rendered="#{userData.userScreens['contractoraccount'].view or userData.isAdmin}"
-                                                />
-                                    <p:menuitem id="sr_lnk1022" value="#{userData.userDDs['project_Account']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/projectAccount.xhtml"
-                                                rendered="#{userData.userScreens['projectAccount'].view or userData.isAdmin}"
-                                                />
-                                    <p:menuitem id="sr_lnk1023" value="#{userData.userDDs['Extracts_Reports']}" icon="&#xE8D2;" url="/faces/views/rscReports/extractionreport.xhtml" 
-                                                rendered="#{userData.userScreens['extractionreport'].view or userData.isAdmin}"
-                                                />
-                                    <p:menuitem id="sr_lnk1024" value="#{userData.userDDs['Complention_Rate_Reports']}" icon="&#xE8D2;" url="/faces/views/rscReports/completionRateReport.xhtml" 
-                                                rendered="#{userData.userScreens['completionRateReport'].view or userData.isAdmin}"
-                                                />
-                                    <p:menuitem id="sr_lnk1025" value="#{userData.userDDs['Business_Item_Reports']}" icon="&#xE8D2;" url="/faces/views/rscReports/workunitsGuideReport.xhtml" 
-                                                rendered="#{userData.userScreens['workunitsGuideReport'].view or userData.isAdmin}"
-                                                />
-                                    <p:menuitem id="sr_lnk1026" value="ارصدة حسابات المقاولين" icon="&#xE8D2;" url="/faces/views/inventoryreports/accountbalancecontractor.xhtml" 
-                                                rendered="#{userData.userScreens['accountbalancecontractor'].view or userData.isAdmin}"
-                                                />
-                                </p:submenu>
-                            </p:submenu>
+                            
                         </pm:menu>
                     </h:form>
                 </div>

@@ -18,6 +18,7 @@ import com.toby.converter.InvOrganizationSiteDTOConverter;
 import com.toby.converter.InvPurchaseInvoiceDTOConverter;
 import com.toby.converter.ItemDTOConverter;
 import com.toby.converter.ItemsBarcodesDetailsViewConverter;
+import com.toby.converter.ProGroupDTOConverter;
 import com.toby.converter.ProProductionStagesDTOConverter;
 import com.toby.converter.ProProductionTransactionDTOConverter;
 import com.toby.converter.SymbolConverter;
@@ -34,6 +35,7 @@ import com.toby.dto.InvItemDTO;
 import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.dto.InvPurchaseInvoiceDTO1;
 import com.toby.dto.InventoryDelegatorDTO;
+import com.toby.dto.ProGroupDTO;
 import com.toby.dto.ProProductionStagesDTO;
 import com.toby.dto.ProProductionTransactionDTO;
 import com.toby.dto.SymbolDTO;
@@ -445,6 +447,44 @@ public class AutoComplete {
         return list;
     }
 
+    public static List<ProGroupDTO> completeProGroups(String query, List<ProGroupDTO> proGroupDTOList, ProGroupDTOConverter proGroupDTOConverter) {
+        try {
+            List<ProGroupDTO> groups = proGroupDTOList;
+            if (query == null || query.trim().equals("")) {
+                proGroupDTOConverter = new ProGroupDTOConverter(groups);
+                return groups;
+            }
+            List<ProGroupDTO> invGroupsFiltered = new ArrayList<>();
+
+            String nameAr;
+            Integer code;
+            ProGroupDTO group;
+            for (int i = 0; i < proGroupDTOList.size(); i++) {
+                group = groups.get(i);
+                nameAr = group.getName();
+                if (nameAr != null && nameAr.toLowerCase().contains(query.toLowerCase())) {
+                    if (!invGroupsFiltered.contains(group)) {
+                        invGroupsFiltered.add(group);
+                    }
+                }
+
+                code = group.getId();
+                if (code != null && String.valueOf(code).contains(query)) {
+                    if (!invGroupsFiltered.contains(group)) {
+                        invGroupsFiltered.add(group);
+                    }
+                }
+            }
+
+            proGroupDTOConverter = new ProGroupDTOConverter(invGroupsFiltered);
+            return invGroupsFiltered;
+        } catch (Exception e) {
+
+            return null;
+        }
+    }
+
+    
     public static List<InvGroupDTO> completeInvGroups(String query, List<InvGroupDTO> invGroupDTOList, InvGroupDTOConverter invGroupDTOConverter) {
         try {
             List<InvGroupDTO> groups = invGroupDTOList;

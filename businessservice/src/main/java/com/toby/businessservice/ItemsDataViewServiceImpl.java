@@ -10,11 +10,13 @@ import com.toby.businessservice.reports.searchBean.ItemCardReportSerachBean;
 import com.toby.core.GenericDAO;
 import com.toby.dto.InvGroupDTO;
 import com.toby.dto.InvItemDTO;
+import com.toby.dto.ProGroupDTO;
 import com.toby.dto.SymbolDTO;
 import com.toby.entity.Branch;
 import com.toby.entity.GlYear;
 import com.toby.entity.InvGroup;
 import com.toby.entity.InvItem;
+import com.toby.entity.ProGroup;
 import com.toby.entity.Symbol;
 import com.toby.entity.TobyCompany;
 import com.toby.entity.TobyUser;
@@ -383,11 +385,19 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             symbolDTO.setName(invItem.getAddon2().getName());
             invItemDTO.setAddon2(symbolDTO);
         }
+        
         if (invItem.getGroupId() != null) {
             InvGroupDTO invGroupDTO = new InvGroupDTO();
             invGroupDTO.setId(invItem.getGroupId().getId());
             invGroupDTO.setName(invItem.getGroupId().getName());
             invItemDTO.setGroupId(invGroupDTO);
+        }
+        
+        if (invItem.getProGroupId() != null) {
+            ProGroupDTO proGroupDTO = new ProGroupDTO();
+            proGroupDTO.setId(invItem.getProGroupId().getId());
+            proGroupDTO.setName(invItem.getProGroupId().getName());
+            invItemDTO.setProGroupId(proGroupDTO);
         }
         
         invItemDTO.setInvBarcodeEntity(invBarcodeSevice.getInvBarcodeByInvItemId(invItem.getBranchId().getId(), invItem.getId(), tobyUser));
@@ -505,6 +515,13 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             invGroup.setId(invItemDTO.getGroupId().getId());
             invGroup.setName(invItemDTO.getGroupId().getName());
             invItem.setGroupId(invGroup);
+        }
+        
+        if (invItemDTO.getProGroupId() != null) {
+            ProGroup proGroup = new ProGroup();
+            proGroup.setId(invItemDTO.getProGroupId().getId());
+            proGroup.setName(invItemDTO.getProGroupId().getName());
+            invItem.setProGroupId(proGroup);
         }
 
         if (invItemDTO.getCreatedBy() != null) {

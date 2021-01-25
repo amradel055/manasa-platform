@@ -31,6 +31,7 @@ import com.toby.define.AccountClassEnum;
 import com.toby.define.AdminUnitDependantEnum;
 import com.toby.define.AssisstantAccountDependantEnum;
 import com.toby.define.CostCenterDependantEnum;
+import com.toby.dto.InvItemDTO;
 import com.toby.entity.Branch;
 import com.toby.entity.Currency;
 import com.toby.entity.GlAccount;
@@ -79,6 +80,7 @@ public class ImportMB extends Basic implements Serializable {
     private UploadedFile documentFile;
     private UploadedFile costCenterFile;
     private UploadedFile invItemFile;
+    private UploadedFile invItemFile2;
     private UploadedFile adminUnitFile;
     private UploadedFile yearFile;
     private UploadedFile currencyFile;
@@ -308,6 +310,39 @@ public class ImportMB extends Basic implements Serializable {
         itemProductionStagesService.saveAll(invItemMap, getUserData().getUserlogin());
 
         OpenDlg("sucesses");
+        System.out.println("تم الحفظ بنجاح");
+    }
+
+    // update InvItem Type
+    public void readInvItemCode() throws BiffException, IOException, Exception {
+        setInputStreamUploadInvItem(getInvItemFile2().getInputstream());
+        Workbook workbook = null;
+        try {
+            workbook = Workbook.getWorkbook(getInputStreamUploadInvItem());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (BiffException e) {
+            e.printStackTrace();
+        }
+        Sheet sheet = workbook.getSheet(0);
+        importInvItemCode(sheet);
+        workbook.close();
+    }
+
+    public void importInvItemCode(Sheet sheet) throws NumberFormatException {
+        InvItemDTO invItem;
+        List<InvItemDTO> invItemDTOList = new ArrayList<>();
+        for (int i = 1; i < sheet.getRows(); i++) {
+            if (!sheet.getCell(0, i).getContents().isEmpty()) {
+                String code = sheet.getCell(0, i).getContents();
+                String type = sheet.getCell(1, i).getContents();
+                invItem = new InvItemDTO();
+                invItem.setCode(code);
+                invItem.setName(type);
+                invItemDTOList.add(invItem);
+            }
+        }
+        invItemService.findInvItemMap(getUserData().getUserBranch().getId(), invItemDTOList);
         System.out.println("تم الحفظ بنجاح");
     }
 
@@ -1106,6 +1141,20 @@ public class ImportMB extends Basic implements Serializable {
      */
     public void setLevel(Integer level) {
         this.level = level;
+    }
+
+    /**
+     * @return the invItemFile2
+     */
+    public UploadedFile getInvItemFile2() {
+        return invItemFile2;
+    }
+
+    /**
+     * @param invItemFile2 the invItemFile2 to set
+     */
+    public void setInvItemFile2(UploadedFile invItemFile2) {
+        this.invItemFile2 = invItemFile2;
     }
 
 }

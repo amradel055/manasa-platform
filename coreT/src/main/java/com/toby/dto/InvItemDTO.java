@@ -75,6 +75,7 @@ public class InvItemDTO  extends BaseEntityDTO{
     private BigDecimal price_edit;
     private Integer isinventoryitem;
     private BigDecimal quantity;
+    private ProGroupDTO proGroupId;
     
     //barcode    
     private List<InvBarcodeDTO> invBarcodeEntity;
@@ -956,5 +957,19 @@ public class InvItemDTO  extends BaseEntityDTO{
      */
     public void setQuantity(BigDecimal quantity) {
         this.quantity = quantity;
+    }
+
+    /**
+     * @return the proGroupId
+     */
+    public ProGroupDTO getProGroupId() {
+        return proGroupId;
+    }
+
+    /**
+     * @param proGroupId the proGroupId to set
+     */
+    public void setProGroupId(ProGroupDTO proGroupId) {
+        this.proGroupId = proGroupId;
     }
 }

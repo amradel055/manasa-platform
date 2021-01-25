@@ -324,8 +324,8 @@ public class UserData extends Basic implements Serializable {
         int i = 0;
         for (TobyPrivilege priv : userPrivileges) {
             if (userScreens.get(priv.getScreenId().getName()) == null && priv.getView()) {
-                i = i + 1;
-                System.out.println(i);
+//                i = i + 1;
+//                System.out.println(i);
                 userScreens.put(priv.getScreenId().getName(), priv);
             }
         }

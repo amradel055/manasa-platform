@@ -22,6 +22,7 @@ import com.toby.entity.Symbol;
 import com.toby.entity.TobyCompany;
 import com.toby.entity.TobyUser;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -146,7 +147,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             params.put("customerFrom", supplierAccountSearchBean.getFromorganizationNameDTO().getCode());
             query.append("AND (e.code >= :customerFrom)");
         }
-        
+
         if (supplierAccountSearchBean.getToorganizationNameDTO() != null) {
             params.put("customerTo", supplierAccountSearchBean.getToorganizationNameDTO().getCode());
             query.append("AND (e.code <= :customerTo)");
@@ -1017,13 +1018,13 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
 
     public String genralValidateDelivery(TobyUser tobyUser, InvOrganizationSiteDTO invOrganizationSiteDTO) {
         StringBuilder errorMessage = new StringBuilder();
-        if (!validateName(tobyUser, invOrganizationSiteDTO.getId(), invOrganizationSiteDTO.getName(), invOrganizationSiteDTO.getType())) {
-            errorMessage.append("الاسم موجود");
-
-        }
-        if (!validateCode(tobyUser, invOrganizationSiteDTO.getId(), invOrganizationSiteDTO.getCode(), invOrganizationSiteDTO.getType())) {
-            errorMessage.append("الكود موجود");
-        }
+//        if (!validateName(tobyUser, invOrganizationSiteDTO.getId(), invOrganizationSiteDTO.getName(), invOrganizationSiteDTO.getType())) {
+//            errorMessage.append("الاسم موجود");
+//
+//        }
+//        if (!validateCode(tobyUser, invOrganizationSiteDTO.getId(), invOrganizationSiteDTO.getCode(), invOrganizationSiteDTO.getType())) {
+//            errorMessage.append("الكود موجود");
+//        }
         return errorMessage.toString();
     }
 
@@ -1322,11 +1323,13 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
     public InvOrganizationSiteDTO addNewCustomer(InvOrganizationSiteDTO invOrganizationSiteDTO, List<InvOrganizationSiteDTO> invOrganizationSiteDTOList, TobyUser tobyUser) {
 
         List<CurrencyDTO> currencyList = currencyServiceDTO.getAllCurrenciesByCompanyId(tobyUser.getCompanyId().getId());
-        
+
         if (invOrganizationSiteDTO != null && invOrganizationSiteDTO.getName() != null && currencyList != null && !currencyList.isEmpty()) {
             invOrganizationSiteDTO.setType(0);
             invOrganizationSiteDTO.setCurrencyId(currencyList.get(0));
             invOrganizationSiteDTO.setActive(1);
+            Integer code = getMaxGenericSerialForDetail(tobyUser.getBranchId().getId(), 0);
+            invOrganizationSiteDTO.setCode(code.toString());
             invOrganizationSiteDTO = addOrganizationSiteDTO(invOrganizationSiteDTO, tobyUser);
             invOrganizationSiteDTOList.add(0, invOrganizationSiteDTO);
 
@@ -1334,7 +1337,21 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         return invOrganizationSiteDTO;
     }
     
-     @Override
+    private synchronized <T> Integer getMaxGenericSerialForDetail(Integer branchId, Integer type) {
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT max(CONVERT(code,UNSIGNED INTEGER)) FROM inv_organization_site i where type = ");
+        query.append(type);
+        query.append(" AND branch_id = ").append(branchId);
+        List<BigInteger> list = dao.executeNativeQuery(query.toString());
+        Integer code = list != null && !list.isEmpty() && list.get(0) != null ? list.get(0).intValue() : null;
+        if (code == null) {
+            return 1;
+        } else {
+            return code + 1;
+        }
+    }
+
+    @Override
     public List<InvOrganizationSiteDTO> getorganizationSiteForOpenningBalanceDTO(Integer branchId, boolean active, Integer type) {
         Map<String, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();

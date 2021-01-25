@@ -18,6 +18,7 @@ import com.toby.entity.InvBarcode;
 import com.toby.entity.InvGroup;
 import com.toby.entity.InvItem;
 import com.toby.entity.InvOrganizationSite;
+import com.toby.entity.ProGroup;
 import com.toby.entity.ProProductionStages;
 import com.toby.entity.Symbol;
 import com.toby.entity.TobyCompany;
@@ -45,7 +46,6 @@ public class InvItemServiceImpl implements InvItemService {
     private OrganizationSiteService organizationSiteService;
     @EJB
     private CurrencyServiceDTO currencyServiceDTO;
-    
 
     StringBuilder appendQuery;
 
@@ -297,26 +297,46 @@ public class InvItemServiceImpl implements InvItemService {
         List<InvItem> invItemList = dao.findListByQuery("SELECT e FROM InvItem e WHERE e.branchId.id = :branchId ", params);
         return mapToDTOList(invItemList, tobyUser);
     }
-    
+
     @Override
     public Map<String, String> findInvItemDTOMap(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
         Map<String, String> list = new HashMap<>();
         params.put("branchId", branchId);
         List<InvItem> invItemList = dao.findListByQuery("SELECT e FROM InvItem e WHERE e.branchId.id = :branchId ", params);
-        for(InvItem invItem : invItemList){
+        for (InvItem invItem : invItemList) {
             list.put(invItem.getCode(), invItem.getCode());
         }
         return list;
     }
-    
+
+    public void findInvItemMap(Integer branchId, List<InvItemDTO> invItemDTOList) {
+        Map<String, Object> params = new HashMap<>();
+        Map<String, InvItem> mapItems = new HashMap<>();
+        params.put("branchId", branchId);
+        List<InvItem> invItemList = dao.findListByQuery("SELECT e FROM InvItem e WHERE e.branchId.id = :branchId ", params);
+        for (InvItem invItem : invItemList) {
+            mapItems.put(invItem.getCode(), invItem);
+        }
+
+        for (InvItemDTO invItemDTO : invItemDTOList) {
+            if (mapItems.containsKey(invItemDTO.getCode())) {
+                InvItem invItem = mapItems.get(invItemDTO.getCode());
+                ProGroup proGroupId = new ProGroup();
+                proGroupId.setId(Integer.parseInt(invItemDTO.getName()));
+                invItem.setProGroupId(proGroupId);
+                addInvItem(invItem, null, null);
+            }
+        }
+    }
+
     @Override
     public Map<String, String> findInvItemDTOMapForNewItem(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
         Map<String, String> list = new HashMap<>();
         params.put("branchId", branchId);
         List<InvItem> invItemList = dao.findListByQuery("SELECT e FROM InvItem e WHERE e.branchId.id = :branchId AND e.isNew = 1", params);
-        for(InvItem invItem : invItemList){
+        for (InvItem invItem : invItemList) {
             list.put(invItem.getCode(), invItem.getCode());
         }
         return list;
@@ -1012,7 +1032,7 @@ public class InvItemServiceImpl implements InvItemService {
                         item.setSiteId(invOrganizationSite);
                     }
                 }
-                if(entry.getKey().equals("001829")){
+                if (entry.getKey().equals("001829")) {
                     System.out.println("Stop");
                 }
                 dao.saveEntity(item);

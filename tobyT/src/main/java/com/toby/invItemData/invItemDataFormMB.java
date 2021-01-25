@@ -45,6 +45,9 @@ import org.primefaces.event.CellEditEvent;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.StreamedContent;
 import com.toby.businessservice.InventorySetupService;
+import com.toby.businessservice.ProGroupService;
+import com.toby.converter.ProGroupDTOConverter;
+import com.toby.dto.ProGroupDTO;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.sf.jasperreports.engine.JRException;
@@ -71,6 +74,7 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
     private List<InvGroupDTO> invGroupList;
     private InvGroupDTOConverter invGroupDTOConverter;
     private List<SymbolDTO> unitList;
+    private List<ProGroupDTO> proGroupDTOList;
     private SymbolConverter unitConverter;
     private List<InvOrganizationSite> invOrganizationSiteList;
     private InvOrganizationSiteConverter organizationSiteConvertor;
@@ -84,6 +88,7 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
     private List<SymbolDTO> addon2List;
     private SymbolDTOConverter typeCatConverter;
     private SymbolDTOConverter unitDTOConverter;
+    private ProGroupDTOConverter proGroupDTOConverter;
     private SymbolConverter paintColorConverter;
 
     private BigDecimal qtySummition = BigDecimal.ZERO;
@@ -121,6 +126,9 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
 
     @EJB
     private SymbolService symbolService;
+    
+    @EJB
+    private ProGroupService proGroupService;
 
     @EJB
     private CompanyService companyService;
@@ -171,7 +179,7 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
                     itemDataId = ((Integer) context.getSessionMap().get("itemDataEntitySelected"));
 
                     if (itemDataId != null) {
-                        quantityItemsStoreList = quantityItemsStoreService.findItemsForBranchList(itemDataId, branchId, setup.getSellBuy());
+                        quantityItemsStoreList = quantityItemsStoreService.findItemsForBranchList(itemDataId, branchId);
 
                         qtySummition = BigDecimal.ZERO;
                         for (QuantityItemsStore itemsStore : quantityItemsStoreList) {
@@ -207,6 +215,9 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
 
             unitList = symbolService.getUnitCompanyId(companyId); //units
             unitDTOConverter = new SymbolDTOConverter(unitList);
+            
+            proGroupDTOList = proGroupService.getallProGroupByBranchIdDTO(getUserData().getUserlogin());
+            setProGroupDTOConverter(new ProGroupDTOConverter(proGroupDTOList));
 
             invOrganizationSiteList = organizationSiteService.getorganizationSiteByBranchIdForGlBankModule(branchId, true, 1); //suppliers
             organizationSiteConvertor = new InvOrganizationSiteConverter(invOrganizationSiteList);
@@ -561,6 +572,42 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
 
     }
 
+       public List<ProGroupDTO> completeproGroups(String query) {
+        List<ProGroupDTO> invGroupsFiltered = new ArrayList<>();
+        try {
+            List<ProGroupDTO> groups = proGroupDTOList;
+
+            if (query == null || query.trim().equals("")) {
+                setProGroupDTOConverter(new ProGroupDTOConverter(groups));
+                return groups;
+            }
+
+            String nameAr;
+            Integer code;
+            ProGroupDTO group;
+            for (int i = 0; i < invGroupList.size(); i++) {
+                group = groups.get(i);
+                nameAr = group.getName();
+                if (nameAr != null && nameAr.toLowerCase().contains(query.toLowerCase()) && !invGroupsFiltered.contains(group)) {
+                    invGroupsFiltered.add(group);
+                }
+
+                code = group.getCode();
+                if (code != null && String.valueOf(code).contains(query) && !invGroupsFiltered.contains(group)) {
+                    invGroupsFiltered.add(group);
+                }
+            }
+
+            proGroupDTOConverter = new ProGroupDTOConverter(invGroupsFiltered);
+        } catch (Exception e) {
+            saveError(e, "invItemDataFormMB", "completeInvGroups");
+        }
+
+        return invGroupsFiltered;
+
+    }
+
+    
     public List<SymbolDTO> completeUnits(String query) {
         List<SymbolDTO> list = new ArrayList<>();
         try {
@@ -1216,6 +1263,34 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
      */
     public void setItemDataEntityReportList(List<InvItemDTO> itemDataEntityReportList) {
         this.itemDataEntityReportList = itemDataEntityReportList;
+    }
+
+    /**
+     * @return the proGroupDTOConverter
+     */
+    public ProGroupDTOConverter getProGroupDTOConverter() {
+        return proGroupDTOConverter;
+    }
+
+    /**
+     * @param proGroupDTOConverter the proGroupDTOConverter to set
+     */
+    public void setProGroupDTOConverter(ProGroupDTOConverter proGroupDTOConverter) {
+        this.proGroupDTOConverter = proGroupDTOConverter;
+    }
+
+    /**
+     * @return the proGroupDTOList
+     */
+    public List<ProGroupDTO> getProGroupDTOList() {
+        return proGroupDTOList;
+    }
+
+    /**
+     * @param proGroupDTOList the proGroupDTOList to set
+     */
+    public void setProGroupDTOList(List<ProGroupDTO> proGroupDTOList) {
+        this.proGroupDTOList = proGroupDTOList;
     }
 
 }

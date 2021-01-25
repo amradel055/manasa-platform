@@ -1,6 +1,5 @@
 package com.toby.businessservice;
 
-import com.toby.dto.InvItemDTO;
 import com.toby.dto.ProItemProductionStagesDTO;
 import com.toby.entity.InvItem;
 import com.toby.entity.TobyUser;
@@ -15,7 +14,7 @@ public interface ProItemProductionStagesService {
     
     public ProItemProductionStagesDTO save(ProItemProductionStagesDTO proItemProductionStagesDTO, TobyUser tobyUser);
     
-     public List<ProItemProductionStagesDTO> getAll(TobyUser tobyUser,InvItemDTO invItemDTO);
+     public List<ProItemProductionStagesDTO> getAll(TobyUser tobyUser, Integer proGroupId);
      
      public ProItemProductionStagesDTO findByDTO(TobyUser tobyUser,ProItemProductionStagesDTO dTO);
        

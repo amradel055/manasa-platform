@@ -3,6 +3,7 @@ package com.toby.dto;
 public class ProItemProductionStagesDTO extends BaseEntityDTO {
 
     private InvItemDTO invItemId;
+    private ProGroupDTO proGroupId;
     private ProProductionStagesDTO proProductionStagesId;
     private ProProductionStagesDTO proProductionStagesIdBak;
     
@@ -68,6 +69,20 @@ public class ProItemProductionStagesDTO extends BaseEntityDTO {
      */
     public void setProProductionStagesIdBak(ProProductionStagesDTO proProductionStagesIdBak) {
         this.proProductionStagesIdBak = proProductionStagesIdBak;
+    }
+
+    /**
+     * @return the proGroupId
+     */
+    public ProGroupDTO getProGroupId() {
+        return proGroupId;
+    }
+
+    /**
+     * @param proGroupId the proGroupId to set
+     */
+    public void setProGroupId(ProGroupDTO proGroupId) {
+        this.proGroupId = proGroupId;
     }
 
 

@@ -1,11 +1,13 @@
 package com.toby.proItemProductionSatges;
 
 import com.toby.businessservice.InvItemService;
+import com.toby.businessservice.ProGroupService;
 import com.toby.businessservice.ProItemProductionStagesService;
 import com.toby.businessservice.ProProductionStagesService;
 import com.toby.converter.ProItemProductionStageDTOConverter;
 import com.toby.converter.ProProductionStagesDTOConverter;
 import com.toby.dto.InvItemDTO;
+import com.toby.dto.ProGroupDTO;
 import com.toby.dto.ProItemProductionStagesDTO;
 import com.toby.dto.ProProductionStagesDTO;
 import com.toby.toby.BaseListBean;
@@ -30,6 +32,8 @@ public class ProItemProductionStagesMB extends BaseListBean {
     private List<ProProductionStagesDTO> proProductionStagesDTOList;
     private ProItemProductionStagesDTO proItemProductionStagesDTOSelected;
     private List<InvItemDTO> invItemDTOs;
+    private List<ProGroupDTO> proGroupDTOList;
+    private ProGroupDTO proGroupDTOSelected;
     private List<ProItemProductionStagesDTO> proItemProductionStagesDTOs;
     private List<ProItemProductionStagesDTO> proItemProductionStagesDTOs1;
 
@@ -42,6 +46,8 @@ public class ProItemProductionStagesMB extends BaseListBean {
     private ProItemProductionStagesService proItemProductionStagesService;
     @EJB
     private InvItemService invItemService;
+    @EJB
+    private ProGroupService proGroupService;
 
     public ProItemProductionStagesMB() {
     }
@@ -58,7 +64,8 @@ public class ProItemProductionStagesMB extends BaseListBean {
         if (validateDetailsWhenAddRow()) {
             fillItemFromBak();
             for (ProItemProductionStagesDTO stagesDTO : proItemProductionStagesDTOs) {
-                stagesDTO.setInvItemId(invItemDTOSelected);
+//                stagesDTO.setInvItemId(invItemDTOSelected);
+                stagesDTO.setProGroupId(getProGroupDTOSelected());
                 proItemProductionStagesService.save(stagesDTO, getUserData().getUser());
             }
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "good ", "تم الحفظ بنجاح "));
@@ -127,9 +134,9 @@ public class ProItemProductionStagesMB extends BaseListBean {
 
     public void selectUserRole(SelectEvent event) {
         try {
-            invItemDTOSelected = (InvItemDTO) event.getObject();
-            if (invItemDTOSelected != null) {
-                proItemProductionStagesDTOs = proItemProductionStagesService.getAll(getUserData().getUser(), getInvItemDTOSelected());
+            proGroupDTOSelected = (ProGroupDTO) event.getObject();
+            if (getProGroupDTOSelected() != null) {
+                proItemProductionStagesDTOs = proItemProductionStagesService.getAll(getUserData().getUser(), getProGroupDTOSelected().getId());
             }
         } catch (Exception e) {
             saveError(e, "UserRoleFormBean", "selectUserRole");
@@ -241,8 +248,8 @@ public class ProItemProductionStagesMB extends BaseListBean {
     }
 
     public List<ProItemProductionStagesDTO> getProItemProductionStagesDTOs() {
-        if (proItemProductionStagesDTOs == null || proItemProductionStagesDTOs.isEmpty()) {
-            proItemProductionStagesDTOs = proItemProductionStagesService.getAll(getUserData().getUser(), getInvItemDTOSelected());
+        if ((proItemProductionStagesDTOs == null || proItemProductionStagesDTOs.isEmpty()) && getProGroupDTOSelected() != null) {
+            proItemProductionStagesDTOs = proItemProductionStagesService.getAll(getUserData().getUser(), getProGroupDTOSelected().getId());
             setProItemProductionStageDTOConverter(new ProItemProductionStageDTOConverter(proItemProductionStagesDTOs));
         }
         return proItemProductionStagesDTOs;
@@ -297,6 +304,37 @@ public class ProItemProductionStagesMB extends BaseListBean {
      */
     public void setIndex(Integer index) {
         this.index = index;
+    }
+
+    /**
+     * @return the proGroupDTOList
+     */
+    public List<ProGroupDTO> getProGroupDTOList() {
+        if(proGroupDTOList == null || proGroupDTOList.isEmpty()){
+            proGroupDTOList = proGroupService.getallProGroupByBranchIdDTO(getUserData().getUserlogin());
+        }
+        return proGroupDTOList;
+    }
+
+    /**
+     * @param proGroupDTOList the proGroupDTOList to set
+     */
+    public void setProGroupDTOList(List<ProGroupDTO> proGroupDTOList) {
+        this.proGroupDTOList = proGroupDTOList;
+    }
+
+    /**
+     * @return the proGroupDTOSelected
+     */
+    public ProGroupDTO getProGroupDTOSelected() {
+        return proGroupDTOSelected;
+    }
+
+    /**
+     * @param proGroupDTOSelected the proGroupDTOSelected to set
+     */
+    public void setProGroupDTOSelected(ProGroupDTO proGroupDTOSelected) {
+        this.proGroupDTOSelected = proGroupDTOSelected;
     }
 
 }

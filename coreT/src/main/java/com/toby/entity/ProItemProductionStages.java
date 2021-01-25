@@ -31,6 +31,9 @@ public class ProItemProductionStages extends BaseEntity {
     @JoinColumn(name = "inv_item_id", referencedColumnName = "id")
     @ManyToOne
     private InvItem invItemId;
+    @JoinColumn(name = "pro_group_id", referencedColumnName = "id")
+    @ManyToOne
+    private ProGroup proGroupId;
     @JoinColumn(name = "pro_production_stages_id", referencedColumnName = "id")
     @ManyToOne
     private ProProductionStages proProductionStagesId;
@@ -99,6 +102,20 @@ public class ProItemProductionStages extends BaseEntity {
     @Override
     public String toString() {
         return "newpackage.ProItemProductionStages[ id=" + id + " ]";
+    }
+
+    /**
+     * @return the proGroupId
+     */
+    public ProGroup getProGroupId() {
+        return proGroupId;
+    }
+
+    /**
+     * @param proGroupId the proGroupId to set
+     */
+    public void setProGroupId(ProGroup proGroupId) {
+        this.proGroupId = proGroupId;
     }
     
 }

@@ -55,6 +55,20 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "InvItem.findByIspurchase", query = "SELECT i FROM InvItem i WHERE i.ispurchase = :ispurchase")})
 public class InvItem extends BaseEntity {
 
+    /**
+     * @return the proGroupId
+     */
+    public ProGroup getProGroupId() {
+        return proGroupId;
+    }
+
+    /**
+     * @param proGroupId the proGroupId to set
+     */
+    public void setProGroupId(ProGroup proGroupId) {
+        this.proGroupId = proGroupId;
+    }
+
     @Column(name = "code")
     private String code;
     @Basic(optional = false)
@@ -140,7 +154,10 @@ public class InvItem extends BaseEntity {
     private InvOrganizationSite siteId;
     @JoinColumn(name = "stone", referencedColumnName = "id")
     @ManyToOne
-    private Symbol stone;
+    private Symbol stone;    
+    @JoinColumn(name = "pro_group_id", referencedColumnName = "id")
+    @ManyToOne
+    private ProGroup proGroupId;
     @Column(name = "height")
     private BigDecimal height;
     @Column(name = "weight")

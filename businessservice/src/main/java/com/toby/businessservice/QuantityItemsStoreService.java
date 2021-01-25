@@ -22,7 +22,7 @@ public interface QuantityItemsStoreService {
 
     public QuantityItemsStore findInventoryItem(Integer inventoryId, Integer branchId, Integer itemId, Boolean sellBuy);
 
-    public List<QuantityItemsStore> findItemsForBranchList(Integer itemId, Integer branchId, Boolean sellBuy);
+    public List<QuantityItemsStore> findItemsForBranchList(Integer itemId, Integer branchId);
 
     public List<QuantityItemsStore> findAllQuantityItemsListStoreByBranchId(Integer branchId, Boolean sellBuy);
     

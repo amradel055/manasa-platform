@@ -338,7 +338,9 @@ public class InvPurchaseInvoiceDetailsImpl implements InvPurchaseInvoiceDetailSe
         Integer index = 1;
         List<Integer> res = dao.executeNativeQuery("select distinct(cloth_number)  from pro_factory_delivery_detail pfdd \n"
                 + "				left join pro_factory_delivery pfd on pfd.id = pfdd.pro_factory_delivery_id\n"
-                + "                left join pro_item_production_stages pips on pips.inv_item_id = pfdd.item_id\n"
+//                + "                left join pro_item_production_stages pips on pips.inv_item_id = pfdd.item_id\n"
+                + "                left join inv_item ii on ii.id = pfdd.item_id \n" 
+                + "                left join pro_item_production_stages pips on pips.pro_group_id = ii.pro_group_id \n"
                 + "                left join pro_production_items_transaction ppti on ppti.pro_factory_delivery_detail_id = pfdd.id\n"
                 + "                where pfd.inv_purchase_invoice_id = " + invPurchaseInvoiceId + "\n"
                 + "                and (pfdd.id not in (select invoiceDetailId from pro_production_transaction_of_invoice where numberRemain <= 0 and productionStagesId = " + productionTransactionDTO + " ) or ppti.pro_factory_delivery_detail_id is null)\n"
@@ -417,7 +419,8 @@ public class InvPurchaseInvoiceDetailsImpl implements InvPurchaseInvoiceDetailSe
 //        List<ProFactoryDeliveryDetail> detailses = dao.findListByQuery("SELECT e FROM ProFactoryDeliveryDetail e WHERE ( "
 //                + "e.itemId.id in (select pe.invItemId.id from  ProItemProductionStages pe where pe.proProductionStagesId.id = :proProductionStagesId) AND e.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.id=:invPurchaseInvoiceId AND e.clothNumber=:clothNumber AND e.invItemParentId.id=:invItemParentId )group by e.itemId", params);
         List<ProFactoryDeliveryDetail> detailses = dao.findListByQuery("SELECT e FROM ProFactoryDeliveryDetail e WHERE e.proFactoryDeliveryId.type = 0 AND  ( "
-                + "e.itemId.id in (select pe.invItemId.id from  ProItemProductionStages pe where pe.proProductionStagesId.id = :proProductionStagesId) AND e.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.id=:invPurchaseInvoiceId AND e.clothNumber=:clothNumber )group by e.itemId", params);
+                + " e.itemId.proGroupId.id in (select pe.proGroupId.id from  ProItemProductionStages pe where pe.proProductionStagesId.id = :proProductionStagesId) "
+                + " AND e.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.id=:invPurchaseInvoiceId AND e.clothNumber=:clothNumber )group by e.itemId", params);
         return mapToIntegerItemsList(detailses);
     }
 
