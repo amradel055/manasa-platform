@@ -459,7 +459,7 @@
                                             rendered="#{not invPurchaseInvoiceDetailsTable.isEdit}"
                                             converter="#{autoComplete.itemsBarcodesDetailsViewConverter}"
                                             value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}"
-                                            maxResults="10"
+                                            maxResults="100"
 
                                             var="item"
                                             itemLabel="#{item}" 
@@ -574,7 +574,7 @@
                                   filterable="false">
 
                             <p:outputLabel id="InvinventoryIdt" 
-                                           value="#{invPurchaseInvoiceDetailsTable.inventoryDTO}" 
+                                           value="#{invPurchaseInvoiceDetailsTable.inventoryDTO.code}" 
                                            style="width:95%"/>     
 
                         </p:column>

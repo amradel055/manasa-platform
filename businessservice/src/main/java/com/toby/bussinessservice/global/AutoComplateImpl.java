@@ -61,7 +61,7 @@ public class AutoComplateImpl implements AutoCompleteService {
         params.put("branchId", branchId);
         params.put("qeury", qeury);
         appendItemsBarcodesDetailsViewBranchId(sql);
-        return dao.findListByQuery(sql.toString(), params, 0, 10);
+        return dao.findListByQuery(sql.toString(), params, 0, 100);
     }
 
     private void appendItemsBarcodesDetailsViewBranchId(StringBuilder sql) {
