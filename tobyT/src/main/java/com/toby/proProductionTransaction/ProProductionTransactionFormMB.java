@@ -94,7 +94,8 @@ public class ProProductionTransactionFormMB extends BaseListBean {
         try {
             if (proProductionTransactionDTO != null) {
                 ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-                context.getSessionMap().put("invPurchaseInvoiceIdSeclected", proProductionTransactionDTO.getInvPurchaseInvoiceId());
+//                context.getSessionMap().put("invPurchaseInvoiceIdSeclected", proProductionTransactionDTO.getInvPurchaseInvoiceId());
+                context.getSessionMap().put("ProFactoryDeliveryIdSelected", proProductionTransactionDTO.getProFactoryDeliveryId());
                 context.getSessionMap().put("ScreenMode", "editInvoice");
                 exit("../proProductionCheck/proProductionTransactionDetail.xhtml");
                 return "";

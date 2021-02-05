@@ -67,6 +67,25 @@
                                   >
                             <h:outputText value="#{table1.serial}" />
                         </p:column>
+                        
+                        <p:column headerText="كود المعرض" style="width: 10vh;text-align: center!important;font-size: 1.8vh"
+                                  filterStyle="display:none"
+                                  filterBy="#{table1.gallaryCode}"  
+                                  filterMatchMode="contains" 
+                                  sortBy="#{table1.gallaryCode}" 
+                                  >
+                            <h:outputText value="#{table1.gallaryCode}" />
+                        </p:column>
+                        
+                        <p:column headerText="اسم المعرض" style="width: 10vh;text-align: center!important;font-size: 1.8vh"
+                                  filterStyle="display:none"
+                                  filterBy="#{table1.gallaryName}"  
+                                  filterMatchMode="contains" 
+                                  sortBy="#{table1.gallaryName}" 
+                                  >
+                            <h:outputText value="#{table1.gallaryName}" />
+                        </p:column>
+                        
                         <p:column  style="width: 12vh;font-size: 1.8vh;text-align:center;border-radius: 0px;" headerText="#{userData.userDDs['TRANSACTION']}" >
                             <p:commandButton  
                                 class="smsearchButtons"

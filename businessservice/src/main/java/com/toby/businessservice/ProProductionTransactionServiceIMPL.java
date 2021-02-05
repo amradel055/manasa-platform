@@ -593,12 +593,12 @@ public class ProProductionTransactionServiceIMPL implements ProProductionTransac
 
         List<ProProductionTransactionDTO> productionTransactionDTOList = new ArrayList<>();
 
-        String sql = "select  distinct(ipi.id) ,  ipi.serial  from \n"
+        String sql = "select  distinct(ipi.id) ,  ipi.serial , pfd.id , invi.code , invi.name  from \n"
                 + "                pro_factory_delivery_detail pfdd left join pro_factory_delivery pfd on pfd.id = pfdd.pro_factory_delivery_id\n"
                 + "                left join inv_purchase_invoice ipi on ipi.id = pfd.inv_purchase_invoice_id\n"
 //                + "                left join pro_item_production_stages pips on pips.inv_item_id = pfdd.item_id\n"
                 + "                left join inv_item ii on ii.id = pfdd.item_id  "
-                + "                left join pro_item_production_stages pips on pips.pro_group_id = ii.pro_group_id \n"
+                + "                left join pro_item_production_stages pips on pips.pro_group_id = ii.pro_group_id left join inv_inventory invi on invi.id = ipi.galary_Id \n"
                 + "                where pips.pro_production_stages_id = " + productionStages.getId() + "  and ipi.branch_id = " + tobyUser.getBranchId().getId() + " AND pfd.type = 0\n"
                 + "               and  (pfdd.id not in ( SELECT pro_factory_delivery_detail_id  FROM  `pro_production_items_transaction` where  pro_production_stages_id = " + productionStages.getId() + " and pro_factory_delivery_detail_id is not null ) \n"
                 + "                or\n"
@@ -617,7 +617,9 @@ public class ProProductionTransactionServiceIMPL implements ProProductionTransac
             ProProductionTransactionDTO productionTransactionDTO = new ProProductionTransactionDTO();
             productionTransactionDTO.setInvPurchaseInvoiceId((Integer) object[0]);
             productionTransactionDTO.setSerial((Integer) object[1]);
-//            productionTransactionDTO.setEmployeename((String) object[2]);
+            productionTransactionDTO.setProFactoryDeliveryId((Integer) object[2]);
+            productionTransactionDTO.setGallaryCode((String) object[3]);
+            productionTransactionDTO.setGallaryName((String) object[4]);
             productionTransactionDTO.setProProductionId(productionStages);
 
             productionTransactionDTOList.add(productionTransactionDTO);

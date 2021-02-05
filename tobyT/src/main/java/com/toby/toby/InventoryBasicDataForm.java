@@ -512,13 +512,14 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
             if (invPurchaseInvoiceDetailsValidate.getId() != null) {
                 getInvInvoiceDTO().getInvPurchaseInvoiceDetailsDeletedList().add(invPurchaseInvoiceDetailsValidate);
             }
+            
+            getInvInvoiceDTO().getInvPurchaseInvoiceDetailList().remove(invPurchaseInvoiceDetailsValidate);
+            updateSummition();
             for (InvDetailDTO detailEntity : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
                 if (detailEntity.getItemsBarcodesDetail() == null && detailEntity.getItemsBarcodesDetailTrans() != null) {
                     detailEntity.setItemsBarcodesDetail(detailEntity.getItemsBarcodesDetailTrans());
                 }
             }
-            getInvInvoiceDTO().getInvPurchaseInvoiceDetailList().remove(invPurchaseInvoiceDetailsValidate);
-            updateSummition();
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceFormMB", "deleteInvPurchaseInvoiceDetail");
         }
@@ -531,6 +532,9 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                 invDetailDTO.setId(null);
             }
             Integer maxClothNumber = 1;
+            invDetailDTO.setClothNumber(maxClothNumber + 1);
+            getInvInvoiceDTO().getInvPurchaseInvoiceDetailList().add(invDetailDTO);
+            updateSummition();
             for (InvDetailDTO detailEntity : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
                 if (detailEntity.getItemsBarcodesDetail() == null && detailEntity.getItemsBarcodesDetailTrans() != null) {
                     detailEntity.setItemsBarcodesDetail(detailEntity.getItemsBarcodesDetailTrans());
@@ -539,9 +543,6 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                     maxClothNumber = detailEntity.getClothNumber();
                 }
             }
-            invDetailDTO.setClothNumber(maxClothNumber + 1);
-            getInvInvoiceDTO().getInvPurchaseInvoiceDetailList().add(invDetailDTO);
-            updateSummition();
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceFormMB", "repeatInvDetail");
         }

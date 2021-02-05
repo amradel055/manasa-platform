@@ -17,6 +17,8 @@ public class ProProductionTransactionDTO extends BaseEntityDTO {
     private ProProductionStagesDTO proProductionId;
     private String stageName;
     private String employeename;
+    private String gallaryName;
+    private String gallaryCode;
     private BigDecimal quantity;
     private BigDecimal stagePrice;
     private BigDecimal total;
@@ -210,6 +212,34 @@ public class ProProductionTransactionDTO extends BaseEntityDTO {
      */
     public void setClothNumber(Integer clothNumber) {
         this.clothNumber = clothNumber;
+    }
+
+    /**
+     * @return the gallaryName
+     */
+    public String getGallaryName() {
+        return gallaryName;
+    }
+
+    /**
+     * @param gallaryName the gallaryName to set
+     */
+    public void setGallaryName(String gallaryName) {
+        this.gallaryName = gallaryName;
+    }
+
+    /**
+     * @return the gallaryCode
+     */
+    public String getGallaryCode() {
+        return gallaryCode;
+    }
+
+    /**
+     * @param gallaryCode the gallaryCode to set
+     */
+    public void setGallaryCode(String gallaryCode) {
+        this.gallaryCode = gallaryCode;
     }
   
 }

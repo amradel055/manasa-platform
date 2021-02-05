@@ -87,23 +87,58 @@ public class InvGlobalServiceImpl implements InvGlobalService {
     private BigDecimal calcCost(InvDetailDTO detailEntity, InvInvoiceDTO invInvoiceDTO) {
         BigDecimal cost = BigDecimal.ZERO;
         if (invInvoiceDTO.getCompanyActivity().equals(CompanyActivityClassEnum.RetailSaleForClothFactory) && (ScreenNameClassEnum.PROWORKORDER.equals(invInvoiceDTO.getScreenName()))) {
-            if (invInvoiceDTO.getPricetype() == 1) {
-                if (detailEntity.getItemsBarcodesDetail().getTypeShow() != null && detailEntity.getItemsBarcodesDetail().getTypeShow() == 1) {
-                    cost = calculateIncrease(detailEntity.getQuantityOfOneUnit(), new BigDecimal(5), detailEntity.getItemsBarcodesDetail().getMaxPriceMen());
-                } else if (detailEntity.getItemsBarcodesDetail().getTypeShow() != null && detailEntity.getItemsBarcodesDetail().getTypeShow() == 2) {
-                    cost = calculateIncrease(detailEntity.getQuantityOfOneUnit(), new BigDecimal(3.5), detailEntity.getItemsBarcodesDetail().getMaxPriceMen());
+            if (detailEntity.getItemsBarcodesDetail().getProGroupId() == 22) {
+                BigDecimal price = BigDecimal.ZERO;
+                if (invInvoiceDTO.getPricetype() == 1) {
+                    price = detailEntity.getItemsBarcodesDetail().getMaxPriceMen();
+                } else {
+                    price = detailEntity.getItemsBarcodesDetail().getMaxPriceYoung();
+                }
+
+                BigDecimal oneBean = BigDecimal.ZERO;
+                if (detailEntity.getQuantityOfOneUnit().compareTo(new BigDecimal(4)) != 1) {
+                    oneBean = calaOneBean(detailEntity, oneBean, price);
+                    cost = oneBean;
+                } else if (detailEntity.getQuantityOfOneUnit().compareTo(new BigDecimal(8)) != 1 && detailEntity.getQuantityOfOneUnit().compareTo(new BigDecimal(4)) == 1) {
+                    cost = price.divide(detailEntity.getQuantityOfOneUnit());
+                } else if (detailEntity.getQuantityOfOneUnit().compareTo(new BigDecimal(8)) == 1) {
+                    oneBean = calaOneBean(detailEntity, oneBean, price);
+                    cost = price.add(oneBean.multiply(detailEntity.getQuantityOfOneUnit()));
                 }
             } else {
-                if (detailEntity.getItemsBarcodesDetail().getTypeShow() != null && detailEntity.getItemsBarcodesDetail().getTypeShow() == 1) {
-                    cost = calculateIncrease(detailEntity.getQuantityOfOneUnit(), new BigDecimal(4), detailEntity.getItemsBarcodesDetail().getMaxPriceYoung());
-                } else if ( detailEntity.getItemsBarcodesDetail().getTypeShow() != null && detailEntity.getItemsBarcodesDetail().getTypeShow() == 2) {
-                    cost = calculateIncrease(detailEntity.getQuantityOfOneUnit(), new BigDecimal(2.5), detailEntity.getItemsBarcodesDetail().getMaxPriceYoung());
+                if (invInvoiceDTO.getPricetype() == 1) {
+                    if (detailEntity.getItemsBarcodesDetail().getTypeShow() != null && detailEntity.getItemsBarcodesDetail().getTypeShow() == 1) {
+                        cost = calculateIncrease(detailEntity.getQuantityOfOneUnit(), new BigDecimal(5), detailEntity.getItemsBarcodesDetail().getMaxPriceMen());
+                    } else if (detailEntity.getItemsBarcodesDetail().getTypeShow() != null && detailEntity.getItemsBarcodesDetail().getTypeShow() == 2) {
+                        cost = calculateIncrease(detailEntity.getQuantityOfOneUnit(), new BigDecimal(3.5), detailEntity.getItemsBarcodesDetail().getMaxPriceMen());
+                    }
+                } else {
+                    if (detailEntity.getItemsBarcodesDetail().getTypeShow() != null && detailEntity.getItemsBarcodesDetail().getTypeShow() == 1) {
+                        cost = calculateIncrease(detailEntity.getQuantityOfOneUnit(), new BigDecimal(4), detailEntity.getItemsBarcodesDetail().getMaxPriceYoung());
+                    } else if (detailEntity.getItemsBarcodesDetail().getTypeShow() != null && detailEntity.getItemsBarcodesDetail().getTypeShow() == 2) {
+                        cost = calculateIncrease(detailEntity.getQuantityOfOneUnit(), new BigDecimal(2.5), detailEntity.getItemsBarcodesDetail().getMaxPriceYoung());
+                    }
                 }
             }
         } else {
             cost = detailEntity.getCost() != null ? detailEntity.getCost().multiply(invInvoiceDTO.getRate()) : BigDecimal.ZERO;
         }
         return cost;
+    }
+
+    private BigDecimal calaOneBean(InvDetailDTO detailEntity, BigDecimal oneBean, BigDecimal price) {
+        if (detailEntity.getItemsBarcodesDetail().getSellPrice().compareTo(new BigDecimal(200)) == 0) {
+            oneBean = new BigDecimal(35);
+        } else if (price.compareTo(new BigDecimal(180)) == 0) {
+            oneBean = new BigDecimal(30);
+        } else if (price.compareTo(new BigDecimal(150)) == 0) {
+            oneBean = new BigDecimal(35);
+        } else if (price.compareTo(new BigDecimal(120)) == 0) {
+            oneBean = new BigDecimal(20);
+        } else if (price.compareTo(new BigDecimal(100)) == 0) {
+            oneBean = new BigDecimal(15);
+        }
+        return oneBean;
     }
 
     public BigDecimal calculateIncrease(BigDecimal total, BigDecimal main, BigDecimal price) {

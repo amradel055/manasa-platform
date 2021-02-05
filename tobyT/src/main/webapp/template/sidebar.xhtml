@@ -798,14 +798,35 @@
                                                                             or userData.userScreens[''].view 
                                                                             or userData.isAdmin}"
                                            >
-                                    <p:menuitem id="sr_lnk33311" value="مجموعات المراحل" icon="&#xE8D2;" url="/faces/views/progroup/progroupList.xhtml" 
+                                    <p:menuitem id="sr_lnk33311" value="إنشاء الطيار" icon="&#xE8D2;" url="/faces/views/procreateDelivery/createDeliveryList.xhtml" 
                                                 rendered="#{userData.userScreens['progroup'].view or userData.isAdmin}"
                                                 />
-                                    <p:menuitem id="sr_lnk33312" value="مراحل الانتاج" icon="&#xE8D2;" url="/faces/views/proproductionstages/proProductionList.xhtml" 
+                                    <p:menuitem id="sr_lnk33312" value="مجموعات المراحل" icon="&#xE8D2;" url="/faces/views/proproductionstages/proProductionList.xhtml" 
                                                 rendered="#{userData.userScreens['proproductionstages'].view or userData.isAdmin}"
                                                 />
-                                    <p:menuitem id="sr_lnk33313" value="حركة أوامر الشغل" icon="&#xE8D2;" url="/faces/views/proProductionTransaction/proProductionTransactionList1.xhtml" 
+                                    <p:menuitem id="sr_lnk33313" value="مراحل الانتاج" icon="&#xE8D2;" url="/faces/views/proproductionstages/proProductionList.xhtml" 
+                                                rendered="#{userData.userScreens['proproductionstages'].view or userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="sr_lnk33319" value="دليل المراحل الانتاجية" icon="&#xE8D2;" url="/faces/views/proItemProductionStages/proItemProductionStagesList_2.xhtml" 
+                                                rendered="#{userData.userScreens['proItemProductionStages'].view or userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="sr_lnk33314" value="تسليم للمشغل" icon="&#xE8D2;" url="/faces/views/profactoryDelivery/profactorydeviveryList.xhtml" 
+                                                rendered="#{userData.userScreens['profactoryDelivery'].view or userData.isAdmin}"
+                                                />      
+                                    <p:menuitem id="sr_lnk333110" value="حركة أوامر الشغل" icon="&#xE8D2;" url="/faces/views/proProductionTransaction/proProductionTransactionList1.xhtml" 
                                                 rendered="#{userData.userScreens['proProductionTransaction'].view or userData.isAdmin}"
+                                                />  
+                                    <p:menuitem id="sr_lnk33315" value="حركة التشيك" icon="&#xE8D2;" url="/faces/views/proProductionCheck/proProductionCheckList.xhtml" 
+                                                rendered="#{userData.userScreens['proProductionCheck'].view or userData.isAdmin}"
+                                                />                                    
+                                    <p:menuitem id="sr_lnk33316" value="ارسال الفاتورة للمعرض" icon="&#xE8D2;" url="/faces/views/proProductionMovementDelivrey/proProductionMovementList.xhtml" 
+                                                rendered="#{userData.userScreens['proProductionMovementDelivrey'].view or userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="sr_lnk33317" value="استلام الفاتورة بالمعرض" icon="&#xE8D2;" url="/faces/views/proSendToGallary/proSendToGallaryList.xhtml" 
+                                                rendered="#{userData.userScreens['proSendToGallary'].view or userData.isAdmin}"
+                                                />                                    
+                                    <p:menuitem id="sr_lnk33318" value="تسليم العميل" icon="&#xE8D2;" url="/faces/views/proRecieveGallary/proRecieveGallaryList.xhtml" 
+                                                rendered="#{userData.userScreens['proRecieveGallary'].view or userData.isAdmin}"
                                                 />
                                 </p:submenu>
                                 <p:submenu id="sr_sm332" label="تقارير الانتاج" icon="&#xE8D2;"

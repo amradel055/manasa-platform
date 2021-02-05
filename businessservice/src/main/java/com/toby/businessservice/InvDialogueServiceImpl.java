@@ -522,6 +522,7 @@ public class InvDialogueServiceImpl implements InvDialogueService {
         dto.setCreatedBy(entity.getCreatedBy() != null ? entity.getCreatedBy().getId() : null);
         dto.setCreatedDate(entity.getCreationDate());
         dto.setIndex(entity.getId());
+        dto.setInventoryName(entity.getGalaryId().getName());
         dto.setCompanyId(entity.getCompanyId().getId() != null ? entity.getCompanyId().getId() : null);
         dto.setCreatedByName(entity.getCreatedBy() != null ? entity.getCreatedBy().getName() : null);
         return dto;

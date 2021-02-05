@@ -90,6 +90,8 @@ public class ItemsBarcodesDetailsView implements Serializable {
     private BigDecimal discountrate;
     @Column(name = "type_show")
     private Integer typeShow;
+    @Column(name = "pro_group_id")
+    private Integer proGroupId;
 
     @Override
     public String toString() {
@@ -382,5 +384,19 @@ public class ItemsBarcodesDetailsView implements Serializable {
      */
     public void setTypeShow(Integer typeShow) {
         this.typeShow = typeShow;
+    }
+
+    /**
+     * @return the proGroupId
+     */
+    public Integer getProGroupId() {
+        return proGroupId;
+    }
+
+    /**
+     * @param proGroupId the proGroupId to set
+     */
+    public void setProGroupId(Integer proGroupId) {
+        this.proGroupId = proGroupId;
     }
 }

@@ -423,6 +423,17 @@ public class InvPurchaseInvoiceDetailsImpl implements InvPurchaseInvoiceDetailSe
                 + " AND e.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.id=:invPurchaseInvoiceId AND e.clothNumber=:clothNumber )group by e.itemId", params);
         return mapToIntegerItemsList(detailses);
     }
+    
+    @Override
+    public List<ProProductionTransactionDetailDetailViewDTO> getInvPurchaseInvoiceDetailItems(Integer invInvoiceSerial,Integer proProductionStagesId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("invInvoiceSerial", invInvoiceSerial);        
+        params.put("proProductionStagesId", proProductionStagesId);        
+        List<ProFactoryDeliveryDetail> detailses = dao.findListByQuery("SELECT e FROM ProFactoryDeliveryDetail e WHERE e.proFactoryDeliveryId.type = 0 AND  ( "
+                + " e.itemId.proGroupId.id in (select pe.proGroupId.id from  ProItemProductionStages pe where pe.proProductionStagesId.id = :proProductionStagesId) "
+                + " AND e.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial=:invInvoiceSerial )group by e.itemId", params);
+        return mapToIntegerItemsList(detailses);
+    }
 
     public List<ProProductionTransactionDetailDetailViewDTO> mapToIntegerItemsList(List<ProFactoryDeliveryDetail> invPurchaseInvoiceDetailList) {
         List<ProProductionTransactionDetailDetailViewDTO> detailDetailViewDTOList = new ArrayList<>();

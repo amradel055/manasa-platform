@@ -5,6 +5,9 @@
  */
 package com.toby.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author AhmedEssam
@@ -17,6 +20,7 @@ public class TobyUserDTO  extends BaseEntityDTO {
     private SymbolDTO lang;
     private Integer master;
     private Integer branchId;
+    private List<TobyUserProproductionDTO> tobyUserProproductionDTOList;
 
     
 
@@ -97,6 +101,23 @@ public class TobyUserDTO  extends BaseEntityDTO {
 
     public void setMaster(Integer master) {
         this.master = master;
+    }
+
+    /**
+     * @return the tobyUserProproductionDTOList
+     */
+    public List<TobyUserProproductionDTO> getTobyUserProproductionDTOList() {
+        if(tobyUserProproductionDTOList == null){
+            tobyUserProproductionDTOList = new ArrayList<>();
+        }
+        return tobyUserProproductionDTOList;
+    }
+
+    /**
+     * @param tobyUserProproductionDTOList the tobyUserProproductionDTOList to set
+     */
+    public void setTobyUserProproductionDTOList(List<TobyUserProproductionDTO> tobyUserProproductionDTOList) {
+        this.tobyUserProproductionDTOList = tobyUserProproductionDTOList;
     }
 
 }

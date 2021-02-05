@@ -47,7 +47,7 @@ public class ProProductionTransactionListMB1 extends BaseListBean {
         try {
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
             context.getSessionMap().remove("ScreenMode");
-            exit("../proProductionTransaction/proProductionTransactionForm.xhtml");
+            exit("../proProductionTransaction/proProductionTransactionFormNew.xhtml");
             return "";
 
         } catch (Exception e) {

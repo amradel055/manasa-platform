@@ -257,7 +257,7 @@
                             <p:graphicImage name="/img/excel.jpg" width="24" style='margin-right:25%;'/>  
                             <p:dataExporter type="xls"
                                             target="invPurchaseInvoiceDetailsTable" 
-                                            fileName="فاتورة اذن استلام بضاعة"
+                                            fileName="فاتورة استلام بالمشغل"
                                             preProcessor="#{proFactoryDeliveryFormDTOMB.preProcessXLS()}"
                                             postProcessor="#{proFactoryDeliveryFormDTOMB.postProcessXLS}" />  
                         </h:commandLink>
@@ -312,7 +312,7 @@
                                          dir="rtl" 
                                          selection="#{proFactoryDeliveryFormDTOMB.invInvoiceDTO.invDailogeDataListSelected}"
                                          value="#{proFactoryDeliveryFormDTOMB.dataModelInvDailogueData}" 
-                                         rows="10"  
+                                         rows="100"  
                                          rowKey="#{dlgTable.index}"
                                          paginator="true" 
                                          lazy="true" 
@@ -327,12 +327,15 @@
                                         <p:inputText id="globalFilter" onkeyup="PF('dlgTable').filter()" style="width:150px" />
                                     </p:outputPanel>
                                 </f:facet>
-                                <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+                                <p:column selectionMode="multiple" style="width:25px;text-align:center"/>
+                                <p:column headerText="#">
+                                    #{index + 1}
+                                </p:column>
                                 <p:column style="width:15vw;font-size:1vw;text-align: right;border-radius: 0px" 
                                           filterStyle="display:none"
                                           filterBy="#{dlgTable.serial}" 
                                           filterMatchMode="contains"
-                                          headerText="#{userData.userDDs['PURCHASE_NUMBER']}"
+                                          headerText="رقم أمر الشغل"
                                           sortBy="#{dlgTable.serial}"
                                           >
                                     <p:outputLabel value="#{dlgTable.serial}" />
@@ -342,7 +345,7 @@
                                           filterStyle="display:none"
                                           filterBy="#{dlgTable.organizationSiteName}"
                                           filterMatchMode="contains"
-                                          headerText="#{userData.userDDs['SUPPLIER']}" 
+                                          headerText="العميل" 
                                           sortBy="#{dlgTable.organizationSiteName}" 
                                           >
                                     <p:outputLabel value="#{dlgTable.organizationSiteName}" />
@@ -355,6 +358,7 @@
                                           sortBy="#{dlgTable.remarks}" >
                                     <p:outputLabel value="#{dlgTable.remarks}" />
                                 </p:column>  
+
                                 <p:column style="width:15vw;font-size:1vw;text-align: right;border-radius: 0px"
                                           filterStyle="display:none"
                                           filterBy="#{dlgTable.date}" 
@@ -366,21 +370,29 @@
                                     </p:outputLabel>                           
                                 </p:column>
 
+                                <p:column style="width:15vw;font-size:1vw;text-align: right;border-radius: 0px"
+                                          filterStyle="display:none" filterBy="#{dlgTable.inventoryName}"
+                                          filterMatchMode="contains"
+                                          headerText="الفرع" 
+                                          sortBy="#{dlgTable.inventoryName}" >
+                                    <p:outputLabel value="#{dlgTable.inventoryName}" />
+                                </p:column> 
+
 
                             </p:dataTable> 
 
 
                         </div>
                         <div style="text-align: center;size: 200px; padding-top: 20px ;">
-                        <p:commandButton  update="invPurchaseInvoiceDetailsTable test "  
-                                          class="reloadButtons"
-                                         
+                            <p:commandButton  update="invPurchaseInvoiceDetailsTable test "  
+                                              class="reloadButtons"
 
-                                          action="#{proFactoryDeliveryFormDTOMB.loadMultiSelection()}" 
-                                          title="#{userData.userDDs['UPLOAD']}" 
-                                          style=" font-size: 20px;	width: 100px;height: 40px; background-color: orange ;color: white; size: 200px">
 
-                        </p:commandButton>
+                                              action="#{proFactoryDeliveryFormDTOMB.loadMultiSelection()}" 
+                                              title="#{userData.userDDs['UPLOAD']}" 
+                                              style=" font-size: 20px;	width: 100px;height: 40px; background-color: orange ;color: white; size: 200px">
+
+                            </p:commandButton>
                         </div>
 
                     </p:dialog>

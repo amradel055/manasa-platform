@@ -46,4 +46,6 @@ public interface InvPurchaseInvoiceDetailService {
     public List<ProProductionTransactionDetailViewDTO> getInvPurchaseInvoiceDetailItemCompleted(Integer invPurchaseInvoiceId, Integer clothNumber, Integer productionTransactionDTO);
 
     public List<ProProductionTransactionDetailDetailViewDTO> getInvPurchaseInvoiceDetailItems(Integer invPurchaseInvoiceId, Integer clothNumber, Integer stageId);
+    
+    public List<ProProductionTransactionDetailDetailViewDTO> getInvPurchaseInvoiceDetailItems(Integer invPurchaseInvoiceId,Integer proProductionStagesId);
 }

@@ -24,6 +24,7 @@ public class InvDailogueData extends BaseEntityDTO {
     private String remarks;
     private ScreenNameClassEnum screenName;
     private Integer proFactoryDeliveryId;
+    private String inventoryName;
     
     
 
@@ -174,6 +175,20 @@ public class InvDailogueData extends BaseEntityDTO {
      */
     public void setProFactoryDeliveryId(Integer proFactoryDeliveryId) {
         this.proFactoryDeliveryId = proFactoryDeliveryId;
+    }
+
+    /**
+     * @return the inventoryName
+     */
+    public String getInventoryName() {
+        return inventoryName;
+    }
+
+    /**
+     * @param inventoryName the inventoryName to set
+     */
+    public void setInventoryName(String inventoryName) {
+        this.inventoryName = inventoryName;
     }
 
 }

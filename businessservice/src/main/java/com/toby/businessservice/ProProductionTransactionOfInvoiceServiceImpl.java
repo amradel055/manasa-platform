@@ -47,5 +47,17 @@ public class ProProductionTransactionOfInvoiceServiceImpl implements ProProducti
 
         return proProductionTransactionOfInvoice;
     }
+    
+    @Override
+    public ProProductionTransactionOfInvoice getRenaimNumberListOfproduction(Integer invInvoiceSerial,  Integer itemId, Integer proProductionStage, TobyUser tobyUser) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("itemId", itemId);
+        params.put("proProductionStage", proProductionStage);
+        params.put("branchId", tobyUser.getBranchId().getId());
+        params.put("invInvoiceSerial", invInvoiceSerial);
+        ProProductionTransactionOfInvoice proProductionTransactionOfInvoice = dao.findEntityByQuery("SELECT e FROM ProProductionTransactionOfInvoice e where  e.invPurchaseInvoiceserial =:invInvoiceSerial and e.productionStagesId =:proProductionStage and e.itemId=:itemId  and e.branchId=:branchId  ", params);
+
+        return proProductionTransactionOfInvoice;
+    }
 
 }

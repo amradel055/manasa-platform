@@ -5,7 +5,6 @@
  */
 package com.toby.businessservice;
 
-import com.toby.dto.InvPurchaseInvoiceDTO1;
 import com.toby.entity.TobyUser;
 import com.toby.views.ProProductionTransactionOfInvoice;
 import java.util.List;
@@ -22,4 +21,5 @@ public interface ProProductionTransactionOfInvoiceService {
 
     public ProProductionTransactionOfInvoice getRenaimNumberListOfproduction(Integer invPurchaseInvoiceId, Integer clothNumber, Integer itemId, Integer proProductionStage, TobyUser tobyUser);
 
+    public ProProductionTransactionOfInvoice getRenaimNumberListOfproduction(Integer invPurchaseInvoiceId,  Integer itemId, Integer proProductionStage, TobyUser tobyUser) ;
 }
