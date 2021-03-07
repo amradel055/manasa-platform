@@ -18,7 +18,7 @@ import java.util.Date;
 public class PurchaseOfItemsBySuppliersSearchBean {
 
     private Integer branchId;
-    private Boolean type;
+    private Integer type;
 
     private InvOrganizationSite fromorganizationName;
     private InvOrganizationSite toorganizationName;
@@ -220,20 +220,6 @@ public class PurchaseOfItemsBySuppliersSearchBean {
     }
 
     /**
-     * @return the type
-     */
-    public Boolean getType() {
-        return type;
-    }
-
-    /**
-     * @param type the type to set
-     */
-    public void setType(Boolean type) {
-        this.type = type;
-    }
-
-    /**
      * @return the salesInvoiceFrom
      */
     public InvPurchaseInvoice getSalesInvoiceFrom() {
@@ -273,6 +259,20 @@ public class PurchaseOfItemsBySuppliersSearchBean {
      */
     public void setShortReport(Boolean shortReport) {
         this.shortReport = shortReport;
+    }
+
+    /**
+     * @return the type
+     */
+    public Integer getType() {
+        return type;
+    }
+
+    /**
+     * @param type the type to set
+     */
+    public void setType(Integer type) {
+        this.type = type;
     }
 
 }

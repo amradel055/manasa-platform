@@ -67,7 +67,6 @@ public class ItemsBarcodesDetailsView implements Serializable {
     private Integer paintColor;
     @Column(name = "item_id")
     private Integer itemId;
-
     @Column(name = "branch_id")
     private Integer branchId;
     @Column(name = "cost_average")
@@ -92,6 +91,14 @@ public class ItemsBarcodesDetailsView implements Serializable {
     private Integer typeShow;
     @Column(name = "pro_group_id")
     private Integer proGroupId;
+    @Column(name = "number_meters_young")
+    private BigDecimal numberMetersYoung;
+    @Column(name = "number_meters_men")
+    private BigDecimal numberMetersMen;
+    @Column(name = "number_meters_free_young")
+    private BigDecimal numberMetersFreeYoung;
+    @Column(name = "number_meters_free_men")
+    private BigDecimal numberMetersFreeMen;
 
     @Override
     public String toString() {
@@ -398,5 +405,61 @@ public class ItemsBarcodesDetailsView implements Serializable {
      */
     public void setProGroupId(Integer proGroupId) {
         this.proGroupId = proGroupId;
+    }
+
+    /**
+     * @return the numberMetersYoung
+     */
+    public BigDecimal getNumberMetersYoung() {
+        return numberMetersYoung;
+    }
+
+    /**
+     * @param numberMetersYoung the numberMetersYoung to set
+     */
+    public void setNumberMetersYoung(BigDecimal numberMetersYoung) {
+        this.numberMetersYoung = numberMetersYoung;
+    }
+
+    /**
+     * @return the numberMetersMen
+     */
+    public BigDecimal getNumberMetersMen() {
+        return numberMetersMen;
+    }
+
+    /**
+     * @param numberMetersMen the numberMetersMen to set
+     */
+    public void setNumberMetersMen(BigDecimal numberMetersMen) {
+        this.numberMetersMen = numberMetersMen;
+    }
+
+    /**
+     * @return the numberMetersFreeYoung
+     */
+    public BigDecimal getNumberMetersFreeYoung() {
+        return numberMetersFreeYoung;
+    }
+
+    /**
+     * @param numberMetersFreeYoung the numberMetersFreeYoung to set
+     */
+    public void setNumberMetersFreeYoung(BigDecimal numberMetersFreeYoung) {
+        this.numberMetersFreeYoung = numberMetersFreeYoung;
+    }
+
+    /**
+     * @return the numberMetersFreeMen
+     */
+    public BigDecimal getNumberMetersFreeMen() {
+        return numberMetersFreeMen;
+    }
+
+    /**
+     * @param numberMetersFreeMen the numberMetersFreeMen to set
+     */
+    public void setNumberMetersFreeMen(BigDecimal numberMetersFreeMen) {
+        this.numberMetersFreeMen = numberMetersFreeMen;
     }
 }

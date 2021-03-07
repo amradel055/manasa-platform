@@ -61,7 +61,17 @@ public class AutoComplateImpl implements AutoCompleteService {
         params.put("branchId", branchId);
         params.put("qeury", qeury);
         appendItemsBarcodesDetailsViewBranchId(sql);
-        return dao.findListByQuery(sql.toString(), params, 0, 100);
+        return dao.findListByQuery(sql.toString(), params, 0, 30);
+    }
+    
+    @Override
+    public List<ItemsBarcodesDetailsView> findAllItemsBarcodesDetailsViewBranchId(Integer branchId, String qeury) {
+        Map<String, Object> params = new HashMap<>();
+        StringBuilder sql = new StringBuilder();
+        params.put("branchId", branchId);
+        params.put("qeury", qeury);
+        appendItemsBarcodesDetailsViewBranchId(sql);
+        return dao.findListByQuery(sql.toString(), params);
     }
 
     private void appendItemsBarcodesDetailsViewBranchId(StringBuilder sql) {
@@ -277,6 +287,7 @@ public class AutoComplateImpl implements AutoCompleteService {
         dTO.setIndex(entity.getId());
         dTO.setCode(entity.getCode());
         dTO.setName(entity.getName());
+        dTO.setMobile(entity.getMobile());
         if (entity.getCurrencyId() != null) {
             CurrencyDTO currencyDTO = new CurrencyDTO();
             currencyDTO.setId(entity.getCurrencyId().getId());
@@ -301,6 +312,7 @@ public class AutoComplateImpl implements AutoCompleteService {
         dTO.setId(entity.getId());
         dTO.setCode(entity.getCode());
         dTO.setName(entity.getName());
+        dTO.setMobile(entity.getMobile());
         if (entity.getCurrencyId() != null) {
             Currency currencyDTO = new Currency();
             currencyDTO.setId(entity.getCurrencyId().getId());

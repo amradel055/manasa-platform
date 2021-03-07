@@ -63,12 +63,12 @@
             <p:fieldset  legend="ادخل اصناف جديده" id="newItemm"  style="margin-bottom:20px">
                 <div id="newItem" class="form-group col-md-12">
 
-                    <p:fileUpload value="#{importMB.invItemFile2}" mode="simple" onstart="disableChoosing()" 
+                    <p:fileUpload value="#{importMB.invItemFile}" mode="simple" onstart="disableChoosing()" 
                                   oncomplete="enableChoosing()" />
                 </div>
 
                 <div class="form-group col-md-12">
-                    <p:commandButton id="btnnewItem"  actionListener="#{importMB.readInvItemCode()}" ajax="false" value="تحميل">
+                    <p:commandButton id="btnnewItem"  actionListener="#{importMB.readInvItem()}" ajax="false" value="تحميل">
                         <f:ajax execute="@all" render="@form"/>
                         <p:ajax/>
                     </p:commandButton>

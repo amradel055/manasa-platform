@@ -26,44 +26,40 @@ public interface InvGlobalService {
     public InvInvoiceDTO updateSummition(InvInvoiceDTO invPurchaseInvoiceDTO);
 
     public InvInvoiceDTO recalcHeadValues(InvInvoiceDTO invPurchaseInvoiceDTO);
-    
+
     public InvInvoiceDTO addInvPurchaseInvoiceDetail(InvInvoiceDTO invPurchaseInvoiceDTO, Integer index);
-    
+
     public String validateSave(List<InvDetailDTO> invPurchaseInvoiceDetailDTOList, Integer invtentortId, ScreenNameClassEnum screenNameClassEnum,
             Boolean negativeSell, Boolean isload, Boolean sellBuy, CompanyActivityClassEnum companyActivityClassEnum);
-    
+
     public Boolean validatePrice(InvDetailDTO detailDTO);
-    
-    public Boolean validateQuantity(InvDetailDTO detailDTO, CompanyActivityClassEnum companyActivityClassEnum,ScreenNameClassEnum screenNameClassEnum);
-    
-    public List<InvDetailDTO> updatePriceAndQuantityForDetail(Integer priceType, List<InvDetailDTO> invDetailDTOList,
-            ScreenNameClassEnum screenNameClassEnum, CompanyActivityClassEnum activityClassEnum);
-    
-    public InvDetailDTO validateItems(InvDetailDTO detailDTO, Integer inventoryId, 
-            ScreenNameClassEnum screenNameClassEnum, Boolean sellBuy,
-            Integer priceType, CompanyActivityClassEnum activityClassEnum
-            , Boolean sellNegative, Boolean isEdit);
-    
+
+    public List<InvDetailDTO> updatePriceAndQuantityForDetail(InvInvoiceDTO invInvoiceDTO);
+
+    public InvDetailDTO validateItems(InvDetailDTO detailDTO, InvInvoiceDTO invInvoiceDTO);
+
+    public Boolean validateQuantity(InvDetailDTO detailDTO, CompanyActivityClassEnum companyActivityClassEnum, ScreenNameClassEnum screenNameClassEnum);
+
     public InvDetailDTO updateAvailableQuantityRow(ScreenNameClassEnum screenNameClassEnum, InvDetailDTO detailDTO, Integer inventoryId, Boolean sellBuy, Boolean sellNegative, Boolean isEdit);
-    
+
     public InvDetailDTO validatePriceColumn(InvDetailDTO detailDTO);
-    
+
     public InvDetailDTO validateQuantityOfUnitColum(InvDetailDTO detailDTO, InvInvoiceDTO invInvoiceDTO);
-    
-    public InvDetailDTO validateQuantityColum(InvDetailDTO detailDTO, Boolean isload, ScreenNameClassEnum screenNameClassEnum,Boolean negativeSell, CompanyActivityClassEnum companyActivityClassEnum) ;
-    
-    public InvDetailDTO validateDiscountColumn(InvDetailDTO detailDTO); 
-    
+
+    public InvDetailDTO validateQuantityColum(InvDetailDTO detailDTO, Boolean isload, ScreenNameClassEnum screenNameClassEnum, Boolean negativeSell, CompanyActivityClassEnum companyActivityClassEnum);
+
+    public InvDetailDTO validateDiscountColumn(InvDetailDTO detailDTO);
+
     public InvDetailDTO fillItemDetail(InvDetailDTO dTO, Map<String, ItemsBarcodesDetailsView> itemsBarcodeMap,
-            Integer id,Integer serial,Integer branchId,BigDecimal cost,BigDecimal discount,BigDecimal quantity,Integer discountType,Integer invInvoiceId,
-            BigDecimal extraCost,BigDecimal net,Integer index,Date createdDate,Integer createdBy,
-            Integer clothNumber,Integer idParent, String itemBarcodeParent, String itemNameParent,Integer proof,
-            String itemBarcode, BigDecimal screwing, Integer itemId, BigDecimal weight, 
-            Integer unitId,Integer unitSerial,String unitName,Integer inventoryItem, BigDecimal number, BigDecimal quantityOfOneUnit, 
-            InvInventory inventoryDTO,InvItem invItem
-            ,CompanyActivityClassEnum companyActivityClassEnum,ScreenNameClassEnum screenNameClassEnum);
+            Integer id, Integer serial, Integer branchId, BigDecimal cost, BigDecimal discount, BigDecimal quantity, Integer discountType, Integer invInvoiceId,
+            BigDecimal extraCost, BigDecimal net, Integer index, Date createdDate, Integer createdBy,
+            Integer clothNumber, Integer idParent, String itemBarcodeParent, String itemNameParent, Integer proof,
+            String itemBarcode, BigDecimal screwing, Integer itemId, BigDecimal weight,
+            Integer unitId, Integer unitSerial, String unitName, Integer inventoryItem, BigDecimal number, BigDecimal quantityOfOneUnit,
+            InvInventory inventoryDTO, InvItem invItem,
+             CompanyActivityClassEnum companyActivityClassEnum, ScreenNameClassEnum screenNameClassEnum,Integer detailId);
 
     public Date sumDateToDueDate(Date date, Date dueDate, Integer duePeroid);
-    
+
     public Integer subtractDatefromDueDate(Date date, Date dueDate, Integer duePeroid);
 }

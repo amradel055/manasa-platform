@@ -27,6 +27,7 @@ public class BankBalanceReportBean {
     private String serial;
     private String itemName;
     private Integer itemSerial;
+    private String customerName;
     /**
      * @return the bankName
      */
@@ -221,5 +222,19 @@ public class BankBalanceReportBean {
      */
     public void setItemSerial(Integer itemSerial) {
         this.itemSerial = itemSerial;
+    }
+
+    /**
+     * @return the customerName
+     */
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    /**
+     * @param customerName the customerName to set
+     */
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 }

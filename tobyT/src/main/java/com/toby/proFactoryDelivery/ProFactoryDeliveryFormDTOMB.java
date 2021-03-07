@@ -63,6 +63,7 @@ public class ProFactoryDeliveryFormDTOMB extends ProductionBasicDataForm {
             findScreenName();
             setInvInvoiceDTO(proFactoryDeliveryService.save(getInvInvoiceDTO(), getUserData().getUser()));
             msgSave(getInvInvoiceDTO().getMsg());
+            reset();
         } else {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "لا يوجد تفاصيل للفاتورة"));
@@ -86,8 +87,10 @@ public class ProFactoryDeliveryFormDTOMB extends ProductionBasicDataForm {
 
     public String saveSelection() {
         int indexOfList = getInvInvoiceDTOListSelected().indexOf(getInvInvoiceDTO());
-        getInvInvoiceDTOListSelected().remove(getInvInvoiceDTO());
+        
         save();
+        getInvInvoiceDTOListSelected().remove(indexOfList);
+//        forward();
         if (indexOfList != -1) {
             getInvInvoiceDTOListSelected().add(indexOfList, getInvInvoiceDTO());
             if (indexOfList < getInvInvoiceDTOListSelected().size() - 1) {

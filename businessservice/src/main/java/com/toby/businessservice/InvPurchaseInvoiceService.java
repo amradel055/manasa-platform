@@ -40,7 +40,7 @@ public interface InvPurchaseInvoiceService {
 
     public List<InvPurchaseInvoiceDTO1> getPurchaseIdFromView(TobyUser tobyUser);
 
-    public List<InvPurchaseInvoice> getALLInvPurchaseInvoicePostFlagedByBranchIdPer(Integer branchId, Boolean type);
+    public List<InvPurchaseInvoice> getALLInvPurchaseInvoicePostFlagedByBranchIdPer(Integer branchId, Integer type);
 
     public InvPurchaseInvoiceDTO1 findInvPurchaseInvoiceDTO(Integer invPurchaseInvoiceDTOId, TobyUser tobyUser);
 

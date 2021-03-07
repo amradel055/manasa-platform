@@ -13,6 +13,7 @@ import com.toby.businessservice.InvAddingOrderService;
 import com.toby.businessservice.InvDelegatorService;
 import com.toby.businessservice.InvDialogueService;
 import com.toby.businessservice.InvGlobalService;
+import com.toby.businessservice.InvInventoryService;
 import com.toby.businessservice.InvItemService;
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
 import com.toby.businessservice.InvPurchaseOrderService;
@@ -83,6 +84,7 @@ import org.primefaces.model.SortOrder;
 public abstract class InventoryBasicDataForm extends BaseFormBean {
 
     private Integer siteType;
+    private String itemName;
 
     private List<InvOrganizationSite> invOrganizationSiteList;
     private List<InvOrganizationSiteDTO> invOrganizationSiteDTOList;
@@ -92,6 +94,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     private List<InvInventory> invInventoryList;
 
     private ItemsBarcodesDetailsViewConverter itemsBarcodesDetailsViewConverter;
+    private ItemsBarcodesDetailsViewConverter itemsBarcodesDetailsViewConverterForSearch;
     private InvDelegatorConvertor purchasePersonConvertor;
     private InvOrganizationSiteConverter supplierConvertor;
     private InvOrganizationSiteDTOConverter organizationSiteDTOConvertor;
@@ -104,6 +107,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     private List<CurrencyDTO> currencyDTOList;
     private CurrencyDTOConverter currencyConverter;
     private List<ItemsBarcodesDetailsView> itemsBarcodesDetailsViewList;
+    private List<ItemsBarcodesDetailsView> itemsBarcodesDetailsViewListForSearch;
+    private ItemsBarcodesDetailsView itemsBarcodesDetailsViewListForSearchSelected;
     private Map<String, ItemsBarcodesDetailsView> itemsBarcodeMap;
     private List<CostCenterDTO> costCenterList;
     private CostCenterDTOConverter costCenterConverter;
@@ -188,6 +193,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     private ProDetailTypeService proDetailTypeService;
     @EJB
     InvPurchaseInvoiceService_1 invPurchaseInvoiceService_1;
+    @EJB
+    InvInventoryService invInventoryService;
 
     @Override
     public abstract String save();
@@ -234,7 +241,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                     getInvInvoiceDTO().setInvInventoryIdTo(getInvInventoryDTOList().get(getInvInventoryDTOList().size() - 1));
                 }
             }
-            
+
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceFormMB", "resetInvPurchaseInvoiceForm");
         }
@@ -248,7 +255,9 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                 || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVSALESINVOICEFORM)
                 || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.PROWORKORDER)
                 || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVRETURNSALESFORM)) {
-            getInvInvoiceDTO().setGallaryId(getGallaryList().get(0));
+            if (getInvInvoiceDTO().getGallaryId() == null) {
+                getInvInvoiceDTO().setGallaryId(getGallaryList().get(0));
+            }
             getGlBankList();
         }
 
@@ -258,7 +267,9 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                 || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVADDINGORDERFORM)) {
             getInvOrganizationSiteDTOList(true, 1);
 //            getInventoryDelegatorList(0, getInvInvoiceDTO().getGallaryId() == null ? null : getInvInvoiceDTO().getGallaryId().getId());
-            getInvInvoiceDTO().setInvDelegatorId(getInventoryDelegatorList(0, getInvInvoiceDTO().getGallaryId() == null ? null : getInvInvoiceDTO().getGallaryId().getId()).get(0));
+            if (getInvInvoiceDTO().getInvDelegatorId() == null) {
+                getInvInvoiceDTO().setInvDelegatorId(getInventoryDelegatorList(0, getInvInvoiceDTO().getGallaryId() == null ? null : getInvInvoiceDTO().getGallaryId().getId()).get(0));
+            }
         } else if (getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVSALESINVOICEFORM)
                 || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVADDINGORDERFORM)
                 || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVRESERVATIONFORM)
@@ -268,12 +279,16 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                 || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVPERMISSIONORDERFORM)) {
             getInvOrganizationSiteDTOList(true, 0);
 //            getInventoryDelegatorList(1, getInvInvoiceDTO().getGallaryId() == null ? null : getInvInvoiceDTO().getGallaryId().getId());
-            getInvInvoiceDTO().setInvDelegatorId(getInventoryDelegatorList(1, getInvInvoiceDTO().getGallaryId() == null ? null : getInvInvoiceDTO().getGallaryId().getId()).get(0));
+            if (getInvInvoiceDTO().getInvDelegatorId() == null) {
+                getInvInvoiceDTO().setInvDelegatorId(getInventoryDelegatorList(1, getInvInvoiceDTO().getGallaryId() == null ? null : getInvInvoiceDTO().getGallaryId().getId()).get(0));
+            }
         }
         getInvInvoiceDTO().setDueperiod(getInvInvoiceDTO().getInventorySetupDTO().getDeliveryPeriod());
         sumDateToDueDate();
         if (getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.PROWORKORDER)) {
-            getInvInvoiceDTO().setPricetype(1);
+            if (getInvInvoiceDTO().getPricetype() == null) {
+                getInvInvoiceDTO().setPricetype(1);
+            }
         }
     }
 
@@ -383,11 +398,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         try {
             if (checkdetail(invPurchaseInvoiceDetailsValidate)) {
                 invPurchaseInvoiceDetailsValidate.setMsg(null);
-                invPurchaseInvoiceDetailsValidate = invGlobalService.validateItems(invPurchaseInvoiceDetailsValidate,
-                        getInvInvoiceDTO().getInvInventoryId() != null ? getInvInvoiceDTO().getInvInventoryId().getId() : null,
-                        getInvInvoiceDTO().getScreenName(), getInvInvoiceDTO().getInventorySetupDTO().getSellBuy(),
-                        getInvInvoiceDTO().getPricetype(), getInvInvoiceDTO().getCompanyActivity(),
-                        getInvInvoiceDTO().getInventorySetupDTO().getNegativeSell(), false);
+                getInvInvoiceDTO().setIsEdit(Boolean.FALSE);
+                invPurchaseInvoiceDetailsValidate = invGlobalService.validateItems(invPurchaseInvoiceDetailsValidate, getInvInvoiceDTO());
                 afterValidation(invPurchaseInvoiceDetailsValidate);
             }
         } catch (Exception e) {
@@ -398,8 +410,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     }
 
     public void updatePriceAndQuantityForDetail() {
-        getInvInvoiceDTO().setInvPurchaseInvoiceDetailList(invGlobalService.updatePriceAndQuantityForDetail(getInvInvoiceDTO().getPricetype(), getInvInvoiceDTO().getInvPurchaseInvoiceDetailList(),
-                getInvInvoiceDTO().getScreenName(), getInvInvoiceDTO().getCompanyActivity()));
+        getInvInvoiceDTO().setInvPurchaseInvoiceDetailList(invGlobalService.updatePriceAndQuantityForDetail(getInvInvoiceDTO()));
     }
 
     public void sumDateToDueDate() {
@@ -479,7 +490,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
     public void calculateRemainValue() {
         try {
-            getInvInvoiceDTO().setRemain(getInvInvoiceDTO().getPayed().subtract(getInvInvoiceDTO().getFinalNet()));
+            getInvInvoiceDTO().setRemain(getInvInvoiceDTO().getFinalNet().subtract(getInvInvoiceDTO().getPayed()));
         } catch (Exception e) {
             saveError(e, "SalesInvoiceFormMB", "calculateRemainValue");
         }
@@ -512,7 +523,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
             if (invPurchaseInvoiceDetailsValidate.getId() != null) {
                 getInvInvoiceDTO().getInvPurchaseInvoiceDetailsDeletedList().add(invPurchaseInvoiceDetailsValidate);
             }
-            
+
             getInvInvoiceDTO().getInvPurchaseInvoiceDetailList().remove(invPurchaseInvoiceDetailsValidate);
             updateSummition();
             for (InvDetailDTO detailEntity : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
@@ -565,6 +576,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
     public void updateSummition() {
         setInvInvoiceDTO(invGlobalService.updateSummition(getInvInvoiceDTO()));
+        calculateRemainValue();
     }
 
     ////////// load dialogue //////////
@@ -610,6 +622,15 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         }
     }
 
+    public void findInvInvoiceDto() {
+        InvInvoiceDTO invoiceDTO = invPurchaseInvoiceService_1.getInvPurchaseInvoiceDTOBySerial(getInvInvoiceDTO().getLoadedSerial(), getUserData().getUserBranch().getId());
+        getInvInvoiceDTO().setOrganizationSiteId(invoiceDTO.getOrganizationSiteId());
+        getInvInvoiceDTO().setInvInventoryId(invoiceDTO.getInvInventoryId());
+        getInvInvoiceDTO().setInvDelegatorId(invoiceDTO.getInvDelegatorId());
+        getInvInvoiceDTO().setRemarks(invoiceDTO.getRemarks());
+        getInvInvoiceDTO().setInvPurchaseInvoiceId(invoiceDTO.getId());
+    }
+
     public void print() {
         iReportService.printReportInvoice(getInvInvoiceDTO(), getUserData());
     }
@@ -625,14 +646,17 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
             getInvInvoiceDTO().setId((Integer) getContext().getSessionMap().get("invPurchaseOrderSelected"));
             setInvInvoiceDTO(invPurchaseOrderService.findInvPurchaseOrderById(getInvInvoiceDTO(), getUserData().getUser()));
         } else if (getUri().contains("invaddingorder") || getUri().contains("invpermissionorder_1")) {
-            getInvInvoiceDTO().setId((Integer) getContext().getSessionMap().get("invAddingOrderSelected"));
-            setInvInvoiceDTO(invAddingOrderService.findInvAddingOrderById(getInvInvoiceDTO(), getUserData().getUser()));
+            getContext().getSessionMap().put("invAddingOrderSelected", getInvInvoiceDTOSelected().getId());
+//            getInvInvoiceDTO().setId((Integer) getContext().getSessionMap().get("invAddingOrderSelected"));
+//            setInvInvoiceDTO(invAddingOrderService.findInvAddingOrderById(getInvInvoiceDTO(), getUserData().getUser()));
         } else if (getUri().contains("invQuotation_1")) {
             getInvInvoiceDTO().setId((Integer) getContext().getSessionMap().get("invQuotationSelected"));
             setInvInvoiceDTO(invQuotationService.findInvPurchaseOrderById(getInvInvoiceDTO(), getUserData().getUser()));
         } else if (getUri().contains("invReservationForm")) {
             getInvInvoiceDTO().setId((Integer) getContext().getSessionMap().get("invReservationSelected"));
             setInvInvoiceDTO(invReservationService.findInvPurchaseInvoiceById(getInvInvoiceDTO(), getUserData().getUser()));
+        } else if (getUri().contains("invtransferInventory")) {
+            getContext().getSessionMap().put("invTransferSelected", getInvInvoiceDTOSelected().getId());
         }
         fillInvInvoiceDetailDTO();
         print();
@@ -658,6 +682,40 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
     public void hishis() {
         System.out.print("ttt");
+    }
+
+    ////  Print Barcode
+    public void printBarcode() {
+
+        try {
+            if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getInvPurchaseInvoiceDetailList() != null && !getInvInvoiceDTO().getInvPurchaseInvoiceDetailList().isEmpty()) {
+                fillReport(prepareReport(), getUserData().getReportPath() + "itemBarcodeToby.jasper", getInvInvoiceDTO().getInvPurchaseInvoiceDetailList(), "pdf");
+            }
+        } catch (Exception e) {
+
+        }
+    }
+
+    public HashMap prepareReport() {
+        try {
+            Map<String, String> userDDs = getUserData().getUserDDs();
+            HashMap hashMap = new HashMap();
+
+//            hashMap.put("PrintedBy", getUserData().getUser().getName());
+//            hashMap.put("Branch", getUserData().getUserBranch().getNameAr());
+            hashMap.put("companyName", getUserData().getCompany().getName());
+
+//            if (isFileExist(getUserData().getImageReportPath())) {
+//                hashMap.put("companyImage", getUserData().getImageReportPath());
+//            } else {
+//                hashMap.put("companyImage", null);
+//            }
+            //  hashMap.put("reportDate", new Date());
+            return hashMap;
+        } catch (Exception e) {
+            saveError(e, "invQuotationFormMB", "prepareReport");
+            return null;
+        }
     }
 
     public List<ItemsBarcodesDetailsView> completeItemsDatas2(String query) {
@@ -782,6 +840,18 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
     public List<CostCenterDTO> completeCostCenters(String query) {
         return AutoComplete.completeCostCenters(query, getCostCenterList(), getCostCenterConverter());
+    }
+
+    public void findAllItemsBarcodesDetailsViewBranchId() {
+        setItemsBarcodesDetailsViewListForSearch(autoCompleteService.findAllItemsBarcodesDetailsViewBranchId(getUserData().getUserBranch().getId(), getItemName()));
+        setItemsBarcodesDetailsViewConverterForSearch(getItemsBarcodesDetailsViewConverterForSearch());
+    }
+
+    public void putItemsBarcodesDetailsViewBranchId() {
+        if (getInvInvoiceDTO().getInvPurchaseInvoiceDetailsSelected() != null) {
+            getInvInvoiceDTO().getInvPurchaseInvoiceDetailsSelected().setItemsBarcodesDetail(getItemsBarcodesDetailsViewListForSearchSelected());
+            validateItems(getInvInvoiceDTO().getInvPurchaseInvoiceDetailsSelected());
+        }
     }
 
     public List<ItemsBarcodesDetailsView> completeItemsData(String query, Integer invPurchaseInvoiceId) {
@@ -1295,7 +1365,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         invInvoiceDTO.setReportManagement(reportManagementService.reportManagementByBranch(getUserData().getUserBranch().getId()));
 
         invInvoiceDTO.setBranchId(getUserData().getUserBranch().getId());
-        
+
         invInvoiceDTO.setTaxflag(invInvoiceDTO.getInventorySetupDTO().getDefaultSalesTax());
         if (invInvoiceDTO.getInventorySetupDTO() != null && invInvoiceDTO.getInventorySetupDTO().getReservationPeriod() != null) {
             invInvoiceDTO.setDueperiod(invInvoiceDTO.getInventorySetupDTO().getReservationPeriod());
@@ -1345,6 +1415,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
             if (getUri().contains("invtransferInventory")) {
                 getInvInvoiceDTO().setScreenName(ScreenNameClassEnum.INVTRANSFERINVENTORY);
                 getInvInvoiceDTO().setType(0);
+                getInvInvoiceDTO().setPricetype(1);
             } else {
                 getInvInvoiceDTO().setScreenName(ScreenNameClassEnum.INVTRANSFER);
                 getInvInvoiceDTO().setType(1);
@@ -1361,7 +1432,11 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                 && !ScreenNameClassEnum.INVTRANSFERINVENTORY.equals(getInvInvoiceDTO().getScreenName())) {
             putCurrency();
         }
-        initData();
+
+        if (!ScreenNameClassEnum.INVPERMISSIONORDERFORM.equals(getInvInvoiceDTO().getScreenName())) {
+            initData();
+        }
+
     }
 
     private void fillInvInvoiceDetailDTO() {
@@ -1656,7 +1731,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
      */
     public List<InvInventoryDTO> getInvInventoryDTOListTo() {
         if (invInventoryDTOListTo == null) {
-            invInventoryDTOListTo = getUserData().getInventoryDTOList();
+            invInventoryDTOListTo = invInventoryService.getALLInventorieDTOListByBranch(getUserData().getUser());
             setInvInventoryDTOConverterTO(new InvInventoryDTOConverter(invInventoryDTOListTo));
         }
         return invInventoryDTOListTo;
@@ -1681,5 +1756,64 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
      */
     public void setInvInventoryDTOConverterTO(InvInventoryDTOConverter invInventoryDTOConverterTO) {
         this.invInventoryDTOConverterTO = invInventoryDTOConverterTO;
+    }
+
+    /**
+     * @return the itemName
+     */
+    public String getItemName() {
+        return itemName;
+    }
+
+    /**
+     * @param itemName the itemName to set
+     */
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
+    }
+
+    /**
+     * @return the itemsBarcodesDetailsViewListForSearch
+     */
+    public List<ItemsBarcodesDetailsView> getItemsBarcodesDetailsViewListForSearch() {
+        return itemsBarcodesDetailsViewListForSearch;
+    }
+
+    /**
+     * @param itemsBarcodesDetailsViewListForSearch the
+     * itemsBarcodesDetailsViewListForSearch to set
+     */
+    public void setItemsBarcodesDetailsViewListForSearch(List<ItemsBarcodesDetailsView> itemsBarcodesDetailsViewListForSearch) {
+        this.itemsBarcodesDetailsViewListForSearch = itemsBarcodesDetailsViewListForSearch;
+    }
+
+    /**
+     * @return the itemsBarcodesDetailsViewConverterForSearch
+     */
+    public ItemsBarcodesDetailsViewConverter getItemsBarcodesDetailsViewConverterForSearch() {
+        return itemsBarcodesDetailsViewConverterForSearch;
+    }
+
+    /**
+     * @param itemsBarcodesDetailsViewConverterForSearch the
+     * itemsBarcodesDetailsViewConverterForSearch to set
+     */
+    public void setItemsBarcodesDetailsViewConverterForSearch(ItemsBarcodesDetailsViewConverter itemsBarcodesDetailsViewConverterForSearch) {
+        this.itemsBarcodesDetailsViewConverterForSearch = itemsBarcodesDetailsViewConverterForSearch;
+    }
+
+    /**
+     * @return the itemsBarcodesDetailsViewListForSearchSelected
+     */
+    public ItemsBarcodesDetailsView getItemsBarcodesDetailsViewListForSearchSelected() {
+        return itemsBarcodesDetailsViewListForSearchSelected;
+    }
+
+    /**
+     * @param itemsBarcodesDetailsViewListForSearchSelected the
+     * itemsBarcodesDetailsViewListForSearchSelected to set
+     */
+    public void setItemsBarcodesDetailsViewListForSearchSelected(ItemsBarcodesDetailsView itemsBarcodesDetailsViewListForSearchSelected) {
+        this.itemsBarcodesDetailsViewListForSearchSelected = itemsBarcodesDetailsViewListForSearchSelected;
     }
 }

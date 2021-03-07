@@ -24,7 +24,7 @@ public class InvoiceProductionStagesReportServiceImpl implements InvoiceProducti
         StringBuilder query = new StringBuilder();
         query.append("SELECT \n"
                 + "        `ipi`.`serial` AS `invoiceSerial`,\n"
-                + "        `ipi`.`date` AS `date`,\n"
+                + "        `ppit`.`date` AS `date`,\n"
                 + "        `ios`.`code` AS `client`,\n"
                 + "        `ios`.`name` AS `client_name`,\n"
                 + "        `ppit`.`number` AS `quantity`,\n"

@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                template="./../../template/newTemplate.xhtml"
+                template="./../../template/template.xhtml"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
@@ -9,15 +9,29 @@
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <ui:define name="content">
         <f:event listener="#{userData.authorize}" type="preRenderView" />
-       
+       <h:form  id="form" dir="#{userData.dir}"  class='formmargin'>
          <div style=" position: absolute;left: 20px"> 
 
-                <p:commandButton  style="width: 90px;background-image: none!important;z-index: 2" 
-                                  class="viewButton searchButton"
-                                  value="Hide/Show"/>  
+                <p:commandButton  style="z-index: 2;
+                                      margin-top: 12%;
+                                      color: #035c70!important; 
+                                      background-color: #223238!important;
+                                      border: 1px solid #22323a!important;
+                                      background: #22323a 50% 50% repeat-x!important;"
+                                      icon="fa fa-fw fa-home"
+                                      title="#{userData.userDDs['HOME']}"
+                                      class="smhomeButton" 
+                                      action="exit" />
+                <p:commandButton  style="z-index: 2;
+                                      margin-top: 9%!important;
+                                      color: #035c70!important; 
+                                      background-color: #223238!important;
+                                      border: 1px solid #22323a!important;
+                                      background: #22323a 50% 50% repeat-x!important;" 
+                                      class="viewButton sminimize"
+                                      icon="fa fa-window-minimize"
+                                      title="إظهار/إخفاء"/> 
             </div>
-        <h:form  id="form" dir="#{userData.dir}"  style="margin-right: 20px">
-          
             <p:fieldset style=" position: relative"  legend="#{userData.userDDs['SALES_JOURNAL']}"> 
 
 
@@ -27,13 +41,13 @@
 
                         <h:panelGroup>
                             <h:panelGroup>
-                                <p:outputLabel  style="width: 70px" value="#{userData.userDDs['FROM_DATE']}"/>
+                                <p:outputLabel  style="width: 100px;margin-right: 6%;" value="#{userData.userDDs['FROM_DATE']}"/>
                             </h:panelGroup>
 
                             <h:panelGroup>
                                 <p:calendar pattern="dd/MM/yyyy" 
                                             value="#{salesJournalReportMB.salesJournalSearchBean.dateFrom}"
-                                            style="width:56%">
+                                            style="width:50%">
 
                                 </p:calendar>
                             </h:panelGroup>
@@ -44,13 +58,13 @@
 
                         <h:panelGroup>
                             <h:panelGroup>
-                                <p:outputLabel  style="width: 70px" value="#{userData.userDDs['TO_DATE']}"/>
+                                <p:outputLabel  style="width: 100px" value="#{userData.userDDs['TO_DATE']}"/>
                             </h:panelGroup>
 
                             <h:panelGroup>
                                 <p:calendar pattern="dd/MM/yyyy" 
                                             value="#{salesJournalReportMB.salesJournalSearchBean.dateTo}"
-                                            style="width:56%">
+                                            style="width:50%">
 
                                 </p:calendar>
                             </h:panelGroup>
@@ -59,11 +73,11 @@
                     <div class="ui-g-12 ui-md-6">
                         <h:panelGroup>
                             <h:panelGroup>
-                                <p:outputLabel style="width: 70px" value="#{userData.userDDs['FROM_DELE']}"/>
+                                <p:outputLabel style="width: 105px;margin-right: 6%;" value="#{userData.userDDs['FROM_DELE']}"/>
                             </h:panelGroup> 
 
                             <h:panelGroup>
-                                <p:autoComplete style="width:75%!important" 
+                                <p:autoComplete style="width:34%!important" 
 
                                                 dropdown="true"
                                                 converter="#{salesJournalReportMB.invDelegatorConverter}"
@@ -83,11 +97,11 @@
 
                         <h:panelGroup>
                             <h:panelGroup>
-                                <p:outputLabel style="width: 70px" value="#{userData.userDDs['TO_DELE']}"/>
+                                <p:outputLabel style="width: 105px" value="#{userData.userDDs['TO_DELE']}"/>
                             </h:panelGroup> 
 
                             <h:panelGroup>
-                                <p:autoComplete style="width:75%!important" 
+                                <p:autoComplete style="width:34%!important" 
 
                                                 dropdown="true"
                                                 converter="#{salesJournalReportMB.invDelegatorConverter}"
@@ -105,12 +119,12 @@
                     <div class="ui-g-12 ui-md-6">
                         <h:panelGroup>
                             <h:panelGroup>
-                                <p:outputLabel style="width: 70px" value="#{userData.userDDs['FROM_INVOI_NO']}"/>
+                                <p:outputLabel style="width: 105px;margin-right: 6%;" value="#{userData.userDDs['FROM_INVOI_NO']}"/>
                             </h:panelGroup> 
 
                                 <h:panelGroup>
                                     <p:autoComplete id="purchaseIdFrom"
-                                                    style="width:75%!important " 
+                                                    style="width:34%!important " 
                                                     dropdown="true"
 
                                                     converter="#{salesJournalReportMB.invInvoiceSalesConverter}"
@@ -130,12 +144,12 @@
 
                             <h:panelGroup>
 
-                                <p:outputLabel style="width: 70px" value="#{userData.userDDs['TO_INVOI_NO']}"/>
+                                <p:outputLabel style="width: 105px" value="#{userData.userDDs['TO_INVOI_NO']}"/>
                             </h:panelGroup> 
 
                               <h:panelGroup>
                                     <p:autoComplete id="purchaseIdTo"
-                                                    style="width:75%!important " 
+                                                    style="width:34%!important " 
                                                     dropdown="true"
 
                                                     converter="#{salesJournalReportMB.invInvoiceSalesConverter}"
@@ -154,16 +168,17 @@
                     <div class="ui-g-12 ui-md-6">
                         <h:panelGroup>
                             <h:panelGroup>
-                                <p:outputLabel style="width: 70px" value="#{userData.userDDs['FROM_INVOI_TYP']}"/>
+                                <p:outputLabel class="floatLeft" style="width: 105px;margin-right: 6%;" value="#{userData.userDDs['FROM_INVOI_TYP']}"/>
                             </h:panelGroup> 
 
                             <h:panelGroup>
-                                <p:selectOneMenu style="width:56%;margin-top:5px"  filter="true" filterMatchMode="contains"   value="#{salesJournalReportMB.salesJournalSearchBean.frompaymentType}" >
+                                <p:selectOneMenu style="width:35%;"  filter="true" filterMatchMode="contains"   value="#{salesJournalReportMB.salesJournalSearchBean.frompaymentType}" >
 
                                     <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" />
                                     <f:selectItem itemLabel="#{userData.userDDs['CASH']}"  itemValue="0" />
                                     <f:selectItem itemLabel="#{userData.userDDs['POSTPONE']}"  itemValue="1" />
                                     <f:selectItem itemLabel="#{userData.userDDs['CREDIT_DOCUMENT']}"  itemValue="2" />
+                                    <f:selectItem itemLabel="نقطة بيع"  itemValue="3" />
                                 </p:selectOneMenu>
                             </h:panelGroup> 
                         </h:panelGroup>
@@ -173,15 +188,16 @@
 
                             <h:panelGroup>
 
-                                <p:outputLabel style="width: 70px" value="#{userData.userDDs['TO_INVOI_TYP']}"/>
+                                <p:outputLabel class="floatLeft" style="width: 105px" value="#{userData.userDDs['TO_INVOI_TYP']}"/>
                             </h:panelGroup> 
 
                             <h:panelGroup>
-                                <p:selectOneMenu style="width:56%;margin-top:5px" filter="true" filterMatchMode="contains"   value="#{salesJournalReportMB.salesJournalSearchBean.topaymentType}"  >
+                                <p:selectOneMenu style="width:35%;" filter="true" filterMatchMode="contains"   value="#{salesJournalReportMB.salesJournalSearchBean.topaymentType}"  >
                                     <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"  />
                                     <f:selectItem itemLabel="#{userData.userDDs['CASH']}"  itemValue="0" />
                                     <f:selectItem itemLabel="#{userData.userDDs['POSTPONE']}"  itemValue="1" />
                                     <f:selectItem itemLabel="#{userData.userDDs['CREDIT_DOCUMENT']}"  itemValue="2" />
+                                    <f:selectItem itemLabel="نقطة بيع"  itemValue="3" />
                                 </p:selectOneMenu>
 
                             </h:panelGroup> 
@@ -192,11 +208,11 @@
 
                         <h:panelGroup>
                             <h:panelGroup>
-                                <p:outputLabel style="width: 70px" value="#{userData.userDDs['FROM_CUSTOM']}"/>
+                                <p:outputLabel style="width: 105px;margin-right: 6%;" value="#{userData.userDDs['FROM_CUSTOM']}"/>
                             </h:panelGroup> 
 
                             <h:panelGroup>
-                                <p:autoComplete style="width:75%!important" 
+                                <p:autoComplete style="width:34%!important" 
 
                                                 dropdown="true"
                                                 converter="#{salesJournalReportMB.invCustomerConverter}"
@@ -215,11 +231,11 @@
 
                         <h:panelGroup>
                             <h:panelGroup>
-                                <p:outputLabel style="width: 70px" value="#{userData.userDDs['TO_CUSTOM']}"/>
+                                <p:outputLabel style="width: 105px" value="#{userData.userDDs['TO_CUSTOM']}"/>
                             </h:panelGroup> 
 
                             <h:panelGroup>
-                                <p:autoComplete style="width:75%!important" 
+                                <p:autoComplete style="width:34%!important" 
 
                                                 dropdown="true"
                                                 converter="#{salesJournalReportMB.invCustomerConverter}"
@@ -237,11 +253,11 @@
 
                         <h:panelGroup>
                             <h:panelGroup>
-                                <p:outputLabel style="width: 70px" value="#{userData.userDDs['FROM_REPOS_NO']}"/>
+                                <p:outputLabel style="width: 105px;margin-right: 6%;" value="#{userData.userDDs['FROM_INVENTORY_NO']}"/>
                             </h:panelGroup> 
 
                             <h:panelGroup>
-                                <p:autoComplete style="width:75%!important"
+                                <p:autoComplete style="width:34%!important"
                                                 dropdown="true"
                                                 converter="#{salesJournalReportMB.invInventoryConverter}"
                                                 value="#{salesJournalReportMB.salesJournalSearchBean.fromInventoryName}"
@@ -259,11 +275,11 @@
                     <div class="ui-g-12 ui-md-6">
                         <h:panelGroup>
                             <h:panelGroup>
-                                <p:outputLabel style="width: 70px" value="#{userData.userDDs['TO_REPOS_NO']}"/>
+                                <p:outputLabel style="width: 105px" value="#{userData.userDDs['TO_INVENTORY_NO']}"/>
                             </h:panelGroup> 
 
                             <h:panelGroup>
-                                <p:autoComplete style="width:75%!important" 
+                                <p:autoComplete style="width:34%!important" 
 
                                                 dropdown="true"
                                                 converter="#{salesJournalReportMB.invInventoryConverter}"
@@ -282,7 +298,7 @@
                     <div class="ui-g-12 ui-md-6">
                         <h:panelGroup>
                             <h:panelGroup>
-                                <p:outputLabel style="width: 70px" value="#{userData.userDDs['TOTAL']}"/>
+                                <p:outputLabel style="width: 105px;margin-right: 6%;" value="#{userData.userDDs['TOTAL']}"/>
                             </h:panelGroup> 
 
                             <h:panelGroup>
@@ -294,6 +310,21 @@
                             </h:panelGroup> 
                         </h:panelGroup> 
                     </div>
+                    <div class="ui-g-12 ui-md-6">
+                        <h:panelGroup>
+                            <h:panelGroup>
+                                <p:outputLabel style="width: 105px;margin-right: 6%;" value="#{userData.userDDs['SHOW_RETURNS']}"/>
+                            </h:panelGroup> 
+                            <h:panelGroup>
+
+                                <p:selectBooleanCheckbox value="#{salesJournalReportMB.salesJournalSearchBean.isReturn}">
+                                    <p:ajax update="reportDB" listener="#{salesJournalReportMB.search()}" />
+                                </p:selectBooleanCheckbox>
+
+                            </h:panelGroup> 
+                        </h:panelGroup> 
+                    </div>
+
 
 
                 </div>
@@ -304,13 +335,13 @@
                     <h:panelGroup  class="centerButtons" style="margin-top: 2%">
 
 
-                        <p:commandButton   class="searchButton"
+                        <p:commandButton   class="searchButtons"
                                            title="#{userData.userDDs['SEARCH']}"
                                            action="#{salesJournalReportMB.search()}"
                                            id="saveB"
                                            value="#{userData.userDDs['SEARCH']}"
                                            update="@form" 
-                                           icon="fa fa-search"  />
+                                           style="color: #fff!important;background-color: #2196F3;margin-left: 5px;"  />
 
                         <p:commandButton  class="newButton"
                                           id="NewB"
@@ -319,13 +350,13 @@
                                           action="#{salesJournalReportMB.reset()}"
                                           update="form"
                                           value="#{userData.userDDs['NEW']}"
-                                          icon="fa fa-plus"/>
+                                           style=""/>
 
-                        <p:commandButton  class="printButton"
+                        <p:commandButton  class="printButtons"
                                           id="PrintB"
                                           ajax="false"
                                           onclick="form.target = '_blank'"  
-                                          icon="fa fa-fw fa-print"
+                                          style="color: #fff!important;background-color: grey;margin-left: 5px;"
                                           value="#{userData.userDDs['PRINT']}" 
                                           actionListener="#{salesJournalReportMB.exportPDF}"
                                           title="#{userData.userDDs['PRINT']}"
@@ -333,11 +364,11 @@
 
                         <p:commandButton   class="closeButton"
                                            id="CloseB"
-                                           icon="fa fa-fw fa-backward"  
+                                          style=""  
                                            title="#{userData.userDDs['BACK']}"
                                            action="exit"
                                            value="#{userData.userDDs['BACK']}"/>
-                        <h:commandLink class="sdcreenimg">  
+                        <h:commandLink class="sdcreenimg" style="margin-right: 4px;">  
                             <p:graphicImage name="/img/excel.jpg" width="24"/>  
                             <p:dataExporter type="xls"
                                             target="purchaseInvoiceDetail" 
@@ -383,7 +414,7 @@
 
                     </f:facet>
 
-                    <p:column style="width: 12vh;text-align: center;font-size: 1.8vh" 
+                    <p:column style="width: 12vh;text-align: center;font-size: 1.8vh;border-radius: 0px;" 
                               headerText="#{userData.userDDs['DATEE']}"
 
                               filterBy="#{purchaseInvoiceDetail.date}" 
@@ -397,7 +428,7 @@
                     </p:column>
 
                     <p:column rendered="#{salesJournalReportMB.salesJournalSearchBean.showReport eq false}" 
-                              style="width:10vh;font-size: 2vh;text-align: -webkit-auto"  headerText="#{userData.userDDs['INVOICE_NO']}"
+                              style="width:10vh;font-size: 2vh;text-align: -webkit-auto;border-radius: 0px;"  headerText="#{userData.userDDs['INVOICE_NO']}"
 
                               filterBy="#{purchaseInvoiceDetail.serialNum}" 
                               filterMatchMode="contains" 
@@ -408,7 +439,7 @@
                     </p:column>
 
                     <p:column rendered="#{salesJournalReportMB.salesJournalSearchBean.showReport eq false}" 
-                              style="text-align: center;font-size: 15px; width: 15%" 
+                              style="text-align: center;font-size: 15px; width: 15%;border-radius: 0px;" 
                               headerText="#{userData.userDDs['CUSTOMERR']}"
 
                               filterBy="#{purchaseInvoiceDetail.supplierName}" 
@@ -420,7 +451,7 @@
                     </p:column>
 
                     <p:column rendered="#{salesJournalReportMB.salesJournalSearchBean.showReport eq false}" 
-                              style="text-align: center;font-size: 15px; width: 15%" headerText="#{userData.userDDs['DELEGATOR']}"
+                              style="text-align: center;font-size: 15px; width: 15%;border-radius: 0px;" headerText="#{userData.userDDs['DELEGATOR']}"
 
                               filterBy="#{purchaseInvoiceDetail.delegatorName}" 
                               filterMatchMode="contains" 
@@ -431,7 +462,7 @@
                         <h:outputText value="#{purchaseInvoiceDetail.delegatorName}"  style="text-align: center;"/>
                     </p:column>
 
-                    <p:column style="text-align: center;font-size: 15px; width: 10%" headerText="#{userData.userDDs['DISCOUNT']}"
+                    <p:column style="text-align: center;font-size: 15px; width: 10%;border-radius: 0px;" headerText="#{userData.userDDs['DISCOUNT']}"
 
                               filterBy="#{purchaseInvoiceDetail.discount}" 
                               filterMatchMode="contains" 
@@ -441,7 +472,7 @@
                         <h:outputText value="#{purchaseInvoiceDetail.discount}"  style="text-align: center;"/>
                     </p:column>
 
-                    <p:column style="text-align: center;font-size: 15px; width: 10%" headerText="#{userData.userDDs['NET']}"
+                    <p:column style="text-align: center;font-size: 15px; width: 10%;border-radius: 0px;" headerText="#{userData.userDDs['NET']}"
 
                               filterBy="#{purchaseInvoiceDetail.net}" 
                               filterMatchMode="contains" 
@@ -452,12 +483,12 @@
                     </p:column>
                     <p:columnGroup type="footer">
                         <p:row>
-                            <p:column colspan="2" style="text-align:right" footerText="#{userData.userDDs['TOTAL']}  :" />
-                            <p:column footerText="" style="font-size: 1.4vh" />
-                            <p:column footerText="" style="font-size: 1.4vh" />
+                            <p:column colspan="2" style="text-align:right;border-radius: 0px;" footerText="#{userData.userDDs['TOTAL']}  :" />
+                            <p:column footerText="" style="font-size: 1.4vh;border-radius: 0px;" />
+                            <p:column footerText="" style="font-size: 1.4vh;border-radius: 0px;" />
 
-                            <p:column footerText="#{salesJournalReportMB.allDiscount}" style="font-size: 1.4vh" />
-                            <p:column footerText="#{salesJournalReportMB.allNet}"  style="font-size: 1.4vh"/>
+                            <p:column footerText="#{salesJournalReportMB.allDiscount}" style="font-size: 1.4vh;border-radius: 0px;" />
+                            <p:column footerText="#{salesJournalReportMB.allNet}"  style="font-size: 1.4vh;border-radius: 0px;"/>
 
 
                         </p:row>

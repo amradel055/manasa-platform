@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                template="./../../template/newTemplate.xhtml"
+                template="./../../template/template.xhtml"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
@@ -163,7 +163,7 @@
                             <p:commandButton   class="sprintButtons"  onclick="form.target = '_blank'"  ajax="false"
                                                icon="fa fa-fw fa-print" style="background-color: rgb(0, 74, 128);border-radius: 3px;"
                                                title="print" 
-                                               action="#{invAddingOrderListDTOMB.print()}" 
+                                               action="#{invAddingOrderListDTOMB.printList()}" 
                                                rendered="#{userData.userScreens['invpermissionorder_1'].edit or userData.isAdmin}" >
 
                                 <f:setPropertyActionListener value="#{invAddingOrderTable}" 

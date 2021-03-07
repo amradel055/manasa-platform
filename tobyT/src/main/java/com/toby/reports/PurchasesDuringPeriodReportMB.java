@@ -119,11 +119,11 @@ public class PurchasesDuringPeriodReportMB extends BaseReportBean {
     private void fillLists() {
         if (isSales) {
             setInvOrgSiteList(getOrganizationSiteService().getorganizationSiteByBranchIdForGlBankModule(getUserData().getUserBranch().getId(),true,0)); // عميل
-            invInvoicesSalesList = invPurchaseInvoiceService.getALLInvPurchaseInvoicePostFlagedByBranchIdPer(branchId, true);
+            invInvoicesSalesList = invPurchaseInvoiceService.getALLInvPurchaseInvoicePostFlagedByBranchIdPer(branchId, 4);
            setInvInvoiceSalesConverter(new InvPurchaseInvoiceConverter(invInvoicesSalesList));
         } else {
             setInvOrgSiteList(getOrganizationSiteService().getorganizationSiteByBranchIdForGlBankModule(getUserData().getUserBranch().getId(),true,1)); //مورد
-            invInvoicesPurchaseList = invPurchaseInvoiceService.getALLInvPurchaseInvoicePostFlagedByBranchIdPer(branchId, false);
+            invInvoicesPurchaseList = invPurchaseInvoiceService.getALLInvPurchaseInvoicePostFlagedByBranchIdPer(branchId, 0);
             invInvoicePurchaseConverter = new InvPurchaseInvoiceConverter(invInvoicesPurchaseList);
         }
         

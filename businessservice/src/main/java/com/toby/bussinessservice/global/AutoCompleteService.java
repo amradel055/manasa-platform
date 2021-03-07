@@ -30,6 +30,8 @@ public interface AutoCompleteService {
     
     public List<ItemsBarcodesDetailsView> autoCompleteItemsBarcodesDetailsViewBranchId(Integer branchId, String qeury);
     
+    public List<ItemsBarcodesDetailsView> findAllItemsBarcodesDetailsViewBranchId(Integer branchId, String qeury);
+    
     public Map<String, ItemsBarcodesDetailsView> findItemsBarcodesDetailsViewBranchIdMap(Integer branchId, String qeury);
 
     public List<InvItemDTO> autoCompleteInvItem(Integer branchId, String qeury);

@@ -122,6 +122,18 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
     }
 
     @Override
+    public void deleteGlBankTransactionByInvoiceId(Integer invoiceId) {
+        List<GlBankTransaction> list = getALLGlBankTransactionByInvoiceId(invoiceId);
+        for (GlBankTransaction glBankTransaction : list) {
+            if (glBankTransaction.getId() != null && glBankTransaction.getId() > 0) {
+                dao.executeDeleteQuery("delete from GlBankTransactionDetail e WHERE e.id > 0 AND e.glBankTransactionId.id = " + glBankTransaction.getId());
+            }
+            dao.deleteEntity(glBankTransaction);
+        }
+
+    }
+
+    @Override
     public List<GlBankTransaction> getALLGlBankTransactionByCompanyId(Integer companyId) {
         return dao.findEntityListByCompanyId(GlBankTransaction.class, companyId);
     }
@@ -285,7 +297,6 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
         dTO.setCreatedByName(entity.getCreatedBy().getName());
         dTO.setOrganizationType(entity.getOrganizationType());
 
-
         if (entity.getPaymentType() != null) {
             if (entity.getPaymentType() == 0) {
                 dTO.setPaymentTypeName("نقدي");
@@ -375,10 +386,18 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
     }
 
     @Override
+    public List<GlBankTransaction> getALLGlBankTransactionByInvoiceId(Integer invoiceId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("invoiceId", invoiceId);
+        List<GlBankTransaction> glBankTransactionList = dao.findListByQuery("SELECT e FROM GlBankTransaction e WHERE e.invoiceId.id = :invoiceId ", params);
+        return glBankTransactionList;
+    }
+
+    @Override
     public void addCash(InvInvoiceDTO dTO, TobyUser tobyUser) {
 
         GlBankTransaction glBankTransaction = mapToEntityFromInvSales(dTO, tobyUser);
-        
+
         glBankTransaction = dao.updateEntity(glBankTransaction);
 
         glBankTransactionDetailsService.addCashDetail(dTO, glBankTransaction.getId(), tobyUser);

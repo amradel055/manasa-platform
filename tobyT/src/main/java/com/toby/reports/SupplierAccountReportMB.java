@@ -207,6 +207,50 @@ public class SupplierAccountReportMB extends BaseReportBean {
 
     }
 
+    
+    public void searchById() {
+
+        setOrganizationSiteRootList(new ArrayList<>());
+        if (uri != null && uri.contains("clientacoount")) {
+            setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId, 0,getSupplierAccountSearchBean()));
+        } else if (uri != null && uri.contains("contractoraccount")) {
+            setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId, 4,getSupplierAccountSearchBean()));
+        } else {
+            setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId, 1,getSupplierAccountSearchBean()));
+        }
+
+        organizationSiteStatementmap = new HashMap<>();
+        organizationSiteStatementBeanMap = new HashMap<>();
+        openingBalanceBeforeFromDateMap = new HashMap<>();
+        organizationSiteStatementViewBeforeList = new ArrayList<>();
+        balance = BigDecimal.ZERO;
+        setSupplierAccountViewBeanList(new ArrayList<>());
+        getSupplierAccountSearchBean().setBranchId(getUserData().getUserBranch().getId());
+
+        setOrganizationSiteStatementViewList(new ArrayList<>());
+        if (uri != null && uri.contains("clientacoount")) {
+            type = 0;
+            supplierAccountSearchBean.setOrganizationType(type);
+        } else if (uri != null && uri.contains("contractoraccount")) {
+            type = 4;
+            supplierAccountSearchBean.setOrganizationType(type);
+        } else {
+            type = 1;
+            supplierAccountSearchBean.setOrganizationType(type);
+        }
+        organizationSiteStatementViewList = supplierAccountService.getAllOrganizationSiteStatementSearchBeanById(getSupplierAccountSearchBean());
+        if (supplierAccountSearchBean.getDateFrom() != null) {
+            organizationSiteStatementViewBeforeList = supplierAccountService.getAllOpeningBalanceBeforeBalanceBySearchBean(supplierAccountSearchBean);
+        }
+        fillOpeningBalanceMap();
+        if (organizationSiteStatementViewList != null && !organizationSiteStatementViewList.isEmpty()) {
+            fillGroupMapWithCorrespondingItem();
+        }
+        prepareRootGroupValues();
+        mergeGroupsWithItems();
+
+    }
+
     public void fillOpeningBalanceMap() {
         if (organizationSiteStatementViewBeforeList != null && !organizationSiteStatementViewBeforeList.isEmpty()) {
             for (OrganizationSiteStatementView view : organizationSiteStatementViewBeforeList) {

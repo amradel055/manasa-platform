@@ -104,6 +104,9 @@ public class NetView implements Serializable {
     private String userName;    
     @Column(name = "user_id")
     private Integer userId;
+    @Column(name = "sum_total_Cost")
+    private BigDecimal sumTotalCost;
+    
     public NetView() {
     }
 
@@ -411,6 +414,20 @@ public class NetView implements Serializable {
      */
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    /**
+     * @return the sumTotalCost
+     */
+    public BigDecimal getSumTotalCost() {
+        return sumTotalCost;
+    }
+
+    /**
+     * @param sumTotalCost the sumTotalCost to set
+     */
+    public void setSumTotalCost(BigDecimal sumTotalCost) {
+        this.sumTotalCost = sumTotalCost;
     }
 
 }

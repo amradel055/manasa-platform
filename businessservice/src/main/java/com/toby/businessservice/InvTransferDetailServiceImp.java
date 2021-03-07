@@ -274,8 +274,9 @@ public class InvTransferDetailServiceImp implements InvTransferDetailService {
     private InvDetailDTO initMapToDTO(InvTransferDetail entity, Map<String, ItemsBarcodesDetailsView> itemsBarcodeMap, InvInvoiceDTO invInvoiceDTO) {
 
         InvDetailDTO dTO = new InvDetailDTO();
+        ItemsBarcodesDetailsView barcodesDetailsView = itemsBarcodeMap.get(entity.getItemBarcode());
         dTO = invGlobalService.fillItemDetail(dTO, itemsBarcodeMap,
-                    entity.getId(), entity.getSerial(), (entity.getBranchId() != null ? entity.getBranchId().getId() : null), null,
+                    entity.getId(), entity.getSerial(), (entity.getBranchId() != null ? entity.getBranchId().getId() : null), barcodesDetailsView.getMaxPriceMen(),
                     null, entity.getAmount(), null, null,
                     BigDecimal.ZERO, null, entity.getId(), entity.getCreationDate(), entity.getCreatedBy().getId(),
                     null,null, 
@@ -285,7 +286,7 @@ public class InvTransferDetailServiceImp implements InvTransferDetailService {
                     entity.getUnitId().getId(), entity.getUnitId().getSerial(), entity.getUnitId().getName(),
                     entity.getInvItemId().getIsInventoryItem(),
                     null,null,null,null,
-                    invInvoiceDTO.getCompanyActivity(),invInvoiceDTO.getScreenName());
+                    invInvoiceDTO.getCompanyActivity(),invInvoiceDTO.getScreenName(),null);
                 dTO = invGlobalService.calculateDetailTotalsRow(dTO, invInvoiceDTO,true);        
         dTO.setRealQuantity(dTO.getQuantity().multiply(dTO.getScrewing()));
         return dTO;
@@ -359,7 +360,7 @@ public class InvTransferDetailServiceImp implements InvTransferDetailService {
         if (dTO.getId() == null) {
             if (entity.getSerial() == null) {
                 Map<String, Object> params = new HashMap<>();
-                params.put("qotationId", invTrasferId);
+                params.put("invTransferId", invTrasferId);
                 Integer max = genericService.getMaxGenericSerialForDetail(InvTransferDetail.class, "invTransferId", invTrasferId);
                 entity.setSerial(max);
             }

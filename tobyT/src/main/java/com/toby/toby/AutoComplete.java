@@ -24,6 +24,7 @@ import com.toby.converter.ProProductionTransactionDTOConverter;
 import com.toby.converter.SymbolConverter;
 import com.toby.converter.SymbolDTOConverter;
 import com.toby.converter.TobyUserDTOConverter;
+import com.toby.converter.TobyUserProproductionDTOConverter;
 import com.toby.dto.CostCenterDTO;
 import com.toby.dto.CurrencyDTO;
 import com.toby.dto.GlAccountDTO;
@@ -40,6 +41,7 @@ import com.toby.dto.ProProductionStagesDTO;
 import com.toby.dto.ProProductionTransactionDTO;
 import com.toby.dto.SymbolDTO;
 import com.toby.dto.TobyUserDTO;
+import com.toby.dto.TobyUserProproductionDTO;
 import com.toby.entity.InvOrganizationSite;
 import com.toby.entity.Symbol;
 import com.toby.views.ItemsBarcodesDetailsView;
@@ -414,6 +416,65 @@ public class AutoComplete {
         }
         return filteredGlBanks;
     }
+    
+    public static List<TobyUserDTO> completeTobyUserDTO(String query, List<TobyUserDTO> tobyUserDTOList, TobyUserDTOConverter tobyUserDTOConverter) {
+        List<TobyUserDTO> list = new ArrayList<>();
+        try {
+            List<TobyUserDTO> list1 = tobyUserDTOList;
+            if (query == null || query.trim().equals("")) {
+                tobyUserDTOConverter = new TobyUserDTOConverter(list1);
+                return list1;
+            }
+
+            String nameAr;
+            String code;
+            TobyUserDTO tobyUserDTO;
+            for (int i = 0; i < tobyUserDTOList.size(); i++) {
+                tobyUserDTO = list1.get(i);
+                nameAr = tobyUserDTO.getName();
+                if (nameAr != null && nameAr.toLowerCase().contains(query.toLowerCase()) && !list.contains(tobyUserDTO)) {
+                    list.add(tobyUserDTO);
+                }
+
+                code = tobyUserDTO.getUserCode();
+                if (code != null && code.toLowerCase().contains(query.toLowerCase()) && !list.contains(tobyUserDTO)) {
+                    list.add(tobyUserDTO);
+                }
+            }
+
+            tobyUserDTOConverter = new TobyUserDTOConverter(list);
+        } catch (Exception e) {
+            printStackTrace(e);
+        }
+        return list;
+    }
+
+    public static List<TobyUserProproductionDTO> completeTobyUserProproductionDTO(String query, List<TobyUserProproductionDTO> tobyUserProproductionDTOList, TobyUserProproductionDTOConverter tobyUserProproductionDTOConverter) {
+        List<TobyUserProproductionDTO> list = new ArrayList<>();
+        try {
+            List<TobyUserProproductionDTO> list1 = tobyUserProproductionDTOList;
+            if (query == null || query.trim().equals("")) {
+                tobyUserProproductionDTOConverter = new TobyUserProproductionDTOConverter(list1);
+                return list1;
+            }
+
+            String nameAr;
+            TobyUserProproductionDTO tobyUserDTO;
+            for (int i = 0; i < tobyUserProproductionDTOList.size(); i++) {
+                tobyUserDTO = list1.get(i);
+                nameAr = tobyUserDTO.getProproductionName();
+                if (nameAr != null && nameAr.toLowerCase().contains(query.toLowerCase()) && !list.contains(tobyUserDTO)) {
+                    list.add(tobyUserDTO);
+                }
+            }
+
+            tobyUserProproductionDTOConverter = new TobyUserProproductionDTOConverter(list);
+        } catch (Exception e) {
+            printStackTrace(e);
+        }
+        return list;
+    }
+
 
     public static List<SymbolDTO> completeSymbolDTO(String query, List<SymbolDTO> symbolList, SymbolDTOConverter symbolConverter) {
         List<SymbolDTO> list = new ArrayList<>();

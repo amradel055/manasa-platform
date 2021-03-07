@@ -1,0 +1,252 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:body>
+
+            <h:form dir="RTL" style="margin-right: 20px" id="form" >
+                <p:fieldset  legend="إجماليات الفئات" id="stages"  style=" position: relative">
+                    <p:messages id="messages" showDetail="true" closable="true"/> 
+
+                    <div class="ui-g-6 ui-xl-6">
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:autoComplete style="width:85%" 
+                                                dropdown="true"
+                                                converter="#{autoComplete.invInventoryDTOConverter}"
+                                                value="#{summitionItemReportMB.gallaryDTOSelected}"  
+                                                var="gallary"
+                                                itemLabel="#{gallary}"
+                                                itemValue="#{gallary}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{autoComplete.completeGallaryForUser}" >
+                                </p:autoComplete>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:outputLabel style="width: 50px;margin-right: 1%" value="المعرض"/>
+
+
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:autoComplete style="width:85%" 
+                                                dropdown="true"
+                                                converter="#{autoComplete.proGroupDTOConverter}"
+                                                value="#{summitionItemReportMB.proGroupDTOSelected}"  
+                                                var="proGroup"
+                                                itemLabel="#{proGroup}"
+                                                itemValue="#{proGroup}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{autoComplete.completeProGroup}" >
+                                </p:autoComplete>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:outputLabel style="width: 50px;margin-right: 1%" value="المرحلة"/>
+
+
+
+                            </div>
+                        </div>
+                        
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:calendar style="width: 50%"  id="dateFrom"
+                                            value="#{summitionItemReportMB.dateFrom}"
+                                            pattern="dd/MM/yyyy"  showButtonPanel="true" >
+
+                                </p:calendar>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:outputLabel style="width: 50px"  value="من تاريخ" />
+
+
+
+                            </div>
+                        </div>
+                         <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:calendar style="width: 50%"  id="dateFrom1"
+                                            value="#{summitionItemReportMB.dateTo}"
+                                            pattern="dd/MM/yyyy"  showButtonPanel="true" >
+
+                                </p:calendar>
+
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:outputLabel style="width: 50px"  value="الى تاريخ" />
+
+
+
+                            </div>
+                        </div>
+                        
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+
+
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:commandButton     class="saveButton" id="saveB" 
+                                                     value="بحث" 
+                                                     icon="fa fa-fw fa-save"
+                                                     action="#{productionReportMB.search()}"
+                                                     update="table messages"
+                                                     >
+
+                                </p:commandButton>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="ui-g-6 ui-xl-6">
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:autoComplete style="width:85%" 
+                                                dropdown="true"
+                                                converter="#{productionReportMB.invPurchaseInvoiceDTOConverter}"
+                                                value="#{productionReportMB.printProductionDTO.fromInvoice}"
+                                                var="fromInvoice"
+                                                itemLabel="#{fromInvoice.serial}"
+                                                itemValue="#{fromInvoice}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{productionReportMB.completeInvpurchaseInvoice}" >
+                                </p:autoComplete>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:outputLabel style="width: 50px;margin-right: 1%" value="من فاتورة"/>
+
+
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+
+
+                                <p:autoComplete style="width:85%" 
+                                                dropdown="true"
+                                                converter="#{productionReportMB.invPurchaseInvoiceDTOConverter}"
+                                                value="#{productionReportMB.printProductionDTO.toInvoice}"
+                                                var="toInvoice"
+                                                itemLabel="#{toInvoice.serial}"
+                                                itemValue="#{toInvoice}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{productionReportMB.completeInvpurchaseInvoice}" >
+                                </p:autoComplete>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+
+
+                                <p:outputLabel style="width: 50px;margin-right: 1%" value="الي فاتورة"/>
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:calendar style="width: 50%"  id="dateFrom"
+                                            value="#{productionReportMB.printProductionDTO.fromDate}"
+                                            pattern="dd/MM/yyyy"  showButtonPanel="true" >
+
+                                </p:calendar>
+
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+
+                                <p:outputLabel style="width: 50px"  value="من تاريخ" />
+
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:calendar style="width: 50%"  id="dateFrom1"
+                                            value="#{productionReportMB.printProductionDTO.toDate}"
+                                            pattern="dd/MM/yyyy"  showButtonPanel="true" >
+
+                                </p:calendar>
+
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+
+                                <p:outputLabel style="width: 50px"  value="الى تاريخ" />
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                </p:fieldset>
+                <p:fieldset  legend="البيانات"   style="margin-bottom:20px">
+                    <p:dataTable  id="table"
+                                  var="data"
+                                  value="#{productionReportMB.productionReports}"
+                                  draggableColumns="true"
+                                  paginator="true"
+                                  widgetVar="data" 
+                                  rowIndexVar="index" 
+                                  rows="7"
+                                  emptyMessage="EMPTY_TABLE"
+                                  >
+
+                        <p:column headerText="اسم العامل" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.empName}" />
+                        </p:column>
+                        <p:column headerText="رقم الفاتورة" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.invoiceSerial}" />
+                        </p:column>
+                        <p:column headerText="مرحلة الانتاج" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.stageName}" />
+                        </p:column>
+                        <p:column headerText="سعر المرحلة" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.price}" />
+                        </p:column>
+                        <p:column headerText="الكمية" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.quantity}" />
+                        </p:column>
+                        <p:column headerText="الاجمالي" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.total}" />
+                        </p:column>
+
+
+
+                    </p:dataTable>
+                    <div class="ui-g-12 ui-md-6">
+                        <p:commandButton class="printButton"  icon="fa fa-fw fa-print"
+                                         onclick="form.target = '_blank'" ajax="false"
+                                         value="#{userData.userDDs['PRINT']}"
+                                         actionListener="#{productionReportMB.exportPDF(actionEvent)}"/>
+                    </div>
+
+                </p:fieldset>
+
+            </h:form>
+        </h:body>
+    </ui:define>
+</ui:composition>
+

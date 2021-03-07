@@ -37,6 +37,8 @@
                                   action="exit" />
 
             </div>
+            <p:hotkey  bind="F7" update="invPurchaseInvoiceDetailsTable" action="#{invPurchaseInvoiceFormDTOMB.addInvDetail()}"/>
+
             <div >
                 <p:messages id="curmsg" autoUpdate="true" showDetail="true" rendered="true" closable="true"/>   
             </div>
@@ -367,13 +369,13 @@
 
             </p:fieldset>
 
-                <p:fieldset id="fieldSetId" legend="#{userData.userDDs['DETA_PURCHASE_INV']}"   style="margin:2% 0">
+            <p:fieldset id="fieldSetId" legend="#{userData.userDDs['DETA_PURCHASE_INV']}"   style="margin:2% 0">
 
 
                 <p:dataTable id="invPurchaseInvoiceDetailsTable"
                              widgetVar="invPurchaseInvoiceDetailsTable"
                              style="margin-bottom:20px"
-                             
+
                              var="invPurchaseInvoiceDetailsTable"
                              rowIndexVar="index" 
                              dir="rtl" 

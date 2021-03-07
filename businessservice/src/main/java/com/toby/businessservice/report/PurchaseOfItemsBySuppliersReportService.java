@@ -7,6 +7,7 @@ package com.toby.businessservice.report;
 
 import com.toby.businessservice.reports.searchBean.PurchaseOfItemsBySuppliersSearchBean;
 import com.toby.views.ItemSalesView;
+import com.toby.views.ItemSalesViewGroup;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -18,7 +19,11 @@ import javax.ejb.Remote;
 public interface PurchaseOfItemsBySuppliersReportService {
 
     public List<ItemSalesView> getAllPurchaseOfItemsBySuppliersSearchBean(PurchaseOfItemsBySuppliersSearchBean purchaseOfItemsBySuppliersSearchBean);
+
+    public List<ItemSalesViewGroup> getAllPurchaseOfItemsBySuppliersSearchBeanByGroup(PurchaseOfItemsBySuppliersSearchBean purchaseOfItemsBySuppliersSearchBean);
+
     public List<ItemSalesView> getAllSalesOfItemsBySuppliersSearchBean(PurchaseOfItemsBySuppliersSearchBean purchaseOfItemsBySuppliersSearchBean);
+
     public List<ItemSalesView> getAllInvoiceDetailBySuppliersSearchBean(PurchaseOfItemsBySuppliersSearchBean purchaseOfItemsBySuppliersSearchBean);
 
 }

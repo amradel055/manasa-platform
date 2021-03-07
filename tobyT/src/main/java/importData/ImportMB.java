@@ -52,6 +52,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
@@ -64,7 +65,6 @@ import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
-import org.olap4j.impl.ArrayMap;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.UploadedFile;
 
@@ -246,7 +246,7 @@ public class ImportMB extends Basic implements Serializable {
 
     public void importUpdateInvItem(Sheet sheet) throws NumberFormatException {
         InvItem invItem;
-        Map<String, InvItem> invItemMap = new ArrayMap<>();
+        Map<String, InvItem> invItemMap = new HashMap<>();
 
         for (int i = 1; i < sheet.getRows(); i++) {
             if (!sheet.getCell(0, i).getContents().isEmpty()) {
@@ -291,7 +291,7 @@ public class ImportMB extends Basic implements Serializable {
 
     public void importUpdateInvItem3(Sheet sheet) throws NumberFormatException {
         InvItem invItem;
-        Map<String, InvItem> invItemMap = new ArrayMap<>();
+        Map<String, InvItem> invItemMap = new HashMap<>();
 
         for (int i = 0; i < sheet.getRows(); i++) {
             if (!sheet.getCell(0, i).getContents().isEmpty()) {
@@ -313,7 +313,7 @@ public class ImportMB extends Basic implements Serializable {
         System.out.println("تم الحفظ بنجاح");
     }
 
-    // update InvItem Type
+    // update InvItem ProGroup 
     public void readInvItemCode() throws BiffException, IOException, Exception {
         setInputStreamUploadInvItem(getInvItemFile2().getInputstream());
         Workbook workbook = null;
@@ -346,7 +346,7 @@ public class ImportMB extends Basic implements Serializable {
         System.out.println("تم الحفظ بنجاح");
     }
 
-    // InvItem Code
+    // Add New InvItem Code
     public void readInvItem() throws BiffException, IOException, Exception {
         setInputStreamUploadInvItem(getInvItemFile().getInputstream());
         Workbook workbook = null;
@@ -364,8 +364,8 @@ public class ImportMB extends Basic implements Serializable {
 
     public void importInvItem(Sheet sheet) throws NumberFormatException {
         InvItem invItem;
-        Map<String, Symbol> symbolMap = new ArrayMap<>();
-        Map<String, InvOrganizationSite> invOrganizationSiteMap = new ArrayMap<>();
+        Map<String, Symbol> symbolMap = new HashMap<>();
+        Map<String, InvOrganizationSite> invOrganizationSiteMap = new HashMap<>();
         Currency currency = new Currency();
         List<Currency> currencyList = currencyService.getAllCurrencyByCompanyId(getUserData().getCompany().getId());
         if (currencyList != null && !currencyList.isEmpty()) {
@@ -593,7 +593,7 @@ public class ImportMB extends Basic implements Serializable {
     public void importGlAccount(Sheet sheet) throws NumberFormatException {
         Integer parentCode = null;
         GlAccount item;
-        Map<Integer, GlAccount> itemMap = new ArrayMap<>();
+        Map<Integer, GlAccount> itemMap = new HashMap<>();
         Currency currency = new Currency();
         List<Currency> currencyList = currencyService.getAllCurrencyByCompanyId(getUserData().getCompany().getId());
         if (currencyList != null && !currencyList.isEmpty()) {

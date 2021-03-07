@@ -15,49 +15,49 @@
                 <p:fieldset  legend="حركه اوامر الشغل" id="stages"  style="margin-bottom:20px">
                     <div class="ui-g-6 ui-xl-6">
                         <div class="ui-g-12 ui-xl-12">
-                            <div class="ui-g-6 ui-xl-6">
-                                <p:selectOneMenu  value="#{proProductionTransactionFormMBNew.tobyUserDTOSelected}"  filter="true" filterMatchMode="contains"
-                                                  converter="#{proProductionTransactionFormMBNew.tobyUserDTOConverter}"
-                                                  >
-                                    <f:selectItems  var="tobyuser"  
-                                                    value="#{proProductionTransactionFormMBNew.tobyUserDTOList}"                                                     
-                                                    itemLabel="#{tobyuser}"
-                                                    itemValue="#{tobyuser}" />
-                                    <p:ajax event="itemSelect"  listener="#{proProductionTransactionFormMBNew.changeUser(tobyuser)}" update="@form" />
-                                </p:selectOneMenu>
+                            <div class="ui-g-6 ui-xl-6">    
+                                <div class="p-field p-col-6 p-md-6">
+                                    <p:selectOneMenu id="user" filter="true" filterMatchMode="contains" value="#{proProductionTransactionFormMBNew.tobyUserDTOSelected}"
+                                                     converter="#{proProductionTransactionFormMBNew.tobyUserDTOConverter}">
+                                        <f:selectItem itemLabel="Select One" itemValue=""/>
+                                        <f:selectItems var="user" itemLabel="#{user}" itemValue="#{user}" value="#{proProductionTransactionFormMBNew.tobyUserDTOList}"/>
+                                        <p:ajax event="itemSelect" listener="#{proProductionTransactionFormMBNew.changeUser()}" update="advanced" />
+                                    </p:selectOneMenu>
+                                </div>
 
                             </div>
                             <div class="ui-g-6 ui-xl-6">
-
-
                                 <p:outputLabel style="width: 50px;margin-right: 1%" value="العامل"/>
-
-
                             </div>
                         </div>
                     </div>
 
+
                     <div class="ui-g-6 ui-xl-6">
                         <div class="ui-g-12 ui-xl-12">
-                            <div class="ui-g-6 ui-xl-6">
-                                <p:selectOneMenu  value="#{proProductionTransactionFormMBNew.tobyUserProproductionDTOSelected}" 
-                                                  converter="#{proProductionTransactionFormMBNew.tobyUserProproductionDTOConverter}"
-                                                  >
-                                    <f:selectItems  var="stages"  value="#{proProductionTransactionFormMBNew.tobyUserProproductionDTOList}"                                                     
-                                                    itemLabel="#{stages}"
-                                                    itemValue="#{stages}" />
-                                </p:selectOneMenu>
 
-                            </div>
                             <div class="ui-g-6 ui-xl-6">
 
 
                                 <p:outputLabel style="width: 50px;margin-right: 1%" value=" مراحل الانتاج"/>
 
 
+                                <p:selectOneMenu id="advanced" value="#{proProductionTransactionFormMBNew.proProductionStagesDTOSelected}" 
+                                                 converter="#{proProductionTransactionFormMBNew.proProductionStagesDTOConverter}"
+                                                 panelStyle="width:180px" effect="fade" var="country"
+                                                 filter="true" filterMatchMode="startsWith">
+
+                                    <f:selectItems value="#{proProductionTransactionFormMBNew.proProductionStagesDTOList}" var="country"
+                                                   itemLabel="#{country.name}" itemValue="#{country}"/>
+                                </p:selectOneMenu>
+
                             </div>
+
                         </div>
                     </div>
+
+
+
 
                     <div class="ui-g-6 ui-xl-6">
                         <div class="ui-g-12 ui-xl-12">
@@ -76,7 +76,7 @@
                                              value="بحث" 
                                              icon="fa fa-fw fa-save" 
                                              action="#{proProductionTransactionFormMBNew.updateDetailItems()}" 
-                                             update="@form"
+                                             update="table4"
                                              >
                         </p:commandButton> 
                     </h:panelGroup>

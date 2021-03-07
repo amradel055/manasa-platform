@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                template="./../../template/newTemplate.xhtml"
+                template="./../../template/template.xhtml"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
@@ -9,45 +9,19 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core">
     <link rel="stylesheet" type="text/css" href="../../resources/css/main.css" /> 
     <ui:define name="content">
-        
+
         <h:head>
             <title>#{userData.userDDs['ACCOUNT_REPORT']}</title>
         </h:head>
-        <style >
-            .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
-                border: 1px solid #c5dbec;
-                background:#fff;
-            }
-        </style>
+
 
         <h:body> 
             <h:form id="form" class='formmargin'>     
 
-                <div style=" position: absolute;left: 20px"> 
 
-                    <p:commandButton  style="z-index: 2;
-                                      margin-top: 12%;
-                                      color: #035c70!important; 
-                                      background-color: #223238!important;
-                                      border: 1px solid #22323a!important;
-                                      background: #22323a 50% 50% repeat-x!important;"
-                                      icon="fa fa-fw fa-home"
-                                      title="#{userData.userDDs['HOME']}"
-                                      class="smhomeButton" 
-                                      action="exit" />
-                    <p:commandButton  style="z-index: 2;
-                                      margin-top: 9%!important;
-                                      color: #035c70!important; 
-                                      background-color: #223238!important;
-                                      border: 1px solid #22323a!important;
-                                      background: #22323a 50% 50% repeat-x!important;" 
-                                      class="viewButton sminimize"
-                                      icon="fa fa-window-minimize"
-                                      title="إظهار/إخفاء"/>  
-                </div>
 
                 <p:fieldset legend="#{userData.userDDs['SAFE_ACCOUNT_BANK']}" id="whole" 
-                            style=" position: relative">
+                            style=" position: relative; text-align: right">
 
 
                     <div class="col-xs-12">
@@ -59,92 +33,10 @@
 
                         <div class="ui-g firstset">
 
-                            <div class="ui-g-12 ui-md-6">
+                            <div class="ui-g-6 ui-xl-6">
 
-                                <h:panelGroup> 
-                                    <h:panelGroup> 
-                                        <p:outputLabel style="width: 80px;margin-right: 4%;" value="#{userData.userDDs['FROM_SAVE']}" />
-                                    </h:panelGroup>
-                                    <h:panelGroup>
-                                        <p:selectOneMenu  style="width: 35%" id="MACUCode" 
-                                                          filter="true" 
-                                                          filterMatchMode="startsWith"
-                                                          converter="#{CashAccountSettlementMB.glBankConverter}"
-                                                          value="#{CashAccountSettlementMB.cashAccountSettlementSearchBean.glBankFrom}"> 
-
-                                            <f:selectItems value="#{CashAccountSettlementMB.glBankList}"  
-                                                           var="bank"
-                                                           itemLabel="#{bank}"
-                                                           itemValue="#{bank}"/>
-                                        </p:selectOneMenu> 
-
-                                    </h:panelGroup>   
-                                </h:panelGroup>
-                            </div>
-
-                            <div class="ui-g-12 ui-md-6">
-                                <h:panelGroup>
-
-                                    <h:panelGroup> 
-                                        <p:outputLabel style="width: 80px;margin-right: 4%;"  value="#{userData.userDDs['TO_SAFE']}" />
-                                    </h:panelGroup>
-                                    <h:panelGroup>
-                                        <p:selectOneMenu style="width: 35%" 
-                                                         filter="true" 
-                                                         filterMatchMode="startsWith"
-                                                         converter="#{CashAccountSettlementMB.glBankConverter}"
-                                                         value="#{CashAccountSettlementMB.cashAccountSettlementSearchBean.glBankTo}" > 
-
-                                            <f:selectItems value="#{CashAccountSettlementMB.glBankList}"  
-                                                           var="bank"
-                                                           itemLabel="#{bank}"
-                                                           itemValue="#{bank}"/>
-                                        </p:selectOneMenu> 
-
-                                    </h:panelGroup>   
-
-                                </h:panelGroup>
-
-                            </div>
-                            <div class="ui-g-12 ui-md-6">
-                                <h:panelGroup>
-                                    <h:panelGroup>
-                                        <p:outputLabel  style="width:75px;margin-right: 4%;" value="#{userData.userDDs['YEAR_FROM']}"/>
-                                    </h:panelGroup>
-                                    <h:panelGroup>
-                                        <p:calendar id="dateFrom" 
-                                                    value="#{CashAccountSettlementMB.cashAccountSettlementSearchBean.dateFrom}" 
-                                                    pattern="dd/MM/yyyy" 
-                                                    style="width:50%" showButtonPanel="true"
-                                                    >
-                                        </p:calendar>
-                                    </h:panelGroup>
-                                </h:panelGroup>
-                            </div>
-                            <div class="ui-g-12 ui-md-6">
-
-                                <h:panelGroup>
-                                    <h:panelGroup>
-                                        <p:outputLabel  style="width:75px;margin-right: 4%;" value="#{userData.userDDs['YEAR_TO']}"/>
-                                    </h:panelGroup>
-                                    <h:panelGroup>
-                                        <p:calendar  style="width: 50%"  id="dateTo" 
-                                                     value="#{CashAccountSettlementMB.cashAccountSettlementSearchBean.dateTo}" 
-
-                                                     pattern="dd/MM/yyyy">
-                                        </p:calendar>
-                                        <h:outputText value="">
-                                            <f:convertDateTime pattern="MM/dd/yyyy" />
-                                        </h:outputText>
-                                    </h:panelGroup>      
-                                </h:panelGroup>
-                            </div>
-                            <div class="ui-g-12 ui-md-6">
-                                <h:panelGroup>
-                                    <h:panelGroup>
-                                        <p:outputLabel style="width:80px;margin-right: 4%;" value="#{userData.userDDs['CURRENCY']}"/>
-                                    </h:panelGroup>
-                                    <h:panelGroup>
+                                <div class="ui-g-12 ui-xl-12">
+                                    <div class="ui-g-6 ui-xl-6">
                                         <p:selectOneMenu style="width:35%;" id="paymentType" 
                                                          value="#{CashAccountSettlementMB.cashAccountSettlementSearchBean.currencyType}">                                                             
                                             <f:selectItem itemLabel="#{userData.userDDs['LOCAL_CURRENCY']}"  itemValue="0"  />
@@ -152,64 +44,53 @@
 
                                             <p:ajax update="cashAccount" listener="#{CashAccountSettlementMB.search()}" />
                                         </p:selectOneMenu>                  
-                                    </h:panelGroup>
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width:80px;" value="#{userData.userDDs['CURRENCY']}"/>
 
-                                </h:panelGroup>
-
-                            </div>
-                            <div class="ui-g-12 ui-md-6">
-
-
-                                <h:panelGroup>
-                                    <h:panelGroup>
-                                        <p:outputLabel style="width: 80px;margin-right: 4%;" value="#{userData.userDDs['FINANCE_YEAR']}"/>
-                                    </h:panelGroup>
-                                    <h:panelGroup>
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-xl-12">
+                                    <div class="ui-g-6 ui-xl-6">
                                         <p:selectOneMenu style="width:35%;" id="year" filter="true" filterMatchMode="startsWith" 
                                                          value="#{CashAccountSettlementMB.glYearSelection}" converter="#{CashAccountSettlementMB.glYearConverter}"  >
                                             <p:ajax update="dateFrom dateTo" listener="#{CashAccountSettlementMB.pushGlYearSelection()}" />
                                             <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"  itemValue="" />
                                             <f:selectItems value="#{CashAccountSettlementMB.glYearList}"  var="year" itemLabel="#{year.name}" itemValue="#{year}"/>
-                                        </p:selectOneMenu>
-                                    </h:panelGroup>
+                                        </p:selectOneMenu>  
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 80px;" value="#{userData.userDDs['FINANCE_YEAR']}"/>
 
-                                </h:panelGroup>
-                            </div>
-
-                            <div class="ui-g-12 ui-md-6">
-                                <h:panelGroup>
-                                    <h:panelGroup>
-                                        <p:outputLabel  style="width:74px;margin-right: 4%;" value="من رقم سند"/>
-                                    </h:panelGroup>
-                                    <h:panelGroup>
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-xl-12">
+                                    <div class="ui-g-6 ui-xl-6">
                                         <p:inputNumber id="serialFrom" 
                                                        value="#{CashAccountSettlementMB.cashAccountSettlementSearchBean.serialFrom}"  
                                                        style="width:35%"  
                                                        >
                                         </p:inputNumber>
-                                    </h:panelGroup>
-                                </h:panelGroup>
-                            </div>
-                            <div class="ui-g-12 ui-md-6">
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel  style="width:74px;" value="من رقم سند"/>
 
-                                <h:panelGroup>
-                                    <h:panelGroup>
-                                        <p:outputLabel  style="width: 81px;margin-right: 3%;" value="الي رقم سند"/>
-                                    </h:panelGroup>
-                                    <h:panelGroup>
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-xl-12">
+                                    <div class="ui-g-6 ui-xl-6">
                                         <p:inputNumber  style="width: 35%"  id="serialTo" 
                                                         value="#{CashAccountSettlementMB.cashAccountSettlementSearchBean.serialTo}" 
                                                         >
-                                        </p:inputNumber>
-                                    </h:panelGroup>      
-                                </h:panelGroup>
-                            </div>
-                            <div class="ui-g-12 ui-md-6" style="margin-top: 5px;">
-                                <h:panelGroup>
-                                    <h:panelGroup>
-                                        <p:outputLabel style="width:80px;margin-right: 4%;" value="نوع الحركه"/>
-                                    </h:panelGroup>
-                                    <h:panelGroup>
+                                        </p:inputNumber> 
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel  style="width: 81px;margin-right: 3%;" value="الي رقم سند"/>
+
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-xl-12">
+                                    <div class="ui-g-6 ui-xl-6">
                                         <p:selectOneMenu style="width:35%;" id="transactionType" filter="true" filterMatchMode="startsWith" 
                                                          value="#{CashAccountSettlementMB.cashAccountSettlementSearchBean.transactionType}"  >
                                             <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"  itemValue="" />
@@ -223,39 +104,119 @@
                                             <f:selectItem itemLabel="مردود مشتريات"  itemValue="7" />
                                             <f:selectItem itemLabel="مردود مبيعات"  itemValue="8" />
                                         </p:selectOneMenu>
-                                    </h:panelGroup>
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width:80px;" value="نوع الحركه"/>
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-xl-12">
+                                    <div class="ui-g-6 ui-xl-6">
 
-                                </h:panelGroup>
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:fieldset legend="#{userData.userDDs['SORT_BY']}" style="margin-bottom:20px;margin-right: 15px;">
+                                            <p:selectOneRadio  value="#{CashAccountSettlementMB.cashAccountSettlementSearchBean.orderBy}" >                                                             
+                                                <f:selectItem    itemLabel="#{userData.userDDs['DATEE']}"  itemValue="0"  />
+                                                <f:selectItem itemLabel="#{userData.userDDs['AMOUNT']}"  itemValue="1"  />
+                                                <f:selectItem itemLabel="رقم السند"  itemValue="2"  />
+                                            </p:selectOneRadio>  
+                                        </p:fieldset>
+                                    </div>
+                                </div>
+
+
                             </div>
-                            <div class="ui-g-12 ui-md-6"></div>
-                            <div class="ui-g-12 ui-md-6">
 
-                                <h:panelGroup>
-                                    <p:fieldset legend="#{userData.userDDs['SORT_BY']}" style="margin-bottom:20px;margin-right: 15px;">
-                                        <p:selectOneRadio  value="#{CashAccountSettlementMB.cashAccountSettlementSearchBean.orderBy}" >                                                             
-                                            <f:selectItem    itemLabel="#{userData.userDDs['DATEE']}"  itemValue="0"  />
-                                            <f:selectItem itemLabel="#{userData.userDDs['AMOUNT']}"  itemValue="1"  />
-                                            <f:selectItem itemLabel="رقم السند"  itemValue="2"  />
-                                        </p:selectOneRadio>  
-                                    </p:fieldset>
-                                </h:panelGroup>
+                            <div class="ui-g-6 ui-xl-6">
+                                <div class="ui-g-12 ui-xl-12">
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:selectOneMenu  style="width: 70%" id="MACUCode" 
+                                                          filter="true" 
+                                                          filterMatchMode="startsWith"
+                                                          converter="#{CashAccountSettlementMB.glBankConverter}"
+                                                          value="#{CashAccountSettlementMB.cashAccountSettlementSearchBean.glBankFrom}"> 
 
+                                            <f:selectItems value="#{CashAccountSettlementMB.glBankList}"  
+                                                           var="bank"
+                                                           itemLabel="#{bank}"
+                                                           itemValue="#{bank}"/>
+                                        </p:selectOneMenu> 
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 80px;" value="#{userData.userDDs['FROM_SAVE']}" />
+
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-xl-12">
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:selectOneMenu style="width: 70%" 
+                                                         filter="true" 
+                                                         filterMatchMode="startsWith"
+                                                         converter="#{CashAccountSettlementMB.glBankConverter}"
+                                                         value="#{CashAccountSettlementMB.cashAccountSettlementSearchBean.glBankTo}" > 
+
+                                            <f:selectItems value="#{CashAccountSettlementMB.glBankList}"  
+                                                           var="bank"
+                                                           itemLabel="#{bank}"
+                                                           itemValue="#{bank}"/>
+                                        </p:selectOneMenu>   
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 80px;"  value="#{userData.userDDs['TO_SAFE']}" />
+
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-xl-12">
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:calendar id="dateFrom" 
+                                                    value="#{CashAccountSettlementMB.cashAccountSettlementSearchBean.dateFrom}" 
+                                                    pattern="dd/MM/yyyy" 
+                                                    style="width:50%" showButtonPanel="true"
+                                                    >
+                                        </p:calendar>        
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel  style="width:75px;" value="#{userData.userDDs['YEAR_FROM']}"/>
+
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-xl-12">
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:calendar  style="width: 50%"  id="dateTo" 
+                                                     value="#{CashAccountSettlementMB.cashAccountSettlementSearchBean.dateTo}" 
+
+                                                     pattern="dd/MM/yyyy">
+                                        </p:calendar>
+                                        <h:outputText value="">
+                                            <f:convertDateTime pattern="MM/dd/yyyy" />
+                                        </h:outputText> 
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel  style="width:75px;" value="#{userData.userDDs['YEAR_TO']}"/>
+
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-xl-12">
+                                    <div class="ui-g-6 ui-xl-6">
+
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:fieldset legend="#{userData.userDDs['DATA_PRESENTATION']}" style="margin-bottom:20px;margin-right: 5px;">
+                                            <p:selectOneRadio value="#{CashAccountSettlementMB.cashAccountSettlementSearchBean.type}" >                                                             
+                                                <f:selectItem itemLabel="#{userData.userDDs['ALL']}"  itemValue="3"  />
+                                                <f:selectItem itemLabel="#{userData.userDDs['IMPORT']}"  itemValue="1"  />
+                                                <f:selectItem itemLabel="#{userData.userDDs['EXPORT']}"  itemValue="0"  />
+
+                                                <!--<p:ajax update="cashAccount" listener="#\{CashAccountSettlementMB.search()}" />-->
+
+                                            </p:selectOneRadio>  
+                                        </p:fieldset>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="ui-g-12 ui-md-6">
 
-                                <h:panelGroup>
-                                    <p:fieldset legend="#{userData.userDDs['DATA_PRESENTATION']}" style="margin-bottom:20px;margin-right: 5px;">
-                                        <p:selectOneRadio value="#{CashAccountSettlementMB.cashAccountSettlementSearchBean.type}" >                                                             
-                                            <f:selectItem itemLabel="#{userData.userDDs['ALL']}"  itemValue="3"  />
-                                            <f:selectItem itemLabel="#{userData.userDDs['IMPORT']}"  itemValue="1"  />
-                                            <f:selectItem itemLabel="#{userData.userDDs['EXPORT']}"  itemValue="0"  />
 
-                                            <!--<p:ajax update="cashAccount" listener="#\{CashAccountSettlementMB.search()}" />-->
 
-                                        </p:selectOneRadio>  
-                                    </p:fieldset>
-                                </h:panelGroup>
-                            </div>
                         </div>
                     </div>
 
@@ -342,10 +303,7 @@
                             </p:column>
                             <p:column  style="width: 15vh;font-size: 2vh;text-align: center;border-radius: 0px" >
                                 <h:outputText value="#{subaccReport.currencyName}" />
-                            </p:column>
-                            <p:column  style="width: 15vh;font-size: 2vh;text-align: center;border-radius: 0px"  rendered="#{CashAccountSettlementMB.companyActivity eq 'Installment'}" >
-                                <h:outputText value="" />
-                            </p:column>           
+                            </p:column>         
                             <p:column  style="width: 15vh;font-size: 2vh;text-align: center;border-radius: 0px" colspan="3" >
                                 <h:outputText value="#{userData.userDDs['START_BALANCE']}" rendered="#{subaccReport.openingBalance gt 0}" />
                             </p:column>
@@ -371,8 +329,23 @@
                                   filterBy="#{subaccReport.serial}"  filterMatchMode="contains" sortBy="#{subaccReport.serial}" filterable="false"
                                   headerText="#{userData.userDDs['DOCUMENT_NUMBER']}">
                             <h:outputText value="#{subaccReport.serial}" style="font-size: 12px"/>
-                        </p:column>                     
-
+                        </p:column>   
+                       
+                         <p:column style="width: 10vh;text-align: center;font-size:1.8vh;border-radius: 0px" 
+                                  filterBy="#{subaccReport.invoiceNumber}"  filterMatchMode="contains" sortBy="#{subaccReport.invoiceNumber}" filterable="false"
+                                  headerText="الفاتورة">
+                            <h:outputText value="#{subaccReport.invoiceNumber}" style="font-size: 12px"/>
+                        </p:column>  
+                        <p:column style="width: 10vh;text-align: center;font-size:1.8vh;border-radius: 0px" 
+                                  filterBy="#{subaccReport.customerCode}"  filterMatchMode="contains" sortBy="#{subaccReport.customerCode}" filterable="false"
+                                  headerText="كود العميل">
+                            <h:outputText value="#{subaccReport.customerCode}" style="font-size: 12px"/>
+                        </p:column>  
+                        <p:column style="width: 10vh;text-align: center;font-size:1.8vh;border-radius: 0px" 
+                                  filterBy="#{subaccReport.customerName}"  filterMatchMode="contains" sortBy="#{subaccReport.customerName}" filterable="false"
+                                  headerText="العميل">
+                            <h:outputText value="#{subaccReport.customerName}" style="font-size: 12px"/>
+                        </p:column>  
 
                         <p:column style="width: 10vh;text-align: center;font-size:1.8vh;border-radius: 0px" 
                                   filterBy="#{subaccReport.transactionType}"  filterMatchMode="contains" sortBy="#{subaccReport.transactionType}" filterable="false"

@@ -173,7 +173,7 @@ public class SalesOfItemsBySupplierMB extends BaseInventoryReportBean {
         setSumTotal(BigDecimal.ZERO);
 
         purchaseOfItemsBySuppliersSearchBean.setBranchId(branchId);
-        purchaseOfItemsBySuppliersSearchBean.setType(Boolean.TRUE);
+        purchaseOfItemsBySuppliersSearchBean.setType(4);
 
         //itemSalesViewList = invItemSalesReportService.getAllInvPurchaseInvoiceDetailsByInvItemSalesSearchBean(invItemSalesSearchBean);
         itemSalesViewList = purchaseOfItemsBySuppliersReportService.getAllSalesOfItemsBySuppliersSearchBean(purchaseOfItemsBySuppliersSearchBean);

@@ -17,8 +17,8 @@ import javax.ejb.Remote;
 @Remote
 public interface SalesJournalService {
 
-   public List<NetView> getAllPurchaseInvoiceSearchBean(SalesJournalSearchBean salesJournalSearchBean);
-   public List<NetView> getAllDates(SalesJournalSearchBean salesJournalSearchBean);
+    public List<NetView> getAllPurchaseInvoiceSearchBean(SalesJournalSearchBean salesJournalSearchBean);
 
+    public List<NetView> getAllDates(SalesJournalSearchBean salesJournalSearchBean);
 
 }

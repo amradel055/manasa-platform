@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -218,6 +219,10 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
             cashAccountSettlment.setSerial(cashAccountSettlmentView.getSerial() != null ? cashAccountSettlmentView.getSerial() + "" : null);
             cashAccountSettlment.setTransactionTypeNumber(cashAccountSettlmentView.getTypeId());
             cashAccountSettlment.setCreatedBy(cashAccountSettlmentView.getCreatedBy());
+            cashAccountSettlment.setCustomerCode(cashAccountSettlmentView.getCustomerCode());
+            cashAccountSettlment.setCustomerName(cashAccountSettlmentView.getCustomerName());
+            cashAccountSettlment.setCustomerMobile(cashAccountSettlmentView.getCustomerMobile());
+            cashAccountSettlment.setInvoiceNumber(cashAccountSettlmentView.getInvoiceNumber());
             /*   if (cashAccountSettlmentView.getType() != null) {
              if (cashAccountSettlementSearchBean.getCurrencyType() == 1) {
              if (cashAccountSettlmentView.getType() == 1) {
@@ -511,13 +516,15 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
 
     @Override
     public void resetDateFrom() {
-        cashAccountSettlementSearchBean.setDateFrom(getGlYearSelection() != null ? getGlYearSelection().getDateFrom() : null);
+//        cashAccountSettlementSearchBean.setDateFrom(getGlYearSelection() != null ? getGlYearSelection().getDateFrom() : null);
+        cashAccountSettlementSearchBean.setDateFrom(new Date());
 
     }
 
     @Override
     public void resetDateTo() {
-        cashAccountSettlementSearchBean.setDateTo(getGlYearSelection() != null ? getGlYearSelection().getDateTo() : null);
+        cashAccountSettlementSearchBean.setDateTo(new Date());
+//        cashAccountSettlementSearchBean.setDateTo(getGlYearSelection() != null ? getGlYearSelection().getDateTo() : null);
 
     }
 
@@ -588,7 +595,7 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
 //        search();
         try {
             if (cashAccountSettlementReports != null && !cashAccountSettlementReports.isEmpty()) {
-                fillReport(prepareReport(), getUserData().getReportPath() + "cashAccountSettlementReport.jasper", cashAccountSettlementReports, "pdf");
+                fillReport(prepareReport(), getUserData().getReportPath() + "cashAccountSettlementReportToby.jasper", cashAccountSettlementReports, "pdf");
             }
         } catch (Exception e) {
             System.out.println(e + "    exeption ++++++++++++++++++++++++++++++ ");

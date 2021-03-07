@@ -244,13 +244,15 @@ public class BankBalanceReportMB extends BaseGlAccountReportBean {
 
     @Override
     public void resetDateFrom() {
-        commonSearchBean.setDateFrom(getGlYearSelection() != null ? getGlYearSelection().getDateFrom() : new Date());
+//        commonSearchBean.setDateFrom(getGlYearSelection() != null ? getGlYearSelection().getDateFrom() : new Date());
+        commonSearchBean.setDateFrom(new Date());
 
     }
 
     @Override
     public void resetDateTo() {
-        commonSearchBean.setDateTo(getGlYearSelection() != null ? getGlYearSelection().getDateTo() : new Date());
+//        commonSearchBean.setDateTo(getGlYearSelection() != null ? getGlYearSelection().getDateTo() : new Date());
+        commonSearchBean.setDateTo(new Date());
 
     }
 

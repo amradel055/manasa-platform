@@ -5,8 +5,9 @@
  */
 package com.toby.toby;
 
-import com.toby.businessservice.InvPurchaseInvoiceService_1;
 import com.toby.businessservice.ProDetailTypeService;
+import com.toby.businessservice.ProGroupService;
+import com.toby.businessservice.ProProductionStagesService;
 import com.toby.bussinessservice.global.AutoCompleteService;
 import com.toby.entity.TobyUser;
 import com.toby.converter.CostCenterDTOConverter;
@@ -18,10 +19,11 @@ import com.toby.converter.InvInventoryDTOConverter;
 import com.toby.converter.InvInvoiceDTOConverter;
 import com.toby.converter.InvOrganizationSiteConverter;
 import com.toby.converter.InvOrganizationSiteDTOConverter;
-import com.toby.converter.InvPurchaseInvoiceDTOConverter;
 import com.toby.converter.ItemDTOConverter;
 import com.toby.converter.ItemsBarcodesDetailsViewConverter;
 import com.toby.converter.ProDetailTypeDTOConverter;
+import com.toby.converter.ProGroupDTOConverter;
+import com.toby.converter.ProProductionStagesDTOConverter;
 import com.toby.converter.SymbolConverter;
 import com.toby.converter.SymbolDTOConverter;
 import com.toby.dto.CostCenterDTO;
@@ -32,9 +34,10 @@ import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.InvItemDTO;
 import com.toby.dto.InvOrganizationSiteDTO;
-import com.toby.dto.InvPurchaseInvoiceDTO;
 import com.toby.dto.InventoryDelegatorDTO;
 import com.toby.dto.ProDetailTypeDTO;
+import com.toby.dto.ProGroupDTO;
+import com.toby.dto.ProProductionStagesDTO;
 import com.toby.dto.SymbolDTO;
 import com.toby.entity.InvOrganizationSite;
 import com.toby.entity.Symbol;
@@ -55,12 +58,16 @@ import static jdk.nashorn.internal.objects.NativeError.printStackTrace;
  */
 @ViewScoped
 @Named(value = "autoComplete")
-public class AutoComplete1 implements Serializable {
+public class AutoComplete1 extends Basic {
 
     @EJB
     private AutoCompleteService autoCompleteService;
     @EJB
     private ProDetailTypeService proDetailTypeService;
+    @EJB
+    private ProProductionStagesService proProductionStagesService;
+    @EJB
+    private ProGroupService proGroupService;
     private Integer branchId;
     private ProDetailTypeDTOConverter proDetailTypeDTOConverter;
     private InvOrganizationSiteDTOConverter organizationSiteDTOConvertor;
@@ -73,6 +80,8 @@ public class AutoComplete1 implements Serializable {
     private ItemDTOConverter itemDTOConverter;
     private ItemsBarcodesDetailsViewConverter itemsBarcodesDetailsViewConverter;
     private InvInvoiceDTOConverter invoiceDTOConverter;
+    private ProProductionStagesDTOConverter proProductionStagesDTOConverter;
+    private ProGroupDTOConverter proGroupDTOConverter;
 //    InvInvoiceDTO
 
     public static List<InvOrganizationSite> completOrgSite(String query, List<InvOrganizationSite> invOrgSites, InvOrganizationSiteConverter invOrgSiteConverter) {
@@ -187,10 +196,10 @@ public class AutoComplete1 implements Serializable {
         return invOrganizationSiteDTOList;
 
     }
-    
+
     public List<InvInvoiceDTO> completeInvPurchaseForFactoryDTO(String query) {
         List<InvInvoiceDTO> list = new ArrayList<>();
-        list = autoCompleteService.autoCompleteInvPurchaseForFactoryDTO(getBranchId(),query);
+        list = autoCompleteService.autoCompleteInvPurchaseForFactoryDTO(getBranchId(), query);
         setInvoiceDTOConverter(new InvInvoiceDTOConverter(list));
         return list;
 
@@ -273,6 +282,27 @@ public class AutoComplete1 implements Serializable {
         invInventoryDTOList = autoCompleteService.getGallaryByBranchId(getBranchId(), query);
         invInventoryDTOConverter = new InvInventoryDTOConverter(invInventoryDTOList);
         return invInventoryDTOList;
+    }
+
+    public List<InvInventoryDTO> completeGallaryForUser(String query) {
+        List<InvInventoryDTO> invInventoryDTOList = new ArrayList<>();
+        invInventoryDTOList = getUserData().getGallaryDTOList();
+        invInventoryDTOConverter = new InvInventoryDTOConverter(invInventoryDTOList);
+        return invInventoryDTOList;
+    }
+
+    public List<ProProductionStagesDTO> completeProProductionStagesDTO(String query) {
+        List<ProProductionStagesDTO> proProductionStagesDTOList = new ArrayList<>();
+        proProductionStagesDTOList = proProductionStagesService.getAllProproductionStages(getUserData().getUser());
+        setProProductionStagesDTOConverter(new ProProductionStagesDTOConverter(proProductionStagesDTOList));
+        return proProductionStagesDTOList;
+    }
+
+    public List<ProGroupDTO> completeProGroup(String query) {
+        List<ProGroupDTO> proGroups = new ArrayList<>();
+        proGroups = proGroupService.getallProGroupByBranchIdDTO(getUserData().getUser());
+        setProGroupDTOConverter(new ProGroupDTOConverter(proGroups));
+        return proGroups;
     }
 
     public static List<Symbol> completeSymbol(String query, List<Symbol> symbolList, SymbolConverter symbolConverter) {
@@ -614,6 +644,35 @@ public class AutoComplete1 implements Serializable {
      */
     public void setInvoiceDTOConverter(InvInvoiceDTOConverter invoiceDTOConverter) {
         this.invoiceDTOConverter = invoiceDTOConverter;
+    }
+
+    /**
+     * @return the proProductionStagesDTOConverter
+     */
+    public ProProductionStagesDTOConverter getProProductionStagesDTOConverter() {
+        return proProductionStagesDTOConverter;
+    }
+
+    /**
+     * @param proProductionStagesDTOConverter the
+     * proProductionStagesDTOConverter to set
+     */
+    public void setProProductionStagesDTOConverter(ProProductionStagesDTOConverter proProductionStagesDTOConverter) {
+        this.proProductionStagesDTOConverter = proProductionStagesDTOConverter;
+    }
+
+    /**
+     * @return the proGroupDTOConverter
+     */
+    public ProGroupDTOConverter getProGroupDTOConverter() {
+        return proGroupDTOConverter;
+    }
+
+    /**
+     * @param proGroupDTOConverter the proGroupDTOConverter to set
+     */
+    public void setProGroupDTOConverter(ProGroupDTOConverter proGroupDTOConverter) {
+        this.proGroupDTOConverter = proGroupDTOConverter;
     }
 
 }

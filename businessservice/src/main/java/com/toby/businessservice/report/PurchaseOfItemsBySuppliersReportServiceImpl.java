@@ -8,6 +8,7 @@ package com.toby.businessservice.report;
 import com.toby.businessservice.reports.searchBean.PurchaseOfItemsBySuppliersSearchBean;
 import com.toby.core.GenericDAO;
 import com.toby.views.ItemSalesView;
+import com.toby.views.ItemSalesViewGroup;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,6 +43,25 @@ public class PurchaseOfItemsBySuppliersReportServiceImpl implements PurchaseOfIt
         appendPaymentType(purchaseOfItemsBySuppliersSearchBean, stringBuilder, params);
         stringBuilder.append(" order by isv.date ASC,isv.itemId ASC");
         List<ItemSalesView> details = dao.findListByQuery(stringBuilder.toString(), params);
+        return details;
+    }
+
+    @Override
+    public List<ItemSalesViewGroup> getAllPurchaseOfItemsBySuppliersSearchBeanByGroup(PurchaseOfItemsBySuppliersSearchBean purchaseOfItemsBySuppliersSearchBean) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("type", purchaseOfItemsBySuppliersSearchBean.getType());
+        params.put("branchId", purchaseOfItemsBySuppliersSearchBean.getBranchId());
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("SELECT isv FROM ItemSalesViewGroup isv WHERE isv.branchId = :branchId AND isv.type = :type");
+
+        appendDate(purchaseOfItemsBySuppliersSearchBean, stringBuilder, params);
+        appendSupplier(purchaseOfItemsBySuppliersSearchBean, stringBuilder, params);
+        appendSerial(purchaseOfItemsBySuppliersSearchBean, stringBuilder, params);
+        appendInventory(purchaseOfItemsBySuppliersSearchBean, stringBuilder, params);
+        appendItem(purchaseOfItemsBySuppliersSearchBean, stringBuilder, params);
+        appendPaymentType(purchaseOfItemsBySuppliersSearchBean, stringBuilder, params);
+        stringBuilder.append(" order by isv.date ASC,isv.itemId ASC");
+        List<ItemSalesViewGroup> details = dao.findListByQuery(stringBuilder.toString(), params);
         return details;
     }
 
@@ -127,6 +147,7 @@ public class PurchaseOfItemsBySuppliersReportServiceImpl implements PurchaseOfIt
             stringBuilder.append(" AND isv.paymentType <= :topaymentType");
         }
     }
+
     //------------------------------------------
     @Override
     public List<ItemSalesView> getAllSalesOfItemsBySuppliersSearchBean(PurchaseOfItemsBySuppliersSearchBean purchaseOfItemsBySuppliersSearchBean) {
@@ -231,7 +252,6 @@ public class PurchaseOfItemsBySuppliersReportServiceImpl implements PurchaseOfIt
     }
 
     //-------------------------------------------
-
     @Override
     public List<ItemSalesView> getAllInvoiceDetailBySuppliersSearchBean(PurchaseOfItemsBySuppliersSearchBean purchaseOfItemsBySuppliersSearchBean) {
         StringBuilder stringBuilder = new StringBuilder();

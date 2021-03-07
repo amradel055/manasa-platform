@@ -21,6 +21,7 @@ public class SalesJournalReportBean {
     private String delegatorName;
     private BigDecimal discount;
     private BigDecimal net;
+    private BigDecimal sumTotalCost;
    
   
     public Integer getSerialNum() {
@@ -122,6 +123,20 @@ public class SalesJournalReportBean {
      */
     public void setDelegatorName(String delegatorName) {
         this.delegatorName = delegatorName;
+    }
+
+    /**
+     * @return the sumTotalCost
+     */
+    public BigDecimal getSumTotalCost() {
+        return sumTotalCost;
+    }
+
+    /**
+     * @param sumTotalCost the sumTotalCost to set
+     */
+    public void setSumTotalCost(BigDecimal sumTotalCost) {
+        this.sumTotalCost = sumTotalCost;
     }
 
     /**

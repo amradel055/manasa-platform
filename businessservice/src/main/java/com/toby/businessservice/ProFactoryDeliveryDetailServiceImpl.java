@@ -169,6 +169,7 @@ public class ProFactoryDeliveryDetailServiceImpl implements ProFactoryDeliveryDe
             InvItem invItem = new InvItem();
             invItem.setId(dTO.getItemId().getId());
             entity.setItemId(invItem);
+            entity.setItemBarcode(dTO.getItemsBarcodesDetail().getBarcode());
         }
 
         if (dTO.getInvItemParentId() != null) {

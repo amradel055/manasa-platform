@@ -115,6 +115,16 @@ public class ItemsBarcodesDetailsViewServiceImpl implements ItemsBarcodesDetails
             itemsBarcodesDetailsView.setPaintColorName(invItem.getPaintColor() == null ? null : invItem.getPaintColor().getName());
             itemsBarcodesDetailsView.setScrewing(BigDecimal.ONE);
             itemsBarcodesDetailsView.setIsInventoryItem(invItem.getIsInventoryItem());
+            itemsBarcodesDetailsView.setMaxPriceMen(invItem.getMaxpricemen());
+            itemsBarcodesDetailsView.setMinPriceMen(invItem.getMinpricemen());
+            itemsBarcodesDetailsView.setMaxPriceYoung(invItem.getMaxpriceyoung());
+            itemsBarcodesDetailsView.setMinPriceYoung(invItem.getMinpriceyoung());
+            itemsBarcodesDetailsView.setNumberMetersFreeMen(invItem.getNumbermetersfreemen());
+            itemsBarcodesDetailsView.setNumberMetersFreeYoung(invItem.getNumbermetersfreeyoung());
+            itemsBarcodesDetailsView.setNumberMetersMen(invItem.getNumbermetersmen());
+            itemsBarcodesDetailsView.setNumberMetersYoung(invItem.getNumbermetersyoung());
+            itemsBarcodesDetailsView.setProGroupId(invItem.getProGroupId() == null ? null : invItem.getProGroupId().getId());
+            itemsBarcodesDetailsView.setTypeShow(invItem.getItemNatural());
             list.add(itemsBarcodesDetailsView);
         }
 

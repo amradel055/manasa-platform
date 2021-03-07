@@ -33,6 +33,7 @@ public class TobyUserProproductionServiceImpl implements TobyUserProproductionSe
         String sql = "SELECT t FROM TobyUserProproduction t where t.branchId.id = :id";
         List<TobyUserProproduction> tobyUserProproductionList = dao.findListByQuery(sql, params);
         TobyUserProproductionDTO tobyUserProproductionDTO;
+        ProProductionStagesDTO productionStagesDTO;
         TobyUserDTO tobyUserDTO;
         for (TobyUserProproduction tobyUserProproduction : tobyUserProproductionList) {
             if (userStagesMap.containsKey(tobyUserProproduction.getUserId().getId())) {
@@ -41,6 +42,7 @@ public class TobyUserProproductionServiceImpl implements TobyUserProproductionSe
                 tobyUserDTO = new TobyUserDTO();
                 tobyUserDTO.setName(tobyUserProproduction.getUserId().getName());
                 tobyUserDTO.setUserCode(tobyUserProproduction.getUserId().getUserCode());
+                tobyUserDTO.setId(tobyUserProproduction.getUserId().getId());
             }
             tobyUserProproductionDTO = new TobyUserProproductionDTO();
             tobyUserProproductionDTO.setUserId(tobyUserProproduction.getUserId().getId());
@@ -49,6 +51,16 @@ public class TobyUserProproductionServiceImpl implements TobyUserProproductionSe
             tobyUserProproductionDTO.setProproductionPrice(tobyUserProproduction.getProproductionId().getPrice());
             tobyUserProproductionDTO.setId(tobyUserProproduction.getId());
             tobyUserDTO.getTobyUserProproductionDTOList().add(tobyUserProproductionDTO);
+            
+            productionStagesDTO = new ProProductionStagesDTO();
+            productionStagesDTO.setId(tobyUserProproduction.getProproductionId().getId());
+            productionStagesDTO.setIndex(tobyUserProproduction.getProproductionId().getId());
+            productionStagesDTO.setName(tobyUserProproduction.getProproductionId().getName());
+            productionStagesDTO.setSerial(tobyUserProproduction.getProproductionId().getSerial());
+            productionStagesDTO.setPrice(tobyUserProproduction.getProproductionId().getPrice());
+            productionStagesDTO.setTypeStage(tobyUserProproduction.getProproductionId().getTypeStage());
+            tobyUserDTO.getProductionStagesDTOList().add(productionStagesDTO);
+            
             userStagesMap.put(tobyUserProproduction.getUserId().getId(), tobyUserDTO);
         }
         tobyUserDTOList = new ArrayList<>(userStagesMap.values());
@@ -61,6 +73,7 @@ public class TobyUserProproductionServiceImpl implements TobyUserProproductionSe
                 + " AND e.userId.id = " + userRole.getUserId().getId() + " AND e.proproductionId.id = " + productionStages.getId();
         dao.executeDeleteQuery(sql);
     }
+
 
     @Override
     public void deleteProductionStages(TobyUserRole userRole, ProProductionStages productionStages) {

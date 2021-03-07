@@ -145,7 +145,7 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
     public List<ProProductionItemsTransactionDTO> getProProductionItemsTransaction(TobyUser tobyUser) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", tobyUser.getBranchId().getId());
-        List<ProProductionItemsTransaction> proProductionItemsTransaction = dao.findListByQuery("SELECT e FROM ProProductionItemsTransaction e where e.branchId.id =:branchId and( e.isDeleted != 1 or e.isDeleted is NULL )", params);
+        List<ProProductionItemsTransaction> proProductionItemsTransaction = dao.findListByQuery("SELECT e FROM ProProductionItemsTransaction e where e.branchId.id =:branchId and( e.isDeleted != 1 or e.isDeleted is NULL ) order by e.id desc", params);
         return mapToDTOList(proProductionItemsTransaction, tobyUser);
     }
 

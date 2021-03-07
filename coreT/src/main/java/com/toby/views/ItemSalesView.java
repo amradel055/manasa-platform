@@ -59,7 +59,7 @@ public class ItemSalesView implements Serializable {
     @Column(name = "serial")
     private Integer serial;
     @Column(name = "type")
-    private Boolean type;
+    private Integer type;
     @Column(name = "delegator_code")
     private String delegatorCode;
     @Column(name = "inventory_code")
@@ -130,6 +130,10 @@ public class ItemSalesView implements Serializable {
     private BigDecimal discount;
     @Column(name = "net")
     private BigDecimal net;
+    @Column(name = "pro_group_id")
+    private Integer proGroupId;
+    @Column(name = "pro_group_name")
+    private String proGroupName;
 
     public ItemSalesView() {
     }
@@ -286,14 +290,6 @@ public class ItemSalesView implements Serializable {
         this.net = net;
     }
 
-    public Boolean getType() {
-        return type;
-    }
-
-    public void setType(Boolean type) {
-        this.type = type;
-    }
-
     public Integer getBranchId() {
         return branchId;
     }
@@ -400,6 +396,48 @@ public class ItemSalesView implements Serializable {
      */
     public void setSupplierCode(String supplierCode) {
         this.supplierCode = supplierCode;
+    }
+
+    /**
+     * @return the type
+     */
+    public Integer getType() {
+        return type;
+    }
+
+    /**
+     * @param type the type to set
+     */
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    /**
+     * @return the proGroupId
+     */
+    public Integer getProGroupId() {
+        return proGroupId;
+    }
+
+    /**
+     * @param proGroupId the proGroupId to set
+     */
+    public void setProGroupId(Integer proGroupId) {
+        this.proGroupId = proGroupId;
+    }
+
+    /**
+     * @return the proGroupName
+     */
+    public String getProGroupName() {
+        return proGroupName;
+    }
+
+    /**
+     * @param proGroupName the proGroupName to set
+     */
+    public void setProGroupName(String proGroupName) {
+        this.proGroupName = proGroupName;
     }
 
 }

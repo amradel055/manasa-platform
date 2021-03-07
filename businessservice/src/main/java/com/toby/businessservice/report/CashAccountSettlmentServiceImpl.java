@@ -446,60 +446,60 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
         if (cashAccountSettlementSearchBean.getOrderBy() == 0) {
             Comparator<CashAccountSettlmentView> compare = (CashAccountSettlmentView o1, CashAccountSettlmentView o2)
                     -> {
-                        int value1 = o1.getBankId().compareTo(o2.getBankId());
-                        if (value1 == 0) {
-                            int value2 = o1.getDate().compareTo(o2.getDate());
-                            if (value2 == 0) {
-                                return o1.getOrdered().compareTo(o2.getOrdered());
-                            } else {
-                                return value2;
-                            }
-                        }
-                        return value1;
-                    };
+                int value1 = o1.getBankId().compareTo(o2.getBankId());
+                if (value1 == 0) {
+                    int value2 = o1.getDate().compareTo(o2.getDate());
+                    if (value2 == 0) {
+                        return o1.getOrdered().compareTo(o2.getOrdered());
+                    } else {
+                        return value2;
+                    }
+                }
+                return value1;
+            };
 
 //            Collections.sort(accountSettlmentViews, compare);
         } else if (cashAccountSettlementSearchBean.getOrderBy() == 1) {
             Comparator<CashAccountSettlmentView> compare = (CashAccountSettlmentView o1, CashAccountSettlmentView o2)
                     -> {
-                        int value1 = o1.getValue().compareTo(o2.getValue());
-                        if (value1 == 0) {
-                            int value2 = o1.getBankId().compareTo(o2.getBankId());
-                            if (value2 == 0) {
-                                int value3 = o1.getDate().compareTo(o2.getDate());
-                                if (value3 == 0) {
-                                    return o1.getOrdered().compareTo(o2.getOrdered());
-                                } else {
-                                    return value3;
-                                }
-                            } else {
-                                return value2;
-                            }
+                int value1 = o1.getValue().compareTo(o2.getValue());
+                if (value1 == 0) {
+                    int value2 = o1.getBankId().compareTo(o2.getBankId());
+                    if (value2 == 0) {
+                        int value3 = o1.getDate().compareTo(o2.getDate());
+                        if (value3 == 0) {
+                            return o1.getOrdered().compareTo(o2.getOrdered());
+                        } else {
+                            return value3;
                         }
-                        return value1;
-                    };
+                    } else {
+                        return value2;
+                    }
+                }
+                return value1;
+            };
 
 //            Collections.sort(accountSettlmentViews, compare);
         } else if (cashAccountSettlementSearchBean.getOrderBy() == 2) {
 
             Comparator<CashAccountSettlmentView> compare = (CashAccountSettlmentView o1, CashAccountSettlmentView o2)
                     -> {
-                        int value1 = o1.getSerial().compareTo(o2.getSerial());
-                        if (value1 == 0) {
-                            int value2 = o1.getBankId().compareTo(o2.getBankId());
-                            if (value2 == 0) {
-                                int value3 = o1.getDate().compareTo(o2.getDate());
-                                if (value3 == 0) {
-                                    return o1.getOrdered().compareTo(o2.getOrdered());
-                                } else {
-                                    return value3;
-                                }
-                            } else {
-                                return value2;
-                            }
+                int value1 = o1.getSerial().compareTo(o2.getSerial());
+                if (value1 == 0) {
+                    int value2 = o1.getBankId().compareTo(o2.getBankId());
+                    if (value2 == 0) {
+                        int value3 = o1.getDate().compareTo(o2.getDate());
+                        if (value3 == 0) {
+                            return o1.getOrdered().compareTo(o2.getOrdered());
+                        } else {
+                            return value3;
                         }
-                        return value1;
-                    };
+                    } else {
+                        return value2;
+                    }
+                }
+                return value1;
+            };
 
 //            Collections.sort(accountSettlmentViews, compare);
         }
@@ -941,6 +941,12 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
             view.setValueLocal(entity.getValueLocal());
             view.setRemark(entity.getRemark());
             view.setRemark2(entity.getRemark2());
+            if (entity.getInvoiceId() != null && entity.getInvoiceId().getOrganizationSiteId() != null) {
+                view.setCustomerName(entity.getInvoiceId().getOrganizationSiteId().getName());
+                view.setCustomerCode(entity.getInvoiceId().getOrganizationSiteId().getCode());
+                view.setInvoiceNumber(entity.getInvoiceId().getSerial());
+            }
+
             if (entity.getGlBankId() != null) {
                 view.setName(entity.getGlBankId().getName());
                 view.setCode(entity.getGlBankId().getCode());
@@ -993,6 +999,11 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
                         view.setCurrencyName(entity.getBankIdFrom().getCurrencyId().getName());
                     }
                 }
+                if (entity.getGlBankTransactionId() != null && entity.getGlBankTransactionId().getInvoiceId() != null && entity.getGlBankTransactionId().getInvoiceId().getOrganizationSiteId() != null) {
+                    view.setCustomerName(entity.getGlBankTransactionId().getInvoiceId().getOrganizationSiteId().getName());
+                    view.setCustomerCode(entity.getGlBankTransactionId().getInvoiceId().getOrganizationSiteId().getCode());
+                    view.setInvoiceNumber(entity.getGlBankTransactionId().getInvoiceId().getSerial());
+                }
                 view.setStatus(0);
                 view.setTypeId(3);
                 view.setTypeName("تحويل صادر");
@@ -1023,6 +1034,11 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
                         view.setCurrencyCode(entity.getBankIdTo().getCurrencyId().getCode());
                         view.setCurrencyName(entity.getBankIdTo().getCurrencyId().getName());
                     }
+                }
+                if (entity.getGlBankTransactionId()!= null && entity.getGlBankTransactionId().getInvoiceId() != null && entity.getGlBankTransactionId().getInvoiceId().getOrganizationSiteId() != null) {
+                    view.setCustomerName(entity.getGlBankTransactionId().getInvoiceId().getOrganizationSiteId().getName());
+                    view.setCustomerCode(entity.getGlBankTransactionId().getInvoiceId().getOrganizationSiteId().getCode());
+                    view.setInvoiceNumber(entity.getGlBankTransactionId().getInvoiceId().getSerial());
                 }
                 view.setStatus(1);
                 view.setTypeId(4);
@@ -1060,6 +1076,12 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
             }
             view.setValue(invInvoiceDTO.getFinalNet());
             view.setValueLocal(invInvoiceDTO.getFinalNet().multiply(invInvoiceDTO.getRate()));
+            
+            if(entity.getInvPurchaseInvoiceId().getId() != null && entity.getInvPurchaseInvoiceId().getOrganizationSiteId() != null ){
+                view.setCustomerName(entity.getInvPurchaseInvoiceId().getOrganizationSiteId().getName());
+                view.setCustomerCode(entity.getInvPurchaseInvoiceId().getOrganizationSiteId().getCode());
+                view.setInvoiceNumber(entity.getInvPurchaseInvoiceId().getSerial());
+            }
 
             view.setRemark(entity.getInvPurchaseInvoiceId().getRemarks());
             if (entity.getInvPurchaseInvoiceId().getType() == 0) {

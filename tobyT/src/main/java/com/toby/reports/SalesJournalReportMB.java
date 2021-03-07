@@ -5,24 +5,31 @@
  */
 package com.toby.reports;
 
-import com.toby.businessservice.report.SalesJournalService;
-
-import com.toby.report.entity.SalesJournalReportBean;
 import com.toby.businessservice.InvDelegatorService;
 import com.toby.businessservice.InvInventoryService;
 import com.toby.businessservice.InvPurchaseInvoiceService;
+
 import com.toby.businessservice.OrganizationSiteService;
+import com.toby.businessservice.report.SalesJournalService;
+
+
 import com.toby.businessservice.reports.searchBean.SalesJournalSearchBean;
+
 import com.toby.converter.InvDelegatorConvertor;
 import com.toby.converter.InvInventoryConverter;
 import com.toby.converter.InvOrganizationSiteConverter;
 import com.toby.converter.InvPurchaseInvoiceConverter;
 import com.toby.entity.InvInventory;
+
 import com.toby.entity.InvOrganizationSite;
 import com.toby.entity.InvPurchaseInvoice;
+
 import com.toby.entity.InventoryDelegator;
+
 import com.toby.toby.BaseReportBean;
 import com.toby.toby.UserData;
+
+import com.toby.report.entity.SalesJournalReportBean;
 import com.toby.views.NetView;
 
 import java.io.IOException;
@@ -63,6 +70,7 @@ public class SalesJournalReportMB extends BaseReportBean {
     private Date selectedDate;
     private Boolean type;
     private BigDecimal totalnet;
+    private BigDecimal totalTotalSumAvarage;
     private BigDecimal totalDiscount;
     private BigDecimal allNet;
     private BigDecimal allDiscount;
@@ -126,10 +134,10 @@ public class SalesJournalReportMB extends BaseReportBean {
         initObjs();
 
         fillLists();
-        setDateRootList(salesJournalService.getAllDates(getSalesJournalSearchBean()));
+//        setDateRootList(salesJournalService.getAllDates(getSalesJournalSearchBean()));
 
         if (uri != null && uri.contains("SalesJournal")) {
-            setInvCustomerList(organizationSiteService.getorganizationSiteByBranchIdForGlBankModule(getUserData().getUserBranch().getId(), true, 0));
+//            setInvCustomerList(organizationSiteService.getorganizationSiteByBranchIdForGlBankModule(getUserData().getUserBranch().getId(), true, 0));
 
             invDelegatorList = delegatorService.getSalesByBranch(getBranchId()); // مبيعات
         } else {
@@ -168,21 +176,19 @@ public class SalesJournalReportMB extends BaseReportBean {
 
     private void fillLists() {
         if (uri != null && uri.contains("SalesJournal")) {
-            setInvCustomerList(organizationSiteService.getorganizationSiteByBranchIdForGlBankModule(getUserData().getUserBranch().getId(), true, 0));
-
+//            setInvCustomerList(organizationSiteService.getorganizationSiteByBranchIdForGlBankModule(getUserData().getUserBranch().getId(), true, 0));
             invDelegatorList = delegatorService.getSalesByBranch(getBranchId()); // مبيعات
-            invInvoicesSalesList = invPurchaseInvoiceService.getALLInvPurchaseInvoicePostFlagedByBranchIdPer(branchId, true);
+            invInvoicesSalesList = invPurchaseInvoiceService.getALLInvPurchaseInvoicePostFlagedByBranchIdPer(branchId, 4);
             setInvInvoiceSalesConverter(new InvPurchaseInvoiceConverter(invInvoicesSalesList));
 
         } else {
-
             setInvCustomerList(organizationSiteService.getorganizationSiteByBranchIdForGlBankModule(getUserData().getUserBranch().getId(), true, 1));
             invDelegatorList = delegatorService.getPurchaseByBranch(getBranchId()); //مشتريات
-            invInvoicesPurchaseList = invPurchaseInvoiceService.getALLInvPurchaseInvoicePostFlagedByBranchIdPer(branchId, false);
+            invInvoicesPurchaseList = invPurchaseInvoiceService.getALLInvPurchaseInvoicePostFlagedByBranchIdPer(branchId, 0);
             invInvoicePurchaseConverter = new InvPurchaseInvoiceConverter(invInvoicesPurchaseList);
         }
         invInventoryList = inventoryService.getALLInventoriesByBranchPer(branchId);
-        netViewList = salesJournalService.getAllPurchaseInvoiceSearchBean(salesJournalSearchBean);
+//        netViewList = salesJournalService.getAllPurchaseInvoiceSearchBean(salesJournalSearchBean);
 
         setInvCustomerConverter(new InvOrganizationSiteConverter(getInvCustomerList()));// مبيعات
 
@@ -211,11 +217,12 @@ public class SalesJournalReportMB extends BaseReportBean {
         getSalesJournalSearchBean().setBranchId(getUserData().getUserBranch().getId());
         setNetViewList(new ArrayList<>());
         if (uri != null && uri.contains("SalesJournalForUser")) {
-            getSalesJournalSearchBean().setType(1);
+            getSalesJournalSearchBean().setType(4);
             getSalesJournalSearchBean().setTobyUserId(getUserData().getUser().getId());
-            getSalesJournalSearchBean().setFrompaymentType(3);
-            getSalesJournalSearchBean().setTopaymentType(3);
+            getSalesJournalSearchBean().setFrompaymentType(1);
+            getSalesJournalSearchBean().setTopaymentType(1);
         }
+        
         netViewList = salesJournalService.getAllPurchaseInvoiceSearchBean(salesJournalSearchBean);
         netViewDetailMap = new HashMap<>();
         allDiscount = BigDecimal.ZERO;
@@ -253,6 +260,7 @@ public class SalesJournalReportMB extends BaseReportBean {
                 totalDiscount = BigDecimal.ZERO;
 
                 totalnet = BigDecimal.ZERO;
+                totalTotalSumAvarage = BigDecimal.ZERO;
                 getSalesJournalReportBeanList().add(reportBean);
                 for (NetView orgView : entry.getValue()) {
 
@@ -263,22 +271,23 @@ public class SalesJournalReportMB extends BaseReportBean {
                     sjrb.setDiscount(orgView.getHeadDiscount());
                     sjrb.setInvInventoryName(orgView.getInventoryName());
                     sjrb.setNet(orgView.getNet());
+                    sjrb.setSumTotalCost(orgView.getSumTotalCost());
                     sjrb.setSerialNum(orgView.getSerial());
 
                     //------------------------
                     if (getSalesJournalSearchBean().getIsReturn()) {
                         if (orgView.getType() == 2 || orgView.getType() == 3) {
                             totalDiscount = totalDiscount.subtract(orgView.getHeadDiscount());
-
+                            totalTotalSumAvarage = totalTotalSumAvarage.subtract(orgView.getSumTotalCost());
                             totalnet = totalnet.subtract(orgView.getNet());
                         } else {
                             totalDiscount = totalDiscount.add(orgView.getHeadDiscount());
-
+                            totalTotalSumAvarage = totalTotalSumAvarage.add(orgView.getSumTotalCost());
                             totalnet = totalnet.add(orgView.getNet());
                         }
                     } else {
                         totalDiscount = totalDiscount.add(orgView.getHeadDiscount());
-
+                        totalTotalSumAvarage = totalTotalSumAvarage.add(orgView.getSumTotalCost());
                         totalnet = totalnet.add(orgView.getNet());
                     }
                     //-------------------------
@@ -288,6 +297,7 @@ public class SalesJournalReportMB extends BaseReportBean {
                 }
                 reportBean.setDiscount(totalDiscount);
                 reportBean.setNet(totalnet);
+                reportBean.setSumTotalCost(totalTotalSumAvarage);
                 allDiscount = allDiscount.add(totalDiscount);
                 allNet = allNet.add(totalnet);
 
@@ -1103,6 +1113,20 @@ public class SalesJournalReportMB extends BaseReportBean {
      */
     public void setInvPurchaseInvoiceService(InvPurchaseInvoiceService invPurchaseInvoiceService) {
         this.invPurchaseInvoiceService = invPurchaseInvoiceService;
+    }
+
+    /**
+     * @return the totalTotalSumAvarage
+     */
+    public BigDecimal getTotalTotalSumAvarage() {
+        return totalTotalSumAvarage;
+    }
+
+    /**
+     * @param totalTotalSumAvarage the totalTotalSumAvarage to set
+     */
+    public void setTotalTotalSumAvarage(BigDecimal totalTotalSumAvarage) {
+        this.totalTotalSumAvarage = totalTotalSumAvarage;
     }
 
 }

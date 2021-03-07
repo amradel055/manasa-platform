@@ -37,6 +37,8 @@ public class TempInvPurchaseInvoiceNotLoadedYet implements Serializable {
     private Integer itemId;
     @Column(name = "quantity")
     private BigDecimal quantity;
+    @Column(name = "number")
+    private BigDecimal number;
     @Column(name = "screwing")
     private BigDecimal screwing;
     @Column(name = "unit_id")
@@ -273,6 +275,20 @@ public class TempInvPurchaseInvoiceNotLoadedYet implements Serializable {
      */
     public void setIsInventoryItem(Integer isInventoryItem) {
         this.isInventoryItem = isInventoryItem;
+    }
+
+    /**
+     * @return the number
+     */
+    public BigDecimal getNumber() {
+        return number;
+    }
+
+    /**
+     * @param number the number to set
+     */
+    public void setNumber(BigDecimal number) {
+        this.number = number;
     }
 
     

@@ -17,6 +17,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -102,6 +103,14 @@ public class CashAccountSettlmentView implements Serializable {
     private String remark2;
     @Column(name = "createdBy")
     private String createdBy;
+    @Transient
+    private String customerName;
+    @Transient
+    private String customerCode;
+    @Transient
+    private String customerMobile;
+    @Transient
+    private Integer invoiceNumber;
 
     public CashAccountSettlmentView() {
     }
@@ -352,6 +361,62 @@ public class CashAccountSettlmentView implements Serializable {
      */
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
+    }
+
+    /**
+     * @return the customerName
+     */
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    /**
+     * @param customerName the customerName to set
+     */
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    /**
+     * @return the customerCode
+     */
+    public String getCustomerCode() {
+        return customerCode;
+    }
+
+    /**
+     * @param customerCode the customerCode to set
+     */
+    public void setCustomerCode(String customerCode) {
+        this.customerCode = customerCode;
+    }
+
+    /**
+     * @return the invoiceNumber
+     */
+    public Integer getInvoiceNumber() {
+        return invoiceNumber;
+    }
+
+    /**
+     * @param invoiceNumber the invoiceNumber to set
+     */
+    public void setInvoiceNumber(Integer invoiceNumber) {
+        this.invoiceNumber = invoiceNumber;
+    }
+
+    /**
+     * @return the customerMobile
+     */
+    public String getCustomerMobile() {
+        return customerMobile;
+    }
+
+    /**
+     * @param customerMobile the customerMobile to set
+     */
+    public void setCustomerMobile(String customerMobile) {
+        this.customerMobile = customerMobile;
     }
 
 }

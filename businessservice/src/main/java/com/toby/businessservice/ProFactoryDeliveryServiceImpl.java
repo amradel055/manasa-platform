@@ -112,7 +112,7 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
 
     private InvInvoiceDTO initData(InvInvoiceDTO invInvoiceDTO, ProFactoryDelivery entity, Boolean isLoaded) {
         invInvoiceDTO.setId(entity.getId());
-        invInvoiceDTO.setSerial(entity.getInvPurchaseInvoiceId() == null ? null : entity.getInvPurchaseInvoiceId().getSerial());
+        invInvoiceDTO.setSerial(entity.getInvPurchaseInvoiceId() == null ? null : entity.getSerial());
         invInvoiceDTO.setCompanyActivity(entity.getBranchId().getCompanyActivity());
         invInvoiceDTO.setBranchId(entity.getBranchId() != null ? entity.getBranchId().getId() : null);
 

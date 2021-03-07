@@ -38,6 +38,7 @@ public class InvPurchaseInvoiceListDTOMB extends InventoryBasicDataForm {
     private List<InvInventoryDTO> gallaryList;
     private InvInventory invInventorySelection;
     private InvInventoryDTO invGallarySelection;
+    private List<InvInvoiceDTO> invInvoiceList;
     @EJB
     private InvPurchaseInvoiceService_1 invPurchaseInvoiceService;
     @EJB
@@ -101,6 +102,24 @@ public class InvPurchaseInvoiceListDTOMB extends InventoryBasicDataForm {
         }
     }
 
+    public void search() {
+        Integer type = 0, invInventorySelectionId = null, invGallarySelectionId = null;
+        invGallarySelectionId = getInvGallarySelection() != null ? getInvGallarySelection().getId() : null;
+
+        if (getUri().contains("invpurchaseinvoicelist")) {
+            type = 0;
+        } else if (getUri().contains("invsalesinvoicelist")) {
+            type = 1;
+        } else if (getUri().contains("invreturnpurchaselist")) {
+            type = 2;
+        } else if (getUri().contains("invreturnsaleslist")) {
+            type = 3;
+        } else if (getUri().contains("proworkorderlist")) {
+            type = 4;
+        }
+        setInvInvoiceList(invPurchaseInvoiceService.getALLInvPurchaseInvoiceDTOByTypeAndBranchIdFroGallary2(type, invGallarySelectionId,getInvInvoiceDTO().getOrganizationSiteId() == null ? null : getInvInvoiceDTO().getOrganizationSiteId().getId()));
+    }
+
     public void loadInventoryList() {
         try {
             if (getInvInventorySelection() != null && getInvInventorySelection().getId() != null && getInvInventorySelection().getId() > 0) {
@@ -112,6 +131,7 @@ public class InvPurchaseInvoiceListDTOMB extends InventoryBasicDataForm {
         }
 
     }
+
     public void loadGallaryList() {
         try {
             if (getInvInventorySelection() != null && getInvInventorySelection().getId() != null && getInvInventorySelection().getId() > 0) {
@@ -146,19 +166,20 @@ public class InvPurchaseInvoiceListDTOMB extends InventoryBasicDataForm {
             return null;
         }
     }
-    
-     public void stop() {
-         if (getInvInvoiceDTOSelected() != null && getInvInvoiceDTOSelected().getId() > 0) {
-             invPurchaseInvoiceService.updateInvPurchaseInvoiceForStopped(getInvInvoiceDTOSelected().getId(), 1);
-             savedMeesage(null);
-         }         
-     }
-     public void run() {
-         if (getInvInvoiceDTOSelected() != null && getInvInvoiceDTOSelected().getId() > 0) {
-             invPurchaseInvoiceService.updateInvPurchaseInvoiceForStopped(getInvInvoiceDTOSelected().getId(), 0);
-             savedMeesage(null);
-         }
-     }
+
+    public void stop() {
+        if (getInvInvoiceDTOSelected() != null && getInvInvoiceDTOSelected().getId() > 0) {
+            invPurchaseInvoiceService.updateInvPurchaseInvoiceForStopped(getInvInvoiceDTOSelected().getId(), 1);
+            savedMeesage(null);
+        }
+    }
+
+    public void run() {
+        if (getInvInvoiceDTOSelected() != null && getInvInvoiceDTOSelected().getId() > 0) {
+            invPurchaseInvoiceService.updateInvPurchaseInvoiceForStopped(getInvInvoiceDTOSelected().getId(), 0);
+            savedMeesage(null);
+        }
+    }
 
     public String goToEdit() {
         try {
@@ -276,5 +297,19 @@ public class InvPurchaseInvoiceListDTOMB extends InventoryBasicDataForm {
      */
     public void setGallaryList(List<InvInventoryDTO> gallaryList) {
         this.gallaryList = gallaryList;
+    }
+
+    /**
+     * @return the invInvoiceList
+     */
+    public List<InvInvoiceDTO> getInvInvoiceList() {
+        return invInvoiceList;
+    }
+
+    /**
+     * @param invInvoiceList the invInvoiceList to set
+     */
+    public void setInvInvoiceList(List<InvInvoiceDTO> invInvoiceList) {
+        this.invInvoiceList = invInvoiceList;
     }
 }

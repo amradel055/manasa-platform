@@ -156,6 +156,9 @@ public abstract class ProductionBasicDataForm extends BaseFormBean {
     }
 
     public void loadDlg() {
+        if(getInvInvoiceDTO().getLoadedSerial() != null && getInvInvoiceDTO().getNeedLoadedSerial() == null){
+            getInvInvoiceDTO().setNeedLoadedSerial(getInvInvoiceDTO().getLoadedSerial());
+        }
         if (getInvInvoiceDTO().getInvDailogeDataSelected() != null || getInvInvoiceDTO().getNeedLoadedSerial() != null) {
             setInvInvoiceDTO(invDialogueService.loadDlg(getInvInvoiceDTO()));
             fillLists();

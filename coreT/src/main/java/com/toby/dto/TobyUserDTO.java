@@ -21,6 +21,7 @@ public class TobyUserDTO  extends BaseEntityDTO {
     private Integer master;
     private Integer branchId;
     private List<TobyUserProproductionDTO> tobyUserProproductionDTOList;
+    private List<ProProductionStagesDTO> productionStagesDTOList;
 
     
 
@@ -118,6 +119,23 @@ public class TobyUserDTO  extends BaseEntityDTO {
      */
     public void setTobyUserProproductionDTOList(List<TobyUserProproductionDTO> tobyUserProproductionDTOList) {
         this.tobyUserProproductionDTOList = tobyUserProproductionDTOList;
+    }
+
+    /**
+     * @return the productionStagesDTOList
+     */
+    public List<ProProductionStagesDTO> getProductionStagesDTOList() {
+        if(productionStagesDTOList == null){
+            productionStagesDTOList = new ArrayList<>();
+        }
+        return productionStagesDTOList;
+    }
+
+    /**
+     * @param productionStagesDTOList the productionStagesDTOList to set
+     */
+    public void setProductionStagesDTOList(List<ProProductionStagesDTO> productionStagesDTOList) {
+        this.productionStagesDTOList = productionStagesDTOList;
     }
 
 }

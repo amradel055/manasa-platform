@@ -88,11 +88,11 @@ public class PurchaseOfItemsBySuppliersReportMB extends BaseInventoryReportBean 
 
         fillLists();
         setOrganizationSiteRootList(new ArrayList<>());
-        if (isSales) {
-            setOrganizationSiteRootList(organizationSiteService.getorganizationSiteByBranchIdForGlBankModule(getUserData().getUserBranch().getId(),true,0));
-        } else {
-            setOrganizationSiteRootList(organizationSiteService.getorganizationSiteByBranchIdForGlBankModule(getUserData().getUserBranch().getId(),true,1));
-        }
+//        if (isSales) {
+//            setOrganizationSiteRootList(organizationSiteService.getorganizationSiteByBranchIdForGlBankModule(getUserData().getUserBranch().getId(),true,0));
+//        } else {
+//            setOrganizationSiteRootList(organizationSiteService.getorganizationSiteByBranchIdForGlBankModule(getUserData().getUserBranch().getId(),true,1));
+//        }
         purchaseOfItemsBySuppliersViewBeanList = new ArrayList<>();
     }
 
@@ -103,10 +103,10 @@ public class PurchaseOfItemsBySuppliersReportMB extends BaseInventoryReportBean 
         purchaseOfItemsBySuppliersSearchBean.setBranchId(getBranchId());
         purchaseOfItemsBySuppliersSearchBean.setShowReport(false);
         if (uri.contains("PurchaseOfItemsBySuppliers")) {
-            purchaseOfItemsBySuppliersSearchBean.setType(Boolean.FALSE);
+            purchaseOfItemsBySuppliersSearchBean.setType(0);
             isSales = false;
         } else {
-            purchaseOfItemsBySuppliersSearchBean.setType(true);
+            purchaseOfItemsBySuppliersSearchBean.setType(4);
             isSales = true;
         }
 
@@ -124,17 +124,17 @@ public class PurchaseOfItemsBySuppliersReportMB extends BaseInventoryReportBean 
 
     private void fillLists() {
         getInventoryListByBranch();
-        getInvItemByBranch();
+//        getInvItemByBranch();
 
-        if (isSales) {
-            getInvOrganizationSiteAsCustomer();
-            getInvoiceSalesListByBranch();
-            // setInvOrganizationList(getOrganizationSiteService().getCustomerByBranchId(getBranchId())); // عميل
-        } else {
-            getInvOrganizationSiteAsSupplier();
-            getInvoicePurchaseListByBranch();
-            // setInvOrganizationList(getOrganizationSiteService().getSupplierByBranchId(getBranchId())); //مورد
-        }
+//        if (isSales) {
+//            getInvOrganizationSiteAsCustomer();
+//            getInvoiceSalesListByBranch();
+//            // setInvOrganizationList(getOrganizationSiteService().getCustomerByBranchId(getBranchId())); // عميل
+//        } else {
+//            getInvOrganizationSiteAsSupplier();
+//            getInvoicePurchaseListByBranch();
+//            // setInvOrganizationList(getOrganizationSiteService().getSupplierByBranchId(getBranchId())); //مورد
+//        }
     }
 
     public void IntializeSearchLab() {
@@ -174,9 +174,9 @@ public class PurchaseOfItemsBySuppliersReportMB extends BaseInventoryReportBean 
     public void search() {
         total = BigDecimal.ZERO;
         if (isSales) {
-            purchaseOfItemsBySuppliersSearchBean.setType(true);
+            purchaseOfItemsBySuppliersSearchBean.setType(4);
         } else {
-            purchaseOfItemsBySuppliersSearchBean.setType(false);
+            purchaseOfItemsBySuppliersSearchBean.setType(0);
         }
         IntializeSearchLab();
         setPurchaseOfItemsBySuppliersViewBeanList(new ArrayList<>());
@@ -207,6 +207,15 @@ public class PurchaseOfItemsBySuppliersReportMB extends BaseInventoryReportBean 
                 fillItemIdMapByGroupId();
                 fillGroupMapWithCorrespondingItem();
             }
+            
+            InvOrganizationSite ios = new InvOrganizationSite();
+            for (ItemSalesView itemSalesView : itemSalesViewList){
+                ios = new InvOrganizationSite();
+               ios.setId(itemSalesView.getOrganizationSiteId());
+               ios.setName(itemSalesView.getOrganizationSiteName());
+               ios.setCode(itemSalesView.getOrganizationSiteCode());
+               getOrganizationSiteRootList().add(ios);
+            }          
             prepareRootGroupValues();
         }
         mergeGroupsWithItems();
@@ -607,6 +616,9 @@ public class PurchaseOfItemsBySuppliersReportMB extends BaseInventoryReportBean 
      * @return the organizationSiteRootList
      */
     public List<InvOrganizationSite> getOrganizationSiteRootList() {
+        if(organizationSiteRootList == null){
+            organizationSiteRootList = new ArrayList<>();
+        }
         return organizationSiteRootList;
     }
 

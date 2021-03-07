@@ -235,6 +235,9 @@ public class InvPurchaseInvoice extends BaseEntity {
     }
 
     public BigDecimal getRate() {
+        if(rate == null){
+            rate = BigDecimal.ONE;
+        }
         return rate;
     }
 

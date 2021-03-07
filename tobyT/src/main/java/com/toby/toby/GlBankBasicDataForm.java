@@ -6,8 +6,13 @@
 package com.toby.toby;
 
 import com.toby.businessservice.CurrencyOperationService;
+import com.toby.bussinessservice.global.AutoCompleteService;
+import com.toby.converter.InvOrganizationSiteConverter;
+import com.toby.converter.InvOrganizationSiteDTOConverter;
+import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.entity.Currency;
 import com.toby.entity.CurrencyOperation;
+import com.toby.entity.InvOrganizationSite;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -33,6 +38,12 @@ public abstract class GlBankBasicDataForm extends BaseFormBean {
 
     @EJB
     CurrencyOperationService currencyOperationService;
+    @EJB
+    AutoCompleteService autoCompleteService;
+    
+    private List<InvOrganizationSite> organizationList;
+    
+     private InvOrganizationSiteConverter invOrganizationSiteConverter;
 
     public BigDecimal updateRate(Currency currency, Date date) {
 
@@ -101,6 +112,46 @@ public abstract class GlBankBasicDataForm extends BaseFormBean {
         }
         httpServletResponse.getOutputStream().flush();
         httpServletResponse.getOutputStream().close();
+    }
+    
+    
+    public List<InvOrganizationSite> completeCustomerFrom(String query) {
+        organizationList = autoCompleteService.autoCompleteOrganizationSite(getUserData().getUserBranch().getId(), Boolean.TRUE, 0, query);
+        invOrganizationSiteConverter = new InvOrganizationSiteConverter(organizationList);
+        return organizationList;
+
+    }
+    
+    
+
+    /**
+     * @return the organizationList
+     */
+    public List<InvOrganizationSite> getOrganizationList() {
+        return organizationList;
+    }
+
+    /**
+     * @param organizationList the organizationList to set
+     */
+    public void setOrganizationList(List<InvOrganizationSite> organizationList) {
+        this.organizationList = organizationList;
+    }
+    
+
+    /**
+     * @return the invOrganizationSiteConverter
+     */
+    public InvOrganizationSiteConverter getInvOrganizationSiteConverter() {
+        return invOrganizationSiteConverter;
+    }
+
+    /**
+     * @param invOrganizationSiteConverter the invOrganizationSiteConverter to
+     * set
+     */
+    public void setInvOrganizationSiteConverter(InvOrganizationSiteConverter invOrganizationSiteConverter) {
+        this.invOrganizationSiteConverter = invOrganizationSiteConverter;
     }
     
 }

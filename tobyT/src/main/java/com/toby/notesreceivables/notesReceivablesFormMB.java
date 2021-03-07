@@ -138,14 +138,14 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
     private List<CostCenter> costCenterList;
     private List<GlBank> glBankList;
     private List<GlAdminUnit> adminUnitList;
-    private List<InvOrganizationSite> organizationList;
+    
     private List<InvOrganizationSite> supplierList;
     private List<InvOrganizationSite> customerList;
 
     private Map<Integer, GlBankTransactionDetail> glBankTransactionDetailsMap = new HashMap();
 
     private GlBankConverter bankConverter;
-    private InvOrganizationSiteConverter invOrganizationSiteConverter;
+   
 
     private GlaccountConverter glAccountConverter;
 
@@ -222,7 +222,7 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
             costCenterList = new ArrayList<>();
             glBankList = new ArrayList<>();
             adminUnitList = new ArrayList<>();
-            organizationList = new ArrayList<>();
+            setOrganizationList(new ArrayList<>());
             glItemsList = new ArrayList<>();
             getGlBankTransactionInvoiceViewList();
 
@@ -451,13 +451,13 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
 //                    customerList = organizationSiteService.getorganizationSiteByBranchIdForGlBankModule(branchId, true, type);
                     customerList = autoCompleteService.autoCompleteOrganizationSite(branchId, true, type, "");
                 }
-                organizationList = customerList;
+                setOrganizationList(customerList);
             } else if (type == 1) {
                 if (supplierList == null || customerList.size() == 0) {
 //                    supplierList = organizationSiteService.getorganizationSiteByBranchIdForGlBankModule(branchId, true, type);
                     supplierList = autoCompleteService.autoCompleteOrganizationSite(branchId, true, type, "");
                 }
-                organizationList = supplierList;
+                setOrganizationList(supplierList);
             } else if (type == 2) {
 //                if (glAccountList == null || glAccountList.size() == 0) {
                 if (allowAccount) {
@@ -473,9 +473,9 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
 //                }
             }
 
-            if ((type == 0 || type == 1) && organizationList != null && !organizationList.isEmpty()) {
+            if ((type == 0 || type == 1) && getOrganizationList() != null && !getOrganizationList().isEmpty()) {
                 glAccountList = new ArrayList<>();
-                for (InvOrganizationSite invOrganizationSite : organizationList) {
+                for (InvOrganizationSite invOrganizationSite : getOrganizationList()) {
                     account = new GlAccount();
                     account = invOrganizationSite.getAccountId();
                     glAccountList.add(account);
@@ -483,7 +483,7 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
 
             }
 
-            setInvOrganizationSiteConverter(new InvOrganizationSiteConverter(organizationList));
+            setInvOrganizationSiteConverter(new InvOrganizationSiteConverter(getOrganizationList()));
             setGlAccountConverter(new GlaccountConverter(glAccountList));
         } catch (Exception e) {
             saveError(e, "notesReceivablesFormMB", "fillAccounts");
@@ -1454,20 +1454,6 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
     }
 
     /**
-     * @return the organizationList
-     */
-    public List<InvOrganizationSite> getOrganizationList() {
-        return organizationList;
-    }
-
-    /**
-     * @param organizationList the organizationList to set
-     */
-    public void setOrganizationList(List<InvOrganizationSite> organizationList) {
-        this.organizationList = organizationList;
-    }
-
-    /**
      * @return the glBankTransactionExist
      */
     public GlBankTransaction getGlBankTransactionExist() {
@@ -1493,21 +1479,6 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
      */
     public void setBankConverter(GlBankConverter bankConverter) {
         this.bankConverter = bankConverter;
-    }
-
-    /**
-     * @return the invOrganizationSiteConverter
-     */
-    public InvOrganizationSiteConverter getInvOrganizationSiteConverter() {
-        return invOrganizationSiteConverter;
-    }
-
-    /**
-     * @param invOrganizationSiteConverter the invOrganizationSiteConverter to
-     * set
-     */
-    public void setInvOrganizationSiteConverter(InvOrganizationSiteConverter invOrganizationSiteConverter) {
-        this.invOrganizationSiteConverter = invOrganizationSiteConverter;
     }
 
     public Map<Integer, GlBankTransactionDetail> getGlBankTransactionDetailsMap() {

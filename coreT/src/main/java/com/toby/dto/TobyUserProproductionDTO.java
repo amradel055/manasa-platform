@@ -39,7 +39,7 @@ public class TobyUserProproductionDTO extends BaseEntityDTO {
     
     @Override
     public String toString() {
-        return proproductionName ;
+        return proproductionName + id ;
     }
 
     /**

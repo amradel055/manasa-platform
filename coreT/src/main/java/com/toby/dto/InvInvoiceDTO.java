@@ -132,6 +132,8 @@ public class InvInvoiceDTO extends BaseEntityDTO {
     private InvInventoryDTO gallary;
     private InvInventoryDTO factory;
     private InvDetailDTO invDetailDTOSelected;
+    private List<InvDetailDTO> invStripDetailList;
+    
 
     public InvInvoiceDTO() {
     }
@@ -1362,6 +1364,9 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      * @return the barcodeSelect
      */
     public Boolean getBarcodeSelect() {
+        if(barcodeSelect == null){
+            barcodeSelect = Boolean.FALSE;
+        }
         return barcodeSelect;
     }
 
@@ -1422,5 +1427,22 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      */
     public void setShowCustomerDate(Boolean showCustomerDate) {
         this.showCustomerDate = showCustomerDate;
+    }
+
+    /**
+     * @return the invStripDetailList
+     */
+    public List<InvDetailDTO> getInvStripDetailList() {
+        if(invStripDetailList == null){
+            invStripDetailList = new ArrayList<>();
+        }
+        return invStripDetailList;
+    }
+
+    /**
+     * @param invStripDetailList the invStripDetailList to set
+     */
+    public void setInvStripDetailList(List<InvDetailDTO> invStripDetailList) {
+        this.invStripDetailList = invStripDetailList;
     }
 }

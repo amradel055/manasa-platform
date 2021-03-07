@@ -54,6 +54,36 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
         List<OrganizationSiteStatementView> details = dao.findListByQuery(stringBuilder.toString(), params);
         return details;
     }
+    
+    @Override
+    public List<OrganizationSiteStatementView> getAllOrganizationSiteStatementSearchBeanById(SupplierAccountSearchBean supplierAccountSearchBean) {
+        Map<String, Object> params = new HashMap<>();
+
+        params.put("branchId", supplierAccountSearchBean.getBranchId());
+//        params.put("type", supplierAccountSearchBean.getOrganizationType());
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("SELECT RIV FROM OrganizationSiteStatementView RIV WHERE RIV.branchId = :branchId and   ");
+
+        int type = supplierAccountSearchBean.getOrganizationType();
+        if (type == 0) {
+            stringBuilder.append("(RIV.organizationType = 0 or RIV.organizationType = 2)");
+        } else if (type == 1) {
+            stringBuilder.append(" (RIV.organizationType = 1 or RIV.organizationType = 2)");
+        } else if (type == 4) {
+            stringBuilder.append(" RIV.organizationType = 4");
+        }
+
+        appendDate(supplierAccountSearchBean, stringBuilder, params);
+        if (supplierAccountSearchBean.getFromorganizationNameDTO()!= null) {
+            params.put("FromOrganization", supplierAccountSearchBean.getFromorganizationNameDTO().getId());
+            stringBuilder.append(" AND RIV.organizationSiteId = :FromOrganization ");
+        }
+        stringBuilder.append(" order by  RIV.date");
+
+        List<OrganizationSiteStatementView> details = dao.findListByQuery(stringBuilder.toString(), params);
+        return details;
+    }
 
     private void appendOrganization(SupplierAccountSearchBean supplierAccountSearchBean, StringBuilder stringBuilder, Map<String, Object> params) {
 

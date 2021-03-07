@@ -26,6 +26,8 @@ public interface GlBankTransactionService {
     public GlBankTransaction addGlBankTransactionForInstallment(GlBankTransaction glBankTransaction, List<GlBankTransactionDetail> glBankTransactionDetailList, List<GlBankTransactionDetail> glBankTransactionDetailListDeleted);
 
     public void deleteGlBankTransaction(GlBankTransaction glBankTransaction);
+    
+    public void deleteGlBankTransactionByInvoiceId(Integer invoiceId) ;
 
     public List<GlBankTransaction> getALLGlBankTransactionByCompanyId(Integer companyId);
 
@@ -52,6 +54,8 @@ public interface GlBankTransactionService {
     public List<GlBankTransactionDTO> getALLGlBankTransactionRecievableNotloadByBranchId(Integer transactionType, int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters);
 
     public List<GlBankTransaction> getALLGlBankTransactionByGeneralJournalId(Integer generalJournalId);
+    
+    public List<GlBankTransaction> getALLGlBankTransactionByInvoiceId(Integer invoiceId) ;
     
     public void addCash(InvInvoiceDTO dTO, TobyUser tobyUser);
 

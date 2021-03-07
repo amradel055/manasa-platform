@@ -1,161 +1,138 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                template="./../../template/newTemplate.xhtml"
+                template="./../../template/template.xhtml"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:c="http:addInvDetail//xmlns.jcp.org/jsp/jstl/core">
+                xmlns="http://www.w3.org/1999/xhtml">
     <ui:define name="content">
 
         <style>
-
-            .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
-                border: 1px solid #c5dbec;
-                background:#fff;
+            button[title="إضافة"]:focus{
+                background-color: orange !important;
 
             }
-            .ui-dialog {
-                position: absolute !important;
-                left: 1vw!important;
-                top: 25vh!important;}
-            </style>
-            <h:form id="form" dir="#{userData.dir}" class='formmargin'>
-            <div style=" position: absolute;left: 20px"> 
+            button[title="حذف"]:focus{
+                background-color: orange !important;
 
-                <p:commandButton  style="z-index: 2;
-                                  margin-top: 24%;
-                                  color: #035c70!important; 
-                                  background-color: #223238!important;
-                                  border: 1px solid #22323a!important;
-                                  background: #22323a 50% 50% repeat-x!important;"
-                                  icon="fa fa-fw fa-home"
-                                  title="#{userData.userDDs['HOME']}"
-                                  class="smhomeButton" 
-                                  action="exit" />
+            }
 
-            </div>
+
+
+        </style>
+        <h:form id="form" dir="#{userData.dir}" class='formmargin'>
+
             <div >
                 <p:messages id="curmsg" autoUpdate="true" showDetail="true" rendered="true" closable="true"/>   
             </div>
+
 
             <p:fieldset  legend="#{userData.userDDs['CONVERSION_BET_STORE']}"> 
 
                 <div  id="firstSegment" class="ui-g-12 ui-g-nopad">
 
                     <div class="ui-g">
-                        <h:panelGroup id="test">
-                            <div class="ui-g-12 ui-md-6">
 
-                                <h:panelGroup>
+                        <div class="ui-g-6 ui-xl-6">
 
-                                    <p:outputLabel style="width: 95px;margin-right: 6%;" id="purchId" value="#{userData.userDDs['INVOICE_NO']}" />
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
                                     <p:inputText style="width: 37%" 
                                                  id="purchIdVal" readonly="true"
                                                  value="#{invTransferFormMB1.invInvoiceDTO.serial}" />
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 95px;" id="purchId" value="#{userData.userDDs['INVOICE_NO']}" />
 
-                                </h:panelGroup>
+                                </div>
                             </div>
-                            <div class="ui-g-12 ui-md-6">
-                                <h:panelGroup>
+                         
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:autoComplete style="width:37%"  id="inventoryDTO2" widgetVar="inventoryDTO2"
+                                                    dropdown="true"
+                                                    converter="#{invTransferFormMB1.invInventoryDTOConverterTO}"
+                                                    value="#{invTransferFormMB1.invInvoiceDTO.invInventoryIdTo}"
+                                                    var="inventoryDTO2" 
+                                                    itemLabel="#{inventoryDTO2}" 
+                                                    itemValue="#{inventoryDTO2}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{invTransferFormMB1.completeInventoryTo}" 
+                                                    >
+                                        <p:ajax update="invPurchaseInvoiceDetailsTable curmsg inventoryDTO inventoryDTO2" event="itemSelect"
+                                                listener="#{invTransferFormMB1.fillInventoryItem()}" />
+                                    </p:autoComplete>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 75px" value="#{userData.userDDs['TO_REPOS']}"/>
 
-                                    <h:panelGroup>
-                                        <p:outputLabel style="width: 95px; margin-right: 6%;" value="#{userData.userDDs['DATEE']}*"/>
-                                    </h:panelGroup>
-                                    <h:panelGroup>
-                                        <p:calendar id="dateFrom" 
-                                                    value="#{invTransferFormMB1.invInvoiceDTO.date}"
-                                                    pattern="dd/MM/yyyy"
-                                                    style="width:50%!important"/>
-                                    </h:panelGroup>
-
-                                </h:panelGroup>
+                                </div>
                             </div>
+                               <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:calendar id="dateFrom" 
+                                                value="#{invTransferFormMB1.invInvoiceDTO.date}"
+                                                pattern="dd/MM/yyyy"
+                                                style="width:50%!important"/>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 95px; " value="#{userData.userDDs['DATEE']}*"/>
 
-
-
-                            <div class="ui-g-12 ui-md-6">
-
-                                <h:panelGroup>
-                                    <h:panelGroup>
-                                        <p:outputLabel style="width: 75px" value="#{userData.userDDs['TO_REPOS']}"/>
-                                    </h:panelGroup>
-
-                                    <h:panelGroup>
-                                        <p:autoComplete style="width:37%"  id="inventoryDTO2" widgetVar="inventoryDTO2"
-                                                        dropdown="true"
-                                                        converter="#{invTransferFormMB1.invInventoryDTOConverterTO}"
-                                                        value="#{invTransferFormMB1.invInvoiceDTO.invInventoryIdTo}"
-                                                        var="inventoryDTO2" 
-                                                        itemLabel="#{inventoryDTO2}" 
-                                                        itemValue="#{inventoryDTO2}" 
-                                                        forceSelection="true" 
-                                                        completeMethod="#{invTransferFormMB1.completeInventoryTo}" 
-                                                        >
-                                            <p:ajax update="invPurchaseInvoiceDetailsTable curmsg inventoryDTO inventoryDTO2" event="itemSelect"
-                                                    listener="#{invTransferFormMB1.fillInventoryItem()}" />
-                                            <p:ajax update="invPurchaseInvoiceDetailsTable curmsg inventoryDTO inventoryDTO2" event="change" 
-                                                    listener="#{invTransferFormMB1.fillInventoryItem()}" />
-                                        </p:autoComplete>
-                                    </h:panelGroup>
-                                </h:panelGroup>
+                                </div>
                             </div>
+                        </div>
 
-                            <div class="ui-g-12 ui-md-6">
-                                <h:panelGroup>              
-                                    <h:panelGroup>
-                                        <p:outputLabel style="width: 100px;margin-right: 6%;" value="#{userData.userDDs['FROM_REPOS']}"/>
-                                    </h:panelGroup>
+                        <div class="ui-g-6 ui-xl-6">
 
-                                    <h:panelGroup>
-                                        <p:autoComplete style="width:37%"  id="inventoryDTO" widgetVar="inventoryDTO"
-                                                        dropdown="true"
-                                                        converter="#{invTransferFormMB1.invInventoryDTOConverter}"
-                                                        value="#{invTransferFormMB1.invInvoiceDTO.invInventoryId}"
-                                                        var="inventoryDTO" 
-                                                        itemLabel="#{inventoryDTO}" 
-                                                        itemValue="#{inventoryDTO}" 
-                                                        forceSelection="true" 
-                                                        completeMethod="#{invTransferFormMB1.completeInventory}" 
-                                                        >
-                                            <p:ajax update="invPurchaseInvoiceDetailsTable curmsg inventoryDTO inventoryDTO2" event="itemSelect"
-                                                    listener="#{invTransferFormMB1.fillInventoryItem()}" />
-                                            <p:ajax update="invPurchaseInvoiceDetailsTable curmsg inventoryDTO inventoryDTO2" event="change" 
-                                                    listener="#{invTransferFormMB1.fillInventoryItem()}" />
-                                        </p:autoComplete>
-                                    </h:panelGroup>
-                                </h:panelGroup>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:autoComplete style="width:37%"  id="inventoryDTO" widgetVar="inventoryDTO"
+                                                    dropdown="true"
+                                                    converter="#{invTransferFormMB1.invInventoryDTOConverter}"
+                                                    value="#{invTransferFormMB1.invInvoiceDTO.invInventoryId}"
+                                                    var="inventoryDTO" 
+                                                    itemLabel="#{inventoryDTO}" 
+                                                    itemValue="#{inventoryDTO}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{invTransferFormMB1.completeInventory}" 
+                                                    >
+                                        <p:ajax update="invPurchaseInvoiceDetailsTable curmsg inventoryDTO inventoryDTO2" event="itemSelect"
+                                                listener="#{invTransferFormMB1.fillInventoryItem()}" />
+                                        <p:ajax update="invPurchaseInvoiceDetailsTable curmsg inventoryDTO inventoryDTO2" event="change" 
+                                                listener="#{invTransferFormMB1.fillInventoryItem()}" />
+                                    </p:autoComplete>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 100px;" value="#{userData.userDDs['FROM_REPOS']}"/>
+
+                                </div>
                             </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText readonly="true" style="width:69%"  value="#{invTransferFormMB1.invInvoiceDTO.loadedSerial}"
+                                                 />
+                                </div>
+                                <div class="ui-g-6 ui-xl-6" rendered="#{invTransferFormMB1.invInvoiceDTO.loadedSerial  ne null}">
+                                    <p:outputLabel   style="width: 95px; " value="رقم فاتورة التحميل"/>
 
-                            <div class="ui-g-12 ui-md-12">
-
-                                <h:panelGroup rendered="#{invTransferFormMB1.invInvoiceDTO.loadedSerial  ne null}">
-                                    <h:panelGroup>
-                                        <p:outputLabel   style="width: 95px; margin-right: 3%;" value="رقم فاتورة التحميل"/>
-                                    </h:panelGroup>
-
-                                    <h:panelGroup>
-                                        <p:inputText readonly="true" style="width:69%"  value="#{invTransferFormMB1.invInvoiceDTO.loadedSerial}"
+                                </div>
+                            </div>
+                             <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width:69%"  value="#{invTransferFormMB1.invInvoiceDTO.remarks}"
                                                      />
-                                    </h:panelGroup>
-                                </h:panelGroup>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6" rendered="#{invTransferFormMB1.invInvoiceDTO.loadedSerial  ne null}">
+                                        <p:outputLabel style="width: 95px; " value="#{userData.userDDs['NOTE']}"/>
+
+                                </div>
                             </div>
+                        </div>
 
+                        <h:panelGroup id="test">
 
-                            <div class="ui-g-12 ui-md-12">
-
-                                <h:panelGroup>
-                                    <h:panelGroup>
-                                        <p:outputLabel style="width: 95px; margin-right: 3%;" value="#{userData.userDDs['NOTE']}"/>
-                                    </h:panelGroup>
-
-                                    <h:panelGroup>
-                                        <p:inputText style="width:69%"  value="#{invTransferFormMB1.invInvoiceDTO.remarks}"
-                                                     />
-                                    </h:panelGroup>
-                                </h:panelGroup>
-                            </div>
+                          
                         </h:panelGroup>
                     </div>
                 </div>
@@ -200,6 +177,10 @@
                             <p:inputText id="globalFilter" onkeyup="PF('invPurchaseInvoiceDetailsTable').filter()" style="width:150px" />
                         </p:outputPanel>
                     </f:facet>
+
+                    <p:column headerText="#"  style="width: 4vh;text-align:center;border-radius: 0px" >
+                        #{index + 1}
+                    </p:column>
 
                     <p:column headerText="#" style="width: 4vh;text-align:center;border-radius: 0px" >
                         <h:outputText value="#{invPurchaseInvoiceDetailsTable.serial}"  />
@@ -389,6 +370,13 @@
                                           value="#{userData.userDDs['PRINT']}" 
                                           title="#{userData.userDDs['PRINT']}" 
                                           actionListener="#{invTransferFormMB1.print}"/>
+                        <p:commandButton  class="printButtons"
+                                      ajax="false"
+                                      onclick="form.target = '_blank'"  
+                                      style="color: #fff!important;background-color:#0700D4CF;margin-left: 5px;" 
+                                      title="#{userData.userDDs['PRINT']}"
+                                      value="#{userData.userDDs['PRINT']} Barcode" 
+                                      actionListener="#{invTransferFormMB1.printBarcode()}"/>
 
                         <p:commandButton  class="deleteButtons" 
                                           id="cancel" 
@@ -436,7 +424,7 @@
 
                             <h:panelGroup>
 
-                                <p:outputLabel style="width: 95px;margin-right: 6%;" id="loadedSerial1" value="رقم الفاتورة المراد تحميلها" />
+                                <p:outputLabel style="width: 95px;" id="loadedSerial1" value="رقم الفاتورة المراد تحميلها" />
                                 <p:inputText style="width: 37%" 
                                              id="loadedSerial" 
                                              value="#{invTransferFormMB1.invInvoiceDTO.needLoadedSerial}" />

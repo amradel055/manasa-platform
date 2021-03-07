@@ -39,6 +39,8 @@ public class ProFactoryDeliveryDetail extends BaseEntity {
     private Integer clothNumber;
     @Column(name = "serial")
     private Integer serial;
+    @Column(name = "item_barcode")
+    private String itemBarcode;
     @JoinColumn(name = "branch_id", referencedColumnName = "id")
     @ManyToOne
     private Branch branchId;
@@ -151,6 +153,20 @@ public class ProFactoryDeliveryDetail extends BaseEntity {
      */
     public void setInvPurchaseInvoiceDetailId(InvPurchaseInvoiceDetail invPurchaseInvoiceDetailId) {
         this.invPurchaseInvoiceDetailId = invPurchaseInvoiceDetailId;
+    }
+
+    /**
+     * @return the itemBarcode
+     */
+    public String getItemBarcode() {
+        return itemBarcode;
+    }
+
+    /**
+     * @param itemBarcode the itemBarcode to set
+     */
+    public void setItemBarcode(String itemBarcode) {
+        this.itemBarcode = itemBarcode;
     }
     
 }
