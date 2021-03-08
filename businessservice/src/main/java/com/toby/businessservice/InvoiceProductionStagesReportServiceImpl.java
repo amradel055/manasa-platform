@@ -39,7 +39,7 @@ public class InvoiceProductionStagesReportServiceImpl implements InvoiceProducti
                 + "        LEFT JOIN `pro_production_stages` `pps` ON `ppit`.`pro_production_stages_id` = `pps`.`id`\n"
                 + "        LEFT JOIN `toby_user` `tu` ON `ppit`.`created_by` = `tu`.`id`\n"
                 + "	where ipi.id is not null and ipi.branch_id =  ").append(branchId).append(appendProProductionInvoice(productionDTO)).append(appendProProductionDate(productionDTO));
-
+        query.append(" order by pps.serial");
         List<Object[]> res = dao.executeNativeQuery(query.toString());
 
         for (Object[] object : res) {
