@@ -1,6 +1,8 @@
 package com.toby.invoiceMovementReport;
 
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
+import com.toby.businessservice.TobyUserInventoryService;
+import com.toby.converter.InvInventoryDTOConverter;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.ProGroupDTO;
 import com.toby.toby.Basic;
@@ -19,16 +21,36 @@ public class SummitionItemReportMB extends Basic{
     private Date dateFrom;
     private Date dateTo;
     private ProGroupDTO proGroupDTOSelected;
+    private List<InvInventoryDTO> gallaryList;
     
     private List<SummitionItemsView> itemsViewList;
     
+    private InvInventoryDTOConverter gallaryDTOConverter;
+    
     @EJB
     InvPurchaseInvoiceService_1 invPurchaseInvoiceService_1;
+    @EJB
+    private TobyUserInventoryService tobyUserInventoryService;
     
     
     
     public void search(){
-        invPurchaseInvoiceService_1.findSummitionQuantity(getGallaryDTOSelected() == null ? null : getGallaryDTOSelected().getId(), getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId());
+        itemsViewList = invPurchaseInvoiceService_1.findSummitionQuantity(getGallaryDTOSelected() == null ? null : getGallaryDTOSelected().getId(), getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId());
+    }
+    
+    public List<InvInventoryDTO> getGallaryList() {
+        if (gallaryList == null || gallaryList.isEmpty()) {
+            gallaryList = tobyUserInventoryService.getAllGallaryByUserAndBranch(getUserData().getUser());
+            setGallaryDTOConverter(new InvInventoryDTOConverter(gallaryList));
+        }
+        return gallaryList;
+    }    
+
+    /**
+     * @param gallaryList the gallaryList to set
+     */
+    public void setGallaryList(List<InvInventoryDTO> gallaryList) {
+        this.gallaryList = gallaryList;
     }
 
     /**
@@ -99,6 +121,20 @@ public class SummitionItemReportMB extends Basic{
      */
     public void setItemsViewList(List<SummitionItemsView> itemsViewList) {
         this.itemsViewList = itemsViewList;
+    }
+
+    /**
+     * @return the gallaryDTOConverter
+     */
+    public InvInventoryDTOConverter getGallaryDTOConverter() {
+        return gallaryDTOConverter;
+    }
+
+    /**
+     * @param gallaryDTOConverter the gallaryDTOConverter to set
+     */
+    public void setGallaryDTOConverter(InvInventoryDTOConverter gallaryDTOConverter) {
+        this.gallaryDTOConverter = gallaryDTOConverter;
     }
 
     

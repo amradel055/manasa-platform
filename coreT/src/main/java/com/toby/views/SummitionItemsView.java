@@ -13,7 +13,7 @@ public class SummitionItemsView implements Serializable {
    private BigDecimal allQuantity ;
    private BigDecimal allCost ;
    private BigDecimal allAvarageCost ;
-   private String code ;
+   private Integer code ;
    private String name ;
 
     /**
@@ -87,20 +87,6 @@ public class SummitionItemsView implements Serializable {
     }
 
     /**
-     * @return the code
-     */
-    public String getCode() {
-        return code;
-    }
-
-    /**
-     * @param code the code to set
-     */
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    /**
      * @return the name
      */
     public String getName() {
@@ -112,6 +98,20 @@ public class SummitionItemsView implements Serializable {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * @return the code
+     */
+    public Integer getCode() {
+        return code;
+    }
+
+    /**
+     * @param code the code to set
+     */
+    public void setCode(Integer code) {
+        this.code = code;
     }
 
     }

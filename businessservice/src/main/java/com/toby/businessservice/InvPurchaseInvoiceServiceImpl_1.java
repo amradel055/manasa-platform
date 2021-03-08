@@ -1781,12 +1781,10 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         params.put("branchId", branchId);
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT "
-                + " sum(ifnull(i.quantity , 0)) as quantity , sum(ifnull(i.number,0)) as number , "
-                + " sum(ifnull(i.number,0)*ifnull(i.quantity,0)) as all_quantity, "
-                + " sum(ifnull(i.number,0)*ifnull(i.cost,0)) as all_cost , "
-                + " sum(ifnull(i.number,0)*ifnull(i.cost_avarage,0)) as all_ava_cost , "
-                + " i.itemId.proGroupId.code as code , "
-                + " i.itemId.proGroupId.name as name "
+                + " sum(i.number) , "
+                + " sum(i.net)  , "
+                + " i.itemId.proGroupId.code  , "
+                + " i.itemId.proGroupId.name "
                 + " FROM InvPurchaseInvoiceDetail i WHERE  i.invPurchaseInvoiceId.branchId.id = :branchId ");
         if (dateFrom != null) {
             params.put("dateFrom", dateFrom);
@@ -1796,16 +1794,16 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             params.put("dateTo", dateTo);
             builder.append(" AND i.invPurchaseInvoiceId.date <= :dateTo ");
         }
-        if (groupId != null) {
-            params.put("gallaryId", gallaryId);
-            builder.append(" AND i.invPurchaseInvoiceId.galaryId.id <= :gallaryId ");
-        }
         if (gallaryId != null) {
+            params.put("gallaryId", gallaryId);
+            builder.append(" AND i.invPurchaseInvoiceId.galaryId.id = :gallaryId ");
+        }
+        if (groupId != null) {
             params.put("groupId", groupId);
-            builder.append(" AND i.itemId.proGroupId.id <= :groupId ");
+            builder.append(" AND i.itemId.proGroupId.id = :groupId ");
         }
         builder.append(" group by i.itemId.proGroupId.id ");
-        List<Object[]> res = dao.findListByQuery(builder.toString());
+        List<Object[]> res = dao.findListByQuery(builder.toString(),params);
         return getTheListBasedOnAccClass(res);
     }
     
@@ -1817,13 +1815,13 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         while (it.hasNext()) {
             Object[] line = (Object[]) it.next();
             SummitionItemsView summitionItemsView = new SummitionItemsView();
-            summitionItemsView.setQuantity((BigDecimal) line[0]);
-            summitionItemsView.setNumber((BigDecimal) line[1]);
-            summitionItemsView.setAllQuantity((BigDecimal) line[2]);
-            summitionItemsView.setAllCost((BigDecimal) line[3]);
-            summitionItemsView.setAllAvarageCost((BigDecimal) line[4]);
-            summitionItemsView.setCode((String) line[5]);
-            summitionItemsView.setName((String) line[6]);
+//            summitionItemsView.setQuantity((BigDecimal) line[0]);
+            summitionItemsView.setNumber((BigDecimal) line[0]);
+//            summitionItemsView.setAllQuantity((BigDecimal) line[2]);
+            summitionItemsView.setAllCost((BigDecimal) line[1]);
+//            summitionItemsView.setAllAvarageCost((BigDecimal) line[4]);
+            summitionItemsView.setCode((Integer) line[2]);
+            summitionItemsView.setName((String) line[3]);
             summitionItemsViews.add(summitionItemsView);
         }
         return summitionItemsViews;

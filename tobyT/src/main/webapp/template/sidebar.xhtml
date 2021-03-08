@@ -821,7 +821,7 @@
                                        rendered="#{userData.userScreens['proProductionTransaction'].view 
                                                                  or userData.userScreens['invoiceProductionStageReport'].view 
                                                                  or userData.userScreens['progroup'].view 
-                                                                 or userData.userScreens[''].view 
+                                                                 or userData.userScreens['summitionItemReport'].view 
                                                                  or userData.userScreens[''].view 
                                                                  or userData.isAdmin}"
                                        >
@@ -863,12 +863,15 @@
                                 </p:submenu>
                                 <p:submenu id="sr_sm332" label="تقارير الانتاج" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['invoiceProductionStageReport'].view 
-                                                                            or userData.userScreens[''].view 
+                                                                            or userData.userScreens['summitionItemReport'].view 
                                                                             or userData.userScreens[''].view 
                                                                             or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk33321" value="بيان مراحل وموظفين الفاتورة" icon="&#xE8D2;" url="/faces/views/proproductionreport/invoiceProductionStageReport.xhtml" 
                                                 rendered="#{userData.userScreens['invoiceProductionStageReport'].view or userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="sr_lnk33322" value="تقرير باجماليات الفئات" icon="&#xE8D2;" url="/faces/views/proproductionreport/summitionItemReport.xhtml" 
+                                                rendered="#{userData.userScreens['summitionItemReport'].view or userData.isAdmin}"
                                                 />
                                 </p:submenu>
                             </p:submenu>
