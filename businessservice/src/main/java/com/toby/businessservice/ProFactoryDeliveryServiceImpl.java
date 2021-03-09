@@ -50,7 +50,7 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
 
     private void appendFilter(Map<String, Object> filters, StringBuilder builder) {
         if (filters.get("globalFilter") != null && !filters.get("globalFilter").toString().isEmpty()) {
-            String filter = " and (  ( s.invPurchaseInvoiceId IS NULL OR s.invPurchaseInvoiceId.serial like CONCAT('%',:globalFilter ,'%')) OR  s.serial like CONCAT('%',:globalFilter ,'%')  OR ( s.gallaryId is null OR s.gallaryId.name  like CONCAT('%',:globalFilter ,'%')) ) ";
+            String filter = " and  ( s.invPurchaseInvoiceId.serial like CONCAT('%',:globalFilter ,'%') OR s.serial like CONCAT('%',:globalFilter ,'%')) ";
             builder.append(filter);
         } else {
             filters.remove("globalFilter");
