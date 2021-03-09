@@ -40,6 +40,9 @@ public class FactoryNotLoadedYetProFactoeyProcedure implements Serializable {
     @Column(name = "item_barcode")
     @Max(40)
     private String itemBarcode;
+    @Column(name = "item_name")
+    @Max(100)
+    private String itemName;
     @Column(name = "number")
     private BigDecimal number;
 
@@ -97,6 +100,20 @@ public class FactoryNotLoadedYetProFactoeyProcedure implements Serializable {
      */
     public void setDetailId(Integer detailId) {
         this.detailId = detailId;
+    }
+
+    /**
+     * @return the itemName
+     */
+    public String getItemName() {
+        return itemName;
+    }
+
+    /**
+     * @param itemName the itemName to set
+     */
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
     }
 
 }

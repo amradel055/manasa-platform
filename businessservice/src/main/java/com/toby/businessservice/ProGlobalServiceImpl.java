@@ -620,7 +620,9 @@ public class ProGlobalServiceImpl implements ProGlobalService {
             CompanyActivityClassEnum companyActivityClassEnum, ScreenNameClassEnum screenNameClassEnum) {
 
         if (companyActivityClassEnum.equals(CompanyActivityClassEnum.RetailSaleForClothFactory)
-                && ScreenNameClassEnum.PROFACTORYDELIVERY.equals(screenNameClassEnum)) {
+                && (ScreenNameClassEnum.PROFACTORYDELIVERY.equals(screenNameClassEnum)
+                || ScreenNameClassEnum.PROSENDTOGALLARY.equals(screenNameClassEnum)
+                || ScreenNameClassEnum.PRORECIEVEGALLARY.equals(screenNameClassEnum))) {
             if (idParent != null) {
                 InvItemDTO invItemDTO = new InvItemDTO();
                 invItemDTO.setId(idParent);

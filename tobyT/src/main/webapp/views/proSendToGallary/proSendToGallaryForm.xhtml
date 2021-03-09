@@ -144,19 +144,7 @@
                               filterable="false">
                         <p:outputLabel value="#{invPurchaseInvoiceDetailsTable.itemName}" />          
                     </p:column>
-
-                    <p:column  style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="Unit"
-
-                               filterBy="#{invPurchaseInvoiceDetailsTable.unitName}" 
-                               filterMatchMode="contains" 
-                               sortBy="#{invPurchaseInvoiceDetailsTable.unitName}"
-                               filterable="false"
-                               headerText="#{userData.userDDs['UNIT_NUMBER']}">
-                        <p:outputLabel id="unitvalue" 
-                                       value="#{invPurchaseInvoiceDetailsTable.unitName}" style="width: 95%" />  
-
-                    </p:column>
-
+                    
                     <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px"
                               id="Quantity"
                               headerText="#{userData.userDDs['NUMBER']}"
@@ -165,10 +153,29 @@
                               sortBy="#{invPurchaseInvoiceDetailsTable.number}"
                               filterable="false">
 
-                        <p:outputLabel id="QuantityT"  
+                        <p:inputNumber id="QuantityT"  
                                        value="#{invPurchaseInvoiceDetailsTable.number}" 
                                        style="width:95%"/>
 
+                    </p:column>
+                    
+                    <p:column 
+                        style="width: 26vh;text-align: center;border-radius: 0px" 
+                        headerText="#{userData.userDDs['TRANSACTION']}">
+                        <p:commandButton  title="#{userData.userDDs['DELETE']}" 
+                                          class="sdeleteButtons" style="color: #fff!important;background-color: red"
+                                          update="invPurchaseInvoiceDetailsTable"
+                                          action="#{proFactoryDeliveryFormDTOMB.deleteInvDetail(invPurchaseInvoiceDetailsTable)}"
+                                          icon="fa fa-remove" >
+                            <p:confirm header="#{userData.userDDs['COFIGRATION']}" 
+                                       message="#{userData.userDDs['ARE_YOU_SURE']}"
+                                       icon="ui-icon-alert" />
+                        </p:commandButton>
+
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
                     </p:column>
 
 
@@ -182,14 +189,7 @@
                                           title="#{userData.userDDs['SAVE']}"
                                           value="#{userData.userDDs['SAVE']}" 
 
-                                          action="#{proFactoryDeliveryFormDTOMB.saveSelection()}"
-                                          update="@form"/>
-                        <p:commandButton  id="saveAll" 
-                                          class="saveButtons"
-                                          title="#{userData.userDDs['SAVE']} الكل"
-                                          value="#{userData.userDDs['SAVE']} الكل" 
-
-                                          action="#{proFactoryDeliveryFormDTOMB.saveAll()}"
+                                          action="#{proFactoryDeliveryFormDTOMB.save()}"
                                           update="@form"/>
 
                         <p:commandButton 
@@ -201,15 +201,6 @@
                             onclick="form.target = ''" 
                             actionListener="#{proFactoryDeliveryFormDTOMB.reset()}"/>
 
-                        <p:commandButton  
-                            class="reloadButtons"
-                            id="loadL"
-                            rendered="#{proFactoryDeliveryFormDTOMB.invInvoiceDTO.id eq null}"
-                            title="#{userData.userDDs['UPLOAD']}"
-                            value="#{userData.userDDs['UPLOAD']}" 
-
-                            action="#{proFactoryDeliveryFormDTOMB.loadDailogue()}"
-                            update="loaddlg"/>
                         <p:commandButton  class="printButtons"
                                           ajax="false"
                                           onclick="form.target = '_blank'"  
@@ -232,7 +223,7 @@
                             <p:graphicImage name="/img/excel.jpg" width="24" style='margin-right:25%;'/>  
                             <p:dataExporter type="xls"
                                             target="invPurchaseInvoiceDetailsTable" 
-                                            fileName="فاتورة اذن استلام بضاعة"
+                                            fileName="بيانات تسليم الفاتورة"
                                             preProcessor="#{proFactoryDeliveryFormDTOMB.preProcessXLS()}"
                                             postProcessor="#{proFactoryDeliveryFormDTOMB.postProcessXLS}" />  
                         </h:commandLink>

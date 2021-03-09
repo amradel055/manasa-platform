@@ -120,7 +120,11 @@ public class InvoiceMovementReportServiceImpl implements InvoiceMovementReportSe
             params.put("id", id);
             params.put("type", type);
             StringBuilder builder = new StringBuilder();
-            builder.append("SELECT sum(i.number) FROM ProFactoryDeliveryDetail i WHERE  i.proFactoryDeliveryId.id = :id AND i.proFactoryDeliveryId.type = :type  AND i.itemId.proGroupId.id = 1  ");
+            if (type == 0) {
+                builder.append("SELECT sum(i.number) FROM ProFactoryDeliveryDetail i WHERE  i.proFactoryDeliveryId.id = :id AND i.proFactoryDeliveryId.type = :type  AND i.itemId.proGroupId.id = 1  ");
+            }else{
+                builder.append("SELECT sum(i.number) FROM ProFactoryDeliveryDetail i WHERE  i.proFactoryDeliveryId.parent.id = :id AND i.proFactoryDeliveryId.type = :type  AND i.itemId.proGroupId.id = 1  ");
+            }
             builder.append(" group by i.itemId.proGroupId.id ");
             List<BigDecimal> res = dao.findListByQuery(builder.toString(), params);
             return (res != null && !res.isEmpty()) ? res.get(0) : BigDecimal.ZERO;
