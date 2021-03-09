@@ -21,25 +21,7 @@ public class PrintProductionDTO {
     
 
     
-    public Integer getFromStatus() {
-        return fromStatus;
-    }
-
     
-    public void setFromStatus(Integer fromStatus) {
-        this.fromStatus = fromStatus;
-    }
-
-    
-    public Integer getToStatus() {
-        return toStatus;
-    }
-
-    
-    public void setToStatus(Integer toStatus) {
-        this.toStatus = toStatus;
-    }
-
     
     public InvInvoiceDTO getFromInvoice() {
         return fromInvoice;
@@ -177,6 +159,36 @@ public class PrintProductionDTO {
     public void setGallaryTo(InvInventoryDTO gallaryTo) {
         this.gallaryTo = gallaryTo;
     }
+
+    /**
+     * @return the fromStatus
+     */
+    public Integer getFromStatus() {
+        return fromStatus;
+    }
+
+    /**
+     * @param fromStatus the fromStatus to set
+     */
+    public void setFromStatus(Integer fromStatus) {
+        this.fromStatus = fromStatus;
+    }
+
+    /**
+     * @return the toStatus
+     */
+    public Integer getToStatus() {
+        return toStatus;
+    }
+
+    /**
+     * @param toStatus the toStatus to set
+     */
+    public void setToStatus(Integer toStatus) {
+        this.toStatus = toStatus;
+    }
+
+   
     
     
     

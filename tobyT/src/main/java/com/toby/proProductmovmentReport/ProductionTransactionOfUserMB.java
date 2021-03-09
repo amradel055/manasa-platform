@@ -9,6 +9,7 @@ import com.toby.businessservice.ProProductionItemsTransactionService;
 import com.toby.businessservice.ProProductionStagesService;
 import com.toby.businessservice.ProductionTransactionOfUserService;
 import com.toby.businessservice.TobyUserService;
+import com.toby.converter.ProProductionStagesDTOConverter;
 import com.toby.converter.TobyUserDTOConverter;
 import com.toby.dto.PrintProductionDTO;
 import com.toby.dto.ProProductionStagesDTO;
@@ -45,6 +46,7 @@ public class ProductionTransactionOfUserMB extends BaseFormBean {
     private List<ProProductionStagesDTO> proProductionStagesDTOList;
     private List<ProductionTransactionOfUser> productionTransactionOfUserList;
     private TobyUserDTOConverter tobyUserDTOConverter;
+    private ProProductionStagesDTOConverter proProductionStagesDTOConverter;
     @EJB
     private TobyUserService tobyUserService;
     @EJB
@@ -54,42 +56,41 @@ public class ProductionTransactionOfUserMB extends BaseFormBean {
     @EJB
     private ProProductionItemsTransactionService proProductionItemsTransactionService;
 
-    
-     public  List<ProProductionStagesDTO> completeProProductionId(String query){
-     
-         return AutoComplete.completeProProductionId(query, proProductionStagesDTOList, null);
-     
-     }
-      public List<TobyUserDTO> completusercode(String query){
-      
-       return AutoComplete.completusercode(query, tobyUserDTOList, tobyUserDTOConverter);
-      }
-    
-    public void search() {
-        if((printProductionDTO.getFromUser()!=null&&printProductionDTO.getToUser()!=null)
-                ||(printProductionDTO.getFromDate()!=null&&printProductionDTO.getToDate()!=null)
-                 ||(printProductionDTO.getFromStatus()!=null)&&(printProductionDTO.getToStatus()!=null)){
-        productionTransactionOfUserList = proProductionItemsTransactionService.getProProductionTransactionDTOForAllUsersList(printProductionDTO, getUserData().getUserBranch().getId());
-        }else{
-         printProductionDTO.setMsg("ادخل من عامل  الي عامل او من تاريخ الي تاريخ او من مرحله الي مرحله  " );
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", printProductionDTO.getMsg()));
-        
-        }
+    public List<ProProductionStagesDTO> completeProProductionId(String query) {
+
+        return AutoComplete.completeProProductionId(query, proProductionStagesDTOList, proProductionStagesDTOConverter);
+
     }
-    
+
+    public List<TobyUserDTO> completusercode(String query) {
+
+        return AutoComplete.completusercode(query, tobyUserDTOList, tobyUserDTOConverter);
+    }
+
+    public void search() {
+        // if((printProductionDTO.getFromUser()!=null&&printProductionDTO.getToUser()!=null)
+        // ||(printProductionDTO.getFromDate()!=null&&printProductionDTO.getToDate()!=null)
+        //  ||(printProductionDTO.getFromStatus()!=null)&&(printProductionDTO.getToStatus()!=null)){
+        productionTransactionOfUserList = proProductionItemsTransactionService.getProProductionTransactionDTOForAllUsersList(printProductionDTO, getUserData().getUserBranch().getId());
+        // }else{
+        //  printProductionDTO.setMsg("ادخل من عامل  الي عامل او من تاريخ الي تاريخ او من مرحله الي مرحله  " );
+        //    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", printProductionDTO.getMsg()));
+
+        //  }
+    }
+
     public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {
         if (productionTransactionOfUserList != null && !productionTransactionOfUserList.isEmpty()) {
-                fillReport(prepareReport(), getUserData().getReportPath() + "omar.jasper", productionTransactionOfUserList, "pdf");
+            fillReport(prepareReport(), getUserData().getReportPath() + "omar.jasper", productionTransactionOfUserList, "pdf");
         } else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "لا توجد نتائج للطباعة"));
         }
     }
-    
 
     public HashMap prepareReport() {
         Map<String, String> userDDs = getUserData().getUserDDs();
         HashMap hashMap = new HashMap();
-        
+
         hashMap.put("fromStage", printProductionDTO.getFromStatus());
         hashMap.put("toStage", printProductionDTO.getFromStatus());
         hashMap.put("toDate", printProductionDTO.getToDate());
@@ -118,8 +119,6 @@ public class ProductionTransactionOfUserMB extends BaseFormBean {
         }
         return hashMap;
     }
-    
-    
 
     @Override
     public String save() {
@@ -228,6 +227,21 @@ public class ProductionTransactionOfUserMB extends BaseFormBean {
      */
     public void setProductionTransactionOfUserList(List<ProductionTransactionOfUser> productionTransactionOfUserList) {
         this.productionTransactionOfUserList = productionTransactionOfUserList;
+    }
+
+    /**
+     * @return the proProductionStagesDTOConverter
+     */
+    public ProProductionStagesDTOConverter getProProductionStagesDTOConverter() {
+        return proProductionStagesDTOConverter;
+    }
+
+    /**
+     * @param proProductionStagesDTOConverter the
+     * proProductionStagesDTOConverter to set
+     */
+    public void setProProductionStagesDTOConverter(ProProductionStagesDTOConverter proProductionStagesDTOConverter) {
+        this.proProductionStagesDTOConverter = proProductionStagesDTOConverter;
     }
 
 }
