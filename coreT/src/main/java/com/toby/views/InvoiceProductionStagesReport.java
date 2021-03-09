@@ -15,6 +15,7 @@ public class InvoiceProductionStagesReport implements Serializable {
     private BigDecimal quantity;
     private String stage;
     private String empName;
+    private BigDecimal number;
 
     public InvoiceProductionStagesReport() {
 
@@ -102,6 +103,20 @@ public class InvoiceProductionStagesReport implements Serializable {
      */
     public void setClothNumber(Integer clothNumber) {
         this.clothNumber = clothNumber;
+    }
+
+    /**
+     * @return the number
+     */
+    public BigDecimal getNumber() {
+        return number;
+    }
+
+    /**
+     * @param number the number to set
+     */
+    public void setNumber(BigDecimal number) {
+        this.number = number;
     }
 
 }

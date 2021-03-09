@@ -17,6 +17,8 @@ public class InvoiceProductionStagesReportServiceImpl implements InvoiceProducti
 
     @EJB
     private GenericDAO dao;
+    @EJB
+    private InvoiceMovementReportService invoiceMovementReportService;
 
     @Override
     public List<InvoiceProductionStagesReport> searchReport(PrintProductionDTO productionDTO, Integer branchId) {
@@ -41,7 +43,7 @@ public class InvoiceProductionStagesReportServiceImpl implements InvoiceProducti
                 + "	where ipi.id is not null and ipi.branch_id =  ").append(branchId).append(appendProProductionInvoice(productionDTO)).append(appendProProductionDate(productionDTO));
         query.append(" order by pps.serial");
         List<Object[]> res = dao.executeNativeQuery(query.toString());
-
+        BigDecimal number = invoiceMovementReportService.summitionTob(productionDTO.getFromInvoice().getId());
         for (Object[] object : res) {
             InvoiceProductionStagesReport invoiceProductionStagesReport = new InvoiceProductionStagesReport();
             invoiceProductionStagesReport.setInvInvoice((Integer) object[0]);
@@ -52,7 +54,8 @@ public class InvoiceProductionStagesReportServiceImpl implements InvoiceProducti
             invoiceProductionStagesReport.setStage((String) object[5]);
             invoiceProductionStagesReport.setEmpName((String) object[6]);
             invoiceProductionStagesReport.setClothNumber((Integer) object[7]);
-
+            invoiceProductionStagesReport.setNumber(number);
+            
             list.add(invoiceProductionStagesReport);
         }
 

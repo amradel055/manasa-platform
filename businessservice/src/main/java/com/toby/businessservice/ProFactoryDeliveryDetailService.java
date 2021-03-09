@@ -19,6 +19,8 @@ import javax.ejb.Remote;
 public interface ProFactoryDeliveryDetailService {
 
     public List<InvDetailDTO> getAllProFactoryDeliveryDetailList(InvInvoiceDTO dto);
+    
+    public List<InvDetailDTO> getAllInvPurchaseInvoiceDetailsByInvPurchaseInvoiceIdDTO(InvInvoiceDTO dto, Integer typeto, Integer typefrom) ;
 
     public List<InvDetailDTO> getAllProFactoryDeliveryDetailListNotLoaded(InvInvoiceDTO dto);
 
