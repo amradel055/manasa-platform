@@ -24,34 +24,34 @@
 
                             <p:submenu id="sr_sm1" label="#{userData.userDDs['GENERAL_SYSTEM_SETTINGS']}" icon="&#xE8D2;"
                                        rendered="#{userData.userScreens['branch'].view 
-                                                                 or userData.userScreens['role'].view 
-                                                                 or userData.userScreens['user'].view 
-                                                                 or userData.userScreens['privilege'].view 
-                                                                 or userData.userScreens['userrole'].view 
-                                                                 or userData.userScreens['userrole_1'].view 
-                                                                 or userData.userScreens['symbol'].view 
-                                                                 or userData.userScreens['dataDictionry'].view 
-                                                                 or userData.userScreens['reportmanagement'].view 
+                                                   or userData.userScreens['role'].view 
+                                                   or userData.userScreens['user'].view 
+                                                   or userData.userScreens['privilege'].view 
+                                                   or userData.userScreens['userrole'].view 
+                                                   or userData.userScreens['userrole_1'].view 
+                                                   or userData.userScreens['symbol'].view 
+                                                   or userData.userScreens['dataDictionry'].view 
+                                                   or userData.userScreens['reportmanagement'].view 
 
-                                                                 or userData.userScreens['userprofile'].view
-                                                                 or userData.userScreens['notification'].view
-                                                                 or userData.userScreens[''].view
-                                                                 or userData.userScreens[''].view
-                                                                 or userData.userScreens[''].view
-                                                                 or userData.userScreens[''].view
-                                                                 or userData.userScreens[''].view
-                                                                 or userData.isAdmin}"
+                                                   or userData.userScreens['userprofile'].view
+                                                   or userData.userScreens['notification'].view
+                                                   or userData.userScreens[''].view
+                                                   or userData.userScreens[''].view
+                                                   or userData.userScreens[''].view
+                                                   or userData.userScreens[''].view
+                                                   or userData.userScreens[''].view
+                                                   or userData.isAdmin}"
                                        >
                                 <p:submenu id="sr_sm11" label="#{userData.userDDs['BRANCHES_USERS_MANAGEMENT']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['branch'].view 
-                                                                            or userData.userScreens['role'].view 
-                                                                            or userData.userScreens['user'].view 
-                                                                            or userData.userScreens['privilege'].view 
-                                                                            or userData.userScreens['userprofile'].view 
-                                                                            or userData.userScreens['userrole'].view
-                                                                            or userData.userScreens['userrole_1'].view
+                                                       or userData.userScreens['role'].view 
+                                                       or userData.userScreens['user'].view 
+                                                       or userData.userScreens['privilege'].view 
+                                                       or userData.userScreens['userprofile'].view 
+                                                       or userData.userScreens['userrole'].view
+                                                       or userData.userScreens['userrole_1'].view
 
-                                                                            or userData.isAdmin}"
+                                                       or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk113" value="#{userData.userDDs['ROLE_MANAGEMENT']}"  icon="&#xE8D2;" url="/faces/views/role/roleList.xhtml"
                                                 rendered="#{userData.userScreens['role'].view or userData.isAdmin}"
@@ -74,10 +74,10 @@
                                 </p:submenu>
                                 <p:submenu id="sr_sm12" label="#{userData.userDDs['GENERAL_SETTINGS']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['notification'].view 
-                                                                            or userData.userScreens['symbol'].view 
-                                                                            or userData.userScreens['dataDictionry'].view
-                                                                            or userData.userScreens['reportmanagement'].view 
-                                                                            or userData.isAdmin}"
+                                                       or userData.userScreens['symbol'].view 
+                                                       or userData.userScreens['dataDictionry'].view
+                                                       or userData.userScreens['reportmanagement'].view 
+                                                       or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk121" value="#{userData.userDDs['GENERAL_SYMBOLS']}" icon="&#xE8D2;" url="/faces/views/symbol/symbolList.xhtml" 
                                                 rendered="#{userData.userScreens['symbol'].view or userData.isAdmin}"
@@ -95,14 +95,14 @@
                             </p:submenu>
                             <p:submenu id="sr_sm2" label="#{userData.userDDs['GENERAL_SYS_REP']}" icon="&#xE8D2;"
                                        rendered="#{userData.userScreens['generalSymbolReport'].view 
-                                                                 or userData.userScreens['userreport'].view 
-                                                                 or userData.userScreens[''].view 
-                                                                 or userData.isAdmin}"
+                                                   or userData.userScreens['userreport'].view 
+                                                   or userData.userScreens[''].view 
+                                                   or userData.isAdmin}"
                                        >
                                 <p:submenu id="sr_sm21" label="#{userData.userDDs['General_Setting_Reports']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['generalSymbolReport'].view 
-                                                                            or userData.userScreens[''].view 
-                                                                            or userData.isAdmin}"
+                                                       or userData.userScreens[''].view 
+                                                       or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk211" value="#{userData.userDDs['GENE_SYMB_DIREC']}" icon="&#xE8D2;" url="/faces/views/accountreport/generalSymbolReport.xhtml" 
                                                 rendered="#{userData.userScreens['generalSymbolReport'].view or userData.isAdmin}"
@@ -110,9 +110,9 @@
                                 </p:submenu>
                                 <p:submenu id="sr_sm22" label="#{userData.userDDs['USERS_REPORT']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['userreport'].view 
-                                                                            or userData.userScreens[''].view 
-                                                                            or userData.userScreens[''].view 
-                                                                            or userData.isAdmin}"
+                                                       or userData.userScreens[''].view 
+                                                       or userData.userScreens[''].view 
+                                                       or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk221" value="#{userData.userDDs['USERS_REPORT']}" icon="&#xE8D2;" url="/faces/views/accountreport/userreport.xhtml" 
                                                 rendered="#{userData.userScreens['userreport'].view or userData.isAdmin}"
@@ -121,37 +121,37 @@
                             </p:submenu>
                             <p:submenu id="sr_sm13" label="#{userData.userDDs['GENERAL_ACCOUNT_MANAGEMENT']}" icon="&#xE8D2;"
                                        rendered="#{userData.userScreens['adminunit'].view 
-                                                                 or userData.userScreens['costcenter'].view 
-                                                                 or userData.userScreens['glaccount'].view 
-                                                                 or userData.userScreens['currency'].view 
-                                                                 or userData.userScreens['glYEAR'].view 
-                                                                 or userData.userScreens['accountssystemsettings'].view 
-                                                                 or userData.userScreens['monitoring'].view 
+                                                   or userData.userScreens['costcenter'].view 
+                                                   or userData.userScreens['glaccount'].view 
+                                                   or userData.userScreens['currency'].view 
+                                                   or userData.userScreens['glYEAR'].view 
+                                                   or userData.userScreens['accountssystemsettings'].view 
+                                                   or userData.userScreens['monitoring'].view 
 
-                                                                 or userData.userScreens['closemonth'].view 
-                                                                 or userData.userScreens['generaljournal'].view 
-                                                                 or userData.userScreens['reviewaccounting'].view
-                                                                 or userData.userScreens['generalbudget'].view   
-                                                                 or userData.userScreens['itemizedAppropriation'].view
-                                                                 or userData.userScreens['annualClosingAccounts'].view
-                                                                 or userData.userScreens[''].view
-                                                                 or userData.userScreens[''].view
-                                                                 or userData.userScreens[''].view
-                                                                 or userData.userScreens[''].view
-                                                                 or userData.userScreens[''].view
-                                                                 or userData.userScreens[''].view
-                                                                 or userData.userScreens[''].view
-                                                                 or userData.isAdmin}"
+                                                   or userData.userScreens['closemonth'].view 
+                                                   or userData.userScreens['generaljournal'].view 
+                                                   or userData.userScreens['reviewaccounting'].view
+                                                   or userData.userScreens['generalbudget'].view   
+                                                   or userData.userScreens['itemizedAppropriation'].view
+                                                   or userData.userScreens['annualClosingAccounts'].view
+                                                   or userData.userScreens[''].view
+                                                   or userData.userScreens[''].view
+                                                   or userData.userScreens[''].view
+                                                   or userData.userScreens[''].view
+                                                   or userData.userScreens[''].view
+                                                   or userData.userScreens[''].view
+                                                   or userData.userScreens[''].view
+                                                   or userData.isAdmin}"
                                        >
                                 <p:submenu id="sr_sm131" label="#{userData.userDDs['GENERAL_ACCOUNT_SETTING']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['closemonth'].view 
-                                                                            or userData.userScreens['currency'].view 
-                                                                            or userData.userScreens['annualClosingAccounts'].view 
-                                                                            or userData.userScreens['glYEAR'].view 
-                                                                            or userData.userScreens['accountssystemsettings'].view 
-                                                                            or userData.userScreens['monitoring'].view 
+                                                       or userData.userScreens['currency'].view 
+                                                       or userData.userScreens['annualClosingAccounts'].view 
+                                                       or userData.userScreens['glYEAR'].view 
+                                                       or userData.userScreens['accountssystemsettings'].view 
+                                                       or userData.userScreens['monitoring'].view 
 
-                                                                            or userData.isAdmin}"
+                                                       or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk1311" value="#{userData.userDDs['ACCOUNT_SYSTEM_SETTINGS']}" icon="&#xE8D2;" url="/faces/views/accountssystemsettings/accountssystemsettings.xhtml" 
                                                 rendered="#{userData.userScreens['accountssystemsettings'].view or userData.isAdmin}"
@@ -174,9 +174,9 @@
                                 </p:submenu>
                                 <p:submenu id="sr_sm132" label="#{userData.userDDs['GENERAL_ACCOUNT_DATA']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['adminunit'].view 
-                                                                            or userData.userScreens['costcenter'].view 
-                                                                            or userData.userScreens['glaccount'].view 
-                                                                            or userData.isAdmin}"
+                                                       or userData.userScreens['costcenter'].view 
+                                                       or userData.userScreens['glaccount'].view 
+                                                       or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk1321" value="#{userData.userDDs['ADMIN_UNITS']}" icon="&#xE8D2;" url="/faces/views/adminunit/adminunit.xhtml"
                                                 rendered="#{userData.userScreens['adminunit'].view or userData.isAdmin}"
@@ -190,8 +190,8 @@
                                 </p:submenu>
                                 <p:submenu id="sr_sm133" label="#{userData.userDDs['ACCOUNT_TRANSACTION']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['generaljournal'].view 
-                                                                            or userData.userScreens['reviewaccounting'].view 
-                                                                            or userData.isAdmin}"
+                                                       or userData.userScreens['reviewaccounting'].view 
+                                                       or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk1331" value="#{userData.userDDs['ACCOUNT_RESTRIC']}" icon="&#xE8D2;" url="/faces/views/generaljournal_1/generaljournal_1.xhtml" 
                                                 rendered="#{userData.userScreens['generaljournal_1'].view or userData.isAdmin}"
@@ -202,8 +202,8 @@
                                 </p:submenu>
                                 <p:submenu id="sr_sm134" label="#{userData.userDDs['BUDG_ITEM_MANAG']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['generalbudget'].view  
-                                                                            or userData.userScreens['itemizedAppropriation'].view 
-                                                                            or userData.isAdmin}"
+                                                       or userData.userScreens['itemizedAppropriation'].view 
+                                                       or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk1341" value="#{userData.userDDs['GENERAL_BUD_ITE_GUI']}" icon="&#xE8D2;" url="/faces/views/generalbudget/generalbudget.xhtml" 
                                                 rendered="#{userData.userScreens['generalbudget'].view or userData.isAdmin}"
@@ -215,53 +215,53 @@
                             </p:submenu>
                             <p:submenu id="sr_sm14" label="#{userData.userDDs['GENERAL_ACCOUNT_REPORTS']}" icon="&#xE8D2;"
                                        rendered="#{userData.userScreens['costCenterIndexReport'].view 
-                                                                 or userData.userScreens['costCenterBalancesReport'].view 
-                                                                 or userData.userScreens['adminunitreport'].view 
-                                                                 or userData.userScreens['adminUnitBalancesReport'].view 
-                                                                 or userData.userScreens['accountreport'].view 
-                                                                 or userData.userScreens['generalBudgetReport'].view 
+                                                   or userData.userScreens['costCenterBalancesReport'].view 
+                                                   or userData.userScreens['adminunitreport'].view 
+                                                   or userData.userScreens['adminUnitBalancesReport'].view 
+                                                   or userData.userScreens['accountreport'].view 
+                                                   or userData.userScreens['generalBudgetReport'].view 
 
-                                                                 or userData.userScreens['journalDocumentsReport'].view 
-                                                                 or userData.userScreens['journalDocumentDailyReport'].view 
-                                                                 or userData.userScreens['journalDocumentsHistoryReport'].view 
+                                                   or userData.userScreens['journalDocumentsReport'].view 
+                                                   or userData.userScreens['journalDocumentDailyReport'].view 
+                                                   or userData.userScreens['journalDocumentsHistoryReport'].view 
 
-                                                                 or userData.userScreens['MonthlyAccountTransactionReport'].view 
-                                                                 or userData.userScreens['subaccountsummaryreport'].view
-                                                                 or userData.userScreens['BalanceAcountMonthlyReport'].view  
-                                                                 or userData.userScreens['SubAccountSummaryExtendedYears'].view  
-                                                                 or userData.userScreens['mainTransactionStatement'].view  
-
-
-                                                                 or userData.userScreens['complexRevisionReport'].view
-
-                                                                 or userData.userScreens['incomeMenu'].view
-                                                                 or userData.userScreens['incomeItemsMenuReport'].view
-                                                                 or userData.userScreens['financialCenterMenu'].view
-                                                                 or userData.userScreens['financialCenterItemsMenuReport'].view
+                                                   or userData.userScreens['MonthlyAccountTransactionReport'].view 
+                                                   or userData.userScreens['subaccountsummaryreport'].view
+                                                   or userData.userScreens['BalanceAcountMonthlyReport'].view  
+                                                   or userData.userScreens['SubAccountSummaryExtendedYears'].view  
+                                                   or userData.userScreens['mainTransactionStatement'].view  
 
 
+                                                   or userData.userScreens['complexRevisionReport'].view
 
-                                                                 or userData.userScreens['analyticalReports'].view
-                                                                 or userData.userScreens['ratioOfCurrent'].view
-                                                                 or userData.userScreens['ratioOfLiquidity'].view
-                                                                 or userData.userScreens['ratioOfNetProfitToOwnerEquity'].view
-                                                                 or userData.userScreens['ratioOfNetProfitToSales'].view
-                                                                 or userData.userScreens['rateOfCirculationOfAssets'].view
-                                                                 or userData.userScreens['rateOfCirculationOfStorage'].view
-                                                                 or userData.userScreens[''].view
-                                                                 or userData.userScreens[''].view
-                                                                 or userData.userScreens[''].view
+                                                   or userData.userScreens['incomeMenu'].view
+                                                   or userData.userScreens['incomeItemsMenuReport'].view
+                                                   or userData.userScreens['financialCenterMenu'].view
+                                                   or userData.userScreens['financialCenterItemsMenuReport'].view
 
 
 
-                                                                 or userData.isAdmin}"
+                                                   or userData.userScreens['analyticalReports'].view
+                                                   or userData.userScreens['ratioOfCurrent'].view
+                                                   or userData.userScreens['ratioOfLiquidity'].view
+                                                   or userData.userScreens['ratioOfNetProfitToOwnerEquity'].view
+                                                   or userData.userScreens['ratioOfNetProfitToSales'].view
+                                                   or userData.userScreens['rateOfCirculationOfAssets'].view
+                                                   or userData.userScreens['rateOfCirculationOfStorage'].view
+                                                   or userData.userScreens[''].view
+                                                   or userData.userScreens[''].view
+                                                   or userData.userScreens[''].view
+
+
+
+                                                   or userData.isAdmin}"
                                        >
                                 <p:submenu id="sr_sm141" label="#{userData.userDDs['BASIC_REPORT']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['costCenterIndexReport'].view 
-                                                                            or userData.userScreens['adminunitreport'].view 
-                                                                            or userData.userScreens['accountreport'].view 
-                                                                            or userData.userScreens['generalBudgetReport'].view 
-                                                                            or userData.isAdmin}"
+                                                       or userData.userScreens['adminunitreport'].view 
+                                                       or userData.userScreens['accountreport'].view 
+                                                       or userData.userScreens['generalBudgetReport'].view 
+                                                       or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk1411" value="#{userData.userDDs['COST_CENTER_REPORT']}" icon="&#xE8D2;" url="/faces/views/accountreport/costCenterIndexReport.xhtml"
                                                 rendered="#{userData.userScreens['costCenterIndexReport'].view or userData.isAdmin}"
@@ -278,9 +278,9 @@
                                 </p:submenu>
                                 <p:submenu id="sr_sm142" label="#{userData.userDDs['JOURN_ENTR_REPORT']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['journalDocumentsReport'].view 
-                                                                            or userData.userScreens['journalDocumentDailyReport'].view 
-                                                                            or userData.userScreens['journalDocumentsHistoryReport'].view 
-                                                                            or userData.isAdmin}"
+                                                       or userData.userScreens['journalDocumentDailyReport'].view 
+                                                       or userData.userScreens['journalDocumentsHistoryReport'].view 
+                                                       or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk1421" value="#{userData.userDDs['JOURNAL_DOCUMENT_REPORT']}" icon="&#xE8D2;" url="/faces/views/accountreport/journalDocumentsReport.xhtml" 
                                                 rendered="#{userData.userScreens['journalDocumentsReport'].view or userData.isAdmin}"
@@ -294,13 +294,13 @@
                                 </p:submenu>
                                 <p:submenu id="sr_sm143" label="#{userData.userDDs['ACCOUNT_STAT_REPORTS']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['subaccountsummaryreport'].view 
-                                                                            or userData.userScreens['BalanceAcountMonthlyReport'].view 
-                                                                            or userData.userScreens['SubAccountSummaryExtendedYears'].view 
-                                                                            or userData.userScreens['MonthlyAccountTransactionReport'].view 
-                                                                            or userData.userScreens['mainTransactionStatement'].view 
-                                                                            or userData.userScreens['costCenterBalancesReport'].view 
-                                                                            or userData.userScreens['adminUnitBalancesReport'].view 
-                                                                            or userData.isAdmin}"
+                                                       or userData.userScreens['BalanceAcountMonthlyReport'].view 
+                                                       or userData.userScreens['SubAccountSummaryExtendedYears'].view 
+                                                       or userData.userScreens['MonthlyAccountTransactionReport'].view 
+                                                       or userData.userScreens['mainTransactionStatement'].view 
+                                                       or userData.userScreens['costCenterBalancesReport'].view 
+                                                       or userData.userScreens['adminUnitBalancesReport'].view 
+                                                       or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk1431" value="#{userData.userDDs['STAT_SUBS_ACCOUNT']}" icon="&#xE8D2;" url="/faces/views/accountreport/subaccountsummaryreport.xhtml" 
                                                 rendered="#{userData.userScreens['subaccountsummaryreport'].view or userData.isAdmin}"
@@ -326,8 +326,8 @@
                                 </p:submenu>
                                 <p:submenu id="sr_sm144" label="#{userData.userDDs['BALANC_REV_REPORTS']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['complexRevisionReport'].view 
-                                                                            or userData.userScreens['complexRevisionOpenningReport'].view 
-                                                                            or userData.isAdmin}"
+                                                       or userData.userScreens['complexRevisionOpenningReport'].view 
+                                                       or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk1441" value="#{userData.userDDs['BALANC_REV_LEVEL']}" icon="&#xE8D2;" url="/faces/views/accountreport/complexRevisionReport.xhtml" 
                                                 rendered="#{userData.userScreens['complexRevisionReport'].view or userData.isAdmin}"
@@ -335,10 +335,10 @@
                                 </p:submenu>
                                 <p:submenu id="sr_sm145" label="#{userData.userDDs['CLOSING_REPORTS']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['incomeMenu'].view  
-                                                                            or userData.userScreens['incomeItemsMenuReport'].view 
-                                                                            or userData.userScreens['financialCenterMenu'].view 
-                                                                            or userData.userScreens['financialCenterItemsMenuReport'].view 
-                                                                            or userData.isAdmin}"
+                                                       or userData.userScreens['incomeItemsMenuReport'].view 
+                                                       or userData.userScreens['financialCenterMenu'].view 
+                                                       or userData.userScreens['financialCenterItemsMenuReport'].view 
+                                                       or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk1451" value="#{userData.userDDs['INCOM_MEN']}" icon="&#xE8D2;" url="/faces/views/accountreport/incomeMenu.xhtml" 
                                                 rendered="#{userData.userScreens['incomeMenu'].view or userData.isAdmin}"
@@ -355,14 +355,14 @@
                                 </p:submenu>
                                 <p:submenu id="sr_sm146" label="#{userData.userDDs['ANALYTIC_REPORT']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['analyticalReports'].view  
-                                                                            or userData.userScreens['ratioOfCurrent'].view 
-                                                                            or userData.userScreens['ratioOfLiquidity'].view 
+                                                       or userData.userScreens['ratioOfCurrent'].view 
+                                                       or userData.userScreens['ratioOfLiquidity'].view 
 
-                                                                            or userData.userScreens['ratioOfNetProfitToOwnerEquity'].view 
-                                                                            or userData.userScreens['ratioOfNetProfitToSales'].view 
-                                                                            or userData.userScreens['rateOfCirculationOfAssets'].view 
-                                                                            or userData.userScreens['rateOfCirculationOfStorage'].view 
-                                                                            or userData.isAdmin}"
+                                                       or userData.userScreens['ratioOfNetProfitToOwnerEquity'].view 
+                                                       or userData.userScreens['ratioOfNetProfitToSales'].view 
+                                                       or userData.userScreens['rateOfCirculationOfAssets'].view 
+                                                       or userData.userScreens['rateOfCirculationOfStorage'].view 
+                                                       or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk1461" value="#{userData.userDDs['FINANCIAL_ANALUSIS_SETTING']}" icon="&#xE8D2;" url="/faces/views/accountreport/analyticalReports.xhtml" 
                                                 rendered="#{userData.userScreens['analyticalReports'].view or userData.isAdmin}"
@@ -371,16 +371,16 @@
                             </p:submenu>
                             <p:submenu id="sr_sm6" label="#{userData.userDDs['SAFES_BANKS_MANG']}" icon="&#xE8D2;"
                                        rendered="#{userData.userScreens['glBank'].view 
-                                                                 or userData.userScreens['notesreceivablespre'].view 
-                                                                 or userData.userScreens['notesreceivables'].view 
-                                                                 or userData.userScreens['settlementdeed'].view 
-                                                                 or userData.userScreens['glBankTransaction'].view 
+                                                   or userData.userScreens['notesreceivablespre'].view 
+                                                   or userData.userScreens['notesreceivables'].view 
+                                                   or userData.userScreens['settlementdeed'].view 
+                                                   or userData.userScreens['glBankTransaction'].view 
 
-                                                                 or userData.isAdmin}"
+                                                   or userData.isAdmin}"
                                        >
                                 <p:submenu id="sr_sm61" label="#{userData.userDDs['MAIN_DATA']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['glBank'].view 
-                                                                            or userData.isAdmin}"
+                                                       or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk611" value="#{userData.userDDs['EST_SAF_BANK']}" icon="&#xE8D2;" url="/faces/views/glBank/glBankList.xhtml" 
                                                 rendered="#{userData.userScreens['glBank'].view or userData.isAdmin}"
@@ -388,10 +388,10 @@
                                 </p:submenu>
                                 <p:submenu id="sr_sm62" label="#{userData.userDDs['Safes_and_Bank_Transaction']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['notesreceivablespre'].view 
-                                                                            or userData.userScreens['notesreceivables'].view 
-                                                                            or userData.userScreens['settlementdeed'].view
-                                                                            or userData.userScreens['glBankTransaction'].view
-                                                                            or userData.isAdmin}"
+                                                       or userData.userScreens['notesreceivables'].view 
+                                                       or userData.userScreens['settlementdeed'].view
+                                                       or userData.userScreens['glBankTransaction'].view
+                                                       or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk621" value="#{userData.userDDs['RECEIPTS']}" icon="&#xE8D2;" url="/faces/views/notesreceivables/notesreceivablesList.xhtml" 
                                                 rendered="#{userData.userScreens['notesreceivables'].view or userData.isAdmin}"
@@ -406,18 +406,18 @@
                             </p:submenu>
                             <p:submenu id="sr_sm5" label="#{userData.userDDs['SAFES_BANK_REPRTS']}" icon="&#xE8D2;"
                                        rendered="#{userData.userScreens['banksBalanceReport'].view 
-                                                                or userData.userScreens['cashaccountsettlement'].view 
-                                                                or userData.userScreens['cashaccountsettlement_1'].view 
-                                                                or userData.userScreens['itemsBalanceReport'].view 
-                                                                or userData.userScreens['cashaccountItems'].view 
-                                                                or userData.userScreens['bankTransactionReport'].view 
-                                                                or userData.isAdmin}"
+                                                   or userData.userScreens['cashaccountsettlement'].view 
+                                                   or userData.userScreens['cashaccountsettlement_1'].view 
+                                                   or userData.userScreens['itemsBalanceReport'].view 
+                                                   or userData.userScreens['cashaccountItems'].view 
+                                                   or userData.userScreens['bankTransactionReport'].view 
+                                                   or userData.isAdmin}"
                                        >
                                 <p:submenu id="sr_sm51" label="#{userData.userDDs['SAFES_BANK_BALANCE_REPORTS']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['banksBalanceReport'].view 
-                                                                            or userData.userScreens['itemsBalanceReport'].view
+                                                       or userData.userScreens['itemsBalanceReport'].view
 
-                                                                            or userData.isAdmin}"
+                                                       or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk511" value="#{userData.userDDs['SAFES_BANK_BALANCES']}" icon="&#xE8D2;" url="/faces/views/accountreport/banksBalanceReport.xhtml" 
                                                 rendered="#{userData.userScreens['banksBalanceReport'].view or userData.isAdmin}"
@@ -425,11 +425,11 @@
                                 </p:submenu>
                                 <p:submenu id="sr_sm52" label="#{userData.userDDs['Safes_and_Bank_Transaction_Reports']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['cashaccountsettlement'].view 
-                                                                            or userData.userScreens['cashaccountsettlement_1'].view 
-                                                                            or userData.userScreens['cashaccountItems'].view 
-                                                                            or userData.userScreens['bankTransactionReport'].view
+                                                       or userData.userScreens['cashaccountsettlement_1'].view 
+                                                       or userData.userScreens['cashaccountItems'].view 
+                                                       or userData.userScreens['bankTransactionReport'].view
 
-                                                                            or userData.isAdmin}"
+                                                       or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk522" value="#{userData.userDDs['SAFE_ACCOUNT_BANK']}" icon="&#xE8D2;" url="/faces/views/bankreport/cashaccountsettlement_1.xhtml" 
                                                 rendered="#{userData.userScreens['cashaccountsettlement_1'].view or userData.isAdmin}"
@@ -441,58 +441,58 @@
                             </p:submenu>
                             <p:submenu id="sr_sm3" label="#{userData.userDDs['DIST_INVENT_MANG']}" icon="&#xE8D2;"
                                        rendered="#{userData.userScreens['invcreate'].view 
-                                                                 or userData.userScreens['inventorysetup'].view 
+                                                   or userData.userScreens['inventorysetup'].view 
 
-                                                                 or userData.userScreens['invgroup'].view 
-                                                                 or userData.userScreens['itemsdata'].view 
-                                                                 or userData.userScreens['itemsdata'].view 
+                                                   or userData.userScreens['invgroup'].view 
+                                                   or userData.userScreens['itemsdata'].view 
+                                                   or userData.userScreens['itemsdata'].view 
 
-                                                                 or userData.userScreens['supplier'].view 
-                                                                 or userData.userScreens['purchasesrepresentative'].view 
-                                                                 or userData.userScreens['supplierOpeningBalance'].view 
-                                                                 or userData.userScreens['supplieraddnotice'].view 
+                                                   or userData.userScreens['supplier'].view 
+                                                   or userData.userScreens['purchasesrepresentative'].view 
+                                                   or userData.userScreens['supplierOpeningBalance'].view 
+                                                   or userData.userScreens['supplieraddnotice'].view 
 
-                                                                 or userData.userScreens['invpurchaseorder_1'].view   
-                                                                 or userData.userScreens['invaddingorder'].view
-                                                                 or userData.userScreens['invpurchaseinvoice_1'].view
-                                                                 or userData.userScreens['invreturnpurchase_1'].view
+                                                   or userData.userScreens['invpurchaseorder_1'].view   
+                                                   or userData.userScreens['invaddingorder'].view
+                                                   or userData.userScreens['invpurchaseinvoice_1'].view
+                                                   or userData.userScreens['invreturnpurchase_1'].view
 
-                                                                 or userData.userScreens['customer'].view
-                                                                 or userData.userScreens['salesperson'].view
-                                                                 or userData.userScreens['customerOpeningBalance'].view
-                                                                 or userData.userScreens['customeraddnotice'].view
-
-
-
-                                                                 or userData.userScreens['invQuotation_1'].view
-                                                                 or userData.userScreens['invreservation_1'].view
-                                                                 or userData.userScreens['invsalesinvoice_1'].view
-                                                                 or userData.userScreens['invaddingorder'].view
-                                                                 or userData.userScreens['changeprice'].view
+                                                   or userData.userScreens['customer'].view
+                                                   or userData.userScreens['salesperson'].view
+                                                   or userData.userScreens['customerOpeningBalance'].view
+                                                   or userData.userScreens['customeraddnotice'].view
 
 
-                                                                 or userData.userScreens['invtransfer'].view
-                                                                 or userData.userScreens['invstrip'].view
-                                                                 or userData.userScreens['invupdate'].view
 
-                                                                 or userData.userScreens['invreturnsales_1'].view
-                                                                 or userData.userScreens['invopeningbalanceitem'].view
+                                                   or userData.userScreens['invQuotation_1'].view
+                                                   or userData.userScreens['invreservation_1'].view
+                                                   or userData.userScreens['invsalesinvoice_1'].view
+                                                   or userData.userScreens['invaddingorder'].view
+                                                   or userData.userScreens['changeprice'].view
 
-                                                                 or userData.userScreens['invpermissionorder_1'].view
-                                                                 or userData.userScreens['invtransferInventory'].view
-                                                                 or userData.userScreens['invMonthTarget'].view
-                                                                 or userData.userScreens[''].view
-                                                                 or userData.userScreens[''].view
-                                                                 or userData.userScreens[''].view
-                                                                 or userData.userScreens[''].view
-                                                                 or userData.userScreens[''].view
 
-                                                                 or userData.isAdmin}"
+                                                   or userData.userScreens['invtransfer'].view
+                                                   or userData.userScreens['invstrip'].view
+                                                   or userData.userScreens['invupdate'].view
+
+                                                   or userData.userScreens['invreturnsales_1'].view
+                                                   or userData.userScreens['invopeningbalanceitem'].view
+
+                                                   or userData.userScreens['invpermissionorder_1'].view
+                                                   or userData.userScreens['invtransferInventory'].view
+                                                   or userData.userScreens['invMonthTarget'].view
+                                                   or userData.userScreens[''].view
+                                                   or userData.userScreens[''].view
+                                                   or userData.userScreens[''].view
+                                                   or userData.userScreens[''].view
+                                                   or userData.userScreens[''].view
+
+                                                   or userData.isAdmin}"
                                        >
                                 <p:submenu id="sr_sm999931" label="#{userData.userDDs['GENERAL_SETTINGS']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['invcreate'].view 
-                                                                            or userData.userScreens['inventorysetup'].view 
-                                                                            or userData.isAdmin}"
+                                                       or userData.userScreens['inventorysetup'].view 
+                                                       or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk9999311" value="#{userData.userDDs['CREATE_INVENTORY']}" icon="&#xE8D2;" url="/faces/views/invcreate/setupNewInventoryList.xhtml" 
                                                 rendered="#{userData.userScreens['invcreate'].view or userData.isAdmin}"
@@ -503,10 +503,10 @@
                                 </p:submenu>
                                 <p:submenu id="sr_sm31" label="#{userData.userDDs['MAIN_DATA']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['invgroup'].view 
-                                                                            or userData.userScreens['itemsdata'].view 
-                                                                            or userData.userScreens['changeprice'].view 
-                                                                            or userData.userScreens['invMonthTarget'].view 
-                                                                            or userData.isAdmin}"
+                                                       or userData.userScreens['itemsdata'].view 
+                                                       or userData.userScreens['changeprice'].view 
+                                                       or userData.userScreens['invMonthTarget'].view 
+                                                       or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk311" value="#{userData.userDDs['ITEMS_GROUP']}" icon="&#xE8D2;" url="/faces/views/invgroup/invgroupList.xhtml" 
                                                 rendered="#{userData.userScreens['invgroup'].view or userData.isAdmin}"
@@ -520,10 +520,10 @@
                                 </p:submenu>
                                 <p:submenu id="sr_sm32" label="#{userData.userDDs['Payable_Accounts']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['supplier'].view 
-                                                                            or userData.userScreens['purchasesrepresentative'].view 
-                                                                            or userData.userScreens['supplierOpeningBalance'].view 
-                                                                            or userData.userScreens['supplieraddnotice'].view 
-                                                                            or userData.isAdmin}"
+                                                       or userData.userScreens['purchasesrepresentative'].view 
+                                                       or userData.userScreens['supplierOpeningBalance'].view 
+                                                       or userData.userScreens['supplieraddnotice'].view 
+                                                       or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk321" value="#{userData.userDDs['PURCHASES_DELEGATE']}" icon="&#xE8D2;" url="/faces/views/purchasesrepresentative/purchasesrepresentativeList.xhtml" 
                                                 rendered="#{userData.userScreens['purchasesrepresentative'].view or userData.isAdmin}"
@@ -540,11 +540,11 @@
                                 </p:submenu>
                                 <p:submenu id="sr_sm33" label="#{userData.userDDs['PURCHASE_TRANS']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['invpurchaseorder_1'].view  
-                                                                            or userData.userScreens['invaddingorder'].view 
-                                                                            or userData.userScreens['invpurchaseinvoice_1'].view 
-                                                                            or userData.userScreens['invreturnpurchase_1'].view 
+                                                       or userData.userScreens['invaddingorder'].view 
+                                                       or userData.userScreens['invpurchaseinvoice_1'].view 
+                                                       or userData.userScreens['invreturnpurchase_1'].view 
 
-                                                                            or userData.isAdmin}"
+                                                       or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk333" value="إضافة" icon="&#xE8D2;" url="/faces/views/invaddingorder/invAddingOrderList1.xhtml" 
                                                 rendered="#{userData.userScreens['invaddingorder'].view or userData.isAdmin}"
@@ -558,11 +558,11 @@
                                 </p:submenu>
                                 <p:submenu id="sr_sm34" label="#{userData.userDDs['Receivable_Accounts']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['customer'].view  
-                                                                            or userData.userScreens['salesperson'].view 
-                                                                            or userData.userScreens['customerDelegator'].view 
-                                                                            or userData.userScreens['customerOpeningBalance'].view 
-                                                                            or userData.userScreens['customeraddnotice'].view 
-                                                                            or userData.isAdmin}"
+                                                       or userData.userScreens['salesperson'].view 
+                                                       or userData.userScreens['customerDelegator'].view 
+                                                       or userData.userScreens['customerOpeningBalance'].view 
+                                                       or userData.userScreens['customeraddnotice'].view 
+                                                       or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk341" value="#{userData.userDDs['SALESPERSON']}" icon="&#xE8D2;" url="/faces/views/salesperson/salespersonList.xhtml" 
                                                 rendered="#{userData.userScreens['salesperson'].view or userData.isAdmin}"
@@ -582,13 +582,13 @@
                                 </p:submenu>
                                 <p:submenu id="sr_sm35" label="#{userData.userDDs['SALES_TRANS']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['invQuotation_1'].view  
-                                                                            or userData.userScreens['invreservation_1'].view 
-                                                                            or userData.userScreens['proworkorder'].view 
-                                                                            or userData.userScreens['invsalesinvoice_1'].view 
-                                                                            or userData.userScreens['invreturnsales_1'].view 
-                                                                            or userData.userScreens['invpermissionorder_1'].view 
+                                                       or userData.userScreens['invreservation_1'].view 
+                                                       or userData.userScreens['proworkorder'].view 
+                                                       or userData.userScreens['invsalesinvoice_1'].view 
+                                                       or userData.userScreens['invreturnsales_1'].view 
+                                                       or userData.userScreens['invpermissionorder_1'].view 
 
-                                                                            or userData.isAdmin}"
+                                                       or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk351" value="أمر شغل" icon="&#xE8D2;" url="/faces/views/proworkorder/proworkorderlist.xhtml" 
                                                 rendered="#{userData.userScreens['proworkorder'].view or userData.isAdmin}"
@@ -599,17 +599,17 @@
                                     <p:menuitem id="sr_lnk353" value="#{userData.userDDs['SALES_RETURN']}" icon="&#xE8D2;" url="/faces/views/invreturnsales_1/invreturnsaleslist.xhtml"
                                                 rendered="#{userData.userScreens['invreturnsales_1'].view or userData.isAdmin}"
                                                 />
-                                        <p:menuitem id="sr_lnk354" value="فسح" icon="&#xE8D2;" url="/faces/views/invpermissionorder_1/invpermissionorderlist.xhtml"
+                                    <p:menuitem id="sr_lnk354" value="فسح" icon="&#xE8D2;" url="/faces/views/invpermissionorder_1/invpermissionorderlist.xhtml"
                                                 rendered="#{userData.userScreens['invpermissionorder_1'].view or userData.isAdmin}"
                                                 />
                                 </p:submenu>
                                 <p:submenu id="sr_sm999932" label="#{userData.userDDs['STORE_TRANSACTION']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['invopeningbalanceitem'].view 
-                                                                            or userData.userScreens['invtransfer'].view 
-                                                                            or userData.userScreens['invstrip'].view 
-                                                                            or userData.userScreens['invtransferInventory'].view 
-                                                                            or userData.userScreens['invupdate'].view 
-                                                                            or userData.isAdmin}"
+                                                       or userData.userScreens['invtransfer'].view 
+                                                       or userData.userScreens['invstrip'].view 
+                                                       or userData.userScreens['invtransferInventory'].view 
+                                                       or userData.userScreens['invupdate'].view 
+                                                       or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk9999321" value="#{userData.userDDs['CONVERSION_BET_STORE']}" icon="&#xE8D2;" url="/faces/views/invtransferInventory/invTransferInventoryList.xhtml" 
                                                 rendered="#{userData.userScreens['invtransferInventory'].view or userData.isAdmin}"
@@ -618,57 +618,57 @@
                             </p:submenu>
                             <p:submenu id="sr_sm4" label="#{userData.userDDs['DISTRIB_REPORTS_STORES']}" icon="&#xE8D2;"
                                        rendered="#{userData.userScreens['groupDataReport'].view 
-                                                                 or userData.userScreens['basicdataofitemsbysuppliersreport'].view   
-                                                                 or userData.userScreens['basicdataofitemsreport'].view 
-                                                                 or userData.userScreens['itemSalesReport'].view
-                                                                 or userData.userScreens['SalesOfItemsBySuppliers'].view   
-                                                                 or userData.userScreens['invstripReport'].view
-                                                                 or userData.userScreens['itemCardReport'].view
-                                                                 or userData.userScreens['InvItemOrderLimitReport'].view                                                                
-                                                                 or userData.userScreens['invgroup'].view
-                                                                 or userData.userScreens['itemPurchaseReport'].view
-                                                                 or userData.userScreens[''].view
-                                                                 or userData.userScreens['invreturnpurchasereport'].view
+                                                   or userData.userScreens['basicdataofitemsbysuppliersreport'].view   
+                                                   or userData.userScreens['basicdataofitemsreport'].view 
+                                                   or userData.userScreens['itemSalesReport'].view
+                                                   or userData.userScreens['SalesOfItemsBySuppliers'].view   
+                                                   or userData.userScreens['invstripReport'].view
+                                                   or userData.userScreens['itemCardReport'].view
+                                                   or userData.userScreens['InvItemOrderLimitReport'].view                                                                
+                                                   or userData.userScreens['invgroup'].view
+                                                   or userData.userScreens['itemPurchaseReport'].view
+                                                   or userData.userScreens[''].view
+                                                   or userData.userScreens['invreturnpurchasereport'].view
 
-                                                                 or userData.userScreens['PurchaseOfItemsBySuppliers'].view
-                                                                 or userData.userScreens['PurchaseOfItemsByDelegators'].view
-                                                                 or userData.userScreens['PurchasesDuringPeriod'].view
-                                                                 or userData.userScreens['PurchasesByCategoriesOfItems'].view
-                                                                 or userData.userScreens['PurchaseJournal'].view
+                                                   or userData.userScreens['PurchaseOfItemsBySuppliers'].view
+                                                   or userData.userScreens['PurchaseOfItemsByDelegators'].view
+                                                   or userData.userScreens['PurchasesDuringPeriod'].view
+                                                   or userData.userScreens['PurchasesByCategoriesOfItems'].view
+                                                   or userData.userScreens['PurchaseJournal'].view
 
-                                                                 or userData.userScreens['purchaseDataReport'].view
+                                                   or userData.userScreens['purchaseDataReport'].view
 
-                                                                 or userData.userScreens['itemSalesReport'].view
-                                                                 or userData.userScreens['SalesOfItemsBySuppliers'].view
+                                                   or userData.userScreens['itemSalesReport'].view
+                                                   or userData.userScreens['SalesOfItemsBySuppliers'].view
 
-                                                                 or userData.userScreens['supplayeraccount'].view
-                                                                 or userData.userScreens['accountbalancesupplier'].view
-                                                                 or userData.userScreens['clientacoount'].view
-                                                                 or userData.userScreens['clientacoountById'].view
-                                                                 or userData.userScreens['customerData'].view
-                                                                 or userData.userScreens['SalesOfItemsByDelegator'].view
-                                                                 or userData.userScreens['SalesOfItemsBySupplier'].view 
-                                                                 or userData.userScreens['SalesDuringPeriod'].view  
-                                                                 or userData.userScreens['SalesByCategoriesOfItems'].view  
+                                                   or userData.userScreens['supplayeraccount'].view
+                                                   or userData.userScreens['accountbalancesupplier'].view
+                                                   or userData.userScreens['clientacoount'].view
+                                                   or userData.userScreens['clientacoountById'].view
+                                                   or userData.userScreens['customerData'].view
+                                                   or userData.userScreens['SalesOfItemsByDelegator'].view
+                                                   or userData.userScreens['SalesOfItemsBySupplier'].view 
+                                                   or userData.userScreens['SalesDuringPeriod'].view  
+                                                   or userData.userScreens['SalesByCategoriesOfItems'].view  
 
-                                                                 or userData.userScreens['salesDataReport'].view
-                                                                 or userData.userScreens['accountbalancecustomer'].view
+                                                   or userData.userScreens['salesDataReport'].view
+                                                   or userData.userScreens['accountbalancecustomer'].view
 
-                                                                 or userData.userScreens['SalesJournal'].view
-                                                                 or userData.userScreens['SalesJournalForUser'].view
-                                                                 or userData.userScreens['InvReturnSalesReport'].view
+                                                   or userData.userScreens['SalesJournal'].view
+                                                   or userData.userScreens['SalesJournalForUser'].view
+                                                   or userData.userScreens['InvReturnSalesReport'].view
 
-                                                                 or userData.userScreens['supplierdata'].view
+                                                   or userData.userScreens['supplierdata'].view
 
 
 
-                                                                 or userData.isAdmin}"
+                                                   or userData.isAdmin}"
                                        >
                                 <p:submenu id="sr_sm41" label="#{userData.userDDs['MAIN_DATA_REP']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['groupDataReport'].view  
-                                                                          or userData.userScreens['basicdataofitemsreport'].view  
-                                                                          or userData.userScreens['basicdataofitemsbysuppliersreport'].view 
-                                                                          or userData.isAdmin}"
+                                                       or userData.userScreens['basicdataofitemsreport'].view  
+                                                       or userData.userScreens['basicdataofitemsbysuppliersreport'].view 
+                                                       or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk411" value="#{userData.userDDs['GROUP_ITEMS']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/groupDataReport.xhtml" 
                                                 rendered="#{userData.userScreens['groupDataReport'].view or userData.isAdmin}"
@@ -682,10 +682,10 @@
                                 </p:submenu>
                                 <p:submenu id="sr_sm42" label="#{userData.userDDs['SUPPLIERS_REP']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['supplayeraccount'].view  
-                                                                          or userData.userScreens['accountbalancesupplier'].view  
-                                                                          or userData.userScreens['supplierdata'].view 
-                                                                          or userData.userScreens['purchaseDataReport'].view 
-                                                                          or userData.isAdmin}"
+                                                       or userData.userScreens['accountbalancesupplier'].view  
+                                                       or userData.userScreens['supplierdata'].view 
+                                                       or userData.userScreens['purchaseDataReport'].view 
+                                                       or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk421" value="#{userData.userDDs['BASIC_DATA_PROCURMENT_DELEGATE']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/purchaseDataReport.xhtml" 
                                                 rendered="#{userData.userScreens['purchaseDataReport'].view or userData.isAdmin}"
@@ -703,14 +703,14 @@
                                 <p:submenu id="sr_sm43" label="#{userData.userDDs['PURCHASES_REP']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['itemPurchaseReport'].view 
 
-                                                                            or userData.userScreens['PurchaseOfItemsBySuppliers'].view 
-                                                                            or userData.userScreens['PurchaseOfItemsByDelegators'].view 
-                                                                            or userData.userScreens['PurchasesDuringPeriod'].view 
-                                                                            or userData.userScreens['PurchasesByCategoriesOfItems'].view 
-                                                                            or userData.userScreens['PurchaseJournal'].view 
+                                                       or userData.userScreens['PurchaseOfItemsBySuppliers'].view 
+                                                       or userData.userScreens['PurchaseOfItemsByDelegators'].view 
+                                                       or userData.userScreens['PurchasesDuringPeriod'].view 
+                                                       or userData.userScreens['PurchasesByCategoriesOfItems'].view 
+                                                       or userData.userScreens['PurchaseJournal'].view 
 
-                                                                            or userData.userScreens['invreturnpurchasereport'].view 
-                                                                            or userData.isAdmin}"
+                                                       or userData.userScreens['invreturnpurchasereport'].view 
+                                                       or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk431" value="#{userData.userDDs['PURCHASES_ITE_GRO']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/itemPurchaseReport.xhtml" 
                                                 rendered="#{userData.userScreens['itemPurchaseReport'].view or userData.isAdmin}"
@@ -736,11 +736,11 @@
                                 </p:submenu>
                                 <p:submenu id="sr_sm44" label="#{userData.userDDs['CUSTOMERS_REP']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['salesDataReport'].view 
-                                                                           or userData.userScreens['customerData'].view 
-                                                                           or userData.userScreens['clientacoount'].view 
-                                                                           or userData.userScreens['clientacoountById'].view 
-                                                                           or userData.userScreens['accountbalancecustomer'].view 
-                                                                           or userData.isAdmin}"
+                                                       or userData.userScreens['customerData'].view 
+                                                       or userData.userScreens['clientacoount'].view 
+                                                       or userData.userScreens['clientacoountById'].view 
+                                                       or userData.userScreens['accountbalancecustomer'].view 
+                                                       or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk441" value="#{userData.userDDs['BASIC_DATA_SALES_REPRESENTATIVES']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/salesDataReport.xhtml" 
                                                 rendered="#{userData.userScreens['salesDataReport'].view or userData.isAdmin}"
@@ -763,17 +763,17 @@
                                 </p:submenu>
                                 <p:submenu id="sr_sm45" label="#{userData.userDDs['SALES_REP']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['itemSalesReport'].view 
-                                                                           or userData.userScreens['SalesOfItemsBySuppliers'].view 
-                                                                           or userData.userScreens['SalesOfItemsByDelegator'].view 
-                                                                           or userData.userScreens['SalesOfItemsBySupplier'].view 
-                                                                           or userData.userScreens['SalesDuringPeriod'].view 
-                                                                           or userData.userScreens['SalesByCategoriesOfItems'].view 
-                                                                           or userData.userScreens['SalesJournal'].view 
-                                                                           or userData.userScreens['SalesJournalForUser'].view 
-                                                                           or userData.userScreens['InvReturnSalesReport'].view 
+                                                       or userData.userScreens['SalesOfItemsBySuppliers'].view 
+                                                       or userData.userScreens['SalesOfItemsByDelegator'].view 
+                                                       or userData.userScreens['SalesOfItemsBySupplier'].view 
+                                                       or userData.userScreens['SalesDuringPeriod'].view 
+                                                       or userData.userScreens['SalesByCategoriesOfItems'].view 
+                                                       or userData.userScreens['SalesJournal'].view 
+                                                       or userData.userScreens['SalesJournalForUser'].view 
+                                                       or userData.userScreens['InvReturnSalesReport'].view 
 
 
-                                                                           or userData.isAdmin}"
+                                                       or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk451" value="#{userData.userDDs['ITEM_SALE_GROUP']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/itemSalesReport.xhtml" 
                                                 rendered="#{userData.userScreens['itemSalesReport'].view or userData.isAdmin}"
@@ -805,8 +805,8 @@
                                 </p:submenu>
                                 <p:submenu id="sr_sm46" label="#{userData.userDDs['STORE_REP']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['itemCardReport'].view 
-                                                                           or userData.userScreens['invstripReport'].view  
-                                                                           or userData.isAdmin}"
+                                                       or userData.userScreens['invstripReport'].view  
+                                                       or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk461" value="#{userData.userDDs['ITEM_CARD_REP']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/itemCardReport.xhtml" 
                                                 rendered="#{userData.userScreens['itemCardReport'].view or userData.isAdmin}"
@@ -816,19 +816,19 @@
                                                 />
                                 </p:submenu>
                             </p:submenu>
-                            
+
                             <p:submenu id="sr_sm333" label="إدارة الانتاج" icon="&#xE8D2;"
                                        rendered="#{userData.userScreens['proProductionTransaction'].view 
-                                                                 or userData.userScreens['invoiceProductionStageReport'].view 
-                                                                 or userData.userScreens['progroup'].view 
-                                                                 or userData.userScreens['summitionItemReport'].view 
-                                                                 or userData.userScreens[''].view 
-                                                                 or userData.isAdmin}"
+                                                   or userData.userScreens['invoiceProductionStageReport'].view 
+                                                   or userData.userScreens['progroup'].view 
+                                                   or userData.userScreens['summitionItemReport'].view 
+                                                   or userData.userScreens[''].view 
+                                                   or userData.isAdmin}"
                                        >
                                 <p:submenu id="sr_sm3331" label="إدارة الانتاج" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['proProductionTransaction'].view 
-                                                                            or userData.userScreens[''].view 
-                                                                            or userData.isAdmin}"
+                                                       or userData.userScreens[''].view 
+                                                       or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk33311" value="إنشاء الطيار" icon="&#xE8D2;" url="/faces/views/procreateDelivery/createDeliveryList.xhtml" 
                                                 rendered="#{userData.userScreens['progroup'].view or userData.isAdmin}"
@@ -845,7 +845,10 @@
                                     <p:menuitem id="sr_lnk33314" value="تسليم للمشغل" icon="&#xE8D2;" url="/faces/views/profactoryDelivery/profactorydeviveryList.xhtml" 
                                                 rendered="#{userData.userScreens['profactoryDelivery'].view or userData.isAdmin}"
                                                 />      
-                                    <p:menuitem id="sr_lnk333110" value="حركة أوامر الشغل" icon="&#xE8D2;" url="/faces/views/proProductionTransaction/proProductionTransactionList1.xhtml" 
+                                    <p:menuitem id="sr_lnk333110" value="حركة أوامر الشغل" icon="&#xE8D2;" url="/faces/views/proProductionTransactionList/proProductionTransactionList1.xhtml" 
+                                                rendered="#{userData.userScreens['proProductionTransaction'].view or userData.isAdmin}"
+                                                />  
+                                    <p:menuitem id="sr_lnk333120" value="حركة أوامر الشغل" icon="&#xE8D2;" url="/faces/views/proProductionTransactionForm/proProductionTransactionFormNew.xhtml" 
                                                 rendered="#{userData.userScreens['proProductionTransaction'].view or userData.isAdmin}"
                                                 />  
                                     <p:menuitem id="sr_lnk33315" value="حركة التشيك" icon="&#xE8D2;" url="/faces/views/proProductionCheck/proProductionCheckList.xhtml" 
@@ -863,19 +866,22 @@
                                 </p:submenu>
                                 <p:submenu id="sr_sm332" label="تقارير الانتاج" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['invoiceProductionStageReport'].view 
-                                                                            or userData.userScreens['summitionItemReport'].view 
-                                                                            or userData.userScreens[''].view 
-                                                                            or userData.isAdmin}"
+                                                       or userData.userScreens['summitionItemReport'].view 
+                                                       or userData.userScreens['productionTransactionOfUser'].view 
+                                                       or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk33321" value="بيان مراحل وموظفين الفاتورة" icon="&#xE8D2;" url="/faces/views/proproductionreport/invoiceProductionStageReport.xhtml" 
                                                 rendered="#{userData.userScreens['invoiceProductionStageReport'].view or userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="sr_lnk33323" value="بيان انتاج العمال لفترة" icon="&#xE8D2;" url="/faces/views/proproductionreport/productionTransactionOfUser.xhtml" 
+                                                rendered="#{userData.userScreens['productionTransactionOfUser'].view or userData.isAdmin}"
                                                 />
                                     <p:menuitem id="sr_lnk33322" value="تقرير باجماليات الفئات" icon="&#xE8D2;" url="/faces/views/proproductionreport/summitionItemReport.xhtml" 
                                                 rendered="#{userData.userScreens['summitionItemReport'].view or userData.isAdmin}"
                                                 />
                                 </p:submenu>
                             </p:submenu>
-                            
+
                         </pm:menu>
                     </h:form>
                 </div>

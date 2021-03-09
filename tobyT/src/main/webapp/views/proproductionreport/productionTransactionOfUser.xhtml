@@ -79,7 +79,7 @@
 
                             <p:autoComplete style="width:85%" id="Cost_Center_from" 
                                             dropdown="true"
-
+                                            converter="#{productionTransactionOfUserMB.proProductionStagesDTOConverter}"
                                             value="#{productionTransactionOfUserMB.printProductionDTO.fromStatus}" 
                                             var="fromStatus"
                                             itemLabel="#{fromStatus.name}"
@@ -101,7 +101,7 @@
                         <div class="ui-g-6 ui-xl-6">
                             <p:autoComplete style="width:85%" id="Cost_Center_to" 
                                             dropdown="true"
-
+                                            converter="#{productionTransactionOfUserMB.proProductionStagesDTOConverter}"
                                             value="#{productionTransactionOfUserMB.printProductionDTO.toStatus}" 
                                             var="toStatus"
                                             itemLabel="#{toStatus.name}"
@@ -178,6 +178,7 @@
                               widgetVar="data" 
                               rowIndexVar="index" 
                               emptyMessage="EMPTY_TABLE"
+                              rows="20" lazy="true"
                               >
 
                     <p:column headerText="الرقم" style="width: 10vh;text-align: center!important;font-size: 1.8vh">

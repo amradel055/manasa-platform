@@ -47,7 +47,7 @@ public class ProProductionTransactionListMB1 extends BaseListBean {
         try {
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
             context.getSessionMap().remove("ScreenMode");
-            exit("../proProductionTransaction/proProductionTransactionFormNew.xhtml");
+            exit("../proProductionTransactionForm/proProductionTransactionFormNew.xhtml");
             return "";
 
         } catch (Exception e) {
@@ -58,7 +58,19 @@ public class ProProductionTransactionListMB1 extends BaseListBean {
 
     @Override
     public String goToEdit() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+         try {
+            if (proProductionItemsTransactionDTOSelected != null && proProductionItemsTransactionDTOSelected.getId() > 0) {
+                getContext().getSessionMap().put("proProductionItemsTransactionDTOSelected", proProductionItemsTransactionDTOSelected.getId());
+                getContext().getSessionMap().put("ScreenMode", "Edit");
+                exit("../proProductionTransactionForm/proProductionTransactionFormNew.xhtml");
+                return "";
+            } else {
+                return "";
+            }
+        } catch (Exception e) {
+            saveError(e, "proProductionTransactionListMB1", "goToEdit");
+            return null;
+            }
     }
 
     @Override

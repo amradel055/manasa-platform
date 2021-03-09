@@ -18,12 +18,16 @@
                 <div>
                     <p:dataTable id="invAddingOrderTable"
                                  var="invAddingOrderTable" 
-                                 widgetVar="bTable" 
+                                 widgetVar="invAddingOrderTable" 
+                                 draggableColumns="true"
+                                 draggableRows="true"
                                  rowIndexVar="index" 
                                  value="#{proFactoryDeliveryListDTOMB.dataModel}"
                                  rows="10" 
                                  paginator="true"
                                  emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"  
+                                 rowKey="#{invAddingOrderTable.index}"
+                                 sortBy="#{1}"
                                  lazy="true" 
                                  paginatorTemplate="{CurrentPageReport} {FirstPageLink}
                                  {PreviousPageLink} {PageLinks} {NextPageLink}
@@ -32,13 +36,18 @@
 
                                  >
 
-                        <f:facet name="header" >
-                            <p:commandButton  icon="fa fa-plus" 
+                       
+                        
+                         <f:facet name="header">
+                            <p:commandButton  class="saddButton" icon="fa fa-plus" 
                                               id="addA"
-                                              class="saddButton"
                                               title="#{userData.userDDs['ADD']}" 
-                                              action="#{proFactoryDeliveryListDTOMB.goToAdd()}" 
-                                              style="float:right" />
+                                              action="#{proFactoryDeliveryListDTOMB.goToAdd()}"
+                                              style="float:right" 
+                                              />
+
+
+
 
                             <p:blockUI block="form" trigger="addA" animate="true" >
 
@@ -46,10 +55,13 @@
 
                             </p:blockUI> 
 
-                            <p:outputPanel  >
+                            <p:outputPanel>
                                 <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
-                                <p:inputText id="globalFilter" onkeyup="PF('bTable').filter()" style="width:150px" />
+                                <p:inputText id="globalFilter" onkeyup="PF('invAddingOrderTable').filter()" style="width:150px" />
                             </p:outputPanel>
+
+
+
                         </f:facet>
 
                         <p:column style="width:12vh;font-size:1.6vh;text-align: -webkit-auto;border-radius: 0px;" filterStyle="display:none" 
