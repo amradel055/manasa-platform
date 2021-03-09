@@ -166,22 +166,23 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
         proProductionItemsTransactionDTO.setDate(proProductionItemsTransaction.getDate());
         proProductionItemsTransactionDTO.setIndex(proProductionItemsTransaction.getId());
 
-        if (proProductionItemsTransaction.getInvPurchaseInvoiceDetailId() != null) {
+        if (proProductionItemsTransaction.getProFactoryDeliveryDetailId() != null && 
+                proProductionItemsTransaction.getProFactoryDeliveryDetailId().getInvPurchaseInvoiceDetailId() != null) {
             InvPurchaseInvoiceDetailDTO invPurchaseInvoiceDetailDTO = new InvPurchaseInvoiceDetailDTO();
-            invPurchaseInvoiceDetailDTO.setId(proProductionItemsTransaction.getInvPurchaseInvoiceDetailId().getId());
-            if (proProductionItemsTransaction.getInvPurchaseInvoiceDetailId().getInvPurchaseInvoiceId() != null) {
+            invPurchaseInvoiceDetailDTO.setId(proProductionItemsTransaction.getProFactoryDeliveryDetailId().getInvPurchaseInvoiceDetailId().getId());
+            if (proProductionItemsTransaction.getProFactoryDeliveryDetailId().getInvPurchaseInvoiceDetailId().getInvPurchaseInvoiceId() != null) {
                 InvPurchaseInvoiceDTO1 invPurchaseInvoiceDTO = new InvPurchaseInvoiceDTO1();
-                invPurchaseInvoiceDTO.setId(proProductionItemsTransaction.getInvPurchaseInvoiceDetailId().getInvPurchaseInvoiceId().getId());
-                invPurchaseInvoiceDTO.setSerial(proProductionItemsTransaction.getInvPurchaseInvoiceDetailId().getInvPurchaseInvoiceId().getSerial());
+                invPurchaseInvoiceDTO.setId(proProductionItemsTransaction.getProFactoryDeliveryDetailId().getInvPurchaseInvoiceDetailId().getInvPurchaseInvoiceId().getId());
+                invPurchaseInvoiceDTO.setSerial(proProductionItemsTransaction.getProFactoryDeliveryDetailId().getInvPurchaseInvoiceDetailId().getInvPurchaseInvoiceId().getSerial());
                 invPurchaseInvoiceDetailDTO.setInvPurchaseInvoiceId(invPurchaseInvoiceDTO);
             }
-            if (proProductionItemsTransaction.getInvPurchaseInvoiceDetailId().getItemId() != null) {
+            if (proProductionItemsTransaction.getProFactoryDeliveryDetailId().getInvPurchaseInvoiceDetailId().getItemId() != null) {
                 InvItemDTO invItemDTO = new InvItemDTO();
-                invItemDTO.setId((proProductionItemsTransaction.getInvPurchaseInvoiceDetailId().getItemId().getId()));
-                invItemDTO.setName((proProductionItemsTransaction.getInvPurchaseInvoiceDetailId().getItemId().getName()));
+                invItemDTO.setId((proProductionItemsTransaction.getProFactoryDeliveryDetailId().getInvPurchaseInvoiceDetailId().getItemId().getId()));
+                invItemDTO.setName((proProductionItemsTransaction.getProFactoryDeliveryDetailId().getInvPurchaseInvoiceDetailId().getItemId().getName()));
                 invPurchaseInvoiceDetailDTO.setItemId(invItemDTO);
             }
-            invPurchaseInvoiceDetailDTO.setId(proProductionItemsTransaction.getInvPurchaseInvoiceDetailId().getId());
+            invPurchaseInvoiceDetailDTO.setId(proProductionItemsTransaction.getProFactoryDeliveryDetailId().getInvPurchaseInvoiceDetailId().getId());
             proProductionItemsTransactionDTO.setInvPurchaseInvoiceDetailId(invPurchaseInvoiceDetailDTO);
         }
 
@@ -205,6 +206,7 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
         proProductionItemsTransactionDTO.setSerial(proProductionItemsTransaction.getSerial());
 
         proProductionItemsTransactionDTO.setCreatedBy(proProductionItemsTransaction.getCreatedBy() != null ? proProductionItemsTransaction.getCreatedBy().getId() : null);
+        proProductionItemsTransactionDTO.setCreatedByName(proProductionItemsTransaction.getCreatedBy() != null ? proProductionItemsTransaction.getCreatedBy().getName() : null);
         proProductionItemsTransactionDTO.setCreatedDate(proProductionItemsTransaction.getCreationDate());
         proProductionItemsTransactionDTO.setBranchId(proProductionItemsTransaction.getBranchId() != null ? proProductionItemsTransaction.getBranchId().getId() : null);
 
