@@ -35,7 +35,9 @@ public class BaseEntityDTO implements Serializable, Cloneable {
     
     private Integer serial ;  
     
-    private String createdByName;    
+    private String createdByName; 
+    
+    private String createdByCode;
 
 
 
@@ -206,5 +208,19 @@ public class BaseEntityDTO implements Serializable, Cloneable {
      */
     public void setCreatedByName(String createdByName) {
         this.createdByName = createdByName;
+    }
+
+    /**
+     * @return the createdByCode
+     */
+    public String getCreatedByCode() {
+        return createdByCode;
+    }
+
+    /**
+     * @param createdByCode the createdByCode to set
+     */
+    public void setCreatedByCode(String createdByCode) {
+        this.createdByCode = createdByCode;
     }
 }
