@@ -82,6 +82,26 @@
 
 
                         </p:column>
+                        <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.4vh" filterStyle="display:none" 
+                                  filterBy="#{details.createdByCode}" 
+                                  filterMatchMode="contains"
+                                  headerText="رقم العامل "
+                                  sortBy="#{details.createdByCode}" 
+                                  >
+                            <p:outputLabel value="#{details.createdByCode}" />
+
+
+                        </p:column>
+                        <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.4vh" filterStyle="display:none" 
+                                  filterBy="#{details.number}" 
+                                  filterMatchMode="contains"
+                                  headerText="عدد الثياب"
+                                  sortBy="#{details.number}" 
+                                  >
+                            <p:outputLabel value="#{details.number}" />
+
+
+                        </p:column>
 
                         <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.6vh" filterStyle="display:none"
                                   filterBy="#{details.proProductionStagesId.name}"

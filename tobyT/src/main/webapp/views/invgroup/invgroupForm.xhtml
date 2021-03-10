@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                template="./../../template/newTemplate.xhtml"
+                template="./../../template/template.xhtml"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
@@ -11,37 +11,38 @@
         <h:form style="margin-right:20px" id="form"  enctype="multipart/form-data"  dir="#{userData.dir}">
             <p:fieldset legend="#{userData.userDDs['ITEMS_TYPES']}" style="margin-bottom:20px">
                 <p:messages autoUpdate="true" id="messages" showDetail="true" closable="true"/>   
-                <h:panelGrid id="pnl" columns="2" cellspacing="20" cellpadding="0" >
 
-                    <h:panelGroup>
-                        <h:panelGroup> 
-                            <p:outputLabel style="width: 55px" value="#{userData.userDDs['GROP_COD']}"/>
-                        </h:panelGroup>
-                        <h:panelGroup>
+
+                <div class="ui-g-6 ui-xl-6">
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
                             <p:inputText   style="width: 49%" id="id" value="#{invGroupFormBean.invGroupDTO.code}" >
-                            
-                                <p:ajax event="blur" listener="#{invGroupFormBean.validateCode()}"  />
-                            
-                            </p:inputText>
-                        </h:panelGroup>
-                    </h:panelGroup>
 
-                    <h:panelGroup> 
-                        <h:panelGroup>
-                            <p:outputLabel style="width: 40px" value="#{userData.userDDs['NAME']}"/>
-                        </h:panelGroup>
-                        <h:panelGroup>
+                                <p:ajax event="blur" listener="#{invGroupFormBean.validateCode()}"  />
+
+                            </p:inputText>
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel style="width: 55px" value="#{userData.userDDs['GROP_COD']}"/>
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="ui-g-6 ui-xl-6">
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
                             <p:inputText   style="width: 49%!important" id="name"  value="#{invGroupFormBean.invGroupDTO.name}" >
                                 <p:ajax event="blur" listener="#{invGroupFormBean.validateName()}"  />
                             </p:inputText>
-                        </h:panelGroup>
-                    </h:panelGroup> 
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel style="width: 40px" value="#{userData.userDDs['NAME']}"/>
 
-                    <h:panelGroup> 
-                        <h:panelGroup> 
-                            <p:outputLabel  style="width:55px" value="#{userData.userDDs['MAIN_GROP']}"/>
-                        </h:panelGroup>
-                        <h:panelGroup>
+                        </div>
+                    </div>
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
                             <p:autoComplete style="width:85%" id="Cost_Center_From" 
                                             dropdown="true"
                                             converter="#{invGroupFormBean.invGroupDTOConverter}"
@@ -53,9 +54,16 @@
                                             forceSelection="true" 
                                             completeMethod="#{invGroupFormBean.completeInvGroups}" >
                             </p:autoComplete>
-                        </h:panelGroup>
-                    </h:panelGroup>
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel  style="width:55px" value="#{userData.userDDs['MAIN_GROP']}"/>
 
+                        </div>
+                    </div>
+                </div>
+                <h:panelGrid id="pnl" columns="2" cellspacing="20" cellpadding="0" >
+
+                  
                 </h:panelGrid>
 
                 <h:panelGrid  class="centerButtons col-md-12"  columns="1" >
