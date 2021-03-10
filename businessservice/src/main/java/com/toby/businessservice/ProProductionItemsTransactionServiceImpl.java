@@ -207,6 +207,7 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
 
         proProductionItemsTransactionDTO.setCreatedBy(proProductionItemsTransaction.getCreatedBy() != null ? proProductionItemsTransaction.getCreatedBy().getId() : null);
         proProductionItemsTransactionDTO.setCreatedByName(proProductionItemsTransaction.getCreatedBy() != null ? proProductionItemsTransaction.getCreatedBy().getName() : null);
+        proProductionItemsTransactionDTO.setCreatedByCode(proProductionItemsTransaction.getCreatedBy() != null ? proProductionItemsTransaction.getCreatedBy().getUserCode() : null);
         proProductionItemsTransactionDTO.setCreatedDate(proProductionItemsTransaction.getCreationDate());
         proProductionItemsTransactionDTO.setBranchId(proProductionItemsTransaction.getBranchId() != null ? proProductionItemsTransaction.getBranchId().getId() : null);
 
