@@ -828,6 +828,16 @@
                                 <p:submenu id="sr_sm3331" label="إدارة الانتاج" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['proProductionTransaction'].view 
                                                        or userData.userScreens[''].view 
+                                                       or userData.userScreens['progroup'].view
+                                                       or userData.userScreens['proproductionstages'].view
+                                                       or userData.userScreens['proproductionstages'].view
+                                                       or userData.userScreens['proItemProductionStages'].view
+                                                       or userData.userScreens['profactoryDelivery'].view
+                                                       or userData.userScreens['proProductionTransaction'].view
+                                                       or userData.userScreens['proProductionCheck'].view
+                                                       or userData.userScreens['proProductionMovementDelivrey'].view
+                                                       or userData.userScreens['proSendToGallary'].view
+                                                       or userData.userScreens['proRecieveGallary'].view
                                                        or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk33311" value="إنشاء الطيار" icon="&#xE8D2;" url="/faces/views/procreateDelivery/createDeliveryList.xhtml" 
@@ -848,7 +858,7 @@
                                     <p:menuitem id="sr_lnk333110" value="حركة أوامر الشغل" icon="&#xE8D2;" url="/faces/views/proProductionTransactionList/proProductionTransactionList1.xhtml" 
                                                 rendered="#{userData.userScreens['proProductionTransaction'].view or userData.isAdmin}"
                                                 />  
-                                    <p:menuitem id="sr_lnk333120" value="حركة أوامر الشغل" icon="&#xE8D2;" url="/faces/views/proProductionTransactionForm/proProductionTransactionFormNew.xhtml" 
+                                    <p:menuitem id="sr_lnk333120" value="حركة أوامر الشغل جديد" icon="&#xE8D2;" url="/faces/views/proProductionTransactionForm/proProductionTransactionFormNew.xhtml" 
                                                 rendered="#{userData.userScreens['proProductionTransaction'].view or userData.isAdmin}"
                                                 />  
                                     <p:menuitem id="sr_lnk33315" value="حركة التشيك" icon="&#xE8D2;" url="/faces/views/proProductionCheck/proProductionCheckList.xhtml" 
@@ -857,7 +867,7 @@
                                     <p:menuitem id="sr_lnk33316" value="ارسال الفاتورة للمعرض" icon="&#xE8D2;" url="/faces/views/proProductionMovementDelivrey/proProductionMovementList.xhtml" 
                                                 rendered="#{userData.userScreens['proProductionMovementDelivrey'].view or userData.isAdmin}"
                                                 />
-                                    <p:menuitem id="sr_lnk33317" value="استلام الفاتورة بالمعرض" icon="&#xE8D2;" url="/faces/views/proSendToGallary/proSendToGallaryList.xhtml" 
+                                    <p:menuitem id="sr_lnk33317" value="ارسال الفاتورة للمعرض" icon="&#xE8D2;" url="/faces/views/proSendToGallary/proSendToGallaryList.xhtml" 
                                                 rendered="#{userData.userScreens['proSendToGallary'].view or userData.isAdmin}"
                                                 />                                    
                                     <p:menuitem id="sr_lnk33318" value="تسليم العميل" icon="&#xE8D2;" url="/faces/views/proRecieveGallary/proRecieveGallaryList.xhtml" 
@@ -868,6 +878,7 @@
                                            rendered="#{userData.userScreens['invoiceProductionStageReport'].view 
                                                        or userData.userScreens['summitionItemReport'].view 
                                                        or userData.userScreens['productionTransactionOfUser'].view 
+                                                       or userData.userScreens['InvoiceMovementReport'].view
                                                        or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk33321" value="بيان مراحل وموظفين الفاتورة" icon="&#xE8D2;" url="/faces/views/proproductionreport/invoiceProductionStageReport.xhtml" 
@@ -879,6 +890,8 @@
                                     <p:menuitem id="sr_lnk33322" value="تقرير باجماليات الفئات" icon="&#xE8D2;" url="/faces/views/proproductionreport/summitionItemReport.xhtml" 
                                                 rendered="#{userData.userScreens['summitionItemReport'].view or userData.isAdmin}"
                                                 />
+                                    <p:menuitem id="sr_lnk33324" value="حركة الثياب بالمشغل والمعرض" icon="&#xE8D2;" url="/faces/views/proproductionreport/InvoiceMovementReport.xhtml" 
+                                                rendered="#{userData.userScreens['InvoiceMovementReport'].view or userData.isAdmin}"                                                />
                                 </p:submenu>
                             </p:submenu>
 

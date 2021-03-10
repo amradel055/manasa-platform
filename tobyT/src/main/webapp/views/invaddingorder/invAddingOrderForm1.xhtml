@@ -9,34 +9,10 @@
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <ui:define name="content">
 
-        <style>
 
-            .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
-                border: 1px solid #c5dbec;
-                background:#fff;
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form id="form" dir="#{userData.dir}" class='formmargin'>
 
-            }
-            .ui-dialog {
-                position: absolute !important;
-                left: 1vw!important;
-                top: 25vh!important;}
-            </style>
-            <f:event listener="#{userData.authorize}" type="preRenderView" />
-            <h:form id="form" dir="#{userData.dir}" class='formmargin'>
-            <div style=" position: absolute;left: 20px"> 
-
-                <p:commandButton  style="z-index: 2;
-                                  margin-top: 24%;
-                                  color: #035c70!important; 
-                                  background-color: #223238!important;
-                                  border: 1px solid #22323a!important;
-                                  background: #22323a 50% 50% repeat-x!important;"
-                                  icon="fa fa-fw fa-home"
-                                  title="#{userData.userDDs['HOME']}"
-                                  class="smhomeButton" 
-                                  action="exit" />
-
-            </div>
             <div >
                 <p:messages id="curmsg" autoUpdate="true" showDetail="true" rendered="true" closable="true"/>   
             </div>
@@ -46,220 +22,198 @@
                 <div  id="firstSegment" class="ui-g-12 ui-g-nopad">
 
                     <div class="ui-g">
-                        <h:panelGroup id="test">
-                            <div class="ui-g-12 ui-md-6">
 
-                                <h:panelGroup>
-
-                                    <p:outputLabel style="width: 95px;margin-right: 6%;" id="purchId" value="#{userData.userDDs['PURCHASE_NUMBER']}" />
+                        <div class="ui-g-6 ui-xl-6">
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
                                     <p:inputText style="width: 37.5%" 
                                                  id="purchIdVal" readonly="true"
                                                  value="#{invAddingOrderFormDTOMB.invInvoiceDTO.serial}" />
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 95px;" id="purchId" value="#{userData.userDDs['PURCHASE_NUMBER']}" />
 
-                                </h:panelGroup>
+                                </div>
                             </div>
-                            <div class="ui-g-12 ui-md-6">
-                                <h:panelGroup>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:calendar id="dateFrom" 
 
-                                    <h:panelGroup>
-                                        <p:outputLabel style="width: 95px; margin-right: 6%;" value="#{userData.userDDs['DATEE']}*"/>
-                                    </h:panelGroup>
-                                    <h:panelGroup>
-                                        <p:calendar id="dateFrom" 
+                                                value="#{invAddingOrderFormDTOMB.invInvoiceDTO.date}"
+                                                pattern="dd/MM/yyyy"
+                                                style="width:50%!important"/>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 95px; " value="#{userData.userDDs['DATEE']}*"/>
 
-                                                    value="#{invAddingOrderFormDTOMB.invInvoiceDTO.date}"
-                                                    pattern="dd/MM/yyyy"
-                                                    style="width:50%!important"/>
-                                    </h:panelGroup>
-
-                                </h:panelGroup>
+                                </div>
                             </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
 
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 100px;" value="#{userData.userDDs['PURCHASES_DELEGATE']}"/>
 
-                            <div class="ui-g-12 ui-md-6">
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:autoComplete style="width:36.5%!important " 
+                                                    rendered="#{invAddingOrderFormDTOMB.invInvoiceDTO.loadedSerial  eq null}"
+                                                    dropdown="true"
+                                                    converter="#{invAddingOrderFormDTOMB.invDelegatorDTOConvertor}"
+                                                    value="#{invAddingOrderFormDTOMB.invInvoiceDTO.invDelegatorId}"
 
-                                <h:panelGroup>
-                                    <h:panelGroup>
-                                        <p:outputLabel style="width: 100px;margin-right: 6%;" value="#{userData.userDDs['PURCHASES_DELEGATE']}"/>
-                                    </h:panelGroup> 
+                                                    var="purchasePerson"
+                                                    itemLabel="#{purchasePerson}" 
+                                                    itemValue="#{purchasePerson}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{invAddingOrderFormDTOMB.completeDelegatorPurchase}"
+                                                    >
 
+                                    </p:autoComplete>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
                                     <p:inputText readonly="true" style="width: 36.5%"  
                                                  id="purchIdVal2" rendered="#{invAddingOrderFormDTOMB.invInvoiceDTO.loadedSerial  ne null}" 
                                                  value="#{invAddingOrderFormDTOMB.invInvoiceDTO.invDelegatorId}" />
 
-                                    <h:panelGroup>
-                                        <p:autoComplete style="width:36.5%!important " 
-                                                        rendered="#{invAddingOrderFormDTOMB.invInvoiceDTO.loadedSerial  eq null}"
-                                                        dropdown="true"
-                                                        converter="#{invAddingOrderFormDTOMB.invDelegatorDTOConvertor}"
-                                                        value="#{invAddingOrderFormDTOMB.invInvoiceDTO.invDelegatorId}"
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText readonly="true" style="width: 38%" 
+                                                 value="#{invAddingOrderFormDTOMB.invInvoiceDTO.currencyId.name}"/>
 
-                                                        var="purchasePerson"
-                                                        itemLabel="#{purchasePerson}" 
-                                                        itemValue="#{purchasePerson}" 
-                                                        forceSelection="true" 
-                                                        completeMethod="#{invAddingOrderFormDTOMB.completeDelegatorPurchase}"
-                                                        >
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 95px; " value="#{userData.userDDs['CURRENCY']}"/>
 
-                                        </p:autoComplete>
-                                    </h:panelGroup> 
-                                </h:panelGroup>
+                                </div>
                             </div>
 
-
-                            <div class="ui-g-12 ui-md-6">
-
-                                <h:panelGroup id="currencyPanelGroup">
-
-                                    <h:panelGroup>
-                                        <p:outputLabel style="width: 95px; margin-right: 6%;" value="#{userData.userDDs['CURRENCY']}"/>
-                                    </h:panelGroup>
-                                    <h:panelGroup>
-                                        <p:inputText readonly="true" style="width: 38%" 
-                                                     value="#{invAddingOrderFormDTOMB.invInvoiceDTO.currencyId.name}"/>
-                                    </h:panelGroup>
-
-
-                                </h:panelGroup>
-                            </div>
-
-                            <div class="ui-g-12 ui-md-6">
-                                <h:panelGroup>
-                                    <h:panelGroup id="exchangeRate">
-                                        <p:outputLabel style="width: 94px; margin-right: 6%;" value="#{userData.userDDs['RATE']}"/>
-                                    </h:panelGroup>
-
+                        </div>
+                       
+                        <div class="ui-g-6 ui-xl-6">
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
                                     <h:panelGroup id="CurrencyRate">
                                         <p:inputText class="rateBox" readonly="true" value="#{invAddingOrderFormDTOMB.invInvoiceDTO.rate}"/>
                                     </h:panelGroup>
-                                </h:panelGroup>
-
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <h:panelGroup id="exchangeRate">
+                                        <p:outputLabel style="width: 94px; " value="#{userData.userDDs['RATE']}"/>
+                                    </h:panelGroup>
+                                </div>
                             </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:calendar pattern="dd/MM/yyyy" 
+                                                value="#{invAddingOrderFormDTOMB.invInvoiceDTO.supplierInvoiceDate}"
+                                                style="width: 37%">
+                                    </p:calendar>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel  style="width: 95px; " value="#{userData.userDDs['BILL_SUPPLIER_DATE']}"/>
 
-                            <div class="ui-g-12 ui-md-6">
-
-                                <h:panelGroup>
-                                    <h:panelGroup>
-                                        <p:outputLabel  style="width: 95px; margin-right: 6%;" value="#{userData.userDDs['BILL_SUPPLIER_DATE']}"/>
-                                    </h:panelGroup>
-                                    <h:panelGroup>
-                                        <p:calendar pattern="dd/MM/yyyy" 
-                                                    value="#{invAddingOrderFormDTOMB.invInvoiceDTO.supplierInvoiceDate}"
-                                                    style="width: 37%">
-                                        </p:calendar>
-                                    </h:panelGroup>
-                                </h:panelGroup>
+                                </div>
                             </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText value="#{invAddingOrderFormDTOMB.invInvoiceDTO.supplierInvoiceNumber}" 
+                                                 style="width: 38%!important"/>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 95px; " value="#{userData.userDDs['SUPP_INVOI_NO']}"/>
 
-
-                            <div class="ui-g-12 ui-md-6">
-
-                                <h:panelGroup>
-                                    <h:panelGroup>
-                                        <p:outputLabel style="width: 95px; margin-right: 6%;" value="#{userData.userDDs['SUPP_INVOI_NO']}"/>
-                                    </h:panelGroup>
-
-                                    <h:panelGroup>
-                                        <p:inputText value="#{invAddingOrderFormDTOMB.invInvoiceDTO.supplierInvoiceNumber}" 
-                                                     style="width: 38%!important"/>
-                                    </h:panelGroup>
-                                </h:panelGroup>
-
+                                </div>
                             </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:autoComplete style="width:36.5%"  id="inventoryDTO" widgetVar="inventoryDTO"
+                                                    dropdown="true" 
+                                                    converter="#{invAddingOrderFormDTOMB.invInventoryDTOConverter}"
+                                                    value="#{invAddingOrderFormDTOMB.invInvoiceDTO.invInventoryId}"
+                                                    var="inventoryDTO" 
+                                                    itemLabel="#{inventoryDTO}" 
+                                                    itemValue="#{inventoryDTO}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{invAddingOrderFormDTOMB.completeInventory}" 
+                                                    >
+                                    </p:autoComplete>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 100px;" value="#{userData.userDDs['DEPOSITORY']}"/>
 
-                            <div class="ui-g-12 ui-md-6">
-                                <h:panelGroup>
-                                    <h:panelGroup>
-                                        <p:outputLabel style="width: 100px;margin-right: 6%;" value="#{userData.userDDs['DEPOSITORY']}"/>
-                                    </h:panelGroup>
-                                    <h:panelGroup>
-                                        <p:autoComplete style="width:36.5%"  id="inventoryDTO" widgetVar="inventoryDTO"
-                                                        dropdown="true" 
-                                                        converter="#{invAddingOrderFormDTOMB.invInventoryDTOConverter}"
-                                                        value="#{invAddingOrderFormDTOMB.invInvoiceDTO.invInventoryId}"
-                                                        var="inventoryDTO" 
-                                                        itemLabel="#{inventoryDTO}" 
-                                                        itemValue="#{inventoryDTO}" 
-                                                        forceSelection="true" 
-                                                        completeMethod="#{invAddingOrderFormDTOMB.completeInventory}" 
-                                                        >
-                                        </p:autoComplete>
-                                    </h:panelGroup>
-                                </h:panelGroup>
+                                </div>
                             </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText readonly="true" style="width: 36.5%" 
+                                                 id="purchIdVal6" rendered="#{invAddingOrderFormDTOMB.invInvoiceDTO.loadedSerial ne null}" 
+                                                 value="#{invAddingOrderFormDTOMB.invInvoiceDTO.organizationSiteId}" />
+                                    <p:autoComplete style="width:37%!important"  
+                                                    rendered="#{invAddingOrderFormDTOMB.invInvoiceDTO.loadedSerial eq null}"
+                                                    dropdown="true"
+                                                    converter="#{invAddingOrderFormDTOMB.organizationSiteDTOConvertor}"
+                                                    value="#{invAddingOrderFormDTOMB.invInvoiceDTO.organizationSiteId}"
+
+                                                    var="supplier"
+                                                    itemLabel="#{supplier}" 
+                                                    itemValue="#{supplier}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{invAddingOrderFormDTOMB.completeSuppllier}" 
+                                                    >
 
 
-                            <div class="ui-g-12 ui-md-6">
-                                <h:panelGroup>
-                                    <h:panelGroup>
-                                        <p:outputLabel style="width: 100px;margin-right: 6%;" value="#{userData.userDDs['SUPPLIER']}"/>
-                                    </h:panelGroup> 
-
-                                    <h:panelGroup>
-                                        <p:inputText readonly="true" style="width: 36.5%" 
-                                                     id="purchIdVal6" rendered="#{invAddingOrderFormDTOMB.invInvoiceDTO.loadedSerial ne null}" 
-                                                     value="#{invAddingOrderFormDTOMB.invInvoiceDTO.organizationSiteId}" />
-                                    </h:panelGroup>
-
-                                    <h:panelGroup > 
-                                        <p:autoComplete style="width:37%!important"  
-                                                        rendered="#{invAddingOrderFormDTOMB.invInvoiceDTO.loadedSerial eq null}"
-                                                        dropdown="true"
-                                                        converter="#{invAddingOrderFormDTOMB.organizationSiteDTOConvertor}"
-                                                        value="#{invAddingOrderFormDTOMB.invInvoiceDTO.organizationSiteId}"
-
-                                                        var="supplier"
-                                                        itemLabel="#{supplier}" 
-                                                        itemValue="#{supplier}" 
-                                                        forceSelection="true" 
-                                                        completeMethod="#{invAddingOrderFormDTOMB.completeSuppllier}" 
-                                                        >
+                                        <p:ajax update="@form"
+                                                event="change"
+                                                process="@form"
+                                                listener="#{invAddingOrderFormDTOMB.putCurrency()}" />
+                                        <p:ajax update="@form"
+                                                process="@form"
+                                                event="itemSelect"
+                                                listener="#{invAddingOrderFormDTOMB.putCurrency()}" />
 
 
-                                            <p:ajax update="@form"
-                                                    event="change"
-                                                    process="@form"
-                                                    listener="#{invAddingOrderFormDTOMB.putCurrency()}" />
-                                            <p:ajax update="@form"
-                                                    process="@form"
-                                                    event="itemSelect"
-                                                    listener="#{invAddingOrderFormDTOMB.putCurrency()}" />
+                                    </p:autoComplete>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 100px;" value="#{userData.userDDs['SUPPLIER']}"/>
 
-
-                                        </p:autoComplete>
-                                    </h:panelGroup> 
-
-                                </h:panelGroup>
+                                </div>
                             </div>
+                            <h:panelGroup rendered="#{invAddingOrderFormDTOMB.invInvoiceDTO.loadedSerial  ne null}">
 
-                            <div class="ui-g-12 ui-md-12">
-
-                                <h:panelGroup rendered="#{invAddingOrderFormDTOMB.invInvoiceDTO.loadedSerial  ne null}">
-                                    <h:panelGroup>
-                                        <p:outputLabel style="width: 95px; margin-right: 3%;" value="رقم أمر الشراء"/>
-                                    </h:panelGroup>
-
-                                    <h:panelGroup>
+                                <div class="ui-g-12 ui-xl-12">
+                                    <div class="ui-g-6 ui-xl-6">
                                         <p:inputText readonly="true" style="width: 36.5%"  value="#{invAddingOrderFormDTOMB.invInvoiceDTO.loadedSerial}"
                                                      />
-                                    </h:panelGroup>
-                                </h:panelGroup>
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 95px; " value="رقم أمر الشراء"/>
+
+                                    </div>
+                                </div>
+                            </h:panelGroup>
+
+
+                        </div>
+                         <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-10 ui-xl-10">
+                                <p:inputText style="width:69.5%"  value="#{invAddingOrderFormDTOMB.invInvoiceDTO.remarks}"
+                                             />
                             </div>
+                            <div class="ui-g-2 ui-xl-2">
+                                <p:outputLabel style="width: 95px;" value="#{userData.userDDs['NOTE']}"/>
 
-
-                            <div class="ui-g-12 ui-md-12" style="margin-top:-12px;">
-
-                                <h:panelGroup>
-                                    <h:panelGroup>
-                                        <p:outputLabel style="width: 95px; margin-right: 3%;" value="#{userData.userDDs['NOTE']}"/>
-                                    </h:panelGroup>
-
-                                    <h:panelGroup>
-                                        <p:inputText style="width:69.5%"  value="#{invAddingOrderFormDTOMB.invInvoiceDTO.remarks}"
-                                                     />
-                                    </h:panelGroup>
-                                </h:panelGroup>
                             </div>
+                        </div>
+                        <h:panelGroup id="test">
+
+
                         </h:panelGroup>
                     </div>
                 </div>
@@ -423,7 +377,7 @@
                         headerText="#{userData.userDDs['TRANSACTION']}">
 
                         <p:commandButton  id="b7" icon="fa fa-plus" 
-                                          class="saddbuttonins" style="color: #fff!important;background-color: #00BCD4"
+                                          class="saddbuttonins" 
                                           title="#{userData.userDDs['ADD']}" 
                                           disabled="#{invAddingOrderFormDTOMB.invInvoiceDTO.loadedSerial  ne null}"
                                           actionListener="#{invAddingOrderFormDTOMB.addInvDetail()}" 
@@ -434,7 +388,7 @@
 
                         <p:commandButton  update="invPurchaseInvoiceDetailsTable totalQuantity  totalWeight   "
                                           title="#{userData.userDDs['DELETE']}" 
-                                          class="sdeleteButtons" style="color: #fff!important;background-color: red"
+                                          class="sdeleteButtons" 
 
                                           action="#{invAddingOrderFormDTOMB.deleteInvDetail(invPurchaseInvoiceDetailsTable)}"
                                           icon="fa fa-remove" >
@@ -535,7 +489,7 @@
 
                             <h:panelGroup>
 
-                                <p:outputLabel style="width: 95px;margin-right: 6%;" id="loadedSerial1" value="رقم طلب الشراء المطلوب استكماله" />
+                                <p:outputLabel style="width: 95px;" id="loadedSerial1" value="رقم طلب الشراء المطلوب استكماله" />
                                 <p:inputText style="width: 37%" 
                                              id="loadedSerial" 
                                              value="#{invAddingOrderFormDTOMB.invInvoiceDTO.needLoadedSerial}" />
