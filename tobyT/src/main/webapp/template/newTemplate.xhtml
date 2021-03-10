@@ -28,7 +28,7 @@
 
 <!--        <link href="#{request.contextPath}/resources/customcss/custom.css" rel="stylesheet"/>
         <link href="#{request.contextPath}/resources/customcss/customEN.css" rel="stylesheet"/>-->
-        
+
 
 
         <!-- Custom Fonts -->
@@ -107,8 +107,8 @@
                                     <h:outputLabel value=" " style="">                                    
                                     </h:outputLabel>
                                 </h:panelGroup>
-                                
-                               
+
+
 
                             </li>
                         </ul>
@@ -498,7 +498,7 @@
                                                             <a href="../generaljournal/generaljournal.xhtml"  
                                                                class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'}  #{userData.targetScreen.equalsIgnoreCase('generaljournal')?'ui-state-highlight':''}  list-group-item" style="color:#0064bc !important;font-size: 13px !important;background-color: #fff !important">#{userData.userDDs['ACCOUNT_RESTRIC']}</a>
                                                         </h:panelGroup>
-                                                        
+
                                                         <h:panelGroup rendered="#{userData.userScreens['generaljournal_1'].view or userData.isAdmin}">
                                                             <a href="../generaljournal_1/generaljournal_1.xhtml"  
                                                                class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'}  #{userData.targetScreen.equalsIgnoreCase('generaljournal_1')?'ui-state-highlight':''}  list-group-item" style="color:#0064bc !important;font-size: 13px !important;background-color: #fff !important">#{userData.userDDs['ACCOUNT_RESTRIC']}</a>
@@ -930,7 +930,7 @@
                                                 <a href="../glBank/glBankList.xhtml" ajax="false"  
                                                    class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('glBank')?'ui-state-highlight':''} list-group-item"  style="background-color: #fff!important;">#{userData.userDDs['EST_SAF_BANK']}</a>
                                             </h:panelGroup>
-                                            
+
                                             <h:panelGroup rendered="#{userData.userScreens['notesreceivables'].view or userData.isAdmin}">
                                                 <a href="../notesreceivables/notesreceivablesList.xhtml" ajax="false" 
                                                    class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('notesreceivables')?'ui-state-highlight':''}  list-group-item" style="background-color: #fff!important;">#{userData.userDDs['RECEIPTS']}</a>
@@ -1265,7 +1265,7 @@
                                                                class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('inventorysetup')?'ui-state-highlight':''}  list-group-item" 
                                                                style="color:#0064bc !important;font-size: 13px !important;background-color: #fff !important" >#{userData.userDDs['INVENTORY_SETUP']}</a>
                                                         </h:panelGroup>
-                                                        
+
                                                         <h:panelGroup rendered="#{userData.userScreens['proDetailType'].view or userData.isAdmin}" >
                                                             <a href="../proDetailType/proDetailTypeList.xhtml" 
                                                                class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('proDetailType')?'ui-state-highlight':''}  list-group-item" 
@@ -1685,7 +1685,7 @@
                                     <h:panelGroup    rendered="#{userData.userScreens['basicdataofitemsbygroupsreport'].view 
 
                                                                  or userData.userScreens['groupDataReport'].view 
-                                                                or userData.userScreens['basicdataofitemsbysuppliersreport'].view   
+                                                                 or userData.userScreens['basicdataofitemsbysuppliersreport'].view   
                                                                  or userData.userScreens['basicdataofitemsreport'].view 
                                                                  or userData.userScreens['itemSalesReport'].view
                                                                  or userData.userScreens['SalesOfItemsBySuppliers'].view   
@@ -1810,13 +1810,13 @@
                                                                class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('groupDataReport')?'ui-state-highlight':''}  list-group-item"  style="color:#0064bc !important;font-size: 13px !important;background-color: #fff !important">#{userData.userDDs['GROUP_ITEMS']}</a>
 
                                                         </h:panelGroup>
-                                                        
+
                                                         <h:panelGroup rendered="#{userData.userScreens['basicdataofitemsreport'].view or userData.isAdmin}">
                                                             <a href="../inventoryreports/basicdataofitemsreport.xhtml" 
                                                                class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('basicdataofitemsreport')?'ui-state-highlight':''}  list-group-item"  style="color:#0064bc !important;font-size: 13px !important;background-color: #fff !important">#{userData.userDDs['REPORT_DATA_ITEM']}</a>
                                                         </h:panelGroup>
-                                                        
-                                                         <h:panelGroup rendered="#{userData.userScreens['basicdataofitemsbysuppliersreport'].view or userData.isAdmin}">
+
+                                                        <h:panelGroup rendered="#{userData.userScreens['basicdataofitemsbysuppliersreport'].view or userData.isAdmin}">
                                                             <a href="../inventoryreports/basicdataofitemsbysuppliersreport.xhtml" 
                                                                class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('basicdataofitemsbysuppliersreport')?'ui-state-highlight':''}  list-group-item"  style="color:#0064bc !important;font-size: 13px !important;background-color: #fff !important">#{userData.userDDs['DATA_ITEMS_ACCO']}</a>
                                                         </h:panelGroup>
@@ -2191,8 +2191,8 @@
 
                                     </h:panelGroup>
 
-                                    
-                                    
+
+
                                     <!--  إدارة الإنتاج-->
 
 
@@ -2253,33 +2253,33 @@
                                                 <a href="../proproductionstages/proProductionList.xhtml" ajax="false"  
                                                    class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('proproductionstages')?'ui-state-highlight':''} list-group-item"  style="background-color: #fff!important;">إنشاء مراحل الانتاج</a>
                                             </h:panelGroup>
-                                            
-                                             <h:panelGroup rendered="#{userData.userScreens['proItemProductionStages'].view or userData.isAdmin}">
+
+                                            <h:panelGroup rendered="#{userData.userScreens['proItemProductionStages'].view or userData.isAdmin}">
                                                 <a href="../proItemProductionStages/proItemProductionStagesList_1.xhtml" ajax="false"  
                                                    class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('proItemProductionStages')?'ui-state-highlight':''} list-group-item"  style="background-color: #fff!important;">  دليل المراحل الانتاجية</a>
                                             </h:panelGroup>
-                                            
-                                            
+
+
                                             <h:panelGroup rendered="#{userData.userScreens['profactoryDelivery'].view or userData.isAdmin}">
                                                 <a href="../profactoryDelivery/profactorydeviveryList.xhtml" ajax="false" 
                                                    class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('profactoryDelivery')?'ui-state-highlight':'' }  list-group-item" style="background-color: #fff!important;">تسليم المشغل</a>
                                             </h:panelGroup>
-                                            
+
                                             <h:panelGroup rendered="#{userData.userScreens['proProductionTransaction'].view or userData.isAdmin}">
                                                 <a href="../proProductionTransaction/proProductionTransactionList1.xhtml" ajax="false" 
                                                    class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('proProductionTransaction')?'ui-state-highlight':''}  list-group-item" style="background-color: #fff!important;">حركة أوامر الشغل</a>
                                             </h:panelGroup>       
-                                            
+
                                             <h:panelGroup rendered="#{userData.userScreens['proProductionCheck'].view or userData.isAdmin}">
                                                 <a href="../proProductionCheck/proProductionCheckList.xhtml" ajax="false" 
                                                    class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('proProductionCheck')?'ui-state-highlight':''}  list-group-item" style="background-color: #fff!important;">حركه التشيك</a>
                                             </h:panelGroup> 
-                                            
+
                                             <h:panelGroup rendered="#{userData.userScreens['proProductionMovementDelivrey'].view or userData.isAdmin}">
                                                 <a href="../proProductionMovementDelivrey/proProductionMovementList.xhtml" ajax="false" 
                                                    class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('proProductionMovementDelivrey')?'ui-state-highlight':'' }  list-group-item" style="background-color: #fff!important;">تسليم الطيار</a>
                                             </h:panelGroup>
-                                            
+
                                             <h:panelGroup rendered="#{userData.userScreens['proSendToGallary'].view or userData.isAdmin}">
                                                 <a href="../proSendToGallary/proSendToGallaryList.xhtml" ajax="false" 
                                                    class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('proSendToGallary')?'ui-state-highlight':'' }  list-group-item" style="background-color: #fff!important;"> ارسال الفاتورة للمعرض</a>
@@ -2288,8 +2288,8 @@
                                                 <a href="../proRecieveGallary/proRecieveGallaryList.xhtml" ajax="false" 
                                                    class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('proRecieveGallary')?'ui-state-highlight':'' }  list-group-item" style="background-color: #fff!important;"> استلام الفاتورة بالمعرض</a>
                                             </h:panelGroup>
-                                            
-                                            
+
+
                                             <h:panelGroup rendered="#{userData.userScreens['proProductionMovementClient'].view or userData.isAdmin}">
                                                 <a href="../proProductionMovementClient/proProductionMovementList.xhtml" ajax="false" 
                                                    class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('proProductionMovementClient')?'ui-state-highlight':'' }  list-group-item" style="background-color: #fff!important;">تسليم العميل</a>
@@ -2298,7 +2298,7 @@
                                         </div>
 
                                     </h:panelGroup>
-                                    
+
                                     <!--end of accordion menu-->
 
 
@@ -2308,114 +2308,114 @@
                             </div>
 
 
-                            
-                                    <!--  تقارير  الانتاج-->
 
-                                    <a href="#demo5-6677"
-                                       class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} list-group-item list-group-item-success" 
-                                       data-toggle="collapse" data-parent="#MainMenu" 
-                                       style="background-color:#0064bc;color:#fff
-                                       ; #{userData.userScreens[''].view 
-                                           or userData.userScreens['InvoiceMovementReport'].view 
-                                           or userData.userScreens['invoiceDetailReport'].view 
-                                           or userData.userScreens['invoiceProductionStageReport'].view 
-                                           or userData.userScreens['movementInvoiceReport'].view 
-                                           or userData.userScreens['printScreen'].view 
-                                           or userData.userScreens['proProductmovmentReport'].view 
-                                           or userData.userScreens['productionOfInvoiceReport'].view 
-                                           or userData.userScreens['productionTransactionOfUser'].view 
-                                           or userData.userScreens['productionUserReport'].view 
-                                           or userData.userScreens[''].view 
-                                           or userData.userScreens[''].view 
-                                           or userData.userScreens[''].view 
-                                           or userData.userScreens[''].view 
-                                           or userData.isAdmin ? '' : 'display:none'}
-                                       ">تقارير الانتاج<i class="fa fa-caret-down"></i></a>
-                                    <h:panelGroup   rendered="#{userData.userScreens[''].view 
-                                                                or userData.userScreens['InvoiceMovementReport'].view 
-                                                                or userData.userScreens['invoiceDetailReport'].view 
-                                                                or userData.userScreens['invoiceProductionStageReport'].view 
-                                                                or userData.userScreens['movementInvoiceReport'].view 
-                                                                or userData.userScreens['printScreen'].view 
-                                                                or userData.userScreens['proProductmovmentReport'].view 
-                                                                or userData.userScreens['productionOfInvoiceReport'].view 
-                                                                or userData.userScreens['productionTransactionOfUser'].view 
-                                                                or userData.userScreens['productionUserReport'].view 
-                                                                or userData.isAdmin}"> 
+                            <!--  تقارير  الانتاج-->
 
-
-                                        <div class="collapse #{(userData.targetScreen.equalsIgnoreCase('') || 
-                                                               userData.targetScreen.equalsIgnoreCase('InvoiceMovementReport') ||
-                                                               userData.targetScreen.equalsIgnoreCase('invoiceDetailReport') ||
-                                                               userData.targetScreen.equalsIgnoreCase('invoiceProductionStageReport') ||
-                                                               userData.targetScreen.equalsIgnoreCase('movementInvoiceReport') ||
-                                                               userData.targetScreen.equalsIgnoreCase('printScreen') ||
-                                                               userData.targetScreen.equalsIgnoreCase('proProductmovmentReport') ||
-                                                               userData.targetScreen.equalsIgnoreCase('productionOfInvoiceReport') ||
-                                                               userData.targetScreen.equalsIgnoreCase('productionTransactionOfUser') ||
-                                                               userData.targetScreen.equalsIgnoreCase('productionUserReport') 
-                                                               )? 'in': ''}" id="demo5-6677">
+                            <a href="#demo5-6677"
+                               class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} list-group-item list-group-item-success" 
+                               data-toggle="collapse" data-parent="#MainMenu" 
+                               style="background-color:#0064bc;color:#fff
+                               ; #{userData.userScreens[''].view 
+                                   or userData.userScreens['InvoiceMovementReport'].view 
+                                   or userData.userScreens['invoiceDetailReport'].view 
+                                   or userData.userScreens['invoiceProductionStageReport'].view 
+                                   or userData.userScreens['movementInvoiceReport'].view 
+                                   or userData.userScreens['printScreen'].view 
+                                   or userData.userScreens['proProductmovmentReport'].view 
+                                   or userData.userScreens['productionOfInvoiceReport'].view 
+                                   or userData.userScreens['productionTransactionOfUser'].view 
+                                   or userData.userScreens['productionUserReport'].view 
+                                   or userData.userScreens[''].view 
+                                   or userData.userScreens[''].view 
+                                   or userData.userScreens[''].view 
+                                   or userData.userScreens[''].view 
+                                   or userData.isAdmin ? '' : 'display:none'}
+                               ">تقارير الانتاج<i class="fa fa-caret-down"></i></a>
+                            <h:panelGroup   rendered="#{userData.userScreens[''].view 
+                                                        or userData.userScreens['InvoiceMovementReport'].view 
+                                                        or userData.userScreens['invoiceDetailReport'].view 
+                                                        or userData.userScreens['invoiceProductionStageReport'].view 
+                                                        or userData.userScreens['movementInvoiceReport'].view 
+                                                        or userData.userScreens['printScreen'].view 
+                                                        or userData.userScreens['proProductmovmentReport'].view 
+                                                        or userData.userScreens['productionOfInvoiceReport'].view 
+                                                        or userData.userScreens['productionTransactionOfUser'].view 
+                                                        or userData.userScreens['productionUserReport'].view 
+                                                        or userData.isAdmin}"> 
 
 
+                                <div class="collapse #{(userData.targetScreen.equalsIgnoreCase('') || 
+                                                       userData.targetScreen.equalsIgnoreCase('InvoiceMovementReport') ||
+                                                       userData.targetScreen.equalsIgnoreCase('invoiceDetailReport') ||
+                                                       userData.targetScreen.equalsIgnoreCase('invoiceProductionStageReport') ||
+                                                       userData.targetScreen.equalsIgnoreCase('movementInvoiceReport') ||
+                                                       userData.targetScreen.equalsIgnoreCase('printScreen') ||
+                                                       userData.targetScreen.equalsIgnoreCase('proProductmovmentReport') ||
+                                                       userData.targetScreen.equalsIgnoreCase('productionOfInvoiceReport') ||
+                                                       userData.targetScreen.equalsIgnoreCase('productionTransactionOfUser') ||
+                                                       userData.targetScreen.equalsIgnoreCase('productionUserReport') 
+                                                       )? 'in': ''}" id="demo5-6677">
 
 
 
-                                            <h:panelGroup rendered="#{userData.userScreens['InvoiceMovementReport'].view or userData.isAdmin}">
-                                                <a href="../proproductionreport/InvoiceMovementReport.xhtml" ajax="false" 
-                                                   class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('InvoiceMovementReport')?'ui-state-highlight':'banksBalanceReport'} list-group-item" 
-                                                   style="background-color: #fff!important;">حركة الثياب بالمشغل والمعرض</a>
-                                            </h:panelGroup>
-
-                                            <h:panelGroup rendered="#{userData.userScreens['invoiceProductionStageReport'].view or userData.isAdmin}">
-                                                <a href="../proproductionreport/invoiceProductionStageReport.xhtml" ajax="false" 
-                                                   class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('invoiceProductionStageReport')?'ui-state-highlight':'' }  list-group-item"
-                                                   style="background-color: #fff!important;">بيان مراحل وموظفين الفاتورة</a>
-                                            </h:panelGroup>
-                                            <h:panelGroup rendered="#{userData.userScreens['productionTransactionOfUser'].view or userData.isAdmin}">
-                                                <a href="../proproductionreport/productionTransactionOfUser.xhtml" ajax="false" 
-                                                   class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('productionTransactionOfUser')?'ui-state-highlight':'' }  list-group-item"
-                                                   style="background-color: #fff!important;">بيان انتاج العمال لفتره</a>
-                                            </h:panelGroup>
-                                            <h:panelGroup rendered="#{userData.userScreens['productionUserReport'].view or userData.isAdmin}">
-                                                <a href="../proproductionreport/productionUserReport.xhtml" ajax="false" 
-                                                   class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('productionUserReport')?'ui-state-highlight':'' }  list-group-item"
-                                                   style="background-color: #fff!important;">بيان انتاج العامل</a>
-                                            </h:panelGroup>
-                                            <h:panelGroup rendered="#{userData.userScreens['movementInvoiceReport'].view or userData.isAdmin}">
-                                                <a href="../proproductionreport/movementInvoiceReport.xhtml" ajax="false" 
-                                                   class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('movementInvoiceReport')?'ui-state-highlight':'' }  list-group-item"
-                                                   style="background-color: #fff!important;">بيان الفواتير المتتلمة بالمعرض</a>
-                                            </h:panelGroup>
-                                            <h:panelGroup rendered="#{userData.userScreens['printScreen'].view or userData.isAdmin}">
-                                                <a href="../proproductionreport/printScreen.xhtml" ajax="false" 
-                                                   class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('printScreen')?'ui-state-highlight':'' }  list-group-item"
-                                                   style="background-color: #fff!important;">printScreen</a>
-                                            </h:panelGroup>
-                                            <h:panelGroup rendered="#{userData.userScreens['proProductmovmentReport'].view or userData.isAdmin}">
-                                                <a href="../proproductionreport/proProductmovmentReport.xhtml" ajax="false" 
-                                                   class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('proProductmovmentReport')?'ui-state-highlight':'' }  list-group-item"
-                                                   style="background-color: #fff!important;">سندات استلام للسائق</a>
-                                            </h:panelGroup>
-                                            <h:panelGroup rendered="#{userData.userScreens['productionOfInvoiceReport'].view or userData.isAdmin}">
-                                                <a href="../proproductionreport/productionOfInvoiceReport.xhtml" ajax="false" 
-                                                   class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('productionOfInvoiceReport')?'ui-state-highlight':'' }  list-group-item"
-                                                   style="background-color: #fff!important;">بيان انتاج حسب الفاتورة</a>
-                                            </h:panelGroup>
-                                            
-                                            
-                                            
-
-                                            <h:panelGroup rendered="#{userData.userScreens['invoiceDetailReport'].view or userData.isAdmin}">
-                                                <a href="../proproductionreport/invoiceDetailReport.xhtml" ajax="false"  
-                                                   class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('invoiceDetailReport')?'ui-state-highlight':''} list-group-item"
-                                                   style="background-color: #fff!important;" >بيان تفاصيل الفاتورة</a>
-                                            </h:panelGroup>
 
 
-
-                                        </div>
-
+                                    <h:panelGroup rendered="#{userData.userScreens['InvoiceMovementReport'].view or userData.isAdmin}">
+                                        <a href="../proproductionreport/InvoiceMovementReport.xhtml" ajax="false" 
+                                           class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('InvoiceMovementReport')?'ui-state-highlight':'banksBalanceReport'} list-group-item" 
+                                           style="background-color: #fff!important;">حركة الثياب بالمشغل والمعرض</a>
                                     </h:panelGroup>
+
+                                    <h:panelGroup rendered="#{userData.userScreens['invoiceProductionStageReport'].view or userData.isAdmin}">
+                                        <a href="../proproductionreport/invoiceProductionStageReport.xhtml" ajax="false" 
+                                           class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('invoiceProductionStageReport')?'ui-state-highlight':'' }  list-group-item"
+                                           style="background-color: #fff!important;">بيان مراحل وموظفين الفاتورة</a>
+                                    </h:panelGroup>
+                                    <h:panelGroup rendered="#{userData.userScreens['productionTransactionOfUser'].view or userData.isAdmin}">
+                                        <a href="../proproductionreport/productionTransactionOfUser.xhtml" ajax="false" 
+                                           class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('productionTransactionOfUser')?'ui-state-highlight':'' }  list-group-item"
+                                           style="background-color: #fff!important;">بيان انتاج العمال لفتره</a>
+                                    </h:panelGroup>
+                                    <h:panelGroup rendered="#{userData.userScreens['productionUserReport'].view or userData.isAdmin}">
+                                        <a href="../proproductionreport/productionUserReport.xhtml" ajax="false" 
+                                           class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('productionUserReport')?'ui-state-highlight':'' }  list-group-item"
+                                           style="background-color: #fff!important;">بيان انتاج العامل</a>
+                                    </h:panelGroup>
+                                    <h:panelGroup rendered="#{userData.userScreens['movementInvoiceReport'].view or userData.isAdmin}">
+                                        <a href="../proproductionreport/movementInvoiceReport.xhtml" ajax="false" 
+                                           class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('movementInvoiceReport')?'ui-state-highlight':'' }  list-group-item"
+                                           style="background-color: #fff!important;">بيان الفواتير المتتلمة بالمعرض</a>
+                                    </h:panelGroup>
+                                    <h:panelGroup rendered="#{userData.userScreens['printScreen'].view or userData.isAdmin}">
+                                        <a href="../proproductionreport/printScreen.xhtml" ajax="false" 
+                                           class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('printScreen')?'ui-state-highlight':'' }  list-group-item"
+                                           style="background-color: #fff!important;">printScreen</a>
+                                    </h:panelGroup>
+                                    <h:panelGroup rendered="#{userData.userScreens['proProductmovmentReport'].view or userData.isAdmin}">
+                                        <a href="../proproductionreport/proProductmovmentReport.xhtml" ajax="false" 
+                                           class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('proProductmovmentReport')?'ui-state-highlight':'' }  list-group-item"
+                                           style="background-color: #fff!important;">سندات استلام للسائق</a>
+                                    </h:panelGroup>
+                                    <h:panelGroup rendered="#{userData.userScreens['productionOfInvoiceReport'].view or userData.isAdmin}">
+                                        <a href="../proproductionreport/productionOfInvoiceReport.xhtml" ajax="false" 
+                                           class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('productionOfInvoiceReport')?'ui-state-highlight':'' }  list-group-item"
+                                           style="background-color: #fff!important;">بيان انتاج حسب الفاتورة</a>
+                                    </h:panelGroup>
+
+
+
+
+                                    <h:panelGroup rendered="#{userData.userScreens['invoiceDetailReport'].view or userData.isAdmin}">
+                                        <a href="../proproductionreport/invoiceDetailReport.xhtml" ajax="false"  
+                                           class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('invoiceDetailReport')?'ui-state-highlight':''} list-group-item"
+                                           style="background-color: #fff!important;" >بيان تفاصيل الفاتورة</a>
+                                    </h:panelGroup>
+
+
+
+                                </div>
+
+                            </h:panelGroup>
 
 
 
@@ -2428,7 +2428,7 @@
                 </div>
 
             </h:form>
-           
+
         </nav>
 
 
@@ -2444,7 +2444,7 @@
         <h:outputScript library="primefaces" name="jquery/jquery.js" target="head" />
         <h:outputScript library="primefaces" name="jquery/jquery-plugins.js" target="head" />
 
-        
+
         <!-- Bootstrap Core JavaScript -->
         <script src="#{request.contextPath}/resources/bootstrap-JS/bootstrap.js"></script>
 
@@ -2510,7 +2510,7 @@
         </script>
 
         <link href="#{request.contextPath}/resources/customcss/#{userData.dir.equalsIgnoreCase('RTL') ? 'custom.css' : 'customEN.css'}" rel="stylesheet"/>
-       
+
     </h:body>
 
 </html>
