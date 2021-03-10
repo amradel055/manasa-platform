@@ -181,6 +181,7 @@ public class ProProductionStagesServiceImpl implements ProProductionStagesServic
 
         ProProductionStagesDTO proProductionStagesDTO = new ProProductionStagesDTO();
         proProductionStagesDTO.setId(proProductionStages.getId());
+        proProductionStagesDTO.setSerial(proProductionStages.getSerial());
         proProductionStagesDTO.setName(proProductionStages.getName());
         proProductionStagesDTO.setNameEn(proProductionStages.getNameEn());
         proProductionStagesDTO.setNameIn(proProductionStages.getNameIn());
