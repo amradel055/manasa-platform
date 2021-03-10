@@ -1,0 +1,162 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <h:body>
+
+            <h:form dir="RTL" style="margin-right: 20px" id="form" >
+                <p:fieldset  legend="إجماليات الفئات" id="stages"  style=" position: relative">
+                    <p:messages id="messages" showDetail="true" closable="true"/> 
+
+                    <div class="ui-g-6 ui-xl-6">
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:selectOneMenu id="group" value="#{summitionItemReportMB.gallaryDTOSelected}"
+                                                 converter="#{summitionItemReportMB.gallaryDTOConverter}">
+                                    <f:selectItem itemLabel="Select One" itemValue=""/>
+                                    <f:selectItems value="#{summitionItemReportMB.gallaryList}" 
+                                                var="gallary"
+                                                itemLabel="#{gallary}"
+                                                itemValue="#{gallary}" />
+                                </p:selectOneMenu>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:outputLabel style="width: 50px;margin-right: 1%" value="المعرض"/>
+
+
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:autoComplete style="width:85%" 
+                                                dropdown="true"
+                                                converter="#{autoComplete.proGroupDTOConverter}"
+                                                value="#{summitionItemReportMB.proGroupDTOSelected}"  
+                                                var="proGroup"
+                                                itemLabel="#{proGroup}"
+                                                itemValue="#{proGroup}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{autoComplete.completeProGroup}" >
+                                </p:autoComplete>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:outputLabel style="width: 50px;margin-right: 1%" value="المرحلة"/>
+
+
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="ui-g-6 ui-xl-6">
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:calendar style="width: 50%"  id="dateFrom"
+                                            value="#{summitionItemReportMB.dateFrom}"
+                                            pattern="dd/MM/yyyy"  showButtonPanel="true" >
+
+                                </p:calendar>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:outputLabel style="width: 50px"  value="من تاريخ" />
+
+
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:calendar style="width: 50%"  id="dateFrom1"
+                                            value="#{summitionItemReportMB.dateTo}"
+                                            pattern="dd/MM/yyyy"  showButtonPanel="true" >
+
+                                </p:calendar>
+
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:outputLabel style="width: 50px"  value="الى تاريخ" />
+
+
+
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                </p:fieldset>
+                <div class="ui-g-12 ui-xl-12">
+
+                    <p:commandButton     class="saveButton" id="saveB" 
+                                         value="بحث" 
+                                         icon="fa fa-fw fa-save"
+                                         action="#{summitionItemReportMB.search()}"
+                                         update="table messages"
+                                         >
+
+                    </p:commandButton>
+
+                    <h:commandLink   class="sdcreenimg" >  
+                        <p:graphicImage name="/img/excel.jpg" width="24" style='margin-right:25%;'/>  
+                        <p:dataExporter type="xls"
+                                        target="table" 
+                                        fileName="إجماليات الفئات" />  
+                    </h:commandLink>
+
+                </div>
+                <p:fieldset  legend="البيانات"   style="margin-bottom:20px">
+                    <p:dataTable  id="table"
+                                  var="data"
+                                  value="#{summitionItemReportMB.itemsViewList}"
+                                  draggableColumns="true"
+                                  paginator="true"
+                                  widgetVar="data" 
+                                  rowIndexVar="index" 
+                                  rows="30"
+                                  emptyMessage="EMPTY_TABLE"
+                                  >
+
+                        <p:column headerText="الكود" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.code}" />
+                        </p:column>
+                        <p:column headerText="المرحلة" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.name}" />
+                        </p:column>
+                        <p:column headerText="العدد" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.number}" />
+                        </p:column>
+                         <p:column headerText="عدد المستلم" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                             <h:outputText value="#{data.factoryNumber}" />
+                        </p:column>
+                         <p:column headerText="عدد المسلم" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                             <h:outputText value="#{data.sendNumber}" />
+                        </p:column>
+                         <p:column headerText="عدد المعرض" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                             <h:outputText value="#{data.deliveryNumber}" />
+                        </p:column>
+                        <p:column headerText="التكلفة" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.allCost}" />
+                        </p:column>
+
+                    </p:dataTable>
+
+                </p:fieldset>
+            </h:form>
+        </h:body>
+    </ui:define>
+</ui:composition>
+

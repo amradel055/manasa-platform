@@ -1783,9 +1783,13 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         builder.append("SELECT "
                 + " sum(i.number) , "
                 + " sum(i.net)  , "
+                + " i.itemId.proGroupId.id  , "
                 + " i.itemId.proGroupId.code  , "
-                + " i.itemId.proGroupId.name "
-                + " FROM InvPurchaseInvoiceDetail i WHERE  i.invPurchaseInvoiceId.branchId.id = :branchId ");
+                + " i.itemId.proGroupId.name ");
+//        tobNumberFactoryDelivary(builder, dateFrom, params, dateTo, gallaryId, groupId , 0);
+//        tobNumberFactoryDelivary(builder, dateFrom, params, dateTo, gallaryId, groupId , 1);
+//        tobNumberFactoryDelivary(builder, dateFrom, params, dateTo, gallaryId, groupId , 2);
+        builder.append(" FROM InvPurchaseInvoiceDetail i WHERE  i.invPurchaseInvoiceId.branchId.id = :branchId ");
         if (dateFrom != null) {
             params.put("dateFrom", dateFrom);
             builder.append(" AND i.invPurchaseInvoiceId.date >= :dateFrom ");
@@ -1803,11 +1807,39 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             builder.append(" AND i.itemId.proGroupId.id = :groupId ");
         }
         builder.append(" group by i.itemId.proGroupId.id ");
-        List<Object[]> res = dao.findListByQuery(builder.toString(),params);
-        return getTheListBasedOnAccClass(res);
+        List<Object[]> res = dao.findListByQuery(builder.toString(), params);
+        return getTheListBasedOnAccClass(res, gallaryId, dateFrom, dateTo);
     }
-    
-     public List<SummitionItemsView> getTheListBasedOnAccClass(List<Object[]> res) {
+
+    private BigDecimal tobNumberFactoryDelivary(Integer gallaryId, Date dateFrom, Date dateTo, Integer groupId, Integer type) {
+        Map<String, Object> params = new HashMap<>();
+        StringBuilder builder = new StringBuilder();
+        params.put("type", type);
+        builder.append(" SELECT  sum(pfdd.number) as number FROM ProFactoryDeliveryDetail pfdd "
+                + " WHERE pfdd.proFactoryDeliveryId.type = :type ");
+        if (dateFrom != null) {
+            params.put("dateFrom", dateFrom);
+            builder.append(" AND i.proFactoryDeliveryId.date >= :dateFrom ");
+        }
+        if (dateFrom != null) {
+            params.put("dateTo", dateTo);
+            builder.append(" AND i.proFactoryDeliveryId.date <= :dateTo ");
+        }
+        if (gallaryId != null) {
+            params.put("gallaryId", gallaryId);
+            builder.append(" AND i.proFactoryDeliveryId.invPurchaseInvoiceId.galaryId.id = :gallaryId ");
+        }
+        if (groupId != null) {
+            params.put("groupId", groupId);
+            builder.append(" AND pfdd.itemId.proGroupId.id = :groupId ");
+        }
+        builder.append(" group by pfdd.itemId.proGroupId.id ");
+
+        List<BigDecimal> res = dao.findListByQuery(builder.toString(), params);
+        return (res != null && !res.isEmpty()) ? res.get(0) : BigDecimal.ZERO;
+    }
+
+    public List<SummitionItemsView> getTheListBasedOnAccClass(List<Object[]> res, Integer gallaryId, Date dateFrom, Date dateTo) {
 
         List<SummitionItemsView> summitionItemsViews = new ArrayList<>();
 
@@ -1820,8 +1852,12 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
 //            summitionItemsView.setAllQuantity((BigDecimal) line[2]);
             summitionItemsView.setAllCost((BigDecimal) line[1]);
 //            summitionItemsView.setAllAvarageCost((BigDecimal) line[4]);
-            summitionItemsView.setCode((Integer) line[2]);
-            summitionItemsView.setName((String) line[3]);
+            Integer groupId = (Integer) line[2];
+            summitionItemsView.setCode((Integer) line[3]);
+            summitionItemsView.setName((String) line[4]);
+            summitionItemsView.setFactoryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupId, 0));
+            summitionItemsView.setSendNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupId, 1));
+            summitionItemsView.setDeliveryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupId, 2));
             summitionItemsViews.add(summitionItemsView);
         }
         return summitionItemsViews;
