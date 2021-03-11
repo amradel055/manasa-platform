@@ -19,6 +19,71 @@
                     <div class="ui-g-6 ui-xl-6">
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
+
+                                <p:outputLabel  value="#{invoiceProductionStagesReportMB.invoiceMovementReport.deliveryDate}" />
+
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:outputLabel  value="تاريخ التسليم للطيار" />
+
+
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:outputLabel   value="#{invoiceProductionStagesReportMB.invoiceMovementReport.galaryDate}" />
+
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:outputLabel   value="تاريخ الاستلام بالمعرض" />
+
+
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel  value="#{invoiceProductionStagesReportMB.invoiceMovementReport.clientDate}" />
+
+
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:outputLabel  value="تاريخ التسليم للعميل" />
+
+
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+
+
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+
+                        <p:commandButton     class="saveButton" id="saveB" 
+                                             value="بحث" 
+                                             icon="fa fa-fw fa-save"
+                                             action="#{invoiceProductionStagesReportMB.search()}"
+                                             update="table messages"
+                                             >
+
+                        </p:commandButton>
+
+
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="ui-g-6 ui-xl-6">
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
                                 <p:autoComplete style="width:85%" id="Cost_Center_from" 
                                                 dropdown="true"
                                                 converter="#{autoComplete.invoiceDTOConverter}"
@@ -107,71 +172,7 @@
                         </div>
                     </div>
 
-                    <div class="ui-g-6 ui-xl-6">
-                        <div class="ui-g-12 ui-xl-12">
-                            <div class="ui-g-6 ui-xl-6">
-
-                                <p:outputLabel  value="#{invoiceProductionStagesReportMB.invoiceMovementReport.deliveryDate}" />
-
-                            </div>
-                            <div class="ui-g-6 ui-xl-6">
-
-                                <p:outputLabel  value="تاريخ التسليم للطيار" />
-
-
-
-                            </div>
-                        </div>
-                        <div class="ui-g-12 ui-xl-12">
-                            <div class="ui-g-6 ui-xl-6">
-
-                                <p:outputLabel   value="#{invoiceProductionStagesReportMB.invoiceMovementReport.galaryDate}" />
-
-                            </div>
-                            <div class="ui-g-6 ui-xl-6">
-
-                                <p:outputLabel   value="تاريخ الاستلام بالمعرض" />
-
-
-
-                            </div>
-                        </div>
-                        <div class="ui-g-12 ui-xl-12">
-                            <div class="ui-g-6 ui-xl-6">
-                                <p:outputLabel  value="#{invoiceProductionStagesReportMB.invoiceMovementReport.clientDate}" />
-
-
-                            </div>
-                            <div class="ui-g-6 ui-xl-6">
-
-                                <p:outputLabel  value="تاريخ التسليم للعميل" />
-
-
-
-                            </div>
-                        </div>
-                        <div class="ui-g-12 ui-xl-12">
-                            <div class="ui-g-6 ui-xl-6">
-
-
-                            </div>
-                            <div class="ui-g-6 ui-xl-6">
-
-
-                        <p:commandButton     class="saveButton" id="saveB" 
-                                             value="بحث" 
-                                             icon="fa fa-fw fa-save"
-                                             action="#{invoiceProductionStagesReportMB.search()}"
-                                             update="table messages"
-                                             >
-
-                        </p:commandButton>
-
-
-                            </div>
-                        </div>
-                        
-                    </div>
+                    
 
                 </p:fieldset>
                 <p:fieldset  legend="البيانات"   style="margin-bottom:20px">

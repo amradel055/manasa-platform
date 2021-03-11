@@ -8,7 +8,7 @@
                 xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <ui:define name="content">
-        
+
         <f:event listener="#{userData.authorize}" type="preRenderView" />
 
         <h:form id="form" dir="#{userData.dir}" class='formmargin'>
@@ -69,8 +69,8 @@
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:inputText  style="width: 36.5%"  value="#{proFactoryDeliveryFormDTOMB.invInvoiceDTO.loadedSerial}"
-                                                 >
-                                         <p:ajax  event="blur" listener="#{proFactoryDeliveryFormDTOMB.loadDlg()}"  update="@form" />
+                                                  >
+                                        <p:ajax  event="blur" listener="#{proFactoryDeliveryFormDTOMB.loadDlg()}"  update="@form" />
                                     </p:inputText>
 
                                 </div>
@@ -97,6 +97,63 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="ui-g-12 ui-xl-12" style="text-align: center">
+                            <h:panelGrid>
+                                <h:panelGroup  class="centerButtons">
+                                    <p:commandButton  id="saveB" 
+                                                      class="saveButtons"
+                                                      title="#{userData.userDDs['SAVE']}"
+                                                      value="#{userData.userDDs['SAVE']}" 
+
+                                                      action="#{proFactoryDeliveryFormDTOMB.save()}"
+                                                      update="@form"/>
+
+                                    <p:commandButton 
+                                        id="newN"
+                                        ajax="false"
+
+                                        value="#{userData.userDDs['NEW']}" 
+                                        class="newButtons"
+                                        onclick="form.target = ''" 
+                                        actionListener="#{proFactoryDeliveryFormDTOMB.reset()}"/>
+
+                                    <p:commandButton  class="printButtons"
+                                                      ajax="false"
+                                                      onclick="form.target = '_blank'"  
+
+                                                      value="#{userData.userDDs['PRINT']}" 
+                                                      title="#{userData.userDDs['PRINT']}" 
+                                                      actionListener="#{proFactoryDeliveryFormDTOMB.print}"/>
+
+
+                                    <p:commandButton  class="deleteButtons" 
+                                                      id="cancel" 
+                                                      title="#{userData.userDDs['CANCEL']}" 
+                                                      value="#{userData.userDDs['CANCEL']}" 
+
+                                                      immediate="true"
+                                                      action="#{proFactoryDeliveryFormDTOMB.exit()}" 
+                                                      update="@form"/>
+
+                                    <h:commandLink  style="float:left" class="sdcreenimg">  
+                                        <p:graphicImage name="/img/excel.jpg" width="24" style='margin-right:25%;'/>  
+                                        <p:dataExporter type="xls"
+                                                        target="invPurchaseInvoiceDetailsTable" 
+                                                        fileName="بيانات تسليم الفاتورة"
+                                                        preProcessor="#{proFactoryDeliveryFormDTOMB.preProcessXLS()}"
+                                                        postProcessor="#{proFactoryDeliveryFormDTOMB.postProcessXLS}" />  
+                                    </h:commandLink>
+
+                                    <p:blockUI block="form" trigger="saveB" animate="true" >
+
+                                        <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                                    </p:blockUI> 
+
+
+                                </h:panelGroup>
+                            </h:panelGrid>
+                        </div>
 
                         <h:panelGroup id="test">
 
@@ -107,64 +164,12 @@
                 </div>
 
             </p:fieldset>
-            
-            <h:panelGrid  class="col-md-12" columns="1"  style="margin-top:2%">
-
-                    <h:panelGroup  class="centerButtons">
-                        <p:commandButton  id="saveB" 
-                                          class="saveButtons"
-                                          title="#{userData.userDDs['SAVE']}"
-                                          value="#{userData.userDDs['SAVE']}" 
-
-                                          action="#{proFactoryDeliveryFormDTOMB.save()}"
-                                          update="@form"/>
-
-                        <p:commandButton 
-                            id="newN"
-                            ajax="false"
-
-                            value="#{userData.userDDs['NEW']}" 
-                            class="newButtons"
-                            onclick="form.target = ''" 
-                            actionListener="#{proFactoryDeliveryFormDTOMB.reset()}"/>
-
-                        <p:commandButton  class="printButtons"
-                                          ajax="false"
-                                          onclick="form.target = '_blank'"  
-
-                                          value="#{userData.userDDs['PRINT']}" 
-                                          title="#{userData.userDDs['PRINT']}" 
-                                          actionListener="#{proFactoryDeliveryFormDTOMB.print}"/>
 
 
-                        <p:commandButton  class="deleteButtons" 
-                                          id="cancel" 
-                                          title="#{userData.userDDs['CANCEL']}" 
-                                          value="#{userData.userDDs['CANCEL']}" 
-
-                                          immediate="true"
-                                          action="#{proFactoryDeliveryFormDTOMB.exit()}" 
-                                          update="@form"/>
-
-                        <h:commandLink  style="float:left" class="sdcreenimg">  
-                            <p:graphicImage name="/img/excel.jpg" width="24" style='margin-right:25%;'/>  
-                            <p:dataExporter type="xls"
-                                            target="invPurchaseInvoiceDetailsTable" 
-                                            fileName="بيانات تسليم الفاتورة"
-                                            preProcessor="#{proFactoryDeliveryFormDTOMB.preProcessXLS()}"
-                                            postProcessor="#{proFactoryDeliveryFormDTOMB.postProcessXLS}" />  
-                        </h:commandLink>
-
-                        <p:blockUI block="form" trigger="saveB" animate="true" >
-
-                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
-
-                        </p:blockUI> 
 
 
-                    </h:panelGroup>
 
-                </h:panelGrid>
+
 
             <p:fieldset id="fieldSetId" legend="بيانات تسليم الفاتورة"  style="margin:2% 0">
 
@@ -202,7 +207,7 @@
                               filterable="false">
                         <p:outputLabel value="#{invPurchaseInvoiceDetailsTable.itemName}" />          
                     </p:column>
-                    
+
                     <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px"
                               id="Quantity"
                               headerText="#{userData.userDDs['NUMBER']}"
@@ -216,7 +221,7 @@
                                        style="width:95%"/>
 
                     </p:column>
-                    
+
                     <p:column 
                         style="width: 26vh;text-align: center;border-radius: 0px" 
                         headerText="#{userData.userDDs['TRANSACTION']}">
@@ -239,7 +244,7 @@
 
                 </p:dataTable>
 
-                
+
             </p:fieldset>
 
 

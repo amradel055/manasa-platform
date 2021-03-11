@@ -101,6 +101,69 @@
                                 </div>
                             </div>
                         </div>
+                          <h:panelGrid  class="col-md-12" columns="1"  style="margin-top:2%">
+
+                    <h:panelGroup  class="centerButtons">
+
+                        <p:commandButton  id="saveB" 
+                                          class="saveButtons"
+                                          title="#{userData.userDDs['SAVE']}"
+                                          value="#{userData.userDDs['SAVE']}" 
+
+                                          action="#{proFactoryDeliveryFormDTOMB.save()}"
+                                          update="@form"/>
+
+                        <p:commandButton 
+                            id="newN"
+                            ajax="false"
+                            value="#{userData.userDDs['NEW']}" 
+                            class="newButtons"
+                            onclick="form.target = ''" 
+                            actionListener="#{proFactoryDeliveryFormDTOMB.reset()}"/>
+
+                        <p:commandButton  
+                            class="reloadButtons"
+                            id="loadL"
+                            rendered="#{proFactoryDeliveryFormDTOMB.invInvoiceDTO.id eq null}"
+                            title="#{userData.userDDs['UPLOAD']}"
+                            value="#{userData.userDDs['UPLOAD']}" 
+                            action="#{proFactoryDeliveryFormDTOMB.loadDailogue()}"
+                            update="loaddlg"/>
+                        <p:commandButton  class="printButtons"
+                                          ajax="false"
+                                          onclick="form.target = '_blank'"  
+                                          value="#{userData.userDDs['PRINT']}" 
+                                          title="#{userData.userDDs['PRINT']}" 
+                                          actionListener="#{proFactoryDeliveryFormDTOMB.print}"/>
+
+
+                        <p:commandButton  class="deleteButtons" 
+                                          id="cancel" 
+                                          title="#{userData.userDDs['CANCEL']}" 
+                                          value="#{userData.userDDs['CANCEL']}" 
+                                          immediate="true"
+                                          action="#{proFactoryDeliveryFormDTOMB.exit()}" 
+                                          update="@form"/>
+
+                        <h:commandLink  style="float:left" class="sdcreenimg">  
+                            <p:graphicImage name="/img/excel.jpg" width="24" style='margin-right:25%;'/>  
+                            <p:dataExporter type="xls"
+                                            target="invPurchaseInvoiceDetailsTable" 
+                                            fileName="فاتورة اذن استلام بضاعة"
+                                            preProcessor="#{proFactoryDeliveryFormDTOMB.preProcessXLS()}"
+                                            postProcessor="#{proFactoryDeliveryFormDTOMB.postProcessXLS}" />  
+                        </h:commandLink>
+
+                        <p:blockUI block="form" trigger="saveB" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI> 
+
+
+                    </h:panelGroup>
+
+                </h:panelGrid>
 
                          <h:panelGroup id="test">
                         </h:panelGroup>
@@ -175,69 +238,7 @@
 
                 </p:dataTable>
 
-                <h:panelGrid  class="col-md-12" columns="1"  style="margin-top:2%">
-
-                    <h:panelGroup  class="centerButtons">
-
-                        <p:commandButton  id="saveB" 
-                                          class="saveButtons"
-                                          title="#{userData.userDDs['SAVE']}"
-                                          value="#{userData.userDDs['SAVE']}" 
-
-                                          action="#{proFactoryDeliveryFormDTOMB.save()}"
-                                          update="@form"/>
-
-                        <p:commandButton 
-                            id="newN"
-                            ajax="false"
-                            value="#{userData.userDDs['NEW']}" 
-                            class="newButtons"
-                            onclick="form.target = ''" 
-                            actionListener="#{proFactoryDeliveryFormDTOMB.reset()}"/>
-
-                        <p:commandButton  
-                            class="reloadButtons"
-                            id="loadL"
-                            rendered="#{proFactoryDeliveryFormDTOMB.invInvoiceDTO.id eq null}"
-                            title="#{userData.userDDs['UPLOAD']}"
-                            value="#{userData.userDDs['UPLOAD']}" 
-                            action="#{proFactoryDeliveryFormDTOMB.loadDailogue()}"
-                            update="loaddlg"/>
-                        <p:commandButton  class="printButtons"
-                                          ajax="false"
-                                          onclick="form.target = '_blank'"  
-                                          value="#{userData.userDDs['PRINT']}" 
-                                          title="#{userData.userDDs['PRINT']}" 
-                                          actionListener="#{proFactoryDeliveryFormDTOMB.print}"/>
-
-
-                        <p:commandButton  class="deleteButtons" 
-                                          id="cancel" 
-                                          title="#{userData.userDDs['CANCEL']}" 
-                                          value="#{userData.userDDs['CANCEL']}" 
-                                          immediate="true"
-                                          action="#{proFactoryDeliveryFormDTOMB.exit()}" 
-                                          update="@form"/>
-
-                        <h:commandLink  style="float:left" class="sdcreenimg">  
-                            <p:graphicImage name="/img/excel.jpg" width="24" style='margin-right:25%;'/>  
-                            <p:dataExporter type="xls"
-                                            target="invPurchaseInvoiceDetailsTable" 
-                                            fileName="فاتورة اذن استلام بضاعة"
-                                            preProcessor="#{proFactoryDeliveryFormDTOMB.preProcessXLS()}"
-                                            postProcessor="#{proFactoryDeliveryFormDTOMB.postProcessXLS}" />  
-                        </h:commandLink>
-
-                        <p:blockUI block="form" trigger="saveB" animate="true" >
-
-                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
-
-                        </p:blockUI> 
-
-
-                    </h:panelGroup>
-
-                </h:panelGrid>
+              
             </p:fieldset>
 
 
