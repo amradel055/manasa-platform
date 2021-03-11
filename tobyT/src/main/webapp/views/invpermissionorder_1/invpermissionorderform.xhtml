@@ -8,19 +8,7 @@
                 xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <ui:define name="content">
-        <style>
-            button[title="إضافة"]:focus{
-                background-color: orange !important;
-
-            }
-            button[title="حذف"]:focus{
-                background-color: orange !important;
-
-            }
-
-
-        </style>
-
+     
         <f:event listener="#{userData.authorize}" type="preRenderView" />
 
         <h:form id="form" dir="#{userData.dir}" class='formmargin'>
@@ -45,7 +33,7 @@
                                                      value="#{invAddingOrderFormDTOMB.invInvoiceDTO.serial}" />
                                     </div>
                                     <div class="ui-g-6 ui-xl-6">
-                                        <p:outputLabel style="width: 95px;margin-right: 6%;" id="purchId" value="#{userData.userDDs['PURCHASE_NUMBER']}" />
+                                        <p:outputLabel style="width: 95px;" id="purchId" value="#{userData.userDDs['PURCHASE_NUMBER']}" />
 
                                     </div>
                                 </div>
@@ -67,7 +55,7 @@
                                         </p:autoComplete>
                                     </div>
                                     <div class="ui-g-6 ui-xl-6">
-                                        <p:outputLabel style="width: 100px;margin-right: 6%;" value="مندوب المبيعات"/>
+                                        <p:outputLabel style="width: 100px;" value="مندوب المبيعات"/>
 
                                     </div>
                                 </div>
@@ -80,7 +68,7 @@
                                                     style="width:50%!important"/>
                                     </div>
                                     <div class="ui-g-6 ui-xl-6">
-                                        <p:outputLabel style="width: 95px; margin-right: 6%;" value="#{userData.userDDs['DATEE']}*"/>
+                                        <p:outputLabel style="width: 95px; " value="#{userData.userDDs['DATEE']}*"/>
 
                                     </div>
                                 </div>
@@ -90,7 +78,7 @@
                                                        value="#{invAddingOrderFormDTOMB.invInvoiceDTO.currencyId}"/>
                                     </div>
                                     <div class="ui-g-6 ui-xl-6">
-                                        <p:outputLabel style="width: 100px; margin-right: 6%;" value="#{userData.userDDs['CURRENCY']}"/>
+                                        <p:outputLabel style="width: 100px; " value="#{userData.userDDs['CURRENCY']}"/>
 
                                     </div>
                                 </div>
@@ -100,7 +88,7 @@
 
                                     </div>
                                     <div class="ui-g-6 ui-xl-6" id="exchangeRate">
-                                        <p:outputLabel style="width: 100px; margin-right: 6%;" value="#{userData.userDDs['RATE']}"/>
+                                        <p:outputLabel style="width: 100px; " value="#{userData.userDDs['RATE']}"/>
 
                                     </div>
                                 </div>
@@ -115,7 +103,7 @@
                                                      style="width: 37%!important"/>
                                     </div>
                                     <div class="ui-g-6 ui-xl-6">
-                                        <p:outputLabel style="width: 95px; margin-right: 6%;" value="#{userData.userDDs['CUSTO_INVOICE']}"/>
+                                        <p:outputLabel style="width: 95px; " value="#{userData.userDDs['CUSTO_INVOICE']}"/>
 
                                     </div>
                                 </div>
@@ -126,7 +114,7 @@
                                                     style="width: 37%"></p:calendar>
                                     </div>
                                     <div class="ui-g-6 ui-xl-6">
-                                        <p:outputLabel  style="width: 95px; margin-right: 6%;" value="#{userData.userDDs['CUSTO_INVOI_DAT']}"/>
+                                        <p:outputLabel  style="width: 95px; " value="#{userData.userDDs['CUSTO_INVOI_DAT']}"/>
 
                                     </div>
                                 </div>
@@ -146,7 +134,7 @@
                                         </p:autoComplete>
                                     </div>
                                     <div class="ui-g-6 ui-xl-6">
-                                        <p:outputLabel style="width: 100px;margin-right: 6%;" value="#{userData.userDDs['DEPOSITORY']}"/>
+                                        <p:outputLabel style="width: 100px;" value="#{userData.userDDs['DEPOSITORY']}"/>
 
                                     </div>
                                 </div>
@@ -174,7 +162,7 @@
                                         </p:autoComplete>
                                     </div>
                                     <div class="ui-g-6 ui-xl-6">
-                                        <p:outputLabel style="width: 100px;margin-right: 6%;" value="#{userData.userDDs['CUSTOMERR']}"/>
+                                        <p:outputLabel style="width: 100px;" value="#{userData.userDDs['CUSTOMERR']}"/>
 
                                     </div>
                                 </div>
@@ -405,14 +393,12 @@
                                           title="#{userData.userDDs['SAVE']}"
                                           value="#{userData.userDDs['SAVE']}" 
 
-                                          style="color: #fff!important;background-color: #2196F3;margin-left: 5px" 
                                           action="#{invAddingOrderFormDTOMB.save()}"
                                           update="@form"/>
 
                         <p:commandButton 
                             id="newN"
                             ajax="false"
-                            style="color: #fff!important;background-color: #9c27b0d1;margin-left: 5px"
                             value="#{userData.userDDs['NEW']}" 
                             class="newButtons"
                             onclick="form.target = ''" 
@@ -424,7 +410,6 @@
                             rendered="#{invAddingOrderFormDTOMB.invInvoiceDTO.id == null}"
                             title="#{userData.userDDs['UPLOAD']}"
                             value="#{userData.userDDs['UPLOAD']}" 
-                            style="color: #fff!important;background-color: #1B00D4E6;margin-left: 5px"  
                             action="#{invAddingOrderFormDTOMB.loadDailogue()}"
                             update="loaddlg"/>
                          <p:commandButton  class="printButtons"
@@ -440,7 +425,6 @@
                                           id="cancel" 
                                           title="#{userData.userDDs['CANCEL']}" 
                                           value="#{userData.userDDs['CANCEL']}" 
-                                          style="color: #fff!important;background-color: #035C70;margin-left: 5px"  
                                           immediate="true"
                                           action="#{invAddingOrderFormDTOMB.exit()}" 
                                           update="@form"/>

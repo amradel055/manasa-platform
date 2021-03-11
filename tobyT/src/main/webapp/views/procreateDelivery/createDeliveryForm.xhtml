@@ -15,29 +15,83 @@
                 <div>
                     <p:messages id="curmsg" autoUpdate="true" showDetail="true" rendered="#{createDeliveryFormMB.showGeneralMessage}" closable="true"/>   
                 </div>
+                <p:fieldset  legend="الطيارين"    >
+                    <div class="ui-g-6 ui-xl-6">
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:inputNumber id="input1" value="#{createDeliveryFormMB.invOrganizationSiteDTO.mobile}" />
 
-                <p:selectOneRadio id="typeActive" value="#{createDeliveryFormMB.invOrganizationSiteDTO.active}" >
-                    <f:selectItem itemLabel="Active" itemValue="#{1}" />
-                    <f:selectItem itemLabel="not Active" itemValue="#{0}" />
-                </p:selectOneRadio>
-                <h:panelGrid columns="4">
-                    <h:outputText value="الاسم" />
-                    <p:inputText value="#{createDeliveryFormMB.invOrganizationSiteDTO.name}">
-                        <p:ajax event="blur" listener="#{createDeliveryFormMB.validateName()}"  />
-                    </p:inputText>
-                    <h:outputText value="الكود" />
-                    <p:inputNumber id="input" value="#{createDeliveryFormMB.invOrganizationSiteDTO.code}">
-                        <p:ajax event="blur" listener="#{createDeliveryFormMB.validateCode()}"  />
-                    </p:inputNumber>
-                    <h:outputText value="التليفون" />
-                    <p:inputNumber id="input1" value="#{createDeliveryFormMB.invOrganizationSiteDTO.mobile}" />
-                    <h:outputText value="الايميل" />
-                    <p:inputText value="#{createDeliveryFormMB.invOrganizationSiteDTO.email}" />
-                    <h:outputText value="العنوان" />
-                    <p:inputText value="#{createDeliveryFormMB.invOrganizationSiteDTO.address}" />
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <h:outputText value="التليفون" />
 
-                    <p:commandButton value="حفظ" action="#{createDeliveryFormMB.save()}" update="@form" />
-                </h:panelGrid>
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:inputText value="#{createDeliveryFormMB.invOrganizationSiteDTO.email}" />
+
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <h:outputText value="الايميل" />
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:inputText value="#{createDeliveryFormMB.invOrganizationSiteDTO.address}" />
+
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <h:outputText value="العنوان" />
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="ui-g-6 ui-xl-6">
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:selectOneRadio id="typeActive" value="#{createDeliveryFormMB.invOrganizationSiteDTO.active}" >
+                                    <f:selectItem itemLabel="Active" itemValue="#{1}" />
+                                    <f:selectItem itemLabel="not Active" itemValue="#{0}" />
+                                </p:selectOneRadio>
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:inputText value="#{createDeliveryFormMB.invOrganizationSiteDTO.name}">
+                                    <p:ajax event="blur" listener="#{createDeliveryFormMB.validateName()}"  />
+                                </p:inputText>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <h:outputText value="الاسم" />
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:inputNumber id="input" value="#{createDeliveryFormMB.invOrganizationSiteDTO.code}">
+                                    <p:ajax event="blur" listener="#{createDeliveryFormMB.validateCode()}"  />
+                                </p:inputNumber>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <h:outputText value="الكود" />
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="ui-g-12 ui-xl-12" style="text-align: center;">
+                        <p:commandButton value="حفظ" action="#{createDeliveryFormMB.save()}" update="@form" />
+
+                    </div> 
+
+                </p:fieldset>
+
             </h:form>
         </h:body>
 
