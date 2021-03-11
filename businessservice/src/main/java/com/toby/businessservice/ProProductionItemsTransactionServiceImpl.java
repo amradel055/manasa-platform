@@ -24,6 +24,7 @@ import com.toby.entity.TobyCompany;
 import com.toby.entity.TobyUser;
 import com.toby.views.ProductionTransactionOfUser;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -250,7 +251,7 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
             productionTransactionOfUser.setNumberExcute((BigDecimal) object[4]);
             productionTransactionOfUser.setPrice((BigDecimal) object[5]);
             productionTransactionOfUser.setTotalNumber((BigDecimal) object[6]);
-            productionTransactionOfUser.setAvarage((BigDecimal) object[7]);
+            productionTransactionOfUser.setAvarage(((BigDecimal) object[7]).setScale(3, RoundingMode.HALF_UP));
 
             productionTransactionOfUsers.add(productionTransactionOfUser);
         }

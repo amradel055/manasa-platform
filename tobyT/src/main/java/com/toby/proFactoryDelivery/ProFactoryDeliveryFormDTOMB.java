@@ -64,6 +64,7 @@ public class ProFactoryDeliveryFormDTOMB extends ProductionBasicDataForm {
             setInvInvoiceDTO(proFactoryDeliveryService.save(getInvInvoiceDTO(), getUserData().getUser()));
             msgSave(getInvInvoiceDTO().getMsg());
             reset();
+            changeFocus("form:invoiceNumber");
         } else {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "لا يوجد تفاصيل للفاتورة"));

@@ -77,7 +77,7 @@
                                 <div class="ui-g-12 ui-xl-12">
 
                                     <div class="ui-g-6 ui-xl-6">
-                                        <p:inputText style="width: 36.5%"  value="#{proFactoryDeliveryFormDTOMB.invInvoiceDTO.loadedSerial}"
+                                        <p:inputText style="width: 36.5%" id="invoiceNumber"  value="#{proFactoryDeliveryFormDTOMB.invInvoiceDTO.loadedSerial}"
                                                      >
                                             <p:ajax  event="blur" listener="#{proFactoryDeliveryFormDTOMB.loadDlg()}"  update="@form" />
                                         </p:inputText>

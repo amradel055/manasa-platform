@@ -81,6 +81,11 @@ public abstract class BaseFormBean extends Basic implements BaseManagedBean {
             savedMeesage(getUserData().getUserDDs().get("SAVED"));
         }
     }
+    
+     public void changeFocus(String focusId) {
+        RequestContext context = RequestContext.getCurrentInstance();
+        context.execute("PrimeFaces.focus('" + focusId + "')");
+    }
 
     public void exit(String url) {
         FacesContext fc = FacesContext.getCurrentInstance();

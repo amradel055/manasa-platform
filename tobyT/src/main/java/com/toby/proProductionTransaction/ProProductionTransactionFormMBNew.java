@@ -142,6 +142,16 @@ public class ProProductionTransactionFormMBNew extends BaseListBean {
         proProductionItemsTransactionService.saveProProductionItemsTransaction(proProductionTransactionDetailDetailViewDTOSelected, proProductionTransactionDTO, tobyUser);
     }
 
+    private void saveAll() {
+        for (ProProductionTransactionDetailDetailViewDTO detailViewDTO : detailDetailDetailViewDTOList) {
+            if (detailViewDTO.getNumberRemain().compareTo(BigDecimal.ZERO) == 1) {
+                proProductionTransactionDetailDetailViewDTOSelected = detailViewDTO;
+                proProductionTransactionDetailDetailViewDTOSelected.setNumberExcute(proProductionTransactionDetailDetailViewDTOSelected.getNumberRemain());
+                saveDetailDetail();
+            }
+        }
+    }
+
     public List<TobyUserDTO> completeTobyUserDTO(String query) {
         return AutoComplete.completeTobyUserDTO(query, getTobyUserDTOList(), getTobyUserDTOConverter());
     }

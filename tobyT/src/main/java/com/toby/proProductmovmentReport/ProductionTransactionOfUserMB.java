@@ -77,6 +77,7 @@ public class ProductionTransactionOfUserMB extends BaseFormBean {
         //    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", printProductionDTO.getMsg()));
 
         //  }
+
     }
 
     public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {
