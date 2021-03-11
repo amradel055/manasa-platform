@@ -6,6 +6,7 @@
 package com.toby.businessservice;
 
 import com.toby.core.GenericDAO;
+import com.toby.core.storedProcedureParameter;
 import com.toby.dto.InvDetailDTO;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.entity.InvItem;
@@ -13,6 +14,7 @@ import com.toby.entity.InvPurchaseInvoiceDetail;
 import com.toby.entity.ProFactoryDelivery;
 import com.toby.entity.ProFactoryDeliveryDetail;
 import com.toby.entity.TobyUser;
+import com.toby.procedure.FactoryNotLoadedYetProFactoeyProcedure;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -38,12 +40,29 @@ public class ProFactoryDeliveryDetailServiceImpl implements ProFactoryDeliveryDe
     private InvPurchaseInvoiceDetailDetailService invPurchaseInvoiceDetailDetailService;
     @EJB
     private ProProductionTransactionService proProductionTransactionService;
+    @EJB
+    InvGlobalService invGlobalService;
 
     @Override
     public List<InvDetailDTO> getAllProPurchaseInvoiceDetailsByInvPurchaseInvoiceIdDTO(InvInvoiceDTO dto) {
         List<InvDetailDTO> invDetailDTOList = null;
         if (dto.getNeedLoadedSerial() != null && dto.getNeedLoadedSerial() != 0) {
             invDetailDTOList = getAllProFactoryDeliveryDetailListNotLoaded(dto);
+        } else {
+            invDetailDTOList = getAllProFactoryDeliveryDetailList(dto);
+        }
+
+        return invDetailDTOList;
+    }
+    
+    @Override
+    public List<InvDetailDTO> getAllInvPurchaseInvoiceDetailsByInvPurchaseInvoiceIdDTO(InvInvoiceDTO dto, Integer typeto, Integer typefrom) {
+        List<InvDetailDTO> invDetailDTOList = null;
+        if (dto.getNeedLoadedSerial() != null && dto.getNeedLoadedSerial() != 0) {
+//            invDetailDTOList = getAllProFactoryDeliveryDetailListNotLoaded(dto);
+                invoiceNotLoadedYetProFactoeyProcedure(dto.getInvPurchaseInvoiceId(),  typeto,  typefrom);
+                List<FactoryNotLoadedYetProFactoeyProcedure> list = dao.findListByQuery("SELECT t FROM FactoryNotLoadedYetProFactoeyProcedure t");
+                invDetailDTOList = returnListDTO(list, dto);
         } else {
             invDetailDTOList = getAllProFactoryDeliveryDetailList(dto);
         }
@@ -73,6 +92,19 @@ public class ProFactoryDeliveryDetailServiceImpl implements ProFactoryDeliveryDe
         invDetailDTOList = returnListDTO(details, dto);
         return invDetailDTOList;
     }
+    
+        private void invoiceNotLoadedYetProFactoeyProcedure(Integer inv_purchase_order_id1, Integer typeto, Integer typefrom) {
+        List<storedProcedureParameter> procedureParameter = new ArrayList<>();
+        procedureParameter.add(new storedProcedureParameter("inv_purchase_invoice_id1", Integer.class, 'i'));
+        procedureParameter.add(new storedProcedureParameter("typeto", Integer.class, 'i'));
+        procedureParameter.add(new storedProcedureParameter("typefrom", Integer.class, 'i'));
+        Map<String, Object> params2 = new HashMap<>();
+        params2.put("inv_purchase_invoice_id1", inv_purchase_order_id1);
+        params2.put("typeto", typeto);
+        params2.put("typefrom", typefrom);
+        dao.StoredProcedure("factory_not_loaded_yet_Pro_Factoey_procedure", procedureParameter, params2);
+    }
+
 
     private <T> List<InvDetailDTO> returnListDTO(List<T> list, InvInvoiceDTO dto) {
         List<InvDetailDTO> dTOList = new ArrayList<>();
@@ -122,7 +154,23 @@ public class ProFactoryDeliveryDetailServiceImpl implements ProFactoryDeliveryDe
                     entity.getInvItemParentId() == null ? null : entity.getInvItemParentId().getCode(),
                     entity.getInvItemParentId() == null ? null : entity.getInvItemParentId().getName(),
                     invInvoiceDTO.getCompanyActivity(), invInvoiceDTO.getScreenName());
-        }
+        } else if (Entity.getClass().equals(FactoryNotLoadedYetProFactoeyProcedure.class)) {
+                FactoryNotLoadedYetProFactoeyProcedure entity = (FactoryNotLoadedYetProFactoeyProcedure) Entity;
+
+                dTO = proGlobalService.fillItemDetail(false,dTO,
+                    null, 
+                    null,
+                    null, null,
+                    null,
+                    entity.getItemId(), null, null,
+                    entity.getItemId(), entity.getItemBarcode(), entity.getItemName(),null,
+                    null, null,
+                    entity.getNumber(), entity.getDetailId(),
+                    null,
+                    null,
+                    invInvoiceDTO.getCompanyActivity(), invInvoiceDTO.getScreenName());
+
+            } 
         return dTO;
     }
 

@@ -118,7 +118,7 @@
                                                  title="تم الانتهاء"
                                                  value="تم النتهاء" 
                                                  icon="fa fa-fw fa-save" 
-                                                 rendered="#{proProductionTransactionFormMBNew.proProductionTransactionDetailDetailViewDTOSelected.numberRemain eq 0 }"
+                                                 rendered="#{table4.numberRemain > 0 }"
                                                  action="#{proProductionTransactionFormMBNew.save()}" 
                                                  update=":form:messages table4"
                                                  >

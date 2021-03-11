@@ -822,6 +822,19 @@
                                                    or userData.userScreens['invoiceProductionStageReport'].view 
                                                    or userData.userScreens['progroup'].view 
                                                    or userData.userScreens['summitionItemReport'].view 
+                                                   or userData.userScreens['proproductionstages'].view
+                                                       or userData.userScreens['proItemProductionStages'].view
+                                                       or userData.userScreens['profactoryDelivery'].view
+                                                       or userData.userScreens['proProductionTransaction'].view
+                                                       or userData.userScreens['proProductionTransactionList'].view
+                                                       or userData.userScreens['proProductionTransactionForm'].view
+                                                       or userData.userScreens['proProductionCheck'].view
+                                                       or userData.userScreens['proProductionMovementDelivrey'].view
+                                                       or userData.userScreens['proSendToGallary'].view
+                                                       or userData.userScreens['proRecieveGallary'].view 
+                                                       or userData.userScreens['summitionItemReportPro'].view 
+                                                       or userData.userScreens['productionTransactionOfUser'].view 
+                                                       or userData.userScreens['InvoiceMovementReport'].view
                                                    or userData.userScreens[''].view 
                                                    or userData.isAdmin}"
                                        >
@@ -830,10 +843,11 @@
                                                        or userData.userScreens[''].view 
                                                        or userData.userScreens['progroup'].view
                                                        or userData.userScreens['proproductionstages'].view
-                                                       or userData.userScreens['proproductionstages'].view
                                                        or userData.userScreens['proItemProductionStages'].view
                                                        or userData.userScreens['profactoryDelivery'].view
                                                        or userData.userScreens['proProductionTransaction'].view
+                                                       or userData.userScreens['proProductionTransactionList'].view
+                                                       or userData.userScreens['proProductionTransactionForm'].view
                                                        or userData.userScreens['proProductionCheck'].view
                                                        or userData.userScreens['proProductionMovementDelivrey'].view
                                                        or userData.userScreens['proSendToGallary'].view
@@ -856,10 +870,10 @@
                                                 rendered="#{userData.userScreens['profactoryDelivery'].view or userData.isAdmin}"
                                                 />      
                                     <p:menuitem id="sr_lnk333110" value="حركة أوامر الشغل" icon="&#xE8D2;" url="/faces/views/proProductionTransactionList/proProductionTransactionList1.xhtml" 
-                                                rendered="#{userData.userScreens['proProductionTransaction'].view or userData.isAdmin}"
+                                                rendered="#{userData.userScreens['proProductionTransactionList'].view or userData.isAdmin}"
                                                 />  
                                     <p:menuitem id="sr_lnk333120" value="حركة أوامر الشغل جديد" icon="&#xE8D2;" url="/faces/views/proProductionTransactionForm/proProductionTransactionFormNew.xhtml" 
-                                                rendered="#{userData.userScreens['proProductionTransaction'].view or userData.isAdmin}"
+                                                rendered="#{userData.userScreens['proProductionTransactionForm'].view or userData.isAdmin}"
                                                 />  
                                     <p:menuitem id="sr_lnk33315" value="حركة التشيك" icon="&#xE8D2;" url="/faces/views/proProductionCheck/proProductionCheckList.xhtml" 
                                                 rendered="#{userData.userScreens['proProductionCheck'].view or userData.isAdmin}"
@@ -877,6 +891,7 @@
                                 <p:submenu id="sr_sm332" label="تقارير الانتاج" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['invoiceProductionStageReport'].view 
                                                        or userData.userScreens['summitionItemReport'].view 
+                                                       or userData.userScreens['summitionItemReportPro'].view 
                                                        or userData.userScreens['productionTransactionOfUser'].view 
                                                        or userData.userScreens['InvoiceMovementReport'].view
                                                        or userData.isAdmin}"
@@ -889,6 +904,9 @@
                                                 />
                                     <p:menuitem id="sr_lnk33322" value="تقرير باجماليات الفئات" icon="&#xE8D2;" url="/faces/views/proproductionreport/summitionItemReport.xhtml" 
                                                 rendered="#{userData.userScreens['summitionItemReport'].view or userData.isAdmin}"
+                                                />
+                                      <p:menuitem id="sr_lnk33325" value=" حركة الثياب بالمصنع حسب الفئه" icon="&#xE8D2;" url="/faces/views/proproductionreport/summitionItemReportPro.xhtml" 
+                                                rendered="#{userData.userScreens['summitionItemReportPro'].view or userData.isAdmin}"
                                                 />
                                     <p:menuitem id="sr_lnk33324" value="حركة الثياب بالمشغل والمعرض" icon="&#xE8D2;" url="/faces/views/proproductionreport/InvoiceMovementReport.xhtml" 
                                                 rendered="#{userData.userScreens['InvoiceMovementReport'].view or userData.isAdmin}"                                                />

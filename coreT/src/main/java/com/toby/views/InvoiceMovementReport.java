@@ -6,6 +6,7 @@
 package com.toby.views;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -23,6 +24,13 @@ public class InvoiceMovementReport implements Serializable {
     private Date factoryDate;
     private Date date;
     private Integer type;
+    private Integer id;
+    private Integer idFactory;
+    private BigDecimal numberTobInvoice;
+    private BigDecimal numberToFactory;
+    private BigDecimal numberTobExitFactory;
+    private BigDecimal numberTobgallary;
+    private BigDecimal numberTobcustomer;
 
     public InvoiceMovementReport() {
 
@@ -116,6 +124,104 @@ public class InvoiceMovementReport implements Serializable {
      */
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    /**
+     * @return the id
+     */
+    public Integer getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    /**
+     * @return the idFactory
+     */
+    public Integer getIdFactory() {
+        return idFactory;
+    }
+
+    /**
+     * @param idFactory the idFactory to set
+     */
+    public void setIdFactory(Integer idFactory) {
+        this.idFactory = idFactory;
+    }
+
+    /**
+     * @return the numberTobInvoice
+     */
+    public BigDecimal getNumberTobInvoice() {
+        return numberTobInvoice;
+    }
+
+    /**
+     * @param numberTobInvoice the numberTobInvoice to set
+     */
+    public void setNumberTobInvoice(BigDecimal numberTobInvoice) {
+        this.numberTobInvoice = numberTobInvoice;
+    }
+
+    /**
+     * @return the numberToFactory
+     */
+    public BigDecimal getNumberToFactory() {
+        return numberToFactory;
+    }
+
+    /**
+     * @param numberToFactory the numberToFactory to set
+     */
+    public void setNumberToFactory(BigDecimal numberToFactory) {
+        this.numberToFactory = numberToFactory;
+    }
+
+    /**
+     * @return the numberTobExitFactory
+     */
+    public BigDecimal getNumberTobExitFactory() {
+        return numberTobExitFactory;
+    }
+
+    /**
+     * @param numberTobExitFactory the numberTobExitFactory to set
+     */
+    public void setNumberTobExitFactory(BigDecimal numberTobExitFactory) {
+        this.numberTobExitFactory = numberTobExitFactory;
+    }
+
+    /**
+     * @return the numberTobgallary
+     */
+    public BigDecimal getNumberTobgallary() {
+        return numberTobgallary;
+    }
+
+    /**
+     * @param numberTobgallary the numberTobgallary to set
+     */
+    public void setNumberTobgallary(BigDecimal numberTobgallary) {
+        this.numberTobgallary = numberTobgallary;
+    }
+
+    /**
+     * @return the numberTobcustomer
+     */
+    public BigDecimal getNumberTobcustomer() {
+        return numberTobcustomer;
+    }
+
+    /**
+     * @param numberTobcustomer the numberTobcustomer to set
+     */
+    public void setNumberTobcustomer(BigDecimal numberTobcustomer) {
+        this.numberTobcustomer = numberTobcustomer;
     }
 
 }

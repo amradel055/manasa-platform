@@ -83,7 +83,7 @@
                                             value="#{productionTransactionOfUserMB.printProductionDTO.fromStatus}" 
                                             var="fromStatus"
                                             itemLabel="#{fromStatus.name}"
-                                            itemValue="#{fromStatus.id}" 
+                                            itemValue="#{fromStatus.serial}" 
                                             forceSelection="true" 
                                             completeMethod="#{productionTransactionOfUserMB.completeProProductionId}" >
                             </p:autoComplete>
@@ -105,7 +105,7 @@
                                             value="#{productionTransactionOfUserMB.printProductionDTO.toStatus}" 
                                             var="toStatus"
                                             itemLabel="#{toStatus.name}"
-                                            itemValue="#{toStatus.id}" 
+                                            itemValue="#{toStatus.serial}" 
                                             forceSelection="true" 
                                             completeMethod="#{productionTransactionOfUserMB.completeProProductionId}" >
                             </p:autoComplete>
@@ -186,9 +186,6 @@
                     </p:column>
                     <p:column headerText="المرحلة " style="width: 10vh;text-align: center!important;font-size: 1.8vh">
                         <h:outputText value="#{data.stageName}" />
-                    </p:column>
-                    <p:column headerText="الرقم" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
-                        <h:outputText value="#{data.userId}" />
                     </p:column>
                     <p:column headerText="الموظف" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
                         <h:outputText value="#{data.userName}" />

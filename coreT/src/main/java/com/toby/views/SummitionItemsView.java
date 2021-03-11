@@ -3,18 +3,18 @@ package com.toby.views;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-
-
 public class SummitionItemsView implements Serializable {
-    
-    
-   private BigDecimal quantity ;
-   private BigDecimal number ;
-   private BigDecimal allQuantity ;
-   private BigDecimal allCost ;
-   private BigDecimal allAvarageCost ;
-   private Integer code ;
-   private String name ;
+
+    private BigDecimal quantity;
+    private BigDecimal number;
+    private BigDecimal allQuantity;
+    private BigDecimal allCost;
+    private BigDecimal allAvarageCost;
+    private Integer code;
+    private String name;
+    private BigDecimal factoryNumber;
+    private BigDecimal sendNumber;
+    private BigDecimal deliveryNumber;
 
     /**
      * @return the quantity
@@ -114,4 +114,46 @@ public class SummitionItemsView implements Serializable {
         this.code = code;
     }
 
+    /**
+     * @return the factoryNumber
+     */
+    public BigDecimal getFactoryNumber() {
+        return factoryNumber;
     }
+
+    /**
+     * @param factoryNumber the factoryNumber to set
+     */
+    public void setFactoryNumber(BigDecimal factoryNumber) {
+        this.factoryNumber = factoryNumber;
+    }
+
+    /**
+     * @return the sendNumber
+     */
+    public BigDecimal getSendNumber() {
+        return sendNumber;
+    }
+
+    /**
+     * @param sendNumber the sendNumber to set
+     */
+    public void setSendNumber(BigDecimal sendNumber) {
+        this.sendNumber = sendNumber;
+    }
+
+    /**
+     * @return the deliveryNumber
+     */
+    public BigDecimal getDeliveryNumber() {
+        return deliveryNumber;
+    }
+
+    /**
+     * @param deliveryNumber the deliveryNumber to set
+     */
+    public void setDeliveryNumber(BigDecimal deliveryNumber) {
+        this.deliveryNumber = deliveryNumber;
+    }
+
+}

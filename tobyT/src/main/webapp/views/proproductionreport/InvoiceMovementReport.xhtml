@@ -193,11 +193,18 @@
                         <p:column headerText="اسم العميل" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
                             <h:outputText value="#{data.clientName}" />
                         </p:column>
+                        
+                        <p:column headerText="عدد الثياب بلفاتورة" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.numberTobInvoice}" />
+                        </p:column>
 
                         <p:column headerText="تاريخ التسليم المشغل" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
                             <h:outputText value="#{data.factoryDate}">
                                 <f:convertDateTime type="date" pattern="dd-MM-yyyy hh:mm:ss"/>
                             </h:outputText>
+                        </p:column>
+                        <p:column headerText="عدد الثياب بالمشغل" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.numberToFactory}" />
                         </p:column>
 
                         <p:column headerText="تاريخ التسليم للطيار" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
@@ -205,10 +212,16 @@
                                 <f:convertDateTime type="date" pattern="dd-MM-yyyy hh:mm:ss"/>
                             </h:outputText>
                         </p:column>
-                        <p:column headerText="تاريخ التسليم للمعرض" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                        <p:column headerText="عدد الثياب للطيار" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.numberTobExitFactory}" />
+                        </p:column>
+                        <p:column headerText="تاريخ الاستلام بالمعرض" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
                             <h:outputText value="#{data.galaryDate}">
                                 <f:convertDateTime type="date" pattern="dd-MM-yyyy hh:mm:ss"/>
                             </h:outputText>
+                        </p:column>
+                        <p:column headerText="عدد الثياب بالمعرض" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.numberTobgallary}" />
                         </p:column>
                         <p:column headerText="تاريخ التسليم للعميل" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
                             <h:outputText value="#{data.clientDate}">

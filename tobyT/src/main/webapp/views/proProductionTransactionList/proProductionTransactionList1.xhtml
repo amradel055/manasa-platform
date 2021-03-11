@@ -63,7 +63,7 @@
 
                         </f:facet>
 
-                        <p:column style="width: 8vh;text-align: -webkit-auto;font-size: 1.4vh" filterStyle="display:none" 
+                        <p:column style="width: 8vh;text-align: -webkit-auto;font-size: 1.4vh" 
                                   filterBy="#{details.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial}" 
                                   filterMatchMode="contains" 
                                   headerText="الفاتوره"
@@ -72,7 +72,7 @@
                             <p:outputLabel value="#{details.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial}" />
                         </p:column>
 
-                        <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.4vh" filterStyle="display:none" 
+                        <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.4vh" 
                                   filterBy="#{details.createdByName}" 
                                   filterMatchMode="contains"
                                   headerText="اسم العامل "
@@ -82,7 +82,7 @@
 
 
                         </p:column>
-                        <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.4vh" filterStyle="display:none" 
+                        <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.4vh" 
                                   filterBy="#{details.createdByCode}" 
                                   filterMatchMode="contains"
                                   headerText="رقم العامل "
@@ -92,18 +92,15 @@
 
 
                         </p:column>
-                        <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.4vh" filterStyle="display:none" 
-                                  filterBy="#{details.number}" 
-                                  filterMatchMode="contains"
+                        <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.4vh"
                                   headerText="عدد الثياب"
-                                  sortBy="#{details.number}" 
                                   >
                             <p:outputLabel value="#{details.number}" />
 
 
                         </p:column>
 
-                        <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.6vh" filterStyle="display:none"
+                        <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.6vh" 
                                   filterBy="#{details.proProductionStagesId.name}"
                                   filterMatchMode="contains" 
                                   headerText="المرحله"
@@ -114,11 +111,8 @@
 
                         </p:column>
 
-                        <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.6vh" filterStyle="display:none"
-                                  filterBy="#{details.date}"
-                                  filterMatchMode="contains" 
+                        <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.6vh"
                                   headerText="التاريح"
-                                  sortBy="#{details.date}" 
                                   >
                             <p:outputLabel value="#{details.date}" >
                                 <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>

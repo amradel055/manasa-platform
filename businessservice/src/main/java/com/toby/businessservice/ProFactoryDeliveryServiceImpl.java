@@ -127,9 +127,8 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
         invInvoiceDTO.setIndex(entity.getSerial());
         invInvoiceDTO.setCompanyId(entity.getCompanyId().getId() != null ? entity.getCompanyId().getId() : null);
         invInvoiceDTO.setCreatedByName(entity.getCreatedBy() != null ? entity.getCreatedBy().getName() : null);
-        
-//        invInvoiceDTO.setProFactoryDelivery(entity.getId());
 
+//        invInvoiceDTO.setProFactoryDelivery(entity.getId());
         if (entity.getInvPurchaseInvoiceId() != null) {
             invInvoiceDTO.setLoadedSerial(entity.getInvPurchaseInvoiceId() != null ? entity.getInvPurchaseInvoiceId().getSerial() : null);
             invInvoiceDTO.setInvPurchaseInvoiceId(entity.getInvPurchaseInvoiceId() != null ? entity.getInvPurchaseInvoiceId().getId() : null);
@@ -137,7 +136,15 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
 
         List<InvDetailDTO> invPurchaseInvoiceDetailsListDTO;
         if (isLoaded) {
-            invPurchaseInvoiceDetailsListDTO = proFactoryDeliveryDetailService.getAllProPurchaseInvoiceDetailsByInvPurchaseInvoiceIdDTO(invInvoiceDTO);
+//            invPurchaseInvoiceDetailsListDTO = proFactoryDeliveryDetailService.getAllProPurchaseInvoiceDetailsByInvPurchaseInvoiceIdDTO(invInvoiceDTO);
+            if (ScreenNameClassEnum.PROSENDTOGALLARY.equals(invInvoiceDTO.getScreenName())) {
+                invPurchaseInvoiceDetailsListDTO = proFactoryDeliveryDetailService.getAllInvPurchaseInvoiceDetailsByInvPurchaseInvoiceIdDTO(invInvoiceDTO, 1, 0);
+            } else if (ScreenNameClassEnum.PRORECIEVEGALLARY.equals(invInvoiceDTO.getScreenName())) {
+                invPurchaseInvoiceDetailsListDTO = proFactoryDeliveryDetailService.getAllInvPurchaseInvoiceDetailsByInvPurchaseInvoiceIdDTO(invInvoiceDTO, 2, 1);
+            }else{
+                invPurchaseInvoiceDetailsListDTO = proFactoryDeliveryDetailService.getAllProPurchaseInvoiceDetailsByInvPurchaseInvoiceIdDTO(invInvoiceDTO);
+            }
+
         } else {
             invInvoiceDTO.setIsOld(Boolean.TRUE);
             invPurchaseInvoiceDetailsListDTO = proFactoryDeliveryDetailService.getAllProFactoryDeliveryDetailList(invInvoiceDTO);
@@ -153,10 +160,14 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
         ProFactoryDelivery proFactoryDelivery = null;
         if (invInvoiceDTO.getNeedLoadedSerial() != null && invInvoiceDTO.getNeedLoadedSerial() != 0) {
             proFactoryDelivery = findProFactoryDeliveryByInvInvoiceId(invInvoiceDTO.getNeedLoadedSerial(), type, invInvoiceDTO.getBranchId());
+            invInvoiceDTO.setInvPurchaseInvoiceId(proFactoryDelivery.getInvPurchaseInvoiceId() == null ? null : proFactoryDelivery.getInvPurchaseInvoiceId().getId());
         } else {
             proFactoryDelivery = dao.findEntityById(ProFactoryDelivery.class, invInvoiceDTO.getInvDailogeDataSelected().getId());
         }
         if (proFactoryDelivery != null) {
+            if (invInvoiceDTO.getInvDailogeDataSelected() != null && invInvoiceDTO.getInvDailogeDataSelected().getProFactoryDeliveryId() != null) {
+                invInvoiceDTO.setProFactoryDeliveryId(invInvoiceDTO.getInvDailogeDataSelected().getProFactoryDeliveryId());
+            }
             invInvoiceDTO = mapToDTO(proFactoryDelivery, invInvoiceDTO, true);
             modifyReturnData(invInvoiceDTO, proFactoryDelivery);
         } else {
@@ -303,7 +314,7 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
             if (!id.isEmpty()) {
                 error.append("\n لا يجوز تعديل هذا السند لأنه تم تحميلة");
             }
-        }   
+        }
     }
 
     @Override

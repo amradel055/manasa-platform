@@ -100,8 +100,8 @@ public class InvoiceProductionStagesReportMB extends BaseListBean {
         Map<String, String> userDDs = getUserData().getUserDDs();
         HashMap hashMap = new HashMap();
 
-        hashMap.put("fromInvoice", printProductionDTO.getFromInvoice().getId());
-        hashMap.put("toInvoice", printProductionDTO.getToInvoice().getId());
+        hashMap.put("fromInvoice", printProductionDTO.getFromInvoice() == null ? null : printProductionDTO.getFromInvoice().getId());
+        hashMap.put("toInvoice", printProductionDTO.getToInvoice() == null ? null : printProductionDTO.getToInvoice().getId());
         hashMap.put("toDate", printProductionDTO.getToDate());
         hashMap.put("fromDate", printProductionDTO.getFromDate());
         hashMap.put("fromInvoiceText", "من فاتورة");
@@ -116,8 +116,8 @@ public class InvoiceProductionStagesReportMB extends BaseListBean {
         hashMap.put("quantityText", "الكمية");
         hashMap.put("stageText", "المرحلة");
         hashMap.put("empNameText", "الموظف");
-        hashMap.put("branchName", getUserData().getUserBranch().getNameAr());
-        hashMap.put("PrintedBy", getUserData().getUser().getName());
+        hashMap.put("branchName", getUserData().getUserBranch() == null ? null :  getUserData().getUserBranch().getNameAr());
+        hashMap.put("PrintedBy", getUserData().getUser() == null ? null : getUserData().getUser().getName());
         if (isFileExist(getUserData().getImageReportPath())) {
             hashMap.put("companyImage", getUserData().getImageReportPath());
         } else {
