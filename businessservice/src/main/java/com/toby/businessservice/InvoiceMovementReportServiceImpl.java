@@ -40,8 +40,8 @@ public class InvoiceMovementReportServiceImpl implements InvoiceMovementReportSe
                 append(branchId).append(" ").
                 append(appendProProductionInvoice(printProductionDTO)).
                 append(appendGallary(printProductionDTO)).
-                append(appendDateInvoice(printProductionDTO)).
-                append(" union all select ipi.serial as serial , ios.name as customerName , inv.name as inventoryName , ipi.date , 3 , ipi.id as id , null from inv_purchase_invoice ipi \n").
+                append(appendDateProFactoryDelivery(printProductionDTO)).
+                append(" union all select ipi.serial as serial , ios.name as customerName , inv.name as inventoryName , ipi.date , 3 , ipi.id as id , null  as idFactory from inv_purchase_invoice ipi \n").
                 append(" left join inv_organization_site ios on ios.id = ipi.organization_site_id\n").
                 append(" left join inv_inventory inv on inv.id = ipi.inv_inventory_id ").
                 append(" left join inv_inventory inv2 on inv2.id = ipi.galary_Id  ").
@@ -174,6 +174,21 @@ public class InvoiceMovementReportServiceImpl implements InvoiceMovementReportSe
 
         if (productionDTO.getToDate() != null) {
             query.append(" and ipi.date <=  '").append(dateFormat.format(productionDTO.getToDate())).append("'");
+        }
+        if (!query.toString().isEmpty()) {
+            return query.toString();
+        }
+        return "";
+    }
+    private String appendDateProFactoryDelivery(PrintProductionDTO productionDTO) {
+        StringBuilder query = new StringBuilder();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        if (productionDTO.getFromDate() != null) {
+            query.append(" and pfd.date >=  '").append(dateFormat.format(productionDTO.getFromDate())).append("'");
+        }
+
+        if (productionDTO.getToDate() != null) {
+            query.append(" and pfd.date <=  '").append(dateFormat.format(productionDTO.getToDate())).append("'");
         }
         if (!query.toString().isEmpty()) {
             return query.toString();

@@ -90,6 +90,12 @@ public class ProGroupServiceImpl implements ProGroupService {
     public List<ProGroup> getProGroupForUser(Integer id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
+    @Override
+    public ProGroupDTO findProGroupDTO(Integer id) {
+        ProGroup proGroup = dao.findEntityById(ProGroup.class, id);
+        return mapToDTO(proGroup, null);
+    }
 
     @Override
     public List<ProGroupDTO> getallProGroupByBranchIdDTO(TobyUser tobyUser) {

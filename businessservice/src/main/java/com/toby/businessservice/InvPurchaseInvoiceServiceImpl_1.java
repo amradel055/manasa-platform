@@ -23,6 +23,8 @@ import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.dto.InventoryDelegatorDTO;
+import com.toby.dto.ProGroupDTO;
+import com.toby.dto.ProProductionStagesDTO;
 import com.toby.entity.Branch;
 import com.toby.entity.CostCenter;
 import com.toby.entity.Currency;
@@ -47,6 +49,7 @@ import com.toby.entity.InvTransferDetail;
 import com.toby.entity.InventoryDelegator;
 import com.toby.entity.InventorySetup;
 import com.toby.entity.ProFactoryDelivery;
+import com.toby.entity.ProProductionStages;
 import com.toby.views.QuantityItemsStore;
 import com.toby.views.SummitionItemsView;
 import java.math.BigDecimal;
@@ -105,7 +108,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     @EJB
     private CurrencyOperationService currencyOperationService;
     @EJB
-    private OrganizationSiteService organizationSiteService;
+    private ProGroupService proGroupService;
     @EJB
     private CurrencyService currencyService;
     @EJB
@@ -1819,15 +1822,15 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 + " WHERE pfdd.proFactoryDeliveryId.type = :type ");
         if (dateFrom != null) {
             params.put("dateFrom", dateFrom);
-            builder.append(" AND i.proFactoryDeliveryId.date >= :dateFrom ");
+            builder.append(" AND pfdd.proFactoryDeliveryId.date >= :dateFrom ");
         }
         if (dateFrom != null) {
             params.put("dateTo", dateTo);
-            builder.append(" AND i.proFactoryDeliveryId.date <= :dateTo ");
+            builder.append(" AND pfdd.proFactoryDeliveryId.date <= :dateTo ");
         }
         if (gallaryId != null) {
             params.put("gallaryId", gallaryId);
-            builder.append(" AND i.proFactoryDeliveryId.invPurchaseInvoiceId.galaryId.id = :gallaryId ");
+            builder.append(" AND pfdd.proFactoryDeliveryId.invPurchaseInvoiceId.galaryId.id = :gallaryId ");
         }
         if (groupId != null) {
             params.put("groupId", groupId);
@@ -1860,6 +1863,35 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             summitionItemsView.setDeliveryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupId, 2));
             summitionItemsViews.add(summitionItemsView);
         }
+        return summitionItemsViews;
+    }
+
+    @Override
+    public List<SummitionItemsView> getTheListBasedOnStagesList(Integer gallaryId, Date dateFrom, Date dateTo, Integer groupId, Integer branchId, TobyUser tobyUser) {
+
+        List<ProGroupDTO> proGrouplist = new ArrayList<>();
+        if (groupId == null) {
+            proGrouplist = proGroupService.getallProGroupByBranchIdDTO(tobyUser);
+        } else {
+            ProGroupDTO dTO = proGroupService.findProGroupDTO(groupId);
+            proGrouplist.add(dTO);
+        }
+        List<SummitionItemsView> summitionItemsViews = new ArrayList<>();
+
+        for (ProGroupDTO groupDTO : proGrouplist) {
+            SummitionItemsView summitionItemsView = new SummitionItemsView();
+            summitionItemsView.setCode(groupDTO.getSerial());
+            summitionItemsView.setName(groupDTO.getName());
+            summitionItemsView.setFactoryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupDTO.getId(), 0));
+            summitionItemsView.setSendNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupDTO.getId(), 1));
+            summitionItemsView.setDeliveryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupDTO.getId(), 2));
+            if (summitionItemsView.getFactoryNumber().compareTo(BigDecimal.ZERO) == 1
+                    || summitionItemsView.getSendNumber().compareTo(BigDecimal.ZERO) == 1
+                    || summitionItemsView.getDeliveryNumber().compareTo(BigDecimal.ZERO) == 1) {
+                summitionItemsViews.add(summitionItemsView);
+            }
+        }
+
         return summitionItemsViews;
     }
 }

@@ -47,6 +47,8 @@ public interface ProGroupService {
     public Integer getMaxId();
 
     public List<ProGroup> getProGroupForUser(Integer id);
+    
+    public ProGroupDTO findProGroupDTO(Integer id) ;
 
     public List<ProGroup> getAllSubProGroupByBranchId(Integer id, Integer branchId);
 

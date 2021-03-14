@@ -268,11 +268,12 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
     }
 
     private void appendProProductionDate(PrintProductionDTO printProductionDTO, StringBuilder query) {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         if (printProductionDTO.getFromDate() != null) {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
             query.append(" and ppit.date  >=  '").append(dateFormat.format(printProductionDTO.getFromDate())).append("' ");
         }
         if (printProductionDTO.getToDate() != null) {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 23:59:59");
             query.append(" and ppit.date  <=  '").append(dateFormat.format(printProductionDTO.getToDate())).append("' ");
         }
     }

@@ -1259,6 +1259,9 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      * @return the invoiceStatus
      */
     public String getInvoiceStatus() {
+        if(invoiceStatus == null){
+            invoiceStatus = "بالمعرض";
+        }
         return invoiceStatus;
     }
 

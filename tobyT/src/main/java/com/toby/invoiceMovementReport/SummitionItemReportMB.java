@@ -15,36 +15,38 @@ import javax.faces.view.ViewScoped;
 
 @Named(value = "summitionItemReportMB")
 @ViewScoped
-public class SummitionItemReportMB extends Basic{
+public class SummitionItemReportMB extends Basic {
 
     private InvInventoryDTO gallaryDTOSelected;
     private Date dateFrom;
     private Date dateTo;
     private ProGroupDTO proGroupDTOSelected;
     private List<InvInventoryDTO> gallaryList;
-    
+
     private List<SummitionItemsView> itemsViewList;
-    
+
     private InvInventoryDTOConverter gallaryDTOConverter;
-    
+
     @EJB
     InvPurchaseInvoiceService_1 invPurchaseInvoiceService_1;
     @EJB
     private TobyUserInventoryService tobyUserInventoryService;
-    
-    
-    
-    public void search(){
-        itemsViewList = invPurchaseInvoiceService_1.findSummitionQuantity(getGallaryDTOSelected() == null ? null : getGallaryDTOSelected().getId(), getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId());
+
+    public void search() {
+        if (getUri().contains("summitionItemReportPro")) {
+            itemsViewList = invPurchaseInvoiceService_1.getTheListBasedOnStagesList(getGallaryDTOSelected() == null ? null : getGallaryDTOSelected().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), getUserData().getUserBranch().getId(), getUserData().getUser());
+        } else {
+            itemsViewList = invPurchaseInvoiceService_1.findSummitionQuantity(getGallaryDTOSelected() == null ? null : getGallaryDTOSelected().getId(), getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId());
+        }
     }
-    
+
     public List<InvInventoryDTO> getGallaryList() {
         if (gallaryList == null || gallaryList.isEmpty()) {
             gallaryList = tobyUserInventoryService.getAllGallaryByUserAndBranch(getUserData().getUser());
             setGallaryDTOConverter(new InvInventoryDTOConverter(gallaryList));
         }
         return gallaryList;
-    }    
+    }
 
     /**
      * @param gallaryList the gallaryList to set
@@ -137,5 +139,4 @@ public class SummitionItemReportMB extends Basic{
         this.gallaryDTOConverter = gallaryDTOConverter;
     }
 
-    
 }

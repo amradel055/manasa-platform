@@ -11,7 +11,6 @@ import com.toby.converter.TobyUserProproductionDTOConverter;
 import com.toby.dto.ProProductionStagesDTO;
 import com.toby.dto.ProProductionTransactionDTO;
 import com.toby.dto.ProProductionTransactionDetailDetailViewDTO;
-import com.toby.dto.SymbolDTO;
 import com.toby.dto.TobyUserDTO;
 import com.toby.dto.TobyUserProproductionDTO;
 import com.toby.entity.TobyUser;
@@ -38,7 +37,7 @@ public class ProProductionTransactionFormMBNew extends BaseListBean {
 
     private List<TobyUserProproductionDTO> tobyUserProproductionDTOList;
     private TobyUserProproductionDTOConverter tobyUserProproductionDTOConverter;
-    private TobyUserProproductionDTO tobyUserProproductionDTOSelected;
+//    private TobyUserProproductionDTO tobyUserProproductionDTOSelected;
 
     private ProProductionStagesDTO proProductionStagesDTOSelected;
     private List<ProProductionStagesDTO> proProductionStagesDTOList;
@@ -79,7 +78,7 @@ public class ProProductionTransactionFormMBNew extends BaseListBean {
             tobyUserProproductionDTOList = getTobyUserDTOSelected().getTobyUserProproductionDTOList();
             if (tobyUserProproductionDTOList != null && !tobyUserProproductionDTOList.isEmpty()) {
                 setTobyUserProproductionDTOConverter(new TobyUserProproductionDTOConverter(tobyUserProproductionDTOList));
-                setTobyUserProproductionDTOSelected(tobyUserProproductionDTOList.get(0));
+//                setTobyUserProproductionDTOSelected(tobyUserProproductionDTOList.get(0));
             }
         }
 
@@ -99,11 +98,11 @@ public class ProProductionTransactionFormMBNew extends BaseListBean {
     }
 
     public void updateDetailItems() {
-        if (tobyUserProproductionDTOSelected != null) {
+        if (getProProductionStagesDTOSelected() != null) {
             setDetailDetailDetailViewDTOList(invPurchaseInvoiceDetailService.getInvPurchaseInvoiceDetailItems(Integer.parseInt(getInvInvoiceSerial() == null ? "0" : getInvInvoiceSerial()), getProProductionStagesDTOSelected().getId()));
 
             for (ProProductionTransactionDetailDetailViewDTO detailViewDTO : getDetailDetailDetailViewDTOList()) {
-                ProProductionTransactionOfInvoice proProductionTransactionOfInvoice = proProductionTransactionOfInvoiceService.getRenaimNumberListOfproduction(Integer.parseInt(getInvInvoiceSerial()), detailViewDTO.getInvItemCode(), getTobyUserProproductionDTOSelected().getProproductionId(), getUserData().getUser());
+                ProProductionTransactionOfInvoice proProductionTransactionOfInvoice = proProductionTransactionOfInvoiceService.getRenaimNumberListOfproduction(Integer.parseInt(getInvInvoiceSerial()), detailViewDTO.getInvItemCode(), getProProductionStagesDTOSelected().getId(), getUserData().getUser());
                 if (proProductionTransactionOfInvoice == null) {
                     detailViewDTO.setNumberRemain(detailViewDTO.getQuantity());
                 } else {
@@ -133,7 +132,7 @@ public class ProProductionTransactionFormMBNew extends BaseListBean {
         proProductionTransactionDetailDetailViewDTOSelected.setCost(getProProductionStagesDTOSelected().getPrice());
         ProProductionTransactionDTO proProductionTransactionDTO = new ProProductionTransactionDTO();
         ProProductionStagesDTO proProductionId = new ProProductionStagesDTO();
-        proProductionId.setId(tobyUserProproductionDTOSelected.getProproductionId());
+        proProductionId.setId(getProProductionStagesDTOSelected().getId());
         proProductionTransactionDTO.setProProductionId(proProductionId);
         TobyUser tobyUser = new TobyUser();
         tobyUser.setId(getTobyUserDTOSelected().getId());
@@ -142,7 +141,7 @@ public class ProProductionTransactionFormMBNew extends BaseListBean {
         proProductionItemsTransactionService.saveProProductionItemsTransaction(proProductionTransactionDetailDetailViewDTOSelected, proProductionTransactionDTO, tobyUser);
     }
 
-    private void saveAll() {
+    public void saveAll() {
         for (ProProductionTransactionDetailDetailViewDTO detailViewDTO : detailDetailDetailViewDTOList) {
             if (detailViewDTO.getNumberRemain().compareTo(BigDecimal.ZERO) == 1) {
                 proProductionTransactionDetailDetailViewDTOSelected = detailViewDTO;
@@ -150,6 +149,8 @@ public class ProProductionTransactionFormMBNew extends BaseListBean {
                 saveDetailDetail();
             }
         }
+        detailDetailDetailViewDTOList = new ArrayList<>();
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "success!", "success!"));
     }
 
     public List<TobyUserDTO> completeTobyUserDTO(String query) {
@@ -252,24 +253,23 @@ public class ProProductionTransactionFormMBNew extends BaseListBean {
         this.tobyUserProproductionDTOList = tobyUserProproductionDTOList;
     }
 
-    /**
-     * @return the tobyUserProproductionDTOSelected
-     */
-    public TobyUserProproductionDTO getTobyUserProproductionDTOSelected() {
-        if (tobyUserProproductionDTOSelected == null) {
-            tobyUserProproductionDTOSelected = new TobyUserProproductionDTO();
-        }
-        return tobyUserProproductionDTOSelected;
-    }
-
-    /**
-     * @param tobyUserProproductionDTOSelected the
-     * tobyUserProproductionDTOSelected to set
-     */
-    public void setTobyUserProproductionDTOSelected(TobyUserProproductionDTO tobyUserProproductionDTOSelected) {
-        this.tobyUserProproductionDTOSelected = tobyUserProproductionDTOSelected;
-    }
-
+//    /**
+//     * @return the tobyUserProproductionDTOSelected
+//     */
+//    public TobyUserProproductionDTO getTobyUserProproductionDTOSelected() {
+//        if (tobyUserProproductionDTOSelected == null) {
+//            tobyUserProproductionDTOSelected = new TobyUserProproductionDTO();
+//        }
+//        return tobyUserProproductionDTOSelected;
+//    }
+//
+//    /**
+//     * @param tobyUserProproductionDTOSelected the
+//     * tobyUserProproductionDTOSelected to set
+//     */
+//    public void setTobyUserProproductionDTOSelected(TobyUserProproductionDTO tobyUserProproductionDTOSelected) {
+//        this.tobyUserProproductionDTOSelected = tobyUserProproductionDTOSelected;
+//    }
     /**
      * @return the detailDetailDetailViewDTOList
      */

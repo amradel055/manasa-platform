@@ -13,39 +13,15 @@
 
             <h:form dir="RTL" style="margin-right: 20px" id="form" >
                 <p:fieldset  legend="حركه اوامر الشغل" id="stages"  style="margin-bottom:20px">
-                    <div class="ui-g-6 ui-xl-6">
-                        <div class="ui-g-12 ui-xl-12">
-                            <div class="ui-g-6 ui-xl-6">    
-                                <div class="p-field p-col-6 p-md-6">
-                                    <p:selectOneMenu id="user" filter="true" filterMatchMode="contains" value="#{proProductionTransactionFormMBNew.tobyUserDTOSelected}"
-                                                     converter="#{proProductionTransactionFormMBNew.tobyUserDTOConverter}">
-                                        <f:selectItem itemLabel="Select One" itemValue=""/>
-                                        <f:selectItems var="user" itemLabel="#{user}" itemValue="#{user}" value="#{proProductionTransactionFormMBNew.tobyUserDTOList}"/>
-                                        <p:ajax event="itemSelect" listener="#{proProductionTransactionFormMBNew.changeUser()}" update="advanced" />
-                                    </p:selectOneMenu>
-                                </div>
-
-                            </div>
-                            <div class="ui-g-6 ui-xl-6">
-                                <p:outputLabel style="width: 50px;margin-right: 1%" value="العامل"/>
-                            </div>
-                        </div>
-                    </div>
-
 
                     <div class="ui-g-6 ui-xl-6">
                         <div class="ui-g-12 ui-xl-12">
 
                             <div class="ui-g-6 ui-xl-6">
-
-
-                                <p:outputLabel style="width: 50px;margin-right: 1%" value=" مراحل الانتاج"/>
-
 
                                 <p:selectOneMenu id="advanced" value="#{proProductionTransactionFormMBNew.proProductionStagesDTOSelected}" 
                                                  converter="#{proProductionTransactionFormMBNew.proProductionStagesDTOConverter}"
-                                                 panelStyle="width:180px" effect="fade" var="country"
-                                                 filter="true" filterMatchMode="startsWith">
+                                                 filter="true" filterMatchMode="contains" style="width: 59%">
 
                                     <f:selectItems value="#{proProductionTransactionFormMBNew.proProductionStagesDTOList}" var="country"
                                                    itemLabel="#{country.name}" itemValue="#{country}"/>
@@ -53,24 +29,42 @@
 
                             </div>
 
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 50px;" value=" مراحل الانتاج"/>
+
+                            </div>
+
                         </div>
                     </div>
 
-
-
-
                     <div class="ui-g-6 ui-xl-6">
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">    
+                                <div class="p-field p-col-6 p-md-6">
+                                    <p:selectOneMenu id="user" filter="true" filterMatchMode="contains" value="#{proProductionTransactionFormMBNew.tobyUserDTOSelected}"
+                                                     converter="#{proProductionTransactionFormMBNew.tobyUserDTOConverter}">
+                                        <f:selectItem itemLabel="اختر العامل" itemValue=""/>
+                                        <f:selectItems var="user" itemLabel="#{user}" itemValue="#{user}" value="#{proProductionTransactionFormMBNew.tobyUserDTOList}"/>
+                                        <p:ajax event="itemSelect" listener="#{proProductionTransactionFormMBNew.changeUser()}" update="advanced" />
+                                    </p:selectOneMenu>
+                                </div>
+
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 50px;" value="العامل"/>
+                            </div>
+                        </div>
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
                                 <p:inputText value="#{proProductionTransactionFormMBNew.invInvoiceSerial}" />
                             </div>
                             <div class="ui-g-6 ui-xl-6">
-                                <p:outputLabel style="width: 50px;margin-right: 1%" value="رقم الفاتورة"/>
+                                <p:outputLabel style="width: 50px;" value="رقم الفاتورة"/>
                             </div>
                         </div>
                     </div>
 
-                    <h:panelGroup>
+                    <div class="ui-g-12 ui-xl-12" style="text-align: center">
                         <p:commandButton     class="saveButton"  
                                              title="بحث"
                                              value="بحث" 
@@ -79,7 +73,22 @@
                                              update="table4"
                                              >
                         </p:commandButton> 
-                    </h:panelGroup>
+                        <p:commandButton     class="saveButton"   id="saveB"
+                                                 value="حفظ الكل" 
+                                                 icon="fa fa-fw fa-save" 
+                                                 action="#{proProductionTransactionFormMBNew.saveAll()}" 
+                                                 update="@form"
+                                                 style="float:right"
+                                                 />
+                    </div>
+
+
+
+
+
+
+
+
                 </p:fieldset>
 
                 <p:messages id="messages" showDetail="true" closable="true"/> 
@@ -97,11 +106,13 @@
                                   emptyMessage="EMPTY_TABLE"
                                   rowKey="#{table4.index}"
                                   >
+
+                        <f:facet name="header" > 
+                            
+                        </f:facet>
+
                         <p:column id="invItem" headerText="صنف" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
-                            <h:outputText value="#{table4.invItemName}"/>  
-
-
-
+                            <h:outputText value="#{table4.invItemName}"/> 
                         </p:column>
                         <p:column id="quantity" headerText="العدد" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
                             <h:outputText value="#{table4.quantity}"/> 
@@ -136,6 +147,11 @@
 
                     </p:dataTable>
                 </p:fieldset>
+                <p:blockUI block="form" trigger="saveB" animate="true" >
+
+                    <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                </p:blockUI> 
             </h:form>
         </h:body>
     </ui:define>

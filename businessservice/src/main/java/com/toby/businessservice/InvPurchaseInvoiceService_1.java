@@ -53,8 +53,8 @@ public interface InvPurchaseInvoiceService_1 {
     public InvInvoiceDTO findInvPurchaseInvoiceById(InvInvoiceDTO invPurchaseInvoiceDto);
 
     public InvPurchaseInvoice updateInvPurchaseInvoice(InvPurchaseInvoice invPurchaseInvoice);
-    
-    public InvPurchaseInvoice updateInvPurchaseInvoiceForStopped(Integer invPurchaseInvoiceId , Integer stopped);
+
+    public InvPurchaseInvoice updateInvPurchaseInvoiceForStopped(Integer invPurchaseInvoiceId, Integer stopped);
 
     public String updateFinalQuantityAndStatusDetailAndSaveDetail(List<InvPurchaseInvoiceDetail> invPurchaseInvoiceDetailsUpdatedList, Integer isPurchaseOrSales, InvPurchaseInvoice invPurchaseInvoice);
 
@@ -88,19 +88,21 @@ public interface InvPurchaseInvoiceService_1 {
     public List<InvInvoiceDTO> getALLInvPurchaseInvoiceDTOByTypeAndBranchId(Integer type, Integer inventoryId, int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters);
 
     public List<InvInvoiceDTO> getALLInvPurchaseInvoiceDTOByTypeAndBranchIdFroGallary2(Integer type, Integer galaryId, Integer customerId);
-    
+
     public InvInvoiceDTO getInvPurchaseInvoiceDTOBySerial(Integer serial, Integer branchId);
-    
+
     public List<InvInvoiceDTO> getALLInvPurchaseInvoiceDTOByTypeAndBranchIdFroGallary(Integer type, Integer galaryId, int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters);
 
     public void deleteInvPurchaseInvoiceDTO(InvInvoiceDTO invPurchaseInvoice, Integer isPurchaseOrSales);
-    
-    public InvInvoiceDTO returnInvInvoiceSummarySumation(InvPurchaseInvoice entity,BigDecimal sumDetailNet);
-    
+
+    public InvInvoiceDTO returnInvInvoiceSummarySumation(InvPurchaseInvoice entity, BigDecimal sumDetailNet);
+
     public BigDecimal remainForInvPurchaseInvoice(Integer invPurchaseInvoiceId);
-    
+
     public String findInvoiceStatus(Integer invPurchaseInvoiceId);
-    
+
     public List<SummitionItemsView> findSummitionQuantity(Integer gallaryId, Integer branchId, Date dateFrom, Date dateTo, Integer groupId);
-    
+
+    public List<SummitionItemsView> getTheListBasedOnStagesList(Integer gallaryId, Date dateFrom, Date dateTo, Integer groupId, Integer branchId, TobyUser tobyUser);
+
 }
