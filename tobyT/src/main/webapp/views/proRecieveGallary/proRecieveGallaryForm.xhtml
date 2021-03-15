@@ -8,27 +8,29 @@
                 xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <ui:define name="content">
-        
-            <h:form id="form" dir="#{userData.dir}" class='formmargin'>
-           
+
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+
+        <h:form id="form" dir="#{userData.dir}" class='formmargin'>
+
             <div >
-                <p:messages id="curmsg" autoUpdate="true" showDetail="true" rendered="true" closable="true"/>   
+                <p:messages id="curmsg" autoUpdate="true" showDetail="true" rendered="true" closable="true"/>
             </div>
 
-            <p:fieldset  legend="استلام الفاتورة بالمعرض"> 
+            <p:fieldset  legend="استلام الفاتورة بالمعرض">
 
                 <div  id="firstSegment" class="ui-g-12 ui-g-nopad">
 
                     <div class="ui-g">
-                         <div class="ui-g-6 ui-xl-6">
+
+                        <div class="ui-g-6 ui-xl-6">
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
-
                                     <p:calendar id="dateFrom" 
-
                                                 value="#{proFactoryDeliveryFormDTOMB.invInvoiceDTO.date}"
                                                 pattern="dd/MM/yyyy"
                                                 style="width:50%!important"/>
+
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
 
@@ -40,24 +42,20 @@
                             </div>
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
-
                                     <p:inputText style="width: 37.5%" 
                                                  id="purchIdVal" readonly="true"
                                                  value="#{proFactoryDeliveryFormDTOMB.invInvoiceDTO.serial}" />
+
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
-
                                     <p:outputLabel style="width: 95px;margin-right: 6%;" id="purchId" value="رقم التسليم" />
-
-
-
                                 </div>
                             </div>
                         </div>
+
                         <div class="ui-g-6 ui-xl-6">
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
-
                                     <p:calendar id="timeFrom" 
 
                                                 value="#{proFactoryDeliveryFormDTOMB.invInvoiceDTO.time}"
@@ -65,17 +63,15 @@
                                                 style="width:50%!important"/>
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
-
                                     <p:outputLabel style="width: 95px; margin-right: 6%;" value="الوقت"/>
-
-
-
                                 </div>
                             </div>
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:inputText readonly="true" style="width: 36.5%"  value="#{proFactoryDeliveryFormDTOMB.invInvoiceDTO.loadedSerial}"
-                                                 />
+                                    <p:inputText  style="width: 36.5%"  value="#{proFactoryDeliveryFormDTOMB.invInvoiceDTO.loadedSerial}"
+                                                  >
+                                        <p:ajax  event="blur" listener="#{proFactoryDeliveryFormDTOMB.loadDlg()}"  update="@form" />
+                                    </p:inputText>
 
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
@@ -93,84 +89,87 @@
 
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 95px; margin-right: 3%;" value="#{userData.userDDs['NOTE']}"/>
 
+                                    <p:outputLabel style="width: 95px; margin-right: 3%;" value="#{userData.userDDs['NOTE']}"/>
 
 
 
                                 </div>
                             </div>
                         </div>
-                          <h:panelGrid  class="col-md-12" columns="1"  style="margin-top:2%">
+                        <div class="ui-g-12 ui-xl-12" style="text-align: center">
+                            <h:panelGrid>
+                                <h:panelGroup  class="centerButtons">
+                                    <p:commandButton  id="saveB" 
+                                                      class="saveButtons"
+                                                      title="#{userData.userDDs['SAVE']}"
+                                                      value="#{userData.userDDs['SAVE']}" 
 
-                    <h:panelGroup  class="centerButtons">
+                                                      action="#{proFactoryDeliveryFormDTOMB.save()}"
+                                                      update="@form"/>
 
-                        <p:commandButton  id="saveB" 
-                                          class="saveButtons"
-                                          title="#{userData.userDDs['SAVE']}"
-                                          value="#{userData.userDDs['SAVE']}" 
+                                    <p:commandButton 
+                                        id="newN"
+                                        ajax="false"
 
-                                          action="#{proFactoryDeliveryFormDTOMB.save()}"
-                                          update="@form"/>
+                                        value="#{userData.userDDs['NEW']}" 
+                                        class="newButtons"
+                                        onclick="form.target = ''" 
+                                        actionListener="#{proFactoryDeliveryFormDTOMB.reset()}"/>
 
-                        <p:commandButton 
-                            id="newN"
-                            ajax="false"
-                            value="#{userData.userDDs['NEW']}" 
-                            class="newButtons"
-                            onclick="form.target = ''" 
-                            actionListener="#{proFactoryDeliveryFormDTOMB.reset()}"/>
+                                    <p:commandButton  class="printButtons"
+                                                      ajax="false"
+                                                      onclick="form.target = '_blank'"  
 
-                        <p:commandButton  
-                            class="reloadButtons"
-                            id="loadL"
-                            rendered="#{proFactoryDeliveryFormDTOMB.invInvoiceDTO.id eq null}"
-                            title="#{userData.userDDs['UPLOAD']}"
-                            value="#{userData.userDDs['UPLOAD']}" 
-                            action="#{proFactoryDeliveryFormDTOMB.loadDailogue()}"
-                            update="loaddlg"/>
-                        <p:commandButton  class="printButtons"
-                                          ajax="false"
-                                          onclick="form.target = '_blank'"  
-                                          value="#{userData.userDDs['PRINT']}" 
-                                          title="#{userData.userDDs['PRINT']}" 
-                                          actionListener="#{proFactoryDeliveryFormDTOMB.print}"/>
+                                                      value="#{userData.userDDs['PRINT']}" 
+                                                      title="#{userData.userDDs['PRINT']}" 
+                                                      actionListener="#{proFactoryDeliveryFormDTOMB.print}"/>
 
 
-                        <p:commandButton  class="deleteButtons" 
-                                          id="cancel" 
-                                          title="#{userData.userDDs['CANCEL']}" 
-                                          value="#{userData.userDDs['CANCEL']}" 
-                                          immediate="true"
-                                          action="#{proFactoryDeliveryFormDTOMB.exit()}" 
-                                          update="@form"/>
+                                    <p:commandButton  class="deleteButtons" 
+                                                      id="cancel" 
+                                                      title="#{userData.userDDs['CANCEL']}" 
+                                                      value="#{userData.userDDs['CANCEL']}" 
 
-                        <h:commandLink  style="float:left" class="sdcreenimg">  
-                            <p:graphicImage name="/img/excel.jpg" width="24" style='margin-right:25%;'/>  
-                            <p:dataExporter type="xls"
-                                            target="invPurchaseInvoiceDetailsTable" 
-                                            fileName="فاتورة اذن استلام بضاعة"
-                                            preProcessor="#{proFactoryDeliveryFormDTOMB.preProcessXLS()}"
-                                            postProcessor="#{proFactoryDeliveryFormDTOMB.postProcessXLS}" />  
-                        </h:commandLink>
+                                                      immediate="true"
+                                                      action="#{proFactoryDeliveryFormDTOMB.exit()}" 
+                                                      update="@form"/>
 
-                        <p:blockUI block="form" trigger="saveB" animate="true" >
+                                    <h:commandLink  style="float:left" class="sdcreenimg">  
+                                        <p:graphicImage name="/img/excel.jpg" width="24" style='margin-right:25%;'/>  
+                                        <p:dataExporter type="xls"
+                                                        target="invPurchaseInvoiceDetailsTable" 
+                                                        fileName="بيانات تسليم الفاتورة"
+                                                        preProcessor="#{proFactoryDeliveryFormDTOMB.preProcessXLS()}"
+                                                        postProcessor="#{proFactoryDeliveryFormDTOMB.postProcessXLS}" />  
+                                    </h:commandLink>
 
-                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+                                    <p:blockUI block="form" trigger="saveB" animate="true" >
 
-                        </p:blockUI> 
+                                        <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                                    </p:blockUI> 
 
 
-                    </h:panelGroup>
+                                </h:panelGroup>
+                            </h:panelGrid>
+                        </div>
 
-                </h:panelGrid>
+                        <h:panelGroup id="test">
 
-                         <h:panelGroup id="test">
+
+
                         </h:panelGroup>
                     </div>
                 </div>
 
             </p:fieldset>
+
+
+
+
+
+
 
             <p:fieldset id="fieldSetId" legend="بيانات استلام الفاتورة بالمعرض"  style="margin:2% 0">
 
@@ -209,18 +208,6 @@
                         <p:outputLabel value="#{invPurchaseInvoiceDetailsTable.itemName}" />          
                     </p:column>
 
-                    <p:column  style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="Unit"
-
-                               filterBy="#{invPurchaseInvoiceDetailsTable.unitName}" 
-                               filterMatchMode="contains" 
-                               sortBy="#{invPurchaseInvoiceDetailsTable.unitName}"
-                               filterable="false"
-                               headerText="#{userData.userDDs['UNIT_NUMBER']}">
-                        <p:outputLabel id="unitvalue" 
-                                       value="#{invPurchaseInvoiceDetailsTable.unitName}" style="width: 95%" />  
-
-                    </p:column>
-
                     <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px"
                               id="Quantity"
                               headerText="#{userData.userDDs['NUMBER']}"
@@ -229,16 +216,35 @@
                               sortBy="#{invPurchaseInvoiceDetailsTable.number}"
                               filterable="false">
 
-                        <p:outputLabel id="QuantityT"  
+                        <p:inputNumber id="QuantityT"  
                                        value="#{invPurchaseInvoiceDetailsTable.number}" 
                                        style="width:95%"/>
 
                     </p:column>
 
+                    <p:column 
+                        style="width: 26vh;text-align: center;border-radius: 0px" 
+                        headerText="#{userData.userDDs['TRANSACTION']}">
+                        <p:commandButton  title="#{userData.userDDs['DELETE']}" 
+                                          class="sdeleteButtons" style="color: #fff!important;background-color: red"
+                                          update="invPurchaseInvoiceDetailsTable"
+                                          action="#{proFactoryDeliveryFormDTOMB.deleteInvDetail(invPurchaseInvoiceDetailsTable)}"
+                                          icon="fa fa-remove" >
+                            <p:confirm header="#{userData.userDDs['COFIGRATION']}" 
+                                       message="#{userData.userDDs['ARE_YOU_SURE']}"
+                                       icon="ui-icon-alert" />
+                        </p:commandButton>
+
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column>
+
 
                 </p:dataTable>
 
-              
+
             </p:fieldset>
 
 
@@ -250,7 +256,7 @@
 
                     <p:dialog id="loaddlg" header="#{userData.userDDs['PURCHASE_OR_NO']}" 
                               widgetVar="loaddlg" modal="true">
-                     
+
                         <div>
                             <p:messages id="loadMsg"
                                         autoUpdate="true" 
@@ -265,9 +271,9 @@
                                          widgetVar="dlgTable" 
                                          rowIndexVar="index" 
                                          dir="rtl" 
-                                         selection="#{proFactoryDeliveryFormDTOMB.invInvoiceDTO.invDailogeDataSelected}"
+                                         selection="#{proFactoryDeliveryFormDTOMB.invInvoiceDTO.invDailogeDataListSelected}"
                                          value="#{proFactoryDeliveryFormDTOMB.dataModelInvDailogueData}" 
-                                         rows="10"  selectionMode="single"
+                                         rows="10"  
                                          rowKey="#{dlgTable.index}"
                                          paginator="true" 
                                          lazy="true" 
@@ -282,7 +288,7 @@
                                         <p:inputText id="globalFilter" onkeyup="PF('dlgTable').filter()" style="width:150px" />
                                     </p:outputPanel>
                                 </f:facet>
-
+                                <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
                                 <p:column style="width:15vw;font-size:1.8vw;text-align: right;border-radius: 0px" 
                                           filterStyle="display:none"
                                           filterBy="#{dlgTable.serial}" 
@@ -328,7 +334,8 @@
                         </div>
                         <p:commandButton  update="invPurchaseInvoiceDetailsTable test "  
                                           class="reloadButtons"
-                                          action="#{proFactoryDeliveryFormDTOMB.loadDlg()}" 
+
+                                          action="#{proFactoryDeliveryFormDTOMB.loadMultiSelection()}" 
                                           title="#{userData.userDDs['UPLOAD']}"  >
 
                         </p:commandButton>
