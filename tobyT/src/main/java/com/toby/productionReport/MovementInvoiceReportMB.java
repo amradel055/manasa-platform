@@ -59,13 +59,13 @@ public class MovementInvoiceReportMB extends BaseListBean {
     }
 
     public void search() {
-        if ((printProductionDTO.getFromInvoice() != null && printProductionDTO.getToInvoice() != null)
-                || (printProductionDTO.getFromDate() != null && printProductionDTO.getToDate() != null)) {
+//        if ((printProductionDTO.getFromInvoice() != null && printProductionDTO.getToInvoice() != null)
+//                || (printProductionDTO.getFromDate() != null && printProductionDTO.getToDate() != null)) {
             productionMovementInvoiceReports = productionMovementInvoiceReportService.getAll(printProductionDTO);
-        } else {
-            printProductionDTO.setMsg("ادخل من فاتوره الي فاتوره او من تاريخ الي تاريخ ");
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", printProductionDTO.getMsg()));
-        }
+//        } else {
+//            printProductionDTO.setMsg("ادخل من فاتوره الي فاتوره او من تاريخ الي تاريخ ");
+//            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", printProductionDTO.getMsg()));
+//        }
     }
 
     public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {
