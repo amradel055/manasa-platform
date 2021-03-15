@@ -22,7 +22,7 @@ import javax.ejb.Remote;
 public interface InvPurchaseInvoiceDetailsService {
 
     public List<InvPurchaseInvoiceDetail> getAllInvPurchaseInvoiceDetailByBranchId(Integer branchId);
-    
+
     public List<InvPurchaseInvoiceDetail> getAllInvPurchaseInvoiceDetailByBranchIdByDate(Integer branchId);
 
     public void addInvPurchaseInvoiceDetails(InvPurchaseInvoiceDetail invPurchaseInvoiceDetail);
@@ -38,17 +38,19 @@ public interface InvPurchaseInvoiceDetailsService {
     public InvPurchaseInvoiceDetail findInvPurchaseInvoiceDetailsById(Integer invPurchaseInvoiceDetailsId);
 
     public BigDecimal getLastCostItem(Integer itemId, GlYear glYear, Integer branchId);
-    
+
+    public BigDecimal getNumberOftoob(Integer id);
+
     public void updateCostAvarage(Integer branchId);
-    
+
     public void reCalcCostAvarage(Integer branchId);
-    
+
     public List<InvDetailDTO> getAllInvPurchaseInvoiceDetailsByInvPurchaseInvoiceIdDTO(InvInvoiceDTO dto);
-    
+
     public List<InvDetailDTO> getAllInvPurchaseInvoiceDetailList(InvInvoiceDTO dto);
-        
+
     public void deleteInvPurchaseInvoiceDetailListDTO(List<InvDetailDTO> invPurchaseInvoiceDetailList);
-    
-    public String addInvPurchaseInvoiceDetailsDTO(List<InvDetailDTO> invPurchaseInvoiceDetailList,InvInvoiceDTO invPurchaseInvoiceDTO , TobyUser tobyUser);
-       
+
+    public String addInvPurchaseInvoiceDetailsDTO(List<InvDetailDTO> invPurchaseInvoiceDetailList, InvInvoiceDTO invPurchaseInvoiceDTO, TobyUser tobyUser);
+
 }

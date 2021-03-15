@@ -28,6 +28,7 @@ public class InvInvoiceDTO extends BaseEntityDTO {
     private Date date;
     private Date dateEndOffer;
     private BigDecimal rate;
+    private BigDecimal numberOfToob;
     private Integer paymentType;
     private Integer status;
     private BigDecimal amountInvSupplier;
@@ -1447,5 +1448,19 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      */
     public void setInvStripDetailList(List<InvDetailDTO> invStripDetailList) {
         this.invStripDetailList = invStripDetailList;
+    }
+
+    /**
+     * @return the numberOfToob
+     */
+    public BigDecimal getNumberOfToob() {
+        return numberOfToob;
+    }
+
+    /**
+     * @param numberOfToob the numberOfToob to set
+     */
+    public void setNumberOfToob(BigDecimal numberOfToob) {
+        this.numberOfToob = numberOfToob;
     }
 }

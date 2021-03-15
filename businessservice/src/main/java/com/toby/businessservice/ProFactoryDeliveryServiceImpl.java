@@ -14,6 +14,7 @@ import com.toby.entity.InvPurchaseInvoice;
 import com.toby.entity.ProFactoryDelivery;
 import com.toby.entity.TobyCompany;
 import com.toby.entity.TobyUser;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -35,6 +36,8 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
     private GenericService genericService;
     @EJB
     private ProFactoryDeliveryDetailService proFactoryDeliveryDetailService;
+    @EJB
+    private InvPurchaseInvoiceDetailsService invPurchaseInvoiceDetailsService;
 
     @Override
     public Long getTotalRegistors(Integer type, Integer branchId, Map<String, Object> filters) {
@@ -162,7 +165,7 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
             proFactoryDelivery = findProFactoryDeliveryByInvInvoiceId(invInvoiceDTO.getNeedLoadedSerial(), type, invInvoiceDTO.getBranchId());
             if (proFactoryDelivery != null) {
                 invInvoiceDTO.setInvPurchaseInvoiceId(proFactoryDelivery.getInvPurchaseInvoiceId() == null ? null : proFactoryDelivery.getInvPurchaseInvoiceId().getId());
-            }else{
+            } else {
                 invInvoiceDTO.setMsg("لم يتم استلام الفاتوره");
             }
         } else {
@@ -175,6 +178,7 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
             invInvoiceDTO = mapToDTO(proFactoryDelivery, invInvoiceDTO, true);
             modifyReturnData(invInvoiceDTO, proFactoryDelivery);
             invInvoiceDTO.setOrganizationSiteName((proFactoryDelivery.getInvPurchaseInvoiceId() != null && proFactoryDelivery.getInvPurchaseInvoiceId().getOrganizationSiteId() != null) ? proFactoryDelivery.getInvPurchaseInvoiceId().getOrganizationSiteId().getName() : null);
+            invInvoiceDTO.setNumberOfToob(invPurchaseInvoiceDetailsService.getNumberOftoob(proFactoryDelivery.getInvPurchaseInvoiceId().getId()));
         } else {
             invInvoiceDTO.setMsg("حدث خطأ - تم حذفه ");
         }

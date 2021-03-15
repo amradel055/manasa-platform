@@ -100,6 +100,22 @@
                             </div>
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel  style="width: 36.5%"  value="#{proFactoryDeliveryFormDTOMB.invInvoiceDTO.numberOfToob}"
+                                                  >
+                                        <p:ajax  event="blur" listener="#{proFactoryDeliveryFormDTOMB.loadDlg()}"  update="@form" />
+                                    </p:outputLabel>
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+
+                                    <p:outputLabel style="width: 95px; margin-right: 3%;" value="  عدد التياب"/>
+
+
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
                                     <p:inputText style="width:69.5%"  value="#{proFactoryDeliveryFormDTOMB.invInvoiceDTO.remarks}"
                                                  />
 
