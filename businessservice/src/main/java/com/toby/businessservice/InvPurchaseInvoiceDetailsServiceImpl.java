@@ -139,6 +139,18 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
 
         return BigDecimal.ZERO;
     }
+    @Override
+    public BigDecimal getNumberOftoob(Integer id) {
+        List<BigDecimal> purchaseInvoiceDetails = new ArrayList<>();
+        Map<String, Object> params = new HashMap();
+        params.put("id", id);
+        purchaseInvoiceDetails = dao.findListByQuery(" SELECT sum(ipid.number) from InvPurchaseInvoiceDetail  ipid where ipid.invPurchaseInvoiceId.id = :id AND ipid.itemId.proGroupId.id = 1", params);
+        if (purchaseInvoiceDetails != null && !purchaseInvoiceDetails.isEmpty()) {
+            return purchaseInvoiceDetails.get(0);
+        }
+
+        return BigDecimal.ZERO;
+    }
 
     public void updateCostAvarage(Integer branchId) {
         List<InvPurchaseInvoiceDetail> purchaseInvoiceDetails = new ArrayList<>();

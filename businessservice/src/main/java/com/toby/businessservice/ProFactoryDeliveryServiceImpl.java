@@ -14,6 +14,7 @@ import com.toby.entity.InvPurchaseInvoice;
 import com.toby.entity.ProFactoryDelivery;
 import com.toby.entity.TobyCompany;
 import com.toby.entity.TobyUser;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -35,6 +36,8 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
     private GenericService genericService;
     @EJB
     private ProFactoryDeliveryDetailService proFactoryDeliveryDetailService;
+    @EJB
+    private InvPurchaseInvoiceDetailsService invPurchaseInvoiceDetailsService;
 
     @Override
     public Long getTotalRegistors(Integer type, Integer branchId, Map<String, Object> filters) {
@@ -141,7 +144,7 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
                 invPurchaseInvoiceDetailsListDTO = proFactoryDeliveryDetailService.getAllInvPurchaseInvoiceDetailsByInvPurchaseInvoiceIdDTO(invInvoiceDTO, 1, 0);
             } else if (ScreenNameClassEnum.PRORECIEVEGALLARY.equals(invInvoiceDTO.getScreenName())) {
                 invPurchaseInvoiceDetailsListDTO = proFactoryDeliveryDetailService.getAllInvPurchaseInvoiceDetailsByInvPurchaseInvoiceIdDTO(invInvoiceDTO, 2, 1);
-            }else{
+            } else {
                 invPurchaseInvoiceDetailsListDTO = proFactoryDeliveryDetailService.getAllProPurchaseInvoiceDetailsByInvPurchaseInvoiceIdDTO(invInvoiceDTO);
             }
 
@@ -160,7 +163,11 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
         ProFactoryDelivery proFactoryDelivery = null;
         if (invInvoiceDTO.getNeedLoadedSerial() != null && invInvoiceDTO.getNeedLoadedSerial() != 0) {
             proFactoryDelivery = findProFactoryDeliveryByInvInvoiceId(invInvoiceDTO.getNeedLoadedSerial(), type, invInvoiceDTO.getBranchId());
-            invInvoiceDTO.setInvPurchaseInvoiceId(proFactoryDelivery.getInvPurchaseInvoiceId() == null ? null : proFactoryDelivery.getInvPurchaseInvoiceId().getId());
+            if (proFactoryDelivery != null) {
+                invInvoiceDTO.setInvPurchaseInvoiceId(proFactoryDelivery.getInvPurchaseInvoiceId() == null ? null : proFactoryDelivery.getInvPurchaseInvoiceId().getId());
+            } else {
+                invInvoiceDTO.setMsg("لم يتم استلام الفاتوره");
+            }
         } else {
             proFactoryDelivery = dao.findEntityById(ProFactoryDelivery.class, invInvoiceDTO.getInvDailogeDataSelected().getId());
         }
@@ -170,6 +177,8 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
             }
             invInvoiceDTO = mapToDTO(proFactoryDelivery, invInvoiceDTO, true);
             modifyReturnData(invInvoiceDTO, proFactoryDelivery);
+            invInvoiceDTO.setOrganizationSiteName((proFactoryDelivery.getInvPurchaseInvoiceId() != null && proFactoryDelivery.getInvPurchaseInvoiceId().getOrganizationSiteId() != null) ? proFactoryDelivery.getInvPurchaseInvoiceId().getOrganizationSiteId().getName() : null);
+            invInvoiceDTO.setNumberOfToob(invPurchaseInvoiceDetailsService.getNumberOftoob(proFactoryDelivery.getInvPurchaseInvoiceId().getId()));
         } else {
             invInvoiceDTO.setMsg("حدث خطأ - تم حذفه ");
         }
