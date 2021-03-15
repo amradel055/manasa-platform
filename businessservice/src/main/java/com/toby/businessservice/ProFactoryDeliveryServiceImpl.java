@@ -141,7 +141,7 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
                 invPurchaseInvoiceDetailsListDTO = proFactoryDeliveryDetailService.getAllInvPurchaseInvoiceDetailsByInvPurchaseInvoiceIdDTO(invInvoiceDTO, 1, 0);
             } else if (ScreenNameClassEnum.PRORECIEVEGALLARY.equals(invInvoiceDTO.getScreenName())) {
                 invPurchaseInvoiceDetailsListDTO = proFactoryDeliveryDetailService.getAllInvPurchaseInvoiceDetailsByInvPurchaseInvoiceIdDTO(invInvoiceDTO, 2, 1);
-            }else{
+            } else {
                 invPurchaseInvoiceDetailsListDTO = proFactoryDeliveryDetailService.getAllProPurchaseInvoiceDetailsByInvPurchaseInvoiceIdDTO(invInvoiceDTO);
             }
 
@@ -160,7 +160,11 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
         ProFactoryDelivery proFactoryDelivery = null;
         if (invInvoiceDTO.getNeedLoadedSerial() != null && invInvoiceDTO.getNeedLoadedSerial() != 0) {
             proFactoryDelivery = findProFactoryDeliveryByInvInvoiceId(invInvoiceDTO.getNeedLoadedSerial(), type, invInvoiceDTO.getBranchId());
-            invInvoiceDTO.setInvPurchaseInvoiceId(proFactoryDelivery.getInvPurchaseInvoiceId() == null ? null : proFactoryDelivery.getInvPurchaseInvoiceId().getId());
+            if (proFactoryDelivery != null) {
+                invInvoiceDTO.setInvPurchaseInvoiceId(proFactoryDelivery.getInvPurchaseInvoiceId() == null ? null : proFactoryDelivery.getInvPurchaseInvoiceId().getId());
+            }else{
+                invInvoiceDTO.setMsg("لم يتم استلام الفاتوره");
+            }
         } else {
             proFactoryDelivery = dao.findEntityById(ProFactoryDelivery.class, invInvoiceDTO.getInvDailogeDataSelected().getId());
         }
@@ -170,6 +174,7 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
             }
             invInvoiceDTO = mapToDTO(proFactoryDelivery, invInvoiceDTO, true);
             modifyReturnData(invInvoiceDTO, proFactoryDelivery);
+            invInvoiceDTO.setOrganizationSiteName((proFactoryDelivery.getInvPurchaseInvoiceId() != null && proFactoryDelivery.getInvPurchaseInvoiceId().getOrganizationSiteId() != null) ? proFactoryDelivery.getInvPurchaseInvoiceId().getOrganizationSiteId().getName() : null);
         } else {
             invInvoiceDTO.setMsg("حدث خطأ - تم حذفه ");
         }
