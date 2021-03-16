@@ -14,6 +14,7 @@ import com.toby.entity.GlAccount;
 import com.toby.entity.GlBank;
 import com.toby.entity.TobyCompany;
 import com.toby.entity.TobyUser;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -262,5 +263,15 @@ public class GlBankServiceImpl implements GlBankService {
         List<GlBank> glBankList = dao.findListByQuery("SELECT e FROM GlBank e WHERE e.branchId.id = :branchId ", params);
         return mapToDTOList(glBankList,tobyUser);      
         
+    }
+
+    @Override
+    public BigDecimal findGlBankOpeninngBalance(Integer branchId , Integer bankId) {
+        Map<String, Object> params = new HashMap();
+        params.put("branchId", branchId);
+        params.put("bankId", bankId);
+        String sql = "SELECT gb.openinngBalance FROM GlBank gb WHERE gb.branchId.id = :branchId and gb.id = :bankId"  ;
+
+        return dao.findEntityByQuery(sql, params);
     }
 }

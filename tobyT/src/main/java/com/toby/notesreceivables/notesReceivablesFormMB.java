@@ -24,6 +24,7 @@ import com.toby.converter.InstTransactionViewConverter;
 import com.toby.converter.InvOrganizationSiteConverter;
 import com.toby.converter.SymbolConverter;
 import com.toby.dto.InvInvoiceDTO;
+import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.entity.AccountsSystemSettings;
 import com.toby.entity.CostCenter;
 import com.toby.entity.GlAccount;
@@ -138,14 +139,13 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
     private List<CostCenter> costCenterList;
     private List<GlBank> glBankList;
     private List<GlAdminUnit> adminUnitList;
-    
+
     private List<InvOrganizationSite> supplierList;
     private List<InvOrganizationSite> customerList;
 
     private Map<Integer, GlBankTransactionDetail> glBankTransactionDetailsMap = new HashMap();
 
     private GlBankConverter bankConverter;
-   
 
     private GlaccountConverter glAccountConverter;
 
@@ -634,7 +634,15 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
                 glBankTransactionDetailEntity.setAdminUnitId(transactionDetail.getAdminUnitId() != null ? transactionDetail.getAdminUnitId().getId() : null);
                 glBankTransactionDetailEntity.setGlBankTransactionId(transactionDetail.getGlBankTransactionId() != null ? transactionDetail.getGlBankTransactionId().getId() : null);
                 glBankTransactionDetailEntity.setRemarks(transactionDetail.getRemarks() != null ? transactionDetail.getRemarks() : null);
-                glBankTransactionDetailEntity.setInvOrganizationSite(transactionDetail.getOrganizationSiteId() != null ? transactionDetail.getOrganizationSiteId() : null);
+                InvOrganizationSite ios = transactionDetail.getOrganizationSiteId();
+                InvOrganizationSiteDTO invOrganizationSiteDTO = new InvOrganizationSiteDTO();
+                if (ios != null) {
+                    invOrganizationSiteDTO.setId(ios.getId());
+                    invOrganizationSiteDTO.setName(ios.getName());
+                    invOrganizationSiteDTO.setCode(ios.getCode());
+                    invOrganizationSiteDTO.setMobile(ios.getMobile());
+                }
+                glBankTransactionDetailEntity.setInvOrganizationSite(transactionDetail.getOrganizationSiteId() != null ? invOrganizationSiteDTO : null);
                 glBankTransactionDetailEntity.setValue(transactionDetail.getValue() != null ? transactionDetail.getValue().setScale(2, BigDecimal.ROUND_UP) : null);
                 glBankTransactionDetailEntity.setValueLocal(transactionDetail.getValueLocal() != null ? transactionDetail.getValueLocal().setScale(2, BigDecimal.ROUND_UP) : null);
                 glBankTransactionDetailEntity.setGlItems(transactionDetail.getSymbolId());
@@ -657,7 +665,8 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
 //            checkDate(true);
             if (glBankTransactionEntity.getGlBank() != null && glBankTransactionEntity.getGlBank().getCurrencyId() != null) {
                 if (glBankTransactionEntity.getId() == null) {
-                    glBankTransactionEntity.setRate(updateRate(glBankTransactionEntity.getGlBank().getCurrencyId(), glBankTransactionEntity.getDate()));
+//                    glBankTransactionEntity.setRate(updateRate(glBankTransactionEntity.getGlBank().getCurrencyId(), glBankTransactionEntity.getDate()));
+                    glBankTransactionEntity.setRate(BigDecimal.ONE);
                 }
                 glBankTransactionEntity.setRate(glBankTransactionEntity.getRate() != null ? glBankTransactionEntity.getRate().setScale(2, BigDecimal.ROUND_UP) : null);
                 changeRate();
@@ -845,7 +854,12 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
                         }
                     } else {
                         if (glBankTransactionDetailEntity.getInvOrganizationSite() != null) {
-                            bankTransactionDetail.setOrganizationSiteId(glBankTransactionDetailEntity.getInvOrganizationSite() != null ? glBankTransactionDetailEntity.getInvOrganizationSite() : null);
+                            InvOrganizationSiteDTO invOrganizationSiteDTO = glBankTransactionDetailEntity.getInvOrganizationSite();
+                            InvOrganizationSite invOrganizationSite = new InvOrganizationSite();
+                            if (invOrganizationSiteDTO != null) {
+                                invOrganizationSite.setId(invOrganizationSiteDTO.getId());
+                            }
+                            bankTransactionDetail.setOrganizationSiteId(glBankTransactionDetailEntity.getInvOrganizationSite() != null ? invOrganizationSite : null);
                             GlAccount accountCreditId = new GlAccount();
                             if (glBankTransactionDetailEntity.getInvOrganizationSite().getAccountId() != null) {
                                 accountCreditId.setId(glBankTransactionDetailEntity.getInvOrganizationSite().getAccountId().getId());
@@ -960,9 +974,9 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب اختيار جهة التعامل"));
                     setShowMessageDetails(true);
                     saveValidation = false;
-                } else if (glBankTransactionDetailEntity.getInvOrganizationSite() != null && glBankTransactionDetailEntity.getInvOrganizationSite().getAccountId() == null) {
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "لا يوجد حساب مخصص لهذا العميل"));
-                    setShowMessageDetails(true);
+//                } else if (glBankTransactionDetailEntity.getInvOrganizationSite() != null && glBankTransactionDetailEntity.getInvOrganizationSite().getAccountId() == null) {
+//                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "لا يوجد حساب مخصص لهذا العميل"));
+//                    setShowMessageDetails(true);
                 } else if (glBankTransactionDetailEntity.getGlItems() != null && glBankTransactionDetailEntity.getGlItems().getAccountId() == null) {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "لا يوجد حساب مخصص لهذا البند"));
                     setShowMessageDetails(true);

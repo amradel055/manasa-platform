@@ -16,9 +16,11 @@ import com.toby.entity.GlBankTransactionDetail;
 import com.toby.entity.InvPurchaseInvoice;
 import com.toby.entity.Symbol;
 import com.toby.entity.TobyUser;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.EJB;
@@ -35,12 +37,19 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
     @EJB
     private GenericDAO dao;
     private EntityManager em;
+    private BigDecimal value ;
+    private Map<Integer, BigDecimal> balance = new HashMap<>();
+    private Map<Integer, BigDecimal> openingBalance = new HashMap<>();
+    GlBankDTO bankDTOTo = new GlBankDTO();
 
     @EJB
     GlBankTransactionDetailsService glBankTransactionDetailsService;
-
     @EJB
     AccountsSystemSettingsService accountsSystemSettingsService;
+    @EJB
+    private TobyUserBankService tobyUserBankService;
+    @EJB
+    private GlBankService bankService;
 
     @Override
     public GlBankTransaction addGlBankTransaction(GlBankTransaction glBankTransaction, List<GlBankTransactionDetail> glBankTransactionDetailList, List<GlBankTransactionDetail> glBankTransactionDetailListDeleted, Integer companyId) {
@@ -212,11 +221,11 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
     }
 
     @Override
-    public Long getTotalRegistors(Integer transactionType, Integer branchId, Map<String, Object> filters) {
+    public Long getTotalRegistors(Integer transactionType, Integer branchId, Integer userId, Map<String, Object> filters, Integer selectGlBankId) {
         StringBuilder builder = new StringBuilder();
         filters.put("transactionType", transactionType);
         builder.append("SELECT count(s) FROM GlBankTransaction s WHERE s.branchId.id = :branchId AND s.transactionType =:transactionType ");
-        appendFilter(filters, branchId, builder);
+        appendFilter(filters, branchId, userId, builder, selectGlBankId, transactionType);
         Long details = dao.findEntityByQuery(builder.toString(), filters);
 
         return details;
@@ -232,6 +241,25 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
 
         return details;
     }
+    
+    public void appendFilter(Map<String, Object> filters, Integer branchId, Integer userId, StringBuilder builder, Integer selectGlBankId, Integer transactionType) {
+        filters.put("branchId", branchId);
+        if (selectGlBankId != null) {
+            filters.put("selectGlBankId", selectGlBankId);
+            builder.append(" AND s.glBankId.id = :selectGlBankId ");
+        }
+        List<Integer> glBankIdList = tobyUserBankService.getAllGlBankIdForUserByTypeAndBranchId(userId, branchId, transactionType);
+        filters.put("glBankIdList", glBankIdList);
+        builder.append(" AND s.glBankId.id in :glBankIdList ");
+
+        if (filters.get("globalFilter") != null && !filters.get("globalFilter").toString().isEmpty()) {
+            String filter = " and (s.serial like CONCAT('%',:globalFilter ,'%')  OR s.glBankId.name  like CONCAT('%',:globalFilter ,'%') OR s.valueLocal like CONCAT('%',:globalFilter ,'%') OR s.createdBy.name like CONCAT('%',:globalFilter ,'%')  OR s.remark like CONCAT('%',:globalFilter ,'%') OR s.remark2 like CONCAT('%',:globalFilter ,'%') OR s.value like CONCAT('%',:globalFilter ,'%') ) ";
+            builder.append(filter);
+        } else {
+            filters.remove("globalFilter");
+        }
+    }
+
 
     public void appendFilter(Map<String, Object> filters, Integer branchId, StringBuilder builder) {
         filters.put("branchId", branchId);
@@ -244,14 +272,14 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
     }
 
     @Override
-    public List<GlBankTransactionDTO> getALLGlBankTransactionRecievableByBranchId(Integer transactionType, int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters) {
+    public List<GlBankTransactionDTO> getALLGlBankTransactionRecievableByBranchId(Integer transactionType, int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters, Integer selectGlBankId, Integer userId) {
         filters.put("transactionType", transactionType);
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT s FROM GlBankTransaction s WHERE s.branchId.id = :branchId AND s.transactionType =:transactionType  ");
-        appendFilter(filters, branchId, builder);
+        appendFilter(filters, branchId, userId, builder, selectGlBankId, transactionType);
         builder.append(" order by s.serial DESC");
         List<GlBankTransaction> details = dao.findListByQuery(builder.toString(), filters, first, pageSize);
-        return returnListDTO(details);
+        return returnListDTO(details, false);
     }
 
     @Override
@@ -369,6 +397,21 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
         return entity;
     }
 
+    public List<GlBankTransactionDTO> returnListDTO(List<GlBankTransaction> list, Boolean duplara) {
+        List<GlBankTransactionDTO> dTOList = new ArrayList<>();
+        for (GlBankTransaction entity : list) {
+            dTOList.add(mapTODTO(entity, false, null));
+
+            if (duplara) {
+                GlBankTransactionDTO DTO2 = transfareTo(entity, null);
+                if (DTO2 != null) {
+                    dTOList.add(DTO2);
+                }
+            }
+        }
+        return dTOList;
+    }
+
     private List<GlBankTransactionDTO> returnListDTO(List<GlBankTransaction> list) {
         List<GlBankTransactionDTO> dTOList = new ArrayList<>();
         for (GlBankTransaction entity : list) {
@@ -402,6 +445,162 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
 
         glBankTransactionDetailsService.addCashDetail(dTO, glBankTransaction.getId(), tobyUser);
     }
+    
+    private GlBankTransactionDTO transfareTo(GlBankTransaction entity, Integer brankId) {
+
+        if (entity.getTransactionType() != null && entity.getTransactionType() == 2) {
+            entity.setDublara(Boolean.TRUE);
+            GlBankTransactionDTO dTO = initMapToDTO(entity, brankId);
+            if (openingBalance.containsKey(entity.getDocumentSerial())) {
+                dTO.setOpeningBalance(openingBalance.get(entity.getDocumentSerial()));
+            } else {
+                dTO.setOpeningBalance(BigDecimal.ZERO);
+            }
+            if (balance.containsKey(dTO.getDocumentSerial())) {
+                setValue(balance.get(dTO.getDocumentSerial()));
+            }
+            //toGlbank
+            GlBankTransactionDTO dTO2 = dTO;
+            dTO2.setTransactionTypeName("تحويل وارد");
+            dTO2.setDebit(dTO.getValueLocal());
+            dTO2.setCredit(BigDecimal.ZERO);
+            dTO.setListOrder(2);
+            if (bankDTOTo.getId().equals(brankId)) {
+                setValue(getValue().add(dTO.getValueLocal()));
+            }
+            if (balance.containsKey(dTO.getDocumentSerial())) {
+                balance.replace(dTO.getDocumentSerial(), getValue());
+            } else {
+                balance.put(dTO.getDocumentSerial(), getValue());
+            }
+            dTO2.setBalance(getValue());
+            setValue(BigDecimal.ZERO);
+            dTO2.setIndex(dTO.getIndex() + 1);
+            //toGlbank 
+            dTO2.setGlBankId(bankDTOTo);
+            bankDTOTo = new GlBankDTO();
+            dTO = null;
+            return dTO2;
+        }
+        return null;
+    }
+
+    
+    public GlBankTransactionDTO mapTODTO(GlBankTransaction entity, Boolean needDetail, Integer brankId) {
+
+        GlBankTransactionDTO dTO = initMapToDTO(entity, brankId);
+
+        if (needDetail) {
+
+        }
+
+        return dTO;
+    }
+    
+     private GlBankTransactionDTO initMapToDTO(GlBankTransaction entity, Integer brankId) {
+
+        GlBankTransactionDTO dTO = new GlBankTransactionDTO();
+
+        dTO.setId(entity.getId());
+        dTO.setSerial(entity.getSerial());
+        if (entity.getGlBankId() != null) {
+            GlBankDTO bankDTO = new GlBankDTO();
+            bankDTO.setId(entity.getGlBankId().getId());
+            bankDTO.setName(entity.getGlBankId().getName());
+            dTO.setGlBankId(bankDTO);
+        }
+
+        dTO.setDate(entity.getDate());
+        dTO.setRemark(entity.getRemark());
+        dTO.setRemark2(entity.getRemark2());
+        dTO.setValue(entity.getValue());
+        dTO.setValueLocal(entity.getValueLocal());
+        dTO.setCreatedByName(entity.getCreatedBy().getName());
+        dTO.setOrganizationType(entity.getOrganizationType());
+        dTO.setDocumentSerial(entity.getDocumentSerial());
+
+        if (entity.getPaymentType() != null) {
+            if (entity.getPaymentType() == 0) {
+                dTO.setPaymentTypeName("نقدي");
+            } else if (entity.getPaymentType() == 1) {
+                dTO.setPaymentTypeName("الشيك");
+            } else {
+                dTO.setPaymentTypeName("الشيك الخطي");
+
+            }
+        }
+
+        if (entity.getTransactionType() != null && !entity.getDublara()) {
+            dTO.setTransactionType(entity.getTransactionType());
+            if (openingBalance.containsKey(entity.getDocumentSerial())) {
+                dTO.setOpeningBalance(openingBalance.get(entity.getDocumentSerial()));
+            } else {
+                if (entity.getGlBankId() == null) {
+                    BigDecimal bankOpeningBalance = bankService.findGlBankOpeninngBalance(entity.getBranchId().getId(), brankId);
+                    dTO.setOpeningBalance(bankOpeningBalance);
+                    setValue(bankOpeningBalance);
+                } else {
+                    dTO.setOpeningBalance(entity.getGlBankId().getOpeninngBalance());
+                    setValue(entity.getGlBankId().getOpeninngBalance());
+                }
+            }
+
+            if (balance.containsKey(entity.getDocumentSerial())) {
+                setValue(balance.get(entity.getDocumentSerial()));
+            }
+
+            
+            if (entity.getTransactionType() == 0) {
+                dTO.setTransactionTypeName("سند صرف	");
+                dTO.setCredit(entity.getValueLocal());
+                dTO.setDebit(BigDecimal.ZERO);
+                setValue(getValue().subtract(entity.getValueLocal()));
+                dTO.setListOrder(1);
+            } else if (entity.getTransactionType() == 1) {
+                dTO.setTransactionTypeName("سند قبض	");
+                dTO.setDebit(entity.getValueLocal());
+                dTO.setCredit(BigDecimal.ZERO);
+                setValue(getValue().add(entity.getValueLocal()));
+                dTO.setListOrder(0);
+            } else if (entity.getTransactionType() == 2) {
+                //fromGlBank
+                dTO.setTransactionTypeName("تحويل صادر");
+                dTO.setCredit(entity.getValueLocal());
+                dTO.setDebit(BigDecimal.ZERO);
+                dTO.setListOrder(2);
+                GlBankDTO bankDTOFrom = new GlBankDTO();
+                for (Iterator iterator = entity.getGlBankTransactionDetailCollection().iterator(); iterator.hasNext();) {
+                    GlBankTransactionDetail bankTransactionDetail = (GlBankTransactionDetail) iterator.next();
+                    //fromGlBank 
+                    bankDTOFrom.setId(bankTransactionDetail.getBankIdFrom().getId());
+                    bankDTOFrom.setName(bankTransactionDetail.getBankIdFrom().getName());
+                    dTO.setGlBankId(bankDTOFrom);
+                    //toGlBank
+                    bankDTOTo.setId(bankTransactionDetail.getBankIdTo().getId());
+                    bankDTOTo.setName(bankTransactionDetail.getBankIdTo().getName());
+                }
+                if (bankDTOFrom.getId().equals(brankId)) {
+                    setValue(getValue().subtract(entity.getValueLocal()));
+                }
+            }
+            if (balance.containsKey(entity.getDocumentSerial())) {
+                balance.replace(entity.getDocumentSerial(), getValue());
+            } else {
+                balance.put(entity.getDocumentSerial(), getValue());
+            }
+            dTO.setBalance(getValue());
+            setValue(BigDecimal.ZERO);
+        }
+        dTO.setPostFlag(entity.getPostFlag());
+        dTO.setIndex(entity.getId());
+        dTO.setCreatedDate(entity.getCreationDate());
+        dTO.setCreatedBy(entity.getCreatedBy().getId());
+
+        return dTO;
+    }
+
+    
+    
 
     public GlBankTransaction mapToEntityFromInvSales(InvInvoiceDTO dTO, TobyUser tobyUser) {
         GlBankTransaction entity = new GlBankTransaction();
@@ -438,6 +637,24 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
         entity.setSerial(getMaxSerail(entity));
 
         return entity;
+    }
+    
+
+    /**
+     * @return the value
+     */
+    public BigDecimal getValue() {
+        if(value == null){
+            value = BigDecimal.ZERO;
+        }
+        return value;
+    }
+
+    /**
+     * @param value the value to set
+     */
+    public void setValue(BigDecimal value) {
+        this.value = value;
     }
 
 }

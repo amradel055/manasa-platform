@@ -42,6 +42,13 @@ public class GlBankTransactionDTO extends BaseEntityDTO {
     
     private String paymentTypeName;
     private String createdByName;
+    private Integer documentSerial;
+    private String transactionTypeName;
+    private BigDecimal credit;
+    private BigDecimal debit;
+    private BigDecimal balance;
+    private BigDecimal openingBalance;
+    private Integer listOrder;
     
     
 
@@ -347,6 +354,104 @@ public class GlBankTransactionDTO extends BaseEntityDTO {
      */
     public void setCreatedByName(String createdByName) {
         this.createdByName = createdByName;
+    }
+
+    /**
+     * @return the documentSerial
+     */
+    public Integer getDocumentSerial() {
+        return documentSerial;
+    }
+
+    /**
+     * @param documentSerial the documentSerial to set
+     */
+    public void setDocumentSerial(Integer documentSerial) {
+        this.documentSerial = documentSerial;
+    }
+
+    /**
+     * @return the transactionTypeName
+     */
+    public String getTransactionTypeName() {
+        return transactionTypeName;
+    }
+
+    /**
+     * @param transactionTypeName the transactionTypeName to set
+     */
+    public void setTransactionTypeName(String transactionTypeName) {
+        this.transactionTypeName = transactionTypeName;
+    }
+
+    /**
+     * @return the credit
+     */
+    public BigDecimal getCredit() {
+        return credit;
+    }
+
+    /**
+     * @param credit the credit to set
+     */
+    public void setCredit(BigDecimal credit) {
+        this.credit = credit;
+    }
+
+    /**
+     * @return the debit
+     */
+    public BigDecimal getDebit() {
+        return debit;
+    }
+
+    /**
+     * @param debit the debit to set
+     */
+    public void setDebit(BigDecimal debit) {
+        this.debit = debit;
+    }
+
+    /**
+     * @return the balance
+     */
+    public BigDecimal getBalance() {
+        return balance;
+    }
+
+    /**
+     * @param balance the balance to set
+     */
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
+    }
+
+    /**
+     * @return the openingBalance
+     */
+    public BigDecimal getOpeningBalance() {
+        return openingBalance;
+    }
+
+    /**
+     * @param openingBalance the openingBalance to set
+     */
+    public void setOpeningBalance(BigDecimal openingBalance) {
+        this.openingBalance = openingBalance;
+    }
+
+    /**
+     * @return the listOrder
+     */
+    public Integer getListOrder() {
+        return listOrder;
+    }
+
+    /**
+     * @param listOrder the listOrder to set
+     */
+    public void setListOrder(Integer listOrder) {
+        this.listOrder = listOrder;
     }
 
 }

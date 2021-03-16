@@ -6,6 +6,7 @@
 package com.toby.entiy;
 
 import com.toby.dto.InvOrganizationSiteDTO;
+import com.toby.entity.BaseEntity;
 import com.toby.entity.CostCenter;
 import com.toby.entity.GlAccount;
 import com.toby.entity.GlAdminUnit;
@@ -13,6 +14,7 @@ import com.toby.entity.GlBank;
 import com.toby.entity.InvOrganizationSite;
 import com.toby.entity.Symbol;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  *
@@ -32,8 +34,9 @@ public class GlBankTransactionDetailEntity extends BaseEntity {
     private Integer glBankTransactionId;
     private GlBank bankFrom;
     private GlBank bankTo;
-    private InvOrganizationSite invOrganizationSite;
+    private InvOrganizationSiteDTO invOrganizationSite;
     private String accountName;
+    private String organizationsiteName;
     private Integer accountNumber;
     private GlAccount glAccount;
     private GlAccount glAccountBak;
@@ -43,8 +46,18 @@ public class GlBankTransactionDetailEntity extends BaseEntity {
     private GlAdminUnit glAdminUnitBak;
     private Symbol glItems;
     private Integer type;
+    private Integer serial;
     private BigDecimal total;
-    private String organizationsiteName;
+    private BigDecimal rate;
+    private BigDecimal valueLocalReverse;
+    private List<GlBankTransactionDetailEntity> glBankTransactionDetailEntityList;
+
+    public GlBankTransactionDetailEntity() {
+    }
+
+    public GlBankTransactionDetailEntity(List<GlBankTransactionDetailEntity> glBankTransactionDetailEntityList) {
+        this.glBankTransactionDetailEntityList = glBankTransactionDetailEntityList;
+    }
 
     public String getRemarks() {
         return remarks;
@@ -120,28 +133,6 @@ public class GlBankTransactionDetailEntity extends BaseEntity {
      */
     public void setBankTo(GlBank bankTo) {
         this.bankTo = bankTo;
-    }
-
-    /**
-     * @return the invOrganizationSite
-     */
-    public InvOrganizationSite getInvOrganizationSite() {
-        return invOrganizationSite;
-    }
-
-    /**
-     * @param invOrganizationSite the invOrganizationSite to set
-     */
-    public void setInvOrganizationSite(InvOrganizationSite invOrganizationSite) {
-        this.invOrganizationSite = invOrganizationSite;
-    }
-
-    public void setInvOrganizationSite(InvOrganizationSiteDTO invOrganizationSite) {
-        InvOrganizationSite invOrganizationSiteNew = new InvOrganizationSite();
-        invOrganizationSiteNew.setId(invOrganizationSite.getId());
-        invOrganizationSiteNew.setName(invOrganizationSite.getName());
-        invOrganizationSiteNew.setCode(invOrganizationSite.getCode());
-        this.invOrganizationSite = invOrganizationSiteNew;
     }
 
     public Integer getAccountCreditId() {
@@ -334,6 +325,80 @@ public class GlBankTransactionDetailEntity extends BaseEntity {
      */
     public void setOrganizationsiteName(String organizationsiteName) {
         this.organizationsiteName = organizationsiteName;
+    }
+
+    /**
+     * @return the rate
+     */
+    public BigDecimal getRate() {
+        if (rate == null) {
+            rate = BigDecimal.ZERO;
+        }
+        return rate;
+    }
+
+    /**
+     * @param rate the rate to set
+     */
+    public void setRate(BigDecimal rate) {
+        this.rate = rate;
+    }
+
+    /**
+     * @return the valueLocalReverse
+     */
+    public BigDecimal getValueLocalReverse() {
+        return valueLocalReverse;
+    }
+
+    /**
+     * @param valueLocalReverse the valueLocalReverse to set
+     */
+    public void setValueLocalReverse(BigDecimal valueLocalReverse) {
+        this.valueLocalReverse = valueLocalReverse;
+    }
+
+    /**
+     * @return the glBankTransactionDetailEntityList
+     */
+    public List<GlBankTransactionDetailEntity> getGlBankTransactionDetailEntityList() {
+        return glBankTransactionDetailEntityList;
+    }
+
+    /**
+     * @param glBankTransactionDetailEntityList the
+     * glBankTransactionDetailEntityList to set
+     */
+    public void setGlBankTransactionDetailEntityList(List<GlBankTransactionDetailEntity> glBankTransactionDetailEntityList) {
+        this.glBankTransactionDetailEntityList = glBankTransactionDetailEntityList;
+    }
+
+    /**
+     * @return the invOrganizationSite
+     */
+    public InvOrganizationSiteDTO getInvOrganizationSite() {
+        return invOrganizationSite;
+    }
+
+    /**
+     * @param invOrganizationSite the invOrganizationSite to set
+     */
+    public void setInvOrganizationSite(InvOrganizationSiteDTO invOrganizationSite) {
+        this.invOrganizationSite = invOrganizationSite;
+    }
+
+    /**
+     * @return the serial
+     */
+    public Integer getSerial() {
+        return serial;
+    }
+
+    /**
+     * @param serial the serial to set
+     */
+    public void setSerial(Integer serial) {
+        this.serial = serial;
     }
 
 }

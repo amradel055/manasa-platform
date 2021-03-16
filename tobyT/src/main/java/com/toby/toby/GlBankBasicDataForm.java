@@ -9,6 +9,7 @@ import com.toby.businessservice.CurrencyOperationService;
 import com.toby.bussinessservice.global.AutoCompleteService;
 import com.toby.converter.InvOrganizationSiteConverter;
 import com.toby.converter.InvOrganizationSiteDTOConverter;
+import com.toby.dto.CurrencyDTO;
 import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.entity.Currency;
 import com.toby.entity.CurrencyOperation;
@@ -45,21 +46,21 @@ public abstract class GlBankBasicDataForm extends BaseFormBean {
     
      private InvOrganizationSiteConverter invOrganizationSiteConverter;
 
-    public BigDecimal updateRate(Currency currency, Date date) {
-
-        if (currency != null) {
-            if (date != null) {
-                CurrencyOperation currencyOperation = currencyOperationService.getRatesByDates(currency.getId(), date, getUserData().getCompany().getId());
-
-                return currencyOperation == null ? BigDecimal.ONE : currencyOperation.getRate();
-            } else {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, getUserData().getUserDDs().get("ERROR"), getUserData().getUserDDs().get("MUST_SELECT_DATE")));
-            }
-        } else {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, getUserData().getUserDDs().get("ERROR"), getUserData().getUserDDs().get("NO_CURRENCY_ERROR")));
-        }
-        return null;
-    }
+//    public BigDecimal updateRate(CurrencyDTO currency, Date date) {
+//
+//        if (currency != null) {
+//            if (date != null) {
+//                CurrencyOperation currencyOperation = currencyOperationService.getRatesByDates(currency.getId(), date, getUserData().getCompany().getId());
+//
+//                return currencyOperation == null ? BigDecimal.ONE : currencyOperation.getRate();
+//            } else {
+//                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, getUserData().getUserDDs().get("ERROR"), getUserData().getUserDDs().get("MUST_SELECT_DATE")));
+//            }
+//        } else {
+//            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, getUserData().getUserDDs().get("ERROR"), getUserData().getUserDDs().get("NO_CURRENCY_ERROR")));
+//        }
+//        return null;
+//    }
 
     public abstract void checkDate(Boolean dateType);
 

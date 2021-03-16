@@ -9,6 +9,7 @@ import com.toby.businessservice.reports.searchBean.GlBankEntitySearch;
 import com.toby.dto.GlBankDTO;
 import com.toby.entity.GlBank;
 import com.toby.entity.TobyUser;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -34,6 +35,8 @@ public interface GlBankService {
     public List<GlBank> getGlBankByBranchIdAndCode(Integer branchId, String code , Integer bankId);
 
     public List<GlBank> findAllGlBankForReport(GlBankEntitySearch glBankEntitySearch);
+    
+    public BigDecimal findGlBankOpeninngBalance(Integer branchId , Integer bankId);
     
     public List<GlBankDTO> getAllGlBankDTOByBranchId(TobyUser tobyUser);
 }

@@ -1744,6 +1744,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                     + "            WHEN (pfd.`type` = 0) THEN 'تسليم للمشغل'\n"
                     + "            WHEN (pfd.`type` = 1) THEN 'تسليم للمعرض'\n"
                     + "            WHEN (pfd.`type` = 2) THEN 'استلام بالمعرض '\n"
+                    + "            WHEN (pfd.`type` = 3) THEN 'تسليم للعميل'\n"
                     + "        END) AS `status` \n"
                     + "FROM toby.pro_factory_delivery pfd left join inv_purchase_invoice ipi on ipi.id = pfd.inv_purchase_invoice_id\n"
                     + "where inv_purchase_invoice_id = " + invPurchaseInvoiceId + "\n"

@@ -56,6 +56,8 @@ public class ProFactoryDeliveryListDTOMB extends InventoryBasicDataForm {
                         type = 1;
                     } else if (getUri().contains("proRecieveGallary")) {
                         type = 2;
+                    } else if (getUri().contains("proSales")) {
+                        type = 3;
                     }
                     setRowCount(factoryDeliveryService.getTotalRegistors(type, getUserData().getUserBranch().getId(), filters).intValue());
                     return factoryDeliveryService.getALLProFactoryDeliveryDTOByBranchId(type, first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), getUserData().getUserBranch().getId(), filters);
@@ -74,6 +76,8 @@ public class ProFactoryDeliveryListDTOMB extends InventoryBasicDataForm {
                 exit("../proSendToGallary/proSendToGallaryForm.xhtml");
             } else if (getUri().contains("proRecieveGallary")) {
                 exit("../proRecieveGallary/proRecieveGallaryForm.xhtml");
+            } else if (getUri().contains("proSales")) {
+                exit("../proSales/proSalesForm.xhtml");
             } else {
                 exit("../profactoryDelivery/profactorydeviveryForm.xhtml");
             }
@@ -94,6 +98,8 @@ public class ProFactoryDeliveryListDTOMB extends InventoryBasicDataForm {
                     exit("../proSendToGallary/proSendToGallaryForm.xhtml");
                 } else if (getUri().contains("proRecieveGallary")) {
                     exit("../proRecieveGallary/proRecieveGallaryForm.xhtml");
+                } else if (getUri().contains("proSales")) {
+                    exit("../proSales/proSalesForm.xhtml");
                 } else {
                     exit("../profactoryDelivery/profactorydeviveryForm.xhtml");
                 }

@@ -180,6 +180,29 @@ public class TobyUserBankServiceImpl implements TobyUserBankService {
 
         return returnListDTO(glBankList);
     }
+    
+    @Override
+    public List<Integer> getAllGlBankIdForUserByTypeAndBranchId(Integer userId, Integer branchId, Integer type) {
+
+        List<Integer> glBankIdList = new ArrayList<>();
+
+        Map<String, Object> params = new HashMap();
+        params.put("userId", userId);
+        params.put("branchId", branchId);
+//        params.put("type", type);
+
+        List<TobyUserBank> tobyUserBankList = dao.findListByQuery("SELECT i FROM TobyUserBank i "
+                + "LEFT JOIN "
+                + "i.bankId b "
+                + "WHERE i.userId.id =:userId AND i.branchId.id = :branchId", params);
+
+        for (TobyUserBank tobyUserBank : tobyUserBankList) {
+            glBankIdList.add(tobyUserBank.getBankId().getId());
+        }
+
+        return glBankIdList;
+    }
+    
 
     private List<GlBankDTO> returnListDTO(List<GlBank> list) {
         List<GlBankDTO> dTOList = new ArrayList<>();

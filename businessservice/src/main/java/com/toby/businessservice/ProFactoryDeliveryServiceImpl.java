@@ -144,6 +144,8 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
                 invPurchaseInvoiceDetailsListDTO = proFactoryDeliveryDetailService.getAllInvPurchaseInvoiceDetailsByInvPurchaseInvoiceIdDTO(invInvoiceDTO, 1, 0);
             } else if (ScreenNameClassEnum.PRORECIEVEGALLARY.equals(invInvoiceDTO.getScreenName())) {
                 invPurchaseInvoiceDetailsListDTO = proFactoryDeliveryDetailService.getAllInvPurchaseInvoiceDetailsByInvPurchaseInvoiceIdDTO(invInvoiceDTO, 2, 1);
+            }else if (ScreenNameClassEnum.PROSALES.equals(invInvoiceDTO.getScreenName())) {
+                invPurchaseInvoiceDetailsListDTO = proFactoryDeliveryDetailService.getAllInvPurchaseInvoiceDetailsByInvPurchaseInvoiceIdDTO(invInvoiceDTO, 3, 2);
             } else {
                 invPurchaseInvoiceDetailsListDTO = proFactoryDeliveryDetailService.getAllProPurchaseInvoiceDetailsByInvPurchaseInvoiceIdDTO(invInvoiceDTO);
             }
@@ -190,7 +192,7 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
         params.put("serial", serial);
         params.put("branchId", branchId);
         params.put("type", type);
-        List<ProFactoryDelivery> details = dao.findListByQuery("SELECT e FROM ProFactoryDelivery e WHERE e.invPurchaseInvoiceId.serial = :serial AND e.branchId.id = :branchId AND e.type = :type", params);
+        List<ProFactoryDelivery> details = dao.findListByQuery("SELECT e FROM ProFactoryDelivery e WHERE e.invPurchaseInvoiceId.serial = :serial AND e.branchId.id = :branchId AND e.type = :type order by e.id asc", params);
         return (details == null || details.isEmpty()) ? null : details.get(0);
     }
 

@@ -278,6 +278,9 @@ public abstract class ProductionBasicDataForm extends BaseFormBean {
         } else if (getUri().contains("proRecieveGallary")) {
             getInvInvoiceDTO().setScreenName(ScreenNameClassEnum.PRORECIEVEGALLARY);
             getInvInvoiceDTO().setType(2);
+        } else if (getUri().contains("proSales")) {
+            getInvInvoiceDTO().setScreenName(ScreenNameClassEnum.PROSALES);
+            getInvInvoiceDTO().setType(3);
         }
         getInvInvoiceDTO().setModuleClassEnum(ModuleClassEnum.PRODUCTION);
     }
@@ -289,7 +292,7 @@ public abstract class ProductionBasicDataForm extends BaseFormBean {
     }
 
     private void fillInvInvoiceDetailDTO() {
-        if (getUri().contains("profactorydeviveryForm") || getUri().contains("proSendToGallaryForm")) {
+        if (getUri().contains("profactorydeviveryForm") || getUri().contains("proSendToGallaryForm") || getUri().contains("proSales")) {
             getInvInvoiceDTO().setId((Integer) getContext().getSessionMap().get("proFactoryDeliverySelected"));
             setInvInvoiceDTO(proFactoryDeliveryService.findProFactoryDeliveryById(getInvInvoiceDTO()));
         }

@@ -5,16 +5,21 @@
  */
 package com.toby.settlementdeed;
 
-import com.toby.businessservice.GlBankTransactionEntityService;
+import com.toby.businessservice.TobyUserBankService;
+import com.toby.businessservice.AccountsSystemSettingsService;
 import com.toby.businessservice.GlBankTransactionService;
+import com.toby.converter.GlBankConverter;
+import com.toby.dto.GlBankTransactionDTO;
+import com.toby.entity.AccountsSystemSettings;
+import com.toby.entity.GlBank;
 import com.toby.entity.GlBankTransaction;
+import com.toby.entiy.GlBankTransactionDetailEntity;
 import com.toby.entiy.GlBankTransactionEntity;
 import com.toby.toby.BaseGlBankListBean;
-import com.toby.toby.BaseListBean;
 import com.toby.toby.UserData;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
@@ -26,6 +31,8 @@ import javax.faces.event.ActionEvent;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import net.sf.jasperreports.engine.JRException;
+import org.primefaces.model.LazyDataModel;
+import org.primefaces.model.SortOrder;
 
 /**
  *
@@ -42,83 +49,120 @@ public class settlementDeedListMB extends BaseGlBankListBean {
 
     private Integer glBankTransactionIdSeclected;
 
+    private LazyDataModel<GlBankTransactionDTO> dataModel;
+
     // DB entites
     private GlBankTransaction glBankTransaction;
-    private GlBankTransaction glBankTransactionSelected;
     private List<GlBankTransaction> glBankTransactionList;
 
     // Interface Entities
     private GlBankTransactionEntity glBankTransactionEntity;
-   
-    private GlBankTransactionEntity glBankTransactionEntitySelected;
-   
-    private List<GlBankTransactionEntity> glBankTransactionEntityList;
-    @EJB
-    private GlBankTransactionEntityService bankTransactionEntityService;
+    private GlBankTransactionDTO glBankTransactionEntitySelected;
+    private List<GlBankTransactionDTO> glBankTransactionEntityList;
+    private AccountsSystemSettings accountsSystemSettings;
+    private List<GlBank> glBankList;
+    private GlBankConverter bankConverter;
+    private GlBank selectGlBank;
 
     @EJB
     private GlBankTransactionService glBankTransactionService;
+    @EJB
+    AccountsSystemSettingsService accountsSystemSettingsService;
+    @EJB
+    private TobyUserBankService tobyUserBankService;
 
     @Override
     @PostConstruct
     public void init() {
         try {
-            load();
+            loadPre();
         } catch (Exception e) {
             saveError(e, "settlementDeedListMB", "init");
         }
     }
 
-    @Override
-    public void load() {
+    public void loadPre() {
         try {
             userData = new UserData();
             glBankTransaction = new GlBankTransaction();
 
             glBankTransactionList = new ArrayList<>();
-            glBankTransactionEntity = new GlBankTransactionEntity();
-            glBankTransactionEntitySelected = new GlBankTransactionEntity();
-            setGlBankTransactionSelected(new GlBankTransaction());
-            glBankTransactionEntityList = new ArrayList<>();
+            setGlBankTransactionEntitySelected(new GlBankTransactionDTO());
+            setGlBankTransactionEntityList(new ArrayList<>());
 
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
             setUserData((UserData) context.getSessionMap().get("userLogInData"));
             setBranchId(userData.getUserBranch().getId());
             setCompanyId(userData.getCompany().getId());
+            setAccountsSystemSettings(accountsSystemSettingsService.getInventoryByCompanyId(getUserData().getCompany().getId()));
 
-            glBankTransactionList = glBankTransactionService.getALLGlBankTransactionSettlmentByBranchId(getBranchId());
+            this.setDataModel(new LazyDataModel<GlBankTransactionDTO>() {
+                private static final long serialVersionUID = 1L;
 
-            for (GlBankTransaction gbt : glBankTransactionList) {
-                glBankTransactionEntity = new GlBankTransactionEntity();
-                glBankTransactionEntity.setId(gbt.getId());
-                glBankTransactionEntity.setDate(gbt.getDate() != null ? gbt.getDate() : null);
-                glBankTransactionEntity.setGlBank(gbt.getGlBankId() != null ? gbt.getGlBankId() : null);
-                glBankTransactionEntity.setPostFlag(gbt.getPostFlag());
-
-                if (gbt.getPaymentType() != null) {
-                    glBankTransactionEntity.setPaymentType(gbt.getPaymentType());
-
-                    if (gbt.getPaymentType() == 0) {
-                        glBankTransactionEntity.setPaymentTypeName("نقدي");
-                    } else if (gbt.getPaymentType() == 1) {
-                        glBankTransactionEntity.setPaymentTypeName("الشيك");
-                    } else {
-                        glBankTransactionEntity.setPaymentTypeName("الشيك الخطي");
-                    }
+                @Override
+                public List<GlBankTransactionDTO> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
+                    Integer bankId = selectGlBank != null ? selectGlBank.getId() : null;
+                    setRowCount(glBankTransactionService.getTotalRegistors(0, userData.getUserBranch().getId(), userData.getUserlogin().getId(), filters, bankId).intValue());
+                    setGlBankTransactionEntityList(glBankTransactionService.getALLGlBankTransactionRecievableByBranchId(0, first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), userData.getUserBranch().getId(), filters, bankId, userData.getUserlogin().getId()));
+                    return getGlBankTransactionEntityList();
                 }
-
-                glBankTransactionEntity.setRemark(gbt.getRemark() != null ? gbt.getRemark() : null);
-                glBankTransactionEntity.setRemark2(gbt.getRemark2());
-                glBankTransactionEntity.setTransactionType(gbt.getTransactionType() != null ? gbt.getTransactionType() : null);
-                glBankTransactionEntity.setValue(gbt.getValue() != null ? gbt.getValue() : null);
-                glBankTransactionEntity.setValueLocal(gbt.getValueLocal() != null ? gbt.getValueLocal() : null);
-                glBankTransactionEntity.setSerial(gbt.getSerial() != null ? gbt.getSerial() : null);
-
-                glBankTransactionEntityList.add(glBankTransactionEntity);
-            }
+            });
         } catch (Exception e) {
             saveError(e, "settlementDeedListMB", "load");
         }
+    }
+
+    @Override
+    public void load() {
+//        try {
+//            userData = new UserData();
+//            glBankTransaction = new GlBankTransaction();
+//
+//            glBankTransactionList = new ArrayList<>();
+//            glBankTransactionEntity = new GlBankTransactionEntity();
+//            setGlBankTransactionEntitySelected(new GlBankTransactionEntity());
+//            setGlBankTransactionEntityList(new ArrayList<>());
+//
+//            ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+//            setUserData((UserData) context.getSessionMap().get("userLogInData"));
+//            setBranchId(userData.getUserBranch().getId());
+//            setCompanyId(userData.getCompany().getId());
+//
+//            glBankTransactionList = glBankTransactionService.getALLGlBankTransactionSettlmentByBranchId(getBranchId());
+//
+//            for (GlBankTransaction gbt : glBankTransactionList) {
+//                glBankTransactionEntity = new GlBankTransactionEntity();
+//                glBankTransactionEntity.setId(gbt.getId());
+//                glBankTransactionEntity.setDate(gbt.getDate() != null ? gbt.getDate() : null);
+//                glBankTransactionEntity.setGlBank(gbt.getGlBankId() != null ? gbt.getGlBankId() : null);
+//                glBankTransactionEntity.setPostFlag(gbt.getPostFlag());
+//
+//                if (gbt.getPaymentType() != null) {
+//                    glBankTransactionEntity.setPaymentType(gbt.getPaymentType());
+//
+//                    if (gbt.getPaymentType() == 0) {
+//                        glBankTransactionEntity.setPaymentTypeName("نقدي");
+//                    } else if (gbt.getPaymentType() == 1) {
+//                        glBankTransactionEntity.setPaymentTypeName("الشيك");
+//                    } else {
+//                        glBankTransactionEntity.setPaymentTypeName("الشيك الخطي");
+//                    }
+//                }
+//
+//                glBankTransactionEntity.setCreatedBy(gbt.getCreatedBy());
+//                glBankTransactionEntity.setCreatedByName(gbt.getCreatedBy().getName());
+//                glBankTransactionEntity.setRemark(gbt.getRemark() != null ? gbt.getRemark() : null);
+//                glBankTransactionEntity.setRemark2(gbt.getRemark2());
+//                glBankTransactionEntity.setTransactionType(gbt.getTransactionType() != null ? gbt.getTransactionType() : null);
+//                glBankTransactionEntity.setValue(gbt.getValue() != null ? gbt.getValue() : null);
+//                glBankTransactionEntity.setValueLocal(gbt.getValueLocal() != null ? gbt.getValueLocal() : null);
+//                glBankTransactionEntity.setSerial(gbt.getSerial() != null ? gbt.getSerial() : null);
+//
+//                getGlBankTransactionEntityList().add(glBankTransactionEntity);
+//            }
+//        } catch (Exception e) {
+//            saveError(e, "settlementDeedListMB", "load");
+//        }
     }
 
     @Override
@@ -155,17 +199,17 @@ public class settlementDeedListMB extends BaseGlBankListBean {
     @Override
     public void delete() {
         try {
-            if (glBankTransactionSelected.getPostFlag() == null || (glBankTransactionSelected.getPostFlag() != null && glBankTransactionSelected.getPostFlag() != 1)) {
+            if (getGlBankTransactionEntitySelected().getPostFlag() == null || (getGlBankTransactionEntitySelected().getPostFlag() != null && getGlBankTransactionEntitySelected().getPostFlag() != 1)) {
 
                 Map<String, String> userDDs = userData.getUserDDs();
 
-                Integer glBankTransactionId = glBankTransactionSelected.getId() != null ? glBankTransactionSelected.getId() : null;
+                Integer glBankTransactionId = getGlBankTransactionEntitySelected().getId() != null ? getGlBankTransactionEntitySelected().getId() : null;
                 glBankTransaction = new GlBankTransaction();
                 glBankTransaction.setId(glBankTransactionId);
 
                 try {
                     glBankTransactionService.deleteGlBankTransaction(glBankTransaction);
-                    glBankTransactionList.remove(glBankTransactionSelected);
+                    getGlBankTransactionEntityList().remove(getGlBankTransactionEntitySelected());
 
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, userDDs.get("INFO"), userDDs.get("DELETED")));
                 } catch (Exception e) {
@@ -179,18 +223,43 @@ public class settlementDeedListMB extends BaseGlBankListBean {
         }
     }
 
+    public void exportPDFWithCopy(ActionEvent actionEvent) throws JRException, IOException {
+
+        GlBankTransactionDTO transactionEntity = (GlBankTransactionDTO) actionEvent.getComponent().getAttributes().get("varValue");
+        startPrintingProcess(transactionEntity);
+        String reportName = "settlementdeedWithCopy.jasper";
+        HashMap hashMap = new HashMap();
+        hashMap.put("Param", prepareReport());
+        hashMap.put("report_name", getUserData().getReportPath() + "settlementdeed.jasper");
+        hashMap.put("listSize", getGlBankTransactionDetailEntityList().size() + 1);
+        hashMap.put("lienCut", getUserData().getImagePath() + "lienCut.png");
+        hashMap.put("copyWordIcon", getUserData().getImagePath() + "copyWordIcon.png");
+        List<GlBankTransactionDetailEntity> glBankTransactionDetailEntity = new ArrayList();
+        glBankTransactionDetailEntity.add(new GlBankTransactionDetailEntity(getGlBankTransactionDetailEntityList()));
+        fillReport(hashMap, getUserData().getReportPath() + reportName, glBankTransactionDetailEntity, "pdf");
+    }
+
     public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {
         try {
 
-            GlBankTransactionEntity transactionEntity = (GlBankTransactionEntity) actionEvent.getComponent().getAttributes().get("varValue");
+            GlBankTransactionDTO transactionEntity = (GlBankTransactionDTO) actionEvent.getComponent().getAttributes().get("varValue");
             startPrintingProcess(transactionEntity);
+            String reportName = "settlementdeed.jasper";
+            if (transactionEntity.getOrganizationType() != 2) {
+                reportName = "settlementdeedforOrganizationSite.jasper";
+            } else {
+                if (getAccountsSystemSettings().getSettlementdeedPrinting().equals("ALLOW_COPY")) {
+                    exportPDFWithCopy(actionEvent);
+                    return;
+                }
+            }
             if (glBankTransactionEntity != null && glBankTransactionEntity.getId() != null) {
                 if (getGlBankTransactionDetailEntityList() != null && !getGlBankTransactionDetailEntityList().isEmpty()) {
-                    fillReport(prepareReport(), getUserData().getReportPath() + "settlementdeed.jasper", getGlBankTransactionDetailEntityList(), "pdf");
+                    fillReport(prepareReport(), getUserData().getReportPath() + reportName, getGlBankTransactionDetailEntityList(), "pdf");
                 }
             } else {
                 if (getGlBankTransactionDetailEntityList() != null && !getGlBankTransactionDetailEntityList().isEmpty()) {
-                    fillReport(prepareReport(), getUserData().getReportPath() + "settlementdeed.jasper", getGlBankTransactionDetailEntityList(), "pdf");
+                    fillReport(prepareReport(), getUserData().getReportPath() + reportName, getGlBankTransactionDetailEntityList(), "pdf");
                 }
             }
         } catch (Exception e) {
@@ -241,7 +310,7 @@ public class settlementDeedListMB extends BaseGlBankListBean {
     }
 
     public Integer getGlBankTransactionIdSeclected() {
-            return glBankTransactionIdSeclected;
+        return glBankTransactionIdSeclected;
     }
 
     public void setGlBankTransactionIdSeclected(Integer glBankTransactionIdSeclected) {
@@ -257,9 +326,6 @@ public class settlementDeedListMB extends BaseGlBankListBean {
     }
 
     public List<GlBankTransaction> getGlBankTransactionList() {
-        if(glBankTransactionList == null || glBankTransactionList.isEmpty()){
-        glBankTransactionList = bankTransactionEntityService.getGlBankTransactionEntityList(getUserData().getUser());
-        }
         return glBankTransactionList;
     }
 
@@ -275,40 +341,106 @@ public class settlementDeedListMB extends BaseGlBankListBean {
         this.glBankTransactionEntity = glBankTransactionEntity;
     }
 
-    public GlBankTransactionEntity getGlBankTransactionEntitySelected() {
+    /**
+     * @return the dataModel
+     */
+    public LazyDataModel<GlBankTransactionDTO> getDataModel() {
+        return dataModel;
+    }
+
+    /**
+     * @param dataModel the dataModel to set
+     */
+    public void setDataModel(LazyDataModel<GlBankTransactionDTO> dataModel) {
+        this.dataModel = dataModel;
+    }
+
+    /**
+     * @return the glBankTransactionEntitySelected
+     */
+    public GlBankTransactionDTO getGlBankTransactionEntitySelected() {
         return glBankTransactionEntitySelected;
     }
 
-    public void setGlBankTransactionEntitySelected(GlBankTransactionEntity glBankTransactionEntitySelected) {
+    /**
+     * @param glBankTransactionEntitySelected the
+     * glBankTransactionEntitySelected to set
+     */
+    public void setGlBankTransactionEntitySelected(GlBankTransactionDTO glBankTransactionEntitySelected) {
         this.glBankTransactionEntitySelected = glBankTransactionEntitySelected;
     }
 
-    public List<GlBankTransactionEntity> getGlBankTransactionEntityList() {
-       
-       
+    /**
+     * @return the glBankTransactionEntityList
+     */
+    public List<GlBankTransactionDTO> getGlBankTransactionEntityList() {
         return glBankTransactionEntityList;
     }
 
-    public void setGlBankTransactionEntityList(List<GlBankTransactionEntity> glBankTransactionEntityList) {
+    /**
+     * @param glBankTransactionEntityList the glBankTransactionEntityList to set
+     */
+    public void setGlBankTransactionEntityList(List<GlBankTransactionDTO> glBankTransactionEntityList) {
         this.glBankTransactionEntityList = glBankTransactionEntityList;
     }
 
     /**
-     * @return the glBankTransactionSelected
+     * @return the accountsSystemSettings
      */
-    public GlBankTransaction getGlBankTransactionSelected() {
-        return glBankTransactionSelected;
+    public AccountsSystemSettings getAccountsSystemSettings() {
+        return accountsSystemSettings;
     }
 
     /**
-     * @param glBankTransactionSelected the glBankTransactionSelected to set
+     * @param accountsSystemSettings the accountsSystemSettings to set
      */
-    public void setGlBankTransactionSelected(GlBankTransaction glBankTransactionSelected) {
-        this.glBankTransactionSelected = glBankTransactionSelected;
+    public void setAccountsSystemSettings(AccountsSystemSettings accountsSystemSettings) {
+        this.accountsSystemSettings = accountsSystemSettings;
     }
 
     /**
-     * @return the glBankTransactionSelected
+     * @return the glBankList
      */
-    
+    public List<GlBank> getGlBankList() {
+        if (glBankList == null) {
+            setGlBankList(tobyUserBankService.getAllGlBankForUserByTypeAndBranchId(getUserData().getUser().getId(), getBranchId(), 0));
+            setBankConverter(new GlBankConverter(glBankList));
+        }
+        return glBankList;
+    }
+
+    /**
+     * @param glBankList the glBankList to set
+     */
+    public void setGlBankList(List<GlBank> glBankList) {
+        this.glBankList = glBankList;
+    }
+
+    /**
+     * @return the bankConverter
+     */
+    public GlBankConverter getBankConverter() {
+        return bankConverter;
+    }
+
+    /**
+     * @param bankConverter the bankConverter to set
+     */
+    public void setBankConverter(GlBankConverter bankConverter) {
+        this.bankConverter = bankConverter;
+    }
+
+    /**
+     * @return the selectGlBank
+     */
+    public GlBank getSelectGlBank() {
+        return selectGlBank;
+    }
+
+    /**
+     * @param selectGlBank the selectGlBank to set
+     */
+    public void setSelectGlBank(GlBank selectGlBank) {
+        this.selectGlBank = selectGlBank;
+    }
 }

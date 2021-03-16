@@ -578,6 +578,8 @@ public class InvDialogueServiceImpl implements InvDialogueService {
             dTO = loadProSendToGallary(dTO, 0);
         } else if (screenNameClassEnum.equals(ScreenNameClassEnum.PRORECIEVEGALLARY)) {
             dTO = loadProSendToGallary(dTO, 1);
+        }else if (screenNameClassEnum.equals(ScreenNameClassEnum.PROSALES)) {
+            dTO = loadProSendToGallary(dTO, 2);
         }
         return dTO;
     }

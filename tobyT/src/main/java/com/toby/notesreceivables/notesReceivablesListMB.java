@@ -7,7 +7,11 @@ package com.toby.notesreceivables;
 
 import com.toby.businessservice.AccountsSystemSettingsService;
 import com.toby.businessservice.GlBankTransactionService;
+import com.toby.businessservice.TobyUserBankService;
+import com.toby.converter.GlBankConverter;
+import com.toby.dto.GlBankTransactionDTO;
 import com.toby.entity.AccountsSystemSettings;
+import com.toby.entity.GlBank;
 import com.toby.entity.GlBankTransaction;
 import com.toby.entiy.GlBankTransactionDetailEntity;
 import com.toby.entiy.GlBankTransactionEntity;
@@ -27,6 +31,8 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import net.sf.jasperreports.engine.JRException;
+import org.primefaces.model.LazyDataModel;
+import org.primefaces.model.SortOrder;
 
 /**
  *
@@ -50,23 +56,70 @@ public class notesReceivablesListMB extends BaseGlBankListBean {
 
     // Interface Entities
     private GlBankTransactionEntity glBankTransactionEntity;
-    private GlBankTransactionEntity glBankTransactionEntitySelected;
-    private List<GlBankTransactionEntity> glBankTransactionEntityList;
+    private GlBankTransactionDTO glBankTransactionEntitySelected;
+    private List<GlBankTransactionDTO> glBankTransactionEntityList;
     private AccountsSystemSettings accountsSystemSettings;
+    private List<GlBank> glBankList;
+    private GlBankConverter bankConverter;
+    private GlBank selectGlBank;
+
+    private LazyDataModel<GlBankTransactionDTO> dataModel;
 
     @EJB
     AccountsSystemSettingsService accountsSystemSettingsService;
     @EJB
     private GlBankTransactionService glBankTransactionService;
+    @EJB
+    private TobyUserBankService tobyUserBankService;
 
     @Override
     @PostConstruct
     public void init() {
         try {
 
-            load();
+            loadPer();
         } catch (Exception e) {
             saveError(e, "notesReceivablesListMB", "init");
+        }
+    }
+
+    public void loadPer() {
+        try {
+            userData = new UserData();
+            glBankTransaction = new GlBankTransaction();
+
+            glBankTransactionList = new ArrayList<>();
+            glBankTransactionEntitySelected = new GlBankTransactionDTO();
+            glBankTransactionEntityList = new ArrayList<>();
+
+            ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+            setUserData((UserData) context.getSessionMap().get("userLogInData"));
+            setBranchId(userData.getUserBranch().getId());
+            setCompanyId(userData.getCompany().getId());
+            setAccountsSystemSettings(accountsSystemSettingsService.getInventoryByCompanyId(getUserData().getCompany().getId()));
+
+            setUri(((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getRequestURI());
+
+            this.setDataModel(new LazyDataModel<GlBankTransactionDTO>() {
+                private static final long serialVersionUID = 1L;
+
+                @Override
+                public List<GlBankTransactionDTO> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
+
+                    if (!getUri().contains("notesreceivablesListpre")) {
+                        Integer bankId = selectGlBank != null ? selectGlBank.getId() : null;
+                        setRowCount(glBankTransactionService.getTotalRegistors(1, userData.getUserBranch().getId(), userData.getUserlogin().getId(), filters, bankId).intValue());
+                        glBankTransactionEntityList = glBankTransactionService.getALLGlBankTransactionRecievableByBranchId(1, first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), userData.getUserBranch().getId(), filters, bankId, userData.getUserlogin().getId());
+                    } else {
+                        setRowCount(glBankTransactionService.getTotalRegistorsPre(3, userData.getUserBranch().getId(), filters).intValue());
+                        glBankTransactionEntityList = glBankTransactionService.getALLGlBankTransactionRecievableNotloadByBranchId(3, first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), userData.getUserBranch().getId(), filters);
+                    }
+
+                    return glBankTransactionEntityList;
+                }
+            });
+        } catch (Exception e) {
+            saveError(e, "notesReceivablesListMB", "load");
         }
     }
 
@@ -78,7 +131,7 @@ public class notesReceivablesListMB extends BaseGlBankListBean {
 
             glBankTransactionList = new ArrayList<>();
             glBankTransactionEntity = new GlBankTransactionEntity();
-            glBankTransactionEntitySelected = new GlBankTransactionEntity();
+            glBankTransactionEntitySelected = new GlBankTransactionDTO();
             glBankTransactionEntityList = new ArrayList<>();
 
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
@@ -95,10 +148,10 @@ public class notesReceivablesListMB extends BaseGlBankListBean {
             }
 
             for (GlBankTransaction gbt : glBankTransactionList) {
-                glBankTransactionEntity = new GlBankTransactionEntity();
+                GlBankTransactionDTO glBankTransactionEntity = new GlBankTransactionDTO();
                 glBankTransactionEntity.setId(gbt.getId());
                 glBankTransactionEntity.setDate(gbt.getDate() != null ? gbt.getDate() : null);
-                glBankTransactionEntity.setGlBank(gbt.getGlBankId() != null ? gbt.getGlBankId() : null);
+                glBankTransactionEntity.setGlBankId(gbt.getGlBankId() != null ? null : null);
                 glBankTransactionEntity.setPostFlag(gbt.getPostFlag());
 
                 if (gbt.getPaymentType() != null) {
@@ -119,6 +172,7 @@ public class notesReceivablesListMB extends BaseGlBankListBean {
                 glBankTransactionEntity.setValue(gbt.getValue() != null ? gbt.getValue() : null);
                 glBankTransactionEntity.setValueLocal(gbt.getValueLocal() != null ? gbt.getValueLocal() : null);
                 glBankTransactionEntity.setSerial(gbt.getSerial() != null ? gbt.getSerial() : null);
+                glBankTransactionEntity.setCreatedByName(gbt.getCreatedBy().getName());
                 glBankTransactionEntityList.add(glBankTransactionEntity);
             }
         } catch (Exception e) {
@@ -141,21 +195,20 @@ public class notesReceivablesListMB extends BaseGlBankListBean {
     }
 
     private void redirectPage() {
-//        String noteSreceivablesType = accountsSystemSettings.getNoteSreceivablesType();
-//        if (noteSreceivablesType.equals("ALLOW_DETAIL")) {
-//            if (getUri().contains("notesreceivablesListpre")) {
-//                exit("../notesreceivablespre/notesreceivablesdatailFormPre.xhtml");
-//            } else {
-//                exit("../notesreceivables/notesreceivablesdatailForm.xhtml");
-//            }
-//        } else {
-//            if (getUri().contains("notesreceivablesListpre")) {
-//                exit("../notesreceivablespre/notesreceivablesFormpre.xhtml");
-//            } else {
-//                exit("../notesreceivables/notesreceivablesForm.xhtml");
-//            }
-//        }
-        exit("../notesreceivables/notesreceivablesForm.xhtml");
+        String noteSreceivablesType = accountsSystemSettings.getNoteSreceivablesType();
+        if (noteSreceivablesType.equals("ALLOW_DETAIL")) {
+            if (getUri().contains("notesreceivablesListpre")) {
+                exit("../notesreceivablespre/notesreceivablesdatailFormPre.xhtml");
+            } else {
+                exit("../notesreceivables/notesreceivablesdatailForm.xhtml");
+            }
+        } else {
+            if (getUri().contains("notesreceivablesListpre")) {
+                exit("../notesreceivablespre/notesreceivablesFormpre.xhtml");
+            } else {
+                exit("../notesreceivables/notesreceivablesForm.xhtml");
+            }
+        }
     }
 
     @Override
@@ -218,7 +271,7 @@ public class notesReceivablesListMB extends BaseGlBankListBean {
     private void exportPDFNoDetail(ActionEvent actionEvent) throws JRException, IOException {
         try {
 
-            GlBankTransactionEntity transactionEntity = (GlBankTransactionEntity) actionEvent.getComponent().getAttributes().get("varValue");
+            GlBankTransactionDTO transactionEntity = (GlBankTransactionDTO) actionEvent.getComponent().getAttributes().get("varValue");
             startPrintingProcess(transactionEntity);
             List<GlBankTransactionDetailEntity> gbtdes = new ArrayList<>();
 
@@ -241,10 +294,10 @@ public class notesReceivablesListMB extends BaseGlBankListBean {
     private void exportPDFDetail(ActionEvent actionEvent) throws JRException, IOException {
         try {
 
-            GlBankTransactionEntity transactionEntity = (GlBankTransactionEntity) actionEvent.getComponent().getAttributes().get("varValue");
+            GlBankTransactionDTO transactionEntity = (GlBankTransactionDTO) actionEvent.getComponent().getAttributes().get("varValue");
             startPrintingProcess(transactionEntity);
             List<GlBankTransactionDetailEntity> reportList = listDuplara();
-            if (glBankTransactionEntity != null && glBankTransactionEntity.getId() != null) {
+            if (transactionEntity != null && transactionEntity.getId() != null) {
                 if (reportList != null && !reportList.isEmpty()) {
                     fillReport(prepareReport(), getUserData().getReportPath() + "notesReceivablesDetial.jasper", reportList, "pdf");
                 }
@@ -360,19 +413,19 @@ public class notesReceivablesListMB extends BaseGlBankListBean {
         this.glBankTransactionEntity = glBankTransactionEntity;
     }
 
-    public GlBankTransactionEntity getGlBankTransactionEntitySelected() {
+    public GlBankTransactionDTO getGlBankTransactionEntitySelected() {
         return glBankTransactionEntitySelected;
     }
 
-    public void setGlBankTransactionEntitySelected(GlBankTransactionEntity glBankTransactionEntitySelected) {
+    public void setGlBankTransactionEntitySelected(GlBankTransactionDTO glBankTransactionEntitySelected) {
         this.glBankTransactionEntitySelected = glBankTransactionEntitySelected;
     }
 
-    public List<GlBankTransactionEntity> getGlBankTransactionEntityList() {
+    public List<GlBankTransactionDTO> getGlBankTransactionEntityList() {
         return glBankTransactionEntityList;
     }
 
-    public void setGlBankTransactionEntityList(List<GlBankTransactionEntity> glBankTransactionEntityList) {
+    public void setGlBankTransactionEntityList(List<GlBankTransactionDTO> glBankTransactionEntityList) {
         this.glBankTransactionEntityList = glBankTransactionEntityList;
     }
 
@@ -402,5 +455,65 @@ public class notesReceivablesListMB extends BaseGlBankListBean {
      */
     public void setAccountsSystemSettings(AccountsSystemSettings accountsSystemSettings) {
         this.accountsSystemSettings = accountsSystemSettings;
+    }
+
+    /**
+     * @return the dataModel
+     */
+    public LazyDataModel<GlBankTransactionDTO> getDataModel() {
+        return dataModel;
+    }
+
+    /**
+     * @param dataModel the dataModel to set
+     */
+    public void setDataModel(LazyDataModel<GlBankTransactionDTO> dataModel) {
+        this.dataModel = dataModel;
+    }
+
+    /**
+     * @return the glBankList
+     */
+    public List<GlBank> getGlBankList() {
+        if (glBankList == null) {
+            setGlBankList(tobyUserBankService.getAllGlBankForUserByTypeAndBranchId(getUserData().getUser().getId(), getBranchId(), 1));
+            setBankConverter(new GlBankConverter(glBankList));
+        }
+        return glBankList;
+    }
+
+    /**
+     * @param glBankList the glBankList to set
+     */
+    public void setGlBankList(List<GlBank> glBankList) {
+        this.glBankList = glBankList;
+    }
+
+    /**
+     * @return the bankConverter
+     */
+    public GlBankConverter getBankConverter() {
+        return bankConverter;
+    }
+
+    /**
+     * @param bankConverter the bankConverter to set
+     */
+    public void setBankConverter(GlBankConverter bankConverter) {
+        this.bankConverter = bankConverter;
+    }
+
+    /**
+     * @return the selectGlBank
+     */
+    public GlBank getSelectGlBank() {
+        return selectGlBank;
+    }
+
+    /**
+     * @param selectGlBank the selectGlBank to set
+     */
+    public void setSelectGlBank(GlBank selectGlBank) {
+        this.selectGlBank = selectGlBank;
     }
 }

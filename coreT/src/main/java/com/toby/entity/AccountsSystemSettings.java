@@ -43,6 +43,12 @@ public class AccountsSystemSettings extends BaseEntity {
 
     @Column(name = "account_printing")
     private String accountPrinting;
+    
+    @Column(name = "settlementdeed_printing")
+    private String settlementdeedPrinting;
+    
+    @Column(name = "bank_serial")
+    private String bankSerial;
 
     public String getJournalsSerial() {
         return journalsSerial;
@@ -131,5 +137,33 @@ public class AccountsSystemSettings extends BaseEntity {
      */
     public void setAccountPrinting(String accountPrinting) {
         this.accountPrinting = accountPrinting;
+    }
+
+    /**
+     * @return the settlementdeedPrinting
+     */
+    public String getSettlementdeedPrinting() {
+        return settlementdeedPrinting;
+    }
+
+    /**
+     * @param settlementdeedPrinting the settlementdeedPrinting to set
+     */
+    public void setSettlementdeedPrinting(String settlementdeedPrinting) {
+        this.settlementdeedPrinting = settlementdeedPrinting;
+    }
+
+    /**
+     * @return the bankSerial
+     */
+    public String getBankSerial() {
+        return bankSerial;
+    }
+
+    /**
+     * @param bankSerial the bankSerial to set
+     */
+    public void setBankSerial(String bankSerial) {
+        this.bankSerial = bankSerial;
     }
 }

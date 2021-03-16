@@ -9,10 +9,13 @@ import com.toby.businessservice.AccountsSystemSettingsService;
 import com.toby.businessservice.GlAccountService;
 import com.toby.businessservice.GlBankTransactionDetailsService;
 import com.toby.businessservice.GlBankTransactionService;
+import com.toby.dto.GlBankTransactionDTO;
+import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.entity.AccountsSystemSettings;
 import com.toby.entity.GlAccount;
 import com.toby.entity.GlBankTransaction;
 import com.toby.entity.GlBankTransactionDetail;
+import com.toby.entity.InvOrganizationSite;
 import com.toby.entiy.GlBankTransactionDetailEntity;
 import com.toby.entiy.GlBankTransactionEntity;
 import java.io.IOException;
@@ -60,7 +63,7 @@ public abstract class BaseGlBankListBean extends BaseListBean {
     @EJB
     AccountsSystemSettingsService accountsSystemSettingsService;
 
-    public void startPrintingProcess(GlBankTransactionEntity bankTransaction) {
+    public void startPrintingProcess(GlBankTransactionDTO bankTransaction) {
         glBankTransactionDetailEntityList = new ArrayList<>();
         glBankTransactionDetailsList = new ArrayList<>();
         glBankTransactionEntityMapper = new GlBankTransactionEntity();
@@ -114,7 +117,15 @@ public abstract class BaseGlBankListBean extends BaseListBean {
             glBankTransactionDetailEntity.setGlAdminUnit(transactionDetail.getAdminUnitId() != null ? transactionDetail.getAdminUnitId() : null);
             glBankTransactionDetailEntity.setGlBankTransactionId(transactionDetail.getGlBankTransactionId() != null ? transactionDetail.getGlBankTransactionId().getId() : null);
             glBankTransactionDetailEntity.setRemarks(transactionDetail.getRemarks() != null ? transactionDetail.getRemarks() : null);
-            glBankTransactionDetailEntity.setInvOrganizationSite(transactionDetail.getOrganizationSiteId() != null ? transactionDetail.getOrganizationSiteId() : null);
+            InvOrganizationSite ios = transactionDetail.getOrganizationSiteId();
+                InvOrganizationSiteDTO invOrganizationSiteDTO = new InvOrganizationSiteDTO();
+                if (ios != null) {
+                    invOrganizationSiteDTO.setId(ios.getId());
+                    invOrganizationSiteDTO.setName(ios.getName());
+                    invOrganizationSiteDTO.setCode(ios.getCode());
+                    invOrganizationSiteDTO.setMobile(ios.getMobile());
+                }
+            glBankTransactionDetailEntity.setInvOrganizationSite(transactionDetail.getOrganizationSiteId() != null ? invOrganizationSiteDTO : null);
             glBankTransactionDetailEntity.setValue(transactionDetail.getValue() != null ? transactionDetail.getValue() : null);
             glBankTransactionDetailEntity.setValueLocal(transactionDetail.getValueLocal() != null ? transactionDetail.getValueLocal() : null);
             glBankTransactionDetailEntity.setSerial(transactionDetail.getSerial() != null ? transactionDetail.getSerial() : null);

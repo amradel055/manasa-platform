@@ -18,6 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -108,6 +109,10 @@ public class GlBankTransaction extends BaseEntity {
     @JoinColumn(name = "parent", referencedColumnName = "id")
     @ManyToOne
     private GlBankTransaction parent;
+    @Column(name = "document_serial")
+    private Integer documentSerial;
+    @Transient
+    private Boolean dublara = Boolean.FALSE;
 
     public GlBankTransaction() {
     }
@@ -348,6 +353,34 @@ public class GlBankTransaction extends BaseEntity {
      */
     public void setParent(GlBankTransaction parent) {
         this.parent = parent;
+    }
+
+    /**
+     * @return the dublara
+     */
+    public Boolean getDublara() {
+        return dublara;
+    }
+
+    /**
+     * @param dublara the dublara to set
+     */
+    public void setDublara(Boolean dublara) {
+        this.dublara = dublara;
+    }
+
+    /**
+     * @return the documentSerial
+     */
+    public Integer getDocumentSerial() {
+        return documentSerial;
+    }
+
+    /**
+     * @param documentSerial the documentSerial to set
+     */
+    public void setDocumentSerial(Integer documentSerial) {
+        this.documentSerial = documentSerial;
     }
 
 }
