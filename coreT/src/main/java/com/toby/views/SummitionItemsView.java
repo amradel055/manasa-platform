@@ -15,6 +15,7 @@ public class SummitionItemsView implements Serializable {
     private BigDecimal factoryNumber;
     private BigDecimal sendNumber;
     private BigDecimal deliveryNumber;
+    private BigDecimal Different;
 
     /**
      * @return the quantity
@@ -118,6 +119,10 @@ public class SummitionItemsView implements Serializable {
      * @return the factoryNumber
      */
     public BigDecimal getFactoryNumber() {
+        if (factoryNumber == null) {
+
+            return BigDecimal.ZERO;
+        }
         return factoryNumber;
     }
 
@@ -132,6 +137,10 @@ public class SummitionItemsView implements Serializable {
      * @return the sendNumber
      */
     public BigDecimal getSendNumber() {
+        if (sendNumber == null) {
+
+            return BigDecimal.ZERO;
+        }
         return sendNumber;
     }
 
@@ -154,6 +163,22 @@ public class SummitionItemsView implements Serializable {
      */
     public void setDeliveryNumber(BigDecimal deliveryNumber) {
         this.deliveryNumber = deliveryNumber;
+    }
+
+    /**
+     * @return the Different
+     */
+    public BigDecimal getDifferent() {
+
+        Different = factoryNumber.subtract(sendNumber);
+        return Different;
+    }
+
+    /**
+     * @param Different the Different to set
+     */
+    public void setDifferent(BigDecimal Different) {
+        this.Different = Different;
     }
 
 }
