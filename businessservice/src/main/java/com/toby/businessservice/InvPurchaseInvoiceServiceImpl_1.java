@@ -117,6 +117,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     private GlBankTransactionService glBankTransactionService;
     @EJB
     AutoCompleteService autoCompleteService;
+    
 
     InvPurchaseReturnSave invPurchaseReturnSave;
 
@@ -1316,6 +1317,8 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             }
             invPurchaseInvoiceDTO = mapToDTO(invPurchaseInvoice, invPurchaseInvoiceDTO, true);
             modifyReturnData(invPurchaseInvoiceDTO, invPurchaseInvoice);
+            invPurchaseInvoiceDTO.setOrganizationSiteName((invPurchaseInvoice.getOrganizationSiteId() != null) ? invPurchaseInvoice.getOrganizationSiteId().getName() : null);
+            invPurchaseInvoiceDTO.setNumberOfToob(invPurchaseInvoiceDetailsService.getNumberOftoob(invPurchaseInvoice.getId()));
         } else {
             invPurchaseInvoiceDTO.setMsg("حدث خطأ - تم حذفه ");
         }
