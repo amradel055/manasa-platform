@@ -238,7 +238,7 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
         appendProProductionDate(printProductionDTO, sql);
         appendProProductionUser(printProductionDTO, sql);
 
-        sql.append(" group by ppit.created_by , ppit.pro_production_stages_id");
+        sql.append(" group by ppit.created_by , ppit.pro_production_stages_id order by pps.serial ");
 
         List<Object[]> res = dao.executeNativeQuery(sql.toString());
 

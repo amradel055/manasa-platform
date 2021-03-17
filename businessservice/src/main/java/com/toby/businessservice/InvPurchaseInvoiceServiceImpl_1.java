@@ -62,6 +62,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  *
@@ -1865,6 +1866,11 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             summitionItemsView.setDeliveryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupId, 2));
             summitionItemsViews.add(summitionItemsView);
         }
+        TreeMap<Integer, SummitionItemsView> params = new TreeMap<>();
+        for (SummitionItemsView summitionItemsViewNew : summitionItemsViews) {
+            params.put(summitionItemsViewNew.getCode(), summitionItemsViewNew);
+        }
+        summitionItemsViews = new ArrayList<SummitionItemsView>(params.values());
         return summitionItemsViews;
     }
 
@@ -1892,6 +1898,11 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 summitionItemsViews.add(summitionItemsView);
             }
 
+            TreeMap<Integer, SummitionItemsView> params = new TreeMap<>();
+            for (SummitionItemsView summitionItemsViewNew : summitionItemsViews) {
+                params.put(summitionItemsViewNew.getCode(), summitionItemsViewNew);
+            }
+            summitionItemsViews = new ArrayList<SummitionItemsView>(params.values());
         }
         return summitionItemsViews;
     }
