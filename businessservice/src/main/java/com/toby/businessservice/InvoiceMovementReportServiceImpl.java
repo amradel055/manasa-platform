@@ -57,6 +57,7 @@ public class InvoiceMovementReportServiceImpl implements InvoiceMovementReportSe
         InvoiceMovementReport invoiceMovementReport;
         for (Object[] object : res) {
             Integer invoiceSerial = (Integer) object[0];
+            Integer idFactory = (Integer) object[6];
 //            Long type = (Long) object[4];
 //            int type2 = (int) type;
             long type = (Long) object[4];
@@ -78,6 +79,7 @@ public class InvoiceMovementReportServiceImpl implements InvoiceMovementReportSe
             if (type == 0) {
                 invoiceMovementReport.setFactoryDate(date);
                 invoiceMovementReport.setNumberToFactory(summitionTob(invoiceMovementReport.getIdFactory(), (int) type));
+
             } else if (type == 1) {
                 invoiceMovementReport.setDeliveryDate(date);
                 invoiceMovementReport.setNumberTobExitFactory(summitionTob(invoiceMovementReport.getIdFactory(), (int) type));
@@ -122,7 +124,7 @@ public class InvoiceMovementReportServiceImpl implements InvoiceMovementReportSe
             StringBuilder builder = new StringBuilder();
             if (type == 0) {
                 builder.append("SELECT sum(i.number) FROM ProFactoryDeliveryDetail i WHERE  i.proFactoryDeliveryId.id = :id AND i.proFactoryDeliveryId.type = :type  AND i.itemId.proGroupId.id = 1  ");
-            }else{
+            } else {
                 builder.append("SELECT sum(i.number) FROM ProFactoryDeliveryDetail i WHERE  i.proFactoryDeliveryId.parent.id = :id AND i.proFactoryDeliveryId.type = :type  AND i.itemId.proGroupId.id = 1  ");
             }
             builder.append(" group by i.itemId.proGroupId.id ");
@@ -138,9 +140,15 @@ public class InvoiceMovementReportServiceImpl implements InvoiceMovementReportSe
         if (productionDTO.getFromInvoice() != null) {
             query.append(" and ipi.serial >=  ").append(productionDTO.getFromInvoice().getSerial());
         }
+        if (productionDTO.getFromInvInvoice() != null) {
+            query.append(" and ipi.serial >=  ").append(productionDTO.getFromInvInvoice());
+        }
 
         if (productionDTO.getToInvoice() != null) {
             query.append(" and ipi.serial <=  ").append(productionDTO.getToInvoice().getSerial());
+        }
+        if (productionDTO.getToInvInvoice() != null) {
+            query.append(" and ipi.serial <=  ").append(productionDTO.getToInvInvoice());
         }
         if (!query.toString().isEmpty()) {
             return query.toString();
@@ -180,6 +188,7 @@ public class InvoiceMovementReportServiceImpl implements InvoiceMovementReportSe
         }
         return "";
     }
+
     private String appendDateProFactoryDelivery(PrintProductionDTO productionDTO) {
         StringBuilder query = new StringBuilder();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
