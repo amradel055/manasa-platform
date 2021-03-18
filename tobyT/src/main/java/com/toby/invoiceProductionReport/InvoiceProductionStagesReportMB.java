@@ -67,6 +67,7 @@ public class InvoiceProductionStagesReportMB extends BaseListBean {
         if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("proproductionreportFormAdd")) {
             getPrintProductionDTO().setFromInvoice((InvInvoiceDTO) getContext().getSessionMap().get("proSalesFormSelected"));
             findInvoiceDate();
+            search();
         }
 
     }
