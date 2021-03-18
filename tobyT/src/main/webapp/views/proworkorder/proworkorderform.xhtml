@@ -412,6 +412,14 @@
                                           value="تسليم الفاتورة" 
                                           actionListener="#{invPurchaseInvoiceFormDTOMB.goTProProductionMovement()}"
                                           />
+                        <p:commandButton  id="r5"  
+                                          ajax="false"
+                                          onclick="form.target = '_blank'" 
+                                          class="saveButtons"
+                                          title="مراحل الانتاج"
+                                          value="مراحل الانتاج" 
+                                          actionListener="#{invPurchaseInvoiceFormDTOMB.goToInvoiceProductionStageReport()}"
+                                          />
 
                     </div>
                 </p:fieldset>

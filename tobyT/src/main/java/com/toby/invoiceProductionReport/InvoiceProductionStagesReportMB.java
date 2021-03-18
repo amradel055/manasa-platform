@@ -6,6 +6,7 @@ import com.toby.businessservice.InvoiceProductionStagesReportService;
 import com.toby.businessservice.ProProductionStagesService;
 import com.toby.converter.InvPurchaseInvoiceDTOConverter;
 import com.toby.converter.ProProductionStagesDTOConverter;
+import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.InvPurchaseInvoiceDTO;
 import com.toby.dto.PrintProductionDTO;
 import com.toby.dto.ProProductionStagesDTO;
@@ -63,6 +64,11 @@ public class InvoiceProductionStagesReportMB extends BaseListBean {
         proProductionStagesDTOList = new ArrayList<>();
         getInvPurchaseInvoiceDTOList();
 
+        if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("proproductionreportFormAdd")) {
+            getPrintProductionDTO().setFromInvoice((InvInvoiceDTO) getContext().getSessionMap().get("proSalesFormSelected"));
+            findInvoiceDate();
+        }
+
     }
 //     public  List<InvPurchaseInvoiceDTO> completeInvpurchaseInvoice(String query){
 //     
@@ -116,7 +122,7 @@ public class InvoiceProductionStagesReportMB extends BaseListBean {
         hashMap.put("quantityText", "الكمية");
         hashMap.put("stageText", "المرحلة");
         hashMap.put("empNameText", "الموظف");
-        hashMap.put("branchName", getUserData().getUserBranch() == null ? null :  getUserData().getUserBranch().getNameAr());
+        hashMap.put("branchName", getUserData().getUserBranch() == null ? null : getUserData().getUserBranch().getNameAr());
         hashMap.put("PrintedBy", getUserData().getUser() == null ? null : getUserData().getUser().getName());
         if (isFileExist(getUserData().getImageReportPath())) {
             hashMap.put("companyImage", getUserData().getImageReportPath());

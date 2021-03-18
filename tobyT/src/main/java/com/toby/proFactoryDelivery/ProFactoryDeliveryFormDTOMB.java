@@ -47,6 +47,11 @@ public class ProFactoryDeliveryFormDTOMB extends ProductionBasicDataForm {
                 fillDefaultList();
             } else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("EditproFactoryDelivery")) {
                 fillInvInvoiceDTO();
+            } else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("proSalesFormAdd")) {
+                reset();
+                fillDefaultList();
+                getInvInvoiceDTO().setLoadedSerial((Integer) getContext().getSessionMap().get("proSalesFormSelected"));
+                loadDlg();
             } else {
                 exit("../profactoryDelivery/profactorydeviveryList.xhtml");
             }

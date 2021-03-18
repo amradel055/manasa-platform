@@ -108,7 +108,7 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
                 ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
                 context.getSessionMap().put("ClientacoountSelected", getInvInvoiceDTO().getOrganizationSiteId());
                 context.getSessionMap().put("ScreenMode", "editClientacoount");
-                exit("../inventoryreports/clientacoount.xhtml");
+                exit("../inventoryreports/clientacoountById.xhtml");
                 return "";
             } else {
                 return "";
@@ -134,15 +134,15 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
 
     public String goTInvoiceMovementReport() {
         try {
-//            if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getId() > 0) {
+            if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getId() > 0) {
                 ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-//                context.getSessionMap().put("invPurchaseInvoiceIdSeclected", getInvInvoiceDTOSelected().getId());
-//                context.getSessionMap().put("ScreenMode", "editInvoice");
+                context.getSessionMap().put("invInvoiceDTOSelected", getInvInvoiceDTO());
+                context.getSessionMap().put("ScreenMode", "AddFromInvInvoice");
                 exit("../proproductionreport/InvoiceMovementReport.xhtml");
                 return "";
-//            } else {
-//                return "";
-//            }
+            } else {
+                return "";
+            }
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceListMB", "goToEdit");
             return null;
@@ -151,15 +151,32 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
 
     public String goTProProductionMovement() {
         try {
-//            if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getId() > 0) {
-                ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-                context.getSessionMap().put("proProductionMovementClientFormSelected", getInvInvoiceDTO());
-                context.getSessionMap().put("ScreenMode", "proProductionMovementClientFormAdd");
-                exit("../proProductionMovementClient/proProductionMovementClientForm.xhtml");
+            if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getId() > 0) {
+            ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+            context.getSessionMap().put("proSalesFormSelected", getInvInvoiceDTO().getSerial());
+            context.getSessionMap().put("ScreenMode", "proSalesFormAdd");
+            exit("../proSales/proSalesForm.xhtml");
+            return "";
+            } else {
                 return "";
-//            } else {
-//                return "";
-//            }
+            }
+        } catch (Exception e) {
+            saveError(e, "InvPurchaseInvoiceListMB", "goToEdit");
+            return null;
+        }
+    }
+    
+    public String goToInvoiceProductionStageReport() {
+        try {
+            if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getId() > 0) {
+            ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+            context.getSessionMap().put("proSalesFormSelected", getInvInvoiceDTO());
+            context.getSessionMap().put("ScreenMode", "proproductionreportFormAdd");
+            exit("../proproductionreport/invoiceProductionStageReport.xhtml");
+            return "";
+            } else {
+                return "";
+            }
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceListMB", "goToEdit");
             return null;

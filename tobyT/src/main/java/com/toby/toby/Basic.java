@@ -76,6 +76,8 @@ public class Basic implements Serializable {
     
     private UserData userData;
     
+    private String ScreenMode;
+    
 
     public void saveError(Exception e, String className, String methodName) {
         getTobyErrorDTO().setClassName(className);
@@ -371,5 +373,20 @@ public class Basic implements Serializable {
      */
     public void setUserData(UserData userData) {
         this.userData = userData;
+    }
+
+    /**
+     * @return the ScreenMode
+     */
+    public String getScreenMode() {
+        setScreenMode((String) getContext().getSessionMap().get("ScreenMode"));
+        return ScreenMode;
+    }
+
+    /**
+     * @param ScreenMode the ScreenMode to set
+     */
+    public void setScreenMode(String ScreenMode) {
+        this.ScreenMode = ScreenMode;
     }
 }

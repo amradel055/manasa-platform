@@ -138,7 +138,6 @@ public class notesReceivablesListMB extends BaseGlBankListBean {
             setUserData((UserData) context.getSessionMap().get("userLogInData"));
             setBranchId(userData.getUserBranch().getId());
             setCompanyId(userData.getCompany().getId());
-            setAccountsSystemSettings(accountsSystemSettingsService.getInventoryByCompanyId(getUserData().getCompany().getId()));
 
             setUri(((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getRequestURI());
             if (!getUri().contains("notesreceivablesListpre")) {
@@ -447,6 +446,9 @@ public class notesReceivablesListMB extends BaseGlBankListBean {
      * @return the accountsSystemSettings
      */
     public AccountsSystemSettings getAccountsSystemSettings() {
+        if (accountsSystemSettings == null) {
+            setAccountsSystemSettings(accountsSystemSettingsService.getInventoryByCompanyId(getUserData().getCompany().getId()));
+        }
         return accountsSystemSettings;
     }
 

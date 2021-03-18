@@ -130,7 +130,7 @@
                                     <p:autoComplete id="organization"
                                                     style="width:37%!important" 
                                                     dropdown="true"
-                                                    converter="#{notesReceivablesFormMB.invOrganizationSiteConverter}"
+                                                    converter="#{notesReceivablesFormMB.invOrganizationSiteDTOConverter}"
                                                     value="#{notesReceivablesFormMB.glBankTransactionDetailEntity.invOrganizationSite}"
                                                     var="supplier"
                                                     itemLabel="#{supplier}" 
@@ -142,6 +142,7 @@
                                             process="@form"
                                             event="itemSelect"
                                             listener="#{notesReceivablesFormMB.check()}" update="invoice accountStatement"/>
+                                        
                                     </p:autoComplete>
 
                                 </div>

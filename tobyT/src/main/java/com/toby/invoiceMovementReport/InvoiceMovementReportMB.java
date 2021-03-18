@@ -7,6 +7,7 @@ import com.toby.businessservice.ProProductionTransactionService;
 import com.toby.businessservice.ProductionReportService;
 import com.toby.converter.ProProductionStagesDTOConverter;
 import com.toby.converter.ProProductionTransactionDTOConverter;
+import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.PrintProductionDTO;
 import com.toby.dto.ProProductionStagesDTO;
 import com.toby.dto.ProProductionTransactionDTO;
@@ -60,13 +61,19 @@ public class InvoiceMovementReportMB extends BaseListBean {
         setUserData((UserData) context.getSessionMap().get("userLogInData"));
         proProductionStagesDTOList = new ArrayList<>();
         proProductionTransactionDTOList = new ArrayList<>();
+        if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("AddFromInvInvoice")) {
+            InvInvoiceDTO invInvoiceDTO = (InvInvoiceDTO) context.getSessionMap().get("invInvoiceDTOSelected");
+            getPrintProductionDTO().setFromInvoice(invInvoiceDTO);
+            getPrintProductionDTO().setToInvoice(invInvoiceDTO);
+            search();
+        }
     }
 
     public void search() {
 
-       // if ((printProductionDTO.getFromInvoice() != null && printProductionDTO.getToInvoice() != null)) {
-            invoiceMovementReportList = invoiceMovementReportService.searchReport(printProductionDTO,getUserData().getUserBranch().getId());
-       // } else {
+        // if ((printProductionDTO.getFromInvoice() != null && printProductionDTO.getToInvoice() != null)) {
+        invoiceMovementReportList = invoiceMovementReportService.searchReport(printProductionDTO, getUserData().getUserBranch().getId());
+        // } else {
 //            printProductionDTO.setMsg("ادخل من فاتوره الي فاتوره");
 //            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", printProductionDTO.getMsg()));
 //

@@ -200,6 +200,7 @@ public class PurchaseOfItemsBySuppliersGroupReportMB extends BaseInventoryReport
          } else {
          itemSalesViewList = purchaseOfItemsBySuppliersReportService.getAllPurchaseOfItemsBySuppliersSearchBean(purchaseOfItemsBySuppliersSearchBean);
          }*/
+//        setItemSalesViewList(purchaseOfItemsBySuppliersReportService.getAllPurchaseOfItemsBySuppliersSearchBeanByGroup(getPurchaseOfItemsBySuppliersSearchBean()));
         setItemSalesViewList(purchaseOfItemsBySuppliersReportService.getAllPurchaseOfItemsBySuppliersSearchBeanByGroup(getPurchaseOfItemsBySuppliersSearchBean()));
         if (getItemSalesViewList() != null && !itemSalesViewList.isEmpty()) {
             fillGroupMapWithCorrespondingItem();
@@ -217,6 +218,7 @@ public class PurchaseOfItemsBySuppliersGroupReportMB extends BaseInventoryReport
                     ios.setName(itemSalesView.getOrganizationSiteName());
                     ios.setCode(itemSalesView.getOrganizationSiteCode());
                     getOrganizationSiteRootList().add(ios);
+                    customermap.put(itemSalesView.getOrganizationSiteId(), itemSalesView.getOrganizationSiteId());
                 }
             }
             prepareRootGroupValues();

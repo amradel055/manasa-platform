@@ -9,13 +9,9 @@ import com.toby.businessservice.CurrencyOperationService;
 import com.toby.bussinessservice.global.AutoCompleteService;
 import com.toby.converter.InvOrganizationSiteConverter;
 import com.toby.converter.InvOrganizationSiteDTOConverter;
-import com.toby.dto.CurrencyDTO;
 import com.toby.dto.InvOrganizationSiteDTO;
-import com.toby.entity.Currency;
-import com.toby.entity.CurrencyOperation;
 import com.toby.entity.InvOrganizationSite;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -41,10 +37,12 @@ public abstract class GlBankBasicDataForm extends BaseFormBean {
     CurrencyOperationService currencyOperationService;
     @EJB
     AutoCompleteService autoCompleteService;
-    
+
     private List<InvOrganizationSite> organizationList;
-    
-     private InvOrganizationSiteConverter invOrganizationSiteConverter;
+    private List<InvOrganizationSiteDTO> organizationSiteDTOList;
+
+    private InvOrganizationSiteConverter invOrganizationSiteConverter;
+    private InvOrganizationSiteDTOConverter invOrganizationSiteDTOConverter;
 
 //    public BigDecimal updateRate(CurrencyDTO currency, Date date) {
 //
@@ -61,7 +59,6 @@ public abstract class GlBankBasicDataForm extends BaseFormBean {
 //        }
 //        return null;
 //    }
-
     public abstract void checkDate(Boolean dateType);
 
     public abstract void resetDateFrom();
@@ -114,16 +111,19 @@ public abstract class GlBankBasicDataForm extends BaseFormBean {
         httpServletResponse.getOutputStream().flush();
         httpServletResponse.getOutputStream().close();
     }
-    
-    
-    public List<InvOrganizationSite> completeCustomerFrom(String query) {
-        organizationList = autoCompleteService.autoCompleteOrganizationSite(getUserData().getUserBranch().getId(), Boolean.TRUE, 0, query);
-        invOrganizationSiteConverter = new InvOrganizationSiteConverter(organizationList);
-        return organizationList;
+
+//    public List<InvOrganizationSite> completeCustomerFrom(String query) {
+//        organizationList = autoCompleteService.autoCompleteOrganizationSite(getUserData().getUserBranch().getId(), Boolean.TRUE, 0, query);
+//        invOrganizationSiteConverter = new InvOrganizationSiteConverter(organizationList);
+//        return organizationList;
+//
+//    }
+    public List<InvOrganizationSiteDTO> completeCustomerFrom(String query) {
+        organizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getUserData().getUserBranch().getId(), Boolean.TRUE, 0, query);
+        invOrganizationSiteDTOConverter = new InvOrganizationSiteDTOConverter(organizationSiteDTOList);
+        return organizationSiteDTOList;
 
     }
-    
-    
 
     /**
      * @return the organizationList
@@ -138,7 +138,6 @@ public abstract class GlBankBasicDataForm extends BaseFormBean {
     public void setOrganizationList(List<InvOrganizationSite> organizationList) {
         this.organizationList = organizationList;
     }
-    
 
     /**
      * @return the invOrganizationSiteConverter
@@ -154,5 +153,34 @@ public abstract class GlBankBasicDataForm extends BaseFormBean {
     public void setInvOrganizationSiteConverter(InvOrganizationSiteConverter invOrganizationSiteConverter) {
         this.invOrganizationSiteConverter = invOrganizationSiteConverter;
     }
-    
+
+    /**
+     * @return the invOrganizationSiteDTOConverter
+     */
+    public InvOrganizationSiteDTOConverter getInvOrganizationSiteDTOConverter() {
+        return invOrganizationSiteDTOConverter;
+    }
+
+    /**
+     * @param invOrganizationSiteDTOConverter the
+     * invOrganizationSiteDTOConverter to set
+     */
+    public void setInvOrganizationSiteDTOConverter(InvOrganizationSiteDTOConverter invOrganizationSiteDTOConverter) {
+        this.invOrganizationSiteDTOConverter = invOrganizationSiteDTOConverter;
+    }
+
+    /**
+     * @return the organizationSiteDTOList
+     */
+    public List<InvOrganizationSiteDTO> getOrganizationSiteDTOList() {
+        return organizationSiteDTOList;
+    }
+
+    /**
+     * @param organizationSiteDTOList the organizationSiteDTOList to set
+     */
+    public void setOrganizationSiteDTOList(List<InvOrganizationSiteDTO> organizationSiteDTOList) {
+        this.organizationSiteDTOList = organizationSiteDTOList;
+    }
+
 }

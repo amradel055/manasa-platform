@@ -255,17 +255,15 @@
 
                     <p:column   style="width:5vh;text-align: right;font-size: 1.6vh;text-align: center" headerText="#{userData.userDDs['CUSTOM_NAME']}" 
 
-                                filterBy="#{PurchaseOfItemsBySuppliersViewTable.groupName}" 
+                                filterBy="#{PurchaseOfItemsBySuppliersViewTable.organizationName}" 
                                 filterMatchMode="contains" 
-                                sortBy="#{PurchaseOfItemsBySuppliersViewTable.groupName}"
+                                sortBy="#{PurchaseOfItemsBySuppliersViewTable.organizationName}"
                                 filterable="false">
 
-                        <h:outputText value="#{PurchaseOfItemsBySuppliersViewTable.groupName}" style="font-size: 1.5vh"/>
+                        <h:outputText value="#{PurchaseOfItemsBySuppliersViewTable.organizationName}" style="font-size: 1.5vh"/>
                     </p:column>
 
                     <p:column   style="width: 12vh;text-align: right;font-size: 1.6vh;text-align: center" headerText="#{userData.userDDs['INVOICE_NO']}" 
-
-
                                 filterBy="#{PurchaseOfItemsBySuppliersViewTable.serial}" 
                                 filterMatchMode="contains" 
                                 sortBy="#{PurchaseOfItemsBySuppliersViewTable.serial}"

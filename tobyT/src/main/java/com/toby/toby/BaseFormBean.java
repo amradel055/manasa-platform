@@ -36,7 +36,7 @@ public abstract class BaseFormBean extends Basic implements BaseManagedBean {
     private Integer index = 999999;
 
     private UserDataDTO userDataDTO;
-    private String ScreenMode;
+    
     private Boolean columnRender = true;
     private String className = "BaseFormBean";
     private Map<String, String> userDDs; 
@@ -140,21 +140,6 @@ public abstract class BaseFormBean extends Basic implements BaseManagedBean {
             saveError(e, "BaseFormBean", "isFileExist");
         }
         return false;
-    }
-
-    /**
-     * @return the ScreenMode
-     */
-    public String getScreenMode() {
-        setScreenMode((String) getContext().getSessionMap().get("ScreenMode"));
-        return ScreenMode;
-    }
-
-    /**
-     * @param ScreenMode the ScreenMode to set
-     */
-    public void setScreenMode(String ScreenMode) {
-        this.ScreenMode = ScreenMode;
     }
 
     /**
