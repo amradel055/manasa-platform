@@ -6,6 +6,7 @@
 package com.toby.businessservice;
 
 import com.toby.dto.InvInvoiceDTO;
+import com.toby.dto.PrintProductionDTO;
 import com.toby.entity.TobyUser;
 import java.util.List;
 import java.util.Map;
@@ -30,5 +31,7 @@ public interface ProFactoryDeliveryService {
     
     public void deleteInvAddingOrder(InvInvoiceDTO invoiceDTO);
     
-
+    public List<InvInvoiceDTO> getALLProFactoryDeliveryDTOByStatus(PrintProductionDTO printProductionDTO,Integer branchId);
+    
+    public List<InvInvoiceDTO> getALLProFactoryDeliveryDTOByStatusRemain(PrintProductionDTO printProductionDTO, Integer branchId) ;
 }

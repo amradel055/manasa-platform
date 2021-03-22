@@ -88,16 +88,7 @@
                             <p:outputLabel value="#{invAddingOrderTable.remarks}" />
                         </p:column>
                         <p:column style="width:11vh;font-size:1.6vh;text-align: center;border-radius: 0px;" headerText="#{userData.userDDs['TRANSACTION']}" >
-                            <p:commandButton update="@form" 
-                                             icon="fa fa-fw fa-edit" 
-                                             style="background-color: #6a6967;border-radius: 3px;"
-                                             class="seditButtons"
-                                             title="#{userData.userDDs['EDIT']}" 
-                                             action="#{proFactoryDeliveryListDTOMB.goToEdit()}"  >
-
-                                <f:setPropertyActionListener value="#{invAddingOrderTable.id}" 
-                                                             target="#{proFactoryDeliveryListDTOMB.invInvoiceDTOSelected.id}" />
-                            </p:commandButton>
+                            
 
                             <p:commandButton update="@form" 
                                              icon="fa fa-remove" 

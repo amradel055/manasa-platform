@@ -916,7 +916,7 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
                             findnotesReceivablesObject(bankTransaction.getId());
                         }
                         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, userDDs.get("INFO"), userDDs.get("SAVED")));
-                        exit();
+//                        exit();
                     } catch (Exception e) {
                         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, userDDs.get("ERROR"), userDDs.get("SAVED_ERROR")));
                     }

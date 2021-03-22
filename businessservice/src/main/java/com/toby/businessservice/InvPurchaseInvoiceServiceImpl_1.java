@@ -23,6 +23,7 @@ import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.dto.InventoryDelegatorDTO;
+import com.toby.dto.PrintProductionDTO;
 import com.toby.dto.ProGroupDTO;
 import com.toby.entity.Branch;
 import com.toby.entity.CostCenter;
@@ -1586,6 +1587,30 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     }
 
     @Override
+    public List<InvInvoiceDTO> getALLInvPurchaseInvoiceDTOByStatus(PrintProductionDTO printProductionDTO, Integer branchId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("type", printProductionDTO.getInvoiceStatus());
+        params.put("galaryId", printProductionDTO.getGallaryFrom().getId());
+        params.put("dateFrom", printProductionDTO.getFromDate());
+        params.put("dateTo", printProductionDTO.getToDate());
+        params.put("branchId", branchId);
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT s FROM InvPurchaseInvoice s WHERE s.branchId.id = :branchId AND  s.type =:type ");
+        if (printProductionDTO.getGallaryFrom() != null) {
+            builder.append(" AND  (:galaryId is Null OR  s.galaryId.id = :galaryId) ");
+        }
+        if (printProductionDTO.getFromDate() != null) {
+            builder.append(" AND   s.date >= :dateFrom ");
+        }
+        if (printProductionDTO.getToDate() != null) {
+            builder.append(" AND   s.date <= :dateTo ");
+        }
+        builder.append(" order by s.serial DESC");
+        List<InvPurchaseInvoice> details = dao.findListByQuery(builder.toString(), params);
+        return returnListDTOForList(details);
+    }
+
+    @Override
     public InvInvoiceDTO getInvPurchaseInvoiceDTOBySerial(Integer serial, Integer branchId) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
@@ -1623,15 +1648,29 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     private void commonData(InvInvoiceDTO invPurchaseInvoiceDTO, InvPurchaseInvoice entity) {
         invPurchaseInvoiceDTO.setId(entity.getId());
         invPurchaseInvoiceDTO.setSerial(entity.getSerial());
+        invPurchaseInvoiceDTO.setInvoiceSerial(entity.getSerial());
         invPurchaseInvoiceDTO.setDate(entity.getDate());
         invPurchaseInvoiceDTO.setIndex(entity.getSerial());
         invPurchaseInvoiceDTO.setPostFlag(entity.getPostFlag());
         invPurchaseInvoiceDTO.setRemarks(entity.getRemarks());
+        invPurchaseInvoiceDTO.setDueDate(entity.getDueDate());
+        if (entity.getDueDate() != null) {
+            invPurchaseInvoiceDTO.setDiffrentTime(entity.getDueDate().getTime() - (new Date()).getTime());
+        }
+        if (entity.getGalaryId() != null) {
+            InvInventoryDTO invInventoryDTO = new InvInventoryDTO();
+            invInventoryDTO.setId(entity.getGalaryId().getId());
+            invInventoryDTO.setName(entity.getGalaryId().getName());
+            invInventoryDTO.setCode(entity.getGalaryId().getCode());
+            invPurchaseInvoiceDTO.setGallary(invInventoryDTO);
+            invPurchaseInvoiceDTO.setGallaryId(invInventoryDTO);
+        }
         if (entity.getOrganizationSiteId() != null) {
             InvOrganizationSiteDTO invOrganizationSiteDTO = new InvOrganizationSiteDTO();
             invOrganizationSiteDTO.setId(entity.getOrganizationSiteId().getId());
             invOrganizationSiteDTO.setName(entity.getOrganizationSiteId().getName());
             invOrganizationSiteDTO.setCode(entity.getOrganizationSiteId().getCode());
+            invOrganizationSiteDTO.setMobile(entity.getOrganizationSiteId().getMobile());
             invPurchaseInvoiceDTO.setOrganizationSiteName(entity.getOrganizationSiteId().getName());
             invPurchaseInvoiceDTO.setOrganizationSiteId(invOrganizationSiteDTO);
         }

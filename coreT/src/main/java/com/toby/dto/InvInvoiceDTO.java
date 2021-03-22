@@ -134,6 +134,8 @@ public class InvInvoiceDTO extends BaseEntityDTO {
     private InvInventoryDTO factory;
     private InvDetailDTO invDetailDTOSelected;
     private List<InvDetailDTO> invStripDetailList;
+    private long diffrentTime;
+    private Integer invoiceSerial;
     
 
     public InvInvoiceDTO() {
@@ -1462,5 +1464,33 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      */
     public void setNumberOfToob(BigDecimal numberOfToob) {
         this.numberOfToob = numberOfToob;
+    }
+
+    /**
+     * @return the diffrentTime
+     */
+    public long getDiffrentTime() {
+        return diffrentTime;
+    }
+
+    /**
+     * @param diffrentTime the diffrentTime to set
+     */
+    public void setDiffrentTime(long diffrentTime) {
+        this.diffrentTime = diffrentTime;
+    }
+
+    /**
+     * @return the invoiceSerial
+     */
+    public Integer getInvoiceSerial() {
+        return invoiceSerial;
+    }
+
+    /**
+     * @param invoiceSerial the invoiceSerial to set
+     */
+    public void setInvoiceSerial(Integer invoiceSerial) {
+        this.invoiceSerial = invoiceSerial;
     }
 }

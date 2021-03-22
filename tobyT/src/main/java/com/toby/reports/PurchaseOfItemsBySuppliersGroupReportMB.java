@@ -200,7 +200,6 @@ public class PurchaseOfItemsBySuppliersGroupReportMB extends BaseInventoryReport
          } else {
          itemSalesViewList = purchaseOfItemsBySuppliersReportService.getAllPurchaseOfItemsBySuppliersSearchBean(purchaseOfItemsBySuppliersSearchBean);
          }*/
-//        setItemSalesViewList(purchaseOfItemsBySuppliersReportService.getAllPurchaseOfItemsBySuppliersSearchBeanByGroup(getPurchaseOfItemsBySuppliersSearchBean()));
         setItemSalesViewList(purchaseOfItemsBySuppliersReportService.getAllPurchaseOfItemsBySuppliersSearchBeanByGroup(getPurchaseOfItemsBySuppliersSearchBean()));
         if (getItemSalesViewList() != null && !itemSalesViewList.isEmpty()) {
             fillGroupMapWithCorrespondingItem();
@@ -332,7 +331,7 @@ public class PurchaseOfItemsBySuppliersGroupReportMB extends BaseInventoryReport
     }
 
     public void mergeGroupsWithItems() {
-
+        purchaseOfItemsBySuppliersViewBeanList = new ArrayList<>();
         for (Map.Entry<Integer, PurchaseOfItemsBySuppliersViewBean> entry : getPurchaseOfItemsBySuppliersViewTreeMap().entrySet()) {
             PurchaseOfItemsBySuppliersViewBean viewBean = entry.getValue();
             if (ItemSalesViewmap.containsKey(viewBean.getOrganizationId())) {
@@ -402,7 +401,7 @@ public class PurchaseOfItemsBySuppliersGroupReportMB extends BaseInventoryReport
 
     @Override
     public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {
-        search();
+//        search();
         if (purchaseOfItemsBySuppliersSearchBean.getShowReport() != null && purchaseOfItemsBySuppliersSearchBean.getShowReport()) {
             fillReport(prepareReport(), getUserData().getReportPath() + "ItemSalesTotalReport.jasper", getPurchaseOfItemsBySuppliersViewBeanList(), "pdf");
         } else {

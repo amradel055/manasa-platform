@@ -10,6 +10,7 @@ import com.toby.bussinessservice.global.InvPurchaseReturnSave;
 import com.toby.core.UserDataDTO;
 import com.toby.define.ScreenNameClassEnum;
 import com.toby.dto.InvInvoiceDTO;
+import com.toby.dto.PrintProductionDTO;
 import com.toby.entity.InvPurchaseInvoice;
 import com.toby.entity.InvPurchaseInvoiceDetail;
 import com.toby.entity.InventorySetup;
@@ -104,5 +105,7 @@ public interface InvPurchaseInvoiceService_1 {
     public List<SummitionItemsView> findSummitionQuantity(Integer gallaryId, Integer branchId, Date dateFrom, Date dateTo, Integer groupId);
 
     public List<SummitionItemsView> getTheListBasedOnStagesList(Integer gallaryId, Date dateFrom, Date dateTo, Integer groupId, Integer branchId, TobyUser tobyUser);
+    
+    public List<InvInvoiceDTO> getALLInvPurchaseInvoiceDTOByStatus(PrintProductionDTO printProductionDTO,Integer branchId);
 
 }

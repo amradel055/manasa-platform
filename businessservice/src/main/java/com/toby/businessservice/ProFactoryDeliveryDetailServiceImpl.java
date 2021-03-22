@@ -165,7 +165,7 @@ public class ProFactoryDeliveryDetailServiceImpl implements ProFactoryDeliveryDe
                     entity.getItemId(), null, null,
                     entity.getItemId(), entity.getItemBarcode(), entity.getItemName(),null,
                     null, null,
-                    entity.getNumber(), entity.getDetailId(),
+                    entity.getNumber(), null,
                     null,
                     null,
                     invInvoiceDTO.getCompanyActivity(), invInvoiceDTO.getScreenName());
@@ -229,7 +229,7 @@ public class ProFactoryDeliveryDetailServiceImpl implements ProFactoryDeliveryDe
         if (dTO.getId() == null) {
             if (entity.getSerial() == null) {
                 Map<String, Object> params = new HashMap<>();
-                params.put("invPurchaseOrderId", proFactoryDeliveryId);
+                params.put("proFactoryDeliveryId", proFactoryDeliveryId);
                 Integer max = genericService.getMaxGenericSerialForDetail(ProFactoryDeliveryDetail.class, "proFactoryDeliveryId", proFactoryDeliveryId);
                 entity.setSerial(max);
             }
