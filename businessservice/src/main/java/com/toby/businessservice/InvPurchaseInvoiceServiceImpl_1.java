@@ -1664,6 +1664,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             invInventoryDTO.setCode(entity.getGalaryId().getCode());
             invPurchaseInvoiceDTO.setGallary(invInventoryDTO);
             invPurchaseInvoiceDTO.setGallaryId(invInventoryDTO);
+            invPurchaseInvoiceDTO.setGallaryName(invInventoryDTO.getName());
         }
         if (entity.getOrganizationSiteId() != null) {
             InvOrganizationSiteDTO invOrganizationSiteDTO = new InvOrganizationSiteDTO();
@@ -1673,6 +1674,9 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             invOrganizationSiteDTO.setMobile(entity.getOrganizationSiteId().getMobile());
             invPurchaseInvoiceDTO.setOrganizationSiteName(entity.getOrganizationSiteId().getName());
             invPurchaseInvoiceDTO.setOrganizationSiteId(invOrganizationSiteDTO);
+            invPurchaseInvoiceDTO.setCustomerCode(invOrganizationSiteDTO.getCode());
+                invPurchaseInvoiceDTO.setCustomerName(invOrganizationSiteDTO.getName());
+                invPurchaseInvoiceDTO.setCustomerMobile(invOrganizationSiteDTO.getMobile());
         }
         if (entity.getInvInventoryId() != null) {
             InvInventoryDTO invInventoryDTO = new InvInventoryDTO();

@@ -98,6 +98,7 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
         invPurchaseInvoiceDTO.setDate(entity.getDate());
         invPurchaseInvoiceDTO.setIndex(entity.getSerial());
         invPurchaseInvoiceDTO.setRemarks(entity.getRemark());
+
         if (entity.getInvPurchaseInvoiceId() != null) {
             invPurchaseInvoiceDTO.setInvoiceSerial(entity.getInvPurchaseInvoiceId().getSerial());
             invPurchaseInvoiceDTO.setDueDate(entity.getInvPurchaseInvoiceId().getDueDate());
@@ -111,6 +112,8 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
                 invInventoryDTO.setCode(entity.getInvPurchaseInvoiceId().getGalaryId().getCode());
                 invPurchaseInvoiceDTO.setGallary(invInventoryDTO);
                 invPurchaseInvoiceDTO.setGallaryId(invInventoryDTO);
+                invPurchaseInvoiceDTO.setGallaryName(invInventoryDTO.getName());
+
             }
             if (entity.getInvPurchaseInvoiceId().getOrganizationSiteId() != null) {
                 InvOrganizationSiteDTO invOrganizationSiteDTO = new InvOrganizationSiteDTO();
@@ -120,6 +123,9 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
                 invOrganizationSiteDTO.setMobile(entity.getInvPurchaseInvoiceId().getOrganizationSiteId().getMobile());
                 invPurchaseInvoiceDTO.setOrganizationSiteName(entity.getInvPurchaseInvoiceId().getOrganizationSiteId().getName());
                 invPurchaseInvoiceDTO.setOrganizationSiteId(invOrganizationSiteDTO);
+                invPurchaseInvoiceDTO.setCustomerCode(invOrganizationSiteDTO.getCode());
+                invPurchaseInvoiceDTO.setCustomerName(invOrganizationSiteDTO.getName());
+                invPurchaseInvoiceDTO.setCustomerMobile(invOrganizationSiteDTO.getMobile());
             }
         }
 
@@ -392,7 +398,7 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
         List<ProFactoryDelivery> details = dao.findListByQuery(builder.toString(), params);
         return returnListDTOForList(details);
     }
-    
+
     @Override
     public List<InvInvoiceDTO> getALLProFactoryDeliveryDTOByStatusRemain(PrintProductionDTO printProductionDTO, Integer branchId) {
         Map<String, Object> params = new HashMap<>();

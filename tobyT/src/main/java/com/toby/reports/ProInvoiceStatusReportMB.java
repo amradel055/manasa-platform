@@ -5,10 +5,15 @@ import com.toby.businessservice.ProFactoryDeliveryService;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.PrintProductionDTO;
 import com.toby.toby.Basic;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.ejb.EJB;
+import javax.faces.event.ActionEvent;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
+import net.sf.jasperreports.engine.JRException;
 
 @Named(value = "proInvoiceStatusReportMB")
 @ViewScoped
@@ -35,6 +40,58 @@ public class ProInvoiceStatusReportMB extends Basic {
             setList(proFactoryDeliveryService.getALLProFactoryDeliveryDTOByStatus(getPrintProductionDTO(), getUserData().getUserBranch().getId()));
         }
         setNumber(getList() == null ? 0 : getList().size());
+    }
+
+    public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {
+//        search();
+        String reportName = "invoiceStatus.jasper";
+        fillReport(prepareReport(), getUserData().getReportPath() + reportName, getList(), "pdf");
+    }
+
+    public HashMap prepareReport() {
+        Map<String, String> userDDs = getUserData().getUserDDs();
+        HashMap hashMap = new HashMap();
+
+        hashMap.put("PrintedBy", getUserData().getUser().getName());
+        hashMap.put("branchName", getUserData().getUserBranch().getNameAr());
+
+        if (isFileExist(getUserData().getImageReportPath())) {
+            hashMap.put("companyImage", getUserData().getImageReportPath());
+        } else {
+            hashMap.put("companyImage", null);
+        }
+
+        hashMap.put("dateText", userDDs.get("DATE"));
+        hashMap.put("dateValue", printProductionDTO.getFromDate());
+        hashMap.put("invoiceSerialText", "رقم الفاتورة");
+        hashMap.put("customerCodeText", "رقم العميل");
+        hashMap.put("customerNameText", "اسم العميل");
+        hashMap.put("customerMobileText", "جوال العميل");
+        hashMap.put("dueDateText", "تاريخ التسليم");
+        hashMap.put("gallaryFromText", "من معرض");
+        hashMap.put("gallaryToText", "الى معرض");
+        hashMap.put("gallaryFromValue", printProductionDTO.getGallaryFrom().getName());
+//        hashMap.put("gallaryToValue", printProductionDTO.getGallaryTo().getName());
+        hashMap.put("statusText", "الحالة");
+
+        if (printProductionDTO.getInvoiceStatus() == 0) {
+            hashMap.put("statusValue", "بالمشغل");
+        } else if (printProductionDTO.getInvoiceStatus() == 1) {
+            hashMap.put("statusValue", "ارسال للمعرض");
+        } else if (printProductionDTO.getInvoiceStatus() == 2) {
+            hashMap.put("statusValue", "استلام بالمعرض");
+        } else if (printProductionDTO.getInvoiceStatus() == 3) {
+            hashMap.put("statusValue", "تسليم للعميل");
+        } else if (printProductionDTO.getInvoiceStatus() == 10) {
+            hashMap.put("statusValue", "باقى الفواتير بالمشغل");
+        }
+
+        hashMap.put("dateText", "إلى تاريخ");
+        hashMap.put("dateValue", printProductionDTO.getToDate());
+
+        hashMap.put("gallaryNameText", "المعرض");
+
+        return hashMap;
     }
 
     /**

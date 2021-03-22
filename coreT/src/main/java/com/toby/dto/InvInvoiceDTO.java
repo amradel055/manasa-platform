@@ -137,6 +137,13 @@ public class InvInvoiceDTO extends BaseEntityDTO {
     private long diffrentTime;
     private Integer invoiceSerial;
     
+    /// report //
+    private String gallaryName;
+    private String customerCode;
+    private String customerName;
+    private String customerMobile;
+    
+    
 
     public InvInvoiceDTO() {
     }
@@ -1492,5 +1499,61 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      */
     public void setInvoiceSerial(Integer invoiceSerial) {
         this.invoiceSerial = invoiceSerial;
+    }
+
+    /**
+     * @return the gallaryName
+     */
+    public String getGallaryName() {
+        return gallaryName;
+    }
+
+    /**
+     * @param gallaryName the gallaryName to set
+     */
+    public void setGallaryName(String gallaryName) {
+        this.gallaryName = gallaryName;
+    }
+
+    /**
+     * @return the customerCode
+     */
+    public String getCustomerCode() {
+        return customerCode;
+    }
+
+    /**
+     * @param customerCode the customerCode to set
+     */
+    public void setCustomerCode(String customerCode) {
+        this.customerCode = customerCode;
+    }
+
+    /**
+     * @return the customerName
+     */
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    /**
+     * @param customerName the customerName to set
+     */
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    /**
+     * @return the customerMobile
+     */
+    public String getCustomerMobile() {
+        return customerMobile;
+    }
+
+    /**
+     * @param customerMobile the customerMobile to set
+     */
+    public void setCustomerMobile(String customerMobile) {
+        this.customerMobile = customerMobile;
     }
 }
