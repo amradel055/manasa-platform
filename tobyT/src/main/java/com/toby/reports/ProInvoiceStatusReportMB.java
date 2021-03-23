@@ -70,7 +70,7 @@ public class ProInvoiceStatusReportMB extends Basic {
         hashMap.put("dueDateText", "تاريخ التسليم");
         hashMap.put("gallaryFromText", "من معرض");
         hashMap.put("gallaryToText", "الى معرض");
-        hashMap.put("gallaryFromValue", printProductionDTO.getGallaryFrom().getName());
+        hashMap.put("gallaryFromValue", printProductionDTO.getGallaryFrom() == null ? null : printProductionDTO.getGallaryFrom().getName() );
 //        hashMap.put("gallaryToValue", printProductionDTO.getGallaryTo().getName());
         hashMap.put("statusText", "الحالة");
 
