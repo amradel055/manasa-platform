@@ -19,6 +19,7 @@ import com.toby.toby.BaseFormBean;
 import com.toby.toby.UserData;
 import com.toby.views.ProductionTransactionOfUser;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,6 +48,9 @@ public class ProductionTransactionOfUserMB extends BaseFormBean {
     private List<ProductionTransactionOfUser> productionTransactionOfUserList;
     private TobyUserDTOConverter tobyUserDTOConverter;
     private ProProductionStagesDTOConverter proProductionStagesDTOConverter;
+    private BigDecimal totalQuantity;
+    private BigDecimal Total;
+
     @EJB
     private TobyUserService tobyUserService;
     @EJB
@@ -72,6 +76,10 @@ public class ProductionTransactionOfUserMB extends BaseFormBean {
         // ||(printProductionDTO.getFromDate()!=null&&printProductionDTO.getToDate()!=null)
         //  ||(printProductionDTO.getFromStatus()!=null)&&(printProductionDTO.getToStatus()!=null)){
         productionTransactionOfUserList = proProductionItemsTransactionService.getProProductionTransactionDTOForAllUsersList(printProductionDTO, getUserData().getUserBranch().getId());
+        for (ProductionTransactionOfUser productionTransactionOfUser : productionTransactionOfUserList) {
+            setTotal(productionTransactionOfUser.getTotalNumber().add(getTotal()));
+            setTotalQuantity(productionTransactionOfUser.getNumberExcute().add(getTotalQuantity()));
+        }
         // }else{
         //  printProductionDTO.setMsg("ادخل من عامل  الي عامل او من تاريخ الي تاريخ او من مرحله الي مرحله  " );
         //    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", printProductionDTO.getMsg()));
@@ -105,7 +113,7 @@ public class ProductionTransactionOfUserMB extends BaseFormBean {
         hashMap.put("fromUserText", " من عامل");
         hashMap.put("fromUserValue", printProductionDTO.getFromUser() == null ? null : printProductionDTO.getFromUser());
         hashMap.put("toUserText", " الى عامل");
-        hashMap.put("toUserValue", printProductionDTO.getToUser()== null ? null : printProductionDTO.getToUser());
+        hashMap.put("toUserValue", printProductionDTO.getToUser() == null ? null : printProductionDTO.getToUser());
         hashMap.put("fromDateText", "  من تاريخ");
         hashMap.put("fromDateValue", printProductionDTO.getFromDate());
         hashMap.put("toDateText", "  الى تاريخ");
@@ -243,6 +251,46 @@ public class ProductionTransactionOfUserMB extends BaseFormBean {
      */
     public void setProProductionStagesDTOConverter(ProProductionStagesDTOConverter proProductionStagesDTOConverter) {
         this.proProductionStagesDTOConverter = proProductionStagesDTOConverter;
+    }
+
+    /**
+     * @return the totalQuantity
+     */
+    public BigDecimal getTotalQuantity() {
+        if (totalQuantity == null) {
+
+            return BigDecimal.ZERO;
+        }
+        return totalQuantity;
+    }
+
+    /**
+     * @param totalQuantity the totalQuantity to set
+     */
+    public void setTotalQuantity(BigDecimal totalQuantity) {
+        this.totalQuantity = totalQuantity;
+    }
+
+    /**
+     * @return the totalNumber
+     */
+    /**
+     * @return the Total
+     */
+    public BigDecimal getTotal() {
+        if (Total == null) {
+
+            return BigDecimal.ZERO;
+        }
+
+        return Total;
+    }
+
+    /**
+     * @param Total the Total to set
+     */
+    public void setTotal(BigDecimal Total) {
+        this.Total = Total;
     }
 
 }
