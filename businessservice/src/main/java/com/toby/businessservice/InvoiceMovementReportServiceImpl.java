@@ -106,7 +106,7 @@ public class InvoiceMovementReportServiceImpl implements InvoiceMovementReportSe
             Map<String, Object> params = new HashMap<>();
             params.put("id", id);
             StringBuilder builder = new StringBuilder();
-            builder.append("SELECT sum(i.number) FROM InvPurchaseInvoiceDetail i WHERE  i.invPurchaseInvoiceId.id = :id  AND i.itemId.proGroupId.id = 1  ");
+            builder.append("SELECT sum(i.number) FROM InvPurchaseInvoiceDetail i WHERE  i.invPurchaseInvoiceId.id = :id  AND( i.itemId.proGroupId.id = 1 or i.itemId.proGroupId.id = 5)  ");
             builder.append(" group by i.itemId.proGroupId.id ");
             List<BigDecimal> res = dao.findListByQuery(builder.toString(), params);
             return (res != null && !res.isEmpty()) ? res.get(0) : BigDecimal.ZERO;
@@ -123,9 +123,9 @@ public class InvoiceMovementReportServiceImpl implements InvoiceMovementReportSe
             params.put("type", type);
             StringBuilder builder = new StringBuilder();
             if (type == 0) {
-                builder.append("SELECT sum(i.number) FROM ProFactoryDeliveryDetail i WHERE  i.proFactoryDeliveryId.id = :id AND i.proFactoryDeliveryId.type = :type  AND i.itemId.proGroupId.id = 1  ");
+                builder.append("SELECT sum(i.number) FROM ProFactoryDeliveryDetail i WHERE  i.proFactoryDeliveryId.id = :id AND i.proFactoryDeliveryId.type = :type  AND (i.itemId.proGroupId.id = 1 or i.itemId.proGroupId.id = 5)  ");
             } else {
-                builder.append("SELECT sum(i.number) FROM ProFactoryDeliveryDetail i WHERE  i.proFactoryDeliveryId.parent.id = :id AND i.proFactoryDeliveryId.type = :type  AND i.itemId.proGroupId.id = 1  ");
+                builder.append("SELECT sum(i.number) FROM ProFactoryDeliveryDetail i WHERE  i.proFactoryDeliveryId.parent.id = :id AND i.proFactoryDeliveryId.type = :type  AND (i.itemId.proGroupId.id = 1 or i.itemId.proGroupId.id = 5)  ");
             }
             builder.append(" group by i.itemId.proGroupId.id ");
             List<BigDecimal> res = dao.findListByQuery(builder.toString(), params);
