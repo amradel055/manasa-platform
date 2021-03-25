@@ -49,6 +49,7 @@ import com.toby.entity.InvTransferDetail;
 import com.toby.entity.InventoryDelegator;
 import com.toby.entity.InventorySetup;
 import com.toby.entity.ProFactoryDelivery;
+import com.toby.views.FactoryInvoiceStatus;
 import com.toby.views.QuantityItemsStore;
 import com.toby.views.SummitionItemsView;
 import java.math.BigDecimal;
@@ -118,6 +119,8 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     private GlBankTransactionService glBankTransactionService;
     @EJB
     AutoCompleteService autoCompleteService;
+    @EJB
+    InvoiceMovementReportService invoiceMovementReportService;
 
     InvPurchaseReturnSave invPurchaseReturnSave;
 
@@ -1675,8 +1678,8 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             invPurchaseInvoiceDTO.setOrganizationSiteName(entity.getOrganizationSiteId().getName());
             invPurchaseInvoiceDTO.setOrganizationSiteId(invOrganizationSiteDTO);
             invPurchaseInvoiceDTO.setCustomerCode(invOrganizationSiteDTO.getCode());
-                invPurchaseInvoiceDTO.setCustomerName(invOrganizationSiteDTO.getName());
-                invPurchaseInvoiceDTO.setCustomerMobile(invOrganizationSiteDTO.getMobile());
+            invPurchaseInvoiceDTO.setCustomerName(invOrganizationSiteDTO.getName());
+            invPurchaseInvoiceDTO.setCustomerMobile(invOrganizationSiteDTO.getMobile());
         }
         if (entity.getInvInventoryId() != null) {
             InvInventoryDTO invInventoryDTO = new InvInventoryDTO();
@@ -1799,6 +1802,92 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                     + "where id = " + invPurchaseInvoiceId + " and type = 1");
         }
         return (statusList != null && !statusList.isEmpty()) ? statusList.get(statusList.size() - 1) : "";
+    }
+
+    @Override
+    public List<FactoryInvoiceStatus> findInvoiceStatus(Date dateFrom, Date dateTo, Integer status, Integer gallaryId, Integer branchId) {
+        List<FactoryInvoiceStatus> factoryInvoiceStatuseList = new ArrayList<>();
+        Map<Integer, FactoryInvoiceStatus> mapList = new HashMap<>();
+
+//        if (status == null || status == 9) {
+//            Map<String, Object> params = new HashMap<>();
+//            params.put("branchId", branchId);
+//            StringBuilder builder = new StringBuilder();
+//            builder.append("SELECT i  FROM InvPurchaseInvoice i WHERE  i.branchId.id = :branchId ");
+//            if (dateFrom != null) {
+//                params.put("dateFrom", dateFrom);
+//                builder.append(" AND i.date >= :dateFrom ");
+//            }
+//            if (dateFrom != null) {
+//                params.put("dateTo", dateTo);
+//                builder.append(" AND i.date <= :dateTo ");
+//            }
+//            if (gallaryId != null) {
+//                params.put("gallaryId", gallaryId);
+//                builder.append(" AND i.galaryId.id = :gallaryId ");
+//            }
+//            List<InvPurchaseInvoice> details = dao.findListByQuery(builder.toString(), params);
+//            for (InvPurchaseInvoice invPurchaseInvoice : details) {
+//                FactoryInvoiceStatus factoryInvoiceStatus = new FactoryInvoiceStatus();
+//                factoryInvoiceStatus.setEmployee(invPurchaseInvoice.getCreatedBy().getName());
+//                factoryInvoiceStatus.setClientName(invPurchaseInvoice.getOrganizationSiteId().getName());
+//                factoryInvoiceStatus.setGallery(invPurchaseInvoice.getGalaryId().getName());
+//                factoryInvoiceStatus.setInvoiceDate(invPurchaseInvoice.getDate());
+//                factoryInvoiceStatus.setInvoiceNumber(invPurchaseInvoice.getSerial());
+//                factoryInvoiceStatus.setNumber(invPurchaseInvoice.get);
+//                factoryInvoiceStatus.setStage("بالمعرض");
+//                factoryInvoiceStatus.setStageDate(invPurchaseInvoice.getDate());
+//                factoryInvoiceStatus.setStageTime(invPurchaseInvoice.getDate());
+//                mapList.put(invPurchaseInvoice.getSerial(), factoryInvoiceStatus);
+//            }
+//        }
+        Map<String, Object> params1 = new HashMap<>();
+        params1.put("branchId", branchId);
+        StringBuilder builder1 = new StringBuilder();
+        builder1.append("SELECT i  FROM ProFactoryDelivery i WHERE  i.invPurchaseInvoiceId.branchId.id = :branchId ");
+        if (dateFrom != null) {
+            params1.put("dateFrom", dateFrom);
+            builder1.append(" AND i.invPurchaseInvoiceId.date >= :dateFrom ");
+        }
+        if (dateFrom != null) {
+            params1.put("dateTo", dateTo);
+            builder1.append(" AND i.invPurchaseInvoiceId.date <= :dateTo ");
+        }
+        if (gallaryId != null) {
+            params1.put("gallaryId", gallaryId);
+            builder1.append(" AND i.invPurchaseInvoiceId.galaryId.id = :gallaryId ");
+        }
+        if (status != null) {
+            params1.put("status", status);
+            builder1.append(" AND i.type = :status ");
+        }
+
+        List<ProFactoryDelivery> res = dao.findListByQuery(builder1.toString(), params1);
+        for (ProFactoryDelivery proFactoryDelivery : res) {
+            FactoryInvoiceStatus factoryInvoiceStatus = new FactoryInvoiceStatus();
+            factoryInvoiceStatus.setEmployee(proFactoryDelivery.getCreatedBy().getName());
+            factoryInvoiceStatus.setClientName(proFactoryDelivery.getInvPurchaseInvoiceId().getOrganizationSiteId().getName());
+            factoryInvoiceStatus.setGallery(proFactoryDelivery.getInvPurchaseInvoiceId().getGalaryId().getName());
+            factoryInvoiceStatus.setInvoiceDate(proFactoryDelivery.getDate());
+            factoryInvoiceStatus.setInvoiceNumber(proFactoryDelivery.getSerial());
+            factoryInvoiceStatus.setNumber(invoiceMovementReportService.summitionTob(proFactoryDelivery.getInvPurchaseInvoiceId().getId()));
+
+            if (proFactoryDelivery.getType() == 0) {
+                factoryInvoiceStatus.setStage("تسليم للمشغل");
+            } else if (proFactoryDelivery.getType() == 1) {
+                factoryInvoiceStatus.setStage("تسليم للمعرض");
+            } else if (proFactoryDelivery.getType() == 2) {
+                factoryInvoiceStatus.setStage("استلام بالمعرض ");
+            } else {
+                factoryInvoiceStatus.setStage("تسليم للعميل");
+            }
+
+            factoryInvoiceStatus.setStageDate(proFactoryDelivery.getDate());
+            mapList.put(proFactoryDelivery.getSerial(), factoryInvoiceStatus);
+        }
+        factoryInvoiceStatuseList = new ArrayList<>(mapList.values());
+
+        return factoryInvoiceStatuseList;
     }
 
     private Boolean CheckData(Date date, Boolean checkGeneralJournal) {

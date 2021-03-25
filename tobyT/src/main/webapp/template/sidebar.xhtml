@@ -836,6 +836,7 @@
                                                        or userData.userScreens['productionTransactionOfUser'].view 
                                                        or userData.userScreens['InvoiceMovementReport'].view
                                                        or userData.userScreens['InvoiceStatusReport'].view
+                                                       or userData.userScreens['FactoryInvoiceStatusReport'].view
                                                    or userData.userScreens[''].view 
                                                    or userData.isAdmin}"
                                        >
@@ -897,6 +898,7 @@
                                                        or userData.userScreens['productionTransactionOfUser'].view 
                                                        or userData.userScreens['InvoiceMovementReport'].view
                                                        or userData.userScreens['InvoiceStatusReport'].view
+                                                       or userData.userScreens['FactoryInvoiceStatusReport'].view
                                                        or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk33321" value="بيان مراحل وموظفين الفاتورة" icon="&#xE8D2;" url="/faces/views/proproductionreport/invoiceProductionStageReport.xhtml" 
@@ -915,6 +917,9 @@
                                                 rendered="#{userData.userScreens['InvoiceMovementReport'].view or userData.isAdmin}"/>
                                     <p:menuitem id="sr_lnk33326" value="بيان الفواتير حسب الحالة" icon="&#xE8D2;" url="/faces/views/proproductionreport/InvoiceStatusReport.xhtml" 
                                                 rendered="#{userData.userScreens['InvoiceStatusReport'].view or userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="sr_lnk33327" value="فواتير المصنع حسب اخر مرحلة" icon="&#xE8D2;" url="/faces/views/proproductionreport/FactoryInvoiceStatusReport.xhtml" 
+                                                rendered="#{userData.userScreens['FactoryInvoiceStatusReport'].view or userData.isAdmin}"
                                                 />
                                 </p:submenu>
                             </p:submenu>
