@@ -79,6 +79,7 @@ public class OfferCompanyServiceImpl implements OfferCompanyService {
         offerCompany1.setId(offerCompanyDTO.getId());
         offerCompany1.setCode(offerCompanyDTO.getCode());
         offerCompany1.setName(offerCompanyDTO.getName());
+        offerCompany1.setDiscount(offerCompanyDTO.getDiscount());
 
         if (offerCompanyDTO.getCreatedBy() != null) {
             TobyUser user = new TobyUser();
@@ -118,6 +119,7 @@ public class OfferCompanyServiceImpl implements OfferCompanyService {
         offerCompanyDTO.setIndex(offerCompany.getId());
 
         offerCompanyDTO.setName(offerCompany.getName());
+        offerCompanyDTO.setDiscount(offerCompany.getDiscount());
         offerCompanyDTO.setCreatedBy(offerCompany.getCreatedBy() != null ? offerCompany.getCreatedBy().getId() : null);
         offerCompanyDTO.setCreatedDate(offerCompany.getCreationDate());
         offerCompanyDTO.setBranchId(offerCompany.getBranchId().getId() != null ? offerCompany.getBranchId().getId() : null);
