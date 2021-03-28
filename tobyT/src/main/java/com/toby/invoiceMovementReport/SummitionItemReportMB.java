@@ -7,11 +7,17 @@ import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.ProGroupDTO;
 import com.toby.toby.Basic;
 import com.toby.views.SummitionItemsView;
+import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
+import net.sf.jasperreports.engine.JRException;
 
 @Named(value = "summitionItemReportMB")
 @ViewScoped
@@ -38,6 +44,51 @@ public class SummitionItemReportMB extends Basic {
         } else {
             itemsViewList = invPurchaseInvoiceService_1.findSummitionQuantity(getGallaryDTOSelected() == null ? null : getGallaryDTOSelected().getId(), getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId());
         }
+    }
+
+    public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {
+        if (itemsViewList != null && !itemsViewList.isEmpty()) {
+            if(getUri().contains("summitionItemReportPro")){
+            fillReport(prepareReport(), getUserData().getReportPath() + "summitionItemReportPro.jasper", itemsViewList, "pdf");
+            }else {
+            fillReport(prepareReport(), getUserData().getReportPath() + "summitionItem.jasper", itemsViewList, "pdf");
+            }
+                
+        
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "لا توجد نتائج للطباعة"));
+        }
+    }
+
+    public HashMap prepareReport() {
+        HashMap hashMap = new HashMap();
+
+        hashMap.put("branchName", getUserData().getUserBranch().getNameAr());
+        hashMap.put("PrintedBy", getUserData().getUser().getName());
+        if (isFileExist(getUserData().getImageReportPath())) {
+            hashMap.put("companyImage", getUserData().getImageReportPath());
+        } else {
+            hashMap.put("companyImage", null);
+        }
+
+        hashMap.put("dateFromText", "  من تاريخ");
+        hashMap.put("dateFromValue", getDateFrom());
+        hashMap.put("dateToText", "  الى تاريخ");
+        hashMap.put("dateToValue", getDateTo());
+        hashMap.put("gallaryText", "المعرض ");
+        hashMap.put("gallaryValue", getGallaryDTOSelected() == null ? null : getGallaryDTOSelected().getName());
+        hashMap.put("proGroupText", "الفئة ");
+        hashMap.put("proGroupValue", getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getName());
+        hashMap.put("codeText", "الكود ");
+        hashMap.put("nameText", "الفئة ");
+        hashMap.put("numberText", "العدد ");
+        hashMap.put("allCostText", "التكلفة ");
+        hashMap.put("factoryNumberText", "استلام بالمشغل ");
+        hashMap.put("sendNumberText", "ارسال للمعرض ");
+        hashMap.put("differentText", "الفرق ");
+        hashMap.put("deliveryNumberText", "المستلم بالمعرض ");
+
+        return hashMap;
     }
 
     public List<InvInventoryDTO> getGallaryList() {
