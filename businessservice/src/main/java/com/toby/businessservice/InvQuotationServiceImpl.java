@@ -42,8 +42,10 @@ public class InvQuotationServiceImpl implements InvQuotationService {
     public InvGlobalService invGlobalService;
     @EJB
     private InvQuotationDetailsService invQuotationDetailsService;
-    
-    InvPurchaseReturnSave invPurchaseReturnSave ;
+    @EJB
+    private OrganizationSiteService organizationSiteService;
+
+    InvPurchaseReturnSave invPurchaseReturnSave;
 
     @Override
     public InvPurchaseReturnSave addInvQotation(InvQotation invQotation, List<InvQotationDetail> invQotationDetailDetailList, List<InvQotationDetail> qotationDetailDeleted) {
@@ -83,8 +85,8 @@ public class InvQuotationServiceImpl implements InvQuotationService {
         }
         dao.deleteEntity(invQotation);
     }
-    
-     @Override
+
+    @Override
     public void deleteInvQotation(InvInvoiceDTO invInvoiceDTO) {
         if (invInvoiceDTO != null && invInvoiceDTO.getId() > 0) {
             dao.executeDeleteQuery("delete from InvQotationDetail e WHERE e.id > 0 AND e.qotationId.id = " + invInvoiceDTO.getId());
@@ -103,8 +105,8 @@ public class InvQuotationServiceImpl implements InvQuotationService {
     public List<InvQotation> getALLInvQotationByCompanyId(Integer Id) {
         return dao.findEntityListByCompanyId(InvQotation.class, Id);
     }
-    
-     @Override
+
+    @Override
     public InvQotation updateInvQotation(InvQotation invQotation) {
         return dao.updateEntity(invQotation);
     }
@@ -116,7 +118,8 @@ public class InvQuotationServiceImpl implements InvQuotationService {
         List<InvQotation> invQotations = dao.findListByQuery("SELECT e FROM InvQotation e WHERE e.branchId.id = :branchId", params);
         return invQotations;
     }
-     @Override
+
+    @Override
     public List<InvQotation> getALLInvQotationByBranchIdByStatus(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
@@ -150,33 +153,33 @@ public class InvQuotationServiceImpl implements InvQuotationService {
             return serial;
         }
     }
-    
+
     public InvInvoiceDTO validateSave(InvInvoiceDTO invPurchaseInvoiceDTO) {
         StringBuilder error = new StringBuilder();
 
         if (invPurchaseInvoiceDTO.getOrganizationSiteId() == null) {
             error.append("\n يجب أختيار عميل / مورد");
         }
-        
+
         if (invPurchaseInvoiceDTO.getDate() == null) {
             error.append("\n يجب اختيار تاريخ");
         }
-        
-        checkIfLoaded(invPurchaseInvoiceDTO,  error) ;
-        
+
+        checkIfLoaded(invPurchaseInvoiceDTO, error);
+
         if (!error.toString().isEmpty()) {
             invPurchaseInvoiceDTO.setMsg(error.toString());
         }
         return invPurchaseInvoiceDTO;
     }
-    
+
     public void checkIfLoaded(InvInvoiceDTO invPurchaseInvoiceDTO, StringBuilder error) {
         if (invPurchaseInvoiceDTO.getId() != null) {
             List<Integer> id = dao.executeNativeQuery("select id from (select inv_qotation_id as id from inv_purchase_invoice "
-                    + " where branch_id = " + invPurchaseInvoiceDTO.getBranchId() + " and inv_qotation_id is not null\n"+" ) as s\n"
-                    + " where id = "+invPurchaseInvoiceDTO.getId());
+                    + " where branch_id = " + invPurchaseInvoiceDTO.getBranchId() + " and inv_qotation_id is not null\n" + " ) as s\n"
+                    + " where id = " + invPurchaseInvoiceDTO.getId());
             if (!id.isEmpty()) {
-                    error.append("\n لا يجوز تعديل هذا السند لأنه تم تحميلة");
+                error.append("\n لا يجوز تعديل هذا السند لأنه تم تحميلة");
             }
         }
     }
@@ -209,19 +212,19 @@ public class InvQuotationServiceImpl implements InvQuotationService {
                     invPurchaseInvoiceDTO.setMsg(error);
                     dao.rollbackQuery();
                 } else {
-                    invPurchaseInvoiceDTO = mapToDTO(invQotation,invPurchaseInvoiceDTO);
+                    invPurchaseInvoiceDTO = mapToDTO(invQotation, invPurchaseInvoiceDTO);
                     invPurchaseInvoiceDTO = invGlobalService.updateSummition(invPurchaseInvoiceDTO);
                 }
 
             }
         } catch (Exception e) {
             invPurchaseInvoiceDTO.setMsg(e.toString());
-             dao.rollbackQuery();
+            dao.rollbackQuery();
         }
 
         return invPurchaseInvoiceDTO;
     }
-    
+
     @Override
     public InvInvoiceDTO findInvPurchaseOrderById(InvInvoiceDTO invPurchaseInvoiceDto, TobyUser tobyUser) {
         InvQotation invQotation = dao.findEntityById(InvQotation.class, invPurchaseInvoiceDto.getId());
@@ -229,8 +232,6 @@ public class InvQuotationServiceImpl implements InvQuotationService {
         invPurchaseInvoiceDTO = invGlobalService.updateSummition(invPurchaseInvoiceDTO);
         return invPurchaseInvoiceDTO;
     }
-    
-    
 
     private InvInvoiceDTO mapToDTO(InvQotation entity, InvInvoiceDTO invPurchaseInvoiceDTO) {
 
@@ -250,22 +251,11 @@ public class InvQuotationServiceImpl implements InvQuotationService {
         invInvoiceDTO.setDiscountType(entity.getDiscountType() ? 1 : 0);
         invInvoiceDTO.setDateEndOffer(entity.getEndDate());
         invInvoiceDTO.setType(entity.getType());
-        
-        if (entity.getCustomerId()!= null) {
-            InvOrganizationSiteDTO invOrganizationSiteDTO = new InvOrganizationSiteDTO();
-            invOrganizationSiteDTO.setId(entity.getCustomerId().getId());
-            invOrganizationSiteDTO.setName(entity.getCustomerId().getName());
-            invOrganizationSiteDTO.setCode(entity.getCustomerId().getCode());
-            invInvoiceDTO.setOrganizationSiteId(invOrganizationSiteDTO);
-            if (entity.getCustomerId().getCurrencyId() != null) {
-                CurrencyDTO currencyDTO = new CurrencyDTO();
-                currencyDTO.setId(entity.getCustomerId().getCurrencyId().getId());
-                currencyDTO.setName(entity.getCustomerId().getCurrencyId().getName());
-                currencyDTO.setCode(entity.getCustomerId().getCurrencyId().getCode());
-                invInvoiceDTO.getOrganizationSiteId().setCurrencyId(currencyDTO);
-            }
+
+        if (entity.getCustomerId() != null) {
+            invInvoiceDTO.setOrganizationSiteId(organizationSiteService.mapToDTOSmall(entity.getCustomerId()));
         }
-        
+
         if (entity.getDelegatorId() != null) {
             InventoryDelegatorDTO inventoryDelegatorDTO = new InventoryDelegatorDTO();
             inventoryDelegatorDTO.setId(entity.getDelegatorId().getId());
@@ -284,13 +274,11 @@ public class InvQuotationServiceImpl implements InvQuotationService {
         invInvoiceDTO = invGlobalService.updateSummition(invInvoiceDTO);
         return invInvoiceDTO;
     }
-    
-    
+
     //mapToEntity
     private InvQotation mapToEntity(InvInvoiceDTO invInvoiceDTO, TobyUser tobyUser) {
 
         InvQotation invQotation = new InvQotation();
-
 
         if (invInvoiceDTO.getOrganizationSiteId() != null) {
             InvOrganizationSite invOrganizationSite = new InvOrganizationSite();
@@ -342,10 +330,8 @@ public class InvQuotationServiceImpl implements InvQuotationService {
         return invQotation;
     }
 
-   
-        
-     @Override
-    public Long getTotalRegistors( Integer branchId, Map<String, Object> filters) {
+    @Override
+    public Long getTotalRegistors(Integer branchId, Map<String, Object> filters) {
         StringBuilder builder = new StringBuilder();
         filters.put("branchId", branchId);
         builder.append("SELECT count(s) FROM InvQotation s WHERE   s.branchId.id = :branchId");
@@ -362,9 +348,9 @@ public class InvQuotationServiceImpl implements InvQuotationService {
             filters.remove("globalFilter");
         }
     }
-    
-     @Override
-    public List<InvInvoiceDTO> getALLInvQotationByBranchId( int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters) {
+
+    @Override
+    public List<InvInvoiceDTO> getALLInvQotationByBranchId(int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters) {
         filters.put("branchId", branchId);
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT s FROM InvQotation s WHERE  s.branchId.id = :branchId ");
@@ -400,12 +386,12 @@ public class InvQuotationServiceImpl implements InvQuotationService {
         if (entity.getCustomerId() != null) {
             invPurchaseInvoiceDTO.setOrganizationSiteName(entity.getCustomerId().getName());
         }
-        if (entity.getDelegatorId()!= null) { 
+        if (entity.getDelegatorId() != null) {
             invPurchaseInvoiceDTO.setInvDelegatorName(entity.getDelegatorId().getName());
-        } 
+        }
     }
-    
-    private InvQotation findInvQotationByInvQotationId(Integer serial, Integer branchId , Integer type) {
+
+    private InvQotation findInvQotationByInvQotationId(Integer serial, Integer branchId, Integer type) {
         Map<String, Object> params = new HashMap<>();
         params.put("serial", serial);
         params.put("branchId", branchId);
@@ -413,12 +399,12 @@ public class InvQuotationServiceImpl implements InvQuotationService {
         List<InvQotation> details = dao.findListByQuery("SELECT e FROM InvQotation e WHERE e.serial = :serial AND e.branchId.id = :branchId AND e.type = :type", params);
         return (details == null || details.isEmpty()) ? null : details.get(0);
     }
-    
+
     @Override
-    public InvInvoiceDTO convertQotationToPurchaseInvoice(InvInvoiceDTO invInvoiceDTO,Integer type) {
-        InvQotation invQotation ;
+    public InvInvoiceDTO convertQotationToPurchaseInvoice(InvInvoiceDTO invInvoiceDTO, Integer type) {
+        InvQotation invQotation;
         if (invInvoiceDTO.getNeedLoadedSerial() != null && invInvoiceDTO.getNeedLoadedSerial() != 0) {
-            invQotation = findInvQotationByInvQotationId(invInvoiceDTO.getNeedLoadedSerial(), invInvoiceDTO.getBranchId(),type);
+            invQotation = findInvQotationByInvQotationId(invInvoiceDTO.getNeedLoadedSerial(), invInvoiceDTO.getBranchId(), type);
         } else {
             invQotation = findInvQotationByInvQotationId(invInvoiceDTO.getInvDailogeDataSelected().getId());
         }

@@ -136,6 +136,7 @@ public class InvInvoiceDTO extends BaseEntityDTO {
     private List<InvDetailDTO> invStripDetailList;
     private long diffrentTime;
     private Integer invoiceSerial;
+    private Integer offerType;
     
     /// report //
     private String gallaryName;
@@ -1555,5 +1556,19 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      */
     public void setCustomerMobile(String customerMobile) {
         this.customerMobile = customerMobile;
+    }
+
+    /**
+     * @return the offerType
+     */
+    public Integer getOfferType() {
+        return offerType;
+    }
+
+    /**
+     * @param offerType the offerType to set
+     */
+    public void setOfferType(Integer offerType) {
+        this.offerType = offerType;
     }
 }

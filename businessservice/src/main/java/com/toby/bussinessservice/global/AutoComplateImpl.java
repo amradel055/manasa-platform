@@ -5,6 +5,7 @@
  */
 package com.toby.bussinessservice.global;
 
+import com.toby.businessservice.OrganizationSiteService;
 import com.toby.core.GenericDAO;
 import com.toby.dto.CostCenterDTO;
 import com.toby.dto.CurrencyDTO;
@@ -42,6 +43,8 @@ public class AutoComplateImpl implements AutoCompleteService {
 
     @EJB
     private GenericDAO dao;
+    @EJB
+    private OrganizationSiteService organizationSiteService;
 
     @Override
     public List<InvInvoiceDTO> autoCompleteProWorkOrderByBranch(Integer branchId, String qeury) {
@@ -63,7 +66,7 @@ public class AutoComplateImpl implements AutoCompleteService {
         appendItemsBarcodesDetailsViewBranchId(sql);
         return dao.findListByQuery(sql.toString(), params, 0, 30);
     }
-    
+
     @Override
     public List<ItemsBarcodesDetailsView> findAllItemsBarcodesDetailsViewBranchId(Integer branchId, String qeury) {
         Map<String, Object> params = new HashMap<>();
@@ -135,9 +138,9 @@ public class AutoComplateImpl implements AutoCompleteService {
         list = returnListDTO(detailses);
         return list;
     }
-    
+
     @Override
-    public List<InvInvoiceDTO> autoCompleteInvPurchaseForFactoryDTO(Integer branchId,String qeury) {
+    public List<InvInvoiceDTO> autoCompleteInvPurchaseForFactoryDTO(Integer branchId, String qeury) {
         List<InvInvoiceDTO> list = new ArrayList<>();
         Map<String, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
@@ -148,14 +151,14 @@ public class AutoComplateImpl implements AutoCompleteService {
         list = returnListDTO(detailses);
         return list;
     }
-    
+
     private void appendInvPurchaseForFactory(StringBuilder sql) {
 
         sql.append("SELECT distinct(p.invPurchaseInvoiceId) FROM ProFactoryDelivery p WHERE p.branchId.id = :branchId AND ((:qeury is null OR p.invPurchaseInvoiceId.serial  like CONCAT('%',:qeury ,'%')))");
-        
+
         sql.append(" ORDER BY p.invPurchaseInvoiceId.serial");
     }
-    
+
     @Override
     public List<InvOrganizationSite> autoCompleteOrganizationSite(Integer branchId, boolean active, Integer type, String qeury) {
         Map<String, Object> params = new HashMap<>();
@@ -281,31 +284,11 @@ public class AutoComplateImpl implements AutoCompleteService {
     }
 
     private <E, T> T mapToInvOrganizationSiteDTO(E Entity) {
-        InvOrganizationSiteDTO dTO = new InvOrganizationSiteDTO();
         InvOrganizationSite entity = (InvOrganizationSite) Entity;
-        dTO.setId(entity.getId());
-        dTO.setIndex(entity.getId());
-        dTO.setCode(entity.getCode());
-        dTO.setName(entity.getName());
-        dTO.setMobile(entity.getMobile());
-        if (entity.getCurrencyId() != null) {
-            CurrencyDTO currencyDTO = new CurrencyDTO();
-            currencyDTO.setId(entity.getCurrencyId().getId());
-            currencyDTO.setCode(entity.getCurrencyId().getCode());
-            currencyDTO.setName(entity.getCurrencyId().getName());
-            dTO.setCurrencyId(currencyDTO);
-        }
-        if (entity.getAccountId() != null) {
-            GlAccountDTO accountDTO = new GlAccountDTO();
-            accountDTO.setAccNumber(entity.getAccountId().getAccNumber());
-            accountDTO.setId(entity.getAccountId().getId());
-            dTO.setAccountId(accountDTO);
-        }
-        dTO.setOpenBalanceCredit(entity.getOpenBalanceCredit());
-        dTO.setOpenBalanceDebit(entity.getOpenBalanceDebit());
-        dTO.setOpenBalanceDate(entity.getOpenBalanceDate());
+        InvOrganizationSiteDTO dTO = organizationSiteService.mapToDTOSmall(entity);
         return (T) dTO;
     }
+
     private InvOrganizationSite mapToInvOrganizationSite(InvOrganizationSite Entity) {
         InvOrganizationSite dTO = new InvOrganizationSite();
         InvOrganizationSite entity = (InvOrganizationSite) Entity;

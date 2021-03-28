@@ -42,6 +42,8 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
     private InvPurchaseInvoiceDetailsService invPurchaseInvoiceDetailsService;
     @EJB
     InvPurchaseInvoiceService_1 invPurchaseInvoiceService_1;
+    @EJB
+    private OrganizationSiteService organizationSiteService;
 
     @Override
     public Long getTotalRegistors(Integer type, Integer branchId, Map<String, Object> filters) {
@@ -92,45 +94,39 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
         return invInvoiceDTO;
     }
 
-    private void commonData(InvInvoiceDTO invPurchaseInvoiceDTO, ProFactoryDelivery entity) {
-        invPurchaseInvoiceDTO.setId(entity.getId());
-        invPurchaseInvoiceDTO.setSerial(entity.getSerial());
-        invPurchaseInvoiceDTO.setDate(entity.getDate());
-        invPurchaseInvoiceDTO.setIndex(entity.getSerial());
-        invPurchaseInvoiceDTO.setRemarks(entity.getRemark());
+    private void commonData(InvInvoiceDTO invInvoiceDTO, ProFactoryDelivery entity) {
+        invInvoiceDTO.setId(entity.getId());
+        invInvoiceDTO.setSerial(entity.getSerial());
+        invInvoiceDTO.setDate(entity.getDate());
+        invInvoiceDTO.setIndex(entity.getSerial());
+        invInvoiceDTO.setRemarks(entity.getRemark());
 
         if (entity.getInvPurchaseInvoiceId() != null) {
-            invPurchaseInvoiceDTO.setInvoiceSerial(entity.getInvPurchaseInvoiceId().getSerial());
-            invPurchaseInvoiceDTO.setDueDate(entity.getInvPurchaseInvoiceId().getDueDate());
+            invInvoiceDTO.setInvoiceSerial(entity.getInvPurchaseInvoiceId().getSerial());
+            invInvoiceDTO.setDueDate(entity.getInvPurchaseInvoiceId().getDueDate());
             if (entity.getInvPurchaseInvoiceId().getDueDate() != null) {
-                invPurchaseInvoiceDTO.setDiffrentTime(entity.getInvPurchaseInvoiceId().getDueDate().getTime() - (new Date()).getTime());
+                invInvoiceDTO.setDiffrentTime(entity.getInvPurchaseInvoiceId().getDueDate().getTime() - (new Date()).getTime());
             }
             if (entity.getInvPurchaseInvoiceId().getGalaryId() != null) {
                 InvInventoryDTO invInventoryDTO = new InvInventoryDTO();
                 invInventoryDTO.setId(entity.getInvPurchaseInvoiceId().getGalaryId().getId());
                 invInventoryDTO.setName(entity.getInvPurchaseInvoiceId().getGalaryId().getName());
                 invInventoryDTO.setCode(entity.getInvPurchaseInvoiceId().getGalaryId().getCode());
-                invPurchaseInvoiceDTO.setGallary(invInventoryDTO);
-                invPurchaseInvoiceDTO.setGallaryId(invInventoryDTO);
-                invPurchaseInvoiceDTO.setGallaryName(invInventoryDTO.getName());
+                invInvoiceDTO.setGallary(invInventoryDTO);
+                invInvoiceDTO.setGallaryId(invInventoryDTO);
+                invInvoiceDTO.setGallaryName(invInventoryDTO.getName());
 
             }
-            if (entity.getInvPurchaseInvoiceId().getOrganizationSiteId() != null) {
-                InvOrganizationSiteDTO invOrganizationSiteDTO = new InvOrganizationSiteDTO();
-                invOrganizationSiteDTO.setId(entity.getInvPurchaseInvoiceId().getOrganizationSiteId().getId());
-                invOrganizationSiteDTO.setName(entity.getInvPurchaseInvoiceId().getOrganizationSiteId().getName());
-                invOrganizationSiteDTO.setCode(entity.getInvPurchaseInvoiceId().getOrganizationSiteId().getCode());
-                invOrganizationSiteDTO.setMobile(entity.getInvPurchaseInvoiceId().getOrganizationSiteId().getMobile());
-                invPurchaseInvoiceDTO.setOrganizationSiteName(entity.getInvPurchaseInvoiceId().getOrganizationSiteId().getName());
-                invPurchaseInvoiceDTO.setOrganizationSiteId(invOrganizationSiteDTO);
-                invPurchaseInvoiceDTO.setCustomerCode(invOrganizationSiteDTO.getCode());
-                invPurchaseInvoiceDTO.setCustomerName(invOrganizationSiteDTO.getName());
-                invPurchaseInvoiceDTO.setCustomerMobile(invOrganizationSiteDTO.getMobile());
+            if (entity.getInvPurchaseInvoiceId() != null && entity.getInvPurchaseInvoiceId().getOrganizationSiteId() != null) {
+                invInvoiceDTO.setOrganizationSiteId(organizationSiteService.mapToDTOSmall(entity.getInvPurchaseInvoiceId().getOrganizationSiteId()));
+                invInvoiceDTO.setCustomerCode(entity.getInvPurchaseInvoiceId().getOrganizationSiteId().getCode());
+                invInvoiceDTO.setCustomerName(entity.getInvPurchaseInvoiceId().getOrganizationSiteId().getName());
+                invInvoiceDTO.setCustomerMobile(entity.getInvPurchaseInvoiceId().getOrganizationSiteId().getMobile());
             }
         }
 
         if (entity.getInvPurchaseInvoiceId() != null) {
-            invPurchaseInvoiceDTO.setLoadedSerial(entity.getInvPurchaseInvoiceId().getSerial());
+            invInvoiceDTO.setLoadedSerial(entity.getInvPurchaseInvoiceId().getSerial());
         }
     }
 

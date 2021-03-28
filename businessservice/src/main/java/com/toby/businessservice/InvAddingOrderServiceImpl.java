@@ -69,6 +69,8 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
     private InventorySetupService inventorySetupService;
     @EJB
     public InvGlobalService invGlobalService;
+    @EJB
+    private OrganizationSiteService organizationSiteService;
 
     InvPurchaseReturnSave invPurchaseReturnSave;
 
@@ -573,68 +575,56 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
         return invPurchaseInvoiceDTO;
     }
 
-    private InvInvoiceDTO initData(InvInvoiceDTO invPurchaseInvoiceDTO, InvAddingorder entity) {
-        invPurchaseInvoiceDTO.setId(entity.getId());
-        invPurchaseInvoiceDTO.setSerial(entity.getSerial());
-        invPurchaseInvoiceDTO.setCompanyActivity(entity.getBranchId().getCompanyActivity());
-        invPurchaseInvoiceDTO.setBranchId(entity.getBranchId() != null ? entity.getBranchId().getId() : null);
-        invPurchaseInvoiceDTO.setDate(entity.getDate());
-        invPurchaseInvoiceDTO.setRemarks(entity.getRemark());
-        invPurchaseInvoiceDTO.setType(entity.getType());
-        invPurchaseInvoiceDTO.setSupplierInvoiceDate(entity.getSupplierDate());
-        invPurchaseInvoiceDTO.setSupplierInvoiceNumber(entity.getSupplierInvoice());
+    private InvInvoiceDTO initData(InvInvoiceDTO invInvoiceDTO, InvAddingorder entity) {
+        invInvoiceDTO.setId(entity.getId());
+        invInvoiceDTO.setSerial(entity.getSerial());
+        invInvoiceDTO.setCompanyActivity(entity.getBranchId().getCompanyActivity());
+        invInvoiceDTO.setBranchId(entity.getBranchId() != null ? entity.getBranchId().getId() : null);
+        invInvoiceDTO.setDate(entity.getDate());
+        invInvoiceDTO.setRemarks(entity.getRemark());
+        invInvoiceDTO.setType(entity.getType());
+        invInvoiceDTO.setSupplierInvoiceDate(entity.getSupplierDate());
+        invInvoiceDTO.setSupplierInvoiceNumber(entity.getSupplierInvoice());
 //        invPurchaseInvoiceDTO.setInvAddingOrderId(entity.getId());
         if (entity.getPurchaseOrderId() != null) {
-            invPurchaseInvoiceDTO.setLoadedSerial(entity.getPurchaseOrderId() != null ? entity.getPurchaseOrderId().getSerial() : null);
-            invPurchaseInvoiceDTO.setInvPurchaseOrderId(entity.getPurchaseOrderId() != null ? entity.getPurchaseOrderId().getId() : null);
-            invPurchaseInvoiceDTO.setParent(entity.getPurchaseOrderId().getId());
+            invInvoiceDTO.setLoadedSerial(entity.getPurchaseOrderId() != null ? entity.getPurchaseOrderId().getSerial() : null);
+            invInvoiceDTO.setInvPurchaseOrderId(entity.getPurchaseOrderId() != null ? entity.getPurchaseOrderId().getId() : null);
+            invInvoiceDTO.setParent(entity.getPurchaseOrderId().getId());
         }
 
         if (entity.getInvPurchaseInvoice() != null) {
-            invPurchaseInvoiceDTO.setLoadedSerial(entity.getInvPurchaseInvoice() != null ? entity.getInvPurchaseInvoice().getSerial() : null);
-            invPurchaseInvoiceDTO.setInvPurchaseInvoiceId(entity.getInvPurchaseInvoice() != null ? entity.getInvPurchaseInvoice().getId() : null);
+            invInvoiceDTO.setLoadedSerial(entity.getInvPurchaseInvoice() != null ? entity.getInvPurchaseInvoice().getSerial() : null);
+            invInvoiceDTO.setInvPurchaseInvoiceId(entity.getInvPurchaseInvoice() != null ? entity.getInvPurchaseInvoice().getId() : null);
         }
 
-        invPurchaseInvoiceDTO.setScreenName(invPurchaseInvoiceDTO.getScreenName());
+        invInvoiceDTO.setScreenName(invInvoiceDTO.getScreenName());
         if (entity.getInvInventoryId() != null) {
             InvInventoryDTO invInventoryDTO = new InvInventoryDTO();
             invInventoryDTO.setId(entity.getInvInventoryId().getId());
             invInventoryDTO.setName(entity.getInvInventoryId().getName());
             invInventoryDTO.setCode(entity.getInvInventoryId().getCode());
-            invPurchaseInvoiceDTO.setInvInventoryId(invInventoryDTO);
+            invInvoiceDTO.setInvInventoryId(invInventoryDTO);
         }
         if (entity.getOrganizationSiteId() != null) {
-            InvOrganizationSiteDTO invOrganizationSiteDTO = new InvOrganizationSiteDTO();
-            invOrganizationSiteDTO.setId(entity.getOrganizationSiteId().getId());
-            invOrganizationSiteDTO.setName(entity.getOrganizationSiteId().getName());
-            invOrganizationSiteDTO.setCode(entity.getOrganizationSiteId().getCode());
-
-            if (entity.getOrganizationSiteId().getCurrencyId() != null) {
-                CurrencyDTO currencyDTO = new CurrencyDTO();
-                currencyDTO.setId(entity.getOrganizationSiteId().getCurrencyId().getId());
-                currencyDTO.setName(entity.getOrganizationSiteId().getCurrencyId().getName());
-                currencyDTO.setCode(entity.getOrganizationSiteId().getCurrencyId().getCode());
-                invOrganizationSiteDTO.setCurrencyId(currencyDTO);
-            }
-            invPurchaseInvoiceDTO.setOrganizationSiteId(invOrganizationSiteDTO);
+            invInvoiceDTO.setOrganizationSiteId(organizationSiteService.mapToDTOSmall(entity.getOrganizationSiteId()));
         }
         if (entity.getInvDelegatorId() != null) {
             InventoryDelegatorDTO inventoryDelegatorDTO = new InventoryDelegatorDTO();
             inventoryDelegatorDTO.setId(entity.getInvDelegatorId().getId());
             inventoryDelegatorDTO.setName(entity.getInvDelegatorId().getName());
             inventoryDelegatorDTO.setCode(entity.getInvDelegatorId().getCode());
-            invPurchaseInvoiceDTO.setInvDelegatorId(inventoryDelegatorDTO);
+            invInvoiceDTO.setInvDelegatorId(inventoryDelegatorDTO);
         }
-        invPurchaseInvoiceDTO.setCreatedBy(entity.getCreatedBy() != null ? entity.getCreatedBy().getId() : null);
-        invPurchaseInvoiceDTO.setCreatedDate(entity.getCreationDate());
-        invPurchaseInvoiceDTO.setIndex(entity.getSerial());
-        invPurchaseInvoiceDTO.setCompanyId(entity.getCompanyId().getId() != null ? entity.getCompanyId().getId() : null);
-        invPurchaseInvoiceDTO.setCreatedByName(entity.getCreatedBy() != null ? entity.getCreatedBy().getName() : null);
-        List<InvDetailDTO> invPurchaseInvoiceDetailsListDTO = invAddingOrderDetailsService.getAllInvAddingOrderDetailsByInvPurchaseInvoiceIdDTO(invPurchaseInvoiceDTO);
-        invPurchaseInvoiceDTO.setInvPurchaseInvoiceDetailList(invPurchaseInvoiceDetailsListDTO);
-        invPurchaseInvoiceDTO.setInvPurchaseInvoiceDetailsDeletedList(new ArrayList<InvDetailDTO>());
-        invPurchaseInvoiceDTO = invGlobalService.updateSummition(invPurchaseInvoiceDTO);
-        return invPurchaseInvoiceDTO;
+        invInvoiceDTO.setCreatedBy(entity.getCreatedBy() != null ? entity.getCreatedBy().getId() : null);
+        invInvoiceDTO.setCreatedDate(entity.getCreationDate());
+        invInvoiceDTO.setIndex(entity.getSerial());
+        invInvoiceDTO.setCompanyId(entity.getCompanyId().getId() != null ? entity.getCompanyId().getId() : null);
+        invInvoiceDTO.setCreatedByName(entity.getCreatedBy() != null ? entity.getCreatedBy().getName() : null);
+        List<InvDetailDTO> invPurchaseInvoiceDetailsListDTO = invAddingOrderDetailsService.getAllInvAddingOrderDetailsByInvPurchaseInvoiceIdDTO(invInvoiceDTO);
+        invInvoiceDTO.setInvPurchaseInvoiceDetailList(invPurchaseInvoiceDetailsListDTO);
+        invInvoiceDTO.setInvPurchaseInvoiceDetailsDeletedList(new ArrayList<InvDetailDTO>());
+        invInvoiceDTO = invGlobalService.updateSummition(invInvoiceDTO);
+        return invInvoiceDTO;
     }
 
     @Override

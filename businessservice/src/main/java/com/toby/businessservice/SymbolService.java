@@ -136,4 +136,8 @@ public interface SymbolService {
     public List<SymbolDTO> getSymbolListByCompanyId(Integer companyId, Integer generalSymbolId);
 
     public List<SymbolDTO> getDeterminationPriceDTO(Integer companyId);
+    
+    public List<Symbol> getAllworkTypeIdByCompanyId(Integer companyId);
+    
+    public List<Symbol> getAllStoreRegionByCompanyId(Integer companyId);
 }

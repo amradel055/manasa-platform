@@ -55,6 +55,7 @@ public class InvOrganizationSiteDTO extends BaseEntityDTO {
     private SymbolDTO supplierType; 
     private SymbolDTO contractorType;
     private String globalFilter;
+    private OfferCompanyDTO offerCompanyDTO;
 
 
     public InvOrganizationSiteDTO() {
@@ -240,6 +241,9 @@ public class InvOrganizationSiteDTO extends BaseEntityDTO {
      * @return the discount
      */
     public BigDecimal getDiscount() {
+        if(discount == null){
+            discount = BigDecimal.ZERO;
+        }
         return discount;
     }
 
@@ -654,6 +658,20 @@ public class InvOrganizationSiteDTO extends BaseEntityDTO {
      */
     public void setGlobalFilter(String globalFilter) {
         this.globalFilter = globalFilter;
+    }
+
+    /**
+     * @return the offerCompanyDTO
+     */
+    public OfferCompanyDTO getOfferCompanyDTO() {
+        return offerCompanyDTO;
+    }
+
+    /**
+     * @param offerCompanyDTO the offerCompanyDTO to set
+     */
+    public void setOfferCompanyDTO(OfferCompanyDTO offerCompanyDTO) {
+        this.offerCompanyDTO = offerCompanyDTO;
     }
 
 
