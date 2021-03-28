@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                template="./../../template/newTemplate.xhtml"
+                template="./../../template/template.xhtml"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
@@ -10,24 +10,11 @@
     <ui:define name="content">
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
-        <style >
-            .colored {                
-                background: #0064bc ;
-                color: #fff ;
-                font-size: 12px;
-            }
-            
-            
-        </style>
+
         <f:event listener="#{userData.authorize}" type="preRenderView" />
         <h:form  id="form" dir="#{userData.dir}"  style="margin-right: 20px">
 
-            <div style=" position: absolute;left: 20px"> 
 
-                <p:commandButton  style="width: 90px;background-image: none!important;z-index: 2" 
-                                  class="viewButton searchButton"
-                                  value="Hide/Show"/>  
-            </div>
 
             <p:fieldset  legend="  #{userData.userDDs['PURCHASES_ITM_SUPP']}"
 
@@ -37,14 +24,12 @@
 
                     <div class="ui-g">
 
-                        <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['FROM_SUPPLIER']}"/>
-                                </h:panelGroup> 
 
-                                <h:panelGroup>
-                                    <p:autoComplete style="width:75%!important"
+
+                        <div class="ui-g-6 ui-xl-6">
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+    <p:autoComplete style="width:75%!important"
                                                     dropdown="true"
                                                     converter="#{purchaseOfItemsBySuppliersReportMB.invOrgSiteSupplierConverter}"
                                                     value="#{purchaseOfItemsBySuppliersReportMB.purchaseOfItemsBySuppliersSearchBean.fromorganizationName}"
@@ -57,17 +42,15 @@
                                                     >
 
                                     </p:autoComplete>
-                                </h:panelGroup> 
-                            </h:panelGroup>
-                        </div>
-                        <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['TO_SUPPLIER']}"/>
-                                </h:panelGroup> 
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['FROM_SUPPLIER']}"/>
 
-                                <h:panelGroup>
-                                    <p:autoComplete style="width:75%!important" 
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+    <p:autoComplete style="width:75%!important" 
 
                                                     dropdown="true"
 
@@ -79,48 +62,41 @@
                                                     forceSelection="true" 
                                                     completeMethod="#{purchaseOfItemsBySuppliersReportMB.completOrgSiteAsSupplier}" >
                                     </p:autoComplete>
-                                </h:panelGroup> 
-                            </h:panelGroup>                                   
-                        </div>
-                        <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel  style="width: 70px" value="#{userData.userDDs['FROM_DATE']}"/>
-                                </h:panelGroup>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['TO_SUPPLIER']}"/>
 
-                                <h:panelGroup>
-                                    <p:calendar pattern="dd/MM/yyyy" 
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+     <p:calendar pattern="dd/MM/yyyy" 
                                                 value="#{purchaseOfItemsBySuppliersReportMB.purchaseOfItemsBySuppliersSearchBean.dateFrom}"
                                                 style="width: 56%">
 
                                     </p:calendar>
-                                </h:panelGroup>
-                            </h:panelGroup>
-                        </div>
-                        <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel  style="width: 70px" value="#{userData.userDDs['TO_DATE']}"/>
-                                </h:panelGroup>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel  style="width: 70px" value="#{userData.userDDs['FROM_DATE']}"/>
 
-                                <h:panelGroup>
-                                    <p:calendar pattern="dd/MM/yyyy" 
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+ <p:calendar pattern="dd/MM/yyyy" 
                                                 value="#{purchaseOfItemsBySuppliersReportMB.purchaseOfItemsBySuppliersSearchBean.dateTo}"
                                                 style="width: 56%">
 
                                     </p:calendar>
-                                </h:panelGroup>
-                            </h:panelGroup>
-                        </div>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel  style="width: 70px" value="#{userData.userDDs['TO_DATE']}"/>
 
-                        <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['FROM_ITEM']}"/>
-                                </h:panelGroup> 
-
-                                <h:panelGroup>
-                                    <p:autoComplete style="width:75%!important"
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+  <p:autoComplete style="width:75%!important"
                                                     dropdown="true"
                                                     converter="#{purchaseOfItemsBySuppliersReportMB.itemDTOFromConverter}"
                                                     value="#{purchaseOfItemsBySuppliersReportMB.purchaseOfItemsBySuppliersSearchBean.fromItemName}"
@@ -131,17 +107,15 @@
                                                     completeMethod="#{purchaseOfItemsBySuppliersReportMB.completInvItemDTOFrom}"   >
 
                                     </p:autoComplete>
-                                </h:panelGroup> 
-                            </h:panelGroup>
-                        </div>
-                        <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['TO_ITEM']}"/>
-                                </h:panelGroup> 
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['FROM_ITEM']}"/>
 
-                                <h:panelGroup>
-                                    <p:autoComplete style="width:75%!important" 
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+  <p:autoComplete style="width:75%!important" 
 
                                                     dropdown="true"
 
@@ -153,18 +127,15 @@
                                                     forceSelection="true" 
                                                     completeMethod="#{purchaseOfItemsBySuppliersReportMB.completInvItemDTOTo}" >
                                     </p:autoComplete>
-                                </h:panelGroup> 
-                            </h:panelGroup>
-                        </div>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['TO_ITEM']}"/>
 
-                        <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['FROM_INVOI_NO']}"/>
-                                </h:panelGroup> 
-
-                                <h:panelGroup>
-                                    <p:autoComplete id="purchaseIdFrom"
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+   <p:autoComplete id="purchaseIdFrom"
                                                     style="width:75%!important " 
                                                     dropdown="true"
 
@@ -177,18 +148,15 @@
                                                     forceSelection="true" 
                                                     completeMethod="#{purchaseOfItemsBySuppliersReportMB.completeSalesInvoice}">
                                     </p:autoComplete>
-                                </h:panelGroup> 
-                            </h:panelGroup>
-                        </div>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['FROM_INVOI_NO']}"/>
 
-                        <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['TO_INVOI_NO']}"/>
-                                </h:panelGroup> 
-
-                                <h:panelGroup>
-                                    <p:autoComplete id="purchaseIdTo"
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+  <p:autoComplete id="purchaseIdTo"
                                                     style="width:75%!important " 
                                                     dropdown="true"
 
@@ -201,17 +169,19 @@
                                                     forceSelection="true" 
                                                     completeMethod="#{purchaseOfItemsBySuppliersReportMB.completeSalesInvoice}">
                                     </p:autoComplete>
-                                </h:panelGroup> 
-                            </h:panelGroup>
-                        </div>
-                        <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['FROM_REPOS_NO']}"/>
-                                </h:panelGroup> 
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['TO_INVOI_NO']}"/>
 
-                                <h:panelGroup>
-                                    <p:autoComplete style="width:75%!important"
+                                </div>
+                            </div>
+                        </div>
+                       
+
+    <div class="ui-g-6 ui-xl-6">
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+ <p:autoComplete style="width:75%!important"
                                                     dropdown="true"
                                                     converter="#{purchaseOfItemsBySuppliersReportMB.invInventoryConverter}"
                                                     value="#{purchaseOfItemsBySuppliersReportMB.purchaseOfItemsBySuppliersSearchBean.fromInventoryName}"
@@ -223,17 +193,15 @@
                                                     >
 
                                     </p:autoComplete>
-                                </h:panelGroup> 
-                            </h:panelGroup>
-                        </div>
-                        <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['TO_REPOS_NO']}"/>
-                                </h:panelGroup> 
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['FROM_REPOS_NO']}"/>
 
-                                <h:panelGroup>
-                                    <p:autoComplete style="width:75%!important" 
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+  <p:autoComplete style="width:75%!important" 
 
                                                     dropdown="true"
                                                     converter="#{purchaseOfItemsBySuppliersReportMB.invInventoryConverter}"
@@ -244,108 +212,107 @@
                                                     forceSelection="true" 
                                                     completeMethod="#{purchaseOfItemsBySuppliersReportMB.completeInventory}">
                                     </p:autoComplete>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['TO_REPOS_NO']}"/>
 
-                                </h:panelGroup> 
-
-                            </h:panelGroup>
-
-                        </div>
-                        <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['FROM_INVOI_TYP']}"/>
-                                </h:panelGroup> 
-
-                                <h:panelGroup>
-                                    <p:selectOneMenu style="width:56%!important "
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+        <p:selectOneMenu style="width:56%!important "
                                                      id="invoiceTypeFrom" 
                                                      value ="#{purchaseOfItemsBySuppliersReportMB.purchaseOfItemsBySuppliersSearchBean.frompaymentType}">                                                             
                                         <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" itemValue="0"/>
                                         <f:selectItem itemLabel="#{userData.userDDs['CASH']}"  itemValue="1" />
                                         <f:selectItem itemLabel="#{userData.userDDs['POSTPONE']}"  itemValue="2" />
                                         <f:selectItem itemLabel="#{userData.userDDs['DECOM_CREDIT']}"  itemValue="3" />
-                                    </p:selectOneMenu>    
-                                </h:panelGroup> 
-                            </h:panelGroup>
-                        </div>
-                        <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['TO_INVOI_TYP']}"/>
-                                </h:panelGroup> 
+                                    </p:selectOneMenu>   
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['FROM_INVOI_TYP']}"/>
 
-                                <h:panelGroup>
-                                    <p:selectOneMenu style="width:56%!important " id="invoiceTypeTo" 
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+  <p:selectOneMenu style="width:56%!important " id="invoiceTypeTo" 
                                                      value ="#{purchaseOfItemsBySuppliersReportMB.purchaseOfItemsBySuppliersSearchBean.topaymentType}">    
                                         <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" itemValue="0"/>
                                         <f:selectItem itemLabel="#{userData.userDDs['CASH']}"  itemValue="1" />
                                         <f:selectItem itemLabel="#{userData.userDDs['POSTPONE']}"  itemValue="2" />
                                         <f:selectItem itemLabel="#{userData.userDDs['DECOM_CREDIT']}"  itemValue="3" />
                                     </p:selectOneMenu>  
-                                </h:panelGroup> 
-                            </h:panelGroup>
-                        </div>
-                        <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['TOTAL_SALE_REP']}"/>
-                                </h:panelGroup> 
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['TO_INVOI_TYP']}"/>
 
-                                <h:panelGroup>
-
-                                    <p:selectBooleanCheckbox  id="showReportCheck" value="#{purchaseOfItemsBySuppliersReportMB.purchaseOfItemsBySuppliersSearchBean.showReport}">
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+    <p:selectBooleanCheckbox  id="showReportCheck" value="#{purchaseOfItemsBySuppliersReportMB.purchaseOfItemsBySuppliersSearchBean.showReport}">
                                         <p:ajax update="reportDB" listener="#{purchaseOfItemsBySuppliersReportMB.showItemReport()}" />
                                     </p:selectBooleanCheckbox>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['TOTAL_SALE_REP']}"/>
 
-                                </h:panelGroup> 
-                            </h:panelGroup>
-                        </div>
-                        <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel style="width: 70px" value="مورد مختصر"/>
-                                </h:panelGroup> 
-
-                                <h:panelGroup>
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
 
                                     <p:selectBooleanCheckbox  id="shortReportCheck"  value="#{purchaseOfItemsBySuppliersReportMB.purchaseOfItemsBySuppliersSearchBean.shortReport}">
                                         <p:ajax update="reportDB" listener="#{purchaseOfItemsBySuppliersReportMB.shortReportListing()}" />
                                     </p:selectBooleanCheckbox>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 70px" value="مورد مختصر"/>
 
-                                </h:panelGroup> 
-                            </h:panelGroup>
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:commandButton value="رسم بياني" update="@form" oncomplete="PF('dlg1').show()" />
+
+                                </div>
+                            </div>
                         </div>
+                     
                         <div class="ui-g-12 ui-md-6">
                             <h:panelGroup>                             
                                 <h:panelGroup>
-                                    <p:commandButton value="رسم بياني" update="@form" oncomplete="PF('dlg1').show()" />
                                 </h:panelGroup> 
                             </h:panelGroup>
-                            
+
                             <p:dialog class="ui-dialog" modal="true" 
-                              position='center,center'
-                              header="رسم بياني" widgetVar="dlg1">
+                                      position='center,center'
+                                      header="رسم بياني" widgetVar="dlg1">
 
-                        <div  id="donutchart" style="width: 75vw; height: 650px;"></div>
+                                <div  id="donutchart" style="width: 75vw; height: 650px;"></div>
 
-                        <h:panelGroup class=" centerButtons">
-                        
-                        <p:commandButton  class="printButton"
-                                          id="PrintC"
-                                          ajax="false"
-                                          onclick="form.target = '_blank'"  
-                                          icon="fa fa-fw fa-print"
-                                          value="#{userData.userDDs['PRINT']}" 
-                                          actionListener="#{purchaseOfItemsBySuppliersReportMB.exportChartPDF}"
-                                          title="#{userData.userDDs['PRINT']}"
-                                          immediate="true" />
-                        </h:panelGroup>
-                    </p:dialog>
-         
-            
+                                <h:panelGroup class=" centerButtons">
+
+                                    <p:commandButton  class="printButton"
+                                                      id="PrintC"
+                                                      ajax="false"
+                                                      onclick="form.target = '_blank'"  
+                                                      icon="fa fa-fw fa-print"
+                                                      value="#{userData.userDDs['PRINT']}" 
+                                                      actionListener="#{purchaseOfItemsBySuppliersReportMB.exportChartPDF}"
+                                                      title="#{userData.userDDs['PRINT']}"
+                                                      immediate="true" />
+                                </h:panelGroup>
+                            </p:dialog>
+
+
                         </div>
                     </div>
-                     
+
                 </div>
                 <paneGrid class="col-md-12 centerButtons" columns="1" >
 
@@ -369,7 +336,7 @@
                                           value="#{userData.userDDs['NEW']}"
                                           icon="fa fa-plus"
                                           resetValues="true"/>
-                        
+
                         <p:commandButton  class="PrintButton"
                                           id="PrintB"
                                           ajax="false"
@@ -637,7 +604,7 @@
                     chart.draw(data, options);
                 }
             </script>
-            
+
         </h:form>
     </ui:define>
 </ui:composition>
