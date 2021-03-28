@@ -112,6 +112,9 @@ public class InvOrganizationSite extends BaseEntity {
     @JoinColumn(name = "contractor_type", referencedColumnName = "id")
     @ManyToOne
     private Symbol contractorType;
+    @JoinColumn(name = "offer_company_id", referencedColumnName = "id")
+    @ManyToOne
+    private OfferCompany offerCompanyId;
 
     public InvOrganizationSite() {
     }
@@ -387,6 +390,20 @@ public class InvOrganizationSite extends BaseEntity {
      */
     public void setContractorType(Symbol contractorType) {
         this.contractorType = contractorType;
+    }
+
+    /**
+     * @return the offerCompanyId
+     */
+    public OfferCompany getOfferCompanyId() {
+        return offerCompanyId;
+    }
+
+    /**
+     * @param offerCompanyId the offerCompanyId to set
+     */
+    public void setOfferCompanyId(OfferCompany offerCompanyId) {
+        this.offerCompanyId = offerCompanyId;
     }
 
 }

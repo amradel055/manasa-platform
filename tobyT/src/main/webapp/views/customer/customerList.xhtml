@@ -9,7 +9,8 @@
                 xmlns="http://www.w3.org/1999/xhtml">
     <ui:define name="content">
         <f:event listener="#{userData.authorize}" type="preRenderView" />
-        <h:form  style="margin-right: 20px"   id="form" dir="#{userData.dir}">
+        <h:form  class='formmargin' id="form" dir="#{userData.dir}">
+            
             <p:fieldset legend="#{userData.userDDs['CUSTOMER_DATA']}" >
 
                 <div >
@@ -20,22 +21,26 @@
                 </div>
                 <div>
                     <p:dataTable 
+                         id="organizationSiteTable"
                         draggableColumns="true"
-                        draggableRows="true"
                         var="organizationSiteTable" 
                         widgetVar="bTable" 
                         rowIndexVar="index" 
-                        value="#{organizationSiteListMB.invOrganizationSitesSiteDTOList}" 
-                        rows="#{userData.rowListCount}" 
+                        value="#{organizationSiteListMB.dataModel}"     
+                        lazy="true" 
+                        rows="20"
                         paginator="true"
+                        paginatorTemplate="{CurrentPageReport} {FirstPageLink}
+                        {PreviousPageLink} {PageLinks} {NextPageLink}
+                        {LastPageLink} {RowsPerPageDropdown}" 
                         emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
-                        id="organizationSiteTable">
+                        >
 
                         <f:facet name="header" >
                             <p:commandButton  class="saddButton" icon="fa fa-plus" title="#{userData.userDDs['ADD']}" 
-                                             id="addA"
-                                             action="#{organizationSiteListMB.goToAdd()}" style="float:right"
-                                             rendered="#{userData.userScreens['customer'].add or userData.isAdmin}"/>
+                                              id="addA"
+                                              action="#{organizationSiteListMB.goToAdd()}" style="float:right"
+                                              rendered="#{userData.userScreens['customer'].add or userData.isAdmin}"/>
 
                             <p:blockUI block="form" trigger="addA" animate="true" >
 
@@ -43,22 +48,24 @@
 
                             </p:blockUI> 
 
-                            <p:commandButton  class="scloseButton" style="float: left;" icon="fa fa-fw fa-close" action="exit" />
                             <p:outputPanel  >
                                 <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
-                                <p:inputText id="globalFilter" a:autofocus="true" onkeyup="PF('bTable').filter()" style="width:150px" />
+                                 <p:inputText id="globalFilter" a:autofocus="true" onkeyup="PF('bTable').filter()" style="width:150px" />
                             </p:outputPanel>
                         </f:facet>
+                        
 
-                        <p:column style="width:13vh;font-size:1.8vh;text-align: right "
+                        <p:column style="width:13vh;font-size:1.8vh;text-align: right;border-radius: 0px "
                                   filterStyle="display:none"
                                   filterBy="#{organizationSiteTable.code}"
                                   filterMatchMode="contains" 
-                                  headerText="#{userData.userDDs['CUSTOM_CODE']}" sortBy="#{organizationSiteTable.code}" >
+                                  headerText="#{userData.userDDs['CUSTOM_CODE']}"
+                                  sortBy="#{organizationSiteTable.code}"  
+                                  >
                             <p:outputLabel value="#{organizationSiteTable.code}" />
                         </p:column>
 
-                        <p:column style="width:13vh;font-size:1.8vh;text-align: right "
+                        <p:column style="width:13vh;font-size:1.8vh;text-align: right;border-radius: 0px "
                                   filterStyle="display:none"
                                   filterBy="#{organizationSiteTable.name}"
                                   filterMatchMode="contains" 
@@ -66,17 +73,7 @@
                             <p:outputLabel value="#{organizationSiteTable.name}" />
                         </p:column>
 
-                        <p:column style="width:15vh;font-size:1.8vh;text-align: right "
-                                  filterStyle="display:none"
-                                  filterBy="#{organizationSiteTable.address}" 
-                                  filterMatchMode="contains" 
-                                  headerText="#{userData.userDDs['ADDRESS']}" 
-                                  sortBy="#{organizationSiteTable.address}"
-                                  >
-                            <p:outputLabel value="#{organizationSiteTable.address}" />
-                        </p:column> 
-
-                        <p:column style="width:15vh;font-size: 1.8vh;text-align: right "
+                        <p:column style="width:15vh;font-size: 1.8vh;text-align: right;border-radius: 0px "
                                   filterStyle="display:none" 
                                   filterBy="#{organizationSiteTable.phone}"
                                   filterMatchMode="contains" 
@@ -85,16 +82,48 @@
                                   >
                             <p:outputLabel value="#{organizationSiteTable.phone}" />
                         </p:column>
+                        
+                        <p:column style="width:15vh;font-size: 1.8vh;text-align: right;border-radius: 0px "
+                                  filterStyle="display:none" 
+                                  filterBy="#{organizationSiteTable.mobile}"
+                                  filterMatchMode="contains" 
+                                  headerText="الجوال"
+                                  sortBy="#{organizationSiteTable.mobile}" 
+                                  >
+                            <p:outputLabel value="#{organizationSiteTable.mobile}" />
+                        </p:column>
 
-                        <p:column style="width:10vh;font-size: 1.8vh;text-align: right " headerText="#{userData.userDDs['TRANSACTION']}" >
-                            <p:commandButton class="seditButton" update="@form" icon="fa fa-fw fa-edit" title="#{userData.userDDs['EDIT']}" action="#{organizationSiteListMB.goToEdit()}" rendered="#{userData.userScreens['customer'].edit or userData.isAdmin}">
-                                <f:setPropertyActionListener value="#{organizationSiteTable}"  target="#{organizationSiteListMB.invOrganizationSiteDTO}" />
+                        <p:column style="width:15vh;font-size: 1.8vh;text-align: right;border-radius: 0px "
+                                  filterStyle="display:none"
+                                  filterBy="#{organizationSiteTable.nationId}"  
+                                  filterMatchMode="contains"
+                                  headerText="الهوية"
+                                  sortBy="#{organizationSiteTable.nationId}"
+                                  >
+                            <p:outputLabel value="#{organizationSiteTable.nationId}" />
+                        </p:column>
+                        
+                        <p:column style="width:15vh;font-size: 1.8vh;text-align: right;border-radius: 0px "
+                                  filterStyle="display:none"
+                                  filterBy="#{organizationSiteTable.sponsorName1}"  
+                                  filterMatchMode="contains"
+                                  headerText="اسم الضامن"
+                                  sortBy="#{organizationSiteTable.sponsorName1}"
+                                  >
+                            <p:outputLabel value="#{organizationSiteTable.sponsorName1}" />
+                        </p:column>
+                        
+
+                        <p:column style="width:10vh;font-size: 1.8vh;text-align: center;border-radius: 0px " headerText="#{userData.userDDs['TRANSACTION']}" >
+                            <p:commandButton class="seditButtons" update="@form" icon="fa fa-fw fa-edit" style="background-color: #6a6967;border-radius: 3px;" 
+                                             title="#{userData.userDDs['EDIT']}" action="#{organizationSiteListMB.goToEdit()}" rendered="#{userData.userScreens['customer'].edit or userData.isAdmin}">
+                                <f:setPropertyActionListener value="#{organizationSiteTable.id}"  target="#{organizationSiteListMB.invOrganizationSiteSelected}" />
                             </p:commandButton>
-                            <p:commandButton  class="sdeleteButton" update="@form" 
-                                             icon="fa fa-remove" 
-                                             title="#{userData.userDDs['DELETE']}" 
-                                             action="#{organizationSiteListMB.delete}"
-                                             rendered="#{userData.userScreens['customer'].delete or userData.isAdmin}">
+                            <p:commandButton  class="sdeleteButtons" update="@form" 
+                                              icon="fa fa-remove" style="background-color: red;border-radius: 3px;"
+                                              title="#{userData.userDDs['DELETE']}" 
+                                              action="#{organizationSiteListMB.delete}"
+                                              rendered="#{userData.userScreens['customer'].delete or userData.isAdmin}">
                                 <f:setPropertyActionListener value="#{organizationSiteTable}" target="#{organizationSiteListMB.invOrganizationSiteDTO}" />
                                 <p:confirm header="Confirmation" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
                             </p:commandButton>

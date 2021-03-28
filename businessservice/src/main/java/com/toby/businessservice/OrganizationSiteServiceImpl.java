@@ -12,6 +12,7 @@ import com.toby.dto.CurrencyDTO;
 import com.toby.dto.GlAccountDTO;
 import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.dto.InventoryDelegatorDTO;
+import com.toby.dto.OfferCompanyDTO;
 import com.toby.dto.SymbolDTO;
 import com.toby.entity.Branch;
 import com.toby.entity.Currency;
@@ -1336,7 +1337,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         }
         return invOrganizationSiteDTO;
     }
-    
+
     private synchronized <T> Integer getMaxGenericSerialForDetail(Integer branchId, Integer type) {
         StringBuilder query = new StringBuilder();
         query.append("SELECT max(CONVERT(code,UNSIGNED INTEGER)) FROM inv_organization_site i where type = ");
@@ -1437,4 +1438,51 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             return true;
         }
     }
+
+    @Override
+    public InvOrganizationSiteDTO mapToDTOSmall(InvOrganizationSite invOrganizationSite) {
+        InvOrganizationSiteDTO invOrganizationSiteDTO = new InvOrganizationSiteDTO();
+        invOrganizationSiteDTO.setId(invOrganizationSite.getId());
+        invOrganizationSiteDTO.setName(invOrganizationSite.getName());
+        invOrganizationSiteDTO.setCode(invOrganizationSite.getCode());
+        invOrganizationSiteDTO.setMobile(invOrganizationSite.getMobile());
+        invOrganizationSiteDTO.setDiscount(invOrganizationSite.getDiscount());
+        if (invOrganizationSite.getCurrencyId() != null) {
+            CurrencyDTO currencyDTO = new CurrencyDTO();
+            currencyDTO.setId(invOrganizationSite.getCurrencyId().getId());
+            currencyDTO.setCode(invOrganizationSite.getCurrencyId().getCode());
+            currencyDTO.setName(invOrganizationSite.getCurrencyId().getName());
+            invOrganizationSiteDTO.setCurrencyId(currencyDTO);
+        }
+        if (invOrganizationSite.getParent() != null) {
+            InvOrganizationSiteDTO parent = new InvOrganizationSiteDTO();
+            parent.setId(invOrganizationSite.getParent().getId());
+            parent.setName(invOrganizationSite.getParent().getName());
+            parent.setCode(invOrganizationSite.getParent().getCode());
+            parent.setMobile(invOrganizationSite.getParent().getMobile());
+            parent.setDiscount(invOrganizationSite.getParent().getDiscount());
+            invOrganizationSiteDTO.setParent(parent);
+        }
+        if (invOrganizationSite.getOfferCompanyId() != null) {
+            OfferCompanyDTO offerCompanyDTO = new OfferCompanyDTO();
+            offerCompanyDTO.setId(invOrganizationSite.getOfferCompanyId().getId());
+            offerCompanyDTO.setName(invOrganizationSite.getOfferCompanyId().getName());
+            offerCompanyDTO.setCode(invOrganizationSite.getOfferCompanyId().getCode());
+            offerCompanyDTO.setDiscount(invOrganizationSite.getOfferCompanyId().getDiscount());
+            invOrganizationSiteDTO.setOfferCompanyDTO(offerCompanyDTO);
+        }
+        
+        if (invOrganizationSite.getAccountId() != null) {
+            GlAccountDTO accountDTO = new GlAccountDTO();
+            accountDTO.setAccNumber(invOrganizationSite.getAccountId().getAccNumber());
+            accountDTO.setId(invOrganizationSite.getAccountId().getId());
+            invOrganizationSiteDTO.setAccountId(accountDTO);
+        }
+        invOrganizationSiteDTO.setOpenBalanceCredit(invOrganizationSite.getOpenBalanceCredit());
+        invOrganizationSiteDTO.setOpenBalanceDebit(invOrganizationSite.getOpenBalanceDebit());
+        invOrganizationSiteDTO.setOpenBalanceDate(invOrganizationSite.getOpenBalanceDate());
+        
+        return invOrganizationSiteDTO;
+    }
+
 }

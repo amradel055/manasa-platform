@@ -134,6 +134,16 @@ public class InvInvoiceDTO extends BaseEntityDTO {
     private InvInventoryDTO factory;
     private InvDetailDTO invDetailDTOSelected;
     private List<InvDetailDTO> invStripDetailList;
+    private long diffrentTime;
+    private Integer invoiceSerial;
+    private Integer offerType;
+    
+    /// report //
+    private String gallaryName;
+    private String customerCode;
+    private String customerName;
+    private String customerMobile;
+    
     
 
     public InvInvoiceDTO() {
@@ -1462,5 +1472,103 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      */
     public void setNumberOfToob(BigDecimal numberOfToob) {
         this.numberOfToob = numberOfToob;
+    }
+
+    /**
+     * @return the diffrentTime
+     */
+    public long getDiffrentTime() {
+        return diffrentTime;
+    }
+
+    /**
+     * @param diffrentTime the diffrentTime to set
+     */
+    public void setDiffrentTime(long diffrentTime) {
+        this.diffrentTime = diffrentTime;
+    }
+
+    /**
+     * @return the invoiceSerial
+     */
+    public Integer getInvoiceSerial() {
+        return invoiceSerial;
+    }
+
+    /**
+     * @param invoiceSerial the invoiceSerial to set
+     */
+    public void setInvoiceSerial(Integer invoiceSerial) {
+        this.invoiceSerial = invoiceSerial;
+    }
+
+    /**
+     * @return the gallaryName
+     */
+    public String getGallaryName() {
+        return gallaryName;
+    }
+
+    /**
+     * @param gallaryName the gallaryName to set
+     */
+    public void setGallaryName(String gallaryName) {
+        this.gallaryName = gallaryName;
+    }
+
+    /**
+     * @return the customerCode
+     */
+    public String getCustomerCode() {
+        return customerCode;
+    }
+
+    /**
+     * @param customerCode the customerCode to set
+     */
+    public void setCustomerCode(String customerCode) {
+        this.customerCode = customerCode;
+    }
+
+    /**
+     * @return the customerName
+     */
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    /**
+     * @param customerName the customerName to set
+     */
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    /**
+     * @return the customerMobile
+     */
+    public String getCustomerMobile() {
+        return customerMobile;
+    }
+
+    /**
+     * @param customerMobile the customerMobile to set
+     */
+    public void setCustomerMobile(String customerMobile) {
+        this.customerMobile = customerMobile;
+    }
+
+    /**
+     * @return the offerType
+     */
+    public Integer getOfferType() {
+        return offerType;
+    }
+
+    /**
+     * @param offerType the offerType to set
+     */
+    public void setOfferType(Integer offerType) {
+        this.offerType = offerType;
     }
 }

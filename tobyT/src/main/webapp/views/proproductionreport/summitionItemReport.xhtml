@@ -21,9 +21,9 @@
                                                  converter="#{summitionItemReportMB.gallaryDTOConverter}">
                                     <f:selectItem itemLabel="Select One" itemValue=""/>
                                     <f:selectItems value="#{summitionItemReportMB.gallaryList}" 
-                                                var="gallary"
-                                                itemLabel="#{gallary}"
-                                                itemValue="#{gallary}" />
+                                                   var="gallary"
+                                                   itemLabel="#{gallary}"
+                                                   itemValue="#{gallary}" />
                                 </p:selectOneMenu>
                             </div>
                             <div class="ui-g-6 ui-xl-6">
@@ -50,7 +50,7 @@
                             </div>
                             <div class="ui-g-6 ui-xl-6">
 
-                                <p:outputLabel style="width: 50px;margin-right: 1%" value="المرحلة"/>
+                                <p:outputLabel style="width: 50px;margin-right: 1%" value="الفئة"/>
 
 
 
@@ -133,7 +133,7 @@
                         <p:column headerText="الكود" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
                             <h:outputText value="#{data.code}" />
                         </p:column>
-                        <p:column headerText="المرحلة" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                        <p:column headerText="الفئة" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
                             <h:outputText value="#{data.name}" />
                         </p:column>
                         <p:column headerText="العدد" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
@@ -144,6 +144,12 @@
                         </p:column>
 
                     </p:dataTable>
+                    <div class="ui-g-12 ui-md-6">
+                        <p:commandButton class="printButton"  icon="fa fa-fw fa-print"
+                                         onclick="form.target = '_blank'" ajax="false"
+                                         value="#{userData.userDDs['PRINT']}"
+                                         actionListener="#{summitionItemReportMB.exportPDF(actionEvent)}"/>
+                    </div>
 
                 </p:fieldset>
             </h:form>

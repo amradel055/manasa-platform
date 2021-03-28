@@ -667,4 +667,20 @@ public class SymbolServiceImpl implements SymbolService {
         Symbol symbol = dao.findEntityByQuery("SELECT sym FROM Symbol sym WHERE sym.companyId.id = :companyId And sym.serial = :serial AND sym.generalSymbolId.id = :generalSymbolId", params);
         return mapTODTO(symbol, null);
     }
+    
+    @Override
+    public List<Symbol> getAllworkTypeIdByCompanyId(Integer companyId) {
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("companyId", companyId);
+        return dao.findListByQuery("SELECT sym FROM Symbol sym WHERE  sym.generalSymbolId.serial=52 AND sym.companyId.id=:companyId", params);
+    }
+    
+    @Override
+    public List<Symbol> getAllStoreRegionByCompanyId(Integer companyId) {
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("companyId", companyId);
+        return dao.findListByQuery("SELECT sym FROM Symbol sym WHERE  sym.generalSymbolId.serial=53 AND sym.companyId.id=:companyId", params);
+    }
 }

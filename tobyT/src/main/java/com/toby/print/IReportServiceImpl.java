@@ -445,8 +445,9 @@ public class IReportServiceImpl implements IReportService {
             hashMap.put("daribaNumber", "الرقم الضريبي");
             hashMap.put("segilText", "رقم السجل التجاري");
             hashMap.put("deliveryDateText", "تاريخ التسليم");
-            hashMap.put("daribaValue", "301353179200003");
-            hashMap.put("segilValue", "4030208050");
+            hashMap.put("daribaValue", "310745902200003");
+            hashMap.put("segilValue", "4030208050"); // العام
+            hashMap.put("segilValue", "4030392548"); // الطائف
             hashMap.put("deliveryDateValue", invPurchaseInvoiceDTO.getDueDate());
             hashMap.put("taxValue", invPurchaseInvoiceDTO.getTaxvalue());
 //            hashMap.put("totalValue", invPurchaseInvoiceDTO.getTotalNet());

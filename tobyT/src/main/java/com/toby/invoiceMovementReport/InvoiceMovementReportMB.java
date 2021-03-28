@@ -29,6 +29,8 @@ import java.util.Map;
 import javax.faces.application.FacesMessage;
 import javax.faces.event.ActionEvent;
 import net.sf.jasperreports.engine.JRException;
+import net.sourceforge.barbecue.linear.code128.ModuleFactory;
+import org.apache.poi.hssf.util.HSSFColor;
 
 @Named(value = "invoiceMovementReportMB")
 @ViewScoped
@@ -82,34 +84,14 @@ public class InvoiceMovementReportMB extends BaseListBean {
 
     public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {
         if (invoiceMovementReportList != null && !invoiceMovementReportList.isEmpty()) {
-            fillReport(prepareReport(), getUserData().getReportPath() + "instProjectGuide.jasper", invoiceMovementReportList, "pdf");
+            fillReport(prepareReport(), getUserData().getReportPath() + "InvoiceMovementReport.jasper", invoiceMovementReportList, "pdf");
         } else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "لا توجد نتائج للطباعة"));
         }
     }
 
     public HashMap prepareReport() {
-        Map<String, String> userDDs = getUserData().getUserDDs();
         HashMap hashMap = new HashMap();
-
-        hashMap.put("fromInvoice", printProductionDTO.getFromInvoice().getId());
-        hashMap.put("toInvoice", printProductionDTO.getToInvoice().getId());
-
-        hashMap.put("toDate", printProductionDTO.getToDate());
-        hashMap.put("fromDate", printProductionDTO.getFromDate());
-
-        hashMap.put("fromInvoiceText", "من فاتورة");
-        hashMap.put("toInvoiceText", "إلى فاتورة");
-        hashMap.put("toDateText", "من تاريخ");
-        hashMap.put("fromDateText", "إلى تاريخ");
-
-        hashMap.put("invoiceText", "الفاتورة");
-        hashMap.put("inventoryNameText", "الفرع");
-        hashMap.put("clienNameText", "اسم العميل");
-        hashMap.put("deliveryDateText", "تاريخ التسليم للطيار");
-        hashMap.put("clientDateText", "تاريخ التسليم للعميل");
-        hashMap.put("galaryDateText", " تاريخ التسليم للمعرض");
-        hashMap.put("factoryDateText", "تاريخ التسليم للمشغل");
 
         hashMap.put("branchName", getUserData().getUserBranch().getNameAr());
         hashMap.put("PrintedBy", getUserData().getUser().getName());
@@ -118,6 +100,31 @@ public class InvoiceMovementReportMB extends BaseListBean {
         } else {
             hashMap.put("companyImage", null);
         }
+
+        hashMap.put("fromInvoiceText", "من فاتورة");
+        hashMap.put("fromInvoiceValue", printProductionDTO.getFromInvoice() == null ? null : printProductionDTO.getFromInvoice().getId());
+        hashMap.put("toInvoiceText", "إلى فاتورة");
+        hashMap.put("toInvoiceValue", printProductionDTO.getToInvoice() == null ? null : printProductionDTO.getToInvoice().getId());
+        hashMap.put("gallaryFromText", "من معرض");
+        hashMap.put("gallaryFromValue", printProductionDTO.getGallaryFrom() == null ? null : printProductionDTO.getGallaryFrom().getName());
+        hashMap.put("gallaryToText", "إلى معرض");
+        hashMap.put("gallaryToValue", printProductionDTO.getGallaryTo() == null ? null : printProductionDTO.getGallaryTo().getName());
+        hashMap.put("fromDateText", "من تاريخ");
+        hashMap.put("fromDateValue", printProductionDTO.getFromDate());
+        hashMap.put("toDateText", "الى تاريخ");
+        hashMap.put("toDateValue", printProductionDTO.getToDate());
+        hashMap.put("invoiceSerialText", " الفاتورة");
+        hashMap.put("inventoryNameText", " الفرع");
+        hashMap.put("clientNameText", " اسم العميل");
+        hashMap.put("numberTobInvoiceText", "عدد الثياب بلفاتورة");
+        hashMap.put("factoryDateText", "تاريخ التسليم المشغل");
+        hashMap.put("numberToFactoryText", "عدد الثياب بالمشغل");
+        hashMap.put("deliveryDateText", " تاريخ التسليم للطيار");
+        hashMap.put("numberTobExitFactoryText", " عدد الثياب للطيار");
+        hashMap.put("galaryDateText", " تاريخ الاستلام بالمعرض");
+        hashMap.put("numberTobgallaryText", " عدد الثياب بالمعرض");
+        hashMap.put("clientDateText", " تاريخ التسليم للعميل");
+
         return hashMap;
     }
 

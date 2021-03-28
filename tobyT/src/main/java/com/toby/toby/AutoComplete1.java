@@ -5,6 +5,7 @@
  */
 package com.toby.toby;
 
+import com.toby.businessservice.OfferCompanyService;
 import com.toby.businessservice.ProDetailTypeService;
 import com.toby.businessservice.ProGroupService;
 import com.toby.businessservice.ProProductionStagesService;
@@ -21,6 +22,7 @@ import com.toby.converter.InvOrganizationSiteConverter;
 import com.toby.converter.InvOrganizationSiteDTOConverter;
 import com.toby.converter.ItemDTOConverter;
 import com.toby.converter.ItemsBarcodesDetailsViewConverter;
+import com.toby.converter.OfferCompanyDTOConverter;
 import com.toby.converter.ProDetailTypeDTOConverter;
 import com.toby.converter.ProGroupDTOConverter;
 import com.toby.converter.ProProductionStagesDTOConverter;
@@ -35,6 +37,7 @@ import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.InvItemDTO;
 import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.dto.InventoryDelegatorDTO;
+import com.toby.dto.OfferCompanyDTO;
 import com.toby.dto.ProDetailTypeDTO;
 import com.toby.dto.ProGroupDTO;
 import com.toby.dto.ProProductionStagesDTO;
@@ -42,7 +45,6 @@ import com.toby.dto.SymbolDTO;
 import com.toby.entity.InvOrganizationSite;
 import com.toby.entity.Symbol;
 import com.toby.views.ItemsBarcodesDetailsView;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
@@ -68,6 +70,9 @@ public class AutoComplete1 extends Basic {
     private ProProductionStagesService proProductionStagesService;
     @EJB
     private ProGroupService proGroupService;
+    @EJB
+    private OfferCompanyService offerCompanyService;
+    
     private Integer branchId;
     private ProDetailTypeDTOConverter proDetailTypeDTOConverter;
     private InvOrganizationSiteDTOConverter organizationSiteDTOConvertor;
@@ -82,6 +87,7 @@ public class AutoComplete1 extends Basic {
     private InvInvoiceDTOConverter invoiceDTOConverter;
     private ProProductionStagesDTOConverter proProductionStagesDTOConverter;
     private ProGroupDTOConverter proGroupDTOConverter;
+    private OfferCompanyDTOConverter offerCompanyDTOConverter;
 //    InvInvoiceDTO
 
     public static List<InvOrganizationSite> completOrgSite(String query, List<InvOrganizationSite> invOrgSites, InvOrganizationSiteConverter invOrgSiteConverter) {
@@ -303,6 +309,13 @@ public class AutoComplete1 extends Basic {
         proGroups = proGroupService.getallProGroupByBranchIdDTO(getUserData().getUser());
         setProGroupDTOConverter(new ProGroupDTOConverter(proGroups));
         return proGroups;
+    }
+    
+    public List<OfferCompanyDTO> completeOfferCompany(String query) {
+        List<OfferCompanyDTO> offerCompanyDTOList = new ArrayList<>();
+        offerCompanyDTOList = offerCompanyService.getALLGlofferCompanyByBranchId(getUserData().getUserBranch().getId(),getUserData().getUser());
+        setOfferCompanyDTOConverter(new OfferCompanyDTOConverter(offerCompanyDTOList));
+        return offerCompanyDTOList;
     }
 
     public static List<Symbol> completeSymbol(String query, List<Symbol> symbolList, SymbolConverter symbolConverter) {
@@ -673,6 +686,20 @@ public class AutoComplete1 extends Basic {
      */
     public void setProGroupDTOConverter(ProGroupDTOConverter proGroupDTOConverter) {
         this.proGroupDTOConverter = proGroupDTOConverter;
+    }
+
+    /**
+     * @return the offerCompanyDTOConverter
+     */
+    public OfferCompanyDTOConverter getOfferCompanyDTOConverter() {
+        return offerCompanyDTOConverter;
+    }
+
+    /**
+     * @param offerCompanyDTOConverter the offerCompanyDTOConverter to set
+     */
+    public void setOfferCompanyDTOConverter(OfferCompanyDTOConverter offerCompanyDTOConverter) {
+        this.offerCompanyDTOConverter = offerCompanyDTOConverter;
     }
 
 }

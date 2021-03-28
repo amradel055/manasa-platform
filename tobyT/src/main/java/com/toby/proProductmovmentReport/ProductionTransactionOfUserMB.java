@@ -19,6 +19,7 @@ import com.toby.toby.BaseFormBean;
 import com.toby.toby.UserData;
 import com.toby.views.ProductionTransactionOfUser;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,6 +48,9 @@ public class ProductionTransactionOfUserMB extends BaseFormBean {
     private List<ProductionTransactionOfUser> productionTransactionOfUserList;
     private TobyUserDTOConverter tobyUserDTOConverter;
     private ProProductionStagesDTOConverter proProductionStagesDTOConverter;
+    private BigDecimal totalQuantity;
+    private BigDecimal Total;
+
     @EJB
     private TobyUserService tobyUserService;
     @EJB
@@ -72,45 +76,28 @@ public class ProductionTransactionOfUserMB extends BaseFormBean {
         // ||(printProductionDTO.getFromDate()!=null&&printProductionDTO.getToDate()!=null)
         //  ||(printProductionDTO.getFromStatus()!=null)&&(printProductionDTO.getToStatus()!=null)){
         productionTransactionOfUserList = proProductionItemsTransactionService.getProProductionTransactionDTOForAllUsersList(printProductionDTO, getUserData().getUserBranch().getId());
+        for (ProductionTransactionOfUser productionTransactionOfUser : productionTransactionOfUserList) {
+            setTotal(productionTransactionOfUser.getTotalNumber().add(getTotal()));
+            setTotalQuantity(productionTransactionOfUser.getNumberExcute().add(getTotalQuantity()));
+        }
         // }else{
         //  printProductionDTO.setMsg("ادخل من عامل  الي عامل او من تاريخ الي تاريخ او من مرحله الي مرحله  " );
         //    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", printProductionDTO.getMsg()));
 
         //  }
-
     }
 
     public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {
         if (productionTransactionOfUserList != null && !productionTransactionOfUserList.isEmpty()) {
-            fillReport(prepareReport(), getUserData().getReportPath() + "omar.jasper", productionTransactionOfUserList, "pdf");
+            fillReport(prepareReport(), getUserData().getReportPath() + "productionTransactionOfUser.jasper", productionTransactionOfUserList, "pdf");
         } else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "لا توجد نتائج للطباعة"));
         }
     }
 
     public HashMap prepareReport() {
-        Map<String, String> userDDs = getUserData().getUserDDs();
         HashMap hashMap = new HashMap();
 
-        hashMap.put("fromStage", printProductionDTO.getFromStatus());
-        hashMap.put("toStage", printProductionDTO.getFromStatus());
-        hashMap.put("toDate", printProductionDTO.getToDate());
-        hashMap.put("fromDate", printProductionDTO.getFromDate());
-        hashMap.put("fromUser", printProductionDTO.getFromUser().getUserCode());
-        hashMap.put("toUser", printProductionDTO.getToUser().getUserCode());
-        hashMap.put("fromStageText", "من مرحلة");
-        hashMap.put("toStageText", "إلى مرحلة");
-        hashMap.put("toDateText", "من تاريخ");
-        hashMap.put("fromDateText", "إلى تاريخ");
-        hashMap.put("fromUserText", " من عميل");
-        hashMap.put("toUserText", "إلى عميل");
-        hashMap.put("productionStagesIdText", "المرحلة");
-        hashMap.put("dateText", "التاريخ");
-        hashMap.put("itemIdText", "الصنف");
-        hashMap.put("itemNameText", "اسم الصنف");
-        hashMap.put("userNameText", " الموظف");
-        hashMap.put("numberExcuteText", "الكمية");
-        hashMap.put("totalNumberText", "الاجمالى");
         hashMap.put("branchName", getUserData().getUserBranch().getNameAr());
         hashMap.put("PrintedBy", getUserData().getUser().getName());
         if (isFileExist(getUserData().getImageReportPath())) {
@@ -118,6 +105,27 @@ public class ProductionTransactionOfUserMB extends BaseFormBean {
         } else {
             hashMap.put("companyImage", null);
         }
+
+        hashMap.put("fromStatusText", "من فئة");
+        hashMap.put("fromStatusValue", printProductionDTO.getFromStatus());
+        hashMap.put("toStatusText", "الى فئة");
+        hashMap.put("toStatusValue", printProductionDTO.getToStatus());
+        hashMap.put("fromUserText", " من عامل");
+        hashMap.put("fromUserValue", printProductionDTO.getFromUser() == null ? null : printProductionDTO.getFromUser());
+        hashMap.put("toUserText", " الى عامل");
+        hashMap.put("toUserValue", printProductionDTO.getToUser() == null ? null : printProductionDTO.getToUser());
+        hashMap.put("fromDateText", "  من تاريخ");
+        hashMap.put("fromDateValue", printProductionDTO.getFromDate());
+        hashMap.put("toDateText", "  الى تاريخ");
+        hashMap.put("toDateValue", printProductionDTO.getToDate());
+        hashMap.put("productionStagesIdText", " الرقم ");
+        hashMap.put("stageNameText", " الفئة ");
+        hashMap.put("userNameText", " الموظف ");
+        hashMap.put("priceText", " السعر ");
+        hashMap.put("numberExcuteText", " الكمية ");
+        hashMap.put("totalNumberText", " الاجمالي ");
+        hashMap.put("avarageText", " الكمية ");
+
         return hashMap;
     }
 
@@ -243,6 +251,46 @@ public class ProductionTransactionOfUserMB extends BaseFormBean {
      */
     public void setProProductionStagesDTOConverter(ProProductionStagesDTOConverter proProductionStagesDTOConverter) {
         this.proProductionStagesDTOConverter = proProductionStagesDTOConverter;
+    }
+
+    /**
+     * @return the totalQuantity
+     */
+    public BigDecimal getTotalQuantity() {
+        if (totalQuantity == null) {
+
+            return BigDecimal.ZERO;
+        }
+        return totalQuantity;
+    }
+
+    /**
+     * @param totalQuantity the totalQuantity to set
+     */
+    public void setTotalQuantity(BigDecimal totalQuantity) {
+        this.totalQuantity = totalQuantity;
+    }
+
+    /**
+     * @return the totalNumber
+     */
+    /**
+     * @return the Total
+     */
+    public BigDecimal getTotal() {
+        if (Total == null) {
+
+            return BigDecimal.ZERO;
+        }
+
+        return Total;
+    }
+
+    /**
+     * @param Total the Total to set
+     */
+    public void setTotal(BigDecimal Total) {
+        this.Total = Total;
     }
 
 }

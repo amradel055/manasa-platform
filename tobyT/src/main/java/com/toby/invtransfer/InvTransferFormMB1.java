@@ -64,11 +64,13 @@ public class InvTransferFormMB1 extends InventoryBasicDataForm {
                 fillDefaultList();
             } else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("edit")) {
                 fillInvInvoiceDTO();
-                getInvInventoryDTOList();                
-                getInvInventoryDTOListTo();
+//                getInvInventoryDTOList();                
+//                getInvInventoryDTOListTo();
             } else {
                 exit("../invQuotation_1/invQuotationList.xhtml");
             }
+            getInvInventoryDTOList();                
+                getInvInventoryDTOListTo();
         } catch (Exception e) {
             saveError(e, "invPurchaseOrderFormMB", "load");
         }

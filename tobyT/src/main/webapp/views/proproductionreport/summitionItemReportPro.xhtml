@@ -151,6 +151,12 @@
                         </p:column>
 
                     </p:dataTable>
+                    <div class="ui-g-12 ui-md-6">
+                        <p:commandButton class="printButton"  icon="fa fa-fw fa-print"
+                                         onclick="form.target = '_blank'" ajax="false"
+                                         value="#{userData.userDDs['PRINT']}"
+                                         actionListener="#{summitionItemReportMB.exportPDF(actionEvent)}"/>
+                    </div>
 
                 </p:fieldset>
             </h:form>

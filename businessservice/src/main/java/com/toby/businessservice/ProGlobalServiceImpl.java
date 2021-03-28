@@ -12,7 +12,6 @@ import com.toby.dto.InvDetailDTO;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.InvItemDTO;
 import com.toby.dto.SymbolDTO;
-import com.toby.entity.InvItem;
 import com.toby.views.ItemsBarcodesDetailsView;
 import java.math.BigDecimal;
 import java.time.Duration;

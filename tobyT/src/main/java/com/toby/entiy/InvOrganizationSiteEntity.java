@@ -5,6 +5,7 @@
  */
 package com.toby.entiy;
 
+import com.toby.dto.OfferCompanyDTO;
 import com.toby.entity.Currency;
 import com.toby.entity.GlAccount;
 import com.toby.entity.InvOrganizationSite;
@@ -57,6 +58,8 @@ public class InvOrganizationSiteEntity extends BaseEntity {
     private BigDecimal discount;
 
     private InventoryDelegator salesPerson;
+    private Date openBalanceDate;
+    private OfferCompanyDTO offerCompanyDTO;
 
     /**
      * @return the name
@@ -571,6 +574,34 @@ public class InvOrganizationSiteEntity extends BaseEntity {
      */
     public void setDiscount(BigDecimal discount) {
         this.discount = discount;
+    }
+
+    /**
+     * @return the openBalanceDate
+     */
+    public Date getOpenBalanceDate() {
+        return openBalanceDate;
+    }
+
+    /**
+     * @param openBalanceDate the openBalanceDate to set
+     */
+    public void setOpenBalanceDate(Date openBalanceDate) {
+        this.openBalanceDate = openBalanceDate;
+    }
+
+    /**
+     * @return the offerCompanyDTO
+     */
+    public OfferCompanyDTO getOfferCompanyDTO() {
+        return offerCompanyDTO;
+    }
+
+    /**
+     * @param offerCompanyDTO the offerCompanyDTO to set
+     */
+    public void setOfferCompanyDTO(OfferCompanyDTO offerCompanyDTO) {
+        this.offerCompanyDTO = offerCompanyDTO;
     }
 
 }

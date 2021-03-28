@@ -203,7 +203,15 @@
                         <h:outputText value="#{data.avarage}" />
                     </p:column>
 
+                    <p:columnGroup type="footer">
+                        <p:row>
+                            <p:column colspan="4" style="text-align:right;border-radius: 0px;" footerText="#{userData.userDDs['TOTAL']}  :" />
 
+                            <p:column footerText="#{productionTransactionOfUserMB.totalQuantity}" style="font-size: 1.4vh;text-align: center!important;border-radius: 0px;" />
+                            <p:column footerText="#{productionTransactionOfUserMB.total}"  style="font-size: 1.4vh;text-align: center!important;border-radius: 0px;"/>
+                            <p:column/>
+                        </p:row>
+                    </p:columnGroup>
 
                 </p:dataTable>
                 <div class="ui-g-12 ui-md-6">

@@ -17,12 +17,8 @@ public class PrintProductionDTO {
     private TobyUserDTO toUser; 
     private InvInventoryDTO gallaryFrom;
     private InvInventoryDTO gallaryTo;
+    private Integer invoiceStatus;
   
-    
-
-    
-    
-    
     public InvInvoiceDTO getFromInvoice() {
         return fromInvoice;
     }
@@ -186,6 +182,20 @@ public class PrintProductionDTO {
      */
     public void setToStatus(Integer toStatus) {
         this.toStatus = toStatus;
+    }
+
+    /**
+     * @return the invoiceStatus
+     */
+    public Integer getInvoiceStatus() {
+        return invoiceStatus;
+    }
+
+    /**
+     * @param invoiceStatus the invoiceStatus to set
+     */
+    public void setInvoiceStatus(Integer invoiceStatus) {
+        this.invoiceStatus = invoiceStatus;
     }
 
    

@@ -131,4 +131,6 @@ public interface OrganizationSiteService {
         
     public String saveOpenningBalance(List<InvOrganizationSiteDTO> invOrganizationSiteDTOList);
     
+    public InvOrganizationSiteDTO mapToDTOSmall(InvOrganizationSite invOrganizationSite);
+    
 }

@@ -67,6 +67,7 @@ public class InvoiceProductionStagesReportMB extends BaseListBean {
         if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("proproductionreportFormAdd")) {
             getPrintProductionDTO().setFromInvoice((InvInvoiceDTO) getContext().getSessionMap().get("proSalesFormSelected"));
             findInvoiceDate();
+            search();
         }
 
     }
@@ -86,7 +87,7 @@ public class InvoiceProductionStagesReportMB extends BaseListBean {
 
     public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {
         if (invoiceProductionStagesReports != null && !invoiceProductionStagesReports.isEmpty()) {
-            fillReport(prepareReport(), getUserData().getReportPath() + "invoiceProductionStageReport.jasper", invoiceProductionStagesReports, "pdf");
+            fillReport(prepareReport(), getUserData().getReportPath() + "invoiceProductionStage.jasper", invoiceProductionStagesReports, "pdf");
         } else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "لا توجد نتائج للطباعة"));
         }
@@ -103,25 +104,8 @@ public class InvoiceProductionStagesReportMB extends BaseListBean {
     }
 
     public HashMap prepareReport() {
-        Map<String, String> userDDs = getUserData().getUserDDs();
         HashMap hashMap = new HashMap();
 
-        hashMap.put("fromInvoice", printProductionDTO.getFromInvoice() == null ? null : printProductionDTO.getFromInvoice().getId());
-        hashMap.put("toInvoice", printProductionDTO.getToInvoice() == null ? null : printProductionDTO.getToInvoice().getId());
-        hashMap.put("toDate", printProductionDTO.getToDate());
-        hashMap.put("fromDate", printProductionDTO.getFromDate());
-        hashMap.put("fromInvoiceText", "من فاتورة");
-        hashMap.put("toInvoiceText", "إلى فاتورة");
-        hashMap.put("toDateText", "الي تاريخ");
-        hashMap.put("fromDateText", "من تاريخ");
-
-        hashMap.put("invoiceText", "الفاتورة");
-        hashMap.put("dateText", "التاريخ");
-        hashMap.put("clientText", "العميل");
-        hashMap.put("clientNameText", "اسم العميل");
-        hashMap.put("quantityText", "الكمية");
-        hashMap.put("stageText", "المرحلة");
-        hashMap.put("empNameText", "الموظف");
         hashMap.put("branchName", getUserData().getUserBranch() == null ? null : getUserData().getUserBranch().getNameAr());
         hashMap.put("PrintedBy", getUserData().getUser() == null ? null : getUserData().getUser().getName());
         if (isFileExist(getUserData().getImageReportPath())) {
@@ -129,6 +113,29 @@ public class InvoiceProductionStagesReportMB extends BaseListBean {
         } else {
             hashMap.put("companyImage", null);
         }
+
+        hashMap.put("fromInvoiceText", "  رقم الفاتورة");
+        hashMap.put("fromInvoicevalue", printProductionDTO.getFromInvoice() == null ? null : printProductionDTO.getFromInvoice().getId());
+        hashMap.put("dateFromText", "من تاريخ");
+        hashMap.put("dateFromValue", printProductionDTO.getFromDate());
+        hashMap.put("dateToText", "الى تاريخ");
+        hashMap.put("dateToValue", printProductionDTO.getToDate());
+        hashMap.put("clientNameText", "اسم العميل");
+        hashMap.put("clientNameValue", invoiceMovementReport.getClientName() == null ? null : invoiceMovementReport.getClientName());
+        hashMap.put("factoryDateText", " تاريخ الاستلام بالمشغل ");
+        hashMap.put("factoryDateValue", invoiceMovementReport.getFactoryDate());
+        hashMap.put("deliveryDateText", " تاريخ التسليم للطيار");
+        hashMap.put("deliveryDateValue", invoiceMovementReport.getDeliveryDate());
+        hashMap.put("galaryDateText", " تاريخ الاستلام بالمعرض");
+        hashMap.put("galaryDateValue", invoiceMovementReport.getGalaryDate());
+        hashMap.put("clientDateText", " تاريخ التسليم للعميل");
+        hashMap.put("clientDateValue", invoiceMovementReport.getClientDate());
+        hashMap.put("numberText", " عدد الثياب");
+        hashMap.put("dateText", "  التاريخ");
+        hashMap.put("quantityText", "الكمية");
+        hashMap.put("stageText", "المرحلة");
+        hashMap.put("empNameText", "الموظف");
+
         return hashMap;
     }
 
