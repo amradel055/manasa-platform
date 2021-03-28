@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                template="./../../template/newTemplate.xhtml"
+                template="./../../template/template.xhtml"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
@@ -9,38 +9,10 @@
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <ui:define name="content">
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-        <style >
-            .colored {                
-                background: #0064bc ;
-                color: #fff ;
-                font-size: 12px;
-            }
-        </style>
+
         <f:event listener="#{userData.authorize}" type="preRenderView" />
         <h:form  id="form" dir="#{userData.dir}"  class='formmargin'>
 
-            <div style=" position: absolute;left: 20px"> 
-
-                <p:commandButton  style="z-index: 2;
-                                      margin-top: 12%;
-                                      color: #035c70!important; 
-                                      background-color: #223238!important;
-                                      border: 1px solid #22323a!important;
-                                      background: #22323a 50% 50% repeat-x!important;"
-                                      icon="fa fa-fw fa-home"
-                                      title="#{userData.userDDs['HOME']}"
-                                      class="smhomeButton" 
-                                      action="exit" />
-                <p:commandButton  style="z-index: 2;
-                                      margin-top: 9%!important;
-                                      color: #035c70!important; 
-                                      background-color: #223238!important;
-                                      border: 1px solid #22323a!important;
-                                      background: #22323a 50% 50% repeat-x!important;" 
-                                      class="viewButton sminimize"
-                                      icon="fa fa-window-minimize"
-                                      title="إظهار/إخفاء"/>  
-            </div>
 
             <p:fieldset  legend="#{userData.userDDs['PURCHASES_ITE_GRO']}"
 
@@ -50,14 +22,9 @@
                 <div  id="firstSegment" class="ui-g-12 ui-g-nopad firstset">
                     <div class="ui-g">
 
-                        <div class="ui-g-12 ui-md-6">
-
-                            <h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel style="width: 115px;margin-right: 6%;" value="#{userData.userDDs['FROM_PURCH_DELE']}"/>
-                                </h:panelGroup> 
-
-                                <h:panelGroup>
+                        <div class="ui-g-6 ui-xl-6">
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
                                     <p:autoComplete style="width:34%!important" 
 
                                                     dropdown="true"
@@ -71,16 +38,14 @@
                                                     completeMethod="#{InvItemSalesReportMB.completeDelegatesPurchase}" >
 
                                     </p:autoComplete>
-                                </h:panelGroup> 
-                            </h:panelGroup>
-                        </div>
-                        <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel style="width: 115px" value="#{userData.userDDs['TO_PURCH_DELE']}"/>
-                                </h:panelGroup> 
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 115px;" value="#{userData.userDDs['FROM_PURCH_DELE']}"/>
 
-                                <h:panelGroup>
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
                                     <p:autoComplete style="width:34%!important" 
 
                                                     dropdown="true"
@@ -93,16 +58,14 @@
                                                     forceSelection="true" 
                                                     completeMethod="#{InvItemSalesReportMB.completeDelegatesPurchase}" >
                                     </p:autoComplete>
-                                </h:panelGroup> 
-                            </h:panelGroup>
-                        </div>
-                        <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel style="width: 115px;margin-right: 6%;" value="#{userData.userDDs['FROM_REPOS_NO']}"/>
-                                </h:panelGroup> 
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 115px" value="#{userData.userDDs['TO_PURCH_DELE']}"/>
 
-                                <h:panelGroup>
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
                                     <p:autoComplete style="width:34%!important " 
                                                     dropdown="true"
                                                     converter="#{InvItemSalesReportMB.invInventoryConverter}"
@@ -113,16 +76,14 @@
                                                     forceSelection="true" 
                                                     completeMethod="#{InvItemSalesReportMB.completeInventory}" >
                                     </p:autoComplete>
-                                </h:panelGroup> 
-                            </h:panelGroup>
-                        </div>
-                        <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel style="width: 115px" value="#{userData.userDDs['TO_REPOS_NO']}"/>
-                                </h:panelGroup> 
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 115px;" value="#{userData.userDDs['FROM_REPOS_NO']}"/>
 
-                                <h:panelGroup>
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
                                     <p:autoComplete style="width:34%!important " 
                                                     dropdown="true"
                                                     converter="#{InvItemSalesReportMB.invInventoryConverter}"
@@ -133,18 +94,14 @@
                                                     forceSelection="true" 
                                                     completeMethod="#{InvItemSalesReportMB.completeInventory}" >
                                     </p:autoComplete>
-                                </h:panelGroup> 
-                            </h:panelGroup>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 115px" value="#{userData.userDDs['TO_REPOS_NO']}"/>
 
-                        </div>
-                        
-                        <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel style="width: 115px;margin-right: 6%;" value="#{userData.userDDs['FROM_INVOI_NO']}"/>
-                                </h:panelGroup> 
-
-                                <h:panelGroup>
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
                                     <p:autoComplete id="purchaseIdFrom"
                                                     style="width:34%!important " 
                                                     dropdown="true"
@@ -158,16 +115,14 @@
                                                     forceSelection="true" 
                                                     completeMethod="#{InvItemSalesReportMB.completePurchaseInvoice}">
                                     </p:autoComplete>
-                                </h:panelGroup> 
-                            </h:panelGroup>
-                        </div>
-                        <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel style="width: 115px" value="#{userData.userDDs['TO_INVOI_NO']}"/>
-                                </h:panelGroup> 
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 115px;" value="#{userData.userDDs['FROM_INVOI_NO']}"/>
 
-                                <h:panelGroup>
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
                                     <p:autoComplete id="purchaseIdTo"
                                                     style="width:34%!important " 
                                                     dropdown="true"
@@ -181,16 +136,14 @@
                                                     forceSelection="true" 
                                                     completeMethod="#{InvItemSalesReportMB.completePurchaseInvoice}">
                                     </p:autoComplete>
-                                </h:panelGroup> 
-                            </h:panelGroup>
-                        </div>
-                        <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel style="width: 115px;margin-right: 6%;" value="#{userData.userDDs['FROM_INVOI_TYP']}"/>
-                                </h:panelGroup> 
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 115px" value="#{userData.userDDs['TO_INVOI_NO']}"/>
 
-                                <h:panelGroup>
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
                                     <p:selectOneMenu style="width:35%!important "
                                                      id="invoiceTypeFrom" 
                                                      value ="#{InvItemSalesReportMB.invItemSalesSearchBean.paymentTypeFrom}">                                                             
@@ -198,17 +151,20 @@
                                         <f:selectItem itemLabel="#{userData.userDDs['CASH']}"  itemValue="0"  />                            
                                         <f:selectItem itemLabel="#{userData.userDDs['POSTPONE']}" itemValue="1" />
                                         <f:selectItem itemLabel="#{userData.userDDs['DECOM_CREDIT']}" itemValue="2" />
-                                    </p:selectOneMenu>    
-                                </h:panelGroup> 
-                            </h:panelGroup>
-                        </div>
-                        <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel style="width: 115px" value="#{userData.userDDs['TO_INVOI_TYP']}"/>
-                                </h:panelGroup> 
+                                    </p:selectOneMenu>   
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 115px;" value="#{userData.userDDs['FROM_INVOI_TYP']}"/>
 
-                                <h:panelGroup>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="ui-g-6 ui-xl-6">
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
                                     <p:selectOneMenu style="width:35%!important " id="invoiceTypeTo" 
                                                      value ="#{InvItemSalesReportMB.invItemSalesSearchBean.paymentTypeTo}">    
                                         <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"/>
@@ -216,77 +172,78 @@
                                         <f:selectItem itemLabel="#{userData.userDDs['POSTPONE']}" itemValue="1" />
                                         <f:selectItem itemLabel="#{userData.userDDs['DECOM_CREDIT']}" itemValue="2" />
                                     </p:selectOneMenu>  
-                                </h:panelGroup> 
-                            </h:panelGroup>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 115px" value="#{userData.userDDs['TO_INVOI_TYP']}"/>
 
-                        </div>
-                        <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel  style="width: 110px;margin-right: 6%;" value="#{userData.userDDs['FROM_DATE']}"/>
-                                </h:panelGroup>
-
-                                <h:panelGroup>
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
                                     <p:calendar pattern="dd/MM/yyyy" 
                                                 value="#{InvItemSalesReportMB.invItemSalesSearchBean.dateFrom}"
                                                 style="width: 50%">
 
                                     </p:calendar>
-                                </h:panelGroup>
-                            </h:panelGroup>
-                        </div>
-                        <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel  style="width: 110px" value="#{userData.userDDs['TO_DATE']}"/>
-                                </h:panelGroup>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel  style="width: 110px;" value="#{userData.userDDs['FROM_DATE']}"/>
 
-                                <h:panelGroup>
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
                                     <p:calendar pattern="dd/MM/yyyy" 
                                                 value="#{InvItemSalesReportMB.invItemSalesSearchBean.dateTo}"
                                                 style="width: 50%">
 
                                     </p:calendar>
-                                </h:panelGroup>
-                            </h:panelGroup>
-                        </div>
-                        <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel style="width: 125px;margin-right: 6%;" value="#{userData.userDDs['TOT_PURCH_REP']}"/>
-                                </h:panelGroup> 
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel  style="width: 110px" value="#{userData.userDDs['TO_DATE']}"/>
 
-                                <h:panelGroup>
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
 
                                     <p:selectBooleanCheckbox id="showReportCheck" value="#{InvItemSalesReportMB.invItemSalesSearchBean.showReport}">
                                         <p:ajax update="reportDB" listener="#{InvItemSalesReportMB.showItemReport()}" />
                                     </p:selectBooleanCheckbox>
 
-                                </h:panelGroup> 
-                            </h:panelGroup>
-                        </div>
-                        <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>
-                                <h:panelGroup>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 125px" value="#{userData.userDDs['TOT_PURCH_REP']}"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <h:panelGroup id="shortReport">
+
+                                        <p:selectBooleanCheckbox id="shortReportCheck" value="#{InvItemSalesReportMB.invItemSalesSearchBean.shortReport}">
+                                            <p:ajax update="reportDB" listener="#{InvItemSalesReportMB.shortReportListing()}" />
+                                        </p:selectBooleanCheckbox>
+
+                                    </h:panelGroup> 
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
                                     <p:outputLabel style="width: 110px" value="مجموعة مختصرة"/>
-                                </h:panelGroup> 
 
-                                <h:panelGroup id="shortReport">
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
 
-                                    <p:selectBooleanCheckbox id="shortReportCheck" value="#{InvItemSalesReportMB.invItemSalesSearchBean.shortReport}">
-                                        <p:ajax update="reportDB" listener="#{InvItemSalesReportMB.shortReportListing()}" />
-                                    </p:selectBooleanCheckbox>
-
-                                </h:panelGroup> 
-                            </h:panelGroup>
-                        </div>
-                        <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>                             
-                                <h:panelGroup>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
                                     <p:commandButton value="رسم بياني" update="@form" oncomplete="PF('dlg1').show()" style="margin-right:6%;"/>
-                                </h:panelGroup> 
-                            </h:panelGroup>
+
+                                </div>
+                            </div>
+
                         </div>
+
                     </div>
 
                 </div>
@@ -302,7 +259,7 @@
                                             id="saveB"
                                             value="#{userData.userDDs['SEARCH']}"
                                             update="itemSalesReportTable" 
-                                            style="color: #fff!important;background-color: #2196F3;margin-left: 5px;"  />
+                                            />
 
                         <p:commandButton  class="newButtons"
                                           title="#{userData.userDDs['NEW']}" 
@@ -311,13 +268,12 @@
                                           action="#{InvItemSalesReportMB.reset()}"
                                           update="itemSalesReportTable"
                                           value="#{userData.userDDs['NEW']}"
-                                          style="color: #fff!important;background-color: #9c27b0d1;margin-left: 5px;"/>
+                                          />
 
                         <p:commandButton  class="printButtons"
                                           id="PrintB"
                                           ajax="false"
                                           onclick="form.target = '_blank'"  
-                                        style="color: #fff!important;background-color: rgb(1, 76, 134);margin-left: 5px;"
                                           value="#{userData.userDDs['PRINT']}" 
                                           actionListener="#{InvItemSalesReportMB.exportPDF}"
                                           title="#{userData.userDDs['PRINT']}"
@@ -327,9 +283,8 @@
                                           id="CloseB"
                                           title="#{userData.userDDs['BACK']}"
                                           action="exit"
-                                          style="color: #fff!important;background-color: #035C70;margin-left: 5px;"  
                                           value="#{userData.userDDs['BACK']}" />
-                        
+
                         <h:commandLink  class="sdcreenimg" style="margin-right: 4px;">  
                             <p:graphicImage name="/img/excel.jpg" width="24"/>  
                             <p:dataExporter type="xls"
@@ -562,28 +517,28 @@
                     chart.draw(data, options);
                 }
             </script>
-           
+
             <p:dialog  class="ui-dialog" modal="true" minimizable="true" 
                        maximizable="true"  resizable="true" 
-                              position='center,center'
-                              header="رسم بياني" widgetVar="dlg1">
+                       position='center,center'
+                       header="رسم بياني" widgetVar="dlg1">
 
-                        <div  id="donutchart" style="width: 75vw; height: 450px;"></div>
-                        
-                        <h:panelGroup class=" centerButtons"> 
-                        <p:commandButton  class="printButton"
-                                          id="PrintC"
-                                          ajax="false"
-                                          onclick="form.target = '_blank'"  
-                                          style="color: #035c70!important;" 
-                                          value="#{userData.userDDs['PRINT']}" 
-                                          actionListener="#{InvItemSalesReportMB.exportChartPDF}"
-                                          title="#{userData.userDDs['PRINT']}"
-                                          immediate="true" />
-                        </h:panelGroup>
-                        
-                    </p:dialog> 
-                
+                <div  id="donutchart" style="width: 75vw; height: 450px;"></div>
+
+                <h:panelGroup class=" centerButtons"> 
+                    <p:commandButton  class="printButton"
+                                      id="PrintC"
+                                      ajax="false"
+                                      onclick="form.target = '_blank'"  
+                                      style="color: #035c70!important;" 
+                                      value="#{userData.userDDs['PRINT']}" 
+                                      actionListener="#{InvItemSalesReportMB.exportChartPDF}"
+                                      title="#{userData.userDDs['PRINT']}"
+                                      immediate="true" />
+                </h:panelGroup>
+
+            </p:dialog> 
+
         </h:form>
     </ui:define>
 </ui:composition>

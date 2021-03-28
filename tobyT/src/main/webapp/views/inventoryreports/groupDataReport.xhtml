@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                template="./../../template/newTemplate.xhtml"
+                template="./../../template/template.xhtml"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
@@ -13,29 +13,18 @@
         <h:form  id="form" dir="#{userData.dir}"  style="margin-right: 20px">
 
 
-            <div style=" position: absolute;left: 20px"> 
-
-                <p:commandButton  style="width: 90px;background-image: none!important;z-index: 2" 
-                                  class="viewButton searchButton"
-                                  value="Hide/Show"/>  
-            </div>
-
+           
             <p:fieldset  legend="#{userData.userDDs['GROUP_ITEMS']}"  
                          style=" position: relative"> 
 
 
                 <div  id="firstSegment" class="ui-g-12 ui-g-nopad firstset">
-                    
+
                     <div class="ui-g">
 
-                        <div class="ui-g-12 ui-md-6">
-
-                            <h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel style="width: 45px" value="#{userData.userDDs['FROM_GROUP']}"/>
-                                </h:panelGroup> 
-
-                                <h:panelGroup>
+                        <div class="ui-g-6 ui-xl-6">
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
                                     <p:autoComplete style="width:75%!important"
                                                     dropdown="true"
                                                     converter="#{groupDataReportMB.invGroupConverter}"
@@ -48,16 +37,16 @@
                                                     >
 
                                     </p:autoComplete>
-                                </h:panelGroup> 
-                            </h:panelGroup>
-                        </div>
-                        <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel style="width: 45px" value="#{userData.userDDs['TO_GROUP']}"/>
-                                </h:panelGroup> 
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 45px" value="#{userData.userDDs['FROM_GROUP']}"/>
 
-                                <h:panelGroup>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
                                     <p:autoComplete style="width:75%!important" 
                                                     dropdown="true"
                                                     converter="#{groupDataReportMB.invGroupConverter}"
@@ -68,10 +57,15 @@
                                                     forceSelection="true"
                                                     completeMethod="#{groupDataReportMB.completGroup}" >
                                     </p:autoComplete>
-                                </h:panelGroup> 
-                            </h:panelGroup>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 45px" value="#{userData.userDDs['TO_GROUP']}"/>
 
+                                </div>
+                            </div>
                         </div>
+
+                       
                     </div>
                 </div>
                 <h:panelGrid  columns="1" class="col-md-12" >

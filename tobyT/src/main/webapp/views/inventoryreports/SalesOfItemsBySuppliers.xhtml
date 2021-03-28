@@ -10,70 +10,45 @@
     <ui:define name="content">
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
-        <style >
-            .colored {                
-                background: #0064bc ;
-                color: #fff ;
-                font-size: 12px;
-            }
-            
-        </style>
+
         <f:event listener="#{userData.authorize}" type="preRenderView" />
 
-        <div style=" position: absolute;left: 20px"> 
-
-            <p:commandButton  style="width: 90px;background-image: none!important;z-index: 2" 
-                              class="viewButton searchButton"
-                              value="Hide/Show"/>  
-        </div>
-
-
-
-
+       
         <h:form  id="form" dir="#{userData.dir}"  style="margin-right: 20px">
             <p:fieldset style=" position: relative" legend="#{userData.userDDs['ITEM_SALE_CUST']}"> 
 
                 <div  id="firstSegment" class="ui-g-12 ui-g-nopad firstset">
                     <div class="ui-g">
-                        <div class="ui-g-12 ui-md-6">  
 
-                            <h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel  style="width: 70px" value="#{userData.userDDs['FROM_DATE']}"/>
-                                </h:panelGroup>
-
-                                <h:panelGroup>
+                        <div class="ui-g-6 ui-xl-6">
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
                                     <p:calendar pattern="dd/MM/yyyy" 
                                                 value="#{purchaseOfItemsBySuppliersGroupReportMB.purchaseOfItemsBySuppliersSearchBean.dateFrom}"
                                                 style="width: 56%">
 
                                     </p:calendar>
-                                </h:panelGroup>
-                            </h:panelGroup>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel  style="width: 70px" value="#{userData.userDDs['FROM_DATE']}"/>
 
-                        </div>
-                        <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel  style="width: 70px" value="#{userData.userDDs['TO_DATE']}"/>
-                                </h:panelGroup>
-
-                                <h:panelGroup>
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
                                     <p:calendar pattern="dd/MM/yyyy" 
                                                 value="#{purchaseOfItemsBySuppliersGroupReportMB.purchaseOfItemsBySuppliersSearchBean.dateTo}"
                                                 style="width: 56%">
 
                                     </p:calendar>
-                                </h:panelGroup>
-                            </h:panelGroup>
-                        </div>
-                        <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['FROM_REPOS_NO']}"/>
-                                </h:panelGroup> 
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel  style="width: 70px" value="#{userData.userDDs['TO_DATE']}"/>
 
-                                <h:panelGroup>
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
                                     <p:autoComplete style="width:75%!important"
                                                     dropdown="true"
                                                     converter="#{purchaseOfItemsBySuppliersGroupReportMB.invInventoryConverter}"
@@ -86,16 +61,16 @@
                                                     >
 
                                     </p:autoComplete>
-                                </h:panelGroup> 
-                            </h:panelGroup>
-                        </div>
-                        <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['TO_REPOS_NO']}"/>
-                                </h:panelGroup> 
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['FROM_REPOS_NO']}"/>
 
-                                <h:panelGroup>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
                                     <p:autoComplete style="width:75%!important" 
 
                                                     dropdown="true"
@@ -107,47 +82,47 @@
                                                     forceSelection="true" 
                                                     completeMethod="#{purchaseOfItemsBySuppliersGroupReportMB.completeInventory}">
                                     </p:autoComplete>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['TO_REPOS_NO']}"/>
 
-                                </h:panelGroup> 
-
-                            </h:panelGroup>
-                        </div>
-                        <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['TOTAL_SALE_REP']}"/>
-                                </h:panelGroup> 
-
-                                <h:panelGroup>
-
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
                                     <p:selectBooleanCheckbox id="showReportCheck" value="#{purchaseOfItemsBySuppliersGroupReportMB.purchaseOfItemsBySuppliersSearchBean.showReport}">
                                     </p:selectBooleanCheckbox>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['TOTAL_SALE_REP']}"/>
 
-                                </h:panelGroup> 
-                            </h:panelGroup>
-                        </div>
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <h:panelGroup id="shortReport">
 
-                        <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>
-                                <h:panelGroup>
+                                        <p:selectBooleanCheckbox id="shortReportCheck" value="#{purchaseOfItemsBySuppliersGroupReportMB.purchaseOfItemsBySuppliersSearchBean.shortReport}">
+                                        </p:selectBooleanCheckbox>
+
+                                    </h:panelGroup> 
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
                                     <p:outputLabel style="width: 70px" value="عميل مختصر"/>
-                                </h:panelGroup> 
 
-                                <h:panelGroup id="shortReport">
+                                </div>
+                            </div>
+                               <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
 
-                                    <p:selectBooleanCheckbox id="shortReportCheck" value="#{purchaseOfItemsBySuppliersGroupReportMB.purchaseOfItemsBySuppliersSearchBean.shortReport}">
-                                    </p:selectBooleanCheckbox>
-
-                                </h:panelGroup> 
-                            </h:panelGroup>
-                        </div>
-                        <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>                             
-                                <h:panelGroup>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
                                     <p:commandButton value="رسم بياني" update="@form" oncomplete="PF('dlg1').show()" />
-                                </h:panelGroup> 
-                            </h:panelGroup>
+
+                                </div>
+                            </div>
                         </div>
+                
                     </div>
                     <p:dialog class="ui-dialog"
                               modal="true"
@@ -447,7 +422,7 @@
                     chart.draw(data, options);
                 }
             </script>
-          
+
         </h:form>
     </ui:define>
 </ui:composition>
