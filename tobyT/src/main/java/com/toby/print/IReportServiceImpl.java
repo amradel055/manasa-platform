@@ -549,7 +549,7 @@ public class IReportServiceImpl implements IReportService {
 
             hashMap.put("netValue", invPurchaseInvoiceDTO.getTotalNet());
 
-            hashMap.put("netValueArabic", Tafqeet.numberToText(Double.parseDouble(invPurchaseInvoiceDTO.getTotalNetAfterDiscount().toString()), "جنيه", "قرش"));
+            hashMap.put("netValueArabic", Tafqeet.numberToText(Double.parseDouble(invPurchaseInvoiceDTO.getTotalNetAfterDiscount().toString()),  "ريـال", "هلله"));
 
             hashMap.put("secondDateValue", invPurchaseInvoiceDTO.getSupplierInvoiceDate());
 
@@ -628,7 +628,7 @@ public class IReportServiceImpl implements IReportService {
 
             hashMap.put("netValue", invPurchaseInvoiceDTO.getTotalNet());
 
-            hashMap.put("netValueArabic", Tafqeet.numberToText(Double.parseDouble(invPurchaseInvoiceDTO.getTotalNetAfterDiscount().toString()), "جنيه", "قرش"));
+            hashMap.put("netValueArabic", Tafqeet.numberToText(Double.parseDouble(invPurchaseInvoiceDTO.getTotalNetAfterDiscount().toString()),  "ريـال", "هلله"));
 
             hashMap.put("secondDateValue", invPurchaseInvoiceDTO.getSupplierInvoiceDate());
 

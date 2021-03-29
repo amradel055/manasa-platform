@@ -748,7 +748,8 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
 
         if (invPurchaseInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.INVADDINGORDERFORM)) {
             entity.setType(0);
-        } else if (invPurchaseInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.INVPERMISSIONORDERFORM) || invPurchaseInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.PROWORKORDER)) {
+        } else if (invPurchaseInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.INVPERMISSIONORDERFORM) || 
+                invPurchaseInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.PROWORKORDER)) {
             entity.setType(1);
         }
 
@@ -820,6 +821,10 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
         if (entity.getPurchaseOrderId() != null) {
             invPurchaseInvoiceDTO.setLoadedSerial(entity.getPurchaseOrderId().getSerial());
         }
+        
+        if (entity.getInvPurchaseInvoice() != null) {
+            invPurchaseInvoiceDTO.setLoadedSerial(entity.getInvPurchaseInvoice().getSerial());
+        }
     }
 
     private InvInvoiceDTO initDataForList(InvInvoiceDTO invInvoiceDTO, InvAddingorder invAddingorder) {
@@ -842,7 +847,7 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
 
     private void appendFilter(Map<String, Object> filters, StringBuilder builder) {
         if (filters.get("globalFilter") != null && !filters.get("globalFilter").toString().isEmpty()) {
-            String filter = " and ( FUNCTION('DATE_FORMAT',s.date, '%d-%m-%Y')  like CONCAT('%',:globalFilter ,'%') OR  s.serial like CONCAT('%',:globalFilter ,'%')  OR s.organizationSiteId.name  like CONCAT('%',:globalFilter ,'%') OR s.supplierInvoice like CONCAT('%',:globalFilter ,'%') OR  s.purchaseOrderId.serial like CONCAT('%',:globalFilter ,'%')) or s.purchaseOrderId IS NULL ";
+            String filter = " and ( FUNCTION('DATE_FORMAT',s.date, '%d-%m-%Y')  like CONCAT('%',:globalFilter ,'%') OR  s.serial like CONCAT('%',:globalFilter ,'%')  OR s.organizationSiteId.name  like CONCAT('%',:globalFilter ,'%') OR s.supplierInvoice like CONCAT('%',:globalFilter ,'%') OR  s.purchaseOrderId.serial like CONCAT('%',:globalFilter ,'%') OR  s.invPurchaseInvoice.serial like CONCAT('%',:globalFilter ,'%')) or s.purchaseOrderId IS NULL  or s.invPurchaseInvoice IS NULL ";
             builder.append(filter);
         } else {
             filters.remove("globalFilter");

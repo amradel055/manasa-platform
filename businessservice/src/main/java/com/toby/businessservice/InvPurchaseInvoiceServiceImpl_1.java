@@ -1279,7 +1279,9 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
 
                 glBankTransactionService.addCash(invInvoiceDTO, tobyUser);
                 invInvoiceDTO.setInvPurchaseInvoiceId(invPurchaseInvoice.getId());
-                invAddingOrderService.save(invInvoiceDTO, tobyUser);
+                if (invPurchaseInvoice.getId() == null) {
+                    invAddingOrderService.save(invInvoiceDTO, tobyUser);
+                }
 
                 if (error != null && !error.isEmpty()) {
                     invInvoiceDTO.setMsg(error);

@@ -121,6 +121,9 @@ public class ProProductionTransactionOfInvoice implements Serializable {
     }
 
     public BigDecimal getTotalNumber() {
+        if(totalNumber == null){
+            totalNumber = BigDecimal.ZERO;
+        }
         return totalNumber;
     }
 
@@ -129,6 +132,9 @@ public class ProProductionTransactionOfInvoice implements Serializable {
     }
 
     public BigDecimal getNumberExcute() {
+        if(numberExcute == null){
+            numberExcute = BigDecimal.ZERO;
+        }
         return numberExcute;
     }
 
@@ -137,6 +143,7 @@ public class ProProductionTransactionOfInvoice implements Serializable {
     }
 
     public BigDecimal getNumberRemain() {
+        numberRemain = getTotalNumber().subtract(getNumberExcute());
         return numberRemain;
     }
 
@@ -153,6 +160,9 @@ public class ProProductionTransactionOfInvoice implements Serializable {
     }
 
     public BigDecimal getProductionStageCost() {
+        if(productionStageCost == null){
+            productionStageCost = BigDecimal.ZERO;
+        }
         return productionStageCost;
     }
 

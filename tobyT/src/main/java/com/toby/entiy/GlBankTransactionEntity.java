@@ -58,6 +58,9 @@ public class GlBankTransactionEntity extends BaseEntity {
     }
 
     public BigDecimal getValue() {
+        if(value == null){
+            value = BigDecimal.ZERO;
+        }
         return value;
     }
 
@@ -350,6 +353,9 @@ public class GlBankTransactionEntity extends BaseEntity {
      * @return the remainInvoice
      */
     public BigDecimal getRemainInvoice() {
+        if(remainInvoice == null){
+            remainInvoice = BigDecimal.ZERO;
+        }
         return remainInvoice;
     }
 

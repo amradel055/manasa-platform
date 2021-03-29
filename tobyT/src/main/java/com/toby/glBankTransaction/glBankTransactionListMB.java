@@ -232,7 +232,7 @@ public class glBankTransactionListMB extends BaseListBean {
         hashMap.put("recievedFromValue", recievedaccount != null ? recievedaccount.getName() : null);*/
         glBankTransactionDetail = glBankTransactionDetailsService.getGlBankTransactionDetailByGlBankTransactionId(glBankTransactionEntity.getId());
         hashMap.put("amountValue", glBankTransactionDetail.getValue());
-        hashMap.put("amountValueText", Tafqeet.numberToText(Double.parseDouble(glBankTransactionDetail.getValue().toString()), "جنيه", "قرش"));
+        hashMap.put("amountValueText", Tafqeet.numberToText(Double.parseDouble(glBankTransactionDetail.getValue().toString()),  "ريـال", "هلله"));
 
         if (glBankTransactionDetail != null) {
             if (glBankTransactionDetail.getBankIdFrom() != null && glBankTransactionDetail.getBankIdFrom().getAccountId() != null) {
