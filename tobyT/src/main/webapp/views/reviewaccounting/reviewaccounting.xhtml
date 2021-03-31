@@ -1,19 +1,14 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                template="./../../template/newTemplate.xhtml"
+                template="./../../template/template.xhtml"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns="http://www.w3.org/1999/xhtml">
     <ui:define name="content">
-        <style>
-
-            .navbar-top-links li:last-child {
-                margin-top: 25px!important;
-            }
-        </style>
+     
         <f:event listener="#{userData.authorize}" type="preRenderView" />
         <h:form id="form" dir="#{userData.dir}" class='formmargin'>  
             <div style=" position: absolute;left: 20px"> 
@@ -126,14 +121,14 @@
                                          value="#{userData.userDDs['REVIEWED']}"
                                          title="#{userData.userDDs['REVIEWED']}" 
                                          actionListener="#{generalJournalBean.saveReviewAccounting()}" 
-                                         style="float:right;margin-right: .5%;margin-top: .2%;border-color: #eeeae640;color: #fff!important;background-color: #2f30af ;margin-right: 25px;"  
+                                         style="float:right;"  
                                          rendered="#{userData.userScreens['reviewaccounting'].add or userData.isAdmin}" />
 
                         <p:commandButton class="cancelreviewbutton" id="b3" 
                                          value="#{userData.userDDs['CANCEL_REVIEW']}"
                                          title="#{userData.userDDs['CANCEL_REVIEW']}" 
                                          actionListener="#{generalJournalBean.undoReview()}"
-                                         style="float:right;color: #fff!important;border-color: #eeeae640;background-color:rgb(148, 75, 197) !important;margin-top: .2%;width: 13vh;margin-right: 55px;" 
+                                         style="float:right;" 
                                          rendered="#{userData.userScreens['reviewaccounting'].add 
                                                      or userData.isAdmin}" 
                                          update="@form"/>
