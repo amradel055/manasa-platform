@@ -1724,7 +1724,7 @@ public class InvPurchaseInvoiceFormMB extends BaseFormBean {
 
             hashMap.put("netValue", totalNet);
 
-            hashMap.put("netValueArabic", Tafqeet.numberToText(Double.parseDouble(totalNetAfterDiscount.toString()), "جنيه", "قرش"));
+            hashMap.put("netValueArabic", Tafqeet.numberToText(Double.parseDouble(totalNetAfterDiscount.toString()), "ريـال", "هلله"));
 
             hashMap.put("secondDateValue", invPurchaseInvoiceEntity.getSupplierInvoiceDate());
 

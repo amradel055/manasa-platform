@@ -168,6 +168,9 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
 
     private AccountsSystemSettings accountsSystemSettings;
     private List<GlBankTransactionInvoiceView> glBankTransactionInvoiceViewList;
+
+    private Boolean isEdit;
+
     @EJB
     private GlBankTransactionInvoiceViewService bankTransactionInvoiceViewService;
     @EJB
@@ -245,6 +248,7 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
             if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("edit")) {
                 setGlBankTransactionId((Integer) context.getSessionMap().get("glBankTransactionIdSeclected"));
                 findnotesReceivablesObject(getGlBankTransactionId());
+                setIsEdit(Boolean.TRUE);
             }
 
             FacesContext fCtx = FacesContext.getCurrentInstance();
@@ -277,6 +281,7 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
                 getGlBankTransactionDetailEntity().setInvOrganizationSite(invInvoiceDTO.getOrganizationSiteId());
                 getGlBankTransactionEntity().setInvoiceId(invInvoiceDTO.getId());
                 calculateRemain();
+                setIsEdit(Boolean.TRUE);
             }
             check();
             /* symbolList = symbolService.getAllDocumentsByCompanyId(getUserData().getCompany().getId());
@@ -634,15 +639,12 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
                 glBankTransactionDetailEntity.setAdminUnitId(transactionDetail.getAdminUnitId() != null ? transactionDetail.getAdminUnitId().getId() : null);
                 glBankTransactionDetailEntity.setGlBankTransactionId(transactionDetail.getGlBankTransactionId() != null ? transactionDetail.getGlBankTransactionId().getId() : null);
                 glBankTransactionDetailEntity.setRemarks(transactionDetail.getRemarks() != null ? transactionDetail.getRemarks() : null);
-                InvOrganizationSite ios = transactionDetail.getOrganizationSiteId();
                 InvOrganizationSiteDTO invOrganizationSiteDTO = new InvOrganizationSiteDTO();
-                if (ios != null) {
-                    invOrganizationSiteDTO.setId(ios.getId());
-                    invOrganizationSiteDTO.setName(ios.getName());
-                    invOrganizationSiteDTO.setCode(ios.getCode());
-                    invOrganizationSiteDTO.setMobile(ios.getMobile());
+                if (transactionDetail.getOrganizationSiteId() != null) {
+                    invOrganizationSiteDTO = organizationSiteService.mapToDTOSmall(transactionDetail.getOrganizationSiteId());
+                    glBankTransactionDetailEntity.setInvOrganizationSite(invOrganizationSiteDTO);
                 }
-                glBankTransactionDetailEntity.setInvOrganizationSite(transactionDetail.getOrganizationSiteId() != null ? invOrganizationSiteDTO : null);
+
                 glBankTransactionDetailEntity.setValue(transactionDetail.getValue() != null ? transactionDetail.getValue().setScale(2, BigDecimal.ROUND_UP) : null);
                 glBankTransactionDetailEntity.setValueLocal(transactionDetail.getValueLocal() != null ? transactionDetail.getValueLocal().setScale(2, BigDecimal.ROUND_UP) : null);
                 glBankTransactionDetailEntity.setGlItems(transactionDetail.getSymbolId());
@@ -991,7 +993,7 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
                     saveValidation = false;
                 }
 
-                if (glBankTransactionEntity.getValue() != null && glBankTransactionEntity.getValue().compareTo(glBankTransactionEntity.getRemainInvoice()) == 1) {
+                if (glBankTransactionEntity.getValue() != null && !isEdit && glBankTransactionEntity.getValue().compareTo(glBankTransactionEntity.getRemainInvoice()) == 1) {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "لا يمكن دفع  قيمه أكبر من المتبقي من الفاتورة"));
                     saveValidation = false;
                 }
@@ -1295,7 +1297,7 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
             hashMap.put("documentNumberValue", glBankTransactionEntityMapper.getSerial());
             hashMap.put("recipientValue", glBankTransactionEntityMapper.getGlBank().getName());
             hashMap.put("amountValue", glBankTransactionEntityMapper.getValue());
-            hashMap.put("amountValueText", Tafqeet.numberToText(Double.parseDouble(glBankTransactionEntityMapper.getValue().toString()), "جنيه", "قرش"));
+            hashMap.put("amountValueText", Tafqeet.numberToText(Double.parseDouble(glBankTransactionEntityMapper.getValue().toString()), "ريـال", "هلله"));
             hashMap.put("valueFromValue", remark1);
             hashMap.put("explainationValue", remark2);
 
@@ -2024,6 +2026,23 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
      */
     public void setGlBankTransactionInvoiceViewList(List<GlBankTransactionInvoiceView> glBankTransactionInvoiceViewList) {
         this.glBankTransactionInvoiceViewList = glBankTransactionInvoiceViewList;
+    }
+
+    /**
+     * @return the isEdit
+     */
+    public Boolean getIsEdit() {
+        if (isEdit == null) {
+            isEdit = Boolean.FALSE;
+        }
+        return isEdit;
+    }
+
+    /**
+     * @param isEdit the isEdit to set
+     */
+    public void setIsEdit(Boolean isEdit) {
+        this.isEdit = isEdit;
     }
 
 }

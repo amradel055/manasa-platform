@@ -397,7 +397,7 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
             hashMap.put("documentNumberValue", glBankTransaction.getSerial() != null ? glBankTransaction.getSerial() : null);
             //hashMap.put("recipientValue", glBankTransactionEntity.getGlBank().getName());
             hashMap.put("amountValue", GlBankTransactionDetailEntity.getValue());
-            hashMap.put("amountValueText", Tafqeet.numberToText(Double.parseDouble(GlBankTransactionDetailEntity.getValue().toString()), "جنيه", "قرش"));
+            hashMap.put("amountValueText", Tafqeet.numberToText(Double.parseDouble(GlBankTransactionDetailEntity.getValue().toString()),  "ريـال", "هلله"));
             hashMap.put("valueFromValue", remark);
 
             /*   GlAccount recipientaccount = new GlAccount();

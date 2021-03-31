@@ -442,6 +442,7 @@
                             <p:submenu id="sr_sm3" label="#{userData.userDDs['DIST_INVENT_MANG']}" icon="&#xE8D2;"
                                        rendered="#{userData.userScreens['invcreate'].view 
                                                    or userData.userScreens['inventorysetup'].view 
+                                                   or userData.userScreens['offerCompany'].view 
 
                                                    or userData.userScreens['invgroup'].view 
                                                    or userData.userScreens['itemsdata'].view 
@@ -492,6 +493,7 @@
                                 <p:submenu id="sr_sm999931" label="#{userData.userDDs['GENERAL_SETTINGS']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['invcreate'].view 
                                                        or userData.userScreens['inventorysetup'].view 
+                                                       or userData.userScreens['offerCompany'].view 
                                                        or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk9999311" value="#{userData.userDDs['CREATE_INVENTORY']}" icon="&#xE8D2;" url="/faces/views/invcreate/setupNewInventoryList.xhtml" 
@@ -499,6 +501,9 @@
                                                 />
                                     <p:menuitem id="sr_lnk9999312" value="#{userData.userDDs['INVENTORY_SETUP']}" icon="&#xE8D2;" url="/faces/views/inventorysetup/inventorysetupscreen.xhtml" 
                                                 rendered="#{userData.userScreens['inventorysetup'].view or userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="sr_lnk9999313" value="انشاء شركة" icon="&#xE8D2;" url="/faces/views/offerCompany/offerCompanyList.xhtml" 
+                                                rendered="#{userData.userScreens['offerCompany'].view or userData.isAdmin}"
                                                 />
                                 </p:submenu>
                                 <p:submenu id="sr_sm31" label="#{userData.userDDs['MAIN_DATA']}" icon="&#xE8D2;"

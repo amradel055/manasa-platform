@@ -169,7 +169,7 @@ public abstract class BaseGlBankListBean extends BaseListBean {
         hashMap.put("documentNumberValue", glBankTransactionEntityMapper.getSerial());
         hashMap.put("payAccountValue", glBankTransactionEntityMapper.getGlBank() != null ? glBankTransactionEntityMapper.getGlBank().getName() : null);
         hashMap.put("amountValue", glBankTransactionEntityMapper.getValue());
-        hashMap.put("amountValueText", Tafqeet.numberToText(Double.parseDouble(glBankTransactionEntityMapper.getValue().toString()), "جنيه", "قرش"));
+        hashMap.put("amountValueText", Tafqeet.numberToText(Double.parseDouble(glBankTransactionEntityMapper.getValue().toString()), "ريـال", "هلله"));
         hashMap.put("valueFromValue", remark1);
         hashMap.put("explainationValue", remark2);
 

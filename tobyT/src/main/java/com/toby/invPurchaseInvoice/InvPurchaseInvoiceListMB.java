@@ -439,7 +439,7 @@ public class InvPurchaseInvoiceListMB extends BaseListBean {
 
             hashMap.put("netValue", getTotalNet());
 
-            hashMap.put("netValueArabic", Tafqeet.numberToText(Double.parseDouble(getTotalNetAfterDiscount().toString()), "جنيه", "قرش"));
+            hashMap.put("netValueArabic", Tafqeet.numberToText(Double.parseDouble(getTotalNetAfterDiscount().toString()),  "ريـال", "هلله"));
 
             hashMap.put("secondDateValue", invPurchaseInvoice.getSupplierInvoiceDate());
 
