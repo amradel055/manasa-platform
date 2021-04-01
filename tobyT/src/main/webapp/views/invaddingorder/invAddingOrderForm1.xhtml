@@ -414,14 +414,12 @@
                                           title="#{userData.userDDs['SAVE']}"
                                           value="#{userData.userDDs['SAVE']}" 
 
-                                          style="color: #fff!important;background-color: #2196F3;margin-left: 5px" 
                                           action="#{invAddingOrderFormDTOMB.save()}"
                                           update="@form"/>
 
                         <p:commandButton 
                             id="newN"
                             ajax="false"
-                            style="color: #fff!important;background-color: #9c27b0d1;margin-left: 5px"
                             value="#{userData.userDDs['NEW']}" 
                             class="newButtons"
                             onclick="form.target = ''" 
@@ -433,13 +431,11 @@
                             rendered="#{invAddingOrderFormDTOMB.invInvoiceDTO.id eq null}"
                             title="#{userData.userDDs['UPLOAD']}"
                             value="#{userData.userDDs['UPLOAD']}" 
-                            style="color: #fff!important;background-color: #1B00D4E6;margin-left: 5px"  
                             action="#{invAddingOrderFormDTOMB.loadDailogue()}"
                             update="loaddlg"/>
                         <p:commandButton  class="printButtons"
                                           ajax="false"
                                           onclick="form.target = '_blank'"  
-                                          style="color: #fff!important;background-color: blue;margin-left: 5px" 
                                           value="#{userData.userDDs['PRINT']}" 
                                           title="#{userData.userDDs['PRINT']}" 
                                           actionListener="#{invAddingOrderFormDTOMB.print}"/>
@@ -449,7 +445,6 @@
                                           id="cancel" 
                                           title="#{userData.userDDs['CANCEL']}" 
                                           value="#{userData.userDDs['CANCEL']}" 
-                                          style="color: #fff!important;background-color: #035C70;margin-left: 5px"  
                                           immediate="true"
                                           action="#{invAddingOrderFormDTOMB.exit()}" 
                                           update="@form"/>

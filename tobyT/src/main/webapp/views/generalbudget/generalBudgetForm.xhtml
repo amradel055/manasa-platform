@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                template="./../../template/newTemplate.xhtml"
+                template="./../../template/template.xhtml"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
@@ -16,73 +16,60 @@
                 <div class="ui-g-12 ui-g-nopad" id="pnl">
                     <div class="ui-g">
 
-                        <div class="ui-g-12 ui-md-6">
+                        <div class="ui-g-6 ui-xl-6">
 
-                            <h:panelGroup> 
-
-                                <h:panelGroup> 
-                                    <p:outputLabel  style="width: 75px" value="#{userData.userDDs['CS_COD']}"/>
-                                </h:panelGroup>
-                                <h:panelGroup>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
                                     <p:inputText style="width: 50%!important"  id="SER" a:autofocus="true" value="#{generalBudgetFormBean.serial}" required="true" requiredMessage="#{userData.userDDs['REQUIRED']}" >
                                         <p:ajax event="keyup" update="msgSER" />
                                     </p:inputText>
                                     <p:message id="msgSER" for="SER"/>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel  style="width: 75px" value="#{userData.userDDs['CS_COD']}"/>
 
-                                </h:panelGroup>
-
-
-                            </h:panelGroup> 
-                        </div>
-                        <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup> 
-
-                                <h:panelGroup> 
-                                    <p:outputLabel  style="width: 75px"  value="#{userData.userDDs['ITEM_NAME_ARABIC']}"/>
-                                </h:panelGroup>
-                                <h:panelGroup>
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
                                     <p:inputText style="width: 50%!important"  id="nameAr" value="#{generalBudgetFormBean.nameAr}" required="true" requiredMessage="#{userData.userDDs['REQUIRED']}" >
                                         <p:ajax event="keyup" update="msgnameAr" />
                                     </p:inputText>
                                     <p:message id="msgnameAr" for="nameAr"/>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel  style="width: 75px"  value="#{userData.userDDs['ITEM_NAME_ARABIC']}"/>
 
-                                </h:panelGroup>
-
-
-                            </h:panelGroup> 
+                                </div>
+                            </div>
                         </div>
-                        <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup> 
+                        <div class="ui-g-6 ui-xl-6">
 
-                                <h:panelGroup>
-                                    <p:outputLabel style="width: 75px"  value="#{userData.userDDs['ITEM_NAME_EN']}"/>
-                                </h:panelGroup>
-                                <h:panelGroup>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
                                     <p:inputText style="width: 50%!important"  id="nameEn" value="#{generalBudgetFormBean.nameEn}" />
-                                </h:panelGroup>
-                                <h:panelGroup>
+
                                     <p:message for="nameEn"/>
-                                </h:panelGroup>
 
-                            </h:panelGroup> 
-                        </div>
-                        <div class="ui-g-12 ui-md-6">
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 75px"  value="#{userData.userDDs['ITEM_NAME_EN']}"/>
 
-                            <h:panelGroup>
-                                <h:panelGroup>
-
-                                    <p:outputLabel style="width: 75px"  value="#{userData.userDDs['ITEM_SET']}" />
-
-                                </h:panelGroup>
-
-                                <h:panelGroup>
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
                                     <p:selectOneMenu  style="width: 50%;margin-right: 5px;height: 22px"  id="accgrp"  value="#{generalBudgetFormBean.groupItemEnum}" >
                                         <f:selectItems value="#{generalBudgetFormBean.accountGroups}" var="grop" itemLabel="#{userData.userDDs[''+= grop]}" itemValue="#{grop}" /> 
                                     </p:selectOneMenu>
-                                </h:panelGroup>                              
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 75px"  value="#{userData.userDDs['ITEM_SET']}" />
 
-                            </h:panelGroup>
+                                </div>
+                            </div>
                         </div>
+
                     </div>
                 </div>
 
