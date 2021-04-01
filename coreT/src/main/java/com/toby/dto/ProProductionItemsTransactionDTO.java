@@ -5,7 +5,6 @@
  */
 package com.toby.dto;
 
-import com.toby.entity.Branch;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -13,51 +12,31 @@ import java.util.Date;
  *
  * @author H
  */
-public class ProProductionItemsTransactionDTO extends BaseEntityDTO{
-    private static final long serialVersionUID = 1L;
-  
-    private Integer id;
-  
+public class ProProductionItemsTransactionDTO extends BaseEntityDTO {
+
     private Date creationDate;
-   
+
     private Date modificationDate;
-  
+
     private Integer serial;
-   
+    private Integer serialNumber;
+
     private BigDecimal number;
-   
+
     private BigDecimal productionStageCost;
-   
+
     private Date date;
-   
+
     private Integer status;
-   
+    private String stageName;
+
     private Integer isDeleted;
-   
-    private Branch branchId;
-   
-    
-    private TobyUserDTO createdBy;
-    
+
     private InvPurchaseInvoiceDetailDTO invPurchaseInvoiceDetailId;
-   
-    private TobyUserDTO modifiedBy;
-   
+
     private ProProductionStagesDTO proProductionStagesId;
-   
+
     private ProProductionTransactionDTO proProductionTransactionId;
-
-
-
-  
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public Date getCreationDate() {
         return creationDate;
@@ -73,14 +52,6 @@ public class ProProductionItemsTransactionDTO extends BaseEntityDTO{
 
     public void setModificationDate(Date modificationDate) {
         this.modificationDate = modificationDate;
-    }
-
-    public Integer getSerial() {
-        return serial;
-    }
-
-    public void setSerial(Integer serial) {
-        this.serial = serial;
     }
 
     public BigDecimal getNumber() {
@@ -123,13 +94,6 @@ public class ProProductionItemsTransactionDTO extends BaseEntityDTO{
         this.isDeleted = isDeleted;
     }
 
-
-    public void setBranchId(Branch branchId) {
-        this.branchId = branchId;
-    }
-
-   
-
     public InvPurchaseInvoiceDetailDTO getInvPurchaseInvoiceDetailId() {
         return invPurchaseInvoiceDetailId;
     }
@@ -137,10 +101,6 @@ public class ProProductionItemsTransactionDTO extends BaseEntityDTO{
     public void setInvPurchaseInvoiceDetailId(InvPurchaseInvoiceDetailDTO invPurchaseInvoiceDetailId) {
         this.invPurchaseInvoiceDetailId = invPurchaseInvoiceDetailId;
     }
-
-  
-
-  
 
     public ProProductionStagesDTO getProProductionStagesId() {
         return proProductionStagesId;
@@ -182,5 +142,40 @@ public class ProProductionItemsTransactionDTO extends BaseEntityDTO{
     public String toString() {
         return "test.ProProductionItemsTransaction[ id=" + id + " ]";
     }
-    
+
+    /**
+     * @return the stageName
+     */
+    public String getStageName() {
+        if (getProProductionStagesId() != null) {
+            stageName = getProProductionStagesId().getName();
+        }
+
+        return stageName;
+    }
+
+    /**
+     * @param stageName the stageName to set
+     */
+    public void setStageName(String stageName) {
+        this.stageName = stageName;
+    }
+
+    /**
+     * @return the serialNumber
+     */
+    public Integer getSerialNumber() {
+
+        if (getInvPurchaseInvoiceDetailId().getInvPurchaseInvoiceId() != null) {
+            serialNumber = getInvPurchaseInvoiceDetailId().getInvPurchaseInvoiceId().getSerial();
+        }
+        return serialNumber;
+    }
+
+    /**
+     * @param serialNumber the serialNumber to set
+     */
+    public void setSerialNumber(Integer serialNumber) {
+        this.serialNumber = serialNumber;
+    }
 }

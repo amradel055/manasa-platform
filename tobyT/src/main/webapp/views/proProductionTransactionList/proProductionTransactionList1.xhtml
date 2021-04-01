@@ -10,39 +10,6 @@
 
 
         <h:form  dir="#{userData.dir}"  id="form" style="margin-right: 15px">
-
-
-
-            <div class="ui-g-12 ui-xl-12">
-                <div class="ui-g-6 ui-xl-6">
-                    <p:calendar id="dateFrom" 
-                                value="#{proProductionTransactionListMB1.proProductionItemsTransactionDTOSelected.date}"
-                                pattern="dd/MM/yyyy"
-                                style="width:50%!important"/>
-
-                </div>
-                <div class="ui-g-6 ui-xl-6">
-                    <p:outputLabel style="width: 95px; margin-right: 6%;" value="#{userData.userDDs['DATEE']}*"/>
-                </div>
-            </div>
-            <div class="ui-g-12 ui-xl-12">
-                <div class="ui-g-6 ui-xl-6">
-
-
-                    <p:commandButton     class="saveButton" id="saveB" 
-                                         value="بحث" 
-                                         icon="fa fa-fw fa-save"
-                                         action="#{proProductionTransactionListMB1.filter()}"
-                                         update="@form"
-                                         >
-
-                    </p:commandButton>
-
-
-                </div>
-            </div>
-
-
             <p:fieldset legend="حركه اوامر الشغل" style="margin-bottom:20px">
 
                 <div >
@@ -92,29 +59,20 @@
                         </f:facet>
 
                         <p:column style="width: 8vh;text-align: -webkit-auto;font-size: 1.4vh" 
-                                  filterBy="#{details.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial}" 
-                                  filterMatchMode="contains" 
                                   headerText="الفاتوره"
-                                  sortBy="#{details.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial}"
                                   >
                             <p:outputLabel value="#{details.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial}" />
                         </p:column>
 
                         <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.4vh" 
-                                  filterBy="#{details.createdByName}" 
-                                  filterMatchMode="contains"
                                   headerText="اسم العامل "
-                                  sortBy="#{details.createdByName}" 
                                   >
                             <p:outputLabel value="#{details.createdByName}" />
 
 
                         </p:column>
                         <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.4vh" 
-                                  filterBy="#{details.createdByCode}" 
-                                  filterMatchMode="contains"
                                   headerText="رقم العامل "
-                                  sortBy="#{details.createdByCode}" 
                                   >
                             <p:outputLabel value="#{details.createdByCode}" />
 
@@ -129,10 +87,7 @@
                         </p:column>
 
                         <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.6vh" 
-                                  filterBy="#{details.proProductionStagesId.name}"
-                                  filterMatchMode="contains" 
                                   headerText="المرحله"
-                                  sortBy="#{details.proProductionStagesId.name}" 
                                   >
                             <p:outputLabel value="#{details.proProductionStagesId.name}" />
 
@@ -140,11 +95,7 @@
                         </p:column>
 
                         <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.6vh"
-                                  filterBy="#{details.date}"
-                                  filterMatchMode="contains" 
                                   headerText="التاريخ"
-                                  sortBy="#{details.date}" 
-
                                   >
                             <p:outputLabel value="#{details.date}" >
                                 <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>

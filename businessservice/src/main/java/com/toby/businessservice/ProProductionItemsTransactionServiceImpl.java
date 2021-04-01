@@ -354,12 +354,13 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
     public Long getTotalRegistors(Integer branchId, Map<String, Object> filters) {
         StringBuilder builder = new StringBuilder();
         filters.put("branchId", branchId);
-        builder.append(" SELECT count(*) FROM pro_production_items_transaction s left join toby_user t on t.id = s.created_by WHERE  s.branch_id = ").append(branchId).append(" and( s.is_deleted != 1 or s.is_deleted is NULL )   ");
-        //appendFilter(filters, builder);
-        List<Object> details = dao.executeNativeQuery(builder.toString());
-        details.get(0);
-        return details == null ? Long.valueOf("0") : Long.valueOf("0");
+        builder.append(" SELECT count(s) FROM ProProductionItemsTransaction s WHERE  s.branchId.id = :branchId and( s.isDeleted != 1 or s.isDeleted is NULL ) ");
+//        appendFilter(filters, builder);
+        Long details = dao.findEntityByQuery(builder.toString(), filters);
+        return details == null ? 0 : details;
     }
+    
+    
 
 //   private void appendFilter(Map<String, Object> filters, StringBuilder builder) {
 //        if (filters.get("invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial") != null
