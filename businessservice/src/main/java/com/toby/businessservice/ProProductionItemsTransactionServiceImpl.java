@@ -22,6 +22,7 @@ import com.toby.entity.ProProductionStages;
 import com.toby.entity.ProProductionTransaction;
 import com.toby.entity.TobyCompany;
 import com.toby.entity.TobyUser;
+import com.toby.views.ProProductionTransactionFactoryView;
 import com.toby.views.ProductionTransactionOfUser;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -167,8 +168,8 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
         proProductionItemsTransactionDTO.setDate(proProductionItemsTransaction.getDate());
         proProductionItemsTransactionDTO.setIndex(proProductionItemsTransaction.getId());
 
-        if (proProductionItemsTransaction.getProFactoryDeliveryDetailId() != null && 
-                proProductionItemsTransaction.getProFactoryDeliveryDetailId().getInvPurchaseInvoiceDetailId() != null) {
+        if (proProductionItemsTransaction.getProFactoryDeliveryDetailId() != null
+                && proProductionItemsTransaction.getProFactoryDeliveryDetailId().getInvPurchaseInvoiceDetailId() != null) {
             InvPurchaseInvoiceDetailDTO invPurchaseInvoiceDetailDTO = new InvPurchaseInvoiceDetailDTO();
             invPurchaseInvoiceDetailDTO.setId(proProductionItemsTransaction.getProFactoryDeliveryDetailId().getInvPurchaseInvoiceDetailId().getId());
             if (proProductionItemsTransaction.getProFactoryDeliveryDetailId().getInvPurchaseInvoiceDetailId().getInvPurchaseInvoiceId() != null) {
@@ -287,4 +288,107 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
         }
     }
 
+    @Override
+    public List<ProProductionItemsTransactionDTO> getALLProProductionItemsTransactionDTO(int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters) {
+        filters.put("branchId", branchId);
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT s FROM ProProductionItemsTransaction s WHERE  s.branchId.id = :branchId and( s.isDeleted != 1 or s.isDeleted is NULL )  ");
+        // appendFilter(filters, builder);
+        List<ProProductionItemsTransaction> details = dao.findListByQuery(builder.toString(), filters, first, pageSize);
+        return mapToDTOList(details, null);
+    }
+
+    @Override
+    public List<ProProductionItemsTransactionDTO> getALLProProductionItemsTransactionDTO(ProProductionTransactionFactoryView transactionFactoryView, Integer branchId) {
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        StringBuilder builder = new StringBuilder();
+        builder.append(" SELECT s FROM ProProductionItemsTransaction s WHERE  s.branchId.id = :branchId and( s.isDeleted != 1 or s.isDeleted is NULL )  ");
+        appendProProductionStatus(transactionFactoryView, builder, params);
+        appendProProductionDate(transactionFactoryView, builder, params);
+        appendProProductionUser(transactionFactoryView, builder, params);
+        appendProProductionInvoiceNumber(transactionFactoryView, builder, params);
+        appendProProductionGellery(transactionFactoryView, builder, params);
+        List<ProProductionItemsTransaction> details = dao.findListByQuery(builder.toString(), params);
+        return mapToDTOList(details, null);
+    }
+
+    private void appendProProductionStatus(ProProductionTransactionFactoryView transactionFactoryView, StringBuilder query, Map<String, Object> params) {
+        if (transactionFactoryView != null && transactionFactoryView.getStatus() != null) {
+            params.put("status", transactionFactoryView.getStatus().getId());
+            query.append(" and s.proProductionStagesId.id = :status  ");
+        }
+    }
+
+    private void appendProProductionDate(ProProductionTransactionFactoryView transactionFactoryView, StringBuilder query, Map<String, Object> params) {
+        if (transactionFactoryView != null && transactionFactoryView.getDate() != null) {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+            params.put("date", dateFormat.format(transactionFactoryView.getDate()));
+            query.append(" and s.proFactoryDeliveryDetailId.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.date = :date ");
+        }
+    }
+
+    private void appendProProductionUser(ProProductionTransactionFactoryView transactionFactoryView, StringBuilder query, Map<String, Object> params) {
+        if (transactionFactoryView != null && transactionFactoryView.getUser() != null) {
+             params.put("user", transactionFactoryView.getUser().getId());
+            query.append(" and s.createdBy.id = :user ");
+        }
+    }
+
+    private void appendProProductionInvoiceNumber(ProProductionTransactionFactoryView transactionFactoryView, StringBuilder query, Map<String, Object> params) {
+        if (transactionFactoryView != null && transactionFactoryView.getInvoiceNumber() != null && !transactionFactoryView.getInvoiceNumber().isEmpty()) {
+             params.put("invoiceNumber", transactionFactoryView.getInvoiceNumber());
+            query.append(" and s.proFactoryDeliveryDetailId.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial = :invoiceNumber ");
+        }
+    }
+
+    private void appendProProductionGellery(ProProductionTransactionFactoryView transactionFactoryView, StringBuilder query, Map<String, Object> params) {
+        if (transactionFactoryView != null && transactionFactoryView.getGalleryList() != null) {
+            params.put("galleryList", transactionFactoryView.getGalleryList().getId());
+            query.append(" and s.proFactoryDeliveryDetailId.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.galaryId.id = :galleryList ");
+        }
+    }
+
+    @Override
+    public Long getTotalRegistors(Integer branchId, Map<String, Object> filters) {
+        StringBuilder builder = new StringBuilder();
+        filters.put("branchId", branchId);
+        builder.append(" SELECT count(*) FROM pro_production_items_transaction s left join toby_user t on t.id = s.created_by WHERE  s.branch_id = ").append(branchId).append(" and( s.is_deleted != 1 or s.is_deleted is NULL )   ");
+        //appendFilter(filters, builder);
+        List<Object> details = dao.executeNativeQuery(builder.toString());
+        details.get(0);
+        return details == null ? Long.valueOf("0") : Long.valueOf("0");
+    }
+
+//   private void appendFilter(Map<String, Object> filters, StringBuilder builder) {
+//        if (filters.get("invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial") != null
+//                && !filters.get("invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial").toString().isEmpty()) {
+//
+//            builder.append(" and s.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial like CONCAT('%',:invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial ,'%')");
+//        } else if (filters.containsKey("invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial")) {
+//            filters.remove("invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial");
+//        }
+//        if (filters.get("createdByName") != null && !filters.get("createdByName").toString().isEmpty()) {
+////            builder.append(" and  s.createdBy IS NOT NULL and s.createdBy.name like CONCAT('%',:createdByName ,'%') ");
+//            builder.append("  and t.name like CONCAT('%',").append("'").append(filters.get("createdByName")).append("'").append(" ,'%')  ");
+//        } else if (filters.containsKey("createdByName")) {
+//            filters.remove("createdByName");
+//        }
+//        if (filters.get("createdByCode") != null && !filters.get("createdByCode").toString().isEmpty()) {
+//            builder.append(" and s.createdBy.userCode like CONCAT('%',:createdByCode ,'%') ");
+//        } else if (filters.containsKey("createdByCode")) {
+//            filters.remove("createdByCode");
+//        }
+//        if (filters.get("proProductionStagesId.name") != null && !filters.get("proProductionStagesId.name").toString().isEmpty()) {
+//            builder.append(" and s.proProductionStagesId.name like CONCAT('%',:proProductionStagesId.name ,'%')");
+//        } else if (filters.containsKey("proProductionStagesId.name")) {
+//            filters.remove("proProductionStagesId.name");
+//        }
+//        if (filters.get("date") != null && !filters.get("date").toString().isEmpty()) {
+//            builder.append(" and ( FUNCTION('DATE_FORMAT',s.date, '%d-%m-%Y')  like CONCAT('%',:date ,'%') ");
+//        } else if (filters.containsKey("date")) {
+//            filters.remove("date");
+//        }
+//    }
 }
