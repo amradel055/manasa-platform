@@ -2,7 +2,6 @@ package com.toby.reports;
 
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
 import com.toby.dto.InvInventoryDTO;
-import com.toby.dto.InvPurchaseInvoiceDTO;
 import com.toby.toby.Basic;
 import com.toby.views.ClientsNoMovment;
 import java.io.IOException;
@@ -19,7 +18,7 @@ import net.sf.jasperreports.engine.JRException;
 @ViewScoped
 public class ClientsNoMovmentMB extends Basic {
 
-    private List<InvPurchaseInvoiceDTO> invPurchaseInvoiceDTOList;
+    private List<ClientsNoMovment> clientsNoMovmentsList;
     private ClientsNoMovment clientsNoMovment;
     private InvInventoryDTO galleryList;
     private Date date;
@@ -29,12 +28,12 @@ public class ClientsNoMovmentMB extends Basic {
 
     public void search() {
 
-        setInvPurchaseInvoiceDTOList(invPurchaseInvoiceDTOList);
+        setClientsNoMovmentsList(clientsNoMovmentsList);
     }
 
     public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {
         String reportName = "ProProductionTransactionFactoryReport.jasper";
-        fillReport(prepareReport(), getUserData().getReportPath() + reportName, getInvPurchaseInvoiceDTOList(), "pdf");
+        fillReport(prepareReport(), getUserData().getReportPath() + reportName, getClientsNoMovmentsList(), "pdf");
     }
 
     public HashMap prepareReport() {
@@ -58,19 +57,7 @@ public class ClientsNoMovmentMB extends Basic {
         return hashMap;
     }
 
-    /**
-     * @return the invPurchaseInvoiceDTOList
-     */
-    public List<InvPurchaseInvoiceDTO> getInvPurchaseInvoiceDTOList() {
-        return invPurchaseInvoiceDTOList;
-    }
-
-    /**
-     * @param invPurchaseInvoiceDTOList the invPurchaseInvoiceDTOList to set
-     */
-    public void setInvPurchaseInvoiceDTOList(List<InvPurchaseInvoiceDTO> invPurchaseInvoiceDTOList) {
-        this.invPurchaseInvoiceDTOList = invPurchaseInvoiceDTOList;
-    }
+    
 
     public InvInventoryDTO getGalleryList() {
         return galleryList;
@@ -113,6 +100,20 @@ public class ClientsNoMovmentMB extends Basic {
      */
     public void setClientsNoMovment(ClientsNoMovment clientsNoMovment) {
         this.clientsNoMovment = clientsNoMovment;
+    }
+
+    /**
+     * @return the clientsNoMovmentsList
+     */
+    public List<ClientsNoMovment> getClientsNoMovmentsList() {
+        return clientsNoMovmentsList;
+    }
+
+    /**
+     * @param clientsNoMovmentsList the clientsNoMovmentsList to set
+     */
+    public void setClientsNoMovmentsList(List<ClientsNoMovment> clientsNoMovmentsList) {
+        this.clientsNoMovmentsList = clientsNoMovmentsList;
     }
 
     /**

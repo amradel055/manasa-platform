@@ -83,7 +83,7 @@
                 <p:fieldset  legend="برنس الرياض ش التحلية"   style="margin-bottom:20px">
                     <p:dataTable  id="table"
                                   var="data"
-                                  value="#{clientsNoMovmentMB.invPurchaseInvoiceDTOList}"
+                                  value="#{clientsNoMovmentMB.clientsNoMovmentsList}"
                                   draggableColumns="true"
                                   paginator="true"
                                   widgetVar="data" 
@@ -96,21 +96,21 @@
                                 value="#{index + 1}" />
                         </p:column>
                         <p:column headerText="رقم العميل " style="width: 10vh;text-align: center!important;font-size: 1.8vh">
-                            <h:outputText value="#{clientsNoMovmentMB.clientsNoMovment.clientNumber}" />
+                            <h:outputText value="#{data.clientNumber}" />
                         </p:column>
                         <p:column headerText="اسم العميل" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
-                            <h:outputText value="#{clientsNoMovmentMB.clientsNoMovment.clientName}" />
+                            <h:outputText value="#{data.clientName}" />
                         </p:column>
                         <p:column headerText=" الهاتف" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
-                            <h:outputText value="#{clientsNoMovmentMB.clientsNoMovment.phoneNumber}" />
+                            <h:outputText value="#{data.phoneNumber}" />
                         </p:column>
                         <p:column headerText="تاريخ اخر فاتورة" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
-                            <h:outputText value="#{clientsNoMovmentMB.clientsNoMovment.lastInvoiceDate}">
+                            <h:outputText value="#{data.lastInvoiceDate}">
                                 <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
                             </h:outputText>
                         </p:column>
                         <p:column headerText=" اجمالى التعامل" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
-                            <h:outputText value="#{clientsNoMovmentMB.clientsNoMovment.totalInvoices}" />
+                            <h:outputText value="#{data.totalInvoices}" />
                         </p:column>
 
                     </p:dataTable>
