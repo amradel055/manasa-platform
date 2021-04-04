@@ -28,6 +28,7 @@ import com.toby.dto.ProGroupDTO;
 import com.toby.entity.Branch;
 import com.toby.entity.CostCenter;
 import com.toby.entity.Currency;
+import com.toby.entity.GeneralJournalDetails;
 import com.toby.entity.GlAccount;
 import com.toby.entity.GlAdminUnit;
 import com.toby.entity.GlBank;
@@ -49,6 +50,7 @@ import com.toby.entity.InvTransferDetail;
 import com.toby.entity.InventoryDelegator;
 import com.toby.entity.InventorySetup;
 import com.toby.entity.ProFactoryDelivery;
+import com.toby.views.ClientsNoMovment;
 import com.toby.views.FactoryInvoiceStatus;
 import com.toby.views.QuantityItemsStore;
 import com.toby.views.SummitionItemsView;
@@ -56,7 +58,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -1996,6 +1997,47 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         }
         summitionItemsViews = new ArrayList<SummitionItemsView>(params.values());
         return summitionItemsViews;
+    }
+
+    @Override
+    public List<ClientsNoMovment> findClientsNoMovment(Integer branchId, Integer gallaryId, Date date, Integer type) {
+        List<ClientsNoMovment> generalJournalDetailsBasedOnAccClassFirsList = new ArrayList<>();
+        String Query;
+        Query = "select ios.code , ios.name , ios.mobile , ipi.date , sum(ifnull(ipid.net,0)) "
+                + "from inv_purchase_invoice_detail ipid left join inv_purchase_invoice ipi on \n"
+                + "ipi.id = ipid.inv_purchase_invoice_id left join \n"
+                + "inv_organization_site ios on ios.id = ipi.organization_site_id\n"
+                + "where ipi.organization_site_id is not null and ipi.type = " + type + " and ipi.branch_id = " + branchId + " and \n"
+                + "ipi.organization_site_id in (\n"
+                + "select id  from inv_organization_site ios2 where ios2.branch_id = " + branchId + " and ios2.id in (\n"
+                + "select distinct(ipi2.organization_site_id) from inv_purchase_invoice ipi2 where ipi2.organization_site_id is not null\n"
+                + "and ipi2.galary_Id = " + gallaryId + " ) and ios2.id not in (\n"
+                + "select distinct(ipi3.organization_site_id) from inv_purchase_invoice ipi3 where ipi3.organization_site_id is not null\n"
+                + "and ipi3.galary_Id = " + gallaryId + " and ipi3.date > " + date + "\n"
+                + "))\n"
+                + "group by ipi.organization_site_id order by ios.code , ipi.date asc";
+
+        List<Object[]> res = dao.executeNativeQuery(Query);
+        generalJournalDetailsBasedOnAccClassFirsList = getTheListBasedOnAccClass(res);
+        return generalJournalDetailsBasedOnAccClassFirsList;
+    }
+
+    public List<ClientsNoMovment> getTheListBasedOnAccClass(List<Object[]> res) {
+
+        List<ClientsNoMovment> GeneralJournalDetailsBasedOnAccClassList = new ArrayList<>();
+
+        Iterator it = res.iterator();
+        while (it.hasNext()) {
+            Object[] line = (Object[]) it.next();
+            ClientsNoMovment detailsIterated = new ClientsNoMovment();
+            detailsIterated.setTotalInvoices((BigDecimal) line[0]);
+            detailsIterated.setClientName((String) line[1]);
+            detailsIterated.setClientNumber((String) line[2]);
+            detailsIterated.setLastInvoiceDate((Date) line[3]);
+            detailsIterated.setPhoneNumber((String) line[4]);
+            GeneralJournalDetailsBasedOnAccClassList.add(detailsIterated);
+        }
+        return GeneralJournalDetailsBasedOnAccClassList;
     }
 
     @Override

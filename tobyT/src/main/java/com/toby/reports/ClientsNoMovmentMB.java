@@ -28,11 +28,11 @@ public class ClientsNoMovmentMB extends Basic {
 
     public void search() {
 
-        setClientsNoMovmentsList(clientsNoMovmentsList);
+        setClientsNoMovmentsList(invPurchaseInvoiceService.findClientsNoMovment(getGalleryList() == null ? null : getGalleryList().getId(), 0, date, getUserData().getUserBranch().getId()));
     }
 
     public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {
-        String reportName = "ProProductionTransactionFactoryReport.jasper";
+        String reportName = "ClientsNoMovmentReport.jasper";
         fillReport(prepareReport(), getUserData().getReportPath() + reportName, getClientsNoMovmentsList(), "pdf");
     }
 
@@ -47,7 +47,10 @@ public class ClientsNoMovmentMB extends Basic {
         } else {
             hashMap.put("companyImage", null);
         }
-
+        hashMap.put("galleryListText", "المعرض");
+        hashMap.put("galleryListValue", getGalleryList() == null ? null : getGalleryList().getName());
+        hashMap.put("dateText", "التاريخ");
+        hashMap.put("dateValue", getDate());
         hashMap.put("clientNumberText", "رقم العميل");
         hashMap.put("clientNameText", "اسم العميل ");
         hashMap.put("phoneNumberText", " الهاتف");
@@ -56,8 +59,6 @@ public class ClientsNoMovmentMB extends Basic {
 
         return hashMap;
     }
-
-    
 
     public InvInventoryDTO getGalleryList() {
         return galleryList;
