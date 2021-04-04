@@ -231,7 +231,7 @@ public class InvTransferDetailServiceImp implements InvTransferDetailService {
     }
 
     @Override
-    public List<InvTransferDetailDTO> addInvTransferDetailsDTO(List<InvTransferDetailDTO>  invTransferDetailDTOList , Integer invTransferDTOId ,TobyUser tobyUser) {
+    public List<InvTransferDetailDTO> addInvTransferDetailsDTO(List<InvTransferDetailDTO> invTransferDetailDTOList, Integer invTransferDTOId, TobyUser tobyUser) {
         List<InvTransferDetailDTO> list = new ArrayList<>();
         for (InvTransferDetailDTO detailDTO : invTransferDetailDTOList) {
             InvTransferDTO invTransferDTO = new InvTransferDTO();
@@ -244,7 +244,7 @@ public class InvTransferDetailServiceImp implements InvTransferDetailService {
         }
         return list;
     }
-    
+
     @Override
     public List<InvDetailDTO> getAllInvTransferDetailsByInvPurchaseInvoiceIdDTO(InvInvoiceDTO invPurchaseInvoiceDTO, Integer branchId) {
         Map<String, Object> params = new HashMap<>();
@@ -276,18 +276,18 @@ public class InvTransferDetailServiceImp implements InvTransferDetailService {
         InvDetailDTO dTO = new InvDetailDTO();
         ItemsBarcodesDetailsView barcodesDetailsView = itemsBarcodeMap.get(entity.getItemBarcode());
         dTO = invGlobalService.fillItemDetail(dTO, itemsBarcodeMap,
-                    entity.getId(), entity.getSerial(), (entity.getBranchId() != null ? entity.getBranchId().getId() : null), barcodesDetailsView.getMaxPriceMen(),
-                    null, entity.getAmount(), null, null,
-                    BigDecimal.ZERO, null, entity.getId(), entity.getCreationDate(), entity.getCreatedBy().getId(),
-                    null,null, 
-                    null, 
-                    null,null,
-                    entity.getItemBarcode(), entity.getScrewing(), entity.getInvItemId().getId(), null, 
-                    entity.getUnitId().getId(), entity.getUnitId().getSerial(), entity.getUnitId().getName(),
-                    entity.getInvItemId().getIsInventoryItem(),
-                    null,null,null,null,
-                    invInvoiceDTO.getCompanyActivity(),invInvoiceDTO.getScreenName(),null);
-                dTO = invGlobalService.calculateDetailTotalsRow(dTO, invInvoiceDTO,true);        
+                entity.getId(), entity.getSerial(), (entity.getBranchId() != null ? entity.getBranchId().getId() : null), barcodesDetailsView.getMaxPriceMen(),
+                null, entity.getAmount(), null, null,
+                BigDecimal.ZERO, null, entity.getId(), entity.getCreationDate(), entity.getCreatedBy().getId(),
+                null, null,
+                null,
+                null, null,
+                entity.getItemBarcode(), entity.getScrewing(), entity.getInvItemId().getId(), null,
+                entity.getUnitId().getId(), entity.getUnitId().getSerial(), entity.getUnitId().getName(),
+                entity.getInvItemId().getIsInventoryItem(),
+                null, null, null, null,
+                invInvoiceDTO.getCompanyActivity(), invInvoiceDTO.getScreenName(), null);
+        dTO = invGlobalService.calculateDetailTotalsRow(dTO, invInvoiceDTO, true);
         dTO.setRealQuantity(dTO.getQuantity().multiply(dTO.getScrewing()));
         return dTO;
     }
@@ -305,16 +305,15 @@ public class InvTransferDetailServiceImp implements InvTransferDetailService {
         }
 
     }
-    
-    
+
     @Override
-    public String addInvTransferDetailsDTO(List<InvDetailDTO> invPurchaseInvoiceDetailList, InvInvoiceDTO invInvoiceDTO, 
+    public String addInvTransferDetailsDTO(List<InvDetailDTO> invPurchaseInvoiceDetailList, InvInvoiceDTO invInvoiceDTO,
             ScreenNameClassEnum screenNameClassEnum, TobyUser isagUser) {
         String error = null;
         if (invPurchaseInvoiceDetailList != null && !invPurchaseInvoiceDetailList.isEmpty()) {
-            error = invGlobalService.validateSave(invPurchaseInvoiceDetailList, invInvoiceDTO.getInvInventoryId().getId(), 
-                    screenNameClassEnum, invInvoiceDTO.getInventorySetupDTO().getNegativeSell(),(invInvoiceDTO.getLoadedSerial() != null),
-                    invInvoiceDTO.getInventorySetupDTO().getSellBuy(),invInvoiceDTO.getCompanyActivity());
+            error = invGlobalService.validateSave(invPurchaseInvoiceDetailList, invInvoiceDTO.getInvInventoryId().getId(),
+                    screenNameClassEnum, invInvoiceDTO.getInventorySetupDTO().getNegativeSell(), (invInvoiceDTO.getLoadedSerial() != null),
+                    invInvoiceDTO.getInventorySetupDTO().getSellBuy(), invInvoiceDTO.getCompanyActivity());
             if (error != null && !error.isEmpty()) {
                 return error;
             }
@@ -338,11 +337,14 @@ public class InvTransferDetailServiceImp implements InvTransferDetailService {
         entity.setAmount(dTO.getQuantity());
         entity.setScrewing(dTO.getScrewing());
         entity.setStatus(dTO.getStatus());
-        
+
         InvTransfer invTransfer = new InvTransfer();
         invTransfer.setId(invTrasferId);
         entity.setInvTransferId(invTransfer);
 
+        if (dTO.getItemsBarcodesDetail() == null && dTO.getItemsBarcodesDetailTrans() != null) {
+            dTO.setItemsBarcodesDetail(dTO.getItemsBarcodesDetailTrans());
+        }
 
         if (dTO.getItemsBarcodesDetail() != null || dTO.getItemsBarcodesDetailTrans() != null) {
             InvItem invItem = new InvItem();
@@ -380,6 +382,5 @@ public class InvTransferDetailServiceImp implements InvTransferDetailService {
         entity.setBranchId(isagUser.getBranchId());
         return entity;
     }
-    
 
 }

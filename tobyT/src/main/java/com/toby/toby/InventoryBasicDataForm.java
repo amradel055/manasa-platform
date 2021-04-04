@@ -398,6 +398,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         try {
             if (checkdetail(invPurchaseInvoiceDetailsValidate)) {
                 invPurchaseInvoiceDetailsValidate.setMsg(null);
+                invPurchaseInvoiceDetailsValidate.setCost(BigDecimal.ZERO);
                 getInvInvoiceDTO().setIsEdit(Boolean.FALSE);
                 invPurchaseInvoiceDetailsValidate = invGlobalService.validateItems(invPurchaseInvoiceDetailsValidate, getInvInvoiceDTO());
                 afterValidation(invPurchaseInvoiceDetailsValidate);

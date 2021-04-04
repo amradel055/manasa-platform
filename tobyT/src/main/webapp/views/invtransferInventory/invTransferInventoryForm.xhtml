@@ -161,7 +161,7 @@
                                           style="float:right"/>
 
                         <p:commandButton   title="بحث" 
-                                           class="sreloadButtons" style="background-color:rgb(162, 46, 247);border-radius: 3px;margin-bottom:3px"
+                                           class="sreloadButtons" style="background-:rgb(162, 46, 247);border-radius: 3px;margin-bottom:3px"
 
                                            onclick="PF('dlg4').show();"
                                            icon="fa fa-fw fa-search-plus" >
@@ -198,7 +198,7 @@
                                             forceSelection="true" 
                                             completeMethod="#{autoComplete.completeItemsBarcodesDetailsView}" 
                                             >
-                            <p:ajax update="unitvalue length paintColor      
+                            <p:ajax update="unitvalue QuantityT       
                                     totalQuantity totalWeight availableQuantityRow         
                                     availableQuantityRowValue "
                                         event="itemSelect" listener="#{invTransferFormMB1.validateItems(invPurchaseInvoiceDetailsTable)}" />
@@ -217,30 +217,6 @@
                                      disabled="true"
                                      value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.unitName}" style="width: 95%" />  
 
-                    </p:column>
-
-                    <p:column style="width: 12vh;text-align: -webkit-auto;border-radius: 0px" id="tall" headerText="الطول"
-                              rendered="#{invTransferFormMB1.invInvoiceDTO.companyActivity eq 'Alumetal'}"
-                              filterBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.length}" 
-                              filterMatchMode="contains" 
-                              sortBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.length}"
-                              filterable="false" >
-                        <p:inputText style="width:99%" 
-                                     disabled="true" 
-                                     id="length" readonly="true"  
-                                     value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.length}"/>
-                    </p:column>
-
-                    <p:column style="width: 12vh;text-align: -webkit-auto;border-radius: 0px" id="color" headerText="اللون"
-                              rendered="#{invTransferFormMB1.invInvoiceDTO.companyActivity eq 'Alumetal'}"
-                              filterBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.paintColorName}" 
-                              filterMatchMode="contains" 
-                              sortBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.paintColorName}"
-                              filterable="false" >
-                        <p:inputText style="width:99%" 
-                                     disabled="true" 
-                                     id="paintColor" readonly="true"  
-                                     value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.paintColorName}"/>
                     </p:column>
 
 
@@ -494,7 +470,7 @@
 
                         <p:commandButton  update="invPurchaseInvoiceDetailsTable test "  
                                           class="reloadButtons"
-                                          style="color: #fff!important;background-color: #00BCD4"   
+                                          style="background-: #00BCD4"   
                                           action="#{invTransferFormMB1.loadDlg()}" 
                                           title="#{userData.userDDs['UPLOAD']}"  >
 

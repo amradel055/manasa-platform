@@ -222,6 +222,9 @@ public class InvPurchaseInvoice extends BaseEntity {
     private ProFactoryDelivery proFactoryDeliveryId;
     @Column(name = "stopped")
     private Integer stopped;
+    @JoinColumn(name = "offer_company_id", referencedColumnName = "id")
+    @ManyToOne
+    private OfferCompany offerCompanyId;
             
     public InvPurchaseInvoice() {
     }
@@ -801,6 +804,20 @@ public class InvPurchaseInvoice extends BaseEntity {
      */
     public void setStopped(Integer stopped) {
         this.stopped = stopped;
+    }
+
+    /**
+     * @return the offerCompanyId
+     */
+    public OfferCompany getOfferCompanyId() {
+        return offerCompanyId;
+    }
+
+    /**
+     * @param offerCompanyId the offerCompanyId to set
+     */
+    public void setOfferCompanyId(OfferCompany offerCompanyId) {
+        this.offerCompanyId = offerCompanyId;
     }
 
 }

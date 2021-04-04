@@ -129,7 +129,7 @@
                                                      converter="#{notesReceivablesFormMB.bankConverter}"
                                                      value="#{notesReceivablesFormMB.glBankTransactionEntity.glBank}"> 
 
-                                        <p:ajax listener="#{notesReceivablesFormMB.updateTransactionRate}" update="form" />
+                                        <p:ajax listener="#{notesReceivablesFormMB.updateTransactionRate}"/>
 
                                         <f:selectItems value="#{notesReceivablesFormMB.glBankList}"  
                                                        var="bank"
