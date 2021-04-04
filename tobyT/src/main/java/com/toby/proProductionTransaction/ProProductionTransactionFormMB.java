@@ -5,7 +5,6 @@ import com.toby.businessservice.ProProductionItemsTransactionService;
 import com.toby.businessservice.ProProductionTransactionOfInvoiceService;
 import com.toby.businessservice.ProProductionTransactionService;
 import com.toby.converter.ProProductionStagesDTOConverter;
-import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.ProProductionItemsTransactionDTO;
 import com.toby.dto.ProProductionProductNumberDTO;
 import com.toby.dto.ProProductionStagesDTO;
@@ -27,7 +26,6 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import org.primefaces.event.SelectEvent;
-import org.primefaces.model.LazyDataModel;
 
 @Named(value = "proProductionTransactionListMB")
 @ViewScoped
@@ -45,7 +43,6 @@ public class ProProductionTransactionFormMB extends BaseListBean {
     private ProProductionTransactionDetailViewDTO proProductionTransactionDetailViewDTO;
     private ProProductionTransactionDetailDetailViewDTO productionTransactionDetailDetailViewDTO;
 
-    private LazyDataModel<InvInvoiceDTO> dataModel;
     @EJB
     private InvPurchaseInvoiceDetailService invPurchaseInvoiceDetailService;
     @EJB
@@ -455,19 +452,7 @@ public class ProProductionTransactionFormMB extends BaseListBean {
         this.proProductionItemsTransactionDTO = proProductionItemsTransactionDTO;
     }
 
-    /**
-     * @return the dataModel
-     */
-    public LazyDataModel<InvInvoiceDTO> getDataModel() {
-        return dataModel;
-    }
-
-    /**
-     * @param dataModel the dataModel to set
-     */
-    public void setDataModel(LazyDataModel<InvInvoiceDTO> dataModel) {
-        this.dataModel = dataModel;
-    }
+   
 
     /**
      * @return the productNumberDTOList
@@ -568,6 +553,8 @@ public class ProProductionTransactionFormMB extends BaseListBean {
     public void setToNumber(Integer toNumber) {
         this.toNumber = toNumber;
     }
+
+  
 
     /**
      * @return the proProductionStagesDTOList

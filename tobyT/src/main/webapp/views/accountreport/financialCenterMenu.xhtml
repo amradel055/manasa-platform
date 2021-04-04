@@ -10,9 +10,6 @@
     <link rel="stylesheet" type="text/css" href="./../../resources/css/custom.css" /> 
     <ui:define name="content">
 
-        <style >
-
-        </style>
 
         <f:event listener="#{userData.authorize}" type="preRenderView" />
         <h:form id="form" dir="#{userData.dir}" style="margin-right:20px">
@@ -20,12 +17,6 @@
                 <p:messages autoUpdate="true"  id="msg2" showDetail="true" closable="true" rendered="true" />
             </div>
 
-            <div style=" position: absolute;left: 20px"> 
-
-                <p:commandButton  style="width: 90px;background-image: none!important;z-index: 2" 
-                                  class="viewButton searchButton"
-                                  value="Hide/Show"/>  
-            </div>
 
             <p:fieldset legend="#{userData.userDDs['FINANCIAL_CENTER_MENU']}" 
 

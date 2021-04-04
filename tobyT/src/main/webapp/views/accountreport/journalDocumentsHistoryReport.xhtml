@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                template="../../template/newTemplate.xhtml"
+                template="../../template/template.xhtml"
                 xmlns:p="http://primefaces.org/ui"
 
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
@@ -14,90 +14,74 @@
         <h:head>
             <title>#{userData.userDDs['ACCOUNT_REPORT']}</title>
         </h:head>
-        <style>
 
-            .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
-                border: 1px solid #c5dbec;
-                background:#fff;
-            }
-
-        </style>
         <h:body>
             <h:form  style="margin-right: 20px" id="form">
-                <div style=" position: absolute;left: 20px"> 
 
-                    <p:commandButton  style="width: 90px;background-image: none!important;z-index: 2" 
-                                      class="viewButton searchButton"
-                                      value="Hide/Show"/>  
-                </div>
                 <p:fieldset legend="#{userData.userDDs['MODIFIED_GENERAL_JOURNAL']}" 
-                            style=" position: relative">
+                            style=" position: relative; text-align: right">
 
                     <div class="firstset">
 
                         <div class="ui-g">
 
-                            <div class="ui-g-12 ui-md-6">
-                                <h:panelGroup>
-                                    <h:panelGroup>
-                                        <p:outputLabel style="width: 45px" value="#{userData.userDDs['FROM_JOURNAL_NUMBER']}" />
-                                    </h:panelGroup>
-                                    <h:panelGroup>
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <div class="ui-g-12 ui-xl-12">
+                                    <div class="ui-g-6 ui-xl-6">
                                         <p:inputText style="width: 57%!important"  a:autofocus="true"
                                                      value="#{deletedAndUpdatedGeneralJournalMB.deletedAndUpdatedSearchBean.voucherIdFrom}" />
-                                    </h:panelGroup>
-                                </h:panelGroup>
-                            </div>
-                            <div class="ui-g-12 ui-md-6">
-                                <h:panelGroup>
-                                    <h:panelGroup>
-                                        <p:outputLabel style="width: 45px"  value="#{userData.userDDs['TO_JOURNAL_NUMBER']}" />
-                                    </h:panelGroup>
-                                    <h:panelGroup>
+
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 45px" value="#{userData.userDDs['FROM_JOURNAL_NUMBER']}" />
+
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-xl-12">
+                                    <div class="ui-g-6 ui-xl-6">
                                         <p:inputText
                                             value="#{deletedAndUpdatedGeneralJournalMB.deletedAndUpdatedSearchBean.voucherIdTo}" 
                                             style="width: 57%!important" />
-                                    </h:panelGroup>
-                                </h:panelGroup>
-                            </div>
-                            <div class="ui-g-12 ui-md-6">
-                                <h:panelGroup>
-                                    <h:panelGroup>
-                                        <p:outputLabel style="width: 45px"  value="#{userData.userDDs['YEAR_FROM']}" />
-                                    </h:panelGroup>
-                                    <h:panelGroup>
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 45px"  value="#{userData.userDDs['TO_JOURNAL_NUMBER']}" />
+
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-xl-12">
+                                    <div class="ui-g-6 ui-xl-6">
                                         <p:calendar style="width: 57%"   id="dateFrom"
                                                     value="#{deletedAndUpdatedGeneralJournalMB.deletedAndUpdatedSearchBean.dateFrom}"
                                                     pattern="dd/MM/yyyy" showButtonPanel="true" >
                                             <p:ajax listener="#{deletedAndUpdatedGeneralJournalMB.checkDate(true)}" event="dateSelect" update="dateFrom"/>
                                         </p:calendar>
-                                    </h:panelGroup>
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 45px"  value="#{userData.userDDs['YEAR_FROM']}" />
 
-                                </h:panelGroup>
-                            </div>
-                            <div class="ui-g-12 ui-md-6">
-                                <h:panelGroup>
-
-                                    <h:panelGroup>
-                                        <p:outputLabel style="width: 45px"  value="#{userData.userDDs['YEAR_TO']}" />
-                                    </h:panelGroup>
-                                    <h:panelGroup>
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-xl-12">
+                                    <div class="ui-g-6 ui-xl-6">
                                         <p:calendar style="width: 57%"  id="dateTo"
                                                     value="#{deletedAndUpdatedGeneralJournalMB.deletedAndUpdatedSearchBean.dateTo}"
                                                     pattern="MM/dd/yyyy"  showButtonPanel="true" >
                                             <p:ajax listener="#{deletedAndUpdatedGeneralJournalMB.checkDate(false)}" event="dateSelect" update="dateTo"/>
                                         </p:calendar>
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 45px"  value="#{userData.userDDs['YEAR_TO']}" />
 
-                                    </h:panelGroup>
+                                    </div>
+                                </div>
 
-                                </h:panelGroup>
                             </div>
-                            <div class="ui-g-12 ui-md-6">
-                                <h:panelGroup>
-                                    <h:panelGroup>
-                                        <p:outputLabel style="width: 45px" value="#{userData.userDDs['FROM_ACCOUNT']}" for="GlAccount_ID_from" />
-                                    </h:panelGroup>
-                                    <h:panelGroup>
+
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <div class="ui-g-12 ui-xl-12">
+                                    <div class="ui-g-6 ui-xl-6">
                                         <p:autoComplete style="width: 75%" id="GlAccount_ID_from" 
 
                                                         dropdown="true"
@@ -109,15 +93,14 @@
                                                         forceSelection="false" 
                                                         completeMethod="#{deletedAndUpdatedGeneralJournalMB.completeGlAccount}" >
                                         </p:autoComplete>
-                                    </h:panelGroup>
-                                </h:panelGroup>
-                            </div>
-                            <div class="ui-g-12 ui-md-6">
-                                <h:panelGroup>
-                                    <h:panelGroup>
-                                        <p:outputLabel style="width: 45px" value="#{userData.userDDs['TO_ACCOUNT']}" for="GlAccount_ID_to"/>
-                                    </h:panelGroup>
-                                    <h:panelGroup>
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 45px" value="#{userData.userDDs['FROM_ACCOUNT']}" for="GlAccount_ID_from" />
+
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-xl-12">
+                                    <div class="ui-g-6 ui-xl-6">
                                         <p:autoComplete style="width: 75%" id="GlAccount_ID_to" 
 
                                                         dropdown="true"
@@ -129,25 +112,27 @@
                                                         forceSelection="false" 
                                                         completeMethod="#{deletedAndUpdatedGeneralJournalMB.completeGlAccount}" >
                                         </p:autoComplete>
-                                    </h:panelGroup>
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 45px" value="#{userData.userDDs['TO_ACCOUNT']}" for="GlAccount_ID_to"/>
 
-                                </h:panelGroup>
-                            </div>
-                            <div class="ui-g-12 ui-md-6">
-                                <h:panelGroup>
-                                    <h:panelGroup>
-                                        <p:outputLabel style="width: 45px;margin-right: 1%;margin-bottom: 5%" value="#{userData.userDDs['FINANCE_YEAR']}"/>
-
-                                    </h:panelGroup>
-                                    <h:panelGroup>
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-xl-12">
+                                    <div class="ui-g-6 ui-xl-6">
                                         <p:selectOneMenu style="width: 57%" id="year" filter="true" filterMatchMode="startsWith"   value="#{deletedAndUpdatedGeneralJournalMB.glYearSelection}" converter="#{deletedAndUpdatedGeneralJournalMB.glYearConverter}">
                                             <p:ajax listener="#{deletedAndUpdatedGeneralJournalMB.pushGlYearSelection()}" update="dateFrom dateTo"/>
                                             <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"  itemValue="" />
                                             <f:selectItems value="#{deletedAndUpdatedGeneralJournalMB.glYearList}"  var="year" itemLabel="#{year.name}" itemValue="#{year}"/>
                                         </p:selectOneMenu>
-                                    </h:panelGroup>
-                                </h:panelGroup>
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 45px;margin-right: 1%;margin-bottom: 5%" value="#{userData.userDDs['FINANCE_YEAR']}"/>
+
+                                    </div>
+                                </div>
                             </div>
+
                         </div>
 
                     </div>
@@ -156,11 +141,10 @@
 
                 </p:fieldset>
 
-                <p:fieldset  style=" margin: 10px 0">
+                <div style="text-align:center">
+                <p:fieldset  style=" margin: 10px 0;text-align: center">
 
-                    <h:panelGrid class="col-md-12 centerButtons"  columns="1">
-                        <h:panelGroup>
-
+                       
 
 
                             <p:commandButton class="searchButton"   icon="fa fa-fw fa-search-plus"
@@ -190,20 +174,20 @@
                                 <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
 
                             </p:blockUI> 
-                        </h:panelGroup>
+                     
 
-                    </h:panelGrid>
                 </p:fieldset>
-                
+                </div>
+
                 <p:fieldset>
 
                     <p:dataTable id="dataTable"
                                  draggableColumns="true" 
                                  value="#{deletedAndUpdatedGeneralJournalMB.deletedAndUpdatedGeneralJournalBeanDataList}"
                                  widgetVar="journal"
-                                paginator="true"
+                                 paginator="true"
                                  rows="20"
-                                var="journal">
+                                 var="journal">
                         <f:facet name="header" class="col-md-12">
 
                             <p:outputPanel>
