@@ -20,7 +20,7 @@ public class ProProductionTransactionFactoryView {
     private InvInventoryDTO gallerySelected;
     private ProProductionStagesDTO status;
     private TobyUserDTO user;
-    private String invoiceNumber;
+    private Integer invoiceNumber;
 
     /**
      * @return the date
@@ -64,19 +64,6 @@ public class ProProductionTransactionFactoryView {
         this.user = user;
     }
 
-    /**
-     * @return the invoiceNumber
-     */
-    public String getInvoiceNumber() {
-        return invoiceNumber;
-    }
-
-    /**
-     * @param invoiceNumber the invoiceNumber to set
-     */
-    public void setInvoiceNumber(String invoiceNumber) {
-        this.invoiceNumber = invoiceNumber;
-    }
 
     /**
      * @return the status
@@ -90,6 +77,20 @@ public class ProProductionTransactionFactoryView {
      */
     public void setStatus(ProProductionStagesDTO status) {
         this.status = status;
+    }
+
+    /**
+     * @return the invoiceNumber
+     */
+    public Integer getInvoiceNumber() {
+        return invoiceNumber;
+    }
+
+    /**
+     * @param invoiceNumber the invoiceNumber to set
+     */
+    public void setInvoiceNumber(Integer invoiceNumber) {
+        this.invoiceNumber = invoiceNumber;
     }
 
 }

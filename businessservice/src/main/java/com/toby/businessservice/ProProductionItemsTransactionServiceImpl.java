@@ -176,6 +176,7 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
                 InvPurchaseInvoiceDTO1 invPurchaseInvoiceDTO = new InvPurchaseInvoiceDTO1();
                 invPurchaseInvoiceDTO.setId(proProductionItemsTransaction.getProFactoryDeliveryDetailId().getInvPurchaseInvoiceDetailId().getInvPurchaseInvoiceId().getId());
                 invPurchaseInvoiceDTO.setSerial(proProductionItemsTransaction.getProFactoryDeliveryDetailId().getInvPurchaseInvoiceDetailId().getInvPurchaseInvoiceId().getSerial());
+                invPurchaseInvoiceDTO.setDate(proProductionItemsTransaction.getProFactoryDeliveryDetailId().getInvPurchaseInvoiceDetailId().getInvPurchaseInvoiceId().getDate());
                 invPurchaseInvoiceDetailDTO.setInvPurchaseInvoiceId(invPurchaseInvoiceDTO);
             }
             if (proProductionItemsTransaction.getProFactoryDeliveryDetailId().getInvPurchaseInvoiceDetailId().getItemId() != null) {
@@ -324,7 +325,8 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
     private void appendProProductionDate(ProProductionTransactionFactoryView transactionFactoryView, StringBuilder query, Map<String, Object> params) {
         if (transactionFactoryView != null && transactionFactoryView.getDate() != null) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
-            params.put("date", dateFormat.format(transactionFactoryView.getDate()));
+//            params.put("date", dateFormat.format(transactionFactoryView.getDate()));
+            params.put("date", transactionFactoryView.getDate());
             query.append(" and s.proFactoryDeliveryDetailId.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.date = :date ");
         }
     }
@@ -337,7 +339,7 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
     }
 
     private void appendProProductionInvoiceNumber(ProProductionTransactionFactoryView transactionFactoryView, StringBuilder query, Map<String, Object> params) {
-        if (transactionFactoryView != null && transactionFactoryView.getInvoiceNumber() != null && !transactionFactoryView.getInvoiceNumber().isEmpty()) {
+        if (transactionFactoryView != null && transactionFactoryView.getInvoiceNumber() != null && transactionFactoryView.getInvoiceNumber() > 0) {
              params.put("invoiceNumber", transactionFactoryView.getInvoiceNumber());
             query.append(" and s.proFactoryDeliveryDetailId.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial = :invoiceNumber ");
         }

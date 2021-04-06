@@ -2022,7 +2022,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 + "group by ipi.organization_site_id order by ios.code , ipi.date asc";
         List<Object[]> res = dao.executeNativeQuery(query);
 
-        list = getTheListClientsNoMovment(res);
+        list = getTheListClientsNoMovment(res); 
 
         return list;
     }
