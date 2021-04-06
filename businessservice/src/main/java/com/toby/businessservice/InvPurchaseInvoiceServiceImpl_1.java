@@ -2018,7 +2018,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 + "group by ipi.organization_site_id order by ios.code , ipi.date asc");
 
         List<Object[]> res;
-        generalJournalDetailsBasedOnAccClassFirsList = getTheListBasedOnAccClass(res);
+        generalJournalDetailsBasedOnAccClassFirsList = getTheListBasedOnAccClass(null);
         return generalJournalDetailsBasedOnAccClassFirsList;
     }
 
