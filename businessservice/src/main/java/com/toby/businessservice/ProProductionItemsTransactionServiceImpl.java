@@ -344,8 +344,8 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
     }
 
     private void appendProProductionGellery(ProProductionTransactionFactoryView transactionFactoryView, StringBuilder query, Map<String, Object> params) {
-        if (transactionFactoryView != null && transactionFactoryView.getGalleryList() != null) {
-            params.put("galleryList", transactionFactoryView.getGalleryList().getId());
+        if (transactionFactoryView != null && transactionFactoryView.getGallerySelected() != null) {
+            params.put("galleryList", transactionFactoryView.getGallerySelected().getId());
             query.append(" and s.proFactoryDeliveryDetailId.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.galaryId.id = :galleryList ");
         }
     }

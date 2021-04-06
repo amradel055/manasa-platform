@@ -6,7 +6,7 @@
 package com.toby.views;
 
 import com.toby.dto.InvInventoryDTO;
-import com.toby.dto.ProGroupDTO;
+import com.toby.dto.ProProductionStagesDTO;
 import com.toby.dto.TobyUserDTO;
 import java.util.Date;
 
@@ -17,8 +17,8 @@ import java.util.Date;
 public class ProProductionTransactionFactoryView {
 
     private Date date;
-    private InvInventoryDTO galleryList;
-    private ProGroupDTO status;
+    private InvInventoryDTO gallerySelected;
+    private ProProductionStagesDTO status;
     private TobyUserDTO user;
     private String invoiceNumber;
 
@@ -37,31 +37,17 @@ public class ProProductionTransactionFactoryView {
     }
 
     /**
-     * @return the galleryList
+     * @return the gallerySelected
      */
-    public InvInventoryDTO getGalleryList() {
-        return galleryList;
+    public InvInventoryDTO getGallerySelected() {
+        return gallerySelected;
     }
 
     /**
-     * @param galleryList the galleryList to set
+     * @param gallerySelected the gallerySelected to set
      */
-    public void setGalleryList(InvInventoryDTO galleryList) {
-        this.galleryList = galleryList;
-    }
-
-    /**
-     * @return the status
-     */
-    public ProGroupDTO getStatus() {
-        return status;
-    }
-
-    /**
-     * @param status the status to set
-     */
-    public void setStatus(ProGroupDTO status) {
-        this.status = status;
+    public void setGallerySelected(InvInventoryDTO gallerySelected) {
+        this.gallerySelected = gallerySelected;
     }
 
     /**
@@ -90,6 +76,20 @@ public class ProProductionTransactionFactoryView {
      */
     public void setInvoiceNumber(String invoiceNumber) {
         this.invoiceNumber = invoiceNumber;
+    }
+
+    /**
+     * @return the status
+     */
+    public ProProductionStagesDTO getStatus() {
+        return status;
+    }
+
+    /**
+     * @param status the status to set
+     */
+    public void setStatus(ProProductionStagesDTO status) {
+        this.status = status;
     }
 
 }

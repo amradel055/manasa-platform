@@ -45,7 +45,7 @@ public class ProProductionTransactionFactoryMB extends Basic {
         }
 
         hashMap.put("galleryListText", "المعرض");
-        hashMap.put("galleryListValue", proProductionTransactionFactoryView.getGalleryList() == null ? null : proProductionTransactionFactoryView.getGalleryList().getName());
+        hashMap.put("galleryListValue", proProductionTransactionFactoryView.getGallerySelected() == null ? null : proProductionTransactionFactoryView.getGallerySelected().getName());
         hashMap.put("statusText", "المرحلة");
         hashMap.put("statusValue", proProductionTransactionFactoryView.getStatus() == null ? null : proProductionTransactionFactoryView.getStatus().getName());
         hashMap.put("userText", "الموظف");
