@@ -28,7 +28,7 @@ public class ClientsNoMovmentMB extends Basic {
 
     public void search() {
 
-        setClientsNoMovmentsList(invPurchaseInvoiceService.findClientsNoMovment(getGalleryList() == null ? null : getGalleryList().getId(), 0, date, getUserData().getUserBranch().getId()));
+        setClientsNoMovmentsList(invPurchaseInvoiceService.findClientsNoMovment(getUserData().getUserBranch().getId(),getGalleryList() == null ? null : getGalleryList().getId(), date, 4));
     }
 
     public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {
