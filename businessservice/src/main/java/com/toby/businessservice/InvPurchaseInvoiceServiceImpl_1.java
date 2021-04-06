@@ -2002,8 +2002,8 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     @Override
     public List<ClientsNoMovment> findClientsNoMovment(Integer branchId, Integer gallaryId, Date date, Integer type) {
         List<ClientsNoMovment> generalJournalDetailsBasedOnAccClassFirsList = new ArrayList<>();
-        String Query;
-        Query = "select ios.code , ios.name , ios.mobile , ipi.date , sum(ifnull(ipid.net,0)) "
+        List<String> Query = null;
+        Query = dao.executeNativeQuery("select ios.code , ios.name , ios.mobile , ipi.date , sum(ifnull(ipid.net,0)) "
                 + "from inv_purchase_invoice_detail ipid left join inv_purchase_invoice ipi on \n"
                 + "ipi.id = ipid.inv_purchase_invoice_id left join \n"
                 + "inv_organization_site ios on ios.id = ipi.organization_site_id\n"
@@ -2015,9 +2015,9 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 + "select distinct(ipi3.organization_site_id) from inv_purchase_invoice ipi3 where ipi3.organization_site_id is not null\n"
                 + "and ipi3.galary_Id = " + gallaryId + " and ipi3.date > " + date + "\n"
                 + "))\n"
-                + "group by ipi.organization_site_id order by ios.code , ipi.date asc";
+                + "group by ipi.organization_site_id order by ios.code , ipi.date asc");
 
-        List<Object[]> res = dao.executeNativeQuery(Query);
+        List<Object[]> res;
         generalJournalDetailsBasedOnAccClassFirsList = getTheListBasedOnAccClass(res);
         return generalJournalDetailsBasedOnAccClassFirsList;
     }
