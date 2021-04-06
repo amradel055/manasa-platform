@@ -105,11 +105,11 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                             detailEntity.setDiscount(discountCompany);
                             return discountCompany;
                         }
-                    } else {
+                    }
+                }else{
                         return detailEntity.getDiscount();
                     }
 
-                }
             } else {
                 if ((invInvoiceDTO != null) && (detailEntity.getItemsBarcodesDetail().getProGroupId() == null
                         || (detailEntity.getItemsBarcodesDetail().getProGroupId() != null && detailEntity.getItemsBarcodesDetail().getProGroupId() != 1
