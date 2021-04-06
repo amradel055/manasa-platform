@@ -1,0 +1,131 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <h:body>
+
+            <h:form dir="RTL" style="margin-right: 20px" id="form" >
+
+                <p:fieldset  legend="عملاء ليس عليهم حركة من تاريخ" id="stages"  style=" position: relative">
+                    <p:messages id="messages" showDetail="true" closable="true"/> 
+
+                    <div class="ui-g-6 ui-xl-6">
+
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:calendar style="width: 50%"  id="dateFrom"
+                                            value="#{clientsNoMovmentMB.date}"
+                                            pattern="dd/MM/yyyy"  showButtonPanel="true" >
+
+                                </p:calendar>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:outputLabel style="width: 50px"  value=" التاريخ" />
+
+
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="ui-g-6 ui-xl-6">
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:autoComplete style="width:85%" id="gallary_from" 
+                                                dropdown="true"
+                                                converter="#{autoComplete.invInventoryDTOConverter}"
+                                                value="#{clientsNoMovmentMB.galleryList}" 
+                                                var="gallaryFrom"
+                                                itemLabel="#{gallaryFrom}"
+                                                itemValue="#{gallaryFrom}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{autoComplete.completeGallaryDTO}" >
+                                </p:autoComplete>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 50px;margin-right: 1%" value="المعرض"/>
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                </p:fieldset>
+
+                <div class="ui-g-12 ui-xl-12">
+                    <div class="ui-g-6 ui-xl-6">
+
+
+                        <p:commandButton     class="saveButton" id="saveB" 
+                                             value="بحث" 
+                                             icon="fa fa-fw fa-save"
+                                             action="#{clientsNoMovmentMB.search()}"
+                                             update="@form"
+                                             >
+
+                        </p:commandButton>
+
+
+                    </div>
+                </div>
+                <p:fieldset  legend="برنس الرياض ش التحلية"   style="margin-bottom:20px">
+                    <p:dataTable  id="table"
+                                  var="data"
+                                  value="#{clientsNoMovmentMB.clientsNoMovmentsList}"
+                                  draggableColumns="true"
+                                  paginator="true"
+                                  widgetVar="data" 
+                                  rowIndexVar="index" 
+                                  emptyMessage="EMPTY_TABLE"
+                                  rows="20" lazy="true"
+                                  >
+                        <p:column headerText="#" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText 
+                                value="#{index + 1}" />
+                        </p:column>
+                        <p:column headerText="رقم العميل " style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.clientNumber}" />
+                        </p:column>
+                        <p:column headerText="اسم العميل" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.clientName}" />
+                        </p:column>
+                        <p:column headerText=" الهاتف" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.phoneNumber}" />
+                        </p:column>
+                        <p:column headerText="تاريخ اخر فاتورة" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.lastInvoiceDate}">
+                                <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText=" اجمالى التعامل" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.totalInvoices}" />
+                        </p:column>
+
+                    </p:dataTable>
+                    <div class="ui-g-12 ui-md-6">
+                        <p:commandButton class="printButton"  icon="fa fa-fw fa-print"
+                                         onclick="form.target = '_blank'" ajax="false"
+                                         value="#{userData.userDDs['PRINT']}"
+                                         actionListener="#{clientsNoMovmentMB.exportPDF(actionEvent)}"/>
+                    </div>
+
+
+                </p:fieldset>
+
+            </h:form>
+        </h:body>
+    </ui:define>
+</ui:composition>
+
