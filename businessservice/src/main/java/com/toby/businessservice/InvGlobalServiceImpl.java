@@ -89,7 +89,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                         || (detailEntity.getItemsBarcodesDetail().getProGroupId() != null
                         && detailEntity.getItemsBarcodesDetail().getProGroupId() != 5
                         && detailEntity.getItemsBarcodesDetail().getProGroupId() != 13))) {
-                    if (detailEntity.getDiscount().compareTo(BigDecimal.ZERO) == 1) {
+                    if (detailEntity.getDiscount().compareTo(BigDecimal.ZERO) != 1) {
                         BigDecimal discountCustomer = BigDecimal.ZERO;
                         BigDecimal discountCompany = BigDecimal.ZERO;
                         if (invInvoiceDTO.getOrganizationSiteId() != null) {
@@ -105,10 +105,12 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                             detailEntity.setDiscount(discountCompany);
                             return discountCompany;
                         }
-                    }
-                }else{
+                    } else {
                         return detailEntity.getDiscount();
                     }
+                } else {
+                    return detailEntity.getDiscount();
+                }
 
             } else {
                 if ((invInvoiceDTO != null) && (detailEntity.getItemsBarcodesDetail().getProGroupId() == null

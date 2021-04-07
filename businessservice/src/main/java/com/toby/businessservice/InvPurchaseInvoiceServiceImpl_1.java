@@ -1278,7 +1278,9 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
 
                 String error = invPurchaseInvoiceDetailsService.addInvPurchaseInvoiceDetailsDTO(invInvoiceDTO.getInvPurchaseInvoiceDetailList(), invInvoiceDTO, tobyUser);
 
-                glBankTransactionService.addCash(invInvoiceDTO, tobyUser);
+                if (invInvoiceDTO.getId() == null) {
+                    glBankTransactionService.addCash(invInvoiceDTO, tobyUser);
+                }
                 invInvoiceDTO.setInvPurchaseInvoiceId(invPurchaseInvoice.getId());
                 if (invPurchaseInvoice.getId() == null) {
                     invAddingOrderService.save(invInvoiceDTO, tobyUser);
@@ -2022,7 +2024,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 + "group by ipi.organization_site_id order by ios.code , ipi.date asc";
         List<Object[]> res = dao.executeNativeQuery(query);
 
-        list = getTheListClientsNoMovment(res); 
+        list = getTheListClientsNoMovment(res);
 
         return list;
     }

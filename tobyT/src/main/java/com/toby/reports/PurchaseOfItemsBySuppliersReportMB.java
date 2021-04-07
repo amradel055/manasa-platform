@@ -13,6 +13,7 @@ import com.toby.entity.InvOrganizationSite;
 import com.toby.report.entity.PurchaseOfItemsBySuppliersViewBean;
 import com.toby.toby.BaseInventoryReportBean;
 import com.toby.views.ItemSalesView;
+import com.toby.views.ItemSalesViewGroup;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -200,8 +201,8 @@ public class PurchaseOfItemsBySuppliersReportMB extends BaseInventoryReportBean 
          } else {
          itemSalesViewList = purchaseOfItemsBySuppliersReportService.getAllPurchaseOfItemsBySuppliersSearchBean(purchaseOfItemsBySuppliersSearchBean);
          }*/
-        itemSalesViewList = purchaseOfItemsBySuppliersReportService.getAllPurchaseOfItemsBySuppliersSearchBean(getPurchaseOfItemsBySuppliersSearchBean());
-        if (itemSalesViewList != null && !itemSalesViewList.isEmpty()) {
+        setItemSalesViewList(purchaseOfItemsBySuppliersReportService.getAllPurchaseOfItemsBySuppliersSearchBean(getPurchaseOfItemsBySuppliersSearchBean()));
+        if (getItemSalesViewList() != null && !itemSalesViewList.isEmpty()) {
             fillGroupMapWithCorrespondingItem();
             if (purchaseOfItemsBySuppliersSearchBean.getShowReport() != null && purchaseOfItemsBySuppliersSearchBean.getShowReport()) {
                 fillItemIdMapByGroupId();
@@ -209,13 +210,17 @@ public class PurchaseOfItemsBySuppliersReportMB extends BaseInventoryReportBean 
             }
             
             InvOrganizationSite ios = new InvOrganizationSite();
-            for (ItemSalesView itemSalesView : itemSalesViewList){
+            Map<Integer, Integer> customermap = new HashMap<>();
+            for (ItemSalesView itemSalesView : getItemSalesViewList()) {
                 ios = new InvOrganizationSite();
-               ios.setId(itemSalesView.getOrganizationSiteId());
-               ios.setName(itemSalesView.getOrganizationSiteName());
-               ios.setCode(itemSalesView.getOrganizationSiteCode());
-               getOrganizationSiteRootList().add(ios);
-            }          
+                if (!customermap.containsKey(itemSalesView.getOrganizationSiteId())) {
+                    ios.setId(itemSalesView.getOrganizationSiteId());
+                    ios.setName(itemSalesView.getOrganizationSiteName());
+                    ios.setCode(itemSalesView.getOrganizationSiteCode());
+                    getOrganizationSiteRootList().add(ios);
+                    customermap.put(itemSalesView.getOrganizationSiteId(), itemSalesView.getOrganizationSiteId());
+                }
+            }         
             prepareRootGroupValues();
         }
         mergeGroupsWithItems();
