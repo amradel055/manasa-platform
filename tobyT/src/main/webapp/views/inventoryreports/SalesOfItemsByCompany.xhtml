@@ -1,0 +1,188 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+        <h:form  id="form" dir="#{userData.dir}"  style="margin-right: 20px">
+            <p:fieldset style=" position: relative" legend="#{userData.userDDs['ITEM_SALE_CUST']}"> 
+
+                <div  id="firstSegment" class="ui-g-12 ui-g-nopad firstset">
+                    <div class="ui-g">
+
+                        <div class="ui-g-6 ui-xl-6">
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:calendar pattern="dd/MM/yyyy" 
+                                                value="#{purchaseOfItemsByCompanyReportMB.purchaseOfItemsBySuppliersSearchBean.dateFrom}"
+                                                style="width: 56%">
+                                    </p:calendar>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel  style="width: 70px" value="#{userData.userDDs['FROM_DATE']}"/>
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:calendar pattern="dd/MM/yyyy" 
+                                                value="#{purchaseOfItemsByCompanyReportMB.purchaseOfItemsBySuppliersSearchBean.dateTo}"
+                                                style="width: 56%">
+
+                                    </p:calendar>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel  style="width: 70px" value="#{userData.userDDs['TO_DATE']}"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:autoComplete style="width:75%!important"
+                                                    dropdown="true"
+                                                    converter="#{autoComplete.invInventoryDTOConverter}"
+                                                    value="#{purchaseOfItemsByCompanyReportMB.purchaseOfItemsBySuppliersSearchBean.fromInventoryDTOName}"
+                                                    var="inventory"
+                                                    itemLabel="#{inventory}" 
+                                                    itemValue="#{inventory}"
+                                                    forceSelection="true" 
+                                                    completeMethod="#{autoComplete.completeGallaryDTO}"
+                                                    >
+
+                                    </p:autoComplete>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['FROM_REPOS_NO']}"/>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div> 
+                </div>
+
+                <h:panelGrid class="col-md-12"  columns="1">
+
+                    <h:panelGroup class="centerButtons" style="margin-top: 2%">
+
+
+                        <p:commandButton    class="searchButton"  
+                                            title="#{userData.userDDs['SEARCH']}"
+                                            action="#{purchaseOfItemsByCompanyReportMB.search()}"
+                                            id="saveB"
+                                            value="#{userData.userDDs['SEARCH']}"
+                                            update="@form" 
+                                            icon="fa fa-search"  />
+
+                        <p:commandButton   class="newButton"
+                                           id="NewB"
+                                           title="#{userData.userDDs['NEW']}" 
+                                           immediate="true" 
+                                           action="#{purchaseOfItemsByCompanyReportMB.reset()}"
+                                           update="form"
+                                           value="#{userData.userDDs['NEW']}"
+                                           icon="fa fa-plus"/>
+
+                        <p:commandButton  class="printButton"
+                                          id="PrintB"
+                                          ajax="false"
+                                          onclick="form.target = '_blank'"  
+                                          icon="fa fa-fw fa-print"
+                                          value="#{userData.userDDs['PRINT']}" 
+                                          actionListener="#{purchaseOfItemsByCompanyReportMB.exportPDF}"
+                                          title="#{userData.userDDs['PRINT']}"
+                                          immediate="true" />
+
+                        <p:commandButton   class="closeButton"
+                                           id="CloseB"
+                                           icon="fa fa-fw fa-close"  
+                                           title="#{userData.userDDs['BACK']}"
+                                           action="exit"
+                                           value="#{userData.userDDs['BACK']}"/>
+                        <h:commandLink   class="sdcreenimg">  
+                            <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                            <p:dataExporter type="xls"
+                                            target="PurchaseOfItemsBySuppliersViewTable" 
+                                            fileName="مبيعات الشركات"
+                                            postProcessor="#{purchaseOfItemsByCompanyReportMB.postProcessXLS}" />  
+                        </h:commandLink>
+
+
+                        <p:blockUI block="form" trigger="saveB NewB PrintB CloseB " animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI> 
+
+                    </h:panelGroup>
+
+                </h:panelGrid>
+
+            </p:fieldset>
+            <p:fieldset id="reportDB"  style="margin-top:2%">
+                <p:dataTable 
+                    paginator="true"
+                    rows="20"
+                    draggableColumns="true" 
+                    var="PurchaseOfItemsBySuppliersViewTable" 
+                    widgetVar="PurchaseOfItemsBySuppliersViewTable"  
+                    rowKey="#{PurchaseOfItemsBySuppliersViewTable}"
+                    rowIndexVar="index" 
+                    value="#{purchaseOfItemsByCompanyReportMB.salesOfItemsByCompanyList}" 
+                    dir="rtl" 
+                    emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                    id="PurchaseOfItemsBySuppliersViewTable"
+                    sortBy="#{PurchaseOfItemsBySuppliersViewTable.gallaryId}">
+
+                    <p:headerRow >
+
+                        <p:column colspan="3">
+                            <div class="p-d-inline-flex p-ai-center" style="vertical-align: middle">
+                                <h:outputText styleClass="p-ml-2" value="#{PurchaseOfItemsBySuppliersViewTable.gallaryName}"/>
+                            </div>
+                        </p:column>
+                    </p:headerRow>
+
+                    <p:column   style="width:5vh;text-align: right;font-size: 1.6vh;text-align: center" headerText="كود الشركة" 
+
+                                filterBy="#{PurchaseOfItemsBySuppliersViewTable.companyCode}" 
+                                filterMatchMode="contains" 
+                                sortBy="#{PurchaseOfItemsBySuppliersViewTable.companyCode}"
+                                filterable="false">
+
+                        <h:outputText value="#{PurchaseOfItemsBySuppliersViewTable.companyCode}" style="font-size: 1.5vh"/>
+                    </p:column>
+
+                    <p:column   style="width: 12vh;text-align: right;font-size: 1.6vh;text-align: center" headerText="اسم الشركة" 
+                                filterBy="#{PurchaseOfItemsBySuppliersViewTable.companyName}" 
+                                filterMatchMode="contains" 
+                                sortBy="#{PurchaseOfItemsBySuppliersViewTable.companyName}"
+                                filterable="false">
+
+
+                        <h:outputText value="#{PurchaseOfItemsBySuppliersViewTable.companyName}" style="font-size: 1.5vh"/>
+                    </p:column>
+
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.6vh;text-align: center" filterStyle="display:none"
+                              headerText="إجمالي المبيعات" 
+
+                              filterBy="#{PurchaseOfItemsBySuppliersViewTable.totalSales}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{PurchaseOfItemsBySuppliersViewTable.totalSales}"
+                              filterable="false">
+
+                        <h:outputText value="#{PurchaseOfItemsBySuppliersViewTable.totalSales}" style="font-size: 1.5vh;width: 95%"/>
+                    </p:column>
+
+                </p:dataTable>
+
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>
