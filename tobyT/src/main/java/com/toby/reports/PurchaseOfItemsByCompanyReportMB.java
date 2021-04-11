@@ -46,13 +46,37 @@ public class PurchaseOfItemsByCompanyReportMB extends BaseInventoryReportBean {
     }
 
     @Override
-    public HashMap prepareReport() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {
+        String reportName = "SalesOfItemsByCompany.jasper";
+        fillReport(prepareReport(), getUserData().getReportPath() + reportName, getSalesOfItemsByCompanyList(), "pdf");
     }
 
     @Override
-    public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public HashMap prepareReport() {
+        HashMap hashMap = new HashMap();
+
+        hashMap.put("PrintedBy", getUserData().getUser().getName());
+        hashMap.put("branchName", getUserData().getUserBranch().getNameAr());
+
+        if (isFileExist(getUserData().getImageReportPath())) {
+            hashMap.put("companyImage", getUserData().getImageReportPath());
+        } else {
+            hashMap.put("companyImage", null);
+        }
+
+        hashMap.put("dateFromText", "من تاريخ");
+        hashMap.put("dateFromValue", getPurchaseOfItemsBySuppliersSearchBean().getDateFrom());
+        hashMap.put("dateToText", "الى تاريخ");
+        hashMap.put("dateToValue", getPurchaseOfItemsBySuppliersSearchBean().getDateTo());
+
+        hashMap.put("fromInventoryDTONameText", "من رقم المستودع");
+        hashMap.put("fromInventoryDTONameValue", getPurchaseOfItemsBySuppliersSearchBean().getFromInventoryDTOName() == null ? null : getPurchaseOfItemsBySuppliersSearchBean().getFromInventoryDTOName().getName());
+
+        hashMap.put("companyCodeText", "كود الشركة");
+        hashMap.put("companyNameText", "اسم الشركة");
+        hashMap.put("totalSalesText", " إجمالي المبيعات");
+
+        return hashMap;
     }
 
     @Override
