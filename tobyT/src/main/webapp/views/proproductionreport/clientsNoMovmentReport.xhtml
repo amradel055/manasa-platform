@@ -80,7 +80,7 @@
 
                     </div>
                 </div>
-                <p:fieldset  legend="برنس الرياض ش التحلية"   style="margin-bottom:20px">
+                <p:fieldset  legend=""   style="margin-bottom:20px">
                     <p:dataTable  id="table"
                                   var="data"
                                   value="#{clientsNoMovmentMB.clientsNoMovmentsList}"
@@ -119,6 +119,12 @@
                                          onclick="form.target = '_blank'" ajax="false"
                                          value="#{userData.userDDs['PRINT']}"
                                          actionListener="#{clientsNoMovmentMB.exportPDF(actionEvent)}"/>
+                         <h:commandLink  style="float:left" class="sdcreenimg" >  
+                            <p:graphicImage name="/img/excel.jpg" width="24" style='margin-right:25%;'/>  
+                            <p:dataExporter type="xls"
+                                            target="table" 
+                                            fileName="عملاء ليس عليهم حركة" />  
+                        </h:commandLink>
                     </div>
 
 

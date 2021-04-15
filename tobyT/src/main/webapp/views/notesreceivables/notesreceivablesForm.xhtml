@@ -64,6 +64,7 @@
 
                                     <p:inputNumber style="width: 55%;" id="value"
                                                    value="#{notesReceivablesFormMB.glBankTransactionEntity.value}">
+                                        <p:ajax event="blur" update="form" listener="#{notesReceivablesFormMB.updateTransactionRate}" />
                                     </p:inputNumber>
 
                                 </div>

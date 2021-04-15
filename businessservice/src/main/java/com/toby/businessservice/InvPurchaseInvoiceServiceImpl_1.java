@@ -1272,15 +1272,14 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
 
                     invPurchaseInvoice = dao.updateEntity(invPurchaseInvoice);
                     invInvoiceDTO.setId(invPurchaseInvoice.getId());
+                    glBankTransactionService.addCash(invInvoiceDTO, tobyUser);
                 }
 
                 invPurchaseInvoiceDetailsService.deleteInvPurchaseInvoiceDetailListDTO(invInvoiceDTO.getInvPurchaseInvoiceDetailsDeletedList());
 
                 String error = invPurchaseInvoiceDetailsService.addInvPurchaseInvoiceDetailsDTO(invInvoiceDTO.getInvPurchaseInvoiceDetailList(), invInvoiceDTO, tobyUser);
 
-                if (invInvoiceDTO.getId() == null) {
-                    glBankTransactionService.addCash(invInvoiceDTO, tobyUser);
-                }
+                    
                 invInvoiceDTO.setInvPurchaseInvoiceId(invPurchaseInvoice.getId());
                 if (invPurchaseInvoice.getId() == null) {
                     invAddingOrderService.save(invInvoiceDTO, tobyUser);
