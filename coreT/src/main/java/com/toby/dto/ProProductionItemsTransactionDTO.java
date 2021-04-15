@@ -15,17 +15,22 @@ import java.util.Date;
 public class ProProductionItemsTransactionDTO extends BaseEntityDTO {
 
     private Date creationDate;
+    
 
     private Date modificationDate;
 
     private Integer serial;
+    private Integer invoiceSerial;
     private Integer serialNumber;
 
     private BigDecimal number;
+    private BigDecimal clothNumber;
 
     private BigDecimal productionStageCost;
 
     private Date date;
+    private Date invoiceDate;
+    private Date OrderDate;
 
     private Integer status;
     private String stageName;
@@ -177,5 +182,61 @@ public class ProProductionItemsTransactionDTO extends BaseEntityDTO {
      */
     public void setSerialNumber(Integer serialNumber) {
         this.serialNumber = serialNumber;
+    }
+
+    /**
+     * @return the invoiceSerial
+     */
+    public Integer getInvoiceSerial() {
+        return invoiceSerial;
+    }
+
+    /**
+     * @param invoiceSerial the invoiceSerial to set
+     */
+    public void setInvoiceSerial(Integer invoiceSerial) {
+        this.invoiceSerial = invoiceSerial;
+    }
+
+    /**
+     * @return the clothNumber
+     */
+    public BigDecimal getClothNumber() {
+        return clothNumber;
+    }
+
+    /**
+     * @param clothNumber the clothNumber to set
+     */
+    public void setClothNumber(BigDecimal clothNumber) {
+        this.clothNumber = clothNumber;
+    }
+
+    /**
+     * @return the invoiceDate
+     */
+    public Date getInvoiceDate() {
+        return invoiceDate;
+    }
+
+    /**
+     * @param invoiceDate the invoiceDate to set
+     */
+    public void setInvoiceDate(Date invoiceDate) {
+        this.invoiceDate = invoiceDate;
+    }
+
+    /**
+     * @return the OrderDate
+     */
+    public Date getOrderDate() {
+        return OrderDate;
+    }
+
+    /**
+     * @param OrderDate the OrderDate to set
+     */
+    public void setOrderDate(Date OrderDate) {
+        this.OrderDate = OrderDate;
     }
 }

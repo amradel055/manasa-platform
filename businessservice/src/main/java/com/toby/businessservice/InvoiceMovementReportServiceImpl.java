@@ -35,7 +35,8 @@ public class InvoiceMovementReportServiceImpl implements InvoiceMovementReportSe
         query.append("select ipi.serial as serial , ios.name as customerName , inv.name as inventoryName , pfd.date , pfd.type , ipi.id as id , pfd.id as idFactory from pro_factory_delivery pfd \n").
                 append(" left join inv_purchase_invoice ipi on ipi.id = pfd.inv_purchase_invoice_id\n").
                 append(" left join inv_organization_site ios on ios.id = ipi.organization_site_id\n").
-                append(" left join inv_inventory inv on inv.id = ipi.inv_inventory_id ").append(" left join inv_inventory inv2 on inv2.id = ipi.galary_Id ").
+                append(" left join inv_inventory inv on inv.id = ipi.inv_inventory_id ").
+                append(" left join inv_inventory inv2 on inv2.id = ipi.galary_Id ").
                 append(" where ipi.branch_id = \n ").
                 append(branchId).append(" ").
                 append(appendProProductionInvoice(printProductionDTO)).

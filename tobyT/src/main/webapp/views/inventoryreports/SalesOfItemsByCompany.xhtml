@@ -94,7 +94,7 @@
                                           onclick="form.target = '_blank'"  
                                           icon="fa fa-fw fa-print"
                                           value="#{userData.userDDs['PRINT']}" 
-                                          actionListener="#{purchaseOfItemsByCompanyReportMB.exportPDF}"
+                                          actionListener="#{purchaseOfItemsByCompanyReportMB.exportPDF(actionEvent)}"
                                           title="#{userData.userDDs['PRINT']}"
                                           immediate="true" />
 

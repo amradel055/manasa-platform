@@ -16,6 +16,7 @@ import com.toby.dto.ProProductionTransactionDTO;
 import com.toby.dto.ProProductionTransactionDetailDetailViewDTO;
 import com.toby.entity.Branch;
 import com.toby.entity.InvPurchaseInvoiceDetail;
+import com.toby.entity.ProFactoryDelivery;
 import com.toby.entity.ProFactoryDeliveryDetail;
 import com.toby.entity.ProProductionItemsTransaction;
 import com.toby.entity.ProProductionStages;
@@ -45,6 +46,8 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
 
     @EJB
     GenericDAO dao;
+    @EJB
+    InvoiceMovementReportService movementReportService;
 
     @Override
     public ProProductionItemsTransactionDTO deleteproProductionItemsTransactionDTO(ProProductionItemsTransactionDTO proProductionItemsTransactionDTO, TobyUser tobyUser) {
@@ -306,23 +309,23 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
         params.put("branchId", branchId);
         StringBuilder builder = new StringBuilder();
         builder.append(" SELECT s FROM ProProductionItemsTransaction s WHERE  s.branchId.id = :branchId and( s.isDeleted != 1 or s.isDeleted is NULL )  ");
-        appendProProductionStatus(transactionFactoryView, builder, params);
-        appendProProductionDate(transactionFactoryView, builder, params);
-        appendProProductionUser(transactionFactoryView, builder, params);
-        appendProProductionInvoiceNumber(transactionFactoryView, builder, params);
-        appendProProductionGellery(transactionFactoryView, builder, params);
+        appendProProductionStatus1(transactionFactoryView, builder, params);
+        appendProProductionDate1(transactionFactoryView, builder, params);
+        appendProProductionUser1(transactionFactoryView, builder, params);
+        appendProProductionInvoiceNumber1(transactionFactoryView, builder, params);
+        appendProProductionGellery1(transactionFactoryView, builder, params);
         List<ProProductionItemsTransaction> details = dao.findListByQuery(builder.toString(), params);
         return mapToDTOList(details, null);
     }
 
-    private void appendProProductionStatus(ProProductionTransactionFactoryView transactionFactoryView, StringBuilder query, Map<String, Object> params) {
+    private void appendProProductionStatus1(ProProductionTransactionFactoryView transactionFactoryView, StringBuilder query, Map<String, Object> params) {
         if (transactionFactoryView != null && transactionFactoryView.getStatus() != null) {
             params.put("status", transactionFactoryView.getStatus().getId());
             query.append(" and s.proProductionStagesId.id = :status  ");
         }
     }
 
-    private void appendProProductionDate(ProProductionTransactionFactoryView transactionFactoryView, StringBuilder query, Map<String, Object> params) {
+    private void appendProProductionDate1(ProProductionTransactionFactoryView transactionFactoryView, StringBuilder query, Map<String, Object> params) {
         if (transactionFactoryView != null && transactionFactoryView.getDate() != null) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
 //            params.put("date", dateFormat.format(transactionFactoryView.getDate()));
@@ -331,25 +334,114 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
         }
     }
 
-    private void appendProProductionUser(ProProductionTransactionFactoryView transactionFactoryView, StringBuilder query, Map<String, Object> params) {
+    private void appendProProductionUser1(ProProductionTransactionFactoryView transactionFactoryView, StringBuilder query, Map<String, Object> params) {
         if (transactionFactoryView != null && transactionFactoryView.getUser() != null) {
-             params.put("user", transactionFactoryView.getUser().getId());
+            params.put("user", transactionFactoryView.getUser().getId());
             query.append(" and s.createdBy.id = :user ");
         }
     }
 
-    private void appendProProductionInvoiceNumber(ProProductionTransactionFactoryView transactionFactoryView, StringBuilder query, Map<String, Object> params) {
+    private void appendProProductionInvoiceNumber1(ProProductionTransactionFactoryView transactionFactoryView, StringBuilder query, Map<String, Object> params) {
         if (transactionFactoryView != null && transactionFactoryView.getInvoiceNumber() != null && transactionFactoryView.getInvoiceNumber() > 0) {
-             params.put("invoiceNumber", transactionFactoryView.getInvoiceNumber());
+            params.put("invoiceNumber", transactionFactoryView.getInvoiceNumber());
             query.append(" and s.proFactoryDeliveryDetailId.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial = :invoiceNumber ");
         }
     }
 
-    private void appendProProductionGellery(ProProductionTransactionFactoryView transactionFactoryView, StringBuilder query, Map<String, Object> params) {
+    private void appendProProductionGellery1(ProProductionTransactionFactoryView transactionFactoryView, StringBuilder query, Map<String, Object> params) {
         if (transactionFactoryView != null && transactionFactoryView.getGallerySelected() != null) {
             params.put("galleryList", transactionFactoryView.getGallerySelected().getId());
             query.append(" and s.proFactoryDeliveryDetailId.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.galaryId.id = :galleryList ");
         }
+    }
+
+    private void appendProProductionDate(ProProductionTransactionFactoryView transactionFactoryView) {
+        StringBuilder query = new StringBuilder();
+        if (transactionFactoryView.getDate() != null) {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+            query.append(" and ipi.date >=  '").append(dateFormat.format(transactionFactoryView.getDate())).append("'");
+        }
+        if (transactionFactoryView.getDate() != null) {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+            query.append(" and ipi.date <=  '").append(dateFormat.format(transactionFactoryView.getDateTo())).append("'");
+        }
+
+    }
+
+    private void appendProProductionGellery(ProProductionTransactionFactoryView transactionFactoryView) {
+        StringBuilder query = new StringBuilder();
+        if (transactionFactoryView != null && transactionFactoryView.getGallerySelected() != null) {
+            query.append(" ipi.galary_Id =  '").append(transactionFactoryView.getGallerySelected().getId()).append("' ");
+        }
+    }
+
+    private String appendFilter(ProProductionTransactionFactoryView transactionFactoryView) {
+        StringBuilder query = new StringBuilder();
+        if (transactionFactoryView != null) {
+            query.append(" and s.id = (select max(p.id) From ProProductionItemsTransaction p where p.proFactoryDeliveryDetailId.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial = s.proFactoryDeliveryDetailId.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial ) order by s.proFactoryDeliveryDetailId.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial  ");
+        }
+        if (!query.toString().isEmpty()) {
+            return query.toString();
+        }
+
+        return "";
+    }
+
+    @Override
+    public List<ProProductionItemsTransactionDTO> getALLProProductionItemsTransactionLastDTO(ProProductionTransactionFactoryView transactionFactoryView, Integer branchId) {
+        List<ProProductionItemsTransactionDTO> list = new ArrayList<>();
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT ipi.serial , tu.name , tu.user_code , pps.name , pit.date , ipi.date , pit.pro_production_stages_id , pit.pro_factory_delivery_detail_id,ipi.id\n").
+                append("from toby.pro_production_items_transaction pit \n").
+                append("left join pro_factory_delivery_detail pfdd on pit.pro_factory_delivery_detail_id = pfdd.id \n").
+                append("left join pro_factory_delivery pfd on pfd.id = pfdd.pro_factory_delivery_id\n").
+                append("left join inv_purchase_invoice ipi on ipi.id = pfd.inv_purchase_invoice_id \n").
+                append("left join toby_user tu on tu.id = pit.created_by\n").
+                append("left join pro_production_stages pps on pps.id = pit.pro_production_stages_id\n").
+                append("WHERE pfd.branch_id = \n  ").
+                append(branchId).append(" ");
+        appendProProductionDate(transactionFactoryView);
+        appendProProductionGellery(transactionFactoryView);
+        builder.append("and  pfd.id not in (select parent from toby.pro_factory_delivery where type = 1 and parent is not null ) AND pit.id IN (\n").
+                append("    SELECT MAX(pit.id)\n").
+                append("    from toby.pro_production_items_transaction pit \n").
+                append("left join pro_factory_delivery_detail pfdd on pit.pro_factory_delivery_detail_id = pfdd.id \n").
+                append("left join pro_factory_delivery pfd on pfd.id = pfdd.pro_factory_delivery_id\n").
+                append("    GROUP BY pfd.id\n").
+                append(") order by ipi.serial ");
+        List<Object[]> details = dao.executeNativeQuery(builder.toString());
+        for (Object[] object : details) {
+            ProProductionItemsTransactionDTO itemsTransactionDTO = new ProProductionItemsTransactionDTO();
+            itemsTransactionDTO.setInvoiceSerial((Integer) object[0]);
+            itemsTransactionDTO.setCreatedByName((String) object[1]);
+            itemsTransactionDTO.setCreatedByCode((String) object[2]);
+            itemsTransactionDTO.setStageName((String) object[3]);
+            itemsTransactionDTO.setOrderDate((Date) object[4]);
+            itemsTransactionDTO.setInvoiceDate((Date) object[5]);
+            itemsTransactionDTO.setId((Integer) object[8]);
+            itemsTransactionDTO.setClothNumber(movementReportService.summitionTob(itemsTransactionDTO.getId()));
+
+            list.add(itemsTransactionDTO);
+        }
+
+        builder = new StringBuilder();
+        builder.append("select pfd from ProFactoryDelivery pfd \n"
+                + "where pfd.id  not in (select distinct(ppit.proFactoryDeliveryDetailId.proFactoryDeliveryId.id)\n"
+                + "from ProProductionItemsTransaction ppit\n"
+                + "where ppit.proFactoryDeliveryDetailId is not null and ppit.proFactoryDeliveryDetailId.proFactoryDeliveryId is not null\n"
+                + ") and pfd.branchId.id = 182");
+        
+        List<ProFactoryDelivery> details1 = dao.findListByQuery(builder.toString());
+         for (ProFactoryDelivery factoryDelivery : details1) {
+            ProProductionItemsTransactionDTO itemsTransactionDTO = new ProProductionItemsTransactionDTO();
+            itemsTransactionDTO.setInvoiceSerial(factoryDelivery.getInvPurchaseInvoiceId().getSerial());
+            itemsTransactionDTO.setInvoiceDate(factoryDelivery.getInvPurchaseInvoiceId().getDate());
+            itemsTransactionDTO.setId(factoryDelivery.getInvPurchaseInvoiceId().getId());
+            itemsTransactionDTO.setClothNumber(movementReportService.summitionTob(itemsTransactionDTO.getId()));
+
+            list.add(itemsTransactionDTO);
+         }
+        return list;
     }
 
     @Override
@@ -361,8 +453,6 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
         Long details = dao.findEntityByQuery(builder.toString(), filters);
         return details == null ? 0 : details;
     }
-    
-    
 
 //   private void appendFilter(Map<String, Object> filters, StringBuilder builder) {
 //        if (filters.get("invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial") != null
