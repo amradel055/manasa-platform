@@ -31,6 +31,8 @@ public class PurchaseOfItemsByCompanyReportMB extends BaseInventoryReportBean {
 
     private List<SalesOfItemsByCompany> salesOfItemsByCompanyList;
 
+   
+
     @EJB
     PurchaseOfItemsBySuppliersReportService purchaseOfItemsBySuppliersReportService;
 
@@ -128,5 +130,7 @@ public class PurchaseOfItemsByCompanyReportMB extends BaseInventoryReportBean {
     public void setSalesOfItemsByCompanyList(List<SalesOfItemsByCompany> salesOfItemsByCompanyList) {
         this.salesOfItemsByCompanyList = salesOfItemsByCompanyList;
     }
+
+  
 
 }

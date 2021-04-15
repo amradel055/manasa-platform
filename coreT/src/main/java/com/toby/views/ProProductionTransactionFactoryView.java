@@ -17,6 +17,7 @@ import java.util.Date;
 public class ProProductionTransactionFactoryView {
 
     private Date date;
+    private Date dateTo;
     private InvInventoryDTO gallerySelected;
     private ProProductionStagesDTO status;
     private TobyUserDTO user;
@@ -91,6 +92,20 @@ public class ProProductionTransactionFactoryView {
      */
     public void setInvoiceNumber(Integer invoiceNumber) {
         this.invoiceNumber = invoiceNumber;
+    }
+
+    /**
+     * @return the dateTo
+     */
+    public Date getDateTo() {
+        return dateTo;
+    }
+
+    /**
+     * @param dateTo the dateTo to set
+     */
+    public void setDateTo(Date dateTo) {
+        this.dateTo = dateTo;
     }
 
 }

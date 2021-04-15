@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice.report;
 
+import com.toby.businessservice.InvoiceMovementReportService;
 import com.toby.businessservice.reports.searchBean.PurchaseOfItemsBySuppliersSearchBean;
 import com.toby.core.GenericDAO;
 import com.toby.entity.InvPurchaseInvoiceDetail;
@@ -29,6 +30,8 @@ public class PurchaseOfItemsBySuppliersReportServiceImpl implements PurchaseOfIt
 
     @EJB
     private GenericDAO dao;
+    @EJB 
+    InvoiceMovementReportService movementReportService;
 
     @Override
     public List<ItemSalesView> getAllPurchaseOfItemsBySuppliersSearchBean(PurchaseOfItemsBySuppliersSearchBean purchaseOfItemsBySuppliersSearchBean) {

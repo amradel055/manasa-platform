@@ -36,5 +36,7 @@ public interface ProProductionItemsTransactionService {
 
     public List<ProProductionItemsTransactionDTO> getALLProProductionItemsTransactionDTO(ProProductionTransactionFactoryView transactionFactoryView, Integer branchId);
 
+    public List<ProProductionItemsTransactionDTO> getALLProProductionItemsTransactionLastDTO(ProProductionTransactionFactoryView transactionFactoryView, Integer branchId);
+
     public Long getTotalRegistors(Integer branchId, Map<String, Object> filters);
 }

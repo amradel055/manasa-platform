@@ -41,6 +41,8 @@ public class PurchaseOfItemsBySuppliersSearchBean {
     private Boolean showReport;
     private Boolean shortReport = false;
 
+   
+
     public Integer getBranchId() {
         return branchId;
     }
@@ -305,5 +307,7 @@ public class PurchaseOfItemsBySuppliersSearchBean {
     public void setToInventoryDTOName(InvInventoryDTO toInventoryDTOName) {
         this.toInventoryDTOName = toInventoryDTOName;
     }
+
+   
 
 }
