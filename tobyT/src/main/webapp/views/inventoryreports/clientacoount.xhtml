@@ -8,6 +8,9 @@
                 xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <ui:define name="content">
+        <link rel="stylesheet" href="https://ZulNs.github.io/libs/calendar.css"/>
+        <script type="text/javascript" src="https://ZulNs.github.io/libs/hijri-date.js"></script>
+        <script type="text/javascript" src="https://ZulNs.github.io/libs/calendar.js"></script>
         <f:event listener="#{userData.authorize}" type="preRenderView" />
         <h:form  id="form" dir="#{userData.dir}"  class='formmargin'>
 
@@ -86,19 +89,21 @@
 
                                 </div>
                             </div>
-                            <div class="ui-g-12 ui-xl-12">
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:calendar pattern="dd/MM/yyyy" 
-                                                value="#{supplierAccountReportMB.supplierAccountSearchBean.dateTo}"
-                                                style="width: 50%"
-                                                id="dateTo">
 
-                                    </p:calendar>
+                            <div class="ui-g-12 ui-xl-12" id="datepicker">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <input id="pick-button" type="button" onclick="pickADate();"
+                                           value="pick"
+                                           />
+                                    <input      value="#{supplierAccountReportMB.supplierAccountSearchBean.dateTest}"
+                                                style="width: 50%"
+                                                id="picked-text"/>
+
 
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
 
-                                    <p:outputLabel  style="width: 70px" value="#{userData.userDDs['TO_DATE']}"/>
+                                    <p:outputLabel style="width: 50px"  value="الى تاريخ" />
 
 
 
@@ -294,6 +299,30 @@
                     document.getElementById("form:dateFrom_input").value = null;
                     document.getElementById("form:dateTo_input").value = null;
                 }
+
+
+                var pickedTxt = document.getElementById('picked-text'),
+                        pickBtn = document.getElementById('pick-button'),
+                        datepicker = new Calendar();
+                document.getElementById('datepicker').appendChild(datepicker.getElement());
+                datepicker.getElement().style.marginTop = '10px';
+
+                datepicker.callback = function () {
+                    pickedTxt.value = datepicker.getDate().getDateString();
+                    pickedTxt.selectionStart = 0;
+                    pickedTxt.selectionEnd = pickedTxt.value.length;
+                    pickedTxt.focus();
+                };
+
+                datepicker.onHide = function () {
+                    pickBtn.style.display = 'inline-block';
+                };
+
+                function pickADate() {
+                    pickBtn.style.display = 'none';
+                    datepicker.show();
+                }
+
             </script>
         </h:form>
     </ui:define>
