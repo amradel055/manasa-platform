@@ -14,6 +14,7 @@ import com.toby.dto.PrintProductionDTO;
 import com.toby.entity.InvPurchaseInvoice;
 import com.toby.entity.InvPurchaseInvoiceDetail;
 import com.toby.entity.InventorySetup;
+import com.toby.views.ClientsNoMovment;
 import com.toby.views.FactoryInvoiceStatus;
 import com.toby.views.SummitionItemsView;
 import java.math.BigDecimal;
@@ -108,6 +109,8 @@ public interface InvPurchaseInvoiceService_1 {
     public List<SummitionItemsView> findSummitionQuantity(Integer gallaryId, Integer branchId, Date dateFrom, Date dateTo, Integer groupId);
 
     public List<SummitionItemsView> getTheListBasedOnStagesList(Integer gallaryId, Date dateFrom, Date dateTo, Integer groupId, Integer branchId, TobyUser tobyUser);
+
+    public List<ClientsNoMovment> findClientsNoMovment(Integer branchId, Integer gallaryId, Date date, Integer type);
 
     public List<InvInvoiceDTO> getALLInvPurchaseInvoiceDTOByStatus(PrintProductionDTO printProductionDTO, Integer branchId);
 

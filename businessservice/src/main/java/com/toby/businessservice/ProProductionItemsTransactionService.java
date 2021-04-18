@@ -11,8 +11,10 @@ import com.toby.dto.ProProductionTransactionDTO;
 import com.toby.dto.ProProductionTransactionDetailDetailViewDTO;
 import com.toby.entity.ProProductionItemsTransaction;
 import com.toby.entity.TobyUser;
+import com.toby.views.ProProductionTransactionFactoryView;
 import com.toby.views.ProductionTransactionOfUser;
 import java.util.List;
+import java.util.Map;
 import javax.ejb.Remote;
 
 /**
@@ -27,6 +29,14 @@ public interface ProProductionItemsTransactionService {
     public List<ProProductionItemsTransactionDTO> getProProductionItemsTransaction(TobyUser tobyUser);
 
     public ProProductionItemsTransactionDTO deleteproProductionItemsTransactionDTO(ProProductionItemsTransactionDTO proProductionItemsTransactionDTO, TobyUser tobyUser);
-    
+
     public List<ProductionTransactionOfUser> getProProductionTransactionDTOForAllUsersList(PrintProductionDTO printProductionDTO, Integer branchId);
+
+    public List<ProProductionItemsTransactionDTO> getALLProProductionItemsTransactionDTO(int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters);
+
+    public List<ProProductionItemsTransactionDTO> getALLProProductionItemsTransactionDTO(ProProductionTransactionFactoryView transactionFactoryView, Integer branchId);
+
+    public List<ProProductionItemsTransactionDTO> getALLProProductionItemsTransactionLastDTO(ProProductionTransactionFactoryView transactionFactoryView, Integer branchId);
+
+    public Long getTotalRegistors(Integer branchId, Map<String, Object> filters);
 }

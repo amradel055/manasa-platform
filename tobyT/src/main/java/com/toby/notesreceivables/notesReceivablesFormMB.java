@@ -339,8 +339,10 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
             glBankTransactionEntity.setPaymentType(0);
             glBankTransactionEntity.setSerial(null);
             glBankTransactionEntity.setValue(glBankTransactionEntity.getValue() != null ? glBankTransactionEntity.getValue().setScale(2, BigDecimal.ROUND_UP) : null);
-            glBankTransactionEntity.setValueLocal(glBankTransactionEntity.getValueLocal() != null ? glBankTransactionEntity.getValueLocal().setScale(2, BigDecimal.ROUND_UP) : null);
-            glBankTransactionEntity.setRate(glBankTransactionEntity.getRate() != null ? glBankTransactionEntity.getRate().setScale(2, BigDecimal.ROUND_UP) : null);
+//            glBankTransactionEntity.setValueLocal(glBankTransactionEntity.getValueLocal() != null ? glBankTransactionEntity.getValueLocal().setScale(2, BigDecimal.ROUND_UP) : null);
+//            glBankTransactionEntity.setRate(glBankTransactionEntity.getRate() != null ? glBankTransactionEntity.getRate().setScale(2, BigDecimal.ROUND_UP) : null);
+            glBankTransactionEntity.setValueLocal(glBankTransactionEntity.getValue() != null ? glBankTransactionEntity.getValue().setScale(2, BigDecimal.ROUND_UP) : null);
+            glBankTransactionEntity.setRate(BigDecimal.ONE);
 
             glBankTransactionEntity.setDate(new Date());
             glBankTransaction = new GlBankTransaction();
@@ -624,7 +626,8 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
             glBankTransactionEntityMapper.setTransactionType(bankTransaction.getTransactionType() != null ? bankTransaction.getTransactionType() : 0);
             glBankTransactionEntityMapper.setValue(bankTransaction.getValue() != null ? bankTransaction.getValue().setScale(2, BigDecimal.ROUND_UP) : BigDecimal.ZERO);
             glBankTransactionEntityMapper.setRate(bankTransaction.getRate() != null ? bankTransaction.getRate().setScale(2, BigDecimal.ROUND_UP) : BigDecimal.ONE);
-            glBankTransactionEntityMapper.setValueLocal(bankTransaction.getValueLocal() == null ? BigDecimal.ZERO : bankTransaction.getValueLocal().setScale(2, BigDecimal.ROUND_UP));
+//            glBankTransactionEntityMapper.setValueLocal(bankTransaction.getValueLocal() == null ? BigDecimal.ZERO : bankTransaction.getValueLocal().setScale(2, BigDecimal.ROUND_UP));
+            glBankTransactionEntityMapper.setValueLocal(glBankTransactionEntityMapper.getValue());
             glBankTransactionEntityMapper.setGlYear(bankTransaction.getGlYear() != null ? bankTransaction.getGlYear() : null);
             glBankTransactionEntityMapper.setInvoiceId(bankTransaction.getInvoiceId() == null ? null : bankTransaction.getInvoiceId().getId());
             for (GlBankTransactionDetail transactionDetail : glBankTransactionDetailsList) {
@@ -670,7 +673,8 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
 //                    glBankTransactionEntity.setRate(updateRate(glBankTransactionEntity.getGlBank().getCurrencyId(), glBankTransactionEntity.getDate()));
                     glBankTransactionEntity.setRate(BigDecimal.ONE);
                 }
-                glBankTransactionEntity.setRate(glBankTransactionEntity.getRate() != null ? glBankTransactionEntity.getRate().setScale(2, BigDecimal.ROUND_UP) : null);
+//                glBankTransactionEntity.setRate(glBankTransactionEntity.getRate() != null ? glBankTransactionEntity.getRate().setScale(2, BigDecimal.ROUND_UP) : null);
+                glBankTransactionEntity.setRate(BigDecimal.ONE);
                 changeRate();
             } else {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "خطأ"));
@@ -705,8 +709,9 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
     @Override
     public void calculateLocalValue() {
         try {
-            glBankTransactionEntity.setValueLocal((glBankTransactionEntity.getValue() == null ? BigDecimal.ZERO : glBankTransactionEntity.getValue()).multiply(glBankTransactionEntity.getRate() == null ? BigDecimal.ONE : glBankTransactionEntity.getRate()));
-            glBankTransactionEntity.setValueLocal(glBankTransactionEntity.getValueLocal() != null ? glBankTransactionEntity.getValueLocal().setScale(2, BigDecimal.ROUND_UP) : null);
+//            glBankTransactionEntity.setValueLocal((glBankTransactionEntity.getValue() == null ? BigDecimal.ZERO : glBankTransactionEntity.getValue()).multiply(glBankTransactionEntity.getRate() == null ? BigDecimal.ONE : glBankTransactionEntity.getRate()));
+//            glBankTransactionEntity.setValueLocal(glBankTransactionEntity.getValueLocal() != null ? glBankTransactionEntity.getValueLocal().setScale(2, BigDecimal.ROUND_UP) : null);
+            glBankTransactionEntity.setValueLocal(glBankTransactionEntity.getValue() == null ? BigDecimal.ZERO : glBankTransactionEntity.getValue());
         } catch (Exception e) {
             saveError(e, "notesReceivablesFormMB", "calculateLocalValue");
         }
@@ -715,7 +720,8 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
     public void updatetransactionDetailLocalValue() {
         try {
             for (GlBankTransactionDetailEntity detailEntity : glBankTransactionDetailEntityList) {
-                detailEntity.setValueLocal((detailEntity.getValue() == null ? BigDecimal.ZERO : detailEntity.getValue()).multiply(glBankTransactionEntity.getRate() == null ? BigDecimal.ONE : glBankTransactionEntity.getRate()));
+//                detailEntity.setValueLocal((detailEntity.getValue() == null ? BigDecimal.ZERO : detailEntity.getValue()).multiply(glBankTransactionEntity.getRate() == null ? BigDecimal.ONE : glBankTransactionEntity.getRate()));
+                detailEntity.setValueLocal((detailEntity.getValue() == null ? BigDecimal.ZERO : detailEntity.getValue()));
             }
             updateLocalValueSummary();
         } catch (Exception e) {
@@ -793,8 +799,10 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
                     }
 
                     glBankTransaction.setValue(glBankTransactionEntity.getValue() != null ? glBankTransactionEntity.getValue() : BigDecimal.ZERO);
-                    glBankTransaction.setValueLocal(glBankTransactionEntity.getValueLocal() != null ? glBankTransactionEntity.getValueLocal() : BigDecimal.ZERO);
-                    glBankTransaction.setRate(glBankTransactionEntity.getRate() != null ? glBankTransactionEntity.getRate() : BigDecimal.ONE);
+//                    glBankTransaction.setValueLocal(glBankTransactionEntity.getValueLocal() != null ? glBankTransactionEntity.getValueLocal() : BigDecimal.ZERO);
+//                    glBankTransaction.setRate(glBankTransactionEntity.getRate() != null ? glBankTransactionEntity.getRate() : BigDecimal.ONE);
+                    glBankTransaction.setValueLocal(glBankTransaction.getValue());
+                    glBankTransaction.setRate(BigDecimal.ONE);
 //                    glBankTransaction.setGlYear(getGlYearSelection().getYear() != null ? getGlYearSelection().getYear() : null);
                     if (glBankTransactionEntity.getPaymentType() == 1) {
                         glBankTransaction.setChequeDate(glBankTransactionEntity.getChequeDate() != null ? glBankTransactionEntity.getChequeDate() : new Date());
@@ -896,7 +904,8 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
 //                if(glBankTransactionDetailEntity.getInvOrganizationSite() != null){}
                     bankTransactionDetail.setRemarks(glBankTransactionDetailEntity.getRemarks());
                     bankTransactionDetail.setValue(glBankTransactionEntity.getValue() != null ? glBankTransactionEntity.getValue() : BigDecimal.ZERO);
-                    bankTransactionDetail.setValueLocal(glBankTransactionEntity.getValueLocal() != null ? glBankTransactionEntity.getValueLocal() : BigDecimal.ZERO);
+                    bankTransactionDetail.setValueLocal(bankTransactionDetail.getValue());
+//                    bankTransactionDetail.setValueLocal(glBankTransactionEntity.getValueLocal() != null ? glBankTransactionEntity.getValueLocal() : BigDecimal.ZERO);
                     bankTransactionDetail.setSymbolId(glBankTransactionDetailEntity.getGlItems());
 //            bankTransactionDetail.set
                     try {

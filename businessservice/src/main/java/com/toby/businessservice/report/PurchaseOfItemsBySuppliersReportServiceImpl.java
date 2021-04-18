@@ -5,11 +5,13 @@
  */
 package com.toby.businessservice.report;
 
+import com.toby.businessservice.InvoiceMovementReportService;
 import com.toby.businessservice.reports.searchBean.PurchaseOfItemsBySuppliersSearchBean;
 import com.toby.core.GenericDAO;
 import com.toby.entity.InvPurchaseInvoiceDetail;
 import com.toby.views.ItemSalesView;
 import com.toby.views.ItemSalesViewGroup;
+import com.toby.views.SalesOfItemsByCompany;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,6 +30,8 @@ public class PurchaseOfItemsBySuppliersReportServiceImpl implements PurchaseOfIt
 
     @EJB
     private GenericDAO dao;
+    @EJB 
+    InvoiceMovementReportService movementReportService;
 
     @Override
     public List<ItemSalesView> getAllPurchaseOfItemsBySuppliersSearchBean(PurchaseOfItemsBySuppliersSearchBean purchaseOfItemsBySuppliersSearchBean) {
@@ -353,7 +357,6 @@ public class PurchaseOfItemsBySuppliersReportServiceImpl implements PurchaseOfIt
         return list;
     }
 
-    
     public List<ItemSalesViewGroup> getAllPurchaseOfItemsBySuppliersSearchBeanByGroupCustomer(PurchaseOfItemsBySuppliersSearchBean purchaseOfItemsBySuppliersSearchBean) {
         Map<String, Object> params = new HashMap<>();
         params.put("type", purchaseOfItemsBySuppliersSearchBean.getType());
@@ -495,4 +498,49 @@ public class PurchaseOfItemsBySuppliersReportServiceImpl implements PurchaseOfIt
 
         return list;
     }
+
+    @Override
+    public List<SalesOfItemsByCompany> getAllSalesOfItemsByCompany(PurchaseOfItemsBySuppliersSearchBean purchaseOfItemsBySuppliersSearchBean) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("SELECT inv.id , inv.name , oc.name as name , oc.code code , sum(ipid.net) as sum \n"
+                + "        FROM `inv_purchase_invoice` `ipi`\n"
+                + "        LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
+                + "        LEFT JOIN inv_organization_site ios on ios.id = ipi.organization_site_id\n"
+                + "        LEFT JOIN offer_company oc on oc.id = ios.offer_company_id\n"
+                + "        LEFT JOIN inv_inventory inv on inv.id = ipi.galary_Id\n"
+                + "        WHERE\n"
+                + "        `ipid`.`item_id` IS NOT NULL AND ipi.type = 4 \n"
+                + "        AND `ipi`.`branch_id` = 182 and ios.offer_company_id is not null\n");
+        if (purchaseOfItemsBySuppliersSearchBean.getDateFrom() != null) {
+            stringBuilder.append(" AND ipi.date >= '").append(purchaseOfItemsBySuppliersSearchBean.getDateFrom()).append("'");
+        }
+        if (purchaseOfItemsBySuppliersSearchBean.getDateTo() != null) {
+            stringBuilder.append(" AND ipi.date <= '").append(purchaseOfItemsBySuppliersSearchBean.getDateTo()).append("'");
+        }
+        if (purchaseOfItemsBySuppliersSearchBean.getFromInventoryDTOName() != null) {
+            stringBuilder.append(" AND ipi.galary_Id = ").append(purchaseOfItemsBySuppliersSearchBean.getFromInventoryDTOName().getId());
+        }
+
+        stringBuilder.append("    GROUP BY ios.offer_company_id");
+        List<Object[]> details = dao.executeNativeQuery(stringBuilder.toString());
+        return prepareListSalesOfItemsByCompany(details);
+    }
+
+    private List<SalesOfItemsByCompany> prepareListSalesOfItemsByCompany(List<Object[]> res) {
+        List<SalesOfItemsByCompany> list = new ArrayList<>();
+        SalesOfItemsByCompany salesOfItemsByCompany;
+        for (Object[] object : res) {
+            salesOfItemsByCompany = new SalesOfItemsByCompany();
+            salesOfItemsByCompany.setGallaryId((Integer) object[0]);
+            salesOfItemsByCompany.setGallaryName((String) object[1]);
+            salesOfItemsByCompany.setCompanyName((String) object[2]);
+            salesOfItemsByCompany.setCompanyCode((Integer) object[3]);
+            salesOfItemsByCompany.setTotalSales((BigDecimal) object[4]);
+
+            list.add(salesOfItemsByCompany);
+        }
+
+        return list;
+    }
+
 }

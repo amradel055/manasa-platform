@@ -25,12 +25,9 @@ import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
 import java.util.List;
-import java.util.Map;
 import javax.faces.application.FacesMessage;
 import javax.faces.event.ActionEvent;
 import net.sf.jasperreports.engine.JRException;
-import net.sourceforge.barbecue.linear.code128.ModuleFactory;
-import org.apache.poi.hssf.util.HSSFColor;
 
 @Named(value = "invoiceMovementReportMB")
 @ViewScoped

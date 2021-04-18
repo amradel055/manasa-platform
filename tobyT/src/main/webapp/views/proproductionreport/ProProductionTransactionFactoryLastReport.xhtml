@@ -1,0 +1,186 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <h:body>
+
+            <h:form dir="RTL" style="margin-right: 20px" id="form" >
+
+                <p:fieldset  legend=" فواتير المصنع حسب اخر حركة لأوامر الشغل" id="stages"  style=" position: relative">
+                    <p:messages id="messages" showDetail="true" closable="true"/> 
+
+
+                    <div class="ui-g-6 ui-xl-6">
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:autoComplete style="width:85%" id="gallary_from" 
+                                                dropdown="true"
+                                                converter="#{autoComplete.invInventoryDTOConverter}"
+                                                value="#{proProductionTransactionFactoryLastMB.proProductionTransactionFactoryView.gallerySelected}" 
+                                                var="gallaryFrom"
+                                                itemLabel="#{gallaryFrom}"
+                                                itemValue="#{gallaryFrom}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{autoComplete.completeGallaryDTO}" >
+                                </p:autoComplete>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 50px;margin-right: 1%" value="المعرض"/>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="ui-g-6 ui-xl-6">
+
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:calendar style="width: 50%"  id="dateFrom"
+                                            value="#{proProductionTransactionFactoryLastMB.proProductionTransactionFactoryView.date}"
+                                            pattern="dd/MM/yyyy"  showButtonPanel="true" >
+
+                                </p:calendar>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:outputLabel style="width: 50px"  value=" من تاريخ" />
+
+
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:calendar style="width: 50%"  id="dateTo"
+                                            value="#{proProductionTransactionFactoryMB.proProductionTransactionFactoryView.dateTo}"
+                                            pattern="dd/MM/yyyy"  showButtonPanel="true" >
+
+                                </p:calendar>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:outputLabel style="width: 50px"  value=" الى تاريخ" />
+
+
+
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+
+
+
+
+                </p:fieldset>
+
+                <div class="ui-g-12 ui-xl-12">
+                    <div class="ui-g-6 ui-xl-6">
+
+
+                        <p:commandButton     class="saveButton" id="saveB" 
+                                             value="بحث" 
+                                             icon="fa fa-fw fa-save"
+                                             action="#{proProductionTransactionFactoryLastMB.search()}"
+                                             update="@form"
+                                             >
+
+                        </p:commandButton>
+
+
+                    </div>
+                </div>
+                <p:fieldset  legend="البيانات"   style="margin-bottom:20px">
+                    <p:dataTable  id="table"
+                                  var="data"
+                                  value="#{proProductionTransactionFactoryLastMB.proProductionItemsTransactionDTOList}"
+                                  draggableColumns="true"
+                                  paginator="true"
+                                  widgetVar="data" 
+                                  rowIndexVar="index" 
+                                  emptyMessage="EMPTY_TABLE"
+                                  rows="20" lazy="true"
+                                  >
+                        <p:column headerText="#" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText 
+                                value="#{index + 1}" />
+                        </p:column>
+                        <p:column style="width: 8vh;text-align: -webkit-auto;font-size: 1.4vh" 
+                                  headerText="رقم الفاتورة"
+                                  >
+                            <p:outputLabel value="#{data.invoiceSerial}" />
+                        </p:column>
+
+                        <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.4vh" 
+                                  headerText="اسم العامل "
+                                  >
+                            <p:outputLabel value="#{data.createdByName}" />
+
+
+                        </p:column>
+                        <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.4vh" 
+                                  headerText="رقم العامل "
+                                  >
+                            <p:outputLabel value="#{data.createdByCode}" />
+
+
+                        </p:column>
+                        <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.4vh"
+                                  headerText="عدد الثياب"
+                                  >
+                            <p:outputLabel value="#{data.clothNumber}" />
+
+
+                        </p:column>
+
+                        <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.6vh" 
+                                  headerText="المرحله"
+                                  >
+                            <p:outputLabel value="#{data.stageName}" />
+
+
+                        </p:column>
+
+                        <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.6vh"
+                                  headerText="تاريخ الشغل"
+                                  >
+                            <p:outputLabel value="#{data.orderDate}" >
+                                <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                            </p:outputLabel>
+                        </p:column>
+                        <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.6vh"
+                                  headerText="تاريخ الفاتورة"
+                                  >
+                            <p:outputLabel value="#{data.invoiceDate}" >
+                                <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                            </p:outputLabel>
+                        </p:column>
+
+                    </p:dataTable>
+                    <div class="ui-g-12 ui-md-6">
+                        <p:commandButton class="printButton"  icon="fa fa-fw fa-print"
+                                         onclick="form.target = '_blank'" ajax="false"
+                                         value="#{userData.userDDs['PRINT']}"
+                                         actionListener="#{proProductionTransactionFactoryLastMB.exportPDF(actionEvent)}"/>
+                    </div>
+
+
+                </p:fieldset>
+
+            </h:form>
+        </h:body>
+    </ui:define>
+</ui:composition>
+

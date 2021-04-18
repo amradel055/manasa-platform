@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice.reports.searchBean;
 
+import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.InvItemDTO;
 import com.toby.entity.InvInventory;
 import com.toby.entity.InvOrganizationSite;
@@ -28,6 +29,8 @@ public class PurchaseOfItemsBySuppliersSearchBean {
     private InvItemDTO toItemName;
     private InvInventory fromInventoryName;
     private InvInventory toInventoryName;
+    private InvInventoryDTO fromInventoryDTOName;
+    private InvInventoryDTO toInventoryDTOName;
     private Integer fromserial;
     private Integer toserial;
     private int frompaymentType;
@@ -37,6 +40,8 @@ public class PurchaseOfItemsBySuppliersSearchBean {
 
     private Boolean showReport;
     private Boolean shortReport = false;
+
+   
 
     public Integer getBranchId() {
         return branchId;
@@ -274,5 +279,35 @@ public class PurchaseOfItemsBySuppliersSearchBean {
     public void setType(Integer type) {
         this.type = type;
     }
+
+    /**
+     * @return the fromInventoryDTOName
+     */
+    public InvInventoryDTO getFromInventoryDTOName() {
+        return fromInventoryDTOName;
+    }
+
+    /**
+     * @param fromInventoryDTOName the fromInventoryDTOName to set
+     */
+    public void setFromInventoryDTOName(InvInventoryDTO fromInventoryDTOName) {
+        this.fromInventoryDTOName = fromInventoryDTOName;
+    }
+
+    /**
+     * @return the toInventoryDTOName
+     */
+    public InvInventoryDTO getToInventoryDTOName() {
+        return toInventoryDTOName;
+    }
+
+    /**
+     * @param toInventoryDTOName the toInventoryDTOName to set
+     */
+    public void setToInventoryDTOName(InvInventoryDTO toInventoryDTOName) {
+        this.toInventoryDTOName = toInventoryDTOName;
+    }
+
+   
 
 }

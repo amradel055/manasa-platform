@@ -102,6 +102,7 @@ public class InvInvoiceDTO extends BaseEntityDTO {
     private Map<Integer, BigDecimal> itemsMap = new HashMap<>();
 
     private ReportManagement reportManagement;
+    private OfferCompanyDTO offerCompanyId;
 
     //report barcod or not
     private Boolean barcodeSelect;
@@ -1570,5 +1571,19 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      */
     public void setOfferType(Integer offerType) {
         this.offerType = offerType;
+    }
+
+    /**
+     * @return the offerCompanyId
+     */
+    public OfferCompanyDTO getOfferCompanyId() {
+        return offerCompanyId;
+    }
+
+    /**
+     * @param offerCompanyId the offerCompanyId to set
+     */
+    public void setOfferCompanyId(OfferCompanyDTO offerCompanyId) {
+        this.offerCompanyId = offerCompanyId;
     }
 }

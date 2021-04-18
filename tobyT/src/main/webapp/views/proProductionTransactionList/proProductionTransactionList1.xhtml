@@ -21,18 +21,16 @@
                 <div>
 
                     <p:dataTable id="details"
-                                 draggableColumns="true"
-                                 draggableRows="true"
                                  var="details" 
                                  widgetVar="details" 
                                  rowIndexVar="index" 
                                  selection="#{proProductionTransactionListMB1.proProductionItemsTransactionDTOSelected}"
-                                 value="#{proProductionTransactionListMB1.proProductionItemsTransactionDTOList}"
-                                 rows="#{userData.rowListCount}" 
+                                 value="#{proProductionTransactionListMB1.dataModel}"
+                                 lazy="true" 
+                                 rows="10" 
                                  paginator="true"
                                  emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" 
                                  rowKey="#{details.index}"
-                                 sortBy="#{1}"
                                  >
 
 
@@ -54,39 +52,27 @@
 
                             </p:blockUI> 
 
-                            <p:outputPanel>
-                                <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
-                                <p:inputText id="globalFilter" onkeyup="PF('details').filter()" style="width:150px" />
-                            </p:outputPanel>
+                           
 
 
 
                         </f:facet>
 
                         <p:column style="width: 8vh;text-align: -webkit-auto;font-size: 1.4vh" 
-                                  filterBy="#{details.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial}" 
-                                  filterMatchMode="contains" 
                                   headerText="الفاتوره"
-                                  sortBy="#{details.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial}"
                                   >
                             <p:outputLabel value="#{details.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial}" />
                         </p:column>
 
                         <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.4vh" 
-                                  filterBy="#{details.createdByName}" 
-                                  filterMatchMode="contains"
                                   headerText="اسم العامل "
-                                  sortBy="#{details.createdByName}" 
                                   >
                             <p:outputLabel value="#{details.createdByName}" />
 
 
                         </p:column>
                         <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.4vh" 
-                                  filterBy="#{details.createdByCode}" 
-                                  filterMatchMode="contains"
                                   headerText="رقم العامل "
-                                  sortBy="#{details.createdByCode}" 
                                   >
                             <p:outputLabel value="#{details.createdByCode}" />
 
@@ -101,10 +87,7 @@
                         </p:column>
 
                         <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.6vh" 
-                                  filterBy="#{details.proProductionStagesId.name}"
-                                  filterMatchMode="contains" 
                                   headerText="المرحله"
-                                  sortBy="#{details.proProductionStagesId.name}" 
                                   >
                             <p:outputLabel value="#{details.proProductionStagesId.name}" />
 
@@ -112,14 +95,10 @@
                         </p:column>
 
                         <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.6vh"
-                                  filterBy="#{details.date}"
-                                  filterMatchMode="contains" 
-                                  headerText="التاريح"
-                                  sortBy="#{details.date}" 
+                                  headerText="التاريخ"
                                   >
                             <p:outputLabel value="#{details.date}" >
                                 <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
-
                             </p:outputLabel>
                         </p:column>
 

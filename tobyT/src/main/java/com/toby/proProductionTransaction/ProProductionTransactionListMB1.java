@@ -5,6 +5,7 @@ import com.toby.dto.ProProductionItemsTransactionDTO;
 import com.toby.toby.BaseListBean;
 import com.toby.toby.UserData;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -12,6 +13,8 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
+import org.primefaces.model.LazyDataModel;
+import org.primefaces.model.SortOrder;
 
 @Named(value = "proProductionTransactionListMB1")
 @ViewScoped
@@ -20,14 +23,36 @@ public class ProProductionTransactionListMB1 extends BaseListBean {
     private ProProductionItemsTransactionDTO proProductionItemsTransactionDTOSelected;
 
     private List<ProProductionItemsTransactionDTO> proProductionItemsTransactionDTOList;
+    
+    private LazyDataModel<ProProductionItemsTransactionDTO> dataModel;
+    
     @EJB
     private ProProductionItemsTransactionService proProductionItemsTransactionService;
 
     @PostConstruct
     @Override
     public void init() {
-        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-        setUserData((UserData) context.getSessionMap().get("userLogInData"));
+        load();
+    }
+    
+    @Override
+    public void load() {
+        try {
+            ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+            setUserData((UserData) context.getSessionMap().get("userLogInData"));
+            this.setDataModel(new LazyDataModel<ProProductionItemsTransactionDTO>() {
+                private static final long serialVersionUID = 1L;
+
+                @Override
+                public List<ProProductionItemsTransactionDTO> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
+//                    proProductionItemsTransactionService.getProProductionItemsTransaction(getUserData().getUser());
+                    setRowCount(proProductionItemsTransactionService.getTotalRegistors( getUserData().getUserBranch().getId(), filters).intValue());
+                    return proProductionItemsTransactionService.getALLProProductionItemsTransactionDTO( first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), getUserData().getUserBranch().getId(), filters);
+                }
+            });
+        } catch (Exception e) {
+            saveError(e, "InvPurchaseInvoiceListMB", "load");
+        }
     }
 
     @Override
@@ -73,10 +98,7 @@ public class ProProductionTransactionListMB1 extends BaseListBean {
             }
     }
 
-    @Override
-    public void load() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    
 
     @Override
     public String getScreenName() {
@@ -115,6 +137,20 @@ public class ProProductionTransactionListMB1 extends BaseListBean {
      */
     public void setProProductionItemsTransactionDTOSelected(ProProductionItemsTransactionDTO proProductionItemsTransactionDTOSelected) {
         this.proProductionItemsTransactionDTOSelected = proProductionItemsTransactionDTOSelected;
+    }
+
+    /**
+     * @return the dataModel
+     */
+    public LazyDataModel<ProProductionItemsTransactionDTO> getDataModel() {
+        return dataModel;
+    }
+
+    /**
+     * @param dataModel the dataModel to set
+     */
+    public void setDataModel(LazyDataModel<ProProductionItemsTransactionDTO> dataModel) {
+        this.dataModel = dataModel;
     }
 
     /**

@@ -662,6 +662,7 @@
                                                    or userData.userScreens['SalesJournal'].view
                                                    or userData.userScreens['SalesJournalForUser'].view
                                                    or userData.userScreens['InvReturnSalesReport'].view
+                                                   or userData.userScreens['SalesOfItemsByCompany'].view
 
                                                    or userData.userScreens['supplierdata'].view
 
@@ -673,8 +674,7 @@
                                            rendered="#{userData.userScreens['groupDataReport'].view  
                                                        or userData.userScreens['basicdataofitemsreport'].view  
                                                        or userData.userScreens['basicdataofitemsbysuppliersreport'].view 
-                                                       or userData.isAdmin}"
-                                           >
+                                                       or userData.isAdmin}" >
                                     <p:menuitem id="sr_lnk411" value="#{userData.userDDs['GROUP_ITEMS']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/groupDataReport.xhtml" 
                                                 rendered="#{userData.userScreens['groupDataReport'].view or userData.isAdmin}"
                                                 />
@@ -776,6 +776,7 @@
                                                        or userData.userScreens['SalesJournal'].view 
                                                        or userData.userScreens['SalesJournalForUser'].view 
                                                        or userData.userScreens['InvReturnSalesReport'].view 
+                                                       or userData.userScreens['SalesOfItemsByCompany'].view 
 
 
                                                        or userData.isAdmin}"
@@ -806,6 +807,9 @@
                                                 />
                                     <p:menuitem id="sr_lnk458" value="#{userData.userDDs['SALES_RETU_REP']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/InvReturnSalesReport.xhtml"
                                                 rendered="#{userData.userScreens['InvReturnSalesReport'].view or userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="sr_lnk4510" value="المبيعات حسب الشركات لفتره" icon="&#xE8D2;" url="/faces/views/inventoryreports/SalesOfItemsByCompany.xhtml"
+                                                rendered="#{userData.userScreens['SalesOfItemsByCompany'].view or userData.isAdmin}"
                                                 />
                                 </p:submenu>
                                 <p:submenu id="sr_sm46" label="#{userData.userDDs['STORE_REP']}" icon="&#xE8D2;"
@@ -842,6 +846,9 @@
                                                        or userData.userScreens['InvoiceMovementReport'].view
                                                        or userData.userScreens['InvoiceStatusReport'].view
                                                        or userData.userScreens['FactoryInvoiceStatusReport'].view
+                                                       or userData.userScreens['clientsNoMovmentReport'].view
+                                                       or userData.userScreens['ProProductionTransactionFactoryReport'].view
+                                                       or userData.userScreens['ProProductionTransactionFactoryLastReport'].view
                                                    or userData.userScreens[''].view 
                                                    or userData.isAdmin}"
                                        >
@@ -904,6 +911,9 @@
                                                        or userData.userScreens['InvoiceMovementReport'].view
                                                        or userData.userScreens['InvoiceStatusReport'].view
                                                        or userData.userScreens['FactoryInvoiceStatusReport'].view
+                                                       or userData.userScreens['clientsNoMovmentReport'].view
+                                                       or userData.userScreens['ProProductionTransactionFactoryReport'].view
+                                                       or userData.userScreens['ProProductionTransactionFactoryLastReport'].view
                                                        or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk33321" value="بيان مراحل وموظفين الفاتورة" icon="&#xE8D2;" url="/faces/views/proproductionreport/invoiceProductionStageReport.xhtml" 
@@ -925,6 +935,15 @@
                                                 />
                                     <p:menuitem id="sr_lnk33327" value="فواتير المصنع حسب اخر مرحلة" icon="&#xE8D2;" url="/faces/views/proproductionreport/FactoryInvoiceStatusReport.xhtml" 
                                                 rendered="#{userData.userScreens['FactoryInvoiceStatusReport'].view or userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="sr_lnk33329" value="عملاء ليس عليهم حركة من تاريخ" icon="&#xE8D2;" url="/faces/views/proproductionreport/clientsNoMovmentReport.xhtml" 
+                                                rendered="#{userData.userScreens['clientsNoMovmentReport'].view or   userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="sr_lnk33328" value=" فواتير المصنع حسب حركة اوامر الشغل" icon="&#xE8D2;" url="/faces/views/proproductionreport/ProProductionTransactionFactoryReport.xhtml" 
+                                                rendered="#{userData.userScreens['ProProductionTransactionFactoryReport'].view or   userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="sr_lnk33330" value=" فواتير المصنع حسب اخر حركة لأوامر الشغل" icon="&#xE8D2;" url="/faces/views/proproductionreport/ProProductionTransactionFactoryLastReport.xhtml" 
+                                                rendered="#{userData.userScreens['ProProductionTransactionFactoryLastReport'].view or   userData.isAdmin}"
                                                 />
                                 </p:submenu>
                             </p:submenu>
