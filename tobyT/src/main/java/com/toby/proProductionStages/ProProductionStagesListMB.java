@@ -68,7 +68,7 @@ public class ProProductionStagesListMB extends BaseFormBean {
         try {
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
             context.getSessionMap().put("ScreenMode", "Add");
-            exit("../proProduction/proProductionForm.xhtml");
+            exit("../proproductionstages/proProductionForm.xhtml");
             return "";
         } catch (Exception e) {
             saveError(e, "proProductionStagesListMB", "goToAdd");

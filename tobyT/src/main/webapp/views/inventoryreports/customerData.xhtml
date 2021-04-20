@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                template="./../../template/newTemplate.xhtml"
+                template="./../../template/template.xhtml"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
@@ -9,31 +9,21 @@
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <ui:define name="content">
         <f:event listener="#{userData.authorize}" type="preRenderView" />
-        <div style=" position: absolute;left: 20px"> 
 
-                <p:commandButton  style="width: 90px;background-image: none!important;z-index: 2" 
-                                  class="viewButton searchButton"
-                                  value="Hide/Show"/>  
-            </div>
-			
-	
+
         <h:form  id="form" dir="#{userData.dir}"  style="margin-right: 20px">
-         
+
             <p:fieldset  legend="#{userData.userDDs['BASIC_DATA_CUSTOMERS']}"
-                         
+
                          style=" position: relative">
-			
+
 
                 <div  id="firstSegment" class="ui-g-12 ui-g-nopad firstset">
                     <div class="ui-g">
 
-                        <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel style="width: 40px" value="#{userData.userDDs['FROM_CUSTOM']}"/>
-                                </h:panelGroup> 
-
-                                <h:panelGroup>
+                        <div class="ui-g-6 ui-xl-6">
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
                                     <p:autoComplete style="width:75%!important"
                                                     dropdown="true"
                                                     converter="#{supplierDataReportMB.invOrgSiteConverter}"
@@ -45,16 +35,17 @@
                                                     completeMethod="#{supplierDataReportMB.completOrgSite}">
 
                                     </p:autoComplete>
-                                </h:panelGroup> 
-                            </h:panelGroup>
-                        </div>
-                        <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel style="width: 40px" value="#{userData.userDDs['TO_CUSTOM']}"/>
-                                </h:panelGroup> 
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 40px" value="#{userData.userDDs['FROM_CUSTOM']}"/>
 
-                                <h:panelGroup>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="ui-g-6 ui-xl-6">
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
                                     <p:autoComplete style="width:75%!important" 
 
                                                     dropdown="true"
@@ -67,71 +58,71 @@
                                                     forceSelection="true"
                                                     completeMethod="#{supplierDataReportMB.completOrgSite}" >
                                     </p:autoComplete>
-                                </h:panelGroup> 
-                            </h:panelGroup>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 40px" value="#{userData.userDDs['TO_CUSTOM']}"/>
+
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <h:panelGrid  columns="1"  class="col-md-12">
 
-                    <h:panelGroup  class="centerButtons"  style="margin-top: 2%">
+                <div style="text-align: center">
 
+                    <p:commandButton     class="searchButton"
+                                         title="#{userData.userDDs['SEARCH']}"
+                                         action="#{supplierDataReportMB.search()}"
+                                         id="saveB"
+                                         value="#{userData.userDDs['SEARCH']}"
+                                         update="CustomerDataViewTable" 
+                                         icon="fa fa-search"  />
 
-                        <p:commandButton     class="searchButton"
-                                             title="#{userData.userDDs['SEARCH']}"
-                                             action="#{supplierDataReportMB.search()}"
-                                             id="saveB"
-                                             value="#{userData.userDDs['SEARCH']}"
-                                             update="CustomerDataViewTable" 
-                                             icon="fa fa-search"  />
-
-                        <p:commandButton   class="newButton"
-                                           id="NewB"
-                                           title="#{userData.userDDs['NEW']}" 
-                                           immediate="true" 
-                                           action="#{supplierDataReportMB.reset()}"
-                                           update="form"
-                                           value="#{userData.userDDs['NEW']}"
-                                           icon="fa fa-plus"/>
+                    <p:commandButton   class="newButton"
+                                       id="NewB"
+                                       title="#{userData.userDDs['NEW']}" 
+                                       immediate="true" 
+                                       action="#{supplierDataReportMB.reset()}"
+                                       update="form"
+                                       value="#{userData.userDDs['NEW']}"
+                                       icon="fa fa-plus"/>
 
 
 
-                        <p:commandButton   class="printButton"
-                                           id="PrintB"
-                                           ajax="false"
-                                           onclick="form.target = '_blank'"  
-                                           icon="fa fa-fw fa-print"
-                                           value="#{userData.userDDs['PRINT']}" 
-                                           actionListener="#{supplierDataReportMB.exportPDF}"
-                                           title="#{userData.userDDs['PRINT']}"
-                                           immediate="true" />
+                    <p:commandButton   class="printButton"
+                                       id="PrintB"
+                                       ajax="false"
+                                       onclick="form.target = '_blank'"  
+                                       icon="fa fa-fw fa-print"
+                                       value="#{userData.userDDs['PRINT']}" 
+                                       actionListener="#{supplierDataReportMB.exportPDF}"
+                                       title="#{userData.userDDs['PRINT']}"
+                                       immediate="true" />
 
-                        <p:commandButton class="closeButton"
-                                         id="CloseB"
-                                         icon="fa fa-fw fa-backward"  
-                                         value="#{userData.userDDs['BACK']}" 
-                                         title="#{userData.userDDs['BACK']}"
-                                         action="exit"/>
+                    <p:commandButton class="closeButton"
+                                     id="CloseB"
+                                     icon="fa fa-fw fa-backward"  
+                                     value="#{userData.userDDs['BACK']}" 
+                                     title="#{userData.userDDs['BACK']}"
+                                     action="exit"/>
 
-                        <h:commandLink  class="sdcreenimg">  
-                            <p:graphicImage name="/img/excel.jpg" width="24"/>  
-                            <p:dataExporter type="xls"
-                                            target="CustomerDataViewTable" 
-                                            fileName=" تقرير بيانات العملاء الأساسية"
-                                            postProcessor="#{supplierDataReportMB.postProcessXLS}" />  
-                        </h:commandLink>
+                    <h:commandLink  class="sdcreenimg">  
+                        <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                        <p:dataExporter type="xls"
+                                        target="CustomerDataViewTable" 
+                                        fileName=" تقرير بيانات العملاء الأساسية"
+                                        postProcessor="#{supplierDataReportMB.postProcessXLS}" />  
+                    </h:commandLink>
 
-                        <p:blockUI block="form" trigger="saveB NewB PrintB CloseB" animate="true" >
+                    <p:blockUI block="form" trigger="saveB NewB PrintB CloseB" animate="true" >
 
-                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+                        <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
 
-                        </p:blockUI> 
+                    </p:blockUI> 
 
 
-                    </h:panelGroup>
-
-                </h:panelGrid>
+                </div>
 
             </p:fieldset>
 

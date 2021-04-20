@@ -32,8 +32,10 @@
                         </div>
 
                         <div class="ui-g-12 ui-md-12">
-                            <p:accordionPanel>
-                                <p:tab title="بيانات أساسية *">
+                            
+                            <p:accordionPanel >
+          <p:ajax event="tabChange" listener="#{accordionBean.onTabChange}" update=""/>
+                                <p:tab title="بيانات أساسية *"  >
 
                                     <div class="ui-g-6 ui-xl-6">
                                         <div class="ui-g-12 ui-xl-12">
