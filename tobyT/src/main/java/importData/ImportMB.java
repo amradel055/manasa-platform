@@ -22,6 +22,7 @@ import com.toby.businessservice.InvOpeningBalanceItemService;
 import com.toby.businessservice.InvPurchaseInvoiceDetailsService;
 import com.toby.businessservice.InvPurchaseInvoiceService;
 import com.toby.businessservice.InvTransferService;
+import com.toby.businessservice.OfferCompanyService;
 import com.toby.businessservice.OrganizationSiteService;
 import com.toby.businessservice.ProItemProductionStagesService;
 import com.toby.businessservice.SymbolService;
@@ -32,6 +33,7 @@ import com.toby.define.AdminUnitDependantEnum;
 import com.toby.define.AssisstantAccountDependantEnum;
 import com.toby.define.CostCenterDependantEnum;
 import com.toby.dto.InvItemDTO;
+import com.toby.dto.OfferCompanyDTO;
 import com.toby.entity.Branch;
 import com.toby.entity.Currency;
 import com.toby.entity.GlAccount;
@@ -89,6 +91,7 @@ public class ImportMB extends Basic implements Serializable {
     private UploadedFile glAccountFile;
     private UploadedFile GeneralJournalHeadFile;
     private UploadedFile ContractFile;
+    private UploadedFile OfferCompanyFile;
 
     private InputStream inputStreamUploadDocument;
     private InputStream inputStreamUploadCostCenter;
@@ -98,6 +101,7 @@ public class ImportMB extends Basic implements Serializable {
     private InputStream inputStreamUploadGlAccount;
     private InputStream inputStreamUploadGeneralJournalHead;
     private InputStream inputStreamUploadInvItem;
+    private InputStream inputStreamUploadOfferCompany;
     private InputStream inputStreamUploadinvOpeningBalance;
     private InputStream inputStreamUploadCustomer;
     private InputStream inputStreamUploadContract;
@@ -161,6 +165,8 @@ public class ImportMB extends Basic implements Serializable {
     private TobyUserService tobyUserService;
     @EJB
     private ProItemProductionStagesService itemProductionStagesService;
+    @EJB
+    private OfferCompanyService offerCompanyService;
 
     @PostConstruct
     public void init() {
@@ -452,6 +458,40 @@ public class ImportMB extends Basic implements Serializable {
         invItem.setCompanyId(getUserData().getCompany());
     }
 
+    // Add New Offer Company Code
+    public void readOfferCompany() throws BiffException, IOException, Exception {
+        setInputStreamUploadOfferCompany(getOfferCompanyFile().getInputstream());
+        Workbook workbook = null;
+        try {
+            workbook = Workbook.getWorkbook(getInputStreamUploadOfferCompany());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (BiffException e) {
+            e.printStackTrace();
+        }
+        Sheet sheet = workbook.getSheet(0);
+        importOfferCompany(sheet);
+        workbook.close();
+    }
+
+    public void importOfferCompany(Sheet sheet) throws NumberFormatException {
+        for (int i = 1; i < sheet.getRows(); i++) {
+            if (!sheet.getCell(0, i).getContents().isEmpty()) {
+                String code = sheet.getCell(0, i).getContents();
+                String name = sheet.getCell(1, i).getContents();
+                String dis = sheet.getCell(2, i).getContents();
+                OfferCompanyDTO offerCompanyDTO = new  OfferCompanyDTO();
+                offerCompanyDTO.setCode(Integer.parseInt(code));
+                offerCompanyDTO.setName(name);
+                offerCompanyDTO.setDiscount(new BigDecimal(dis));
+                offerCompanyService.addOfferCompany(offerCompanyDTO, getUserData().getUserlogin());
+            }
+        }
+
+        OpenDlg("sucesses");
+        System.out.println("تم الحفظ بنجاح");
+    }
+    
     // inventory oppening balance Code
     public void readInvOpeiningBalance() throws BiffException, IOException, Exception {
         setInputStreamUploadinvOpeningBalance(getInvOpeningBalanceFile().getInputstream());
@@ -1155,6 +1195,35 @@ public class ImportMB extends Basic implements Serializable {
      */
     public void setInvItemFile2(UploadedFile invItemFile2) {
         this.invItemFile2 = invItemFile2;
+    }
+
+    /**
+     * @return the inputStreamUploadOfferCompany
+     */
+    public InputStream getInputStreamUploadOfferCompany() {
+        return inputStreamUploadOfferCompany;
+    }
+
+    /**
+     * @param inputStreamUploadOfferCompany the inputStreamUploadOfferCompany to
+     * set
+     */
+    public void setInputStreamUploadOfferCompany(InputStream inputStreamUploadOfferCompany) {
+        this.inputStreamUploadOfferCompany = inputStreamUploadOfferCompany;
+    }
+
+    /**
+     * @return the OfferCompanyFile
+     */
+    public UploadedFile getOfferCompanyFile() {
+        return OfferCompanyFile;
+    }
+
+    /**
+     * @param OfferCompanyFile the OfferCompanyFile to set
+     */
+    public void setOfferCompanyFile(UploadedFile OfferCompanyFile) {
+        this.OfferCompanyFile = OfferCompanyFile;
     }
 
 }

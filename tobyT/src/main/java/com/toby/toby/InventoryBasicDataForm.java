@@ -695,7 +695,14 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
         try {
             if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getInvPurchaseInvoiceDetailList() != null && !getInvInvoiceDTO().getInvPurchaseInvoiceDetailList().isEmpty()) {
-                fillReport(prepareReport(), getUserData().getReportPath() + "itemBarcodeToby.jasper", getInvInvoiceDTO().getInvPurchaseInvoiceDetailList(), "pdf");
+                List<InvDetailDTO> listNew = new ArrayList<>();
+                for (InvDetailDTO dTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
+                    InvDetailDTO invDetailDTO = new InvDetailDTO();
+                    invDetailDTO = (InvDetailDTO) dTO.clone();
+                    invDetailDTO.setCost((invDetailDTO.getCost().add(invDetailDTO.getCost().multiply(new BigDecimal(0.15)))).setScale(3, BigDecimal.ROUND_UP));
+                    listNew.add(invDetailDTO);
+                }
+                fillReport(prepareReport(), getUserData().getReportPath() + "itemBarcodeToby.jasper", listNew, "pdf");
             }
         } catch (Exception e) {
 

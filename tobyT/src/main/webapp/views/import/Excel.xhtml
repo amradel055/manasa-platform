@@ -77,6 +77,22 @@
 
             </p:fieldset>
             
+            <p:fieldset  legend="ادخل شركات جديده" id="newOfferCompany"  style="margin-bottom:20px">
+                <div id="newOferCompany" class="form-group col-md-12">
+
+                    <p:fileUpload value="#{importMB.offerCompanyFile}" mode="simple" onstart="disableChoosing()" 
+                                  oncomplete="enableChoosing()" />
+                </div>
+
+                <div class="form-group col-md-12">
+                    <p:commandButton id="btnnewOOferCompany"  actionListener="#{importMB.readOfferCompany()}" ajax="false" value="تحميل">
+                        <f:ajax execute="@all" render="@form"/>
+                        <p:ajax/>
+                    </p:commandButton>
+                </div>
+
+
+            </p:fieldset>
 
             <p:fieldset  legend="ادخال العملاء" id="customer"  style="margin-bottom:20px">
                 <div id="customerloader" class="form-group col-md-12">

@@ -9,17 +9,12 @@
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <ui:define name="content">
         <h:body>
-
             <h:form dir="RTL" style="margin-right: 20px" id="form" >
-
                 <p:fieldset  legend=" فواتير المصنع حسب اخر حركة لأوامر الشغل" id="stages"  style=" position: relative">
                     <p:messages id="messages" showDetail="true" closable="true"/> 
-
-
                     <div class="ui-g-6 ui-xl-6">
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
-
                                 <p:autoComplete style="width:85%" id="gallary_from" 
                                                 dropdown="true"
                                                 converter="#{autoComplete.invInventoryDTOConverter}"
@@ -33,57 +28,33 @@
                             </div>
                             <div class="ui-g-6 ui-xl-6">
                                 <p:outputLabel style="width: 50px;margin-right: 1%" value="المعرض"/>
-
                             </div>
                         </div>
                     </div>
-
-
                     <div class="ui-g-6 ui-xl-6">
-
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
-
                                 <p:calendar style="width: 50%"  id="dateFrom"
                                             value="#{proProductionTransactionFactoryLastMB.proProductionTransactionFactoryView.date}"
                                             pattern="dd/MM/yyyy"  showButtonPanel="true" >
-
                                 </p:calendar>
                             </div>
                             <div class="ui-g-6 ui-xl-6">
-
                                 <p:outputLabel style="width: 50px"  value=" من تاريخ" />
-
-
-
                             </div>
                         </div>
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
-
                                 <p:calendar style="width: 50%"  id="dateTo"
-                                            value="#{proProductionTransactionFactoryMB.proProductionTransactionFactoryView.dateTo}"
+                                            value="#{proProductionTransactionFactoryLastMB.proProductionTransactionFactoryView.dateTo}"
                                             pattern="dd/MM/yyyy"  showButtonPanel="true" >
-
                                 </p:calendar>
                             </div>
                             <div class="ui-g-6 ui-xl-6">
-
                                 <p:outputLabel style="width: 50px"  value=" الى تاريخ" />
-
-
-
                             </div>
                         </div>
-
-
                     </div>
-
-
-
-
-
-
                 </p:fieldset>
 
                 <div class="ui-g-12 ui-xl-12">

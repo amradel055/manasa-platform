@@ -224,7 +224,7 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
         params.put("serial", serial);
         params.put("branchId", branchId);
         params.put("type", type);
-        List<ProFactoryDelivery> details = dao.findListByQuery("SELECT e FROM ProFactoryDelivery e WHERE e.invPurchaseInvoiceId.serial = :serial AND e.branchId.id = :branchId AND e.type = :type order by e.id asc", params);
+        List<ProFactoryDelivery> details = dao.findListByQuery("SELECT e FROM ProFactoryDelivery e WHERE e.invPurchaseInvoiceId.serial = :serial AND e.branchId.id = :branchId AND e.type = :type order by e.id desc", params);
         return (details == null || details.isEmpty()) ? null : details.get(0);
     }
 
