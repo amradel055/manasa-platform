@@ -28,7 +28,6 @@ import com.toby.dto.ProGroupDTO;
 import com.toby.entity.Branch;
 import com.toby.entity.CostCenter;
 import com.toby.entity.Currency;
-import com.toby.entity.GeneralJournalDetails;
 import com.toby.entity.GlAccount;
 import com.toby.entity.GlAdminUnit;
 import com.toby.entity.GlBank;
@@ -1272,15 +1271,14 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
 
                     invPurchaseInvoice = dao.updateEntity(invPurchaseInvoice);
                     invInvoiceDTO.setId(invPurchaseInvoice.getId());
+                    glBankTransactionService.addCash(invInvoiceDTO, tobyUser);
                 }
 
                 invPurchaseInvoiceDetailsService.deleteInvPurchaseInvoiceDetailListDTO(invInvoiceDTO.getInvPurchaseInvoiceDetailsDeletedList());
 
                 String error = invPurchaseInvoiceDetailsService.addInvPurchaseInvoiceDetailsDTO(invInvoiceDTO.getInvPurchaseInvoiceDetailList(), invInvoiceDTO, tobyUser);
 
-                if (invInvoiceDTO.getId() == null) {
-                    glBankTransactionService.addCash(invInvoiceDTO, tobyUser);
-                }
+                    
                 invInvoiceDTO.setInvPurchaseInvoiceId(invPurchaseInvoice.getId());
                 if (invPurchaseInvoice.getId() == null) {
                     invAddingOrderService.save(invInvoiceDTO, tobyUser);

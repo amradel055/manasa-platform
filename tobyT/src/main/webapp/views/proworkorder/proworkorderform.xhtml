@@ -81,10 +81,6 @@
                             </div>
                             <div class="ui-g-6 ui-xl-6">
                                 <p:outputLabel style="width: 100px;" value="#{userData.userDDs['INVO_TYP']}"/>
-
-
-
-
                             </div>
                         </div>
                         <div class="ui-g-12 ui-xl-12">
@@ -126,6 +122,7 @@
                                                rendered="#{not invPurchaseInvoiceFormDTOMB.invInvoiceDTO.showCustomerDate}"
                                                />
                                 <p:autoComplete style="width:37%!important"  rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.showCustomerDate}"
+                                                id="customer"
                                                 dropdown="true"
                                                 converter="#{invPurchaseInvoiceFormDTOMB.organizationSiteDTOConvertor}"
                                                 value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.organizationSiteId}"
@@ -147,11 +144,26 @@
                                 <p:commandButton style="margin-right: 40%"  value="إضافة" type="button" onclick="PF('dlg3').show();"> 
 
                                 </p:commandButton>
+
+
                             </div>
                             <div class="ui-g-6 ui-xl-6">
 
 
                                 <p:outputLabel style="width: 100px;" value="#{userData.userDDs['CUSTOMER']}"/>
+
+
+                            </div>
+                        </div>
+
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:inputText id="notice" disabled="true" style="width:48%" value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.customerNotice}" />
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+
+                                <p:outputLabel style="width: 65px" value=" ملاحظة"/>
 
 
                             </div>

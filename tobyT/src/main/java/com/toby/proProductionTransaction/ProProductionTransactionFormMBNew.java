@@ -108,6 +108,7 @@ public class ProProductionTransactionFormMBNew extends BaseListBean {
                 } else {
                     detailViewDTO.setNumberRemain(proProductionTransactionOfInvoice.getNumberRemain());
                 }
+                detailViewDTO.setTotalNumber(detailViewDTO.getTotalNumber());
                 detailViewDTO.setNumberExcute(detailViewDTO.getNumberRemain());
             }
 

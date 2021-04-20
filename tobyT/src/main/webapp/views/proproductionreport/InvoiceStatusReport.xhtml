@@ -55,20 +55,17 @@
                     <div class="ui-g-6 ui-xl-6">
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
-
-                                <p:autoComplete style="width:85%" id="gallary_from" 
-                                                dropdown="true"
-                                                converter="#{autoComplete.invInventoryDTOConverter}"
-                                                value="#{proInvoiceStatusReportMB.printProductionDTO.gallaryFrom}" 
-                                                var="gallaryFrom"
-                                                itemLabel="#{gallaryFrom}"
-                                                itemValue="#{gallaryFrom}" 
-                                                forceSelection="true" 
-                                                completeMethod="#{autoComplete.completeGallaryDTO}" >
-                                </p:autoComplete>
+                                <p:selectOneMenu  id="gallary_From" value="#{proInvoiceStatusReportMB.printProductionDTO.gallaryFrom}"
+                                                  converter="#{proInvoiceStatusReportMB.gallaryDTOConverter}">
+                                    <f:selectItems value="#{proInvoiceStatusReportMB.gallaryList}" 
+                                                   var="gallaryFrom"
+                                                   itemLabel="#{gallaryFrom}"
+                                                   itemValue="#{gallaryFrom}" />
+                                </p:selectOneMenu>
                             </div>
                             <div class="ui-g-6 ui-xl-6">
-                                <p:outputLabel style="width: 50px;margin-right: 1%" value="معرض"/>
+
+                                <p:outputLabel style="width: 50px;margin-right: 1%" value=" معرض"/>
 
 
 
@@ -95,23 +92,23 @@
 
                     </div>
 
-                    
-                        <div class="ui-g-12 ui-xl-12">
-                            <div class="ui-g-6 ui-xl-6">
 
-                                
-                                <p:outputLabel style="width: 50px"  value="#{proInvoiceStatusReportMB.number}" />
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
 
 
-                            </div>
-                            <div class="ui-g-6 ui-xl-6">
-
-                                <p:outputLabel style="width: 50px"  value="عدد الفواتير" />
+                            <p:outputLabel style="width: 50px"  value="#{proInvoiceStatusReportMB.number}" />
 
 
-
-                            </div>
                         </div>
+                        <div class="ui-g-6 ui-xl-6">
+
+                            <p:outputLabel style="width: 50px"  value="عدد الفواتير" />
+
+
+
+                        </div>
+                    </div>
 
 
 

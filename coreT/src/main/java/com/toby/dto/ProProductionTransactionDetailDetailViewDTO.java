@@ -34,6 +34,9 @@ public class ProProductionTransactionDetailDetailViewDTO extends BaseEntityDTO {
      * @return the quantity
      */
     public BigDecimal getQuantity() {
+        if(quantity == null){
+            quantity = BigDecimal.ZERO;
+        }
         return quantity;
     }
 
@@ -104,6 +107,9 @@ public class ProProductionTransactionDetailDetailViewDTO extends BaseEntityDTO {
      * @return the cost
      */
     public BigDecimal getCost() {
+        if(cost == null){
+            cost = BigDecimal.ZERO;
+        }
         return cost;
     }
 

@@ -5,7 +5,6 @@
  */
 package com.toby.businessservice;
 
-import com.sun.javafx.scene.control.skin.VirtualFlow;
 import com.toby.core.GenericDAO;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.InvInventoryTransactionDTO;
@@ -18,7 +17,6 @@ import com.toby.dto.SymbolDTO;
 import com.toby.entity.Branch;
 import com.toby.entity.InvInventory;
 import com.toby.entity.InvInventoryTransaction;
-import com.toby.entity.InvItem;
 import com.toby.entity.InvOrganizationSite;
 import com.toby.entity.InvPurchaseInvoice;
 import com.toby.entity.InvPurchaseInvoiceDetail;
@@ -26,7 +24,6 @@ import com.toby.entity.InvPurchaseOrder;
 import com.toby.entity.QuantityItemNotFinish;
 import com.toby.entity.TobyCompany;
 import com.toby.entity.TobyUser;
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
