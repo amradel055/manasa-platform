@@ -2,6 +2,9 @@ package com.toby.reports;
 
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
 import com.toby.businessservice.ProFactoryDeliveryService;
+import com.toby.businessservice.TobyUserInventoryService;
+import com.toby.converter.InvInventoryDTOConverter;
+import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.PrintProductionDTO;
 import com.toby.toby.Basic;
@@ -25,10 +28,15 @@ public class ProInvoiceStatusReportMB extends Basic {
 
     private Integer number;
 
+    private InvInventoryDTOConverter gallaryDTOConverter;
+    private List<InvInventoryDTO> gallaryList;
+
     @EJB
     private InvPurchaseInvoiceService_1 invPurchaseInvoiceService;
     @EJB
     private ProFactoryDeliveryService proFactoryDeliveryService;
+    @EJB
+    private TobyUserInventoryService tobyUserInventoryService;
 
     public void search() {
         if (printProductionDTO.getInvoiceStatus() == 4) {
@@ -70,7 +78,7 @@ public class ProInvoiceStatusReportMB extends Basic {
         hashMap.put("dueDateText", "تاريخ التسليم");
         hashMap.put("gallaryFromText", "من معرض");
         hashMap.put("gallaryToText", "الى معرض");
-        hashMap.put("gallaryFromValue", printProductionDTO.getGallaryFrom() == null ? null : printProductionDTO.getGallaryFrom().getName() );
+        hashMap.put("gallaryFromValue", printProductionDTO.getGallaryFrom() == null ? null : printProductionDTO.getGallaryFrom().getName());
 //        hashMap.put("gallaryToValue", printProductionDTO.getGallaryTo().getName());
         hashMap.put("statusText", "الحالة");
 
@@ -137,5 +145,38 @@ public class ProInvoiceStatusReportMB extends Basic {
      */
     public void setNumber(Integer number) {
         this.number = number;
+    }
+
+    /**
+     * @return the gallaryDTOConverter
+     */
+    public InvInventoryDTOConverter getGallaryDTOConverter() {
+        return gallaryDTOConverter;
+    }
+
+    /**
+     * @param gallaryDTOConverter the gallaryDTOConverter to set
+     */
+    public void setGallaryDTOConverter(InvInventoryDTOConverter gallaryDTOConverter) {
+        this.gallaryDTOConverter = gallaryDTOConverter;
+    }
+
+    /**
+     * @return the gallaryList
+     */
+    public List<InvInventoryDTO> getGallaryList() {
+
+        if (gallaryList == null || gallaryList.isEmpty()) {
+            gallaryList = tobyUserInventoryService.getAllGallaryByUserAndBranch(getUserData().getUser());
+            setGallaryDTOConverter(new InvInventoryDTOConverter(gallaryList));
+        }
+        return gallaryList;
+    }
+
+    /**
+     * @param gallaryList the gallaryList to set
+     */
+    public void setGallaryList(List<InvInventoryDTO> gallaryList) {
+        this.gallaryList = gallaryList;
     }
 }
