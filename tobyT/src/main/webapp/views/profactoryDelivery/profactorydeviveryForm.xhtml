@@ -146,10 +146,8 @@
                                 </div>
                             </div>
 
-
-                            <h:panelGrid  class="col-md-12"   style="margin-right:20%">
-
-                                <h:panelGroup  class="centerButtons">
+                            <div style="text-align: center">
+                         
 
                                     <p:commandButton  id="saveB" 
                                                       class="saveButtons"
@@ -178,8 +176,8 @@
                                                       action="#{proFactoryDeliveryFormDTOMB.exit()}" 
                                                       update="@form"/>
 
-                                    <h:commandLink  style="float:left" class="sdcreenimg">  
-                                        <p:graphicImage name="/img/excel.jpg" width="24" style='margin-right:25%;'/>  
+                                    <h:commandLink  class="sdcreenimg">  
+                                        <p:graphicImage name="/img/excel.jpg" width="24" />  
                                         <p:dataExporter type="xls"
                                                         target="invPurchaseInvoiceDetailsTable" 
                                                         fileName="فاتورة استلام بالمشغل"
@@ -194,9 +192,8 @@
                                     </p:blockUI> 
 
 
-                                </h:panelGroup>
-
-                            </h:panelGrid>
+                            
+                                </div>
 
                         </h:panelGroup>
                     </div>

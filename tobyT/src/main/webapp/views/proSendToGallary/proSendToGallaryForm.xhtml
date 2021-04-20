@@ -130,8 +130,7 @@
                             </div>
                         </div>
                         <div class="ui-g-12 ui-xl-12" style="text-align: center">
-                            <h:panelGrid>
-                                <h:panelGroup  class="centerButtons">
+                      
                                     <p:commandButton  id="saveB" 
                                                       class="saveButtons"
                                                       title="#{userData.userDDs['SAVE']}"
@@ -167,8 +166,8 @@
                                                       action="#{proFactoryDeliveryFormDTOMB.exit()}" 
                                                       update="@form"/>
 
-                                    <h:commandLink  style="float:left" class="sdcreenimg">  
-                                        <p:graphicImage name="/img/excel.jpg" width="24" style='margin-right:25%;'/>  
+                                    <h:commandLink   class="sdcreenimg">  
+                                        <p:graphicImage name="/img/excel.jpg" width="24" />  
                                         <p:dataExporter type="xls"
                                                         target="invPurchaseInvoiceDetailsTable" 
                                                         fileName="بيانات تسليم الفاتورة"
@@ -183,8 +182,7 @@
                                     </p:blockUI> 
 
 
-                                </h:panelGroup>
-                            </h:panelGrid>
+                            
                         </div>
 
                         <h:panelGroup id="test">

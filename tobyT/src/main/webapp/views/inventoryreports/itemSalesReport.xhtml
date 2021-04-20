@@ -41,7 +41,7 @@
                                     </p:autoComplete>
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 105px;margin-right:6%;" value="#{userData.userDDs['FROM_SALEPER']}"/>
+                                    <p:outputLabel style="width: 105px;" value="#{userData.userDDs['FROM_SALEPER']}"/>
 
                                 </div>
                             </div>
@@ -79,7 +79,7 @@
                                     </p:autoComplete>
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 105px;margin-right:6%;" value="#{userData.userDDs['FROM_REPOS_NO']}"/>
+                                    <p:outputLabel style="width: 105px;" value="#{userData.userDDs['FROM_REPOS_NO']}"/>
 
                                 </div>
                             </div>
@@ -118,7 +118,7 @@
                                     </p:autoComplete>
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 105px;margin-right:6%;" value="#{userData.userDDs['FROM_INVOI_NO']}"/>
+                                    <p:outputLabel style="width: 105px;" value="#{userData.userDDs['FROM_INVOI_NO']}"/>
 
                                 </div>
                             </div>
@@ -155,7 +155,7 @@
                                     </p:selectOneMenu>    
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 105px;margin-right:6%;" value="#{userData.userDDs['FROM_INVOI_TYP']}"/>
+                                    <p:outputLabel style="width: 105px;" value="#{userData.userDDs['FROM_INVOI_TYP']}"/>
 
                                 </div>
                             </div>
@@ -187,7 +187,7 @@
                                     </p:calendar>
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel  style="width: 100px;margin-right:6%;" value="#{userData.userDDs['FROM_DATE']}"/>
+                                    <p:outputLabel  style="width: 100px;" value="#{userData.userDDs['FROM_DATE']}"/>
 
                                 </div>
                             </div>
@@ -210,7 +210,7 @@
                                     </p:selectBooleanCheckbox>
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 120px;margin-right:6%;" value="#{userData.userDDs['TOTAL_SALE_REP']}"/>
+                                    <p:outputLabel style="width: 120px;" value="#{userData.userDDs['TOTAL_SALE_REP']}"/>
 
                                 </div>
                             </div>
@@ -233,7 +233,7 @@
 
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:commandButton value="رسم بياني" update="@form" oncomplete="PF('dlg1').show()" style="margin-right:6%;"/>
+                                    <p:commandButton value="رسم بياني" update="@form" oncomplete="PF('dlg1').show()" style=""/>
 
                                 </div>
                             </div>
@@ -262,10 +262,8 @@
                     </p:dialog> 
                 </div>
 
-                <h:panelGrid   columns="2" class="col-md-12" >
-
-                    <h:panelGroup  class="centerButtons" style="margin-top: 2%">
-
+           
+                        <div style="text-align: center">
 
                         <p:commandButton   class="searchButtons"  
                                            title="#{userData.userDDs['SEARCH']}"
@@ -312,10 +310,8 @@
 
                         </p:blockUI> 
 
-
-                    </h:panelGroup>
-
-                </h:panelGrid>
+                        </div>
+              
             </p:fieldset>
 
             <p:fieldset id="reportDB"  style="margin-top:2%">
