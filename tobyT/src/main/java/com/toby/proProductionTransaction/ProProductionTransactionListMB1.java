@@ -23,9 +23,9 @@ public class ProProductionTransactionListMB1 extends BaseListBean {
     private ProProductionItemsTransactionDTO proProductionItemsTransactionDTOSelected;
 
     private List<ProProductionItemsTransactionDTO> proProductionItemsTransactionDTOList;
-    
+
     private LazyDataModel<ProProductionItemsTransactionDTO> dataModel;
-    
+
     @EJB
     private ProProductionItemsTransactionService proProductionItemsTransactionService;
 
@@ -34,7 +34,7 @@ public class ProProductionTransactionListMB1 extends BaseListBean {
     public void init() {
         load();
     }
-    
+
     @Override
     public void load() {
         try {
@@ -46,8 +46,9 @@ public class ProProductionTransactionListMB1 extends BaseListBean {
                 @Override
                 public List<ProProductionItemsTransactionDTO> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
 //                    proProductionItemsTransactionService.getProProductionItemsTransaction(getUserData().getUser());
-                    setRowCount(proProductionItemsTransactionService.getTotalRegistors( getUserData().getUserBranch().getId(), filters).intValue());
-                    return proProductionItemsTransactionService.getALLProProductionItemsTransactionDTO( first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), getUserData().getUserBranch().getId(), filters);
+                    setRowCount(proProductionItemsTransactionService.getTotalRegistors(getUserData().getUserBranch().getId(), filters).intValue());
+                    setProProductionItemsTransactionDTOList(proProductionItemsTransactionService.getALLProProductionItemsTransactionDTO(first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), getUserData().getUserBranch().getId(), filters));
+                    return getProProductionItemsTransactionDTOList();
                 }
             });
         } catch (Exception e) {
@@ -57,8 +58,8 @@ public class ProProductionTransactionListMB1 extends BaseListBean {
 
     @Override
     public void delete() {
-        proProductionItemsTransactionDTOList.remove(proProductionItemsTransactionDTOSelected);
-        proProductionItemsTransactionService.deleteproProductionItemsTransactionDTO(proProductionItemsTransactionDTOSelected, getUserData().getUser());
+        getProProductionItemsTransactionDTOList().remove(getProProductionItemsTransactionDTOSelected());
+        proProductionItemsTransactionService.deleteproProductionItemsTransactionDTO(getProProductionItemsTransactionDTOSelected(), getUserData().getUser());
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO", "تم الحذف بنجاح"));
     }
 
@@ -83,7 +84,7 @@ public class ProProductionTransactionListMB1 extends BaseListBean {
 
     @Override
     public String goToEdit() {
-         try {
+        try {
             if (proProductionItemsTransactionDTOSelected != null && proProductionItemsTransactionDTOSelected.getId() > 0) {
                 getContext().getSessionMap().put("proProductionItemsTransactionDTOSelected", proProductionItemsTransactionDTOSelected.getId());
                 getContext().getSessionMap().put("ScreenMode", "Edit");
@@ -95,10 +96,8 @@ public class ProProductionTransactionListMB1 extends BaseListBean {
         } catch (Exception e) {
             saveError(e, "proProductionTransactionListMB1", "goToEdit");
             return null;
-            }
+        }
     }
-
-    
 
     @Override
     public String getScreenName() {

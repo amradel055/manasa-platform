@@ -232,7 +232,7 @@ public class InvPurchaseInvoiceDetailsImpl implements InvPurchaseInvoiceDetailSe
             invPurchaseInvoiceDetailDTO.setUnitsItemsSelected(invPurchaseInvoiceDetail.getUnitId().getId());
 //            invPurchaseInvoiceDetailDTO.setUnitId(invPurchaseInvoiceDetail.getUnitId().getId());
         }
-        
+
         return invPurchaseInvoiceDetailDTO;
     }
 
@@ -338,8 +338,8 @@ public class InvPurchaseInvoiceDetailsImpl implements InvPurchaseInvoiceDetailSe
         Integer index = 1;
         List<Integer> res = dao.executeNativeQuery("select distinct(cloth_number)  from pro_factory_delivery_detail pfdd \n"
                 + "				left join pro_factory_delivery pfd on pfd.id = pfdd.pro_factory_delivery_id\n"
-//                + "                left join pro_item_production_stages pips on pips.inv_item_id = pfdd.item_id\n"
-                + "                left join inv_item ii on ii.id = pfdd.item_id \n" 
+                //                + "                left join pro_item_production_stages pips on pips.inv_item_id = pfdd.item_id\n"
+                + "                left join inv_item ii on ii.id = pfdd.item_id \n"
                 + "                left join pro_item_production_stages pips on pips.pro_group_id = ii.pro_group_id \n"
                 + "                left join pro_production_items_transaction ppti on ppti.pro_factory_delivery_detail_id = pfdd.id\n"
                 + "                where pfd.inv_purchase_invoice_id = " + invPurchaseInvoiceId + "\n"
@@ -410,7 +410,7 @@ public class InvPurchaseInvoiceDetailsImpl implements InvPurchaseInvoiceDetailSe
 
     @Override
     public List<ProProductionTransactionDetailDetailViewDTO> getInvPurchaseInvoiceDetailItems(Integer invPurchaseInvoiceId,
-            Integer clothNumber,  Integer proProductionStagesId) {
+            Integer clothNumber, Integer proProductionStagesId) {
         Map<String, Object> params = new HashMap<>();
         params.put("invPurchaseInvoiceId", invPurchaseInvoiceId);         //////  AND ((e.type = 0 OR e.type = 2) AND e.active = 1) ORDER BY e.code
         params.put("clothNumber", clothNumber);         //////  AND ((e.type = 0 OR e.type = 2) AND e.active = 1) ORDER BY e.code
@@ -423,21 +423,24 @@ public class InvPurchaseInvoiceDetailsImpl implements InvPurchaseInvoiceDetailSe
                 + " AND e.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.id=:invPurchaseInvoiceId AND e.clothNumber=:clothNumber )group by e.itemId", params);
         return mapToIntegerItemsList(detailses);
     }
-    
+
     @Override
-    public List<ProProductionTransactionDetailDetailViewDTO> getInvPurchaseInvoiceDetailItems(Integer invInvoiceSerial,Integer proProductionStagesId) {
+    public List<ProProductionTransactionDetailDetailViewDTO> getInvPurchaseInvoiceDetailItems(Integer invInvoiceSerial, Integer proProductionStagesId) {
         Map<String, Object> params = new HashMap<>();
-        params.put("invInvoiceSerial", invInvoiceSerial);        
-        params.put("proProductionStagesId", proProductionStagesId);        
-        List<ProFactoryDeliveryDetail> detailses = dao.findListByQuery("SELECT e FROM ProFactoryDeliveryDetail e WHERE e.proFactoryDeliveryId.type = 0 AND  ( "
+        params.put("invInvoiceSerial", invInvoiceSerial);
+        params.put("proProductionStagesId", proProductionStagesId);
+        List<ProFactoryDeliveryDetail> detailses = dao.findListByQuery("SELECT e FROM ProFactoryDeliveryDetail e "
+                + " WHERE "
+                + " e.proFactoryDeliveryId.type = 0 AND  ( "
                 + " e.itemId.proGroupId.id in (select pe.proGroupId.id from  ProItemProductionStages pe where pe.proProductionStagesId.id = :proProductionStagesId) "
-                + " AND e.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial=:invInvoiceSerial )group by e.itemId", params);
+                + " AND e.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial=:invInvoiceSerial )", params);
         return mapToIntegerItemsList(detailses);
     }
 
     public List<ProProductionTransactionDetailDetailViewDTO> mapToIntegerItemsList(List<ProFactoryDeliveryDetail> invPurchaseInvoiceDetailList) {
         List<ProProductionTransactionDetailDetailViewDTO> detailDetailViewDTOList = new ArrayList<>();
         Integer index = 1;
+        Map<Integer, ProProductionTransactionDetailDetailViewDTO> map = new HashMap<>();
         for (ProFactoryDeliveryDetail proFactoryDeliveryDetail : invPurchaseInvoiceDetailList) {
             ProProductionTransactionDetailDetailViewDTO productionTransactionDetailDetailViewDTO = new ProProductionTransactionDetailDetailViewDTO();
 
@@ -447,8 +450,13 @@ public class InvPurchaseInvoiceDetailsImpl implements InvPurchaseInvoiceDetailSe
             productionTransactionDetailDetailViewDTO.setInvItemCode(proFactoryDeliveryDetail.getItemId().getId());
             productionTransactionDetailDetailViewDTO.setIndex(index++);
             productionTransactionDetailDetailViewDTO.setProFactoryDeliveryDetailId(proFactoryDeliveryDetail.getId());
-            detailDetailViewDTOList.add(productionTransactionDetailDetailViewDTO);
+            if(map.containsKey(proFactoryDeliveryDetail.getItemId().getId())){
+                ProProductionTransactionDetailDetailViewDTO detailDetailViewDTO = map.get(proFactoryDeliveryDetail.getItemId().getId());
+                productionTransactionDetailDetailViewDTO.setQuantity(productionTransactionDetailDetailViewDTO.getQuantity().add(detailDetailViewDTO.getQuantity()));
+            }
+            map.put(proFactoryDeliveryDetail.getItemId().getId(), productionTransactionDetailDetailViewDTO);
         }
+        detailDetailViewDTOList = new ArrayList<>(map.values());
         return detailDetailViewDTOList;
     }
 

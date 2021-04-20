@@ -361,7 +361,7 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
             query.append(" and ipi.date >=  '").append(dateFormat.format(transactionFactoryView.getDate())).append("'");
         }
-        if (transactionFactoryView.getDate() != null) {
+        if (transactionFactoryView.getDateTo() != null) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
             query.append(" and ipi.date <=  '").append(dateFormat.format(transactionFactoryView.getDateTo())).append("'");
         }
@@ -402,13 +402,17 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
                 append(branchId).append(" ");
         appendProProductionDate(transactionFactoryView);
         appendProProductionGellery(transactionFactoryView);
-        builder.append("and  pfd.id not in (select parent from toby.pro_factory_delivery where type = 1 and parent is not null ) AND pit.id IN (\n").
-                append("    SELECT MAX(pit.id)\n").
-                append("    from toby.pro_production_items_transaction pit \n").
-                append("left join pro_factory_delivery_detail pfdd on pit.pro_factory_delivery_detail_id = pfdd.id \n").
-                append("left join pro_factory_delivery pfd on pfd.id = pfdd.pro_factory_delivery_id\n").
-                append("    GROUP BY pfd.id\n").
-                append(") order by ipi.serial ");
+//        builder.append("and  pfd.id not in (select parent from toby.pro_factory_delivery where type = 1 and parent is not null ) AND pit.id IN (\n").
+//                append("    SELECT MAX(pit.id)\n").
+//                append("    from toby.pro_production_items_transaction pit \n").
+//                append("left join pro_factory_delivery_detail pfdd on pit.pro_factory_delivery_detail_id = pfdd.id \n").
+//                append("left join pro_factory_delivery pfd on pfd.id = pfdd.pro_factory_delivery_id\n").
+//                append("    GROUP BY pfd.id\n").
+//                append(") order by ipi.serial ");
+        builder.append("and  pfd.id not in (select parent from toby.pro_factory_delivery where type = 1 and parent is not null ) AND pit.id = (\n").
+                append("    select ppit2.id from pro_production_items_transaction  ppit2\n"
+                        + "left join pro_production_stages pps on pps.id = ppit2.pro_production_stages_id where  pro_factory_delivery_detail_id = pit.pro_factory_delivery_detail_id\n"
+                        + "order by pps.serial desc limit 1 ) order by ipi.serial ");
         List<Object[]> details = dao.executeNativeQuery(builder.toString());
         for (Object[] object : details) {
             ProProductionItemsTransactionDTO itemsTransactionDTO = new ProProductionItemsTransactionDTO();
@@ -425,22 +429,25 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
         }
 
         builder = new StringBuilder();
-        builder.append("select pfd from ProFactoryDelivery pfd \n"
-                + "where pfd.id  not in (select distinct(ppit.proFactoryDeliveryDetailId.proFactoryDeliveryId.id)\n"
-                + "from ProProductionItemsTransaction ppit\n"
-                + "where ppit.proFactoryDeliveryDetailId is not null and ppit.proFactoryDeliveryDetailId.proFactoryDeliveryId is not null\n"
-                + ") and pfd.branchId.id = 182");
-        
-        List<ProFactoryDelivery> details1 = dao.findListByQuery(builder.toString());
-         for (ProFactoryDelivery factoryDelivery : details1) {
+        builder.append("select ipi.id , ipi.serial , ipi.date from pro_factory_delivery pfd2\n"
+                + "	left join inv_purchase_invoice ipi on ipi.id = pfd2.inv_purchase_invoice_id\n"
+                + "               where pfd2.type = 0 and pfd2.id  not in (select distinct(pfd.id)\n"
+                + "                from pro_production_items_transaction ppit\n"
+                + "                Left join pro_factory_delivery_detail pfdd on pfdd.id = ppit.pro_factory_delivery_detail_id\n"
+                + "                LEFT JOIN pro_factory_delivery pfd on pfd.id = pfdd.pro_factory_delivery_id\n"
+                + "                where ppit.pro_factory_delivery_detail_id is not null \n"
+                + "                and pfd.id is not null)");
+
+        List<Object[]> details1 = dao.executeNativeQuery(builder.toString());
+        for (Object[] object : details1) {
             ProProductionItemsTransactionDTO itemsTransactionDTO = new ProProductionItemsTransactionDTO();
-            itemsTransactionDTO.setInvoiceSerial(factoryDelivery.getInvPurchaseInvoiceId().getSerial());
-            itemsTransactionDTO.setInvoiceDate(factoryDelivery.getInvPurchaseInvoiceId().getDate());
-            itemsTransactionDTO.setId(factoryDelivery.getInvPurchaseInvoiceId().getId());
+            itemsTransactionDTO.setId((Integer) object[0]);
+            itemsTransactionDTO.setInvoiceSerial((Integer) object[1]);
+            itemsTransactionDTO.setInvoiceDate((Date) object[2]);
             itemsTransactionDTO.setClothNumber(movementReportService.summitionTob(itemsTransactionDTO.getId()));
 
             list.add(itemsTransactionDTO);
-         }
+        }
         return list;
     }
 
