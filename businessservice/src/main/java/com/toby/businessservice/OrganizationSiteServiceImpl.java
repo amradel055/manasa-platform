@@ -680,20 +680,20 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
 
     @Override
     public Long getTotalRegistors(Integer branchId, Map<String, Object> filters, Integer type) {
+        filters.put("branchId", branchId);
         filters.put("type", type);
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT count(i) FROM InvOrganizationSite i WHERE i.branchId.id = :branchId AND (i.type = :type OR i.type = 2) ");
-        appendFilter(filters, branchId, builder);
+        appendFilter(filters, builder);
         Long details = dao.findEntityByQuery(builder.toString(), filters);
 
         return details;
     }
 
-    public void appendFilter(Map<String, Object> filters, Integer branchId, StringBuilder builder) {
-        filters.put("branchId", branchId);
+    public void appendFilter(Map<String, Object> filters, StringBuilder builder) {
         if (filters.get("globalFilter") != null && !filters.get("globalFilter").toString().isEmpty()) {
             //OR ( i.parent.name  like CONCAT('%',:globalFilter ,'%'))
-            String filter = " and (i.code like CONCAT('%',:globalFilter ,'%')  OR i.sponsorName1  like CONCAT('%',:globalFilter ,'%') OR i.nationId  like CONCAT('%',:globalFilter ,'%') OR i.name  like CONCAT('%',:globalFilter ,'%') OR i.mobile like CONCAT('%',:globalFilter ,'%') OR i.phone like CONCAT('%',:globalFilter ,'%')  ) ";
+            String filter = " and ( i.mobile like CONCAT('%',:globalFilter ,'%') OR i.code like CONCAT('%',:globalFilter ,'%') ) ";
             builder.append(filter);
         } else {
             filters.remove("globalFilter");
@@ -702,10 +702,11 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
 
     @Override
     public List<InvOrganizationSiteDTO> getALLCustomerDTOByBranchIdAndType(int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters, Integer type) {
+        filters.put("branchId", branchId);
         filters.put("type", type);
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT i FROM InvOrganizationSite i WHERE i.branchId.id = :branchId  AND (i.type = :type OR i.type = 2) ");
-        appendFilter(filters, branchId, builder);
+        appendFilter(filters, builder);
         builder.append(" ORDER BY i.id DESC");
         List<InvOrganizationSite> details = dao.findListByQuery(builder.toString(), filters, first, pageSize);
         List<InvOrganizationSiteDTO> dTOList = new ArrayList<>();
@@ -1471,7 +1472,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             offerCompanyDTO.setDiscount(invOrganizationSite.getOfferCompanyId().getDiscount());
             invOrganizationSiteDTO.setOfferCompanyDTO(offerCompanyDTO);
         }
-        
+
         if (invOrganizationSite.getAccountId() != null) {
             GlAccountDTO accountDTO = new GlAccountDTO();
             accountDTO.setAccNumber(invOrganizationSite.getAccountId().getAccNumber());
@@ -1481,7 +1482,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         invOrganizationSiteDTO.setOpenBalanceCredit(invOrganizationSite.getOpenBalanceCredit());
         invOrganizationSiteDTO.setOpenBalanceDebit(invOrganizationSite.getOpenBalanceDebit());
         invOrganizationSiteDTO.setOpenBalanceDate(invOrganizationSite.getOpenBalanceDate());
-        
+
         return invOrganizationSiteDTO;
     }
 

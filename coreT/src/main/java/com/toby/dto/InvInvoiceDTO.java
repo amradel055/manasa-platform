@@ -61,6 +61,7 @@ public class InvInvoiceDTO extends BaseEntityDTO {
     private Integer serial;
     private Integer serialTax;
     private String address;
+    private String customerNotice;
     private InvDetailDTO invPurchaseInvoiceDetailsSelected;
     private List<InvDetailDTO> invPurchaseInvoiceDetailListSelected;
     private Boolean isOld;
@@ -1586,4 +1587,23 @@ public class InvInvoiceDTO extends BaseEntityDTO {
     public void setOfferCompanyId(OfferCompanyDTO offerCompanyId) {
         this.offerCompanyId = offerCompanyId;
     }
+
+    /**
+     * @return the customerNotice
+     */
+    public String getCustomerNotice() {
+        return customerNotice;
+    }
+
+    /**
+     * @param customerNotice the customerNotice to set
+     */
+    public void setCustomerNotice(String customerNotice) {
+        this.customerNotice = customerNotice;
+    }
+
+    /**
+     * @return the customerNotice
+     */
+   
 }

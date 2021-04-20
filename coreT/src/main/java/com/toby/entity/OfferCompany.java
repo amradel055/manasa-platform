@@ -26,6 +26,9 @@ public class OfferCompany extends BaseEntity{
     @Size(max = 45)
     @Column(name = "name")
     private String name;
+    @Size(max = 450)
+    @Column(name = "notice")
+    private String notice;
     @Column(name = "code")
     private Integer code;
     @Column(name = "discount")
@@ -109,6 +112,20 @@ public class OfferCompany extends BaseEntity{
      */
     public void setCode(Integer code) {
         this.code = code;
+    }
+
+    /**
+     * @return the notice
+     */
+    public String getNotice() {
+        return notice;
+    }
+
+    /**
+     * @param notice the notice to set
+     */
+    public void setNotice(String notice) {
+        this.notice = notice;
     }
 
 }

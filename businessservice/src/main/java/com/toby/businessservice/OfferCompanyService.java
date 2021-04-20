@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice;
 
+import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.OfferCompanyDTO;
 import com.toby.entity.TobyUser;
 import java.util.List;
@@ -21,13 +22,13 @@ public interface OfferCompanyService {
 
     public List<OfferCompanyDTO> getAllOfferCompany(TobyUser tobyUser);
 
-    public OfferCompanyDTO addOfferCompany(OfferCompanyDTO offerCompanyDTO, TobyUser tobyUser) ;
+    public OfferCompanyDTO addOfferCompany(OfferCompanyDTO offerCompanyDTO, TobyUser tobyUser);
 
-    public OfferCompanyDTO findOfferCompany(Integer offerCompanyId,TobyUser tobyUser) ;
+    public OfferCompanyDTO findOfferCompany(Integer offerCompanyId, TobyUser tobyUser);
 
-    public List<OfferCompanyDTO> getALLGlofferCompanyByCompanyId(Integer companyId,TobyUser tobyUser);
+    public List<OfferCompanyDTO> getALLGlofferCompanyByCompanyId(Integer companyId, TobyUser tobyUser);
 
-    public List<OfferCompanyDTO> getALLGlofferCompanyByBranchId(Integer branchId, TobyUser tobyUser) ;
+    public List<OfferCompanyDTO> getALLGlofferCompanyByBranchId(Integer branchId, TobyUser tobyUser);
 
-
+    public String getNoticeByCustomerId(Integer id);
 }
