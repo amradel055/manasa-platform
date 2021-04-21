@@ -1,6 +1,8 @@
 package com.toby.reports;
 
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
+import com.toby.businessservice.TobyUserInventoryService;
+import com.toby.converter.InvInventoryDTOConverter;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.toby.Basic;
 import com.toby.views.ClientsNoMovment;
@@ -22,13 +24,17 @@ public class ClientsNoMovmentMB extends Basic {
     private ClientsNoMovment clientsNoMovment;
     private InvInventoryDTO galleryList;
     private Date date;
+    private InvInventoryDTOConverter gallaryDTOConverter;
+    private List<InvInventoryDTO> gallaryList_1;
 
     @EJB
     private InvPurchaseInvoiceService_1 invPurchaseInvoiceService;
+    @EJB
+    private TobyUserInventoryService tobyUserInventoryService;
 
     public void search() {
 
-        setClientsNoMovmentsList(invPurchaseInvoiceService.findClientsNoMovment(getUserData().getUserBranch().getId(),getGalleryList() == null ? null : getGalleryList().getId(), date, 4));
+        setClientsNoMovmentsList(invPurchaseInvoiceService.findClientsNoMovment(getUserData().getUserBranch().getId(), getGalleryList() == null ? null : getGalleryList().getId(), date, 4));
     }
 
     public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {
@@ -115,6 +121,39 @@ public class ClientsNoMovmentMB extends Basic {
      */
     public void setClientsNoMovmentsList(List<ClientsNoMovment> clientsNoMovmentsList) {
         this.clientsNoMovmentsList = clientsNoMovmentsList;
+    }
+
+    /**
+     * @return the gallaryDTOConverter
+     */
+    public InvInventoryDTOConverter getGallaryDTOConverter() {
+        return gallaryDTOConverter;
+    }
+
+    /**
+     * @param gallaryDTOConverter the gallaryDTOConverter to set
+     */
+    public void setGallaryDTOConverter(InvInventoryDTOConverter gallaryDTOConverter) {
+        this.gallaryDTOConverter = gallaryDTOConverter;
+    }
+
+    /**
+     * @return the gallaryList_1
+     */
+    public List<InvInventoryDTO> getGallaryList_1() {
+
+        if (gallaryList_1 == null || gallaryList_1.isEmpty()) {
+            gallaryList_1 = tobyUserInventoryService.getAllGallaryByUserAndBranch(getUserData().getUser());
+            setGallaryDTOConverter(new InvInventoryDTOConverter(gallaryList_1));
+        }
+        return gallaryList_1;
+    }
+
+    /**
+     * @param gallaryList_1 the gallaryList_1 to set
+     */
+    public void setGallaryList_1(List<InvInventoryDTO> gallaryList_1) {
+        this.gallaryList_1 = gallaryList_1;
     }
 
     /**

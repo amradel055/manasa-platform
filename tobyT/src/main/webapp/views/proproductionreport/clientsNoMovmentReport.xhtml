@@ -40,19 +40,18 @@
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
 
-                                <p:autoComplete style="width:85%" id="gallary_from" 
-                                                dropdown="true"
-                                                converter="#{autoComplete.invInventoryDTOConverter}"
-                                                value="#{clientsNoMovmentMB.galleryList}" 
-                                                var="gallaryFrom"
-                                                itemLabel="#{gallaryFrom}"
-                                                itemValue="#{gallaryFrom}" 
-                                                forceSelection="true" 
-                                                completeMethod="#{autoComplete.completeGallaryDTO}" >
-                                </p:autoComplete>
+                                <p:selectOneMenu  id="gallary_From" value="#{clientsNoMovmentMB.galleryList}"
+                                                 converter="#{clientsNoMovmentMB.gallaryDTOConverter}">
+                                    <f:selectItems value="#{clientsNoMovmentMB.gallaryList_1}" 
+                                                   var="gallaryFrom"
+                                                   itemLabel="#{gallaryFrom}"
+                                                   itemValue="#{gallaryFrom}" />
+                                </p:selectOneMenu>
                             </div>
                             <div class="ui-g-6 ui-xl-6">
-                                <p:outputLabel style="width: 50px;margin-right: 1%" value="المعرض"/>
+
+                                <p:outputLabel style="width: 50px;margin-right: 1%" value=" معرض"/>
+
 
 
 

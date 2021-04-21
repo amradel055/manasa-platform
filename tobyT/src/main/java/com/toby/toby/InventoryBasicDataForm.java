@@ -22,11 +22,13 @@ import com.toby.businessservice.InvReservationService;
 import com.toby.businessservice.InvTransferService;
 import com.toby.businessservice.InventorySetupService;
 import com.toby.businessservice.ItemsBarcodesDetailsViewService;
+import com.toby.businessservice.OfferCompanyService;
 import com.toby.businessservice.OrganizationSiteService;
 import com.toby.businessservice.ProDetailTypeService;
 import com.toby.businessservice.QuantityItemsStoreService;
 import com.toby.businessservice.ReportManagementService;
 import com.toby.businessservice.SymbolService;
+import com.toby.businessservice.report.SupplierAccountService;
 import com.toby.bussinessservice.global.AutoCompleteService;
 import com.toby.converter.CostCenterDTOConverter;
 import com.toby.converter.CurrencyDTOConverter;
@@ -195,6 +197,10 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     InvPurchaseInvoiceService_1 invPurchaseInvoiceService_1;
     @EJB
     InvInventoryService invInventoryService;
+    @EJB
+    OfferCompanyService companyService;
+    @EJB
+    SupplierAccountService supplierAccountService;
 
     @Override
     public abstract String save();
@@ -483,6 +489,9 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         try {
             getInvInvoiceDTO().setMsg(null);
             setInvInvoiceDTO(invPurchaseInvoiceService.putCurrency(getInvInvoiceDTO()));
+            getInvInvoiceDTO().setCustomerNotice(companyService.getNoticeByCustomerId(getInvInvoiceDTO() == null ? null : getInvInvoiceDTO().getOrganizationSiteId().getId()));
+            getInvInvoiceDTO().setAccountStatement(supplierAccountService.getAccountForOrganizationSite(getInvInvoiceDTO().getOrganizationSiteId().getId()));
+
             errorMsg(getInvInvoiceDTO().getMsg());
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceFormMB", "putCurrency");

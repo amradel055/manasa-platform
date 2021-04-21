@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                template="./../../template/newTemplate.xhtml"
+                template="./../../template/template.xhtml"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
@@ -12,29 +12,19 @@
 
         <h:form  id="form" dir="#{userData.dir}"  style="margin-right: 20px">
 
-            <div style=" position: absolute;left: 20px"> 
 
-                <p:commandButton  style="width: 90px;background-image: none!important;z-index: 2" 
-                                  class="viewButton searchButton"
-                                  value="Hide/Show"/>  
-            </div>
 
             <p:fieldset  legend="#{userData.userDDs['ACC_BALA_SUPPLIERS']}"
-                         
+
                          style=" position: relative"> 
 
                 <div  id="firstSegment" class="ui-g-12 ui-g-nopad firstset">
-                    
+
                     <div class="ui-g">
 
-                        <div class="ui-g-12 ui-md-6">
-
-                            <h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel style="width: 60px" value="#{userData.userDDs['FROM_SUPPLI_NO']}"/>
-                                </h:panelGroup> 
-
-                                <h:panelGroup>
+                        <div class="ui-g-6 ui-xl-6">
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
                                     <p:autoComplete style="width:75%!important"
                                                     dropdown="true"
                                                     converter="#{accountbalancesupplierMB.invOrgSiteConverter}"
@@ -46,16 +36,14 @@
                                                     completeMethod="#{accountbalancesupplierMB.completOrgSite}" >
 
                                     </p:autoComplete>
-                                </h:panelGroup> 
-                            </h:panelGroup>
-                        </div>
-                        <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel style="width: 60px" value="#{userData.userDDs['TO_SUPPLI_NO']}"/>
-                                </h:panelGroup> 
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 60px" value="#{userData.userDDs['FROM_SUPPLI_NO']}"/>
 
-                                <h:panelGroup>
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
                                     <p:autoComplete style="width:75%!important"
                                                     dropdown="true"
                                                     converter="#{accountbalancesupplierMB.invOrgSiteConverter}"
@@ -67,67 +55,62 @@
                                                     completeMethod="#{accountbalancesupplierMB.completOrgSite}" >
 
                                     </p:autoComplete>
-                                </h:panelGroup> 
-                            </h:panelGroup>
-                        </div>
-                        <div class="ui-g-12 ui-md-6">
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 60px" value="#{userData.userDDs['TO_SUPPLI_NO']}"/>
 
-                            <h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel  style="width: 60px" value="#{userData.userDDs['FROM_DATE']}"/>
-                                </h:panelGroup>
-
-                                <h:panelGroup>
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
                                     <p:calendar pattern="dd/MM/yyyy" 
                                                 value="#{accountbalancesupplierMB.organizationSiteStatementSearchBean.dateFrom}"
                                                 style="width: 55%"
                                                 id="dateFrom">
 
                                     </p:calendar>
-                                </h:panelGroup>
-                            </h:panelGroup>
-                        </div>
-                        <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel  style="width: 60px" value="#{userData.userDDs['TO_DATE']}"/>
-                                </h:panelGroup>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel  style="width: 60px" value="#{userData.userDDs['FROM_DATE']}"/>
 
-                                <h:panelGroup>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
                                     <p:calendar pattern="dd/MM/yyyy" 
                                                 value="#{accountbalancesupplierMB.organizationSiteStatementSearchBean.dateTo}"
                                                 style="width: 55%"
                                                 id="dateTo">
 
                                     </p:calendar>
-                                </h:panelGroup>
-                            </h:panelGroup>
-                        </div>
-                        <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel  style="width: 60px" value="#{userData.userDDs['TO_DATE']}"/>
 
-                                <h:panelGroup>
-                                    <p:outputLabel  style="width: 80px" value="#{userData.userDDs['WITHOUT_O_BALA']}"/>
-                                </h:panelGroup>
-                                <h:panelGroup>
-
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
                                     <p:selectBooleanCheckbox value="#{accountbalancesupplierMB.zeroAmount}" style="margin-right:1%" id="check">
                                         <p:ajax  listener="#{accountbalancesupplierMB.deleteZeroRecords}" update="@form" />
                                     </p:selectBooleanCheckbox>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel  style="width: 80px" value="#{userData.userDDs['WITHOUT_O_BALA']}"/>
 
-                                </h:panelGroup>
-
-
-                            </h:panelGroup>
+                                </div>
+                            </div>
 
                         </div>
+
+
                     </div>
                 </div>
 
-                <h:panelGrid columns="1"  class="col-md-12">
-
-                    <h:panelGroup  class="centerButtons" style="margin-top: 2%">
-
+            
+                        <div style="text-align: center">
 
                         <p:commandButton   class="searchButton"
                                            title="#{userData.userDDs['SEARCH']}"
@@ -178,10 +161,7 @@
                         </p:blockUI> 
 
 
-
-                    </h:panelGroup>
-
-                </h:panelGrid>
+                        </div>
 
             </p:fieldset>
 
@@ -308,12 +288,12 @@
                     </p:columnGroup>
                 </p:dataTable>
             </p:fieldset>
-              <script>
+            <script>
                 function clearDate() {
-               document.getElementById("form:dateFrom_input").value = null;
-               document.getElementById("form:dateTo_input").value = null; 
-               document.getElementById("form:check_input").value = false; 
-               }
+                    document.getElementById("form:dateFrom_input").value = null;
+                    document.getElementById("form:dateTo_input").value = null;
+                    document.getElementById("form:check_input").value = false;
+                }
             </script>
         </h:form>
     </ui:define>

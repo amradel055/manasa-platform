@@ -2,7 +2,7 @@
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
-                template="./../../template/newTemplate.xhtml"
+                template="./../../template/template.xhtml"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns="http://www.w3.org/1999/xhtml">
@@ -12,20 +12,7 @@
     <ui:define name="content">
          <f:event listener="#{userData.authorize}" type="preRenderView" />
         <h:form  class='formmargin'  id="form" dir="#{userData.dir}">
-            <div style=" position: absolute;left: 20px"> 
-
-                    <p:commandButton  style="z-index: 2;
-                                      margin-top: 24%;
-                                      color: #035c70!important; 
-                                      background-color: #223238!important;
-                                      border: 1px solid #22323a!important;
-                                      background: #22323a 50% 50% repeat-x!important;"
-                                      icon="fa fa-fw fa-home"
-                                      title="#{userData.userDDs['HOME']}"
-                                      class="smhomeButton" 
-                                      action="exit" />
-                       
-                </div>
+            
             <div>
 
                 <p:messages autoUpdate="true"  id="cupmsg" showDetail="true" closable="true" rendered="true" />   
@@ -73,7 +60,6 @@
                 </p:dataTable>
                 <h:panelGroup class="centerButtons" style="margin-top: 1%">
                      <p:commandButton  class="saveallButtons" id="b3" title="#{userData.userDDs['SAVE_ALL']}"  value="#{userData.userDDs['SAVE_ALL']}" 
-                                         style="color: #fff!important;background-color: #8b00ff;margin-left: 5px" 
                                          actionListener="#{monitoringSettingMB.saveAll}" 
                                          rendered="#{userData.userScreens['shiftingJournalsettings'].add or userData.isAdmin}">
                         </p:commandButton>
@@ -82,7 +68,6 @@
                                          title="#{userData.userDDs['BACK']}" 
                                          immediate="true" 
                                          value="#{userData.userDDs['BACK']}" 
-                                         style="color: #fff!important;background-color: #0034ffeb;margin-left: 5px" 
                                          action="exit"   />
 
                         <p:blockUI block="form" trigger="b3" animate="true" >

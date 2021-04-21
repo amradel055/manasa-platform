@@ -832,23 +832,23 @@
                                                    or userData.userScreens['progroup'].view 
                                                    or userData.userScreens['summitionItemReport'].view 
                                                    or userData.userScreens['proproductionstages'].view
-                                                       or userData.userScreens['proItemProductionStages'].view
-                                                       or userData.userScreens['profactoryDelivery'].view
-                                                       or userData.userScreens['proProductionTransaction'].view
-                                                       or userData.userScreens['proProductionTransactionList'].view
-                                                       or userData.userScreens['proProductionTransactionForm'].view
-                                                       or userData.userScreens['proProductionCheck'].view
-                                                       or userData.userScreens['proProductionMovementDelivrey'].view
-                                                       or userData.userScreens['proSendToGallary'].view
-                                                       or userData.userScreens['proRecieveGallary'].view 
-                                                       or userData.userScreens['summitionItemReportPro'].view 
-                                                       or userData.userScreens['productionTransactionOfUser'].view 
-                                                       or userData.userScreens['InvoiceMovementReport'].view
-                                                       or userData.userScreens['InvoiceStatusReport'].view
-                                                       or userData.userScreens['FactoryInvoiceStatusReport'].view
-                                                       or userData.userScreens['clientsNoMovmentReport'].view
-                                                       or userData.userScreens['ProProductionTransactionFactoryReport'].view
-                                                       or userData.userScreens['ProProductionTransactionFactoryLastReport'].view
+                                                   or userData.userScreens['proItemProductionStages'].view
+                                                   or userData.userScreens['profactoryDelivery'].view
+                                                   or userData.userScreens['proProductionTransaction'].view
+                                                   or userData.userScreens['proProductionTransactionList'].view
+                                                   or userData.userScreens['proProductionTransactionForm'].view
+                                                   or userData.userScreens['proProductionCheck'].view
+                                                   or userData.userScreens['proProductionMovementDelivrey'].view
+                                                   or userData.userScreens['proSendToGallary'].view
+                                                   or userData.userScreens['proRecieveGallary'].view 
+                                                   or userData.userScreens['summitionItemReportPro'].view 
+                                                   or userData.userScreens['productionTransactionOfUser'].view 
+                                                   or userData.userScreens['InvoiceMovementReport'].view
+                                                   or userData.userScreens['InvoiceStatusReport'].view
+                                                   or userData.userScreens['FactoryInvoiceStatusReport'].view
+                                                   or userData.userScreens['clientsNoMovmentReport'].view
+                                                   or userData.userScreens['ProProductionTransactionFactoryReport'].view
+                                                   or userData.userScreens['ProProductionTransactionFactoryLastReport'].view
                                                    or userData.userScreens[''].view 
                                                    or userData.isAdmin}"
                                        >
@@ -901,7 +901,7 @@
                                     <p:menuitem id="sr_lnk33318" value="استلام الفاتورة بالمعرض" icon="&#xE8D2;" url="/faces/views/proRecieveGallary/proRecieveGallaryList.xhtml" 
                                                 rendered="#{userData.userScreens['proRecieveGallary'].view or userData.isAdmin}"
                                                 />
-                                    
+
                                 </p:submenu>
                                 <p:submenu id="sr_sm332" label="تقارير الانتاج" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['invoiceProductionStageReport'].view 
@@ -925,7 +925,7 @@
                                     <p:menuitem id="sr_lnk33322" value="تقرير باجماليات الفئات" icon="&#xE8D2;" url="/faces/views/proproductionreport/summitionItemReport.xhtml" 
                                                 rendered="#{userData.userScreens['summitionItemReport'].view or userData.isAdmin}"
                                                 />
-                                      <p:menuitem id="sr_lnk33325" value=" حركة الثياب بالمصنع حسب الفئه" icon="&#xE8D2;" url="/faces/views/proproductionreport/summitionItemReportPro.xhtml" 
+                                    <p:menuitem id="sr_lnk33325" value=" حركة الثياب بالمصنع حسب الفئه" icon="&#xE8D2;" url="/faces/views/proproductionreport/summitionItemReportPro.xhtml" 
                                                 rendered="#{userData.userScreens['summitionItemReportPro'].view or userData.isAdmin}"
                                                 />
                                     <p:menuitem id="sr_lnk33324" value="حركة الثياب بالمشغل والمعرض" icon="&#xE8D2;" url="/faces/views/proproductionreport/InvoiceMovementReport.xhtml" 
@@ -947,7 +947,30 @@
                                                 />
                                 </p:submenu>
                             </p:submenu>
+                            <p:submenu id="sr_sm55" label="الترحيلات" icon="&#xE8D2;"
+                                       rendered="#{userData.userScreens['shiftingJournals'].view 
+                                                   or userData.userScreens['shiftingJournalsettings'].view 
 
+                                                   or userData.isAdmin}"
+                                       >
+                                <p:submenu id="sr_sm56" label="الترحيل" icon="&#xE8D2;"
+                                           rendered="#{userData.userScreens['shiftingJournals'].view 
+                                                       or userData.isAdmin}"
+                                           >
+                                    <p:menuitem id="sr_lnk550" value="شاشه الترحيل" icon="&#xE8D2;" url="/faces/views/shiftingJournals/shiftingJournals.xhtml" 
+                                                rendered="#{userData.userScreens['shiftingJournals'].view or userData.isAdmin}"
+                                                />
+                                </p:submenu>
+                                <p:submenu id="sr_sm100" label="اعدادت الترحيلات" icon="&#xE8D2;"
+                                           rendered="#{userData.userScreens['shiftingJournalsettings'].view 
+                                                       or userData.isAdmin}"
+                                           >
+                                    <p:menuitem id="sr_lnk552" value="اعدادات الترحيلات" icon="&#xE8D2;" url="/faces/views/shiftingJournalsettings/shiftingjournalsetting.xhtml" 
+                                                rendered="#{userData.userScreens['shiftingJournalsettings'].view or userData.isAdmin}"
+                                                />
+
+                                </p:submenu>
+                            </p:submenu>
                         </pm:menu>
                     </h:form>
                 </div>

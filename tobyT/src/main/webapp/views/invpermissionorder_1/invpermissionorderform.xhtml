@@ -389,10 +389,8 @@
 
                 </p:dataTable>
 
-                <h:panelGrid  class="col-md-12" columns="1"  style="margin-top:2%">
-
-                    <h:panelGroup  class="centerButtons">
-
+              
+                        <div style="text-align: center">
                         <p:commandButton  id="saveB" 
                                           class="saveButtons"
                                           title="#{userData.userDDs['SAVE']}"
@@ -434,8 +432,8 @@
                                           action="#{invAddingOrderFormDTOMB.exit()}" 
                                           update="@form"/>
 
-                        <h:commandLink  style="float:left" class="sdcreenimg">  
-                            <p:graphicImage name="/img/excel.jpg" width="24" style='margin-right:25%;'/>  
+                        <h:commandLink   class="sdcreenimg">  
+                            <p:graphicImage name="/img/excel.jpg" width="24" />  
                             <p:dataExporter type="xls"
                                             target="invPurchaseInvoiceDetailsTable" 
                                             fileName="فاتورة المشتريات"
@@ -449,9 +447,7 @@
                         </p:blockUI> 
 
 
-                    </h:panelGroup>
-
-                </h:panelGrid>
+                        </div>
             </p:fieldset>
 
 

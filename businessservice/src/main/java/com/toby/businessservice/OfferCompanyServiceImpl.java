@@ -74,11 +74,28 @@ public class OfferCompanyServiceImpl implements OfferCompanyService {
         return mapToDTOList(offerCompanyList, tobyUser);
     }
 
+    @Override
+    public String getNoticeByCustomerId(Integer id) {
+        String offerCompanyNotice = "";
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT oc.notice FROM offer_company oc\n"
+                + "join toby.inv_organization_site os\n"
+                + "on os.offer_company_id = oc.id\n").
+                append("where os.id =  \n ").
+                append(id).append(" ");
+        List<String> details = dao.executeNativeQuery(builder.toString());
+        for (String customerNotice : details) {
+            offerCompanyNotice = customerNotice;
+        }
+        return offerCompanyNotice;
+    }
+
     public OfferCompany mapToEntity(OfferCompanyDTO offerCompanyDTO, TobyUser tobyUser) {
         OfferCompany offerCompany1 = new OfferCompany();
         offerCompany1.setId(offerCompanyDTO.getId());
         offerCompany1.setCode(offerCompanyDTO.getCode());
         offerCompany1.setName(offerCompanyDTO.getName());
+        offerCompany1.setNotice(offerCompanyDTO.getNotice());
         offerCompany1.setDiscount(offerCompanyDTO.getDiscount());
 
         if (offerCompanyDTO.getCreatedBy() != null) {
@@ -116,6 +133,7 @@ public class OfferCompanyServiceImpl implements OfferCompanyService {
         offerCompanyDTO.setId(offerCompany.getId());
         offerCompanyDTO.setCreatedDate(offerCompany.getCreationDate());
         offerCompanyDTO.setCode(offerCompany.getCode());
+        offerCompanyDTO.setNotice(offerCompany.getNotice());
         offerCompanyDTO.setIndex(offerCompany.getId());
 
         offerCompanyDTO.setName(offerCompany.getName());

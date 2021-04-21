@@ -16,6 +16,7 @@ public class OfferCompanyDTO extends BaseEntityDTO{
     private String name;
     private Integer code;
     private BigDecimal discount;
+    private String notice;
 
     public OfferCompanyDTO() {
     }
@@ -84,6 +85,20 @@ public class OfferCompanyDTO extends BaseEntityDTO{
      */
     public void setCode(Integer code) {
         this.code = code;
+    }
+
+    /**
+     * @return the notice
+     */
+    public String getNotice() {
+        return notice;
+    }
+
+    /**
+     * @param notice the notice to set
+     */
+    public void setNotice(String notice) {
+        this.notice = notice;
     }
 
 }

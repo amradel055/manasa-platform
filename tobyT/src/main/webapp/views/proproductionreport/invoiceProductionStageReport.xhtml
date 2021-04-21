@@ -9,6 +9,9 @@
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <ui:define name="content">
         <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <link rel="stylesheet" href="https://ZulNs.github.io/libs/calendar.css"/>
+        <script type="text/javascript" src="https://ZulNs.github.io/libs/hijri-date.js"></script>
+        <script type="text/javascript" src="https://ZulNs.github.io/libs/calendar.js"></script>
         <h:body>
 
             <h:form dir="RTL" style="margin-right: 20px" id="form" >
@@ -42,7 +45,6 @@
                                 <p:outputLabel   value="تاريخ الاستلام بالمعرض" />
 
 
-
                             </div>
                         </div>
                         <div class="ui-g-12 ui-xl-12">
@@ -67,19 +69,19 @@
                             <div class="ui-g-6 ui-xl-6">
 
 
-                        <p:commandButton     class="saveButton" id="saveB" 
-                                             value="بحث" 
-                                             icon="fa fa-fw fa-save"
-                                             action="#{invoiceProductionStagesReportMB.search()}"
-                                             update="table messages"
-                                             >
+                                <p:commandButton     class="saveButton" id="saveB" 
+                                                     value="بحث" 
+                                                     icon="fa fa-fw fa-save"
+                                                     action="#{invoiceProductionStagesReportMB.search()}"
+                                                     update="table messages"
+                                                     >
 
-                        </p:commandButton>
+                                </p:commandButton>
 
 
                             </div>
                         </div>
-                        
+
                     </div>
                     <div class="ui-g-6 ui-xl-6">
                         <div class="ui-g-12 ui-xl-12">
@@ -129,10 +131,26 @@
                             <div class="ui-g-6 ui-xl-6">
 
                                 <p:calendar style="width: 50%"  id="dateFrom1"
-                                            value="#{invoiceProductionStagesReportMB.printProductionDTO.toDate}"
+                                            
                                             pattern="dd/MM/yyyy"  showButtonPanel="true" >
 
                                 </p:calendar>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:outputLabel style="width: 50px"  value="الى تاريخ" />
+
+
+
+                            </div>
+                        </div>
+                         <div class="ui-g-12 ui-xl-12" id="datepicker">
+                            <div class="ui-g-6 ui-xl-6">
+                                <input id="pick-button" type="button" onclick="pickADate();"
+                                       value="#{invoiceProductionStagesReportMB.printProductionDTO.toDate} pick" />
+                                <input id="picked-text" type="text" size="22"/>
+
+                               
                             </div>
                             <div class="ui-g-6 ui-xl-6">
 
@@ -170,9 +188,10 @@
 
                             </div>
                         </div>
+                       
                     </div>
 
-                    
+
 
                 </p:fieldset>
                 <p:fieldset  legend="البيانات"   style="margin-bottom:20px">
@@ -226,6 +245,29 @@
                 </p:fieldset>
 
             </h:form>
+            <script type="text/javascript">
+                var pickedTxt = document.getElementById('picked-text'),
+                        pickBtn = document.getElementById('pick-button'),
+                        datepicker = new Calendar();
+                document.getElementById('datepicker').appendChild(datepicker.getElement());
+                datepicker.getElement().style.marginTop = '10px';
+
+                datepicker.callback = function () {
+                    pickedTxt.value = datepicker.getDate().getDateString();
+                    pickedTxt.selectionStart = 0;
+                    pickedTxt.selectionEnd = pickedTxt.value.length;
+                    pickedTxt.focus();
+                };
+
+                datepicker.onHide = function () {
+                    pickBtn.style.display = 'inline-block';
+                };
+
+                function pickADate() {
+                    pickBtn.style.display = 'none';
+                    datepicker.show();
+                }
+            </script>
         </h:body>
     </ui:define>
 </ui:composition>

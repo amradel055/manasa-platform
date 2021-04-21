@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                template="./../../template/newTemplate.xhtml"
+                template="./../../template/template.xhtml"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
@@ -9,34 +9,9 @@
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <ui:define name="content">
 
-        <style>
 
-            .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
-                border: 1px solid #c5dbec;
-                background:#fff;
+        <h:form id="form" dir="#{userData.dir}" class='formmargin'>
 
-            }
-            .ui-dialog {
-                position: absolute !important;
-                left: 1vw!important;
-                top: 25vh!important;}
-            </style>
-
-            <h:form id="form" dir="#{userData.dir}" class='formmargin'>
-            <div style=" position: absolute;left: 20px"> 
-
-                <p:commandButton  style="z-index: 2;
-                                  margin-top: 24%;
-                                  color: #035c70!important; 
-                                  background-color: #223238!important;
-                                  border: 1px solid #22323a!important;
-                                  background: #22323a 50% 50% repeat-x!important;"
-                                  icon="fa fa-fw fa-home"
-                                  title="#{userData.userDDs['HOME']}"
-                                  class="smhomeButton" 
-                                  action="exit" />
-
-            </div>
             <div >
                 <p:messages id="curmsg" autoUpdate="true" showDetail="true" rendered="true" closable="true"/>   
             </div>
@@ -47,56 +22,32 @@
 
                     <div class="ui-g">
                         <h:panelGroup id="test">
-                            <div class="ui-g-12 ui-md-6">
 
-                                <h:panelGroup>
+                              <div class="ui-g-6 ui-xl-6">
 
-                                    <p:outputLabel style="width: 95px;margin-right: 6%;" id="purchId" value="#{userData.userDDs['QUOTATION_NO']}" />
-                                    <p:inputText style="width: 37%" 
-                                                 id="purchIdVal" readonly="true"
-                                                 value="#{invQuotationFormDTOMB.invInvoiceDTO.serial}" />
+                                <div class="ui-g-12 ui-xl-12">
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:autoComplete style="width:37%!important " 
+                                                        dropdown="true"
+                                                        converter="#{invQuotationFormDTOMB.invDelegatorDTOConvertor}"
+                                                        value="#{invQuotationFormDTOMB.invInvoiceDTO.invDelegatorId}"
 
-                                </h:panelGroup>
-                            </div>
-                            <div class="ui-g-12 ui-md-6">
-                                <h:panelGroup>
+                                                        var="purchasePerson"
+                                                        itemLabel="#{purchasePerson}" 
+                                                        itemValue="#{purchasePerson}" 
+                                                        forceSelection="true" 
+                                                        completeMethod="#{invQuotationFormDTOMB.completeDelegatorSales}"
+                                                        >
 
-                                    <h:panelGroup>
-                                        <p:outputLabel style="width: 95px; margin-right: 6%;" value="#{userData.userDDs['DATEE']}*"/>
-                                    </h:panelGroup>
-                                    <h:panelGroup>
-                                        <p:calendar id="dateFrom" 
-                                                    value="#{invQuotationFormDTOMB.invInvoiceDTO.date}"
-                                                    pattern="dd/MM/yyyy"
-                                                    style="width:50%!important"/>
-                                    </h:panelGroup>
+                                        </p:autoComplete>
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 100px;" value="#{userData.userDDs['SALESPERSON']}"/>
 
-                                </h:panelGroup>
-                            </div>
-
-                            <div class="ui-g-12 ui-md-6" >
-
-                                <h:panelGroup id="pdueDate" >
-
-                                    <h:panelGroup>
-                                        <p:outputLabel for="dueDate" style="width: 95px;" value="#{userData.userDDs['OFFER_END_DATE']}"/>
-                                    </h:panelGroup>
-                                    <h:panelGroup>
-                                        <p:calendar id="dueDate" value="#{invQuotationFormDTOMB.invInvoiceDTO.dateEndOffer}"
-                                                    pattern="dd/MM/yyyy"
-                                                    style="width:50%"/>
-                                    </h:panelGroup>
-
-                                </h:panelGroup>
-                            </div>
-
-                            <div class="ui-g-12 ui-md-6">
-                                <h:panelGroup>
-                                    <h:panelGroup>
-                                        <p:outputLabel style="width: 100px;margin-right: 6%;" value="#{userData.userDDs['CUSTOMERS']}"/>
-                                    </h:panelGroup> 
-
-                                    <h:panelGroup>
+                                    </div>
+                                </div>
+                                      <div class="ui-g-12 ui-xl-12">
+                                    <div class="ui-g-6 ui-xl-6">
                                         <p:autoComplete style="width:37%!important" 
                                                         dropdown="true"
                                                         converter="#{invQuotationFormDTOMB.organizationSiteDTOConvertor}"
@@ -121,48 +72,69 @@
 
 
                                         </p:autoComplete>
-                                    </h:panelGroup> 
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 100px;" value="#{userData.userDDs['CUSTOMERS']}"/>
 
-                                </h:panelGroup>
-                            </div>
-                            <div class="ui-g-12 ui-md-6">
+                                    </div>
+                                </div>
 
-                                <h:panelGroup>
-                                    <h:panelGroup>
-                                        <p:outputLabel style="width: 100px;margin-right: 6%;" value="#{userData.userDDs['SALESPERSON']}"/>
-                                    </h:panelGroup> 
-
-                                    <h:panelGroup>
-                                        <p:autoComplete style="width:37%!important " 
-                                                        dropdown="true"
-                                                        converter="#{invQuotationFormDTOMB.invDelegatorDTOConvertor}"
-                                                        value="#{invQuotationFormDTOMB.invInvoiceDTO.invDelegatorId}"
-
-                                                        var="purchasePerson"
-                                                        itemLabel="#{purchasePerson}" 
-                                                        itemValue="#{purchasePerson}" 
-                                                        forceSelection="true" 
-                                                        completeMethod="#{invQuotationFormDTOMB.completeDelegatorSales}"
-                                                        >
-
-                                        </p:autoComplete>
-                                    </h:panelGroup> 
-                                </h:panelGroup>
-                            </div>
-
-                            <div class="ui-g-12 ui-md-12">
-
-                                <h:panelGroup>
-                                    <h:panelGroup>
-                                        <p:outputLabel style="width: 95px; margin-right: 3%;" value="#{userData.userDDs['NOTE']}"/>
-                                    </h:panelGroup>
-
-                                    <h:panelGroup>
+                                <div class="ui-g-12 ui-xl-12">
+                                    <div class="ui-g-6 ui-xl-6">
                                         <p:inputText style="width:69%"  value="#{invQuotationFormDTOMB.invInvoiceDTO.remarks}"
                                                      />
-                                    </h:panelGroup>
-                                </h:panelGroup>
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 95px; " value="#{userData.userDDs['NOTE']}"/>
+
+                                    </div>
+                                </div>
+
+
                             </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <div class="ui-g-12 ui-xl-12">
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:inputText style="width: 37%" 
+                                                     id="purchIdVal" readonly="true"
+                                                     value="#{invQuotationFormDTOMB.invInvoiceDTO.serial}" />
+
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 95px;" id="purchId" value="#{userData.userDDs['QUOTATION_NO']}" />
+
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-xl-12">
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:calendar id="dateFrom" 
+                                                    value="#{invQuotationFormDTOMB.invInvoiceDTO.date}"
+                                                    pattern="dd/MM/yyyy"
+                                                    style="width:50%!important"/>
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 95px; " value="#{userData.userDDs['DATEE']}*"/>
+
+                                    </div>
+                                </div>
+                                <h:panelGroup id="pdueDate" >
+                                    <div class="ui-g-12 ui-xl-12">
+                                        <div class="ui-g-6 ui-xl-6">
+                                            <p:calendar id="dueDate" value="#{invQuotationFormDTOMB.invInvoiceDTO.dateEndOffer}"
+                                                        pattern="dd/MM/yyyy"
+                                                        style="width:50%"/>
+                                        </div>
+                                        <div class="ui-g-6 ui-xl-6">
+                                            <p:outputLabel for="dueDate" style="width: 95px;" value="#{userData.userDDs['OFFER_END_DATE']}"/>
+
+                                        </div>
+                                    </div>
+                                </h:panelGroup>
+                            
+                            </div>
+                          
+
                         </h:panelGroup>
                     </div>
                 </div>
@@ -397,7 +369,7 @@
                             <div class="ui-g-12 ui-md-4">
                                 <h:panelGroup>
                                     <h:panelGroup>
-                                        <p:outputLabel style="width: 155px; margin-right: 3%;" value="#{userData.userDDs['TOTAL']} "/>
+                                        <p:outputLabel style="width: 155px; " value="#{userData.userDDs['TOTAL']} "/>
                                     </h:panelGroup>
 
                                     <h:panelGroup>
@@ -414,7 +386,7 @@
                                     <h:panelGroup>
 
                                         <h:panelGroup>
-                                            <p:outputLabel style="width: 70px;margin-right: 6%;" value="#{userData.userDDs['DISCOUNT_TYPE']}"/>
+                                            <p:outputLabel style="width: 70px;" value="#{userData.userDDs['DISCOUNT_TYPE']}"/>
                                         </h:panelGroup>
                                         <h:panelGroup>
                                             <p:selectOneMenu style="width: 50%" id="PURCHASE_NUMBER" 
@@ -465,7 +437,7 @@
 
                                 <h:panelGroup>
                                     <h:panelGroup>
-                                        <p:outputLabel style="width: 155px;margin-right: 3%;" value="#{userData.userDDs['TOT_AF_TOT_DIS']}"/>
+                                        <p:outputLabel style="width: 155px;" value="#{userData.userDDs['TOT_AF_TOT_DIS']}"/>
                                     </h:panelGroup>
 
                                     <h:panelGroup>
@@ -480,22 +452,18 @@
                     </h:panelGroup>
                 </div>
 
-                <h:panelGrid  class="col-md-12" columns="1"  style="margin-top:2%">
-
-                    <h:panelGroup  class="centerButtons">
+               <div style="text-align:center">
 
                         <p:commandButton  id="saveB" 
                                           class="saveButtons"
                                           title="#{userData.userDDs['SAVE']}"
                                           value="#{userData.userDDs['SAVE']}" 
-                                          style="color: #fff!important;background-color: #2196F3;margin-left: 5px" 
                                           action="#{invQuotationFormDTOMB.save()}"
                                           update="@form"/>
 
                         <p:commandButton 
                             id="newN"
                             ajax="false"
-                            style="color: #fff!important;background-color: #9c27b0d1;margin-left: 5px"
                             value="#{userData.userDDs['NEW']}" 
                             class="newButtons"
                             onclick="form.target = ''" 
@@ -505,13 +473,12 @@
                                           id="cancel" 
                                           title="#{userData.userDDs['CANCEL']}" 
                                           value="#{userData.userDDs['CANCEL']}" 
-                                          style="color: #fff!important;background-color: #035C70;margin-left: 5px"  
                                           immediate="true"
                                           action="#{invQuotationFormDTOMB.exit()}" 
                                           update="@form"/>
 
-                        <h:commandLink  style="float:left" class="sdcreenimg">  
-                            <p:graphicImage name="/img/excel.jpg" width="24" style='margin-right:25%;'/>  
+                        <h:commandLink   class="sdcreenimg">  
+                            <p:graphicImage name="/img/excel.jpg" width="24" />  
                             <p:dataExporter type="xls"
                                             target="invPurchaseInvoiceDetailsTable" 
                                             fileName="عروض الاسعار"
@@ -524,10 +491,7 @@
 
                         </p:blockUI> 
 
-
-                    </h:panelGroup>
-
-                </h:panelGrid>
+               </div>
             </p:fieldset>
         </h:form>
 

@@ -122,6 +122,7 @@
                                                rendered="#{not invPurchaseInvoiceFormDTOMB.invInvoiceDTO.showCustomerDate}"
                                                />
                                 <p:autoComplete style="width:37%!important"  rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.showCustomerDate}"
+                                                id="customer"
                                                 dropdown="true"
                                                 converter="#{invPurchaseInvoiceFormDTOMB.organizationSiteDTOConvertor}"
                                                 value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.organizationSiteId}"
@@ -143,11 +144,40 @@
                                 <p:commandButton style="margin-right: 40%"  value="إضافة" type="button" onclick="PF('dlg3').show();"> 
 
                                 </p:commandButton>
+
+
                             </div>
                             <div class="ui-g-6 ui-xl-6">
 
 
                                 <p:outputLabel style="width: 100px;" value="#{userData.userDDs['CUSTOMER']}"/>
+
+
+                            </div>
+                        </div>
+
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel id="notice"  style="width:48%" value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.customerNotice}" />
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+
+                                <p:outputLabel style="width: 65px" value=" ملاحظة"/>
+
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:outputLabel id="accountStatement" value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.accountStatement}"/>
+
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+
+                                <p:outputLabel style="width: 65px;font-size: 16px!important;" value="اجمالي رصيد العميل"  />
 
 
                             </div>
@@ -723,7 +753,8 @@
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:selectOneMenu style="width: 50%" id="PURCHASE_NUMBER" 
 
-                                                     value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.discountType}"  >                                                             
+                                                     value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.discountType}"  
+                                                     rendered="#{userData.userScreens['proworkorder'].edit or userData.isAdmin}">                                                             
                                         <f:selectItem itemLabel="#{userData.userDDs['VALUE']}"  itemValue="0"  />
                                         <f:selectItem itemLabel="#{userData.userDDs['RATIO']}"  itemValue="1"  />
 
@@ -734,7 +765,8 @@
 
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 70px;" value="#{userData.userDDs['DISCOUNT_TYPE']}"/>
+                                    <p:outputLabel style="width: 70px;" value="#{userData.userDDs['DISCOUNT_TYPE']}"
+                                                   rendered="#{userData.userScreens['proworkorder'].edit or userData.isAdmin}"/>
 
 
 
@@ -745,17 +777,20 @@
                                 <div class="ui-g-6 ui-xl-6">
 
                                     <p:inputText id="discount" value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.discount}"  
-                                                 style="width: 50%;display: inline!important" >
+                                                 style="width: 50%;display: inline!important" 
+                                                 rendered="#{userData.userScreens['proworkorder'].edit or userData.isAdmin}">
                                         <p:ajax event="blur"
 
                                                 listener="#{invPurchaseInvoiceFormDTOMB.recalcHeadValues()}"
                                                 update="form:totalActualWeight form:totalNetAfterDiscount form:taxvalue form:totalWithTaxValue form:remain"  />
                                     </p:inputText>
-                                    <p:outputLabel id="per" style="display: inline!important" value="%"/>
+                                    <p:outputLabel id="per" style="display: inline!important" value="%"
+                                                   rendered="#{userData.userScreens['proworkorder'].edit or userData.isAdmin}"/>
 
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 100px" value="#{userData.userDDs['DISC_ON_INVOICE']}"/>
+                                    <p:outputLabel style="width: 100px" value="#{userData.userDDs['DISC_ON_INVOICE']}"
+                                                   rendered="#{userData.userScreens['proworkorder'].edit or userData.isAdmin}"/>
 
 
 

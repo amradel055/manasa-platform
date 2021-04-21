@@ -61,6 +61,7 @@ public class InvInvoiceDTO extends BaseEntityDTO {
     private Integer serial;
     private Integer serialTax;
     private String address;
+    private String customerNotice;
     private InvDetailDTO invPurchaseInvoiceDetailsSelected;
     private List<InvDetailDTO> invPurchaseInvoiceDetailListSelected;
     private Boolean isOld;
@@ -74,6 +75,7 @@ public class InvInvoiceDTO extends BaseEntityDTO {
     private BigDecimal totalNetAfterDiscount;
     private BigDecimal payed;
     private BigDecimal remain;
+    private BigDecimal accountStatement;
 
     private InventorySetupDTO inventorySetupDTO;
 
@@ -138,14 +140,12 @@ public class InvInvoiceDTO extends BaseEntityDTO {
     private long diffrentTime;
     private Integer invoiceSerial;
     private Integer offerType;
-    
+
     /// report //
     private String gallaryName;
     private String customerCode;
     private String customerName;
     private String customerMobile;
-    
-    
 
     public InvInvoiceDTO() {
     }
@@ -1271,7 +1271,7 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      * @return the invoiceStatus
      */
     public String getInvoiceStatus() {
-        if(invoiceStatus == null){
+        if (invoiceStatus == null) {
             invoiceStatus = "بالمعرض";
         }
         return invoiceStatus;
@@ -1379,7 +1379,7 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      * @return the barcodeSelect
      */
     public Boolean getBarcodeSelect() {
-        if(barcodeSelect == null){
+        if (barcodeSelect == null) {
             barcodeSelect = Boolean.FALSE;
         }
         return barcodeSelect;
@@ -1448,7 +1448,7 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      * @return the invStripDetailList
      */
     public List<InvDetailDTO> getInvStripDetailList() {
-        if(invStripDetailList == null){
+        if (invStripDetailList == null) {
             invStripDetailList = new ArrayList<>();
         }
         return invStripDetailList;
@@ -1586,4 +1586,36 @@ public class InvInvoiceDTO extends BaseEntityDTO {
     public void setOfferCompanyId(OfferCompanyDTO offerCompanyId) {
         this.offerCompanyId = offerCompanyId;
     }
+
+    /**
+     * @return the customerNotice
+     */
+    public String getCustomerNotice() {
+        return customerNotice;
+    }
+
+    /**
+     * @param customerNotice the customerNotice to set
+     */
+    public void setCustomerNotice(String customerNotice) {
+        this.customerNotice = customerNotice;
+    }
+
+    /**
+     * @return the accountStatement
+     */
+    public BigDecimal getAccountStatement() {
+        return accountStatement;
+    }
+
+    /**
+     * @param accountStatement the accountStatement to set
+     */
+    public void setAccountStatement(BigDecimal accountStatement) {
+        this.accountStatement = accountStatement;
+    }
+
+    /**
+     * @return the customerNotice
+     */
 }
