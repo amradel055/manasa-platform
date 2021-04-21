@@ -28,6 +28,7 @@ import com.toby.businessservice.ProDetailTypeService;
 import com.toby.businessservice.QuantityItemsStoreService;
 import com.toby.businessservice.ReportManagementService;
 import com.toby.businessservice.SymbolService;
+import com.toby.businessservice.report.SupplierAccountService;
 import com.toby.bussinessservice.global.AutoCompleteService;
 import com.toby.converter.CostCenterDTOConverter;
 import com.toby.converter.CurrencyDTOConverter;
@@ -198,6 +199,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     InvInventoryService invInventoryService;
     @EJB
     OfferCompanyService companyService;
+    @EJB
+    SupplierAccountService supplierAccountService;
 
     @Override
     public abstract String save();
@@ -420,7 +423,6 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     public void sumDateToDueDate() {
         getInvInvoiceDTO().setDueDate(invGlobalService.sumDateToDueDate(getInvInvoiceDTO().getDate(), getInvInvoiceDTO().getDueDate(), getInvInvoiceDTO().getDueperiod()));
     }
-    
 
     public void subtractDatefromDueDate() {
         getInvInvoiceDTO().setDueperiod(invGlobalService.subtractDatefromDueDate(getInvInvoiceDTO().getDate(), getInvInvoiceDTO().getDueDate(), getInvInvoiceDTO().getDueperiod()));
@@ -487,7 +489,9 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         try {
             getInvInvoiceDTO().setMsg(null);
             setInvInvoiceDTO(invPurchaseInvoiceService.putCurrency(getInvInvoiceDTO()));
-            getInvInvoiceDTO().setCustomerNotice(companyService.getNoticeByCustomerId( getInvInvoiceDTO() == null ? null : getInvInvoiceDTO().getOrganizationSiteId().getId()));
+            getInvInvoiceDTO().setCustomerNotice(companyService.getNoticeByCustomerId(getInvInvoiceDTO() == null ? null : getInvInvoiceDTO().getOrganizationSiteId().getId()));
+            getInvInvoiceDTO().setAccountStatement(supplierAccountService.getAccountForOrganizationSite(getInvInvoiceDTO().getOrganizationSiteId().getId()));
+
             errorMsg(getInvInvoiceDTO().getMsg());
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceFormMB", "putCurrency");

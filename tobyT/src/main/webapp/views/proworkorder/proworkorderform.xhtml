@@ -158,12 +158,26 @@
 
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
-                                <p:inputText id="notice" disabled="true" style="width:48%" value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.customerNotice}" />
+                                <p:outputLabel id="notice"  style="width:48%" value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.customerNotice}" />
                             </div>
                             <div class="ui-g-6 ui-xl-6">
 
 
                                 <p:outputLabel style="width: 65px" value=" ملاحظة"/>
+
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:outputLabel id="accountStatement" value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.accountStatement}"/>
+
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+
+                                <p:outputLabel style="width: 65px;font-size: 16px!important;" value="اجمالي رصيد العميل"  />
 
 
                             </div>
