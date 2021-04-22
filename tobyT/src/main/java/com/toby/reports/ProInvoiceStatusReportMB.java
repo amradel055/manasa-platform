@@ -41,8 +41,7 @@ public class ProInvoiceStatusReportMB extends Basic {
     public void search() {
         if (printProductionDTO.getInvoiceStatus() == 4) {
             setList(invPurchaseInvoiceService.getALLInvPurchaseInvoiceDTOByStatus(getPrintProductionDTO(), getUserData().getUserBranch().getId()));
-        }
-        if (printProductionDTO.getInvoiceStatus() == 10) {
+        }else if (printProductionDTO.getInvoiceStatus() == 10) {
             setList(proFactoryDeliveryService.getALLProFactoryDeliveryDTOByStatusRemain(getPrintProductionDTO(), getUserData().getUserBranch().getId()));
         } else {
             setList(proFactoryDeliveryService.getALLProFactoryDeliveryDTOByStatus(getPrintProductionDTO(), getUserData().getUserBranch().getId()));
