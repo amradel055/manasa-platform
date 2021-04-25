@@ -409,9 +409,13 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
 //                append("left join pro_factory_delivery pfd on pfd.id = pfdd.pro_factory_delivery_id\n").
 //                append("    GROUP BY pfd.id\n").
 //                append(") order by ipi.serial ");
-        builder.append("and  pfd.id not in (select parent from toby.pro_factory_delivery where type = 1 and parent is not null ) AND pit.id = (\n").
+        builder.append("and  pfd.id not in (select parent from toby.pro_factory_delivery where type = 1 and parent is not null ) "
+                + "AND pit.id = (\n").
                 append("    select ppit2.id from pro_production_items_transaction  ppit2\n"
-                        + "left join pro_production_stages pps on pps.id = ppit2.pro_production_stages_id where  pro_factory_delivery_detail_id = pit.pro_factory_delivery_detail_id\n"
+                        + "left join pro_production_stages pps on pps.id = ppit2.pro_production_stages_id \n"
+                        + "left join pro_factory_delivery_detail pfdd2 on pfdd2.id = ppit2.pro_factory_delivery_detail_id\n"
+                        + "left join pro_factory_delivery pfd2 on pfd2.id = pfdd2.pro_factory_delivery_id "
+                        + "where  pfd2.id = pfd.id\n"
                         + "order by pps.serial desc limit 1 ) order by ipi.serial ");
         List<Object[]> details = dao.executeNativeQuery(builder.toString());
         for (Object[] object : details) {
