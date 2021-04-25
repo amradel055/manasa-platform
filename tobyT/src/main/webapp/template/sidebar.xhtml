@@ -855,6 +855,8 @@
                                                    or userData.userScreens['clientsNoMovmentReport'].view
                                                    or userData.userScreens['ProProductionTransactionFactoryReport'].view
                                                    or userData.userScreens['ProProductionTransactionFactoryLastReport'].view
+                                                   or userData.userScreens['SalesReportByValueAdedReport'].view
+                                                   or userData.userScreens['SalesReportByValueAdedDetailsReport'].view
                                                    or userData.userScreens[''].view 
                                                    or userData.isAdmin}"
                                        >
@@ -920,6 +922,8 @@
                                                        or userData.userScreens['clientsNoMovmentReport'].view
                                                        or userData.userScreens['ProProductionTransactionFactoryReport'].view
                                                        or userData.userScreens['ProProductionTransactionFactoryLastReport'].view
+                                                       or userData.userScreens['SalesReportByValueAdedReport'].view
+                                                       or userData.userScreens['SalesReportByValueAdedDetailsReport'].view
                                                        or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk33321" value="تتبع مراحل الفاتورة" icon="&#xE8D2;" url="/faces/views/proproductionreport/invoiceProductionStageReport.xhtml" 
@@ -950,6 +954,12 @@
                                                 />
                                     <p:menuitem id="sr_lnk33330" value=" فواتير المصنع حسب آخرمرحلة" icon="&#xE8D2;" url="/faces/views/proproductionreport/ProProductionTransactionFactoryLastReport.xhtml" 
                                                 rendered="#{userData.userScreens['ProProductionTransactionFactoryLastReport'].view or   userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="sr_lnk33331" value=" بيان الفواتير حسب الضريبة " icon="&#xE8D2;" url="/faces/views/proproductionreport/SalesReportByValueAdedReport.xhtml" 
+                                                rendered="#{userData.userScreens['SalesReportByValueAdedReport'].view or   userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="sr_lnk33332" value="  بيان الفواتير حسب الضريبة تفصيلى" icon="&#xE8D2;" url="/faces/views/proproductionreport/SalesReportByValueAdedDetailsReport.xhtml" 
+                                                rendered="#{userData.userScreens['SalesReportByValueAdedDetailsReport'].view or   userData.isAdmin}"
                                                 />
                                 </p:submenu>
                             </p:submenu>
