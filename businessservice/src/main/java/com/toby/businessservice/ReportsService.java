@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice;
 
+import com.toby.views.CustomerBalances;
 import com.toby.views.SalesReportByValueAded;
 import com.toby.views.SalesReportByValueAdedDetails;
 import java.util.List;
@@ -20,4 +21,6 @@ public interface ReportsService {
     public List<SalesReportByValueAded> getSalesReportByValueAded(SalesReportByValueAded salesReportByValueAded, Integer branchId);
 
     public List<SalesReportByValueAdedDetails> getSalesReportByValueAdedDetails(SalesReportByValueAdedDetails salesReportByValueAdedDetails, Integer branchId);
+
+    public List<CustomerBalances> getCustomerBalances(CustomerBalances customerBalances, Integer branchId);
 }
