@@ -52,6 +52,8 @@ public interface OrganizationSiteService {
     public List<InvOrganizationSite> getSupplierByBranchIdForSupplierAccountReportMB(Integer branchId, Integer type, SupplierAccountSearchBean supplierAccountSearchBean);
 
     public List<InvOrganizationSite> getCustomerByBranchId(Integer branchId);
+    
+        public List<InvOrganizationSite> getorganizationSiteByBranchIdForGlBankModule(Integer branchId, boolean active, Integer type, Integer type2);
 
     public List<InvOrganizationSiteDTO> getorganizationSiteByBranchIdForGlBankModule(Integer branchId, boolean active, Integer type, TobyUser tobyUser);
 

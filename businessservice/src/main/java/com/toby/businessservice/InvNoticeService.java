@@ -5,7 +5,9 @@
  */
 package com.toby.businessservice;
 
+import com.toby.dto.InvNoticeDTO;
 import com.toby.entity.InvNotice;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -27,8 +29,16 @@ public interface InvNoticeService {
     public List<InvNotice> getALLInvNoticeByCompanyId(Integer Id);
 
     public List<InvNotice> getALLInvNoticeByBranchIdAndType(Integer Id , Integer type);
+    
+    public List<InvNoticeDTO> getALLInvNoticeByBranchIdAndTypeDTO(Integer Id, Integer type);
 
     public InvNotice findInvNoticeByInvNoticeId(Integer invNoticeId);
 
     Integer findMaxSerialNoByBranch();
+    
+    public InvNotice updateInvNoticeForShifting(InvNotice invNotice);
+    
+    public List<InvNoticeDTO> getInvNoticeListDTO(Integer branchId, Integer type,Date dateFrom,
+            Date dateTo,Integer noticeFrom,Integer noticeTo);
+
 }
