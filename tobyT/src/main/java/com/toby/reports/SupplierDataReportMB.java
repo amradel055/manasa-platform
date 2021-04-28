@@ -100,15 +100,15 @@ public class SupplierDataReportMB extends BaseReportBean {
     }
 
     private void fillLists() {
-        if (isSupplier) {
-            setInvOrgSiteList(getOrganizationSiteService().getorganizationSiteByBranchIdForGlBankModule(getUserData().getUserBranch().getId(),true,1)); // مورد
-
-        } else {
-            setInvOrgSiteList(getOrganizationSiteService().getorganizationSiteByBranchIdForGlBankModule(getUserData().getUserBranch().getId(),true,0)); //عميل
-
-        }
-
-        setInvOrgSiteConverter(new InvOrganizationSiteConverter(getInvOrgSiteList()));
+//        if (isSupplier) {
+//            setInvOrgSiteList(getOrganizationSiteService().getorganizationSiteByBranchIdForGlBankModule(getUserData().getUserBranch().getId(),true,1)); // مورد
+//
+//        } else {
+//            setInvOrgSiteList(getOrganizationSiteService().getorganizationSiteByBranchIdForGlBankModule(getUserData().getUserBranch().getId(),true,0)); //عميل
+//
+//        }
+//
+//        setInvOrgSiteConverter(new InvOrganizationSiteConverter(getInvOrgSiteList()));
 
     }
 
