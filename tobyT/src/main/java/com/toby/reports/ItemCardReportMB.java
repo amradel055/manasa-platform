@@ -66,8 +66,6 @@ public class ItemCardReportMB extends BaseReportBean {
     @EJB
     private InvItemService invItemService;
     @EJB
-    private InventoryStripReportService inventoryStripReportService;
-    @EJB
     private ItemsDataViewService itemsDataViewService;
 
     @Override

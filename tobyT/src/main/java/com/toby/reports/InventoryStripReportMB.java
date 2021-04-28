@@ -362,31 +362,14 @@ public class InventoryStripReportMB extends BaseReportBean {
         BigDecimal avgBalance = idv.getBalance() != null ? idv.getBalance() : BigDecimal.ZERO;
         BigDecimal finalBalanceValue = idv.getBalanceValue() != null ? idv.getBalanceValue().setScale(2, BigDecimal.ROUND_UP) : BigDecimal.ZERO;
         BigDecimal quntity = idv.getBalance() != null ? idv.getBalance().setScale(2, BigDecimal.ROUND_UP) : BigDecimal.ZERO;
-        BigDecimal weight = idv.getWeight() != null ? idv.getWeight() : BigDecimal.ZERO;
         BigDecimal sellPrice = idv.getSellPrice() != null ? idv.getSellPrice() : BigDecimal.ZERO;
 
-        if (idv.getWeight() == null || (idv.getWeight() != null && idv.getWeight().compareTo(BigDecimal.ZERO) == 0)) {
-            if (evaluationStatus == 0) {
-                return finalBalanceValue;
-            } else {
-                return quntity.multiply(sellPrice);
-            }
+        if (evaluationStatus == 0) {
+            return finalBalanceValue;
+        } else {
+            return quntity.multiply(sellPrice);
         }
 
-        if (idv.getWeight() != null && idv.getWeight().compareTo(BigDecimal.ZERO) != 0) {
-
-            if (getWeightPrice() != null && getWeightPrice().compareTo(BigDecimal.ZERO) != 0) {
-                return quntity.multiply(weight).multiply(getWeightPrice());
-            }
-
-            if (evaluationStatus == 0) {
-                return quntity.multiply(weight).multiply(avgBalance);
-            } else {
-                return quntity.multiply(weight).multiply(sellPrice);
-            }
-        }
-
-        return BigDecimal.ZERO;
     }
 
     public void putValueOfParent(InvGroup ParentGrp, StripReportViewBean reportViewBean) {
@@ -472,7 +455,6 @@ public class InventoryStripReportMB extends BaseReportBean {
                         reportViewBean.setUnitName(idv.getItemUnitName());
                         reportViewBean.setItemCode(idv.getItemCode());
                         reportViewBean.setSellPrice(idv.getSellPrice());
-                        reportViewBean.setWeight(idv.getWeight());
 //                        reportViewBean.setBalanceValue(idv.getBalanceValue() != null ? idv.getBalanceValue().setScale(2, BigDecimal.ROUND_UP) : BigDecimal.ZERO);
                         reportViewBean.setBalanceValue(calculateBalanceValueBasedWeightExistenceAndEvaluation(idv));
                         reportViewBean.setCostAverage(idv.getCostAverage() != null ? idv.getCostAverage().setScale(2, BigDecimal.ROUND_UP) : BigDecimal.ZERO);

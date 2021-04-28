@@ -23,13 +23,13 @@
                             <div class="ui-g-6 ui-xl-6">
                                 <p:autoComplete style="width: 34%!important " 
                                                 dropdown="true"
-                                                converter="#{ItemCardReportMB.invInventoryConverter}"
-                                                value="#{ItemCardReportMB.itemCardReportSerachBean.inventoryTo}"
+                                                converter="#{itemCardReportMB.invInventoryConverter}"
+                                                value="#{itemCardReportMB.itemCardReportSerachBean.inventoryTo}"
                                                 var="inventory"
                                                 itemLabel="#{inventory}" 
                                                 itemValue="#{inventory}" 
                                                 forceSelection="true" 
-                                                completeMethod="#{ItemCardReportMB.completInventory}" >
+                                                completeMethod="#{itemCardReportMB.completInventory}" >
                                 </p:autoComplete>
                             </div>
                             <div class="ui-g-6 ui-xl-6">
@@ -41,13 +41,13 @@
                             <div class="ui-g-6 ui-xl-6">
                                 <p:autoComplete style="width: 34%!important " 
                                                 dropdown="true"
-                                                converter="#{ItemCardReportMB.itemConverter}"
-                                                value="#{ItemCardReportMB.itemCardReportSerachBean.invItemTo}"
+                                                converter="#{itemCardReportMB.itemConverter}"
+                                                value="#{itemCardReportMB.itemCardReportSerachBean.invItemTo}"
                                                 var="item"
                                                 itemLabel="#{item}" 
                                                 itemValue="#{item}" 
                                                 forceSelection="true" 
-                                                completeMethod="#{ItemCardReportMB.completInvItem}" >
+                                                completeMethod="#{itemCardReportMB.completInvItem}" >
                                 </p:autoComplete>
                             </div>
                             <div class="ui-g-6 ui-xl-6">
@@ -58,7 +58,7 @@
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
                                 <p:calendar pattern="dd/MM/yyyy" 
-                                            value="#{ItemCardReportMB.itemCardReportSerachBean.dateTo}"
+                                            value="#{itemCardReportMB.itemCardReportSerachBean.dateTo}"
                                             style="width: 50%">
 
                                 </p:calendar>
@@ -75,13 +75,13 @@
                             <div class="ui-g-6 ui-xl-6">
                                 <p:autoComplete style="width: 34%!important " 
                                                 dropdown="true"
-                                                converter="#{ItemCardReportMB.invInventoryConverter}"
-                                                value="#{ItemCardReportMB.itemCardReportSerachBean.inventoryFrom}"
+                                                converter="#{itemCardReportMB.invInventoryConverter}"
+                                                value="#{itemCardReportMB.itemCardReportSerachBean.inventoryFrom}"
                                                 var="inventory"
                                                 itemLabel="#{inventory}" 
                                                 itemValue="#{inventory}" 
                                                 forceSelection="true" 
-                                                completeMethod="#{ItemCardReportMB.completInventory}" >
+                                                completeMethod="#{itemCardReportMB.completInventory}" >
                                 </p:autoComplete>
                             </div>
                             <div class="ui-g-6 ui-xl-6">
@@ -93,13 +93,13 @@
                             <div class="ui-g-6 ui-xl-6">
                                 <p:autoComplete style="width: 34%!important " 
                                                 dropdown="true"
-                                                converter="#{ItemCardReportMB.itemConverter}"
-                                                value="#{ItemCardReportMB.itemCardReportSerachBean.invItemForm}"
+                                                converter="#{itemCardReportMB.itemConverter}"
+                                                value="#{itemCardReportMB.itemCardReportSerachBean.invItemForm}"
                                                 var="item"
                                                 itemLabel="#{item}" 
                                                 itemValue="#{item}" 
                                                 forceSelection="true" 
-                                                completeMethod="#{ItemCardReportMB.completInvItem}" >
+                                                completeMethod="#{itemCardReportMB.completInvItem}" >
                                 </p:autoComplete>
                             </div>
                             <div class="ui-g-6 ui-xl-6">
@@ -110,7 +110,7 @@
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
                                 <p:calendar pattern="dd/MM/yyyy" 
-                                            value="#{ItemCardReportMB.itemCardReportSerachBean.dateFrom}"
+                                            value="#{itemCardReportMB.itemCardReportSerachBean.dateFrom}"
                                             style="width: 50%">
 
                                 </p:calendar>
@@ -127,7 +127,7 @@
               <div style="text-align: center">
                         <p:commandButton   class="searchButtons"
                                            title="#{userData.userDDs['SEARCH']}"
-                                           action="#{ItemCardReportMB.search()}"
+                                           action="#{itemCardReportMB.search()}"
                                            id="search"
                                            value="#{userData.userDDs['SEARCH']}"
                                            update="itemCardTable" 
@@ -137,7 +137,7 @@
                                              id="NewB"
                                              title="#{userData.userDDs['NEW']}" 
                                              immediate="true" 
-                                             action="#{ItemCardReportMB.reset()}"
+                                             action="#{itemCardReportMB.reset()}"
                                              update="form"
                                              value="#{userData.userDDs['NEW']}"
                                              />
@@ -147,7 +147,7 @@
                                              ajax="false"
                                              onclick="form.target = '_blank'"  
                                              value="#{userData.userDDs['PRINT']}" 
-                                             actionListener="#{ItemCardReportMB.exportPDF}"
+                                             actionListener="#{itemCardReportMB.exportPDF}"
                                              title="#{userData.userDDs['PRINT']}"
                                              immediate="true" />
 
@@ -162,7 +162,7 @@
                             <p:dataExporter type="xls"
                                             target="itemCardTable" 
                                             fileName="بطاقة صنف"
-                                            postProcessor="#{ItemCardReportMB.postProcessXLS}" />  
+                                            postProcessor="#{itemCardReportMB.postProcessXLS}" />  
                         </h:commandLink>
 
                         <p:blockUI block="form" trigger="search NewB PrintB CloseB" animate="true" >
@@ -180,7 +180,7 @@
                              var="itemCardTable"
                              widgetVar="itemCardTable"  
                              rowIndexVar="index" 
-                             value="#{ItemCardReportMB.itemCardReportEntityList}"
+                             value="#{itemCardReportMB.itemCardReportEntityList}"
                              emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
                              id="itemCardTable"
                              sortBy="#{itemCardTable.itemId}" 
