@@ -16,7 +16,6 @@ import com.toby.dto.ProProductionTransactionDTO;
 import com.toby.dto.ProProductionTransactionDetailDetailViewDTO;
 import com.toby.entity.Branch;
 import com.toby.entity.InvPurchaseInvoiceDetail;
-import com.toby.entity.ProFactoryDelivery;
 import com.toby.entity.ProFactoryDeliveryDetail;
 import com.toby.entity.ProProductionItemsTransaction;
 import com.toby.entity.ProProductionStages;
@@ -297,7 +296,7 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
         filters.put("branchId", branchId);
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT s FROM ProProductionItemsTransaction s WHERE  s.branchId.id = :branchId and( s.isDeleted != 1 or s.isDeleted is NULL )  ");
-        // appendFilter(filters, builder);
+        //appendFilterByName(filters,builder);
         List<ProProductionItemsTransaction> details = dao.findListByQuery(builder.toString(), filters, first, pageSize);
         return mapToDTOList(details, null);
     }
@@ -460,12 +459,12 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
         StringBuilder builder = new StringBuilder();
         filters.put("branchId", branchId);
         builder.append(" SELECT count(s) FROM ProProductionItemsTransaction s WHERE  s.branchId.id = :branchId and( s.isDeleted != 1 or s.isDeleted is NULL ) ");
-//        appendFilter(filters, builder);
+        //appendFilterByName(filters, builder);
         Long details = dao.findEntityByQuery(builder.toString(), filters);
         return details == null ? 0 : details;
     }
 
-//   private void appendFilter(Map<String, Object> filters, StringBuilder builder) {
+    private void appendFilter(Map<String, Object> filters, StringBuilder builder) {
 //        if (filters.get("invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial") != null
 //                && !filters.get("invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial").toString().isEmpty()) {
 //
@@ -473,10 +472,10 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
 //        } else if (filters.containsKey("invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial")) {
 //            filters.remove("invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial");
 //        }
-//        if (filters.get("createdByName") != null && !filters.get("createdByName").toString().isEmpty()) {
-////            builder.append(" and  s.createdBy IS NOT NULL and s.createdBy.name like CONCAT('%',:createdByName ,'%') ");
-//            builder.append("  and t.name like CONCAT('%',").append("'").append(filters.get("createdByName")).append("'").append(" ,'%')  ");
-//        } else if (filters.containsKey("createdByName")) {
+//        if (filters.get("globalFilter") != null && !filters.get("globalFilter").toString().isEmpty()) {
+//            builder.append(" and  s.createdBy IS NOT NULL and s.createdBy.name like CONCAT('%',:globalFilter ,'%') ");
+//            builder.append("  and t.name like CONCAT('%',").append("'").append(filters.get("globalFilter")).append("'").append(" ,'%')  ");
+//        } else {
 //            filters.remove("createdByName");
 //        }
 //        if (filters.get("createdByCode") != null && !filters.get("createdByCode").toString().isEmpty()) {
@@ -494,5 +493,16 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
 //        } else if (filters.containsKey("date")) {
 //            filters.remove("date");
 //        }
-//    }
+    }
+
+    public void appendFilterByName(Map<String, Object> filters, StringBuilder builder) {
+        if (filters.get("invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial") != null
+                && !filters.get("invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial").toString().isEmpty()) {
+
+            builder.append(" and s.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial like CONCAT('%',:invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial ,'%')");
+        } else if (filters.containsKey("invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial")) {
+            filters.remove("invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial");
+        }
+
+    }
 }
