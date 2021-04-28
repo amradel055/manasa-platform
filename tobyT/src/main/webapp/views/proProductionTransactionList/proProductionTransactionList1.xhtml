@@ -46,13 +46,14 @@
 
 
 
+
                             <p:blockUI block="form" trigger="addA" animate="true" >
 
                                 <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
 
                             </p:blockUI> 
 
-                           
+
 
 
 
@@ -60,8 +61,12 @@
 
                         <p:column style="width: 8vh;text-align: -webkit-auto;font-size: 1.4vh" 
                                   headerText="الفاتوره"
+                                  id="serial"
+                                  filterMatchMode="contains" 
+                                  filterBy="#{details.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial}"
+                                  sortBy="#{details.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial}"
                                   >
-                            <p:outputLabel value="#{details.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial}" />
+                            <p:outputLabel  value="#{details.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial}" />
                         </p:column>
 
                         <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.4vh" 

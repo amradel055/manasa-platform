@@ -76,7 +76,7 @@ public class SalesReportByValueAded {
      */
     public BigDecimal getTax() {
         if (Tax == null) {
-            Tax = getTotalBeforeTax().subtract(getTotalAfterTax());
+            Tax = getTotalAfterTax().subtract(getTotalBeforeTax());
         }
 
         return Tax;
