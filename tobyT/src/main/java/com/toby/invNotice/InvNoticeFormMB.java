@@ -8,26 +8,39 @@ package com.toby.invNotice;
 import com.toby.businessservice.GlAccountService;
 import com.toby.businessservice.InvNoticeService;
 import com.toby.businessservice.OrganizationSiteService;
+import com.toby.businessservice.SymbolService;
+import com.toby.bussinessservice.global.AutoCompleteService;
 import com.toby.converter.GlaccountConverter;
 import com.toby.converter.InvOrganizationSiteConverter;
+import com.toby.converter.SymbolDTOConverter;
+import com.toby.dto.InvOrganizationSiteDTO;
+import com.toby.dto.SymbolDTO;
+import com.toby.entity.Branch;
 import com.toby.entity.GlAccount;
 import com.toby.entity.InvNotice;
 import com.toby.entity.InvOrganizationSite;
+import com.toby.entity.Symbol;
 import com.toby.entiy.InvNoticeEntity;
+import com.toby.toby.AutoComplete1;
 import com.toby.toby.BaseFormBean;
 import com.toby.toby.UserData;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
+import net.sf.jasperreports.engine.JRException;
+import tafqeet.Tafqeet;
 
 /**
  *
@@ -40,20 +53,25 @@ public class InvNoticeFormMB extends BaseFormBean {
     private List<GlAccount> glAccountList;
     private GlaccountConverter glAccountConverter;
     private GlAccount accountId;
-    private List<InvOrganizationSite> organizationSiteList;
-    private InvOrganizationSiteConverter organizationSiteConvertor;
-    private InvOrganizationSite customer;
+    private InvOrganizationSiteDTO customer;
     private InvNoticeEntity invNoticeEntity;
     private Integer invNoticeId;
     private Integer typeFlow;
     private InvNotice invNotice;
     private String uri;
+    private Boolean installment;
+    private List<SymbolDTO> symbolDtoList;
+    private SymbolDTOConverter symbolDTOConverter;
     @EJB
     private OrganizationSiteService organizationSiteService;
     @EJB
     private GlAccountService accountService;
     @EJB
     private InvNoticeService invNoticeService;
+    @EJB
+    SymbolService symbolService;
+    @EJB
+    AutoCompleteService autoCompleteService;
 
     @Override
     @PostConstruct
@@ -73,7 +91,6 @@ public class InvNoticeFormMB extends BaseFormBean {
             invNotice = new InvNotice();
             invNoticeEntity = new InvNoticeEntity();
             glAccountList = new ArrayList<>();
-            organizationSiteList = new ArrayList<>();
         } catch (Exception e) {
             saveError(e, "InvNoticeFormMB", "reset");
         }
@@ -95,7 +112,6 @@ public class InvNoticeFormMB extends BaseFormBean {
                 try {
                     invNoticeId = (Integer) context.getSessionMap().get("invNoticeEntitySelected");
                     setEditedInvNoticeValues(invNoticeId);
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -107,12 +123,14 @@ public class InvNoticeFormMB extends BaseFormBean {
 
     private void fillListts() {
         try {
-            if (uri.contains("supplier")) {
-                organizationSiteList = organizationSiteService.getSupplierByBranchId(getUserData().getUserBranch().getId());
-            } else {
-                organizationSiteList = organizationSiteService.getCustomerByBranchId(getUserData().getUserBranch().getId());
-            }
-            organizationSiteConvertor = new InvOrganizationSiteConverter(organizationSiteList);
+//            if (uri.contains("supplier")) {
+////                organizationSiteList = organizationSiteService.getorganizationSiteByBranchIdForGlBankModule(getUserData().getUserBranch().getId(), true, 1, 4);
+//                setOrganizationSiteList(autoCompleteService.autoCompleteOrganizationSiteDTO(getUserData().getUserBranch().getId(), true, 1, ""));
+//            } else {
+////                organizationSiteList = organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(getUserData().getUserBranch().getId(), 0);
+//                setOrganizationSiteList(autoCompleteService.autoCompleteOrganizationSiteDTO(getUserData().getUserBranch().getId(), true, 0, ""));
+//            }
+//            organizationSiteConvertor = new InvOrganizationSiteConverter(getOrganizationSiteList());
 
             glAccountList = accountService.getBranchGLAccountsActive(getUserData().getUserBranch().getId());
             glAccountConverter = new GlaccountConverter(glAccountList);
@@ -140,6 +158,7 @@ public class InvNoticeFormMB extends BaseFormBean {
             invNotice.setRemark(invNoticeEntity.getRemarks());
             invNotice.setValue(invNoticeEntity.getAmount() != null ? invNoticeEntity.getAmount() : BigDecimal.ZERO);
             invNotice.setMarkEdit(invNoticeEntity.getMarkEdit());
+
             if (invNoticeEntity.getType() != null) {
                 invNotice.setType(invNoticeEntity.getType());
             } else {
@@ -148,7 +167,9 @@ public class InvNoticeFormMB extends BaseFormBean {
             }
 
             if (invNoticeEntity.getOrganizationSiteId() != null) {
-                invNotice.setOrganizationSiteId(invNoticeEntity.getOrganizationSiteId());
+                InvOrganizationSite invOrganizationSite = new InvOrganizationSite();
+                invOrganizationSite.setId(invNoticeEntity.getOrganizationSiteId().getId());
+                invNotice.setOrganizationSiteId(invOrganizationSite);
             } else {
                 errorMessage("يجب اختيار جهة التعامل");
                 return "";
@@ -160,6 +181,7 @@ public class InvNoticeFormMB extends BaseFormBean {
             try {
                 invNotice = invNoticeService.addInvNotice(invNotice);
                 invNoticeEntity.setId(invNotice.getId());
+                invNoticeEntity.setSerial(invNotice.getSerial());
                 savedMeesage(userDDs.get("SAVED"));
                 // exit();
 
@@ -172,6 +194,47 @@ public class InvNoticeFormMB extends BaseFormBean {
         }
         return "";
 
+    }
+
+    public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {
+        if (getInvNoticeEntity() != null && getInvNoticeEntity().getId() != null) {
+            List<InvNoticeEntity> invNoticeList = new ArrayList<>();
+            invNoticeList.add(getInvNoticeEntity());
+            fillReport(prepareReport(), getUserData().getReportPath() + "invNotice.jasper", invNoticeList, "pdf");
+            invNoticeList = null;
+        } else {
+            errorMessage("يجب الحفظ اولاً للطباعه");
+        }
+    }
+
+    public HashMap prepareReport() {
+        Map<String, String> userDDs = getUserData().getUserDDs();
+        HashMap hashMap = new HashMap();
+        if (getInvNoticeEntity() != null) {
+            if (getInvNoticeEntity().getType() == 0 || getInvNoticeEntity().getType() == 2) {
+                hashMap.put("reportNameText", "إشعار اضافه");
+            } else if (getInvNoticeEntity().getType() == 1 || getInvNoticeEntity().getType() == 3) {
+                hashMap.put("reportNameText", "إشعار خصم");
+            } else if (getInvNoticeEntity().getType() == 4 || getInvNoticeEntity().getType() == 5) {
+                hashMap.put("reportNameText", "إشعار تسويه");
+            }
+            hashMap.put("amountValueText", Tafqeet.numberToText(Double.parseDouble(getInvNoticeEntity().getAmount().toString()), getInvNoticeEntity().getAccountId().getCurrencyId().getName(), getInvNoticeEntity().getAccountId().getCurrencyId().getSubName()));
+        }
+        if (uri.contains("supplier")) {
+            hashMap.put("invOrganizationText", "مورد");
+            hashMap.put("invOrganizationToText", "الي مورد");
+        } else {
+            hashMap.put("invOrganizationText", "العميل");
+            hashMap.put("invOrganizationToText", "الي عميل");
+        }
+        hashMap.put("serialText", "رقم الاشعار");
+        hashMap.put("dateText", userDDs.get("DATE"));
+        hashMap.put("amountText", "المبلغ");
+
+        hashMap.put("accountNumberText", "رقم الحساب");
+        hashMap.put("accountNameText", "اسم الحساب");
+        hashMap.put("remarkText", "البيان");
+        return hashMap;
     }
 
     private Integer setType() {
@@ -210,15 +273,36 @@ public class InvNoticeFormMB extends BaseFormBean {
             invNoticeEntity.setId(invNotice.getId());
             invNoticeEntity.setSerial(invNotice.getSerial());
             invNoticeEntity.setAccountId(invNotice.getContrastAccountId());
-            invNoticeEntity.setOrganizationSiteId(invNotice.getOrganizationSiteId());
+            if (invNotice.getOrganizationSiteId() != null) {;
+                invNoticeEntity.setOrganizationSiteId(organizationSiteService.mapToDTOSmall(invNotice.getOrganizationSiteId()));
+            }
             invNoticeEntity.setAmount(invNotice.getValue());
             invNoticeEntity.setDate(invNotice.getDate());
             invNoticeEntity.setRemarks(invNotice.getRemark());
             invNoticeEntity.setType(invNotice.getType());
+            invNoticeEntity.setPostFlag(invNotice.getPostFlag());
+
         } catch (Exception e) {
             saveError(e, "InvNoticeFormMB", "setEditedInvNoticeValues");
         }
 
+    }
+
+    public void fillGlaccountFrominvOrganizationSiteTo() {
+        try {
+            if (invNoticeEntity.getOrganizationSiteIdTo() != null && invNoticeEntity.getOrganizationSiteIdTo().getAccountId() != null) {
+                if (invNoticeEntity.getOrganizationSiteIdTo().getAccountId() != null) {
+
+                    GlAccount account = new GlAccount();
+                    account.setId(invNoticeEntity.getOrganizationSiteIdTo().getAccountId().getId());
+                    invNoticeEntity.setAccountId(account);
+                } else {
+                    errorMessage("جهه التعامل غير مربوطه علي حساب");
+                }
+            }
+        } catch (Exception e) {
+            saveError(e, "notesReceivablesFormMB", "loadInstContract");
+        }
     }
 
     @Override
@@ -242,44 +326,7 @@ public class InvNoticeFormMB extends BaseFormBean {
             saveError(e, "InvNoticeFormMB", "exit");
         }
     }
-
-    public List<InvOrganizationSite> completeOrganizationSite(String query) {
-        List<InvOrganizationSite> filteredSuppliers = new ArrayList<>();
-        try {
-            List<InvOrganizationSite> supplierList = organizationSiteList;
-            if (query == null || query.trim().equals("")) {
-
-                organizationSiteConvertor = new InvOrganizationSiteConverter(supplierList);
-                return supplierList;
-            }
-
-            String nameAr;
-            String code;
-            InvOrganizationSite supplierFilter;
-            for (int i = 0; i < organizationSiteList.size(); i++) {
-                supplierFilter = supplierList.get(i);
-                nameAr = supplierFilter.getName();
-                if (nameAr != null && nameAr.toLowerCase().contains(query.toLowerCase())) {
-                    if (!filteredSuppliers.contains(supplierFilter)) {
-                        filteredSuppliers.add(supplierFilter);
-                    }
-                }
-
-                code = supplierFilter.getCode();
-                if (code != null && code.toLowerCase().contains(query.toLowerCase())) {
-                    if (!filteredSuppliers.contains(supplierFilter)) {
-                        filteredSuppliers.add(supplierFilter);
-                    }
-                }
-            }
-
-            organizationSiteConvertor = new InvOrganizationSiteConverter(filteredSuppliers);
-        } catch (Exception e) {
-            saveError(e, "InvNoticeFormMB", "completeOrganizationSite");
-        }
-        return filteredSuppliers;
-    }
-
+    
     public List<GlAccount> completeGlAccount(String query) {
         List<GlAccount> filteredGlaccounts = new ArrayList<>();
         try {
@@ -342,34 +389,6 @@ public class InvNoticeFormMB extends BaseFormBean {
      */
     public void setAccountId(GlAccount accountId) {
         this.accountId = accountId;
-    }
-
-    /**
-     * @return the organizationSiteList
-     */
-    public List<InvOrganizationSite> getOrganizationSiteList() {
-        return organizationSiteList;
-    }
-
-    /**
-     * @param organizationSiteList the organizationSiteList to set
-     */
-    public void setOrganizationSiteList(List<InvOrganizationSite> organizationSiteList) {
-        this.organizationSiteList = organizationSiteList;
-    }
-
-    /**
-     * @return the customer
-     */
-    public InvOrganizationSite getCustomer() {
-        return customer;
-    }
-
-    /**
-     * @param customer the customer to set
-     */
-    public void setCustomer(InvOrganizationSite customer) {
-        this.customer = customer;
     }
 
     /**
@@ -442,20 +461,58 @@ public class InvNoticeFormMB extends BaseFormBean {
         this.uri = uri;
     }
 
-    public InvOrganizationSiteConverter getOrganizationSiteConvertor() {
-        return organizationSiteConvertor;
-    }
-
-    public void setOrganizationSiteConvertor(InvOrganizationSiteConverter organizationSiteConvertor) {
-        this.organizationSiteConvertor = organizationSiteConvertor;
-    }
-
     public GlaccountConverter getGlAccountConverter() {
         return glAccountConverter;
     }
 
     public void setGlAccountConverter(GlaccountConverter glAccountConverter) {
         this.glAccountConverter = glAccountConverter;
+    }
+
+    /**
+     * @return the installment
+     */
+    public Boolean getInstallment() {
+        return installment;
+    }
+
+    /**
+     * @param installment the installment to set
+     */
+    public void setInstallment(Boolean installment) {
+        this.installment = installment;
+    }
+
+    /**
+     * @return the symbolDtoList
+     */
+    public List<SymbolDTO> getSymbolDtoList() {
+        if (symbolDtoList == null) {
+            symbolDtoList = symbolService.getSymbolListByCompanyId(getUserData().getCompany().getId(), 6);
+            setSymbolDTOConverter(new SymbolDTOConverter(symbolDtoList));
+        }
+        return symbolDtoList;
+    }
+
+    /**
+     * @param symbolDtoList the symbolDtoList to set
+     */
+    public void setSymbolDtoList(List<SymbolDTO> symbolDtoList) {
+        this.symbolDtoList = symbolDtoList;
+    }
+
+    /**
+     * @return the symbolDTOConverter
+     */
+    public SymbolDTOConverter getSymbolDTOConverter() {
+        return symbolDTOConverter;
+    }
+
+    /**
+     * @param symbolDTOConverter the symbolDTOConverter to set
+     */
+    public void setSymbolDTOConverter(SymbolDTOConverter symbolDTOConverter) {
+        this.symbolDTOConverter = symbolDTOConverter;
     }
 
 }

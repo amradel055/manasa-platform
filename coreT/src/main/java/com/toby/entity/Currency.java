@@ -29,6 +29,8 @@ public class Currency extends BaseEntity {
     @Basic(optional = false)
     @Column(name = "name")
     private String name;
+    @Column(name = "sub_name")
+    private String subName;
     @Size(max = 5)
     @Column(name = "code")
     private String code;
@@ -148,6 +150,20 @@ public class Currency extends BaseEntity {
 
     public void setInvPurchaseOrderCollection(Collection<InvPurchaseOrder> invPurchaseOrderCollection) {
         this.invPurchaseOrderCollection = invPurchaseOrderCollection;
+    }
+
+    /**
+     * @return the subName
+     */
+    public String getSubName() {
+        return subName;
+    }
+
+    /**
+     * @param subName the subName to set
+     */
+    public void setSubName(String subName) {
+        this.subName = subName;
     }
 
 }

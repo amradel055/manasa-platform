@@ -180,6 +180,38 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         List<InvOrganizationSite> detailses = dao.findListByQuery("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND ((e.type = 0 OR e.type = 2) AND e.active = 1) ORDER BY e.code", params);
         return detailses;
     }
+    
+    @Override
+    public List<InvOrganizationSite> getorganizationSiteByBranchIdForGlBankModule(Integer branchId, boolean active, Integer type, Integer type2) {
+        Map<String, Object> params = new HashMap<>();
+        StringBuilder sql = new StringBuilder();
+        params.put("branchId", branchId);
+        params.put("type", type);
+        params.put("type2", type2);
+        sql.append("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND ((e.type = :type OR e.type = :type2 OR e.type = 2)");
+        if (active) {
+            sql.append(" AND e.active = 1 ");
+        }
+        sql.append(" )");
+
+        sql.append(" ORDER BY e.code");
+        List<InvOrganizationSite> detailses = dao.findListByQuery(sql.toString(), params);
+        List<InvOrganizationSite> list = new ArrayList<>();
+        for (InvOrganizationSite detail : detailses) {
+            InvOrganizationSite site = new InvOrganizationSite();
+            site.setAccountId(detail.getAccountId());
+            site.setCode(detail.getCode());
+            site.setCurrencyId(detail.getCurrencyId());
+            site.setId(detail.getId());
+            site.setName(detail.getName());
+            site.setOpenBalanceCredit(detail.getOpenBalanceCredit());
+            site.setOpenBalanceDebit(detail.getOpenBalanceDebit());
+            site.setOpenBalanceDate(detail.getOpenBalanceDate());
+            list.add(site);
+        }
+        return list;
+    }
+
 
     @Override
     public List<InvOrganizationSiteDTO> getorganizationSiteByBranchIdForGlBankModule(Integer branchId, boolean active, Integer type, TobyUser tobyUser) {

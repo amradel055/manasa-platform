@@ -1,4 +1,4 @@
-﻿<?xml version='1.0' encoding='UTF-8' ?>
+<?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 template="./../../template/template.xhtml"
@@ -8,8 +8,9 @@
                 xmlns="http://www.w3.org/1999/xhtml">
     <ui:define name="content">
         <f:event listener="#{userData.authorize}" type="preRenderView" />
-        <h:form  style="margin-right: 20px" id="form" dir="#{userData.dir}">
-            <p:fieldset legend="#{userData.userDDs['ADD/DISC_NOTIFI']}" id="whole"  style="margin-bottom:30px; margin-right: 15px">
+        <h:form  class='formmargin' id="form" dir="#{userData.dir}">
+          
+            <p:fieldset legend="#{userData.userDDs['ADD/DISC_NOTIFI']}" id="whole">
                 <div>
                     <p:messages id="curmsg" showDetail="true" rendered="true" closable="true"/>   
                 </div>
@@ -29,8 +30,9 @@
                                          title="#{userData.userDDs['ADD']}"
                                          action="#{invNoticeListMB.goToAdd()}"
                                          style="float:right" 
+                                         rendered="#{userData.userScreens['customeraddnotice'].add or userData.isAdmin}"
                                          />
-                        <p:commandButton class="scloseButton"  icon="fa fa-fw fa-backward"  style="float: left" action="exit" />
+                        
                         <p:blockUI block="form" trigger="addA" animate="true" >
 
                             <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
@@ -43,21 +45,11 @@
                         </p:outputPanel>
                     </f:facet>
 
-                    <p:column headerText="#" style="width: 5vh;text-align: right;font-size: 1.8vh"  >
+                    <p:column headerText="#" style="width: 5vh;text-align: right;font-size: 1.8vh;border-radius: 0px"  >
                         <p:outputLabel value="#{invNotice.serial}" />
                     </p:column>
 
-                    <p:column filterStyle="display:none"
-                              filterBy="#{invNotice.accountId}" 
-                              filterMatchMode="contains" 
-                              headerText="#{userData.userDDs['ACCOUNT_NUMBER']}" 
-                              style="width: 12vh;text-align: right;font-size: 1.8vh"
-                              sortBy="#{invNotice.accountId}"
-                              >
-                        <p:outputLabel value="#{invNotice.accountId}" />
-                    </p:column>
-
-                    <p:column style="width: 14vh;text-align: right;font-size: 1.8vh" filterStyle="display:none"
+                    <p:column style="width: 14vh;text-align: right;font-size: 1.8vh;border-radius: 0px" filterStyle="display:none"
                               filterBy="#{invNotice.organizationSiteId}" 
                               filterMatchMode="contains" 
                               headerText="#{userData.userDDs['CORRES_CUSTO']}"
@@ -66,7 +58,7 @@
                         <p:outputLabel value="#{invNotice.organizationSiteId}" />
                     </p:column>
 
-                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh" filterStyle="display:none"
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh;border-radius: 0px" filterStyle="display:none"
                               filterBy="#{invNotice.date}" 
                               filterMatchMode="contains" 
                               headerText="#{userData.userDDs['DATEE']}"
@@ -77,16 +69,16 @@
                         </p:outputLabel> 
                     </p:column>
 
-                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh" filterStyle="display:none"
-                              filterBy="#{invNotice.amount}" 
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh;border-radius: 0px" filterStyle="display:none"
+                              filterBy="#{invNotice.value}" 
                               filterMatchMode="contains" 
                               headerText="#{userData.userDDs['AMOUNT']}"
-                              sortBy="#{invNotice.amount}"
+                              sortBy="#{invNotice.value}"
                               >
-                        <p:outputLabel value="#{invNotice.amount}" />
+                        <p:outputLabel value="#{invNotice.value}" />
                     </p:column>
                     
-                    <p:column style="width: 14vh;text-align: right;font-size: 1.8vh" filterStyle="display:none"
+                    <p:column style="width: 14vh;text-align: right;font-size: 1.8vh;border-radius: 0px" filterStyle="display:none"
                               filterBy="#{invNotice.typeName}" 
                               filterMatchMode="contains" 
                               headerText="#{userData.userDDs['TYPE']}"
@@ -95,29 +87,31 @@
                         <p:outputLabel value="#{invNotice.typeName}" />
                     </p:column>
 
-                    <p:column style="width: 14vh;text-align: right;font-size: 1.8vh" filterStyle="display:none"
-                              filterBy="#{invNotice.remarks}" 
+                    <p:column style="width: 14vh;text-align: right;font-size: 1.8vh;border-radius: 0px" filterStyle="display:none"
+                              filterBy="#{invNotice.remark}" 
                               filterMatchMode="contains" 
                               headerText="#{userData.userDDs['NOTE']}"
-                              sortBy="#{invNotice.remarks}"
+                              sortBy="#{invNotice.remark}"
                               >
-                        <p:outputLabel value="#{invNotice.remarks}" />
+                        <p:outputLabel value="#{invNotice.remark}" />
                     </p:column>
 
 
-                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh" headerText="#{userData.userDDs['TRANSACTION']}">
-                        <p:commandButton  class="seditButton" update="@form" icon="fa fa-fw fa-edit"
-                                         title="#{userData.userDDs['EDIT']}" 
+                    <p:column style="width: 10vh;text-align: center;font-size: 1.8vh;border-radius: 0px" headerText="#{userData.userDDs['TRANSACTION']}">
+                        <p:commandButton  class="seditButtons" update="@form" icon="fa fa-fw fa-edit"
+                                         title="#{userData.userDDs['EDIT']}" style="background-color: #6a6967;border-radius: 3px;"
                                          action="#{invNoticeListMB.goToEdit()}" 
+                                         rendered="#{userData.userScreens['customeraddnotice'].edit or userData.isAdmin}"
                                          >
                             <f:setPropertyActionListener value="#{invNotice}" 
                                                          target="#{invNoticeListMB.invNoticeEntitySelected}" />
                         </p:commandButton>
 
-                        <p:commandButton  class="sdeleteButton" update="form" 
-                                         icon="fa fa-remove" 
+                        <p:commandButton  class="sdeleteButtons" update="form" 
+                                         icon="fa fa-remove" style="background-color: red;border-radius: 3px;"
                                          title="#{userData.userDDs['DELETE']}" 
                                          action="#{invNoticeListMB.delete}"
+                                         rendered="#{userData.userScreens['customeraddnotice'].delete or userData.isAdmin}"
                                          >
 
                             <f:setPropertyActionListener value="#{invNotice}"

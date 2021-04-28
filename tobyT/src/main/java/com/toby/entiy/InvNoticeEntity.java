@@ -5,8 +5,9 @@
  */
 package com.toby.entiy;
 
+import com.toby.dto.InvOrganizationSiteDTO;
+import com.toby.dto.SymbolDTO;
 import com.toby.entity.GlAccount;
-import com.toby.entity.InvOrganizationSite;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -23,10 +24,13 @@ public class InvNoticeEntity {
     private Integer type;
     private String typeName;
     private String remarks;
-    private InvOrganizationSite organizationSiteId;
     private BigDecimal amount = BigDecimal.ZERO;
     private Date date;
     private Boolean markEdit;
+    private SymbolDTO noticeNaming;
+    private Integer postFlag;
+    private InvOrganizationSiteDTO organizationSiteIdTo;
+    private InvOrganizationSiteDTO organizationSiteId;
 
     /**
      * @return the branchId
@@ -68,20 +72,6 @@ public class InvNoticeEntity {
      */
     public void setRemarks(String remarks) {
         this.remarks = remarks;
-    }
-
-    /**
-     * @return the organizationSiteId
-     */
-    public InvOrganizationSite getOrganizationSiteId() {
-        return organizationSiteId;
-    }
-
-    /**
-     * @param organizationSiteId the organizationSiteId to set
-     */
-    public void setOrganizationSiteId(InvOrganizationSite organizationSiteId) {
-        this.organizationSiteId = organizationSiteId;
     }
 
     /**
@@ -169,4 +159,61 @@ public class InvNoticeEntity {
     public void setTypeName(String typeName) {
         this.typeName = typeName;
     }
+
+    /**
+     * @return the noticeNaming
+     */
+    public SymbolDTO getNoticeNaming() {
+        return noticeNaming;
+    }
+
+    /**
+     * @param noticeNaming the noticeNaming to set
+     */
+    public void setNoticeNaming(SymbolDTO noticeNaming) {
+        this.noticeNaming = noticeNaming;
+    }
+
+    /**
+     * @return the postFlag
+     */
+    public Integer getPostFlag() {
+        return postFlag;
+    }
+
+    /**
+     * @param postFlag the postFlag to set
+     */
+    public void setPostFlag(Integer postFlag) {
+        this.postFlag = postFlag;
+    }
+
+    /**
+     * @return the organizationSiteIdTo
+     */
+    public InvOrganizationSiteDTO getOrganizationSiteIdTo() {
+        return organizationSiteIdTo;
+    }
+
+    /**
+     * @param organizationSiteIdTo the organizationSiteIdTo to set
+     */
+    public void setOrganizationSiteIdTo(InvOrganizationSiteDTO organizationSiteIdTo) {
+        this.organizationSiteIdTo = organizationSiteIdTo;
+    }
+
+    /**
+     * @return the organizationSiteId
+     */
+    public InvOrganizationSiteDTO getOrganizationSiteId() {
+        return organizationSiteId;
+    }
+
+    /**
+     * @param organizationSiteId the organizationSiteId to set
+     */
+    public void setOrganizationSiteId(InvOrganizationSiteDTO organizationSiteId) {
+        this.organizationSiteId = organizationSiteId;
+    }
+
 }

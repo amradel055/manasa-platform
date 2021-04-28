@@ -178,7 +178,7 @@ public class InvOrganizationSiteDTO extends BaseEntityDTO {
 
     @Override
     public String toString() {
-        return name + " " + code + " " + mobile;
+        return name + " " + code + " " + (mobile == null ? "" : mobile);
     }
 
     /**

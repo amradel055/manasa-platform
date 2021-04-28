@@ -672,6 +672,21 @@
 
                                                    or userData.isAdmin}"
                                        >
+                                <p:submenu id="sr_sm7" label="تقارير عامه" icon="&#xE8D2;"
+                                           rendered="#{userData.userScreens['SalesReportByValueAdedReport'].view  
+                                                       or userData.userScreens['SalesReportByValueAdedDetailsReport'].view  
+                                                       or userData.userScreens['CustomerBalancesReport'].view 
+                                                       or userData.isAdmin}" >
+                                    <p:menuitem id="sr_sm71" value=" بيان الفواتير حسب الضريبة " icon="&#xE8D2;" url="/faces/views/proproductionreport/SalesReportByValueAdedReport.xhtml" 
+                                                rendered="#{userData.userScreens['SalesReportByValueAdedReport'].view or   userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="sr_sm72" value="  بيان الفواتير حسب الضريبة تفصيلى" icon="&#xE8D2;" url="/faces/views/proproductionreport/SalesReportByValueAdedDetailsReport.xhtml" 
+                                                rendered="#{userData.userScreens['SalesReportByValueAdedDetailsReport'].view or   userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="sr_sm73" value=" أرصدة العملاء" icon="&#xE8D2;" url="/faces/views/proproductionreport/CustomerBalancesReport.xhtml" 
+                                                rendered="#{userData.userScreens['CustomerBalancesReport'].view or   userData.isAdmin}"
+                                                />
+                                </p:submenu>
                                 <p:submenu id="sr_sm41" label="#{userData.userDDs['MAIN_DATA_REP']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['groupDataReport'].view  
                                                        or userData.userScreens['basicdataofitemsreport'].view  
@@ -957,15 +972,7 @@
                                     <p:menuitem id="sr_lnk33330" value=" فواتير المصنع حسب آخرمرحلة" icon="&#xE8D2;" url="/faces/views/proproductionreport/ProProductionTransactionFactoryLastReport.xhtml" 
                                                 rendered="#{userData.userScreens['ProProductionTransactionFactoryLastReport'].view or   userData.isAdmin}"
                                                 />
-                                    <p:menuitem id="sr_lnk33331" value=" بيان الفواتير حسب الضريبة " icon="&#xE8D2;" url="/faces/views/proproductionreport/SalesReportByValueAdedReport.xhtml" 
-                                                rendered="#{userData.userScreens['SalesReportByValueAdedReport'].view or   userData.isAdmin}"
-                                                />
-                                    <p:menuitem id="sr_lnk33332" value="  بيان الفواتير حسب الضريبة تفصيلى" icon="&#xE8D2;" url="/faces/views/proproductionreport/SalesReportByValueAdedDetailsReport.xhtml" 
-                                                rendered="#{userData.userScreens['SalesReportByValueAdedDetailsReport'].view or   userData.isAdmin}"
-                                                />
-                                    <p:menuitem id="sr_lnk33333" value=" أرصدة العملاء" icon="&#xE8D2;" url="/faces/views/proproductionreport/CustomerBalancesReport.xhtml" 
-                                                rendered="#{userData.userScreens['CustomerBalancesReport'].view or   userData.isAdmin}"
-                                                />
+
                                 </p:submenu>
                             </p:submenu>
                             <p:submenu id="sr_sm55" label="الترحيلات" icon="&#xE8D2;"

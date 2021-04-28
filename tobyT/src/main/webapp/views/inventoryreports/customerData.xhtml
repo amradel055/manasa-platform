@@ -21,50 +21,7 @@
                 <div  id="firstSegment" class="ui-g-12 ui-g-nopad firstset">
                     <div class="ui-g">
 
-                        <div class="ui-g-6 ui-xl-6">
-                            <div class="ui-g-12 ui-xl-12">
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:autoComplete style="width:75%!important"
-                                                    dropdown="true"
-                                                    converter="#{supplierDataReportMB.invOrgSiteConverter}"
-                                                    value="#{supplierDataReportMB.supplierDataReportSearchBean.fromorganizationName}"
-                                                    var="organization"
-                                                    itemLabel="#{organization}" 
-                                                    itemValue="#{organization}"
-                                                    forceSelection="true" 
-                                                    completeMethod="#{supplierDataReportMB.completOrgSite}">
 
-                                    </p:autoComplete>
-                                </div>
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 40px" value="#{userData.userDDs['FROM_CUSTOM']}"/>
-
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="ui-g-6 ui-xl-6">
-                            <div class="ui-g-12 ui-xl-12">
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:autoComplete style="width:75%!important" 
-
-                                                    dropdown="true"
-                                                    converter="#{supplierDataReportMB.invOrgSiteConverter}"
-                                                    value="#{supplierDataReportMB.supplierDataReportSearchBean.toorganizationName}"
-                                                    var="organization"
-                                                    itemLabel="#{organization}" 
-                                                    itemValue="#{organization}"
-
-                                                    forceSelection="true"
-                                                    completeMethod="#{supplierDataReportMB.completOrgSite}" >
-                                    </p:autoComplete>
-                                </div>
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 40px" value="#{userData.userDDs['TO_CUSTOM']}"/>
-
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
