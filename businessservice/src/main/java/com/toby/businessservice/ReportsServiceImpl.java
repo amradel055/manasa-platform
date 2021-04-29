@@ -9,6 +9,7 @@ import com.toby.core.GenericDAO;
 import com.toby.views.CustomerBalances;
 import com.toby.views.SalesReportByValueAded;
 import com.toby.views.SalesReportByValueAdedDetails;
+import com.toby.views.StatementOfBondsByBranche;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -140,6 +141,170 @@ public class ReportsServiceImpl implements ReportsService {
         return customerBalanceses;
     }
 
+    @Override
+    public List<StatementOfBondsByBranche> getStatementOfBondsByBranch(StatementOfBondsByBranche statementOfBondsByBranche, Integer branchId) {
+
+        List<StatementOfBondsByBranche> statementOfBondsByBrancheList = new ArrayList<>();
+        StringBuilder sql = new StringBuilder();
+        sql.append(" select s.ScreenName , s.gl_bank_name , s.adding , s.gallary_id , s.gallary_code , s.gallary_name from (SELECT \n"
+                + "        'قبض نقدي' AS `ScreenName`, `gb`.`name` AS `gl_bank_name`, sum(IFNULL(`gbtd`.`value_local`, 0) )AS `adding` , inv.id as gallary_id , inv.code as gallary_code , inv.name as gallary_name\n"
+                + "    FROM\n"
+                + "        `gl_bank_transaction` `gbt`\n"
+                + "        LEFT JOIN `gl_bank_transaction_detail` `gbtd` ON `gbt`.`id` = `gbtd`.`gl_bank_transaction_id`\n"
+                + "        LEFT JOIN `gl_bank` `gb` ON `gb`.`id` = `gbt`.`gl_bank_id`\n"
+                + "        LEFT JOIN inv_inventory inv on inv.id = gb.gallary_id \n"
+                + "    WHERE\n"
+                + "        `gbt`.`serial` IS NOT NULL AND `gbt`.`payment_type` = 0 AND `gbtd`.`organization_site_id` IS NOT NULL \n"
+                + "        AND `gbt`.`transaction_type`"
+                + " ");
+        sql.append(" AND gbt.branch_id = ").append(branchId);
+        sql.append(" AND gb.id is not null AND gbt.transaction_type = 1\n");
+        appendDate2(statementOfBondsByBranche, sql);
+        sql.append(" group by gb.id , gb.gallary_id \n");
+        sql.append(" union all\n"
+                + " SELECT \n"
+                + "        'قبض شيك' AS `ScreenName`, `gb`.`name` AS `gl_bank_name`, sum(IFNULL(`gbtd`.`value_local`, 0) )AS `adding` , inv.id as gallary_id , inv.code as gallary_code , inv.name as gallary_name\n"
+                + "    FROM\n"
+                + "        `gl_bank_transaction` `gbt`\n"
+                + "        LEFT JOIN `gl_bank_transaction_detail` `gbtd` ON `gbt`.`id` = `gbtd`.`gl_bank_transaction_id`\n"
+                + "        LEFT JOIN `gl_bank` `gb` ON `gb`.`id` = `gbt`.`gl_bank_id`\n"
+                + "        LEFT JOIN inv_inventory inv on inv.id = gb.gallary_id\n"
+                + "    WHERE\n"
+                + "        `gbt`.`serial` IS NOT NULL AND `gbt`.`payment_type` = 1 AND `gbtd`.`organization_site_id` IS NOT NULL \n"
+                + "        AND `gbt`.`transaction_type` "
+                + " ");
+        sql.append(" AND gbt.branch_id = ").append(branchId);
+        sql.append(" AND gb.id is not null AND gbt.transaction_type = 1\n");
+        appendDate2(statementOfBondsByBranche, sql);
+        sql.append(" group by gb.id , gb.gallary_id \n");
+        sql.append(" union all\n"
+                + " SELECT \n"
+                + "        'قبض شيك خطي' AS `ScreenName`, `gb`.`name` AS `gl_bank_name`, sum(IFNULL(`gbtd`.`value_local`, 0) )AS `adding` , inv.id as gallary_id , inv.code as gallary_code , inv.name as gallary_name\n"
+                + "    FROM\n"
+                + "        `gl_bank_transaction` `gbt`\n"
+                + "        LEFT JOIN `gl_bank_transaction_detail` `gbtd` ON `gbt`.`id` = `gbtd`.`gl_bank_transaction_id`\n"
+                + "        LEFT JOIN `gl_bank` `gb` ON `gb`.`id` = `gbt`.`gl_bank_id`\n"
+                + "        LEFT JOIN inv_inventory inv on inv.id = gb.gallary_id\n"
+                + "    WHERE\n"
+                + "        `gbt`.`serial` IS NOT NULL AND `gbt`.`payment_type` = 2 AND `gbtd`.`organization_site_id` IS NOT NULL \n"
+                + "        AND `gbt`.`transaction_type`"
+                + " ");
+        sql.append(" AND gbt.branch_id = ").append(branchId);
+        sql.append(" AND gb.id is not null AND gbt.transaction_type = 1\n");
+        appendDate2(statementOfBondsByBranche, sql);
+        sql.append(" group by gb.id , gb.gallary_id \n");
+        sql.append("  union all \n"
+                + "    SELECT \n"
+                + "        'صرف نقدي' AS `ScreenName`, `gb`.`name` AS `gl_bank_name`, sum(IFNULL(`gbtd`.`value_local`, 0) )AS `adding` , inv.id as gallary_id , inv.code as gallary_code , inv.name as gallary_name\n"
+                + "    FROM\n"
+                + "        `gl_bank_transaction` `gbt`\n"
+                + "        LEFT JOIN `gl_bank_transaction_detail` `gbtd` ON `gbt`.`id` = `gbtd`.`gl_bank_transaction_id`\n"
+                + "        LEFT JOIN `gl_bank` `gb` ON `gb`.`id` = `gbt`.`gl_bank_id`\n"
+                + "        LEFT JOIN inv_inventory inv on inv.id = gb.gallary_id\n"
+                + "    WHERE\n"
+                + "        `gbt`.`serial` IS NOT NULL AND `gbt`.`payment_type` = 0 AND `gbtd`.`organization_site_id` IS NOT NULL \n"
+                + "        AND `gbt`.`transaction_type`"
+                + " ");
+        sql.append(" AND gbt.branch_id = ").append(branchId);
+        sql.append(" AND gb.id is not null AND gbt.transaction_type = 0\n");
+        appendDate2(statementOfBondsByBranche, sql);
+        sql.append(" group by gb.id , gb.gallary_id \n");
+        sql.append("  union all\n"
+                + " SELECT \n"
+                + "        'صرف شيك' AS `ScreenName`, `gb`.`name` AS `gl_bank_name`, sum(IFNULL(`gbtd`.`value_local`, 0) )AS `adding` , inv.id as gallary_id , inv.code as gallary_code , inv.name as gallary_name\n"
+                + "    FROM\n"
+                + "        `gl_bank_transaction` `gbt`\n"
+                + "        LEFT JOIN `gl_bank_transaction_detail` `gbtd` ON `gbt`.`id` = `gbtd`.`gl_bank_transaction_id`\n"
+                + "        LEFT JOIN `gl_bank` `gb` ON `gb`.`id` = `gbt`.`gl_bank_id`\n"
+                + "        LEFT JOIN inv_inventory inv on inv.id = gb.gallary_id\n"
+                + "    WHERE\n"
+                + "        `gbt`.`serial` IS NOT NULL AND `gbt`.`payment_type` = 1 AND `gbtd`.`organization_site_id` IS NOT NULL \n"
+                + "        AND `gbt`.`transaction_type`"
+                + " ");
+        sql.append(" AND gbt.branch_id = ").append(branchId);
+        sql.append(" AND gb.id is not null AND gbt.transaction_type = 0\n");
+        appendDate2(statementOfBondsByBranche, sql);
+        sql.append(" group by gb.id , gb.gallary_id \n");
+        sql.append(" union all\n"
+                + " SELECT \n"
+                + "        'صرف شيك خطي' AS `ScreenName`, `gb`.`name` AS `gl_bank_name`, sum(IFNULL(`gbtd`.`value_local`, 0) )AS `adding` , inv.id as gallary_id , inv.code as gallary_code , inv.name as gallary_name\n"
+                + "    FROM\n"
+                + "        `gl_bank_transaction` `gbt`\n"
+                + "        LEFT JOIN `gl_bank_transaction_detail` `gbtd` ON `gbt`.`id` = `gbtd`.`gl_bank_transaction_id`\n"
+                + "        LEFT JOIN `gl_bank` `gb` ON `gb`.`id` = `gbt`.`gl_bank_id`\n"
+                + "        LEFT JOIN inv_inventory inv on inv.id = gb.gallary_id\n"
+                + "    WHERE\n"
+                + "        `gbt`.`serial` IS NOT NULL AND `gbt`.`payment_type` = 2 AND `gbtd`.`organization_site_id` IS NOT NULL \n"
+                + "        AND `gbt`.`transaction_type`"
+                + " ");
+        sql.append(" AND gbt.branch_id = ").append(branchId);
+        sql.append(" AND gb.id is not null AND gbt.transaction_type = 0\n");
+        appendDate2(statementOfBondsByBranche, sql);
+        sql.append(" group by gb.id , gb.gallary_id \n");
+        sql.append(" union all  \n"
+                + " SELECT  'اشعار اضافة للعميل' AS `ScreenName`, 'بدون' AS `gl_bank_name`, sum(IFNULL(`value`, 0))AS `adding` , inv.id as gallary_id , inv.code as gallary_code , inv.name as gallary_name\n"
+                + "    FROM `inv_notice` as inc \n"
+                + "    left join inv_purchase_invoice as ipi on ipi.organization_site_id = inc.organization_site_id \n"
+                + "        LEFT JOIN inv_inventory inv on inv.id = ipi.galary_id \n"
+                + "    WHERE (inc.`type` = 0)"
+                + " ");
+        sql.append(" AND inc.branch_id = ").append(branchId);
+        appendDate3(statementOfBondsByBranche, sql);
+        sql.append(" group by ipi.galary_Id ");
+        sql.append(" UNION ALL \n"
+                + "    SELECT  'اشعار خصم عملاء' AS `ScreenName`, 'بدون' AS `gl_bank_name`, sum(IFNULL(`value`, 0))AS `adding`  , inv.id as gallary_id , inv.code as gallary_code , inv.name as gallary_name\n"
+                + "    FROM `inv_notice` as inc \n"
+                + "    left join inv_purchase_invoice as ipi on ipi.organization_site_id = inc.organization_site_id \n"
+                + "        LEFT JOIN inv_inventory inv on inv.id = ipi.galary_id\n"
+                + "    WHERE (`inc`.`type` = 1)"
+                + " ");
+        sql.append(" AND inc.branch_id = ").append(branchId);
+        appendDate3(statementOfBondsByBranche, sql);
+        sql.append(" group by ipi.galary_Id ");
+        sql.append("  UNION ALL \n"
+                + "    SELECT  'ااشعار دائن' AS `ScreenName`, 'بدون' AS `gl_bank_name`, sum(IFNULL(`value`, 0))AS `adding`  , inv.id as gallary_id , inv.code as gallary_code , inv.name as gallary_name\n"
+                + "    FROM `inv_notice` as inc \n"
+                + "    left join inv_purchase_invoice as ipi on ipi.organization_site_id = inc.organization_site_id \n"
+                + "        LEFT JOIN inv_inventory inv on inv.id = ipi.galary_id\n"
+                + "    WHERE (`inc`.`type` = 4)"
+                + " ");
+        sql.append(" AND inc.branch_id = ").append(branchId);
+        appendDate3(statementOfBondsByBranche, sql);
+        sql.append(" group by ipi.galary_Id ");
+        sql.append("  UNION ALL\n"
+                + "	SELECT  'اشعار اضافة للمورد' AS `ScreenName`, 'بدون' AS `gl_bank_name`, sum(IFNULL(`value`, 0))AS `adding`  , inv.id as gallary_id , inv.code as gallary_code , inv.name as gallary_name\n"
+                + "    FROM `inv_notice` as inc \n"
+                + "    left join inv_purchase_invoice as ipi on ipi.organization_site_id = inc.organization_site_id \n"
+                + "        LEFT JOIN inv_inventory inv on inv.id = ipi.galary_id\n"
+                + "    WHERE (inc.`type` = 2)"
+                + " ");
+        sql.append(" AND inc.branch_id = ").append(branchId);
+        appendDate3(statementOfBondsByBranche, sql);
+        sql.append(" group by ipi.galary_Id ");
+        sql.append(" UNION ALL \n"
+                + "    SELECT  'اشعار خصم موردين' AS `ScreenName`, 'بدون' AS `gl_bank_name`, sum(IFNULL(`value`, 0))AS `adding`  , inv.id as gallary_id , inv.code as gallary_code , inv.name as gallary_name\n"
+                + "    FROM `inv_notice` as inc \n"
+                + "    left join inv_purchase_invoice as ipi on ipi.organization_site_id = inc.organization_site_id\n"
+                + "        LEFT JOIN inv_inventory inv on inv.id = ipi.galary_id \n"
+                + "    WHERE (`inc`.`type` = 3)"
+                + " ");
+        sql.append(" AND inc.branch_id = ").append(branchId);
+        appendDate3(statementOfBondsByBranche, sql);
+        sql.append(" group by ipi.galary_Id) as s ");
+        sql.append(" order by s.gallary_id ");
+        List<Object[]> res = dao.executeNativeQuery(sql.toString());
+        for (Object[] object : res) {
+            statementOfBondsByBranche = new StatementOfBondsByBranche();
+            statementOfBondsByBranche.setPaymentType((String) object[0]);
+            statementOfBondsByBranche.setType((String) object[1]);
+            statementOfBondsByBranche.setTotalAmount((BigDecimal) object[2]);
+            statementOfBondsByBranche.setGalleryCode((String) object[4]);
+            statementOfBondsByBranche.setGalleryName((String) object[5]);
+            statementOfBondsByBrancheList.add(statementOfBondsByBranche);
+        }
+        return statementOfBondsByBrancheList;
+    }
+
     private void appendGallery(SalesReportByValueAded salesReportByValueAded, StringBuilder query) {
         if (salesReportByValueAded.getGallerySelected() != null) {
             query.append(" and ip.gallery =  ").append(salesReportByValueAded.getGallerySelected());
@@ -179,4 +344,27 @@ public class ReportsServiceImpl implements ReportsService {
             query.append(" and gallery =  ").append(customerBalances.getGallerySelected());
         }
     }
+
+    private void appendDate2(StatementOfBondsByBranche statementOfBondsByBranche, StringBuilder query) {
+        if (statementOfBondsByBranche.getDateFrom() != null) {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+            query.append("  AND `gbt`.`date` >=   '").append(dateFormat.format(statementOfBondsByBranche.getDateFrom())).append("' ");
+        }
+        if (statementOfBondsByBranche.getDateTo() != null) {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 23:59:59");
+            query.append("  AND `gbt`.`date` <=  '").append(dateFormat.format(statementOfBondsByBranche.getDateTo())).append("' ");
+        }
+    }
+
+    private void appendDate3(StatementOfBondsByBranche statementOfBondsByBranche, StringBuilder query) {
+        if (statementOfBondsByBranche.getDateFrom() != null) {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+            query.append("  AND `inc`.`date` >=  '").append(dateFormat.format(statementOfBondsByBranche.getDateFrom())).append("' ");
+        }
+        if (statementOfBondsByBranche.getDateTo() != null) {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 23:59:59");
+            query.append("  AND `inc`.`date` <=  '").append(dateFormat.format(statementOfBondsByBranche.getDateTo())).append("' ");
+        }
+    }
+
 }
