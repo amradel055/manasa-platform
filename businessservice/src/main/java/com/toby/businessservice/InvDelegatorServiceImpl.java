@@ -358,5 +358,19 @@ public class InvDelegatorServiceImpl implements InvDelegatorService {
 
         return errorMessage.toString();
     }
+    
+    @Override
+    public InventoryDelegatorDTO findDelegatorDefault(Integer branchId, Integer type) {
+//        type 0 -> BANK  ;  1 -> Customer   ; 2 -> Supplier ; 3 -> invPurchase ; 4 -> invSales
+        Map<String, Object> params = new HashMap();
+        params.put("branchId", branchId);
+        params.put("type", type);
+        List<InventoryDelegator> delegatorList = new ArrayList<>();
+        delegatorList = dao.findListByQuery("SELECT acc FROM InventoryDelegator acc WHERE acc.branchId.id=:branchId AND acc.type = :type  ", params);
+        if (delegatorList != null && !delegatorList.isEmpty()) {
+            return mapTODTO(delegatorList.get(0), Boolean.FALSE);
+        }
+        return null;
+    }
 
 }

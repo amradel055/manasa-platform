@@ -619,7 +619,7 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
         }
         entity.setGlYear(dTO.getYear());
         entity.setOrganizationType(0);
-        entity.setPaymentType(dTO.getPaymentType());
+        entity.setPaymentType(0);
         entity.setPostFlag(0);
         entity.setRate(dTO.getRate());
         entity.setRemark(dTO.getRemarks());

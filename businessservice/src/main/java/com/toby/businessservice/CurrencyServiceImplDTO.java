@@ -101,4 +101,18 @@ public class CurrencyServiceImplDTO implements CurrencyServiceDTO {
         entity.setCompanyId(tobyUser.getCompanyId());
         return entity;
     }
+    
+    
+    
+    @Override
+    public CurrencyDTO getDefaultCurrenciesByCompanyId(Integer companyId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("companyId", companyId);
+        List<Currency> detail = new ArrayList<>();
+        detail = dao.findListByQuery("SELECT c FROM Currency c WHERE c.companyId.id = :companyId ", params);
+        if(detail != null && !detail.isEmpty()){
+            return mapTODTO(detail.get(0), Boolean.FALSE);
+        }
+        return null;
+    }
 }

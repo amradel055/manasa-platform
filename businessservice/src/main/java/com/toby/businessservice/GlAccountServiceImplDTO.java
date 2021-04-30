@@ -190,4 +190,29 @@ public class GlAccountServiceImplDTO implements GlAccountServiceDTO {
         entity.setCompanyId(tobyUser.getCompanyId());
         return entity;
     }
+    
+    @Override
+    public GlAccountDTO getGlAccountForBank(Integer branchId, Integer type) {
+//        type 0 -> BANK  ;  1 -> Customer   ; 2 -> Supplier ; 3 -> invPurchase ; 4 -> invSales
+        Map<String, Object> params = new HashMap();
+        params.put("branchId", branchId);
+        if (type == 0) {
+            params.put("accNumber", 1201001);
+        } else if (type == 1) {
+            params.put("accNumber", 1202001);
+        } else if (type == 2) {
+            params.put("accNumber", 2101001);
+        }else if (type == 3) {
+            params.put("accNumber", 3101001);
+        }else if (type == 4) {
+            params.put("accNumber", 2101001);
+        }
+        List<GlAccount> glAccountList = new ArrayList<>();
+        glAccountList = dao.findListByQuery("SELECT acc FROM GlAccount acc WHERE acc.branchId.id=:branchId AND acc.accNumber = :accNumber  ", params);
+        if (glAccountList != null && !glAccountList.isEmpty()) {
+            return mapTODTO(glAccountList.get(0), Boolean.FALSE);
+        }
+        return null;
+    }
+
 }
