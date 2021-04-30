@@ -8,6 +8,7 @@ package com.toby.businessservice;
 import com.toby.views.CustomerBalances;
 import com.toby.views.SalesReportByValueAded;
 import com.toby.views.SalesReportByValueAdedDetails;
+import com.toby.views.StatementOfBondsByBranche;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -23,4 +24,6 @@ public interface ReportsService {
     public List<SalesReportByValueAdedDetails> getSalesReportByValueAdedDetails(SalesReportByValueAdedDetails salesReportByValueAdedDetails, Integer branchId);
 
     public List<CustomerBalances> getCustomerBalances(CustomerBalances customerBalances, Integer branchId);
+
+    public List<StatementOfBondsByBranche> getStatementOfBondsByBranch(StatementOfBondsByBranche statementOfBondsByBranche, Integer branchId);
 }
