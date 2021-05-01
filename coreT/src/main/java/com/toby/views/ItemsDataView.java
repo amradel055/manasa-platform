@@ -112,8 +112,6 @@ public class ItemsDataView implements Serializable {
     private String itemCode;
     @Column(name = "sell_price")
     private BigDecimal sellPrice;
-    @Column(name = "weight")
-    private BigDecimal weight;
     @Column(name = "item_barcode")
     private String itemBarcode;
     @Column(name = "item_unit_name")
@@ -277,6 +275,9 @@ public class ItemsDataView implements Serializable {
     }
 
     public BigDecimal getSellPrice() {
+        if(sellPrice == null){
+            sellPrice = BigDecimal.ZERO;
+        }
         return sellPrice;
     }
 
@@ -466,6 +467,9 @@ public class ItemsDataView implements Serializable {
      * @return the balance
      */
     public BigDecimal getBalance() {
+        if(balance == null){
+            balance = BigDecimal.ZERO;
+        }
         return balance;
     }
 
@@ -593,20 +597,6 @@ public class ItemsDataView implements Serializable {
      */
     public void setTotalQtyOut(BigDecimal totalQtyOut) {
         this.totalQtyOut = totalQtyOut;
-    }
-
-    /**
-     * @return the weight
-     */
-    public BigDecimal getWeight() {
-        return weight;
-    }
-
-    /**
-     * @param weight the weight to set
-     */
-    public void setWeight(BigDecimal weight) {
-        this.weight = weight;
     }
    
 }

@@ -8,7 +8,6 @@ package com.toby.businessservice.report;
 import com.toby.businessservice.InvoiceMovementReportService;
 import com.toby.businessservice.reports.searchBean.PurchaseOfItemsBySuppliersSearchBean;
 import com.toby.core.GenericDAO;
-import com.toby.entity.InvPurchaseInvoiceDetail;
 import com.toby.views.ItemSalesView;
 import com.toby.views.ItemSalesViewGroup;
 import com.toby.views.SalesOfItemsByCompany;
@@ -89,12 +88,12 @@ public class PurchaseOfItemsBySuppliersReportServiceImpl implements PurchaseOfIt
 
         if (purchaseOfItemsBySuppliersSearchBean.getFromorganizationName() != null) {
             params.put("fromorganization", purchaseOfItemsBySuppliersSearchBean.getFromorganizationName().getId());
-            stringBuilder.append(" AND isv.organizationSiteId >= :fromorganization");
+            stringBuilder.append(" AND isv.supplierId >= :fromorganization");
         }
 
         if (purchaseOfItemsBySuppliersSearchBean.getToorganizationName() != null) {
             params.put("toorganization", purchaseOfItemsBySuppliersSearchBean.getToorganizationName().getId());
-            stringBuilder.append(" AND isv.organizationSiteId <= :toorganization");
+            stringBuilder.append(" AND isv.supplierId <= :toorganization");
         }
 
     }

@@ -48,6 +48,10 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
     private ProProductionMovementDetailService proProductionMovementDetailService;
     @EJB
     private CurrencyServiceDTO currencyServiceDTO;
+    @EJB
+    private GlAccountServiceDTO glAccountServiceDTO;
+    @EJB
+    private InvDelegatorService invDelegatorService;
 
     @Override
     public List<InvOrganizationSite> getInvOrganizationSiteByCompanyId(Integer companyId) {
@@ -1356,17 +1360,22 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
     @Override
     public InvOrganizationSiteDTO addNewCustomer(InvOrganizationSiteDTO invOrganizationSiteDTO, List<InvOrganizationSiteDTO> invOrganizationSiteDTOList, TobyUser tobyUser) {
 
-        List<CurrencyDTO> currencyList = currencyServiceDTO.getAllCurrenciesByCompanyId(tobyUser.getCompanyId().getId());
+        CurrencyDTO currencyDefault = currencyServiceDTO.getDefaultCurrenciesByCompanyId(tobyUser.getCompanyId().getId());
 
-        if (invOrganizationSiteDTO != null && invOrganizationSiteDTO.getName() != null && currencyList != null && !currencyList.isEmpty()) {
+        if (invOrganizationSiteDTO != null && invOrganizationSiteDTO.getName() != null && currencyDefault != null) {
             invOrganizationSiteDTO.setType(0);
-            invOrganizationSiteDTO.setCurrencyId(currencyList.get(0));
+            invOrganizationSiteDTO.setCurrencyId(currencyDefault);
             invOrganizationSiteDTO.setActive(1);
             Integer code = getMaxGenericSerialForDetail(tobyUser.getBranchId().getId(), 0);
+            GlAccountDTO glAccountDTO = new GlAccountDTO();
+            glAccountDTO.setId(8247);
+            invOrganizationSiteDTO.setAccountId(glAccountDTO);
+            InventoryDelegatorDTO inventoryDelegatorDTO = new InventoryDelegatorDTO();
+            inventoryDelegatorDTO.setId(77);
+            invOrganizationSiteDTO.setDelegatorId(inventoryDelegatorDTO);
             invOrganizationSiteDTO.setCode(code.toString());
             invOrganizationSiteDTO = addOrganizationSiteDTO(invOrganizationSiteDTO, tobyUser);
             invOrganizationSiteDTOList.add(0, invOrganizationSiteDTO);
-
         }
         return invOrganizationSiteDTO;
     }

@@ -54,5 +54,7 @@ public interface InvDelegatorService {
     public boolean validateCode(TobyUser tobyUser, Integer inventoryDelegatorId, String code, Integer type);
 
     public InventoryDelegatorDTO updateInventoryDelegatorDTO(InventoryDelegatorDTO inventoryDelegatorDTO, TobyUser tobyUser);
+    
+    public InventoryDelegatorDTO findDelegatorDefault(Integer branchId, Integer type) ;
 
 }

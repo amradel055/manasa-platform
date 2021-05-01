@@ -24,5 +24,7 @@ public interface GlAccountServiceDTO {
     public GlAccountDTO findGlAccountDTO(Integer glAccount);
     
     public GlAccount findGlAccount(Integer glAccount);
+    
+    public GlAccountDTO getGlAccountForBank(Integer branchId, Integer type);
 
 }

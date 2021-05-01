@@ -20,4 +20,6 @@ public interface CurrencyServiceDTO {
     
     public List<CurrencyDTO> getAllCurrenciesByCompanyId(Integer companyId);
     
+    public CurrencyDTO getDefaultCurrenciesByCompanyId(Integer companyId);
+    
 }
