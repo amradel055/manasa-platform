@@ -1,0 +1,123 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <h:body>
+
+            <h:form dir="RTL" style="margin-right: 20px" id="form" >
+                <p:fieldset  legend=" بيان ارصدة الأصناف" id="stages"  style=" position: relative">
+                    <p:messages id="messages" showDetail="true" closable="true"/> 
+
+
+
+                    <div class="ui-g-6 ui-xl-6">
+
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:calendar style="width: 50%"  id="dateFrom1"
+                                            value="#{itemBalancesStatementReport.itemBalancesStatement.dateTo}"
+                                            pattern="dd/MM/yyyy"  showButtonPanel="true" >
+
+                                </p:calendar>
+
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:outputLabel style="width: 50px"  value="الى تاريخ" />
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui-g-6 ui-xl-6">
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:calendar style="width: 50%"  id="dateFrom"
+                                            value="#{itemBalancesStatementReport.itemBalancesStatement.dateFrom}"
+                                            pattern="dd/MM/yyyy"  showButtonPanel="true" >
+
+                                </p:calendar>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:outputLabel style="width: 50px"  value="من تاريخ" />
+
+
+
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+                </p:fieldset>
+                <div class="ui-g-12 ui-xl-12">
+
+                    <p:commandButton     class="saveButton" id="saveB" 
+                                         value="بحث" 
+                                         icon="fa fa-fw fa-save"
+                                         action="#{itemBalancesStatementReport.search()}"
+                                         update="table messages"
+                                         >
+
+                    </p:commandButton>
+                    <h:commandLink  class="sdcreenimg">  
+                        <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                        <p:dataExporter type="xls"
+                                        target="costCenterDataTable" 
+                                        fileName="مراكز التكلفة"
+                                        postProcessor="#{itemBalancesStatementReport.postProcessXLS}" />  
+                    </h:commandLink> 
+
+                </div>
+                <p:fieldset  legend="البيانات"   style="margin-bottom:20px">
+                    <p:dataTable  id="table"
+                                  var="data"
+                                  value="#{itemBalancesStatementReport.itemBalancesStatementList}"
+                                  draggableColumns="true"
+                                  paginator="true"
+                                  widgetVar="data" 
+                                  rowIndexVar="index" 
+                                  rows="30"
+                                  emptyMessage="EMPTY_TABLE"
+                                  >
+
+                        <p:column headerText=" رقم الصنف" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.code}" />
+                        </p:column>
+                        <p:column headerText=" اسم الصنف " style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.name}" />
+                        </p:column>
+                        <p:column headerText="تاريخ اخر فاتورة" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.date}" />
+                        </p:column>
+                        <p:column headerText=" سعر البيع" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.sallary}" />
+                        </p:column>
+                        <p:column headerText="متوسط التكلفة" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.costAverage}" />
+                        </p:column>
+
+                    </p:dataTable>
+                    <div class="ui-g-12 ui-md-6">
+                        <p:commandButton class="printButton"  icon="fa fa-fw fa-print"
+                                         onclick="form.target = '_blank'" ajax="false"
+                                         value="#{userData.userDDs['PRINT']}"
+                                         actionListener="#{itemBalancesStatementReport.exportPDF(actionEvent)}"/>
+                    </div>
+
+                </p:fieldset>
+            </h:form>
+        </h:body>
+    </ui:define>
+</ui:composition>
+

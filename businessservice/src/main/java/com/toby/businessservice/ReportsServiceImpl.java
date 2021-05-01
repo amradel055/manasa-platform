@@ -9,6 +9,7 @@ import com.toby.core.GenericDAO;
 import com.toby.views.CompanyInvoicesWithoutSewing;
 import com.toby.views.CustomerBalances;
 import com.toby.views.InvoicesIssuedWithinAperiod;
+import com.toby.views.ItemBalancesStatement;
 import com.toby.views.SalesReportByValueAded;
 import com.toby.views.SalesReportByValueAdedDetails;
 import com.toby.views.StatementOfBondsByBranche;
@@ -352,15 +353,15 @@ public class ReportsServiceImpl implements ReportsService {
 
         List<CompanyInvoicesWithoutSewing> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT inv.id , inv.name , oc.name as name , oc.code code , sum(ipid.net) as sum \n"
-                + "FROM `inv_purchase_invoice` `ipi`\n"
-                + "LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
-                + "LEFT JOIN inv_organization_site ios on ios.id = ipi.organization_site_id\n"
-                + "LEFT JOIN offer_company oc on oc.id = ios.offer_company_id\n"
-                + "LEFT JOIN inv_inventory inv on inv.id = ipi.galary_Id\n"
-                + "LEFT JOIN inv_item ii on ii.id = ipid.item_id\n"
-                + "LEFT JOIN pro_group pg on pg.id = ii.pro_group_id\n"
-                + "WHERE `ipid`.`item_id` IS NOT NULL AND ipi.type = 4 \n"
+        sql.append(" SELECT inv.id , inv.name , oc.name as name , oc.code code , sum(ipid.net) as sum \n"
+                + " FROM `inv_purchase_invoice` `ipi`\n"
+                + " LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
+                + " LEFT JOIN inv_organization_site ios on ios.id = ipi.organization_site_id\n"
+                + " LEFT JOIN offer_company oc on oc.id = ios.offer_company_id\n"
+                + " LEFT JOIN inv_inventory inv on inv.id = ipi.galary_Id\n"
+                + " LEFT JOIN inv_item ii on ii.id = ipid.item_id\n"
+                + " LEFT JOIN pro_group pg on pg.id = ii.pro_group_id\n"
+                + " WHERE `ipid`.`item_id` IS NOT NULL AND ipi.type = 4 \n"
                 + " ");
         sql.append(" AND `ipi`.`branch_id` = ").append(branchId);
         appendDate5(invoicesWithoutSewing, sql);
@@ -378,6 +379,42 @@ public class ReportsServiceImpl implements ReportsService {
 
         }
         return list;
+    }
+
+    @Override
+    public List<ItemBalancesStatement> getItemBalancesStatement(ItemBalancesStatement itemBalancesStatement, Integer branchId) {
+
+        List<ItemBalancesStatement> itemBalancesStatementList = new ArrayList<>();
+        StringBuilder sql = new StringBuilder();
+        sql.append(" select ii.code , ii.name  ,\n"
+                + "( select  ipi2.date \n"
+                + " from inv_purchase_invoice_detail ipid2 left join inv_purchase_invoice ipi2 \n"
+                + " on ipi2.id = ipid2.inv_purchase_invoice_id where ipid2.item_id = ii.id "
+                + "");
+//        if (itemBalancesStatement.getFromDate() != null) {
+//            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 23:59:59");
+//            sql.append(" and ipi2.date <  '").append(dateFormat.format(itemBalancesStatement.getFromDate())).append("' ");
+//        }
+        sql.append(" order by ipi2.id desc limit 1) as last_date,ii.max_price_men as sell_price , ii.cost_average as cost_average");
+        sql.append(" from inv_item ii left join pro_group pg on pg.id = ii.pro_group_id "
+                + " ");
+        sql.append("  where ii.branch_id = ").append(branchId);
+        sql.append(" and pg.sort = 1 and ii.id not in (select item_id \n"
+                + " from inv_purchase_invoice_detail ipid \n"
+                + " left join inv_purchase_invoice ipi on ipi.id = ipid.inv_purchase_invoice_id)\n"
+                + " ");
+        appendDate6(itemBalancesStatement, sql);
+        List<Object[]> res = dao.executeNativeQuery(sql.toString());
+        for (Object[] object : res) {
+            itemBalancesStatement = new ItemBalancesStatement();
+            itemBalancesStatement.setCode((String) object[0]);
+            itemBalancesStatement.setName((String) object[1]);
+            itemBalancesStatement.setDate((Date) object[2]);
+            itemBalancesStatement.setSallary((BigDecimal) object[3]);
+            itemBalancesStatement.setCostAverage((BigDecimal) object[4]);
+            itemBalancesStatementList.add(itemBalancesStatement);
+        }
+        return itemBalancesStatementList;
     }
 
     private void appendGallery(SalesReportByValueAded salesReportByValueAded, StringBuilder query) {
@@ -461,6 +498,17 @@ public class ReportsServiceImpl implements ReportsService {
         if (invoicesWithoutSewing.getDateTo() != null) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 23:59:59");
             query.append(" and `ipi`.`date` <=  '").append(dateFormat.format(invoicesWithoutSewing.getDateTo())).append("' ");
+        }
+    }
+
+    private void appendDate6(ItemBalancesStatement itemBalancesStatement, StringBuilder query) {
+        if (itemBalancesStatement.getDateFrom() != null) {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+            query.append(" ipi.date >=  '").append(dateFormat.format(itemBalancesStatement.getDateFrom())).append("' ");
+        }
+        if (itemBalancesStatement.getDateTo() != null) {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 23:59:59");
+            query.append(" and ipi.date <=   '").append(dateFormat.format(itemBalancesStatement.getDateTo())).append("' ");
         }
     }
 
