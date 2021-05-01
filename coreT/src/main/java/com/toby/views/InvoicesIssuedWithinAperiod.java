@@ -14,12 +14,12 @@ import java.util.Date;
  */
 public class InvoicesIssuedWithinAperiod {
     
-    private String invoiceNumber;
+    private Integer invoiceNumber;
     private String status;
     private Date date;
     private Date dateFrom;
     private Date dateTo;
-    private String clientSerial;
+    private Integer clientSerial;
     private String clientCode;
     private String clientName;
     private BigDecimal invoiceValue;
@@ -30,17 +30,7 @@ public class InvoicesIssuedWithinAperiod {
 
     /**
      * @return the invoiceNumber
-     */
-    public String getInvoiceNumber() {
-        return invoiceNumber;
-    }
-
-    /**
-     * @param invoiceNumber the invoiceNumber to set
-     */
-    public void setInvoiceNumber(String invoiceNumber) {
-        this.invoiceNumber = invoiceNumber;
-    }
+   
 
     /**
      * @return the status
@@ -98,23 +88,7 @@ public class InvoicesIssuedWithinAperiod {
         this.dateTo = dateTo;
     }
 
-    /**
-     * @return the clientSerial
-     */
-    public String getClientSerial() {
-        return clientSerial;
-    }
-
-    /**
-     * @param clientSerial the clientSerial to set
-     */
-    public void setClientSerial(String clientSerial) {
-        this.clientSerial = clientSerial;
-    }
-
-    /**
-     * @return the clientName
-     */
+   
     public String getClientName() {
         return clientName;
     }
@@ -227,6 +201,34 @@ public class InvoicesIssuedWithinAperiod {
      */
     public void setPayed(BigDecimal payed) {
         this.payed = payed;
+    }
+
+    /**
+     * @return the invoiceNumber
+     */
+    public Integer getInvoiceNumber() {
+        return invoiceNumber;
+    }
+
+    /**
+     * @param invoiceNumber the invoiceNumber to set
+     */
+    public void setInvoiceNumber(Integer invoiceNumber) {
+        this.invoiceNumber = invoiceNumber;
+    }
+
+    /**
+     * @return the clientSerial
+     */
+    public Integer getClientSerial() {
+        return clientSerial;
+    }
+
+    /**
+     * @param clientSerial the clientSerial to set
+     */
+    public void setClientSerial(Integer clientSerial) {
+        this.clientSerial = clientSerial;
     }
     
 }

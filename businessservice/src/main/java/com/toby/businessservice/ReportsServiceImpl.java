@@ -6,6 +6,7 @@
 package com.toby.businessservice;
 
 import com.toby.core.GenericDAO;
+import com.toby.views.CompanyInvoicesWithoutSewing;
 import com.toby.views.CustomerBalances;
 import com.toby.views.InvoicesIssuedWithinAperiod;
 import com.toby.views.SalesReportByValueAded;
@@ -332,8 +333,8 @@ public class ReportsServiceImpl implements ReportsService {
         List<Object[]> res = dao.executeNativeQuery(sql.toString());
         for (Object[] object : res) {
             issuedWithinAperiod = new InvoicesIssuedWithinAperiod();
-            issuedWithinAperiod.setInvoiceNumber((String) object[0]);
-            issuedWithinAperiod.setClientSerial((String) object[1]);
+            issuedWithinAperiod.setInvoiceNumber((Integer) object[0]);
+            issuedWithinAperiod.setClientSerial((Integer) object[1]);
             issuedWithinAperiod.setDate((Date) object[2]);
             issuedWithinAperiod.setClientCode((String) object[3]);
             issuedWithinAperiod.setClientName((String) object[4]);
@@ -342,6 +343,39 @@ public class ReportsServiceImpl implements ReportsService {
             issuedWithinAperiod.setPayed((BigDecimal) object[7]);
             issuedWithinAperiod.setBouncedBack((BigDecimal) object[8]);
             list.add(issuedWithinAperiod);
+        }
+        return list;
+    }
+
+    @Override
+    public List<CompanyInvoicesWithoutSewing> getCompanyInvoicesWithoutSewing(CompanyInvoicesWithoutSewing invoicesWithoutSewing, Integer branchId) {
+
+        List<CompanyInvoicesWithoutSewing> list = new ArrayList<>();
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT inv.id , inv.name , oc.name as name , oc.code code , sum(ipid.net) as sum \n"
+                + "FROM `inv_purchase_invoice` `ipi`\n"
+                + "LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
+                + "LEFT JOIN inv_organization_site ios on ios.id = ipi.organization_site_id\n"
+                + "LEFT JOIN offer_company oc on oc.id = ios.offer_company_id\n"
+                + "LEFT JOIN inv_inventory inv on inv.id = ipi.galary_Id\n"
+                + "LEFT JOIN inv_item ii on ii.id = ipid.item_id\n"
+                + "LEFT JOIN pro_group pg on pg.id = ii.pro_group_id\n"
+                + "WHERE `ipid`.`item_id` IS NOT NULL AND ipi.type = 4 \n"
+                + " ");
+        sql.append(" AND `ipi`.`branch_id` = ").append(branchId);
+        appendDate5(invoicesWithoutSewing, sql);
+        sql.append(" and ios.offer_company_id is not null AND pg.id != 5\n ");
+        sql.append(" GROUP BY ios.offer_company_id ");
+        List<Object[]> res = dao.executeNativeQuery(sql.toString());
+        for (Object[] object : res) {
+            invoicesWithoutSewing = new CompanyInvoicesWithoutSewing();
+            invoicesWithoutSewing.setId((Integer) object[0]);
+            invoicesWithoutSewing.setGalleryName((String) object[1]);
+            invoicesWithoutSewing.setName((String) object[2]);
+            invoicesWithoutSewing.setCode((Integer) object[3]);
+            invoicesWithoutSewing.setTotal((BigDecimal) object[4]);
+            list.add(invoicesWithoutSewing);
+
         }
         return list;
     }
@@ -416,6 +450,17 @@ public class ReportsServiceImpl implements ReportsService {
         if (issuedWithinAperiod.getDateTo() != null) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 23:59:59");
             query.append(" and `ipi`.`date` <=  '").append(dateFormat.format(issuedWithinAperiod.getDateTo())).append("' ");
+        }
+    }
+
+    private void appendDate5(CompanyInvoicesWithoutSewing invoicesWithoutSewing, StringBuilder query) {
+        if (invoicesWithoutSewing.getDateFrom() != null) {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+            query.append(" and `ipi`.`date` >=  '").append(dateFormat.format(invoicesWithoutSewing.getDateFrom())).append("' ");
+        }
+        if (invoicesWithoutSewing.getDateTo() != null) {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 23:59:59");
+            query.append(" and `ipi`.`date` <=  '").append(dateFormat.format(invoicesWithoutSewing.getDateTo())).append("' ");
         }
     }
 
