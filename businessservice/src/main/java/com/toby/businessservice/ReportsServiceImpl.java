@@ -7,6 +7,7 @@ package com.toby.businessservice;
 
 import com.toby.core.GenericDAO;
 import com.toby.views.CustomerBalances;
+import com.toby.views.InvoicesIssuedWithinAperiod;
 import com.toby.views.SalesReportByValueAded;
 import com.toby.views.SalesReportByValueAdedDetails;
 import com.toby.views.StatementOfBondsByBranche;
@@ -305,6 +306,46 @@ public class ReportsServiceImpl implements ReportsService {
         return statementOfBondsByBrancheList;
     }
 
+    @Override
+    public List<InvoicesIssuedWithinAperiod> getInvoiceWithinAperiod(InvoicesIssuedWithinAperiod issuedWithinAperiod, Integer branchId) {
+
+        List<InvoicesIssuedWithinAperiod> list = new ArrayList<>();
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT \n"
+                + "        `ipi`.`id` AS `id`, `ipi`.`serial` AS `serial`,  `ipi`.`date` AS `date`, `ios`.`code` AS `organization_code`, `ios`.`name` AS `organization_name`,\n"
+                + "        (CASE WHEN (SUM(IFNULL(`ipid`.`net`, 0)) = 0) THEN 0 ELSE NET(TRUNCATE(SUM(IFNULL(`ipid`.`net`, 0)),2),0,0,`ipi`.`tax_flag`,15,0,0,0)END) AS `total`,\n"
+                + "        (CASE WHEN (SUM(IFNULL(`ipid`.`net`, 0)) = 0) THEN 0 ELSE NET(TRUNCATE(SUM(IFNULL(`ipid`.`net`, 0)),2),`ipi`.`discount_type`,`ipi`.`discount`,`ipi`.`tax_flag`,15,0,0, 0) END) AS `net`,\n"
+                + "        (SELECT sum(IFNULL(`gbtd`.`value_local`, 0)) AS `adding` FROM  `gl_bank_transaction` `gbt` LEFT JOIN `gl_bank_transaction_detail` `gbtd` \n"
+                + "        ON `gbt`.`id` = `gbtd`.`gl_bank_transaction_id` WHERE gbt.invoice_id = ipi.id) as payed,\n"
+                + "        IFNULL((SELECT (CASE WHEN (SUM(IFNULL(`ipid2`.`net`, 0)) = 0) THEN 0 ELSE NET(TRUNCATE(SUM(IFNULL(`ipid2`.`net`, 0)),2),\n"
+                + "       `ipi2`.`discount_type`,`ipi2`.`discount`,`ipi2`.`tax_flag`,15,0,0, 0) END) AS `net` FROM `inv_purchase_invoice` `ipi2` \n"
+                + "        LEFT JOIN `inv_purchase_invoice_detail` `ipid2` ON `ipi2`.`id` = `ipid2`.`inv_purchase_invoice_id` WHERE  `ipi2`.`parent` = ipi.id),0) as returnn\n"
+                + "\n"
+                + "    FROM\n"
+                + "        `inv_purchase_invoice` `ipi` LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id` LEFT JOIN `inv_organization_site` `ios` \n"
+                + "         ON `ios`.`id` = `ipi`.`organization_site_id`\n"
+                + "         WHERE  `ipi`.`type` = 4  AND `ipi`.`date` IS NOT NULL"
+                + " ");
+        sql.append(" AND ipi.branch_id = ").append(branchId);
+        appendDate4(issuedWithinAperiod, sql);
+        sql.append(" GROUP BY  `ipi`.`id` , `ipi`.`date` , `ipi`.`organization_site_id` ");
+        List<Object[]> res = dao.executeNativeQuery(sql.toString());
+        for (Object[] object : res) {
+            issuedWithinAperiod = new InvoicesIssuedWithinAperiod();
+            issuedWithinAperiod.setInvoiceNumber((String) object[0]);
+            issuedWithinAperiod.setClientSerial((String) object[1]);
+            issuedWithinAperiod.setDate((Date) object[2]);
+            issuedWithinAperiod.setClientCode((String) object[3]);
+            issuedWithinAperiod.setClientName((String) object[4]);
+            issuedWithinAperiod.setInvoiceValue((BigDecimal) object[5]);
+            issuedWithinAperiod.setInvoiceNet((BigDecimal) object[6]);
+            issuedWithinAperiod.setPayed((BigDecimal) object[7]);
+            issuedWithinAperiod.setBouncedBack((BigDecimal) object[8]);
+            list.add(issuedWithinAperiod);
+        }
+        return list;
+    }
+
     private void appendGallery(SalesReportByValueAded salesReportByValueAded, StringBuilder query) {
         if (salesReportByValueAded.getGallerySelected() != null) {
             query.append(" and ip.gallery =  ").append(salesReportByValueAded.getGallerySelected());
@@ -364,6 +405,17 @@ public class ReportsServiceImpl implements ReportsService {
         if (statementOfBondsByBranche.getDateTo() != null) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 23:59:59");
             query.append("  AND `inc`.`date` <=  '").append(dateFormat.format(statementOfBondsByBranche.getDateTo())).append("' ");
+        }
+    }
+
+    private void appendDate4(InvoicesIssuedWithinAperiod issuedWithinAperiod, StringBuilder query) {
+        if (issuedWithinAperiod.getDateFrom() != null) {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+            query.append(" and `ipi`.`date` >=  '").append(dateFormat.format(issuedWithinAperiod.getDateFrom())).append("' ");
+        }
+        if (issuedWithinAperiod.getDateTo() != null) {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 23:59:59");
+            query.append(" and `ipi`.`date` <=  '").append(dateFormat.format(issuedWithinAperiod.getDateTo())).append("' ");
         }
     }
 

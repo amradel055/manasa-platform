@@ -6,6 +6,7 @@
 package com.toby.businessservice;
 
 import com.toby.views.CustomerBalances;
+import com.toby.views.InvoicesIssuedWithinAperiod;
 import com.toby.views.SalesReportByValueAded;
 import com.toby.views.SalesReportByValueAdedDetails;
 import com.toby.views.StatementOfBondsByBranche;
@@ -26,4 +27,6 @@ public interface ReportsService {
     public List<CustomerBalances> getCustomerBalances(CustomerBalances customerBalances, Integer branchId);
 
     public List<StatementOfBondsByBranche> getStatementOfBondsByBranch(StatementOfBondsByBranche statementOfBondsByBranche, Integer branchId);
+
+    public List<InvoicesIssuedWithinAperiod> getInvoiceWithinAperiod(InvoicesIssuedWithinAperiod issuedWithinAperiod, Integer branchId);
 }
