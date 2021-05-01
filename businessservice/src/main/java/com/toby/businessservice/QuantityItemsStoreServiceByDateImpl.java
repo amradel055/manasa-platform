@@ -359,36 +359,100 @@ public class QuantityItemsStoreServiceByDateImpl implements QuantityItemsStoreBy
     
     
     @Override
-    public BigDecimal getQuantatyItemByinventory(Integer invInventoryId, Integer invItemId, Boolean sellBuy, Date date) {
+        public BigDecimal getQuantatyItemByinventory(Integer invInventoryId, Integer invItemId, Boolean sellBuy, Date date) {
 
-        StringBuilder query = new StringBuilder();
-        String dateStr = null;
-        if (date != null) {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            dateStr = dateFormat.format(date);
-
-        }
-        query.append("SELECT (SUM((IFNULL(`i`.`qtyin`, 0) * IFNULL(`i`.`screwing`, 1))) - SUM((IFNULL(`i`.`qtyout`, 0) * IFNULL(`i`.`screwing`, 1)))) as qty\n"
-                + "   FROM\n"
-                + "   ( ");
-
-        if (!sellBuy) {
-            query.append(" SELECT \n"
-                    + "        IFNULL(`ipid`.`quantity`, 0) AS `qtyin`,\n"
-                    + "        0 AS `qtyout`,\n"
-                    + "        IFNULL(`ipid`.`screwing`, 1) AS `screwing`\n"
-                    + "    FROM\n"
-                    + "        `inv_purchase_invoice` `ipi`\n"
-                    + "        LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
-                    + "    WHERE\n"
-                    + "        ((`ipi`.`type` = 0) AND (`ipi`.`date` IS NOT NULL)) AND `ipid`.`item_id` = " + invItemId + " ");
+            StringBuilder query = new StringBuilder();
+            String dateStr = null;
             if (date != null) {
-                query.append(" AND IF ( '" ).append(dateStr).append(  "' IS NOT NULL , `ipi`.`date` <= '" ).append(dateStr).append(  "' ,true)");
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                dateStr = dateFormat.format(date);
+
+            }
+            query.append("SELECT (SUM((IFNULL(`i`.`qtyin`, 0) * IFNULL(`i`.`screwing`, 1))) - SUM((IFNULL(`i`.`qtyout`, 0) * IFNULL(`i`.`screwing`, 1)))) as qty\n"
+                    + "   FROM\n"
+                    + "   ( ");
+
+            if (!sellBuy) {
+                query.append(" SELECT \n"
+                        + "        IFNULL(`ipid`.`quantity`, 0) AS `qtyin`,\n"
+                        + "        0 AS `qtyout`,\n"
+                        + "        IFNULL(`ipid`.`screwing`, 1) AS `screwing`\n"
+                        + "    FROM\n"
+                        + "        `inv_purchase_invoice` `ipi`\n"
+                        + "        LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
+                        + "    WHERE\n"
+                        + "        ((`ipi`.`type` = 0) AND (`ipi`.`date` IS NOT NULL)) AND `ipid`.`item_id` = " + invItemId + " ");
+                if (date != null) {
+                    query.append(" AND IF ( '" ).append(dateStr).append(  "' IS NOT NULL , `ipi`.`date` <= '" ).append(dateStr).append(  "' ,true)");
+                }
+                if (invInventoryId != null) {
+                    query.append("  AND `ipi`.`inv_inventory_id` = \n").append(invInventoryId);
+                }
+                query.append("  UNION ALL SELECT \n"
+                        + "        0 AS `qtyin`,\n"
+                        + "        IFNULL(`ipid`.`quantity`, 0) AS `qtyout`,\n"
+                        + "        IFNULL(`ipid`.`screwing`, 1) AS `screwing`\n"
+                        + "    FROM\n"
+                        + "        `inv_purchase_invoice` `ipi`\n"
+                        + "        LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
+                        + "    WHERE\n"
+                        + "        ((`ipi`.`type` = 1) AND (`ipi`.`date` IS NOT NULL)) AND `ipid`.`item_id` = " + invItemId + " ");
+                if (date != null) {
+                    query.append("AND IF ( '" ).append(dateStr).append(  "' IS NOT NULL , `ipi`.`date` <= '" ).append(dateStr).append(  "' ,true) ");
+                }
+                if (invInventoryId != null) {
+                    query.append("  AND `ipi`.`inv_inventory_id` = \n").append(invInventoryId);
+                }
+            } else {
+                query.append(" SELECT \n"
+                        + "        0 AS `qtyin`,\n"
+                        + "        IFNULL(`iaod`.`quantity`, 0) AS `qtyout`,\n"
+                        + "        IFNULL(`iaod`.`screwing`, 1) AS `screwing`\n"
+                        + "    FROM\n"
+                        + "        `inv_addingorder` `iao`\n"
+                        + "        LEFT JOIN `inv_addingorder_detail` `iaod` ON `iao`.`id` = `iaod`.`addingorder_id`\n"
+                        + "    WHERE\n"
+                        + "         `iao`.`type` = 1  AND `iao`.`date` IS NOT NULL  AND `iaod`.`item_id` = " + invItemId + " ");
+                if (date != null) {
+                    query.append("AND IF ( '" ).append(dateStr).append(  "' IS NOT NULL , `iao`.`date` <= '" ).append(dateStr).append(  "' ,true)");
+                }
+                if (invInventoryId != null) {
+                    query.append("  AND `iao`.`inv_inventory_id` = \n").append(invInventoryId);
+                }
+                query.append(" UNION ALL SELECT \n"
+                        + "		IFNULL(`iaod`.`quantity`, 0) AS `qtyin`,\n"
+                        + "        0 AS `qtyout`,\n"
+                        + "        IFNULL(`iaod`.`screwing`, 1) AS `screwing`\n"
+                        + "    FROM\n"
+                        + "        `inv_addingorder` `iao`\n"
+                        + "        LEFT JOIN `inv_addingorder_detail` `iaod` ON `iao`.`id` = `iaod`.`addingorder_id`\n"
+                        + "    WHERE\n"
+                        + "    `iao`.`type` = 0  AND `iao`.`date` IS NOT NULL  AND `iaod`.`item_id` = " + invItemId + " ");
+                if (date != null) {
+                    query.append("AND IF ( '" ).append(dateStr).append(  "' IS NOT NULL , `iao`.`date` <= '" ).append(dateStr).append(  "' ,true)");
+                }
+                if (invInventoryId != null) {
+                    query.append("  AND `iao`.`inv_inventory_id` = \n").append(invInventoryId);
+                }
+            }
+
+            query.append(" UNION ALL SELECT \n"
+                    + "        0 AS `qtyin`,\n"
+                    + "        IFNULL(`ird`.`amount`, 0) AS `qtyout`,\n"
+                    + "        IFNULL(`ird`.`screwing`, 1) AS `screwing`\n"
+                    + "    FROM\n"
+                    + "        `inv_reservation` `ir`\n"
+                    + "        LEFT JOIN `inv_reservation_detail` `ird` ON `ir`.`id` = `ird`.`reservation_id`\n"
+                    + "    WHERE\n"
+                    + "        `ir`.`reservation_date` IS NOT NULL\n"
+                    + "            AND `ir`.`end_date` >= (NOW() - INTERVAL 1 DAY) AND `ird`.`item_id` = " + invItemId + "");
+            if (date != null) {
+                query.append(" AND IF ( '" ).append(dateStr).append(  "' IS NOT NULL , `ir`.`end_date` <= '" ).append(dateStr).append(  "' ,true)");
             }
             if (invInventoryId != null) {
-                query.append("  AND `ipi`.`inv_inventory_id` = \n").append(invInventoryId);
+                query.append("  AND `ir`.`inv_id` = \n").append(invInventoryId);
             }
-            query.append("  UNION ALL SELECT \n"
+            query.append(" UNION ALL SELECT \n"
                     + "        0 AS `qtyin`,\n"
                     + "        IFNULL(`ipid`.`quantity`, 0) AS `qtyout`,\n"
                     + "        IFNULL(`ipid`.`screwing`, 1) AS `screwing`\n"
@@ -396,160 +460,96 @@ public class QuantityItemsStoreServiceByDateImpl implements QuantityItemsStoreBy
                     + "        `inv_purchase_invoice` `ipi`\n"
                     + "        LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
                     + "    WHERE\n"
-                    + "        ((`ipi`.`type` = 1) AND (`ipi`.`date` IS NOT NULL)) AND `ipid`.`item_id` = " + invItemId + " ");
+                    + "        ((`ipi`.`type` = 2) AND (`ipi`.`date` IS NOT NULL)) AND `ipid`.`item_id` = " + invItemId + "");
             if (date != null) {
-                query.append("AND IF ( '" ).append(dateStr).append(  "' IS NOT NULL , `ipi`.`date` <= '" ).append(dateStr).append(  "' ,true) ");
-            }
-            if (invInventoryId != null) {
-                query.append("  AND `ipi`.`inv_inventory_id` = \n").append(invInventoryId);
-            }
-        } else {
-            query.append(" SELECT \n"
-                    + "        0 AS `qtyin`,\n"
-                    + "        IFNULL(`iaod`.`quantity`, 0) AS `qtyout`,\n"
-                    + "        IFNULL(`iaod`.`screwing`, 1) AS `screwing`\n"
-                    + "    FROM\n"
-                    + "        `inv_addingorder` `iao`\n"
-                    + "        LEFT JOIN `inv_addingorder_detail` `iaod` ON `iao`.`id` = `iaod`.`addingorder_id`\n"
-                    + "    WHERE\n"
-                    + "         `iao`.`type` = 1  AND `iao`.`date` IS NOT NULL  AND `iaod`.`item_id` = " + invItemId + " ");
-            if (date != null) {
-                query.append("AND IF ( '" ).append(dateStr).append(  "' IS NOT NULL , `iao`.`date` <= '" ).append(dateStr).append(  "' ,true)");
+                query.append(" AND IF ( '" ).append(dateStr).append(  "' IS NOT NULL , `ipi`.`date` <= '" ).append(dateStr).append(  "' ,true)");
             }
             if (invInventoryId != null) {
                 query.append("  AND `ipi`.`inv_inventory_id` = \n").append(invInventoryId);
             }
             query.append(" UNION ALL SELECT \n"
-                    + "		IFNULL(`iaod`.`quantity`, 0) AS `qtyin`,\n"
+                    + "        IFNULL(`ipid`.`quantity`, 0) AS `qtyin`,\n"
                     + "        0 AS `qtyout`,\n"
-                    + "        IFNULL(`iaod`.`screwing`, 1) AS `screwing`\n"
+                    + "        IFNULL(`ipid`.`screwing`, 1) AS `screwing`\n"
                     + "    FROM\n"
-                    + "        `inv_addingorder` `iao`\n"
-                    + "        LEFT JOIN `inv_addingorder_detail` `iaod` ON `iao`.`id` = `iaod`.`addingorder_id`\n"
+                    + "        `inv_purchase_invoice` `ipi`\n"
+                    + "        LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
                     + "    WHERE\n"
-                    + "    `iao`.`type` = 0  AND `iao`.`date` IS NOT NULL  AND `iaod`.`item_id` = " + invItemId + " ");
+                    + "        ((`ipi`.`type` = 3) AND (`ipi`.`date` IS NOT NULL)) AND `ipid`.`item_id` = " + invItemId + " ");
             if (date != null) {
-                query.append("AND IF ( '" ).append(dateStr).append(  "' IS NOT NULL , `iao`.`date` <= '" ).append(dateStr).append(  "' ,true)");
+                query.append(" AND IF ( '" ).append(dateStr).append(  "' IS NOT NULL , `ipi`.`date` <= '" ).append(dateStr).append(  "' ,true)");
             }
             if (invInventoryId != null) {
                 query.append("  AND `ipi`.`inv_inventory_id` = \n").append(invInventoryId);
             }
-        }
+            query.append(" UNION ALL SELECT \n"
+                    + "        0 AS `qtyin`,\n"
+                    + "        IFNULL(`itd`.`amount`, 0) AS `qtyout`,\n"
+                    + "        IFNULL(`itd`.`screwing`, 1) AS `screwing`\n"
+                    + "    FROM\n"
+                    + "        `inv_transfer` `it`\n"
+                    + "        LEFT JOIN `inv_transfer_detail` `itd` ON `it`.`id` = `itd`.`inv_transfer_id`\n"
+                    + "    WHERE\n"
+                    + "        ((`it`.`transfer_date` IS NOT NULL)\n"
+                    + "            AND (`it`.`transfer_type` = 0))  AND `itd`.`inv_item_id` = " + invItemId + " ");
+            if (date != null) {
+                query.append(" AND IF ( '" ).append(dateStr).append(  "' IS NOT NULL , `it`.`transfer_date` <= '" ).append(dateStr).append(  "' ,true)");
+            }
+            if (invInventoryId != null) {
+                query.append("  AND `it`.`inv_from` = \n").append(invInventoryId);
+            }
+            query.append(" UNION ALL SELECT \n"
+                    + "        IFNULL(`itd`.`amount`, 0) AS `qtyin`,\n"
+                    + "        0 AS `qtyout`,\n"
+                    + "        IFNULL(`itd`.`screwing`, 1) AS `screwing`\n"
+                    + "    FROM\n"
+                    + "        `inv_transfer` `it`\n"
+                    + "        LEFT JOIN `inv_transfer_detail` `itd` ON `it`.`id` = `itd`.`inv_transfer_id`\n"
+                    + "    WHERE\n"
+                    + "        ((`it`.`transfer_date` IS NOT NULL)\n"
+                    + "            AND (`it`.`transfer_type` = 0))  AND `itd`.`inv_item_id` = " + invItemId + " ");
+            if (date != null) {
+                query.append(" AND IF ( '" ).append(dateStr).append(  "' IS NOT NULL , `it`.`transfer_date` <= '" ).append(dateStr).append(  "' ,true)");
+            }
+            if (invInventoryId != null) {
+                query.append("  AND `it`.`inv_to` = \n").append(invInventoryId);
+            }
+            query.append(" UNION ALL SELECT \n"
+                    + "        `isd`.`difference` AS `qtyin`,\n"
+                    + "        0 AS `qtyout`,\n"
+                    + "        IFNULL(`isd`.`screwing`, 1) AS `screwing`\n"
+                    + "    FROM\n"
+                    + "        `inv_update` `is`\n"
+                    + "        LEFT JOIN `inv_update_detail` `isd` ON `is`.`id` = `isd`.`inv_update_id`\n"
+                    + "    WHERE\n"
+                    + "        (`is`.`date` IS NOT NULL) AND `isd`.`inv_item_id` = " + invItemId + " ");
+            if (date != null) {
+                query.append(" AND IF ( '" ).append(dateStr).append(  "' IS NOT NULL , `is`.`date` <= '" ).append(dateStr).append(  "' ,true)");
+            }
+            if (invInventoryId != null) {
+                query.append("  AND `is`.`inventory_id` = \n").append(invInventoryId);
+            }
+            query.append(" UNION ALL SELECT \n"
+                    + "        `iobid`.`quantity` AS `qtyin`,\n"
+                    + "        0 AS `qtyout`,\n"
+                    + "        IFNULL(`iobid`.`screwing`, 1) AS `screwing`\n"
+                    + "    FROM\n"
+                    + "        `inv_openning_balance_item` `iobi`\n"
+                    + "        LEFT JOIN `inv_openning_balance_item_detail` `iobid` ON `iobi`.`id` = `iobid`.`inv_openning_balance_item_id`\n"
+                    + "    WHERE\n"
+                    + "        (`iobi`.`date` IS NOT NULL) AND `iobid`.`item_id` = " + invItemId + " ");
+            if (date != null) {
+                query.append(" AND IF ( '" ).append(dateStr).append(  "' IS NOT NULL , `iobi`.`date` <= '" ).append(dateStr).append(  "' ,true)");
+            }
+            if (invInventoryId != null) {
+                query.append("  AND `iobi`.`inv_inventory_id` = \n").append(invInventoryId);
+            }
+            query.append(") as i");
 
-        query.append(" UNION ALL SELECT \n"
-                + "        0 AS `qtyin`,\n"
-                + "        IFNULL(`ird`.`amount`, 0) AS `qtyout`,\n"
-                + "        IFNULL(`ird`.`screwing`, 1) AS `screwing`\n"
-                + "    FROM\n"
-                + "        `inv_reservation` `ir`\n"
-                + "        LEFT JOIN `inv_reservation_detail` `ird` ON `ir`.`id` = `ird`.`reservation_id`\n"
-                + "    WHERE\n"
-                + "        `ir`.`reservation_date` IS NOT NULL\n"
-                + "            AND `ir`.`end_date` >= (NOW() - INTERVAL 1 DAY) AND `ird`.`item_id` = " + invItemId + "");
-        if (date != null) {
-            query.append(" AND IF ( '" ).append(dateStr).append(  "' IS NOT NULL , `ir`.`end_date` <= '" ).append(dateStr).append(  "' ,true)");
-        }
-        if (invInventoryId != null) {
-            query.append("  AND `ipi`.`inv_inventory_id` = \n").append(invInventoryId);
-        }
-        query.append(" UNION ALL SELECT \n"
-                + "        0 AS `qtyin`,\n"
-                + "        IFNULL(`ipid`.`quantity`, 0) AS `qtyout`,\n"
-                + "        IFNULL(`ipid`.`screwing`, 1) AS `screwing`\n"
-                + "    FROM\n"
-                + "        `inv_purchase_invoice` `ipi`\n"
-                + "        LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
-                + "    WHERE\n"
-                + "        ((`ipi`.`type` = 2) AND (`ipi`.`date` IS NOT NULL)) AND `ipid`.`item_id` = " + invItemId + "");
-        if (date != null) {
-            query.append(" AND IF ( '" ).append(dateStr).append(  "' IS NOT NULL , `ipi`.`date` <= '" ).append(dateStr).append(  "' ,true)");
-        }
-        if (invInventoryId != null) {
-            query.append("  AND `ipi`.`inv_inventory_id` = \n").append(invInventoryId);
-        }
-        query.append(" UNION ALL SELECT \n"
-                + "        IFNULL(`ipid`.`quantity`, 0) AS `qtyin`,\n"
-                + "        0 AS `qtyout`,\n"
-                + "        IFNULL(`ipid`.`screwing`, 1) AS `screwing`\n"
-                + "    FROM\n"
-                + "        `inv_purchase_invoice` `ipi`\n"
-                + "        LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
-                + "    WHERE\n"
-                + "        ((`ipi`.`type` = 3) AND (`ipi`.`date` IS NOT NULL)) AND `ipid`.`item_id` = " + invItemId + " ");
-        if (date != null) {
-            query.append(" AND IF ( '" ).append(dateStr).append(  "' IS NOT NULL , `ipi`.`date` <= '" ).append(dateStr).append(  "' ,true)");
-        }
-        if (invInventoryId != null) {
-            query.append("  AND `ipi`.`inv_inventory_id` = \n").append(invInventoryId);
-        }
-        query.append(" UNION ALL SELECT \n"
-                + "        0 AS `qtyin`,\n"
-                + "        IFNULL(`itd`.`amount`, 0) AS `qtyout`,\n"
-                + "        IFNULL(`itd`.`screwing`, 1) AS `screwing`\n"
-                + "    FROM\n"
-                + "        `inv_transfer` `it`\n"
-                + "        LEFT JOIN `inv_transfer_detail` `itd` ON `it`.`id` = `itd`.`inv_transfer_id`\n"
-                + "    WHERE\n"
-                + "        ((`it`.`transfer_date` IS NOT NULL)\n"
-                + "            AND (`it`.`transfer_type` = 0))  AND `itd`.`inv_item_id` = " + invItemId + " ");
-        if (date != null) {
-            query.append(" AND IF ( '" ).append(dateStr).append(  "' IS NOT NULL , `it`.`transfer_date` <= '" ).append(dateStr).append(  "' ,true)");
-        }
-        if (invInventoryId != null) {
-            query.append("  AND `ipi`.`inv_inventory_id` = \n").append(invInventoryId);
-        }
-        query.append(" UNION ALL SELECT \n"
-                + "        IFNULL(`itd`.`amount`, 0) AS `qtyin`,\n"
-                + "        0 AS `qtyout`,\n"
-                + "        IFNULL(`itd`.`screwing`, 1) AS `screwing`\n"
-                + "    FROM\n"
-                + "        `inv_transfer` `it`\n"
-                + "        LEFT JOIN `inv_transfer_detail` `itd` ON `it`.`id` = `itd`.`inv_transfer_id`\n"
-                + "    WHERE\n"
-                + "        ((`it`.`transfer_date` IS NOT NULL)\n"
-                + "            AND (`it`.`transfer_type` = 0))  AND `itd`.`inv_item_id` = " + invItemId + " ");
-        if (date != null) {
-            query.append(" AND IF ( '" ).append(dateStr).append(  "' IS NOT NULL , `it`.`transfer_date` <= '" ).append(dateStr).append(  "' ,true)");
-        }
-        if (invInventoryId != null) {
-            query.append("  AND `ipi`.`inv_inventory_id` = \n").append(invInventoryId);
-        }
-        query.append(" UNION ALL SELECT \n"
-                + "        `isd`.`difference` AS `qtyin`,\n"
-                + "        0 AS `qtyout`,\n"
-                + "        IFNULL(`isd`.`screwing`, 1) AS `screwing`\n"
-                + "    FROM\n"
-                + "        `inv_update` `is`\n"
-                + "        LEFT JOIN `inv_update_detail` `isd` ON `is`.`id` = `isd`.`inv_update_id`\n"
-                + "    WHERE\n"
-                + "        (`is`.`date` IS NOT NULL) AND `isd`.`inv_item_id` = " + invItemId + " ");
-        if (date != null) {
-            query.append(" AND IF ( '" ).append(dateStr).append(  "' IS NOT NULL , `is`.`date` <= '" ).append(dateStr).append(  "' ,true)");
-        }
-        if (invInventoryId != null) {
-            query.append("  AND `ipi`.`inv_inventory_id` = \n").append(invInventoryId);
-        }
-        query.append(" UNION ALL SELECT \n"
-                + "        `iobid`.`quantity` AS `qtyin`,\n"
-                + "        0 AS `qtyout`,\n"
-                + "        IFNULL(`iobid`.`screwing`, 1) AS `screwing`\n"
-                + "    FROM\n"
-                + "        `inv_openning_balance_item` `iobi`\n"
-                + "        LEFT JOIN `inv_openning_balance_item_detail` `iobid` ON `iobi`.`id` = `iobid`.`inv_openning_balance_item_id`\n"
-                + "    WHERE\n"
-                + "        (`iobi`.`date` IS NOT NULL) AND `iobid`.`item_id` = " + invItemId + " ");
-        if (date != null) {
-            query.append(" AND IF ( '" ).append(dateStr).append(  "' IS NOT NULL , `iobi`.`date` <= '" ).append(dateStr).append(  "' ,true)");
-        }
-        if (invInventoryId != null) {
-            query.append("  AND `ipi`.`inv_inventory_id` = \n").append(invInventoryId);
-        }
-        query.append(") as i");
+            List<BigDecimal> quantity = dao.executeNativeQuery(query.toString());
+            return (quantity != null && !quantity.isEmpty()) ? (quantity.get(0) != null ? quantity.get(0) : BigDecimal.ZERO) : BigDecimal.ZERO;
 
-        List<BigDecimal> quantity = dao.executeNativeQuery(query.toString());
-        return (quantity != null && !quantity.isEmpty()) ? (quantity.get(0) != null ? quantity.get(0) : BigDecimal.ZERO) : BigDecimal.ZERO;
-
-    }
+        }
 
     @Override
     public BigDecimal getQuantatyItemByinventoryRecalcCostAvarage(Integer invInventoryId, Integer invItemId, Boolean sellBuy, Date date) {
