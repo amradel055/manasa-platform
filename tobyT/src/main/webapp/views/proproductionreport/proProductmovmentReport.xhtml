@@ -67,7 +67,7 @@
                 <div class="ui-g-6 ui-xl-6">
                     <div class="ui-g-12 ui-xl-12">
                         <div class="ui-g-6 ui-xl-6">
-<p:calendar style="width: 50%"  id="dateFrom"
+                            <p:calendar style="width: 50%"  id="dateFrom"
                                         value="#{proProductmovmentReportMB.printProProductDTO.fromDate}"
                                         pattern="dd/MM/yyyy" 
                                         >
@@ -83,9 +83,9 @@
 
                         </div>
                     </div>
-                      <div class="ui-g-12 ui-xl-12">
+                    <div class="ui-g-12 ui-xl-12">
                         <div class="ui-g-6 ui-xl-6">
-<p:calendar style="width: 50%"  id="dateFrom1"
+                            <p:calendar style="width: 50%"  id="dateFrom1"
                                         value="#{proProductmovmentReportMB.printProProductDTO.toDate}"
                                         pattern="dd/MM/yyyy" 
                                         >
@@ -101,7 +101,7 @@
 
                         </div>
                     </div>
-                      <div class="ui-g-12 ui-xl-12">
+                    <div class="ui-g-12 ui-xl-12">
                         <div class="ui-g-6 ui-xl-6">
 
 
@@ -109,14 +109,21 @@
                         <div class="ui-g-6 ui-xl-6">
 
 
-                    <p:commandButton     class="saveButton" id="saveB" 
-                                         value="search" 
-                                         icon="fa fa-fw fa-save"
-                                         action="#{proProductmovmentReportMB.search()}"
-                                         update="detail messages"
-                                         >
+                            <p:commandButton     class="saveButton" id="saveB" 
+                                                 value="search" 
+                                                 icon="fa fa-fw fa-save"
+                                                 action="#{proProductmovmentReportMB.search()}"
+                                                 update="detail messages"
+                                                 >
 
-                    </p:commandButton>
+                            </p:commandButton>
+                            <h:commandLink  class="sdcreenimg">  
+                                <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                                <p:dataExporter type="xls"
+                                                target="costCenterDataTable" 
+                                                fileName="مراكز التكلفة"
+                                                postProcessor="#{proProductmovmentReportMB.postProcessXLS}" />  
+                            </h:commandLink> 
 
 
                         </div>

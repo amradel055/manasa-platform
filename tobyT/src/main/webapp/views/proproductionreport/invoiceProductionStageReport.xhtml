@@ -77,6 +77,13 @@
                                                      >
 
                                 </p:commandButton>
+                                <h:commandLink  class="sdcreenimg">  
+                                    <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                                    <p:dataExporter type="xls"
+                                                    target="costCenterDataTable" 
+                                                    fileName="مراكز التكلفة"
+                                                    postProcessor="#{invoiceProductionStagesReportMB.postProcessXLS}" />  
+                                </h:commandLink> 
 
 
                             </div>
@@ -131,7 +138,7 @@
                             <div class="ui-g-6 ui-xl-6">
 
                                 <p:calendar style="width: 50%"  id="dateFrom1"
-                                            
+
                                             pattern="dd/MM/yyyy"  showButtonPanel="true" >
 
                                 </p:calendar>
@@ -144,13 +151,13 @@
 
                             </div>
                         </div>
-                         <div class="ui-g-12 ui-xl-12" id="datepicker">
+                        <div class="ui-g-12 ui-xl-12" id="datepicker">
                             <div class="ui-g-6 ui-xl-6">
                                 <input id="pick-button" type="button" onclick="pickADate();"
                                        value="#{invoiceProductionStagesReportMB.printProductionDTO.toDate} pick" />
                                 <input id="picked-text" type="text" size="22"/>
 
-                               
+
                             </div>
                             <div class="ui-g-6 ui-xl-6">
 
@@ -188,7 +195,7 @@
 
                             </div>
                         </div>
-                       
+
                     </div>
 
 
