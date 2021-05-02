@@ -680,6 +680,7 @@
                                                        or userData.userScreens['clientsNoMovmentReport'].view 
                                                        or userData.userScreens['CompanyInvoicesWithoutSewingReport'].view 
                                                        or userData.userScreens['InvoicesIssuedWithinAperiod'].view 
+                                                       or userData.userScreens['ItemBalancesStatementReport'].view 
                                                        or userData.userScreens['SalesOfItemsByCompany'].view 
                                                          or userData.userScreens['supplierdata'].view 
                                                        or userData.userScreens['SalesOfItemsBySupplier'].view 
@@ -704,6 +705,9 @@
                                                 />
                                     <p:menuitem id="sr_lnk33331" value="الفواتير الصادرة خلال فترة " icon="&#xE8D2;" url="/faces/views/proproductionreport/InvoicesIssuedWithinAperiod.xhtml" 
                                                 rendered="#{userData.userScreens['InvoicesIssuedWithinAperiod'].view or   userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="sr_lnk33335" value="بيان ارصدة الأصناف" icon="&#xE8D2;" url="/faces/views/proproductionreport/ItemBalancesStatementReport.xhtml" 
+                                                rendered="#{userData.userScreens['ItemBalancesStatementReport'].view or   userData.isAdmin}"
                                                 />
                                     <p:menuitem id="sr_lnk4510" value="المبيعات حسب الشركات لفتره" icon="&#xE8D2;" url="/faces/views/inventoryreports/SalesOfItemsByCompany.xhtml"
                                                 rendered="#{userData.userScreens['SalesOfItemsByCompany'].view or userData.isAdmin}"
@@ -892,6 +896,7 @@
                                                    or userData.userScreens['clientsNoMovmentReport'].view
                                                    or userData.userScreens['CompanyInvoicesWithoutSewingReport'].view
                                                    or userData.userScreens['InvoicesIssuedWithinAperiod'].view
+                                                   or userData.userScreens['ItemBalancesStatementReport'].view
                                                    or userData.userScreens['ProProductionTransactionFactoryReport'].view
                                                    or userData.userScreens['ProProductionTransactionFactoryLastReport'].view
                                                    or userData.userScreens['SalesReportByValueAdedReport'].view
@@ -963,6 +968,7 @@
                                                        or userData.userScreens['clientsNoMovmentReport'].view
                                                        or userData.userScreens['CompanyInvoicesWithoutSewingReport'].view
                                                        or userData.userScreens['InvoicesIssuedWithinAperiod'].view
+                                                       or userData.userScreens['ItemBalancesStatementReport'].view
                                                        or userData.userScreens['ProProductionTransactionFactoryReport'].view
                                                        or userData.userScreens['ProProductionTransactionFactoryLastReport'].view
                                                        or userData.userScreens['SalesReportByValueAdedReport'].view

@@ -391,19 +391,21 @@ public class ReportsServiceImpl implements ReportsService {
                 + " from inv_purchase_invoice_detail ipid2 left join inv_purchase_invoice ipi2 \n"
                 + " on ipi2.id = ipid2.inv_purchase_invoice_id where ipid2.item_id = ii.id "
                 + "");
-//        if (itemBalancesStatement.getFromDate() != null) {
-//            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 23:59:59");
-//            sql.append(" and ipi2.date <  '").append(dateFormat.format(itemBalancesStatement.getFromDate())).append("' ");
-//        }
+        if (itemBalancesStatement.getFromDate() != null) {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 23:59:59");
+            sql.append(" and ipi2.date <  '").append(dateFormat.format(itemBalancesStatement.getFromDate())).append("' ");
+        }
         sql.append(" order by ipi2.id desc limit 1) as last_date,ii.max_price_men as sell_price , ii.cost_average as cost_average");
         sql.append(" from inv_item ii left join pro_group pg on pg.id = ii.pro_group_id "
                 + " ");
         sql.append("  where ii.branch_id = ").append(branchId);
         sql.append(" and pg.sort = 1 and ii.id not in (select item_id \n"
                 + " from inv_purchase_invoice_detail ipid \n"
-                + " left join inv_purchase_invoice ipi on ipi.id = ipid.inv_purchase_invoice_id)\n"
+                + " left join inv_purchase_invoice ipi on ipi.id = ipid.inv_purchase_invoice_id\n"
                 + " ");
+        sql.append("  where ii.branch_id = ").append(branchId);
         appendDate6(itemBalancesStatement, sql);
+        sql.append(" ) ");
         List<Object[]> res = dao.executeNativeQuery(sql.toString());
         for (Object[] object : res) {
             itemBalancesStatement = new ItemBalancesStatement();
@@ -504,7 +506,7 @@ public class ReportsServiceImpl implements ReportsService {
     private void appendDate6(ItemBalancesStatement itemBalancesStatement, StringBuilder query) {
         if (itemBalancesStatement.getDateFrom() != null) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
-            query.append(" ipi.date >=  '").append(dateFormat.format(itemBalancesStatement.getDateFrom())).append("' ");
+            query.append(" AND ipi.date >=  '").append(dateFormat.format(itemBalancesStatement.getDateFrom())).append("' ");
         }
         if (itemBalancesStatement.getDateTo() != null) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 23:59:59");
