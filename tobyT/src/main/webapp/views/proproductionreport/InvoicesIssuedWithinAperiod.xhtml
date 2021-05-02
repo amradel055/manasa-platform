@@ -70,6 +70,13 @@
                                          >
 
                     </p:commandButton>
+                    <h:commandLink  class="sdcreenimg">  
+                        <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                        <p:dataExporter type="xls"
+                                        target="table" 
+                                        fileName="الفواتير الصادرة خلال فترة "
+                                        postProcessor="#{invoicesIssuedWithinAperiodReport.postProcessXLS}" />  
+                    </h:commandLink> 
 
                 </div>
                 <p:fieldset  legend="البيانات"   style="margin-bottom:20px">
@@ -83,7 +90,7 @@
                                   rows="30"
                                   emptyMessage="EMPTY_TABLE"
                                   >
-                       
+
                         <p:column headerText="  رقم الفاتورة" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
                             <h:outputText value="#{data.invoiceNumber}" />
                         </p:column>

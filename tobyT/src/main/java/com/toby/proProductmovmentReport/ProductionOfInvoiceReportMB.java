@@ -24,6 +24,12 @@ import javax.faces.event.ActionEvent;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import net.sf.jasperreports.engine.JRException;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
 
 /**
  *
@@ -31,47 +37,54 @@ import net.sf.jasperreports.engine.JRException;
  */
 @Named(value = "productionOfInvoiceReportMB")
 @ViewScoped
-public class ProductionOfInvoiceReportMB extends BaseFormBean{
-   
-    
-      private PrintProductionDTO productionDTO;
+public class ProductionOfInvoiceReportMB extends BaseFormBean {
+
+    private PrintProductionDTO productionDTO;
     private List<ProProductionTransactionOfInvoice> proProductionTransactionOfInvoiceList;
     @EJB
-    private  ProProductionTransactionOfInvoiceService proProductionTransactionOfInvoiceService;
-    
-     
-     
-     
-     
-     
-     public void search(){
-      if(productionDTO.getFromInvoice()!=null){
-             
-            proProductionTransactionOfInvoiceList= proProductionTransactionOfInvoiceService.getProProductionTransactionOfInvoiceListOfPourchais(productionDTO.getFromInvoice().getSerial(), getUserData().getUser());
-     }else{
-        productionDTO.setMsg("ادخل الفاتوره " );
+    private ProProductionTransactionOfInvoiceService proProductionTransactionOfInvoiceService;
+
+    public void search() {
+        if (productionDTO.getFromInvoice() != null) {
+
+            proProductionTransactionOfInvoiceList = proProductionTransactionOfInvoiceService.getProProductionTransactionOfInvoiceListOfPourchais(productionDTO.getFromInvoice().getSerial(), getUserData().getUser());
+        } else {
+            productionDTO.setMsg("ادخل الفاتوره ");
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", productionDTO.getMsg()));
-        
-      
-      } 
-     }
-     
-     
-       public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {
+
+        }
+    }
+
+    public void postProcessXLS(Object document) {
+        HSSFWorkbook wb = (HSSFWorkbook) document;
+        HSSFSheet sheet = wb.getSheetAt(0);
+        HSSFRow header = sheet.getRow(0);
+
+        HSSFCellStyle cellStyle = wb.createCellStyle();
+        cellStyle.setFillForegroundColor(HSSFColor.GREEN.index);
+        cellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+
+        for (int i = 0; i < header.getPhysicalNumberOfCells(); i++) {
+            HSSFCell cell = header.getCell(i);
+
+            cell.setCellStyle(cellStyle);
+        }
+    }
+
+    public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {
         if (proProductionTransactionOfInvoiceList != null && !proProductionTransactionOfInvoiceList.isEmpty()) {
-                fillReport(prepareReport(), getUserData().getReportPath() + "productionOfInvoiceReport.jasper", proProductionTransactionOfInvoiceList, "pdf");
+            fillReport(prepareReport(), getUserData().getReportPath() + "productionOfInvoiceReport.jasper", proProductionTransactionOfInvoiceList, "pdf");
         } else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "لا توجد نتائج للطباعة"));
         }
     }
-    
 
     public HashMap prepareReport() {
         Map<String, String> userDDs = getUserData().getUserDDs();
         HashMap hashMap = new HashMap();
-        
-        hashMap.put("formInvoice",productionDTO.getFromInvoice().getId());
-      
+
+        hashMap.put("formInvoice", productionDTO.getFromInvoice().getId());
+
         hashMap.put("fromInvoiceText", "الفاتوره");
         hashMap.put("dateText", "التاريخ");
         hashMap.put("productionStagesIdText", "المرحله");
@@ -79,7 +92,7 @@ public class ProductionOfInvoiceReportMB extends BaseFormBean{
         hashMap.put("itemIdText", "الصنف");
         hashMap.put("itemNameText", "اسم الصنف");
         hashMap.put("numberExcuteText", "الكميه المنفذه");
-          hashMap.put("branchName", getUserData().getUserBranch().getNameAr());
+        hashMap.put("branchName", getUserData().getUserBranch().getNameAr());
         hashMap.put("PrintedBy", getUserData().getUser().getName());
         if (isFileExist(getUserData().getImageReportPath())) {
             hashMap.put("companyImage", getUserData().getImageReportPath());
@@ -88,21 +101,18 @@ public class ProductionOfInvoiceReportMB extends BaseFormBean{
         }
         return hashMap;
     }
-     
-     
+
     @Override
     public String save() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @PostConstruct
     @Override
     public void init() {
-  ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-        setUserData((UserData) context.getSessionMap().get("userLogInData")); 
-    
-    
-    
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        setUserData((UserData) context.getSessionMap().get("userLogInData"));
+
     }
 
     @Override
@@ -115,12 +125,11 @@ public class ProductionOfInvoiceReportMB extends BaseFormBean{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-  
     public PrintProductionDTO getProductionDTO() {
-        if(productionDTO ==null){
-            productionDTO =new PrintProductionDTO();
+        if (productionDTO == null) {
+            productionDTO = new PrintProductionDTO();
 //            productionDTO.setFromInvoice(new InvPurchaseInvoiceDTO1());
-        
+
         }
         return productionDTO;
     }
@@ -136,15 +145,13 @@ public class ProductionOfInvoiceReportMB extends BaseFormBean{
      * @return the proProductionTransactionOfInvoiceList
      */
     public List<ProProductionTransactionOfInvoice> getProProductionTransactionOfInvoiceList() {
-        
-        
-     
-        
+
         return proProductionTransactionOfInvoiceList;
     }
 
     /**
-     * @param proProductionTransactionOfInvoiceList the proProductionTransactionOfInvoiceList to set
+     * @param proProductionTransactionOfInvoiceList the
+     * proProductionTransactionOfInvoiceList to set
      */
     public void setProProductionTransactionOfInvoiceList(List<ProProductionTransactionOfInvoice> proProductionTransactionOfInvoiceList) {
         this.proProductionTransactionOfInvoiceList = proProductionTransactionOfInvoiceList;

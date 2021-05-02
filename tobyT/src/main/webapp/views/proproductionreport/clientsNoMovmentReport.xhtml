@@ -41,7 +41,7 @@
                             <div class="ui-g-6 ui-xl-6">
 
                                 <p:selectOneMenu  id="gallary_From" value="#{clientsNoMovmentMB.galleryList}"
-                                                 converter="#{clientsNoMovmentMB.gallaryDTOConverter}">
+                                                  converter="#{clientsNoMovmentMB.gallaryDTOConverter}">
                                     <f:selectItems value="#{clientsNoMovmentMB.gallaryList_1}" 
                                                    var="gallaryFrom"
                                                    itemLabel="#{gallaryFrom}"
@@ -75,6 +75,13 @@
                                              >
 
                         </p:commandButton>
+                        <h:commandLink  class="sdcreenimg">  
+                            <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                            <p:dataExporter type="xls"
+                                            target="table" 
+                                            fileName="عملاء ليس عليهم حركة من تاريخ"
+                                            postProcessor="#{clientsNoMovmentMB.postProcessXLS}" />  
+                        </h:commandLink> 
 
 
                     </div>
@@ -118,7 +125,7 @@
                                          onclick="form.target = '_blank'" ajax="false"
                                          value="#{userData.userDDs['PRINT']}"
                                          actionListener="#{clientsNoMovmentMB.exportPDF(actionEvent)}"/>
-                         <h:commandLink  style="float:left" class="sdcreenimg" >  
+                        <h:commandLink  style="float:left" class="sdcreenimg" >  
                             <p:graphicImage name="/img/excel.jpg" width="24" style='margin-right:25%;'/>  
                             <p:dataExporter type="xls"
                                             target="table" 

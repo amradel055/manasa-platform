@@ -76,6 +76,13 @@
                                                      >
 
                                 </p:commandButton>
+                                <h:commandLink  class="sdcreenimg">  
+                                    <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                                    <p:dataExporter type="xls"
+                                                    target="table" 
+                                                    fileName="الشاشة"
+                                                    postProcessor="#{printProductionTransaction.postProcessXLS}" />  
+                                </h:commandLink> 
 
 
                             </div>

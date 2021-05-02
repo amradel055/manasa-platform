@@ -32,6 +32,12 @@ import javax.faces.event.ActionEvent;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import net.sf.jasperreports.engine.JRException;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
 
 /**
  *
@@ -48,7 +54,7 @@ public class ProProductmovmentReportMB extends BaseFormBean {
     private List<InvPurchaseInvoiceDTO1> invPurchaseInvoiceDTOList;
     private InvPurchaseInvoiceDTOConverter invPurchaseInvoiceDTOConverter;
     @EJB
-   private InvPurchaseInvoiceService invPurchaseInvoiceService;
+    private InvPurchaseInvoiceService invPurchaseInvoiceService;
     @EJB
     private ProProductionMovementReportService proProductionMovementReportService;
     @EJB
@@ -68,13 +74,14 @@ public class ProProductmovmentReportMB extends BaseFormBean {
         setUserData((UserData) context.getSessionMap().get("userLogInData"));
         getProProductMovementDetailDTOList();
         proProductionMovementReportList = new ArrayList<>();
-        ProProductMovementDetailDTOList=new ArrayList<>();
+        ProProductMovementDetailDTOList = new ArrayList<>();
         getInvPurchaseInvoiceDTOList();
     }
-     public  List<InvPurchaseInvoiceDTO1> completeInvpurchaseInvoice(String query){
-     
-     return AutoComplete.completeInvpurchaseInvoice(query, invPurchaseInvoiceDTOList, invPurchaseInvoiceDTOConverter);
-     }
+
+    public List<InvPurchaseInvoiceDTO1> completeInvpurchaseInvoice(String query) {
+
+        return AutoComplete.completeInvpurchaseInvoice(query, invPurchaseInvoiceDTOList, invPurchaseInvoiceDTOConverter);
+    }
 
     @Override
     public void load() {
@@ -82,31 +89,46 @@ public class ProProductmovmentReportMB extends BaseFormBean {
     }
 
     public void search() {
-          if((printProProductDTO.getFromInvoice()!=null&&printProProductDTO.getToInvoice()!=null)
-                ||(printProProductDTO.getFromDate()!=null&&printProProductDTO.getToDate()!=null)){
+        if ((printProProductDTO.getFromInvoice() != null && printProProductDTO.getToInvoice() != null)
+                || (printProProductDTO.getFromDate() != null && printProProductDTO.getToDate() != null)) {
 
-        proProductionMovementReportList = proProductionMovementReportService.getProProductionMovementReportList(printProProductDTO,getUserData().getUser());
-          }else{
-          
-             printProProductDTO.setMsg("ادخل من فاتوره الي فاتوره او من تاريخ الي تاريخ " );
+            proProductionMovementReportList = proProductionMovementReportService.getProProductionMovementReportList(printProProductDTO, getUserData().getUser());
+        } else {
+
+            printProProductDTO.setMsg("ادخل من فاتوره الي فاتوره او من تاريخ الي تاريخ ");
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", printProProductDTO.getMsg()));
-        
-          }
+
+        }
     }
-    
+
+    public void postProcessXLS(Object document) {
+        HSSFWorkbook wb = (HSSFWorkbook) document;
+        HSSFSheet sheet = wb.getSheetAt(0);
+        HSSFRow header = sheet.getRow(0);
+
+        HSSFCellStyle cellStyle = wb.createCellStyle();
+        cellStyle.setFillForegroundColor(HSSFColor.GREEN.index);
+        cellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+
+        for (int i = 0; i < header.getPhysicalNumberOfCells(); i++) {
+            HSSFCell cell = header.getCell(i);
+
+            cell.setCellStyle(cellStyle);
+        }
+    }
+
     public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {
         if (proProductionMovementReportList != null && !proProductionMovementReportList.isEmpty()) {
-                fillReport(prepareReport(), getUserData().getReportPath() + "productionUserReport.jasper", proProductionMovementReportList, "pdf");
+            fillReport(prepareReport(), getUserData().getReportPath() + "productionUserReport.jasper", proProductionMovementReportList, "pdf");
         } else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "لا توجد نتائج للطباعة"));
         }
     }
-    
 
     public HashMap prepareReport() {
         Map<String, String> userDDs = getUserData().getUserDDs();
         HashMap hashMap = new HashMap();
-        
+
         hashMap.put("fromInvoice", printProProductDTO.getFromInvoice().getSerial());
         hashMap.put("toInvoice", printProProductDTO.getToInvoice().getSerial());
         hashMap.put("toDate", printProProductDTO.getToDate());
@@ -172,7 +194,7 @@ public class ProProductmovmentReportMB extends BaseFormBean {
      * @return the printProProductDTO
      */
     public PrintProProductDTO getPrintProProductDTO() {
-        if(printProProductDTO == null){
+        if (printProProductDTO == null) {
             printProProductDTO = new PrintProProductDTO();
         }
         return printProProductDTO;
@@ -204,11 +226,11 @@ public class ProProductmovmentReportMB extends BaseFormBean {
      * @return the invPurchaseInvoiceDTOList
      */
     public List<InvPurchaseInvoiceDTO1> getInvPurchaseInvoiceDTOList() {
-      if(invPurchaseInvoiceDTOList==null||invPurchaseInvoiceDTOList.isEmpty()){
-       invPurchaseInvoiceDTOList=invPurchaseInvoiceService.findInvPurchaseInvoiceDTOList(getUserData().getUser());
+        if (invPurchaseInvoiceDTOList == null || invPurchaseInvoiceDTOList.isEmpty()) {
+            invPurchaseInvoiceDTOList = invPurchaseInvoiceService.findInvPurchaseInvoiceDTOList(getUserData().getUser());
 //          setInvPurchaseInvoiceDTOConverter(new InvPurchaseInvoiceDTOConverter(invPurchaseInvoiceDTOList));
-      }
-        
+        }
+
         return invPurchaseInvoiceDTOList;
     }
 
@@ -227,7 +249,8 @@ public class ProProductmovmentReportMB extends BaseFormBean {
     }
 
     /**
-     * @param invPurchaseInvoiceDTOConverter the invPurchaseInvoiceDTOConverter to set
+     * @param invPurchaseInvoiceDTOConverter the invPurchaseInvoiceDTOConverter
+     * to set
      */
     public void setInvPurchaseInvoiceDTOConverter(InvPurchaseInvoiceDTOConverter invPurchaseInvoiceDTOConverter) {
         this.invPurchaseInvoiceDTOConverter = invPurchaseInvoiceDTOConverter;

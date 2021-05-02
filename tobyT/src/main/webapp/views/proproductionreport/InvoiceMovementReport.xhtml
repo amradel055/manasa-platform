@@ -103,7 +103,7 @@
                             <div class="ui-g-6 ui-xl-6">
 
                                 <p:selectOneMenu  id="gallary_From" value="#{invoiceMovementReportMB.printProductionDTO.gallaryFrom}"
-                                                 converter="#{invoiceMovementReportMB.gallaryDTOConverter}">
+                                                  converter="#{invoiceMovementReportMB.gallaryDTOConverter}">
                                     <f:selectItems value="#{invoiceMovementReportMB.gallaryList}" 
                                                    var="gallaryFrom"
                                                    itemLabel="#{gallaryFrom}"
@@ -123,7 +123,7 @@
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
                                 <p:selectOneMenu  id="gallary_To" value="#{invoiceMovementReportMB.printProductionDTO.gallaryTo}"
-                                                 converter="#{invoiceMovementReportMB.gallaryDTOConverter}">
+                                                  converter="#{invoiceMovementReportMB.gallaryDTOConverter}">
                                     <f:selectItems value="#{invoiceMovementReportMB.gallaryList}" 
                                                    var="gallaryTo"
                                                    itemLabel="#{gallaryTo}"
@@ -158,6 +158,13 @@
                                              >
 
                         </p:commandButton>
+                        <h:commandLink  class="sdcreenimg">  
+                            <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                            <p:dataExporter type="xls"
+                                            target="table" 
+                                            fileName=" الشاشة"
+                                            postProcessor="#{invoiceMovementReportMB.postProcessXLS}" />  
+                        </h:commandLink> 
 
 
                     </div>
