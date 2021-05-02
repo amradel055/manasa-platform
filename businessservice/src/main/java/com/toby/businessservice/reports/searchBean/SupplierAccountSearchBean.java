@@ -24,6 +24,7 @@ public class SupplierAccountSearchBean {
     private Boolean showReport;
     private InvOrganizationSiteDTO fromorganizationNameDTO;
     private InvOrganizationSiteDTO toorganizationNameDTO;
+    private String dateTest;
 
     public Integer getBranchId() {
         return branchId;
@@ -137,5 +138,19 @@ public class SupplierAccountSearchBean {
      */
     public void setToorganizationNameDTO(InvOrganizationSiteDTO toorganizationNameDTO) {
         this.toorganizationNameDTO = toorganizationNameDTO;
+    }
+
+    /**
+     * @return the dateTest
+     */
+    public String getDateTest() {
+        return dateTest;
+    }
+
+    /**
+     * @param dateTest the dateTest to set
+     */
+    public void setDateTest(String dateTest) {
+        this.dateTest = dateTest;
     }
 }
