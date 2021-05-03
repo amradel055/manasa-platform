@@ -328,8 +328,10 @@ public class OrganizationSiteFormMB extends BaseFormBean implements Serializable
     }
 
     public List<OfferCompanyDTO> completeOfferCompany(String query) {
-        offerCompanyDTOList = offerCompanyService.getALLGlofferCompanyByBranchId(getUserData().getUserBranch().getId(), getUserData().getUser());
-        setOfferCompanyDTOConverter(new OfferCompanyDTOConverter(offerCompanyDTOList));
+        if (offerCompanyDTOList == null || offerCompanyDTOList.isEmpty()) {
+            offerCompanyDTOList = offerCompanyService.getALLGlofferCompanyByBranchId(getUserData().getUserBranch().getId(), getUserData().getUser());
+            setOfferCompanyDTOConverter(new OfferCompanyDTOConverter(offerCompanyDTOList));
+        }
         return offerCompanyDTOList;
     }
 
@@ -644,15 +646,14 @@ public class OrganizationSiteFormMB extends BaseFormBean implements Serializable
             invOrganizationSiteEntity.setSalesPerson(invOrganizationSite.getDelegatorId());
 
             invOrganizationSiteEntity.setParent(invOrganizationSite.getParent());
-            
-            if(invOrganizationSite.getOfferCompanyId() != null){
+
+            if (invOrganizationSite.getOfferCompanyId() != null) {
                 OfferCompanyDTO offerCompanyDTO = new OfferCompanyDTO();
                 offerCompanyDTO.setId(invOrganizationSite.getOfferCompanyId().getId());
                 offerCompanyDTO.setName(invOrganizationSite.getOfferCompanyId().getName());
                 offerCompanyDTO.setDiscount(invOrganizationSite.getOfferCompanyId().getDiscount());
                 invOrganizationSiteEntity.setOfferCompanyDTO(offerCompanyDTO);
             }
-            
 
             if (invOrganizationSite.getCode() != null) {
                 invOrganizationSiteEntity.setCode(invOrganizationSite.getCode());
@@ -771,8 +772,8 @@ public class OrganizationSiteFormMB extends BaseFormBean implements Serializable
             invOrganizationSite.setSupplierType(invOrganizationSiteEntity.getSupplierType());
 
             invOrganizationSite.setDelegatorId(invOrganizationSiteEntity.getSalesPerson());
-            
-            if(invOrganizationSiteEntity.getOfferCompanyDTO() != null){
+
+            if (invOrganizationSiteEntity.getOfferCompanyDTO() != null) {
                 OfferCompany offerCompany = new OfferCompany();
                 offerCompany.setId(invOrganizationSiteEntity.getOfferCompanyDTO().getId());
                 invOrganizationSite.setOfferCompanyId(offerCompany);
@@ -1467,6 +1468,12 @@ public class OrganizationSiteFormMB extends BaseFormBean implements Serializable
      * @return the offerCompanyDTOList
      */
     public List<OfferCompanyDTO> getOfferCompanyDTOList() {
+
+        if (offerCompanyDTOList == null || offerCompanyDTOList.isEmpty()) {
+            offerCompanyDTOList = offerCompanyService.getALLGlofferCompanyByBranchId(getUserData().getUserBranch().getId(), getUserData().getUser());
+            setOfferCompanyDTOConverter(new OfferCompanyDTOConverter(offerCompanyDTOList));
+        }
+
         return offerCompanyDTOList;
     }
 

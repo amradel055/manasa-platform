@@ -32,9 +32,9 @@
                         </div>
 
                         <div class="ui-g-12 ui-md-12">
-                            
+
                             <p:accordionPanel >
-          <p:ajax event="tabChange" listener="#{accordionBean.onTabChange}" update=""/>
+                                <p:ajax event="tabChange" listener="#{accordionBean.onTabChange}" update=""/>
                                 <p:tab title="بيانات أساسية *"  >
 
                                     <div class="ui-g-6 ui-xl-6">
@@ -306,23 +306,20 @@
                                 <p:tab title="المسئولين">
                                     <div class="ui-g-6 ui-xl-6">
                                         <div class="ui-g-12 ui-xl-12">
-
                                             <div class="ui-g-6 ui-xl-6">
-                                                <p:autoComplete style="width:40%" 
-                                                                dropdown="true"
-                                                                converter="#{organizationSiteFormMB.offerCompanyDTOConverter}"
-                                                                value="#{organizationSiteFormMB.invOrganizationSiteEntity.offerCompanyDTO}"
-
-                                                                var="offerCompanyDTO"
-                                                                itemLabel="#{offerCompanyDTO}" 
-                                                                itemValue="#{offerCompanyDTO}" 
-                                                                forceSelection="true" 
-                                                                completeMethod="#{organizationSiteFormMB.completeOfferCompany}" >
-                                                </p:autoComplete>
+                                                <p:selectOneMenu  id="offerCompanyDTO" value="#{organizationSiteFormMB.invOrganizationSiteEntity.offerCompanyDTO}"
+                                                                  converter="#{organizationSiteFormMB.offerCompanyDTOConverter}">
+                                                    <f:selectItem itemLabel="Select One" itemValue=""/>
+                                                    <f:selectItems value="#{organizationSiteFormMB.offerCompanyDTOList}" 
+                                                                   var="offerCompanyDTO"
+                                                                   itemLabel="#{offerCompanyDTO}"
+                                                                   itemValue="#{offerCompanyDTO}" />
+                                                </p:selectOneMenu>
                                             </div>
                                             <div class="ui-g-6 ui-xl-6">
-                                                <p:outputLabel style="width: 110px;" value="الشركة التابع لها"
-                                                               rendered="#{organizationSiteFormMB.customer}"/>
+
+                                                <p:outputLabel style="width: 50px;margin-right: 1%" value=" الشركة التابع لها"/>
+
                                             </div>
                                         </div>
                                     </div>

@@ -51,10 +51,16 @@ public class SummitionItemReportMB extends Basic {
             itemsViewList = invPurchaseInvoiceService_1.findSummitionQuantity(getGallaryDTOSelected() == null ? null : getGallaryDTOSelected().getId(), getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId());
         }
     }
-    
-    
-    
-     public void postProcessXLS(Object document) {
+
+    public void convertDateFrom() {
+        setDateFrom(findDateFromHijriFrom());
+    }
+
+    public void convertDateTo() {
+        setDateTo(findDateFromHijriTo());
+    }
+
+    public void postProcessXLS(Object document) {
         HSSFWorkbook wb = (HSSFWorkbook) document;
         HSSFSheet sheet = wb.getSheetAt(0);
         HSSFRow header = sheet.getRow(0);
@@ -72,13 +78,12 @@ public class SummitionItemReportMB extends Basic {
 
     public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {
         if (itemsViewList != null && !itemsViewList.isEmpty()) {
-            if(getUri().contains("summitionItemReportPro")){
-            fillReport(prepareReport(), getUserData().getReportPath() + "summitionItemReportPro.jasper", itemsViewList, "pdf");
-            }else {
-            fillReport(prepareReport(), getUserData().getReportPath() + "summitionItem.jasper", itemsViewList, "pdf");
+            if (getUri().contains("summitionItemReportPro")) {
+                fillReport(prepareReport(), getUserData().getReportPath() + "summitionItemReportPro.jasper", itemsViewList, "pdf");
+            } else {
+                fillReport(prepareReport(), getUserData().getReportPath() + "summitionItem.jasper", itemsViewList, "pdf");
             }
-                
-        
+
         } else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "لا توجد نتائج للطباعة"));
         }

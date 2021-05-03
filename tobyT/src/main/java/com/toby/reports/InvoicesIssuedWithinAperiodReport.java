@@ -31,8 +31,16 @@ public class InvoicesIssuedWithinAperiodReport extends Basic {
     public void search() {
         setIssuedWithinAperiodList(reportsService.getInvoiceWithinAperiod(issuedWithinAperiod, getUserData().getUserBranch().getId()));
     }
-    
-     public void postProcessXLS(Object document) {
+
+    public void convertDateFrom() {
+        getIssuedWithinAperiod().setDateFrom(findDateFromHijriFrom());
+    }
+
+    public void convertDateTo() {
+        getIssuedWithinAperiod().setDateTo(findDateFromHijriTo());
+    }
+
+    public void postProcessXLS(Object document) {
         HSSFWorkbook wb = (HSSFWorkbook) document;
         HSSFSheet sheet = wb.getSheetAt(0);
         HSSFRow header = sheet.getRow(0);

@@ -101,6 +101,14 @@ public class ProProductmovmentReportMB extends BaseFormBean {
         }
     }
 
+    public void convertDateFrom() {
+        getPrintProProductDTO().setFromDate(findDateFromHijriFrom());
+    }
+
+    public void convertDateTo() {
+       getPrintProProductDTO().setToDate(findDateFromHijriTo());
+    }
+
     public void postProcessXLS(Object document) {
         HSSFWorkbook wb = (HSSFWorkbook) document;
         HSSFSheet sheet = wb.getSheetAt(0);
