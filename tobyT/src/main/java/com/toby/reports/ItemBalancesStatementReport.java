@@ -32,6 +32,14 @@ public class ItemBalancesStatementReport extends Basic {
         setItemBalancesStatementList(reportsService.getItemBalancesStatement(itemBalancesStatement, getUserData().getUserBranch().getId()));
     }
 
+    public void convertDateFrom() {
+        getItemBalancesStatement().setDateFrom(findDateFromHijriFrom());
+    }
+
+    public void convertDateTo() {
+        getItemBalancesStatement().setDateTo(findDateFromHijriTo());
+    }
+
     public void postProcessXLS(Object document) {
         HSSFWorkbook wb = (HSSFWorkbook) document;
         HSSFSheet sheet = wb.getSheetAt(0);

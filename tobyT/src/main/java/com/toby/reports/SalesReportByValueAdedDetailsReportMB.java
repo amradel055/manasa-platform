@@ -31,13 +31,21 @@ public class SalesReportByValueAdedDetailsReportMB extends Basic {
     public void search() {
         setSalesReportByValueAdedDetailsList(reportsService.getSalesReportByValueAdedDetails(salesReportByValueAdedDetails, getUserData().getUserBranch().getId()));
     }
-    
-     public void postProcessXLS(Object document) {
+
+    public void convertDateFrom() {
+        getSalesReportByValueAdedDetails().setDateFrom(findDateFromHijriFrom());
+    }
+
+    public void convertDateTo() {
+        getSalesReportByValueAdedDetails().setDateTo(findDateFromHijriTo());
+    }
+
+    public void postProcessXLS(Object document) {
         HSSFWorkbook wb = (HSSFWorkbook) document;
         HSSFSheet sheet = wb.getSheetAt(0);
-         HSSFRow header = sheet.getRow(0);
+        HSSFRow header = sheet.getRow(0);
 
-         HSSFCellStyle cellStyle = wb.createCellStyle();
+        HSSFCellStyle cellStyle = wb.createCellStyle();
         cellStyle.setFillForegroundColor(HSSFColor.GREEN.index);
         cellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
 

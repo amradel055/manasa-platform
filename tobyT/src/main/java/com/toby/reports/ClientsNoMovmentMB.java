@@ -42,13 +42,19 @@ public class ClientsNoMovmentMB extends Basic {
 
         setClientsNoMovmentsList(invPurchaseInvoiceService.findClientsNoMovment(getUserData().getUserBranch().getId(), getGalleryList() == null ? null : getGalleryList().getId(), date, 4));
     }
+
+    public void convertDate() {
+        setDate(findDateFromHijriFrom());
+    }
+
     
-      public void postProcessXLS(Object document) {
+
+    public void postProcessXLS(Object document) {
         HSSFWorkbook wb = (HSSFWorkbook) document;
         HSSFSheet sheet = wb.getSheetAt(0);
-         HSSFRow header = sheet.getRow(0);
+        HSSFRow header = sheet.getRow(0);
 
-         HSSFCellStyle cellStyle = wb.createCellStyle();
+        HSSFCellStyle cellStyle = wb.createCellStyle();
         cellStyle.setFillForegroundColor(HSSFColor.GREEN.index);
         cellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
 

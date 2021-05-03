@@ -93,6 +93,14 @@ public class ProductionTransactionOfUserMB extends BaseFormBean {
         //  }
     }
 
+    public void convertDateFrom() {
+        getPrintProductionDTO().setFromDate(findDateFromHijriFrom());
+    }
+
+    public void convertDateTo() {
+        getPrintProductionDTO().setToDate(findDateFromHijriTo());
+    }
+
     public void postProcessXLS(Object document) {
         HSSFWorkbook wb = (HSSFWorkbook) document;
         HSSFSheet sheet = wb.getSheetAt(0);

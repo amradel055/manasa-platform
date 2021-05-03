@@ -39,12 +39,12 @@
                                 <p:inputText value="#{factoryInvoiceStatusReportMB.dayHijriFrom}" /> يوم
                                 <p:inputText value="#{factoryInvoiceStatusReportMB.monthHijriFrom}" />  شهر
                                 <p:inputText value="#{factoryInvoiceStatusReportMB.yearHijriFrom}" />  سنة
-                           <p:commandButton     class="saveButton" id="excuteFrom" 
-                                             value="تنفيذ" 
-                                             icon="fa fa-fw fa-save"
-                                             action="#{factoryInvoiceStatusReportMB.convertDateFrom()}"
-                                             update="dateFrom"
-                                             />
+                                <p:commandButton     class="saveButton" id="excuteFrom" 
+                                                     value="تنفيذ" 
+                                                     icon="fa fa-fw fa-save"
+                                                     action="#{factoryInvoiceStatusReportMB.convertDateFrom()}"
+                                                     update="dateFrom"
+                                                     />
                             </div>
                             <div class="ui-g-6 ui-xl-6">
                                 <p:outputLabel style="width: 50px"  value="من تاريخ هجري" />
@@ -67,23 +67,24 @@
 
                             </div>
                         </div>
-                        
+
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
                                 <p:inputText value="#{factoryInvoiceStatusReportMB.dayHijriTo}" /> يوم
                                 <p:inputText value="#{factoryInvoiceStatusReportMB.monthHijriTo}" />  شهر
                                 <p:inputText value="#{factoryInvoiceStatusReportMB.yearHijriTo}" />  سنة
-                           <p:commandButton     class="saveButton" id="excuteTo" 
-                                             value="تنفيذ" 
-                                             icon="fa fa-fw fa-save"
-                                             action="#{factoryInvoiceStatusReportMB.convertDateTo()}"
-                                             update="dateFrom1"
-                                             />
+                                <p:commandButton     class="saveButton" id="excuteTo" 
+                                                     value="تنفيذ" 
+                                                     icon="fa fa-fw fa-save"
+                                                     action="#{factoryInvoiceStatusReportMB.convertDateTo()}"
+                                                     update="dateFrom1"
+                                                     />
                             </div>
                             <div class="ui-g-6 ui-xl-6">
                                 <p:outputLabel style="width: 50px"  value="إلى تاريخ هجري" />
                             </div>
                         </div>
+                        
                     </div>
                     <div class="ui-g-6 ui-xl-6">
                         <div class="ui-g-12 ui-xl-12">

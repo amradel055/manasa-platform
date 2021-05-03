@@ -92,7 +92,15 @@ public class InvoiceMovementReportMB extends BaseListBean {
 //
 //        }
     }
-    
+
+    public void convertDateFrom() {
+        getPrintProductionDTO().setFromDate(findDateFromHijriFrom());
+    }
+
+    public void convertDateTo() {
+        getPrintProductionDTO().setToDate(findDateFromHijriTo());
+    }
+
     public void postProcessXLS(Object document) {
         HSSFWorkbook wb = (HSSFWorkbook) document;
         HSSFSheet sheet = wb.getSheetAt(0);
@@ -276,7 +284,7 @@ public class InvoiceMovementReportMB extends BaseListBean {
      * @return the gallaryList
      */
     public List<InvInventoryDTO> getGallaryList() {
-        
+
         if (gallaryList == null || gallaryList.isEmpty()) {
             gallaryList = tobyUserInventoryService.getAllGallaryByUserAndBranch(getUserData().getUser());
             setGallaryDTOConverter(new InvInventoryDTOConverter(gallaryList));

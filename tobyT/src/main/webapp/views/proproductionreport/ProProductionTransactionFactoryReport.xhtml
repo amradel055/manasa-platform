@@ -19,7 +19,7 @@
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
 
-                                <p:calendar style="width: 50%"  id="dateFrom"
+                                <p:calendar style="width: 50%"  id="date1"
                                             value="#{proProductionTransactionFactoryMB.proProductionTransactionFactoryView.date}"
                                             pattern="dd/MM/yyyy"  showButtonPanel="true" >
 
@@ -31,6 +31,23 @@
 
 
 
+                            </div>
+                        </div>
+                        
+                         <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:inputText value="#{proProductionTransactionFactoryMB.dayHijriTo}" /> يوم
+                                <p:inputText value="#{proProductionTransactionFactoryMB.monthHijriTo}" />  شهر
+                                <p:inputText value="#{proProductionTransactionFactoryMB.yearHijriTo}" />  سنة
+                                <p:commandButton     class="saveButton" id="excuteTo" 
+                                                     value="تنفيذ" 
+                                                     icon="fa fa-fw fa-save"
+                                                     action="#{proProductionTransactionFactoryMB.convertDate()}"
+                                                     update="date1"
+                                                     />
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 50px"  value=" تاريخ هجري" />
                             </div>
                         </div>
                         <div class="ui-g-12 ui-xl-12">
