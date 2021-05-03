@@ -239,4 +239,18 @@ public class ProProductionItemsTransactionDTO extends BaseEntityDTO {
     public void setOrderDate(Date OrderDate) {
         this.OrderDate = OrderDate;
     }
+
+    /**
+     * @return the serial
+     */
+    public Integer getSerial() {
+        return serial;
+    }
+
+    /**
+     * @param serial the serial to set
+     */
+    public void setSerial(Integer serial) {
+        this.serial = serial;
+    }
 }
