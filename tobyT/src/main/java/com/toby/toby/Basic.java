@@ -21,6 +21,10 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.time.LocalDate;
+import java.time.chrono.HijrahChronology;
+import java.time.chrono.HijrahDate;
+import java.time.chrono.IsoChronology;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -66,18 +70,36 @@ public class Basic implements Serializable {
 
     private SendEmailSMTP sendEmailSMTP;
 
-    InetAddress ip;   
+    InetAddress ip;
 
     private String errorGlobal;
 
     private String uri;
-    
+
     private ExternalContext context;
-    
+
     private UserData userData;
-    
+
     private String ScreenMode;
-    
+
+    private Integer dayHijriFrom;
+    private Integer monthHijriFrom;
+    private Integer yearHijriFrom;
+    private Integer dayHijriTo;
+    private Integer monthHijriTo;
+    private Integer yearHijriTo;
+
+    public Date findDateFromHijriFrom() {
+        HijrahDate date = HijrahChronology.INSTANCE.date(getYearHijriFrom(), getMonthHijriFrom(), getDayHijriFrom());
+        LocalDate dateFrom = IsoChronology.INSTANCE.date(date);
+        return java.sql.Date.valueOf(dateFrom);
+    }
+
+    public Date findDateFromHijriTo() {
+        HijrahDate date = HijrahChronology.INSTANCE.date(getYearHijriTo(), getMonthHijriTo(), getDayHijriTo());
+        LocalDate dateFrom = IsoChronology.INSTANCE.date(date);
+        return java.sql.Date.valueOf(dateFrom);
+    }
 
     public void saveError(Exception e, String className, String methodName) {
         getTobyErrorDTO().setClassName(className);
@@ -219,8 +241,6 @@ public class Basic implements Serializable {
         }
 
     }
-    
-    
 
     /**
      * @return the branch
@@ -310,6 +330,7 @@ public class Basic implements Serializable {
     public void setFindClientData(FindClientData findClientData) {
         this.findClientData = findClientData;
     }
+
     /**
      * @return the errorGlobal
      */
@@ -327,8 +348,6 @@ public class Basic implements Serializable {
         context.getSessionMap().put("errorGlobal", errorGlobal);
         this.errorGlobal = errorGlobal;
     }
-    
-    
 
     /**
      * @return the uri
@@ -391,4 +410,89 @@ public class Basic implements Serializable {
     public void setScreenMode(String ScreenMode) {
         this.ScreenMode = ScreenMode;
     }
+
+    /**
+     * @return the dayHijriFrom
+     */
+    public Integer getDayHijriFrom() {
+        return dayHijriFrom;
+    }
+
+    /**
+     * @param dayHijriFrom the dayHijriFrom to set
+     */
+    public void setDayHijriFrom(Integer dayHijriFrom) {
+        this.dayHijriFrom = dayHijriFrom;
+    }
+
+    /**
+     * @return the monthHijriFrom
+     */
+    public Integer getMonthHijriFrom() {
+        return monthHijriFrom;
+    }
+
+    /**
+     * @param monthHijriFrom the monthHijriFrom to set
+     */
+    public void setMonthHijriFrom(Integer monthHijriFrom) {
+        this.monthHijriFrom = monthHijriFrom;
+    }
+
+    /**
+     * @return the yearHijriFrom
+     */
+    public Integer getYearHijriFrom() {
+        return yearHijriFrom;
+    }
+
+    /**
+     * @param yearHijriFrom the yearHijriFrom to set
+     */
+    public void setYearHijriFrom(Integer yearHijriFrom) {
+        this.yearHijriFrom = yearHijriFrom;
+    }
+
+    /**
+     * @return the dayHijriTo
+     */
+    public Integer getDayHijriTo() {
+        return dayHijriTo;
+    }
+
+    /**
+     * @param dayHijriTo the dayHijriTo to set
+     */
+    public void setDayHijriTo(Integer dayHijriTo) {
+        this.dayHijriTo = dayHijriTo;
+    }
+
+    /**
+     * @return the monthHijriTo
+     */
+    public Integer getMonthHijriTo() {
+        return monthHijriTo;
+    }
+
+    /**
+     * @param monthHijriTo the monthHijriTo to set
+     */
+    public void setMonthHijriTo(Integer monthHijriTo) {
+        this.monthHijriTo = monthHijriTo;
+    }
+
+    /**
+     * @return the yearHijriTo
+     */
+    public Integer getYearHijriTo() {
+        return yearHijriTo;
+    }
+
+    /**
+     * @param yearHijriTo the yearHijriTo to set
+     */
+    public void setYearHijriTo(Integer yearHijriTo) {
+        this.yearHijriTo = yearHijriTo;
+    }
+
 }

@@ -1,0 +1,222 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <h:form id="form" dir="#{userData.dir}" class='formmargin'>
+            <div style=" position: absolute;left: 20px"> 
+
+                <p:commandButton  style="z-index: 2;
+                                  margin-top: 24%;
+                                  color: #035c70!important; 
+                                  background-color: #223238!important;
+                                  border: 1px solid #22323a!important;
+                                  background: #22323a 50% 50% repeat-x!important;"
+                                  icon="fa fa-fw fa-home"
+                                  title="#{userData.userDDs['HOME']}"
+                                  class="smhomeButton" 
+                                  action="exit" />
+
+            </div>
+            <p:fieldset legend="الأصناف">
+                <div>
+                    <p:messages autoUpdate="true"  id="msg" showDetail="true" closable="true" rendered="true" />
+                </div>
+
+                
+                <h:panelGroup>
+                    <h:panelGroup>
+                        <p:outputLabel  style="width: 100px" value="من تاريخ"/>
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <p:calendar pattern="dd/MM/yyyy" 
+                                    value="#{itemOfferFormMB.invInvoiceDTO.date}"
+                                    style="width: 50%">
+
+                        </p:calendar>
+                    </h:panelGroup>
+                </h:panelGroup>
+
+                <h:panelGroup>
+                    <h:panelGroup>
+                        <p:outputLabel  style="width: 100px" value="إلى تاريخ"/>
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <p:calendar pattern="dd/MM/yyyy" 
+                                    value="#{itemOfferFormMB.invInvoiceDTO.dateEndOffer}"
+                                    style="width: 50%">
+
+                        </p:calendar>
+                    </h:panelGroup>
+                </h:panelGroup>
+            </p:fieldset>
+             <p:fieldset  style="margin-bottom:20px">
+                <p:dataTable id="invPurchaseInvoiceDetailsTable" class="salesInvoiceTable"
+                             widgetVar="invPurchaseInvoiceDetailsTable"
+                             style="margin-bottom:20px"
+                             var="invPurchaseInvoiceDetailsTable"
+                             rowIndexVar="index" 
+                             dir="rtl" 
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                             editable="true"
+                             editMode="cell"
+                             selectionMode="single"
+                             sortBy="#{1}"
+                             rowKey="#{invPurchaseInvoiceDetailsTable.index}"
+                             selection="#{itemOfferFormMB.invInvoiceDTO.invPurchaseInvoiceDetailsSelected}"
+                             value="#{itemOfferFormMB.invInvoiceDTO.invPurchaseInvoiceDetailList}" >
+
+                    <f:facet name="header" >
+                        <p:commandButton  id="addnew"
+                                          class="saddButton"
+                                          icon="fa fa-plus"
+                                          title="#{userData.userDDs['ADD']}" 
+                                          actionListener="#{itemOfferFormMB.addInvDetail()}" 
+                                          update="invPurchaseInvoiceDetailsTable"  
+                                          oncomplete="PrimeFaces.focus('form:invPurchaseInvoiceDetailsTable:'+#{itemOfferFormMB.invInvoiceDTO.invPurchaseInvoiceDetailList.size()}+':invItemNameIn')"
+                                          immediate="true"
+                                          ajax="true"
+                                          style="float:right"
+                                          />
+
+
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('invPurchaseInvoiceDetailsTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:column headerText="#" style="width: 4vh;text-align:center;border-radius: 0px" >
+                        <h:outputText value="#{invPurchaseInvoiceDetailsTable.serial}"  />
+                    </p:column>
+
+                    <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="itemName" headerText="#{userData.userDDs['ITEM']}" 
+                              filterBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}"
+                              filterable="false">
+                        <p:outputLabel value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}" 
+                                       rendered="#{itemOfferFormMB.invInvoiceDTO.id ne null}" />
+                        <p:autoComplete id="invItemNameIn"  
+                                        style="width:100%"
+                                        rendered="#{itemOfferFormMB.invInvoiceDTO.id eq null}"
+                                        converter="#{itemOfferFormMB.itemsBarcodesDetailsViewConverter}"
+                                        value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}"
+                                        maxResults="10"
+                                        var="item"
+                                        itemLabel="#{item}" 
+                                        itemValue="#{item}" 
+                                        forceSelection="true" 
+                                        completeMethod="#{itemOfferFormMB.completeItemsDatas}" >
+                            <p:ajax update=" unitvalue costTt "
+                                    event="itemSelect" listener="#{itemOfferFormMB.validateItems(invPurchaseInvoiceDetailsTable)}" />
+                        </p:autoComplete>            
+                    </p:column>
+
+                    <p:column  style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="Unit"
+
+                               filterBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.unitName}" 
+                               filterMatchMode="contains" 
+                               sortBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.unitName}"
+                               filterable="false"
+                               headerText="#{userData.userDDs['UNIT_NUMBER']}">
+                        <p:inputText id="unitvalue" readonly="true" 
+                                     disabled="true"
+                                     value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.unitName}" style="width: 95%" />  
+
+                    </p:column>
+
+                    <p:column style="width: 12vh;text-align: -webkit-auto;border-radius: 0px" id="COST" headerText="#{userData.userDDs['PRICE']}"
+                              filterBy="#{invPurchaseInvoiceDetailsTable.costBefor}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{invPurchaseInvoiceDetailsTable.costBefor}"
+                              filterable="false">
+                        <p:inputText id="costTt"  readonly="true"
+                                     value="#{invPurchaseInvoiceDetailsTable.costBefor}"
+
+                                     style="width:95%">
+                         </p:inputText>  
+                    </p:column>
+                    
+                    <p:column style="width: 14vh;text-align: -webkit-auto;border-radius: 0px" id="DISCOUNT" headerText="#{userData.userDDs['DISCOUNT']}">
+                        <p:inputText id="discountT" 
+                                     value="#{invPurchaseInvoiceDetailsTable.discount}" 
+                                     style="width:70%!important;display: inline!important">
+                            <p:ajax listener="#{itemOfferFormMB.calcDisountValueColumn(invPurchaseInvoiceDetailsTable)}"
+                                    update="discountTValue valueafterT"    />
+                        </p:inputText>  
+                        <p:outputLabel value="%"  style="display: inline!important"  />
+                    </p:column>
+                    
+                    <p:column style="width: 14vh;text-align: -webkit-auto;border-radius: 0px" id="DISCOUNTValue" headerText="#{userData.userDDs['DISCOUNT']} قيمة">
+                        <p:inputText id="discountTValue" 
+                                     value="#{invPurchaseInvoiceDetailsTable.discountValue}" 
+                                     style="width:70%!important;display: inline!important">
+                            <p:ajax listener="#{itemOfferFormMB.calcDiscountRateColumn(invPurchaseInvoiceDetailsTable)}"
+                                    update="discountT valueafterT"   />
+                        </p:inputText>  
+                    </p:column>
+                    
+                    <p:column style="width: 14vh;text-align: -webkit-auto;border-radius: 0px" id="valueafter" headerText="سعر بعد الخصم">
+                        <p:outputLabel id="valueafterT" 
+                                     value="#{invPurchaseInvoiceDetailsTable.costAfter}" 
+                                     style="width:70%!important;display: inline!important"/>
+                    </p:column>
+
+                    <p:column 
+                        rendered="#{itemOfferFormMB.columnRender}"
+                        style="width: 13vh;text-align: center;border-radius: 0px" 
+                        headerText="#{userData.userDDs['TRANSACTION']}">
+
+                        <p:commandButton  id="b7" icon="fa fa-plus" 
+                                          class="saddbuttonins" style="color: #fff!important;background-color: #00BCD4"
+                                          title="#{userData.userDDs['ADD']}" 
+                                          actionListener="#{itemOfferFormMB.addInvDetail()}" 
+                                          immediate="true"
+                                          oncomplete="PrimeFaces.focus('form:invPurchaseInvoiceDetailsTable:'+#{itemOfferFormMB.invInvoiceDTO.invPurchaseInvoiceDetailList.size()}+':invItemNameIn')"
+                                          ajax="true"   />
+
+                        <p:commandButton  update="invPurchaseInvoiceDetailsTable           "
+                                          title="#{userData.userDDs['DELETE']}" 
+                                          class="sdeleteButtons" style="color: #fff!important;background-color: red"
+
+                                          action="#{itemOfferFormMB.deleteInvDetail(invPurchaseInvoiceDetailsTable)}"
+                                          icon="fa fa-remove" >
+                            <p:confirm header="#{userData.userDDs['COFIGRATION']}" 
+                                       message="#{userData.userDDs['ARE_YOU_SURE']}"
+                                       icon="ui-icon-alert" />
+                        </p:commandButton>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column >
+
+                </p:dataTable>
+
+                <div style="text-align: center!important;margin-top: 2%;margin-bottom: 2%;">
+                    <p:commandButton class="saveButton"
+                                     id="saveB" 
+                                     title="#{userData.userDDs['SAVE']}"
+                                     value="#{userData.userDDs['SAVE']}"
+                                     style=""
+                                     action="#{itemOfferFormMB.save()}" 
+                                     update="@form"/>
+                </div>
+                <p:blockUI block="form" trigger="saveB" animate="true" >
+
+                    <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                </p:blockUI> 
+            </p:fieldset>
+
+        </h:form>
+    </ui:define>
+</ui:composition>

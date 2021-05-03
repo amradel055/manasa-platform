@@ -18,6 +18,7 @@ import com.toby.entity.InvItem;
 import com.toby.entity.InvPurchaseInvoice;
 import com.toby.entity.InvPurchaseInvoiceDetail;
 import com.toby.entity.InventorySetup;
+import com.toby.entity.ItemOfferDetail;
 import com.toby.entity.ProFactoryDelivery;
 import com.toby.entity.Symbol;
 import com.toby.procedure.InvoiceNotLoadedYetProFactoeyProcedure;
@@ -480,6 +481,26 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
         }
 
     }
+    
+    @Override
+    public <T> List<ItemsBarcodesDetailsView> findItemBarcodeDetails(List<T> list, Integer branchId) {
+        List<String> barcodeList = new ArrayList<>();
+        for (T Entity : list) {
+            if (Entity.getClass().equals(InvPurchaseInvoiceDetail.class)) {
+                InvPurchaseInvoiceDetail entity = (InvPurchaseInvoiceDetail) Entity;
+                barcodeList.add(entity.getItemBarcode());
+            }else if(Entity.getClass().equals(ItemOfferDetail.class)){
+                ItemOfferDetail entity = (ItemOfferDetail) Entity;
+                barcodeList.add(entity.getItemBarcode());
+            } else if (Entity.getClass().equals(TempInvPurchaseInvoiceNotLoadedYet.class)) {
+                TempInvPurchaseInvoiceNotLoadedYet entity = (TempInvPurchaseInvoiceNotLoadedYet) Entity;
+                barcodeList.add(entity.getItemBarcode());
+            }
+        }
+        List<ItemsBarcodesDetailsView> itemsBarcodesDetailsViewList = itemsBarcodesDetailsViewService.findItemsBarcodesDetailsViewBranchIdByBarcode(branchId, barcodeList);
+        return itemsBarcodesDetailsViewList;
+    }
+
 
     @Override
     public String addInvPurchaseInvoiceDetailsDTO(List<InvDetailDTO> invPurchaseInvoiceDetailList, InvInvoiceDTO invInvoiceDTO, TobyUser tobyUser) {

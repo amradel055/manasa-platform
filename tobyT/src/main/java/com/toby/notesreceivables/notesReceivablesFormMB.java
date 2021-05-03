@@ -170,6 +170,8 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
     private List<GlBankTransactionInvoiceView> glBankTransactionInvoiceViewList;
 
     private Boolean isEdit;
+    
+    private Integer serialSelected;
 
     @EJB
     private GlBankTransactionInvoiceViewService bankTransactionInvoiceViewService;
@@ -325,6 +327,18 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
         } catch (Exception e) {
             saveError(e, "notesReceivablesFormMB", "findnotesReceivablesObject");
         }
+    }
+    
+    public void findNotesReceivable(){
+        if(serialSelected != null){
+            GlBankTransaction idSelected = glBankTransactionService.findGlBankTransactionSettlmentBySerial(getUserData().getUserBranch().getId() , serialSelected , 1);
+            ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+                context.getSessionMap().put("glBankTransactionIdSeclected", idSelected.getId());
+                context.getSessionMap().put("ScreenMode", "Edit");
+            
+            init();
+        }
+        
     }
 
     @Override
@@ -2052,6 +2066,20 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
      */
     public void setIsEdit(Boolean isEdit) {
         this.isEdit = isEdit;
+    }
+
+    /**
+     * @return the serialSelected
+     */
+    public Integer getSerialSelected() {
+        return serialSelected;
+    }
+
+    /**
+     * @param serialSelected the serialSelected to set
+     */
+    public void setSerialSelected(Integer serialSelected) {
+        this.serialSelected = serialSelected;
     }
 
 }

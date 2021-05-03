@@ -39,6 +39,8 @@ public interface GlBankTransactionService {
 
     public GlBankTransaction findGlBankTransactionById(Integer glBankTransactionId);
 
+    public GlBankTransaction findGlBankTransactionSettlmentBySerial(Integer branchId,Integer serial,Integer transactionType);
+            
     public GlBankTransaction addOneGlBankTransaction(GlBankTransaction glBankTransaction, GlBankTransactionDetail bankTransactionDetail);
 
     public Integer getMaxSerail(GlBankTransaction glBankTransaction);

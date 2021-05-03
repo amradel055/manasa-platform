@@ -10,6 +10,7 @@ import com.toby.dto.InvDetailDTO;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.entity.GlYear;
 import com.toby.entity.InvPurchaseInvoiceDetail;
+import com.toby.views.ItemsBarcodesDetailsView;
 import java.math.BigDecimal;
 import java.util.List;
 import javax.ejb.Remote;
@@ -53,4 +54,5 @@ public interface InvPurchaseInvoiceDetailsService {
 
     public String addInvPurchaseInvoiceDetailsDTO(List<InvDetailDTO> invPurchaseInvoiceDetailList, InvInvoiceDTO invPurchaseInvoiceDTO, TobyUser tobyUser);
 
+    public <T> List<ItemsBarcodesDetailsView> findItemBarcodeDetails(List<T> list, Integer branchId);
 }

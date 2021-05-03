@@ -34,5 +34,6 @@ public enum ScreenNameClassEnum {
     INVPOSINVOICEFORM,
     INVTRANSFERINVENTORY,
     INVTRANSFER,
-    INVUPDATE
+    INVUPDATE,
+    ITEMOFFER
 }

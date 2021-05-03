@@ -168,6 +168,15 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
     }
 
     @Override
+    public GlBankTransaction findGlBankTransactionSettlmentBySerial(Integer branchId,Integer serial,Integer transactionType) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        params.put("transactionType", transactionType);
+        params.put("serial", serial);
+        List<GlBankTransaction> glBankTransactionList = dao.findListByQuery("SELECT e FROM GlBankTransaction e WHERE e.serial = :serial AND e.branchId.id = :branchId AND e.transactionType =:transactionType order by e.serial DESC ", params);
+        return (glBankTransactionList == null || glBankTransactionList.isEmpty()) ? null : glBankTransactionList.get(0);
+    }
+    @Override
     public List<GlBankTransaction> getALLGlBankTransactionSettlmentByBranchId(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);

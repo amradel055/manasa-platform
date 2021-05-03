@@ -36,7 +36,14 @@ public class FactoryInvoiceStatusReportMB extends Basic {
     private InvPurchaseInvoiceService_1 invPurchaseInvoiceService;
 
     public void search() {
-        setList(invPurchaseInvoiceService.findInvoiceStatus(fromDate, toDate, getStatus() == null ? null : getStatus().getId(), getGalleryList() == null ? null : getGalleryList().getId(), getUserData().getUserBranch().getId()));
+        setList(invPurchaseInvoiceService.findInvoiceStatus(getFromDate(), getToDate(), getStatus() == null ? null : getStatus().getId(), getGalleryList() == null ? null : getGalleryList().getId(), getUserData().getUserBranch().getId()));
+    }
+    
+    public void convertDateFrom(){
+        setFromDate(findDateFromHijriFrom());
+    }
+    public void convertDateTo(){
+        setToDate(findDateFromHijriTo());
     }
    
     public void postProcessXLS(Object document) {

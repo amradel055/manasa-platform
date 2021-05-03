@@ -16,6 +16,7 @@ import javax.ejb.Remote;
  */
 @Remote
 public interface GlBankTransactionInvoiceViewService {
-    public List<GlBankTransactionInvoiceView> getGlBankTransactionInvoiceViewList(Integer organizationSiteId,TobyUser tobyUser);
-    
+
+    public List<GlBankTransactionInvoiceView> getGlBankTransactionInvoiceViewList(Integer organizationSiteId, TobyUser tobyUser);
+
 }

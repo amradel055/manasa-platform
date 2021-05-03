@@ -48,6 +48,7 @@ public class InvDetailDTO extends BaseEntityDTO {
     private String unitName;
     private String color;
     private BigDecimal discount;
+    private BigDecimal discountValue;
     private BigDecimal cost;
     private BigDecimal net;
     private Integer serial;
@@ -67,6 +68,9 @@ public class InvDetailDTO extends BaseEntityDTO {
     private Integer invPurchaseInvoiceDetailId;
     private Boolean proof;
     private String statusName;
+    
+    private BigDecimal costBefor;
+    private BigDecimal costAfter;
     
     private List<ProDetailTypeDTO> proDetailTypeDTOList ;
     
@@ -775,6 +779,48 @@ public class InvDetailDTO extends BaseEntityDTO {
      */
     public void setBarCode(String barCode) {
         this.barCode = barCode;
+    }
+
+    /**
+     * @return the costBefor
+     */
+    public BigDecimal getCostBefor() {
+        return costBefor;
+    }
+
+    /**
+     * @param costBefor the costBefor to set
+     */
+    public void setCostBefor(BigDecimal costBefor) {
+        this.costBefor = costBefor;
+    }
+
+    /**
+     * @return the costAfter
+     */
+    public BigDecimal getCostAfter() {
+        return costAfter;
+    }
+
+    /**
+     * @param costAfter the costAfter to set
+     */
+    public void setCostAfter(BigDecimal costAfter) {
+        this.costAfter = costAfter;
+    }
+
+    /**
+     * @return the discountValue
+     */
+    public BigDecimal getDiscountValue() {
+        return discountValue;
+    }
+
+    /**
+     * @param discountValue the discountValue to set
+     */
+    public void setDiscountValue(BigDecimal discountValue) {
+        this.discountValue = discountValue;
     }
 
 }
