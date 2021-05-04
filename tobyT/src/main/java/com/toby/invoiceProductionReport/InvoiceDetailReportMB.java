@@ -29,25 +29,21 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 
-
 @Named(value = "invoiceDetailReportMB")
 @ViewScoped
-public class InvoiceDetailReportMB extends BaseListBean{
-    
-    
+public class InvoiceDetailReportMB extends BaseListBean {
+
     private List<InvPurchaseInvoiceDTO> invPurchaseInvoiceDTOList;
-    private List<InvoiceDetailsReport>  invoiceDetailsReports;
+    private List<InvoiceDetailsReport> invoiceDetailsReports;
     private PrintProductionDTO printProductionDTO;
-    
+
     private InvPurchaseInvoiceDTOConverter invPurchaseInvoiceDTOConverter;
 
-  
     @EJB
     private InvPurchaseInvoiceService invPurchaseInvoiceService;
     @EJB
     private InvoiceDetailReportService invoiceDetailReportService;
 
-    
     public InvoiceDetailReportMB() {
     }
 
@@ -58,29 +54,37 @@ public class InvoiceDetailReportMB extends BaseListBean{
         setUserData((UserData) context.getSessionMap().get("userLogInData"));
         getInvPurchaseInvoiceDTOList();
     }
-    
+
 //     public  List<InvPurchaseInvoiceDTO> completeInvpurchaseInvoice(String query){
 //     
 //     return AutoComplete.completeInvpurchaseInvoice(query, invPurchaseInvoiceDTOList, invPurchaseInvoiceDTOConverter);
 //     }
-    
     public void search() {
-        if((printProductionDTO.getFromInvoice()!=null&&printProductionDTO.getToInvoice()!=null)
-                ||(printProductionDTO.getFromDate()!=null&&printProductionDTO.getToDate()!=null)){
-          invoiceDetailsReports = invoiceDetailReportService.searchReport(printProductionDTO, getUserData().getUser());
-        
-        }else{
-               printProductionDTO.setMsg("ادخل من فاتوره الي فاتوره او من تاريخ الي تاريخ " );
+        if ((printProductionDTO.getFromInvoice() != null && printProductionDTO.getToInvoice() != null)
+                || (printProductionDTO.getFromDate() != null && printProductionDTO.getToDate() != null)) {
+            invoiceDetailsReports = invoiceDetailReportService.searchReport(printProductionDTO, getUserData().getUser());
+
+        } else {
+            printProductionDTO.setMsg("ادخل من فاتوره الي فاتوره او من تاريخ الي تاريخ ");
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", printProductionDTO.getMsg()));
-      
-    }}
-    
-     public void postProcessXLS(Object document) {
+
+        }
+    }
+
+    public void convertDateFrom() {
+        getPrintProductionDTO().setFromDate(findDateFromHijriFrom());
+    }
+
+    public void convertDateTo() {
+        getPrintProductionDTO().setToDate(findDateFromHijriTo());
+    }
+
+    public void postProcessXLS(Object document) {
         HSSFWorkbook wb = (HSSFWorkbook) document;
         HSSFSheet sheet = wb.getSheetAt(0);
-         HSSFRow header = sheet.getRow(0);
+        HSSFRow header = sheet.getRow(0);
 
-         HSSFCellStyle cellStyle = wb.createCellStyle();
+        HSSFCellStyle cellStyle = wb.createCellStyle();
         cellStyle.setFillForegroundColor(HSSFColor.GREEN.index);
         cellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
 
@@ -90,7 +94,7 @@ public class InvoiceDetailReportMB extends BaseListBean{
             cell.setCellStyle(cellStyle);
         }
     }
-    
+
     public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {
         if (invoiceDetailsReports != null && !invoiceDetailsReports.isEmpty()) {
             fillReport(prepareReport(), getUserData().getReportPath() + "invoiceDetailReport.jasper", invoiceDetailsReports, "pdf");
@@ -98,11 +102,11 @@ public class InvoiceDetailReportMB extends BaseListBean{
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "لا توجد نتائج للطباعة"));
         }
     }
-    
+
     public HashMap prepareReport() {
         Map<String, String> userDDs = getUserData().getUserDDs();
         HashMap hashMap = new HashMap();
-        
+
         hashMap.put("fromInvoice", printProductionDTO.getFromInvoice().getId());
         hashMap.put("toInvoice", printProductionDTO.getToInvoice().getId());
         hashMap.put("toDate", printProductionDTO.getToDate());
@@ -111,11 +115,11 @@ public class InvoiceDetailReportMB extends BaseListBean{
         hashMap.put("toInvoiceText", "إلى فاتورة");
         hashMap.put("toDateText", "الي تاريخ");
         hashMap.put("fromDateText", "من تاريخ");
-        
+
         hashMap.put("invoiceText", "الفاتورة");
         hashMap.put("branchText", "الفرع");
         hashMap.put("dateText", "التاريخ");
-        hashMap.put("clientText","العميل");
+        hashMap.put("clientText", "العميل");
         hashMap.put("clientNameText", "اسم العميل");
         hashMap.put("quantityText", "الكمية");
         hashMap.put("branchName", getUserData().getUserBranch().getNameAr());
@@ -127,8 +131,6 @@ public class InvoiceDetailReportMB extends BaseListBean{
         }
         return hashMap;
     }
-    
-
 
     @Override
     public void delete() {
@@ -175,7 +177,6 @@ public class InvoiceDetailReportMB extends BaseListBean{
         return invoiceDetailsReports;
     }
 
-   
     public void setInvoiceDetailsReports(List<InvoiceDetailsReport> invoiceDetailsReports) {
         this.invoiceDetailsReports = invoiceDetailsReports;
     }
@@ -184,11 +185,10 @@ public class InvoiceDetailReportMB extends BaseListBean{
         return invPurchaseInvoiceDTOConverter;
     }
 
-    
     public void setInvPurchaseInvoiceDTOConverter(InvPurchaseInvoiceDTOConverter invPurchaseInvoiceDTOConverter) {
         this.invPurchaseInvoiceDTOConverter = invPurchaseInvoiceDTOConverter;
     }
-  
+
     public List<InvPurchaseInvoiceDTO> getInvPurchaseInvoiceDTOList() {
         if (invPurchaseInvoiceDTOList == null || invPurchaseInvoiceDTOList.isEmpty()) {
 //            invPurchaseInvoiceDTOList = invPurchaseInvoiceService.findInvPurchaseInvoiceDTOList(getUserData().getUser());
@@ -197,9 +197,8 @@ public class InvoiceDetailReportMB extends BaseListBean{
         return invPurchaseInvoiceDTOList;
     }
 
-    
     public void setInvPurchaseInvoiceDTOList(List<InvPurchaseInvoiceDTO> invPurchaseInvoiceDTOList) {
         this.invPurchaseInvoiceDTOList = invPurchaseInvoiceDTOList;
     }
-    
+
 }

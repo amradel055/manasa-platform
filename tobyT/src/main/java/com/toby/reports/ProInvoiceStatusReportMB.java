@@ -47,14 +47,22 @@ public class ProInvoiceStatusReportMB extends Basic {
     public void search() {
         if (printProductionDTO.getInvoiceStatus() == 4) {
             setList(invPurchaseInvoiceService.getALLInvPurchaseInvoiceDTOByStatus(getPrintProductionDTO(), getUserData().getUserBranch().getId()));
-        }else if (printProductionDTO.getInvoiceStatus() == 10) {
+        } else if (printProductionDTO.getInvoiceStatus() == 10) {
             setList(proFactoryDeliveryService.getALLProFactoryDeliveryDTOByStatusRemain(getPrintProductionDTO(), getUserData().getUserBranch().getId()));
         } else {
             setList(proFactoryDeliveryService.getALLProFactoryDeliveryDTOByStatusRemain(getPrintProductionDTO(), getUserData().getUserBranch().getId()));
         }
         setNumber(getList() == null ? 0 : getList().size());
     }
-    
+
+    public void convertDateFrom() {
+        getPrintProductionDTO().setFromDate(findDateFromHijriFrom());
+    }
+
+    public void convertDateTo() {
+        getPrintProductionDTO().setToDate(findDateFromHijriTo());
+    }
+
     public void postProcessXLS(Object document) {
         HSSFWorkbook wb = (HSSFWorkbook) document;
         HSSFSheet sheet = wb.getSheetAt(0);

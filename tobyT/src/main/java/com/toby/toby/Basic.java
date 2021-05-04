@@ -82,6 +82,8 @@ public class Basic implements Serializable {
 
     private String ScreenMode;
 
+    
+   
     private Integer dayHijriFrom;
     private Integer monthHijriFrom;
     private Integer yearHijriFrom;
@@ -100,6 +102,7 @@ public class Basic implements Serializable {
         LocalDate dateFrom = IsoChronology.INSTANCE.date(date);
         return java.sql.Date.valueOf(dateFrom);
     }
+    
 
     public void saveError(Exception e, String className, String methodName) {
         getTobyErrorDTO().setClassName(className);
@@ -495,4 +498,5 @@ public class Basic implements Serializable {
         this.yearHijriTo = yearHijriTo;
     }
 
+    
 }

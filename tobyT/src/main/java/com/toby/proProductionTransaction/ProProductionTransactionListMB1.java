@@ -56,6 +56,10 @@ public class ProProductionTransactionListMB1 extends BaseListBean {
         }
     }
 
+    public void search() {
+        setProProductionItemsTransactionDTOList(proProductionItemsTransactionService.getALLProProductionItemsTransactionByInvoicesSerial(getProProductionItemsTransactionDTOSelected().getSerial()));
+    }
+
     @Override
     public void delete() {
         getProProductionItemsTransactionDTOList().remove(getProProductionItemsTransactionDTOSelected());
@@ -127,6 +131,10 @@ public class ProProductionTransactionListMB1 extends BaseListBean {
      * @return the proProductionItemsTransactionDTOSelected
      */
     public ProProductionItemsTransactionDTO getProProductionItemsTransactionDTOSelected() {
+
+        if (proProductionItemsTransactionDTOSelected == null) {
+            proProductionItemsTransactionDTOSelected = new ProProductionItemsTransactionDTO();
+        }
         return proProductionItemsTransactionDTOSelected;
     }
 

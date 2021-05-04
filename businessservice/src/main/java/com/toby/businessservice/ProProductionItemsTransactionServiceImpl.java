@@ -296,8 +296,17 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
         filters.put("branchId", branchId);
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT s FROM ProProductionItemsTransaction s WHERE  s.branchId.id = :branchId and( s.isDeleted != 1 or s.isDeleted is NULL )  ");
-        //appendFilterByName(filters,builder);
         List<ProProductionItemsTransaction> details = dao.findListByQuery(builder.toString(), filters, first, pageSize);
+        return mapToDTOList(details, null);
+    }
+
+    @Override
+    public List<ProProductionItemsTransactionDTO> getALLProProductionItemsTransactionByInvoicesSerial(Integer serial) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("serial", serial);
+        StringBuilder builder = new StringBuilder();
+        builder.append(" SELECT s FROM ProProductionItemsTransaction s WHERE s.proFactoryDeliveryDetailId.proFactoryDeliveryId.invPurchaseInvoiceId.serial = :serial  ");
+        List<ProProductionItemsTransaction> details = dao.findListByQuery(builder.toString(),params);
         return mapToDTOList(details, null);
     }
 
@@ -459,12 +468,11 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
         StringBuilder builder = new StringBuilder();
         filters.put("branchId", branchId);
         builder.append(" SELECT count(s) FROM ProProductionItemsTransaction s WHERE  s.branchId.id = :branchId and( s.isDeleted != 1 or s.isDeleted is NULL ) ");
-        //appendFilterByName(filters, builder);
         Long details = dao.findEntityByQuery(builder.toString(), filters);
         return details == null ? 0 : details;
     }
 
-    private void appendFilter(Map<String, Object> filters, StringBuilder builder) {
+    // private void appendFilter(Map<String, Object> filters, StringBuilder builder) {
 //        if (filters.get("invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial") != null
 //                && !filters.get("invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial").toString().isEmpty()) {
 //
@@ -493,16 +501,7 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
 //        } else if (filters.containsKey("date")) {
 //            filters.remove("date");
 //        }
-    }
+    // }
+   
 
-    public void appendFilterByName(Map<String, Object> filters, StringBuilder builder) {
-        if (filters.get("invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial") != null
-                && !filters.get("invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial").toString().isEmpty()) {
-
-            builder.append(" and s.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial like CONCAT('%',:invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial ,'%')");
-        } else if (filters.containsKey("invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial")) {
-            filters.remove("invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial");
-        }
-
-    }
 }

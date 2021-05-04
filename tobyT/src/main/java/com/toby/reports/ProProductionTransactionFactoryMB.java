@@ -33,6 +33,10 @@ public class ProProductionTransactionFactoryMB extends Basic {
         setProProductionItemsTransactionDTOList(proProductionItemsTransactionService.getALLProProductionItemsTransactionDTO(proProductionTransactionFactoryView, getUserData().getUserBranch().getId()));
     }
     
+     public void convertDate(){
+        getProProductionTransactionFactoryView().setDate(findDateFromHijriTo());
+    }
+    
     public void postProcessXLS(Object document) {
         HSSFWorkbook wb = (HSSFWorkbook) document;
         HSSFSheet sheet = wb.getSheetAt(0);

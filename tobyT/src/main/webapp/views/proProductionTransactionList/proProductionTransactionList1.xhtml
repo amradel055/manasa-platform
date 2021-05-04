@@ -10,7 +10,14 @@
 
 
         <h:form  dir="#{userData.dir}"  id="form" style="margin-right: 15px">
+
+
+
+
             <p:fieldset legend="حركه اوامر الشغل" style="margin-bottom:20px">
+
+
+
 
                 <div >
                     <p:messages id="curmsg" 
@@ -18,6 +25,42 @@
                                 showDetail="true" 
                                 rendered="true" closable="true"/>   
                 </div>
+
+
+                <div  id="firstLine" class="ui-g-12 ui-g-nopad">
+                    <div class="ui-g">
+
+                        <div class="ui-g-6 ui-xl-6">
+
+
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 35%!important" id="ad1" value="#{proProductionTransactionListMB1.proProductionItemsTransactionDTOSelected.serial}"/>
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 85px;" value=" رقم الفاتورة"/>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="asmaa" style="text-align: center">
+
+                    <p:commandButton     class="saveButton" id="search" 
+                                         value="بحث" 
+                                         icon="fa fa-fw fa-save"
+                                         action="#{proProductionTransactionListMB1.search()}"
+                                          update="details curmsg"
+                                         >
+
+                    </p:commandButton>
+
+
+                </div>
+                
                 <div>
 
                     <p:dataTable id="details"
@@ -62,9 +105,6 @@
                         <p:column style="width: 8vh;text-align: -webkit-auto;font-size: 1.4vh" 
                                   headerText="الفاتوره"
                                   id="serial"
-                                  filterMatchMode="contains" 
-                                  filterBy="#{details.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial}"
-                                  sortBy="#{details.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial}"
                                   >
                             <p:outputLabel  value="#{details.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial}" />
                         </p:column>
