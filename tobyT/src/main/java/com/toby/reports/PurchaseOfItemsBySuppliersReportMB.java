@@ -96,6 +96,14 @@ public class PurchaseOfItemsBySuppliersReportMB extends BaseInventoryReportBean 
 //        }
         purchaseOfItemsBySuppliersViewBeanList = new ArrayList<>();
     }
+    
+     public void convertDateFrom() {
+        getPurchaseOfItemsBySuppliersSearchBean().setDateFrom(findDateFromHijriFrom());
+    }
+
+    public void convertDateTo() {
+        getPurchaseOfItemsBySuppliersSearchBean().setDateTo(findDateFromHijriTo());
+    }
 
     private void initObjs() {
         itemSalesViewList = new ArrayList<>();

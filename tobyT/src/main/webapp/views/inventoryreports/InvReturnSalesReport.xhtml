@@ -24,13 +24,13 @@
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:autoComplete style="width:75%!important " 
                                                     dropdown="true"
-                                                    converter="#{InvReturnPurchaseReportMB.suplierConverter}"
-                                                    value="#{InvReturnPurchaseReportMB.invReturnPurchaseSearchBean.suplierFrom}"
+                                                    converter="#{invReturnPurchaseReportMB.suplierConverter}"
+                                                    value="#{invReturnPurchaseReportMB.invReturnPurchaseSearchBean.suplierFrom}"
                                                     var="suplier"
                                                     itemLabel="#{suplier}" 
                                                     itemValue="#{suplier}" 
                                                     forceSelection="true" 
-                                                    completeMethod="#{InvReturnPurchaseReportMB.completSupliers}" >
+                                                    completeMethod="#{invReturnPurchaseReportMB.completSupliers}" >
                                     </p:autoComplete>
 
                                 </div>
@@ -46,13 +46,13 @@
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:autoComplete style="width:75%!important " 
                                                     dropdown="true"
-                                                    converter="#{InvReturnPurchaseReportMB.suplierConverter}"
-                                                    value="#{InvReturnPurchaseReportMB.invReturnPurchaseSearchBean.suplierTo}"
+                                                    converter="#{invReturnPurchaseReportMB.suplierConverter}"
+                                                    value="#{invReturnPurchaseReportMB.invReturnPurchaseSearchBean.suplierTo}"
                                                     var="suplier"
                                                     itemLabel="#{suplier}" 
                                                     itemValue="#{suplier}" 
                                                     forceSelection="true" 
-                                                    completeMethod="#{InvReturnPurchaseReportMB.completSupliers}" >
+                                                    completeMethod="#{invReturnPurchaseReportMB.completSupliers}" >
                                     </p:autoComplete>
 
                                 </div>
@@ -68,8 +68,9 @@
                                 <div class="ui-g-6 ui-xl-6">
 
                                     <p:calendar pattern="dd/MM/yyyy" 
-                                                value="#{InvReturnPurchaseReportMB.invReturnPurchaseSearchBean.dateFrom}"
-                                                style="width: 56%">
+                                                value="#{invReturnPurchaseReportMB.invReturnPurchaseSearchBean.dateFrom}"
+                                                style="width: 56%"
+                                                id="dateFrom">
 
                                     </p:calendar>
                                 </div>
@@ -81,12 +82,30 @@
 
                                 </div>
                             </div>
+
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText value="#{invReturnPurchaseReportMB.dayHijriFrom}" /> يوم
+                                    <p:inputText value="#{invReturnPurchaseReportMB.monthHijriFrom}" />  شهر
+                                    <p:inputText value="#{invReturnPurchaseReportMB.yearHijriFrom}" />  سنة
+                                    <p:commandButton     class="saveButton" id="excuteFrom" 
+                                                         value="تنفيذ" 
+                                                         icon="fa fa-fw fa-save"
+                                                         action="#{invReturnPurchaseReportMB.convertDateFrom()}"
+                                                         update="dateFrom"
+                                                         />
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 50px"  value="من تاريخ هجري" />
+                                </div>
+                            </div>
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
 
                                     <p:calendar pattern="dd/MM/yyyy" 
-                                                value="#{InvReturnPurchaseReportMB.invReturnPurchaseSearchBean.dateTo}"
-                                                style="width: 56%">
+                                                value="#{invReturnPurchaseReportMB.invReturnPurchaseSearchBean.dateTo}"
+                                                style="width: 56%"
+                                                id="dateTo">
 
                                     </p:calendar>
 
@@ -99,17 +118,34 @@
 
                                 </div>
                             </div>
+
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText value="#{invReturnPurchaseReportMB.dayHijriTo}" /> يوم
+                                    <p:inputText value="#{invReturnPurchaseReportMB.monthHijriTo}" />  شهر
+                                    <p:inputText value="#{invReturnPurchaseReportMB.yearHijriTo}" />  سنة
+                                    <p:commandButton     class="saveButton" id="excuteTo" 
+                                                         value="تنفيذ" 
+                                                         icon="fa fa-fw fa-save"
+                                                         action="#{invReturnPurchaseReportMB.convertDateTo()}"
+                                                         update="dateTo"
+                                                         />
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 50px"  value="إلى تاريخ هجري" />
+                                </div>
+                            </div>
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:autoComplete style="width:75%!important " 
                                                     dropdown="true"
-                                                    converter="#{InvReturnPurchaseReportMB.invInventoryConverter}"
-                                                    value="#{InvReturnPurchaseReportMB.invReturnPurchaseSearchBean.inventoryFrom}"
+                                                    converter="#{invReturnPurchaseReportMB.invInventoryConverter}"
+                                                    value="#{invReturnPurchaseReportMB.invReturnPurchaseSearchBean.inventoryFrom}"
                                                     var="inventory"
                                                     itemLabel="#{inventory}" 
                                                     itemValue="#{inventory}" 
                                                     forceSelection="true" 
-                                                    completeMethod="#{InvReturnPurchaseReportMB.completInventory}" >
+                                                    completeMethod="#{invReturnPurchaseReportMB.completInventory}" >
                                     </p:autoComplete>
 
                                 </div>
@@ -126,13 +162,13 @@
 
                                     <p:autoComplete style="width:75%!important " 
                                                     dropdown="true"
-                                                    converter="#{InvReturnPurchaseReportMB.invInventoryConverter}"
-                                                    value="#{InvReturnPurchaseReportMB.invReturnPurchaseSearchBean.inventoryTo}"
+                                                    converter="#{invReturnPurchaseReportMB.invInventoryConverter}"
+                                                    value="#{invReturnPurchaseReportMB.invReturnPurchaseSearchBean.inventoryTo}"
                                                     var="inventory"
                                                     itemLabel="#{inventory}" 
                                                     itemValue="#{inventory}" 
                                                     forceSelection="true" 
-                                                    completeMethod="#{InvReturnPurchaseReportMB.completInventory}" >
+                                                    completeMethod="#{invReturnPurchaseReportMB.completInventory}" >
                                     </p:autoComplete>
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
@@ -154,14 +190,14 @@
                                                     style="width:75%!important " 
                                                     dropdown="true"
 
-                                                    converter="#{InvReturnPurchaseReportMB.invReturnPurchaseConverter}"
-                                                    value="#{InvReturnPurchaseReportMB.invReturnPurchaseSearchBean.invReturnPurchaseFrom}"
+                                                    converter="#{invReturnPurchaseReportMB.invReturnPurchaseConverter}"
+                                                    value="#{invReturnPurchaseReportMB.invReturnPurchaseSearchBean.invReturnPurchaseFrom}"
 
                                                     var="purchasePerson"
                                                     itemLabel="#{purchasePerson}" 
                                                     itemValue="#{purchasePerson}" 
                                                     forceSelection="true" 
-                                                    completeMethod="#{InvReturnPurchaseReportMB.completePurchaseReturn}">
+                                                    completeMethod="#{invReturnPurchaseReportMB.completePurchaseReturn}">
                                     </p:autoComplete>
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
@@ -179,14 +215,14 @@
                                                     style="width:75%!important " 
                                                     dropdown="true"
 
-                                                    converter="#{InvReturnPurchaseReportMB.invReturnPurchaseConverter}"
-                                                    value="#{InvReturnPurchaseReportMB.invReturnPurchaseSearchBean.invReturnPurchaseTo}"
+                                                    converter="#{invReturnPurchaseReportMB.invReturnPurchaseConverter}"
+                                                    value="#{invReturnPurchaseReportMB.invReturnPurchaseSearchBean.invReturnPurchaseTo}"
 
                                                     var="purchasePerson"
                                                     itemLabel="#{purchasePerson}" 
                                                     itemValue="#{purchasePerson}" 
                                                     forceSelection="true" 
-                                                    completeMethod="#{InvReturnPurchaseReportMB.completePurchaseReturn}">
+                                                    completeMethod="#{invReturnPurchaseReportMB.completePurchaseReturn}">
                                     </p:autoComplete>
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
@@ -201,7 +237,7 @@
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:selectOneMenu style="width: 56%!important "
                                                      id="invoiceTypeFrom" 
-                                                     value ="#{InvReturnPurchaseReportMB.invReturnPurchaseSearchBean.paymentTypeFrom}">                                                             
+                                                     value ="#{invReturnPurchaseReportMB.invReturnPurchaseSearchBean.paymentTypeFrom}">                                                             
                                         <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"/>
                                         <f:selectItem itemLabel="#{userData.userDDs['CASH']}"  itemValue="0"  />                            
                                         <f:selectItem itemLabel="#{userData.userDDs['POSTPONE']}" itemValue="1" />
@@ -220,7 +256,7 @@
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:selectOneMenu style="width: 56%!important " id="invoiceTypeTo" 
-                                                     value ="#{InvReturnPurchaseReportMB.invReturnPurchaseSearchBean.paymentTypeTo}">    
+                                                     value ="#{invReturnPurchaseReportMB.invReturnPurchaseSearchBean.paymentTypeTo}">    
                                         <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"/>
                                         <f:selectItem itemLabel="#{userData.userDDs['CASH']}"  itemValue="0"  />                            
                                         <f:selectItem itemLabel="#{userData.userDDs['POSTPONE']}" itemValue="1" />
@@ -267,52 +303,52 @@
                 </div>
                 <div style="text-align: center">
 
-                        <p:commandButton    class="searchButton"
-                                            title="#{userData.userDDs['SEARCH']}"
-                                            action="#{InvReturnPurchaseReportMB.search()}"
-                                            id="saveB"
-                                            value="#{userData.userDDs['SEARCH']}"
-                                            update="@form" 
-                                            icon="fa fa-search"  />
+                    <p:commandButton    class="searchButton"
+                                        title="#{userData.userDDs['SEARCH']}"
+                                        action="#{invReturnPurchaseReportMB.search()}"
+                                        id="saveB"
+                                        value="#{userData.userDDs['SEARCH']}"
+                                        update="@form" 
+                                        icon="fa fa-search"  />
 
-                        <p:commandButton  class="newButton"
-                                          id="NewB"
-                                          title="#{userData.userDDs['NEW']}" 
-                                          immediate="true" 
-                                          action="#{InvReturnPurchaseReportMB.reset()}"
-                                          update="form"
-                                          value="#{userData.userDDs['NEW']}"
-                                          icon="fa fa-plus"/>
+                    <p:commandButton  class="newButton"
+                                      id="NewB"
+                                      title="#{userData.userDDs['NEW']}" 
+                                      immediate="true" 
+                                      action="#{invReturnPurchaseReportMB.reset()}"
+                                      update="form"
+                                      value="#{userData.userDDs['NEW']}"
+                                      icon="fa fa-plus"/>
 
-                        <p:commandButton  class="printButton"
-                                          id="PrintB"
-                                          ajax="false"
-                                          onclick="form.target = '_blank'"  
-                                          icon="fa fa-fw fa-print"
-                                          value="#{userData.userDDs['PRINT']}" 
-                                          actionListener="#{InvReturnPurchaseReportMB.exportPDF}"
-                                          title="#{userData.userDDs['PRINT']}"
-                                          immediate="true" />
+                    <p:commandButton  class="printButton"
+                                      id="PrintB"
+                                      ajax="false"
+                                      onclick="form.target = '_blank'"  
+                                      icon="fa fa-fw fa-print"
+                                      value="#{userData.userDDs['PRINT']}" 
+                                      actionListener="#{invReturnPurchaseReportMB.exportPDF}"
+                                      title="#{userData.userDDs['PRINT']}"
+                                      immediate="true" />
 
-                        <p:commandButton class="closeButton"
-                                         id="CloseB"
-                                         icon="fa fa-fw fa-backward"  
-                                         title="#{userData.userDDs['BACK']}"
-                                         action="exit"
-                                         value="#{userData.userDDs['BACK']}"/>
-                        <h:commandLink class="sdcreenimg">  
-                            <p:graphicImage name="/img/excel.jpg" width="24"/>  
-                            <p:dataExporter type="xls"
-                                            target="returnInvoiceViewTable" 
-                                            fileName=" تقرير مردودات المشتريات"
-                                            postProcessor="#{InvReturnPurchaseReportMB.postProcessXLS}" />  
-                        </h:commandLink>
+                    <p:commandButton class="closeButton"
+                                     id="CloseB"
+                                     icon="fa fa-fw fa-backward"  
+                                     title="#{userData.userDDs['BACK']}"
+                                     action="exit"
+                                     value="#{userData.userDDs['BACK']}"/>
+                    <h:commandLink class="sdcreenimg">  
+                        <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                        <p:dataExporter type="xls"
+                                        target="returnInvoiceViewTable" 
+                                        fileName=" تقرير مردودات المشتريات"
+                                        postProcessor="#{invReturnPurchaseReportMB.postProcessXLS}" />  
+                    </h:commandLink>
 
-                        <p:blockUI block="form" trigger="saveB NewB PrintB CloseB" animate="true" >
+                    <p:blockUI block="form" trigger="saveB NewB PrintB CloseB" animate="true" >
 
-                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+                        <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
 
-                        </p:blockUI> 
+                    </p:blockUI> 
 
                 </div>
 
@@ -327,7 +363,7 @@
                     widgetVar="returnInvoiceViewTable"  
                     rowKey="#{returnInvoiceViewTable}"
                     rowIndexVar="index" 
-                    value="#{InvReturnPurchaseReportMB.returnInvoiceReportBeanList}" 
+                    value="#{invReturnPurchaseReportMB.returnInvoiceReportBeanList}" 
                     dir="rtl" 
                     emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
                     id="returnInvoiceViewTable">

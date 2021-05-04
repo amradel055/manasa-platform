@@ -146,6 +146,14 @@ public class SalesJournalReportMB extends BaseReportBean {
         }
         invInventoryList = inventoryService.getALLInventoriesByBranchPer(branchId);
     }
+    
+     public void convertDateFrom() {
+        getSalesJournalSearchBean().setDateFrom(findDateFromHijriFrom());
+    }
+
+    public void convertDateTo() {
+        getSalesJournalSearchBean().setDateTo(findDateFromHijriTo());
+    }
 
     private void initObjs() {
 

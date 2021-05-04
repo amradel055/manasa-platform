@@ -8,28 +8,28 @@
                 xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <ui:define name="content">
-       <h:form  id="form" dir="#{userData.dir}"  class='formmargin'>
-         <div style=" position: absolute;left: 20px"> 
+        <h:form  id="form" dir="#{userData.dir}"  class='formmargin'>
+            <div style=" position: absolute;left: 20px"> 
 
                 <p:commandButton  style="z-index: 2;
-                                      margin-top: 12%;
-                                      color: #035c70!important; 
-                                      background-color: #223238!important;
-                                      border: 1px solid #22323a!important;
-                                      background: #22323a 50% 50% repeat-x!important;"
-                                      icon="fa fa-fw fa-home"
-                                      title="#{userData.userDDs['HOME']}"
-                                      class="smhomeButton" 
-                                      action="exit" />
+                                  margin-top: 12%;
+                                  color: #035c70!important; 
+                                  background-color: #223238!important;
+                                  border: 1px solid #22323a!important;
+                                  background: #22323a 50% 50% repeat-x!important;"
+                                  icon="fa fa-fw fa-home"
+                                  title="#{userData.userDDs['HOME']}"
+                                  class="smhomeButton" 
+                                  action="exit" />
                 <p:commandButton  style="z-index: 2;
-                                      margin-top: 9%!important;
-                                      color: #035c70!important; 
-                                      background-color: #223238!important;
-                                      border: 1px solid #22323a!important;
-                                      background: #22323a 50% 50% repeat-x!important;" 
-                                      class="viewButton sminimize"
-                                      icon="fa fa-window-minimize"
-                                      title="إظهار/إخفاء"/> 
+                                  margin-top: 9%!important;
+                                  color: #035c70!important; 
+                                  background-color: #223238!important;
+                                  border: 1px solid #22323a!important;
+                                  background: #22323a 50% 50% repeat-x!important;" 
+                                  class="viewButton sminimize"
+                                  icon="fa fa-window-minimize"
+                                  title="إظهار/إخفاء"/> 
             </div>
             <p:fieldset style=" position: relative"  legend="#{userData.userDDs['SALES_JOURNAL']}"> 
 
@@ -46,12 +46,31 @@
                             <h:panelGroup>
                                 <p:calendar pattern="dd/MM/yyyy" 
                                             value="#{salesJournalReportMB.salesJournalSearchBean.dateFrom}"
-                                            style="width:50%">
+                                            style="width:50%"
+                                            id="dateFrom">
 
                                 </p:calendar>
                             </h:panelGroup>
                         </h:panelGroup>
                     </div>
+
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:inputText value="#{salesJournalReportMB.dayHijriFrom}" /> يوم
+                            <p:inputText value="#{salesJournalReportMB.monthHijriFrom}" />  شهر
+                            <p:inputText value="#{salesJournalReportMB.yearHijriFrom}" />  سنة
+                            <p:commandButton     class="saveButton" id="excuteFrom" 
+                                                 value="تنفيذ" 
+                                                 icon="fa fa-fw fa-save"
+                                                 action="#{salesJournalReportMB.convertDateFrom()}"
+                                                 update="dateFrom"
+                                                 />
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel style="width: 50px"  value="من تاريخ هجري" />
+                        </div>
+                    </div>
+
                     <div class="ui-g-12 ui-md-6">
 
 
@@ -63,11 +82,28 @@
                             <h:panelGroup>
                                 <p:calendar pattern="dd/MM/yyyy" 
                                             value="#{salesJournalReportMB.salesJournalSearchBean.dateTo}"
-                                            style="width:50%">
+                                            style="width:50%"
+                                            id="dateTo">
 
                                 </p:calendar>
                             </h:panelGroup>
                         </h:panelGroup>
+                    </div>
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:inputText value="#{salesJournalReportMB.dayHijriTo}" /> يوم
+                            <p:inputText value="#{salesJournalReportMB.monthHijriTo}" />  شهر
+                            <p:inputText value="#{salesJournalReportMB.yearHijriTo}" />  سنة
+                            <p:commandButton     class="saveButton" id="excuteTo" 
+                                                 value="تنفيذ" 
+                                                 icon="fa fa-fw fa-save"
+                                                 action="#{salesJournalReportMB.convertDateTo()}"
+                                                 update="dateTo"
+                                                 />
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel style="width: 50px"  value="إلى تاريخ هجري" />
+                        </div>
                     </div>
                     <div class="ui-g-12 ui-md-6">
                         <h:panelGroup>
@@ -75,21 +111,21 @@
                                 <p:outputLabel style="width: 105px;margin-right: 6%;" value="#{userData.userDDs['FROM_INVOI_NO']}"/>
                             </h:panelGroup> 
 
-                                <h:panelGroup>
-                                    <p:autoComplete id="purchaseIdFrom"
-                                                    style="width:34%!important " 
-                                                    dropdown="true"
+                            <h:panelGroup>
+                                <p:autoComplete id="purchaseIdFrom"
+                                                style="width:34%!important " 
+                                                dropdown="true"
 
-                                                    converter="#{salesJournalReportMB.invInvoiceSalesConverter}"
-                                                    value="#{salesJournalReportMB.salesJournalSearchBean.fromserial}"
+                                                converter="#{salesJournalReportMB.invInvoiceSalesConverter}"
+                                                value="#{salesJournalReportMB.salesJournalSearchBean.fromserial}"
 
-                                                    var="purchasePerson"
-                                                    itemLabel="#{purchasePerson}" 
-                                                    itemValue="#{purchasePerson}" 
-                                                    forceSelection="true" 
-                                                    completeMethod="#{salesJournalReportMB.completeSalesInvoice}">
-                                    </p:autoComplete>
-                                </h:panelGroup> 
+                                                var="purchasePerson"
+                                                itemLabel="#{purchasePerson}" 
+                                                itemValue="#{purchasePerson}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{salesJournalReportMB.completeSalesInvoice}">
+                                </p:autoComplete>
+                            </h:panelGroup> 
                         </h:panelGroup>
                     </div>
                     <div class="ui-g-12 ui-md-6">
@@ -100,21 +136,21 @@
                                 <p:outputLabel style="width: 105px" value="#{userData.userDDs['TO_INVOI_NO']}"/>
                             </h:panelGroup> 
 
-                              <h:panelGroup>
-                                    <p:autoComplete id="purchaseIdTo"
-                                                    style="width:34%!important " 
-                                                    dropdown="true"
+                            <h:panelGroup>
+                                <p:autoComplete id="purchaseIdTo"
+                                                style="width:34%!important " 
+                                                dropdown="true"
 
-                                                    converter="#{salesJournalReportMB.invInvoiceSalesConverter}"
-                                                    value="#{salesJournalReportMB.salesJournalSearchBean.toserial}"
+                                                converter="#{salesJournalReportMB.invInvoiceSalesConverter}"
+                                                value="#{salesJournalReportMB.salesJournalSearchBean.toserial}"
 
-                                                    var="purchasePerson"
-                                                    itemLabel="#{purchasePerson}" 
-                                                    itemValue="#{purchasePerson}" 
-                                                    forceSelection="true" 
-                                                    completeMethod="#{salesJournalReportMB.completeSalesInvoice}">
-                                    </p:autoComplete>
-                                </h:panelGroup>
+                                                var="purchasePerson"
+                                                itemLabel="#{purchasePerson}" 
+                                                itemValue="#{purchasePerson}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{salesJournalReportMB.completeSalesInvoice}">
+                                </p:autoComplete>
+                            </h:panelGroup>
 
                         </h:panelGroup>
                     </div>
@@ -219,7 +255,7 @@
                                           action="#{salesJournalReportMB.reset()}"
                                           update="form"
                                           value="#{userData.userDDs['NEW']}"
-                                           style=""/>
+                                          style=""/>
 
                         <p:commandButton  class="printButtons"
                                           id="PrintB"
@@ -233,7 +269,7 @@
 
                         <p:commandButton   class="closeButton"
                                            id="CloseB"
-                                          style=""  
+                                           style=""  
                                            title="#{userData.userDDs['BACK']}"
                                            action="exit"
                                            value="#{userData.userDDs['BACK']}"/>

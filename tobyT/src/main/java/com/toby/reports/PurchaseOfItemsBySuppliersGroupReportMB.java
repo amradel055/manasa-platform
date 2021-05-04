@@ -121,6 +121,14 @@ public class PurchaseOfItemsBySuppliersGroupReportMB extends BaseInventoryReport
         purchaseOfItemsBySuppliersViewBeanTempList = new ArrayList<>();
 
     }
+    
+     public void convertDateFrom() {
+        getPurchaseOfItemsBySuppliersSearchBean().setDateFrom(findDateFromHijriFrom());
+    }
+
+    public void convertDateTo() {
+        getPurchaseOfItemsBySuppliersSearchBean().setDateTo(findDateFromHijriTo());
+    }
 
     private void fillLists() {
         getInventoryListByBranch();
