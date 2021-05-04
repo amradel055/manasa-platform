@@ -36,15 +36,15 @@
                         </div>
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
-                                <p:inputText value="#{factoryInvoiceStatusReportMB.dayHijriFrom}" /> يوم
-                                <p:inputText value="#{factoryInvoiceStatusReportMB.monthHijriFrom}" />  شهر
-                                <p:inputText value="#{factoryInvoiceStatusReportMB.yearHijriFrom}" />  سنة
-                                <p:commandButton     class="saveButton" id="excuteFrom" 
-                                                     value="تنفيذ" 
-                                                     icon="fa fa-fw fa-save"
-                                                     action="#{factoryInvoiceStatusReportMB.convertDateFrom()}"
-                                                     update="dateFrom"
-                                                     />
+                                <p:inputText style="width: 10%" value="#{factoryInvoiceStatusReportMB.dayHijriFrom}" /> يوم
+                                <p:inputText style="width: 10%" value="#{factoryInvoiceStatusReportMB.monthHijriFrom}" />  شهر
+                                <p:inputText style="width: 20%" value="#{factoryInvoiceStatusReportMB.yearHijriFrom}" />  سنه
+                           <p:commandButton     class="saveButton" id="excuteFrom" 
+                                             value="تنفيذ" 
+                                             icon="fa fa-fw fa-save"
+                                             action="#{factoryInvoiceStatusReportMB.convertDateFrom()}"
+                                             update="dateFrom"
+                                             />
                             </div>
                             <div class="ui-g-6 ui-xl-6">
                                 <p:outputLabel style="width: 50px"  value="من تاريخ هجري" />
@@ -70,15 +70,15 @@
 
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
-                                <p:inputText value="#{factoryInvoiceStatusReportMB.dayHijriTo}" /> يوم
-                                <p:inputText value="#{factoryInvoiceStatusReportMB.monthHijriTo}" />  شهر
-                                <p:inputText value="#{factoryInvoiceStatusReportMB.yearHijriTo}" />  سنة
-                                <p:commandButton     class="saveButton" id="excuteTo" 
-                                                     value="تنفيذ" 
-                                                     icon="fa fa-fw fa-save"
-                                                     action="#{factoryInvoiceStatusReportMB.convertDateTo()}"
-                                                     update="dateFrom1"
-                                                     />
+                                <p:inputText style="width: 10%" value="#{factoryInvoiceStatusReportMB.dayHijriTo}" /> يوم
+                                <p:inputText style="width: 10%" value="#{factoryInvoiceStatusReportMB.monthHijriTo}" />  شهر
+                                <p:inputText style="width: 20%" value="#{factoryInvoiceStatusReportMB.yearHijriTo}" />  سنه
+                           <p:commandButton     class="saveButton" id="excuteTo" 
+                                             value="تنفيذ" 
+                                             icon="fa fa-fw fa-save"
+                                             action="#{factoryInvoiceStatusReportMB.convertDateTo()}"
+                                             update="dateFrom1"
+                                             />
                             </div>
                             <div class="ui-g-6 ui-xl-6">
                                 <p:outputLabel style="width: 50px"  value="إلى تاريخ هجري" />
