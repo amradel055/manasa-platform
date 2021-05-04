@@ -32,7 +32,7 @@ public class InvoiceMovementReportServiceImpl implements InvoiceMovementReportSe
     @Override
     public List<InvoiceMovementReport> searchReport(PrintProductionDTO printProductionDTO, Integer branchId) {
         StringBuilder query = new StringBuilder();
-        query.append("select ipi.serial as serial , ios.name as customerName , inv.name as inventoryName , pfd.date , pfd.type , ipi.id as id , pfd.id as idFactory from pro_factory_delivery pfd \n").
+        query.append("select ipi.serial as serial , ios.name as customerName , inv.name as inventoryName , pfd.date , pfd.type , ipi.id as id , pfd.id as idFactory , pfd.parent as parent  from pro_factory_delivery pfd \n").
                 append(" left join inv_purchase_invoice ipi on ipi.id = pfd.inv_purchase_invoice_id\n").
                 append(" left join inv_organization_site ios on ios.id = ipi.organization_site_id\n").
                 append(" left join inv_inventory inv on inv.id = ipi.inv_inventory_id ").
@@ -42,7 +42,7 @@ public class InvoiceMovementReportServiceImpl implements InvoiceMovementReportSe
                 append(appendProProductionInvoice(printProductionDTO)).
                 append(appendGallary(printProductionDTO)).
                 append(appendDateProFactoryDelivery(printProductionDTO)).
-                append(" union all select ipi.serial as serial , ios.name as customerName , inv.name as inventoryName , ipi.date , 3 , ipi.id as id , null  as idFactory from inv_purchase_invoice ipi \n").
+                append(" union all select ipi.serial as serial , ios.name as customerName , inv.name as inventoryName , ipi.date , 3 , ipi.id as id , null  as idFactory, null as parent  from inv_purchase_invoice ipi \n").
                 append(" left join inv_organization_site ios on ios.id = ipi.organization_site_id\n").
                 append(" left join inv_inventory inv on inv.id = ipi.inv_inventory_id ").
                 append(" left join inv_inventory inv2 on inv2.id = ipi.galary_Id  ").
@@ -54,27 +54,42 @@ public class InvoiceMovementReportServiceImpl implements InvoiceMovementReportSe
 
         List<Object[]> res = dao.executeNativeQuery(query.toString());
         List<InvoiceMovementReport> list = new ArrayList<>();
-        Map<Integer, InvoiceMovementReport> mapList = new HashMap<>();
+        Map<String, InvoiceMovementReport> mapList = new HashMap<>();
         InvoiceMovementReport invoiceMovementReport;
         for (Object[] object : res) {
             Integer invoiceSerial = (Integer) object[0];
             Integer idFactory = (Integer) object[6];
+            Integer parent = (Integer) object[7];
 //            Long type = (Long) object[4];
 //            int type2 = (int) type;
             long type = (Long) object[4];
             Date date = (Date) object[3];
 
-            if (mapList.containsKey(invoiceSerial)) {
-                invoiceMovementReport = mapList.get(invoiceSerial);
-            } else {
+            if (null == parent) {
                 invoiceMovementReport = new InvoiceMovementReport();
                 invoiceMovementReport.setInvoiceSerial((Integer) object[0]);
                 invoiceMovementReport.setClientName((String) object[1]);
                 invoiceMovementReport.setInventoryName((String) object[2]);
                 invoiceMovementReport.setId((Integer) object[5]);
                 invoiceMovementReport.setIdFactory((Integer) object[6]);
+                invoiceMovementReport.setParent((Integer) object[7]);
+                invoiceMovementReport.setParentCheck((invoiceMovementReport.getInvoiceSerial() + "" + invoiceMovementReport.getIdFactory()));
+            } else {
+                invoiceMovementReport = mapList.get((invoiceSerial + "" + parent));
+                invoiceMovementReport.setParent(parent);
+                invoiceMovementReport.setParentCheck((invoiceSerial + "" + idFactory));
             }
 
+//            if (mapList.containsKey(idFactory)) {
+//                invoiceMovementReport = mapList.get(idFactory);
+//            } else {
+//                invoiceMovementReport = new InvoiceMovementReport();
+//                invoiceMovementReport.setInvoiceSerial((Integer) object[0]);
+//                invoiceMovementReport.setClientName((String) object[1]);
+//                invoiceMovementReport.setInventoryName((String) object[2]);
+//                invoiceMovementReport.setId((Integer) object[5]);
+//                invoiceMovementReport.setIdFactory((Integer) object[6]);
+//            }
             invoiceMovementReport.setNumberTobInvoice(summitionTob(invoiceMovementReport.getId()));
 
             if (type == 0) {
@@ -94,7 +109,10 @@ public class InvoiceMovementReportServiceImpl implements InvoiceMovementReportSe
 //                invoiceMovementReport.setNumberTobcustomer(summitionTob(invoiceMovementReport.getIdFactory(), (int) type));
             }
 
-            mapList.put(invoiceSerial, invoiceMovementReport);
+            if (null != invoiceMovementReport.getParent()) {
+                mapList.remove((invoiceSerial + "" + parent), invoiceMovementReport);
+            }
+            mapList.put(invoiceMovementReport.getParentCheck(), invoiceMovementReport);
 
         }
         list = new ArrayList(mapList.values());

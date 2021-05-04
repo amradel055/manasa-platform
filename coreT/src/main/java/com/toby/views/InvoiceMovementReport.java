@@ -26,6 +26,8 @@ public class InvoiceMovementReport implements Serializable {
     private Integer type;
     private Integer id;
     private Integer idFactory;
+    private Integer parent;
+    private String parentCheck;
     private BigDecimal numberTobInvoice;
     private BigDecimal numberToFactory;
     private BigDecimal numberTobExitFactory;
@@ -222,6 +224,34 @@ public class InvoiceMovementReport implements Serializable {
      */
     public void setNumberTobcustomer(BigDecimal numberTobcustomer) {
         this.numberTobcustomer = numberTobcustomer;
+    }
+
+    /**
+     * @return the parent
+     */
+    public Integer getParent() {
+        return parent;
+    }
+
+    /**
+     * @param parent the parent to set
+     */
+    public void setParent(Integer parent) {
+        this.parent = parent;
+    }
+
+    /**
+     * @return the parentCheck
+     */
+    public String getParentCheck() {
+        return parentCheck;
+    }
+
+    /**
+     * @param parentCheck the parentCheck to set
+     */
+    public void setParentCheck(String parentCheck) {
+        this.parentCheck = parentCheck;
     }
 
 }

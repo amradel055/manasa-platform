@@ -1278,7 +1278,6 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
 
                 String error = invPurchaseInvoiceDetailsService.addInvPurchaseInvoiceDetailsDTO(invInvoiceDTO.getInvPurchaseInvoiceDetailList(), invInvoiceDTO, tobyUser);
 
-                    
                 invInvoiceDTO.setInvPurchaseInvoiceId(invPurchaseInvoice.getId());
                 if (invPurchaseInvoice.getId() == null) {
                     invAddingOrderService.save(invInvoiceDTO, tobyUser);
@@ -1587,18 +1586,19 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         Map<String, Object> params = new HashMap<>();
         params.put("type", printProductionDTO.getInvoiceStatus());
         params.put("galaryId", printProductionDTO.getGallaryFrom().getId());
-        params.put("dateFrom", printProductionDTO.getFromDate());
-        params.put("dateTo", printProductionDTO.getToDate());
+
         params.put("branchId", branchId);
         StringBuilder builder = new StringBuilder();
-        builder.append("SELECT s FROM InvPurchaseInvoice s WHERE s.branchId.id = :branchId AND  s.type =:type ");
+        builder.append("SELECT s FROM InvPurchaseInvoice s WHERE s.branchId.id = :branchId AND  s.type =:type AND s.id not in (SELECT p.invPurchaseInvoiceId.id from ProFactoryDelivery p ) ");
         if (printProductionDTO.getGallaryFrom() != null) {
             builder.append(" AND  (:galaryId is Null OR  s.galaryId.id = :galaryId) ");
         }
         if (printProductionDTO.getFromDate() != null) {
+            params.put("dateFrom", printProductionDTO.getFromDate());
             builder.append(" AND   s.date >= :dateFrom ");
         }
         if (printProductionDTO.getToDate() != null) {
+            params.put("dateTo", printProductionDTO.getToDate());
             builder.append(" AND   s.date <= :dateTo ");
         }
         builder.append(" order by s.serial DESC");
