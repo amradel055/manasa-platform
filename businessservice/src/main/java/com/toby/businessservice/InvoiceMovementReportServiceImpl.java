@@ -76,8 +76,10 @@ public class InvoiceMovementReportServiceImpl implements InvoiceMovementReportSe
                 invoiceMovementReport.setParentCheck((invoiceMovementReport.getInvoiceSerial() + "" + invoiceMovementReport.getIdFactory()));
             } else {
                 invoiceMovementReport = mapList.get((invoiceSerial + "" + parent));
-                invoiceMovementReport.setParent(parent);
-                invoiceMovementReport.setParentCheck((invoiceSerial + "" + idFactory));
+                if (invoiceMovementReport != null) {
+                    invoiceMovementReport.setParent(parent);
+                    invoiceMovementReport.setParentCheck((invoiceSerial + "" + idFactory));
+                }
             }
 
 //            if (mapList.containsKey(idFactory)) {
@@ -90,29 +92,31 @@ public class InvoiceMovementReportServiceImpl implements InvoiceMovementReportSe
 //                invoiceMovementReport.setId((Integer) object[5]);
 //                invoiceMovementReport.setIdFactory((Integer) object[6]);
 //            }
-            invoiceMovementReport.setNumberTobInvoice(summitionTob(invoiceMovementReport.getId()));
+            if (invoiceMovementReport != null) {
+                invoiceMovementReport.setNumberTobInvoice(summitionTob(invoiceMovementReport.getId()));
 
-            if (type == 0) {
-                invoiceMovementReport.setFactoryDate(date);
-                invoiceMovementReport.setNumberToFactory(summitionTob(invoiceMovementReport.getIdFactory(), (int) type));
+                if (type == 0) {
+                    invoiceMovementReport.setFactoryDate(date);
+                    invoiceMovementReport.setNumberToFactory(summitionTob(invoiceMovementReport.getIdFactory(), (int) type));
 
-            } else if (type == 1) {
-                invoiceMovementReport.setDeliveryDate(date);
-                invoiceMovementReport.setNumberTobExitFactory(summitionTob(invoiceMovementReport.getIdFactory(), (int) type));
-            }
-            if (type == 2) {
-                invoiceMovementReport.setGalaryDate(date);
-                invoiceMovementReport.setNumberTobgallary(summitionTob(invoiceMovementReport.getIdFactory(), (int) type));
-            }
-            if (type == 3) {
-                invoiceMovementReport.setClientDate(date);
+                } else if (type == 1) {
+                    invoiceMovementReport.setDeliveryDate(date);
+                    invoiceMovementReport.setNumberTobExitFactory(summitionTob(invoiceMovementReport.getIdFactory(), (int) type));
+                }
+                if (type == 2) {
+                    invoiceMovementReport.setGalaryDate(date);
+                    invoiceMovementReport.setNumberTobgallary(summitionTob(invoiceMovementReport.getIdFactory(), (int) type));
+                }
+                if (type == 3) {
+                    invoiceMovementReport.setClientDate(date);
 //                invoiceMovementReport.setNumberTobcustomer(summitionTob(invoiceMovementReport.getIdFactory(), (int) type));
-            }
+                }
 
-            if (null != invoiceMovementReport.getParent()) {
-                mapList.remove((invoiceSerial + "" + parent), invoiceMovementReport);
+                if (null != invoiceMovementReport.getParent()) {
+                    mapList.remove((invoiceSerial + "" + parent), invoiceMovementReport);
+                }
+                mapList.put(invoiceMovementReport.getParentCheck(), invoiceMovementReport);
             }
-            mapList.put(invoiceMovementReport.getParentCheck(), invoiceMovementReport);
 
         }
         list = new ArrayList(mapList.values());

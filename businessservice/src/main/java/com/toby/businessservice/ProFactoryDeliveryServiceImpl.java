@@ -117,16 +117,20 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
                 invInvoiceDTO.setGallaryName(invInventoryDTO.getName());
 
             }
-            if (entity.getInvPurchaseInvoiceId() != null && entity.getInvPurchaseInvoiceId().getOrganizationSiteId() != null) {
-                invInvoiceDTO.setOrganizationSiteId(organizationSiteService.mapToDTOSmall(entity.getInvPurchaseInvoiceId().getOrganizationSiteId()));
-                invInvoiceDTO.setCustomerCode(entity.getInvPurchaseInvoiceId().getOrganizationSiteId().getCode());
-                invInvoiceDTO.setCustomerName(entity.getInvPurchaseInvoiceId().getOrganizationSiteId().getName());
-                invInvoiceDTO.setCustomerMobile(entity.getInvPurchaseInvoiceId().getOrganizationSiteId().getMobile());
-            }
+            customerData(entity, invInvoiceDTO);
         }
 
         if (entity.getInvPurchaseInvoiceId() != null) {
             invInvoiceDTO.setLoadedSerial(entity.getInvPurchaseInvoiceId().getSerial());
+        }
+    }
+
+    public void customerData(ProFactoryDelivery entity, InvInvoiceDTO invInvoiceDTO) {
+        if (entity.getInvPurchaseInvoiceId() != null && entity.getInvPurchaseInvoiceId().getOrganizationSiteId() != null) {
+            invInvoiceDTO.setOrganizationSiteId(organizationSiteService.mapToDTOSmall(entity.getInvPurchaseInvoiceId().getOrganizationSiteId()));
+            invInvoiceDTO.setCustomerCode(entity.getInvPurchaseInvoiceId().getOrganizationSiteId().getCode());
+            invInvoiceDTO.setCustomerName(entity.getInvPurchaseInvoiceId().getOrganizationSiteId().getName());
+            invInvoiceDTO.setCustomerMobile(entity.getInvPurchaseInvoiceId().getOrganizationSiteId().getMobile());
         }
     }
 
@@ -161,6 +165,7 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
         invInvoiceDTO.setIndex(entity.getSerial());
         invInvoiceDTO.setCompanyId(entity.getCompanyId().getId() != null ? entity.getCompanyId().getId() : null);
         invInvoiceDTO.setCreatedByName(entity.getCreatedBy() != null ? entity.getCreatedBy().getName() : null);
+        customerData(entity, invInvoiceDTO);
 
 //        invInvoiceDTO.setProFactoryDelivery(entity.getId());
         if (entity.getInvPurchaseInvoiceId() != null) {

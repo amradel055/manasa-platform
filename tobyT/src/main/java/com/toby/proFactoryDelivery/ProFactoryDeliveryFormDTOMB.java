@@ -68,6 +68,7 @@ public class ProFactoryDeliveryFormDTOMB extends ProductionBasicDataForm {
             findScreenName();
             setInvInvoiceDTO(proFactoryDeliveryService.save(getInvInvoiceDTO(), getUserData().getUser()));
             msgSave(getInvInvoiceDTO().getMsg());
+            sendSms(getInvInvoiceDTO().getCustomerMobile(), "التوبى العالمى", "برنس للخياطة يبلغكم بأن الثياب جاهزة للتسليم  للاستفسار الاتصال على الرقم 920027070 - 0553016270");
             reset();
             changeFocus("form:invoiceNumber");
         } else {
@@ -93,7 +94,7 @@ public class ProFactoryDeliveryFormDTOMB extends ProductionBasicDataForm {
 
     public String saveSelection() {
         int indexOfList = getInvInvoiceDTOListSelected().indexOf(getInvInvoiceDTO());
-        
+
         save();
         getInvInvoiceDTOListSelected().remove(indexOfList);
 //        forward();

@@ -14,12 +14,17 @@ import com.toby.entity.Branch;
 import com.toby.entity.GlYear;
 import com.toby.entity.TobyUser;
 import com.toby.entity.TobyUserLogin;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Serializable;
+import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.time.LocalDate;
 import java.time.chrono.HijrahChronology;
@@ -216,6 +221,46 @@ public class Basic implements Serializable {
 
         } catch (MessagingException mex) {
             mex.printStackTrace();
+        }
+    }
+
+    public String sendSms(String mobile, String sender, String message) {
+        try {
+
+            String username = "l3TTd3Ur";
+            String password = "lC2DacCyTH";
+            String language = "2";
+
+            String requestUrl = "https://mshastra.com/sendurl.aspx/?"
+                    + "user=" + URLEncoder.encode(username, "UTF-8")
+                    + "&pwd=" + URLEncoder.encode(password, "UTF-8")
+//                    + "&language=" + URLEncoder.encode(language, "UTF-8")
+                    + "&senderid=" + URLEncoder.encode(sender, "UTF-8")
+                    + "&mobileno=" + URLEncoder.encode("0201015926792", "UTF-8")
+                    + "&msgtext=" + URLEncoder.encode(message, "UTF-8")
+                    + "&CountryCode=" + URLEncoder.encode("ALL", "UTF-8");
+
+            URL url = new URL(requestUrl);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+            conn.setDoOutput(true);
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Length", Integer.toString(requestUrl.length()));
+            conn.getOutputStream().write(requestUrl.getBytes("UTF-8"));
+            final BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            final StringBuffer stringBuffer = new StringBuffer();
+            String line;
+            while ((line = rd.readLine()) != null) {
+                stringBuffer.append(line);
+            }
+            rd.close();
+            System.out.println(conn.getResponseMessage());
+
+            conn.disconnect();
+            return conn.getResponseMessage();
+        } catch (Exception e) {
+            System.out.println("Error SMS " + e);
+            return "Error " + e;
         }
     }
 
