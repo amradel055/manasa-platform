@@ -31,12 +31,14 @@ public class CompanyInvoicesWithoutSewingReport extends Basic {
     public void search() {
         setInvoicesWithoutSewingList(reportsService.getCompanyInvoicesWithoutSewing(invoicesWithoutSewing, getUserData().getUserBranch().getId()));
     }
+    
      public void convertDateFrom(){
         getInvoicesWithoutSewing().setDateFrom(findDateFromHijriFrom());
     }
     public void convertDateTo(){
         getInvoicesWithoutSewing().setDateTo(findDateFromHijriTo());
     }
+    
      public void postProcessXLS(Object document) {
         HSSFWorkbook wb = (HSSFWorkbook) document;
         HSSFSheet sheet = wb.getSheetAt(0);

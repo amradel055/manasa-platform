@@ -158,6 +158,14 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
 
     }
 
+    public void convertDateFrom() {
+        getCashAccountSettlementSearchBean().setDateFrom(findDateFromHijriFrom());
+    }
+
+    public void convertDateTo() {
+        getCashAccountSettlementSearchBean().setDateTo(findDateFromHijriTo());
+    }
+
     @Override
     public void reset() {
         load();
@@ -434,8 +442,8 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
             totalForBalanceMap.put(cashAccountSettlment.getBankId(), bala.setScale(2, RoundingMode.UP));
         }
     }
-    
-     public void addOpeningBalance2(SubAccountSummaryReport cashAccountSettlment) {
+
+    public void addOpeningBalance2(SubAccountSummaryReport cashAccountSettlment) {
         openingBalance = BigDecimal.ZERO;
         if (cashAccountSettlment.getBankId() != null && distinctBankId.compareTo(cashAccountSettlment.getBankId()) != 0) {
             distinctBankId = cashAccountSettlment.getBankId();

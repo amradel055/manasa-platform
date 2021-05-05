@@ -102,11 +102,19 @@ public class SupplierAccountReportMB extends BaseReportBean {
             InvOrganizationSiteDTO invOrganizationSiteDTO = (InvOrganizationSiteDTO) getContext().getSessionMap().get("ClientacoountSelected");
             supplierAccountSearchBean.setFromorganizationNameDTO(invOrganizationSiteDTO);
             supplierAccountSearchBean.setToorganizationNameDTO(invOrganizationSiteDTO);
-            completOrgSiteFrom(null).add(0,invOrganizationSiteDTO);
-            completOrgSiteTo(null).add(0,invOrganizationSiteDTO);
+            completOrgSiteFrom(null).add(0, invOrganizationSiteDTO);
+            completOrgSiteTo(null).add(0, invOrganizationSiteDTO);
             search();
         }
 
+    }
+
+    public void convertDateFrom() {
+        getSupplierAccountSearchBean().setDateFrom(findDateFromHijriFrom());
+    }
+
+    public void convertDateTo() {
+        getSupplierAccountSearchBean().setDateTo(findDateFromHijriTo());
     }
 
     private void initObjs() {
@@ -168,11 +176,11 @@ public class SupplierAccountReportMB extends BaseReportBean {
 
         setOrganizationSiteRootList(new ArrayList<>());
         if (uri != null && uri.contains("clientacoount")) {
-            setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId, 0,getSupplierAccountSearchBean()));
+            setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId, 0, getSupplierAccountSearchBean()));
         } else if (uri != null && uri.contains("contractoraccount")) {
-            setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId, 4,getSupplierAccountSearchBean()));
+            setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId, 4, getSupplierAccountSearchBean()));
         } else {
-            setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId, 1,getSupplierAccountSearchBean()));
+            setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId, 1, getSupplierAccountSearchBean()));
         }
 
         organizationSiteStatementmap = new HashMap<>();
@@ -207,16 +215,15 @@ public class SupplierAccountReportMB extends BaseReportBean {
 
     }
 
-    
     public void searchById() {
 
         setOrganizationSiteRootList(new ArrayList<>());
         if (uri != null && uri.contains("clientacoount")) {
-            setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId, 0,getSupplierAccountSearchBean()));
+            setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId, 0, getSupplierAccountSearchBean()));
         } else if (uri != null && uri.contains("contractoraccount")) {
-            setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId, 4,getSupplierAccountSearchBean()));
+            setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId, 4, getSupplierAccountSearchBean()));
         } else {
-            setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId, 1,getSupplierAccountSearchBean()));
+            setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId, 1, getSupplierAccountSearchBean()));
         }
 
         organizationSiteStatementmap = new HashMap<>();

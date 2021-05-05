@@ -134,7 +134,7 @@
 
                             </div>
                         </div>
-                         <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
                                 <p:inputText value="#{invoiceProductionStagesReportMB.dayHijriFrom}" /> يوم
                                 <p:inputText value="#{invoiceProductionStagesReportMB.monthHijriFrom}" />  شهر
@@ -152,23 +152,23 @@
                         </div>
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
-
-                                <p:calendar style="width: 50%"  id="dateFrom1"
-
+                                <p:calendar style="width: 50%"  id="dateTo"
+                                            value="#{invoiceProductionStagesReportMB.printProductionDTO.toDate}"
                                             pattern="dd/MM/yyyy"  showButtonPanel="true" >
 
                                 </p:calendar>
+
                             </div>
                             <div class="ui-g-6 ui-xl-6">
+
 
                                 <p:outputLabel style="width: 50px"  value="الى تاريخ" />
 
 
-
                             </div>
                         </div>
-                        
-                         <div class="ui-g-12 ui-xl-12">
+
+                        <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
                                 <p:inputText value="#{invoiceProductionStagesReportMB.dayHijriTo}" /> يوم
                                 <p:inputText value="#{invoiceProductionStagesReportMB.monthHijriTo}" />  شهر
@@ -177,29 +177,14 @@
                                                      value="تنفيذ" 
                                                      icon="fa fa-fw fa-save"
                                                      action="#{invoiceProductionStagesReportMB.convertDateTo()}"
-                                                     update="dateFrom1"
+                                                     update="dateTo"
                                                      />
                             </div>
                             <div class="ui-g-6 ui-xl-6">
                                 <p:outputLabel style="width: 50px"  value="إلى تاريخ هجري" />
                             </div>
                         </div>
-                        <div class="ui-g-12 ui-xl-12" id="datepicker">
-                            <div class="ui-g-6 ui-xl-6">
-                                <input id="pick-button" type="button" onclick="pickADate();"
-                                       value="#{invoiceProductionStagesReportMB.printProductionDTO.toDate} pick" />
-                                <input id="picked-text" type="text" size="22"/>
 
-
-                            </div>
-                            <div class="ui-g-6 ui-xl-6">
-
-                                <p:outputLabel style="width: 50px"  value="الى تاريخ" />
-
-
-
-                            </div>
-                        </div>
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
 

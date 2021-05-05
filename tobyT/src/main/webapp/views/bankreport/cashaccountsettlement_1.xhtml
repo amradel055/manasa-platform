@@ -180,6 +180,24 @@
 
                                     </div>
                                 </div>
+
+                                <div class="ui-g-12 ui-xl-12">
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:inputText value="#{CashAccountSettlementMB.dayHijriFrom}" /> يوم
+                                        <p:inputText value="#{CashAccountSettlementMB.monthHijriFrom}" />  شهر
+                                        <p:inputText value="#{CashAccountSettlementMB.yearHijriFrom}" />  سنة
+                                        <p:commandButton     class="saveButton" id="excuteFrom" 
+                                                             value="تنفيذ" 
+                                                             icon="fa fa-fw fa-save"
+                                                             action="#{CashAccountSettlementMB.convertDateFrom()}"
+                                                             update="dateFrom"
+                                                             />
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 50px"  value="من تاريخ هجري" />
+                                    </div>
+                                </div>
+
                                 <div class="ui-g-12 ui-xl-12">
                                     <div class="ui-g-6 ui-xl-6">
                                         <p:calendar  style="width: 50%"  id="dateTo" 
@@ -196,6 +214,24 @@
 
                                     </div>
                                 </div>
+
+                                <div class="ui-g-12 ui-xl-12">
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:inputText value="#{CashAccountSettlementMB.dayHijriTo}" /> يوم
+                                        <p:inputText value="#{CashAccountSettlementMB.monthHijriTo}" />  شهر
+                                        <p:inputText value="#{CashAccountSettlementMB.yearHijriTo}" />  سنة
+                                        <p:commandButton     class="saveButton" id="excuteTo" 
+                                                             value="تنفيذ" 
+                                                             icon="fa fa-fw fa-save"
+                                                             action="#{CashAccountSettlementMB.convertDateTo()}"
+                                                             update="dateTo"
+                                                             />
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 50px"  value="إلى تاريخ هجري" />
+                                    </div>
+                                </div>
+                                
                                 <div class="ui-g-12 ui-xl-12">
                                     <div class="ui-g-6 ui-xl-6">
 
@@ -330,8 +366,8 @@
                                   headerText="#{userData.userDDs['DOCUMENT_NUMBER']}">
                             <h:outputText value="#{subaccReport.serial}" style="font-size: 12px"/>
                         </p:column>   
-                       
-                         <p:column style="width: 10vh;text-align: center;font-size:1.8vh;border-radius: 0px" 
+
+                        <p:column style="width: 10vh;text-align: center;font-size:1.8vh;border-radius: 0px" 
                                   filterBy="#{subaccReport.invoiceNumber}"  filterMatchMode="contains" sortBy="#{subaccReport.invoiceNumber}" filterable="false"
                                   headerText="الفاتورة">
                             <h:outputText value="#{subaccReport.invoiceNumber}" style="font-size: 12px"/>

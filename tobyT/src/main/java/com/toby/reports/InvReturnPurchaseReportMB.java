@@ -88,6 +88,14 @@ public class InvReturnPurchaseReportMB extends BaseReportBean {
 
         fillLists();
     }
+    
+     public void convertDateFrom() {
+        getInvReturnPurchaseSearchBean().setDateFrom(findDateFromHijriFrom());
+    }
+
+    public void convertDateTo() {
+         getInvReturnPurchaseSearchBean().setDateTo(findDateFromHijriTo());
+    }
 
     private void initObjs() {
         invInventoryList = new ArrayList<>();

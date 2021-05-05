@@ -89,6 +89,14 @@ public class BankBalanceReportMB extends BaseGlAccountReportBean {
         prepareOpeneingBlancesValues(commonSearchBean);
     }
 
+    public void convertDateFrom() {
+        getCommonSearchBean().setDateFrom(findDateFromHijriFrom());
+    }
+
+    public void convertDateTo() {
+        getCommonSearchBean().setDateTo(findDateFromHijriTo());
+    }
+
     @Override
     public void reset() {
 //        bankTransactionViewLocalList = glBankService.getAllGlBankByBranchId(getUserData().getUserBranch().getId());
@@ -153,7 +161,7 @@ public class BankBalanceReportMB extends BaseGlAccountReportBean {
                         }
                     }
 
-                     balanceReportBean.setBalance((balanceReportBean.getDebit().subtract(balanceReportBean.getCredit()).add(balanceReportBean.getPreviousBalance() != null ? balanceReportBean.getPreviousBalance() : BigDecimal.ZERO)).setScale(2, RoundingMode.UP));
+                    balanceReportBean.setBalance((balanceReportBean.getDebit().subtract(balanceReportBean.getCredit()).add(balanceReportBean.getPreviousBalance() != null ? balanceReportBean.getPreviousBalance() : BigDecimal.ZERO)).setScale(2, RoundingMode.UP));
                     //  addOpeneingBalanceToPreviousBalance(balanceReportBean.getAccountIdTo(), balanceReportBean);
                     getBalanceViewMap().put(balanceReportView.getBankIdTo(), balanceReportBean);
 
@@ -187,7 +195,7 @@ public class BankBalanceReportMB extends BaseGlAccountReportBean {
                             balanceReportBean.setCredit(balanceReportView.getValueLocal() != null ? (balanceReportBean.getCredit().add(balanceReportView.getValueLocal()).setScale(2, RoundingMode.UP)) : balanceReportBean.getCredit().setScale(2, RoundingMode.UP));
                         }
                     }
-                     balanceReportBean.setBalance((balanceReportBean.getDebit().subtract(balanceReportBean.getCredit()).add(balanceReportBean.getPreviousBalance() != null ? balanceReportBean.getPreviousBalance() : BigDecimal.ZERO)).setScale(2, RoundingMode.UP));
+                    balanceReportBean.setBalance((balanceReportBean.getDebit().subtract(balanceReportBean.getCredit()).add(balanceReportBean.getPreviousBalance() != null ? balanceReportBean.getPreviousBalance() : BigDecimal.ZERO)).setScale(2, RoundingMode.UP));
                     //  addOpeneingBalanceToPreviousBalance(balanceReportBean.getAccountIdFrom(), balanceReportBean);
                     getBalanceViewMap().put(balanceReportView.getBankIdFrom(), balanceReportBean);
 

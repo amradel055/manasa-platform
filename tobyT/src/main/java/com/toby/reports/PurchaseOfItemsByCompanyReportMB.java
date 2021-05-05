@@ -46,6 +46,14 @@ public class PurchaseOfItemsByCompanyReportMB extends BaseInventoryReportBean {
     public void search() {
         setSalesOfItemsByCompanyList(purchaseOfItemsBySuppliersReportService.getAllSalesOfItemsByCompany(getPurchaseOfItemsBySuppliersSearchBean()));
     }
+    
+     public void convertDateFrom() {
+        getPurchaseOfItemsBySuppliersSearchBean().setDateFrom(findDateFromHijriFrom());
+    }
+
+    public void convertDateTo() {
+         getPurchaseOfItemsBySuppliersSearchBean().setDateTo(findDateFromHijriTo());
+    }
 
     @Override
     public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {

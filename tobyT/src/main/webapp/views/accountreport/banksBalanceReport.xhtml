@@ -93,6 +93,22 @@
 
                                     </div>
                                 </div>
+                                <div class="ui-g-12 ui-xl-12">
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:inputText value="#{bankBalanceReportMB.dayHijriFrom}" /> يوم
+                                        <p:inputText value="#{bankBalanceReportMB.monthHijriFrom}" />  شهر
+                                        <p:inputText value="#{bankBalanceReportMB.yearHijriFrom}" />  سنة
+                                        <p:commandButton     class="saveButton" id="excuteFrom" 
+                                                             value="تنفيذ" 
+                                                             icon="fa fa-fw fa-save"
+                                                             action="#{bankBalanceReportMB.convertDateFrom()}"
+                                                             update="dateFrom"
+                                                             />
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 50px"  value="من تاريخ هجري" />
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="ui-g-6 ui-xl-6">
@@ -111,6 +127,22 @@
 
 
 
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-xl-12">
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:inputText value="#{bankBalanceReportMB.dayHijriTo}" /> يوم
+                                        <p:inputText value="#{bankBalanceReportMB.monthHijriTo}" />  شهر
+                                        <p:inputText value="#{bankBalanceReportMB.yearHijriTo}" />  سنة
+                                        <p:commandButton     class="saveButton" id="excuteTo" 
+                                                             value="تنفيذ" 
+                                                             icon="fa fa-fw fa-save"
+                                                             action="#{bankBalanceReportMB.convertDateTo()}"
+                                                             update="dateTo"
+                                                             />
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 50px"  value="إلى تاريخ هجري" />
                                     </div>
                                 </div>
                                 <div class="ui-g-12 ui-xl-12">

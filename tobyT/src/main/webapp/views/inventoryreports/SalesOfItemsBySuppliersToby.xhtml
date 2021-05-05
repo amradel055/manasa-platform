@@ -16,7 +16,7 @@
                 color: #fff ;
                 font-size: 12px;
             }
-            
+
         </style>
 
         <div style=" position: absolute;left: 20px"> 
@@ -90,12 +90,29 @@
                                 <h:panelGroup>
                                     <p:calendar pattern="dd/MM/yyyy" 
                                                 value="#{purchaseOfItemsBySuppliersReportMB.purchaseOfItemsBySuppliersSearchBean.dateFrom}"
-                                                style="width: 56%">
+                                                style="width: 56%"
+                                                id="dateFrom">
 
                                     </p:calendar>
                                 </h:panelGroup>
                             </h:panelGroup>
 
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:inputText value="#{purchaseOfItemsBySuppliersReportMB.dayHijriFrom}" /> يوم
+                                <p:inputText value="#{purchaseOfItemsBySuppliersReportMB.monthHijriFrom}" />  شهر
+                                <p:inputText value="#{purchaseOfItemsBySuppliersReportMB.yearHijriFrom}" />  سنة
+                                <p:commandButton     class="saveButton" id="excuteFrom" 
+                                                     value="تنفيذ" 
+                                                     icon="fa fa-fw fa-save"
+                                                     action="#{purchaseOfItemsBySuppliersReportMB.convertDateFrom()}"
+                                                     update="dateFrom"
+                                                     />
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 50px"  value="من تاريخ هجري" />
+                            </div>
                         </div>
                         <div class="ui-g-12 ui-md-6">
                             <h:panelGroup>
@@ -106,11 +123,29 @@
                                 <h:panelGroup>
                                     <p:calendar pattern="dd/MM/yyyy" 
                                                 value="#{purchaseOfItemsBySuppliersReportMB.purchaseOfItemsBySuppliersSearchBean.dateTo}"
-                                                style="width: 56%">
+                                                style="width: 56%"
+                                                id="dateTo">
 
                                     </p:calendar>
                                 </h:panelGroup>
                             </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:inputText value="#{purchaseOfItemsBySuppliersReportMB.dayHijriTo}" /> يوم
+                                <p:inputText value="#{purchaseOfItemsBySuppliersReportMB.monthHijriTo}" />  شهر
+                                <p:inputText value="#{purchaseOfItemsBySuppliersReportMB.yearHijriTo}" />  سنة
+                                <p:commandButton     class="saveButton" id="excuteTo" 
+                                                     value="تنفيذ" 
+                                                     icon="fa fa-fw fa-save"
+                                                     action="#{purchaseOfItemsBySuppliersReportMB.convertDateTo()}"
+                                                     update="dateTo"
+                                                     />
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 50px"  value="إلى تاريخ هجري" />
+                            </div>
                         </div>
                         <div class="ui-g-12 ui-md-6">
                             <h:panelGroup>
@@ -620,7 +655,7 @@
                     chart.draw(data, options);
                 }
             </script>
-          
+
         </h:form>
     </ui:define>
 </ui:composition>
