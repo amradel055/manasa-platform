@@ -16,10 +16,11 @@
                     <p:messages id="messages" showDetail="true" closable="true"/> 
                     <div class="ui-g-6 ui-xl-6">
 
+
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
 
-                                <p:calendar style="width: 50%"  id="date1"
+                                <p:calendar style="width: 50%"  id="dateFrom"
                                             value="#{proProductionTransactionFactoryMB.proProductionTransactionFactoryView.date}"
                                             pattern="dd/MM/yyyy"  showButtonPanel="true" >
 
@@ -27,14 +28,50 @@
                             </div>
                             <div class="ui-g-6 ui-xl-6">
 
-                                <p:outputLabel style="width: 50px"  value=" التاريخ" />
+                                <p:outputLabel style="width: 50px"  value=" من تاريخ" />
 
 
 
                             </div>
                         </div>
-                        
-                         <div class="ui-g-12 ui-xl-12">
+
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:inputText value="#{proProductionTransactionFactoryMB.dayHijriFrom}" /> يوم
+                                <p:inputText value="#{proProductionTransactionFactoryMB.monthHijriFrom}" />  شهر
+                                <p:inputText value="#{proProductionTransactionFactoryMB.yearHijriFrom}" />  سنة
+                                <p:commandButton     class="saveButton" id="excuteFrom" 
+                                                     value="تنفيذ" 
+                                                     icon="fa fa-fw fa-save"
+                                                     action="#{proProductionTransactionFactoryMB.convertDateFrom()}"
+                                                     update="dateFrom"
+                                                     />
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 50px"  value= "من تاريخ هجرى" />
+                            </div>
+                        </div>
+
+
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:calendar style="width: 50%"  id="dateTo"
+                                            value="#{proProductionTransactionFactoryMB.proProductionTransactionFactoryView.dateTo}"
+                                            pattern="dd/MM/yyyy"  showButtonPanel="true" >
+
+                                </p:calendar>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:outputLabel style="width: 50px"  value=" الى تاريخ" />
+
+
+
+                            </div>
+                        </div>
+
+                        <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
                                 <p:inputText value="#{proProductionTransactionFactoryMB.dayHijriTo}" /> يوم
                                 <p:inputText value="#{proProductionTransactionFactoryMB.monthHijriTo}" />  شهر
@@ -42,14 +79,15 @@
                                 <p:commandButton     class="saveButton" id="excuteTo" 
                                                      value="تنفيذ" 
                                                      icon="fa fa-fw fa-save"
-                                                     action="#{proProductionTransactionFactoryMB.convertDate()}"
-                                                     update="date1"
+                                                     action="#{proProductionTransactionFactoryMB.convertDateTo()}"
+                                                     update="dateTo"
                                                      />
                             </div>
                             <div class="ui-g-6 ui-xl-6">
-                                <p:outputLabel style="width: 50px"  value=" تاريخ هجري" />
+                                <p:outputLabel style="width: 50px"  value="الى تاريخ هجرى " />
                             </div>
                         </div>
+
                         <div class="ui-g-12 ui-xl-12">
 
                             <div class="ui-g-6 ui-xl-6">
@@ -67,17 +105,13 @@
                     <div class="ui-g-6 ui-xl-6">
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
-
-                                <p:autoComplete style="width:85%" id="gallary_from" 
-                                                dropdown="true"
-                                                converter="#{autoComplete.invInventoryDTOConverter}"
-                                                value="#{proProductionTransactionFactoryMB.proProductionTransactionFactoryView.gallerySelected}" 
-                                                var="gallaryFrom"
-                                                itemLabel="#{gallaryFrom}"
-                                                itemValue="#{gallaryFrom}" 
-                                                forceSelection="true" 
-                                                completeMethod="#{autoComplete.completeGallaryDTO}" >
-                                </p:autoComplete>
+                                <p:selectOneMenu  id="gallary_From" value="#{proProductionTransactionFactoryMB.proProductionTransactionFactoryView.gallerySelected}"
+                                                  converter="#{proProductionTransactionFactoryMB.gallaryDTOConverter}">
+                                    <f:selectItems value="#{proProductionTransactionFactoryMB.gallaryList}" 
+                                                   var="gallaryFrom"
+                                                   itemLabel="#{gallaryFrom}"
+                                                   itemValue="#{gallaryFrom}" />
+                                </p:selectOneMenu>
                             </div>
                             <div class="ui-g-6 ui-xl-6">
                                 <p:outputLabel style="width: 50px;margin-right: 1%" value="المعرض"/>

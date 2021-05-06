@@ -32,6 +32,8 @@ public class ItemMainDataByGroupSearchBean {
     private Date dateFrom;
     private Date dateTo;
     private int supplier ;
+    
+    
     public Integer getBranchId() {
         return branchId;
     }

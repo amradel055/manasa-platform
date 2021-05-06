@@ -1,6 +1,9 @@
 package com.toby.reports;
 
 import com.toby.businessservice.ProProductionItemsTransactionService;
+import com.toby.businessservice.TobyUserInventoryService;
+import com.toby.converter.InvInventoryDTOConverter;
+import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.ProProductionItemsTransactionDTO;
 import com.toby.toby.Basic;
 import com.toby.views.ProProductionTransactionFactoryView;
@@ -26,17 +29,26 @@ public class ProProductionTransactionFactoryMB extends Basic {
     private List<ProProductionItemsTransactionDTO> proProductionItemsTransactionDTOList;
     private ProProductionTransactionFactoryView proProductionTransactionFactoryView;
 
+    private InvInventoryDTOConverter gallaryDTOConverter;
+    private List<InvInventoryDTO> gallaryList;
+
     @EJB
     private ProProductionItemsTransactionService proProductionItemsTransactionService;
+    @EJB
+    private TobyUserInventoryService tobyUserInventoryService;
 
     public void search() {
         setProProductionItemsTransactionDTOList(proProductionItemsTransactionService.getALLProProductionItemsTransactionDTO(proProductionTransactionFactoryView, getUserData().getUserBranch().getId()));
     }
-    
-     public void convertDate(){
-        getProProductionTransactionFactoryView().setDate(findDateFromHijriTo());
+
+    public void convertDateFrom() {
+        getProProductionTransactionFactoryView().setDate(findDateFromHijriFrom());
     }
-    
+
+    public void convertDateTo() {
+        getProProductionTransactionFactoryView().setDateTo(findDateFromHijriTo());
+    }
+
     public void postProcessXLS(Object document) {
         HSSFWorkbook wb = (HSSFWorkbook) document;
         HSSFSheet sheet = wb.getSheetAt(0);
@@ -119,6 +131,38 @@ public class ProProductionTransactionFactoryMB extends Basic {
      */
     public void setProProductionTransactionFactoryView(ProProductionTransactionFactoryView proProductionTransactionFactoryView) {
         this.proProductionTransactionFactoryView = proProductionTransactionFactoryView;
+    }
+
+    /**
+     * @return the gallaryDTOConverter
+     */
+    public InvInventoryDTOConverter getGallaryDTOConverter() {
+        return gallaryDTOConverter;
+    }
+
+    /**
+     * @param gallaryDTOConverter the gallaryDTOConverter to set
+     */
+    public void setGallaryDTOConverter(InvInventoryDTOConverter gallaryDTOConverter) {
+        this.gallaryDTOConverter = gallaryDTOConverter;
+    }
+
+    /**
+     * @return the gallaryList
+     */
+    public List<InvInventoryDTO> getGallaryList() {
+        if (gallaryList == null || gallaryList.isEmpty()) {
+            gallaryList = tobyUserInventoryService.getAllGallaryByUserAndBranch(getUserData().getUser());
+            setGallaryDTOConverter(new InvInventoryDTOConverter(gallaryList));
+        }
+        return gallaryList;
+    }
+
+    /**
+     * @param gallaryList the gallaryList to set
+     */
+    public void setGallaryList(List<InvInventoryDTO> gallaryList) {
+        this.gallaryList = gallaryList;
     }
 
     /**
