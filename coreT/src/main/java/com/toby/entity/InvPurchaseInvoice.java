@@ -114,6 +114,8 @@ public class InvPurchaseInvoice extends BaseEntity {
     private BigDecimal discount;
     @Column(name = "discount_type")
     private Integer discountType;
+    @Column(name = "disc_halala")
+    private BigDecimal discHalala;
     @Basic(optional = false)
     @NotNull
     @Column(name = "post_flag")
@@ -818,6 +820,23 @@ public class InvPurchaseInvoice extends BaseEntity {
      */
     public void setOfferCompanyId(OfferCompany offerCompanyId) {
         this.offerCompanyId = offerCompanyId;
+    }
+
+    /**
+     * @return the discHalala
+     */
+    public BigDecimal getDiscHalala() {
+        if(discHalala == null){
+            discHalala = BigDecimal.ZERO;
+        }
+        return discHalala;
+    }
+
+    /**
+     * @param discHalala the discHalala to set
+     */
+    public void setDiscHalala(BigDecimal discHalala) {
+        this.discHalala = discHalala;
     }
 
 }

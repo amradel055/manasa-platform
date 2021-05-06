@@ -1,6 +1,7 @@
 package com.toby.dto;
 
 import java.util.Date;
+import java.util.List;
 
 
 public class PrintProductionDTO {
@@ -196,9 +197,7 @@ public class PrintProductionDTO {
      */
     public void setInvoiceStatus(Integer invoiceStatus) {
         this.invoiceStatus = invoiceStatus;
-    }
-
-   
+    }  
     
     
     

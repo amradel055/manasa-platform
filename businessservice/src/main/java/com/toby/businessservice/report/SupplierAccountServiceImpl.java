@@ -161,6 +161,6 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
         stringBuilder.append("SELECT sum(RIV.exitt) - sum(RIV.adding) FROM OrganizationSiteStatementView RIV WHERE RIV.organizationSiteId = :organizationSiteId  ");
 
         List<BigDecimal> details = dao.findListByQuery(stringBuilder.toString(), params);
-        return details.get(0);
+        return (details != null && !details.isEmpty() ) ? details.get(0).setScale(3, BigDecimal.ROUND_UP) : BigDecimal.ZERO;
     }
 }

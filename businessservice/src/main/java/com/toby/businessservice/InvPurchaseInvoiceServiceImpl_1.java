@@ -527,7 +527,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         InvInvoiceDTO invPurchaseInvoiceDTO = mapToDTO(invPurchaseInvoice, invPurchaseInvoiceDto, false);
         invPurchaseInvoiceDTO = invGlobalService.updateSummition(invPurchaseInvoiceDTO);
         BigDecimal remain = remainForInvPurchaseInvoice(invPurchaseInvoiceDTO.getId());
-        invPurchaseInvoiceDTO.setRemain(remain.setScale(0, BigDecimal.ROUND_DOWN));
+        invPurchaseInvoiceDTO.setRemain(remain.setScale(0, BigDecimal.ROUND_UP));
         invPurchaseInvoiceDTO.setPayed(findPayed(invPurchaseInvoiceDTO.getId()).setScale(0, BigDecimal.ROUND_DOWN));
         return invPurchaseInvoiceDTO;
     }
@@ -1151,6 +1151,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         invPurchaseInvoice.setDate(invInvoiceDTO.getDate());
         invPurchaseInvoice.setDiscount(invInvoiceDTO.getDiscount());
         invPurchaseInvoice.setDiscountType(invInvoiceDTO.getDiscountType());
+        invPurchaseInvoice.setDiscHalala(invInvoiceDTO.getDiscHalala());
         invPurchaseInvoice.setDueDate(invInvoiceDTO.getDueDate());
         invPurchaseInvoice.setRemarks(invInvoiceDTO.getRemarks());
         invPurchaseInvoice.setPostFlag(0);
@@ -1403,6 +1404,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         invInvoiceDTO.setRemarks(entity.getRemarks());
         invInvoiceDTO.setDiscount(entity.getDiscount());
         invInvoiceDTO.setDiscountType(entity.getDiscountType());
+         invInvoiceDTO.setDiscHalala(entity.getDiscHalala());
         invInvoiceDTO.setDueDate(entity.getDueDate());
         invInvoiceDTO.setPaymentType(entity.getPaymentType());
         invInvoiceDTO.setPostFlag(entity.getPostFlag());
@@ -1650,6 +1652,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         invInvoiceDTO.setPostFlag(entity.getPostFlag());
         invInvoiceDTO.setRemarks(entity.getRemarks());
         invInvoiceDTO.setDueDate(entity.getDueDate());
+       invInvoiceDTO.setNumberOfToob(invoiceMovementReportService.summitionTob(entity.getId()));
         if (entity.getDueDate() != null) {
             invInvoiceDTO.setDiffrentTime(entity.getDueDate().getTime() - (new Date()).getTime());
         }
@@ -1715,12 +1718,13 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         BigDecimal valueAfterDiscount = BigDecimal.ZERO;
         if (entity != null) {
             if (entity.getDiscountType() == 0) {
-                valueAfterDiscount = sumDetailNet.subtract(entity.getDiscount());
+                valueAfterDiscount = sumDetailNet.subtract(entity.getDiscount().add(entity.getDiscHalala()));
             } else if (entity.getDiscountType() == 1) {
-                valueAfterDiscount = sumDetailNet.subtract((entity.getDiscount().multiply(sumDetailNet)).divide(new BigDecimal(100)));
+                valueAfterDiscount = sumDetailNet.subtract(entity.getDiscHalala()).subtract((entity.getDiscount().multiply(sumDetailNet)).divide(new BigDecimal(100)));
             }
             invInvoiceDTO.setValue(valueAfterDiscount);
             invInvoiceDTO.setValueLocal(invInvoiceDTO.getValue().multiply(entity.getRate()));
+            invInvoiceDTO.setDiscHalala(entity.getDiscHalala());
 
             if (entity.getTaxflag()) {
 //                invPurchaseInvoiceDTO.getTotalNetAfterDiscount().multiply(BigDecimal.valueOf(0.15))
@@ -1737,9 +1741,9 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             } else if (entity.getTaxdiscflag() == null || !entity.getTaxdiscflag()) {
                 invInvoiceDTO.setTaxDiscValue(BigDecimal.ZERO);
             }
-            invInvoiceDTO.setTaxDiscValueLocal(invInvoiceDTO.getTaxDiscValue().multiply(entity.getRate()));
+            invInvoiceDTO.setTaxDiscValueLocal((invInvoiceDTO.getTaxDiscValue().multiply(entity.getRate())).add(entity.getDiscHalala()));
             invInvoiceDTO.setRate(entity.getRate());
-            invInvoiceDTO.setFinalNet(invInvoiceDTO.getValue().subtract(invInvoiceDTO.getDiscountValue()).add(invInvoiceDTO.getTaxValue()).subtract(invInvoiceDTO.getTaxDiscValue()));
+            invInvoiceDTO.setFinalNet(invInvoiceDTO.getValue().add(invInvoiceDTO.getTaxValue()).subtract(invInvoiceDTO.getTaxDiscValue()));
         }
         return invInvoiceDTO;
 
@@ -1762,7 +1766,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         if (invPurchaseInvoiceId != null && invPurchaseInvoiceId > 0) {
             BigDecimal payment = findPayed(invPurchaseInvoiceId);
             BigDecimal total = finalNetForInvPurchaseInvoice(invPurchaseInvoiceId);
-            BigDecimal remain = total.subtract(payment);
+            BigDecimal remain = (total.subtract(payment)).setScale(0, RoundingMode.HALF_UP);
             return remain;
         }
         return BigDecimal.ZERO;
@@ -2063,6 +2067,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             summitionItemsView.setFactoryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupDTO.getId(), 0));
             summitionItemsView.setSendNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupDTO.getId(), 1));
             summitionItemsView.setDeliveryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupDTO.getId(), 2));
+            summitionItemsView.setCustomerNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupDTO.getId(), 3));
             if (summitionItemsView.getFactoryNumber().compareTo(BigDecimal.ZERO) == 1
                     || summitionItemsView.getSendNumber().compareTo(BigDecimal.ZERO) == 1
                     || summitionItemsView.getDeliveryNumber().compareTo(BigDecimal.ZERO) == 1) {

@@ -374,7 +374,7 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
             Integer type = getGlBankTransactionEntity().getOrganizationType();
             if (type == 0) {
                 if (CustomerList == null || CustomerList.size() == 0) {
-                    CustomerList = organizationSiteService.getorganizationSiteByBranchIdForGlBankModule(getUserData().getUserBranch().getId(), true, 0);
+//                    CustomerList = organizationSiteService.getorganizationSiteByBranchIdForGlBankModule(getUserData().getUserBranch().getId(), true, 0);
                 } else {
                     organizationList = CustomerList;
 //                organizationList = new ArrayList<>();
@@ -387,14 +387,14 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
 //                    organizationList.add(dest);
 //                }
                 }
-                organizationList = CustomerList;
-                supplierConvertor = new InvOrganizationSiteConverter(organizationList);
+//                organizationList = CustomerList;
+//                supplierConvertor = new InvOrganizationSiteConverter(organizationList);
             } else if (type == 1) {
                 if (supplierList == null || supplierList.size() == 0) {
-                    supplierList = organizationSiteService.getorganizationSiteByBranchIdForGlBankModule(getUserData().getUserBranch().getId(), true, 1);
+//                    supplierList = organizationSiteService.getorganizationSiteByBranchIdForGlBankModule(getUserData().getUserBranch().getId(), true, 1);
                 }
-                organizationList = supplierList;
-                supplierConvertor = new InvOrganizationSiteConverter(organizationList);
+//                organizationList = supplierList;
+//                supplierConvertor = new InvOrganizationSiteConverter(organizationList);
             } else if (type == 2) {
                 if (glAccountList == null || glAccountList.size() == 0) {
                     if (allowAccount) {
@@ -413,13 +413,13 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
 
             if ((type == 0 || type == 1) && organizationList != null && !organizationList.isEmpty()) {
                 glAccountList = new ArrayList<>();
-                for (InvOrganizationSite invOrganizationSite : organizationList) {
-                    account = new GlAccount();
-                    account = invOrganizationSite.getAccountId();
-                    glAccountList.add(account);
-                }
+//                for (InvOrganizationSite invOrganizationSite : organizationList) {
+//                    account = new GlAccount();
+//                    account = invOrganizationSite.getAccountId();
+//                    glAccountList.add(account);
+//                }
 
-                setInvOrganizationSiteConverter(new InvOrganizationSiteConverter(organizationList));
+//                setInvOrganizationSiteConverter(new InvOrganizationSiteConverter(organizationList));
             }
 
             setGlAccountConverter(new GlaccountConverter(glAccountList));
@@ -1081,6 +1081,9 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
                         InvOrganizationSite invOrganizationSite = new InvOrganizationSite();
                         if (ios != null) {
                             invOrganizationSite.setId(ios.getId());
+                            GlAccount accountId = new GlAccount();
+                            accountId.setId(detailsEntity.getInvOrganizationSite().getAccountId().getId());
+                            invOrganizationSite.setAccountId(accountId);
                         }
                         bankTransactionDetail.setOrganizationSiteId(detailsEntity.getInvOrganizationSite() != null ? invOrganizationSite : null);
                         bankTransactionDetail.setRemarks(detailsEntity.getRemarks());

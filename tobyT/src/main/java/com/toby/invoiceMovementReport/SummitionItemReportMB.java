@@ -8,6 +8,8 @@ import com.toby.dto.ProGroupDTO;
 import com.toby.toby.Basic;
 import com.toby.views.SummitionItemsView;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -37,7 +39,14 @@ public class SummitionItemReportMB extends Basic {
 
     private List<SummitionItemsView> itemsViewList;
 
+    private List<InvInventoryDTO> gallaryListSelected;
+
     private InvInventoryDTOConverter gallaryDTOConverter;
+
+    private BigDecimal sumFactoryNumberTotal;
+    private BigDecimal sumSendNumberTotal;
+    private BigDecimal sumDeliveryNumberTotal;
+    private BigDecimal sumCustomerNumberTotal;
 
     @EJB
     InvPurchaseInvoiceService_1 invPurchaseInvoiceService_1;
@@ -45,11 +54,49 @@ public class SummitionItemReportMB extends Basic {
     private TobyUserInventoryService tobyUserInventoryService;
 
     public void search() {
-        if (getUri().contains("summitionItemReportPro")) {
-            itemsViewList = invPurchaseInvoiceService_1.getTheListBasedOnStagesList(getGallaryDTOSelected() == null ? null : getGallaryDTOSelected().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), getUserData().getUserBranch().getId(), getUserData().getUser());
-        } else {
-            itemsViewList = invPurchaseInvoiceService_1.findSummitionQuantity(getGallaryDTOSelected() == null ? null : getGallaryDTOSelected().getId(), getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId());
+//        List<SummitionItemsView> itemsViewForGallary = null;
+        if (getGallaryListSelected() != null && !getGallaryListSelected().isEmpty()) {
+
+            for (InvInventoryDTO invInventoryDTO : getGallaryListSelected()) {
+                List<SummitionItemsView> itemsViewForGallaryinner = new ArrayList<>();
+                SummitionItemsView summitionItemsView = new SummitionItemsView();
+                BigDecimal sumFactoryNumber = BigDecimal.ZERO, sumSendNumber = BigDecimal.ZERO, sumDeliveryNumber = BigDecimal.ZERO, sumCustomerNumber = BigDecimal.ZERO;
+
+                summitionItemsView.setName(invInventoryDTO.getName());
+                summitionItemsView.setRowType(1);
+
+                if (getUri().contains("summitionItemReportPro")) {
+                    itemsViewForGallaryinner = invPurchaseInvoiceService_1.getTheListBasedOnStagesList(invInventoryDTO.getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), getUserData().getUserBranch().getId(), getUserData().getUser());
+                } else {
+                    itemsViewForGallaryinner = invPurchaseInvoiceService_1.findSummitionQuantity(invInventoryDTO.getId(), getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId());
+                }
+
+                if (itemsViewForGallaryinner != null && !itemsViewForGallaryinner.isEmpty()) {
+                    for (SummitionItemsView view : itemsViewForGallaryinner) {
+                        sumFactoryNumber = sumFactoryNumber.add(view.getFactoryNumber());
+                        sumSendNumber = sumSendNumber.add(view.getSendNumber());
+                        sumDeliveryNumber = sumDeliveryNumber.add(view.getDeliveryNumber());
+                        sumCustomerNumber = sumCustomerNumber.add(view.getCustomerNumber());
+                    }
+
+                    summitionItemsView.setFactoryNumber(sumFactoryNumber);
+                    summitionItemsView.setSendNumber(sumSendNumber);
+                    summitionItemsView.setDeliveryNumber(sumDeliveryNumber);
+                    summitionItemsView.setCustomerNumber(sumCustomerNumber);
+
+                    getItemsViewList().add(summitionItemsView);
+                    getItemsViewList().addAll(itemsViewForGallaryinner);
+
+                    setSumFactoryNumberTotal(getSumFactoryNumberTotal().add(sumFactoryNumber));
+                    setSumSendNumberTotal(getSumSendNumberTotal().add(sumSendNumber));
+                    setSumDeliveryNumberTotal(getSumDeliveryNumberTotal().add(sumDeliveryNumber));
+                    setSumCustomerNumberTotal(getSumCustomerNumberTotal().add(sumCustomerNumber));
+                }
+
+            }
+
         }
+
     }
 
     public void convertDateFrom() {
@@ -195,6 +242,9 @@ public class SummitionItemReportMB extends Basic {
      * @return the itemsViewList
      */
     public List<SummitionItemsView> getItemsViewList() {
+        if (itemsViewList == null) {
+            itemsViewList = new ArrayList<>();
+        }
         return itemsViewList;
     }
 
@@ -217,6 +267,88 @@ public class SummitionItemReportMB extends Basic {
      */
     public void setGallaryDTOConverter(InvInventoryDTOConverter gallaryDTOConverter) {
         this.gallaryDTOConverter = gallaryDTOConverter;
+    }
+
+    /**
+     * @return the gallaryListSelected
+     */
+    public List<InvInventoryDTO> getGallaryListSelected() {
+        return gallaryListSelected;
+    }
+
+    /**
+     * @param gallaryListSelected the gallaryListSelected to set
+     */
+    public void setGallaryListSelected(List<InvInventoryDTO> gallaryListSelected) {
+        this.gallaryListSelected = gallaryListSelected;
+    }
+
+    /**
+     * @return the sumFactoryNumberTotal
+     */
+    public BigDecimal getSumFactoryNumberTotal() {
+        if (sumFactoryNumberTotal == null) {
+            sumFactoryNumberTotal = BigDecimal.ZERO;
+        }
+        return sumFactoryNumberTotal;
+    }
+
+    /**
+     * @param sumFactoryNumberTotal the sumFactoryNumberTotal to set
+     */
+    public void setSumFactoryNumberTotal(BigDecimal sumFactoryNumberTotal) {
+        this.sumFactoryNumberTotal = sumFactoryNumberTotal;
+    }
+
+    /**
+     * @return the sumSendNumberTotal
+     */
+    public BigDecimal getSumSendNumberTotal() {
+        if (sumSendNumberTotal == null) {
+            sumSendNumberTotal = BigDecimal.ZERO;
+        }
+        return sumSendNumberTotal;
+    }
+
+    /**
+     * @param sumSendNumberTotal the sumSendNumberTotal to set
+     */
+    public void setSumSendNumberTotal(BigDecimal sumSendNumberTotal) {
+        this.sumSendNumberTotal = sumSendNumberTotal;
+    }
+
+    /**
+     * @return the sumDeliveryNumberTotal
+     */
+    public BigDecimal getSumDeliveryNumberTotal() {
+        if (sumDeliveryNumberTotal == null) {
+            sumDeliveryNumberTotal = BigDecimal.ZERO;
+        }
+        return sumDeliveryNumberTotal;
+    }
+
+    /**
+     * @param sumDeliveryNumberTotal the sumDeliveryNumberTotal to set
+     */
+    public void setSumDeliveryNumberTotal(BigDecimal sumDeliveryNumberTotal) {
+        this.sumDeliveryNumberTotal = sumDeliveryNumberTotal;
+    }
+
+    /**
+     * @return the sumCustomerNumberTotal
+     */
+    public BigDecimal getSumCustomerNumberTotal() {
+        if (sumCustomerNumberTotal == null) {
+            sumCustomerNumberTotal = BigDecimal.ZERO;
+        }
+        return sumCustomerNumberTotal;
+    }
+
+    /**
+     * @param sumCustomerNumberTotal the sumCustomerNumberTotal to set
+     */
+    public void setSumCustomerNumberTotal(BigDecimal sumCustomerNumberTotal) {
+        this.sumCustomerNumberTotal = sumCustomerNumberTotal;
     }
 
 }

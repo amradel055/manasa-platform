@@ -15,7 +15,11 @@ public class SummitionItemsView implements Serializable {
     private BigDecimal factoryNumber;
     private BigDecimal sendNumber;
     private BigDecimal deliveryNumber;
+    private BigDecimal customerNumber;
     private BigDecimal Different;
+    private Integer gallarycode;
+    private String gallaryname;
+    private Integer rowType;
 
     /**
      * @return the quantity
@@ -179,6 +183,65 @@ public class SummitionItemsView implements Serializable {
      */
     public void setDifferent(BigDecimal Different) {
         this.Different = Different;
+    }
+
+    /**
+     * @return the customerNumber
+     */
+    public BigDecimal getCustomerNumber() {
+        return customerNumber;
+    }
+
+    /**
+     * @param customerNumber the customerNumber to set
+     */
+    public void setCustomerNumber(BigDecimal customerNumber) {
+        this.customerNumber = customerNumber;
+    }
+
+    /**
+     * @return the gallarycode
+     */
+    public Integer getGallarycode() {
+        return gallarycode;
+    }
+
+    /**
+     * @param gallarycode the gallarycode to set
+     */
+    public void setGallarycode(Integer gallarycode) {
+        this.gallarycode = gallarycode;
+    }
+
+    /**
+     * @return the gallaryname
+     */
+    public String getGallaryname() {
+        return gallaryname;
+    }
+
+    /**
+     * @param gallaryname the gallaryname to set
+     */
+    public void setGallaryname(String gallaryname) {
+        this.gallaryname = gallaryname;
+    }
+
+    /**
+     * @return the rowType
+     */
+    public Integer getRowType() {
+        if (rowType == null) {
+            rowType = 0;
+        }
+        return rowType;
+    }
+
+    /**
+     * @param rowType the rowType to set
+     */
+    public void setRowType(Integer rowType) {
+        this.rowType = rowType;
     }
 
 }
