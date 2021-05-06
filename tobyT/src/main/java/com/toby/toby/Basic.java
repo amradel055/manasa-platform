@@ -232,8 +232,8 @@ public class Basic implements Serializable {
             String language = "2";
 
             String requestUrl = "https://mshastra.com/sendurl.aspx/?"
-                    + "user=" + URLEncoder.encode(username, "UTF-8")
-                    + "&pwd=" + URLEncoder.encode(password, "UTF-8")
+                    + "user=" + URLEncoder.encode("20099319", "UTF-8")
+                    + "&pwd=" + URLEncoder.encode("0564933202", "UTF-8")
 //                    + "&language=" + URLEncoder.encode(language, "UTF-8")
                     + "&senderid=" + URLEncoder.encode(sender, "UTF-8")
                     + "&mobileno=" + URLEncoder.encode("0201015926792", "UTF-8")

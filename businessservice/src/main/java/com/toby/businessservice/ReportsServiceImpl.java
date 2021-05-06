@@ -131,7 +131,7 @@ public class ReportsServiceImpl implements ReportsService {
         sql.append(" where branch_id = ").append(branchId);
         //appendGallery2(customerBalances, sql);
         sql.append(" group by organization_site_id\n");
-        sql.append(" having (sum(exitt) - sum(adding) ) > 2 ");
+        sql.append(" having (sum(exitt) - sum(adding) ) > 0 ");
         List<Object[]> res = dao.executeNativeQuery(sql.toString());
         for (Object[] object : res) {
             CustomerBalances customerBalances1 = new CustomerBalances();
