@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.toby.reports;
+package com.toby.report;
 
 import com.toby.businessservice.TobyUserInventoryService;
-import com.toby.businessservice.report.InvItemMainDataByGroupReportService;
 import com.toby.businessservice.InvGroupService;
 import com.toby.businessservice.InvItemService;
+import com.toby.businessservice.report.InvItemMainDataByGroupReportService;
 import com.toby.businessservice.reports.searchBean.ItemMainDataByGroupSearchBean;
 import com.toby.converter.InvGroupConverter;
 import com.toby.converter.InvInventoryConverter;
@@ -495,31 +495,32 @@ public class InvItemMainDataByGroupReportMB extends BaseReportBean {
         hashMap.put("costText", userDDs.get("SELLING_PRICE"));
 
         if (itemMainDataByGroupSearchBean.getGroupSelected() != null && !itemMainDataByGroupSearchBean.getGroupSelected().isEmpty()) {
-             String groupSelected = "";
+            String groupSelected = "";
             int index = 0;
             for (InvGroup invGroup : invGroupSubList) {
-                 if (itemMainDataByGroupSearchBean.getGroupSelected().size() == index) {
-                  break;
-                  }
+                if (itemMainDataByGroupSearchBean.getGroupSelected().size() == index) {
+                    break;
+                }
                 if (invGroup.getId() == Integer.valueOf(itemMainDataByGroupSearchBean.getGroupSelected().get(index))) {
                     groupSelected += invGroup.getName() + " - ";
-                     index++;
-                } 
+                    index++;
+                }
             }
             hashMap.put("groupLabel", " مجموعة");
-            hashMap.put("groupValue",  groupSelected == "" ? null :  groupSelected.substring(0,groupSelected.lastIndexOf("-")));
+            if (!groupSelected.isEmpty()) {
+                hashMap.put("groupValue", groupSelected.substring(0, groupSelected.lastIndexOf("-")));
+            }
+            if (itemMainDataByGroupSearchBean.getFromItem() != null) {
+                hashMap.put("fromItemText", "من صنف");
+                hashMap.put("fromItem", itemMainDataByGroupSearchBean.getFromItem().getName());
+            }
+            if (itemMainDataByGroupSearchBean.getToItem() != null) {
+                hashMap.put("toItemText", "الي صنف");
+                hashMap.put("toItem", itemMainDataByGroupSearchBean.getToItem().getName());
+            }
         }
-        if (itemMainDataByGroupSearchBean.getFromItem() != null) {
-            hashMap.put("fromItemText", "من صنف");
-            hashMap.put("fromItem", itemMainDataByGroupSearchBean.getFromItem().getName());
-        }
-        if (itemMainDataByGroupSearchBean.getToItem() != null) {
-            hashMap.put("toItemText", "الي صنف");
-            hashMap.put("toItem", itemMainDataByGroupSearchBean.getToItem().getName());
-        }
-        return hashMap;
+            return hashMap;
     }
-
     public List<InvGroup> completGroup(String query) {
         List<InvGroup> invGroList = getInvGroupList();
         if (query == null || query.trim().equals("")) {
