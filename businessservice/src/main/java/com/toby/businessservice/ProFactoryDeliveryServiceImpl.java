@@ -44,6 +44,8 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
     InvPurchaseInvoiceService_1 invPurchaseInvoiceService_1;
     @EJB
     private OrganizationSiteService organizationSiteService;
+    @EJB
+    InvoiceMovementReportService invoiceMovementReportService;
 
     @Override
     public Long getTotalRegistors(Integer type, Integer branchId, Map<String, Object> filters) {
@@ -100,7 +102,7 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
         invInvoiceDTO.setDate(entity.getDate());
         invInvoiceDTO.setIndex(entity.getSerial());
         invInvoiceDTO.setRemarks(entity.getRemark());
-
+        invInvoiceDTO.setNumberOfToob(invoiceMovementReportService.summitionTob(entity.getId()));
         if (entity.getInvPurchaseInvoiceId() != null) {
             invInvoiceDTO.setInvoiceSerial(entity.getInvPurchaseInvoiceId().getSerial());
             invInvoiceDTO.setDueDate(entity.getInvPurchaseInvoiceId().getDueDate());

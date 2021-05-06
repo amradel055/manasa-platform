@@ -73,10 +73,12 @@ public class SummitionItemReportMB extends Basic {
 
                 if (itemsViewForGallaryinner != null && !itemsViewForGallaryinner.isEmpty()) {
                     for (SummitionItemsView view : itemsViewForGallaryinner) {
-                        sumFactoryNumber = sumFactoryNumber.add(view.getFactoryNumber());
-                        sumSendNumber = sumSendNumber.add(view.getSendNumber());
-                        sumDeliveryNumber = sumDeliveryNumber.add(view.getDeliveryNumber());
-                        sumCustomerNumber = sumCustomerNumber.add(view.getCustomerNumber());
+                        if (view.getCode() == 1 || view.getCode() == 2) {
+                            sumFactoryNumber = sumFactoryNumber.add(view.getFactoryNumber());
+                            sumSendNumber = sumSendNumber.add(view.getSendNumber());
+                            sumDeliveryNumber = sumDeliveryNumber.add(view.getDeliveryNumber());
+                            sumCustomerNumber = sumCustomerNumber.add(view.getCustomerNumber());
+                        }
                     }
 
                     summitionItemsView.setFactoryNumber(sumFactoryNumber);
@@ -273,6 +275,7 @@ public class SummitionItemReportMB extends Basic {
      * @return the gallaryListSelected
      */
     public List<InvInventoryDTO> getGallaryListSelected() {
+
         return gallaryListSelected;
     }
 
