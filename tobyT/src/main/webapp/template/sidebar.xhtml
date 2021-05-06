@@ -598,9 +598,7 @@
                                     <p:menuitem id="sr_lnk351" value="أمر شغل" icon="&#xE8D2;" url="/faces/views/proworkorder/proworkorderlist.xhtml" 
                                                 rendered="#{userData.userScreens['proworkorder'].view or userData.isAdmin}"
                                                 />
-                                    <p:menuitem id="sr_lnk352" value="#{userData.userDDs['SALES_INVOICES']}" icon="&#xE8D2;" url="/faces/views/proSales/proSalesList.xhtml" 
-                                                rendered="#{userData.userScreens['invsalesinvoice_1'].view or userData.isAdmin}"
-                                                />
+                                    
                                     <p:menuitem id="sr_lnk353" value="#{userData.userDDs['SALES_RETURN']}" icon="&#xE8D2;" url="/faces/views/invreturnsales_1/invreturnsaleslist.xhtml"
                                                 rendered="#{userData.userScreens['invreturnsales_1'].view or userData.isAdmin}"
                                                 />
@@ -908,6 +906,7 @@
                                                    or userData.userScreens['proProductionMovementDelivrey'].view
                                                    or userData.userScreens['proSendToGallary'].view
                                                    or userData.userScreens['proRecieveGallary'].view 
+                                                   or userData.userScreens['proSales'].view 
                                                    or userData.userScreens['summitionItemReportPro'].view 
                                                    or userData.userScreens['productionTransactionOfUser'].view 
                                                    or userData.userScreens['InvoiceMovementReport'].view
@@ -940,6 +939,7 @@
                                                        or userData.userScreens['proProductionMovementDelivrey'].view
                                                        or userData.userScreens['proSendToGallary'].view
                                                        or userData.userScreens['proRecieveGallary'].view
+                                                       or userData.userScreens['proSales'].view
                                                        or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk33311" value="إنشاء الطيار" icon="&#xE8D2;" url="/faces/views/procreateDelivery/createDeliveryList.xhtml" 
@@ -974,6 +974,9 @@
                                                 />                                    
                                     <p:menuitem id="sr_lnk33318" value="استلام الفاتورة بالمعرض" icon="&#xE8D2;" url="/faces/views/proRecieveGallary/proRecieveGallaryList.xhtml" 
                                                 rendered="#{userData.userScreens['proRecieveGallary'].view or userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="sr_lnk33320" value="#{userData.userDDs['تسليم الفاتورة للعميل']}" icon="&#xE8D2;" url="/faces/views/proSales/proSalesList.xhtml" 
+                                                rendered="#{userData.userScreens['proSales'].view or userData.isAdmin}"
                                                 />
 
                                 </p:submenu>
