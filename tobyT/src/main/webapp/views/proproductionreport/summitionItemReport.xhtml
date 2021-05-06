@@ -8,6 +8,14 @@
                 xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <ui:define name="content">
+        <style type="text/css">
+            .cheap {
+                background-color: #54a90a !important;
+                background-image: none !important;
+                color: #ffffff !important;
+            }
+        </style>
+
         <h:body>
 
             <h:form dir="RTL" style="margin-right: 20px" id="form" >
@@ -17,20 +25,18 @@
                     <div class="ui-g-6 ui-xl-6">
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
-                                <p:selectOneMenu id="group" value="#{summitionItemReportMB.gallaryDTOSelected}"
-                                                 converter="#{summitionItemReportMB.gallaryDTOConverter}">
+                                <p:selectCheckboxMenu id="gallary_From" value="#{summitionItemReportMB.gallaryListSelected}" 
+                                                      converter="#{summitionItemReportMB.gallaryDTOConverter}"
+                                                      label="المعرض" style="width: 15rem"
+                                                      filter="true" filterMatchMode="startsWith" panelStyle="width: 15rem" scrollHeight="250">
                                     <f:selectItems value="#{summitionItemReportMB.gallaryList}" 
                                                    var="gallary"
                                                    itemLabel="#{gallary}"
-                                                   itemValue="#{gallary}" />
-                                </p:selectOneMenu>
+                                                   itemValue="#{gallary}"/>
+                                </p:selectCheckboxMenu>
                             </div>
                             <div class="ui-g-6 ui-xl-6">
-
                                 <p:outputLabel style="width: 50px;margin-right: 1%" value="المعرض"/>
-
-
-
                             </div>
                         </div>
                         <div class="ui-g-12 ui-xl-12">
@@ -161,6 +167,7 @@
                                   rowIndexVar="index" 
                                   rows="30"
                                   emptyMessage="EMPTY_TABLE"
+                                  rowStyleClass="#{data.rowType eq 1 ? 'cheap' : null}"
                                   >
 
                         <p:column headerText="الكود" style="width: 10vh;text-align: center!important;font-size: 1.8vh">

@@ -25,6 +25,10 @@ public class SummitionItemsView implements Serializable {
      * @return the quantity
      */
     public BigDecimal getQuantity() {
+
+        if (quantity == null) {
+            return BigDecimal.ZERO;
+        }
         return quantity;
     }
 
@@ -39,6 +43,10 @@ public class SummitionItemsView implements Serializable {
      * @return the number
      */
     public BigDecimal getNumber() {
+
+        if (number == null) {
+            return BigDecimal.ZERO;
+        }
         return number;
     }
 
@@ -53,6 +61,11 @@ public class SummitionItemsView implements Serializable {
      * @return the allQuantity
      */
     public BigDecimal getAllQuantity() {
+
+        if (allQuantity == null) {
+            return BigDecimal.ZERO;
+        }
+
         return allQuantity;
     }
 
@@ -67,6 +80,10 @@ public class SummitionItemsView implements Serializable {
      * @return the allCost
      */
     public BigDecimal getAllCost() {
+
+        if (allCost == null) {
+            return BigDecimal.ZERO;
+        }
         return allCost;
     }
 
@@ -81,6 +98,10 @@ public class SummitionItemsView implements Serializable {
      * @return the allAvarageCost
      */
     public BigDecimal getAllAvarageCost() {
+
+        if (allAvarageCost == null) {
+            return BigDecimal.ZERO;
+        }
         return allAvarageCost;
     }
 
@@ -159,6 +180,10 @@ public class SummitionItemsView implements Serializable {
      * @return the deliveryNumber
      */
     public BigDecimal getDeliveryNumber() {
+        if (deliveryNumber == null) {
+            return BigDecimal.ZERO;
+        }
+
         return deliveryNumber;
     }
 
@@ -189,6 +214,9 @@ public class SummitionItemsView implements Serializable {
      * @return the customerNumber
      */
     public BigDecimal getCustomerNumber() {
+        if (customerNumber == null) {
+            return BigDecimal.ZERO;
+        }
         return customerNumber;
     }
 
