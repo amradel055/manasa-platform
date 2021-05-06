@@ -50,7 +50,7 @@ public class ProInvoiceStatusReportMB extends Basic {
         } else if (printProductionDTO.getInvoiceStatus() == 10) {
             setList(proFactoryDeliveryService.getALLProFactoryDeliveryDTOByStatusRemain(getPrintProductionDTO(), getUserData().getUserBranch().getId()));
         } else {
-            setList(proFactoryDeliveryService.getALLProFactoryDeliveryDTOByStatus(getPrintProductionDTO(), getUserData().getUserBranch().getId()));
+            setList(proFactoryDeliveryService.getALLProFactoryDeliveryDTOByStatusRemain(getPrintProductionDTO(), getUserData().getUserBranch().getId()));
         }
         setNumber(getList() == null ? 0 : getList().size());
     }

@@ -140,6 +140,7 @@ public class InvInvoiceDTO extends BaseEntityDTO {
     private long diffrentTime;
     private Integer invoiceSerial;
     private Integer offerType;
+    private BigDecimal discHalala;
 
     /// report //
     private String gallaryName;
@@ -1613,6 +1614,23 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      */
     public void setAccountStatement(BigDecimal accountStatement) {
         this.accountStatement = accountStatement;
+    }
+
+    /**
+     * @return the discHalala
+     */
+    public BigDecimal getDiscHalala() {
+        if(discHalala == null){
+            discHalala = BigDecimal.ZERO;
+        }
+        return discHalala;
+    }
+
+    /**
+     * @param discHalala the discHalala to set
+     */
+    public void setDiscHalala(BigDecimal discHalala) {
+        this.discHalala = discHalala;
     }
 
     /**

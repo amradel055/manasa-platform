@@ -66,6 +66,7 @@ import com.toby.print.IReportServiceImpl;
 import com.toby.views.ItemsBarcodesDetailsView;
 import com.toby.views.QuantityItemsStore;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -305,7 +306,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                     && !getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVTRANSFER)) {
                 getCurrencyDTOList();
             }
-            getItemsBarcodesDetailsViewList(getInvInvoiceDTO().getParent());
+//            getItemsBarcodesDetailsViewList(getInvInvoiceDTO().getParent());
             if (getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVPURCHASEINVOICEFORM)
                     || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVRETURNPURCHASEFORM)
                     || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVSALESINVOICEFORM)
@@ -344,6 +345,27 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     public void recalcHeadValues() {
         try {
             setInvInvoiceDTO(invGlobalService.recalcHeadValues(getInvInvoiceDTO()));
+        } catch (Exception e) {
+            saveError(e, "InvPurchaseInvoiceFormMB", "recalcHeadValues");
+        }
+    }
+
+    public void removeHalala() {
+        Integer num = getInvInvoiceDTO().getFinalNet().intValue();
+        BigDecimal remain = getInvInvoiceDTO().getFinalNet().subtract(new BigDecimal(num));
+        BigDecimal discHalala = remain.divide(BigDecimal.valueOf(1.15), 5, RoundingMode.HALF_UP);
+        getInvInvoiceDTO().setDiscHalala(discHalala);
+        calcDiscountValue();
+        calculateRemainValue();
+    }
+
+    public void calcDiscountValue() {
+        try {
+            if (getInvInvoiceDTO().getDiscHalala() != null
+                    && getInvInvoiceDTO().getDiscHalala().compareTo(BigDecimal.ZERO) == 1) {
+                setInvInvoiceDTO(invGlobalService.recalcHeadValues(getInvInvoiceDTO()));
+            }
+
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceFormMB", "recalcHeadValues");
         }
@@ -490,11 +512,21 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
             getInvInvoiceDTO().setMsg(null);
             setInvInvoiceDTO(invPurchaseInvoiceService.putCurrency(getInvInvoiceDTO()));
             getInvInvoiceDTO().setCustomerNotice(companyService.getNoticeByCustomerId(getInvInvoiceDTO() == null ? null : getInvInvoiceDTO().getOrganizationSiteId().getId()));
-            getInvInvoiceDTO().setAccountStatement(supplierAccountService.getAccountForOrganizationSite(getInvInvoiceDTO().getOrganizationSiteId().getId()));
 
             errorMsg(getInvInvoiceDTO().getMsg());
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceFormMB", "putCurrency");
+        }
+    }
+    
+    public void updateCustomerData(){
+        putCurrency();
+        findAccountStatement();
+    }
+
+    public void findAccountStatement() {
+        if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getOrganizationSiteId() != null && getInvInvoiceDTO().getOrganizationSiteId().getId() != null) {
+            getInvInvoiceDTO().setAccountStatement(supplierAccountService.getAccountForOrganizationSite(getInvInvoiceDTO().getOrganizationSiteId().getId()));
         }
     }
 
@@ -1496,7 +1528,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     public void calculateRemain() {
         if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getId() != null) {
             BigDecimal remain = invPurchaseInvoiceService_1.remainForInvPurchaseInvoice(getInvInvoiceDTO().getId());
-            getInvInvoiceDTO().setRemain(remain);
+            getInvInvoiceDTO().setRemain(remain.setScale(0, RoundingMode.HALF_UP));
         }
     }
 

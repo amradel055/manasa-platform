@@ -7,10 +7,11 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:c="http:addInvDetail//xmlns.jcp.org/jsp/jstl/core">
-    <ui:define name="content">
+    <ui:define name="content" >
 
+        <f:event listener="#{invPurchaseInvoiceFormDTOMB.findAccountStatement}" type="postAddToView"  />
 
-        <h:form id="form" dir="#{userData.dir}" class='formmargin' >
+        <h:form id="form" dir="#{userData.dir}" class='formmargin'  >
             <p:hotkey bind="F2" handler="PF('dlg4').show()"/>
             <div >
                 <p:messages id="curmsg" autoUpdate="true" showDetail="true" rendered="true" closable="true"/>   
@@ -137,7 +138,7 @@
                                     <p:ajax update="@form"
                                             process="@form"
                                             event="itemSelect"
-                                            listener="#{invPurchaseInvoiceFormDTOMB.putCurrency()}" />
+                                            listener="#{invPurchaseInvoiceFormDTOMB.updateCustomerData()}" />
 
 
                                 </p:autoComplete>
@@ -973,6 +974,13 @@
                             class="newButtons"
                             onclick="form.target = ''" 
                             actionListener="#{invPurchaseInvoiceFormDTOMB.reset()}"/>
+                        
+                        <p:commandButton 
+                            id="removeHalala"
+                            value="حذف الهلله" 
+                            class="newButtons"
+                            update="form:totalActualWeight form:totalNetAfterDiscount form:taxvalue form:totalWithTaxValue form:remain " 
+                            actionListener="#{invPurchaseInvoiceFormDTOMB.removeHalala()}"/>
 
                         <p:commandButton  class="printButtons"
                                           ajax="false"
@@ -999,7 +1007,7 @@
                                             postProcessor="#{invPurchaseInvoiceFormDTOMB.postProcessXLS}" />  
                         </h:commandLink>
 
-                        <p:blockUI block="form" trigger="saveB" animate="true" >
+                        <p:blockUI block="form" trigger="saveB removeHalala" animate="true" >
 
                             <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
 

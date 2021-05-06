@@ -80,11 +80,11 @@ public class InvNoticeServiceImpl implements InvNoticeService {
 
         if (type != null) {
             if (type == 2) {
-                query.append(" AND i.type >= :type order by i.id desc");
+                query.append(" AND i.type in (2,3,5) order by i.id desc");
             } else {
-                query.append(" AND i.type <= :type order by i.id desc");
+                query.append(" AND i.type in (0,1,4) order by i.id desc");
             }
-            params.put("type", type);
+//            params.put("type", type);
         }
 
         List<InvNotice> invNoticeList = dao.findListByQuery(query.toString(), params);

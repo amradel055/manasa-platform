@@ -117,16 +117,20 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
                 invInvoiceDTO.setGallaryName(invInventoryDTO.getName());
 
             }
-            if (entity.getInvPurchaseInvoiceId() != null && entity.getInvPurchaseInvoiceId().getOrganizationSiteId() != null) {
-                invInvoiceDTO.setOrganizationSiteId(organizationSiteService.mapToDTOSmall(entity.getInvPurchaseInvoiceId().getOrganizationSiteId()));
-                invInvoiceDTO.setCustomerCode(entity.getInvPurchaseInvoiceId().getOrganizationSiteId().getCode());
-                invInvoiceDTO.setCustomerName(entity.getInvPurchaseInvoiceId().getOrganizationSiteId().getName());
-                invInvoiceDTO.setCustomerMobile(entity.getInvPurchaseInvoiceId().getOrganizationSiteId().getMobile());
-            }
+            customerData(entity, invInvoiceDTO);
         }
 
         if (entity.getInvPurchaseInvoiceId() != null) {
             invInvoiceDTO.setLoadedSerial(entity.getInvPurchaseInvoiceId().getSerial());
+        }
+    }
+
+    public void customerData(ProFactoryDelivery entity, InvInvoiceDTO invInvoiceDTO) {
+        if (entity.getInvPurchaseInvoiceId() != null && entity.getInvPurchaseInvoiceId().getOrganizationSiteId() != null) {
+            invInvoiceDTO.setOrganizationSiteId(organizationSiteService.mapToDTOSmall(entity.getInvPurchaseInvoiceId().getOrganizationSiteId()));
+            invInvoiceDTO.setCustomerCode(entity.getInvPurchaseInvoiceId().getOrganizationSiteId().getCode());
+            invInvoiceDTO.setCustomerName(entity.getInvPurchaseInvoiceId().getOrganizationSiteId().getName());
+            invInvoiceDTO.setCustomerMobile(entity.getInvPurchaseInvoiceId().getOrganizationSiteId().getMobile());
         }
     }
 
@@ -161,6 +165,7 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
         invInvoiceDTO.setIndex(entity.getSerial());
         invInvoiceDTO.setCompanyId(entity.getCompanyId().getId() != null ? entity.getCompanyId().getId() : null);
         invInvoiceDTO.setCreatedByName(entity.getCreatedBy() != null ? entity.getCreatedBy().getName() : null);
+        customerData(entity, invInvoiceDTO);
 
 //        invInvoiceDTO.setProFactoryDelivery(entity.getId());
         if (entity.getInvPurchaseInvoiceId() != null) {
@@ -399,18 +404,30 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
     public List<InvInvoiceDTO> getALLProFactoryDeliveryDTOByStatusRemain(PrintProductionDTO printProductionDTO, Integer branchId) {
         Map<String, Object> params = new HashMap<>();
         params.put("galaryId", printProductionDTO.getGallaryFrom().getId());
-        params.put("dateFrom", printProductionDTO.getFromDate());
-        params.put("dateTo", printProductionDTO.getToDate());
         params.put("branchId", branchId);
+        params.put("type", printProductionDTO.getInvoiceStatus());
+        if (0 == printProductionDTO.getInvoiceStatus()) {
+            params.put("typeTo", 1);
+        } else if (1 == printProductionDTO.getInvoiceStatus()) {
+            params.put("typeTo", 2);
+        } else if (2 == printProductionDTO.getInvoiceStatus()) {
+            params.put("typeTo", 3);
+        }
+
         StringBuilder builder = new StringBuilder();
-        builder.append("SELECT s FROM ProFactoryDelivery s WHERE   s.invPurchaseInvoiceId.branchId.id = :branchId AND s.type = 0 AND s.invPurchaseInvoiceId.id not in (select p.invPurchaseInvoiceId.id FROM ProFactoryDelivery p WHERE   p.invPurchaseInvoiceId.branchId.id = :branchId AND p.type = 1) ");
+        builder.append("SELECT s FROM ProFactoryDelivery s WHERE   s.invPurchaseInvoiceId.branchId.id = :branchId AND s.type = :type ");
+        if (3 != printProductionDTO.getInvoiceStatus()) {
+            builder.append(" AND s.invPurchaseInvoiceId.id not in (select p.invPurchaseInvoiceId.id FROM ProFactoryDelivery p WHERE   p.invPurchaseInvoiceId.branchId.id = :branchId AND p.type = :typeTo)");
+        }
         if (printProductionDTO.getGallaryFrom() != null) {
             builder.append(" AND  (:galaryId is Null OR  s.invPurchaseInvoiceId.galaryId.id = :galaryId) ");
         }
         if (printProductionDTO.getFromDate() != null) {
+            params.put("dateFrom", printProductionDTO.getFromDate());
             builder.append(" AND   s.invPurchaseInvoiceId.date >= :dateFrom ");
         }
         if (printProductionDTO.getToDate() != null) {
+            params.put("dateTo", printProductionDTO.getToDate());
             builder.append(" AND   s.invPurchaseInvoiceId.date <= :dateTo ");
         }
         builder.append(" order by s.serial DESC");

@@ -342,7 +342,8 @@ public class InvGlobalServiceImpl implements InvGlobalService {
         if (BigDecimal.valueOf(998.999).equals(finalN)) {
             invPurchaseInvoiceDTO.setFinalNet(BigDecimal.valueOf(999));
         } else {
-            invPurchaseInvoiceDTO.setFinalNet(finalN.setScale(0, BigDecimal.ROUND_DOWN));
+//            invPurchaseInvoiceDTO.setFinalNet(finalN.setScale(0, BigDecimal.ROUND_DOWN));
+            invPurchaseInvoiceDTO.setFinalNet(finalN);
         }
         return invPurchaseInvoiceDTO;
     }
@@ -372,6 +373,11 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                     }
                 } else if (Validation.isDiscountValid(invPurchaseInvoiceDTO.getDiscountValue())) {
                     invPurchaseInvoiceDTO.setDiscountValue(invPurchaseInvoiceDTO.getTotalNet().multiply(invPurchaseInvoiceDTO.getDiscount()).divide(BigDecimal.valueOf(100)));
+                }
+
+                if (invPurchaseInvoiceDTO.getDiscHalala() != null) {
+                
+                    invPurchaseInvoiceDTO.setDiscountValue(invPurchaseInvoiceDTO.getDiscountValue().add(invPurchaseInvoiceDTO.getDiscHalala()));
                 }
             }
         } catch (Exception e) {

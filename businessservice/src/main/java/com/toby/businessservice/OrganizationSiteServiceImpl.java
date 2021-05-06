@@ -1517,6 +1517,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         if (invOrganizationSite.getAccountId() != null) {
             GlAccountDTO accountDTO = new GlAccountDTO();
             accountDTO.setAccNumber(invOrganizationSite.getAccountId().getAccNumber());
+            accountDTO.setName(invOrganizationSite.getAccountId().getName());
             accountDTO.setId(invOrganizationSite.getAccountId().getId());
             invOrganizationSiteDTO.setAccountId(accountDTO);
         }
