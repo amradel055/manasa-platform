@@ -32,5 +32,8 @@ public interface InvOpeningBalanceItemDetailService {
 
     public List<InvOpenningBalanceItemDetailDTO> deleteInvInventoryTransactionDetailList(Integer inventoryTransactionId, TobyUser tobyUser);
 
-    public  List<InvOpenningBalanceItemDetailDTO>  saveInvOpenningBalanceItemDetailDTO (List<InvOpenningBalanceItemDetailDTO> invOpenningBalanceItemDetailDTOList, Integer invOpenningBalanceItemDetailDTOId, TobyUser tobyUser);
+    public List<InvOpenningBalanceItemDetailDTO> saveInvOpenningBalanceItemDetailDTO(List<InvOpenningBalanceItemDetailDTO> invOpenningBalanceItemDetailDTOList, Integer invOpenningBalanceItemDetailDTOId, TobyUser tobyUser);
+
+    public List<Object[]> getInvOpeningBalanceItemDetailsByBranchId(Integer branchId, List<Integer> itemIdList);
+
 }

@@ -77,5 +77,7 @@ public interface GenericDAO {
     public List<InvItem> creteQueryInvItemView(int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters);
 
     public void StoredProcedure(String storedName, List<storedProcedureParameter> procedureParameters, Map<String, Object> parm);
+    
+    public void executeUpdateQuery(String jpqlQuery, Map<String, Object> params);
 
 }

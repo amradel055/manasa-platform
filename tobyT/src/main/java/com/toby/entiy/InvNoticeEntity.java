@@ -31,6 +31,8 @@ public class InvNoticeEntity {
     private Integer postFlag;
     private InvOrganizationSiteDTO organizationSiteIdTo;
     private InvOrganizationSiteDTO organizationSiteId;
+    private Integer invoiceId;
+    private Integer invoiceSerial;
 
     /**
      * @return the branchId
@@ -214,6 +216,34 @@ public class InvNoticeEntity {
      */
     public void setOrganizationSiteId(InvOrganizationSiteDTO organizationSiteId) {
         this.organizationSiteId = organizationSiteId;
+    }
+
+    /**
+     * @return the invoiceId
+     */
+    public Integer getInvoiceId() {
+        return invoiceId;
+    }
+
+    /**
+     * @param invoiceId the invoiceId to set
+     */
+    public void setInvoiceId(Integer invoiceId) {
+        this.invoiceId = invoiceId;
+    }
+
+    /**
+     * @return the invoiceSerial
+     */
+    public Integer getInvoiceSerial() {
+        return invoiceSerial;
+    }
+
+    /**
+     * @param invoiceSerial the invoiceSerial to set
+     */
+    public void setInvoiceSerial(Integer invoiceSerial) {
+        this.invoiceSerial = invoiceSerial;
     }
 
 }

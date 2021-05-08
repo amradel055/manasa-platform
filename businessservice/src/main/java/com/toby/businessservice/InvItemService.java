@@ -93,5 +93,10 @@ public interface InvItemService {
      public void updateInvItem2(Map<String, InvItem> invItemMap, TobyUser tobyUser);
      
      public void findInvItemMap(Integer branchId,List<InvItemDTO> invItemDTOList) ;
-
+     
+     public void getInvItemListByBranchId(Integer branchId);
+     
+     public void updateInvItemCostAverageToZero(Integer branchId);
+     
+     public List<Integer> getInvItemListByBranchIdNotInInvPurchaseInvoice(Integer branchId);
 }

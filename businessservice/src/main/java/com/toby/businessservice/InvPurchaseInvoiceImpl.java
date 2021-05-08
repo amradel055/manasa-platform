@@ -955,6 +955,14 @@ public class InvPurchaseInvoiceImpl implements InvPurchaseInvoiceService {
         List<InvPurchaseInvoice> list = retriveInvPurchaseInvoiceDate(invPurchaseInvoiceList);
         return list;
     }
+    
+    @Override
+    public BigDecimal findQuantityItemByDateWithOutInventory(InvPurchaseInvoice invPurchaseInvoice, Boolean sellBuy, InvPurchaseInvoiceDetail invPurchaseInvoiceDetail) {
+        BigDecimal quantityItemsStoreByDate;
+        quantityItemsStoreByDate = quantityItemsStoreByDateService.getQuantatyItemByinventoryRecalcCostAvarage(null,
+                invPurchaseInvoiceDetail.getItemId().getId(), sellBuy, invPurchaseInvoice.getDate());
+        return quantityItemsStoreByDate;
+    }
 
     public void mergeDetailQuantities(InvPurchaseInvoiceDetail invPurchaseInvoiceDetail, Integer isPurchaseOrSales,
             InvPurchaseInvoice invPurchaseInvoice, BigDecimal quantityItemsStoreByDate, InventorySetup invSetup) {

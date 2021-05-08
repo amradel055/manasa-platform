@@ -51,7 +51,6 @@ public class SupplierAccountReportMB extends BaseReportBean {
     private BigDecimal totalCredit = BigDecimal.ZERO;
     private BigDecimal totalDebit = BigDecimal.ZERO;
     private String uri;
-    private String screenMode;
     private List<SupplierAccountViewBean> supplierAccountViewBeanList;
     private SupplierAccountSearchBean supplierAccountSearchBean;
     private List<OrganizationSiteStatementView> organizationSiteStatementViewList;
@@ -591,14 +590,6 @@ public class SupplierAccountReportMB extends BaseReportBean {
     @Override
     public String getScreenName() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public String getScreenMode() {
-        return screenMode;
-    }
-
-    public void setScreenMode(String screenMode) {
-        this.screenMode = screenMode;
     }
 
     /*  public Boolean getIsSales() {

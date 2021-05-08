@@ -10,11 +10,8 @@ import com.toby.converter.GlYearConverter;
 import com.toby.core.UserDataDTO;
 import com.toby.entity.GlYear;
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -84,15 +81,6 @@ public abstract class BaseFormBean extends Basic implements BaseManagedBean {
      public void changeFocus(String focusId) {
         RequestContext context = RequestContext.getCurrentInstance();
         context.execute("PrimeFaces.focus('" + focusId + "')");
-    }
-
-    public void exit(String url) {
-        FacesContext fc = FacesContext.getCurrentInstance();
-        try {
-            fc.getExternalContext().redirect(url);
-        } catch (IOException ex) {
-            Logger.getLogger(null).log(Level.SEVERE, null, ex);
-        }
     }
 
     public void OpenDlg(String dlgvar) {

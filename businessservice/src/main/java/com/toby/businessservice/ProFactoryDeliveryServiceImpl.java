@@ -102,7 +102,7 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
         invInvoiceDTO.setDate(entity.getDate());
         invInvoiceDTO.setIndex(entity.getSerial());
         invInvoiceDTO.setRemarks(entity.getRemark());
-        invInvoiceDTO.setNumberOfToob(invoiceMovementReportService.summitionTob(entity.getId()));
+        invInvoiceDTO.setNumberOfToob(invoiceMovementReportService.summitionTob(entity.getInvPurchaseInvoiceId().getId()));
         if (entity.getInvPurchaseInvoiceId() != null) {
             invInvoiceDTO.setInvoiceSerial(entity.getInvPurchaseInvoiceId().getSerial());
             invInvoiceDTO.setDueDate(entity.getInvPurchaseInvoiceId().getDueDate());
@@ -426,11 +426,11 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
         }
         if (printProductionDTO.getFromDate() != null) {
             params.put("dateFrom", printProductionDTO.getFromDate());
-            builder.append(" AND   s.invPurchaseInvoiceId.date >= :dateFrom ");
+            builder.append(" AND   s.date >= :dateFrom ");
         }
         if (printProductionDTO.getToDate() != null) {
             params.put("dateTo", printProductionDTO.getToDate());
-            builder.append(" AND   s.invPurchaseInvoiceId.date <= :dateTo ");
+            builder.append(" AND   s.date <= :dateTo ");
         }
         builder.append(" order by s.serial DESC");
 

@@ -72,7 +72,7 @@ import java.util.TreeMap;
  */
 @Stateless
 public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceService_1 {
-
+    
     @EJB
     private GenericDAO dao;
     @EJB
@@ -123,15 +123,15 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     InvoiceMovementReportService invoiceMovementReportService;
     @EJB
     private OrganizationSiteService organizationSiteService;
-
+    
     InvPurchaseReturnSave invPurchaseReturnSave;
-
+    
     @Override
     public synchronized InvPurchaseReturnSave addInvPurchaseInvoice(InvPurchaseInvoice invPurchaseInvoice,
             List<InvPurchaseInvoiceDetail> invPurchaseInvoiceDetailList,
             List<InvPurchaseInvoiceDetail> invPurchaseInvoiceDetailListDeleted,
             List<Integer> updatedPurchaseOrAddingOrderList, Integer purchaseOrAddingOrder, StringBuilder headIdList, Integer isPurchaseOrSales) {
-
+        
         invPurchaseReturnSave = new InvPurchaseReturnSave();
         if (invPurchaseInvoice.getId() != null) {
             //بعمل حفظ فى حالة التعديل
@@ -145,12 +145,12 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 invPurchaseInvoice.setSerialTax(serialTax);
             }
             invPurchaseInvoice.setSerial(serial);
-
+            
             dao.saveEntity(invPurchaseInvoice);
         }
         // لو انا محمل الفاتورة من مرحلة سابقة بعمل هنا تعديل للكميات وحالة كل فاتورة من المحمل منها
         String msg = updateFinalQuantityAndStatusDetailAndSaveDetail(invPurchaseInvoiceDetailList, isPurchaseOrSales, invPurchaseInvoice);
-
+        
         if (msg == null) {
             // لو الدنيا اللى فاتت تمام نروح نمسح من قاعدة البيانات اللى اتمسح من الفاتورة
             deleteDetails(invPurchaseInvoiceDetailListDeleted, isPurchaseOrSales);
@@ -161,23 +161,23 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             if (headIdList != null && !"".equals(headIdList.toString())) {
                 updateHeadStatus(findHeadSelectedId(headIdList, purchaseOrAddingOrder), purchaseOrAddingOrder);
             }
-
+            
         } else {
             invPurchaseInvoice.setMsg(msg);
             invPurchaseReturnSave.setMsg(msg);
             dao.rollbackQuery();
         }
-
+        
         invPurchaseReturnSave.setInvPurchaseInvoice(invPurchaseInvoice);
         invPurchaseReturnSave.setInvPurchaseInvoiceDetailList(invPurchaseInvoiceDetailsService.getAllInvPurchaseInvoiceDetailsByInvPurchaseInvoiceId(invPurchaseInvoice.getId()));
         return invPurchaseReturnSave;
     }
-
+    
     @Override
     public void addInvPurchaseInvoiceTest(InvPurchaseInvoice invPurchaseInvoice) {
         dao.saveEntity(invPurchaseInvoice);
     }
-
+    
     @Override
     public void saveDetail(InvPurchaseInvoiceDetail invPurchaseInvoiceDetail, InvPurchaseInvoice invPurchaseInvoice,
             Integer isPurchaseOrSales, BigDecimal quantityItemsStoreByDate, InventorySetup invSetup) {
@@ -198,7 +198,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
 
 //        invPurchaseReturnSave.getInvPurchaseInvoiceDetailList().add(invPurchaseInvoiceDetail);
     }
-
+    
     public synchronized BigDecimal findCostAvarageForItemByDate(Integer inventoryId, Integer branchId, Integer itemId, Date date) {
         Map<String, Object> params = new HashMap();
         params.put("inventoryId", inventoryId);
@@ -207,12 +207,12 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         params.put("date", date);
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT ipid.costAvarage FROM InvPurchaseInvoiceDetail ipid LEFT JOIN InvPurchaseInvoice ipi WHERE ipid.invPurchaseInvoiceId.id = ipi.id  AND ipi.invInventoryId.id = :inventoryId AND ipi.branchId.id = :branchId and ipi.type = false AND ipid.itemId.id = :itemId AND ipi.date <= :date order by ipi.date DESC");
-
+        
         List<BigDecimal> itemsStores = dao.findListByQuery(sql.toString(), params);
-
+        
         return (itemsStores != null && itemsStores.size() > 0) ? itemsStores.get(0) : null;
     }
-
+    
     @Override
     public void reCalcCostAvarage(Integer branchId) {
         InventorySetup invSetup = inventorySetupService.getInventoryByBranchId(branchId);
@@ -227,9 +227,9 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             }
             saveDetail(detail, detail.getInvPurchaseInvoiceId(), x, quantityItemsStoreByDate, invSetup);
         }
-
+        
     }
-
+    
     public BigDecimal updateCostAvarage(InvPurchaseInvoiceDetail invPurchaseInvoiceDetail, BigDecimal quantityItemsStoreByDate) {
         InvItem invItem = invItemService.findInvItem(invPurchaseInvoiceDetail.getItemId().getId());
         BigDecimal costAvarageDetail = invPurchaseInvoiceDetail.getNet().divide(((invPurchaseInvoiceDetail.getScrewing() == null ? BigDecimal.ONE : invPurchaseInvoiceDetail.getScrewing()).multiply(invPurchaseInvoiceDetail.getQuantity())), 2, RoundingMode.HALF_UP).setScale(3, BigDecimal.ROUND_UP);
@@ -246,7 +246,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         invItemService.updateInvItem(invItem);
         return invItem.getCostAverage();
     }
-
+    
     public void deleteDetails(List<InvPurchaseInvoiceDetail> invPurchaseInvoiceDetailListDeleted, Integer isPurchaseOrSales) {
         if (invPurchaseInvoiceDetailListDeleted != null && !invPurchaseInvoiceDetailListDeleted.isEmpty()) {
             for (InvPurchaseInvoiceDetail deleted : invPurchaseInvoiceDetailListDeleted) {
@@ -257,7 +257,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             }
         }
     }
-
+    
     public List<Integer> findHeadSelectedId(StringBuilder headIdList, Integer isPurchaseOrder) {
         String query = null;
         if (isPurchaseOrder == 0) {
@@ -272,9 +272,9 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             query = "select DISTINCT h.id FROM InvTransfer h Left join InvTransferDetail d WHERE h.id = d.invTransferId.id and d.id in (" + headIdList.toString() + ") ";
         }
         return dao.findListByQuery(query);
-
+        
     }
-
+    
     public synchronized void restorQuantity(InvPurchaseInvoiceDetail invPurchaseInvoiceDetail, Integer isPurchaseOrSales) {
         if (isPurchaseOrSales == 1) {
             if (invPurchaseInvoiceDetail.getSelectedId() != null) {
@@ -298,7 +298,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             }
         }
     }
-
+    
     public Integer restorDetailStatus(BigDecimal quantity, BigDecimal finalQuantity) {
         if (quantity.compareTo(finalQuantity) == 0) {
             return 0;
@@ -307,9 +307,9 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         } else {
             return 2;
         }
-
+        
     }
-
+    
     public void updateHeadStatus(List<Integer> updatedPurchaseOrAddingOrderList, Integer purchaseOrAddingOrder) {
         InvPurchaseOrder purchaseOrder;
         InvAddingorder invAddingorder;
@@ -365,7 +365,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                         }
                         invAddingOrderService.updateInvAddingOrder(invAddingorder);
                     }
-
+                    
                 }
                 if (purchaseOrAddingOrder == 2) {
                     params.put("headId", headId);
@@ -433,7 +433,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             }
         }
     }
-
+    
     @Override
     public void deleteInvPurchaseInvoice(InvPurchaseInvoice invPurchaseInvoice, Integer isPurchaseOrSales) {
         if (invPurchaseInvoice.getId() != null && invPurchaseInvoice.getId() > 0) {
@@ -442,19 +442,19 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             dao.deleteEntity(invPurchaseInvoice);
         }
     }
-
+    
     @Override
     public List<InvPurchaseInvoice> getALLInvPurchaseInvoiceByCompanyId(Integer companyId) {
         return dao.findEntityListByCompanyId(InvPurchaseInvoice.class, companyId);
     }
-
+    
     @Override
     public List<InvPurchaseInvoice> getALLInvPurchaseInvoiceByBranchId(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         return dao.findListByQuery("SELECT e FROM InvPurchaseInvoice e WHERE e.branchId.id = :branchId AND e.type = false", params);
     }
-
+    
     @Override
     public List<InvPurchaseInvoice> getALLInvPurchaseInvoicePostFlagedByBranchId(Integer branchId, Boolean type) {
         Map<String, Object> params = new HashMap<>();
@@ -463,7 +463,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         List<InvPurchaseInvoice> invPurchaseInvoiceList = dao.findListByQuery("SELECT e FROM InvPurchaseInvoice e WHERE e.branchId.id = :branchId AND e.postFlag != 1 AND e.type =:type", params);
         return invPurchaseInvoiceList;
     }
-
+    
     @Override
     public List<InvPurchaseInvoice> getALLInvPurchaseInvoicePostFlagedByBranchIdPer(Integer branchId, Boolean type) {
         Map<String, Object> params = new HashMap<>();
@@ -473,7 +473,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         List<InvPurchaseInvoice> list = retriveInvPurchaseInvoiceDate(invPurchaseInvoiceList);
         return list;
     }
-
+    
     private List<InvPurchaseInvoice> retriveInvPurchaseInvoiceDate(List<InvPurchaseInvoice> invPurchaseInvoiceList) {
         List<InvPurchaseInvoice> list = new ArrayList<>();
         for (InvPurchaseInvoice invPurchaseInvoice : invPurchaseInvoiceList) {
@@ -520,7 +520,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         }
         return list;
     }
-
+    
     @Override
     public InvInvoiceDTO findInvPurchaseInvoiceById(InvInvoiceDTO invPurchaseInvoiceDto) {
         InvPurchaseInvoice invPurchaseInvoice = dao.findEntityById(InvPurchaseInvoice.class, invPurchaseInvoiceDto.getId());
@@ -531,21 +531,21 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         invPurchaseInvoiceDTO.setPayed(findPayed(invPurchaseInvoiceDTO.getId()).setScale(0, BigDecimal.ROUND_DOWN));
         return invPurchaseInvoiceDTO;
     }
-
+    
     @Override
     public List<InvPurchaseInvoice> getALLSalesInvoiceByBranchId(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         return dao.findListByQuery("SELECT e FROM InvPurchaseInvoice e WHERE e.branchId.id = :branchId AND e.type = true", params);
     }
-
+    
     @Override
     public List<InvPurchaseInvoice> getALLSalesInvoiceByBranchIdWithStatus(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         return dao.findListByQuery("SELECT e FROM InvPurchaseInvoice e WHERE e.branchId.id = :branchId AND e.type = true AND (e.status != 2  OR e.status is null)", params);
     }
-
+    
     @Override
     public List<InvPurchaseInvoice> getALLSalesInvoiceByBranchIdWithStatusPer(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
@@ -554,12 +554,12 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         List<InvPurchaseInvoice> list = retriveInvPurchaseInvoiceDate(invPurchaseInvoiceList);
         return list;
     }
-
+    
     @Override
     public InvPurchaseInvoice updateInvPurchaseInvoice(InvPurchaseInvoice invPurchaseInvoice) {
-
+        
         InvPurchaseInvoice invoiceUpdate = new InvPurchaseInvoice();
-
+        
         invoiceUpdate = dao.findEntityById(InvPurchaseInvoice.class, invPurchaseInvoice.getId());
         invoiceUpdate.setPostFlag(invPurchaseInvoice.getPostFlag());
         if (invPurchaseInvoice.getPostFlag().compareTo(1) == 0) {
@@ -567,25 +567,25 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         } else {
             invoiceUpdate.setGeneralJournalId(null);
         }
-
+        
         return dao.updateEntity(invPurchaseInvoice);
     }
-
+    
     @Override
     public InvPurchaseInvoice updateInvPurchaseInvoiceForStopped(Integer invPurchaseInvoiceId, Integer stopped) {
-
+        
         InvPurchaseInvoice invoiceUpdate = new InvPurchaseInvoice();
-
+        
         invoiceUpdate = dao.findEntityById(InvPurchaseInvoice.class, invPurchaseInvoiceId);
         invoiceUpdate.setStopped(stopped);
         return dao.updateEntity(invoiceUpdate);
     }
-
+    
     @Override
     public synchronized String updateFinalQuantityAndStatusDetailAndSaveDetail(List<InvPurchaseInvoiceDetail> invPurchaseInvoiceDetailsUpdatedList,
             Integer isPurchaseOrSales, InvPurchaseInvoice invPurchaseInvoice) {
         InventorySetup invSetup = inventorySetupService.getInventoryByBranchId(invPurchaseInvoice.getBranchId().getId());
-
+        
         Integer selectedId;
         QuantityItemsStore quantityItemsStore;
         BigDecimal quantityItemsStoreByDate;
@@ -606,7 +606,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                     mergeDetailQuantities(invPurchaseInvoiceDetail, isPurchaseOrSales, invPurchaseInvoice, null, invSetup);
                 } else {
                     quantityItemsStore = findQuantityItemNow(invPurchaseInvoice, invPurchaseInvoiceDetail, invSetup);
-
+                    
                     if (quantityItemsStore != null && quantityItemsStore.getQty() != null
                             && quantityItemsStore.getQty().compareTo(invPurchaseInvoiceDetail.getQuantity()) != -1 && !invSetup.getNegativeSell()) {
                         // بيدخل هنا فى حالة لو مش مسموحلة يبيع بكميات سالبة بس بشرط يكون الكمية اكبر من الصفر 
@@ -619,29 +619,29 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
 //                    dao.rollbackQuery();
                         return "Quantity Not Avialable";
                     }
-
+                    
                 }
-
+                
             }
         }
-
+        
         return null;
     }
-
+    
     private QuantityItemsStore findQuantityItemNow(InvPurchaseInvoice invPurchaseInvoice, InvPurchaseInvoiceDetail invPurchaseInvoiceDetail, InventorySetup invSetup) {
         QuantityItemsStore quantityItemsStore;
         quantityItemsStore = itemsStoreService.findInventoryItem(invPurchaseInvoice.getInvInventoryId().getId(),
                 invPurchaseInvoice.getBranchId().getId(), invPurchaseInvoiceDetail.getItemId().getId(), invSetup.getSellBuy());
         return quantityItemsStore;
     }
-
+    
     private BigDecimal findQuantityItemByDate(InvPurchaseInvoice invPurchaseInvoice, InvPurchaseInvoiceDetail invPurchaseInvoiceDetail, InventorySetup invSetup) {
         BigDecimal quantityItemsStoreByDate;
         quantityItemsStoreByDate = quantityItemsStoreByDateService.findInventoryItem(invPurchaseInvoice.getInvInventoryId().getId(),
                 invPurchaseInvoice.getBranchId().getId(), invPurchaseInvoiceDetail.getItemId().getId(), invSetup.getSellBuy(), invPurchaseInvoice.getDate());
         return quantityItemsStoreByDate;
     }
-
+    
     @Override
     public BigDecimal findQuantityItemByDate(InvPurchaseInvoice invPurchaseInvoice, InvPurchaseInvoiceDetail invPurchaseInvoiceDetail) {
         BigDecimal quantityItemsStoreByDate;
@@ -649,7 +649,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 invPurchaseInvoice.getBranchId().getId(), invPurchaseInvoiceDetail.getItemId().getId(), invPurchaseInvoice.getDate());
         return quantityItemsStoreByDate;
     }
-
+    
     public void mergeDetailQuantities(InvPurchaseInvoiceDetail invPurchaseInvoiceDetail, Integer isPurchaseOrSales,
             InvPurchaseInvoice invPurchaseInvoice, BigDecimal quantityItemsStoreByDate, InventorySetup invSetup) {
         Integer selectedId;
@@ -674,10 +674,10 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         // فى الاخر بحفظ التفصيلى
         saveDetail(invPurchaseInvoiceDetail, invPurchaseInvoice, isPurchaseOrSales, quantityItemsStoreByDate, invSetup);
     }
-
+    
     public void updatePurchaseOrderStatusAndQuantity(InvPurchaseInvoiceDetail invPurchaseInvoiceDetail) {
         InvPurchaseOrderDetail purchaseOrderDetail;
-
+        
         BigDecimal purchaseOrderFinalQuantity;
         BigDecimal finalQuantity;
         Integer res;
@@ -709,24 +709,24 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         // هنحفظ التفصيلى
         invPurchaseOrderDetailsService.updatePurchaseOrderDetails(purchaseOrderDetail);
     }
-
+    
     public void updateAddingOrderStatusAndQuantity(InvPurchaseInvoiceDetail invPurchaseInvoiceDetail) {
         InvAddingorderDetail addingOrderDetail;
         BigDecimal addingOrderFinalQuantity;
         BigDecimal finalQuantity;
         Integer res;
         BigDecimal quantityInvoiceOld = null;
-
+        
         addingOrderDetail = invAddingOrderDetailsService.findInvAddingOrderDetailsById(invPurchaseInvoiceDetail.getSelectedId());
         addingOrderFinalQuantity = addingOrderDetail.getFinalQuantity() != null
                 ? addingOrderDetail.getFinalQuantity() : BigDecimal.ZERO;
-
+        
         if (invPurchaseInvoiceDetail.getId() != null) {
             InvPurchaseInvoiceDetail invPurchaseInvoiceDetailOld = invPurchaseInvoiceDetailsService.findInvPurchaseInvoiceDetailsById(invPurchaseInvoiceDetail.getId());
             quantityInvoiceOld = invPurchaseInvoiceDetailOld.getQuantity();
         }
         finalQuantity = calculateFinalQuantity(invPurchaseInvoiceDetail, addingOrderFinalQuantity, quantityInvoiceOld);
-
+        
         res = finalQuantity.compareTo(BigDecimal.ZERO);
         if (res == 1) {
             addingOrderDetail.setFinalQuantity(finalQuantity);
@@ -737,24 +737,24 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         }
         invAddingOrderDetailsService.updateInvAddingOrderDetails(addingOrderDetail);
     }
-
+    
     public void updateReservationStatusAndQuantity(InvPurchaseInvoiceDetail invPurchaseInvoiceDetail) {
         InvReservationDetail reservationDetail;
         BigDecimal reservationFinalQuantity;
         BigDecimal finalQuantity;
         Integer res;
         BigDecimal quantityInvoiceOld = null;
-
+        
         reservationDetail = invReservationDetailService.findInvReservationDetailById(invPurchaseInvoiceDetail.getSelectedId());
         reservationFinalQuantity = reservationDetail.getFinalQuantity() != null
                 ? reservationDetail.getFinalQuantity() : BigDecimal.ZERO;
-
+        
         if (invPurchaseInvoiceDetail.getId() != null) {
             InvPurchaseInvoiceDetail invPurchaseInvoiceDetailOld = invPurchaseInvoiceDetailsService.findInvPurchaseInvoiceDetailsById(invPurchaseInvoiceDetail.getId());
             quantityInvoiceOld = invPurchaseInvoiceDetailOld.getQuantity();
         }
         finalQuantity = calculateFinalQuantity(invPurchaseInvoiceDetail, reservationFinalQuantity, quantityInvoiceOld);
-
+        
         res = finalQuantity.compareTo(BigDecimal.ZERO);
         if (res == 1) {
             reservationDetail.setFinalQuantity(finalQuantity);
@@ -765,24 +765,24 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         }
         invReservationDetailService.updateInvReservationDetails(reservationDetail);
     }
-
+    
     public void updateTransferStatusAndQuantity(InvPurchaseInvoiceDetail invPurchaseInvoiceDetail) {
         InvTransferDetail transferDetail;
         BigDecimal transferFinalQuantity;
         BigDecimal finalQuantity;
         Integer res;
         BigDecimal quantityInvoiceOld = null;
-
+        
         transferDetail = invTransferDetailService.findInvTransferDetailsById(invPurchaseInvoiceDetail.getSelectedId());
         transferFinalQuantity = transferDetail.getFinalQuantity() != null
                 ? transferDetail.getFinalQuantity() : BigDecimal.ZERO;
-
+        
         if (invPurchaseInvoiceDetail.getId() != null) {
             InvPurchaseInvoiceDetail invPurchaseInvoiceDetailOld = invPurchaseInvoiceDetailsService.findInvPurchaseInvoiceDetailsById(invPurchaseInvoiceDetail.getId());
             quantityInvoiceOld = invPurchaseInvoiceDetailOld.getQuantity();
         }
         finalQuantity = calculateFinalQuantity(invPurchaseInvoiceDetail, transferFinalQuantity, quantityInvoiceOld);
-
+        
         res = finalQuantity.compareTo(BigDecimal.ZERO);
         if (res == 1) {
             transferDetail.setFinalQuantity(finalQuantity);
@@ -793,24 +793,24 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         }
         invTransferDetailService.updateInvTransferDetails(transferDetail);
     }
-
+    
     public void updateQutationStatusAndQuantity(InvPurchaseInvoiceDetail invPurchaseInvoiceDetail) {
         InvQotationDetail qotationDetail;
         BigDecimal qutaionFinalQuantity;
         BigDecimal finalQuantity;
         Integer res;
         BigDecimal quantityInvoiceOld = null;
-
+        
         qotationDetail = invQuotationDetailsService.findInvQotationDetailById(invPurchaseInvoiceDetail.getSelectedId());
         qutaionFinalQuantity = qotationDetail.getFinalQuantity() != null
                 ? qotationDetail.getFinalQuantity() : BigDecimal.ZERO;
-
+        
         if (invPurchaseInvoiceDetail.getId() != null) {
             InvPurchaseInvoiceDetail invPurchaseInvoiceDetailOld = invPurchaseInvoiceDetailsService.findInvPurchaseInvoiceDetailsById(invPurchaseInvoiceDetail.getId());
             quantityInvoiceOld = invPurchaseInvoiceDetailOld.getQuantity();
         }
         finalQuantity = calculateFinalQuantity(invPurchaseInvoiceDetail, qutaionFinalQuantity, quantityInvoiceOld);
-
+        
         res = finalQuantity.compareTo(BigDecimal.ZERO);
         if (res == 1) {
             qotationDetail.setFinalQuantity(finalQuantity);
@@ -821,7 +821,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         }
         invQuotationDetailsService.updateInvQotationDetails(qotationDetail);
     }
-
+    
     public BigDecimal calculateFinalQuantity(InvPurchaseInvoiceDetail invPurchaseInvoiceDetail,
             BigDecimal existQuantitiyFromDataBaseSource, BigDecimal quantityInvoiceOld) {
         BigDecimal finalQuantity;
@@ -836,14 +836,14 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         }
         return finalQuantity;
     }
-
+    
     @Override
     public synchronized Integer getMaxSerialForInvoiceDetail(InvPurchaseInvoice invPurchaseInvoiceId) {
         Map<String, Object> params = new HashMap<>();
         params.put("invPurchaseInvoiceId", invPurchaseInvoiceId.getId());
-
+        
         Integer serial = dao.findEntityByQuery("SELECT max(e.serial) FROM InvPurchaseInvoiceDetail e WHERE e.invPurchaseInvoiceId.id =:invPurchaseInvoiceId ", params);
-
+        
         if (serial == null) {
             return 1;
         } else {
@@ -851,40 +851,40 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             return serial;
         }
     }
-
+    
     @Override
     public synchronized Integer getMaxSerialTaxForInvoice(Integer branchId, Integer galaryId, Integer type, Boolean taxFalgFinal) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
-
+        
         StringBuilder query = new StringBuilder();
         query.append("SELECT max(e.serialTax) FROM InvPurchaseInvoice e WHERE e.branchId.id =:branchId");
-
+        
         if (type != null) {
             params.put("type", type);
             query.append(" AND e.type =:type");
         }
-
+        
         if (galaryId != null) {
             params.put("galaryId", galaryId);
             query.append(" AND e.galaryId.id =:galaryId");
         }
-
+        
         if (taxFalgFinal) {
             query.append(" AND e.taxFlagFinal = 1 ");
         } else {
             query.append(" AND e.taxFlagFinal = 0 ");
         }
-
+        
         Integer serial = dao.findEntityByQuery(query.toString(), params);
-
+        
         if (serial == null) {
             return 1;
         } else {
             return serial + 1;
         }
     }
-
+    
     @Override
     public void findmofakroun() {
         Map<String, Object> params = new HashMap<>();
@@ -939,16 +939,16 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             }
         }
     }
-
+    
     private InvInvoiceDTO mapToDTO(InvPurchaseInvoice entity, Boolean isLoaded) {
-
+        
         InvInvoiceDTO invPurchaseInvoiceDTO = new InvInvoiceDTO();
-
+        
         initData(invPurchaseInvoiceDTO, entity, isLoaded);
-
+        
         return invPurchaseInvoiceDTO;
     }
-
+    
     @Override
     public InvInvoiceDTO updateRate(InvInvoiceDTO invPurchaseInvoiceDTO) {
         try {
@@ -959,16 +959,16 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         }
         return invPurchaseInvoiceDTO;
     }
-
+    
     @Override
     public String validateloginDistributedScreens(UserDataDTO userDataDTO, ScreenNameClassEnum screenNameClassEnum) {
         StringBuilder error = new StringBuilder();
         validateInventory(userDataDTO, error, screenNameClassEnum);
         return error.toString();
     }
-
+    
     private void validateInventory(UserDataDTO userDataDTO, StringBuilder error, ScreenNameClassEnum screenNameClassEnum) {
-
+        
         if (!ScreenNameClassEnum.INVSALESINVOICEFORM.equals(screenNameClassEnum)) {
             List<InvInventoryDTO> invInventoryDTOList = userDataDTO.getInventoryDTOList();
             if (invInventoryDTOList == null || invInventoryDTOList.isEmpty()) {
@@ -1002,14 +1002,14 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             if (organizationSiteList == null || organizationSiteList.isEmpty()) {
                 error.append("\n يجب انشاء موردين / عملاء ");
             }
-
+            
             List<CurrencyDTO> currencyDTOList = currencyService.getAllCurrenciesWithLocalCurrencyHavingRatesByCompanyIdDTO(userDataDTO.getCompanyId()); // العملات
             if (currencyDTOList == null || currencyDTOList.isEmpty()) {
                 error.append("\n يجب انشاء عملة للتعامل بها");
             }
         }
     }
-
+    
     public InvInvoiceDTO deleteInvPurchaseInvoiceDetail(InvInvoiceDTO invPurchaseInvoiceDTO) {
         try {
             if (invPurchaseInvoiceDTO.getInvPurchaseInvoiceDetailsSelected().getId() != null) {
@@ -1022,14 +1022,14 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         }
         return invPurchaseInvoiceDTO;
     }
-
+    
     @Override
     public InvInvoiceDTO putCurrency(InvInvoiceDTO invPurchaseInvoiceDTO) {
         try {
             if (invPurchaseInvoiceDTO.getOrganizationSiteId() != null && invPurchaseInvoiceDTO.getOrganizationSiteId().getCurrencyId() != null) {
                 invPurchaseInvoiceDTO.setCurrencyId(invPurchaseInvoiceDTO.getOrganizationSiteId().getCurrencyId());
                 invPurchaseInvoiceDTO = updateRate(invPurchaseInvoiceDTO);
-
+                
                 invPurchaseInvoiceDTO = invGlobalService.updateSummition(invPurchaseInvoiceDTO);
             } else {
                 invPurchaseInvoiceDTO.setMsg("هذا المورد أو العميل ليس له عمله");
@@ -1042,21 +1042,21 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
 
     //mapToEntity
     private InvPurchaseInvoice mapToEntity(InvInvoiceDTO invInvoiceDTO, TobyUser tobyUser) {
-
+        
         InvPurchaseInvoice invPurchaseInvoice = new InvPurchaseInvoice();
-
+        
         if (invInvoiceDTO.getInvInventoryId() != null) {
             InvInventory inventory = new InvInventory();
             inventory.setId(invInvoiceDTO.getInvInventoryId().getId());
             invPurchaseInvoice.setInvInventoryId(inventory);
         }
-
+        
         if (invInvoiceDTO.getGallaryId() != null) {
             InvInventory inventory = new InvInventory();
             inventory.setId(invInvoiceDTO.getGallaryId().getId());
             invPurchaseInvoice.setGalaryId(inventory);
         }
-
+        
         if (invInvoiceDTO.getAdminUnitId() != null) {
             GlAdminUnit glAdminUnit = new GlAdminUnit();
             glAdminUnit.setId(invInvoiceDTO.getAdminUnitId().getId());
@@ -1072,20 +1072,20 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             currency.setId(invInvoiceDTO.getCurrencyId().getId());
             invPurchaseInvoice.setCurrencyId(currency);
         }
-
+        
         if (invInvoiceDTO.getOrganizationSiteId() != null) {
             InvOrganizationSite invOrganizationSite = new InvOrganizationSite();
             invOrganizationSite.setId(invInvoiceDTO.getOrganizationSiteId().getId());
             invOrganizationSite.setName(invInvoiceDTO.getOrganizationSiteId().getName());
             invPurchaseInvoice.setOrganizationSiteId(invOrganizationSite);
         }
-
+        
         if (invInvoiceDTO.getAccountId() != null) {
             GlAccount glAccount = new GlAccount();
             glAccount.setId(invInvoiceDTO.getAccountId());
             invPurchaseInvoice.setAccountId(glAccount);
         }
-
+        
         if (invInvoiceDTO.getGlBankId() != null) {
             GlBank glBank = new GlBank();
             glBank.setId(invInvoiceDTO.getGlBankId().getId());
@@ -1096,7 +1096,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             inventoryDelegator.setId(invInvoiceDTO.getInvDelegatorId().getId());
             invPurchaseInvoice.setInvDelegatorId(inventoryDelegator);
         }
-
+        
         if (invInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.INVPURCHASEINVOICEFORM)) {
             invPurchaseInvoice.setType(0);
             if (invInvoiceDTO.getInvAddingOrderId() != null) {
@@ -1110,13 +1110,13 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             }
         } else if (invInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.INVSALESINVOICEFORM)) {
             invPurchaseInvoice.setType(1);
-
+            
             if (invInvoiceDTO.getInvPurchaseInvoiceId() != null) {
                 InvPurchaseInvoice purchaseInvoice = new InvPurchaseInvoice();
                 purchaseInvoice.setId(invInvoiceDTO.getInvPurchaseInvoiceId());
                 invPurchaseInvoice.setParent(purchaseInvoice);
             }
-
+            
             if (invInvoiceDTO.getProFactoryDeliveryId() != null) {
                 ProFactoryDelivery proFactoryDelivery = new ProFactoryDelivery();
                 proFactoryDelivery.setId(invInvoiceDTO.getProFactoryDeliveryId());
@@ -1144,7 +1144,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 invPurchaseInvoice.setParent(purchaseInvoice);
             }
         }
-
+        
         invPurchaseInvoice.setId(invInvoiceDTO.getId());
         invPurchaseInvoice.setSerial(invInvoiceDTO.getSerial());
         invPurchaseInvoice.setSerialTax(invInvoiceDTO.getSerialTax());
@@ -1170,7 +1170,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         invPurchaseInvoice.setPricetype(invInvoiceDTO.getPricetype());
         invPurchaseInvoice.setDueperiod(invInvoiceDTO.getDueperiod());
         invPurchaseInvoice.setProof(invInvoiceDTO.getProof() ? 1 : 0);
-
+        
         if (invInvoiceDTO.getCreatedBy() != null) {
             TobyUser user = new TobyUser();
             user.setId(invInvoiceDTO.getCreatedBy());
@@ -1183,7 +1183,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 company.setId(invInvoiceDTO.getCompanyId());
                 invPurchaseInvoice.setCompanyId(company);
             }
-
+            
             if (invInvoiceDTO.getBranchId() != null) {
                 Branch branch = new Branch();
                 branch.setId(invInvoiceDTO.getBranchId());
@@ -1197,7 +1197,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         }
         return invPurchaseInvoice;
     }
-
+    
     public InvInvoiceDTO validateSave(InvInvoiceDTO invInvoiceDTO) {
         StringBuilder error = new StringBuilder();
         if (invInvoiceDTO.getInvInventoryId() == null) {
@@ -1208,25 +1208,25 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 error.append("\n يجب أختيار معرض");
             }
         }
-
+        
         if (invInvoiceDTO.getCurrencyId() == null) {
             error.append("\n يجب أختيار عمله");
         }
-
+        
         if (invInvoiceDTO.getOrganizationSiteId() == null) {
             error.append("\n يجب أختيار عميل / مورد");
         }
-
+        
         if (invInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.INVSALESINVOICEFORM) || ScreenNameClassEnum.PROWORKORDER.equals(invInvoiceDTO.getScreenName())) {
             checkIfLoaded(invInvoiceDTO, error);
         }
-
+        
         if (!error.toString().isEmpty()) {
             invInvoiceDTO.setMsg(error.toString());
         }
         return invInvoiceDTO;
     }
-
+    
     public void checkIfLoaded(InvInvoiceDTO invPurchaseInvoiceDTO, StringBuilder error) {
         if (invPurchaseInvoiceDTO.getId() != null) {
             List<Integer> id = dao.executeNativeQuery("select id from (select parent as id from inv_purchase_invoice "
@@ -1243,12 +1243,12 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             }
         }
     }
-
+    
     @Override
     public InvInvoiceDTO save(InvInvoiceDTO invInvoiceDTO, TobyUser tobyUser) {
         try {
             invInvoiceDTO = validateSave(invInvoiceDTO);
-
+            
             InvPurchaseInvoice invPurchaseInvoice;
             if (invInvoiceDTO != null && (invInvoiceDTO.getMsg() == null || invInvoiceDTO.getMsg().isEmpty())) {
                 invPurchaseInvoice = mapToEntity(invInvoiceDTO, tobyUser);
@@ -1269,21 +1269,21 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                         Integer serialTax = getMaxSerialTaxForInvoice(invPurchaseInvoice.getBranchId().getId(), invPurchaseInvoice.getGalaryId().getId(), invPurchaseInvoice.getType(), invPurchaseInvoice.getTaxFlagFinal() == null ? Boolean.FALSE : invPurchaseInvoice.getTaxFlagFinal());
                         invPurchaseInvoice.setSerialTax(serialTax);
                     }
-
+                    
                     invPurchaseInvoice = dao.updateEntity(invPurchaseInvoice);
                     invInvoiceDTO.setId(invPurchaseInvoice.getId());
                     glBankTransactionService.addCash(invInvoiceDTO, tobyUser);
                 }
-
+                
                 invPurchaseInvoiceDetailsService.deleteInvPurchaseInvoiceDetailListDTO(invInvoiceDTO.getInvPurchaseInvoiceDetailsDeletedList());
-
+                
                 String error = invPurchaseInvoiceDetailsService.addInvPurchaseInvoiceDetailsDTO(invInvoiceDTO.getInvPurchaseInvoiceDetailList(), invInvoiceDTO, tobyUser);
-
+                
                 invInvoiceDTO.setInvPurchaseInvoiceId(invPurchaseInvoice.getId());
                 if (invPurchaseInvoice.getId() == null) {
                     invAddingOrderService.save(invInvoiceDTO, tobyUser);
                 }
-
+                
                 if (error != null && !error.isEmpty()) {
                     invInvoiceDTO.setMsg(error);
                     dao.rollbackQuery();
@@ -1296,7 +1296,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             invInvoiceDTO.setMsg(e.toString());
             dao.rollbackQuery();
         }
-
+        
         return invInvoiceDTO;
     }
 
@@ -1332,7 +1332,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         }
         return invPurchaseInvoiceDTO;
     }
-
+    
     private InvPurchaseInvoice findInvPurchaseInvoiceByInvPurchaseInvoiceId(Integer serial, Integer type, Integer branchId) {
         Map<String, Object> params = new HashMap<>();
         params.put("serial", serial);
@@ -1341,15 +1341,15 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         List<InvPurchaseInvoice> details = dao.findListByQuery("SELECT e FROM InvPurchaseInvoice e WHERE e.serial = :serial AND e.branchId.id = :branchId AND e.type = :type", params);
         return (details == null || details.isEmpty()) ? null : details.get(0);
     }
-
+    
     private void modifyReturnData(InvInvoiceDTO invPurchaseInvoiceDTO, InvPurchaseInvoice invPurchaseInvoice) {
         invPurchaseInvoiceDTO.setId(null);
         invPurchaseInvoiceDTO.setSerial(null);
         invPurchaseInvoiceDTO.setDate(new Date());
-
+        
         invPurchaseInvoiceDTO.setParent(invPurchaseInvoice.getId());
         invPurchaseInvoiceDTO.setInvPurchaseInvoiceId(invPurchaseInvoice.getId());
-
+        
         invPurchaseInvoiceDTO.setLoadedSerial(invPurchaseInvoice.getSerial());
         List<InvDetailDTO> detailDTOs = new ArrayList<>();
         for (InvDetailDTO invDetailDTO : invPurchaseInvoiceDTO.getInvPurchaseInvoiceDetailList()) {
@@ -1359,14 +1359,14 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         }
         invPurchaseInvoiceDTO.setInvPurchaseInvoiceDetailList(detailDTOs);
     }
-
+    
     private InvInvoiceDTO mapToDTO(InvPurchaseInvoice entity, InvInvoiceDTO invPurchaseInvoiceDTO, Boolean isLoaded) {
-
+        
         invPurchaseInvoiceDTO = initData(invPurchaseInvoiceDTO, entity, isLoaded);
-
+        
         return invPurchaseInvoiceDTO;
     }
-
+    
     private InvInvoiceDTO initData(InvInvoiceDTO invInvoiceDTO, InvPurchaseInvoice entity, Boolean isLoaded) {
         invInvoiceDTO.setId(entity.getId());
         invInvoiceDTO.setSerial(entity.getSerial());
@@ -1404,7 +1404,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         invInvoiceDTO.setRemarks(entity.getRemarks());
         invInvoiceDTO.setDiscount(entity.getDiscount());
         invInvoiceDTO.setDiscountType(entity.getDiscountType());
-         invInvoiceDTO.setDiscHalala(entity.getDiscHalala());
+        invInvoiceDTO.setDiscHalala(entity.getDiscHalala());
         invInvoiceDTO.setDueDate(entity.getDueDate());
         invInvoiceDTO.setPaymentType(entity.getPaymentType());
         invInvoiceDTO.setPostFlag(entity.getPostFlag());
@@ -1416,7 +1416,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         invInvoiceDTO.setDueperiod(entity.getDueperiod());
         invInvoiceDTO.setPricetype(entity.getPricetype());
         invInvoiceDTO.setProof(entity.getProof() == 1);
-
+        
         if (entity.getOrganizationSiteId() != null) {
             invInvoiceDTO.setOrganizationSiteId(organizationSiteService.mapToDTOSmall(entity.getOrganizationSiteId()));
         }
@@ -1428,7 +1428,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             invInventoryDTO.setCode(entity.getInvInventoryId().getCode());
             invInvoiceDTO.setInvInventoryId(invInventoryDTO);
         }
-
+        
         if (entity.getGalaryId() != null) {
             InvInventoryDTO invInventoryDTO = new InvInventoryDTO();
             invInventoryDTO.setId(entity.getGalaryId().getId());
@@ -1436,7 +1436,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             invInventoryDTO.setCode(entity.getGalaryId().getCode());
             invInvoiceDTO.setGallaryId(invInventoryDTO);
         }
-
+        
         if (ScreenNameClassEnum.INVPURCHASEINVOICEFORM.equals(invInvoiceDTO.getScreenName())) {
             if (invInvoiceDTO.getInventorySetupDTO().getSellBuy()) {
                 if (entity.getInvAddingOrderId() != null) {
@@ -1471,7 +1471,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             invInvoiceDTO.setInvPurchaseInvoiceId(entity.getId());
             invInvoiceDTO.setLoadedSerial(entity.getSerial());
         }
-
+        
         invInvoiceDTO.setExtraCost(entity.getExtraCost());
         invInvoiceDTO.setTaxdiscflag(entity.getTaxdiscflag());
         invInvoiceDTO.setTaxdiscvalue(entity.getTaxdiscvalue());
@@ -1490,14 +1490,14 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             invInvoiceDTO.setGlBankId(glBankDTO);
         }
         invInvoiceDTO.setTaxflag(entity.getTaxflag());
-
+        
         invInvoiceDTO.setCreatedBy(entity.getCreatedBy() != null ? entity.getCreatedBy().getId() : null);
         invInvoiceDTO.setCreatedDate(entity.getCreationDate());
         invInvoiceDTO.setIndex(entity.getSerial());
         invInvoiceDTO.setType(entity.getType());
         invInvoiceDTO.setCompanyId(entity.getCompanyId().getId() != null ? entity.getCompanyId().getId() : null);
         invInvoiceDTO.setCreatedByName(entity.getCreatedBy() != null ? entity.getCreatedBy().getName() : null);
-
+        
         List<InvDetailDTO> invPurchaseInvoiceDetailsListDTO;
         if (isLoaded) {
             invPurchaseInvoiceDetailsListDTO = invPurchaseInvoiceDetailsService.getAllInvPurchaseInvoiceDetailsByInvPurchaseInvoiceIdDTO(invInvoiceDTO);
@@ -1506,11 +1506,11 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         }
         invInvoiceDTO.setInvPurchaseInvoiceDetailsDeletedList(new ArrayList<InvDetailDTO>());
         invInvoiceDTO.setInvPurchaseInvoiceDetailList(invPurchaseInvoiceDetailsListDTO);
-
+        
         invInvoiceDTO = invGlobalService.updateSummition(invInvoiceDTO);
         return invInvoiceDTO;
     }
-
+    
     @Override
     public Long getTotalRegistors(Integer type, Integer inventoryId, Integer branchId, Map<String, Object> filters) {
         StringBuilder builder = new StringBuilder();
@@ -1522,7 +1522,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         Long details = dao.findEntityByQuery(builder.toString(), filters);
         return details == null ? 0 : details;
     }
-
+    
     @Override
     public Long getTotalRegistorsForGallary(Integer type, Integer galaryId, Integer branchId, Map<String, Object> filters) {
         StringBuilder builder = new StringBuilder();
@@ -1534,7 +1534,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         Long details = dao.findEntityByQuery(builder.toString(), filters);
         return details == null ? 0 : details;
     }
-
+    
     private void appendFilter(Map<String, Object> filters, StringBuilder builder) {
         if (filters.get("globalFilter") != null && !filters.get("globalFilter").toString().isEmpty()) {
             String filter = " and ( FUNCTION('DATE_FORMAT',s.date, '%d-%m-%Y')  like CONCAT('%',:globalFilter ,'%') OR  s.serial like CONCAT('%',:globalFilter ,'%')  OR s.invInventoryId.name  like CONCAT('%',:globalFilter ,'%') OR s.galaryId.name  like CONCAT('%',:globalFilter ,'%') OR s.organizationSiteId.name like CONCAT('%',:globalFilter ,'%') OR  s.invDelegatorId.name like CONCAT('%',:globalFilter ,'%') OR s.paymentType  like CONCAT('%',:globalFilter ,'%') OR s.createdBy.name like CONCAT('%',:globalFilter ,'%') OR s.remarks like CONCAT('%',:globalFilter ,'%'))";
@@ -1543,7 +1543,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             filters.remove("globalFilter");
         }
     }
-
+    
     @Override
     public List<InvInvoiceDTO> getALLInvPurchaseInvoiceDTOByTypeAndBranchId(Integer type, Integer inventoryId, int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters) {
         filters.put("type", type);
@@ -1556,7 +1556,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         List<InvPurchaseInvoice> details = dao.findListByQuery(builder.toString(), filters, first, pageSize);
         return returnListDTOForList(details);
     }
-
+    
     @Override
     public List<InvInvoiceDTO> getALLInvPurchaseInvoiceDTOByTypeAndBranchIdFroGallary(Integer type, Integer galaryId, int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters) {
         filters.put("type", type);
@@ -1569,7 +1569,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         List<InvPurchaseInvoice> details = dao.findListByQuery(builder.toString(), filters, first, pageSize);
         return returnListDTOForList(details);
     }
-
+    
     @Override
     public List<InvInvoiceDTO> getALLInvPurchaseInvoiceDTOByTypeAndBranchIdFroGallary2(Integer type, Integer galaryId, Integer customerId) {
         Map<String, Object> params = new HashMap<>();
@@ -1582,13 +1582,13 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         List<InvPurchaseInvoice> details = dao.findListByQuery(builder.toString(), params);
         return returnListDTOForList(details);
     }
-
+    
     @Override
     public List<InvInvoiceDTO> getALLInvPurchaseInvoiceDTOByStatus(PrintProductionDTO printProductionDTO, Integer branchId) {
         Map<String, Object> params = new HashMap<>();
         params.put("type", printProductionDTO.getInvoiceStatus());
         params.put("galaryId", printProductionDTO.getGallaryFrom().getId());
-
+        
         params.put("branchId", branchId);
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT s FROM InvPurchaseInvoice s WHERE s.branchId.id = :branchId AND  s.type =:type AND s.id not in (SELECT p.invPurchaseInvoiceId.id from ProFactoryDelivery p ) ");
@@ -1607,7 +1607,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         List<InvPurchaseInvoice> details = dao.findListByQuery(builder.toString(), params);
         return returnListDTOForList(details);
     }
-
+    
     @Override
     public InvInvoiceDTO getInvPurchaseInvoiceDTOBySerial(Integer serial, Integer branchId) {
         Map<String, Object> params = new HashMap<>();
@@ -1616,7 +1616,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT s FROM InvPurchaseInvoice s WHERE  s.branchId.id =:branchId AND s.serial = :serial ");
         List<InvPurchaseInvoice> details = dao.findListByQuery(builder.toString(), params);
-
+        
         if (details != null && !details.isEmpty()) {
             InvInvoiceDTO invInvoiceDTO = initDataForList(null, details.get(0));
             return invInvoiceDTO;
@@ -1624,7 +1624,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             return null;
         }
     }
-
+    
     private List<InvInvoiceDTO> returnListDTOForList(List<InvPurchaseInvoice> invPurchaseInvoiceList) {
         List<InvInvoiceDTO> invInvoiceDTOList = new ArrayList<>();
         for (InvPurchaseInvoice invPurchaseInvoice : invPurchaseInvoiceList) {
@@ -1634,7 +1634,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         }
         return invInvoiceDTOList;
     }
-
+    
     private InvInvoiceDTO initDataForList(InvInvoiceDTO invInvoiceDTO, InvPurchaseInvoice invPurchaseInvoice) {
         if (invInvoiceDTO == null) {
             invInvoiceDTO = new InvInvoiceDTO();
@@ -1642,7 +1642,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         commonData(invInvoiceDTO, invPurchaseInvoice);
         return invInvoiceDTO;
     }
-
+    
     private void commonData(InvInvoiceDTO invInvoiceDTO, InvPurchaseInvoice entity) {
         invInvoiceDTO.setId(entity.getId());
         invInvoiceDTO.setSerial(entity.getSerial());
@@ -1652,7 +1652,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         invInvoiceDTO.setPostFlag(entity.getPostFlag());
         invInvoiceDTO.setRemarks(entity.getRemarks());
         invInvoiceDTO.setDueDate(entity.getDueDate());
-       invInvoiceDTO.setNumberOfToob(invoiceMovementReportService.summitionTob(entity.getId()));
+        invInvoiceDTO.setNumberOfToob(invoiceMovementReportService.summitionTob(entity.getId()));
         if (entity.getDueDate() != null) {
             invInvoiceDTO.setDiffrentTime(entity.getDueDate().getTime() - (new Date()).getTime());
         }
@@ -1692,14 +1692,14 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             invInvoiceDTO.setInvDelegatorId(inventoryDelegatorDTO);
             invInvoiceDTO.setInvDelegatorName(entity.getInvDelegatorId().getName());
         }
-
+        
         invInvoiceDTO.setPaymentType(entity.getPaymentType());
-
+        
         if (entity.getCreatedBy() != null) {
             invInvoiceDTO.setCreatedByName(entity.getCreatedBy().getName());
         }
     }
-
+    
     @Override
     public void deleteInvPurchaseInvoiceDTO(InvInvoiceDTO invPurchaseInvoice, Integer isPurchaseOrSales) {
         if (invPurchaseInvoice != null && invPurchaseInvoice.getId() > 0) {
@@ -1711,7 +1711,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             dao.deleteEntity(invPurchaseInvoice1);
         }
     }
-
+    
     @Override
     public InvInvoiceDTO returnInvInvoiceSummarySumation(InvPurchaseInvoice entity, BigDecimal sumDetailNet) {
         InvInvoiceDTO invInvoiceDTO = new InvInvoiceDTO();
@@ -1725,19 +1725,19 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             invInvoiceDTO.setValue(valueAfterDiscount);
             invInvoiceDTO.setValueLocal(invInvoiceDTO.getValue().multiply(entity.getRate()));
             invInvoiceDTO.setDiscHalala(entity.getDiscHalala());
-
+            
             if (entity.getTaxflag()) {
 //                invPurchaseInvoiceDTO.getTotalNetAfterDiscount().multiply(BigDecimal.valueOf(0.15))
                 invInvoiceDTO.setTaxValue(invInvoiceDTO.getValue().multiply(BigDecimal.valueOf(0.15)).setScale(3, BigDecimal.ROUND_DOWN));
-
+                
             } else if (!entity.getTaxflag()) {
                 invInvoiceDTO.setTaxValue(BigDecimal.ZERO);
             }
             invInvoiceDTO.setTaxValueLocal(invInvoiceDTO.getTaxValue().multiply(entity.getRate()));
-
+            
             if (entity.getTaxdiscflag() != null && entity.getTaxdiscflag()) {
                 invInvoiceDTO.setTaxDiscValue(invInvoiceDTO.getValue().multiply(new BigDecimal(0.01)).setScale(3, BigDecimal.ROUND_DOWN));
-
+                
             } else if (entity.getTaxdiscflag() == null || !entity.getTaxdiscflag()) {
                 invInvoiceDTO.setTaxDiscValue(BigDecimal.ZERO);
             }
@@ -1746,9 +1746,9 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             invInvoiceDTO.setFinalNet(invInvoiceDTO.getValue().add(invInvoiceDTO.getTaxValue()).subtract(invInvoiceDTO.getTaxDiscValue()));
         }
         return invInvoiceDTO;
-
+        
     }
-
+    
     public BigDecimal finalNetForInvPurchaseInvoice(Integer invPurchaseInvoiceId) {
         if (invPurchaseInvoiceId != null && invPurchaseInvoiceId > 0) {
             Map<String, Object> params = new HashMap<>();
@@ -1760,7 +1760,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         }
         return BigDecimal.ZERO;
     }
-
+    
     @Override
     public BigDecimal remainForInvPurchaseInvoice(Integer invPurchaseInvoiceId) {
         if (invPurchaseInvoiceId != null && invPurchaseInvoiceId > 0) {
@@ -1771,15 +1771,16 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         }
         return BigDecimal.ZERO;
     }
-
+    
     private BigDecimal findPayed(Integer invPurchaseInvoiceId) {
         Map<String, Object> params = new HashMap<>();
         params.put("invPurchaseInvoiceId", invPurchaseInvoiceId);
         List<BigDecimal> details = dao.findListByQuery("SELECT  sum(i.value)    FROM GlBankTransaction i WHERE i.invoiceId.id = :invPurchaseInvoiceId Group by i.invoiceId.id", params);
-        BigDecimal payment = (details != null && !details.isEmpty()) ? details.get(0) : BigDecimal.ZERO;
+        List<BigDecimal> detailsReturn = dao.findListByQuery("SELECT  sum(i.value)    FROM GlBankTransactionDetail i WHERE i.invoiceId.id = :invPurchaseInvoiceId Group by i.invoiceId.id", params);
+        BigDecimal payment = (details != null && !details.isEmpty()) ? details.get(0).subtract((detailsReturn != null && !detailsReturn.isEmpty()) ? detailsReturn.get(0) : BigDecimal.ZERO) : BigDecimal.ZERO;
         return payment;
     }
-
+    
     @Override
     public String findInvoiceStatus(Integer invPurchaseInvoiceId) {
         List<String> statusList = null;
@@ -1800,7 +1801,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         }
         return (statusList != null && !statusList.isEmpty()) ? statusList.get(statusList.size() - 1) : "";
     }
-
+    
     @Override
     public List<FactoryInvoiceStatus> findInvoiceStatus(Date dateFrom, Date dateTo, Integer status, Integer gallaryId, Integer branchId) {
         List<FactoryInvoiceStatus> factoryInvoiceStatuseList = new ArrayList<>();
@@ -1858,7 +1859,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             params1.put("status", status);
             builder1.append(" AND i.type = :status ");
         }
-
+        
         List<ProFactoryDelivery> res = dao.findListByQuery(builder1.toString(), params1);
         for (ProFactoryDelivery proFactoryDelivery : res) {
             FactoryInvoiceStatus factoryInvoiceStatus = new FactoryInvoiceStatus();
@@ -1868,7 +1869,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             factoryInvoiceStatus.setInvoiceDate(proFactoryDelivery.getDate());
             factoryInvoiceStatus.setInvoiceNumber(proFactoryDelivery.getSerial());
             factoryInvoiceStatus.setNumber(invoiceMovementReportService.summitionTob(proFactoryDelivery.getInvPurchaseInvoiceId().getId()));
-
+            
             if (proFactoryDelivery.getType() == 0) {
                 factoryInvoiceStatus.setStage("تسليم للمشغل");
             } else if (proFactoryDelivery.getType() == 1) {
@@ -1878,15 +1879,15 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             } else {
                 factoryInvoiceStatus.setStage("تسليم للعميل");
             }
-
+            
             factoryInvoiceStatus.setStageDate(proFactoryDelivery.getDate());
             mapList.put(proFactoryDelivery.getSerial(), factoryInvoiceStatus);
         }
         factoryInvoiceStatuseList = new ArrayList<>(mapList.values());
-
+        
         return factoryInvoiceStatuseList;
     }
-
+    
     private Boolean CheckData(Date date, Boolean checkGeneralJournal) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
@@ -1894,7 +1895,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
-
+        
         Calendar calendar2 = Calendar.getInstance();
         calendar2.setTime(new Date());
         calendar2.set(Calendar.HOUR_OF_DAY, 0);
@@ -1907,9 +1908,9 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         } else {
             return !checkDate;
         }
-
+        
     }
-
+    
     @Override
     public List<SummitionItemsView> findSummitionQuantity(Integer gallaryId, Integer branchId, Date dateFrom, Date dateTo, Integer groupId) {
         Map<String, Object> params = new HashMap<>();
@@ -1945,7 +1946,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         List<Object[]> res = dao.findListByQuery(builder.toString(), params);
         return getTheListBasedOnAccClass(res, gallaryId, dateFrom, dateTo);
     }
-
+    
     private BigDecimal tobNumberFactoryDelivary(Integer gallaryId, Date dateFrom, Date dateTo, Integer groupId, Integer type) {
         Map<String, Object> params = new HashMap<>();
         StringBuilder builder = new StringBuilder();
@@ -1969,15 +1970,15 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             builder.append(" AND pfdd.itemId.proGroupId.id = :groupId ");
         }
         builder.append(" group by pfdd.itemId.proGroupId.id ");
-
+        
         List<BigDecimal> res = dao.findListByQuery(builder.toString(), params);
         return (res != null && !res.isEmpty()) ? res.get(0) : BigDecimal.ZERO;
     }
-
+    
     public List<SummitionItemsView> getTheListBasedOnAccClass(List<Object[]> res, Integer gallaryId, Date dateFrom, Date dateTo) {
-
+        
         List<SummitionItemsView> summitionItemsViews = new ArrayList<>();
-
+        
         Iterator it = res.iterator();
         while (it.hasNext()) {
             Object[] line = (Object[]) it.next();
@@ -2002,7 +2003,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         summitionItemsViews = new ArrayList<SummitionItemsView>(params.values());
         return summitionItemsViews;
     }
-
+    
     @Override
     public List<ClientsNoMovment> findClientsNoMovment(Integer branchId, Integer gallaryId, Date date, Integer type) {
         Map<String, Object> params = new HashMap<>();
@@ -2025,16 +2026,16 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 + "))\n"
                 + "group by ipi.organization_site_id order by ios.code , ipi.date asc";
         List<Object[]> res = dao.executeNativeQuery(query);
-
+        
         list = getTheListClientsNoMovment(res);
-
+        
         return list;
     }
-
+    
     public List<ClientsNoMovment> getTheListClientsNoMovment(List<Object[]> res) {
-
+        
         List<ClientsNoMovment> GeneralJournalDetailsBasedOnAccClassList = new ArrayList<>();
-
+        
         Iterator it = res.iterator();
         while (it.hasNext()) {
             Object[] line = (Object[]) it.next();
@@ -2048,10 +2049,10 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         }
         return GeneralJournalDetailsBasedOnAccClassList;
     }
-
+    
     @Override
     public List<SummitionItemsView> getTheListBasedOnStagesList(Integer gallaryId, Date dateFrom, Date dateTo, Integer groupId, Integer branchId, TobyUser tobyUser) {
-
+        
         List<ProGroupDTO> proGrouplist = new ArrayList<>();
         if (groupId == null) {
             proGrouplist = proGroupService.getallProGroupByBranchIdDTO(tobyUser);
@@ -2073,7 +2074,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                     || summitionItemsView.getDeliveryNumber().compareTo(BigDecimal.ZERO) == 1) {
                 summitionItemsViews.add(summitionItemsView);
             }
-
+            
             TreeMap<Integer, SummitionItemsView> params = new TreeMap<>();
             for (SummitionItemsView summitionItemsViewNew : summitionItemsViews) {
                 params.put(summitionItemsViewNew.getCode(), summitionItemsViewNew);

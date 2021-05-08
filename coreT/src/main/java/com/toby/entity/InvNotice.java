@@ -64,6 +64,9 @@ public class InvNotice extends BaseEntity {
     @JoinColumn(name = "general_journal_id", referencedColumnName = "id")
     @ManyToOne
     private GeneralJournal generalJournalId;
+    @JoinColumn(name = "inv_invoice", referencedColumnName = "id")
+    @ManyToOne
+    private InvPurchaseInvoice invInvoice;
 
     public InvNotice() {
     }
@@ -183,6 +186,20 @@ public class InvNotice extends BaseEntity {
      */
     public void setGeneralJournalId(GeneralJournal generalJournalId) {
         this.generalJournalId = generalJournalId;
+    }
+
+    /**
+     * @return the invInvoice
+     */
+    public InvPurchaseInvoice getInvInvoice() {
+        return invInvoice;
+    }
+
+    /**
+     * @param invInvoice the invInvoice to set
+     */
+    public void setInvInvoice(InvPurchaseInvoice invInvoice) {
+        this.invInvoice = invInvoice;
     }
 
 }

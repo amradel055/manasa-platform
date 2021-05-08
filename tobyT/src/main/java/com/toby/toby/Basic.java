@@ -34,6 +34,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -108,6 +110,34 @@ public class Basic implements Serializable {
         return java.sql.Date.valueOf(dateFrom);
     }
     
+    public String goTOrganizationSiteacoount(Integer organizationSiteId) {
+        try {
+            if (organizationSiteId != null && organizationSiteId > 0) {
+                ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+                context.getSessionMap().put("ClientacoountSelected", organizationSiteId);
+                context.getSessionMap().put("ScreenMode", "editClientacoount");
+                exit("../inventoryreports/clientacoountById.xhtml");
+                return "";
+            } else {
+                return "";
+            }
+        } catch (Exception e) {
+            saveError(e, "InvPurchaseInvoiceListMB", "goToEdit");
+            return null;
+        }
+    }
+    
+    
+
+    public void exit(String url) {
+        FacesContext fc = FacesContext.getCurrentInstance();
+        try {
+            fc.getExternalContext().redirect(url);
+        } catch (IOException ex) {
+            Logger.getLogger(null).log(Level.SEVERE, null, ex);
+        }
+    }
+    
 
     public void saveError(Exception e, String className, String methodName) {
         getTobyErrorDTO().setClassName(className);
@@ -118,6 +148,8 @@ public class Basic implements Serializable {
 //        getSendEmailSMTP().sendEmail(getUserlogin(), "Class Name -> " + className + "\n" + "Method Name -> " + methodName + "\n" + "ISAG ERROR \n" + System.err,"errorerp@toby-it.com", "123456");
 //        getSendEmailSMTP().sendEmail(getUserlogin(), "Class Name -> " + className + "\n" + "Method Name -> " + methodName + "\n" + "ISAG ERROR \n" + System.err, "devError@toby-it.com", "toby@2020");
     }
+    
+    
 
     public boolean isFileExist(String filePath) {
         try {

@@ -105,11 +105,7 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
     public String goTClientacoount() {
         try {
             if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getOrganizationSiteId().getId() > 0) {
-                ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-                context.getSessionMap().put("ClientacoountSelected", getInvInvoiceDTO().getOrganizationSiteId());
-                context.getSessionMap().put("ScreenMode", "editClientacoount");
-                exit("../inventoryreports/clientacoountById.xhtml");
-                return "";
+                return goTOrganizationSiteacoount(getInvInvoiceDTO().getOrganizationSiteId().getId());
             } else {
                 return "";
             }

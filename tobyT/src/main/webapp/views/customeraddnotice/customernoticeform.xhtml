@@ -41,7 +41,7 @@
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:fieldset  style="width: 68%;border-radius: 5px">
                                         <p:selectOneRadio  id="console"  value ="#{invNoticeFormMB.invNoticeEntity.type}" >
-                                            <f:selectItem itemLabel="#{userData.userDDs['ADD_NOTIF']}" itemValue="0" />
+                                            <f:selectItem itemLabel="اشعار مدين" itemValue="0" />
                                             <f:selectItem itemLabel="#{userData.userDDs['DISC_NOTIF']}" itemValue="1" />
                                             <f:selectItem itemLabel="اشعار دائن" itemValue="4" />
                                         </p:selectOneRadio>
@@ -64,11 +64,34 @@
                                                     itemValue="#{supplier}" 
                                                     forceSelection="true" 
                                                     completeMethod="#{autoComplete.completeCustomerFrom}">
-                                        
+                                        <p:ajax update="invoice"
+                                                event="itemSelect"
+                                                process="@this"
+                                                listener="#{invNoticeFormMB.chooseInvoice()}" />
                                     </p:autoComplete>
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:outputLabel style="width: 85px;" value="#{userData.userDDs['CORRES_CUSTO']}"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel value="#{invNoticeFormMB.invNoticeEntity.invoiceSerial}" 
+                                               rendered="#{invNoticeFormMB.invNoticeEntity.id ne null}" />
+
+                                <p:selectOneMenu  id="invoice" style="width:100%"  
+                                                  rendered="#{invNoticeFormMB.invNoticeEntity.id eq null}"
+                                                  value="#{invNoticeFormMB.invNoticeEntity.invoiceId}">
+                                    <f:selectItem itemLabel="اختر الفاتوره "/>
+                                    <f:selectItems  var="inninvoice"
+                                                    value="#{invNoticeFormMB.glBankTransactionInvoiceViewList}"
+                                                    itemLabel="#{inninvoice.serial}"
+                                                    itemValue="#{inninvoice.invoiceId}"/>
+                                </p:selectOneMenu>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 85px;" value="الفاتورة"/>
 
                                 </div>
                             </div>
