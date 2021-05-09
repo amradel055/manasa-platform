@@ -157,6 +157,7 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
         invInvoiceDTO.setBranchId(entity.getBranchId() != null ? entity.getBranchId().getId() : null);
 
         invInvoiceDTO.setDate(entity.getDate());
+        invInvoiceDTO.setDateHegry(entity.getDateHegry());
 
         invInvoiceDTO.setRemarks(entity.getRemark());
         invInvoiceDTO.setType(entity.getType());
@@ -259,6 +260,7 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
         entity.setId(invoiceDTO.getId());
         entity.setSerial(invoiceDTO.getSerial());
         entity.setDate(invoiceDTO.getDate());
+        entity.setDateHegry(invoiceDTO.getDateHegry());
         entity.setRemark(invoiceDTO.getRemarks());
         entity.setType(invoiceDTO.getType());
 
