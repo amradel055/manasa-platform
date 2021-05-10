@@ -14,10 +14,10 @@ public class GlBankDTO extends BaseEntityDTO {
     private String code;
     private BigDecimal openinngBalance;
     private Date dateOpeninngBalance;
+    private Date dateHegry;
     private Integer accountId;
     private Integer type;
     private Integer currencyId;
-    
 
     public GlBankDTO() {
     }
@@ -58,7 +58,6 @@ public class GlBankDTO extends BaseEntityDTO {
         this.accountId = accountId;
     }
 
-
     public Integer getCurrencyId() {
         return currencyId;
     }
@@ -74,8 +73,6 @@ public class GlBankDTO extends BaseEntityDTO {
     public void setType(Integer type) {
         this.type = type;
     }
-
-    
 
     @Override
     public int hashCode() {
@@ -116,6 +113,20 @@ public class GlBankDTO extends BaseEntityDTO {
 
     public void setDateOpeninngBalance(Date dateOpeninngBalance) {
         this.dateOpeninngBalance = dateOpeninngBalance;
+    }
+
+    /**
+     * @return the dateHegry
+     */
+    public Date getDateHegry() {
+        return dateHegry;
+    }
+
+    /**
+     * @param dateHegry the dateHegry to set
+     */
+    public void setDateHegry(Date dateHegry) {
+        this.dateHegry = dateHegry;
     }
 
 }

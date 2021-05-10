@@ -42,7 +42,7 @@ public class ProFactoryDelivery extends BaseEntity {
     @Column(name = "date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
-    @Column(name = "date")
+    @Column(name = "date_hegry")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateHegry;
     @Column(name = "time")

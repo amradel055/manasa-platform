@@ -170,7 +170,7 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
     private List<GlBankTransactionInvoiceView> glBankTransactionInvoiceViewList;
 
     private Boolean isEdit;
-    
+
     private Integer serialSelected;
 
     @EJB
@@ -295,6 +295,10 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
         }
     }
 
+    public void convertDateFrom() {
+        getGlBankTransactionEntity().setDate(findDateFromHijriFrom());
+    }
+
     public void calculateRemain() {
         if (getGlBankTransactionEntity() != null && getGlBankTransactionEntity().getInvoiceId() != null) {
             BigDecimal remain = invPurchaseInvoiceService_1.remainForInvPurchaseInvoice(glBankTransactionEntity.getInvoiceId());
@@ -328,17 +332,17 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
             saveError(e, "notesReceivablesFormMB", "findnotesReceivablesObject");
         }
     }
-    
-    public void findNotesReceivable(){
-        if(serialSelected != null){
-            GlBankTransaction idSelected = glBankTransactionService.findGlBankTransactionSettlmentBySerial(getUserData().getUserBranch().getId() , serialSelected , 1);
+
+    public void findNotesReceivable() {
+        if (serialSelected != null) {
+            GlBankTransaction idSelected = glBankTransactionService.findGlBankTransactionSettlmentBySerial(getUserData().getUserBranch().getId(), serialSelected, 1);
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-                context.getSessionMap().put("glBankTransactionIdSeclected", idSelected.getId());
-                context.getSessionMap().put("ScreenMode", "Edit");
-            
+            context.getSessionMap().put("glBankTransactionIdSeclected", idSelected.getId());
+            context.getSessionMap().put("ScreenMode", "Edit");
+
             init();
         }
-        
+
     }
 
     @Override

@@ -87,6 +87,9 @@ public class InvPurchaseInvoice extends BaseEntity {
     @Column(name = "date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
+    @Column(name = "date_hegry")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dateHegry;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "rate")
     private BigDecimal rate;
@@ -837,6 +840,20 @@ public class InvPurchaseInvoice extends BaseEntity {
      */
     public void setDiscHalala(BigDecimal discHalala) {
         this.discHalala = discHalala;
+    }
+
+    /**
+     * @return the dateHegry
+     */
+    public Date getDateHegry() {
+        return dateHegry;
+    }
+
+    /**
+     * @param dateHegry the dateHegry to set
+     */
+    public void setDateHegry(Date dateHegry) {
+        this.dateHegry = dateHegry;
     }
 
 }

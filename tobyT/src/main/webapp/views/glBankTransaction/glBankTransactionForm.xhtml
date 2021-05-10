@@ -37,7 +37,7 @@
                                 <div class="ui-g-6 ui-xl-6">
 
                                     <p:calendar style="width: 47%!important"  value="#{glBankTransactionFromMB.glBankTransactionEntity.date}" 
-                                                pattern="dd/MM/yyyy" >
+                                                pattern="dd/MM/yyyy" id="date">
                                         <p:ajax event="dateSelect" listener="#{glBankTransactionFromMB.updateDate(event)}" />
                                     </p:calendar>
                                 </div>
@@ -47,6 +47,23 @@
 
 
 
+                                </div>
+                            </div>
+
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText value="#{glBankTransactionFromMB.dayHijriFrom}" /> يوم
+                                    <p:inputText value="#{glBankTransactionFromMB.monthHijriFrom}" />  شهر
+                                    <p:inputText value="#{glBankTransactionFromMB.yearHijriFrom}" />  سنة
+                                    <p:commandButton     class="saveButton" id="excuteFrom" 
+                                                         value="تنفيذ" 
+                                                         icon="fa fa-fw fa-save"
+                                                         action="#{glBankTransactionFromMB.convertDateFrom()}"
+                                                         update="date"
+                                                         />
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 50px"  value="من تاريخ هجري" />
                                 </div>
                             </div>
                             <div class="ui-g-12 ui-xl-12">
@@ -158,80 +175,80 @@
 
 
 
-                <div class="ui-g-6 ui-xl-6">
-                    <div class="ui-g-12 ui-xl-12">
                         <div class="ui-g-6 ui-xl-6">
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
 
- <p:inputText  style="width: 50%"  id="amount" value="#{glBankTransactionFromMB.glBankTransactionDetailEntity.value}">
+                                    <p:inputText  style="width: 50%"  id="amount" value="#{glBankTransactionFromMB.glBankTransactionDetailEntity.value}">
                                         <p:ajax event="keyup" listener="#{glBankTransactionFromMB.calculateLocalValue()}" update="currencyLocal"/>
                                     </p:inputText>
-                        </div>
-                        <div class="ui-g-6 ui-xl-6">
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
 
 
                                     <p:outputLabel style="width: 60px" value="#{userData.userDDs['AMOUNT']}"/>
 
 
-                        </div>
-                    </div>
-                    <div class="ui-g-12 ui-xl-12">
-                        <div class="ui-g-6 ui-xl-6">
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
 
                                     <p:outputLabel id="currency" value="#{glBankTransactionFromMB.glBankTransactionDetailEntity.bankFrom.currencyId.name}"/>
 
-                        </div>
-                        <div class="ui-g-6 ui-xl-6">
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
                                     <p:outputLabel style="width: 60px" value="#{userData.userDDs['CURRENCY']}"/>
 
 
 
 
-                        </div>
-                    </div>
-                    <div class="ui-g-12 ui-xl-12">
-                        <div class="ui-g-6 ui-xl-6">
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
 
-  <p:inputNumber style="width: 50%!important" id="rate" value="#{glBankTransactionFromMB.glBankTransactionEntity.rate}">
+                                    <p:inputNumber style="width: 50%!important" id="rate" value="#{glBankTransactionFromMB.glBankTransactionEntity.rate}">
                                         <p:ajax event="keyup" listener="#{glBankTransactionFromMB.calculateLocalValue()}" update="currencyLocal" />
                                     </p:inputNumber>
-                        </div>
-                        <div class="ui-g-6 ui-xl-6">
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
 
 
                                     <p:outputLabel style="width: 60px" value="#{userData.userDDs['RATE']}"/>
 
 
-                        </div>
-                    </div>
-                    <div class="ui-g-12 ui-xl-12">
-                        <div class="ui-g-6 ui-xl-6">
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
 
                                     <p:inputText  style="width: 50%"  id="currencyLocal" value="#{glBankTransactionFromMB.glBankTransactionDetailEntity.valueLocal}"/>
 
-                        </div>
-                        <div class="ui-g-6 ui-xl-6">
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
 
                                     <p:outputLabel style="width: 60px" value="#{userData.userDDs['LOCAL_CURRENCY']}"/>
 
 
 
-                        </div>
-                    </div>
-                    <div class="ui-g-12 ui-xl-12">
-                        <div class="ui-g-6 ui-xl-6">
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
                                     <p:inputText style="width: 50%" id="note" value="#{glBankTransactionFromMB.glBankTransactionEntity.remark}"/>
 
 
-                        </div>
-                        <div class="ui-g-6 ui-xl-6">
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
 
                                     <p:outputLabel style="width: 60px" value="#{userData.userDDs['NOTE']}"/>
 
 
 
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
 
                     </div>
                 </div>

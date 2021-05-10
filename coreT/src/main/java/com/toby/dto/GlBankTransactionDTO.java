@@ -17,6 +17,7 @@ public class GlBankTransactionDTO extends BaseEntityDTO {
 
     private Integer serial;
     private Date date;
+    private Date dateHegry;
     private BigDecimal value;
     private Integer postFlag;
     private Integer paymentType;
@@ -38,8 +39,7 @@ public class GlBankTransactionDTO extends BaseEntityDTO {
     private Date chequeDueDate;
     private Integer chequeStatus;
     private GlBankTransactionDTO parent;
-    
-    
+
     private String paymentTypeName;
     private String createdByName;
     private Integer documentSerial;
@@ -49,8 +49,6 @@ public class GlBankTransactionDTO extends BaseEntityDTO {
     private BigDecimal balance;
     private BigDecimal openingBalance;
     private Integer listOrder;
-    
-    
 
     public GlBankTransactionDTO() {
     }
@@ -452,6 +450,20 @@ public class GlBankTransactionDTO extends BaseEntityDTO {
      */
     public void setListOrder(Integer listOrder) {
         this.listOrder = listOrder;
+    }
+
+    /**
+     * @return the dateHegry
+     */
+    public Date getDateHegry() {
+        return dateHegry;
+    }
+
+    /**
+     * @param dateHegry the dateHegry to set
+     */
+    public void setDateHegry(Date dateHegry) {
+        this.dateHegry = dateHegry;
     }
 
 }

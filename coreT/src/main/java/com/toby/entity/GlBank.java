@@ -50,6 +50,9 @@ public class GlBank extends BaseEntity {
     @Column(name = "date_openinng_balance")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateOpeninngBalance;
+    @Column(name = "date_hegry")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dateHegry;
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     @ManyToOne
     private GlAccount accountId;
@@ -175,6 +178,20 @@ public class GlBank extends BaseEntity {
 
     public void setDateOpeninngBalance(Date dateOpeninngBalance) {
         this.dateOpeninngBalance = dateOpeninngBalance;
+    }
+
+    /**
+     * @return the dateHegry
+     */
+    public Date getDateHegry() {
+        return dateHegry;
+    }
+
+    /**
+     * @param dateHegry the dateHegry to set
+     */
+    public void setDateHegry(Date dateHegry) {
+        this.dateHegry = dateHegry;
     }
 
 }

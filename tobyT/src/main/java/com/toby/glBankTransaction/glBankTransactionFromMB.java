@@ -140,6 +140,10 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
 
     }
 
+    public void convertDateFrom() {
+        getGlBankTransactionEntity().setDate(findDateFromHijriFrom());
+    }
+
     public void setGlBankTransactionDataEmpty() {
         try {
 
@@ -374,7 +378,7 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
             hashMap.put("companyName", getUserData().getCompany().getName());
             hashMap.put("amountText", userDDs.get("AMOUNT"));
             hashMap.put("dateText", userDDs.get("DATE"));
-        //  hashMap.put("companyImage", getUserData().getImageReportPath());
+            //  hashMap.put("companyImage", getUserData().getImageReportPath());
 
             // hashMap.put("reportNameText", "سند قبض ");
             hashMap.put("recipientText", "المستلم");
@@ -383,7 +387,7 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
             hashMap.put("signatureText", "التوقيع");
             hashMap.put("valueFromText", "وذلك قيمة");
             hashMap.put("documentNumberText", "رقم السند");
-        //hashMap.put("chequeDateText", "تاريخ الشيك");
+            //hashMap.put("chequeDateText", "تاريخ الشيك");
             //hashMap.put("chequeDateValue", glBankTransactionEntity.getDate() != null ? glBankTransactionEntity.getDate() : null);
             //hashMap.put("deservedDateText", "تاريخ الاستحقاق");
             // hashMap.put("deservedDateValue", glBankTransactionEntityMapper.getChequeDueDate() != null ? glBankTransactionEntityMapper.getChequeDueDate() : null);
@@ -397,7 +401,7 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
             hashMap.put("documentNumberValue", glBankTransaction.getSerial() != null ? glBankTransaction.getSerial() : null);
             //hashMap.put("recipientValue", glBankTransactionEntity.getGlBank().getName());
             hashMap.put("amountValue", GlBankTransactionDetailEntity.getValue());
-            hashMap.put("amountValueText", Tafqeet.numberToText(Double.parseDouble(GlBankTransactionDetailEntity.getValue().toString()),  "ريـال", "هلله"));
+            hashMap.put("amountValueText", Tafqeet.numberToText(Double.parseDouble(GlBankTransactionDetailEntity.getValue().toString()), "ريـال", "هلله"));
             hashMap.put("valueFromValue", remark);
 
             /*   GlAccount recipientaccount = new GlAccount();
