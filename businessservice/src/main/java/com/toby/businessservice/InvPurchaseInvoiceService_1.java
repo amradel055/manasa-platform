@@ -76,7 +76,7 @@ public interface InvPurchaseInvoiceService_1 {
 
     public InvInvoiceDTO updateRate(InvInvoiceDTO invPurchaseInvoiceDTO);
 
-    public String validateloginDistributedScreens(UserDataDTO userDataDTO, ScreenNameClassEnum screenNameClassEnum);
+    public String validateloginDistributedScreens(UserDataDTO userDataDTO, ScreenNameClassEnum screenNameClassEnum,Integer gallaryId);
 
     public InvInvoiceDTO putCurrency(InvInvoiceDTO invPurchaseInvoiceDTO);
 

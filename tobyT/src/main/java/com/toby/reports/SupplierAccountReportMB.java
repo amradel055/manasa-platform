@@ -565,14 +565,14 @@ public class SupplierAccountReportMB extends BaseReportBean {
     }
 
     public List<InvOrganizationSiteDTO> completOrgSiteFrom(String query) {
-        List<InvOrganizationSiteDTO> list = autoCompleteService.autoCompleteOrganizationSiteDTO(getUserData().getUserBranch().getId(), true, type, query);
+        List<InvOrganizationSiteDTO> list = autoCompleteService.autoCompleteOrganizationSiteDTO(getUserData().getUserBranch().getId(), true, type, query,null);
         invOrgSiteConverter = new InvOrganizationSiteDTOConverter(list);
         return list;
 //        return getAutoComplete().completOrgSiteDTO(query, getInvOrgSiteList(), invOrgSiteConverter);
     }
 
     public List<InvOrganizationSiteDTO> completOrgSiteTo(String query) {
-        List<InvOrganizationSiteDTO> list = autoCompleteService.autoCompleteOrganizationSiteDTO(getUserData().getUserBranch().getId(), true, type, query);
+        List<InvOrganizationSiteDTO> list = autoCompleteService.autoCompleteOrganizationSiteDTO(getUserData().getUserBranch().getId(), true, type, query,null);
         invOrgSiteConverter = new InvOrganizationSiteDTOConverter(list);
         return list;
 //        return getAutoComplete().completOrgSiteDTO(query, getInvOrgSiteList(), invOrgSiteConverter);

@@ -474,13 +474,13 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
             if (type == 0) {
                 if (customerList == null || customerList.size() == 0) {
 //                    customerList = organizationSiteService.getorganizationSiteByBranchIdForGlBankModule(branchId, true, type);
-                    customerList = autoCompleteService.autoCompleteOrganizationSite(branchId, true, type, "");
+                    customerList = autoCompleteService.autoCompleteOrganizationSite(branchId, true, type, "",((getUserData().getGallaryDTOList() != null && !getUserData().getGallaryDTOList().isEmpty()) ? getUserData().getGallaryDTOList().get(0).getId() : null));
                 }
                 setOrganizationList(customerList);
             } else if (type == 1) {
                 if (supplierList == null || customerList.size() == 0) {
 //                    supplierList = organizationSiteService.getorganizationSiteByBranchIdForGlBankModule(branchId, true, type);
-                    supplierList = autoCompleteService.autoCompleteOrganizationSite(branchId, true, type, "");
+                    supplierList = autoCompleteService.autoCompleteOrganizationSite(branchId, true, type, "",((getUserData().getGallaryDTOList() != null && !getUserData().getGallaryDTOList().isEmpty()) ? getUserData().getGallaryDTOList().get(0).getId() : null));
                 }
                 setOrganizationList(supplierList);
             } else if (type == 2) {

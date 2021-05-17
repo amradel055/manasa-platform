@@ -455,7 +455,9 @@ public class IReportServiceImpl implements IReportService {
             hashMap.put("totalWithTaxValue", invPurchaseInvoiceDTO.getTaxvalue().add(invPurchaseInvoiceDTO.getTotalNet()));
             hashMap.put("payedValue", invPurchaseInvoiceDTO.getPayed());
             hashMap.put("remainValue", invPurchaseInvoiceDTO.getRemain());
-            hashMap.put("receiptNumberValue", invPurchaseInvoiceDTO.getSerial());
+            hashMap.put("receiptNumberValue", invPurchaseInvoiceDTO.getSerialTax());
+            hashMap.put("workOrderNumberValue", invPurchaseInvoiceDTO.getSerial());
+            hashMap.put("workOrderNumberValueText", "امر الشغل  ");
             hashMap.put("invName", invPurchaseInvoiceDTO.getGallaryId().getName());
             hashMap.put("customerName", invPurchaseInvoiceDTO.getOrganizationSiteId() == null ? "" : invPurchaseInvoiceDTO.getOrganizationSiteId().getName());
             hashMap.put("customerPhone", invPurchaseInvoiceDTO.getOrganizationSiteId() == null ? "" : invPurchaseInvoiceDTO.getOrganizationSiteId().getMobile());

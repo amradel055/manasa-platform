@@ -143,7 +143,7 @@ public class AutoComplete1 extends Basic {
 
     public List<InvOrganizationSiteDTO> completeCustomerFrom(String query) {
         List<InvOrganizationSiteDTO> invOrganizationSiteDTOList = new ArrayList<>();
-        invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getBranchId(), Boolean.TRUE, 0, query);
+        invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getBranchId(), Boolean.TRUE, 0, query,null);
         organizationSiteDTOConvertor = new InvOrganizationSiteDTOConverter(invOrganizationSiteDTOList);
         return invOrganizationSiteDTOList;
 
@@ -165,7 +165,7 @@ public class AutoComplete1 extends Basic {
 
     public List<InvOrganizationSiteDTO> completeCustomerTo(String query) {
         List<InvOrganizationSiteDTO> invOrganizationSiteDTOList = new ArrayList<>();
-        invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getBranchId(), Boolean.TRUE, 0, query);
+        invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getBranchId(), Boolean.TRUE, 0, query,null);
         organizationSiteDTOConvertor = new InvOrganizationSiteDTOConverter(invOrganizationSiteDTOList);
         return invOrganizationSiteDTOList;
 
@@ -173,7 +173,7 @@ public class AutoComplete1 extends Basic {
 
     public List<InvOrganizationSiteDTO> completeSupplierFrom(String query) {
         List<InvOrganizationSiteDTO> invOrganizationSiteDTOList;
-        invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getBranchId(), Boolean.TRUE, 1, query);
+        invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getBranchId(), Boolean.TRUE, 1, query,null);
         setSupplierConvertorFrom(new InvOrganizationSiteDTOConverter(invOrganizationSiteDTOList));
         return invOrganizationSiteDTOList;
 
@@ -181,7 +181,7 @@ public class AutoComplete1 extends Basic {
 
     public List<InvOrganizationSiteDTO> completeSupplierTo(String query) {
         List<InvOrganizationSiteDTO> invOrganizationSiteDTOList;
-        invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getBranchId(), Boolean.TRUE, 1, query);
+        invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getBranchId(), Boolean.TRUE, 1, query,null);
         setOrganizationSiteDTOConvertor(new InvOrganizationSiteDTOConverter(invOrganizationSiteDTOList));
         return invOrganizationSiteDTOList;
 
@@ -189,7 +189,7 @@ public class AutoComplete1 extends Basic {
 
     public List<InvOrganizationSiteDTO> completeCustomerAndSupplierFrom(String query) {
         List<InvOrganizationSiteDTO> invOrganizationSiteDTOList = new ArrayList<>();
-        invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getBranchId(), Boolean.TRUE, 2, query);
+        invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getBranchId(), Boolean.TRUE, 2, query,null);
         organizationSiteDTOConvertor = new InvOrganizationSiteDTOConverter(invOrganizationSiteDTOList);
         return invOrganizationSiteDTOList;
 
@@ -197,7 +197,7 @@ public class AutoComplete1 extends Basic {
 
     public List<InvOrganizationSiteDTO> completeCustomerAndSupplierTo(String query) {
         List<InvOrganizationSiteDTO> invOrganizationSiteDTOList = new ArrayList<>();
-        invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getBranchId(), Boolean.TRUE, 2, query);
+        invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getBranchId(), Boolean.TRUE, 2, query,null);
         organizationSiteDTOConvertor = new InvOrganizationSiteDTOConverter(invOrganizationSiteDTOList);
         return invOrganizationSiteDTOList;
 
@@ -213,7 +213,7 @@ public class AutoComplete1 extends Basic {
 
     public List<InvOrganizationSiteDTO> completeContractorFrom(String query) {
         List<InvOrganizationSiteDTO> invOrganizationSiteDTOList = new ArrayList<>();
-        invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getBranchId(), Boolean.TRUE, 4, query);
+        invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getBranchId(), Boolean.TRUE, 4, query,null);
         organizationSiteDTOConvertor = new InvOrganizationSiteDTOConverter(invOrganizationSiteDTOList);
         return invOrganizationSiteDTOList;
 
@@ -221,7 +221,7 @@ public class AutoComplete1 extends Basic {
 
     public List<InvOrganizationSiteDTO> completeContractorTo(String query) {
         List<InvOrganizationSiteDTO> invOrganizationSiteDTOList = new ArrayList<>();
-        invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getBranchId(), Boolean.TRUE, 4, query);
+        invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getBranchId(), Boolean.TRUE, 4, query,null);
         organizationSiteDTOConvertor = new InvOrganizationSiteDTOConverter(invOrganizationSiteDTOList);
         return invOrganizationSiteDTOList;
 

@@ -56,6 +56,7 @@ public class InvOrganizationSiteDTO extends BaseEntityDTO {
     private SymbolDTO contractorType;
     private String globalFilter;
     private OfferCompanyDTO offerCompanyDTO;
+    private InvInventoryDTO gallaryIdDTO;
 
 
     public InvOrganizationSiteDTO() {
@@ -672,6 +673,20 @@ public class InvOrganizationSiteDTO extends BaseEntityDTO {
      */
     public void setOfferCompanyDTO(OfferCompanyDTO offerCompanyDTO) {
         this.offerCompanyDTO = offerCompanyDTO;
+    }
+
+    /**
+     * @return the gallaryIdDTO
+     */
+    public InvInventoryDTO getGallaryIdDTO() {
+        return gallaryIdDTO;
+    }
+
+    /**
+     * @param gallaryIdDTO the gallaryIdDTO to set
+     */
+    public void setGallaryIdDTO(InvInventoryDTO gallaryIdDTO) {
+        this.gallaryIdDTO = gallaryIdDTO;
     }
 
 

@@ -17,6 +17,7 @@ import com.toby.dto.SymbolDTO;
 import com.toby.entity.Branch;
 import com.toby.entity.Currency;
 import com.toby.entity.GlAccount;
+import com.toby.entity.InvInventory;
 import com.toby.entity.InvOrganizationSite;
 import com.toby.entity.InventoryDelegator;
 import com.toby.entity.Symbol;
@@ -74,7 +75,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         List<InvOrganizationSite> detailsesReturn = retiveOrganizationSiteDate(detailses);
         return detailsesReturn;
     }
-    
+
     @Override
     public InvOrganizationSite addOrganizationSiteNew(InvOrganizationSite invOrganizationSite) {
         Map<String, Object> params = new HashMap<>();
@@ -84,9 +85,9 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         params2.put("branchId", 182);
         params2.put("code", invOrganizationSite.getCode());
 //        List<InvOrganizationSite> detailsesMobile = dao.findListByQuery("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND e.mobile = :mobile ORDER BY e.code", params);
-        List<InvOrganizationSite> detailsesCode   = dao.findListByQuery("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND e.code = :code ORDER BY e.code", params2);
-        if(detailsesCode == null || detailsesCode.isEmpty()){
-             return dao.updateEntity(invOrganizationSite);
+        List<InvOrganizationSite> detailsesCode = dao.findListByQuery("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND e.code = :code ORDER BY e.code", params2);
+        if (detailsesCode == null || detailsesCode.isEmpty()) {
+            return dao.updateEntity(invOrganizationSite);
         }
         return null;
     }
@@ -200,7 +201,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         List<InvOrganizationSite> detailses = dao.findListByQuery("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND ((e.type = 0 OR e.type = 2) AND e.active = 1) ORDER BY e.code", params);
         return detailses;
     }
-    
+
     @Override
     public List<InvOrganizationSite> getorganizationSiteByBranchIdForGlBankModule(Integer branchId, boolean active, Integer type, Integer type2) {
         Map<String, Object> params = new HashMap<>();
@@ -231,7 +232,6 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         }
         return list;
     }
-
 
     @Override
     public List<InvOrganizationSiteDTO> getorganizationSiteByBranchIdForGlBankModule(Integer branchId, boolean active, Integer type, TobyUser tobyUser) {
@@ -407,6 +407,12 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         invOrganizationSite.setPhone2(invOrganizationSiteDTO.getPhone2());
         invOrganizationSite.setPostBox(invOrganizationSiteDTO.getPostBox());
         invOrganizationSite.setRemark(invOrganizationSiteDTO.getRemark());
+
+        if (invOrganizationSiteDTO.getGallaryIdDTO() != null && invOrganizationSiteDTO.getGallaryIdDTO().getId() != null) {
+            InvInventory invInventory = new InvInventory();
+            invInventory.setId(invOrganizationSiteDTO.getGallaryIdDTO().getId());
+            invOrganizationSite.setGallaryId(invInventory);
+        }
 
         if (invOrganizationSiteDTO.getParent() != null) {
             InvOrganizationSite organizationSite1 = new InvOrganizationSite();
@@ -1390,6 +1396,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             inventoryDelegatorDTO.setId(77);
             invOrganizationSiteDTO.setDelegatorId(inventoryDelegatorDTO);
             invOrganizationSiteDTO.setCode(code.toString());
+
             invOrganizationSiteDTO = addOrganizationSiteDTO(invOrganizationSiteDTO, tobyUser);
             invOrganizationSiteDTOList.add(0, invOrganizationSiteDTO);
         }

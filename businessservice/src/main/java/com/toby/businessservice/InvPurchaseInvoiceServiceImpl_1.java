@@ -961,13 +961,13 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     }
     
     @Override
-    public String validateloginDistributedScreens(UserDataDTO userDataDTO, ScreenNameClassEnum screenNameClassEnum) {
+    public String validateloginDistributedScreens(UserDataDTO userDataDTO, ScreenNameClassEnum screenNameClassEnum,Integer gallaryId) {
         StringBuilder error = new StringBuilder();
-        validateInventory(userDataDTO, error, screenNameClassEnum);
+        validateInventory(userDataDTO, error, screenNameClassEnum, gallaryId);
         return error.toString();
     }
     
-    private void validateInventory(UserDataDTO userDataDTO, StringBuilder error, ScreenNameClassEnum screenNameClassEnum) {
+    private void validateInventory(UserDataDTO userDataDTO, StringBuilder error, ScreenNameClassEnum screenNameClassEnum,Integer gallaryId) {
         
         if (!ScreenNameClassEnum.INVSALESINVOICEFORM.equals(screenNameClassEnum)) {
             List<InvInventoryDTO> invInventoryDTOList = userDataDTO.getInventoryDTOList();
@@ -987,7 +987,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 || ScreenNameClassEnum.INVADDINGORDERFORM.equals(screenNameClassEnum)
                 || ScreenNameClassEnum.INVPURCHASEORDERFORM.equals(screenNameClassEnum)) {
 //            organizationSiteList = organizationSiteService.getorganizationSiteByBranchIdDTO(userDataDTO.getBranchId(), true, 1);
-            organizationSiteList = autoCompleteService.autoCompleteOrganizationSiteDTO(userDataDTO.getBranchId(), true, 1, null);
+            organizationSiteList = autoCompleteService.autoCompleteOrganizationSiteDTO(userDataDTO.getBranchId(), true, 1, null, gallaryId);
         } else if (ScreenNameClassEnum.INVRETURNSALESFORM.equals(screenNameClassEnum)
                 || ScreenNameClassEnum.INVRESERVATIONFORM.equals(screenNameClassEnum)
                 || ScreenNameClassEnum.INVPERMISSIONORDERFORM.equals(screenNameClassEnum)
@@ -995,7 +995,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 || ScreenNameClassEnum.PROWORKORDER.equals(screenNameClassEnum)
                 || ScreenNameClassEnum.INVSALESORDERFORM.equals(screenNameClassEnum)) {
 //            organizationSiteList = organizationSiteService.getorganizationSiteByBranchIdDTO(userDataDTO.getBranchId(), true, 0);
-            organizationSiteList = autoCompleteService.autoCompleteOrganizationSiteDTO(userDataDTO.getBranchId(), true, 0, null);
+            organizationSiteList = autoCompleteService.autoCompleteOrganizationSiteDTO(userDataDTO.getBranchId(), true, 0, null, gallaryId);
         }
         if (!ScreenNameClassEnum.INVTRANSFERINVENTORY.equals(screenNameClassEnum)
                 && !ScreenNameClassEnum.INVSALESINVOICEFORM.equals(screenNameClassEnum)) {
@@ -1537,7 +1537,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     
     private void appendFilter(Map<String, Object> filters, StringBuilder builder) {
         if (filters.get("globalFilter") != null && !filters.get("globalFilter").toString().isEmpty()) {
-            String filter = " and ( FUNCTION('DATE_FORMAT',s.date, '%d-%m-%Y')  like CONCAT('%',:globalFilter ,'%') OR  s.serial like CONCAT('%',:globalFilter ,'%')  OR s.invInventoryId.name  like CONCAT('%',:globalFilter ,'%') OR s.galaryId.name  like CONCAT('%',:globalFilter ,'%') OR s.organizationSiteId.name like CONCAT('%',:globalFilter ,'%') OR  s.invDelegatorId.name like CONCAT('%',:globalFilter ,'%') OR s.paymentType  like CONCAT('%',:globalFilter ,'%') OR s.createdBy.name like CONCAT('%',:globalFilter ,'%') OR s.remarks like CONCAT('%',:globalFilter ,'%'))";
+            String filter = " and ( FUNCTION('DATE_FORMAT',s.date, '%d-%m-%Y')  like CONCAT('%',:globalFilter ,'%') OR  s.serial like CONCAT('%',:globalFilter ,'%') OR  s.serialTax like CONCAT('%',:globalFilter ,'%')  OR s.invInventoryId.name  like CONCAT('%',:globalFilter ,'%') OR s.galaryId.name  like CONCAT('%',:globalFilter ,'%') OR s.organizationSiteId.name like CONCAT('%',:globalFilter ,'%') OR  s.invDelegatorId.name like CONCAT('%',:globalFilter ,'%') OR s.paymentType  like CONCAT('%',:globalFilter ,'%') OR s.createdBy.name like CONCAT('%',:globalFilter ,'%') OR s.remarks like CONCAT('%',:globalFilter ,'%'))";
             builder.append(filter);
         } else {
             filters.remove("globalFilter");
@@ -1646,6 +1646,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     private void commonData(InvInvoiceDTO invInvoiceDTO, InvPurchaseInvoice entity) {
         invInvoiceDTO.setId(entity.getId());
         invInvoiceDTO.setSerial(entity.getSerial());
+        invInvoiceDTO.setSerialTax(entity.getSerialTax());
         invInvoiceDTO.setInvoiceSerial(entity.getSerial());
         invInvoiceDTO.setDate(entity.getDate());
         invInvoiceDTO.setIndex(entity.getSerial());

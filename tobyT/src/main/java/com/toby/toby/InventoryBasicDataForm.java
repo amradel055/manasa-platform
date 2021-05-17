@@ -455,6 +455,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     }
 
     public void addNewCustomer() {
+        getOrganizationSiteId().setGallaryIdDTO(getInvInvoiceDTO().getGallaryId());
         getInvInvoiceDTO().setOrganizationSiteId(organizationSiteService.addNewCustomer(getOrganizationSiteId(), getInvOrganizationSiteDTOList(true, 0), getUserData().getUser()));
         getInvInvoiceDTO().setShowCustomerDate(Boolean.FALSE);
     }
@@ -781,7 +782,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     }
 
     public List<InvOrganizationSiteDTO> completeCustomerFrom(String query) {
-        invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getUserData().getUserBranch().getId(), Boolean.TRUE, 0, query);
+        invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getUserData().getUserBranch().getId(), Boolean.TRUE, 0, query,getInvInvoiceDTO().getGallaryId().getId());
         organizationSiteDTOConvertor = new InvOrganizationSiteDTOConverter(invOrganizationSiteDTOList);
         return invOrganizationSiteDTOList;
 
@@ -792,8 +793,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         return itemsBarcodesDetailsViews;
     }
 
-    protected String validateloginDistributedScreens(ScreenNameClassEnum screenNameClassEnum) {
-        return invPurchaseInvoiceService.validateloginDistributedScreens(getUserDataDTO(), screenNameClassEnum);
+    protected String validateloginDistributedScreens(ScreenNameClassEnum screenNameClassEnum,Integer gallaryId) {
+        return invPurchaseInvoiceService.validateloginDistributedScreens(getUserDataDTO(), screenNameClassEnum, getInvInvoiceDTO().getGallaryId() == null ? null : getInvInvoiceDTO().getGallaryId().getId());
     }
 
     public List<InvOrganizationSiteDTO> completeFromCustomer(String query) {
@@ -970,7 +971,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     public List<InvOrganizationSiteDTO> getInvOrganizationSiteDTOList(Boolean active, Integer type) {
         if (invOrganizationSiteDTOList == null) {
 //            setInvOrganizationSiteDTOList(organizationSiteService.getorganizationSiteByBranchIdDTO(getUserlogin().getBranchId().getId(), active, type));
-            setInvOrganizationSiteDTOList(autoCompleteService.autoCompleteOrganizationSiteDTO(getUserlogin().getBranchId().getId(), active, type, null));
+            setInvOrganizationSiteDTOList(autoCompleteService.autoCompleteOrganizationSiteDTO(getUserlogin().getBranchId().getId(), active, type, null,getInvInvoiceDTO().getGallaryId() == null ? null : getInvInvoiceDTO().getGallaryId().getId()));
             setOrganizationSiteDTOConvertor(new InvOrganizationSiteDTOConverter(invOrganizationSiteDTOList));
         }
         return invOrganizationSiteDTOList;
