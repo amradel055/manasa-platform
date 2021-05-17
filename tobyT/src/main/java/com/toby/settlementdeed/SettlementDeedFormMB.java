@@ -275,6 +275,10 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
             saveError(e, "SettlementDeedFormMB", "init");
         }
     }
+    
+      public void convertDateFrom() {
+        getGlBankTransactionEntity().setDate(findDateFromHijriFrom());
+    }
 
     private void findSettlementDeedObject(int glBankTransId, Boolean isUpdate) {
         try {

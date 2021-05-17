@@ -14,6 +14,7 @@ import java.util.Date;
 public class ProFactoryDeliveryDTO extends BaseEntityDTO {
 
     private Date date;
+    private Date dateHegry;
     private Date time;
     private InvInventoryDTO factoryId;
     private InvInventoryDTO gallaryId;
@@ -108,5 +109,19 @@ public class ProFactoryDeliveryDTO extends BaseEntityDTO {
     public void setInvPurchaseInvoiceId(InvInvoiceDTO invPurchaseInvoiceId) {
         this.invPurchaseInvoiceId = invPurchaseInvoiceId;
     }
-    
+
+    /**
+     * @return the dateHegry
+     */
+    public Date getDateHegry() {
+        return dateHegry;
+    }
+
+    /**
+     * @param dateHegry the dateHegry to set
+     */
+    public void setDateHegry(Date dateHegry) {
+        this.dateHegry = dateHegry;
+    }
+
 }

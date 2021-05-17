@@ -42,6 +42,9 @@ public class ProFactoryDelivery extends BaseEntity {
     @Column(name = "date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
+    @Column(name = "date_hegry")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dateHegry;
     @Column(name = "time")
     @Temporal(TemporalType.TIMESTAMP)
     private Date time;
@@ -204,6 +207,20 @@ public class ProFactoryDelivery extends BaseEntity {
      */
     public void setParent(ProFactoryDelivery parent) {
         this.parent = parent;
+    }
+
+    /**
+     * @return the dateHegry
+     */
+    public Date getDateHegry() {
+        return dateHegry;
+    }
+
+    /**
+     * @param dateHegry the dateHegry to set
+     */
+    public void setDateHegry(Date dateHegry) {
+        this.dateHegry = dateHegry;
     }
     
 }

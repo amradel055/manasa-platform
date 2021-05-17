@@ -26,6 +26,7 @@ public class InvInvoiceDTO extends BaseEntityDTO {
     private ScreenNameClassEnum ScreenName;
     private ModuleClassEnum moduleClassEnum;
     private Date date;
+    private Date dateHegry;
     private Date dateEndOffer;
     private BigDecimal rate;
     private BigDecimal numberOfToob;
@@ -1620,7 +1621,7 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      * @return the discHalala
      */
     public BigDecimal getDiscHalala() {
-        if(discHalala == null){
+        if (discHalala == null) {
             discHalala = BigDecimal.ZERO;
         }
         return discHalala;
@@ -1631,6 +1632,20 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      */
     public void setDiscHalala(BigDecimal discHalala) {
         this.discHalala = discHalala;
+    }
+
+    /**
+     * @return the dateHegry
+     */
+    public Date getDateHegry() {
+        return dateHegry;
+    }
+
+    /**
+     * @param dateHegry the dateHegry to set
+     */
+    public void setDateHegry(Date dateHegry) {
+        this.dateHegry = dateHegry;
     }
 
     /**

@@ -56,9 +56,10 @@ public class SummitionItemReportMB extends Basic {
     public void search() {
 //        List<SummitionItemsView> itemsViewForGallary = null;
         if (getGallaryListSelected() != null && !getGallaryListSelected().isEmpty()) {
-
+            itemsViewList = new ArrayList<>();
+            List<SummitionItemsView> itemsViewForGallaryinner = new ArrayList<>();
             for (InvInventoryDTO invInventoryDTO : getGallaryListSelected()) {
-                List<SummitionItemsView> itemsViewForGallaryinner = new ArrayList<>();
+
                 SummitionItemsView summitionItemsView = new SummitionItemsView();
                 BigDecimal sumFactoryNumber = BigDecimal.ZERO, sumSendNumber = BigDecimal.ZERO, sumDeliveryNumber = BigDecimal.ZERO, sumCustomerNumber = BigDecimal.ZERO;
 

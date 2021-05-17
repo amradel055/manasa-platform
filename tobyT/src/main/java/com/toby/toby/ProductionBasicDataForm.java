@@ -34,23 +34,23 @@ import org.primefaces.model.SortOrder;
  * @author m_els
  */
 public abstract class ProductionBasicDataForm extends BaseFormBean {
-
+    
     private Integer siteType;
-
+    
     private InvInvoiceDTO invInvoiceDTO;
     private InvInvoiceDTO invInvoiceDTOSelected;
     private List<InvInvoiceDTO> invInvoiceDTOListSelected;
     private List<InvInvoiceDTO> invInvoiceDTOListAfterSave;
     private Integer invoiceNumber;
-
+    
     IReportService iReportService = new IReportServiceImpl();
-
+    
     private LazyDataModel<InvInvoiceDTO> dataModel;
     private LazyDataModel<InvDailogueData> dataModelInvDailogueData;
-
+    
     private InvInventoryDTOConverter gallaryDTOConverter;
     private List<InvInventoryDTO> gallaryList;
-
+    
     @EJB
     AutoCompleteService autoCompleteService;
     @EJB
@@ -61,21 +61,25 @@ public abstract class ProductionBasicDataForm extends BaseFormBean {
     private ReportManagementService reportManagementService;
     @EJB
     private InvDialogueService invDialogueService;
-
+    
     @Override
     public abstract String save();
-
+    
     @Override
     public abstract void init();
-
+    
     public abstract String exit();
-
+    
     @Override
     public abstract void load();
-
+    
     @Override
     public abstract String getScreenName();
-
+    
+    public void convertDateFrom() {
+        getInvInvoiceDTO().setDate(findDateFromHijriFrom());
+    }
+    
     public void reset() {
         try {
             setInvInvoiceDTO(null);
@@ -83,20 +87,20 @@ public abstract class ProductionBasicDataForm extends BaseFormBean {
             saveError(e, "InvPurchaseInvoiceFormMB", "resetInvPurchaseInvoiceForm");
         }
     }
-
+    
     public void fillDefaultList() {
 //        getGallaryList();
     }
-
+    
     public void fillLists() {
         try {
             fillDefaultList();
         } catch (Exception e) {
             saveError(e, "invPurchaseOrderFormMB", "fillLists");
         }
-
+        
     }
-
+    
     public void deleteInvDetail(InvDetailDTO invPurchaseInvoiceDetailsValidate) {
         try {
             if (invPurchaseInvoiceDetailsValidate.getId() != null) {
@@ -107,7 +111,7 @@ public abstract class ProductionBasicDataForm extends BaseFormBean {
             saveError(e, "InvPurchaseInvoiceFormMB", "deleteInvPurchaseInvoiceDetail");
         }
     }
-
+    
     public void deleteAllSelection() {
         if (getInvInvoiceDTO().getInvPurchaseInvoiceDetailListSelected() != null) {
             for (InvDetailDTO detailEntity : getInvInvoiceDTO().getInvPurchaseInvoiceDetailListSelected()) {
@@ -126,7 +130,7 @@ public abstract class ProductionBasicDataForm extends BaseFormBean {
     public void loadDailogue() {
         this.setDataModelInvDailogueData(new LazyDataModel<InvDailogueData>() {
             private static final long serialVersionUID = 1L;
-
+            
             @Override
             public InvDailogueData getRowData(String rowKey) {
                 for (InvDailogueData invDailogueData : getInvInvoiceDTO().getInvDailogueDataList()) {
@@ -134,29 +138,29 @@ public abstract class ProductionBasicDataForm extends BaseFormBean {
                         return invDailogueData;
                     }
                 }
-
+                
                 return null;
             }
-
+            
             @Override
             public Integer getRowKey(InvDailogueData invDailogueData) {
                 return invDailogueData.getIndex();
             }
-
+            
             @Override
             public List<InvDailogueData> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
-
+                
                 setRowCount(invDialogueService.getTotalRegistors(getUserData().getUserBranch().getId(), filters, null, getInvInvoiceDTO().getScreenName()).intValue());
                 getInvInvoiceDTO().setInvDailogueDataList(invDialogueService.loadInvDailogueData(first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), filters, getInvInvoiceDTO().getInventorySetupDTO(), getUserData().getUserBranch().getId(), getInvInvoiceDTO().getScreenName()));
                 return getInvInvoiceDTO().getInvDailogueDataList();
             }
-
+            
         });
         OpenDlg("loaddlg");
     }
-
+    
     public void loadDlg() {
-        if(getInvInvoiceDTO().getLoadedSerial() != null && getInvInvoiceDTO().getNeedLoadedSerial() == null){
+        if (getInvInvoiceDTO().getLoadedSerial() != null && getInvInvoiceDTO().getNeedLoadedSerial() == null) {
             getInvInvoiceDTO().setNeedLoadedSerial(getInvInvoiceDTO().getLoadedSerial());
         }
         if (getInvInvoiceDTO().getInvDailogeDataSelected() != null || getInvInvoiceDTO().getNeedLoadedSerial() != null) {
@@ -166,9 +170,9 @@ public abstract class ProductionBasicDataForm extends BaseFormBean {
             errorMsg(getInvInvoiceDTO().getMsg());
         }
     }
-
+    
     public void loadMultiSelection() throws CloneNotSupportedException {
-
+        
         if (getInvInvoiceDTO().getInvDailogeDataListSelected() != null || getInvInvoiceDTO().getNeedLoadedSerial() != null) {
             setInvInvoiceDTOListSelected(new ArrayList<>());
             if (getInvInvoiceDTO().getInvDailogeDataListSelected() != null && !getInvInvoiceDTO().getInvDailogeDataListSelected().isEmpty()) {
@@ -184,7 +188,7 @@ public abstract class ProductionBasicDataForm extends BaseFormBean {
             errorMsg(getInvInvoiceDTO().getMsg());
         }
     }
-
+    
     private void initDailogue(InvDailogueData dailogueData) throws CloneNotSupportedException {
         InvInvoiceDTO invoiceDTO = (InvInvoiceDTO) getInvInvoiceDTO().clone();
         invoiceDTO.setInvDailogeDataSelected(dailogueData);
@@ -192,7 +196,7 @@ public abstract class ProductionBasicDataForm extends BaseFormBean {
         InvInvoiceDTO dTO = invDialogueService.loadDlg(invoiceDTO);
         getInvInvoiceDTOListSelected().add(dTO);
     }
-
+    
     public void forward() {
         if (getInvInvoiceDTOListSelected() != null && !getInvInvoiceDTOListSelected().isEmpty()) {
             int size = getInvInvoiceDTOListSelected().size();
@@ -202,7 +206,7 @@ public abstract class ProductionBasicDataForm extends BaseFormBean {
             }
         }
     }
-
+    
     public void backward() {
         if (getInvInvoiceDTOListSelected() != null && !getInvInvoiceDTOListSelected().isEmpty()) {
             if (getInvoiceNumber() > 0) {
@@ -211,19 +215,19 @@ public abstract class ProductionBasicDataForm extends BaseFormBean {
             }
         }
     }
-
+    
     public void print() {
         iReportService.printReportInvoice(getInvInvoiceDTO(), getUserData());
     }
-
+    
     public void printList() {
-
+        
     }
-
+    
     public void hishis() {
         System.out.println("Tamam");
     }
-
+    
     public List<InvInventoryDTO> completeGallary(String query) {
         return AutoComplete.completeInventoryDTO(query, getGallaryList(), getGallaryDTOConverter());
     }
@@ -252,22 +256,22 @@ public abstract class ProductionBasicDataForm extends BaseFormBean {
         }
         return invInvoiceDTO;
     }
-
+    
     public InvInvoiceDTO settingInventory(InvInvoiceDTO invInvoiceDTO) {
-
+        
         invInvoiceDTO.setCompanyActivity(getUserData().getUserBranch().getCompanyActivity());
-
+        
         findScreenName();
-
+        
         invInvoiceDTO.setDate(new Date());
-
+        
         invInvoiceDTO.setReportManagement(reportManagementService.reportManagementByBranch(getUserData().getUserBranch().getId()));
-
+        
         invInvoiceDTO.setBranchId(getUserData().getUserBranch().getId());
-
+        
         return invInvoiceDTO;
     }
-
+    
     public void findScreenName() {
         if (getUri().contains("profactorydeviveryForm")) {
             getInvInvoiceDTO().setScreenName(ScreenNameClassEnum.PROFACTORYDELIVERY);
@@ -284,13 +288,13 @@ public abstract class ProductionBasicDataForm extends BaseFormBean {
         }
         getInvInvoiceDTO().setModuleClassEnum(ModuleClassEnum.PRODUCTION);
     }
-
+    
     public void fillInvInvoiceDTO() {
         fillInvInvoiceDetailDTO();
         setInvInvoiceDTO(settingInventory(getInvInvoiceDTO()));
         fillLists();
     }
-
+    
     private void fillInvInvoiceDetailDTO() {
         if (getUri().contains("profactorydeviveryForm") || getUri().contains("proSendToGallaryForm") || getUri().contains("proSales")) {
             getInvInvoiceDTO().setId((Integer) getContext().getSessionMap().get("proFactoryDeliverySelected"));

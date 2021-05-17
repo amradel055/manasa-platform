@@ -30,6 +30,7 @@ import java.time.LocalDate;
 import java.time.chrono.HijrahChronology;
 import java.time.chrono.HijrahDate;
 import java.time.chrono.IsoChronology;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -89,14 +90,16 @@ public class Basic implements Serializable {
 
     private String ScreenMode;
 
-    
-   
     private Integer dayHijriFrom;
     private Integer monthHijriFrom;
     private Integer yearHijriFrom;
     private Integer dayHijriTo;
     private Integer monthHijriTo;
     private Integer yearHijriTo;
+
+    HijrahDate islamyYear;
+    HijrahDate islamyMonth;
+    HijrahDate islamyDay;
 
     public Date findDateFromHijriFrom() {
         HijrahDate date = HijrahChronology.INSTANCE.date(getYearHijriFrom(), getMonthHijriFrom(), getDayHijriFrom());
@@ -108,6 +111,42 @@ public class Basic implements Serializable {
         HijrahDate date = HijrahChronology.INSTANCE.date(getYearHijriTo(), getMonthHijriTo(), getDayHijriTo());
         LocalDate dateFrom = IsoChronology.INSTANCE.date(date);
         return java.sql.Date.valueOf(dateFrom);
+    }
+
+    public HijrahDate findHijriYear() {
+        Date date = new Date(); // Gregorian date
+        Calendar cl = Calendar.getInstance();
+        cl.setTime(date);
+
+        islamyYear = HijrahChronology.INSTANCE.date(LocalDate.of(cl.get(Calendar.YEAR), cl.get(Calendar.MONTH) + 1, cl.get(Calendar.DATE)));
+        //islamyMonth = HijrahChronology.INSTANCE.date(LocalDate.of(cl.get(Calendar.YEAR), cl.get(Calendar.MONTH) + 1, cl.get(Calendar.DATE)));
+        // islamyDay = HijrahChronology.INSTANCE.date(LocalDate.of(cl.get(Calendar.YEAR), cl.get(Calendar.MONTH) + 1, cl.get(Calendar.DATE)));
+
+        return islamyYear;
+    }
+
+    public HijrahDate findHijriMonth() {
+        Date date = new Date(); // Gregorian date
+        Calendar cl = Calendar.getInstance();
+        cl.setTime(date);
+
+        //islamyYear = HijrahChronology.INSTANCE.date(LocalDate.of(cl.get(Calendar.YEAR), cl.get(Calendar.MONTH) + 1, cl.get(Calendar.DATE)));
+        islamyMonth = HijrahChronology.INSTANCE.date(LocalDate.of(cl.get(Calendar.YEAR), cl.get(Calendar.MONTH) + 1, cl.get(Calendar.DATE)));
+        // islamyDay = HijrahChronology.INSTANCE.date(LocalDate.of(cl.get(Calendar.YEAR), cl.get(Calendar.MONTH) + 1, cl.get(Calendar.DATE)));
+
+        return islamyMonth;
+    }
+
+    public HijrahDate findHijriDay() {
+        Date date = new Date(); // Gregorian date
+        Calendar cl = Calendar.getInstance();
+        cl.setTime(date);
+
+        //islamyYear = HijrahChronology.INSTANCE.date(LocalDate.of(cl.get(Calendar.YEAR), cl.get(Calendar.MONTH) + 1, cl.get(Calendar.DATE)));
+        //islamyMonth = HijrahChronology.INSTANCE.date(LocalDate.of(cl.get(Calendar.YEAR), cl.get(Calendar.MONTH) + 1, cl.get(Calendar.DATE)));
+        islamyDay = HijrahChronology.INSTANCE.date(LocalDate.of(cl.get(Calendar.YEAR), cl.get(Calendar.MONTH) + 1, cl.get(Calendar.DATE)));
+
+        return islamyDay;
     }
     
     public String goTOrganizationSiteacoount(Integer organizationSiteId) {
@@ -266,7 +305,7 @@ public class Basic implements Serializable {
             String requestUrl = "https://mshastra.com/sendurl.aspx/?"
                     + "user=" + URLEncoder.encode("20099319", "UTF-8")
                     + "&pwd=" + URLEncoder.encode("0564933202", "UTF-8")
-//                    + "&language=" + URLEncoder.encode(language, "UTF-8")
+                    //                    + "&language=" + URLEncoder.encode(language, "UTF-8")
                     + "&senderid=" + URLEncoder.encode(sender, "UTF-8")
                     + "&mobileno=" + URLEncoder.encode("0201015926792", "UTF-8")
                     + "&msgtext=" + URLEncoder.encode(message, "UTF-8")
@@ -575,5 +614,4 @@ public class Basic implements Serializable {
         this.yearHijriTo = yearHijriTo;
     }
 
-    
 }

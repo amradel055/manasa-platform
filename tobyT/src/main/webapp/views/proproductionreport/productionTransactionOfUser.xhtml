@@ -119,19 +119,19 @@
 
                             <p:autoComplete style="width:85%" id="Cost_Center_from" 
                                             dropdown="true"
-                                            converter="#{productionTransactionOfUserMB.proProductionStagesDTOConverter}"
+                                            converter="#{autoComplete.proGroupDTOConverter}"
                                             value="#{productionTransactionOfUserMB.printProductionDTO.fromStatus}" 
                                             var="fromStatus"
                                             itemLabel="#{fromStatus.name}"
                                             itemValue="#{fromStatus.serial}" 
                                             forceSelection="true" 
-                                            completeMethod="#{productionTransactionOfUserMB.completeProProductionId}" >
+                                            completeMethod="#{autoComplete.completeProGroup}" >
                             </p:autoComplete>
 
                         </div>
                         <div class="ui-g-6 ui-xl-6">
 
-                            <p:outputLabel style="width: 50px;margin-right: 1%" value="من فئة"/>
+                            <p:outputLabel style="width: 50px;margin-right: 1%" value="من مرحلة"/>
 
 
 
@@ -141,19 +141,19 @@
                         <div class="ui-g-6 ui-xl-6">
                             <p:autoComplete style="width:85%" id="Cost_Center_to" 
                                             dropdown="true"
-                                            converter="#{productionTransactionOfUserMB.proProductionStagesDTOConverter}"
+                                            converter="#{autoComplete.proGroupDTOConverter}"
                                             value="#{productionTransactionOfUserMB.printProductionDTO.toStatus}" 
                                             var="toStatus"
                                             itemLabel="#{toStatus.name}"
                                             itemValue="#{toStatus.serial}" 
                                             forceSelection="true" 
-                                            completeMethod="#{productionTransactionOfUserMB.completeProProductionId}" >
+                                            completeMethod="#{autoComplete.completeProGroup}" >
                             </p:autoComplete>
 
                         </div>
                         <div class="ui-g-6 ui-xl-6">
 
-                            <p:outputLabel style="width: 50px;margin-right: 1%" value="الى فئة"/>
+                            <p:outputLabel style="width: 50px;margin-right: 1%" value="الى مرحلة"/>
 
 
 
@@ -226,6 +226,9 @@
                     </p:column>
                     <p:column headerText="الفئة " style="width: 10vh;text-align: center!important;font-size: 1.8vh">
                         <h:outputText value="#{data.stageName}" />
+                    </p:column>
+                    <p:column headerText="رقم العامل" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                        <h:outputText value="#{data.userCode}" />
                     </p:column>
                     <p:column headerText="الموظف" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
                         <h:outputText value="#{data.userName}" />

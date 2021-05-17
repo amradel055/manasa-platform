@@ -49,6 +49,22 @@
                         </div>
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
+                                <p:inputText value="#{invPurchaseInvoiceFormDTOMB.dayHijriFrom}" /> يوم
+                                <p:inputText value="#{invPurchaseInvoiceFormDTOMB.monthHijriFrom}" />  شهر
+                                <p:inputText value="#{invPurchaseInvoiceFormDTOMB.yearHijriFrom}" />  سنة
+                                <p:commandButton     class="saveButton" id="excuteFrom" 
+                                                     value="تنفيذ" 
+                                                     icon="fa fa-fw fa-save"
+                                                     action="#{invPurchaseInvoiceFormDTOMB.convertDateFrom()}"
+                                                     update="dateFrom"
+                                                     />
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 50px"  value="من تاريخ هجري" />
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
 
                                 <p:selectOneMenu value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.pricetype}" >
                                     <f:selectItem itemLabel="رجالى" itemValue="1" />
@@ -969,7 +985,7 @@
                             class="newButtons"
                             onclick="form.target = ''" 
                             actionListener="#{invPurchaseInvoiceFormDTOMB.reset()}"/>
-                        
+
                         <p:commandButton 
                             id="removeHalala"
                             value="حذف الهلله" 

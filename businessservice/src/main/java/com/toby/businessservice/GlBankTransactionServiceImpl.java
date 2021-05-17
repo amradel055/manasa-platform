@@ -327,6 +327,7 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
         }
 
         dTO.setDate(entity.getDate());
+        dTO.setDateHegry(entity.getDateHegry());
         dTO.setRemark(entity.getRemark());
         dTO.setRemark2(entity.getRemark2());
         dTO.setValue(entity.getValue());
@@ -360,6 +361,7 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
         entity.setChequeNumber(dTO.getChequeNumber());
         entity.setChequeStatus(dTO.getChequeStatus());
         entity.setDate(dTO.getDate());
+        entity.setDateHegry(dTO.getDateHegry());
         if (dTO.getDocumentTypeId() != null && dTO.getDocumentTypeId().getId() != null) {
             Symbol symbol = new Symbol();
             symbol.setId(dTO.getDocumentTypeId().getId());
@@ -520,6 +522,7 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
         }
 
         dTO.setDate(entity.getDate());
+        dTO.setDateHegry(entity.getDateHegry());
         dTO.setRemark(entity.getRemark());
         dTO.setRemark2(entity.getRemark2());
         dTO.setValue(entity.getValue());
@@ -615,6 +618,7 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
         GlBankTransaction entity = new GlBankTransaction();
 
         entity.setDate(dTO.getDate());
+        entity.setDateHegry(dTO.getDateHegry());
 
         if (dTO.getGlBankId() != null && dTO.getGlBankId().getId() != null) {
             GlBank glBank = new GlBank();

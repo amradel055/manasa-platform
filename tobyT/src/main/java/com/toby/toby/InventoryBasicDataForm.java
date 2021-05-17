@@ -253,6 +253,10 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
             saveError(e, "InvPurchaseInvoiceFormMB", "resetInvPurchaseInvoiceForm");
         }
     }
+    
+      public void convertDateFrom() {
+          getInvInvoiceDTO().setDate(findDateFromHijriFrom());
+    }
 
     public void fillDefaultList() {
         getInvInventoryDTOList();

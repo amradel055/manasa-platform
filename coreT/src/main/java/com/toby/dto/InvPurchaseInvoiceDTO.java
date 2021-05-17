@@ -21,6 +21,7 @@ public class InvPurchaseInvoiceDTO extends BaseEntityDTO {
     private CompanyActivityClassEnum companyActivity;
     private ScreenNameClassEnum ScreenName;
     private Date date;
+    private Date dateHegry;
     private InvInventoryDTO gallaryId;
     private Integer pricetype;
     private BigDecimal rate;
@@ -546,8 +547,7 @@ public class InvPurchaseInvoiceDTO extends BaseEntityDTO {
      * @return the invPurchaseInvoiceDetailsSelected
      */
     public InvDetailDTO getInvPurchaseInvoiceDetailsSelected() {
-       
-       
+
         return invPurchaseInvoiceDetailsSelected;
     }
 
@@ -694,6 +694,20 @@ public class InvPurchaseInvoiceDTO extends BaseEntityDTO {
      */
     public void setInvPurchaseInvoiceDetails1(InvDetailDTO invPurchaseInvoiceDetails1) {
         this.invPurchaseInvoiceDetails1 = invPurchaseInvoiceDetails1;
+    }
+
+    /**
+     * @return the dateHegry
+     */
+    public Date getDateHegry() {
+        return dateHegry;
+    }
+
+    /**
+     * @param dateHegry the dateHegry to set
+     */
+    public void setDateHegry(Date dateHegry) {
+        this.dateHegry = dateHegry;
     }
 
 }

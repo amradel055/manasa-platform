@@ -22,7 +22,7 @@
 
                     <div class="ui-g">
 
-               
+
 
                         <div class="ui-g-6 ui-xl-6">
                             <div class="ui-g-12 ui-xl-12">
@@ -54,7 +54,7 @@
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:outputLabel  style="width: 36.5%"  value="#{proFactoryDeliveryFormDTOMB.invInvoiceDTO.organizationSiteName}"
-                                                  >
+                                                    >
                                         <p:ajax  event="blur" listener="#{proFactoryDeliveryFormDTOMB.loadDlg()}"  update="@form" />
                                     </p:outputLabel>
 
@@ -81,7 +81,7 @@
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:outputLabel  style="width: 36.5%"  value="#{proFactoryDeliveryFormDTOMB.invInvoiceDTO.numberOfToob}"
-                                                  >
+                                                    >
                                         <p:ajax  event="blur" listener="#{proFactoryDeliveryFormDTOMB.loadDlg()}"  update="@form" />
                                     </p:outputLabel>
 
@@ -109,7 +109,7 @@
                                 </div>
                             </div>
                         </div>
-                                 <div class="ui-g-6 ui-xl-6">
+                        <div class="ui-g-6 ui-xl-6">
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:calendar id="dateFrom" 
@@ -124,6 +124,23 @@
 
 
 
+                                </div>
+                            </div>
+
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText value="#{proFactoryDeliveryFormDTOMB.dayHijriFrom}" /> يوم
+                                    <p:inputText value="#{proFactoryDeliveryFormDTOMB.monthHijriFrom}" />  شهر
+                                    <p:inputText value="#{proFactoryDeliveryFormDTOMB.yearHijriFrom}" />  سنة
+                                    <p:commandButton     class="saveButton" id="excuteFrom" 
+                                                         value="تنفيذ" 
+                                                         icon="fa fa-fw fa-save"
+                                                         action="#{proFactoryDeliveryFormDTOMB.convertDateFrom()}"
+                                                         update="dateFrom"
+                                                         />
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 50px"  value="من تاريخ هجري" />
                                 </div>
                             </div>
                             <div class="ui-g-12 ui-xl-12">
