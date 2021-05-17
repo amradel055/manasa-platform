@@ -64,6 +64,8 @@ public interface OrganizationSiteService {
     public Boolean checkCodeExistence(InvOrganizationSite invOrganizationSite);
 
     public List<InvOrganizationSite> getInvOrganizationSiteByBranchIdPer(Integer branchId);
+    
+     public InvOrganizationSite addOrganizationSiteNew(InvOrganizationSite invOrganizationSite);
 
     public List<InvOrganizationSiteDTO> getorganizationSiteByBranchIdDTO(TobyUser tobyUser, boolean active, Integer type);
 

@@ -9,7 +9,6 @@
                 xmlns:c="http:addInvDetail//xmlns.jcp.org/jsp/jstl/core">
     <ui:define name="content" >
 
-        <f:event listener="#{invPurchaseInvoiceFormDTOMB.findAccountStatement}" type="postAddToView"  />
 
         <h:form id="form" dir="#{userData.dir}" class='formmargin'  >
             <p:hotkey bind="F2" handler="PF('dlg4').show()"/>
@@ -39,7 +38,7 @@
                         </div>
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
-                                <p:calendar id="dateFrom" 
+                                <p:calendar id="dateFrom"  locale="es"
                                             value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.date}"
                                             pattern="dd/MM/yyyy"
                                             style="width:50%!important"/>

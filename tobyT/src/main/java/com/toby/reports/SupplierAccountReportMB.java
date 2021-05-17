@@ -98,7 +98,8 @@ public class SupplierAccountReportMB extends BaseReportBean {
 
         if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("editClientacoount")) {
             context.getSessionMap().put("ScreenMode", "");
-            InvOrganizationSiteDTO invOrganizationSiteDTO = (InvOrganizationSiteDTO) getContext().getSessionMap().get("ClientacoountSelected");
+            Integer invOrganizationSiteDTOId = (Integer) getContext().getSessionMap().get("ClientacoountSelected");
+            InvOrganizationSiteDTO invOrganizationSiteDTO = organizationSiteService.findOrganizationSiteByIdDTO(invOrganizationSiteDTOId);
             supplierAccountSearchBean.setFromorganizationNameDTO(invOrganizationSiteDTO);
             supplierAccountSearchBean.setToorganizationNameDTO(invOrganizationSiteDTO);
             completOrgSiteFrom(null).add(0, invOrganizationSiteDTO);

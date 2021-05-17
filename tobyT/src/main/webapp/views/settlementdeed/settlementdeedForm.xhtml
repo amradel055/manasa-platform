@@ -514,14 +514,15 @@
                     <p:column style="width: 10vh;font-size: 1.8vh;text-align: right;border-radius: 0px" 
                               headerText="#{userData.userDDs['TRANSACTION']}">
 
-                         <p:commandButton 
+                        <p:commandButton 
                             class="printButtons"
                             id="b71" value="كشف حساب" 
                             title="كشف الحساب" onclick="form.target = '_blank'" 
+                            ajax="false"
                             rendered="#{glBankTransactionDetailsTable.invOrganizationSite ne null}"
                             actionListener="#{SettlementDeedFormMB.goTOrganizationSiteacoount(glBankTransactionDetailsTable.invOrganizationSite.id)}"  
-                            ajax="true" />
-                         
+                            />
+
                         <p:commandButton 
                             class="saddButtons"
                             id="b7" icon="fa fa-plus"
@@ -567,12 +568,6 @@
                                           disabled="#{SettlementDeedFormMB.glBankTransactionEntity.postFlag == 1}"
                                           rendered="#{(userData.userScreens['settlementdeed'].add or userData.userScreens['settlementdeed'].edit) or userData.isAdmin}"
                                           />
-                        <p:commandButton  class="printButtons"
-                                          ajax="false"
-                                          onclick="form.target = '_blank'"  
-                                          value="كشف حساب" 
-                                          title="كشف حساب" 
-                                          actionListener="#{SettlementDeedFormMB.goTClientacoount}"/>
                         <p:commandButton  class="newButton" title="#{userData.userDDs['RESET']}" 
                                           immediate="true"
                                           id="newA"

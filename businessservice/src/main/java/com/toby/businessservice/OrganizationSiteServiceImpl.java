@@ -74,6 +74,22 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         List<InvOrganizationSite> detailsesReturn = retiveOrganizationSiteDate(detailses);
         return detailsesReturn;
     }
+    
+    @Override
+    public InvOrganizationSite addOrganizationSiteNew(InvOrganizationSite invOrganizationSite) {
+        Map<String, Object> params = new HashMap<>();
+        Map<String, Object> params2 = new HashMap<>();
+        params.put("branchId", 182);
+        params.put("mobile", invOrganizationSite.getMobile());
+        params2.put("branchId", 182);
+        params2.put("code", invOrganizationSite.getCode());
+//        List<InvOrganizationSite> detailsesMobile = dao.findListByQuery("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND e.mobile = :mobile ORDER BY e.code", params);
+        List<InvOrganizationSite> detailsesCode   = dao.findListByQuery("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND e.code = :code ORDER BY e.code", params2);
+        if(detailsesCode == null || detailsesCode.isEmpty()){
+             return dao.updateEntity(invOrganizationSite);
+        }
+        return null;
+    }
 
     @Override
     public InvOrganizationSite addOrganizationSite(InvOrganizationSite invOrganizationSite) {

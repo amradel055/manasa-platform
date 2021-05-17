@@ -151,6 +151,7 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
         }
     }
     
+    @Override
     public BigDecimal getAccountForOrganizationSite(Integer organizationSiteId) {
         Map<String, Object> params = new HashMap<>();
 
@@ -161,6 +162,6 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
         stringBuilder.append("SELECT sum(RIV.exitt) - sum(RIV.adding) FROM OrganizationSiteStatementView RIV WHERE RIV.organizationSiteId = :organizationSiteId  ");
 
         List<BigDecimal> details = dao.findListByQuery(stringBuilder.toString(), params);
-        return (details != null && !details.isEmpty() ) ? details.get(0).setScale(3, BigDecimal.ROUND_UP) : BigDecimal.ZERO;
+        return (details != null && !details.isEmpty() ) ? ( details.get(0) == null ? BigDecimal.ZERO : details.get(0).setScale(3, BigDecimal.ROUND_UP) ): BigDecimal.ZERO;
     }
 }

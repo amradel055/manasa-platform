@@ -1257,7 +1257,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                     invPurchaseInvoice = dao.updateEntity(invPurchaseInvoice);
                 } else {
                     // فى حالة ان الفاتورة جديدة بروح اجيب السيريال الاول 
-                    Integer serial = genericService.getMaxSerialForInvoice(InvPurchaseInvoice.class, invPurchaseInvoice.getBranchId().getId(), null, invPurchaseInvoice.getType());
+                    Integer serial = genericService.getMaxSerialForInvoice(InvPurchaseInvoice.class, invPurchaseInvoice.getBranchId().getId(), invPurchaseInvoice.getInvInventoryId().getId(), invPurchaseInvoice.getType());
                     if (serial == null) {
                         invInvoiceDTO.setMsg("من فضلك اعد حفظ الفاتورة");
                         dao.rollbackQuery();

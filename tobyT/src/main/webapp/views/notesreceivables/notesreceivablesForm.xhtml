@@ -23,22 +23,7 @@
                     <div class="ui-g">
 
                         <div class="ui-g-4 ui-xl-4">
-                            <div class="ui-g-12 ui-xl-12">
-                                <div class="ui-g-6 ui-xl-6">
-
-                                    <p:inputText id="serialSelected" value="#{notesReceivablesFormMB.serialSelected}">
-                                        <p:ajax listener="#{notesReceivablesFormMB.findNotesReceivable()}" event="blur" update="@form"/>
-                                    </p:inputText>
-
-                                </div>
-                                <div class="ui-g-6 ui-xl-6">
-
-
-                                    <p:outputLabel style="width: 60px;font-size: 14px!important;font-family: bold!important;" value="ادخل رقم السند"/>
-
-
-                                </div>
-                            </div>
+                            
                             
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
@@ -108,7 +93,7 @@
                                         <p:ajax 
                                             process="@form"
                                             event="itemSelect"
-                                            listener="#{notesReceivablesFormMB.check()}" update="invoice accountStatement"/>
+                                            listener="#{notesReceivablesFormMB.check()}" update="@form"/>
 
                                     </p:autoComplete>
 
@@ -280,6 +265,15 @@
                                           action="#{notesReceivablesFormMB.save()}"
                                           disabled="#{notesReceivablesFormMB.glBankTransactionEntity.postFlag == 1}"
                                           update="@form"/>
+                        
+                        <p:commandButton 
+                            class="printButtons"
+                            id="b71" value="كشف حساب" 
+                            title="كشف الحساب" onclick="form.target = '_blank'" 
+                            ajax="false"
+                            rendered="#{notesReceivablesFormMB.glBankTransactionDetailEntity.invOrganizationSite ne null}"
+                            actionListener="#{notesReceivablesFormMB.goTOrganizationSiteacoount(notesReceivablesFormMB.glBankTransactionDetailEntity.invOrganizationSite.id)}"  
+                            />
 
                         <p:commandButton class="newButton" 
                                          title="#{userData.userDDs['NEW']}" 

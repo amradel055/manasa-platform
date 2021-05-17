@@ -64,7 +64,7 @@
                                                     itemValue="#{supplier}" 
                                                     forceSelection="true" 
                                                     completeMethod="#{autoComplete.completeCustomerFrom}">
-                                        <p:ajax update="invoice"
+                                        <p:ajax update="@form"
                                                 event="itemSelect"
                                                 process="@this"
                                                 listener="#{invNoticeFormMB.chooseInvoice()}" />
@@ -148,6 +148,15 @@
                                           value="#{userData.userDDs['SAVE']}" 
                                           action="#{invNoticeFormMB.save()}"
                                           update="form curmsg"/>
+                        
+                        <p:commandButton 
+                            class="printButtons"
+                            id="b71" value="كشف حساب" 
+                            title="كشف الحساب" onclick="form.target = '_blank'" 
+                            ajax="false"
+                            rendered="#{invNoticeFormMB.invNoticeEntity.organizationSiteId ne null}"
+                            actionListener="#{invNoticeFormMB.goTOrganizationSiteacoount(invNoticeFormMB.invNoticeEntity.organizationSiteId.id)}"  
+                            />
 
                         <p:commandButton  class="newButton" 
                                           id="newN"
