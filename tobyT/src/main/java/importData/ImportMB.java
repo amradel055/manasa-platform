@@ -589,7 +589,7 @@ public class ImportMB extends Basic implements Serializable {
             if (!sheet.getCell(0, i).getContents().isEmpty()) {
                 item = new InvOrganizationSite();
                 initCustomerData(sheet, i, item, currency);
-                organizationSiteService.addOrganizationSiteNew(item);
+                organizationSiteService.addOrganizationSite(item);
             }
         }
 
