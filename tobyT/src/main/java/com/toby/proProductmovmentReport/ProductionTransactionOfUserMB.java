@@ -150,6 +150,7 @@ public class ProductionTransactionOfUserMB extends BaseFormBean {
         hashMap.put("toDateValue", printProductionDTO.getToDate());
         hashMap.put("productionStagesIdText", " الرقم ");
         hashMap.put("stageNameText", " الفئة ");
+        hashMap.put("userCodeText", " رقم العامل ");
         hashMap.put("userNameText", " الموظف ");
         hashMap.put("priceText", " السعر ");
         hashMap.put("numberExcuteText", " الكمية ");
