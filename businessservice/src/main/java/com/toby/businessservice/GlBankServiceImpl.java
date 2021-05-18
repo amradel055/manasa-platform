@@ -80,7 +80,7 @@ public class GlBankServiceImpl implements GlBankService {
     }
 
     @Override
-    public List<GlBank> getGlBankByBranchIdAndCode(Integer branchId, String code, Integer bankId) {
+    public List<GlBank> getGlBankByBranchIdAndCode(Integer branchId, Integer code, Integer bankId) {
         Map<String, Object> params = new HashMap<>();
         List<GlBank> glBanks = null;
         String query = null;

@@ -1183,7 +1183,7 @@ public class InvPurchaseInvoiceFormMB extends BaseFormBean {
             }
 
             String nameAr;
-            String code;
+            Integer code;
             GlBank glBankFilter;
             for (int i = 0; i < glBankList.size(); i++) {
                 glBankFilter = glBanksList.get(i);
@@ -1195,7 +1195,7 @@ public class InvPurchaseInvoiceFormMB extends BaseFormBean {
                 }
 
                 code = glBankFilter.getCode();
-                if (code != null && code.toLowerCase().contains(query.toLowerCase())) {
+                if (code != null) {
                     if (!filteredGlBanks.contains(glBankFilter)) {
                         filteredGlBanks.add(glBankFilter);
                     }

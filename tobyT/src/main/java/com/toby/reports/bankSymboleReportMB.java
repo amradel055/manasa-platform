@@ -196,7 +196,7 @@ public class bankSymboleReportMB extends BaseGlAccountReportBean {
         List<GlBank> filteredGlBanks = new ArrayList<>();
 
         String nameAr;
-        String code;
+        Integer code;
         GlBank glBankFilter;
         for (int i = 0; i < getGlBankList().size(); i++) {
             glBankFilter = glBanksList.get(i);
@@ -208,7 +208,7 @@ public class bankSymboleReportMB extends BaseGlAccountReportBean {
             }
 
             code = glBankFilter.getCode();
-            if (code != null && code.toLowerCase().contains(query.toLowerCase())) {
+            if (code != null) {
                 if (!filteredGlBanks.contains(glBankFilter)) {
                     filteredGlBanks.add(glBankFilter);
                 }

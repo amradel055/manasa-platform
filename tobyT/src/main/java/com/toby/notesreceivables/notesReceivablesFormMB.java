@@ -170,6 +170,7 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
     private List<GlBankTransactionInvoiceView> glBankTransactionInvoiceViewList;
 
     private Boolean isEdit;
+    private Boolean isPreviosBalance;
 
     private Integer serialSelected;
 
@@ -474,13 +475,13 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
             if (type == 0) {
                 if (customerList == null || customerList.size() == 0) {
 //                    customerList = organizationSiteService.getorganizationSiteByBranchIdForGlBankModule(branchId, true, type);
-                    customerList = autoCompleteService.autoCompleteOrganizationSite(branchId, true, type, "",((getUserData().getGallaryDTOList() != null && !getUserData().getGallaryDTOList().isEmpty()) ? getUserData().getGallaryDTOList().get(0).getId() : null));
+                    customerList = autoCompleteService.autoCompleteOrganizationSite(branchId, true, type, "", ((getUserData().getGallaryDTOList() != null && !getUserData().getGallaryDTOList().isEmpty()) ? getUserData().getGallaryDTOList().get(0).getId() : null));
                 }
                 setOrganizationList(customerList);
             } else if (type == 1) {
                 if (supplierList == null || customerList.size() == 0) {
 //                    supplierList = organizationSiteService.getorganizationSiteByBranchIdForGlBankModule(branchId, true, type);
-                    supplierList = autoCompleteService.autoCompleteOrganizationSite(branchId, true, type, "",((getUserData().getGallaryDTOList() != null && !getUserData().getGallaryDTOList().isEmpty()) ? getUserData().getGallaryDTOList().get(0).getId() : null));
+                    supplierList = autoCompleteService.autoCompleteOrganizationSite(branchId, true, type, "", ((getUserData().getGallaryDTOList() != null && !getUserData().getGallaryDTOList().isEmpty()) ? getUserData().getGallaryDTOList().get(0).getId() : null));
                 }
                 setOrganizationList(supplierList);
             } else if (type == 2) {
@@ -1020,8 +1021,18 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
                     saveValidation = false;
                 }
 
-                if (glBankTransactionEntity.getValue() != null && !isEdit && glBankTransactionEntity.getValue().compareTo(glBankTransactionEntity.getRemainInvoice()) == 1) {
+                if ( glBankTransactionEntity.getInvoiceId() != null && glBankTransactionEntity.getValue() != null && !isEdit && glBankTransactionEntity.getValue().compareTo(glBankTransactionEntity.getRemainInvoice()) == 1) {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "لا يمكن دفع  قيمه أكبر من المتبقي من الفاتورة"));
+                    saveValidation = false;
+                }
+                
+                 if ( isPreviosBalance && glBankTransactionEntity.getInvoiceId() != null) {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب عدم اختيار فاتورة او الغاء الرصيد السابق"));
+                    saveValidation = false;
+                }
+                 
+                 if ( !isPreviosBalance && glBankTransactionEntity.getInvoiceId() == null) {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب  اختيار فاتورة"));
                     saveValidation = false;
                 }
 
@@ -2084,6 +2095,23 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
      */
     public void setSerialSelected(Integer serialSelected) {
         this.serialSelected = serialSelected;
+    }
+
+    /**
+     * @return the isPreviosBalance
+     */
+    public Boolean getIsPreviosBalance() {
+        if (isPreviosBalance == null) {
+            isPreviosBalance = Boolean.FALSE;
+        }
+        return isPreviosBalance;
+    }
+
+    /**
+     * @param isPreviosBalance the isPreviosBalance to set
+     */
+    public void setIsPreviosBalance(Boolean isPreviosBalance) {
+        this.isPreviosBalance = isPreviosBalance;
     }
 
 }

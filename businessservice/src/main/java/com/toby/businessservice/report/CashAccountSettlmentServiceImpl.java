@@ -8,6 +8,7 @@ package com.toby.businessservice.report;
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
 import com.toby.businessservice.reports.searchBean.SubAccountSummarySearchBean;
 import com.toby.core.GenericDAO;
+import com.toby.dto.GlBankDTO;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.entity.GlBank;
 import com.toby.entity.GlBankTransaction;
@@ -52,11 +53,30 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
         return netview;
     }
 
+    private String fillBanks(List<GlBankDTO> bankDTOList) {
+        StringBuilder builder = null;
+        if (bankDTOList != null && !bankDTOList.isEmpty()) {
+            for (GlBankDTO bank : bankDTOList) {
+                if(builder == null){
+                    builder = new StringBuilder();
+                    builder.append(bank.getId());
+                }else{
+                    builder.append(",").append(bank.getId());
+                }
+            }
+        }
+        return builder == null ? null : builder.toString();
+    }
+
     private List<CashAccountSettlmentView> findOpenBalance(SubAccountSummarySearchBean cashAccountSettlementSearchBean) {
         Map<String, Object> params = new HashMap();
         params.put("branchId", cashAccountSettlementSearchBean.getBranchId());
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT g FROM GlBank g WHERE g.branchId.id = :branchId AND g.dateOpeninngBalance is not null AND g.openinngBalance > 0  ");
+        String banks = fillBanks(cashAccountSettlementSearchBean.getGlBankToListSelected());
+        if(banks != null){
+            builder.append(" and g.id in (").append(banks).append(") ");
+        }
         if (cashAccountSettlementSearchBean.getGlBankFrom() != null) {
             builder.append(" and g.code >= :glBankFrom");
             params.put("glBankFrom", cashAccountSettlementSearchBean.getGlBankFrom().getCode());
@@ -117,13 +137,13 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT g FROM GlBankTransaction g WHERE g.branchId.id = :branchId AND g.transactionType <> 2 AND  g.transactionType <> 3 ");
         if (cashAccountSettlementSearchBean.getGlBankFrom() != null && cashAccountSettlementSearchBean.getGlBankFrom().getId() > 0) {
-            builder.append(" and g.glBankId.id >= :glBankFrom");
-            params.put("glBankFrom", cashAccountSettlementSearchBean.getGlBankFrom().getId());
+            builder.append(" and g.glBankId.code >= :glBankFrom");
+            params.put("glBankFrom", cashAccountSettlementSearchBean.getGlBankFrom().getCode());
         }
 
         if (cashAccountSettlementSearchBean.getGlBankTo() != null && cashAccountSettlementSearchBean.getGlBankTo().getId() > 0) {
-            builder.append(" and g.glBankId.id <= :glBankTo");
-            params.put("glBankTo", cashAccountSettlementSearchBean.getGlBankTo().getId());
+            builder.append(" and g.glBankId.code <= :glBankTo");
+            params.put("glBankTo", cashAccountSettlementSearchBean.getGlBankTo().getCode());
         }
 
         if (cashAccountSettlementSearchBean.getDateFrom() != null) {
@@ -178,13 +198,13 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT g FROM GlBankTransactionDetail g WHERE g.glBankTransactionId.branchId.id = :branchId AND g.glBankTransactionId.transactionType = 2 ");
         if (cashAccountSettlementSearchBean.getGlBankFrom() != null && cashAccountSettlementSearchBean.getGlBankFrom().getId() > 0) {
-            builder.append(" and g.bankIdFrom.id >= :glBankFrom");
-            params.put("glBankFrom", cashAccountSettlementSearchBean.getGlBankFrom().getId());
+            builder.append(" and g.bankIdFrom.code >= :glBankFrom");
+            params.put("glBankFrom", cashAccountSettlementSearchBean.getGlBankFrom().getCode());
         }
 
         if (cashAccountSettlementSearchBean.getGlBankTo() != null && cashAccountSettlementSearchBean.getGlBankTo().getId() > 0) {
-            builder.append(" and g.bankIdFrom.id <= :glBankTo");
-            params.put("glBankTo", cashAccountSettlementSearchBean.getGlBankTo().getId());
+            builder.append(" and g.bankIdFrom.code <= :glBankTo");
+            params.put("glBankTo", cashAccountSettlementSearchBean.getGlBankTo().getCode());
         }
 
         if (cashAccountSettlementSearchBean.getDateFrom() != null) {
@@ -232,13 +252,13 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT g FROM GlBankTransactionDetail g WHERE g.glBankTransactionId.branchId.id = :branchId AND g.glBankTransactionId.transactionType = 2 ");
         if (cashAccountSettlementSearchBean.getGlBankFrom() != null && cashAccountSettlementSearchBean.getGlBankFrom().getId() > 0) {
-            builder.append(" and g.bankIdTo.id >= :glBankFrom");
-            params.put("glBankFrom", cashAccountSettlementSearchBean.getGlBankFrom().getId());
+            builder.append(" and g.bankIdTo.code >= :glBankFrom");
+            params.put("glBankFrom", cashAccountSettlementSearchBean.getGlBankFrom().getCode());
         }
 
         if (cashAccountSettlementSearchBean.getGlBankTo() != null && cashAccountSettlementSearchBean.getGlBankTo().getId() > 0) {
-            builder.append(" and g.bankIdTo.id <= :glBankTo");
-            params.put("glBankTo", cashAccountSettlementSearchBean.getGlBankTo().getId());
+            builder.append(" and g.bankIdTo.code <= :glBankTo");
+            params.put("glBankTo", cashAccountSettlementSearchBean.getGlBankTo().getCode());
         }
 
         if (cashAccountSettlementSearchBean.getDateFrom() != null) {
@@ -288,13 +308,13 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
         builder.append("SELECT g , sum(g.net) FROM InvPurchaseInvoiceDetail g WHERE g.invPurchaseInvoiceId.branchId.id = :branchId AND ( g.invPurchaseInvoiceId.paymentType = 0 OR g.invPurchaseInvoiceId.paymentType = 3 )");
 
         if (cashAccountSettlementSearchBean.getGlBankFrom() != null && cashAccountSettlementSearchBean.getGlBankFrom().getId() > 0) {
-            builder.append(" and g.invPurchaseInvoiceId.glBankId.id >= :glBankFrom");
-            params.put("glBankFrom", cashAccountSettlementSearchBean.getGlBankFrom().getId());
+            builder.append(" and g.invPurchaseInvoiceId.glBankId.code >= :glBankFrom");
+            params.put("glBankFrom", cashAccountSettlementSearchBean.getGlBankFrom().getCode());
         }
 
         if (cashAccountSettlementSearchBean.getGlBankTo() != null && cashAccountSettlementSearchBean.getGlBankTo().getId() > 0) {
-            builder.append(" and g.invPurchaseInvoiceId.glBankId.id <= :glBankTo");
-            params.put("glBankTo", cashAccountSettlementSearchBean.getGlBankTo().getId());
+            builder.append(" and g.invPurchaseInvoiceId.glBankId.code <= :glBankTo");
+            params.put("glBankTo", cashAccountSettlementSearchBean.getGlBankTo().getCode());
         }
 
         if (cashAccountSettlementSearchBean.getDateFrom() != null) {
@@ -914,7 +934,7 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
             view.setCreatedBy(entity.getCreatedBy().getName());
             view.setPaymentType(0);
             view.setDate(entity.getDateOpeninngBalance());
-            view.setSerial(new BigInteger(entity.getCode()));
+            view.setSerial(entity.getCode());
             view.setValue(entity.getOpeninngBalance());
             view.setValueLocal(entity.getOpeninngBalance());
             view.setName(entity.getName());
@@ -936,7 +956,7 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
             view.setType(entity.getTransactionType());
             view.setPaymentType(entity.getPaymentType());
             view.setDate(entity.getDate());
-            view.setSerial(new BigInteger(entity.getSerial().toString()));
+            view.setSerial(entity.getSerial());
             view.setValue(entity.getValue());
             view.setValueLocal(entity.getValueLocal());
             view.setRemark(entity.getRemark());
@@ -980,7 +1000,7 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
                     view.setType(entity.getGlBankTransactionId().getTransactionType());
                     view.setPaymentType(entity.getGlBankTransactionId().getPaymentType());
                     view.setDate(entity.getGlBankTransactionId().getDate());
-                    view.setSerial(new BigInteger(entity.getGlBankTransactionId().getSerial().toString()));
+                    view.setSerial(entity.getGlBankTransactionId().getSerial());
                     view.setRemark2(entity.getGlBankTransactionId().getRemark2());
 
                     if (entity.getGlBankTransactionId().getCreatedBy() != null) {
@@ -1016,7 +1036,7 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
                     view.setType(entity.getGlBankTransactionId().getTransactionType());
                     view.setPaymentType(entity.getGlBankTransactionId().getPaymentType());
                     view.setDate(entity.getGlBankTransactionId().getDate());
-                    view.setSerial(new BigInteger(entity.getGlBankTransactionId().getSerial().toString()));
+                    view.setSerial(entity.getGlBankTransactionId().getSerial());
                     view.setRemark2(entity.getGlBankTransactionId().getRemark2());
 
                     if (entity.getGlBankTransactionId().getCreatedBy() != null) {
@@ -1035,7 +1055,7 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
                         view.setCurrencyName(entity.getBankIdTo().getCurrencyId().getName());
                     }
                 }
-                if (entity.getGlBankTransactionId()!= null && entity.getGlBankTransactionId().getInvoiceId() != null && entity.getGlBankTransactionId().getInvoiceId().getOrganizationSiteId() != null) {
+                if (entity.getGlBankTransactionId() != null && entity.getGlBankTransactionId().getInvoiceId() != null && entity.getGlBankTransactionId().getInvoiceId().getOrganizationSiteId() != null) {
                     view.setCustomerName(entity.getGlBankTransactionId().getInvoiceId().getOrganizationSiteId().getName());
                     view.setCustomerCode(entity.getGlBankTransactionId().getInvoiceId().getOrganizationSiteId().getCode());
                     view.setInvoiceNumber(entity.getGlBankTransactionId().getInvoiceId().getSerial());
@@ -1062,7 +1082,7 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
                 view.setType(entity.getInvPurchaseInvoiceId().getType());
                 view.setPaymentType(entity.getInvPurchaseInvoiceId().getPaymentType());
                 view.setDate(entity.getInvPurchaseInvoiceId().getDate());
-                view.setSerial(new BigInteger(entity.getInvPurchaseInvoiceId().getSerial() != null ? entity.getInvPurchaseInvoiceId().getSerial().toString() : "0"));
+                view.setSerial(entity.getInvPurchaseInvoiceId().getSerial() != null ? entity.getInvPurchaseInvoiceId().getSerial() : 0);
                 if (entity.getInvPurchaseInvoiceId().getGlBankId() != null) {
                     view.setName(entity.getInvPurchaseInvoiceId().getGlBankId().getName());
                     view.setCode(entity.getInvPurchaseInvoiceId().getGlBankId().getCode());
@@ -1076,8 +1096,8 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
             }
             view.setValue(invInvoiceDTO.getFinalNet());
             view.setValueLocal(invInvoiceDTO.getFinalNet().multiply(invInvoiceDTO.getRate()));
-            
-            if(entity.getInvPurchaseInvoiceId().getId() != null && entity.getInvPurchaseInvoiceId().getOrganizationSiteId() != null ){
+
+            if (entity.getInvPurchaseInvoiceId().getId() != null && entity.getInvPurchaseInvoiceId().getOrganizationSiteId() != null) {
                 view.setCustomerName(entity.getInvPurchaseInvoiceId().getOrganizationSiteId().getName());
                 view.setCustomerCode(entity.getInvPurchaseInvoiceId().getOrganizationSiteId().getCode());
                 view.setInvoiceNumber(entity.getInvPurchaseInvoiceId().getSerial());

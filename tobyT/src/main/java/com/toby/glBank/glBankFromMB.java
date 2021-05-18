@@ -286,7 +286,7 @@ public class glBankFromMB extends BaseFormBean {
 
     public void validateCode() {
         try {
-            if (glBankEntity.getCode() != null && !glBankEntity.getCode().isEmpty()) {
+            if (glBankEntity.getCode() != null ) {
                 List<GlBank> banks = glBankService.getGlBankByBranchIdAndCode(getUserData().getUserBranch().getId(), glBankEntity.getCode(), glBankEntity.getId());
                 if (banks != null && !banks.isEmpty()) {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, userDDs.get("ERROR"), "لا يمكن تكرار الكود"));

@@ -4,6 +4,7 @@ import com.toby.dto.GlBankDTO;
 import com.toby.entity.Symbol;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 public class SubAccountSummarySearchBean implements Serializable {
 
@@ -31,6 +32,7 @@ public class SubAccountSummarySearchBean implements Serializable {
     private String TobyUserFrom;
     private String TobyUserTo;    
     private Integer bankId;
+    private List<GlBankDTO>  glBankToListSelected;
     
     public GlBankDTO getGlBankFrom() {
         return glBankFrom;
@@ -274,6 +276,20 @@ public class SubAccountSummarySearchBean implements Serializable {
      */
     public void setBankId(Integer bankId) {
         this.bankId = bankId;
+    }
+
+    /**
+     * @return the glBankToListSelected
+     */
+    public List<GlBankDTO> getGlBankToListSelected() {
+        return glBankToListSelected;
+    }
+
+    /**
+     * @param glBankToListSelected the glBankToListSelected to set
+     */
+    public void setGlBankToListSelected(List<GlBankDTO> glBankToListSelected) {
+        this.glBankToListSelected = glBankToListSelected;
     }
 
 }

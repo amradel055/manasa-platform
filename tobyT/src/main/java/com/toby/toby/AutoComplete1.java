@@ -435,7 +435,7 @@ public class AutoComplete1 extends Basic {
             }
 
             String nameAr;
-            String code;
+            Integer code;
             GlBankDTO glBankFilter;
             for (int i = 0; i < glBankList.size(); i++) {
                 glBankFilter = glBanksList.get(i);
@@ -447,7 +447,7 @@ public class AutoComplete1 extends Basic {
                 }
 
                 code = glBankFilter.getCode();
-                if (code != null && code.toLowerCase().contains(query.toLowerCase())) {
+                if (code != null ) {
                     if (!filteredGlBanks.contains(glBankFilter)) {
                         filteredGlBanks.add(glBankFilter);
                     }

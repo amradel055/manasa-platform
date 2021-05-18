@@ -37,7 +37,6 @@ public class InvPurchaseInvoiceListDTOMB extends InventoryBasicDataForm {
     private List<InvInventory> inventoryList;
     private List<InvInventoryDTO> gallaryList;
     private InvInventory invInventorySelection;
-    private InvInventoryDTO invGallarySelection;
     private List<InvInvoiceDTO> invInvoiceList;
     @EJB
     private InvPurchaseInvoiceService_1 invPurchaseInvoiceService;
@@ -266,23 +265,6 @@ public class InvPurchaseInvoiceListDTOMB extends InventoryBasicDataForm {
      */
     public void setInvInventorySelection(InvInventory invInventorySelection) {
         this.invInventorySelection = invInventorySelection;
-    }
-
-    /**
-     * @return the invGallarySelection
-     */
-    public InvInventoryDTO getInvGallarySelection() {
-        if (invGallarySelection == null) {
-            invGallarySelection = new InvInventoryDTO();
-        }
-        return invGallarySelection;
-    }
-
-    /**
-     * @param invGallarySelection the invGallarySelection to set
-     */
-    public void setInvGallarySelection(InvInventoryDTO invGallarySelection) {
-        this.invGallarySelection = invGallarySelection;
     }
 
     /**

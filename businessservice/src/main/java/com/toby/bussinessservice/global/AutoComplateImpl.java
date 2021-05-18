@@ -186,6 +186,7 @@ public class AutoComplateImpl implements AutoCompleteService {
             sql.append(" AND e.type = :type  ");
         }
         if (gallaryId != null) {
+            params.put("gallaryId", gallaryId);
             sql.append(" AND e.gallaryId.id = :gallaryId ");
         }
         if (active) {

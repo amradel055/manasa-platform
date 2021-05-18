@@ -88,6 +88,8 @@ public class PurchaseOfItemsBySuppliersReportMB extends BaseInventoryReportBean 
         initObjs();
 
         fillLists();
+        getPurchaseOfItemsBySuppliersSearchBean().setFromInventoryName(getInvInventoryList().get(0));
+        getPurchaseOfItemsBySuppliersSearchBean().setToInventoryName(getInvInventoryList().get(0));
         setOrganizationSiteRootList(new ArrayList<>());
 //        if (isSales) {
 //            setOrganizationSiteRootList(organizationSiteService.getorganizationSiteByBranchIdForGlBankModule(getUserData().getUserBranch().getId(),true,0));
@@ -362,6 +364,7 @@ public class PurchaseOfItemsBySuppliersReportMB extends BaseInventoryReportBean 
                         reportViewBean.setItemQuantity(idv.getItemQuantity());
                         reportViewBean.setItemUnitName(idv.getItemUnitName());
                         reportViewBean.setSerial(idv.getSerial());
+                        reportViewBean.setSerialTax(idv.getSerialTax());
                         reportViewBean.setNet(idv.getNet());
 
                         reportViewBean.setDetailUnitName(idv.getDetailUnitName());
@@ -460,6 +463,7 @@ public class PurchaseOfItemsBySuppliersReportMB extends BaseInventoryReportBean 
         hashMap.put("DateToValue", purchaseOfItemsBySuppliersSearchBean.getDateTo());
 
         hashMap.put("ReceiptNum", userDDs.get("INVOICE_NO"));
+        hashMap.put("workOrderNum", "رقم الشغل");
         hashMap.put("ReceiptDate", userDDs.get("INVOICE_DATE"));
 
         hashMap.put("ItemNum", userDDs.get("ITEM_NUMBER"));
@@ -569,6 +573,9 @@ public class PurchaseOfItemsBySuppliersReportMB extends BaseInventoryReportBean 
      * @return the purchaseOfItemsBySuppliersSearchBean
      */
     public PurchaseOfItemsBySuppliersSearchBean getPurchaseOfItemsBySuppliersSearchBean() {
+        if(purchaseOfItemsBySuppliersSearchBean == null){
+            purchaseOfItemsBySuppliersSearchBean = new PurchaseOfItemsBySuppliersSearchBean();
+        }
         return purchaseOfItemsBySuppliersSearchBean;
     }
 

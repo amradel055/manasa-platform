@@ -307,7 +307,8 @@
                                     <div class="ui-g-6 ui-xl-6">
                                         <div class="ui-g-12 ui-xl-12">
                                             <div class="ui-g-6 ui-xl-6">
-                                                <p:selectOneMenu  id="offerCompanyDTO" value="#{organizationSiteFormMB.invOrganizationSiteEntity.offerCompanyDTO}"
+                                                <p:selectOneMenu  id="offerCompanyDTO" filter="true" filterMatchMode="contains"
+                                                                  value="#{organizationSiteFormMB.invOrganizationSiteEntity.offerCompanyDTO}"
                                                                   converter="#{organizationSiteFormMB.offerCompanyDTOConverter}">
                                                     <f:selectItem itemLabel="Select One" itemValue=""/>
                                                     <f:selectItems value="#{organizationSiteFormMB.offerCompanyDTOList}" 

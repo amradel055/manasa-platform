@@ -18,6 +18,7 @@ public class PurchaseOfItemsBySuppliersViewBean {
     private Integer organizationId;
     private Integer index;
     private Integer serial;
+    private Integer serialTax;
     private Date date;
     private String itemCode;
     private String itemName;
@@ -329,6 +330,20 @@ public class PurchaseOfItemsBySuppliersViewBean {
      */
     public void setIndex(Integer index) {
         this.index = index;
+    }
+
+    /**
+     * @return the serialTax
+     */
+    public Integer getSerialTax() {
+        return serialTax;
+    }
+
+    /**
+     * @param serialTax the serialTax to set
+     */
+    public void setSerialTax(Integer serialTax) {
+        this.serialTax = serialTax;
     }
 
 }

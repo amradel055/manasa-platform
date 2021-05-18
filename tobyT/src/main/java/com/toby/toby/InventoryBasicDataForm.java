@@ -88,7 +88,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
     private Integer siteType;
     private String itemName;
-
+    
     private List<InvOrganizationSite> invOrganizationSiteList;
     private List<InvOrganizationSiteDTO> invOrganizationSiteDTOList;
     private List<SymbolDTO> regionList;
@@ -147,7 +147,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     private InvInventoryDTOConverter gallaryDTOConverter;
     private List<InvInventoryDTO> gallaryList;
     private List<InvItemDTO> invItemDTOParentList;
-    private ItemDTOConverter itemDTOParentConverter;
+    private ItemDTOConverter itemDTOParentConverter;    
+    private InvInventoryDTO invGallarySelection;
 
     @EJB
     AutoCompleteService autoCompleteService;
@@ -782,7 +783,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     }
 
     public List<InvOrganizationSiteDTO> completeCustomerFrom(String query) {
-        invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getUserData().getUserBranch().getId(), Boolean.TRUE, 0, query,getInvInvoiceDTO().getGallaryId().getId());
+        invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getUserData().getUserBranch().getId(), Boolean.TRUE, 0, query,getInvInvoiceDTO().getGallaryId() == null ? (getInvGallarySelection() == null ? null : getInvGallarySelection().getId()) : getInvInvoiceDTO().getGallaryId().getId());
         organizationSiteDTOConvertor = new InvOrganizationSiteDTOConverter(invOrganizationSiteDTOList);
         return invOrganizationSiteDTOList;
 
@@ -1869,5 +1870,22 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
      */
     public void setItemsBarcodesDetailsViewListForSearchSelected(ItemsBarcodesDetailsView itemsBarcodesDetailsViewListForSearchSelected) {
         this.itemsBarcodesDetailsViewListForSearchSelected = itemsBarcodesDetailsViewListForSearchSelected;
+    }     
+
+    /**
+     * @return the invGallarySelection
+     */
+    public InvInventoryDTO getInvGallarySelection() {
+        if (invGallarySelection == null) {
+            invGallarySelection = new InvInventoryDTO();
+        }
+        return invGallarySelection;
+    }
+
+    /**
+     * @param invGallarySelection the invGallarySelection to set
+     */
+    public void setInvGallarySelection(InvInventoryDTO invGallarySelection) {
+        this.invGallarySelection = invGallarySelection;
     }
 }

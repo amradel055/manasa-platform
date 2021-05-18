@@ -459,7 +459,7 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
             List<GlBank> filteredGlBanks = new ArrayList<>();
 
             String nameAr;
-            String code;
+            Integer code;
             GlBank glBankFilter;
             for (int i = 0; i < getGlBankListTo().size(); i++) {
                 glBankFilter = glBanksList.get(i);
@@ -471,7 +471,7 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
                 }
 
                 code = glBankFilter.getCode();
-                if (code != null && code.toLowerCase().contains(query.toLowerCase())) {
+                if (code != null ) {
                     if (!filteredGlBanks.contains(glBankFilter)) {
                         filteredGlBanks.add(glBankFilter);
                     }
@@ -497,7 +497,7 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
             List<GlBank> filteredGlBanks = new ArrayList<>();
 
             String nameAr;
-            String code;
+            Integer code;
             GlBank glBankFilter;
             for (int i = 0; i < getGlBankListFrom().size(); i++) {
                 glBankFilter = glBanksList.get(i);
@@ -509,7 +509,7 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
                 }
 
                 code = glBankFilter.getCode();
-                if (code != null && code.toLowerCase().contains(query.toLowerCase())) {
+                if (code != null ) {
                     if (!filteredGlBanks.contains(glBankFilter)) {
                         filteredGlBanks.add(glBankFilter);
                     }

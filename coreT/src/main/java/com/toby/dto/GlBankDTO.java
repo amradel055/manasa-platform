@@ -11,7 +11,7 @@ import java.util.Date;
 public class GlBankDTO extends BaseEntityDTO {
 
     private String name;
-    private String code;
+    private Integer code;
     private BigDecimal openinngBalance;
     private Date dateOpeninngBalance;
     private Date dateHegry;
@@ -42,11 +42,11 @@ public class GlBankDTO extends BaseEntityDTO {
         this.name = name;
     }
 
-    public String getCode() {
+    public Integer getCode() {
         return code;
     }
 
-    public void setCode(String code) {
+    public void setCode(Integer code) {
         this.code = code;
     }
 
