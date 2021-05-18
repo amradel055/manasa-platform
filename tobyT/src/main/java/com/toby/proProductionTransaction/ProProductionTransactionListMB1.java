@@ -4,6 +4,7 @@ import com.toby.businessservice.ProProductionItemsTransactionService;
 import com.toby.dto.ProProductionItemsTransactionDTO;
 import com.toby.toby.BaseListBean;
 import com.toby.toby.UserData;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
@@ -57,7 +58,8 @@ public class ProProductionTransactionListMB1 extends BaseListBean {
     }
 
     public void search() {
-        setProProductionItemsTransactionDTOList(proProductionItemsTransactionService.getALLProProductionItemsTransactionByInvoicesSerial(getProProductionItemsTransactionDTOSelected().getSerial()));
+        proProductionItemsTransactionDTOList = new ArrayList<>();
+        setProProductionItemsTransactionDTOList(proProductionItemsTransactionService.getALLProProductionItemsTransactionByInvoicesSerial(getProProductionItemsTransactionDTOSelected().getInvPurchaseInvoiceDetailId().getInvPurchaseInvoiceId().getSerial()));
     }
 
     @Override

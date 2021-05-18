@@ -45,6 +45,7 @@ public class SummitionItemReportMB extends Basic {
 
     private BigDecimal sumFactoryNumberTotal;
     private BigDecimal sumSendNumberTotal;
+    private BigDecimal sumDifferentTotal;
     private BigDecimal sumDeliveryNumberTotal;
     private BigDecimal sumCustomerNumberTotal;
 
@@ -57,11 +58,16 @@ public class SummitionItemReportMB extends Basic {
 //        List<SummitionItemsView> itemsViewForGallary = null;
         if (getGallaryListSelected() != null && !getGallaryListSelected().isEmpty()) {
             itemsViewList = new ArrayList<>();
+            sumFactoryNumberTotal = BigDecimal.ZERO;
+            sumSendNumberTotal = BigDecimal.ZERO;
+            sumDeliveryNumberTotal = BigDecimal.ZERO;
+            sumCustomerNumberTotal = BigDecimal.ZERO;
+            sumDifferentTotal = BigDecimal.ZERO;
             List<SummitionItemsView> itemsViewForGallaryinner = new ArrayList<>();
             for (InvInventoryDTO invInventoryDTO : getGallaryListSelected()) {
 
                 SummitionItemsView summitionItemsView = new SummitionItemsView();
-                BigDecimal sumFactoryNumber = BigDecimal.ZERO, sumSendNumber = BigDecimal.ZERO, sumDeliveryNumber = BigDecimal.ZERO, sumCustomerNumber = BigDecimal.ZERO;
+                BigDecimal sumFactoryNumber = BigDecimal.ZERO, sumSendNumber = BigDecimal.ZERO, sumDeliveryNumber = BigDecimal.ZERO, sumCustomerNumber = BigDecimal.ZERO, sumDifferentNumber = BigDecimal.ZERO;;
 
                 summitionItemsView.setName(invInventoryDTO.getName());
                 summitionItemsView.setRowType(1);
@@ -79,6 +85,7 @@ public class SummitionItemReportMB extends Basic {
                             sumSendNumber = sumSendNumber.add(view.getSendNumber());
                             sumDeliveryNumber = sumDeliveryNumber.add(view.getDeliveryNumber());
                             sumCustomerNumber = sumCustomerNumber.add(view.getCustomerNumber());
+                            sumDifferentNumber = sumDifferentNumber.add(view.getDifferent());
                         }
                     }
 
@@ -86,6 +93,7 @@ public class SummitionItemReportMB extends Basic {
                     summitionItemsView.setSendNumber(sumSendNumber);
                     summitionItemsView.setDeliveryNumber(sumDeliveryNumber);
                     summitionItemsView.setCustomerNumber(sumCustomerNumber);
+                    summitionItemsView.setDifferent(sumDifferentNumber);
 
                     getItemsViewList().add(summitionItemsView);
                     getItemsViewList().addAll(itemsViewForGallaryinner);
@@ -94,6 +102,7 @@ public class SummitionItemReportMB extends Basic {
                     setSumSendNumberTotal(getSumSendNumberTotal().add(sumSendNumber));
                     setSumDeliveryNumberTotal(getSumDeliveryNumberTotal().add(sumDeliveryNumber));
                     setSumCustomerNumberTotal(getSumCustomerNumberTotal().add(sumCustomerNumber));
+                    setSumDifferentTotal(getSumDifferentTotal().add(sumDifferentNumber));
                 }
 
             }
@@ -353,6 +362,23 @@ public class SummitionItemReportMB extends Basic {
      */
     public void setSumCustomerNumberTotal(BigDecimal sumCustomerNumberTotal) {
         this.sumCustomerNumberTotal = sumCustomerNumberTotal;
+    }
+
+    /**
+     * @return the sumDifferentTotal
+     */
+    public BigDecimal getSumDifferentTotal() {
+        if (sumDifferentTotal == null) {
+            return BigDecimal.ZERO;
+        }
+        return sumDifferentTotal;
+    }
+
+    /**
+     * @param sumDifferentTotal the sumDifferentTotal to set
+     */
+    public void setSumDifferentTotal(BigDecimal sumDifferentTotal) {
+        this.sumDifferentTotal = sumDifferentTotal;
     }
 
 }

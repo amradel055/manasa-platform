@@ -6,6 +6,7 @@
 package com.toby.businessservice;
 
 import com.toby.common.Validation;
+import com.toby.core.GenericDAO;
 import com.toby.define.CompanyActivityClassEnum;
 import com.toby.define.ScreenNameClassEnum;
 import com.toby.dto.InvDetailDTO;
@@ -34,6 +35,8 @@ public class InvGlobalServiceImpl implements InvGlobalService {
 
     @EJB
     private QuantityItemsStoreByDateService quantityItemsStoreAddExitService;
+    @EJB
+    private GenericDAO dao;
 
     @Override
     public InvDetailDTO calculateDetailTotalsRow(InvDetailDTO detailEntity, InvInvoiceDTO invInvoiceDTO, Boolean isNeeadQuantity) {
@@ -376,7 +379,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                 }
 
                 if (invPurchaseInvoiceDTO.getDiscHalala() != null) {
-                
+
                     invPurchaseInvoiceDTO.setDiscountValue(invPurchaseInvoiceDTO.getDiscountValue().add(invPurchaseInvoiceDTO.getDiscHalala()));
                 }
             }
@@ -1029,6 +1032,20 @@ public class InvGlobalServiceImpl implements InvGlobalService {
         cal.setTime(date);
         cal.add(Calendar.DATE, (duePeroid != null ? duePeroid : 0));
         return dueDate = cal.getTime();
+    }
+
+    @Override
+    public Integer getDeliveryDaysByGalleryId(Integer galleryId) {
+        Integer deliveryDays = null;
+        StringBuilder builder = new StringBuilder();
+        builder.append(" SELECT gs.delivery_days FROM toby.gallery_settings gs ").
+                append("where gs.gallery_id = \n ").
+                append(galleryId).append(" ");
+        List<Integer> details = dao.executeNativeQuery(builder.toString());
+        for (Integer deliveryDaysByGalleryId : details) {
+            deliveryDays = deliveryDaysByGalleryId;
+        }
+        return deliveryDays;
     }
 
     @Override

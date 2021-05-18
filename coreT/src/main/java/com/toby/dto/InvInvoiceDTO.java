@@ -1648,7 +1648,5 @@ public class InvInvoiceDTO extends BaseEntityDTO {
         this.dateHegry = dateHegry;
     }
 
-    /**
-     * @return the customerNotice
-     */
+   
 }
