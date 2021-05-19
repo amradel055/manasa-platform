@@ -46,7 +46,7 @@ public interface InvAddingOrderService {
     
     public InvInvoiceDTO save(InvInvoiceDTO invPurchaseInvoiceDTO, TobyUser tobyUser);
     
-     public Long getTotalRegistors(Integer type, Integer branchId, Map<String, Object> filters);
+     public Long getTotalRegistors(Integer type, Integer branchId, Integer galaryId, Map<String, Object> filters);
      
-     public List<InvInvoiceDTO> getALLInvAddingorderDTOByBranchId(Integer type, int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters);
+     public List<InvInvoiceDTO> getALLInvAddingorderDTOByBranchId(Integer type, Integer galaryId, int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters);
 }

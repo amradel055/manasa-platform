@@ -151,7 +151,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
     }
 
     @Override
-    public List<InvOrganizationSite> getSupplierByBranchIdForSupplierAccountReportMB(Integer branchId, Integer type, SupplierAccountSearchBean supplierAccountSearchBean) {
+    public List<InvOrganizationSite> getSupplierByBranchIdForSupplierAccountReportMB(Integer branchId,Integer gallaryId, Integer type, SupplierAccountSearchBean supplierAccountSearchBean) {
         Map<String, Object> params = new HashMap<>();
         StringBuilder query = new StringBuilder();
         params.put("branchId", branchId);
@@ -164,6 +164,9 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         } else if (type == 4) {
             query.append(" (e.type = 4 ) ");
         }
+        
+        
+        
 
         if (supplierAccountSearchBean.getFromorganizationNameDTO() != null) {
             params.put("customerFrom", supplierAccountSearchBean.getFromorganizationNameDTO().getCode());
@@ -174,6 +177,12 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             params.put("customerTo", supplierAccountSearchBean.getToorganizationNameDTO().getCode());
             query.append("AND (e.code <= :customerTo)");
         }
+        
+        if(gallaryId != null){
+            params.put("gallaryId", gallaryId);
+            query.append("AND e.gallaryId.id = :gallaryId");
+        }
+        
         //query.append("  AND e.active = 1) ORDER BY e.code ");
         query.append("  AND e.active = 1) ORDER BY e.id ");
 

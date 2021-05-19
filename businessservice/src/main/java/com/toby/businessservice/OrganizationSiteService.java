@@ -49,7 +49,7 @@ public interface OrganizationSiteService {
 
     public List<InvOrganizationSite> getSupplierByBranchIdForSupplierAccountReportMB(Integer branchId, Integer type);
 
-    public List<InvOrganizationSite> getSupplierByBranchIdForSupplierAccountReportMB(Integer branchId, Integer type, SupplierAccountSearchBean supplierAccountSearchBean);
+    public List<InvOrganizationSite> getSupplierByBranchIdForSupplierAccountReportMB(Integer branchId,Integer gallaryId, Integer type, SupplierAccountSearchBean supplierAccountSearchBean);
 
     public List<InvOrganizationSite> getCustomerByBranchId(Integer branchId);
     

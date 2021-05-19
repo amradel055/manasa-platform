@@ -624,6 +624,7 @@
                                                    or userData.userScreens['itemSalesReport'].view
                                                    or userData.userScreens['SalesOfItemsBySuppliers'].view   
                                                    or userData.userScreens['SalesOfItemsBySuppliersToby'].view   
+                                                   or userData.userScreens['SalesOfItemsBySuppliersTobyForUser'].view   
                                                    or userData.userScreens['invstripReport'].view
                                                    or userData.userScreens['itemCardReport'].view
                                                    or userData.userScreens['InvItemOrderLimitReport'].view                                                                
@@ -643,6 +644,7 @@
                                                    or userData.userScreens['itemSalesReport'].view
                                                    or userData.userScreens['SalesOfItemsBySuppliers'].view
                                                    or userData.userScreens['SalesOfItemsBySuppliersToby'].view
+                                                   or userData.userScreens['SalesOfItemsBySuppliersTobyForUser'].view
 
                                                    or userData.userScreens['supplayeraccount'].view
                                                    or userData.userScreens['accountbalancesupplier'].view
@@ -837,6 +839,7 @@
                                            rendered="#{userData.userScreens['itemSalesReport'].view 
                                                        or userData.userScreens['SalesOfItemsBySuppliers'].view 
                                                        or userData.userScreens['SalesOfItemsBySuppliersToby'].view 
+                                                       or userData.userScreens['SalesOfItemsBySuppliersTobyForUser'].view 
                                                        or userData.userScreens['SalesOfItemsByDelegator'].view 
                                                        or userData.userScreens['SalesOfItemsBySupplier'].view 
                                                        or userData.userScreens['SalesDuringPeriod'].view 
@@ -857,6 +860,9 @@
                                                 />
                                     <p:menuitem id="sr_lnk4511" value="#{userData.userDDs['ITEM_SALE_CUST']} تفصيلى" icon="&#xE8D2;" url="/faces/views/inventoryreports/SalesOfItemsBySuppliersToby.xhtml" 
                                                 rendered="#{userData.userScreens['SalesOfItemsBySuppliers'].view or userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="sr_lnk451345" value="#{userData.userDDs['ITEM_SALE_CUST']} تفصيلى" icon="&#xE8D2;" url="/faces/views/inventoryreports/SalesOfItemsBySuppliersTobyForUser.xhtml" 
+                                                rendered="#{userData.userScreens['SalesOfItemsBySuppliersTobyForUser'].view or userData.isAdmin}"
                                                 />
                                     <p:menuitem id="sr_lnk453" value="#{userData.userDDs['ITEM_SALE_DELE']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/SalesOfItemsByDelegator.xhtml" 
                                                 rendered="#{userData.userScreens['SalesOfItemsByDelegator'].view or userData.isAdmin}"

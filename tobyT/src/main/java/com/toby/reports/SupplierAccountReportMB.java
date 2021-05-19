@@ -176,11 +176,11 @@ public class SupplierAccountReportMB extends BaseReportBean {
 
         setOrganizationSiteRootList(new ArrayList<>());
         if (uri != null && uri.contains("clientacoount")) {
-            setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId, 0, getSupplierAccountSearchBean()));
+            setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId,((getUserData().getGallaryDTOList() == null || getUserData().getGallaryDTOList().isEmpty()) ? null : getUserData().getGallaryDTOList().get(0).getId()), 0, getSupplierAccountSearchBean()));
         } else if (uri != null && uri.contains("contractoraccount")) {
-            setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId, 4, getSupplierAccountSearchBean()));
+            setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId,((getUserData().getGallaryDTOList() == null || getUserData().getGallaryDTOList().isEmpty()) ? null : getUserData().getGallaryDTOList().get(0).getId()), 4, getSupplierAccountSearchBean()));
         } else {
-            setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId, 1, getSupplierAccountSearchBean()));
+            setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId,((getUserData().getGallaryDTOList() == null || getUserData().getGallaryDTOList().isEmpty()) ? null : getUserData().getGallaryDTOList().get(0).getId()), 1, getSupplierAccountSearchBean()));
         }
 
         organizationSiteStatementmap = new HashMap<>();
@@ -219,11 +219,11 @@ public class SupplierAccountReportMB extends BaseReportBean {
 
         setOrganizationSiteRootList(new ArrayList<>());
         if (uri != null && uri.contains("clientacoount")) {
-            setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId, 0, getSupplierAccountSearchBean()));
+            setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId,((getUserData().getGallaryDTOList() == null || getUserData().getGallaryDTOList().isEmpty()) ? null : getUserData().getGallaryDTOList().get(0).getId()) , 0, getSupplierAccountSearchBean()));
         } else if (uri != null && uri.contains("contractoraccount")) {
-            setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId, 4, getSupplierAccountSearchBean()));
+            setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId,((getUserData().getGallaryDTOList() == null || getUserData().getGallaryDTOList().isEmpty()) ? null : getUserData().getGallaryDTOList().get(0).getId()) , 4, getSupplierAccountSearchBean()));
         } else {
-            setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId, 1, getSupplierAccountSearchBean()));
+            setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId,((getUserData().getGallaryDTOList() == null || getUserData().getGallaryDTOList().isEmpty()) ? null : getUserData().getGallaryDTOList().get(0).getId()) , 1, getSupplierAccountSearchBean()));
         }
 
         organizationSiteStatementmap = new HashMap<>();
@@ -565,14 +565,14 @@ public class SupplierAccountReportMB extends BaseReportBean {
     }
 
     public List<InvOrganizationSiteDTO> completOrgSiteFrom(String query) {
-        List<InvOrganizationSiteDTO> list = autoCompleteService.autoCompleteOrganizationSiteDTO(getUserData().getUserBranch().getId(), true, type, query,null);
+        List<InvOrganizationSiteDTO> list = autoCompleteService.autoCompleteOrganizationSiteDTO(getUserData().getUserBranch().getId(), true, type, query,((getUserData().getGallaryDTOList() == null || getUserData().getGallaryDTOList().isEmpty()) ? null : getUserData().getGallaryDTOList().get(0).getId()));
         invOrgSiteConverter = new InvOrganizationSiteDTOConverter(list);
         return list;
 //        return getAutoComplete().completOrgSiteDTO(query, getInvOrgSiteList(), invOrgSiteConverter);
     }
 
     public List<InvOrganizationSiteDTO> completOrgSiteTo(String query) {
-        List<InvOrganizationSiteDTO> list = autoCompleteService.autoCompleteOrganizationSiteDTO(getUserData().getUserBranch().getId(), true, type, query,null);
+        List<InvOrganizationSiteDTO> list = autoCompleteService.autoCompleteOrganizationSiteDTO(getUserData().getUserBranch().getId(), true, type, query,((getUserData().getGallaryDTOList() == null || getUserData().getGallaryDTOList().isEmpty()) ? null : getUserData().getGallaryDTOList().get(0).getId()));
         invOrgSiteConverter = new InvOrganizationSiteDTOConverter(list);
         return list;
 //        return getAutoComplete().completOrgSiteDTO(query, getInvOrgSiteList(), invOrgSiteConverter);

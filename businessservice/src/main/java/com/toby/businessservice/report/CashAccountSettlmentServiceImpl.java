@@ -14,6 +14,7 @@ import com.toby.entity.GlBank;
 import com.toby.entity.GlBankTransaction;
 import com.toby.entity.GlBankTransactionDetail;
 import com.toby.entity.GlYear;
+import com.toby.entity.InvOrganizationSite;
 import com.toby.entity.InvPurchaseInvoiceDetail;
 import com.toby.entity.InvReturnPurchase;
 import com.toby.views.CashAccountSettlmentView;
@@ -57,10 +58,10 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
         StringBuilder builder = null;
         if (bankDTOList != null && !bankDTOList.isEmpty()) {
             for (GlBankDTO bank : bankDTOList) {
-                if(builder == null){
+                if (builder == null) {
                     builder = new StringBuilder();
                     builder.append(bank.getId());
-                }else{
+                } else {
                     builder.append(",").append(bank.getId());
                 }
             }
@@ -74,7 +75,7 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT g FROM GlBank g WHERE g.branchId.id = :branchId AND g.dateOpeninngBalance is not null AND g.openinngBalance > 0  ");
         String banks = fillBanks(cashAccountSettlementSearchBean.getGlBankToListSelected());
-        if(banks != null){
+        if (banks != null) {
             builder.append(" and g.id in (").append(banks).append(") ");
         }
         if (cashAccountSettlementSearchBean.getGlBankFrom() != null) {
@@ -965,6 +966,18 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
                 view.setCustomerName(entity.getInvoiceId().getOrganizationSiteId().getName());
                 view.setCustomerCode(entity.getInvoiceId().getOrganizationSiteId().getCode());
                 view.setInvoiceNumber(entity.getInvoiceId().getSerial());
+            } else {
+                Map<String, Object> params2 = new HashMap();
+                params2.put("id", entity.getId());
+                StringBuilder builder2 = new StringBuilder();
+                builder2.append("SELECT g.organizationSiteId FROM GlBankTransactionDetail g WHERE g.glBankTransactionId.id = :id ");
+                List<InvOrganizationSite> invOrganizationSites = dao.findListByQuery(builder2.toString(), params2);
+                if (invOrganizationSites != null && !invOrganizationSites.isEmpty()) {
+                    InvOrganizationSite invOrganizationSite = invOrganizationSites.get(0);
+                    view.setCustomerName(invOrganizationSite.getName());
+                    view.setCustomerCode(invOrganizationSite.getCode());
+                }
+
             }
 
             if (entity.getGlBankId() != null) {

@@ -7,11 +7,7 @@ package com.toby.invPurchaseInvoiceDTO;
 
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
 import com.toby.businessservice.TobyUserInventoryService;
-import com.toby.converter.InvInventoryConverter;
-import com.toby.converter.InvInventoryDTOConverter;
-import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.InvInvoiceDTO;
-import com.toby.entity.InvInventory;
 import com.toby.toby.InventoryBasicDataForm;
 import com.toby.toby.UserData;
 import java.util.List;
@@ -34,14 +30,9 @@ import org.primefaces.model.SortOrder;
 @ViewScoped
 public class InvPurchaseInvoiceListDTOMB extends InventoryBasicDataForm {
 
-    private List<InvInventory> inventoryList;
-    private List<InvInventoryDTO> gallaryList;
-    private InvInventory invInventorySelection;
     private List<InvInvoiceDTO> invInvoiceList;
     @EJB
     private InvPurchaseInvoiceService_1 invPurchaseInvoiceService;
-    @EJB
-    private TobyUserInventoryService tobyUserInventoryService;
 
     @Override
     @PostConstruct
@@ -63,7 +54,7 @@ public class InvPurchaseInvoiceListDTOMB extends InventoryBasicDataForm {
 
                 @Override
                 public List<InvInvoiceDTO> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
-                    Integer type = 0, invInventorySelectionId = null, invGallarySelectionId = null;
+                    Integer type = 0;
                     if (getUri().contains("invpurchaseinvoicelist")) {
                         type = 0;
                     } else if (getUri().contains("invsalesinvoicelist")) {
@@ -75,27 +66,12 @@ public class InvPurchaseInvoiceListDTOMB extends InventoryBasicDataForm {
                     } else if (getUri().contains("proworkorderlist")) {
                         type = 4;
                     }
-                    invInventorySelectionId = getInvInventorySelection() != null ? getInvInventorySelection().getId() : null;
-                    invGallarySelectionId = getInvGallarySelection() != null ? getInvGallarySelection().getId() : null;
+                    Integer invInventorySelectionId = getInvInventorySelection() != null ? getInvInventorySelection().getId() : null;
+                    Integer invGallarySelectionId = getInvGallarySelection() != null ? getInvGallarySelection().getId() : null;
                     setRowCount(invPurchaseInvoiceService.getTotalRegistorsForGallary(type, invGallarySelectionId, getUserData().getUserBranch().getId(), filters).intValue());
                     return invPurchaseInvoiceService.getALLInvPurchaseInvoiceDTOByTypeAndBranchIdFroGallary(type, invGallarySelectionId, first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), getUserData().getUserBranch().getId(), filters);
                 }
             });
-            //----------------------------------------------
-            setInventoryList(tobyUserInventoryService.getAllInventroisByUserAndBranchPer(getUserData().getUser().getId(), getUserlogin().getBranchId().getId()));
-            setGallaryList(tobyUserInventoryService.getAllGallaryByUserAndBranch(getUserData().getUser()));
-            if (getInventoryList() != null && !inventoryList.isEmpty()) {
-                setInvInventoryConverter(new InvInventoryConverter(getInventoryList()));
-            }
-            if (getGallaryList() != null && !getGallaryList().isEmpty()) {
-                setGallaryDTOConverter(new InvInventoryDTOConverter(getGallaryList()));
-            }
-            if (getInvInventorySelection().getId() == null) {
-                setInvInventorySelection(getInventoryList() == null || getInventoryList().isEmpty() ? null : getInventoryList().get(0));
-            }
-            if (getInvGallarySelection().getId() == null) {
-                setInvGallarySelection(getGallaryList() == null || getGallaryList().isEmpty() ? null : getGallaryList().get(0));
-            }
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceListMB", "load");
         }
@@ -116,7 +92,7 @@ public class InvPurchaseInvoiceListDTOMB extends InventoryBasicDataForm {
         } else if (getUri().contains("proworkorderlist")) {
             type = 4;
         }
-        setInvInvoiceList(invPurchaseInvoiceService.getALLInvPurchaseInvoiceDTOByTypeAndBranchIdFroGallary2(type, invGallarySelectionId,getInvInvoiceDTO().getOrganizationSiteId() == null ? null : getInvInvoiceDTO().getOrganizationSiteId().getId()));
+        setInvInvoiceList(invPurchaseInvoiceService.getALLInvPurchaseInvoiceDTOByTypeAndBranchIdFroGallary2(type, invGallarySelectionId, getInvInvoiceDTO().getOrganizationSiteId() == null ? null : getInvInvoiceDTO().getOrganizationSiteId().getId()));
     }
 
     public void loadInventoryList() {
@@ -234,51 +210,6 @@ public class InvPurchaseInvoiceListDTOMB extends InventoryBasicDataForm {
     @Override
     public String exit() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    /**
-     * @return the inventoryList
-     */
-    public List<InvInventory> getInventoryList() {
-        return inventoryList;
-    }
-
-    /**
-     * @param inventoryList the inventoryList to set
-     */
-    public void setInventoryList(List<InvInventory> inventoryList) {
-        this.inventoryList = inventoryList;
-    }
-
-    /**
-     * @return the invInventorySelection
-     */
-    public InvInventory getInvInventorySelection() {
-        if (invInventorySelection == null) {
-            invInventorySelection = new InvInventory();
-        }
-        return invInventorySelection;
-    }
-
-    /**
-     * @param invInventorySelection the invInventorySelection to set
-     */
-    public void setInvInventorySelection(InvInventory invInventorySelection) {
-        this.invInventorySelection = invInventorySelection;
-    }
-
-    /**
-     * @return the gallaryList
-     */
-    public List<InvInventoryDTO> getGallaryList() {
-        return gallaryList;
-    }
-
-    /**
-     * @param gallaryList the gallaryList to set
-     */
-    public void setGallaryList(List<InvInventoryDTO> gallaryList) {
-        this.gallaryList = gallaryList;
     }
 
     /**
