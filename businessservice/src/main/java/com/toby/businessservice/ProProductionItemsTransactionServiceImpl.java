@@ -295,7 +295,7 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
     public List<ProProductionItemsTransactionDTO> getALLProProductionItemsTransactionDTO(int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters) {
         filters.put("branchId", branchId);
         StringBuilder builder = new StringBuilder();
-        builder.append("SELECT s FROM ProProductionItemsTransaction s WHERE  s.branchId.id = :branchId and( s.isDeleted != 1 or s.isDeleted is NULL )  ");
+        builder.append("SELECT s FROM ProProductionItemsTransaction s WHERE  s.branchId.id = :branchId and( s.isDeleted != 1 or s.isDeleted is NULL ) order by s.id desc  ");
         List<ProProductionItemsTransaction> details = dao.findListByQuery(builder.toString(), filters, first, pageSize);
         return mapToDTOList(details, null);
     }
@@ -305,7 +305,7 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
         Map<String, Object> params = new HashMap<>();
         params.put("serial", serial);
         StringBuilder builder = new StringBuilder();
-        builder.append(" SELECT s FROM ProProductionItemsTransaction s WHERE s.proFactoryDeliveryDetailId.proFactoryDeliveryId.invPurchaseInvoiceId.serial = :serial  ");
+        builder.append(" SELECT s FROM ProProductionItemsTransaction s WHERE s.proFactoryDeliveryDetailId.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial = :serial  ");
         List<ProProductionItemsTransaction> details = dao.findListByQuery(builder.toString(),params);
         return mapToDTOList(details, null);
     }

@@ -115,50 +115,45 @@
 
                 <div class="ui-g-6 ui-xl-6">
                     <div class="ui-g-12 ui-xl-12">
-                        <div class="ui-g-6 ui-xl-6">
+                            <div class="ui-g-6 ui-xl-6">
 
-                            <p:autoComplete style="width:85%" id="Cost_Center_from" 
-                                            dropdown="true"
-                                            converter="#{autoComplete.proGroupDTOConverter}"
-                                            value="#{productionTransactionOfUserMB.printProductionDTO.fromStatus}" 
-                                            var="fromStatus"
-                                            itemLabel="#{fromStatus.name}"
-                                            itemValue="#{fromStatus.serial}" 
-                                            forceSelection="true" 
-                                            completeMethod="#{autoComplete.completeProGroup}" >
-                            </p:autoComplete>
+                                <p:autoComplete style="width:85%" 
+                                                dropdown="true"
+                                                converter="#{autoComplete.proProductionStagesDTOConverter}"
+                                                value="#{productionTransactionOfUserMB.printProductionDTO.fromStatus}"  
+                                                var="proGroup"
+                                                itemLabel="#{proGroup}"
+                                                itemValue="#{proGroup}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{autoComplete.completeProProductionStagesDTO}" >
+                                </p:autoComplete>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
 
+                                <p:outputLabel style="width: 50px;margin-right: 1%" value="من مرحلة"/>
+
+                            </div>
                         </div>
-                        <div class="ui-g-6 ui-xl-6">
+                   <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
 
-                            <p:outputLabel style="width: 50px;margin-right: 1%" value="من مرحلة"/>
+                                <p:autoComplete style="width:85%" 
+                                                dropdown="true"
+                                                converter="#{autoComplete.proProductionStagesDTOConverter}"
+                                                value="#{productionTransactionOfUserMB.printProductionDTO.toStatus}"  
+                                                var="proGroup"
+                                                itemLabel="#{proGroup}"
+                                                itemValue="#{proGroup}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{autoComplete.completeProProductionStagesDTO}" >
+                                </p:autoComplete>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
 
+                                <p:outputLabel style="width: 50px;margin-right: 1%" value=" الى مرحلة"/>
 
-
+                            </div>
                         </div>
-                    </div>
-                    <div class="ui-g-12 ui-xl-12">
-                        <div class="ui-g-6 ui-xl-6">
-                            <p:autoComplete style="width:85%" id="Cost_Center_to" 
-                                            dropdown="true"
-                                            converter="#{autoComplete.proGroupDTOConverter}"
-                                            value="#{productionTransactionOfUserMB.printProductionDTO.toStatus}" 
-                                            var="toStatus"
-                                            itemLabel="#{toStatus.name}"
-                                            itemValue="#{toStatus.serial}" 
-                                            forceSelection="true" 
-                                            completeMethod="#{autoComplete.completeProGroup}" >
-                            </p:autoComplete>
-
-                        </div>
-                        <div class="ui-g-6 ui-xl-6">
-
-                            <p:outputLabel style="width: 50px;margin-right: 1%" value="الى مرحلة"/>
-
-
-
-                        </div>
-                    </div>
                     <div class="ui-g-12 ui-xl-12">
                         <div class="ui-g-6 ui-xl-6">
                             <p:autoComplete style="width:85%" id="User-code_from" 

@@ -203,7 +203,9 @@
                             <p:column>
                                 <h:outputText value="#{summitionItemReportMB.sumSendNumberTotal}"/>
                             </p:column>
-                            <p:column/>
+                            <p:column>
+                                <h:outputText value="#{summitionItemReportMB.sumDifferentTotal}"/>
+                            </p:column>
                             <p:column>
                                 <h:outputText value="#{summitionItemReportMB.sumDeliveryNumberTotal}"/>
                             </p:column>
@@ -229,8 +231,14 @@
                                             value="#{summitionItemReportMB.sumSendNumberTotal}" />
                                     </f:facet>
                                 </p:column>
+                                <p:column  >
+                                    <f:facet name="footer">
+                                        <p:inputNumber
+                                            value="#{summitionItemReportMB.sumDifferentTotal}" />
+                                    </f:facet>
+                                </p:column>
                                 
-                                <p:column  />
+                             
                                 
                                 <p:column  >
                                     <f:facet name="footer">

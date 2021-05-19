@@ -68,7 +68,7 @@ public class ProProductionStagesServiceImpl implements ProProductionStagesServic
 //        List<ProProductionStages> proProductionStagesList = dao.findListByQuery("SELECT p FROM ProProductionStages p WHERE p.branchId.id = :branchId AND p.serial in (7) ORDER BY p.id DESC", params); // تطريز توب مغربي
 //        List<ProProductionStages> proProductionStagesList = dao.findListByQuery("SELECT p FROM ProProductionStages p WHERE p.branchId.id = :branchId AND p.serial in (5) ORDER BY p.id DESC", params); // تطريز خفيف
 //        List<ProProductionStages> proProductionStagesList = dao.findListByQuery("SELECT p FROM ProProductionStages p WHERE p.branchId.id = :branchId AND p.serial in (22) ORDER BY p.id DESC", params); // اللوجو & موديل طقطق وزرار
-          List<ProProductionStages> proProductionStagesList = dao.findListByQuery("SELECT p FROM ProProductionStages p WHERE p.branchId.id = :branchId AND p.serial in (1,2,3,4,8,9,11,12,13,14,15,16,17,18,19,20,21,23,24,25,26,27,28) ORDER BY p.id DESC", params); // تعديل
+        List<ProProductionStages> proProductionStagesList = dao.findListByQuery("SELECT p FROM ProProductionStages p WHERE p.branchId.id = :branchId AND p.serial in (1,2,3,4,8,9,11,12,13,14,15,16,17,18,19,20,21,23,24,25,26,27,28) ORDER BY p.id DESC", params); // تعديل
         return proProductionStagesList;
     }
 
@@ -132,8 +132,10 @@ public class ProProductionStagesServiceImpl implements ProProductionStagesServic
     }
 
     @Override
-    public List<ProProductionStagesDTO> getAllProproductionStages(TobyUser tobyUser) {
-        List<ProProductionStages> proProductionStageseList = dao.findListByQuery("SELECT e FROM ProProductionStages e where e.typeStage=0");
+    public List<ProProductionStagesDTO> getAllProproductionStages(TobyUser tobyUser, Integer branchId) {
+        Map<String, Object> params = new HashMap();
+        params.put("branchId", branchId);
+        List<ProProductionStages> proProductionStageseList = dao.findListByQuery(" SELECT e FROM ProProductionStages e where e.branchId.id = :branchId ", params);
         return mapToDTOList(proProductionStageseList, tobyUser);
 
     }
