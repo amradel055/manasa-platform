@@ -299,7 +299,7 @@ public class AutoComplete1 extends Basic {
 
     public List<ProProductionStagesDTO> completeProProductionStagesDTO(String query) {
         List<ProProductionStagesDTO> proProductionStagesDTOList = new ArrayList<>();
-        proProductionStagesDTOList = proProductionStagesService.getAllProproductionStages(getUserData().getUser());
+        proProductionStagesDTOList = proProductionStagesService.getAllProproductionStages(getUserData().getUser(),getUserData().getUserBranch().getId());
         setProProductionStagesDTOConverter(new ProProductionStagesDTOConverter(proProductionStagesDTOList));
         return proProductionStagesDTOList;
     }

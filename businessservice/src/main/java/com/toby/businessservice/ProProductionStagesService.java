@@ -40,7 +40,7 @@ public interface ProProductionStagesService {
     
     public List<ProProductionStagesDTO> getAllProproductionStagesListByUserAndBranch( TobyUser tobyUser, Integer branchId);
     
-    public List<ProProductionStagesDTO> getAllProproductionStages( TobyUser tobyUser);
+    public List<ProProductionStagesDTO> getAllProproductionStages( TobyUser tobyUser, Integer branchId);
     
     public ProProductionStages checkForLastStage(TobyUser tobyUser );
     

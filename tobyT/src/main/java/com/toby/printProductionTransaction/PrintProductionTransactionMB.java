@@ -176,7 +176,7 @@ public class PrintProductionTransactionMB extends BaseListBean {
 
     public List<ProProductionStagesDTO> getProProductionStagesDTOList() {
         if (proProductionStagesDTOList == null | proProductionStagesDTOList.isEmpty()) {
-            proProductionStagesDTOList = proProductionStagesService.getAllProproductionStages(getUserData().getUser());
+            proProductionStagesDTOList = proProductionStagesService.getAllProproductionStages(getUserData().getUser(),getUserData().getUserBranch().getId());
         }
         return proProductionStagesDTOList;
     }

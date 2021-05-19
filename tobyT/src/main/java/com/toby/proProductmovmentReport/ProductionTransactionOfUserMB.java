@@ -244,7 +244,7 @@ public class ProductionTransactionOfUserMB extends BaseFormBean {
 
         if (proProductionStagesDTOList == null || proProductionStagesDTOList.isEmpty()) {
             proProductionStagesDTOList = new ArrayList<>();
-            proProductionStagesDTOList = proProductionStagesService.getAllProproductionStages(getUserData().getUser());
+            proProductionStagesDTOList = proProductionStagesService.getAllProproductionStages(getUserData().getUser(),getUserData().getUserBranch().getId());
         }
         return proProductionStagesDTOList;
     }
