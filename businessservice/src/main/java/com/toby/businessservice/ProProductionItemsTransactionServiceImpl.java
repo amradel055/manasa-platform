@@ -264,10 +264,10 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
 
     private void appendProProductionStatus(PrintProductionDTO printProductionDTO, StringBuilder query) {
         if (printProductionDTO.getFromStatus() != null) {
-            query.append(" and pps.serial >=  ").append(printProductionDTO.getFromStatus());
+            query.append(" and pps.serial >=  ").append(printProductionDTO.getFromStatus().getSerial());
         }
         if (printProductionDTO.getToStatus() != null) {
-            query.append(" and pps.serial <=  ").append(printProductionDTO.getToStatus());
+            query.append(" and pps.serial <=  ").append(printProductionDTO.getToStatus().getSerial());
         }
     }
 

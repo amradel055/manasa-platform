@@ -6,6 +6,7 @@ import com.toby.converter.InvInventoryDTOConverter;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.ProGroupDTO;
 import com.toby.toby.Basic;
+import com.toby.toby.UserData;
 import com.toby.views.SummitionItemsView;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -13,8 +14,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.inject.Named;
@@ -53,6 +56,12 @@ public class SummitionItemReportMB extends Basic {
     InvPurchaseInvoiceService_1 invPurchaseInvoiceService_1;
     @EJB
     private TobyUserInventoryService tobyUserInventoryService;
+
+    @PostConstruct
+    public void init() {
+        gallaryListSelected = new ArrayList<>();
+        getGallaryListSelected().addAll(getGallaryList());
+    }
 
     public void search() {
 //        List<SummitionItemsView> itemsViewForGallary = null;
@@ -285,6 +294,11 @@ public class SummitionItemReportMB extends Basic {
      * @return the gallaryListSelected
      */
     public List<InvInventoryDTO> getGallaryListSelected() {
+
+        if (gallaryListSelected == null) {
+
+            gallaryListSelected = new ArrayList<>();
+        }
 
         return gallaryListSelected;
     }

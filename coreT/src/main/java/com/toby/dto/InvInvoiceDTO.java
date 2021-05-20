@@ -26,6 +26,7 @@ public class InvInvoiceDTO extends BaseEntityDTO {
     private ScreenNameClassEnum ScreenName;
     private ModuleClassEnum moduleClassEnum;
     private Date date;
+    private String name;
     private Date dateHegry;
     private Date dateEndOffer;
     private BigDecimal rate;
@@ -1648,5 +1649,18 @@ public class InvInvoiceDTO extends BaseEntityDTO {
         this.dateHegry = dateHegry;
     }
 
-   
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
 }

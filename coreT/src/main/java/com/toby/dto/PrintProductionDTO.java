@@ -1,60 +1,55 @@
 package com.toby.dto;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-
 public class PrintProductionDTO {
-    private String Msg ;
-    private Integer fromStatus;
-    private Integer toStatus;
+
+    private String Msg;
+    private ProProductionStagesDTO fromStatus;
+    private ProProductionStagesDTO toStatus;
     private InvInvoiceDTO fromInvoice;
     private Integer fromInvInvoice;
     private InvInvoiceDTO toInvoice;
     private Integer toInvInvoice;
     private Date toDate;
     private Date fromDate;
-    private TobyUserDTO fromUser; 
-    private TobyUserDTO toUser; 
+    private TobyUserDTO fromUser;
+    private TobyUserDTO toUser;
     private InvInventoryDTO gallaryFrom;
+    private List<InvInventoryDTO> gallaryListSelected;
     private InvInventoryDTO gallaryTo;
     private Integer invoiceStatus;
-  
+
     public InvInvoiceDTO getFromInvoice() {
         return fromInvoice;
     }
 
-    
     public void setFromInvoice(InvInvoiceDTO fromInvoice) {
         this.fromInvoice = fromInvoice;
     }
 
-    
     public InvInvoiceDTO getToInvoice() {
         return toInvoice;
     }
 
-    
     public void setToInvoice(InvInvoiceDTO toInvoice) {
         this.toInvoice = toInvoice;
     }
 
-    
     public Date getToDate() {
         return toDate;
     }
 
-    
     public void setToDate(Date toDate) {
         this.toDate = toDate;
     }
 
-    
     public Date getFromDate() {
         return fromDate;
     }
 
-    
     public void setFromDate(Date fromDate) {
         this.fromDate = fromDate;
     }
@@ -158,34 +153,6 @@ public class PrintProductionDTO {
     }
 
     /**
-     * @return the fromStatus
-     */
-    public Integer getFromStatus() {
-        return fromStatus;
-    }
-
-    /**
-     * @param fromStatus the fromStatus to set
-     */
-    public void setFromStatus(Integer fromStatus) {
-        this.fromStatus = fromStatus;
-    }
-
-    /**
-     * @return the toStatus
-     */
-    public Integer getToStatus() {
-        return toStatus;
-    }
-
-    /**
-     * @param toStatus the toStatus to set
-     */
-    public void setToStatus(Integer toStatus) {
-        this.toStatus = toStatus;
-    }
-
-    /**
      * @return the invoiceStatus
      */
     public Integer getInvoiceStatus() {
@@ -197,8 +164,52 @@ public class PrintProductionDTO {
      */
     public void setInvoiceStatus(Integer invoiceStatus) {
         this.invoiceStatus = invoiceStatus;
-    }  
-    
-    
-    
+    }
+
+    /**
+     * @return the fromStatus
+     */
+    public ProProductionStagesDTO getFromStatus() {
+        return fromStatus;
+    }
+
+    /**
+     * @param fromStatus the fromStatus to set
+     */
+    public void setFromStatus(ProProductionStagesDTO fromStatus) {
+        this.fromStatus = fromStatus;
+    }
+
+    /**
+     * @return the toStatus
+     */
+    public ProProductionStagesDTO getToStatus() {
+        return toStatus;
+    }
+
+    /**
+     * @param toStatus the toStatus to set
+     */
+    public void setToStatus(ProProductionStagesDTO toStatus) {
+        this.toStatus = toStatus;
+    }
+
+    /**
+     * @return the gallaryListSelected
+     */
+    public List<InvInventoryDTO> getGallaryListSelected() {
+
+        if (gallaryListSelected == null) {
+            gallaryListSelected = new ArrayList<>();
+        }
+        return gallaryListSelected;
+    }
+
+    /**
+     * @param gallaryListSelected the gallaryListSelected to set
+     */
+    public void setGallaryListSelected(List<InvInventoryDTO> gallaryListSelected) {
+        this.gallaryListSelected = gallaryListSelected;
+    }
+
 }

@@ -94,7 +94,7 @@ public class ProProductionStagesDTO extends BaseEntityDTO{
   
      @Override
     public String toString() {
-        return name + " " + id;
+        return name + " " + serial;
     }
 
     

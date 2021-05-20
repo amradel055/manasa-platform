@@ -81,6 +81,8 @@ public class ProductionTransactionOfUserMB extends BaseFormBean {
         // if((printProductionDTO.getFromUser()!=null&&printProductionDTO.getToUser()!=null)
         // ||(printProductionDTO.getFromDate()!=null&&printProductionDTO.getToDate()!=null)
         //  ||(printProductionDTO.getFromStatus()!=null)&&(printProductionDTO.getToStatus()!=null)){
+        totalQuantity = BigDecimal.ZERO;
+        Total = BigDecimal.ZERO;
         productionTransactionOfUserList = proProductionItemsTransactionService.getProProductionTransactionDTOForAllUsersList(printProductionDTO, getUserData().getUserBranch().getId());
         for (ProductionTransactionOfUser productionTransactionOfUser : productionTransactionOfUserList) {
             setTotal(productionTransactionOfUser.getTotalNumber().add(getTotal()));
@@ -244,7 +246,7 @@ public class ProductionTransactionOfUserMB extends BaseFormBean {
 
         if (proProductionStagesDTOList == null || proProductionStagesDTOList.isEmpty()) {
             proProductionStagesDTOList = new ArrayList<>();
-            proProductionStagesDTOList = proProductionStagesService.getAllProproductionStages(getUserData().getUser(),getUserData().getUserBranch().getId());
+            proProductionStagesDTOList = proProductionStagesService.getAllProproductionStages(getUserData().getUser(), getUserData().getUserBranch().getId());
         }
         return proProductionStagesDTOList;
     }

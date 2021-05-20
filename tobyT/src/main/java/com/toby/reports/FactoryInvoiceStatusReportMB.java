@@ -1,14 +1,18 @@
 package com.toby.reports;
 
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
+import com.toby.businessservice.TobyUserInventoryService;
+import com.toby.converter.InvInventoryDTOConverter;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.ProGroupDTO;
 import com.toby.toby.Basic;
 import com.toby.views.FactoryInvoiceStatus;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.event.ActionEvent;
 import javax.inject.Named;
@@ -30,22 +34,40 @@ public class FactoryInvoiceStatusReportMB extends Basic {
     private Date toDate;
     private Date fromDate;
     private InvInventoryDTO galleryList;
+
+    private InvInventoryDTOConverter gallaryDTOConverter;
+    private List<InvInventoryDTO> gallaryListSelected;
+    private List<InvInventoryDTO> gallarySelected;
+
     private ProGroupDTO status;
 
     @EJB
     private InvPurchaseInvoiceService_1 invPurchaseInvoiceService;
+    @EJB
+    private TobyUserInventoryService tobyUserInventoryService;
+
+    @PostConstruct
+    public void init() {
+        getGallarySelected().addAll(getGallaryListSelected());
+    }
 
     public void search() {
-        setList(invPurchaseInvoiceService.findInvoiceStatus(getFromDate(), getToDate(), getStatus() == null ? null : getStatus().getId(), getGalleryList() == null ? null : getGalleryList().getId(), getUserData().getUserBranch().getId()));
+        if (getGallarySelected() != null && !getGallarySelected().isEmpty()) {
+            for (InvInventoryDTO invInventoryDTO : getGallarySelected()) {
+                setGalleryList(invInventoryDTO);
+                getList().addAll(invPurchaseInvoiceService.findInvoiceStatus(getFromDate(), getToDate(), getStatus() == null ? null : getStatus().getId(), getGalleryList() == null ? null : getGalleryList().getId(), getUserData().getUserBranch().getId()));
+            }
+        }
     }
-    
-    public void convertDateFrom(){
+
+    public void convertDateFrom() {
         setFromDate(findDateFromHijriFrom());
     }
-    public void convertDateTo(){
+
+    public void convertDateTo() {
         setToDate(findDateFromHijriTo());
     }
-   
+
     public void postProcessXLS(Object document) {
         HSSFWorkbook wb = (HSSFWorkbook) document;
         HSSFSheet sheet = wb.getSheetAt(0);
@@ -151,6 +173,9 @@ public class FactoryInvoiceStatusReportMB extends Basic {
      * @return the list
      */
     public List<FactoryInvoiceStatus> getList() {
+        if (list == null) {
+            list = new ArrayList<>();
+        }
         return list;
     }
 
@@ -182,6 +207,9 @@ public class FactoryInvoiceStatusReportMB extends Basic {
      * @return the galleryList
      */
     public InvInventoryDTO getGalleryList() {
+        if (galleryList == null) {
+            galleryList = new InvInventoryDTO();
+        }
         return galleryList;
     }
 
@@ -190,6 +218,56 @@ public class FactoryInvoiceStatusReportMB extends Basic {
      */
     public void setGalleryList(InvInventoryDTO galleryList) {
         this.galleryList = galleryList;
+    }
+
+    /**
+     * @return the gallaryDTOConverter
+     */
+    public InvInventoryDTOConverter getGallaryDTOConverter() {
+        return gallaryDTOConverter;
+    }
+
+    /**
+     * @param gallaryDTOConverter the gallaryDTOConverter to set
+     */
+    public void setGallaryDTOConverter(InvInventoryDTOConverter gallaryDTOConverter) {
+        this.gallaryDTOConverter = gallaryDTOConverter;
+    }
+
+    /**
+     * @return the gallaryListSelected
+     */
+    public List<InvInventoryDTO> getGallaryListSelected() {
+
+        if (gallaryListSelected == null || gallaryListSelected.isEmpty()) {
+            gallaryListSelected = tobyUserInventoryService.getAllGallaryByUserAndBranch(getUserData().getUser());
+            setGallaryDTOConverter(new InvInventoryDTOConverter(gallaryListSelected));
+        }
+        return gallaryListSelected;
+    }
+
+    /**
+     * @param gallaryListSelected the gallaryListSelected to set
+     */
+    public void setGallaryListSelected(List<InvInventoryDTO> gallaryListSelected) {
+        this.gallaryListSelected = gallaryListSelected;
+    }
+
+    /**
+     * @return the gallarySelected
+     */
+    public List<InvInventoryDTO> getGallarySelected() {
+        if (gallarySelected == null) {
+            gallarySelected = new ArrayList<>();
+        }
+        return gallarySelected;
+    }
+
+    /**
+     * @param gallarySelected the gallarySelected to set
+     */
+    public void setGallarySelected(List<InvInventoryDTO> gallarySelected) {
+        this.gallarySelected = gallarySelected;
     }
 
     /**
