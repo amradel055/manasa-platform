@@ -9,9 +9,11 @@ import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.PrintProductionDTO;
 import com.toby.toby.Basic;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.event.ActionEvent;
 import javax.inject.Named;
@@ -43,16 +45,28 @@ public class ProInvoiceStatusReportMB extends Basic {
     private ProFactoryDeliveryService proFactoryDeliveryService;
     @EJB
     private TobyUserInventoryService tobyUserInventoryService;
+    
+     @PostConstruct
+    public void init() {
+        getPrintProductionDTO().getGallaryListSelected().addAll(getGallaryList());
+    }
 
     public void search() {
-        if (printProductionDTO.getInvoiceStatus() == 4) {
-            setList(invPurchaseInvoiceService.getALLInvPurchaseInvoiceDTOByStatus(getPrintProductionDTO(), getUserData().getUserBranch().getId()));
-        } else if (printProductionDTO.getInvoiceStatus() == 10) {
-            setList(proFactoryDeliveryService.getALLProFactoryDeliveryDTOByStatusRemain(getPrintProductionDTO(), getUserData().getUserBranch().getId()));
-        } else {
-            setList(proFactoryDeliveryService.getALLProFactoryDeliveryDTOByStatusRemain(getPrintProductionDTO(), getUserData().getUserBranch().getId()));
+        if (getPrintProductionDTO() != null && getPrintProductionDTO().getGallaryListSelected() != null && !getPrintProductionDTO().getGallaryListSelected().isEmpty()) {
+            for (InvInventoryDTO invInventoryDTO : getPrintProductionDTO().getGallaryListSelected()) {
+
+                getPrintProductionDTO().setGallaryFrom(invInventoryDTO);
+                if (printProductionDTO.getInvoiceStatus() == 4) {
+                    getList().addAll(invPurchaseInvoiceService.getALLInvPurchaseInvoiceDTOByStatus(getPrintProductionDTO(), getUserData().getUserBranch().getId()));
+                } else if (printProductionDTO.getInvoiceStatus() == 10) {
+                    getList().addAll(proFactoryDeliveryService.getALLProFactoryDeliveryDTOByStatusRemain(getPrintProductionDTO(), getUserData().getUserBranch().getId()));
+                } else {
+                    getList().addAll(proFactoryDeliveryService.getALLProFactoryDeliveryDTOByStatusRemain(getPrintProductionDTO(), getUserData().getUserBranch().getId()));
+                }
+
+            }
+            setNumber(getList() == null ? 0 : getList().size());
         }
-        setNumber(getList() == null ? 0 : getList().size());
     }
 
     public void convertDateFrom() {
@@ -152,6 +166,9 @@ public class ProInvoiceStatusReportMB extends Basic {
      * @return the list
      */
     public List<InvInvoiceDTO> getList() {
+        if (list == null) {
+            list = new ArrayList<>();
+        }
         return list;
     }
 

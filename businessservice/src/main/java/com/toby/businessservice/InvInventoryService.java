@@ -27,34 +27,35 @@ public interface InvInventoryService {
     public List<InvInventory> getALLInventoriesByBranchPer(Integer id);
 
     public List<InvInventory> getALLInventoriesByBranch(Integer id);
-    
-    public List<InvInventory> getALLInventoriesByBranchByType(Integer branchId,Integer invType);
-    
-    public List<InvInventoryDTO> getInventoryByInvType(TobyUser tobyUser,int type);
-    
+
+    public List<InvInventory> getALLInventoriesByBranchByType(Integer branchId, Integer invType);
+
+    public List<InvInventoryDTO> getInventoryByInvType(TobyUser tobyUser, int type);
+
     public void deleteNewInventory(InvInventory inventoryDelegator);
 
     public InvInventory updateNewInventory(InvInventory inventoryDelegator, TobyUser user, TobyCompany company, Branch branch);
-    
+
     public InvInventoryDTO updateNewInventoryDTO(InvInventoryDTO invInventoryDTO, TobyUser user);
 
     public InvInventory addNewInventory(InvInventory inventoryDelegator);
 
-    public InvInventoryDTO findInventory(Integer id,TobyUser tobyUser);
-    
-    
+    public InvInventoryDTO findInventory(Integer id, TobyUser tobyUser);
 
     public List<InvInventory> findInventory(Integer branchId, Integer inventoryId, String code);
+
     public Boolean validateCode(TobyUser tobyUser, Integer inventoryId, String code);
+
     public Boolean validateName(TobyUser tobyUser, Integer inventoryId, String name);
 
     public List<InvInventory> findInventory(Integer branchId, String code);
+
     public List<InvInventoryDTO> findInventoryDTOByBranchAndCode(TobyUser tobyUser, String code);
 
     public List<InvInventory> getAllInventories();
-    
+
     public List<InvInventory> getALLInventoriesByType(Integer invType);
-    
+
     public List<InvInventoryDTO> getALLInventorieDTOListByBranch(TobyUser tobyUser);
 
 }

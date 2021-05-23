@@ -288,7 +288,7 @@ public class InvInventoryImpl implements InvInventoryService {
     public List<InvInventoryDTO> getALLInventorieDTOListByBranch(TobyUser tobyUser) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", tobyUser.getBranchId().getId());
-        List<InvInventory> invInventoryList = dao.findListByQuery("SELECT i FROM InvInventory i where i.branchId.id = :branchId  ORDER BY i.code", params);
+        List<InvInventory> invInventoryList = dao.findListByQuery("SELECT i FROM InvInventory i where i.branchId.id = :branchId AND i.invType = 0 ORDER BY i.code", params);
         return mapToDTOList(invInventoryList, tobyUser);
     }
 

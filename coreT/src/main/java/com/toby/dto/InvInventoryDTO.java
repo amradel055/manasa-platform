@@ -11,7 +11,7 @@ import com.toby.define.InventoryPricesGroupEnum;
  *
  * @author amr
  */
-public class InvInventoryDTO extends BaseEntityDTO{
+public class InvInventoryDTO extends BaseEntityDTO {
 
     private String msg;
     private String code;
@@ -96,7 +96,6 @@ public class InvInventoryDTO extends BaseEntityDTO{
         this.accountId = accountId;
     }
 
-
     /**
      * @return the msg
      */
@@ -150,8 +149,6 @@ public class InvInventoryDTO extends BaseEntityDTO{
         return name + " -- " + code;
     }
 
-    
-    
     public CostCenterDTO getCostCenterId() {
         return costCenterId;
     }

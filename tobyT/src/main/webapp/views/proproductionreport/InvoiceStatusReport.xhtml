@@ -34,7 +34,7 @@
 
                             </div>
                         </div>
-                        
+
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
                                 <p:inputText value="#{proInvoiceStatusReportMB.dayHijriFrom}" /> يوم
@@ -51,7 +51,7 @@
                                 <p:outputLabel style="width: 50px"  value="من تاريخ هجري" />
                             </div>
                         </div>
-                        
+
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
                                 <p:calendar style="width: 50%"  id="dateTo"
@@ -86,21 +86,23 @@
                                 <p:outputLabel style="width: 50px"  value="إلى تاريخ هجري" />
                             </div>
                         </div>
-                        
+
                     </div>
                     <div class="ui-g-6 ui-xl-6">
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
-                                <p:selectOneMenu  id="gallary_From" value="#{proInvoiceStatusReportMB.printProductionDTO.gallaryFrom}"
-                                                  converter="#{proInvoiceStatusReportMB.gallaryDTOConverter}">
+                                <p:selectCheckboxMenu id="gallary_From" value="#{proInvoiceStatusReportMB.printProductionDTO.gallaryListSelected}" 
+                                                      converter="#{proInvoiceStatusReportMB.gallaryDTOConverter}"
+                                                      label="المعرض" style="width: 15rem"
+                                                      filter="true" filterMatchMode="startsWith" panelStyle="width: 15rem" scrollHeight="250">
                                     <f:selectItems value="#{proInvoiceStatusReportMB.gallaryList}" 
-                                                   var="gallaryFrom"
-                                                   itemLabel="#{gallaryFrom}"
-                                                   itemValue="#{gallaryFrom}" />
-                                </p:selectOneMenu>
+                                                   var="gallary"
+                                                   itemLabel="#{gallary}"
+                                                   itemValue="#{gallary}"/>
+                                </p:selectCheckboxMenu>
                             </div>
                             <div class="ui-g-6 ui-xl-6">
-                                <p:outputLabel style="width: 50px;margin-right: 1%" value=" معرض"/>
+                                <p:outputLabel style="width: 50px;margin-right: 1%" value="المعرض"/>
                             </div>
                         </div>
                         <div class="ui-g-12 ui-xl-12">

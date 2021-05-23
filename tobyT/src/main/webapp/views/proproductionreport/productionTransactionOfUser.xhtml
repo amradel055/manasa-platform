@@ -161,7 +161,7 @@
                                             converter="#{productionTransactionOfUserMB.tobyUserDTOConverter}"
                                             value="#{productionTransactionOfUserMB.printProductionDTO.fromUser}" 
                                             var="fromUser"
-                                            itemLabel="#{fromUser.userCode}"
+                                            itemLabel="#{fromUser}"
                                             itemValue="#{fromUser}" 
                                             forceSelection="true" 
                                             completeMethod="#{productionTransactionOfUserMB.completusercode}" >
@@ -184,7 +184,7 @@
                                             converter="#{productionTransactionOfUserMB.tobyUserDTOConverter}"
                                             value="#{productionTransactionOfUserMB.printProductionDTO.toUser}" 
                                             var="toUser"
-                                            itemLabel="#{toUser.userCode}"
+                                            itemLabel="#{toUser}"
                                             itemValue="#{toUser}" 
                                             forceSelection="true" 
                                             completeMethod="#{productionTransactionOfUserMB.completusercode}" >
