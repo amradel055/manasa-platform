@@ -18,6 +18,7 @@ public class SalesJournalReportBean {
     private Date date;
     private String invInventoryName;
     private String supplierName;
+    private String supplierCode;
     private String delegatorName;
     private BigDecimal discount;
     private BigDecimal net;
@@ -137,6 +138,20 @@ public class SalesJournalReportBean {
      */
     public void setSumTotalCost(BigDecimal sumTotalCost) {
         this.sumTotalCost = sumTotalCost;
+    }
+
+    /**
+     * @return the supplierCode
+     */
+    public String getSupplierCode() {
+        return supplierCode;
+    }
+
+    /**
+     * @param supplierCode the supplierCode to set
+     */
+    public void setSupplierCode(String supplierCode) {
+        this.supplierCode = supplierCode;
     }
 
     /**

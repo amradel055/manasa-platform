@@ -60,6 +60,8 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
                 getInvInvoiceDTO().setInvoiceStatus(invPurchaseInvoiceService.findInvoiceStatus(getInvInvoiceDTO().getId()));
                 getInvInvoiceDTO().setIsEdit(Boolean.FALSE);
                 getInvInvoiceDTO().setShowCustomerDate(Boolean.FALSE);
+                findAccountStatement();
+                getInvOrganizationSiteDTOList(Boolean.TRUE, 0).add(0, getInvInvoiceDTO().getOrganizationSiteId());
             } else {
                 exit("../base/error.xhtml");
             }

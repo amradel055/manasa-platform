@@ -61,6 +61,10 @@ public class InvInventory extends BaseEntity {
     private GlAdminUnit adminUnitId;
      @Column(name = "inv_type")
      private Integer invType;
+     @Column(name = "dariba_value")
+    private String daribaValue;
+    @Column(name = "segil_value")
+    private String segilValue;
 
     public InvInventory() {
     }
@@ -175,5 +179,33 @@ public class InvInventory extends BaseEntity {
      */
     public void setInvType(Integer invType) {
         this.invType = invType;
+    }
+
+    /**
+     * @return the daribaValue
+     */
+    public String getDaribaValue() {
+        return daribaValue;
+    }
+
+    /**
+     * @param daribaValue the daribaValue to set
+     */
+    public void setDaribaValue(String daribaValue) {
+        this.daribaValue = daribaValue;
+    }
+
+    /**
+     * @return the segilValue
+     */
+    public String getSegilValue() {
+        return segilValue;
+    }
+
+    /**
+     * @param segilValue the segilValue to set
+     */
+    public void setSegilValue(String segilValue) {
+        this.segilValue = segilValue;
     }
 }

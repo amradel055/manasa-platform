@@ -413,7 +413,7 @@ public class PurchaseOfItemsBySuppliersReportMB extends BaseInventoryReportBean 
 
     @Override
     public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {
-        search();
+//        search();
         if (purchaseOfItemsBySuppliersSearchBean.getShowReport() != null && purchaseOfItemsBySuppliersSearchBean.getShowReport()) {
             fillReport(prepareReport(), getUserData().getReportPath() + "ItemSalesTotalReport.jasper", getPurchaseOfItemsBySuppliersViewBeanList(), "pdf");
         } else {

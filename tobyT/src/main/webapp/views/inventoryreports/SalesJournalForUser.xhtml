@@ -342,6 +342,18 @@
 
                         <h:outputText value="#{purchaseInvoiceDetail.serialNum}" style="font-size: 12px; width: 80%"/>
                     </p:column>
+                    
+                    <p:column rendered="#{salesJournalReportMB.salesJournalSearchBean.showReport eq false}" 
+                              style="text-align: center;font-size: 15px; width: 15%;border-radius: 0px;" 
+                              headerText="كود"
+
+                              filterBy="#{purchaseInvoiceDetail.supplierCode}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{purchaseInvoiceDetail.supplierCode}"
+                              filterable="false">
+
+                        <h:outputText value="#{purchaseInvoiceDetail.supplierCode}"  style="text-align: center;"/>
+                    </p:column>
 
                     <p:column rendered="#{salesJournalReportMB.salesJournalSearchBean.showReport eq false}" 
                               style="text-align: center;font-size: 15px; width: 15%;border-radius: 0px;" 

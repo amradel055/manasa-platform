@@ -317,7 +317,7 @@ public class Basic implements Serializable {
             conn.setDoOutput(true);
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Length", Integer.toString(requestUrl.length()));
-            conn.getOutputStream().write(requestUrl.getBytes("UTF-8"));
+            conn.getOutputStream().write(requestUrl.getBytes("UTF-8")); // here
             final BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             final StringBuffer stringBuffer = new StringBuffer();
             String line;

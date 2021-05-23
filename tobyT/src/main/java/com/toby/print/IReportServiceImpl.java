@@ -368,6 +368,7 @@ public class IReportServiceImpl implements IReportService {
             return null;
         }
     }
+
     public HashMap prepareProWorkOrderReport(InvInvoiceDTO invPurchaseInvoiceDTO, UserData userData) {
         try {
             Map<String, String> userDDs = userData.getUserDDs();
@@ -403,7 +404,7 @@ public class IReportServiceImpl implements IReportService {
 
             if (invPurchaseInvoiceDTO.getTaxFlagFinal()) {
                 hashMap.put("taxCodeText", userData.getUserBranch().getTaxCode());
-                    hashMap.put("salesReceiptText", "فاتورة مبيعات ");
+                hashMap.put("salesReceiptText", "فاتورة مبيعات ");
 
                 hashMap.put("receiptNumberText", "رقم الفاتورة");
             } else {
@@ -445,9 +446,7 @@ public class IReportServiceImpl implements IReportService {
             hashMap.put("daribaNumber", "الرقم الضريبي");
             hashMap.put("segilText", "رقم السجل التجاري");
             hashMap.put("deliveryDateText", "تاريخ التسليم");
-            hashMap.put("daribaValue", "310745902200003");
-            hashMap.put("segilValue", "4030208050"); // العام
-            hashMap.put("segilValue", "4030392548"); // الطائف
+
             hashMap.put("deliveryDateValue", invPurchaseInvoiceDTO.getDueDate());
             hashMap.put("taxValue", invPurchaseInvoiceDTO.getTaxvalue());
 //            hashMap.put("totalValue", invPurchaseInvoiceDTO.getTotalNet());
@@ -458,7 +457,11 @@ public class IReportServiceImpl implements IReportService {
             hashMap.put("receiptNumberValue", invPurchaseInvoiceDTO.getSerialTax());
             hashMap.put("workOrderNumberValue", invPurchaseInvoiceDTO.getSerial());
             hashMap.put("workOrderNumberValueText", "امر الشغل  ");
+            if(invPurchaseInvoiceDTO.getGallaryId() != null){
             hashMap.put("invName", invPurchaseInvoiceDTO.getGallaryId().getName());
+            hashMap.put("daribaValue", invPurchaseInvoiceDTO.getGallaryId().getDaribaValue());
+            hashMap.put("segilValue", invPurchaseInvoiceDTO.getGallaryId().getSegilValue());
+            }
             hashMap.put("customerName", invPurchaseInvoiceDTO.getOrganizationSiteId() == null ? "" : invPurchaseInvoiceDTO.getOrganizationSiteId().getName());
             hashMap.put("customerPhone", invPurchaseInvoiceDTO.getOrganizationSiteId() == null ? "" : invPurchaseInvoiceDTO.getOrganizationSiteId().getMobile());
             hashMap.put("addressValue", invPurchaseInvoiceDTO.getOrganizationSiteId() == null ? "" : invPurchaseInvoiceDTO.getOrganizationSiteId().getAddress());
@@ -551,7 +554,7 @@ public class IReportServiceImpl implements IReportService {
 
             hashMap.put("netValue", invPurchaseInvoiceDTO.getTotalNet());
 
-            hashMap.put("netValueArabic", Tafqeet.numberToText(Double.parseDouble(invPurchaseInvoiceDTO.getTotalNetAfterDiscount().toString()),  "ريـال", "هلله"));
+            hashMap.put("netValueArabic", Tafqeet.numberToText(Double.parseDouble(invPurchaseInvoiceDTO.getTotalNetAfterDiscount().toString()), "ريـال", "هلله"));
 
             hashMap.put("secondDateValue", invPurchaseInvoiceDTO.getSupplierInvoiceDate());
 
@@ -630,7 +633,7 @@ public class IReportServiceImpl implements IReportService {
 
             hashMap.put("netValue", invPurchaseInvoiceDTO.getTotalNet());
 
-            hashMap.put("netValueArabic", Tafqeet.numberToText(Double.parseDouble(invPurchaseInvoiceDTO.getTotalNetAfterDiscount().toString()),  "ريـال", "هلله"));
+            hashMap.put("netValueArabic", Tafqeet.numberToText(Double.parseDouble(invPurchaseInvoiceDTO.getTotalNetAfterDiscount().toString()), "ريـال", "هلله"));
 
             hashMap.put("secondDateValue", invPurchaseInvoiceDTO.getSupplierInvoiceDate());
 
@@ -726,7 +729,7 @@ public class IReportServiceImpl implements IReportService {
 
         hashMap.put("invInventoryIdText", "المخزن");
         hashMap.put("invInventoryIdValue", invPurchaseInvoiceDTO.getInvInventoryId() == null ? null : invPurchaseInvoiceDTO.getInvInventoryId().getName());
-        
+
         hashMap.put("organizationSiteIdText", "العميل");
         hashMap.put("organizationSiteIdValue", invPurchaseInvoiceDTO.getOrganizationSiteId() == null ? null : invPurchaseInvoiceDTO.getOrganizationSiteId().getName());
 

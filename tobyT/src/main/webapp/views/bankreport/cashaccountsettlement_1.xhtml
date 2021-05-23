@@ -40,9 +40,6 @@
                                         <p:selectOneMenu style="width:35%;" id="paymentType" 
                                                          value="#{CashAccountSettlementMB.cashAccountSettlementSearchBean.currencyType}">                                                             
                                             <f:selectItem itemLabel="#{userData.userDDs['LOCAL_CURRENCY']}"  itemValue="0"  />
-                                            <f:selectItem itemLabel="#{userData.userDDs['FOREIGN_CURRENCY']}"  itemValue="1"  />
-
-                                            <p:ajax update="cashAccount" listener="#{CashAccountSettlementMB.search()}" />
                                         </p:selectOneMenu>                  
                                     </div>
                                     <div class="ui-g-6 ui-xl-6">
@@ -243,7 +240,6 @@
                                                 <f:selectItem itemLabel="#{userData.userDDs['IMPORT']}"  itemValue="1"  />
                                                 <f:selectItem itemLabel="#{userData.userDDs['EXPORT']}"  itemValue="0"  />
 
-                                                <!--<p:ajax update="cashAccount" listener="#\{CashAccountSettlementMB.search()}" />-->
 
                                             </p:selectOneRadio>  
                                         </p:fieldset>

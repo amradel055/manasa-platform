@@ -129,7 +129,7 @@ public class ReportsServiceImpl implements ReportsService {
                 + "FROM toby.organization_site_statement_view \n"
                 + " ");
         sql.append(" where branch_id = ").append(branchId);
-        //appendGallery2(customerBalances, sql);
+        appendGallery2(customerBalances, sql);
         sql.append(" group by organization_site_id\n");
         sql.append(" having (sum(exitt) - sum(adding) ) > 0 ");
         List<Object[]> res = dao.executeNativeQuery(sql.toString());
@@ -455,7 +455,7 @@ public class ReportsServiceImpl implements ReportsService {
 
     private void appendGallery2(CustomerBalances customerBalances, StringBuilder query) {
         if (customerBalances.getGallerySelected() != null) {
-            query.append(" and gallery =  ").append(customerBalances.getGallerySelected());
+            query.append(" and organization_gallary_id =  ").append(customerBalances.getGallerySelected().getId());
         }
     }
 

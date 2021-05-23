@@ -55,6 +55,8 @@ public class InvInventoryImpl implements InvInventoryService {
             invInventory.setCode(invInventoryDTO.getCode());
             invInventory.setName(invInventoryDTO.getName());
             invInventory.setTypeItem(invInventoryDTO.getTypeItem());
+            invInventory.setDaribaValue(invInventoryDTO.getDaribaValue());
+            invInventory.setSegilValue(invInventoryDTO.getSegilValue());
 
             if (invInventoryDTO.getGlAdminUnitId() != null) {
                 GlAdminUnit glAdminUnit = new GlAdminUnit();
@@ -69,7 +71,7 @@ public class InvInventoryImpl implements InvInventoryService {
                 costCenter.setName(invInventoryDTO.getCostCenterId().getName());
                 invInventory.setCostCenterId(costCenter);
             }
-            if (invInventoryDTO.getAccountId()!= null) {
+            if (invInventoryDTO.getAccountId() != null) {
                 GlAccount account = new GlAccount();
                 account.setId(invInventoryDTO.getAccountId().getId());
                 account.setName(invInventoryDTO.getAccountId().getName());
@@ -119,6 +121,8 @@ public class InvInventoryImpl implements InvInventoryService {
         invInventoryDTO.setIndex(invInventory.getId());
         invInventoryDTO.setInvType(invInventory.getInvType());
         invInventoryDTO.setCompanyId(invInventory.getCompanyId() != null ? invInventory.getCompanyId().getId() : null);
+        invInventoryDTO.setDaribaValue(invInventory.getDaribaValue());
+        invInventoryDTO.setSegilValue(invInventory.getSegilValue());
 
         invInventoryDTO.setTypeItem(invInventory.getTypeItem());
         invInventoryDTO.setName(invInventory.getName());
@@ -301,12 +305,12 @@ public class InvInventoryImpl implements InvInventoryService {
         StringBuilder quarry = new StringBuilder();
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", tobyUser.getBranchId().getId());
-      params.put("code", code);
-          quarry.append("SELECT i FROM InvInventory i where i.branchId.id = :branchId and i.code = :code  ");
-          if(inventoryId!=null){
+        params.put("code", code);
+        quarry.append("SELECT i FROM InvInventory i where i.branchId.id = :branchId and i.code = :code  ");
+        if (inventoryId != null) {
             params.put("inventoryId", inventoryId);
-              quarry.append(" and i.id != :inventoryId");
-          }
+            quarry.append(" and i.id != :inventoryId");
+        }
         List<InvInventory> invInventoryList = dao.findListByQuery(quarry.toString(), params);
         if (invInventoryList == null || invInventoryList.isEmpty()) {
             return true;

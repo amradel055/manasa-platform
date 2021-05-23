@@ -1428,6 +1428,8 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             invInventoryDTO.setId(entity.getInvInventoryId().getId());
             invInventoryDTO.setName(entity.getInvInventoryId().getName());
             invInventoryDTO.setCode(entity.getInvInventoryId().getCode());
+            invInventoryDTO.setDaribaValue(entity.getGalaryId().getDaribaValue());
+            invInventoryDTO.setSegilValue(entity.getGalaryId().getSegilValue());
             invInvoiceDTO.setInvInventoryId(invInventoryDTO);
         }
 
@@ -1436,6 +1438,9 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             invInventoryDTO.setId(entity.getGalaryId().getId());
             invInventoryDTO.setName(entity.getGalaryId().getName());
             invInventoryDTO.setCode(entity.getGalaryId().getCode());
+            invInventoryDTO.setDaribaValue(entity.getGalaryId().getDaribaValue());
+            invInventoryDTO.setSegilValue(entity.getGalaryId().getSegilValue());
+
             invInvoiceDTO.setGallaryId(invInventoryDTO);
         }
 
