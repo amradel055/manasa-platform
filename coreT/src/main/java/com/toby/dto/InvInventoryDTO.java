@@ -11,7 +11,7 @@ import com.toby.define.InventoryPricesGroupEnum;
  *
  * @author amr
  */
-public class InvInventoryDTO extends BaseEntityDTO{
+public class InvInventoryDTO extends BaseEntityDTO {
 
     private String msg;
     private String code;
@@ -21,9 +21,8 @@ public class InvInventoryDTO extends BaseEntityDTO{
     private GlAccountDTO accountId;
     private CostCenterDTO costCenterId;
     private GlAdminUnitDTO glAdminUnitId;
-    
-     private Integer invType;
-    
+    private Integer invType;
+
     /**
      * @return the code
      */
@@ -94,7 +93,6 @@ public class InvInventoryDTO extends BaseEntityDTO{
         this.accountId = accountId;
     }
 
-
     /**
      * @return the msg
      */
@@ -148,8 +146,6 @@ public class InvInventoryDTO extends BaseEntityDTO{
         return name + " -- " + code;
     }
 
-    
-    
     public CostCenterDTO getCostCenterId() {
         return costCenterId;
     }
@@ -188,5 +184,5 @@ public class InvInventoryDTO extends BaseEntityDTO{
     public void setInvType(Integer invType) {
         this.invType = invType;
     }
-    
+
 }

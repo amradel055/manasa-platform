@@ -8,7 +8,9 @@ package com.toby.views;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.ProProductionStagesDTO;
 import com.toby.dto.TobyUserDTO;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -19,6 +21,7 @@ public class ProProductionTransactionFactoryView {
     private Date date;
     private Date dateTo;
     private InvInventoryDTO gallerySelected;
+    private List<InvInventoryDTO> gallerySelectedList;
     private ProProductionStagesDTO status;
     private TobyUserDTO user;
     private Integer invoiceNumber;
@@ -41,6 +44,9 @@ public class ProProductionTransactionFactoryView {
      * @return the gallerySelected
      */
     public InvInventoryDTO getGallerySelected() {
+        if (gallerySelected == null) {
+            gallerySelected = new InvInventoryDTO();
+        }
         return gallerySelected;
     }
 
@@ -64,7 +70,6 @@ public class ProProductionTransactionFactoryView {
     public void setUser(TobyUserDTO user) {
         this.user = user;
     }
-
 
     /**
      * @return the status
@@ -106,6 +111,23 @@ public class ProProductionTransactionFactoryView {
      */
     public void setDateTo(Date dateTo) {
         this.dateTo = dateTo;
+    }
+
+    /**
+     * @return the gallerySelectedList
+     */
+    public List<InvInventoryDTO> getGallerySelectedList() {
+        if (gallerySelectedList == null) {
+            gallerySelectedList = new ArrayList<>();
+        }
+        return gallerySelectedList;
+    }
+
+    /**
+     * @param gallerySelectedList the gallerySelectedList to set
+     */
+    public void setGallerySelectedList(List<InvInventoryDTO> gallerySelectedList) {
+        this.gallerySelectedList = gallerySelectedList;
     }
 
 }

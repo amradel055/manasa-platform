@@ -8,8 +8,10 @@ import com.toby.dto.ProProductionItemsTransactionDTO;
 import com.toby.toby.Basic;
 import com.toby.views.ProProductionTransactionFactoryView;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.event.ActionEvent;
 import javax.inject.Named;
@@ -37,8 +39,18 @@ public class ProProductionTransactionFactoryMB extends Basic {
     @EJB
     private TobyUserInventoryService tobyUserInventoryService;
 
+    @PostConstruct
+    public void init() {
+        getProProductionTransactionFactoryView().getGallerySelectedList().addAll(getGallaryList());
+    }
+
     public void search() {
-        setProProductionItemsTransactionDTOList(proProductionItemsTransactionService.getALLProProductionItemsTransactionDTO(proProductionTransactionFactoryView, getUserData().getUserBranch().getId()));
+        if (getProProductionTransactionFactoryView() != null && getProProductionTransactionFactoryView().getGallerySelectedList() != null && !getProProductionTransactionFactoryView().getGallerySelectedList().isEmpty()) {
+            for (InvInventoryDTO invInventoryDTO : getProProductionTransactionFactoryView().getGallerySelectedList()) {
+                getProProductionTransactionFactoryView().setGallerySelected(invInventoryDTO);
+                getProProductionItemsTransactionDTOList().addAll(proProductionItemsTransactionService.getALLProProductionItemsTransactionDTO(proProductionTransactionFactoryView, getUserData().getUserBranch().getId()));
+            }
+        }
     }
 
     public void convertDateFrom() {
@@ -103,6 +115,9 @@ public class ProProductionTransactionFactoryMB extends Basic {
     }
 
     public List<ProProductionItemsTransactionDTO> getProProductionItemsTransactionDTOList() {
+        if (proProductionItemsTransactionDTOList == null) {
+            proProductionItemsTransactionDTOList = new ArrayList<>();
+        }
         return proProductionItemsTransactionDTOList;
     }
 
