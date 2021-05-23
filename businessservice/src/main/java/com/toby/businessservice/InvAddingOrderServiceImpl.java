@@ -642,7 +642,7 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
             error.append("\n يجب أختيار عميل / مورد");
         }
         if (invPurchaseInvoiceDTO.getInvPurchaseInvoiceId() != null) {
-            checkIfInvInvoiceIdExist(invPurchaseInvoiceDTO.getInvPurchaseInvoiceId(), tobyUser.getBranchId().getId(),error);
+            checkIfInvInvoiceIdExist(invPurchaseInvoiceDTO.getInvPurchaseInvoiceId(), tobyUser.getBranchId().getId(), error);
         }
 
         checkIfLoaded(invPurchaseInvoiceDTO, error);
@@ -664,7 +664,7 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
         }
     }
 
-    public void checkIfInvInvoiceIdExist(Integer invInvoiceSerial,Integer branchId , StringBuilder error) {
+    public void checkIfInvInvoiceIdExist(Integer invInvoiceSerial, Integer branchId, StringBuilder error) {
         if (invInvoiceSerial != null) {
             Map<String, Object> params = new HashMap<>();
             params.put("invInvoiceSerial", invInvoiceSerial);
@@ -679,7 +679,7 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
     @Override
     public InvInvoiceDTO save(InvInvoiceDTO invInvoiceDTO, TobyUser tobyUser) {
         try {
-            invInvoiceDTO = validateSave(invInvoiceDTO,tobyUser);
+            invInvoiceDTO = validateSave(invInvoiceDTO, tobyUser);
 
             InvAddingorder invAddingOrder;
             if (invInvoiceDTO != null && (invInvoiceDTO.getMsg() == null || invInvoiceDTO.getMsg().isEmpty())) {
@@ -739,17 +739,19 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
             inventoryDelegator.setId(invPurchaseInvoiceDTO.getInvDelegatorId().getId());
             entity.setInvDelegatorId(inventoryDelegator);
         }
-
-        if (invPurchaseInvoiceDTO.getInvInventoryId() != null) {
-            InvInventory invInventory = new InvInventory();
-            invInventory.setId(invPurchaseInvoiceDTO.getInvInventoryId().getId());
-            entity.setInvInventoryId(invInventory);
+        if (ScreenNameClassEnum.INVPERMISSIONORDERFORM.equals(invPurchaseInvoiceDTO.getScreenName())) {
+            if (invPurchaseInvoiceDTO.getInvInventoryId() != null) {
+                InvInventory invInventory = new InvInventory();
+                //invInventory.setId(invPurchaseInvoiceDTO.getInvInventoryId().getId());
+                invInventory.setId(45);
+                entity.setInvInventoryId(invInventory);
+            }
         }
 
         if (invPurchaseInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.INVADDINGORDERFORM)) {
             entity.setType(0);
-        } else if (invPurchaseInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.INVPERMISSIONORDERFORM) || 
-                invPurchaseInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.PROWORKORDER)) {
+        } else if (invPurchaseInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.INVPERMISSIONORDERFORM)
+                || invPurchaseInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.PROWORKORDER)) {
             entity.setType(1);
         }
 
@@ -821,7 +823,7 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
         if (entity.getPurchaseOrderId() != null) {
             invPurchaseInvoiceDTO.setLoadedSerial(entity.getPurchaseOrderId().getSerial());
         }
-        
+
         if (entity.getInvPurchaseInvoice() != null) {
             invPurchaseInvoiceDTO.setLoadedSerial(entity.getInvPurchaseInvoice().getSerial());
         }

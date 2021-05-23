@@ -120,21 +120,27 @@
                                 </div>
                                 <div class="ui-g-12 ui-xl-12">
                                     <div class="ui-g-6 ui-xl-6">
-                                        <p:autoComplete style="width:37%"  id="inventoryDTO" widgetVar="inventoryDTO"
-                                                        dropdown="true"
-                                                        converter="#{invAddingOrderFormDTOMB.invInventoryDTOConverter}"
-                                                        value="#{invAddingOrderFormDTOMB.invInvoiceDTO.invInventoryId}"
-                                                        var="inventoryDTO" 
-                                                        disabled="#{invAddingOrderFormDTOMB.invInvoiceDTO.loadedSerial ne null}"
-                                                        itemLabel="#{inventoryDTO}" 
-                                                        itemValue="#{inventoryDTO}" 
+                                        <p:outputLabel rendered="#{invAddingOrderFormDTOMB.invInvoiceDTO.id ne null}" style="width: 65px" 
+                                                       value="#{invAddingOrderFormDTOMB.invInvoiceDTO.gallaryId}"/>
+                                        <p:autoComplete style="width:95%!important" 
+                                                        converter="#{invAddingOrderFormDTOMB.gallaryDTOConverter}"
+                                                        value="#{invAddingOrderFormDTOMB.invInvoiceDTO.gallaryId}"
+                                                        rendered="#{invAddingOrderFormDTOMB.invInvoiceDTO.id eq null}" 
+                                                        var="gallary"
+                                                        itemLabel="#{gallary}" 
+                                                        itemValue="#{gallary}" 
                                                         forceSelection="true" 
-                                                        completeMethod="#{invAddingOrderFormDTOMB.completeInventory}" 
+                                                        completeMethod="#{invAddingOrderFormDTOMB.completeGallary}"
+                                                        widgetVar="gallary"
                                                         >
+
                                         </p:autoComplete>
                                     </div>
                                     <div class="ui-g-6 ui-xl-6">
-                                        <p:outputLabel style="width: 100px;" value="#{userData.userDDs['DEPOSITORY']}"/>
+                                        <p:outputLabel style="width: 65px" value="المعرض"/>
+
+
+
 
                                     </div>
                                 </div>
@@ -251,23 +257,23 @@
                               filterable="false">
                         <p:outputLabel value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}" 
                                        rendered="#{invPurchaseInvoiceDetailsTable.isEdit}" />
-                              
-                        <p:autoComplete id="invItemNameIn"  
-                                            style="width:100%"
-                                            rendered="#{not invPurchaseInvoiceDetailsTable.isEdit}"
-                                            converter="#{autoComplete.itemsBarcodesDetailsViewConverter}"
-                                            value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}"
-                                            maxResults="30"
 
-                                            var="item"
-                                            itemLabel="#{item}" 
-                                            itemValue="#{item}" 
-                                            forceSelection="true" 
-                                            completeMethod="#{autoComplete.completeItemsBarcodesDetailsView}" 
-                                            >
+                        <p:autoComplete id="invItemNameIn"  
+                                        style="width:100%"
+                                        rendered="#{not invPurchaseInvoiceDetailsTable.isEdit}"
+                                        converter="#{autoComplete.itemsBarcodesDetailsViewConverter}"
+                                        value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}"
+                                        maxResults="30"
+
+                                        var="item"
+                                        itemLabel="#{item}" 
+                                        itemValue="#{item}" 
+                                        forceSelection="true" 
+                                        completeMethod="#{autoComplete.completeItemsBarcodesDetailsView}" 
+                                        >
                             <p:ajax update=" unitvalue length paintColor QuantityT WeightT  totalQuantity totalWeight  "
-                                        event="itemSelect" listener="#{invAddingOrderFormDTOMB.validateItems(invPurchaseInvoiceDetailsTable)}" />
-                            </p:autoComplete>  
+                                    event="itemSelect" listener="#{invAddingOrderFormDTOMB.validateItems(invPurchaseInvoiceDetailsTable)}" />
+                        </p:autoComplete>  
                     </p:column>
 
                     <p:column  style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="Unit"
@@ -389,65 +395,65 @@
 
                 </p:dataTable>
 
-              
-                        <div style="text-align: center">
-                        <p:commandButton  id="saveB" 
-                                          class="saveButtons"
-                                          title="#{userData.userDDs['SAVE']}"
-                                          value="#{userData.userDDs['SAVE']}" 
 
-                                          action="#{invAddingOrderFormDTOMB.save()}"
-                                          update="@form"/>
+                <div style="text-align: center">
+                    <p:commandButton  id="saveB" 
+                                      class="saveButtons"
+                                      title="#{userData.userDDs['SAVE']}"
+                                      value="#{userData.userDDs['SAVE']}" 
 
-                        <p:commandButton 
-                            id="newN"
-                            ajax="false"
-                            value="#{userData.userDDs['NEW']}" 
-                            class="newButtons"
-                            onclick="form.target = ''" 
-                            actionListener="#{invAddingOrderFormDTOMB.reset()}"/>
+                                      action="#{invAddingOrderFormDTOMB.save()}"
+                                      update="@form"/>
 
-                        <p:commandButton  
-                            class="reloadButtons"
-                            id="loadL"
-                            rendered="#{invAddingOrderFormDTOMB.invInvoiceDTO.id == null}"
-                            title="#{userData.userDDs['UPLOAD']}"
-                            value="#{userData.userDDs['UPLOAD']}" 
-                            action="#{invAddingOrderFormDTOMB.loadDailogue()}"
-                            update="loaddlg"/>
-                        <p:commandButton  class="printButtons"
-                                          ajax="false"
-                                          onclick="form.target = '_blank'"  
-                                          rendered="#{invAddingOrderFormDTOMB.invInvoiceDTO.id != null}"
-                                          value="#{userData.userDDs['PRINT']}" 
-                                          title="#{userData.userDDs['PRINT']}" 
-                                          actionListener="#{invAddingOrderFormDTOMB.print}"/>
+                    <p:commandButton 
+                        id="newN"
+                        ajax="false"
+                        value="#{userData.userDDs['NEW']}" 
+                        class="newButtons"
+                        onclick="form.target = ''" 
+                        actionListener="#{invAddingOrderFormDTOMB.reset()}"/>
 
-
-                        <p:commandButton  class="deleteButtons" 
-                                          id="cancel" 
-                                          title="#{userData.userDDs['CANCEL']}" 
-                                          value="#{userData.userDDs['CANCEL']}" 
-                                          immediate="true"
-                                          action="#{invAddingOrderFormDTOMB.exit()}" 
-                                          update="@form"/>
-
-                        <h:commandLink   class="sdcreenimg">  
-                            <p:graphicImage name="/img/excel.jpg" width="24" />  
-                            <p:dataExporter type="xls"
-                                            target="invPurchaseInvoiceDetailsTable" 
-                                            fileName="فاتورة المشتريات"
-                                            postProcessor="#{invAddingOrderFormDTOMB.postProcessXLS}" />  
-                        </h:commandLink>
-
-                        <p:blockUI block="form" trigger="saveB" animate="true" >
-
-                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
-
-                        </p:blockUI> 
+                    <p:commandButton  
+                        class="reloadButtons"
+                        id="loadL"
+                        rendered="#{invAddingOrderFormDTOMB.invInvoiceDTO.id == null}"
+                        title="#{userData.userDDs['UPLOAD']}"
+                        value="#{userData.userDDs['UPLOAD']}" 
+                        action="#{invAddingOrderFormDTOMB.loadDailogue()}"
+                        update="loaddlg"/>
+                    <p:commandButton  class="printButtons"
+                                      ajax="false"
+                                      onclick="form.target = '_blank'"  
+                                      rendered="#{invAddingOrderFormDTOMB.invInvoiceDTO.id != null}"
+                                      value="#{userData.userDDs['PRINT']}" 
+                                      title="#{userData.userDDs['PRINT']}" 
+                                      actionListener="#{invAddingOrderFormDTOMB.print}"/>
 
 
-                        </div>
+                    <p:commandButton  class="deleteButtons" 
+                                      id="cancel" 
+                                      title="#{userData.userDDs['CANCEL']}" 
+                                      value="#{userData.userDDs['CANCEL']}" 
+                                      immediate="true"
+                                      action="#{invAddingOrderFormDTOMB.exit()}" 
+                                      update="@form"/>
+
+                    <h:commandLink   class="sdcreenimg">  
+                        <p:graphicImage name="/img/excel.jpg" width="24" />  
+                        <p:dataExporter type="xls"
+                                        target="invPurchaseInvoiceDetailsTable" 
+                                        fileName="فاتورة المشتريات"
+                                        postProcessor="#{invAddingOrderFormDTOMB.postProcessXLS}" />  
+                    </h:commandLink>
+
+                    <p:blockUI block="form" trigger="saveB" animate="true" >
+
+                        <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                    </p:blockUI> 
+
+
+                </div>
             </p:fieldset>
 
 
