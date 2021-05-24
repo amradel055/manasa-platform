@@ -399,11 +399,12 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
     public List<ProProductionItemsTransactionDTO> getALLProProductionItemsTransactionLastDTO(ProProductionTransactionFactoryView transactionFactoryView, Integer branchId) {
         List<ProProductionItemsTransactionDTO> list = new ArrayList<>();
         StringBuilder builder = new StringBuilder();
-        builder.append("SELECT ipi.serial , tu.name , tu.user_code , pps.name , pit.date , ipi.date , pit.pro_production_stages_id , pit.pro_factory_delivery_detail_id,ipi.id\n").
+        builder.append("SELECT ipi.serial , tu.name , tu.user_code , pps.name , pit.date , ipi.date , pit.pro_production_stages_id , pit.pro_factory_delivery_detail_id,ipi.id ,ii2.name\n").
                 append("from toby.pro_production_items_transaction pit \n").
                 append("left join pro_factory_delivery_detail pfdd on pit.pro_factory_delivery_detail_id = pfdd.id \n").
                 append("left join pro_factory_delivery pfd on pfd.id = pfdd.pro_factory_delivery_id\n").
                 append("left join inv_purchase_invoice ipi on ipi.id = pfd.inv_purchase_invoice_id \n").
+                append("left join inv_inventory ii2 on ii2.id = ipi.galary_Id \n").
                 append("left join toby_user tu on tu.id = pit.created_by\n").
                 append("left join pro_production_stages pps on pps.id = pit.pro_production_stages_id\n").
                 append("WHERE pfd.branch_id = \n  ").
@@ -435,6 +436,7 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
             itemsTransactionDTO.setOrderDate((Date) object[4]);
             itemsTransactionDTO.setInvoiceDate((Date) object[5]);
             itemsTransactionDTO.setId((Integer) object[8]);
+            itemsTransactionDTO.setGalleryName((String) object[9]);
             itemsTransactionDTO.setClothNumber(movementReportService.summitionTob(itemsTransactionDTO.getId()));
 
             list.add(itemsTransactionDTO);

@@ -10,7 +10,7 @@
     <ui:define name="content">
         <h:body>
             <h:form dir="RTL" style="margin-right: 20px" id="form" >
-                <p:fieldset  legend=" فواتير المصنع حسب اخر حركة لأوامر الشغل" id="stages"  style=" position: relative">
+                <p:fieldset  legend=" فواتير المصنع حسب اخر مرحلة" id="stages"  style=" position: relative">
                     <p:messages id="messages" showDetail="true" closable="true"/> 
                     <div class="ui-g-6 ui-xl-6">
                         <div class="ui-g-12 ui-xl-12">
@@ -133,6 +133,11 @@
                                   headerText="رقم الفاتورة"
                                   >
                             <p:outputLabel value="#{data.invoiceSerial}" />
+                        </p:column>
+                        <p:column style="width: 8vh;text-align: -webkit-auto;font-size: 1.4vh" 
+                                  headerText=" اسم المعرض"
+                                  >
+                            <p:outputLabel value="#{data.galleryName}" />
                         </p:column>
 
                         <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.4vh" 

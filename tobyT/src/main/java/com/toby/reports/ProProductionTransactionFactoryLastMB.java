@@ -101,6 +101,7 @@ public class ProProductionTransactionFactoryLastMB extends Basic {
         hashMap.put("gallerySelectedText", "  المعرض");
         hashMap.put("gallerySelectedValue", proProductionTransactionFactoryView.getGallerySelected() == null ? null : proProductionTransactionFactoryView.getGallerySelected().getName());
         hashMap.put("invoiceSerialText", "رقم الفاتورة");
+        hashMap.put("galleryNameText", "اسم المعرض");
         hashMap.put("createdByNameText", "اسم العامل ");
         hashMap.put("createdByCodeText", " رقم العامل ");
         hashMap.put("clothNumberText", "  عدد الثياب");
