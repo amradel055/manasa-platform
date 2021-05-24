@@ -6,7 +6,12 @@
 package com.toby.organizationSite;
 
 import com.toby.businessservice.OrganizationSiteService;
+import com.toby.businessservice.TobyUserInventoryService;
+import com.toby.converter.InvInventoryConverter;
+import com.toby.converter.InvInventoryDTOConverter;
+import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.InvOrganizationSiteDTO;
+import com.toby.entity.InvInventory;
 import com.toby.toby.BaseListBean;
 import com.toby.toby.UserData;
 import java.io.Serializable;
@@ -40,8 +45,17 @@ public class OrganizationSiteListMB extends BaseListBean implements Serializable
     private String url;
     private LazyDataModel<InvOrganizationSiteDTO> dataModel;
 
+    private List<InvInventory> inventoryList;
+    private List<InvInventoryDTO> gallaryList;
+    private InvInventory invInventorySelection;
+    private InvInventoryDTO invGallarySelection;
+    private InvInventoryDTOConverter gallaryDTOConverter;
+    private InvInventoryConverter invInventoryConverter;
+
     @EJB
     private OrganizationSiteService organizationSiteService;
+    @EJB
+    private TobyUserInventoryService tobyUserInventoryService;
 
     @Override
     @PostConstruct
@@ -65,18 +79,22 @@ public class OrganizationSiteListMB extends BaseListBean implements Serializable
 
                 @Override
                 public List<InvOrganizationSiteDTO> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
+                    Integer invGallarySelectionId = null, invInventorySelectionId = null;
+                    invInventorySelectionId = getInvInventorySelection() != null ? getInvInventorySelection().getId() : null;
+                    invGallarySelectionId = getInvGallarySelection() != null ? getInvGallarySelection().getId() : null;
                     if (url.contains("customer")) {
-                        setRowCount(organizationSiteService.getTotalRegistors(userData.getUserBranch().getId(), filters, 0).intValue());
-                        setInvOrganizationSitesDTOList(organizationSiteService.getALLCustomerDTOByBranchIdAndType(first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), userData.getUserBranch().getId(), filters, 0));
+
+                        setRowCount(organizationSiteService.getTotalRegistors(userData.getUserBranch().getId(), filters, 0, invGallarySelectionId).intValue());
+                        setInvOrganizationSitesDTOList(organizationSiteService.getALLCustomerDTOByBranchIdAndType(first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), userData.getUserBranch().getId(), filters, 0, invGallarySelectionId));
                     } else if (url.contains("supplier")) {
-                        setRowCount(organizationSiteService.getTotalRegistors(userData.getUserBranch().getId(), filters, 1).intValue());
-                        setInvOrganizationSitesDTOList(organizationSiteService.getALLCustomerDTOByBranchIdAndType(first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), userData.getUserBranch().getId(), filters, 1));
+                        setRowCount(organizationSiteService.getTotalRegistors(userData.getUserBranch().getId(), filters, 1, invGallarySelectionId).intValue());
+                        setInvOrganizationSitesDTOList(organizationSiteService.getALLCustomerDTOByBranchIdAndType(first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), userData.getUserBranch().getId(), filters, 1, invGallarySelectionId));
                     } else if (url.contains("contractor")) {
-                        setRowCount(organizationSiteService.getTotalRegistors(userData.getUserBranch().getId(), filters, 4).intValue());
-                        setInvOrganizationSitesDTOList(organizationSiteService.getALLCustomerDTOByBranchIdAndType(first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), userData.getUserBranch().getId(), filters, 4));
+                        setRowCount(organizationSiteService.getTotalRegistors(userData.getUserBranch().getId(), filters, 4, invGallarySelectionId).intValue());
+                        setInvOrganizationSitesDTOList(organizationSiteService.getALLCustomerDTOByBranchIdAndType(first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), userData.getUserBranch().getId(), filters, 4, invGallarySelectionId));
                     } else if (url.contains("crmLeads")) {
-                        setRowCount(organizationSiteService.getTotalRegistors(userData.getUserBranch().getId(), filters, 5).intValue());
-                        setInvOrganizationSitesDTOList(organizationSiteService.getALLCustomerDTOByBranchIdAndType(first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), userData.getUserBranch().getId(), filters, 5));
+                        setRowCount(organizationSiteService.getTotalRegistors(userData.getUserBranch().getId(), filters, 5, invGallarySelectionId).intValue());
+                        setInvOrganizationSitesDTOList(organizationSiteService.getALLCustomerDTOByBranchIdAndType(first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), userData.getUserBranch().getId(), filters, 5, invGallarySelectionId));
                     }
 
                     return invOrganizationSitesDTOList;
@@ -92,6 +110,20 @@ public class OrganizationSiteListMB extends BaseListBean implements Serializable
 //                invOrganizationSites = organizationSiteService.getorganizationSiteByBranchIdForGlBankModule(getUserData().getUserBranch().getId(), false, 4);  // its type = 1 
 //
 //            }
+            setInventoryList(tobyUserInventoryService.getAllInventroisByUserAndBranchPer(getUserData().getUser().getId(), getUserlogin().getBranchId().getId()));
+            setGallaryList(tobyUserInventoryService.getAllGallaryByUserAndBranch(getUserData().getUser()));
+            if (getInventoryList() != null && !inventoryList.isEmpty()) {
+                setInvInventoryConverter(new InvInventoryConverter(getInventoryList()));
+            }
+            if (getGallaryList() != null && !getGallaryList().isEmpty()) {
+                setGallaryDTOConverter(new InvInventoryDTOConverter(getGallaryList()));
+            }
+            if (getInvInventorySelection().getId() == null) {
+                setInvInventorySelection(getInventoryList() == null || getInventoryList().isEmpty() ? null : getInventoryList().get(0));
+            }
+            if (getInvGallarySelection().getId() == null) {
+                setInvGallarySelection(getGallaryList() == null || getGallaryList().isEmpty() ? null : getGallaryList().get(0));
+            }
         } catch (Exception e) {
             saveError(e, "OrganizationSiteListMB", "load");
         }
@@ -103,7 +135,7 @@ public class OrganizationSiteListMB extends BaseListBean implements Serializable
             Map<String, String> userDDs = userData.getUserDDs();
             if (invOrganizationSiteDTO != null) {
                 try {
-                    organizationSiteService.deleteOrganizationSiteDTO(invOrganizationSiteDTO,getUserData().getUserlogin());
+                    organizationSiteService.deleteOrganizationSiteDTO(invOrganizationSiteDTO, getUserData().getUserlogin());
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, userDDs.get("INFO"), userDDs.get("DELETED")));
                     load();
                 } catch (Exception e) {
@@ -119,6 +151,18 @@ public class OrganizationSiteListMB extends BaseListBean implements Serializable
     @Override
     public void filter() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void loadGallaryList() {
+        try {
+            if (getInvInventorySelection() != null && getInvInventorySelection().getId() != null && getInvInventorySelection().getId() > 0) {
+                load();
+            } else {
+            }
+        } catch (Exception e) {
+            saveError(e, "InvPurchaseInvoiceListMB", "loadInventoryList");
+        }
+
     }
 
     @Override
@@ -243,5 +287,101 @@ public class OrganizationSiteListMB extends BaseListBean implements Serializable
      */
     public void setInvOrganizationSitesDTOList(List<InvOrganizationSiteDTO> invOrganizationSitesDTOList) {
         this.invOrganizationSitesDTOList = invOrganizationSitesDTOList;
+    }
+
+    /**
+     * @return the inventoryList
+     */
+    public List<InvInventory> getInventoryList() {
+        if (inventoryList == null) {
+            inventoryList = new ArrayList<>();
+        }
+        return inventoryList;
+    }
+
+    /**
+     * @param inventoryList the inventoryList to set
+     */
+    public void setInventoryList(List<InvInventory> inventoryList) {
+        this.inventoryList = inventoryList;
+    }
+
+    /**
+     * @return the gallaryList
+     */
+    public List<InvInventoryDTO> getGallaryList() {
+        if (gallaryList == null) {
+            gallaryList = new ArrayList<>();
+        }
+        return gallaryList;
+    }
+
+    /**
+     * @param gallaryList the gallaryList to set
+     */
+    public void setGallaryList(List<InvInventoryDTO> gallaryList) {
+        this.gallaryList = gallaryList;
+    }
+
+    /**
+     * @return the invInventorySelection
+     */
+    public InvInventory getInvInventorySelection() {
+        if (invInventorySelection == null) {
+            invInventorySelection = new InvInventory();
+        }
+        return invInventorySelection;
+    }
+
+    /**
+     * @param invInventorySelection the invInventorySelection to set
+     */
+    public void setInvInventorySelection(InvInventory invInventorySelection) {
+        this.invInventorySelection = invInventorySelection;
+    }
+
+    /**
+     * @return the invGallarySelection
+     */
+    public InvInventoryDTO getInvGallarySelection() {
+        if (invGallarySelection == null) {
+            invGallarySelection = new InvInventoryDTO();
+        }
+        return invGallarySelection;
+    }
+
+    /**
+     * @param invGallarySelection the invGallarySelection to set
+     */
+    public void setInvGallarySelection(InvInventoryDTO invGallarySelection) {
+        this.invGallarySelection = invGallarySelection;
+    }
+
+    /**
+     * @return the gallaryDTOConverter
+     */
+    public InvInventoryDTOConverter getGallaryDTOConverter() {
+        return gallaryDTOConverter;
+    }
+
+    /**
+     * @param gallaryDTOConverter the gallaryDTOConverter to set
+     */
+    public void setGallaryDTOConverter(InvInventoryDTOConverter gallaryDTOConverter) {
+        this.gallaryDTOConverter = gallaryDTOConverter;
+    }
+
+    /**
+     * @return the invInventoryConverter
+     */
+    public InvInventoryConverter getInvInventoryConverter() {
+        return invInventoryConverter;
+    }
+
+    /**
+     * @param invInventoryConverter the invInventoryConverter to set
+     */
+    public void setInvInventoryConverter(InvInventoryConverter invInventoryConverter) {
+        this.invInventoryConverter = invInventoryConverter;
     }
 }

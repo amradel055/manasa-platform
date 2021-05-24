@@ -19,26 +19,46 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "inv_organization_site")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "InvOrganizationSite.findAll", query = "SELECT i FROM InvOrganizationSite i"),
-    @NamedQuery(name = "InvOrganizationSite.findByCode", query = "SELECT i FROM InvOrganizationSite i WHERE i.code = :code"),
-    @NamedQuery(name = "InvOrganizationSite.findByName", query = "SELECT i FROM InvOrganizationSite i WHERE i.name = :name"),
-    @NamedQuery(name = "InvOrganizationSite.findByType", query = "SELECT i FROM InvOrganizationSite i WHERE i.type = :type"),
-    @NamedQuery(name = "InvOrganizationSite.findByPhone", query = "SELECT i FROM InvOrganizationSite i WHERE i.phone = :phone"),
-    @NamedQuery(name = "InvOrganizationSite.findByFax", query = "SELECT i FROM InvOrganizationSite i WHERE i.fax = :fax"),
-    @NamedQuery(name = "InvOrganizationSite.findByEmail", query = "SELECT i FROM InvOrganizationSite i WHERE i.email = :email"),
-    @NamedQuery(name = "InvOrganizationSite.findByMobile", query = "SELECT i FROM InvOrganizationSite i WHERE i.mobile = :mobile"),
-    @NamedQuery(name = "InvOrganizationSite.findByAddress", query = "SELECT i FROM InvOrganizationSite i WHERE i.address = :address"),
-    @NamedQuery(name = "InvOrganizationSite.findByPostBox", query = "SELECT i FROM InvOrganizationSite i WHERE i.postBox = :postBox"),
-    @NamedQuery(name = "InvOrganizationSite.findByDiscount", query = "SELECT i FROM InvOrganizationSite i WHERE i.discount = :discount"),
-    @NamedQuery(name = "InvOrganizationSite.findByOpenBalanceDebit", query = "SELECT i FROM InvOrganizationSite i WHERE i.openBalanceDebit = :openBalanceDebit"),
-    @NamedQuery(name = "InvOrganizationSite.findByOpenBalanceCredit", query = "SELECT i FROM InvOrganizationSite i WHERE i.openBalanceCredit = :openBalanceCredit"),
-    @NamedQuery(name = "InvOrganizationSite.findByBalanceLimit", query = "SELECT i FROM InvOrganizationSite i WHERE i.balanceLimit = :balanceLimit"),
-    @NamedQuery(name = "InvOrganizationSite.findByRemark", query = "SELECT i FROM InvOrganizationSite i WHERE i.remark = :remark"),
-    @NamedQuery(name = "InvOrganizationSite.findByActive", query = "SELECT i FROM InvOrganizationSite i WHERE i.active = :active"),
-    @NamedQuery(name = "InvOrganizationSite.findByZip", query = "SELECT i FROM InvOrganizationSite i WHERE i.zip = :zip"),
-    @NamedQuery(name = "InvOrganizationSite.findByContactPerson", query = "SELECT i FROM InvOrganizationSite i WHERE i.contactPerson = :contactPerson"),
-    @NamedQuery(name = "InvOrganizationSite.findByContractCode", query = "SELECT i FROM InvOrganizationSite i WHERE(:fromCode IS NULL OR i.code >= :fromCode) AND (:toCode IS NULL OR i.code <= :toCode) and i.type=4 AND i.branchId.id= :branchID"),
-    @NamedQuery(name = "InvOrganizationSite.findByPhone2", query = "SELECT i FROM InvOrganizationSite i WHERE i.phone2 = :phone2"),
+    @NamedQuery(name = "InvOrganizationSite.findAll", query = "SELECT i FROM InvOrganizationSite i")
+    ,
+    @NamedQuery(name = "InvOrganizationSite.findByCode", query = "SELECT i FROM InvOrganizationSite i WHERE i.code = :code")
+    ,
+    @NamedQuery(name = "InvOrganizationSite.findByName", query = "SELECT i FROM InvOrganizationSite i WHERE i.name = :name")
+    ,
+    @NamedQuery(name = "InvOrganizationSite.findByType", query = "SELECT i FROM InvOrganizationSite i WHERE i.type = :type")
+    ,
+    @NamedQuery(name = "InvOrganizationSite.findByPhone", query = "SELECT i FROM InvOrganizationSite i WHERE i.phone = :phone")
+    ,
+    @NamedQuery(name = "InvOrganizationSite.findByFax", query = "SELECT i FROM InvOrganizationSite i WHERE i.fax = :fax")
+    ,
+    @NamedQuery(name = "InvOrganizationSite.findByEmail", query = "SELECT i FROM InvOrganizationSite i WHERE i.email = :email")
+    ,
+    @NamedQuery(name = "InvOrganizationSite.findByMobile", query = "SELECT i FROM InvOrganizationSite i WHERE i.mobile = :mobile")
+    ,
+    @NamedQuery(name = "InvOrganizationSite.findByAddress", query = "SELECT i FROM InvOrganizationSite i WHERE i.address = :address")
+    ,
+    @NamedQuery(name = "InvOrganizationSite.findByPostBox", query = "SELECT i FROM InvOrganizationSite i WHERE i.postBox = :postBox")
+    ,
+    @NamedQuery(name = "InvOrganizationSite.findByDiscount", query = "SELECT i FROM InvOrganizationSite i WHERE i.discount = :discount")
+    ,
+    @NamedQuery(name = "InvOrganizationSite.findByOpenBalanceDebit", query = "SELECT i FROM InvOrganizationSite i WHERE i.openBalanceDebit = :openBalanceDebit")
+    ,
+    @NamedQuery(name = "InvOrganizationSite.findByOpenBalanceCredit", query = "SELECT i FROM InvOrganizationSite i WHERE i.openBalanceCredit = :openBalanceCredit")
+    ,
+    @NamedQuery(name = "InvOrganizationSite.findByBalanceLimit", query = "SELECT i FROM InvOrganizationSite i WHERE i.balanceLimit = :balanceLimit")
+    ,
+    @NamedQuery(name = "InvOrganizationSite.findByRemark", query = "SELECT i FROM InvOrganizationSite i WHERE i.remark = :remark")
+    ,
+    @NamedQuery(name = "InvOrganizationSite.findByActive", query = "SELECT i FROM InvOrganizationSite i WHERE i.active = :active")
+    ,
+    @NamedQuery(name = "InvOrganizationSite.findByZip", query = "SELECT i FROM InvOrganizationSite i WHERE i.zip = :zip")
+    ,
+    @NamedQuery(name = "InvOrganizationSite.findByContactPerson", query = "SELECT i FROM InvOrganizationSite i WHERE i.contactPerson = :contactPerson")
+    ,
+    @NamedQuery(name = "InvOrganizationSite.findByContractCode", query = "SELECT i FROM InvOrganizationSite i WHERE(:fromCode IS NULL OR i.code >= :fromCode) AND (:toCode IS NULL OR i.code <= :toCode) and i.type=4 AND i.branchId.id= :branchID")
+    ,
+    @NamedQuery(name = "InvOrganizationSite.findByPhone2", query = "SELECT i FROM InvOrganizationSite i WHERE i.phone2 = :phone2")
+    ,
     @NamedQuery(name = "InvOrganizationSite.findByOpenBalanceDate", query = "SELECT i FROM InvOrganizationSite i WHERE i.openBalanceDate = :openBalanceDate")})
 public class InvOrganizationSite extends BaseEntity {
 
@@ -115,6 +135,9 @@ public class InvOrganizationSite extends BaseEntity {
     @JoinColumn(name = "offer_company_id", referencedColumnName = "id")
     @ManyToOne
     private OfferCompany offerCompanyId;
+    @JoinColumn(name = "gallary_id", referencedColumnName = "id")
+    @ManyToOne
+    private InvInventory galaryId;
 
     public InvOrganizationSite() {
     }
@@ -404,6 +427,20 @@ public class InvOrganizationSite extends BaseEntity {
      */
     public void setOfferCompanyId(OfferCompany offerCompanyId) {
         this.offerCompanyId = offerCompanyId;
+    }
+
+    /**
+     * @return the galaryId
+     */
+    public InvInventory getGalaryId() {
+        return galaryId;
+    }
+
+    /**
+     * @param galaryId the galaryId to set
+     */
+    public void setGalaryId(InvInventory galaryId) {
+        this.galaryId = galaryId;
     }
 
 }

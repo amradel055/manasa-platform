@@ -10,7 +10,7 @@
     <ui:define name="content">
         <f:event listener="#{userData.authorize}" type="preRenderView" />
         <h:form  class='formmargin' id="form" dir="#{userData.dir}">
-            
+
             <p:fieldset legend="#{userData.userDDs['CUSTOMER_DATA']}" >
 
                 <div >
@@ -21,7 +21,7 @@
                 </div>
                 <div>
                     <p:dataTable 
-                         id="organizationSiteTable"
+                        id="organizationSiteTable"
                         draggableColumns="true"
                         var="organizationSiteTable" 
                         widgetVar="bTable" 
@@ -42,6 +42,18 @@
                                               action="#{organizationSiteListMB.goToAdd()}" style="float:right"
                                               rendered="#{userData.userScreens['customer'].add or userData.isAdmin}"/>
 
+                            <p:selectOneMenu id="inventory" value="#{organizationSiteListMB.invGallarySelection}"
+                                             converter="#{organizationSiteListMB.gallaryDTOConverter}" 
+                                             style="float:right;width: 20%!important;color:#fff;height: 30px!important;margin-right: 0.5%;">
+
+                                <p:ajax listener="#{organizationSiteListMB.loadGallaryList()}" update="form" />
+                                <f:selectItem itemLabel="#{userData.userDDs['ALL']}" itemValue="" />
+
+                                <f:selectItems value="#{organizationSiteListMB.gallaryList}" 
+                                               var="inventory" itemLabel="#{inventory.name}"
+                                               itemValue="#{inventory}"/> 
+                            </p:selectOneMenu>
+
                             <p:blockUI block="form" trigger="addA" animate="true" >
 
                                 <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
@@ -50,10 +62,10 @@
 
                             <p:outputPanel  >
                                 <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
-                                 <p:inputText id="globalFilter" a:autofocus="true" onkeyup="PF('bTable').filter()" style="width:150px" />
+                                <p:inputText id="globalFilter" a:autofocus="true" onkeyup="PF('bTable').filter()" style="width:150px" />
                             </p:outputPanel>
                         </f:facet>
-                        
+
 
                         <p:column style="width:13vh;font-size:1.8vh;text-align: right;border-radius: 0px "
                                   filterStyle="display:none"
@@ -82,7 +94,7 @@
                                   >
                             <p:outputLabel value="#{organizationSiteTable.phone}" />
                         </p:column>
-                        
+
                         <p:column style="width:15vh;font-size: 1.8vh;text-align: right;border-radius: 0px "
                                   filterStyle="display:none" 
                                   filterBy="#{organizationSiteTable.mobile}"
@@ -102,7 +114,7 @@
                                   >
                             <p:outputLabel value="#{organizationSiteTable.nationId}" />
                         </p:column>
-                        
+
                         <p:column style="width:15vh;font-size: 1.8vh;text-align: right;border-radius: 0px "
                                   filterStyle="display:none"
                                   filterBy="#{organizationSiteTable.sponsorName1}"  
@@ -112,7 +124,7 @@
                                   >
                             <p:outputLabel value="#{organizationSiteTable.sponsorName1}" />
                         </p:column>
-                        
+
 
                         <p:column style="width:10vh;font-size: 1.8vh;text-align: center;border-radius: 0px " headerText="#{userData.userDDs['TRANSACTION']}" >
                             <p:commandButton class="seditButtons" update="@form" icon="fa fa-fw fa-edit" style="background-color: #6a6967;border-radius: 3px;" 

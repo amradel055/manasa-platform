@@ -52,8 +52,8 @@ public interface OrganizationSiteService {
     public List<InvOrganizationSite> getSupplierByBranchIdForSupplierAccountReportMB(Integer branchId, Integer type, SupplierAccountSearchBean supplierAccountSearchBean);
 
     public List<InvOrganizationSite> getCustomerByBranchId(Integer branchId);
-    
-        public List<InvOrganizationSite> getorganizationSiteByBranchIdForGlBankModule(Integer branchId, boolean active, Integer type, Integer type2);
+
+    public List<InvOrganizationSite> getorganizationSiteByBranchIdForGlBankModule(Integer branchId, boolean active, Integer type, Integer type2);
 
     public List<InvOrganizationSiteDTO> getorganizationSiteByBranchIdForGlBankModule(Integer branchId, boolean active, Integer type, TobyUser tobyUser);
 
@@ -93,9 +93,9 @@ public interface OrganizationSiteService {
 
     public List<InvOrganizationSiteDTO> getCustomerDTOFromAndTo(Integer branchId, invOrganizationSiteSearchBean organizationSiteSearchBean);
 
-    public Long getTotalRegistors(Integer branchId, Map<String, Object> filters, Integer type);
+    public Long getTotalRegistors(Integer branchId, Map<String, Object> filters, Integer type,Integer galaryId);
 
-    public List<InvOrganizationSiteDTO> getALLCustomerDTOByBranchIdAndType(int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters, Integer type);
+    public List<InvOrganizationSiteDTO> getALLCustomerDTOByBranchIdAndType(int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters, Integer type, Integer galaryId);
 
     public void deleteOrganizationSiteDTO(InvOrganizationSiteDTO invOrganizationSiteDTO, TobyUser isagUser);
 
@@ -122,17 +122,17 @@ public interface OrganizationSiteService {
     public List<InvOrganizationSiteDTO> getOrganizationDTOByBranchIdDTO(TobyUser tobyUser, Integer type);
 
     public List<InvOrganizationSiteDTO> getorganizationSiteByBranchIdDTOSmall(Integer branchId, boolean active, Integer type);
-    
+
     public InvOrganizationSiteDTO addNewCustomer(InvOrganizationSiteDTO invOrganizationSiteDTO, List<InvOrganizationSiteDTO> invOrganizationSiteDTOList, TobyUser tobyUser);
 
-    public List<InvOrganizationSiteDTO> getorganizationSiteForOpenningBalanceDTO(Integer branchId, boolean active, Integer type) ;
+    public List<InvOrganizationSiteDTO> getorganizationSiteForOpenningBalanceDTO(Integer branchId, boolean active, Integer type);
 
     public InvOrganizationSite getInvOrganizationSiteBySerial(Integer branchId, String code);
-    
-    public Map<String,String> findMobileOrganizationSite(Integer branchId);
-        
+
+    public Map<String, String> findMobileOrganizationSite(Integer branchId);
+
     public String saveOpenningBalance(List<InvOrganizationSiteDTO> invOrganizationSiteDTOList);
-    
+
     public InvOrganizationSiteDTO mapToDTOSmall(InvOrganizationSite invOrganizationSite);
-    
+
 }
