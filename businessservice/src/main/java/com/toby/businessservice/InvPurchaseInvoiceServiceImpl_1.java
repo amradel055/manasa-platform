@@ -1326,6 +1326,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             invPurchaseInvoiceDTO = mapToDTO(invPurchaseInvoice, invPurchaseInvoiceDTO, true);
             modifyReturnData(invPurchaseInvoiceDTO, invPurchaseInvoice);
             invPurchaseInvoiceDTO.setOrganizationSiteName((invPurchaseInvoice.getOrganizationSiteId() != null) ? invPurchaseInvoice.getOrganizationSiteId().getName() : null);
+            invPurchaseInvoiceDTO.setGallaryName(invPurchaseInvoice.getGalaryId()!= null ? invPurchaseInvoice.getGalaryId().getName() : null);
             invPurchaseInvoiceDTO.setNumberOfToob(invPurchaseInvoiceDetailsService.getNumberOftoob(invPurchaseInvoice.getId()));
         } else {
             invPurchaseInvoiceDTO.setMsg("حدث خطأ - تم حذفه ");

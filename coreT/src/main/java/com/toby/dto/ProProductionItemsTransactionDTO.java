@@ -34,6 +34,7 @@ public class ProProductionItemsTransactionDTO extends BaseEntityDTO {
 
     private Integer status;
     private String stageName;
+    private String galleryName;
 
     private Integer isDeleted;
 
@@ -252,5 +253,19 @@ public class ProProductionItemsTransactionDTO extends BaseEntityDTO {
      */
     public void setSerial(Integer serial) {
         this.serial = serial;
+    }
+
+    /**
+     * @return the galleryName
+     */
+    public String getGalleryName() {
+        return galleryName;
+    }
+
+    /**
+     * @param galleryName the galleryName to set
+     */
+    public void setGalleryName(String galleryName) {
+        this.galleryName = galleryName;
     }
 }

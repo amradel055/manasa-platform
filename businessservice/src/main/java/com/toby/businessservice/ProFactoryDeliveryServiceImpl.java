@@ -220,6 +220,7 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
             invInvoiceDTO = mapToDTO(proFactoryDelivery, invInvoiceDTO, true);
             modifyReturnData(invInvoiceDTO, proFactoryDelivery);
             invInvoiceDTO.setOrganizationSiteName((proFactoryDelivery.getInvPurchaseInvoiceId() != null && proFactoryDelivery.getInvPurchaseInvoiceId().getOrganizationSiteId() != null) ? proFactoryDelivery.getInvPurchaseInvoiceId().getOrganizationSiteId().getName() : null);
+            invInvoiceDTO.setGallaryName((proFactoryDelivery.getInvPurchaseInvoiceId() != null && proFactoryDelivery.getInvPurchaseInvoiceId().getOrganizationSiteId() != null) ? proFactoryDelivery.getInvPurchaseInvoiceId().getGalaryId().getName() : null);
             invInvoiceDTO.setNumberOfToob(invPurchaseInvoiceDetailsService.getNumberOftoob(proFactoryDelivery.getInvPurchaseInvoiceId().getId()));
         } else {
             invInvoiceDTO.setMsg("حدث خطأ - تم حذفه ");
