@@ -587,7 +587,7 @@
                                   filterMatchMode="contains" 
                                   sortBy="#{invPurchaseInvoiceDetailsTable.quantityOfOneUnit}"
                                   filterable="false">
-                            <p:inputText id="QuantityTOU"   disabled="true"
+                            <p:inputText id="QuantityTOU"  
                                          value="#{invPurchaseInvoiceDetailsTable.quantityOfOneUnit}" 
                                          style="width:95%">
                                 <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.validateQuantityOfUnitColum(invPurchaseInvoiceDetailsTable)}" 
@@ -664,15 +664,13 @@
                                   filterMatchMode="contains" 
                                   sortBy="#{invPurchaseInvoiceDetailsTable.cost}"
                                   filterable="false">
-                            <p:inputText id="costTtr"   rendered="false"
+                            <p:inputText id="costTt" 
                                          value="#{invPurchaseInvoiceDetailsTable.cost}"
                                          disabled="#{invPurchaseInvoiceDetailsTable.showPrice}"
                                          style="width:95%">
                                 <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.validatePriceColumn(invPurchaseInvoiceDetailsTable)}" 
                                         update="netId totalQuantity   totalNet form:totalActualWeight form:totalNetAfterDiscount form:totalWithTaxValue form:remain form:taxvalue QuantityT NUMBER QuantityOu QuantityTAV"/>
                             </p:inputText>      
-                            <p:outputLabel id="costTt"   value="#{invPurchaseInvoiceDetailsTable.cost}" style="width:95%">
-                            </p:outputLabel> 
                         </p:column>
 
                         <p:column style="width: 14vh;text-align: -webkit-auto;border-radius: 0px" id="DISCOUNT" headerText="#{userData.userDDs['DISCOUNT']}">

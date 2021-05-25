@@ -84,15 +84,30 @@ public class ProProductionTransactionServiceIMPL implements ProProductionTransac
     }
 
     private void appendProProductionInvoice(PrintProductionDTO productionDTO, Map<String, Object> params, StringBuilder query) {
+
         if (productionDTO.getFromInvoice() != null) {
             params.put("fromInvoice", productionDTO.getFromInvoice().getSerial());
             query.append("and p.invPurchaseInvoiceId.serial >= :fromInvoice ");
         }
+        if (productionDTO.getFromInvInvoice() != null) {
+            params.put("fromInvoice", productionDTO.getFromInvInvoice());
+            query.append("and p.invPurchaseInvoiceId.serial >= :fromInvoice ");
+        }
 
-        if (productionDTO.getToInvoice() != null) {
-            params.put("toInvoice", productionDTO.getToInvoice().getSerial());
+        if (productionDTO.getToInvInvoice() != null) {
+            params.put("toInvoice", productionDTO.getToInvInvoice());
             query.append("and p.invPurchaseInvoiceId.serial <= :toInvoice ");
         }
+
+//        if (productionDTO.getFromInvoice() != null) {
+//            params.put("fromInvoice", productionDTO.getFromInvoice().getSerial());
+//            query.append("and p.invPurchaseInvoiceId.serial >= :fromInvoice ");
+//        }
+//
+//        if (productionDTO.getToInvoice() != null) {
+//            params.put("toInvoice", productionDTO.getToInvoice().getSerial());
+//            query.append("and p.invPurchaseInvoiceId.serial <= :toInvoice ");
+//        }
     }
 
     private void appendProProductionDate(PrintProductionDTO productionDTO, Map<String, Object> params, StringBuilder query) {
@@ -392,7 +407,7 @@ public class ProProductionTransactionServiceIMPL implements ProProductionTransac
                 + "SELECT ipi.serial , ipi.date as date , ppt.cloth_number , -1 as q , ipi.branch_id as branch_id  ,ppt.pro_factory_delivery_id as pro_factory_delivery_id  \n"
                 + "FROM toby.pro_production_transaction ppt \n"
                 + "left join inv_purchase_invoice ipi on ipi.id = ppt.inv_purchase_invoice_id \n"
-                + "where cloth_number is not null)  as s  where branch_id = "+tobyUser.getBranchId().getId()+"  group by  serial , pro_factory_delivery_id having sum(s.q) > 0";
+                + "where cloth_number is not null)  as s  where branch_id = " + tobyUser.getBranchId().getId() + "  group by  serial , pro_factory_delivery_id having sum(s.q) > 0";
 
         List<Object[]> res = dao.executeNativeQuery(sql);
         for (Object[] object : res) {
@@ -596,7 +611,7 @@ public class ProProductionTransactionServiceIMPL implements ProProductionTransac
         String sql = "select  distinct(ipi.id) ,  ipi.serial , pfd.id , invi.code , invi.name  from \n"
                 + "                pro_factory_delivery_detail pfdd left join pro_factory_delivery pfd on pfd.id = pfdd.pro_factory_delivery_id\n"
                 + "                left join inv_purchase_invoice ipi on ipi.id = pfd.inv_purchase_invoice_id\n"
-//                + "                left join pro_item_production_stages pips on pips.inv_item_id = pfdd.item_id\n"
+                //                + "                left join pro_item_production_stages pips on pips.inv_item_id = pfdd.item_id\n"
                 + "                left join inv_item ii on ii.id = pfdd.item_id  "
                 + "                left join pro_item_production_stages pips on pips.pro_group_id = ii.pro_group_id left join inv_inventory invi on invi.id = ipi.galary_Id \n"
                 + "                where pips.pro_production_stages_id = " + productionStages.getId() + "  and ipi.branch_id = " + tobyUser.getBranchId().getId() + " AND pfd.type = 0\n"

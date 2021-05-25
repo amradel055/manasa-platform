@@ -11,7 +11,6 @@ public class PrintProductionDTO {
     private ProProductionStagesDTO toStatus;
     private InvInvoiceDTO fromInvoice;
     private Integer fromInvInvoice;
-    private InvInvoiceDTO toInvoice;
     private Integer toInvInvoice;
     private Date toDate;
     private Date fromDate;
@@ -28,14 +27,6 @@ public class PrintProductionDTO {
 
     public void setFromInvoice(InvInvoiceDTO fromInvoice) {
         this.fromInvoice = fromInvoice;
-    }
-
-    public InvInvoiceDTO getToInvoice() {
-        return toInvoice;
-    }
-
-    public void setToInvoice(InvInvoiceDTO toInvoice) {
-        this.toInvoice = toInvoice;
     }
 
     public Date getToDate() {

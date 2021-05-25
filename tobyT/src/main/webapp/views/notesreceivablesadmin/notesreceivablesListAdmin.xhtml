@@ -154,7 +154,7 @@
                                              icon="fa fa-fw fa-edit"
                                              title="#{userData.userDDs['EDIT']}" 
                                              action="#{notesReceivablesListMB.goToEdit()}"
-                                             rendered="#{userData.userScreens['notesreceivables'].edit or userData.userScreens['notesreceivables'].view or userData.isAdmin}">
+                                             rendered="#{userData.userScreens['notesreceivablesadmin'].edit or userData.userScreens['notesreceivablesadmin'].view or userData.isAdmin}">
 
                                 <f:setPropertyActionListener value="#{glBankTransactionTable.id}" 
                                                              target="#{notesReceivablesListMB.glBankTransactionIdSeclected}" />
@@ -163,7 +163,7 @@
                                              icon="fa fa-remove" 
                                              title="#{userData.userDDs['DELETE']}" 
                                              action="#{notesReceivablesListMB.delete}"
-                                             rendered="#{userData.userScreens['notesreceivables'].delete or userData.isAdmin}"
+                                             rendered="#{userData.userScreens['notesreceivablesadmin'].delete or userData.isAdmin}"
                                              disabled="#{(glBankTransactionTable.postFlag == 1)}"
 
                                              >
@@ -175,7 +175,7 @@
                                                icon="fa fa-fw fa-print"
                                                style="background-color:#0A487B;border-radius: 3px;margin-bottom:3px"
                                                actionListener="#{notesReceivablesListMB.exportPDF}" 
-                                               rendered="#{userData.userScreens['notesreceivables'].view or userData.isAdmin}">
+                                               rendered="#{userData.userScreens['notesreceivablesadmin'].view or userData.isAdmin}">
                                 <f:attribute name="varValue" value="#{glBankTransactionTable}" />
                             </p:commandButton>
                         </p:column>

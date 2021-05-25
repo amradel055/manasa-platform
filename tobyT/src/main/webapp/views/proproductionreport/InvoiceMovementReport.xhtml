@@ -89,46 +89,18 @@
                     <div class="ui-g-6 ui-xl-6">
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
-                                <p:autoComplete style="width:85%" id="Cost_Center_from" 
-                                                dropdown="true"
-                                                converter="#{autoComplete.invoiceDTOConverter}"
-                                                value="#{invoiceMovementReportMB.printProductionDTO.fromInvoice}" 
-                                                var="fromInvoice"
-                                                itemLabel="#{fromInvoice.serial}"
-                                                itemValue="#{fromInvoice}" 
-                                                forceSelection="true" 
-                                                completeMethod="#{autoComplete.completeInvPurchaseForFactoryDTO}" >
-                                </p:autoComplete>
-
+                                <h:inputText value="#{invoiceMovementReportMB.printProductionDTO.fromInvInvoice}" />
                             </div>
                             <div class="ui-g-6 ui-xl-6">
-
                                 <p:outputLabel style="width: 50px;margin-right: 1%" value="من فاتورة"/>
-
-
-
                             </div>
                         </div>
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
-                                <p:autoComplete style="width:85%" id="Cost_Center_to" 
-                                                dropdown="true"
-                                                converter="#{autoComplete.invoiceDTOConverter}"
-                                                value="#{invoiceMovementReportMB.printProductionDTO.toInvoice}" 
-                                                var="toInvoice"
-                                                itemLabel="#{toInvoice.serial}"
-                                                itemValue="#{toInvoice}" 
-                                                forceSelection="true" 
-                                                completeMethod="#{autoComplete.completeInvPurchaseForFactoryDTO}" >
-                                </p:autoComplete>
-
+                                <h:inputText value="#{invoiceMovementReportMB.printProductionDTO.toInvInvoice}" />
                             </div>
                             <div class="ui-g-6 ui-xl-6">
-
                                 <p:outputLabel style="width: 50px;margin-right: 1%" value="الي فاتورة"/>
-
-
-
                             </div>
                         </div>
                         <div class="ui-g-12 ui-xl-12">
@@ -269,7 +241,7 @@
                         <p:commandButton class="printButton"  icon="fa fa-fw fa-print"
                                          onclick="form.target = '_blank'" ajax="false"
                                          value="#{userData.userDDs['PRINT']}"
-                                         actionListener="#{invoiceMovementReportMB.exportPDF(actionEvent)}"/>
+                                         actionListener="#{invoiceMovementReportMB.exportPDF}"/>
                     </div>
 
 

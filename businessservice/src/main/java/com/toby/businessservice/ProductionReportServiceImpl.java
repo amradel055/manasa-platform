@@ -43,15 +43,31 @@ public class ProductionReportServiceImpl implements ProductionReportService{
     }
     
      private void appendProProductionInvoice(PrintProductionDTO productionDTO, Map<String, Object> params, StringBuilder query) {
-        if (productionDTO.getFromInvoice()!= null) {
-            params.put("fromInvoice", productionDTO.getFromInvoice().getSerial());
-            query.append(" and p.invoiceSerial >= :fromInvoice ");
-        }
+         
+         if (productionDTO.getFromInvoice() != null) {
+             params.put("fromInvoice", productionDTO.getFromInvoice().getSerial());
+             query.append(" and p.invoiceSerial >= :fromInvoice ");
+         }
+         if (productionDTO.getFromInvInvoice() != null) {
+             params.put("fromInvoice", productionDTO.getFromInvInvoice());
+             query.append(" and p.invoiceSerial >= :fromInvoice ");
+         }
+
+         if (productionDTO.getToInvInvoice() != null) {
+             params.put("toInvoice", productionDTO.getToInvInvoice());
+             query.append("and p.invoiceSerial <= :toInvoice ");
+         }
         
-        if (productionDTO.getToInvoice()!= null) {
-            params.put("toInvoice", productionDTO.getToInvoice().getSerial());
-            query.append("and p.invoiceSerial <= :toInvoice ");
-        }
+        
+//        if (productionDTO.getFromInvoice()!= null) {
+//            params.put("fromInvoice", productionDTO.getFromInvoice().getSerial());
+//            query.append(" and p.invoiceSerial >= :fromInvoice ");
+//        }
+//        
+//        if (productionDTO.getToInvoice()!= null) {
+//            params.put("toInvoice", productionDTO.getToInvoice().getSerial());
+//            query.append("and p.invoiceSerial <= :toInvoice ");
+//        }
     }
      
      private void appendProProductionDate(PrintProductionDTO productionDTO, Map<String, Object> params, StringBuilder query) {

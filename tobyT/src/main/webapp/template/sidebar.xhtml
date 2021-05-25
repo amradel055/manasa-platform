@@ -371,7 +371,7 @@
                             </p:submenu>
                             <p:submenu id="sr_sm6" label="#{userData.userDDs['SAFES_BANKS_MANG']}" icon="&#xE8D2;"
                                        rendered="#{userData.userScreens['glBank'].view 
-                                                   or userData.userScreens['notesreceivablespre'].view 
+                                                   or userData.userScreens['notesreceivablesadmin'].view 
                                                    or userData.userScreens['notesreceivables'].view 
                                                    or userData.userScreens['settlementdeed'].view 
                                                    or userData.userScreens['glBankTransaction'].view 
@@ -387,12 +387,15 @@
                                                 />
                                 </p:submenu>
                                 <p:submenu id="sr_sm62" label="#{userData.userDDs['Safes_and_Bank_Transaction']}" icon="&#xE8D2;"
-                                           rendered="#{userData.userScreens['notesreceivablespre'].view 
+                                           rendered="#{userData.userScreens['notesreceivablesadmin'].view 
                                                        or userData.userScreens['notesreceivables'].view 
                                                        or userData.userScreens['settlementdeed'].view
                                                        or userData.userScreens['glBankTransaction'].view
                                                        or userData.isAdmin}"
                                            >
+                                    <p:menuitem id="sr_lnk624" value="#{userData.userDDs['RECEIPTS']}" icon="&#xE8D2;" url="/faces/views/notesreceivablesadmin/notesreceivablesListAdmin.xhtml" 
+                                                rendered="#{userData.userScreens['notesreceivablesadmin'].view or userData.isAdmin}"
+                                                />
                                     <p:menuitem id="sr_lnk621" value="#{userData.userDDs['RECEIPTS']}" icon="&#xE8D2;" url="/faces/views/notesreceivables/notesreceivablesList.xhtml" 
                                                 rendered="#{userData.userScreens['notesreceivables'].view or userData.isAdmin}"
                                                 />

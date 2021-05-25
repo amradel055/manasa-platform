@@ -108,6 +108,15 @@
                               >
                         <p:outputLabel value="#{invInvoicePurchaseTable.invInventoryId.name}" />
                     </p:column>
+                    
+                    <p:column style="width: 8vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
+                              filterBy="#{invInvoicePurchaseTable.customerCode}"
+                              filterMatchMode="contains" 
+                              headerText="كود"
+                              sortBy="#{invInvoicePurchaseTable.customerCode}" 
+                              >
+                        <p:outputLabel value="#{invInvoicePurchaseTable.customerCode}" />
+                    </p:column>
 
                     <p:column style="width: 8vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
                               filterBy="#{invInvoicePurchaseTable.organizationSiteName}"

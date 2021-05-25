@@ -60,7 +60,7 @@ public class InvoiceDetailReportMB extends BaseListBean {
 //     return AutoComplete.completeInvpurchaseInvoice(query, invPurchaseInvoiceDTOList, invPurchaseInvoiceDTOConverter);
 //     }
     public void search() {
-        if ((printProductionDTO.getFromInvoice() != null && printProductionDTO.getToInvoice() != null)
+        if ((printProductionDTO.getFromInvInvoice() != null && printProductionDTO.getToInvInvoice() != null)
                 || (printProductionDTO.getFromDate() != null && printProductionDTO.getToDate() != null)) {
             invoiceDetailsReports = invoiceDetailReportService.searchReport(printProductionDTO, getUserData().getUser());
 
@@ -107,8 +107,8 @@ public class InvoiceDetailReportMB extends BaseListBean {
         Map<String, String> userDDs = getUserData().getUserDDs();
         HashMap hashMap = new HashMap();
 
-        hashMap.put("fromInvoice", printProductionDTO.getFromInvoice().getId());
-        hashMap.put("toInvoice", printProductionDTO.getToInvoice().getId());
+        hashMap.put("fromInvoice", printProductionDTO.getFromInvInvoice());
+        hashMap.put("toInvoice", printProductionDTO.getToInvInvoice());
         hashMap.put("toDate", printProductionDTO.getToDate());
         hashMap.put("fromDate", printProductionDTO.getFromDate());
         hashMap.put("fromInvoiceText", "من فاتورة");

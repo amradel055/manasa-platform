@@ -32,6 +32,8 @@ public class SupplierAccountViewBean {
     private String glBankName;
     private String remark;
     private Boolean main;
+    
+    private Integer instContractSerial;
 
     /**
      * @return the adding
@@ -227,6 +229,20 @@ public class SupplierAccountViewBean {
      */
     public void setMain(Boolean main) {
         this.main = main;
+    }
+
+    /**
+     * @return the instContractSerial
+     */
+    public Integer getInstContractSerial() {
+        return instContractSerial;
+    }
+
+    /**
+     * @param instContractSerial the instContractSerial to set
+     */
+    public void setInstContractSerial(Integer instContractSerial) {
+        this.instContractSerial = instContractSerial;
     }
 
 }

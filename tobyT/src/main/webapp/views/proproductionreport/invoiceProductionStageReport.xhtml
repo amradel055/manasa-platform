@@ -93,28 +93,14 @@
                     <div class="ui-g-6 ui-xl-6">
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
-                                <p:autoComplete style="width:85%" id="Cost_Center_from" 
-                                                dropdown="true"
-                                                converter="#{autoComplete.invoiceDTOConverter}"
-                                                value="#{invoiceProductionStagesReportMB.printProductionDTO.fromInvoice}" 
-                                                var="fromInvoice"
-                                                itemLabel="#{fromInvoice.serial}"
-                                                itemValue="#{fromInvoice}" 
-                                                forceSelection="true" 
-                                                completeMethod="#{autoComplete.completeInvPurchaseForFactoryDTO}" >
-                                    <p:ajax update="@form"
-                                            process="@form"
-                                            event="itemSelect"
-                                            listener="#{invoiceProductionStagesReportMB.findInvoiceDate()}" />
-                                </p:autoComplete>
+
+                                <h:inputText value="#{invoiceProductionStagesReportMB.printProductionDTO.fromInvInvoice}" >
+                                    <p:ajax update="@form"  process="@form"     event="blur"  listener="#{invoiceProductionStagesReportMB.findInvoiceDate()}" />
+                                </h:inputText>
 
                             </div>
                             <div class="ui-g-6 ui-xl-6">
-
                                 <p:outputLabel style="width: 50px;margin-right: 1%" value="رقم الفاتورة"/>
-
-
-
                             </div>
                         </div>
                         <div class="ui-g-12 ui-xl-12">

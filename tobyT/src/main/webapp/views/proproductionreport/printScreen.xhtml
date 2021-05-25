@@ -92,17 +92,7 @@
                     <div class="ui-g-6 ui-xl-6">
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
-                                <p:autoComplete style="width:85%" id="Cost_Center_from" 
-                                                dropdown="true"
-                                                converter="#{printProductionTransaction.invPurchaseInvoiceDTOConverter}"
-                                                value="#{printProductionTransaction.printProductionDTO.fromInvoice}" 
-                                                var="fromInvoice"
-                                                itemLabel="#{fromInvoice.serial}"
-                                                itemValue="#{fromInvoice}" 
-                                                forceSelection="true" 
-                                                completeMethod="#{printProductionTransaction.completeCostCenter}" >
-                                </p:autoComplete>
-
+                                <h:inputText value="#{printProductionTransaction.printProductionDTO.fromInvInvoice}" />
                             </div>
                             <div class="ui-g-6 ui-xl-6">
 
@@ -114,18 +104,7 @@
                         </div>
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
-
-                                <p:autoComplete style="width:85%" id="Cost_Center_to" 
-                                                dropdown="true"
-                                                converter="#{printProductionTransaction.invPurchaseInvoiceDTOConverter}"
-                                                value="#{printProductionTransaction.printProductionDTO.toInvoice}" 
-                                                var="toInvoice"
-                                                itemLabel="#{toInvoice.serial}"
-                                                itemValue="#{toInvoice}" 
-                                                forceSelection="true" 
-                                                completeMethod="#{printProductionTransaction.completeCostCenter}" >
-                                </p:autoComplete>
-
+                                <h:inputText value="#{printProductionTransaction.printProductionDTO.toInvInvoice}" />
                             </div>
                             <div class="ui-g-6 ui-xl-6">
                                 <p:outputLabel style="width: 50px;margin-right: 1%" value="الي فاتورة"/>

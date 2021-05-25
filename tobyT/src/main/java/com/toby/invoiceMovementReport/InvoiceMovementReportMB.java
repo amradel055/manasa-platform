@@ -76,8 +76,8 @@ public class InvoiceMovementReportMB extends BaseListBean {
         proProductionTransactionDTOList = new ArrayList<>();
         if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("AddFromInvInvoice")) {
             InvInvoiceDTO invInvoiceDTO = (InvInvoiceDTO) context.getSessionMap().get("invInvoiceDTOSelected");
-            getPrintProductionDTO().setFromInvoice(invInvoiceDTO);
-            getPrintProductionDTO().setToInvoice(invInvoiceDTO);
+            getPrintProductionDTO().setFromInvInvoice(invInvoiceDTO.getSerial());
+            getPrintProductionDTO().setToInvInvoice(invInvoiceDTO.getSerial());
             search();
         }
     }
@@ -137,9 +137,9 @@ public class InvoiceMovementReportMB extends BaseListBean {
         }
 
         hashMap.put("fromInvoiceText", "من فاتورة");
-        hashMap.put("fromInvoiceValue", printProductionDTO.getFromInvoice() == null ? null : printProductionDTO.getFromInvoice().getId());
+        hashMap.put("fromInvoiceValue", printProductionDTO.getFromInvInvoice() );
         hashMap.put("toInvoiceText", "إلى فاتورة");
-        hashMap.put("toInvoiceValue", printProductionDTO.getToInvoice() == null ? null : printProductionDTO.getToInvoice().getId());
+        hashMap.put("toInvoiceValue", printProductionDTO.getToInvInvoice());
         hashMap.put("gallaryFromText", "من معرض");
         hashMap.put("gallaryFromValue", printProductionDTO.getGallaryFrom() == null ? null : printProductionDTO.getGallaryFrom().getName());
         hashMap.put("gallaryToText", "إلى معرض");

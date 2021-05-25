@@ -95,47 +95,18 @@
                     <div class="ui-g-6 ui-xl-6">
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
-
-                                <p:autoComplete style="width:85%" 
-                                                dropdown="true"
-                                                converter="#{productionReportMB.invPurchaseInvoiceDTOConverter}"
-                                                value="#{productionReportMB.printProductionDTO.fromInvoice}"
-                                                var="fromInvoice"
-                                                itemLabel="#{fromInvoice.serial}"
-                                                itemValue="#{fromInvoice}" 
-                                                forceSelection="true" 
-                                                completeMethod="#{productionReportMB.completeInvpurchaseInvoice}" >
-                                </p:autoComplete>
+                                <h:inputText value="#{productionReportMB.printProductionDTO.fromInvInvoice}" />
                             </div>
                             <div class="ui-g-6 ui-xl-6">
-
                                 <p:outputLabel style="width: 50px;margin-right: 1%" value="من فاتورة"/>
-
-
-
                             </div>
                         </div>
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
-
-
-                                <p:autoComplete style="width:85%" 
-                                                dropdown="true"
-                                                converter="#{productionReportMB.invPurchaseInvoiceDTOConverter}"
-                                                value="#{productionReportMB.printProductionDTO.toInvoice}"
-                                                var="toInvoice"
-                                                itemLabel="#{toInvoice.serial}"
-                                                itemValue="#{toInvoice}" 
-                                                forceSelection="true" 
-                                                completeMethod="#{productionReportMB.completeInvpurchaseInvoice}" >
-                                </p:autoComplete>
+                                <h:inputText value="#{productionReportMB.printProductionDTO.toInvInvoice}" />
                             </div>
                             <div class="ui-g-6 ui-xl-6">
-
-
-
                                 <p:outputLabel style="width: 50px;margin-right: 1%" value="الي فاتورة"/>
-
                             </div>
                         </div>
                         <div class="ui-g-12 ui-xl-12">
@@ -143,7 +114,6 @@
                                 <p:calendar style="width: 50%"  id="dateFrom"
                                             value="#{productionReportMB.printProductionDTO.fromDate}"
                                             pattern="dd/MM/yyyy"  showButtonPanel="true" >
-
                                 </p:calendar>
 
                             </div>

@@ -1,6 +1,7 @@
 package com.toby.invoiceProductionReport;
 
 import com.toby.businessservice.InvPurchaseInvoiceService;
+import com.toby.businessservice.InvPurchaseInvoiceService_1;
 import com.toby.businessservice.InvoiceMovementReportService;
 import com.toby.businessservice.InvoiceProductionStagesReportService;
 import com.toby.businessservice.ProProductionStagesService;
@@ -39,29 +40,29 @@ import org.apache.poi.hssf.util.HSSFColor;
 @Named(value = "invoiceProductionStagesReportMB")
 @ViewScoped
 public class InvoiceProductionStagesReportMB extends BaseListBean {
-
+    
     private List<ProProductionStagesDTO> proProductionStagesDTOList;
     private List<InvPurchaseInvoiceDTO> invPurchaseInvoiceDTOList;
     private List<InvoiceProductionStagesReport> invoiceProductionStagesReports;
     private PrintProductionDTO printProductionDTO;
-
+    
     private ProProductionStagesDTOConverter proProductionStagesDTOConverter;
     private InvPurchaseInvoiceDTOConverter invPurchaseInvoiceDTOConverter;
-
+    
     private InvoiceMovementReport invoiceMovementReport;
-
+    
     @EJB
     private ProProductionStagesService proProductionStagesService;
     @EJB
-    private InvPurchaseInvoiceService invPurchaseInvoiceService;
+    private InvPurchaseInvoiceService_1 invPurchaseInvoiceService;
     @EJB
     private InvoiceProductionStagesReportService invoiceProductionStagesReportService;
     @EJB
     private InvoiceMovementReportService invoiceMovementReportService;
-
+    
     public InvoiceProductionStagesReportMB() {
     }
-
+    
     @Override
     @PostConstruct
     public void init() {
@@ -69,13 +70,14 @@ public class InvoiceProductionStagesReportMB extends BaseListBean {
         setUserData((UserData) context.getSessionMap().get("userLogInData"));
         proProductionStagesDTOList = new ArrayList<>();
         getInvPurchaseInvoiceDTOList();
-
+        
         if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("proproductionreportFormAdd")) {
             getPrintProductionDTO().setFromInvoice((InvInvoiceDTO) getContext().getSessionMap().get("proSalesFormSelected"));
+            getPrintProductionDTO().setFromInvInvoice(getPrintProductionDTO().getFromInvoice().getSerial());
             findInvoiceDate();
             search();
         }
-
+        
     }
 //     public  List<InvPurchaseInvoiceDTO> completeInvpurchaseInvoice(String query){
 //     
@@ -83,38 +85,40 @@ public class InvoiceProductionStagesReportMB extends BaseListBean {
 //     }
 
     public void search() {
-        if ((printProductionDTO.getFromInvoice() != null)) {
+        if ((printProductionDTO.getFromInvInvoice() != null)) {
+            InvInvoiceDTO invoiceDTO = invPurchaseInvoiceService.getInvPurchaseInvoiceDTOBySerial(printProductionDTO.getFromInvInvoice(), getUserData().getUserBranch().getId());
+            getPrintProductionDTO().setFromInvoice(invoiceDTO);
             invoiceProductionStagesReports = invoiceProductionStagesReportService.searchReport(printProductionDTO, getUserData().getUserBranch().getId());
         } else {
             printProductionDTO.setMsg("ادخل رقم فاتوره ");
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", printProductionDTO.getMsg()));
         }
     }
-
+    
     public void convertDateFrom() {
         getPrintProductionDTO().setFromDate(findDateFromHijriFrom());
     }
-
+    
     public void convertDateTo() {
         getPrintProductionDTO().setToDate(findDateFromHijriTo());
     }
-
+    
     public void postProcessXLS(Object document) {
         HSSFWorkbook wb = (HSSFWorkbook) document;
         HSSFSheet sheet = wb.getSheetAt(0);
         HSSFRow header = sheet.getRow(0);
-
+        
         HSSFCellStyle cellStyle = wb.createCellStyle();
         cellStyle.setFillForegroundColor(HSSFColor.GREEN.index);
         cellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-
+        
         for (int i = 0; i < header.getPhysicalNumberOfCells(); i++) {
             HSSFCell cell = header.getCell(i);
-
+            
             cell.setCellStyle(cellStyle);
         }
     }
-
+    
     public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {
         if (invoiceProductionStagesReports != null && !invoiceProductionStagesReports.isEmpty()) {
             fillReport(prepareReport(), getUserData().getReportPath() + "invoiceProductionStage.jasper", invoiceProductionStagesReports, "pdf");
@@ -122,7 +126,7 @@ public class InvoiceProductionStagesReportMB extends BaseListBean {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "لا توجد نتائج للطباعة"));
         }
     }
-
+    
     public void findInvoiceDate() {
         PrintProductionDTO printProductionDTOSearch = new PrintProductionDTO();
         printProductionDTOSearch.setFromInvInvoice(printProductionDTO.getFromInvoice().getSerial());
@@ -132,10 +136,10 @@ public class InvoiceProductionStagesReportMB extends BaseListBean {
             setInvoiceMovementReport(invoiceMovementReportList.get(0));
         }
     }
-
+    
     public HashMap prepareReport() {
         HashMap hashMap = new HashMap();
-
+        
         hashMap.put("branchName", getUserData().getUserBranch() == null ? null : getUserData().getUserBranch().getNameAr());
         hashMap.put("PrintedBy", getUserData().getUser() == null ? null : getUserData().getUser().getName());
         if (isFileExist(getUserData().getImageReportPath())) {
@@ -143,7 +147,7 @@ public class InvoiceProductionStagesReportMB extends BaseListBean {
         } else {
             hashMap.put("companyImage", null);
         }
-
+        
         hashMap.put("fromInvoiceText", "  رقم الفاتورة");
         hashMap.put("fromInvoicevalue", printProductionDTO.getFromInvoice() == null ? null : printProductionDTO.getFromInvoice().getId());
         hashMap.put("dateFromText", "من تاريخ");
@@ -165,51 +169,51 @@ public class InvoiceProductionStagesReportMB extends BaseListBean {
         hashMap.put("quantityText", "الكمية");
         hashMap.put("stageText", "المرحلة");
         hashMap.put("empNameText", "الموظف");
-
+        
         return hashMap;
     }
-
+    
     @Override
     public void delete() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     @Override
     public void filter() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     @Override
     public String goToAdd() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     @Override
     public String goToEdit() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     @Override
     public void load() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     @Override
     public String getScreenName() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     public List<ProProductionStagesDTO> getProProductionStagesDTOList() {
         if (proProductionStagesDTOList == null | proProductionStagesDTOList.isEmpty()) {
-            proProductionStagesDTOList = proProductionStagesService.getAllProproductionStages(getUserData().getUser(),getUserData().getUserBranch().getId());
+            proProductionStagesDTOList = proProductionStagesService.getAllProproductionStages(getUserData().getUser(), getUserData().getUserBranch().getId());
         }
         return proProductionStagesDTOList;
     }
-
+    
     public void setProProductionStagesDTOList(List<ProProductionStagesDTO> proProductionStagesDTOList) {
         this.proProductionStagesDTOList = proProductionStagesDTOList;
     }
-
+    
     public List<InvPurchaseInvoiceDTO> getInvPurchaseInvoiceDTOList() {
         if (invPurchaseInvoiceDTOList == null || invPurchaseInvoiceDTOList.isEmpty()) {
 //            invPurchaseInvoiceDTOList = invPurchaseInvoiceService.findInvPurchaseInvoiceDTOList(getUserData().getUser());
@@ -217,35 +221,35 @@ public class InvoiceProductionStagesReportMB extends BaseListBean {
         }
         return invPurchaseInvoiceDTOList;
     }
-
+    
     public void setInvPurchaseInvoiceDTOList(List<InvPurchaseInvoiceDTO> invPurchaseInvoiceDTOList) {
         this.invPurchaseInvoiceDTOList = invPurchaseInvoiceDTOList;
     }
-
+    
     public PrintProductionDTO getPrintProductionDTO() {
         if (printProductionDTO == null) {
             printProductionDTO = new PrintProductionDTO();
         }
         return printProductionDTO;
-
+        
     }
-
+    
     public void setPrintProductionDTO(PrintProductionDTO printProductionDTO) {
         this.printProductionDTO = printProductionDTO;
     }
-
+    
     public ProProductionStagesDTOConverter getProProductionStagesDTOConverter() {
         return proProductionStagesDTOConverter;
     }
-
+    
     public void setProProductionStagesDTOConverter(ProProductionStagesDTOConverter proProductionStagesDTOConverter) {
         this.proProductionStagesDTOConverter = proProductionStagesDTOConverter;
     }
-
+    
     public InvPurchaseInvoiceDTOConverter getInvPurchaseInvoiceDTOConverter() {
         return invPurchaseInvoiceDTOConverter;
     }
-
+    
     public void setInvPurchaseInvoiceDTOConverter(InvPurchaseInvoiceDTOConverter invPurchaseInvoiceDTOConverter) {
         this.invPurchaseInvoiceDTOConverter = invPurchaseInvoiceDTOConverter;
     }
@@ -278,5 +282,5 @@ public class InvoiceProductionStagesReportMB extends BaseListBean {
     public void setInvoiceMovementReport(InvoiceMovementReport invoiceMovementReport) {
         this.invoiceMovementReport = invoiceMovementReport;
     }
-
+    
 }

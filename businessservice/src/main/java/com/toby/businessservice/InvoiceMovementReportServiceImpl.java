@@ -167,9 +167,10 @@ public class InvoiceMovementReportServiceImpl implements InvoiceMovementReportSe
             query.append(" and ipi.serial >=  ").append(productionDTO.getFromInvInvoice());
         }
 
-        if (productionDTO.getToInvoice() != null) {
-            query.append(" and ipi.serial <=  ").append(productionDTO.getToInvoice().getSerial());
-        }
+//        if (productionDTO.getToInvoice() != null) {
+//            query.append(" and ipi.serial <=  ").append(productionDTO.getToInvoice().getSerial());
+//        }
+        
         if (productionDTO.getToInvInvoice() != null) {
             query.append(" and ipi.serial <=  ").append(productionDTO.getToInvInvoice());
         }

@@ -131,7 +131,7 @@ public class PrintProductionTransactionMB extends BaseListBean {
     }
 
     public void search() {
-        if ((printProductionDTO.getFromInvoice() != null && printProductionDTO.getToInvoice() != null)
+        if ((printProductionDTO.getFromInvInvoice() != null && printProductionDTO.getToInvInvoice() != null)
                 || (printProductionDTO.getFromDate() != null && printProductionDTO.getToDate() != null)
                 || (printProductionDTO.getFromStatus() != null) && (printProductionDTO.getToStatus() != null)) {
 
