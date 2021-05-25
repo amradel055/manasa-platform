@@ -53,6 +53,13 @@
                                 </div>
                             </div>
                         </div>
+                    
+                    <p:fieldset legend="#{userData.userDDs['RESET_AVERAGE_COST']}" style='width: 130%; float: right;'>
+                        <p:commandButton   class="saveButton"
+                                           id="excute" title="اعادة ضبط متوسط التكلفة"  
+                                           value="#{userData.userDDs['APPLY']}"
+                                           style="color: #035c70!important;" action="#{inventorySetupBean.reCalcCostAvarage()}"/>
+                    </p:fieldset>
                     <div class="ui-g-12 ui-xl-12" style="text-align: center">
 
 

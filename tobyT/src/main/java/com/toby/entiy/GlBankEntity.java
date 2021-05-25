@@ -19,7 +19,7 @@ import java.util.List;
 public class GlBankEntity extends BaseEntity {
 
     private String name;
-    private String code;
+    private Integer code;
     private BigDecimal openingBalance;
     private Date openingBalanceDate;
     private GlAccount accountId;
@@ -38,11 +38,11 @@ public class GlBankEntity extends BaseEntity {
         this.name = name;
     }
 
-    public String getCode() {
+    public Integer getCode() {
         return code;
     }
 
-    public void setCode(String code) {
+    public void setCode(Integer code) {
         this.code = code;
     }
 

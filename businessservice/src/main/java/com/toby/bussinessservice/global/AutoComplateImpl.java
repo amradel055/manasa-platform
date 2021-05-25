@@ -127,13 +127,16 @@ public class AutoComplateImpl implements AutoCompleteService {
     }
 
     @Override
-    public List<InvOrganizationSiteDTO> autoCompleteOrganizationSiteDTO(Integer branchId, boolean active, Integer type, String qeury) {
+    public List<InvOrganizationSiteDTO> autoCompleteOrganizationSiteDTO(Integer branchId, boolean active, Integer type, String qeury,Integer gallaryId) {
         List<InvOrganizationSiteDTO> list = new ArrayList<>();
         Map<String, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
         params.put("branchId", branchId);
         params.put("qeury", qeury);
-        appendOrganizationTypeAndActive(params, type, sql, active);
+        if(gallaryId != null){
+            params.put("gallaryId", gallaryId);
+        }
+        appendOrganizationTypeAndActive(params, type, sql, active, gallaryId);
         List<InvOrganizationSite> detailses = dao.findListByQuery(sql.toString(), params, 0, 10);
         list = returnListDTO(detailses);
         return list;
@@ -160,12 +163,12 @@ public class AutoComplateImpl implements AutoCompleteService {
     }
 
     @Override
-    public List<InvOrganizationSite> autoCompleteOrganizationSite(Integer branchId, boolean active, Integer type, String qeury) {
+    public List<InvOrganizationSite> autoCompleteOrganizationSite(Integer branchId, boolean active, Integer type, String qeury,Integer gallaryId) {
         Map<String, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
         params.put("branchId", branchId);
         params.put("qeury", qeury);
-        appendOrganizationTypeAndActive(params, type, sql, active);
+        appendOrganizationTypeAndActive(params, type, sql, active, gallaryId);
         List<InvOrganizationSite> detailses = dao.findListByQuery(sql.toString(), params, 0, 10);
         List<InvOrganizationSite> DTOlist = new ArrayList();
         for (InvOrganizationSite e : detailses) {
@@ -174,13 +177,17 @@ public class AutoComplateImpl implements AutoCompleteService {
         return DTOlist;
     }
 
-    private void appendOrganizationTypeAndActive(Map<String, Object> params, Integer type, StringBuilder sql, boolean active) {
+    private void appendOrganizationTypeAndActive(Map<String, Object> params, Integer type, StringBuilder sql, boolean active,Integer gallaryId) {
         params.put("type", type);
         sql.append("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND ((:qeury is null OR e.name  like CONCAT('%',:qeury ,'%')) OR (:qeury is null OR e.code  like CONCAT('%',:qeury ,'%') ) OR (:qeury is null OR e.phone  like CONCAT('%',:qeury ,'%') ) OR (:qeury is null OR e.mobile  like CONCAT('%',:qeury ,'%') ) OR (:qeury is null OR e.email  like CONCAT('%',:qeury ,'%') ) )");
         if (type == 0 || type == 1) {
             sql.append(" AND (e.type = :type OR e.type = 2) ");
         } else {
             sql.append(" AND e.type = :type  ");
+        }
+        if (gallaryId != null) {
+            params.put("gallaryId", gallaryId);
+            sql.append(" AND e.gallaryId.id = :gallaryId ");
         }
         if (active) {
             sql.append(" AND e.active = 1 ");

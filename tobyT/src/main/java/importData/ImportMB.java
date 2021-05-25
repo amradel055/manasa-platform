@@ -601,6 +601,7 @@ public class ImportMB extends Basic implements Serializable {
         Cell itemCode = sheet.getCell(0, i);
         Cell itemName = sheet.getCell(1, i);
         Cell mobile = sheet.getCell(2, i);
+        Cell companyName = sheet.getCell(4, i);
         item.setActive(1);
         item.setMobile(mobile.getContents());
         item.setCode(itemCode.getContents());
@@ -611,6 +612,7 @@ public class ImportMB extends Basic implements Serializable {
         item.setCreatedBy(getUserData().getUser());
         item.setCreationDate(new Date());
         item.setCompanyId(getUserData().getCompany());
+        item.setAddress(companyName.getContents());
     }
 
     // GlAccount Code

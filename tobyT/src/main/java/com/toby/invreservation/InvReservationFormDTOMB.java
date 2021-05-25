@@ -25,7 +25,7 @@ public class InvReservationFormDTOMB extends InventoryBasicDataForm {
     @PostConstruct
     public void init() {
         try {
-            String error = validateloginDistributedScreens(getInvInvoiceDTO().getScreenName());
+            String error = validateloginDistributedScreens(getInvInvoiceDTO().getScreenName(),getInvInvoiceDTO().getGallaryId() == null ? null : getInvInvoiceDTO().getGallaryId().getId());
             if (error.isEmpty()) {
                 load();
             } else {

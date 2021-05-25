@@ -28,15 +28,13 @@ import org.primefaces.model.SortOrder;
  */
 @Named(value = "invAddingOrderListDTOMB")
 @ViewScoped
-public class invAddingOrderListDTOMB extends InventoryBasicDataForm  {
+public class invAddingOrderListDTOMB extends InventoryBasicDataForm {
 
-      private InvInvoiceDTO invInvoiceDTOSelected;
-   
-   
-    
+    private InvInvoiceDTO invInvoiceDTOSelected;
+
     private String uri;
     private boolean isPermission;
- 
+
     @EJB
     private InvAddingOrderService invAddingOrderService;
 //    @EJB
@@ -51,7 +49,7 @@ public class invAddingOrderListDTOMB extends InventoryBasicDataForm  {
     @Override
     @PostConstruct
     public void init() {
-        try { 
+        try {
             uri = ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getRequestURI();
             isPermission = !uri.contains("invaddingorder");
             load();
@@ -63,7 +61,7 @@ public class invAddingOrderListDTOMB extends InventoryBasicDataForm  {
     @Override
     public void load() {
         try {
-             this.setDataModel(new LazyDataModel<InvInvoiceDTO>() {
+            this.setDataModel(new LazyDataModel<InvInvoiceDTO>() {
                 private static final long serialVersionUID = 1L;
 
                 @Override
@@ -71,9 +69,11 @@ public class invAddingOrderListDTOMB extends InventoryBasicDataForm  {
                     Integer type = 0;
                     if (!getUri().contains("invAddingOrderList1")) {
                         type = 1;
-                    } 
-                    setRowCount(invAddingOrderService.getTotalRegistors(type, getUserData().getUserBranch().getId(), filters).intValue());
-                    return invAddingOrderService.getALLInvAddingorderDTOByBranchId(type, first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), getUserData().getUserBranch().getId(), filters);
+                    }
+                    Integer invInventorySelectionId = getInvInventorySelection() != null ? getInvInventorySelection().getId() : null;
+                    Integer invGallarySelectionId = getInvGallarySelection() != null ? getInvGallarySelection().getId() : null;
+                    setRowCount(invAddingOrderService.getTotalRegistors(type, getUserData().getUserBranch().getId(),invInventorySelectionId, filters).intValue());
+                    return invAddingOrderService.getALLInvAddingorderDTOByBranchId(type,invInventorySelectionId, first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), getUserData().getUserBranch().getId(), filters);
                 }
             });
         } catch (Exception e) {
@@ -81,8 +81,31 @@ public class invAddingOrderListDTOMB extends InventoryBasicDataForm  {
         }
     }
 
+    public void loadInventoryList() {
+        try {
+            if (getInvInventorySelection() != null && getInvInventorySelection().getId() != null && getInvInventorySelection().getId() > 0) {
+                load();
+            } else {
+            }
+        } catch (Exception e) {
+            saveError(e, "invAddingOrderListDTOMB", "loadInventoryList");
+        }
 
-     public String goToAdd() {
+    }
+
+    public void loadGallaryList() {
+        try {
+            if (getInvInventorySelection() != null && getInvInventorySelection().getId() != null && getInvInventorySelection().getId() > 0) {
+                load();
+            } else {
+            }
+        } catch (Exception e) {
+            saveError(e, "invAddingOrderListDTOMB", "loadInventoryList");
+        }
+
+    }
+
+    public String goToAdd() {
         try {
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
             context.getSessionMap().put("ScreenMode", "Addinvorder");
@@ -98,7 +121,7 @@ public class invAddingOrderListDTOMB extends InventoryBasicDataForm  {
         }
     }
 
-     public String goToEdit() {
+    public String goToEdit() {
         try {
             if (getInvInvoiceDTOSelected() != null && getInvInvoiceDTOSelected().getId() > 0) {
                 ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
@@ -119,17 +142,17 @@ public class invAddingOrderListDTOMB extends InventoryBasicDataForm  {
         }
     }
 
-     public void delete() {
-        try { 
-        if(getInvInvoiceDTOSelected() != null){
-            try { 
-                invAddingOrderService.deleteInvAddingOrder(new InvAddingorder(getInvInvoiceDTOSelected().getId()));
-                load();
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,getUserDDs().get("INFO"), getUserDDs().get("DELETED")));
-            } catch (Exception e) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,getUserDDs().get("ERROR"), getUserDDs().get("UNIQE_KEY_ERROR")));
+    public void delete() {
+        try {
+            if (getInvInvoiceDTOSelected() != null) {
+                try {
+                    invAddingOrderService.deleteInvAddingOrder(new InvAddingorder(getInvInvoiceDTOSelected().getId()));
+                    load();
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, getUserDDs().get("INFO"), getUserDDs().get("DELETED")));
+                } catch (Exception e) {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), getUserDDs().get("UNIQE_KEY_ERROR")));
+                }
             }
-        }
         } catch (Exception e) {
             saveError(e, "invAddingOrderListMB", "delete");
         }
@@ -176,9 +199,6 @@ public class invAddingOrderListDTOMB extends InventoryBasicDataForm  {
 //            saveError(e, "invAddingOrderListMB", "print");
 //        }
 //    }
-
-    
-
     /**
      * @return the invAddingOrderParent
      */
@@ -191,9 +211,6 @@ public class invAddingOrderListDTOMB extends InventoryBasicDataForm  {
 //        }
 //        return invAddingOrderParent;
 //    }
-
-     
-
     @Override
     public String save() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -213,7 +230,7 @@ public class invAddingOrderListDTOMB extends InventoryBasicDataForm  {
      * @return the invInvoiceDTOSelected
      */
     public InvInvoiceDTO getInvInvoiceDTOSelected() {
-        if(invInvoiceDTOSelected == null){
+        if (invInvoiceDTOSelected == null) {
             invInvoiceDTOSelected = new InvInvoiceDTO();
         }
         return invInvoiceDTOSelected;

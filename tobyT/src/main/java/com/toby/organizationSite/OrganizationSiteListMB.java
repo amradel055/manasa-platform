@@ -83,7 +83,6 @@ public class OrganizationSiteListMB extends BaseListBean implements Serializable
                     invInventorySelectionId = getInvInventorySelection() != null ? getInvInventorySelection().getId() : null;
                     invGallarySelectionId = getInvGallarySelection() != null ? getInvGallarySelection().getId() : null;
                     if (url.contains("customer")) {
-
                         setRowCount(organizationSiteService.getTotalRegistors(userData.getUserBranch().getId(), filters, 0, invGallarySelectionId).intValue());
                         setInvOrganizationSitesDTOList(organizationSiteService.getALLCustomerDTOByBranchIdAndType(first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), userData.getUserBranch().getId(), filters, 0, invGallarySelectionId));
                     } else if (url.contains("supplier")) {

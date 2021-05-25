@@ -12,7 +12,7 @@ package com.toby.report.entity;
 public class GlBankReport {
 
     private Integer id;
-    private String code;
+    private Integer code;
     private String bankName;
     private String currencyName;
     private Integer accounntCode;
@@ -28,11 +28,11 @@ public class GlBankReport {
         this.id = id;
     }
 
-    public String getCode() {
+    public Integer getCode() {
         return code;
     }
 
-    public void setCode(String code) {
+    public void setCode(Integer code) {
         this.code = code;
     }
 

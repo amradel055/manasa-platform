@@ -27,6 +27,7 @@ public class InvNoticeDTO extends BaseEntityDTO {
     private GeneralJournalDTO generalJournalId;
     private SymbolDTO noticeNaming;
     private Integer instContractSerial;
+    private Integer invInvoice;
 
     public InvNoticeDTO() {
     }
@@ -194,6 +195,20 @@ public class InvNoticeDTO extends BaseEntityDTO {
      */
     public void setInstContractSerial(Integer instContractSerial) {
         this.instContractSerial = instContractSerial;
+    }
+
+    /**
+     * @return the invInvoice
+     */
+    public Integer getInvInvoice() {
+        return invInvoice;
+    }
+
+    /**
+     * @param invInvoice the invInvoice to set
+     */
+    public void setInvInvoice(Integer invInvoice) {
+        this.invInvoice = invInvoice;
     }
 
 }

@@ -149,6 +149,9 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     private List<InvInventoryDTO> gallaryList;
     private List<InvItemDTO> invItemDTOParentList;
     private ItemDTOConverter itemDTOParentConverter;
+    private InvInventoryDTO invGallarySelection;
+    private InvInventory invInventorySelection;
+    private List<InvInventory> inventoryList;
 
     @EJB
     AutoCompleteService autoCompleteService;
@@ -456,6 +459,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     }
 
     public void addNewCustomer() {
+        getOrganizationSiteId().setGallaryIdDTO(getInvInvoiceDTO().getGallaryId());
         getInvInvoiceDTO().setOrganizationSiteId(organizationSiteService.addNewCustomer(getOrganizationSiteId(), getInvOrganizationSiteDTOList(true, 0), getUserData().getUser()));
         getInvInvoiceDTO().setShowCustomerDate(Boolean.FALSE);
     }
@@ -782,7 +786,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     }
 
     public List<InvOrganizationSiteDTO> completeCustomerFrom(String query) {
-        invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getUserData().getUserBranch().getId(), Boolean.TRUE, 0, query);
+        invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getUserData().getUserBranch().getId(), Boolean.TRUE, 0, query, getInvInvoiceDTO().getGallaryId() == null ? (getInvGallarySelection() == null ? null : getInvGallarySelection().getId()) : getInvInvoiceDTO().getGallaryId().getId());
         organizationSiteDTOConvertor = new InvOrganizationSiteDTOConverter(invOrganizationSiteDTOList);
         return invOrganizationSiteDTOList;
 
@@ -793,8 +797,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         return itemsBarcodesDetailsViews;
     }
 
-    protected String validateloginDistributedScreens(ScreenNameClassEnum screenNameClassEnum) {
-        return invPurchaseInvoiceService.validateloginDistributedScreens(getUserDataDTO(), screenNameClassEnum);
+    protected String validateloginDistributedScreens(ScreenNameClassEnum screenNameClassEnum, Integer gallaryId) {
+        return invPurchaseInvoiceService.validateloginDistributedScreens(getUserDataDTO(), screenNameClassEnum, getInvInvoiceDTO().getGallaryId() == null ? null : getInvInvoiceDTO().getGallaryId().getId());
     }
 
     public List<InvOrganizationSiteDTO> completeFromCustomer(String query) {
@@ -971,7 +975,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     public List<InvOrganizationSiteDTO> getInvOrganizationSiteDTOList(Boolean active, Integer type) {
         if (invOrganizationSiteDTOList == null) {
 //            setInvOrganizationSiteDTOList(organizationSiteService.getorganizationSiteByBranchIdDTO(getUserlogin().getBranchId().getId(), active, type));
-            setInvOrganizationSiteDTOList(autoCompleteService.autoCompleteOrganizationSiteDTO(getUserlogin().getBranchId().getId(), active, type, null));
+            setInvOrganizationSiteDTOList(autoCompleteService.autoCompleteOrganizationSiteDTO(getUserlogin().getBranchId().getId(), active, type, null, getInvInvoiceDTO().getGallaryId() == null ? null : getInvInvoiceDTO().getGallaryId().getId()));
             setOrganizationSiteDTOConvertor(new InvOrganizationSiteDTOConverter(invOrganizationSiteDTOList));
         }
         return invOrganizationSiteDTOList;
@@ -1874,19 +1878,56 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     }
 
     /**
-     * @return the invInventoryDTO
+     * @return the invGallarySelection
      */
-    public InvInventoryDTO getInvInventoryDTO() {
-        if (invInventoryDTO == null) {
-            invInventoryDTO = new InvInventoryDTO();
+    public InvInventoryDTO getInvGallarySelection() {
+        if (invGallarySelection == null) {
+            setInvGallarySelection(getGallaryList() == null || getGallaryList().isEmpty() ? null : getGallaryList().get(0));
         }
-        return invInventoryDTO;
+        return invGallarySelection;
     }
 
     /**
-     * @param invInventoryDTO the invInventoryDTO to set
+     * @param invGallarySelection the invGallarySelection to set
      */
-    public void setInvInventoryDTO(InvInventoryDTO invInventoryDTO) {
-        this.invInventoryDTO = invInventoryDTO;
+    public void setInvGallarySelection(InvInventoryDTO invGallarySelection) {
+        this.invGallarySelection = invGallarySelection;
+    }
+
+    /**
+     * @return the invInventorySelection
+     */
+    public InvInventory getInvInventorySelection() {
+        if (invInventorySelection == null) {
+            setInvInventorySelection(getInventoryList() == null || getInventoryList().isEmpty() ? null : getInventoryList().get(0));
+        }
+        return invInventorySelection;
+    }
+
+    /**
+     * @param invInventorySelection the invInventorySelection to set
+     */
+    public void setInvInventorySelection(InvInventory invInventorySelection) {
+        this.invInventorySelection = invInventorySelection;
+    }
+
+    /**
+     * @return the inventoryList
+     */
+    public List<InvInventory> getInventoryList() {
+        if (inventoryList == null) {
+            setInventoryList(tobyUserInventoryService.getAllInventroisByUserAndBranchPer(getUserData().getUser().getId(), getUserlogin().getBranchId().getId()));
+            if (getInventoryList() != null && !getInventoryList().isEmpty()) {
+                setInvInventoryConverter(new InvInventoryConverter(inventoryList));
+            }
+        }
+        return inventoryList;
+    }
+
+    /**
+     * @param inventoryList the inventoryList to set
+     */
+    public void setInventoryList(List<InvInventory> inventoryList) {
+        this.inventoryList = inventoryList;
     }
 }

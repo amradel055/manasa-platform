@@ -199,5 +199,14 @@ public class InvOpeningBalanceItemDetailServiceImpl implements InvOpeningBalance
 
         return detailDTOs;
     }
+    
+    @Override
+    public List<Object[]> getInvOpeningBalanceItemDetailsByBranchId(Integer branchId,List<Integer> itemIdList) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        params.put("itemIdList", itemIdList);
+        List<Object[]> balanceItemDetailList = dao.findListByQuery("SELECT i.itemId.id , i.cost  FROM InvOpenningBalanceItemDetail i WHERE i.branchId.id = :branchId and i.itemId.id in :itemIdList", params);
+        return balanceItemDetailList;
+    }
 
 }

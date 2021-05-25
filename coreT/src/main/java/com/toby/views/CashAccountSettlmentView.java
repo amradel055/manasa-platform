@@ -63,7 +63,7 @@ public class CashAccountSettlmentView implements Serializable {
     @Column(name = "type")
     private Integer type;
     @Column(name = "serial")
-    private BigInteger serial;
+    private Integer serial;
     @Column(name = "paymentType")
     private Integer paymentType;
     @Column(name = "date")
@@ -82,7 +82,7 @@ public class CashAccountSettlmentView implements Serializable {
     private String name;
     @Size(max = 450)
     @Column(name = "code")
-    private String code;
+    private Integer code;
     @Size(max = 450)
     @Column(name = "currencyName")
     private String currencyName;
@@ -226,14 +226,14 @@ public class CashAccountSettlmentView implements Serializable {
     /**
      * @return the code
      */
-    public String getCode() {
+    public Integer getCode() {
         return code;
     }
 
     /**
      * @param code the code to set
      */
-    public void setCode(String code) {
+    public void setCode(Integer code) {
         this.code = code;
     }
 
@@ -268,14 +268,14 @@ public class CashAccountSettlmentView implements Serializable {
     /**
      * @return the serial
      */
-    public BigInteger getSerial() {
+    public Integer getSerial() {
         return serial;
     }
 
     /**
      * @param serial the serial to set
      */
-    public void setSerial(BigInteger serial) {
+    public void setSerial(Integer serial) {
         this.serial = serial;
     }
 

@@ -54,11 +54,18 @@
                                               style="float:right" 
                                               rendered="#{userData.userScreens['invpermissionorder_1'].add or userData.isAdmin}"/>
 
-                            <p:blockUI block="form" trigger="addA" animate="true" >
 
-                                <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+                            <p:selectOneMenu id="inventory" value="#{invAddingOrderListDTOMB.invInventorySelection}"
+                                         converter="#{invAddingOrderListDTOMB.invInventoryConverter}" 
+                                         style="float:right;width: 20%!important;color:#fff;height: 30px!important;margin-right: 0.5%;">
 
-                            </p:blockUI> 
+                            <p:ajax listener="#{invAddingOrderListDTOMB.loadInventoryList()}" update="form" />
+                            <f:selectItem itemLabel="#{userData.userDDs['ALL']}" itemValue="" />
+
+                            <f:selectItems value="#{invAddingOrderListDTOMB.inventoryList}" 
+                                           var="inventory" itemLabel="#{inventory.name}"
+                                           itemValue="#{inventory}"/> 
+                        </p:selectOneMenu>
 
                             <p:outputPanel  >
                                 <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />

@@ -56,7 +56,7 @@ public class InvOrganizationSiteDTO extends BaseEntityDTO {
     private SymbolDTO contractorType;
     private String globalFilter;
     private OfferCompanyDTO offerCompanyDTO;
-     private InvInventoryDTO galaryId;
+    private InvInventoryDTO gallaryIdDTO;
 
 
     public InvOrganizationSiteDTO() {
@@ -676,22 +676,18 @@ public class InvOrganizationSiteDTO extends BaseEntityDTO {
     }
 
     /**
-     * @return the galaryId
+     * @return the gallaryIdDTO
      */
-    public InvInventoryDTO getGalaryId() {
-        return galaryId;
+    public InvInventoryDTO getGallaryIdDTO() {
+        return gallaryIdDTO;
     }
 
     /**
-     * @param galaryId the galaryId to set
+     * @param gallaryIdDTO the gallaryIdDTO to set
      */
-    public void setGalaryId(InvInventoryDTO galaryId) {
-        this.galaryId = galaryId;
+    public void setGallaryIdDTO(InvInventoryDTO gallaryIdDTO) {
+        this.gallaryIdDTO = gallaryIdDTO;
     }
 
-    /**
-     * @return the galaryId
-     */
-    
 
 }

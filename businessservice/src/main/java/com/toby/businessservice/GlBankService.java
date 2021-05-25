@@ -32,7 +32,7 @@ public interface GlBankService {
 
     public List<GlBank> getAllGlBankByBranchId(Integer branchId);
 
-    public List<GlBank> getGlBankByBranchIdAndCode(Integer branchId, String code , Integer bankId);
+    public List<GlBank> getGlBankByBranchIdAndCode(Integer branchId, Integer code , Integer bankId);
 
     public List<GlBank> findAllGlBankForReport(GlBankEntitySearch glBankEntitySearch);
     

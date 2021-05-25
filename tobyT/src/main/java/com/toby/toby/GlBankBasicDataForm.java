@@ -119,7 +119,7 @@ public abstract class GlBankBasicDataForm extends BaseFormBean {
 //
 //    }
     public List<InvOrganizationSiteDTO> completeCustomerFrom(String query) {
-        organizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getUserData().getUserBranch().getId(), Boolean.TRUE, 0, query);
+        organizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getUserData().getUserBranch().getId(), Boolean.TRUE, 0, query,((getUserData().getGallaryDTOList() != null && !getUserData().getGallaryDTOList().isEmpty()) ? getUserData().getGallaryDTOList().get(0).getId() : null));
         invOrganizationSiteDTOConverter = new InvOrganizationSiteDTOConverter(organizationSiteDTOList);
         return organizationSiteDTOList;
 

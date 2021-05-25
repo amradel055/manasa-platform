@@ -13,7 +13,9 @@ import com.toby.entity.GlAdminUnit;
 import com.toby.entity.GlBank;
 import com.toby.entity.InvOrganizationSite;
 import com.toby.entity.Symbol;
+import com.toby.views.GlBankTransactionInvoiceView;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -51,6 +53,8 @@ public class GlBankTransactionDetailEntity extends BaseEntity {
     private BigDecimal rate;
     private BigDecimal valueLocalReverse;
     private List<GlBankTransactionDetailEntity> glBankTransactionDetailEntityList;
+    private List<GlBankTransactionInvoiceView> glBankTransactionInvoiceViewList;
+    private Integer invoiceId;
 
     public GlBankTransactionDetailEntity() {
     }
@@ -399,6 +403,37 @@ public class GlBankTransactionDetailEntity extends BaseEntity {
      */
     public void setSerial(Integer serial) {
         this.serial = serial;
+    }
+
+    /**
+     * @return the glBankTransactionInvoiceViewList
+     */
+    public List<GlBankTransactionInvoiceView> getGlBankTransactionInvoiceViewList() {
+        if(glBankTransactionInvoiceViewList == null){
+            glBankTransactionInvoiceViewList = new ArrayList<>();
+        }
+        return glBankTransactionInvoiceViewList;
+    }
+
+    /**
+     * @param glBankTransactionInvoiceViewList the glBankTransactionInvoiceViewList to set
+     */
+    public void setGlBankTransactionInvoiceViewList(List<GlBankTransactionInvoiceView> glBankTransactionInvoiceViewList) {
+        this.glBankTransactionInvoiceViewList = glBankTransactionInvoiceViewList;
+    }
+
+    /**
+     * @return the invoiceId
+     */
+    public Integer getInvoiceId() {
+        return invoiceId;
+    }
+
+    /**
+     * @param invoiceId the invoiceId to set
+     */
+    public void setInvoiceId(Integer invoiceId) {
+        this.invoiceId = invoiceId;
     }
 
 }

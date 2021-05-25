@@ -61,6 +61,7 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
     ProGlobalService proGlobalService;
     @EJB
     private InvPurchaseInvoiceDetailDetailService invPurchaseInvoiceDetailDetailService;
+    
 
     @Override
     public List<InvPurchaseInvoiceDetail> getAllInvPurchaseInvoiceDetailByBranchId(Integer branchId) {
@@ -72,11 +73,13 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
 
     @Override
     public void reCalcCostAvarage(Integer branchId) {
+        invItemService.getInvItemListByBranchId(branchId);
         InventorySetup invSetup = inventorySetupService.getInventoryByBranchId(branchId);
         List<InvPurchaseInvoiceDetail> invPurchaseInvoiceDetailList = getAllInvPurchaseInvoiceDetailByBranchId(branchId);
         for (InvPurchaseInvoiceDetail detail : invPurchaseInvoiceDetailList) {
-            BigDecimal quantityItemsStoreByDate = invPurchaseInvoiceService.findQuantityItemByDate(detail.getInvPurchaseInvoiceId(), detail);
+            BigDecimal quantityItemsStoreByDate = invPurchaseInvoiceService.findQuantityItemByDateWithOutInventory(detail.getInvPurchaseInvoiceId(), invSetup.getSellBuy(), detail);
             invPurchaseInvoiceService.saveDetail(detail, detail.getInvPurchaseInvoiceId(), detail.getInvPurchaseInvoiceId().getType(), quantityItemsStoreByDate, invSetup);
+            System.out.println("item_id -> " + detail.getItemId().getId() + " ; Item_Name -> " + detail.getItemId().getName() + " ; Qty -> " + quantityItemsStoreByDate + "");
         }
 
     }

@@ -6,6 +6,7 @@
 package com.toby.invNotice;
 
 import com.toby.businessservice.GlAccountService;
+import com.toby.businessservice.GlBankTransactionInvoiceViewService;
 import com.toby.businessservice.InvNoticeService;
 import com.toby.businessservice.OrganizationSiteService;
 import com.toby.businessservice.SymbolService;
@@ -19,11 +20,13 @@ import com.toby.entity.Branch;
 import com.toby.entity.GlAccount;
 import com.toby.entity.InvNotice;
 import com.toby.entity.InvOrganizationSite;
+import com.toby.entity.InvPurchaseInvoice;
 import com.toby.entity.Symbol;
 import com.toby.entiy.InvNoticeEntity;
 import com.toby.toby.AutoComplete1;
 import com.toby.toby.BaseFormBean;
 import com.toby.toby.UserData;
+import com.toby.views.GlBankTransactionInvoiceView;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -62,6 +65,8 @@ public class InvNoticeFormMB extends BaseFormBean {
     private Boolean installment;
     private List<SymbolDTO> symbolDtoList;
     private SymbolDTOConverter symbolDTOConverter;
+    private List<GlBankTransactionInvoiceView> glBankTransactionInvoiceViewList;
+
     @EJB
     private OrganizationSiteService organizationSiteService;
     @EJB
@@ -72,6 +77,8 @@ public class InvNoticeFormMB extends BaseFormBean {
     SymbolService symbolService;
     @EJB
     AutoCompleteService autoCompleteService;
+    @EJB
+    private GlBankTransactionInvoiceViewService bankTransactionInvoiceViewService;
 
     @Override
     @PostConstruct
@@ -139,6 +146,10 @@ public class InvNoticeFormMB extends BaseFormBean {
         }
     }
 
+    public void chooseInvoice() {
+        setGlBankTransactionInvoiceViewList(bankTransactionInvoiceViewService.getGlBankTransactionInvoiceViewList(getInvNoticeEntity().getOrganizationSiteId().getId(), getUserData().getUser()));
+    }
+
     @Override
     public String save() {
         try {
@@ -158,6 +169,11 @@ public class InvNoticeFormMB extends BaseFormBean {
             invNotice.setRemark(invNoticeEntity.getRemarks());
             invNotice.setValue(invNoticeEntity.getAmount() != null ? invNoticeEntity.getAmount() : BigDecimal.ZERO);
             invNotice.setMarkEdit(invNoticeEntity.getMarkEdit());
+            if (invNoticeEntity.getInvoiceId() != null) {
+                InvPurchaseInvoice invPurchaseInvoice = new InvPurchaseInvoice();
+                invPurchaseInvoice.setId(invNoticeEntity.getInvoiceId());
+                invNotice.setInvInvoice(invPurchaseInvoice);
+            }
 
             if (invNoticeEntity.getType() != null) {
                 invNotice.setType(invNoticeEntity.getType());
@@ -182,6 +198,9 @@ public class InvNoticeFormMB extends BaseFormBean {
                 invNotice = invNoticeService.addInvNotice(invNotice);
                 invNoticeEntity.setId(invNotice.getId());
                 invNoticeEntity.setSerial(invNotice.getSerial());
+                if (invNotice.getInvInvoice() != null) {
+                    invNoticeEntity.setInvoiceSerial(invNotice.getInvInvoice().getSerial());
+                }
                 savedMeesage(userDDs.get("SAVED"));
                 // exit();
 
@@ -281,7 +300,10 @@ public class InvNoticeFormMB extends BaseFormBean {
             invNoticeEntity.setRemarks(invNotice.getRemark());
             invNoticeEntity.setType(invNotice.getType());
             invNoticeEntity.setPostFlag(invNotice.getPostFlag());
-
+            if (invNotice.getInvInvoice() != null) {
+                invNoticeEntity.setInvoiceId(invNotice.getInvInvoice().getId());
+                invNoticeEntity.setInvoiceSerial(invNotice.getInvInvoice().getSerial());
+            }
         } catch (Exception e) {
             saveError(e, "InvNoticeFormMB", "setEditedInvNoticeValues");
         }
@@ -326,7 +348,7 @@ public class InvNoticeFormMB extends BaseFormBean {
             saveError(e, "InvNoticeFormMB", "exit");
         }
     }
-    
+
     public List<GlAccount> completeGlAccount(String query) {
         List<GlAccount> filteredGlaccounts = new ArrayList<>();
         try {
@@ -513,6 +535,21 @@ public class InvNoticeFormMB extends BaseFormBean {
      */
     public void setSymbolDTOConverter(SymbolDTOConverter symbolDTOConverter) {
         this.symbolDTOConverter = symbolDTOConverter;
+    }
+
+    /**
+     * @return the glBankTransactionInvoiceViewList
+     */
+    public List<GlBankTransactionInvoiceView> getGlBankTransactionInvoiceViewList() {
+        return glBankTransactionInvoiceViewList;
+    }
+
+    /**
+     * @param glBankTransactionInvoiceViewList the
+     * glBankTransactionInvoiceViewList to set
+     */
+    public void setGlBankTransactionInvoiceViewList(List<GlBankTransactionInvoiceView> glBankTransactionInvoiceViewList) {
+        this.glBankTransactionInvoiceViewList = glBankTransactionInvoiceViewList;
     }
 
 }

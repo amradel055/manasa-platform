@@ -32,7 +32,7 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
     @PostConstruct
     public void init() {
         try {
-            String error = validateloginDistributedScreens(getInvInvoiceDTO().getScreenName());
+            String error = validateloginDistributedScreens(getInvInvoiceDTO().getScreenName(),getInvInvoiceDTO().getGallaryId() == null ? null : getInvInvoiceDTO().getGallaryId().getId());
             if (error.isEmpty()) {
                 load();
             } else {
@@ -60,6 +60,8 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
                 getInvInvoiceDTO().setInvoiceStatus(invPurchaseInvoiceService.findInvoiceStatus(getInvInvoiceDTO().getId()));
                 getInvInvoiceDTO().setIsEdit(Boolean.FALSE);
                 getInvInvoiceDTO().setShowCustomerDate(Boolean.FALSE);
+                findAccountStatement();
+                getInvOrganizationSiteDTOList(Boolean.TRUE, 0).add(0, getInvInvoiceDTO().getOrganizationSiteId());
             } else {
                 exit("../base/error.xhtml");
             }
@@ -105,11 +107,7 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
     public String goTClientacoount() {
         try {
             if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getOrganizationSiteId().getId() > 0) {
-                ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-                context.getSessionMap().put("ClientacoountSelected", getInvInvoiceDTO().getOrganizationSiteId());
-                context.getSessionMap().put("ScreenMode", "editClientacoount");
-                exit("../inventoryreports/clientacoountById.xhtml");
-                return "";
+                return goTOrganizationSiteacoount(getInvInvoiceDTO().getOrganizationSiteId().getId());
             } else {
                 return "";
             }

@@ -48,7 +48,6 @@ public class NetView implements Serializable {
     private Boolean taxFlagFinal;
     @Column(name = "tax_flag_final_text")
     private String taxFlagFinalText;
-
     @Column(name = "type")
     private Integer type;
     @Basic(optional = false)
@@ -71,6 +70,8 @@ public class NetView implements Serializable {
     private Integer organizationSiteId;
     @Column(name = "organization_site_name")
     private String organizationSiteName;
+    @Column(name = "organization_site_code")
+    private String organizationSiteCode;
     @Column(name = "organization_site_type")
     private Integer organizationSiteType;
     @Basic(optional = false)
@@ -428,6 +429,20 @@ public class NetView implements Serializable {
      */
     public void setSumTotalCost(BigDecimal sumTotalCost) {
         this.sumTotalCost = sumTotalCost;
+    }
+
+    /**
+     * @return the organizationSiteCode
+     */
+    public String getOrganizationSiteCode() {
+        return organizationSiteCode;
+    }
+
+    /**
+     * @param organizationSiteCode the organizationSiteCode to set
+     */
+    public void setOrganizationSiteCode(String organizationSiteCode) {
+        this.organizationSiteCode = organizationSiteCode;
     }
 
 }

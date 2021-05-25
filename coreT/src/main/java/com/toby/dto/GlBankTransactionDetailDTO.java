@@ -28,6 +28,7 @@ public class GlBankTransactionDetailDTO extends BaseEntityDTO {
     private BigDecimal rateBankFrom;
     private BigDecimal rateBankTo;
     private SymbolDTO symbolId;
+    private Integer invoiceId;
 
     public GlBankTransactionDetailDTO() {
     }
@@ -239,6 +240,20 @@ public class GlBankTransactionDetailDTO extends BaseEntityDTO {
      */
     public void setSymbolId(SymbolDTO symbolId) {
         this.symbolId = symbolId;
+    }
+
+    /**
+     * @return the invoiceId
+     */
+    public Integer getInvoiceId() {
+        return invoiceId;
+    }
+
+    /**
+     * @param invoiceId the invoiceId to set
+     */
+    public void setInvoiceId(Integer invoiceId) {
+        this.invoiceId = invoiceId;
     }
     
 }

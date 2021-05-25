@@ -77,6 +77,9 @@ public class GlBankTransactionDetail extends BaseEntity {
     @JoinColumn(name = "symbol_id", referencedColumnName = "id")
     @ManyToOne
     private Symbol symbolId;
+    @JoinColumn(name = "invoice_id", referencedColumnName = "id")
+    @ManyToOne
+    private InvPurchaseInvoice invoiceId;
 
     public GlBankTransactionDetail() {
     }
@@ -234,6 +237,20 @@ public class GlBankTransactionDetail extends BaseEntity {
 
     public void setSymbolId(Symbol symbolId) {
         this.symbolId = symbolId;
+    }
+
+    /**
+     * @return the invoiceId
+     */
+    public InvPurchaseInvoice getInvoiceId() {
+        return invoiceId;
+    }
+
+    /**
+     * @param invoiceId the invoiceId to set
+     */
+    public void setInvoiceId(InvPurchaseInvoice invoiceId) {
+        this.invoiceId = invoiceId;
     }
     
 }

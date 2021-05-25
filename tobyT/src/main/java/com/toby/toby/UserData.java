@@ -166,6 +166,7 @@ public class UserData extends Basic implements Serializable {
             this.setInventoryDTODefault(userData.getInventoryDTODefault());
             this.setGlBankDTOList(userData.getGlBankDTOList());
             this.setGlBankDTODefault(userData.getGlBankDTODefault());
+            this.setGallaryDTOList(userData.getGallaryDTOList());
 
             InputStream stream;
             try {

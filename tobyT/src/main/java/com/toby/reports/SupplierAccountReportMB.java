@@ -51,7 +51,6 @@ public class SupplierAccountReportMB extends BaseReportBean {
     private BigDecimal totalCredit = BigDecimal.ZERO;
     private BigDecimal totalDebit = BigDecimal.ZERO;
     private String uri;
-    private String screenMode;
     private List<SupplierAccountViewBean> supplierAccountViewBeanList;
     private SupplierAccountSearchBean supplierAccountSearchBean;
     private List<OrganizationSiteStatementView> organizationSiteStatementViewList;
@@ -99,7 +98,8 @@ public class SupplierAccountReportMB extends BaseReportBean {
 
         if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("editClientacoount")) {
             context.getSessionMap().put("ScreenMode", "");
-            InvOrganizationSiteDTO invOrganizationSiteDTO = (InvOrganizationSiteDTO) getContext().getSessionMap().get("ClientacoountSelected");
+            Integer invOrganizationSiteDTOId = (Integer) getContext().getSessionMap().get("ClientacoountSelected");
+            InvOrganizationSiteDTO invOrganizationSiteDTO = organizationSiteService.findOrganizationSiteByIdDTO(invOrganizationSiteDTOId);
             supplierAccountSearchBean.setFromorganizationNameDTO(invOrganizationSiteDTO);
             supplierAccountSearchBean.setToorganizationNameDTO(invOrganizationSiteDTO);
             completOrgSiteFrom(null).add(0, invOrganizationSiteDTO);
@@ -176,11 +176,11 @@ public class SupplierAccountReportMB extends BaseReportBean {
 
         setOrganizationSiteRootList(new ArrayList<>());
         if (uri != null && uri.contains("clientacoount")) {
-            setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId, 0, getSupplierAccountSearchBean()));
+            setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId,((getUserData().getGallaryDTOList() == null || getUserData().getGallaryDTOList().isEmpty()) ? null : getUserData().getGallaryDTOList().get(0).getId()), 0, getSupplierAccountSearchBean()));
         } else if (uri != null && uri.contains("contractoraccount")) {
-            setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId, 4, getSupplierAccountSearchBean()));
+            setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId,((getUserData().getGallaryDTOList() == null || getUserData().getGallaryDTOList().isEmpty()) ? null : getUserData().getGallaryDTOList().get(0).getId()), 4, getSupplierAccountSearchBean()));
         } else {
-            setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId, 1, getSupplierAccountSearchBean()));
+            setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId,((getUserData().getGallaryDTOList() == null || getUserData().getGallaryDTOList().isEmpty()) ? null : getUserData().getGallaryDTOList().get(0).getId()), 1, getSupplierAccountSearchBean()));
         }
 
         organizationSiteStatementmap = new HashMap<>();
@@ -219,11 +219,11 @@ public class SupplierAccountReportMB extends BaseReportBean {
 
         setOrganizationSiteRootList(new ArrayList<>());
         if (uri != null && uri.contains("clientacoount")) {
-            setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId, 0, getSupplierAccountSearchBean()));
+            setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId,((getUserData().getGallaryDTOList() == null || getUserData().getGallaryDTOList().isEmpty()) ? null : getUserData().getGallaryDTOList().get(0).getId()) , 0, getSupplierAccountSearchBean()));
         } else if (uri != null && uri.contains("contractoraccount")) {
-            setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId, 4, getSupplierAccountSearchBean()));
+            setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId,((getUserData().getGallaryDTOList() == null || getUserData().getGallaryDTOList().isEmpty()) ? null : getUserData().getGallaryDTOList().get(0).getId()) , 4, getSupplierAccountSearchBean()));
         } else {
-            setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId, 1, getSupplierAccountSearchBean()));
+            setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId,((getUserData().getGallaryDTOList() == null || getUserData().getGallaryDTOList().isEmpty()) ? null : getUserData().getGallaryDTOList().get(0).getId()) , 1, getSupplierAccountSearchBean()));
         }
 
         organizationSiteStatementmap = new HashMap<>();
@@ -565,14 +565,14 @@ public class SupplierAccountReportMB extends BaseReportBean {
     }
 
     public List<InvOrganizationSiteDTO> completOrgSiteFrom(String query) {
-        List<InvOrganizationSiteDTO> list = autoCompleteService.autoCompleteOrganizationSiteDTO(getUserData().getUserBranch().getId(), true, type, query);
+        List<InvOrganizationSiteDTO> list = autoCompleteService.autoCompleteOrganizationSiteDTO(getUserData().getUserBranch().getId(), true, type, query,((getUserData().getGallaryDTOList() == null || getUserData().getGallaryDTOList().isEmpty()) ? null : getUserData().getGallaryDTOList().get(0).getId()));
         invOrgSiteConverter = new InvOrganizationSiteDTOConverter(list);
         return list;
 //        return getAutoComplete().completOrgSiteDTO(query, getInvOrgSiteList(), invOrgSiteConverter);
     }
 
     public List<InvOrganizationSiteDTO> completOrgSiteTo(String query) {
-        List<InvOrganizationSiteDTO> list = autoCompleteService.autoCompleteOrganizationSiteDTO(getUserData().getUserBranch().getId(), true, type, query);
+        List<InvOrganizationSiteDTO> list = autoCompleteService.autoCompleteOrganizationSiteDTO(getUserData().getUserBranch().getId(), true, type, query,((getUserData().getGallaryDTOList() == null || getUserData().getGallaryDTOList().isEmpty()) ? null : getUserData().getGallaryDTOList().get(0).getId()));
         invOrgSiteConverter = new InvOrganizationSiteDTOConverter(list);
         return list;
 //        return getAutoComplete().completOrgSiteDTO(query, getInvOrgSiteList(), invOrgSiteConverter);
@@ -591,14 +591,6 @@ public class SupplierAccountReportMB extends BaseReportBean {
     @Override
     public String getScreenName() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public String getScreenMode() {
-        return screenMode;
-    }
-
-    public void setScreenMode(String screenMode) {
-        this.screenMode = screenMode;
     }
 
     /*  public Boolean getIsSales() {

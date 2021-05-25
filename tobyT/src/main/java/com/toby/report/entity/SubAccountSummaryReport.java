@@ -19,7 +19,7 @@ public class SubAccountSummaryReport implements Serializable{
     private BigDecimal balance;
     private String remark;
     private String remark2;
-    private String code;
+    private Integer code;
     private String currencyName;
     private String currencyCode;
     private String transactionType;
@@ -190,14 +190,14 @@ public class SubAccountSummaryReport implements Serializable{
     /**
      * @return the code
      */
-    public String getCode() {
+    public Integer getCode() {
         return code;
     }
 
     /**
      * @param code the code to set
      */
-    public void setCode(String code) {
+    public void setCode(Integer code) {
         this.code = code;
     }
 

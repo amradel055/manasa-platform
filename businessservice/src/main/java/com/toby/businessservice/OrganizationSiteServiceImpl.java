@@ -78,6 +78,22 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
     }
     
     @Override
+    public InvOrganizationSite addOrganizationSiteNew(InvOrganizationSite invOrganizationSite) {
+        Map<String, Object> params = new HashMap<>();
+        Map<String, Object> params2 = new HashMap<>();
+        params.put("branchId", 182);
+        params.put("mobile", invOrganizationSite.getMobile());
+        params2.put("branchId", 182);
+        params2.put("code", invOrganizationSite.getCode());
+//        List<InvOrganizationSite> detailsesMobile = dao.findListByQuery("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND e.mobile = :mobile ORDER BY e.code", params);
+        List<InvOrganizationSite> detailsesCode = dao.findListByQuery("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND e.code = :code ORDER BY e.code", params2);
+        if (detailsesCode == null || detailsesCode.isEmpty()) {
+            return dao.updateEntity(invOrganizationSite);
+        }
+        return null;
+    }
+    
+    @Override
     public InvOrganizationSite addOrganizationSite(InvOrganizationSite invOrganizationSite) {
         return dao.updateEntity(invOrganizationSite);
     }
@@ -136,7 +152,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
     }
     
     @Override
-    public List<InvOrganizationSite> getSupplierByBranchIdForSupplierAccountReportMB(Integer branchId, Integer type, SupplierAccountSearchBean supplierAccountSearchBean) {
+    public List<InvOrganizationSite> getSupplierByBranchIdForSupplierAccountReportMB(Integer branchId, Integer gallaryId, Integer type, SupplierAccountSearchBean supplierAccountSearchBean) {
         Map<String, Object> params = new HashMap<>();
         StringBuilder query = new StringBuilder();
         params.put("branchId", branchId);
@@ -159,6 +175,12 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             params.put("customerTo", supplierAccountSearchBean.getToorganizationNameDTO().getCode());
             query.append("AND (e.code <= :customerTo)");
         }
+        
+        if (gallaryId != null) {
+            params.put("gallaryId", gallaryId);
+            query.append("AND e.gallaryId.id = :gallaryId");
+        }
+
         //query.append("  AND e.active = 1) ORDER BY e.code ");
         query.append("  AND e.active = 1) ORDER BY e.id ");
         
@@ -392,6 +414,12 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         invOrganizationSite.setPhone2(invOrganizationSiteDTO.getPhone2());
         invOrganizationSite.setPostBox(invOrganizationSiteDTO.getPostBox());
         invOrganizationSite.setRemark(invOrganizationSiteDTO.getRemark());
+        
+        if (invOrganizationSiteDTO.getGallaryIdDTO() != null && invOrganizationSiteDTO.getGallaryIdDTO().getId() != null) {
+            InvInventory invInventory = new InvInventory();
+            invInventory.setId(invOrganizationSiteDTO.getGallaryIdDTO().getId());
+            invOrganizationSite.setGallaryId(invInventory);
+        }
         
         if (invOrganizationSiteDTO.getParent() != null) {
             InvOrganizationSite organizationSite1 = new InvOrganizationSite();
@@ -716,12 +744,12 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
     }
     
     @Override
-    public Long getTotalRegistors(Integer branchId, Map<String, Object> filters, Integer type, Integer galaryId) {
+    public Long getTotalRegistors(Integer branchId, Map<String, Object> filters, Integer type, Integer gallaryId) {
         filters.put("branchId", branchId);
         filters.put("type", type);        
-        filters.put("galaryId", galaryId);
+        filters.put("gallaryId", gallaryId);
         StringBuilder builder = new StringBuilder();
-        builder.append("SELECT count(i) FROM InvOrganizationSite i WHERE i.branchId.id = :branchId AND i.type = :type OR i.type = 2 AND (:galaryId is Null OR  i.galaryId.id = :galaryId ) ");
+        builder.append("SELECT count(i) FROM InvOrganizationSite i WHERE i.branchId.id = :branchId AND i.type = :type OR i.type = 2 AND (:gallaryId is Null OR  i.gallaryId.id = :gallaryId ) ");
         appendFilter(filters, builder);
         Long details = dao.findEntityByQuery(builder.toString(), filters);
         
@@ -739,12 +767,12 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
     }
     
     @Override
-    public List<InvOrganizationSiteDTO> getALLCustomerDTOByBranchIdAndType(int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters, Integer type, Integer galaryId) {
+    public List<InvOrganizationSiteDTO> getALLCustomerDTOByBranchIdAndType(int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters, Integer type, Integer gallaryId) {
         filters.put("branchId", branchId);
         filters.put("type", type);
-        filters.put("galaryId", galaryId);
+        filters.put("gallaryId", gallaryId);
         StringBuilder builder = new StringBuilder();
-        builder.append("SELECT i FROM InvOrganizationSite i WHERE i.branchId.id = :branchId  AND i.type = :type OR i.type = 2 AND  i.galaryId.id = :galaryId ");
+        builder.append("SELECT i FROM InvOrganizationSite i WHERE i.branchId.id = :branchId  AND i.type = :type OR i.type = 2 AND (:gallaryId is Null OR  i.gallaryId.id = :gallaryId )");
         appendFilter(filters, builder);
         builder.append(" ORDER BY i.id DESC");
         List<InvOrganizationSite> details = dao.findListByQuery(builder.toString(), filters, first, pageSize);
@@ -780,6 +808,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         dTO.setContactPerson(entity.getContactPerson());
         dTO.setPhone2(entity.getPhone2());
         dTO.setOpenBalanceDate(entity.getOpenBalanceDate());
+        
         if (entity.getAccountId() != null) {
             GlAccountDTO glAccountDTO = new GlAccountDTO();
             glAccountDTO.setId(entity.getAccountId().getId());
@@ -787,11 +816,12 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             glAccountDTO.setAccNumber(entity.getAccountId().getAccNumber());
             dTO.setAccountId(glAccountDTO);
         }
-        if (entity.getGalaryId() != null) {
+        if (entity.getGallaryId() != null) {
             InvInventoryDTO invInventoryDTO = new InvInventoryDTO();
-            invInventoryDTO.setId(entity.getGalaryId().getId());
-            dTO.setGalaryId(invInventoryDTO);
+            invInventoryDTO.setId(entity.getGallaryId().getId());
+            dTO.setGallaryIdDTO(invInventoryDTO);
         }
+        
         if (entity.getCountryId() != null) {
             SymbolDTO symbolDTO = new SymbolDTO();
             symbolDTO.setId(entity.getCountryId().getId());
@@ -880,11 +910,12 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             glAccount.setId(dTO.getAccountId().getId());
             entity.setAccountId(glAccount);
         }
-        if (dTO.getGalaryId() != null) {
-            InvInventory inventory = new InvInventory();
-            inventory.setId(dTO.getGalaryId().getId());
-            entity.setGalaryId(inventory);
+        if (dTO.getGallaryIdDTO() != null) {
+            InvInventory invInventory = new InvInventory();
+            invInventory.setId(dTO.getGallaryIdDTO().getId());
+            entity.setGallaryId(invInventory);
         }
+        
         if (dTO.getCountryId() != null) {
             Symbol symbol = new Symbol();
             symbol.setId(dTO.getCountryId().getId());
@@ -1387,6 +1418,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             inventoryDelegatorDTO.setId(77);
             invOrganizationSiteDTO.setDelegatorId(inventoryDelegatorDTO);
             invOrganizationSiteDTO.setCode(code.toString());
+            
             invOrganizationSiteDTO = addOrganizationSiteDTO(invOrganizationSiteDTO, tobyUser);
             invOrganizationSiteDTOList.add(0, invOrganizationSiteDTO);
         }

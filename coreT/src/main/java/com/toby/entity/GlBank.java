@@ -43,7 +43,7 @@ public class GlBank extends BaseEntity {
     private String name;
     @Size(max = 45)
     @Column(name = "code")
-    private String code;
+    private Integer code;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "openinng_balance")
     private BigDecimal openinngBalance;
@@ -90,11 +90,11 @@ public class GlBank extends BaseEntity {
         this.name = name;
     }
 
-    public String getCode() {
+    public Integer getCode() {
         return code;
     }
 
-    public void setCode(String code) {
+    public void setCode(Integer code) {
         this.code = code;
     }
 

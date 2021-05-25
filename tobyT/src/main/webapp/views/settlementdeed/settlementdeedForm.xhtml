@@ -157,20 +157,20 @@
                             </p:fieldset>
                         </h:panelGroup>
                     </div>
-                    <div class="ui-g-12 ui-xl-12">
-
-                        <div class="ui-g-6 ui-xl-6">
-                            <p:inputNumber style="width: 55%" 
-                                           id="value"
-                                           value="#{SettlementDeedFormMB.glBankTransactionEntity.value}">
-
-                                <p:ajax event="blur" listener="#{SettlementDeedFormMB.updateTransactionRate()}" />
-                            </p:inputNumber>
-                        </div>
-                        <div class="ui-g-6 ui-xl-6">
-                            <p:outputLabel style="width: 64px;margin-right: 6%;" value="#{userData.userDDs['AMOUNT']}"/>
-                        </div>
-                    </div>
+                    <!--                    <div class="ui-g-12 ui-xl-12">
+                    
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:inputNumber style="width: 55%" 
+                                                               id="value"
+                                                               value="#/{SettlementDeedFormMB.glBankTransactionEntity.value}">
+                    
+                                                    <p:ajax event="blur" listener="#/{SettlementDeedFormMB.updateTransactionRate()}" />
+                                                </p:inputNumber>
+                                            </div>
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:outputLabel style="width: 64px;margin-right: 6%;" value="#/{userData.userDDs['AMOUNT']}"/>
+                                            </div>
+                                        </div>-->
                     <div class="ui-g-12 ui-xl-12">
 
                         <div class="ui-g-6 ui-xl-6">
@@ -368,6 +368,25 @@
                         <h:outputText value="#{glBankTransactionDetailsTable.invOrganizationSite.name}"  rendered="#{not glBankTransactionDetailsTable.markEdit}"/>
 
                     </p:column>
+
+                    <p:column  style="width: 17vh;font-size: 1.8vh;text-align: right" 
+                               headerText="الفواتير" rendered="#{SettlementDeedFormMB.organizationSiteView}">
+
+                        <p:outputLabel value="#{glBankTransactionDetailsTable.invoiceId}" 
+                                       rendered="#{not glBankTransactionDetailsTable.markEdit}" />
+
+                        <p:selectOneMenu  id="invoice" style="width:100%"  rendered="#{glBankTransactionDetailsTable.markEdit}"
+                                          value="#{glBankTransactionDetailsTable.invoiceId}">
+                            <f:selectItem itemLabel="اختر الفاتوره "/>
+                            <f:selectItems  var="inninvoice"
+                                            value="#{glBankTransactionDetailsTable.glBankTransactionInvoiceViewList}"
+                                            itemLabel="#{inninvoice.serial}"
+                                            itemValue="#{inninvoice.invoiceId}"/>
+                        </p:selectOneMenu>
+
+                    </p:column>
+
+
                     <p:column style="width: 14vh;font-size: 1.8vh;text-align: right" 
                               filterBy="#{userData.userDDs['ACCOUNT_NUMBER']}"  filterMatchMode="contains" sortBy="#{userData.userDDs['ACCOUNT_NUMBER']}" filterable="false"
                               headerText="#{userData.userDDs['ACCOUNT_NUMBER']}"  rendered="#{SettlementDeedFormMB.organizationSiteView}">
@@ -488,42 +507,12 @@
                                        rendered="#{glBankTransactionDetailsTable.markEdit}" style="width: 25em;">
                             <p:ajax event="blur" 
                                     listener="#{SettlementDeedFormMB.updateAllSummations}"
-                                    update="glBankTransactionDetailsTable"
-
                                     />
                         </p:inputNumber>
                         <h:outputText value="#{glBankTransactionDetailsTable.value}"
                                       rendered="#{not glBankTransactionDetailsTable.markEdit}"/>
 
                     </p:column>
-                    <p:column  style="width: 18vh;font-size: 1.8vh;text-align: right;border-radius: 0px" 
-                               headerText="المعدل">
-
-
-                        <p:inputNumber id="rate" value="#{glBankTransactionDetailsTable.rate}" 
-                                       rendered="#{glBankTransactionDetailsTable.markEdit}" decimalPlaces="4" style="width: 25em;">
-                            <p:ajax event="blur" 
-                                    listener="#{SettlementDeedFormMB.updateAllSummations}"
-                                    update="valueLocalT"
-
-                                    />
-                        </p:inputNumber>
-                        <h:outputText value="#{glBankTransactionDetailsTable.rate}"
-                                      rendered="#{not glBankTransactionDetailsTable.markEdit}"/>
-
-                    </p:column>
-                    <p:column  style="width: 13vh;font-size: 1.8vh;text-align: right;border-radius: 0px" id="localValue" 
-                               headerText="#{userData.userDDs['RATE*AMOUNT']}">
-
-
-                        <h:outputText id="valueLocalT" value="#{glBankTransactionDetailsTable.valueLocal}" 
-                                      rendered="#{glBankTransactionDetailsTable.markEdit}" style="width:200%"/>
-                        <h:outputText value="#{glBankTransactionDetailsTable.valueLocal}"
-                                      rendered="#{not glBankTransactionDetailsTable.markEdit}"/>
-
-                    </p:column>
-
-
 
 
 
@@ -534,8 +523,6 @@
                             <p:column  style="border-radius: 0px" rendered="#{SettlementDeedFormMB.organizationSiteView}" />
                             <p:column style="border-radius: 0px" id="valueSummary2" footerText="#{SettlementDeedFormMB.valueSummary}" />
                             <p:column  style="border-radius: 0px"/>
-                            <p:column style="border-radius: 0px" id="totalQuantity2" footerText="#{SettlementDeedFormMB.localValue}" />
-                            <p:column  style="border-radius: 0px"/>
 
                         </p:row>
                     </p:columnGroup>
@@ -543,6 +530,15 @@
 
                     <p:column style="width: 10vh;font-size: 1.8vh;text-align: right;border-radius: 0px" 
                               headerText="#{userData.userDDs['TRANSACTION']}">
+
+                        <p:commandButton 
+                            class="printButtons"
+                            id="b71" value="كشف حساب" 
+                            title="كشف الحساب" onclick="form.target = '_blank'" 
+                            ajax="false"
+                            rendered="#{glBankTransactionDetailsTable.invOrganizationSite ne null}"
+                            actionListener="#{SettlementDeedFormMB.goTOrganizationSiteacoount(glBankTransactionDetailsTable.invOrganizationSite.id)}"  
+                            />
 
                         <p:commandButton 
                             class="saddButtons"

@@ -71,7 +71,6 @@ public class LoginBean extends Basic implements Serializable {
     @EJB
     private TobyUserRoleService userRoleService;
 
-
     @EJB
     private BranchService branchService;
 
@@ -165,7 +164,6 @@ public class LoginBean extends Basic implements Serializable {
                 loggedInUser.setBranchId(userData.getUserBranch());
                 context.getSessionMap().put("userlogin", loggedInUser);
                 context.getSessionMap().put("userDataDTO", userDataDTO);
-
 
                 saveUserData(userData, true);
 
@@ -269,7 +267,7 @@ public class LoginBean extends Basic implements Serializable {
             userData.setSelectedBranch(branches.get(0).getId());
             userData.setUserPrivileges(privilegeService.getUserPrivileges(loggedInUser.getId(), branches.get(0).getId()));
             userData.setTobyUserRole(userRoleService.findUserRoleByUserIdAndBranch(userData.getUser().getId(), userData.getUserBranch().getId()));
-            
+
             List<GlYear> branchYears = yearService.getALLGlyearByBranchId(userData.getUserBranch().getId());
 
             for (GlYear year : branchYears) {
@@ -307,18 +305,22 @@ public class LoginBean extends Basic implements Serializable {
             if (tobyUserproproductionStatgesList != null && tobyUserproproductionStatgesList.size() > 0) {
                 userData.setProProductionStagesDTODefault(tobyUserproproductionStatgesList.get(0));
             }
-            
+
             List<InvInventoryDTO> tobyUserInventoryDTO = tobyUserInventoryService.getAllInventroisByUserAndBranchPerDTO(userData.getUser().getId(), userData.getUserBranch().getId());
             userData.setInventoryDTOList(tobyUserInventoryDTO);
             if (tobyUserInventoryDTO != null && tobyUserInventoryDTO.size() > 0) {
                 userData.setInventoryDTODefault(tobyUserInventoryDTO.get(0));
             }
 
-            List<GlBankDTO> glBankDTOList = tobyUserBankService.getAllGlBankForUserByTypeAndBranchIdPerDTO(userData.getUser().getId(), userData.getUserBranch().getId(),null);
+            List<GlBankDTO> glBankDTOList = tobyUserBankService.getAllGlBankForUserByTypeAndBranchIdPerDTO(userData.getUser().getId(), userData.getUserBranch().getId(), null);
             userData.setGlBankDTOList(glBankDTOList);
             if (glBankDTOList != null && glBankDTOList.size() > 0) {
                 userData.setGlBankDTODefault(glBankDTOList.get(0));
             }
+
+            List<InvInventoryDTO> tobyUserGallaryDTO = tobyUserInventoryService.getAllGallaryByUserAndBranch(userData.getUser());
+            userData.setGallaryDTOList(tobyUserGallaryDTO);
+
         }
 
     }

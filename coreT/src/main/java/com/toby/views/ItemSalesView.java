@@ -58,6 +58,8 @@ public class ItemSalesView implements Serializable {
     private Integer id;
     @Column(name = "serial")
     private Integer serial;
+    @Column(name = "serial_tax")
+    private Integer serialTax;
     @Column(name = "type")
     private Integer type;
     @Column(name = "delegator_code")
@@ -438,6 +440,20 @@ public class ItemSalesView implements Serializable {
      */
     public void setProGroupName(String proGroupName) {
         this.proGroupName = proGroupName;
+    }
+
+    /**
+     * @return the serialTax
+     */
+    public Integer getSerialTax() {
+        return serialTax;
+    }
+
+    /**
+     * @param serialTax the serialTax to set
+     */
+    public void setSerialTax(Integer serialTax) {
+        this.serialTax = serialTax;
     }
 
 }

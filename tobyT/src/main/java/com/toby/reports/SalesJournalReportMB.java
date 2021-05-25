@@ -281,6 +281,7 @@ public class SalesJournalReportMB extends BaseReportBean {
                     sjrb.setNet(orgView.getNet());
                     sjrb.setSumTotalCost(orgView.getSumTotalCost());
                     sjrb.setSerialNum(orgView.getSerial());
+                    sjrb.setSupplierCode(orgView.getOrganizationSiteCode());
 
                     //------------------------
                     if (getSalesJournalSearchBean().getIsReturn()) {
@@ -398,6 +399,7 @@ public class SalesJournalReportMB extends BaseReportBean {
         hashMap.put("inventoryToText", userDDs.get("TO_DEPOSITORY"));
         hashMap.put("invoiceNumberFromText", userDDs.get("FROM_INVOI_NO"));
         hashMap.put("invoiceNumberToText", userDDs.get("TO_INVOI_NO"));
+        hashMap.put("supplierCode", "الكود");
         if (salesJournalSearchBean.getFrompaymentType() != null && salesJournalSearchBean.getFrompaymentType() == 0) {
             hashMap.put("invTypeFromValue", userDDs.get("CASH"));
         } else if (salesJournalSearchBean.getFrompaymentType() != null && salesJournalSearchBean.getFrompaymentType() == 1) {

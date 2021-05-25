@@ -137,7 +137,7 @@ public class InvOrganizationSite extends BaseEntity {
     private OfferCompany offerCompanyId;
     @JoinColumn(name = "gallary_id", referencedColumnName = "id")
     @ManyToOne
-    private InvInventory galaryId;
+    private InvInventory gallaryId;
 
     public InvOrganizationSite() {
     }
@@ -430,17 +430,17 @@ public class InvOrganizationSite extends BaseEntity {
     }
 
     /**
-     * @return the galaryId
+     * @return the gallaryId
      */
-    public InvInventory getGalaryId() {
-        return galaryId;
+    public InvInventory getGallaryId() {
+        return gallaryId;
     }
 
     /**
-     * @param galaryId the galaryId to set
+     * @param gallaryId the gallaryId to set
      */
-    public void setGalaryId(InvInventory galaryId) {
-        this.galaryId = galaryId;
+    public void setGallaryId(InvInventory gallaryId) {
+        this.gallaryId = gallaryId;
     }
 
 }

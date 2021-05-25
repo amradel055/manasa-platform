@@ -49,7 +49,7 @@ public interface OrganizationSiteService {
 
     public List<InvOrganizationSite> getSupplierByBranchIdForSupplierAccountReportMB(Integer branchId, Integer type);
 
-    public List<InvOrganizationSite> getSupplierByBranchIdForSupplierAccountReportMB(Integer branchId, Integer type, SupplierAccountSearchBean supplierAccountSearchBean);
+    public List<InvOrganizationSite> getSupplierByBranchIdForSupplierAccountReportMB(Integer branchId,Integer gallaryId, Integer type, SupplierAccountSearchBean supplierAccountSearchBean);
 
     public List<InvOrganizationSite> getCustomerByBranchId(Integer branchId);
 
@@ -64,6 +64,8 @@ public interface OrganizationSiteService {
     public Boolean checkCodeExistence(InvOrganizationSite invOrganizationSite);
 
     public List<InvOrganizationSite> getInvOrganizationSiteByBranchIdPer(Integer branchId);
+    
+     public InvOrganizationSite addOrganizationSiteNew(InvOrganizationSite invOrganizationSite);
 
     public List<InvOrganizationSiteDTO> getorganizationSiteByBranchIdDTO(TobyUser tobyUser, boolean active, Integer type);
 
@@ -93,9 +95,9 @@ public interface OrganizationSiteService {
 
     public List<InvOrganizationSiteDTO> getCustomerDTOFromAndTo(Integer branchId, invOrganizationSiteSearchBean organizationSiteSearchBean);
 
-    public Long getTotalRegistors(Integer branchId, Map<String, Object> filters, Integer type,Integer galaryId);
+    public Long getTotalRegistors(Integer branchId, Map<String, Object> filters, Integer type,Integer gallaryId);
 
-    public List<InvOrganizationSiteDTO> getALLCustomerDTOByBranchIdAndType(int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters, Integer type, Integer galaryId);
+    public List<InvOrganizationSiteDTO> getALLCustomerDTOByBranchIdAndType(int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters, Integer type, Integer gallaryId);
 
     public void deleteOrganizationSiteDTO(InvOrganizationSiteDTO invOrganizationSiteDTO, TobyUser isagUser);
 

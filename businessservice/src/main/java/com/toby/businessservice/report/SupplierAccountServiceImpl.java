@@ -54,7 +54,7 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
         List<OrganizationSiteStatementView> details = dao.findListByQuery(stringBuilder.toString(), params);
         return details;
     }
-    
+
     @Override
     public List<OrganizationSiteStatementView> getAllOrganizationSiteStatementSearchBeanById(SupplierAccountSearchBean supplierAccountSearchBean) {
         Map<String, Object> params = new HashMap<>();
@@ -75,7 +75,7 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
         }
 
         appendDate(supplierAccountSearchBean, stringBuilder, params);
-        if (supplierAccountSearchBean.getFromorganizationNameDTO()!= null) {
+        if (supplierAccountSearchBean.getFromorganizationNameDTO() != null) {
             params.put("FromOrganization", supplierAccountSearchBean.getFromorganizationNameDTO().getId());
             stringBuilder.append(" AND RIV.organizationSiteId = :FromOrganization ");
         }
@@ -87,7 +87,7 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
 
     private void appendOrganization(SupplierAccountSearchBean supplierAccountSearchBean, StringBuilder stringBuilder, Map<String, Object> params) {
 
-        if (supplierAccountSearchBean.getFromorganizationNameDTO()!= null) {
+        if (supplierAccountSearchBean.getFromorganizationNameDTO() != null) {
             params.put("FromOrganization", supplierAccountSearchBean.getFromorganizationNameDTO().getCode());
             stringBuilder.append(" AND RIV.organizationCode >= :FromOrganization ");
         }
@@ -150,7 +150,8 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
             stringBuilder.append(" AND RIV.date < :fromDate");
         }
     }
-    
+
+    @Override
     public BigDecimal getAccountForOrganizationSite(Integer organizationSiteId) {
         Map<String, Object> params = new HashMap<>();
 
@@ -158,9 +159,81 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
 //        params.put("type", supplierAccountSearchBean.getOrganizationType());
 
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("SELECT sum(RIV.exitt) - sum(RIV.adding) FROM OrganizationSiteStatementView RIV WHERE RIV.organizationSiteId = :organizationSiteId  ");
+//        stringBuilder.append("SELECT sum(RIV.exitt) - sum(RIV.adding) FROM OrganizationSiteStatementView RIV WHERE RIV.organizationSiteId = :organizationSiteId  ");
+        stringBuilder.append("SELECT (sum(s.exitt) - sum(s.adding)) as balance from (SELECT 0 AS `exitt`, IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`, 15, IFNULL(`disc_halala`, 0)),0) AS `adding`\n"
+                + "	FROM `inv_purchase_invoice` `ipi` LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
+                + "	WHERE ((`ipi`.`type` = 0) AND (`ipi`.`date` IS NOT NULL)) "
+                + "     AND ipi.organization_site_id = " + organizationSiteId + "\n"
+                + "    group by ipi.id\n"
+                + "UNION ALL SELECT IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`, 15, IFNULL(`disc_halala`, 0)),0)  AS `exitt`, 0 AS `adding`\n"
+                + "    FROM `inv_purchase_invoice` `ipi` LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
+                + "    WHERE ((`ipi`.`type` = 4)  AND (`ipi`.`date` IS NOT NULL)) "
+                + "     AND ipi.organization_site_id = " + organizationSiteId + "\n"
+                + "    group by ipi.id\n"
+                + "UNION ALL SELECT IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`, 15, IFNULL(`disc_halala`, 0)),0)  AS `exitt`, 0 AS `adding`\n"
+                + "    FROM  `inv_purchase_invoice` `ipi` LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
+                + "    WHERE ((`ipi`.`type` = 2)  AND (`ipi`.`date` IS NOT NULL)) "
+                + "     AND ipi.organization_site_id = " + organizationSiteId + "\n"
+                + "    group by ipi.id\n"
+                + "UNION ALL SELECT 0 AS `exitt`, IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`, 15, IFNULL(`disc_halala`, 0)),0) AS `adding`\n"
+                + "    FROM `inv_purchase_invoice` `ipi` LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
+                + "    WHERE ((`ipi`.`type` = 3) AND (`ipi`.`date` IS NOT NULL)) "
+                + "     AND ipi.organization_site_id = " + organizationSiteId + "\n"
+                + "    group by ipi.id\n"
+                + "UNION ALL SELECT 0 AS `exitt`, IFNULL(`gbtd`.`value_local`, 0) AS `adding`\n"
+                + "    FROM `gl_bank_transaction` `gbt`  LEFT JOIN `gl_bank_transaction_detail` `gbtd` ON `gbt`.`id` = `gbtd`.`gl_bank_transaction_id`\n"
+                + "    WHERE ((`gbt`.`payment_type` = 0) "
+                + "     AND gbtd.organization_site_id = " + organizationSiteId + "\n"
+                + "AND (`gbt`.`transaction_type` = 1)) \n"
+                + "    GROUP BY  `gbt`.`id`\n"
+                + "UNION ALL SELECT 0 AS `exitt`, IFNULL(`gbtd`.`value_local`, 0) AS `adding`\n"
+                + "	FROM `gl_bank_transaction` `gbt` LEFT JOIN `gl_bank_transaction_detail` `gbtd` ON `gbt`.`id` = `gbtd`.`gl_bank_transaction_id`\n"
+                + "    WHERE (`gbt`.`payment_type` = 1) "
+                + "     AND gbtd.organization_site_id = " + organizationSiteId + "\n"
+                + "AND (`gbt`.`transaction_type` = 1)\n"
+                + "    GROUP BY  `gbt`.`id`\n"
+                + "UNION ALL SELECT 0 AS `exitt`, IFNULL(`gbtd`.`value_local`, 0) AS `adding`\n"
+                + "    FROM `gl_bank_transaction` `gbt`  LEFT JOIN `gl_bank_transaction_detail` `gbtd` ON `gbt`.`id` = `gbtd`.`gl_bank_transaction_id`\n"
+                + "    WHERE (`gbt`.`payment_type` = 2)  "
+                + "     AND gbtd.organization_site_id = " + organizationSiteId + "\n"
+                + "AND (`gbt`.`transaction_type` = 1)\n"
+                + "    GROUP BY  `gbt`.`id`\n"
+                + "UNION ALL SELECT   SUM(IFNULL(`gbtd`.`value_local`, 0)) AS `exitt`, 0 AS `adding`\n"
+                + "    FROM `gl_bank_transaction` `gbt`  LEFT JOIN `gl_bank_transaction_detail` `gbtd` ON `gbt`.`id` = `gbtd`.`gl_bank_transaction_id`\n"
+                + "    WHERE (`gbt`.`payment_type` = 0)  "
+                + "     AND gbtd.organization_site_id = " + organizationSiteId + "\n"
+                + "AND (`gbt`.`transaction_type` = 0)\n"
+                + "    GROUP BY  `gbt`.`id`\n"
+                + "UNION ALL SELECT     SUM(IFNULL(`gbtd`.`value_local`, 0)) AS `exitt`, 0 AS `adding`\n"
+                + "    FROM `gl_bank_transaction` `gbt` LEFT JOIN `gl_bank_transaction_detail` `gbtd` ON `gbt`.`id` = `gbtd`.`gl_bank_transaction_id`\n"
+                + "    WHERE (`gbt`.`payment_type` = 1) "
+                + "     AND gbtd.organization_site_id = " + organizationSiteId + "\n"
+                + "AND (`gbt`.`transaction_type` = 0)\n"
+                + "    GROUP BY  `gbt`.`id` \n"
+                + "UNION ALL SELECT  SUM(IFNULL(`gbtd`.`value_local`, 0)) AS `exitt`,  0 AS `adding` \n"
+                + "    FROM `gl_bank_transaction` `gbt` LEFT JOIN `gl_bank_transaction_detail` `gbtd` ON `gbt`.`id` = `gbtd`.`gl_bank_transaction_id`\n"
+                + "    WHERE  (`gbt`.`payment_type` = 2) "
+                + "     AND gbtd.organization_site_id = " + organizationSiteId + "\n"
+                + "AND (`gbt`.`transaction_type` = 0)\n"
+                + "    GROUP BY `gbt`.`id`\n"
+                + "UNION ALL SELECT IFNULL(`ios`.`open_balance_debit`, 0) AS `exitt`, IFNULL(`ios`.`open_balance_credit`, 0) AS `adding`\n"
+                + "    FROM  `inv_organization_site` `ios` WHERE  "
+                + " `ios`.id = " + organizationSiteId + "\n"
+                + "UNION ALL SELECT  IFNULL(`in`.`value`, 0) AS `exitt`,  0 AS `adding`\n"
+                + "    FROM `inv_notice` `in`   WHERE (`in`.`type` = 0)  "
+                + "and `in`.organization_site_id =  " + organizationSiteId + "\n"
+                + "UNION ALL SELECT   0 AS `exitt`, IFNULL(`in`.`value`, 0) AS `adding`\n"
+                + "    FROM `inv_notice` `in` WHERE  (`in`.`type` = 1)  "
+                + "and `in`.organization_site_id =  " + organizationSiteId + "\n"
+                + "UNION ALL SELECT  0 AS `exitt`,IFNULL(`in`.`value`, 0) AS `adding`\n"
+                + "    FROM `inv_notice` `in` WHERE  (`in`.`type` = 2) "
+                + "and `in`.organization_site_id =  " + organizationSiteId + "\n"
+                + "UNION ALL SELECT  IFNULL(`in`.`value`, 0) AS `exitt`,  0 AS `adding`\n"
+                + "    FROM  `inv_notice` `in`   WHERE   (`in`.`type` = 3) "
+                + "and `in`.organization_site_id =  " + organizationSiteId + "\n"
+                + "    ) s ");
 
-        List<BigDecimal> details = dao.findListByQuery(stringBuilder.toString(), params);
-        return (details != null && !details.isEmpty() ) ? details.get(0).setScale(3, BigDecimal.ROUND_UP) : BigDecimal.ZERO;
+        List<BigDecimal> details = dao.executeNativeQuery(stringBuilder.toString());
+        return (details != null && !details.isEmpty()) ? (details.get(0) == null ? BigDecimal.ZERO : details.get(0).setScale(3, BigDecimal.ROUND_UP)) : BigDecimal.ZERO;
     }
 }

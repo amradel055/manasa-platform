@@ -26,6 +26,22 @@
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
 
+                                    <p:inputText id="serialSelected" value="#{notesReceivablesFormMB.serialSelected}">
+                                        <p:ajax listener="#{notesReceivablesFormMB.findNotesReceivable()}" event="blur" update="@form"/>
+                                    </p:inputText>
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+
+
+                                    <p:outputLabel style="width: 60px;font-size: 14px!important;font-family: bold!important;" value="ادخل رقم السند"/>
+
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+
                                     <p:outputLabel id="settelmentId" value="#{notesReceivablesFormMB.glBankTransactionEntity.serial}"/>
                                     <p:inputText type="hidden" readonly="true" style="width: 60%" id="settelmentId2" value="#{notesReceivablesFormMB.glBankTransactionEntity.id}" />
 

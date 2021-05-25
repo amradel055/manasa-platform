@@ -835,11 +835,12 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
     }
 
     @Override
-    public Long getTotalRegistors(Integer type, Integer branchId, Map<String, Object> filters) {
+    public Long getTotalRegistors(Integer type, Integer branchId, Integer invInventoryId, Map<String, Object> filters) {
         StringBuilder builder = new StringBuilder();
         filters.put("type", type);
         filters.put("branchId", branchId);
-        builder.append("SELECT count(s) FROM InvAddingorder s WHERE   s.branchId.id = :branchId AND s.type =:type ");
+        filters.put("invInventoryId", invInventoryId);
+        builder.append("SELECT count(s) FROM InvAddingorder s WHERE   s.branchId.id = :branchId AND s.type =:type AND (:invInventoryId is Null OR  s.invInventoryId.id = :invInventoryId)");
         appendFilter(filters, builder);
         builder.append("   group by s.id ");
         Long details = dao.findEntityByQuery(builder.toString(), filters);
@@ -857,11 +858,12 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
     }
 
     @Override
-    public List<InvInvoiceDTO> getALLInvAddingorderDTOByBranchId(Integer type, int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters) {
+    public List<InvInvoiceDTO> getALLInvAddingorderDTOByBranchId(Integer type, Integer invInventoryId, int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters) {
         filters.put("type", type);
         filters.put("branchId", branchId);
+        filters.put("invInventoryId", invInventoryId);
         StringBuilder builder = new StringBuilder();
-        builder.append("SELECT s FROM InvAddingorder s WHERE   s.branchId.id = :branchId AND s.type =:type  ");
+        builder.append("SELECT s FROM InvAddingorder s WHERE   s.branchId.id = :branchId AND s.type =:type  AND  (:invInventoryId is Null OR  s.invInventoryId.id = :invInventoryId)  ");
         appendFilter(filters, builder);
         builder.append("  group by s.id ");
         builder.append(" order by s.serial DESC");

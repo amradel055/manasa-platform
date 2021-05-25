@@ -46,6 +46,8 @@ public class InvItemServiceImpl implements InvItemService {
     private OrganizationSiteService organizationSiteService;
     @EJB
     private CurrencyServiceDTO currencyServiceDTO;
+    @EJB
+    private InvOpeningBalanceItemDetailService invOpeningBalanceItemDetailService;
 
     StringBuilder appendQuery;
 
@@ -1038,6 +1040,36 @@ public class InvItemServiceImpl implements InvItemService {
                 dao.saveEntity(item);
             }
         }
+    }
+    
+     @Override
+    public void getInvItemListByBranchId(Integer branchId) {
+        updateInvItemCostAverageToZero(branchId);
+        List<Integer> invItemIdList = getInvItemListByBranchIdNotInInvPurchaseInvoice(branchId);
+        List<Object[]> objectList = invOpeningBalanceItemDetailService.getInvOpeningBalanceItemDetailsByBranchId(branchId, invItemIdList);
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        for (Object[] objects : objectList) {
+            String builder = "UPDATE  InvItem i set i.costAverage = " + (BigDecimal) objects[1] + " WHERE i.id = " + (Integer) objects[0] + " and i.branchId.id = :branchId";
+            dao.executeUpdateQuery(builder, params);
+        }
+    }
+    
+    @Override
+    public void updateInvItemCostAverageToZero(Integer branchId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        String builder_Zero = "UPDATE  InvItem i set i.costAverage = null WHERE i.id > 0 and i.branchId.id = :branchId";
+        dao.executeUpdateQuery(builder_Zero, params);
+    }
+    
+    @Override
+    public List<Integer> getInvItemListByBranchIdNotInInvPurchaseInvoice(Integer branchId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        //  List<Integer> detailses = dao.findListByQuery("SELECT i.id FROM InvItem i WHERE i.branchId.id = :branchId  and i.id not in (SELECT e.itemId.id FROM InvPurchaseInvoiceDetail e WHERE e.branchId.id = :branchId and e.invPurchaseInvoiceId.type = 0) ORDER BY i.code", params);
+        List<Integer> detailses = dao.findListByQuery("SELECT i.id FROM InvItem i WHERE i.branchId.id = :branchId  ORDER BY i.code", params);
+        return detailses;
     }
 
 }
