@@ -22,6 +22,8 @@ import javax.ejb.Remote;
 public interface OrganizationSiteService {
 
     public void updateOrganizationSiteMobile(InvOrganizationSiteDTO organizationSiteDTO);
+    
+    public void updateOrganizationSiteCompany(InvOrganizationSiteDTO organizationSiteDTO) ;
 
     public List<InvOrganizationSite> getContractorByBranchIdForGlBankModule(Integer branchId, boolean active, Integer type);
 

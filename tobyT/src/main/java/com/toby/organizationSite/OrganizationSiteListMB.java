@@ -5,12 +5,15 @@
  */
 package com.toby.organizationSite;
 
+import com.toby.businessservice.OfferCompanyService;
 import com.toby.businessservice.OrganizationSiteService;
 import com.toby.businessservice.TobyUserInventoryService;
 import com.toby.converter.InvInventoryConverter;
 import com.toby.converter.InvInventoryDTOConverter;
+import com.toby.converter.OfferCompanyDTOConverter;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.InvOrganizationSiteDTO;
+import com.toby.dto.OfferCompanyDTO;
 import com.toby.entity.InvInventory;
 import com.toby.toby.BaseListBean;
 import com.toby.toby.UserData;
@@ -52,10 +55,15 @@ public class OrganizationSiteListMB extends BaseListBean implements Serializable
     private InvInventoryDTOConverter gallaryDTOConverter;
     private InvInventoryConverter invInventoryConverter;
 
+    private List<OfferCompanyDTO> offerCompanyDTOList;
+    private OfferCompanyDTOConverter offerCompanyDTOConverter;
+
     @EJB
     private OrganizationSiteService organizationSiteService;
     @EJB
     private TobyUserInventoryService tobyUserInventoryService;
+    @EJB
+    private OfferCompanyService offerCompanyService;
 
     @Override
     @PostConstruct
@@ -208,6 +216,11 @@ public class OrganizationSiteListMB extends BaseListBean implements Serializable
             saveError(e, "OrganizationSiteListMB", "goToEdit");
             return null;
         }
+    }
+
+    public void updateCompany(InvOrganizationSiteDTO invOrganizationSiteDTO2) {
+        organizationSiteService.updateOrganizationSiteCompany(invOrganizationSiteDTO2);
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "تم الحفظ بنجاح", "تم الحفظ بنجاح"));
     }
 
     @Override
@@ -382,5 +395,37 @@ public class OrganizationSiteListMB extends BaseListBean implements Serializable
      */
     public void setInvInventoryConverter(InvInventoryConverter invInventoryConverter) {
         this.invInventoryConverter = invInventoryConverter;
+    }
+
+    /**
+     * @return the offerCompanyDTOList
+     */
+    public List<OfferCompanyDTO> getOfferCompanyDTOList() {
+        if (offerCompanyDTOList == null || offerCompanyDTOList.isEmpty()) {
+            offerCompanyDTOList = offerCompanyService.getALLGlofferCompanyByBranchId(getUserData().getUserBranch().getId(), getUserData().getUser());
+            setOfferCompanyDTOConverter(new OfferCompanyDTOConverter(offerCompanyDTOList));
+        }
+        return offerCompanyDTOList;
+    }
+
+    /**
+     * @param offerCompanyDTOList the offerCompanyDTOList to set
+     */
+    public void setOfferCompanyDTOList(List<OfferCompanyDTO> offerCompanyDTOList) {
+        this.offerCompanyDTOList = offerCompanyDTOList;
+    }
+
+    /**
+     * @return the offerCompanyDTOConverter
+     */
+    public OfferCompanyDTOConverter getOfferCompanyDTOConverter() {
+        return offerCompanyDTOConverter;
+    }
+
+    /**
+     * @param offerCompanyDTOConverter the offerCompanyDTOConverter to set
+     */
+    public void setOfferCompanyDTOConverter(OfferCompanyDTOConverter offerCompanyDTOConverter) {
+        this.offerCompanyDTOConverter = offerCompanyDTOConverter;
     }
 }

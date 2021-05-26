@@ -85,15 +85,7 @@
                             <p:outputLabel value="#{organizationSiteTable.name}" />
                         </p:column>
 
-                        <p:column style="width:15vh;font-size: 1.8vh;text-align: right;border-radius: 0px "
-                                  filterStyle="display:none" 
-                                  filterBy="#{organizationSiteTable.phone}"
-                                  filterMatchMode="contains" 
-                                  headerText="#{userData.userDDs['PHONE']}"
-                                  sortBy="#{organizationSiteTable.phone}" 
-                                  >
-                            <p:outputLabel value="#{organizationSiteTable.phone}" />
-                        </p:column>
+
 
                         <p:column style="width:15vh;font-size: 1.8vh;text-align: right;border-radius: 0px "
                                   filterStyle="display:none" 
@@ -104,26 +96,20 @@
                                   >
                             <p:outputLabel value="#{organizationSiteTable.mobile}" />
                         </p:column>
-
-                        <p:column style="width:15vh;font-size: 1.8vh;text-align: right;border-radius: 0px "
-                                  filterStyle="display:none"
-                                  filterBy="#{organizationSiteTable.nationId}"  
-                                  filterMatchMode="contains"
-                                  headerText="الهوية"
-                                  sortBy="#{organizationSiteTable.nationId}"
-                                  >
-                            <p:outputLabel value="#{organizationSiteTable.nationId}" />
+                        <p:column style="width:30vh;font-size: 2.5vh;text-align: center;border-radius: 0px " headerText="الشركة التابع لها">
+                            <p:selectOneMenu  id="offerCompanyDTO" filter="true" filterMatchMode="contains"
+                                              value="#{organizationSiteTable.offerCompanyDTO}"
+                                              converter="#{organizationSiteListMB.offerCompanyDTOConverter}">
+                                <f:selectItem itemLabel="اختر" itemValue=""/>
+                                <f:selectItems value="#{organizationSiteListMB.offerCompanyDTOList}" 
+                                               var="offerCompanyDTO"
+                                               itemLabel="#{offerCompanyDTO}"
+                                               itemValue="#{offerCompanyDTO}" />
+                            </p:selectOneMenu>
                         </p:column>
 
-                        <p:column style="width:15vh;font-size: 1.8vh;text-align: right;border-radius: 0px "
-                                  filterStyle="display:none"
-                                  filterBy="#{organizationSiteTable.sponsorName1}"  
-                                  filterMatchMode="contains"
-                                  headerText="اسم الضامن"
-                                  sortBy="#{organizationSiteTable.sponsorName1}"
-                                  >
-                            <p:outputLabel value="#{organizationSiteTable.sponsorName1}" />
-                        </p:column>
+
+
 
 
                         <p:column style="width:10vh;font-size: 1.8vh;text-align: center;border-radius: 0px " headerText="#{userData.userDDs['TRANSACTION']}" >
@@ -138,6 +124,9 @@
                                               rendered="#{userData.userScreens['customer'].delete or userData.isAdmin}">
                                 <f:setPropertyActionListener value="#{organizationSiteTable}" target="#{organizationSiteListMB.invOrganizationSiteDTO}" />
                                 <p:confirm header="Confirmation" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                            </p:commandButton>
+                            <p:commandButton class="seditButtons" update="@form" icon="fa fa-fw fa-save" style="background-color: #6a6967;border-radius: 3px;" 
+                                             title="#{userData.userDDs['SAVE']}" action="#{organizationSiteListMB.updateCompany(organizationSiteTable)}" rendered="#{userData.userScreens['customer'].edit or userData.isAdmin}">
                             </p:commandButton>
                         </p:column>
 

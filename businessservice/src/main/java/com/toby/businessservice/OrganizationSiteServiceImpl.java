@@ -66,6 +66,19 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
     }
 
     @Override
+    public void updateOrganizationSiteCompany(InvOrganizationSiteDTO organizationSiteDTO) {
+        if (organizationSiteDTO != null && organizationSiteDTO.getId() != null) {
+            InvOrganizationSite entity = dao.findEntityById(InvOrganizationSite.class, organizationSiteDTO.getId());
+            if (organizationSiteDTO.getOfferCompanyDTO() != null && organizationSiteDTO.getOfferCompanyDTO().getId() != null) {
+                OfferCompany offerCompany = new OfferCompany();
+                offerCompany.setId(organizationSiteDTO.getOfferCompanyDTO().getId());
+                entity.setOfferCompanyId(offerCompany);
+                dao.updateEntity(entity);
+            }
+        }
+    }
+
+    @Override
     public List<InvOrganizationSite> getInvOrganizationSiteByCompanyId(Integer companyId) {
         return dao.findEntityListByCompanyId(InvOrganizationSite.class, companyId);
     }
@@ -461,6 +474,13 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
 
         }
 
+        if (invOrganizationSiteDTO.getOfferCompanyDTO() != null) {
+            OfferCompany offerCompany = new OfferCompany();
+            offerCompany.setId(invOrganizationSiteDTO.getOfferCompanyDTO().getId());
+            invOrganizationSite.setOfferCompanyId(offerCompany);
+
+        }
+
         if (invOrganizationSiteDTO.getCurrencyId() != null) {
             Currency currency = new Currency();
             currency.setId(invOrganizationSiteDTO.getCurrencyId().getId());
@@ -830,6 +850,15 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             InvInventoryDTO invInventoryDTO = new InvInventoryDTO();
             invInventoryDTO.setId(entity.getGallaryId().getId());
             dTO.setGallaryIdDTO(invInventoryDTO);
+        }
+
+        if (entity.getOfferCompanyId() != null) {
+            OfferCompanyDTO offerCompanyDTO = new OfferCompanyDTO();
+            offerCompanyDTO.setId(entity.getOfferCompanyId().getId());
+            offerCompanyDTO.setName(entity.getOfferCompanyId().getName());
+            offerCompanyDTO.setCode(entity.getOfferCompanyId().getCode());
+            offerCompanyDTO.setDiscount(entity.getOfferCompanyId().getDiscount());
+            dTO.setOfferCompanyDTO(offerCompanyDTO);
         }
 
         if (entity.getCountryId() != null) {
