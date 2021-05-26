@@ -291,6 +291,14 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
              if (symbolList != null && !symbolList.isEmpty()) {
              symbolConverter = new SymbolConverter(symbolList);
              }*/
+
+            if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("edit")) {
+                if (getGlBankTransactionEntity() != null && getGlBankTransactionEntity().getOrganizationType() != null
+                        && (getGlBankTransactionEntity().getOrganizationType() == 1 || getGlBankTransactionEntity().getOrganizationType() == 2)) {
+                    getOrganizationSiteDTOList().add(0, getGlBankTransactionDetailEntity().getInvOrganizationSite());
+                }
+
+            }
         } catch (Exception e) {
             saveError(e, "notesReceivablesFormMB", "init");
         }
@@ -1021,17 +1029,17 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
                     saveValidation = false;
                 }
 
-                if ( glBankTransactionEntity.getInvoiceId() != null && glBankTransactionEntity.getValue() != null && !isEdit && glBankTransactionEntity.getValue().compareTo(glBankTransactionEntity.getRemainInvoice()) == 1) {
+                if (glBankTransactionEntity.getInvoiceId() != null && glBankTransactionEntity.getValue() != null && !isEdit && glBankTransactionEntity.getValue().compareTo(glBankTransactionEntity.getRemainInvoice()) == 1) {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "لا يمكن دفع  قيمه أكبر من المتبقي من الفاتورة"));
                     saveValidation = false;
                 }
-                
-                 if ( isPreviosBalance && glBankTransactionEntity.getInvoiceId() != null) {
+
+                if (isPreviosBalance && glBankTransactionEntity.getInvoiceId() != null) {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب عدم اختيار فاتورة او الغاء الرصيد السابق"));
                     saveValidation = false;
                 }
-                 
-                 if ( !isPreviosBalance && glBankTransactionEntity.getInvoiceId() == null) {
+
+                if (!isPreviosBalance && glBankTransactionEntity.getInvoiceId() == null) {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب  اختيار فاتورة"));
                     saveValidation = false;
                 }

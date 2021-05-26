@@ -12,6 +12,7 @@ import com.toby.converter.InvOrganizationSiteDTOConverter;
 import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.entity.InvOrganizationSite;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -173,6 +174,9 @@ public abstract class GlBankBasicDataForm extends BaseFormBean {
      * @return the organizationSiteDTOList
      */
     public List<InvOrganizationSiteDTO> getOrganizationSiteDTOList() {
+        if(organizationSiteDTOList == null){
+            organizationSiteDTOList = new ArrayList<>();
+        }
         return organizationSiteDTOList;
     }
 

@@ -142,9 +142,7 @@
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
 
-                                    <p:outputLabel value="#{notesReceivablesFormMB.glBankTransactionDetailEntity.invOrganizationSite}" 
-                                                   rendered="#{notesReceivablesFormMB.isEdit}" />
-                                    <p:autoComplete id="organization" rendered="#{not notesReceivablesFormMB.isEdit}"
+                                    <p:autoComplete id="organization" 
                                                     style="width:37%!important" 
                                                     dropdown="true"
                                                     converter="#{notesReceivablesFormMB.invOrganizationSiteDTOConverter}"
@@ -317,9 +315,7 @@
                             </p:panelGrid>
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel value="#{notesReceivablesFormMB.glBankTransactionEntity.invoiceId}" 
-                                                   rendered="#{notesReceivablesFormMB.isEdit}" />
-                                    <p:selectOneMenu  id="invoice" style="width:100%" rendered="#{not notesReceivablesFormMB.isEdit}" 
+                                    <p:selectOneMenu  id="invoice" style="width:100%"   
                                                       value="#{notesReceivablesFormMB.glBankTransactionEntity.invoiceId}">
                                         <f:selectItem itemLabel="اختر الفاتوره "/>
                                         <f:selectItems  var="inninvoice"
