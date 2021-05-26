@@ -70,6 +70,9 @@ public class InvAddingorder extends BaseEntity {
     @JoinColumn(name = "inv_inventory_id", referencedColumnName = "id")
     @ManyToOne
     private InvInventory invInventoryId;
+    @JoinColumn(name = "gallary_Id", referencedColumnName = "id")
+    @ManyToOne
+    private InvInventory gallaryId;
     @JoinColumn(name = "inv_delegator_id", referencedColumnName = "id")
     @ManyToOne
     private InventoryDelegator invDelegatorId;
@@ -234,6 +237,20 @@ public class InvAddingorder extends BaseEntity {
      */
     public void setInvPurchaseInvoice(InvPurchaseInvoice invPurchaseInvoice) {
         this.invPurchaseInvoice = invPurchaseInvoice;
+    }
+
+    /**
+     * @return the gallaryId
+     */
+    public InvInventory getGallaryId() {
+        return gallaryId;
+    }
+
+    /**
+     * @param gallaryId the gallaryId to set
+     */
+    public void setGallaryId(InvInventory gallaryId) {
+        this.gallaryId = gallaryId;
     }
 
 }

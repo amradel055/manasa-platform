@@ -173,7 +173,7 @@
 
 
                                 </p:autoComplete>
-                                <p:commandButton style="margin-right: 40%"  value="إضافة" type="button" onclick="PF('dlg3').show();"/> 
+                                <p:commandButton style="margin-right: 40%"  value="تعديل" type="button" onclick="PF('dlg3').show();"/> 
 
                             </div>
                             <div class="ui-g-6 ui-xl-6">
@@ -218,21 +218,21 @@
                             </div>
                             <div class="ui-g-6 ui-xl-6">
 
-                                <p:dialog header="إضافة عميل جديد" widgetVar="dlg3" showEffect="explode" hideEffect="bounce" height="500" width="500">
+                                <p:dialog header=" تعديل بيانات العميل" widgetVar="dlg3" showEffect="explode" hideEffect="bounce" height="500" width="500">
 
                                     <h:panelGroup>
-                                        <p:outputLabel style="width: 100px" value=" الإســم "/>
+                                        <p:outputLabel style="width: 100px" value=" الإســم: "/>
                                     </h:panelGroup> 
                                     <h:panelGroup>
-                                        <p:inputText value="#{invPurchaseInvoiceFormDTOMB.organizationSiteId.name}"/>  
+                                        <p:outputLabel value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.organizationSiteId.name}"/>  
                                     </h:panelGroup>
                                     <br/>
                                     <br/>
                                     <h:panelGroup>
-                                        <p:outputLabel style="width: 100px" value="التليفون "/>
+                                        <p:outputLabel style="width: 100px" value="التليفون: "/>
                                     </h:panelGroup> 
                                     <h:panelGroup>
-                                        <p:inputMask id="phone" value="#{invPurchaseInvoiceFormDTOMB.organizationSiteId.mobile}" mask="999999999999" />
+                                        <p:inputText id="phone" value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.organizationSiteId.mobile}"  />
                                     </h:panelGroup>
                                     <h:panelGroup>
                                         <br/>
@@ -240,7 +240,7 @@
                                                              title="#{userData.userDDs['SAVE']}"
                                                              value="#{userData.userDDs['SAVE']}" 
                                                              icon="fa fa-fw fa-save" 
-                                                             action="#{invPurchaseInvoiceFormDTOMB.addNewCustomer()}"
+                                                             action="#{invPurchaseInvoiceFormDTOMB.editCustomer()}"
                                                              update="@form"
                                                              >
                                         </p:commandButton>

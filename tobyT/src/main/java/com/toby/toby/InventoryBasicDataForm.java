@@ -75,6 +75,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.LazyDataModel;
@@ -462,6 +463,14 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         getOrganizationSiteId().setGallaryIdDTO(getInvInvoiceDTO().getGallaryId());
         getInvInvoiceDTO().setOrganizationSiteId(organizationSiteService.addNewCustomer(getOrganizationSiteId(), getInvOrganizationSiteDTOList(true, 0), getUserData().getUser()));
         getInvInvoiceDTO().setShowCustomerDate(Boolean.FALSE);
+    }
+
+    public void editCustomer() {
+
+        if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getId() != null) {
+
+            organizationSiteService.updateOrganizationSiteMobile(getInvInvoiceDTO().getOrganizationSiteId());
+        }
     }
 
     private Boolean checkdetail(InvDetailDTO invPurchaseInvoiceDetailsValidate) {
