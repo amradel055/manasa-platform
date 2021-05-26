@@ -727,8 +727,8 @@ public class IReportServiceImpl implements IReportService {
         hashMap.put("dateText", "تاريخ");
         hashMap.put("datevalue", invPurchaseInvoiceDTO.getDate());
 
-        hashMap.put("invInventoryIdText", "المخزن");
-        hashMap.put("invInventoryIdValue", invPurchaseInvoiceDTO.getInvInventoryId() == null ? null : invPurchaseInvoiceDTO.getInvInventoryId().getName());
+        hashMap.put("gallaryIdText", "المعرض");
+        hashMap.put("gallaryIdValue", invPurchaseInvoiceDTO.getGallaryId() == null ? null : invPurchaseInvoiceDTO.getGallaryId().getName());
 
         hashMap.put("organizationSiteIdText", "العميل");
         hashMap.put("organizationSiteIdValue", invPurchaseInvoiceDTO.getOrganizationSiteId() == null ? null : invPurchaseInvoiceDTO.getOrganizationSiteId().getName());

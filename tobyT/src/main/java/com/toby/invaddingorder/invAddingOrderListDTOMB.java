@@ -72,8 +72,8 @@ public class invAddingOrderListDTOMB extends InventoryBasicDataForm {
                     }
                     Integer invInventorySelectionId = getInvInventorySelection() != null ? getInvInventorySelection().getId() : null;
                     Integer invGallarySelectionId = getInvGallarySelection() != null ? getInvGallarySelection().getId() : null;
-                    setRowCount(invAddingOrderService.getTotalRegistors(type, getUserData().getUserBranch().getId(),invInventorySelectionId, filters).intValue());
-                    return invAddingOrderService.getALLInvAddingorderDTOByBranchId(type,invInventorySelectionId, first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), getUserData().getUserBranch().getId(), filters);
+                    setRowCount(invAddingOrderService.getTotalRegistors(type, getUserData().getUserBranch().getId(),invGallarySelectionId, filters).intValue());
+                    return invAddingOrderService.getALLInvAddingorderDTOByBranchId(type,invGallarySelectionId, first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), getUserData().getUserBranch().getId(), filters);
                 }
             });
         } catch (Exception e) {
