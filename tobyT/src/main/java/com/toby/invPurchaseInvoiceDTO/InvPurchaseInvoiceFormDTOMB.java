@@ -62,6 +62,7 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
                 getInvInvoiceDTO().setShowCustomerDate(Boolean.FALSE);
                 findAccountStatement();
                 getInvOrganizationSiteDTOList(Boolean.TRUE, 0).add(0, getInvInvoiceDTO().getOrganizationSiteId());
+                setOrganizationSiteId(getInvInvoiceDTO().getOrganizationSiteId());
             } else {
                 exit("../base/error.xhtml");
             }
@@ -75,6 +76,7 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
         if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getInvPurchaseInvoiceDetailList() != null && !getInvInvoiceDTO().getInvPurchaseInvoiceDetailList().isEmpty()) {
             getInvInvoiceDTO().setMsg(null);
             setInvInvoiceDTO(invPurchaseInvoiceService.save(getInvInvoiceDTO(), getUserData().getUser()));
+            setOrganizationSiteId(getInvInvoiceDTO().getOrganizationSiteId());
             msgSave(getInvInvoiceDTO().getMsg());
         } else {
             FacesContext.getCurrentInstance().addMessage(null,

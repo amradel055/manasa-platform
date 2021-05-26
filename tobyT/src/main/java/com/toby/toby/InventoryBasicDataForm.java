@@ -466,10 +466,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     }
 
     public void editCustomer() {
-
-        if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getId() != null) {
-
-            organizationSiteService.updateOrganizationSiteMobile(getInvInvoiceDTO().getOrganizationSiteId());
+        if (getOrganizationSiteId() != null && getOrganizationSiteId().getId() != null) {
+            organizationSiteService.updateOrganizationSiteMobile(getOrganizationSiteId());
         }
     }
 
