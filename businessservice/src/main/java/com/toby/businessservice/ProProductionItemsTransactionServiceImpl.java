@@ -306,7 +306,7 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
         params.put("serial", serial);
         StringBuilder builder = new StringBuilder();
         builder.append(" SELECT s FROM ProProductionItemsTransaction s WHERE s.proFactoryDeliveryDetailId.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial = :serial  ");
-        List<ProProductionItemsTransaction> details = dao.findListByQuery(builder.toString(),params);
+        List<ProProductionItemsTransaction> details = dao.findListByQuery(builder.toString(), params);
         return mapToDTOList(details, null);
     }
 
@@ -443,14 +443,15 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
         }
 
         builder = new StringBuilder();
-        builder.append("select ipi.id , ipi.serial , ipi.date from pro_factory_delivery pfd2\n"
+        builder.append("select ipi.id , ipi.serial , ipi.date,ii2.name from pro_factory_delivery pfd2\n"
                 + "	left join inv_purchase_invoice ipi on ipi.id = pfd2.inv_purchase_invoice_id\n"
+                + "	left join inv_inventory ii2 on ii2.id = ipi.galary_Id \n"
                 + "               where pfd2.type = 0 and pfd2.id  not in (select distinct(pfd.id)\n"
                 + "                from pro_production_items_transaction ppit\n"
                 + "                Left join pro_factory_delivery_detail pfdd on pfdd.id = ppit.pro_factory_delivery_detail_id\n"
                 + "                LEFT JOIN pro_factory_delivery pfd on pfd.id = pfdd.pro_factory_delivery_id\n"
                 + "                where ppit.pro_factory_delivery_detail_id is not null \n"
-                + "                and pfd.id is not null)");
+                + "                and pfd.id is not null) order by ipi.serial ");
 
         List<Object[]> details1 = dao.executeNativeQuery(builder.toString());
         for (Object[] object : details1) {
@@ -458,6 +459,7 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
             itemsTransactionDTO.setId((Integer) object[0]);
             itemsTransactionDTO.setInvoiceSerial((Integer) object[1]);
             itemsTransactionDTO.setInvoiceDate((Date) object[2]);
+            itemsTransactionDTO.setGalleryName((String) object[3]);
             itemsTransactionDTO.setClothNumber(movementReportService.summitionTob(itemsTransactionDTO.getId()));
 
             list.add(itemsTransactionDTO);
@@ -504,6 +506,4 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
 //            filters.remove("date");
 //        }
     // }
-   
-
 }
