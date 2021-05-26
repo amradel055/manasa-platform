@@ -749,7 +749,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         filters.put("type", type);        
         filters.put("gallaryId", gallaryId);
         StringBuilder builder = new StringBuilder();
-        builder.append("SELECT count(i) FROM InvOrganizationSite i WHERE i.branchId.id = :branchId AND i.type = :type OR i.type = 2 AND (:gallaryId is Null OR  i.gallaryId.id = :gallaryId ) ");
+        builder.append("SELECT count(i) FROM InvOrganizationSite i WHERE i.branchId.id = :branchId AND i.type = :type  AND   i.gallaryId.id = :gallaryId  ");
         appendFilter(filters, builder);
         Long details = dao.findEntityByQuery(builder.toString(), filters);
         
@@ -772,7 +772,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         filters.put("type", type);
         filters.put("gallaryId", gallaryId);
         StringBuilder builder = new StringBuilder();
-        builder.append("SELECT i FROM InvOrganizationSite i WHERE i.branchId.id = :branchId  AND i.type = :type OR i.type = 2 AND (:gallaryId is Null OR  i.gallaryId.id = :gallaryId )");
+        builder.append("SELECT i FROM InvOrganizationSite i WHERE i.branchId.id = :branchId  AND i.type = :type  AND  i.gallaryId.id = :gallaryId ");
         appendFilter(filters, builder);
         builder.append(" ORDER BY i.id DESC");
         List<InvOrganizationSite> details = dao.findListByQuery(builder.toString(), filters, first, pageSize);

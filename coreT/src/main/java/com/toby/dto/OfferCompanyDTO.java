@@ -70,7 +70,7 @@ public class OfferCompanyDTO extends BaseEntityDTO{
 
     @Override
     public String toString() {
-        return name + " " + code;
+        return name + " " + code + " - " + discount + " % ";
     }
 
     /**

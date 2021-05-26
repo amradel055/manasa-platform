@@ -258,6 +258,8 @@ public class InvGlobalServiceImpl implements InvGlobalService {
             oneBean = new BigDecimal(20);
         } else if (price.compareTo(new BigDecimal(100)) == 0) {
             oneBean = new BigDecimal(15);
+        }else{
+            oneBean = price;
         }
         return oneBean;
     }
