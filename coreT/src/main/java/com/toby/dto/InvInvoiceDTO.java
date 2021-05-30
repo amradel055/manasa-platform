@@ -1274,9 +1274,9 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      * @return the invoiceStatus
      */
     public String getInvoiceStatus() {
-        if (invoiceStatus == null) {
-            invoiceStatus = "بالمعرض";
-        }
+//        if (invoiceStatus == null) {
+//            invoiceStatus = "فى الطريق";
+//        }
         return invoiceStatus;
     }
 
