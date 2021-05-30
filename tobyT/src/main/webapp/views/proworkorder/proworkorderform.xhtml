@@ -169,7 +169,7 @@
                                     <p:ajax update="@form" process="@form"  event="itemSelect" listener="#{invPurchaseInvoiceFormDTOMB.updateCustomerData()}" />
                                 </p:autoComplete>
                                 <p:commandButton style="margin-right: 40%" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id eq null}"  value="إضافة" type="button" onclick="PF('dlg3').show();"/> 
-                                <p:commandButton style="margin-right: 40%" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id ne null}"  value="تعديل" type="button" onclick="PF('dlg31').show();"/> 
+                                <p:commandButton style="margin-right: 40%" rendered="#{(userData.userScreens['proworkorder'].edit) and invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id ne null}"  value="تعديل" type="button" onclick="PF('dlg31').show();"/> 
 
                             </div>
                             <div class="ui-g-6 ui-xl-6">
@@ -471,6 +471,7 @@
                                           onclick="form.target = '_blank'"  
                                           value="كشف حساب" 
                                           title="كشف حساب" 
+                                          rendered="#{(userData.userScreens['proworkorder'].add) or  userData.isAdmin}"
                                           actionListener="#{invPurchaseInvoiceFormDTOMB.goTClientacoount}"/>
                         <p:commandButton  id="r2"  
                                           ajax="false"
@@ -478,6 +479,7 @@
                                           class="saveButtons"
                                           title="سند قبض"
                                           value="سند قبض" 
+                                          rendered="#{(userData.userScreens['proworkorder'].add) or  userData.isAdmin}"
                                           actionListener="#{invPurchaseInvoiceFormDTOMB.goTNotesreceivables()}"
                                           />
                         <p:commandButton  id="r3"  
@@ -494,6 +496,7 @@
                                           class="saveButtons"
                                           title="تسليم الفاتورة"
                                           value="تسليم الفاتورة" 
+                                          rendered="#{(userData.userScreens['proworkorder'].add) or  userData.isAdmin}"
                                           actionListener="#{invPurchaseInvoiceFormDTOMB.goTProProductionMovement()}"
                                           />
                         <p:commandButton  id="r5"  
@@ -1030,12 +1033,13 @@
                             value="#{userData.userDDs['NEW']}" 
                             class="newButtons"
                             onclick="form.target = ''" 
+                            rendered="#{(userData.userScreens['proworkorder'].add) or  userData.isAdmin}"
                             actionListener="#{invPurchaseInvoiceFormDTOMB.reset()}"/>
 
                         <p:commandButton 
                             id="removeHalala"
                             value="حذف الهلله" 
-                            class="newButtons"
+                            class="newButtons" rendered="#{(userData.userScreens['proworkorder'].add) or  userData.isAdmin}"
                             update="form:totalActualWeight form:totalNetAfterDiscount form:taxvalue form:totalWithTaxValue form:remain " 
                             actionListener="#{invPurchaseInvoiceFormDTOMB.removeHalala()}"/>
 

@@ -32,13 +32,8 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
     @PostConstruct
     public void init() {
         try {
-            String error = validateloginDistributedScreens(getInvInvoiceDTO().getScreenName(),getInvInvoiceDTO().getGallaryId() == null ? null : getInvInvoiceDTO().getGallaryId().getId());
-            if (error.isEmpty()) {
-                load();
-            } else {
-                setErrorGlobal(error);
-                exit("../base/error.xhtml");
-            }
+
+            load();
 
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceFormMB", "init");
@@ -50,10 +45,16 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
         try {
 
             if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("addInvoice")) {
-                reset();
-                fillDefaultList();
-                putCurrency();
-                getInvInvoiceDTO().setOrganizationSiteId(null);
+                String error = validateloginDistributedScreens(getInvInvoiceDTO().getScreenName(), getInvInvoiceDTO().getGallaryId() == null ? null : getInvInvoiceDTO().getGallaryId().getId());
+                if (error.isEmpty()) {
+                    reset();
+                    fillDefaultList();
+                    putCurrency();
+                    getInvInvoiceDTO().setOrganizationSiteId(null);
+                } else {
+                    setErrorGlobal(error);
+                    exit("../base/error.xhtml");
+                }
             } else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("editInvoice")) {
                 getInvInvoiceDTO().setIsEdit(Boolean.TRUE);
                 fillInvInvoiceDTO();
@@ -152,11 +153,11 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
     public String goTProProductionMovement() {
         try {
             if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getId() > 0) {
-            ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-            context.getSessionMap().put("proSalesFormSelected", getInvInvoiceDTO().getSerial());
-            context.getSessionMap().put("ScreenMode", "proSalesFormAdd");
-            exit("../proSales/proSalesForm.xhtml");
-            return "";
+                ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+                context.getSessionMap().put("proSalesFormSelected", getInvInvoiceDTO().getSerial());
+                context.getSessionMap().put("ScreenMode", "proSalesFormAdd");
+                exit("../proSales/proSalesForm.xhtml");
+                return "";
             } else {
                 return "";
             }
@@ -165,15 +166,15 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
             return null;
         }
     }
-    
+
     public String goToInvoiceProductionStageReport() {
         try {
             if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getId() > 0) {
-            ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-            context.getSessionMap().put("proSalesFormSelected", getInvInvoiceDTO());
-            context.getSessionMap().put("ScreenMode", "proproductionreportFormAdd");
-            exit("../proproductionreport/invoiceProductionStageReport.xhtml");
-            return "";
+                ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+                context.getSessionMap().put("proSalesFormSelected", getInvInvoiceDTO());
+                context.getSessionMap().put("ScreenMode", "proproductionreportFormAdd");
+                exit("../proproductionreport/invoiceProductionStageReport.xhtml");
+                return "";
             } else {
                 return "";
             }
