@@ -128,19 +128,19 @@
                     </p:column>
 
                     <p:column style="width: 9vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
-                              filterBy="#{invInvoicePurchaseTable.invDelegatorName}"
+                              filterBy="#{invInvoicePurchaseTable.customerMobile}"
                               filterMatchMode="contains" 
-                              headerText="#{userData.userDDs['DELEGATOR']}"
-                              sortBy="#{invInvoicePurchaseTable.invDelegatorName}" 
+                              headerText="الهاتف"
+                              sortBy="#{invInvoicePurchaseTable.customerMobile}" 
                               >
-                        <p:outputLabel value="#{invInvoicePurchaseTable.invDelegatorName}" />
+                        <p:outputLabel value="#{invInvoicePurchaseTable.customerMobile}" />
                     </p:column>
                     <p:column style="width: 10vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
-                              filterBy="#{invInvoicePurchaseTable.paymentType}"
+                              filterBy="#{invInvoicePurchaseTable.invoiceStatus}"
                               filterMatchMode="contains" 
-                              headerText="#{userData.userDDs['INVO_TYP']}"
-                              sortBy="#{invInvoicePurchaseTable.paymentType}" >
-                        <p:outputLabel value="#{invInvoicePurchaseTable.paymentType == 0 ? userData.userDDs['CASH'] : invInvoicePurchaseTable.paymentType == 1 ? userData.userDDs['POSTPONE']  :  invInvoicePurchaseTable.paymentType == 2 ? userData.userDDs['CREDIT_DOCUMENT'] : invInvoicePurchaseTable.paymentType}" />
+                              headerText="الحالة"
+                              sortBy="#{invInvoicePurchaseTable.invoiceStatus}" >
+                        <p:outputLabel value="#{invInvoicePurchaseTable.invoiceStatus}" />
                     </p:column>
                     <p:column style="width: 10vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
                               filterBy="#{invInvoicePurchaseTable.createdByName}"
@@ -281,21 +281,20 @@
                               >
                         <p:outputLabel value="#{invInvoicePurchaseTable2.organizationSiteName}" />
                     </p:column>
-
                     <p:column style="width: 9vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
-                              filterBy="#{invInvoicePurchaseTable2.invDelegatorName}"
+                              filterBy="#{invInvoicePurchaseTable.customerMobile}"
                               filterMatchMode="contains" 
-                              headerText="#{userData.userDDs['DELEGATOR']}"
-                              sortBy="#{invInvoicePurchaseTable2.invDelegatorName}" 
+                              headerText="الهاتف"
+                              sortBy="#{invInvoicePurchaseTable.customerMobile}" 
                               >
-                        <p:outputLabel value="#{invInvoicePurchaseTable2.invDelegatorName}" />
+                        <p:outputLabel value="#{invInvoicePurchaseTable.customerMobile}" />
                     </p:column>
                     <p:column style="width: 10vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
-                              filterBy="#{invInvoicePurchaseTable2.paymentType}"
+                              filterBy="#{invInvoicePurchaseTable.invoiceStatus}"
                               filterMatchMode="contains" 
-                              headerText="#{userData.userDDs['INVO_TYP']}"
-                              sortBy="#{invInvoicePurchaseTable2.paymentType}" >
-                        <p:outputLabel value="#{invInvoicePurchaseTable2.paymentType == 0 ? userData.userDDs['CASH'] : invInvoicePurchaseTable2.paymentType == 1 ? userData.userDDs['POSTPONE']  :  invInvoicePurchaseTable2.paymentType == 2 ? userData.userDDs['CREDIT_DOCUMENT'] : invInvoicePurchaseTable2.paymentType}" />
+                              headerText="الحالة"
+                              sortBy="#{invInvoicePurchaseTable.invoiceStatus}" >
+                        <p:outputLabel value="#{invInvoicePurchaseTable.invoiceStatus}" />
                     </p:column>
                     <p:column style="width: 10vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
                               filterBy="#{invInvoicePurchaseTable2.createdByName}"

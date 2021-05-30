@@ -6,12 +6,16 @@
 package com.toby.invItemData;
 
 import com.toby.businessservice.InvItemService;
+import com.toby.dto.InvDetailDTO;
 import com.toby.dto.InvItemDTO;
+import com.toby.entity.InvItem;
 import com.toby.toby.BaseListBean;
 import com.toby.toby.UserData;
 import com.toby.views.InvItemView;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
@@ -80,7 +84,7 @@ public class invItemDataListMB extends BaseListBean implements Serializable {
                 @Override
                 public List<InvItemDTO> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
                     setRowCount(itemDataService.getTotalRegistors(branchId, filters).intValue());
-                    itemDataByBranch = itemDataService.getInvItemDTOView(first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), branchId, filters,getUserData().getUser());
+                    itemDataByBranch = itemDataService.getInvItemDTOView(first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), branchId, filters, getUserData().getUser());
                     return itemDataByBranch;
                 }
             };
@@ -88,6 +92,35 @@ public class invItemDataListMB extends BaseListBean implements Serializable {
             saveError(e, "invItemDataListMB", "load");
         }
 
+    }
+
+    public void printBarcode() {
+
+        try {
+            if (itemDataEntityId != null) {
+                InvItem item = itemDataService.findInvItem(itemDataEntityId);
+                List<InvDetailDTO> listNew = new ArrayList<>();
+                InvDetailDTO invDetailDTO = new InvDetailDTO();
+                invDetailDTO.setCost((item.getMaxpricemen().add(item.getMaxpricemen().multiply(new BigDecimal(0.15)))).setScale(3, BigDecimal.ROUND_UP));
+                invDetailDTO.setItemCode(item.getCode());
+                invDetailDTO.setItemName(item.getName());
+                listNew.add(invDetailDTO);
+                fillReport(prepareReport(), getUserData().getReportPath() + "itemBarcodeToby.jasper", listNew, "pdf");
+            }
+        } catch (Exception e) {
+
+        }
+    }
+    
+    public HashMap prepareReport() {
+        try {
+            HashMap hashMap = new HashMap();
+            hashMap.put("companyName", getUserData().getCompany().getName());
+            return hashMap;
+        } catch (Exception e) {
+            saveError(e, "invItemDataListMB", "prepareReport");
+            return null;
+        }
     }
 
     @Override
@@ -144,7 +177,7 @@ public class invItemDataListMB extends BaseListBean implements Serializable {
                         itemDataByBranch.remove(itemDataEntity);
                     }
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, userDDs.get("INFO"), userDDs.get("DELETED")));
-                    itemDataByBranch = itemDataService.getInvItemDTOByBranchId((userData.getSelectedBranch()),getUserlogin());
+                    itemDataByBranch = itemDataService.getInvItemDTOByBranchId((userData.getSelectedBranch()), getUserlogin());
                 } catch (Exception e) {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, userDDs.get("ERROR"), userDDs.get("UNIQE_KEY_ERROR")));
                 }
