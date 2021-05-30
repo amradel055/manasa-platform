@@ -148,12 +148,12 @@ public class InvoiceProductionStagesReportMB extends BaseListBean {
             hashMap.put("companyImage", null);
         }
         
-        hashMap.put("fromInvoiceText", "  رقم الفاتورة");
-        hashMap.put("fromInvoicevalue", printProductionDTO.getFromInvoice() == null ? null : printProductionDTO.getFromInvoice().getId());
-        hashMap.put("dateFromText", "من تاريخ");
-        hashMap.put("dateFromValue", printProductionDTO.getFromDate());
-        hashMap.put("dateToText", "الى تاريخ");
-        hashMap.put("dateToValue", printProductionDTO.getToDate());
+        hashMap.put("fromInvInvoiceText", "  رقم الفاتورة");
+        hashMap.put("fromInvInvoiceValue", printProductionDTO.getFromInvInvoice() == null ? null :  printProductionDTO.getFromInvInvoice());
+        hashMap.put("fromDateText", "من تاريخ");
+        hashMap.put("fromDateValue", printProductionDTO.getFromDate());
+        hashMap.put("toDateText", "الى تاريخ");
+        hashMap.put("toDateValue", printProductionDTO.getToDate());
         hashMap.put("clientNameText", "اسم العميل");
         hashMap.put("clientNameValue", invoiceMovementReport.getClientName() == null ? null : invoiceMovementReport.getClientName());
         hashMap.put("factoryDateText", " تاريخ الاستلام بالمشغل ");

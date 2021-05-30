@@ -71,7 +71,7 @@
                         </p:outputPanel>
                     </f:facet>
 
-                    <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px;"  filterStyle="display:none" 
+                    <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px; text-align: right"  filterStyle="display:none" 
                                filterBy="#{invInvoicePurchaseTable.serialTax}" 
                                filterMatchMode="contains" 
                                headerText="#{userData.userDDs['INVOICE_NO']}"
@@ -108,7 +108,7 @@
                               >
                         <p:outputLabel value="#{invInvoicePurchaseTable.invInventoryId.name}" />
                     </p:column>
-                    
+
                     <p:column style="width: 8vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
                               filterBy="#{invInvoicePurchaseTable.customerCode}"
                               filterMatchMode="contains" 
@@ -135,13 +135,23 @@
                               >
                         <p:outputLabel value="#{invInvoicePurchaseTable.customerMobile}" />
                     </p:column>
-                    <p:column style="width: 10vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
+                    <p:column style="width: 9vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
                               filterBy="#{invInvoicePurchaseTable.invoiceStatus}"
                               filterMatchMode="contains" 
                               headerText="الحالة"
-                              sortBy="#{invInvoicePurchaseTable.invoiceStatus}" >
+                              sortBy="#{invInvoicePurchaseTable.invoiceStatus}" 
+                              >
                         <p:outputLabel value="#{invInvoicePurchaseTable.invoiceStatus}" />
                     </p:column>
+                    <p:column style="width: 9vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
+                              filterBy="#{invInvoicePurchaseTable.numberOfToob}"
+                              filterMatchMode="contains" 
+                              headerText="عد التوب"
+                              sortBy="#{invInvoicePurchaseTable.numberOfToob}" 
+                              >
+                        <p:outputLabel value="#{invInvoicePurchaseTable.numberOfToob}" />
+                    </p:column>
+
                     <p:column style="width: 10vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
                               filterBy="#{invInvoicePurchaseTable.createdByName}"
                               filterMatchMode="contains" 
@@ -170,16 +180,16 @@
                         </p:commandButton>
 
                         <p:commandButton update="@form" 
-                                             class="sdeleteButtons"
-                                             icon="fa fa-remove" 
-                                             style="background-color: red;border-radius: 3px;"
-                                             title="#{userData.userDDs['DELETE']}" 
-                                             action="#{invPurchaseInvoiceListDTOMB.delete()}" 
-                                             rendered="#{userData.userScreens['proworkorder'].edit or userData.isAdmin}">
-                                <f:setPropertyActionListener value="#{invInvoicePurchaseTable}" target="#{invPurchaseInvoiceListDTOMB.invInvoiceDTOSelected}" />
-                                <p:confirm header="Confirmation" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                                         class="sdeleteButtons"
+                                         icon="fa fa-remove" 
+                                         style="background-color: red;border-radius: 3px;"
+                                         title="#{userData.userDDs['DELETE']}" 
+                                         action="#{invPurchaseInvoiceListDTOMB.delete()}" 
+                                         rendered="#{userData.userScreens['proworkorder'].edit or userData.isAdmin}">
+                            <f:setPropertyActionListener value="#{invInvoicePurchaseTable}" target="#{invPurchaseInvoiceListDTOMB.invInvoiceDTOSelected}" />
+                            <p:confirm header="Confirmation" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
 
-                            </p:commandButton>
+                        </p:commandButton>
 
                         <p:commandButton 
                             class="sprintButtons"
@@ -205,7 +215,7 @@
                 </p:confirmDialog>
 
             </p:fieldset>
-            
+
             <p:fieldset   legend="بحث بالعميل" >
 
 
@@ -243,17 +253,17 @@
                         العميل
                     </f:facet>
 
-                    <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px;"  filterStyle="display:none" 
+                    <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px; text-align: right"  filterStyle="display:none" 
                                filterBy="#{invInvoicePurchaseTable2.serial}" 
                                filterMatchMode="contains" 
                                headerText="#{userData.userDDs['INVOICE_NO']}"
                                sortBy="#{invInvoicePurchaseTable2.serial}"
                                >
-                        <p:outputLabel value="#{invInvoicePurchaseTable2.serial}" />
+                        <p:outputLabel value="#{invInvoicePurchaseTable2.serial}"/>
                     </p:column>
 
 
-                    <p:column style="width: 9vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" filterStyle="display:none" 
+                    <p:column style="width: 9vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px; text-align: center" filterStyle="display:none" 
                               filterBy="#{invInvoicePurchaseTable2.date}" 
                               filterMatchMode="contains"
                               headerText="#{userData.userDDs['DATEE']}"
@@ -264,7 +274,7 @@
                         </p:outputLabel>                           
                     </p:column>
 
-                    <p:column style="width: 9vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
+                    <p:column style="width: 9vh;font-size: 1.8vh;border-radius: 0px;text-align: center" filterStyle="display:none"
                               filterBy="#{invInvoicePurchaseTable2.invInventoryId.name}"
                               filterMatchMode="contains" 
                               headerText="#{userData.userDDs['DEPOSITORY']}"
@@ -273,7 +283,16 @@
                         <p:outputLabel value="#{invInvoicePurchaseTable2.invInventoryId.name}" />
                     </p:column>
 
-                    <p:column style="width: 8vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
+                    <p:column style="width: 8vh;font-size: 1.8vh;border-radius: 0px;text-align: center" filterStyle="display:none"
+                              filterBy="#{invInvoicePurchaseTable2.customerCode}"
+                              filterMatchMode="contains" 
+                              headerText="كود"
+                              sortBy="#{invInvoicePurchaseTable2.customerCode}" 
+                              >
+                        <p:outputLabel value="#{invInvoicePurchaseTable2.customerCode}" />
+                    </p:column>
+
+                    <p:column style="width: 8vh;font-size: 1.8vh;border-radius: 0px;text-align: center" filterStyle="display:none"
                               filterBy="#{invInvoicePurchaseTable2.organizationSiteName}"
                               filterMatchMode="contains" 
                               headerText="العميل"
@@ -281,21 +300,29 @@
                               >
                         <p:outputLabel value="#{invInvoicePurchaseTable2.organizationSiteName}" />
                     </p:column>
-                    <p:column style="width: 9vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
-                              filterBy="#{invInvoicePurchaseTable.customerMobile}"
+                    <p:column style="width: 9vh;font-size: 1.8vh;border-radius: 0px;text-align: center" filterStyle="display:none"
+                              filterBy="#{invInvoicePurchaseTable2.customerMobile}"
                               filterMatchMode="contains" 
                               headerText="الهاتف"
-                              sortBy="#{invInvoicePurchaseTable.customerMobile}" 
+                              sortBy="#{invInvoicePurchaseTable2.customerMobile}" 
                               >
-                        <p:outputLabel value="#{invInvoicePurchaseTable.customerMobile}" />
+                        <p:outputLabel value="#{invInvoicePurchaseTable2.customerMobile}" />
                     </p:column>
-                    <p:column style="width: 10vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
-                              filterBy="#{invInvoicePurchaseTable.invoiceStatus}"
+                    <p:column style="width: 10vh;font-size: 1.8vh;border-radius: 0px;text-align: center" filterStyle="display:none"
+                              filterBy="#{invInvoicePurchaseTable2.invoiceStatus}"
                               filterMatchMode="contains" 
                               headerText="الحالة"
-                              sortBy="#{invInvoicePurchaseTable.invoiceStatus}" >
-                        <p:outputLabel value="#{invInvoicePurchaseTable.invoiceStatus}" />
+                              sortBy="#{invInvoicePurchaseTable2.invoiceStatus}" >
+                        <p:outputLabel value="#{invInvoicePurchaseTable2.invoiceStatus}" />
                     </p:column>
+                    <p:column style="width: 10vh;font-size: 1.8vh;border-radius: 0px;text-align: center" filterStyle="display:none"
+                              filterBy="#{invInvoicePurchaseTable2.numberOfToob}"
+                              filterMatchMode="contains" 
+                              headerText="عدد التوب"
+                              sortBy="#{invInvoicePurchaseTable2.numberOfToob}" >
+                        <p:outputLabel value="#{invInvoicePurchaseTable2.numberOfToob}" />
+                    </p:column>
+
                     <p:column style="width: 10vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
                               filterBy="#{invInvoicePurchaseTable2.createdByName}"
                               filterMatchMode="contains" 
@@ -303,7 +330,7 @@
                               sortBy="#{invInvoicePurchaseTable2.createdByName}" >
                         <p:outputLabel value="#{invInvoicePurchaseTable2.createdByName}" />
                     </p:column>
-                    <p:column style="width: 10vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
+                    <p:column style="width: 10vh;font-size: 1.8vh;border-radius: 0px;text-align: center" filterStyle="display:none"
                               filterBy="#{invInvoicePurchaseTable2.remarks}"
                               filterMatchMode="contains" 
                               headerText="#{userData.userDDs['NOTE']}"

@@ -123,6 +123,8 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     InvoiceMovementReportService invoiceMovementReportService;
     @EJB
     private OrganizationSiteService organizationSiteService;
+    @EJB
+    private InvPurchaseInvoiceService_1 invPurchaseInvoiceService;
 
     InvPurchaseReturnSave invPurchaseReturnSave;
 
@@ -1328,7 +1330,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             invPurchaseInvoiceDTO = mapToDTO(invPurchaseInvoice, invPurchaseInvoiceDTO, true);
             modifyReturnData(invPurchaseInvoiceDTO, invPurchaseInvoice);
             invPurchaseInvoiceDTO.setOrganizationSiteName((invPurchaseInvoice.getOrganizationSiteId() != null) ? invPurchaseInvoice.getOrganizationSiteId().getName() : null);
-            invPurchaseInvoiceDTO.setGallaryName(invPurchaseInvoice.getGalaryId()!= null ? invPurchaseInvoice.getGalaryId().getName() : null);
+            invPurchaseInvoiceDTO.setGallaryName(invPurchaseInvoice.getGalaryId() != null ? invPurchaseInvoice.getGalaryId().getName() : null);
             invPurchaseInvoiceDTO.setNumberOfToob(invPurchaseInvoiceDetailsService.getNumberOftoob(invPurchaseInvoice.getId()));
         } else {
             invPurchaseInvoiceDTO.setMsg("حدث خطأ - تم حذفه ");
@@ -1578,7 +1580,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         return returnListDTOForList(details);
     }
 
-    @Override 
+    @Override
     public List<InvInvoiceDTO> getALLInvPurchaseInvoiceDTOByTypeAndBranchIdFroGallary2(Integer type, Integer galaryId, Integer customerId) {
         Map<String, Object> params = new HashMap<>();
         params.put("type", type);
@@ -1652,6 +1654,8 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     }
 
     private void commonData(InvInvoiceDTO invInvoiceDTO, InvPurchaseInvoice entity) {
+
+
         invInvoiceDTO.setId(entity.getId());
         invInvoiceDTO.setSerial(entity.getSerial());
         invInvoiceDTO.setSerialTax(entity.getSerialTax());
@@ -1662,6 +1666,15 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         invInvoiceDTO.setRemarks(entity.getRemarks());
         invInvoiceDTO.setDueDate(entity.getDueDate());
         invInvoiceDTO.setNumberOfToob(invoiceMovementReportService.summitionTob(entity.getId()));
+        String invoiceStatus = invPurchaseInvoiceService.findInvoiceStatus(entity.getId());
+
+        if(invoiceStatus != null && !invoiceStatus.isEmpty()){
+            invInvoiceDTO.setInvoiceStatus(invoiceStatus);
+        }else{
+            invInvoiceDTO.setInvoiceStatus("بالمعرض");
+        }
+        
+       
         if (entity.getDueDate() != null) {
             invInvoiceDTO.setDiffrentTime(entity.getDueDate().getTime() - (new Date()).getTime());
         }
