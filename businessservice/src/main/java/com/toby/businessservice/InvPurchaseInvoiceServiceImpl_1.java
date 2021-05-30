@@ -1545,7 +1545,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
 
     private void appendFilter(Map<String, Object> filters, StringBuilder builder) {
         if (filters.get("globalFilter") != null && !filters.get("globalFilter").toString().isEmpty()) {
-            String filter = " and ( FUNCTION('DATE_FORMAT',s.date, '%d-%m-%Y')  like CONCAT('%',:globalFilter ,'%') OR  s.serial like CONCAT('%',:globalFilter ,'%') OR  s.serialTax like CONCAT('%',:globalFilter ,'%')  OR s.invInventoryId.name  like CONCAT('%',:globalFilter ,'%') OR s.galaryId.name  like CONCAT('%',:globalFilter ,'%') OR s.organizationSiteId.name like CONCAT('%',:globalFilter ,'%') OR s.organizationSiteId.code like CONCAT('%',:globalFilter ,'%') OR s.organizationSiteId.mobile like CONCAT('%',:globalFilter ,'%') OR s.paymentType  like CONCAT('%',:globalFilter ,'%') OR s.createdBy.name like CONCAT('%',:globalFilter ,'%') OR s.remarks like CONCAT('%',:globalFilter ,'%'))";
+            String filter = " and ( FUNCTION('DATE_FORMAT',s.date, '%d-%m-%Y')  like CONCAT('%',:globalFilter ,'%') OR  s.serial like CONCAT('%',:globalFilter ,'%') OR  s.serialTax like CONCAT('%',:globalFilter ,'%')  OR s.invInventoryId.name  like CONCAT('%',:globalFilter ,'%') OR s.galaryId.name  like CONCAT('%',:globalFilter ,'%') OR s.organizationSiteId.name like CONCAT('%',:globalFilter ,'%') OR s.organizationSiteId.code like CONCAT('%',:globalFilter ,'%')  OR s.organizationSiteId.mobile like CONCAT('%',:globalFilter ,'%') OR s.paymentType  like CONCAT('%',:globalFilter ,'%') OR s.createdBy.name like CONCAT('%',:globalFilter ,'%') OR s.remarks like CONCAT('%',:globalFilter ,'%'))";
             builder.append(filter);
         } else {
             filters.remove("globalFilter");
@@ -1797,8 +1797,8 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             statusList = dao.executeNativeQuery("SELECT \n"
                     + "        (CASE\n"
                     + "            WHEN (pfd.`type` = 0) THEN 'تسليم للمشغل'\n"
-                    + "            WHEN (pfd.`type` = 1) THEN 'تسليم للمعرض'\n"
-                    + "            WHEN (pfd.`type` = 2) THEN 'استلام بالمعرض '\n"
+                    + "            WHEN (pfd.`type` = 1) THEN 'فى الطريق'\n"
+                    + "            WHEN (pfd.`type` = 2) THEN 'جاهز '\n"
                     + "            WHEN (pfd.`type` = 3) THEN 'تسليم للعميل'\n"
                     + "        END) AS `status` \n"
                     + "FROM toby.pro_factory_delivery pfd left join inv_purchase_invoice ipi on ipi.id = pfd.inv_purchase_invoice_id\n"

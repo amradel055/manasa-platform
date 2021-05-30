@@ -213,8 +213,11 @@
 
                             </div>
                             <div class="ui-g-6 ui-xl-6">
+                                
 
-                                <p:dialog header="إضافة عميل جديد" widgetVar="dlg3" showEffect="explode" hideEffect="bounce" height="500" width="500">
+                                <p:dialog header="إضافة عميل جديد" 
+                                          rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id eq null}" 
+                                          widgetVar="dlg3" showEffect="explode" hideEffect="bounce" height="500" width="500">
 
                                     <h:panelGroup>
                                         <p:outputLabel style="width: 100px" value=" الإســم "/>
@@ -228,7 +231,7 @@
                                         <p:outputLabel style="width: 100px" value="التليفون "/>
                                     </h:panelGroup> 
                                     <h:panelGroup>
-                                        <p:inputMask id="phone1" value="#{invPurchaseInvoiceFormDTOMB.organizationSiteId.mobile}" mask="999999999999" />
+                                        <p:inputMask  value="#{invPurchaseInvoiceFormDTOMB.organizationSiteId.mobile}" mask="999999999999" />
                                     </h:panelGroup>
                                     <h:panelGroup>
                                         <br/>
@@ -244,7 +247,9 @@
 
                                 </p:dialog>
 
-                                <p:dialog header=" تعديل بيانات العميل" widgetVar="dlg31" showEffect="explode" hideEffect="bounce" height="500" width="500">
+                                <p:dialog header=" تعديل بيانات العميل" 
+                                          rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id ne null}"
+                                          widgetVar="dlg31" showEffect="explode" hideEffect="bounce" height="500" width="500">
 
                                     <h:panelGroup>
                                         <p:outputLabel style="width: 100px" value=" الإســم: "/>
@@ -258,7 +263,7 @@
                                         <p:outputLabel style="width: 100px" value="التليفون: "/>
                                     </h:panelGroup> 
                                     <h:panelGroup>
-                                        <p:inputMask id="phone" value="#{invPurchaseInvoiceFormDTOMB.organizationSiteId.mobile}" mask="999999999999" />
+                                        <p:inputMask  value="#{invPurchaseInvoiceFormDTOMB.organizationSiteId.mobile}" mask="999999999999" />
                                     </h:panelGroup>
                                     <h:panelGroup>
                                         <br/>
