@@ -45,14 +45,15 @@ public class ProInvoiceStatusReportMB extends Basic {
     private ProFactoryDeliveryService proFactoryDeliveryService;
     @EJB
     private TobyUserInventoryService tobyUserInventoryService;
-    
-     @PostConstruct
+
+    @PostConstruct
     public void init() {
         getPrintProductionDTO().getGallaryListSelected().addAll(getGallaryList());
     }
 
     public void search() {
         if (getPrintProductionDTO() != null && getPrintProductionDTO().getGallaryListSelected() != null && !getPrintProductionDTO().getGallaryListSelected().isEmpty()) {
+            list = new ArrayList<>();
             for (InvInventoryDTO invInventoryDTO : getPrintProductionDTO().getGallaryListSelected()) {
 
                 getPrintProductionDTO().setGallaryFrom(invInventoryDTO);

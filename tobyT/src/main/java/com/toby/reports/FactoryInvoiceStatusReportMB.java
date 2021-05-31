@@ -53,6 +53,7 @@ public class FactoryInvoiceStatusReportMB extends Basic {
 
     public void search() {
         if (getGallarySelected() != null && !getGallarySelected().isEmpty()) {
+            list = new ArrayList<>();
             for (InvInventoryDTO invInventoryDTO : getGallarySelected()) {
                 setGalleryList(invInventoryDTO);
                 getList().addAll(invPurchaseInvoiceService.findInvoiceStatus(getFromDate(), getToDate(), getStatus() == null ? null : getStatus().getId(), getGalleryList() == null ? null : getGalleryList().getId(), getUserData().getUserBranch().getId()));

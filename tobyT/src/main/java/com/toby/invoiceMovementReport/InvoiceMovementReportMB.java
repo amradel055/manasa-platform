@@ -70,10 +70,13 @@ public class InvoiceMovementReportMB extends BaseListBean {
     @Override
     @PostConstruct
     public void init() {
+
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         setUserData((UserData) context.getSessionMap().get("userLogInData"));
         proProductionStagesDTOList = new ArrayList<>();
         proProductionTransactionDTOList = new ArrayList<>();
+        getPrintProductionDTO().getGallaryFromList().addAll(getGallaryList());
+//        getPrintProductionDTO().getGallaryToList().addAll(getGallaryList());
         if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("AddFromInvInvoice")) {
             InvInvoiceDTO invInvoiceDTO = (InvInvoiceDTO) context.getSessionMap().get("invInvoiceDTOSelected");
             getPrintProductionDTO().setFromInvInvoice(invInvoiceDTO.getSerial());
@@ -84,13 +87,13 @@ public class InvoiceMovementReportMB extends BaseListBean {
 
     public void search() {
 
-        // if ((printProductionDTO.getFromInvoice() != null && printProductionDTO.getToInvoice() != null)) {
-        invoiceMovementReportList = invoiceMovementReportService.searchReport(printProductionDTO, getUserData().getUserBranch().getId());
-        // } else {
-//            printProductionDTO.setMsg("ادخل من فاتوره الي فاتوره");
-//            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", printProductionDTO.getMsg()));
-//
-//        }
+        if (getPrintProductionDTO() != null && getPrintProductionDTO().getGallaryFromList() != null && !getPrintProductionDTO().getGallaryFromList().isEmpty()) {
+            invoiceMovementReportList = new ArrayList<>();
+            for (InvInventoryDTO inventoryDTOFrom : getPrintProductionDTO().getGallaryFromList()) {
+                getPrintProductionDTO().setGallaryFrom(inventoryDTOFrom);
+                getInvoiceMovementReportList().addAll(invoiceMovementReportService.searchReport(printProductionDTO, getUserData().getUserBranch().getId()));
+            }
+        }
     }
 
     public void convertDateFrom() {
@@ -137,7 +140,7 @@ public class InvoiceMovementReportMB extends BaseListBean {
         }
 
         hashMap.put("fromInvoiceText", "من فاتورة");
-        hashMap.put("fromInvoiceValue", printProductionDTO.getFromInvInvoice() );
+        hashMap.put("fromInvoiceValue", printProductionDTO.getFromInvInvoice());
         hashMap.put("toInvoiceText", "إلى فاتورة");
         hashMap.put("toInvoiceValue", printProductionDTO.getToInvInvoice());
         hashMap.put("gallaryFromText", "من معرض");
@@ -212,7 +215,7 @@ public class InvoiceMovementReportMB extends BaseListBean {
 
     public List<ProProductionStagesDTO> getProProductionStagesDTOList() {
         if (proProductionStagesDTOList == null | proProductionStagesDTOList.isEmpty()) {
-            proProductionStagesDTOList = proProductionStagesService.getAllProproductionStages(getUserData().getUser(),getUserData().getUserBranch().getId());
+            proProductionStagesDTOList = proProductionStagesService.getAllProproductionStages(getUserData().getUser(), getUserData().getUserBranch().getId());
         }
         return proProductionStagesDTOList;
     }

@@ -91,6 +91,14 @@
                                   >
                             <p:outputLabel value="#{invAddingOrderTable.loadedSerial}" />
                         </p:column> 
+                        <p:column style="width:13vh;font-size:1.6vh;text-align: -webkit-auto;border-radius: 0px;" filterStyle="display:none"
+                                  filterBy="#{invAddingOrderTable.gallaryName}" 
+                                  filterMatchMode="contains"
+                                  headerText=" اسم المعرض"
+                                  sortBy="#{invAddingOrderTable.gallaryName}"
+                                  >
+                            <p:outputLabel value="#{invAddingOrderTable.gallaryName}" />
+                        </p:column> 
                         <p:column style="width:10vh;font-size:1.6vh;text-align: -webkit-auto;border-radius: 0px;" 
                                   filterStyle="display:none"
                                   filterBy="#{invAddingOrderTable.remarks}"
