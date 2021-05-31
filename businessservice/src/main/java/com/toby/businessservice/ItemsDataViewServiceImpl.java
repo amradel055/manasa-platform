@@ -371,6 +371,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             SymbolDTO symbolDTO = new SymbolDTO();
             symbolDTO.setId(invItem.getUnitId().getId());
             symbolDTO.setName(invItem.getUnitId().getName());
+            symbolDTO.setCreatedByCode(invItem.getUnitId().getCreatedBy().getUserCode());
             invItemDTO.setUnitId(symbolDTO);
         }
         if (invItem.getAddon1() != null) {
@@ -390,6 +391,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             InvGroupDTO invGroupDTO = new InvGroupDTO();
             invGroupDTO.setId(invItem.getGroupId().getId());
             invGroupDTO.setName(invItem.getGroupId().getName());
+            invGroupDTO.setCode(invItem.getGroupId().getCode());
             invItemDTO.setGroupId(invGroupDTO);
         }
         
@@ -397,6 +399,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             ProGroupDTO proGroupDTO = new ProGroupDTO();
             proGroupDTO.setId(invItem.getProGroupId().getId());
             proGroupDTO.setName(invItem.getProGroupId().getName());
+            proGroupDTO.setCode(invItem.getProGroupId().getCode());
             invItemDTO.setProGroupId(proGroupDTO);
         }
         
@@ -514,6 +517,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             InvGroup invGroup = new InvGroup();
             invGroup.setId(invItemDTO.getGroupId().getId());
             invGroup.setName(invItemDTO.getGroupId().getName());
+            invGroup.setCode(invItemDTO.getGroupId().getCode());
             invItem.setGroupId(invGroup);
         }
         
@@ -521,6 +525,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             ProGroup proGroup = new ProGroup();
             proGroup.setId(invItemDTO.getProGroupId().getId());
             proGroup.setName(invItemDTO.getProGroupId().getName());
+            proGroup.setCode(invItemDTO.getProGroupId().getCode());
             invItem.setProGroupId(proGroup);
         }
 

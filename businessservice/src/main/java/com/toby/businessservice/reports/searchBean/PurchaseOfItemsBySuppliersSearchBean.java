@@ -10,7 +10,9 @@ import com.toby.dto.InvItemDTO;
 import com.toby.entity.InvInventory;
 import com.toby.entity.InvOrganizationSite;
 import com.toby.entity.InvPurchaseInvoice;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -30,6 +32,7 @@ public class PurchaseOfItemsBySuppliersSearchBean {
     private InvInventory fromInventoryName;
     private InvInventory toInventoryName;
     private InvInventoryDTO fromInventoryDTOName;
+    private List<InvInventoryDTO> galleryFrom;
     private InvInventoryDTO toInventoryDTOName;
     private Integer fromserial;
     private Integer toserial;
@@ -40,8 +43,6 @@ public class PurchaseOfItemsBySuppliersSearchBean {
 
     private Boolean showReport;
     private Boolean shortReport = false;
-
-   
 
     public Integer getBranchId() {
         return branchId;
@@ -308,6 +309,21 @@ public class PurchaseOfItemsBySuppliersSearchBean {
         this.toInventoryDTOName = toInventoryDTOName;
     }
 
-   
+    /**
+     * @return the galleryFrom
+     */
+    public List<InvInventoryDTO> getGalleryFrom() {
+        if (galleryFrom == null) {
+            galleryFrom = new ArrayList<>();
+        }
+        return galleryFrom;
+    }
+
+    /**
+     * @param galleryFrom the galleryFrom to set
+     */
+    public void setGalleryFrom(List<InvInventoryDTO> galleryFrom) {
+        this.galleryFrom = galleryFrom;
+    }
 
 }

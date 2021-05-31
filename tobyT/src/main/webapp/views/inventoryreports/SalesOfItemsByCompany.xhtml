@@ -11,7 +11,7 @@
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
         <h:form  id="form" dir="#{userData.dir}"  style="margin-right: 20px">
-            <p:fieldset style=" position: relative" legend="#{userData.userDDs['ITEM_SALE_CUST']}"> 
+            <p:fieldset style=" position: relative" legend="المبيعات حسب الشركات لفترة"> 
 
                 <div  id="firstSegment" class="ui-g-12 ui-g-nopad firstset">
                     <div class="ui-g">
@@ -81,18 +81,15 @@
 
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:autoComplete style="width:75%!important"
-                                                    dropdown="true"
-                                                    converter="#{autoComplete.invInventoryDTOConverter}"
-                                                    value="#{purchaseOfItemsByCompanyReportMB.purchaseOfItemsBySuppliersSearchBean.fromInventoryDTOName}"
-                                                    var="inventory"
-                                                    itemLabel="#{inventory}" 
-                                                    itemValue="#{inventory}"
-                                                    forceSelection="true" 
-                                                    completeMethod="#{autoComplete.completeGallaryDTO}"
-                                                    >
-
-                                    </p:autoComplete>
+                                    <p:selectCheckboxMenu id="gallary_From" value="#{purchaseOfItemsByCompanyReportMB.purchaseOfItemsBySuppliersSearchBean.galleryFrom}" 
+                                                          converter="#{purchaseOfItemsByCompanyReportMB.gallaryDTOConverter}"
+                                                          label="المعرض" style="width: 15rem"
+                                                          filter="true" filterMatchMode="startsWith" panelStyle="width: 15rem" scrollHeight="250">
+                                        <f:selectItems value="#{purchaseOfItemsByCompanyReportMB.gallaryList}" 
+                                                       var="gallary"
+                                                       itemLabel="#{gallary}"
+                                                       itemValue="#{gallary}"/>
+                                    </p:selectCheckboxMenu>
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:outputLabel style="width: 70px" value="#{userData.userDDs['FROM_REPOS_NO']}"/>

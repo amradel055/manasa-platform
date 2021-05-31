@@ -5,14 +5,18 @@
  */
 package com.toby.reports;
 
+import com.toby.businessservice.TobyUserInventoryService;
 import com.toby.businessservice.report.PurchaseOfItemsBySuppliersReportService;
 import com.toby.businessservice.reports.searchBean.PurchaseOfItemsBySuppliersSearchBean;
+import com.toby.converter.InvInventoryDTOConverter;
+import com.toby.dto.InvInventoryDTO;
 import com.toby.toby.BaseInventoryReportBean;
 import com.toby.views.SalesOfItemsByCompany;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.event.ActionEvent;
 import javax.faces.view.ViewScoped;
@@ -31,10 +35,18 @@ public class PurchaseOfItemsByCompanyReportMB extends BaseInventoryReportBean {
 
     private List<SalesOfItemsByCompany> salesOfItemsByCompanyList;
 
-   
+    private InvInventoryDTOConverter gallaryDTOConverter;
+    private List<InvInventoryDTO> gallaryList;
 
     @EJB
     PurchaseOfItemsBySuppliersReportService purchaseOfItemsBySuppliersReportService;
+    @EJB
+    private TobyUserInventoryService tobyUserInventoryService;
+
+    @PostConstruct
+    public void init() {
+        getPurchaseOfItemsBySuppliersSearchBean().getGalleryFrom().addAll(getGallaryList());
+    }
 
     @Override
     public void reset() {
@@ -44,15 +56,21 @@ public class PurchaseOfItemsByCompanyReportMB extends BaseInventoryReportBean {
 
     @Override
     public void search() {
-        setSalesOfItemsByCompanyList(purchaseOfItemsBySuppliersReportService.getAllSalesOfItemsByCompany(getPurchaseOfItemsBySuppliersSearchBean()));
+        if (getPurchaseOfItemsBySuppliersSearchBean() != null && getPurchaseOfItemsBySuppliersSearchBean().getGalleryFrom() != null && !getPurchaseOfItemsBySuppliersSearchBean().getGalleryFrom().isEmpty()) {
+            salesOfItemsByCompanyList = new ArrayList<>();
+            for (InvInventoryDTO inventoryDTO : getPurchaseOfItemsBySuppliersSearchBean().getGalleryFrom()) {
+                getPurchaseOfItemsBySuppliersSearchBean().setFromInventoryDTOName(inventoryDTO);
+                getSalesOfItemsByCompanyList().addAll(purchaseOfItemsBySuppliersReportService.getAllSalesOfItemsByCompany(getPurchaseOfItemsBySuppliersSearchBean()));
+            }
+        }
     }
-    
-     public void convertDateFrom() {
+
+    public void convertDateFrom() {
         getPurchaseOfItemsBySuppliersSearchBean().setDateFrom(findDateFromHijriFrom());
     }
 
     public void convertDateTo() {
-         getPurchaseOfItemsBySuppliersSearchBean().setDateTo(findDateFromHijriTo());
+        getPurchaseOfItemsBySuppliersSearchBean().setDateTo(findDateFromHijriTo());
     }
 
     @Override
@@ -139,6 +157,36 @@ public class PurchaseOfItemsByCompanyReportMB extends BaseInventoryReportBean {
         this.salesOfItemsByCompanyList = salesOfItemsByCompanyList;
     }
 
-  
+    /**
+     * @return the gallaryDTOConverter
+     */
+    public InvInventoryDTOConverter getGallaryDTOConverter() {
+        return gallaryDTOConverter;
+    }
+
+    /**
+     * @param gallaryDTOConverter the gallaryDTOConverter to set
+     */
+    public void setGallaryDTOConverter(InvInventoryDTOConverter gallaryDTOConverter) {
+        this.gallaryDTOConverter = gallaryDTOConverter;
+    }
+
+    /**
+     * @return the gallaryList
+     */
+    public List<InvInventoryDTO> getGallaryList() {
+        if (gallaryList == null || gallaryList.isEmpty()) {
+            gallaryList = tobyUserInventoryService.getAllGallaryByUserAndBranch(getUserData().getUser());
+            setGallaryDTOConverter(new InvInventoryDTOConverter(gallaryList));
+        }
+        return gallaryList;
+    }
+
+    /**
+     * @param gallaryList the gallaryList to set
+     */
+    public void setGallaryList(List<InvInventoryDTO> gallaryList) {
+        this.gallaryList = gallaryList;
+    }
 
 }
