@@ -74,10 +74,10 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
         params.put("branchId", cashAccountSettlementSearchBean.getBranchId());
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT g FROM GlBank g WHERE g.branchId.id = :branchId AND g.dateOpeninngBalance is not null AND g.openinngBalance > 0  ");
-        String banks = fillBanks(cashAccountSettlementSearchBean.getGlBankToListSelected());
-        if (banks != null) {
-            builder.append(" and g.id in (").append(banks).append(") ");
-        }
+//        String banks = fillBanks(cashAccountSettlementSearchBean.getGlBankToListSelected());
+//        if (banks != null) {
+//            builder.append(" and g.id in (").append(banks).append(") ");
+//        }
         if (cashAccountSettlementSearchBean.getGlBankFrom() != null) {
             builder.append(" and g.code >= :glBankFrom");
             params.put("glBankFrom", cashAccountSettlementSearchBean.getGlBankFrom().getCode());
