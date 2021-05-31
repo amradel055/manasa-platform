@@ -515,9 +515,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         }
         if (invItemDTO.getGroupId() != null) {
             InvGroup invGroup = new InvGroup();
-            invGroup.setId(invItemDTO.getGroupId().getId());
-            invGroup.setName(invItemDTO.getGroupId().getName());
-            invGroup.setCode(invItemDTO.getGroupId().getCode());
+            invGroup.setId(56);
             invItem.setGroupId(invGroup);
         }
         
