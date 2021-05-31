@@ -183,12 +183,16 @@ public class InvoiceMovementReportServiceImpl implements InvoiceMovementReportSe
     private String appendGallary(PrintProductionDTO productionDTO) {
         StringBuilder query = new StringBuilder();
         if (productionDTO.getGallaryFrom() != null) {
-            query.append(" and inv2.code >=  '").append(productionDTO.getGallaryFrom().getCode()).append("'");
+            query.append(" and inv2.id =  ").append(productionDTO.getGallaryFrom().getId());
         }
+        
+//        if (productionDTO.getGallaryFrom() != null) {
+//            query.append(" and inv2.code >=  '").append(productionDTO.getGallaryFrom().getCode()).append("'");
+//        }
 
-        if (productionDTO.getGallaryTo() != null) {
-            query.append(" and inv2.code <=  '").append(productionDTO.getGallaryTo().getCode()).append("'");
-        }
+//        if (productionDTO.getGallaryTo() != null) {
+//            query.append(" and inv2.code <=  '").append(productionDTO.getGallaryTo().getCode()).append("'");
+//        }
 
         if (!query.toString().isEmpty()) {
             return query.toString();

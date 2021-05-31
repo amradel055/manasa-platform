@@ -17,8 +17,10 @@ public class PrintProductionDTO {
     private TobyUserDTO fromUser;
     private TobyUserDTO toUser;
     private InvInventoryDTO gallaryFrom;
+    private List<InvInventoryDTO> gallaryFromList;
     private List<InvInventoryDTO> gallaryListSelected;
     private InvInventoryDTO gallaryTo;
+    private List<InvInventoryDTO> gallaryToList;
     private Integer invoiceStatus;
 
     public InvInvoiceDTO getFromInvoice() {
@@ -201,6 +203,40 @@ public class PrintProductionDTO {
      */
     public void setGallaryListSelected(List<InvInventoryDTO> gallaryListSelected) {
         this.gallaryListSelected = gallaryListSelected;
+    }
+
+    /**
+     * @return the gallaryFromList
+     */
+    public List<InvInventoryDTO> getGallaryFromList() {
+        if (gallaryFromList == null) {
+            gallaryFromList = new ArrayList<>();
+        }
+        return gallaryFromList;
+    }
+
+    /**
+     * @param gallaryFromList the gallaryFromList to set
+     */
+    public void setGallaryFromList(List<InvInventoryDTO> gallaryFromList) {
+        this.gallaryFromList = gallaryFromList;
+    }
+
+    /**
+     * @return the gallaryToList
+     */
+    public List<InvInventoryDTO> getGallaryToList() {
+        if (gallaryToList == null) {
+            gallaryToList = new ArrayList<>();
+        }
+        return gallaryToList;
+    }
+
+    /**
+     * @param gallaryToList the gallaryToList to set
+     */
+    public void setGallaryToList(List<InvInventoryDTO> gallaryToList) {
+        this.gallaryToList = gallaryToList;
     }
 
 }

@@ -363,23 +363,21 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
         }
     }
 
-    private void appendProProductionDate(ProProductionTransactionFactoryView transactionFactoryView) {
-        StringBuilder query = new StringBuilder();
+    private void appendProProductionDate(StringBuilder builder, ProProductionTransactionFactoryView transactionFactoryView) {
         if (transactionFactoryView.getDate() != null) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
-            query.append(" and ipi.date >=  '").append(dateFormat.format(transactionFactoryView.getDate())).append("'");
+            builder.append(" and ipi.date >=  '").append(dateFormat.format(transactionFactoryView.getDate())).append("'");
         }
         if (transactionFactoryView.getDateTo() != null) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
-            query.append(" and ipi.date <=  '").append(dateFormat.format(transactionFactoryView.getDateTo())).append("'");
+            builder.append(" and ipi.date <=  '").append(dateFormat.format(transactionFactoryView.getDateTo())).append("'");
         }
 
     }
 
-    private void appendProProductionGellery(ProProductionTransactionFactoryView transactionFactoryView) {
-        StringBuilder query = new StringBuilder();
+    private void appendProProductionGellery(StringBuilder builder, ProProductionTransactionFactoryView transactionFactoryView) {
         if (transactionFactoryView != null && transactionFactoryView.getGallerySelected() != null) {
-            query.append(" ipi.galary_Id =  '").append(transactionFactoryView.getGallerySelected().getId()).append("' ");
+            builder.append(" AND ipi.galary_Id = ").append(transactionFactoryView.getGallerySelected().getId());
         }
     }
 
@@ -409,8 +407,8 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
                 append("left join pro_production_stages pps on pps.id = pit.pro_production_stages_id\n").
                 append("WHERE pfd.branch_id = \n  ").
                 append(branchId).append(" ");
-        appendProProductionDate(transactionFactoryView);
-        appendProProductionGellery(transactionFactoryView);
+        appendProProductionDate(builder, transactionFactoryView);
+        appendProProductionGellery(builder, transactionFactoryView);
 //        builder.append("and  pfd.id not in (select parent from toby.pro_factory_delivery where type = 1 and parent is not null ) AND pit.id IN (\n").
 //                append("    SELECT MAX(pit.id)\n").
 //                append("    from toby.pro_production_items_transaction pit \n").
@@ -418,7 +416,7 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
 //                append("left join pro_factory_delivery pfd on pfd.id = pfdd.pro_factory_delivery_id\n").
 //                append("    GROUP BY pfd.id\n").
 //                append(") order by ipi.serial ");
-        builder.append("and  pfd.id not in (select parent from toby.pro_factory_delivery where type = 1 and parent is not null ) "
+        builder.append(" and  pfd.id not in (select parent from toby.pro_factory_delivery where type = 1 and parent is not null ) "
                 + "AND pit.id = (\n").
                 append("    select ppit2.id from pro_production_items_transaction  ppit2\n"
                         + "left join pro_production_stages pps on pps.id = ppit2.pro_production_stages_id \n"
@@ -446,7 +444,11 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
         builder.append("select ipi.id , ipi.serial , ipi.date,ii2.name from pro_factory_delivery pfd2\n"
                 + "	left join inv_purchase_invoice ipi on ipi.id = pfd2.inv_purchase_invoice_id\n"
                 + "	left join inv_inventory ii2 on ii2.id = ipi.galary_Id \n"
-                + "               where pfd2.type = 0 and pfd2.id  not in (select distinct(pfd.id)\n"
+                + "               where pfd2.branch_id = \n  ").
+                append(branchId).append(" ");
+        //appendProProductionDate(builder, transactionFactoryView);
+        appendProProductionGellery(builder, transactionFactoryView);
+        builder.append(" and pfd2.type = 0 and pfd2.id  not in (select distinct(pfd.id)\n"
                 + "                from pro_production_items_transaction ppit\n"
                 + "                Left join pro_factory_delivery_detail pfdd on pfdd.id = ppit.pro_factory_delivery_detail_id\n"
                 + "                LEFT JOIN pro_factory_delivery pfd on pfd.id = pfdd.pro_factory_delivery_id\n"
