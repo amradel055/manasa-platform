@@ -58,7 +58,7 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
             } else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("editInvoice")) {
                 getInvInvoiceDTO().setIsEdit(Boolean.TRUE);
                 fillInvInvoiceDTO();
-//                getInvInvoiceDTO().setInvoiceStatus(invPurchaseInvoiceService.findInvoiceStatus(getInvInvoiceDTO().getId()));
+                getInvInvoiceDTO().setInvoiceStatus(invPurchaseInvoiceService.findInvoiceStatus(getInvInvoiceDTO().getId()));
                 getInvInvoiceDTO().setIsEdit(Boolean.FALSE);
                 getInvInvoiceDTO().setShowCustomerDate(Boolean.FALSE);
                 findAccountStatement();
