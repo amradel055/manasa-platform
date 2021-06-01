@@ -345,7 +345,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         invItemDTO.setCommissionrate(invItem.getCommissionrate());
         invItemDTO.setCommissionvalue(invItem.getCommissionvalue());
         invItemDTO.setPrice_edit(invItem.getPrice_edit());
-        invItemDTO.setIsinventoryitem(invItem.getIsInventoryItem());        
+        invItemDTO.setIsinventoryitem(invItem.getIsInventoryItem());
         invItemDTO.setTypeshow(invItem.getTypeshow());
         invItemDTO.setQuantity(invItem.getQuantity());
         invItemDTO.setItemNatural(invItem.getItemNatural());
@@ -386,7 +386,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             symbolDTO.setName(invItem.getAddon2().getName());
             invItemDTO.setAddon2(symbolDTO);
         }
-        
+
         if (invItem.getGroupId() != null) {
             InvGroupDTO invGroupDTO = new InvGroupDTO();
             invGroupDTO.setId(invItem.getGroupId().getId());
@@ -394,7 +394,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             invGroupDTO.setCode(invItem.getGroupId().getCode());
             invItemDTO.setGroupId(invGroupDTO);
         }
-        
+
         if (invItem.getProGroupId() != null) {
             ProGroupDTO proGroupDTO = new ProGroupDTO();
             proGroupDTO.setId(invItem.getProGroupId().getId());
@@ -402,7 +402,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             proGroupDTO.setCode(invItem.getProGroupId().getCode());
             invItemDTO.setProGroupId(proGroupDTO);
         }
-        
+
         invItemDTO.setInvBarcodeEntity(invBarcodeSevice.getInvBarcodeByInvItemId(invItem.getBranchId().getId(), invItem.getId(), tobyUser));
 
         return invItemDTO;
@@ -451,7 +451,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         invItem.setMinpricemen(invItemDTO.getMinpricemen());
         invItem.setNumbermetersyoung(invItemDTO.getNumbermetersyoung());
         invItem.setNumbermetersmen(invItemDTO.getNumbermetersmen());
-        invItem.setNumbermetersfreeyoung(invItemDTO.getNumbermetersyoung());
+        invItem.setNumbermetersfreeyoung(invItemDTO.getNumbermetersfreeyoung());
         invItem.setNumbermetersfreemen(invItemDTO.getNumbermetersfreemen());
         invItem.setBounsepriceyoung(invItemDTO.getBounsepriceyoung());
         invItem.setBounsepricemen(invItemDTO.getBounsepricemen());
@@ -513,12 +513,11 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             symbol.setName(invItemDTO.getAddon2().getName());
             invItem.setAddon2(symbol);
         }
-        if (invItemDTO.getGroupId() != null) {
-            InvGroup invGroup = new InvGroup();
-            invGroup.setId(56);
-            invItem.setGroupId(invGroup);
-        }
         
+        InvGroup invGroup = new InvGroup();
+        invGroup.setId(56);
+        invItem.setGroupId(invGroup);
+
         if (invItemDTO.getProGroupId() != null) {
             ProGroup proGroup = new ProGroup();
             proGroup.setId(invItemDTO.getProGroupId().getId());
@@ -571,9 +570,9 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         if (invItemDTO.getInvBarcodeDeletedList() != null) {
             invBarcodeSevice.deleteListInvBarcode(invItemDTO.getInvBarcodeDeletedList());
         }
-        
+
         if (invItemDTO.getInvBarcodeEntity() != null) {
-            invBarcodeSevice.addListInvBarcode(invItemDTO.getInvBarcodeEntity(),tobyUser,invItem.getId());
+            invBarcodeSevice.addListInvBarcode(invItemDTO.getInvBarcodeEntity(), tobyUser, invItem.getId());
         }
 
         invItemDTO1 = mapToDTO(invItem, tobyUser);
@@ -799,7 +798,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         InvItem invItem = dao.findEntityById(InvItem.class, invItemById);
         return mapToDTO(invItem, tobyUser);
     }
-    
+
     private String appendGlYear(ItemCardReportSerachBean itemCardReportSerachBean, GlYear glYear, Map<String, Object> params) {
         StringBuilder appendQuery = new StringBuilder();
         if (itemCardReportSerachBean.getDateFrom() != null) {
@@ -869,6 +868,5 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
 
         return appendQuery.toString();
     }
-    
 
 }

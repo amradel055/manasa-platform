@@ -12,302 +12,7 @@
         <h:form id="form" dir="#{userData.dir}" style="margin-right: 15px">
             <p:fieldset id="whole" style="margin-bottom:20px">
 
-                <div class="ui-g-6 ui-xl-6">
-                    <div class="ui-g-12 ui-xl-12">
-                        <div class="ui-g-6 ui-xl-6">
-                            <p:autoComplete style="width:85%!important" 
-                                            dropdown="true"
-                                            required="true"
-                                            converter="#{itemDataFormMB.organizationSiteConvertor}"
-                                            value="#{itemDataFormMB.itemDataEntity.siteId}"
-                                            var="supplier"
-                                            itemLabel="#{supplier}" 
-                                            itemValue="#{supplier}" 
-                                            forceSelection="true" 
-                                            completeMethod="#{itemDataFormMB.completeOrganizationSite}">
-                            </p:autoComplete>
-
-                        </div>
-                        <div class="ui-g-6 ui-xl-6">
-
-                            <p:outputLabel style="width: 70px" value="#{userData.userDDs['SUPPLIER_NAME']}"/>
-
-
-                        </div>
-                    </div>
-                    <div class="ui-g-12 ui-xl-12">
-                        <div class="ui-g-6 ui-xl-6">
-
-                            <p:inputText rendered="#{itemDataFormMB.itemDataEntity.id eq null}" style="width: 49%!important" id="itemNumber" a:autofocus="true" value="#{itemDataFormMB.itemDataEntity.code}" >
-                            </p:inputText>
-                            <p:outputLabel rendered="#{itemDataFormMB.itemDataEntity.id ne null}" style="width: 49%!important" id="itemNumber2"  value="#{itemDataFormMB.itemDataEntity.code}" />
-
-                        </div>
-                        <div class="ui-g-6 ui-xl-6">
-
-                            <p:outputLabel style="width: 70px" value="#{userData.userDDs['ITEM_CODE']}"/>
-
-
-
-                        </div>
-                    </div>
-                    <div class="ui-g-12 ui-xl-12">
-                        <div class="ui-g-6 ui-xl-6">
-
-                            <p:inputText style="width: 49%!important"
-                                         id="itemName" 
-                                         value="#{itemDataFormMB.itemDataEntity.name}"
-                                         requiredMessage="#{userData.userDDs['ITEM_NAME_REQ']}"
-                                         required="true"/>
-                        </div>
-                        <div class="ui-g-6 ui-xl-6">
-                            <p:outputLabel  style="width: 70px" value="#{userData.userDDs['ITEM_NAME']}"/>
-
-
-
-
-                        </div>
-                    </div>
-                    <div class="ui-g-12 ui-xl-12">
-                        <div class="ui-g-6 ui-xl-6">
-                            <p:autoComplete style="width:85%" id="Cost_Center_From"  
-                                            dropdown="true"
-                                            converter="#{itemDataFormMB.unitDTOConverter}"
-                                            value="#{itemDataFormMB.itemDataEntity.unitId}"
-                                            var="unitId"
-                                            itemLabel="#{unitId}" 
-                                            itemValue="#{unitId}" 
-                                            forceSelection="true" 
-                                            completeMethod="#{itemDataFormMB.completeUnits}" >
-
-                            </p:autoComplete>
-
-                        </div>
-                        <div class="ui-g-6 ui-xl-6">
-
-
-                            <p:outputLabel  style="width: 70px" value="#{userData.userDDs['MEASUR_UNIT']}"/>
-
-
-                        </div>
-                    </div>
-                    
-                    <div class="ui-g-12 ui-xl-12">
-                        <div class="ui-g-6 ui-xl-6">
-                            <p:autoComplete style="width:85%" id="progroup"  
-                                            dropdown="true"
-                                            converter="#{itemDataFormMB.proGroupDTOConverter}"
-                                            value="#{itemDataFormMB.itemDataEntity.proGroupId}"
-                                            var="proGroup"
-                                            itemLabel="#{proGroup}" 
-                                            itemValue="#{proGroup}" 
-                                            forceSelection="true" 
-                                            completeMethod="#{itemDataFormMB.completeproGroups}" >
-                            </p:autoComplete>
-                        </div>
-                        <div class="ui-g-6 ui-xl-6">
-                            <p:outputLabel  style="width: 70px" value="المرحلة"/>
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="ui-g-12 ui-xl-12">
-                        <div class="ui-g-6 ui-xl-6">
-                            <p:selectOneMenu style="width: 50.5%"  id="typeCat" filter="true" filterMatchMode="startsWith" 
-                                             value="#{itemDataFormMB.itemDataEntity.typeCat}"
-                                             requiredMessage="#{userData.userDDs['PROD_TYP_MUST_SELE']}"
-                                             required="true" >                        
-                                <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"    />
-                                <f:selectItem itemLabel="#{userData.userDDs['CRUDE_MATERIALS']}" itemValue="0"    />
-                                <f:selectItem itemLabel="#{userData.userDDs['MATE_UND_OPE']}" itemValue="1"    />
-                                <f:selectItem itemLabel="#{userData.userDDs['CRUDE_PRODUCT']}" itemValue="2"    />
-                                <f:selectItem itemLabel="#{userData.userDDs['OTHER_MATERI']}" itemValue="3"    />
-                                <f:selectItem itemLabel="#{userData.userDDs['SPARE_PARTS']}" itemValue="4"    />
-                                <f:selectItem itemLabel="#{userData.userDDs['PACK_WARP_MATER']}" itemValue="5"    />
-                            </p:selectOneMenu> 
-
-                        </div>
-                        <div class="ui-g-6 ui-xl-6">
-
-
-                            <p:outputLabel style="width: 70px" value="#{userData.userDDs['PRODUCT_TYPE']}"/>
-
-
-                        </div>
-                    </div>
-                    <div class="ui-g-12 ui-xl-12">
-                        <div class="ui-g-6 ui-xl-6">
-
-                            <p:inputText style="width: 49%!important" id="isSell"
-                                         value="#{itemDataFormMB.itemDataEntity.sellPrice}"
-                                         requiredMessage="#{userData.userDDs['SELL_PRI_MU_ADD']}"
-                                         required="true"/>
-                        </div>
-                        <div class="ui-g-6 ui-xl-6">
-
-                            <p:outputLabel style="width: 70px" value="#{userData.userDDs['SELLING_PRICE1']}"/>
-
-
-
-                        </div>
-                    </div>
-                    <div class="ui-g-12 ui-xl-12">
-                        <div class="ui-g-6 ui-xl-6">
-                            <p:inputText style="width: 49%!important" id="remarks" 
-                                         value="#{itemDataFormMB.itemDataEntity.remarks}"/>
-
-                        </div>
-                        <div class="ui-g-6 ui-xl-6">
-                            <p:outputLabel style="width: 70px" value="#{userData.userDDs['NOTE']}"/>
-
-
-
-
-                        </div>
-                    </div>
-                    <div class="ui-g-12 ui-xl-12">
-                        <div class="ui-g-6 ui-xl-6">
-                            <p:inputText style="width: 49%!important" id="LOC" 
-                                         value="#{itemDataFormMB.itemDataEntity.storageLocation}"/>
-
-                        </div>
-                        <div class="ui-g-6 ui-xl-6">
-
-
-                            <p:outputLabel style="width: 70px" value="#{userData.userDDs['STORAGE_LOCA']}"/>
-
-
-                        </div>
-                    </div>
-                    <div class="ui-g-12 ui-xl-12">
-                        <div class="ui-g-6 ui-xl-6">
-
-                            <p:inputText style="width:49%!important" id="minimumAmount" 
-                                         value="#{itemDataFormMB.itemDataEntity.minimumAmount}"/>
-                        </div>
-                        <div class="ui-g-6 ui-xl-6">
-
-                            <p:outputLabel style="width:70px" value="#{userData.userDDs['SECOND_LIMIT']}"/>
-
-
-
-                        </div>
-                    </div>
-                    <div class="ui-g-12 ui-xl-12">
-                        <div class="ui-g-6 ui-xl-6">
-                            <p:inputText style="width:49%!important" id="maxmumAmount"
-                                         value="#{itemDataFormMB.itemDataEntity.maxmumAmount}"/>
-
-                        </div>
-                        <div class="ui-g-6 ui-xl-6">
-
-
-                            <p:outputLabel style="width:70px" value="#{userData.userDDs['MAX_LIMIT']}"/>
-
-
-                        </div>
-                    </div>
-                    <div class="ui-g-12 ui-xl-12">
-                        <div class="ui-g-6 ui-xl-6">
-                            <p:inputText style="width:49%!important" id="LastPrice"
-                                         value="#{itemDataFormMB.itemDataEntity.lastCost}"/>
-
-                        </div>
-                        <div class="ui-g-6 ui-xl-6">
-
-
-                            <p:outputLabel style="width:70px" value="#{userData.userDDs['LATEST_COST']}"/>
-
-
-                        </div>
-                    </div>
-                    <div class="ui-g-12 ui-xl-12">
-                        <div class="ui-g-6 ui-xl-6">
-
-                            <p:outputLabel style="width:49%!important" id="costAverage" 
-                                           value="#{itemDataFormMB.itemDataEntity.costAverage}"/>
-                        </div>
-                        <div class="ui-g-6 ui-xl-6">
-
-
-                            <p:outputLabel style="width:70px" value="#{userData.userDDs['AVERAGE_COST']}"/>
-
-
-                        </div>
-                    </div>
-                    <div class="ui-g-12 ui-xl-12">
-                        <div class="ui-g-6 ui-xl-6">
-
-
-                            <p:inputNumber style="width:49%!important" id="length"
-                                           value="#{itemDataFormMB.itemDataEntity.length}"/>
-
-                        </div>
-                        <div class="ui-g-6 ui-xl-6">
-
-
-                            <p:outputLabel style="width:70px" value="#{userData.userDDs['LENGHT']}"/>
-
-
-                        </div>
-                    </div>
-                    <div class="ui-g-12 ui-xl-12">
-                        <div class="ui-g-6 ui-xl-6">
-                            <p:inputNumber style="width:49%!important" id="width"
-                                           value="#{itemDataFormMB.itemDataEntity.width}"/>
-
-                        </div>
-                        <div class="ui-g-6 ui-xl-6">
-
-                            <p:outputLabel style="width:70px" value="#{userData.userDDs['WIDTH']}"/>
-
-                        </div>
-                    </div>
-                    <div class="ui-g-12 ui-xl-12">
-                        <div class="ui-g-6 ui-xl-6">
-                            <p:inputNumber style="width:49%!important" id="height"
-                                           value="#{itemDataFormMB.itemDataEntity.height}"/>
-
-                        </div>
-                        <div class="ui-g-6 ui-xl-6">
-
-
-                            <p:outputLabel style="width:70px" value="#{userData.userDDs['HEIGHT']}"/>
-
-
-                        </div>
-                    </div>
-                    <div class="ui-g-12 ui-xl-12">
-                        <div class="ui-g-6 ui-xl-6">
-                            <p:inputNumber style="width:49%!important" id="weight"
-                                           value="#{itemDataFormMB.itemDataEntity.weight}"/>
-
-
-                        </div>
-                        <div class="ui-g-6 ui-xl-6">
-
-                            <p:outputLabel style="width:70px" value="#{userData.userDDs['WEIGHT']}"/>
-
-
-
-                        </div>
-                    </div>
-                    <div class="ui-g-12 ui-xl-12">
-                        <div class="ui-g-6 ui-xl-6">
-
-                            <p:outputLabel style="width:48%" id="dateFrom" value="#{itemDataFormMB.itemDataEntity.dateCreateCat}">
-                                <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
-                            </p:outputLabel>
-                        </div>
-                        <div class="ui-g-6 ui-xl-6">
-
-                            <p:outputLabel style="width:70px" value="#{userData.userDDs['CREATED_DATE']}"/>
-
-
-
-                        </div>
-                    </div>
-                </div>
+                
 
 
                 <div class="ui-g-6 ui-xl-6">
@@ -481,7 +186,7 @@
                     </div>
                     <div class="ui-g-12 ui-xl-12">
                         <div class="ui-g-6 ui-xl-6">
-                            <p:selectOneMenu value="#{itemDataFormMB.itemDataEntity.itemNatural}" >
+                            <p:selectOneMenu value="#{itemDataFormMB.itemDataEntity.itemNatural}" rendered="false" >
                                 <f:selectItem itemLabel="اختر" itemValue="" />
                                 <f:selectItem itemLabel="مواد خام" itemValue="0" />
                                 <f:selectItem itemLabel="منتج" itemValue="1" />
@@ -493,7 +198,7 @@
                         <div class="ui-g-6 ui-xl-6">
 
 
-                            <p:outputLabel style="width:70px" value=" طبيعة الصنف"/>
+                            <p:outputLabel style="width:70px" value=" طبيعة الصنف"  rendered="false"/>
 
 
                         </div>
@@ -515,63 +220,14 @@
 
                         </div>
                     </div>
+                    
                     <div class="ui-g-12 ui-xl-12">
                         <div class="ui-g-6 ui-xl-6">
-                            <p:inputText style="width:48%" value="#{itemDataFormMB.itemDataEntity.commissionrate}" />
-
-
-                        </div>
-                        <div class="ui-g-6 ui-xl-6">
-
-
-                            <p:outputLabel style="width:70px" value=" العمولة نسبة"/>
-
-
-                        </div>
-                    </div>
-                    <div class="ui-g-12 ui-xl-12">
-                        <div class="ui-g-6 ui-xl-6">
-
-                            <p:inputText style="width:48%" value="#{itemDataFormMB.itemDataEntity.commissionvalue}" />
-
-                        </div>
-                        <div class="ui-g-6 ui-xl-6">
-                            <p:outputLabel style="width:70px" value=" العمولة مبلغ"/>
-
-
-
-
-                        </div>
-                    </div>
-                    <div class="ui-g-12 ui-xl-12">
-                        <div class="ui-g-6 ui-xl-6">
-                            <p:inputText style="width:48%" value="#{itemDataFormMB.itemDataEntity.price_edit}" />
-
-
-                        </div>
-                        <div class="ui-g-6 ui-xl-6">
-                            <p:outputLabel style="width:70px" value="  سعر التعديل"/>
-
-
-
-
-                        </div>
-                    </div>
-                    <div class="ui-g-12 ui-xl-12">
-                        <div class="ui-g-6 ui-xl-6">
-
-
-
-
-
-
-                            <p:selectOneMenu value="#{itemDataFormMB.itemDataEntity.typeshow}" >
+                            <p:selectOneMenu value="#{itemDataFormMB.itemDataEntity.itemNatural}" >
                                 <f:selectItem itemLabel="اختر" itemValue="" />
-                                <f:selectItem itemLabel="عرض واحد" itemValue="0" />
-                                <f:selectItem itemLabel="عرضين" itemValue="1" />
+                                <f:selectItem itemLabel="عرض واحد" itemValue="1" />
+                                <f:selectItem itemLabel="عرضين" itemValue="2" />
                             </p:selectOneMenu>
-
-
                         </div>
                         <div class="ui-g-6 ui-xl-6">
 
@@ -584,6 +240,204 @@
                    
                 </div>
 
+                <div class="ui-g-6 ui-xl-6">
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:autoComplete style="width:85%!important" 
+                                            dropdown="true"
+                                            required="true"
+                                            converter="#{itemDataFormMB.organizationSiteConvertor}"
+                                            value="#{itemDataFormMB.itemDataEntity.siteId}"
+                                            var="supplier"
+                                            itemLabel="#{supplier}" 
+                                            itemValue="#{supplier}" 
+                                            forceSelection="true" 
+                                            completeMethod="#{itemDataFormMB.completeOrganizationSite}">
+                            </p:autoComplete>
+
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+
+                            <p:outputLabel style="width: 70px" value="#{userData.userDDs['SUPPLIER_NAME']}"/>
+
+
+                        </div>
+                    </div>
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
+
+                            <p:inputText rendered="#{itemDataFormMB.itemDataEntity.id eq null}" style="width: 49%!important" id="itemNumber" a:autofocus="true" value="#{itemDataFormMB.itemDataEntity.code}" >
+                            </p:inputText>
+                            <p:outputLabel rendered="#{itemDataFormMB.itemDataEntity.id ne null}" style="width: 49%!important" id="itemNumber2"  value="#{itemDataFormMB.itemDataEntity.code}" />
+
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+
+                            <p:outputLabel style="width: 70px" value="#{userData.userDDs['ITEM_CODE']}"/>
+
+
+
+                        </div>
+                    </div>
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
+
+                            <p:inputText style="width: 49%!important"
+                                         id="itemName" 
+                                         value="#{itemDataFormMB.itemDataEntity.name}"
+                                         requiredMessage="#{userData.userDDs['ITEM_NAME_REQ']}"
+                                         required="true"/>
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel  style="width: 70px" value="#{userData.userDDs['ITEM_NAME']}"/>
+
+
+
+
+                        </div>
+                    </div>
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:autoComplete style="width:85%" id="Cost_Center_From"  
+                                            dropdown="true"
+                                            converter="#{itemDataFormMB.unitDTOConverter}"
+                                            value="#{itemDataFormMB.itemDataEntity.unitId}"
+                                            var="unitId"
+                                            itemLabel="#{unitId}" 
+                                            itemValue="#{unitId}" 
+                                            forceSelection="true" 
+                                            completeMethod="#{itemDataFormMB.completeUnits}" >
+
+                            </p:autoComplete>
+
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+
+
+                            <p:outputLabel  style="width: 70px" value="#{userData.userDDs['MEASUR_UNIT']}"/>
+
+
+                        </div>
+                    </div>
+                    
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:autoComplete style="width:85%" id="progroup"  
+                                            dropdown="true"
+                                            converter="#{itemDataFormMB.proGroupDTOConverter}"
+                                            value="#{itemDataFormMB.itemDataEntity.proGroupId}"
+                                            var="proGroup"
+                                            itemLabel="#{proGroup}" 
+                                            itemValue="#{proGroup}" 
+                                            forceSelection="true" 
+                                            completeMethod="#{itemDataFormMB.completeproGroups}" >
+                            </p:autoComplete>
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel  style="width: 70px" value="المرحلة"/>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="ui-g-12 ui-xl-12" >
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:selectOneMenu style="width: 50.5%"  id="typeCat" filter="true" filterMatchMode="startsWith"  rendered="false"
+                                             value="#{itemDataFormMB.itemDataEntity.typeCat}"
+                                             requiredMessage="#{userData.userDDs['PROD_TYP_MUST_SELE']}"
+                                             required="true" >                        
+                                <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"    />
+                                <f:selectItem itemLabel="#{userData.userDDs['CRUDE_MATERIALS']}" itemValue="0"    />
+                                <f:selectItem itemLabel="#{userData.userDDs['MATE_UND_OPE']}" itemValue="1"    />
+                                <f:selectItem itemLabel="#{userData.userDDs['CRUDE_PRODUCT']}" itemValue="2"    />
+                                <f:selectItem itemLabel="#{userData.userDDs['OTHER_MATERI']}" itemValue="3"    />
+                                <f:selectItem itemLabel="#{userData.userDDs['SPARE_PARTS']}" itemValue="4"    />
+                                <f:selectItem itemLabel="#{userData.userDDs['PACK_WARP_MATER']}" itemValue="5"    />
+                            </p:selectOneMenu> 
+
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+
+
+                            <p:outputLabel style="width: 70px" value="#{userData.userDDs['PRODUCT_TYPE']}"  rendered="false"/>
+
+
+                        </div>
+                    </div>
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
+
+                            <p:inputText style="width: 49%!important" id="isSell"
+                                         value="#{itemDataFormMB.itemDataEntity.sellPrice}"
+                                         requiredMessage="#{userData.userDDs['SELL_PRI_MU_ADD']}"
+                                         required="true"/>
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+
+                            <p:outputLabel style="width: 70px" value="#{userData.userDDs['SELLING_PRICE1']}"/>
+
+
+
+                        </div>
+                    </div>
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:inputText style="width: 49%!important" id="remarks" 
+                                         value="#{itemDataFormMB.itemDataEntity.remarks}"/>
+
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel style="width: 70px" value="#{userData.userDDs['NOTE']}"/>
+
+
+
+
+                        </div>
+                    </div>
+                    
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:inputText style="width:49%!important" id="LastPrice"
+                                         value="#{itemDataFormMB.itemDataEntity.lastCost}"/>
+
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+
+
+                            <p:outputLabel style="width:70px" value="#{userData.userDDs['LATEST_COST']}"/>
+
+
+                        </div>
+                    </div>
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
+
+                            <p:outputLabel style="width:49%!important" id="costAverage" 
+                                           value="#{itemDataFormMB.itemDataEntity.costAverage}"/>
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+
+
+                            <p:outputLabel style="width:70px" value="#{userData.userDDs['AVERAGE_COST']}"/>
+
+
+                        </div>
+                    </div>
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
+
+                            <p:outputLabel style="width:48%" id="dateFrom" value="#{itemDataFormMB.itemDataEntity.dateCreateCat}">
+                                <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                            </p:outputLabel>
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+
+                            <p:outputLabel style="width:70px" value="#{userData.userDDs['CREATED_DATE']}"/>
+
+
+
+                        </div>
+                    </div>
+                </div>
                 <!--First Segment-->
                 <h:panelGrid id="firstSegment" columns="2"  class="col-md-12" cellspacing="20" cellpadding="0" style="margin-top:15px" >
 

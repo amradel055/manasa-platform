@@ -464,6 +464,14 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         getInvInvoiceDTO().setShowCustomerDate(Boolean.FALSE);
     }
 
+    public void editCustomer() {
+
+        if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getId() != null) {
+
+            organizationSiteService.updateOrganizationSiteMobile(getInvInvoiceDTO().getOrganizationSiteId());
+        }
+    }
+
     private Boolean checkdetail(InvDetailDTO invPurchaseInvoiceDetailsValidate) {
         if (invPurchaseInvoiceDetailsValidate.getItemsBarcodesDetail() != null && !invPurchaseInvoiceDetailsValidate.getItemsBarcodesDetail().getBarcode().isEmpty()) {
 //            for (InvDetailDTO detailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
