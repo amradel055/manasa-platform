@@ -305,6 +305,9 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
             } else if (Entity.getClass().equals(TempInvPurchaseInvoiceNotLoadedYet.class)) {
                 TempInvPurchaseInvoiceNotLoadedYet entity = (TempInvPurchaseInvoiceNotLoadedYet) Entity;
                 barcodeList.add(entity.getItemBarcode());
+            } else if (Entity.getClass().equals(InvoiceNotLoadedYetProFactoeyProcedure.class)) {
+                InvoiceNotLoadedYetProFactoeyProcedure entity = (InvoiceNotLoadedYetProFactoeyProcedure) Entity;
+                barcodeList.add(entity.getItemBarcode());
             }
         }
         List<ItemsBarcodesDetailsView> itemsBarcodesDetailsViewList = itemsBarcodesDetailsViewService.findItemsBarcodesDetailsViewBranchIdByBarcode(invInvoiceDTO.getBranchId(), barcodeList);

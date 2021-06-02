@@ -192,13 +192,13 @@ public class ShiftingJournalMB_New extends GeneralJournalBean {
             SelectItemGroup group1 = new SelectItemGroup("الخزائن");
             group1.setSelectItems(new SelectItem[]{
                 new SelectItem(symbolsMap.get(1001).getId(), symbolsMap.get(1001).getName()),
-                new SelectItem(symbolsMap.get(1002).getId(), symbolsMap.get(1002).getName()),
-                new SelectItem(symbolsMap.get(1003).getId(), symbolsMap.get(1003).getName()),
+//                new SelectItem(symbolsMap.get(1002).getId(), symbolsMap.get(1002).getName()),
+//                new SelectItem(symbolsMap.get(1003).getId(), symbolsMap.get(1003).getName()),
                 new SelectItem(symbolsMap.get(1004).getId(), symbolsMap.get(1004).getName()),
-                new SelectItem(symbolsMap.get(1005).getId(), symbolsMap.get(1005).getName()),
-                new SelectItem(symbolsMap.get(1006).getId(), symbolsMap.get(1006).getName()),
+//                new SelectItem(symbolsMap.get(1005).getId(), symbolsMap.get(1005).getName()),
+//                new SelectItem(symbolsMap.get(1006).getId(), symbolsMap.get(1006).getName()),
                 new SelectItem(symbolsMap.get(1007).getId(), symbolsMap.get(1007).getName()),
-                new SelectItem(symbolsMap.get(1008).getId(), symbolsMap.get(1008).getName())
+//                new SelectItem(symbolsMap.get(1008).getId(), symbolsMap.get(1008).getName())
             });
             options.add(group1);
 
@@ -206,28 +206,18 @@ public class ShiftingJournalMB_New extends GeneralJournalBean {
             group2.setSelectItems(new SelectItem[]{
                 new SelectItem(symbolsMap.get(1009).getId(), symbolsMap.get(1009).getName()),
                 new SelectItem(symbolsMap.get(1010).getId(), symbolsMap.get(1010).getName()),
-                new SelectItem(symbolsMap.get(1011).getId(), symbolsMap.get(1011).getName()),
+//                new SelectItem(symbolsMap.get(1011).getId(), symbolsMap.get(1011).getName()),
                 new SelectItem(symbolsMap.get(1012).getId(), symbolsMap.get(1012).getName()),
                 new SelectItem(symbolsMap.get(1013).getId(), symbolsMap.get(1013).getName()),
                 new SelectItem(symbolsMap.get(1015).getId(), symbolsMap.get(1015).getName()),
                 new SelectItem(symbolsMap.get(1016).getId(), symbolsMap.get(1016).getName()),
-                new SelectItem(symbolsMap.get(1017).getId(), symbolsMap.get(1017).getName()),
+//                new SelectItem(symbolsMap.get(1017).getId(), symbolsMap.get(1017).getName()),
                 new SelectItem(symbolsMap.get(1018).getId(), symbolsMap.get(1018).getName()),
                 new SelectItem(symbolsMap.get(1019).getId(), symbolsMap.get(1019).getName()),
-                new SelectItem(symbolsMap.get(1020).getId(), symbolsMap.get(1020).getName())
+//                new SelectItem(symbolsMap.get(1020).getId(), symbolsMap.get(1020).getName())
             });
             options.add(group2);
 
-            SelectItemGroup group3 = new SelectItemGroup("التقسيط");
-            group3.setSelectItems(new SelectItem[]{
-                new SelectItem(symbolsMap.get(1021).getId(), symbolsMap.get(1021).getName())
-            });
-            options.add(group3);
-            SelectItemGroup group4 = new SelectItemGroup("المستخلصات");
-            group4.setSelectItems(new SelectItem[]{
-                new SelectItem(symbolsMap.get(1022).getId(), symbolsMap.get(1022).getName())
-            });
-            options.add(group4);
 
             SelectItemGroup group5 = new SelectItemGroup("الاشعارات");
             group5.setSelectItems(new SelectItem[]{

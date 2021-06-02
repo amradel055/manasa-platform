@@ -270,18 +270,6 @@
                         <p:outputLabel value="#{invPurchaseInvoiceDetailsTable.itemName}" />          
                     </p:column>
 
-                    <p:column  style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="Unit"
-
-                               filterBy="#{invPurchaseInvoiceDetailsTable.unitName}" 
-                               filterMatchMode="contains" 
-                               sortBy="#{invPurchaseInvoiceDetailsTable.unitName}"
-                               filterable="false"
-                               headerText="#{userData.userDDs['UNIT_NUMBER']}">
-                        <p:outputLabel id="unitvalue" 
-                                       value="#{invPurchaseInvoiceDetailsTable.unitName}" style="width: 95%" />  
-
-                    </p:column>
-
                     <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px"
                               id="Quantity"
                               headerText="#{userData.userDDs['NUMBER']}"
