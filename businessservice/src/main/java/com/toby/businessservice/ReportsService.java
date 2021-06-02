@@ -9,6 +9,7 @@ import com.toby.views.CompanyInvoicesWithoutSewing;
 import com.toby.views.CustomerBalances;
 import com.toby.views.InvoicesIssuedWithinAperiod;
 import com.toby.views.ItemBalancesStatement;
+import com.toby.views.ProfitOfItemsSold;
 import com.toby.views.SalesReportByValueAded;
 import com.toby.views.SalesReportByValueAdedDetails;
 import com.toby.views.StatementOfBondsByBranche;
@@ -35,4 +36,6 @@ public interface ReportsService {
     public List<CompanyInvoicesWithoutSewing> getCompanyInvoicesWithoutSewing(CompanyInvoicesWithoutSewing invoicesWithoutSewing, Integer branchId);
 
     public List<ItemBalancesStatement> getItemBalancesStatement(ItemBalancesStatement itemBalancesStatement, Integer branchId);
+
+    public List<ProfitOfItemsSold> getProfitOfItemsSold(ProfitOfItemsSold profitOfItemsSold, Integer branchId , Integer type);
 }
