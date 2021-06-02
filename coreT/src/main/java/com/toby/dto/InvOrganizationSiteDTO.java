@@ -12,9 +12,9 @@ import java.util.Date;
  * @author hq003
  */
 public class InvOrganizationSiteDTO extends BaseEntityDTO {
-    
+
     private Integer index;
-    
+
     private String code;
     private String name;
     private String address;
@@ -23,41 +23,43 @@ public class InvOrganizationSiteDTO extends BaseEntityDTO {
     private String mobile;
     private String personResponsible;
     private String phone;
-    private String email; 
-    private Integer type; 
-    private String postBox; 
-    private BigDecimal discount; 
-    private BigDecimal openBalanceDebit; 
-    private BigDecimal openBalanceCredit; 
-    private BigDecimal balanceLimit; 
-    private String remark; 
-    private Integer active; 
-    private String zip; 
-    private String contactPerson; 
-    private String phone2;  
-    private Date openBalanceDate; 
-    private String companyName; 
-    private String nationId; 
-    private String accountBankNumber; 
-    private String sponsorName1; 
-    private String sponsorPhone1; 
-    private String sponsorName2; 
-    private String sponsorPhone2; 
-    private Date birthdate; 
-    private GlAccountDTO accountId; 
-    private Integer branchId; 
-    private SymbolDTO countryId; 
-    private CurrencyDTO currencyId; 
-    private InventoryDelegatorDTO delegatorId; 
-    private SymbolDTO regionId; 
-    private SymbolDTO workTypeId;  
-    private InvOrganizationSiteDTO parent; 
-    private SymbolDTO supplierType; 
+    private String email;
+    private Integer type;
+    private String postBox;
+    private BigDecimal discount;
+    private BigDecimal openBalanceDebit;
+    private BigDecimal openBalanceCredit;
+    private BigDecimal balanceLimit;
+    private String remark;
+    private Integer active;
+    private String zip;
+    private String contactPerson;
+    private String phone2;
+    private Date openBalanceDate;
+    private String companyName;
+    private String nationId;
+    private String accountBankNumber;
+    private String sponsorName1;
+    private String sponsorPhone1;
+    private String sponsorName2;
+    private String sponsorPhone2;
+    private Date birthdate;
+    private GlAccountDTO accountId;
+    private Integer branchId;
+    private SymbolDTO countryId;
+    private CurrencyDTO currencyId;
+    private InventoryDelegatorDTO delegatorId;
+    private SymbolDTO regionId;
+    private SymbolDTO workTypeId;
+    private InvOrganizationSiteDTO parent;
+    private SymbolDTO supplierType;
     private SymbolDTO contractorType;
     private String globalFilter;
     private OfferCompanyDTO offerCompanyDTO;
     private InvInventoryDTO gallaryIdDTO;
-
+    private BigDecimal length;
+    private BigDecimal shoulder;
+    private BigDecimal step;
 
     public InvOrganizationSiteDTO() {
     }
@@ -242,7 +244,7 @@ public class InvOrganizationSiteDTO extends BaseEntityDTO {
      * @return the discount
      */
     public BigDecimal getDiscount() {
-        if(discount == null){
+        if (discount == null) {
             discount = BigDecimal.ZERO;
         }
         return discount;
@@ -689,5 +691,55 @@ public class InvOrganizationSiteDTO extends BaseEntityDTO {
         this.gallaryIdDTO = gallaryIdDTO;
     }
 
+    /**
+     * @return the length
+     */
+    public BigDecimal getLength() {
+        if (length == null) {
+            length = BigDecimal.ZERO;
+        }
+        return length;
+    }
+
+    /**
+     * @param length the length to set
+     */
+    public void setLength(BigDecimal length) {
+        this.length = length;
+    }
+
+    /**
+     * @return the shoulder
+     */
+    public BigDecimal getShoulder() {
+        if (shoulder == null) {
+            shoulder = BigDecimal.ZERO;
+        }
+        return shoulder;
+    }
+
+    /**
+     * @param shoulder the shoulder to set
+     */
+    public void setShoulder(BigDecimal shoulder) {
+        this.shoulder = shoulder;
+    }
+
+    /**
+     * @return the step
+     */
+    public BigDecimal getStep() {
+        if (step == null) {
+            step = BigDecimal.ZERO;
+        }
+        return step;
+    }
+
+    /**
+     * @param step the step to set
+     */
+    public void setStep(BigDecimal step) {
+        this.step = step;
+    }
 
 }

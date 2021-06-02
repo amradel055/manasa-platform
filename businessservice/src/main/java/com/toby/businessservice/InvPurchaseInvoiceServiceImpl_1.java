@@ -1941,6 +1941,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         builder.append("SELECT "
                 + " sum(i.number) , "
                 + " sum(i.net)  , "
+                + " sum(i.costAvarage)  , "
                 + " i.itemId.proGroupId.id  , "
                 + " i.itemId.proGroupId.code  , "
                 + " i.itemId.proGroupId.name ");
@@ -2009,10 +2010,11 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             summitionItemsView.setNumber((BigDecimal) line[0]);
 //            summitionItemsView.setAllQuantity((BigDecimal) line[2]);
             summitionItemsView.setAllCost((BigDecimal) line[1]);
+            summitionItemsView.setAllAvarageCost((BigDecimal) line[2]);
 //            summitionItemsView.setAllAvarageCost((BigDecimal) line[4]);
-            Integer groupId = (Integer) line[2];
-            summitionItemsView.setCode((Integer) line[3]);
-            summitionItemsView.setName((String) line[4]);
+            Integer groupId = (Integer) line[3];
+            summitionItemsView.setCode((Integer) line[4]);
+            summitionItemsView.setName((String) line[5]);
             summitionItemsView.setFactoryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupId, 0));
             summitionItemsView.setSendNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupId, 1));
             summitionItemsView.setDeliveryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupId, 2));

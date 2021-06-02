@@ -138,6 +138,12 @@ public class InvOrganizationSite extends BaseEntity {
     @JoinColumn(name = "gallary_id", referencedColumnName = "id")
     @ManyToOne
     private InvInventory gallaryId;
+    @Column(name = "length")
+    private BigDecimal length;
+    @Column(name = "shoulder")
+    private BigDecimal shoulder;
+    @Column(name = "step")
+    private BigDecimal step;
 
     public InvOrganizationSite() {
     }
@@ -441,6 +447,48 @@ public class InvOrganizationSite extends BaseEntity {
      */
     public void setGallaryId(InvInventory gallaryId) {
         this.gallaryId = gallaryId;
+    }
+
+    /**
+     * @return the length
+     */
+    public BigDecimal getLength() {
+        return length;
+    }
+
+    /**
+     * @param length the length to set
+     */
+    public void setLength(BigDecimal length) {
+        this.length = length;
+    }
+
+    /**
+     * @return the shoulder
+     */
+    public BigDecimal getShoulder() {
+        return shoulder;
+    }
+
+    /**
+     * @param shoulder the shoulder to set
+     */
+    public void setShoulder(BigDecimal shoulder) {
+        this.shoulder = shoulder;
+    }
+
+    /**
+     * @return the step
+     */
+    public BigDecimal getStep() {
+        return step;
+    }
+
+    /**
+     * @param step the step to set
+     */
+    public void setStep(BigDecimal step) {
+        this.step = step;
     }
 
 }

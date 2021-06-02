@@ -51,6 +51,9 @@ public class SummitionItemReportMB extends Basic {
     private BigDecimal sumDifferentTotal;
     private BigDecimal sumDeliveryNumberTotal;
     private BigDecimal sumCustomerNumberTotal;
+    private BigDecimal sumNumberTotal;
+    private BigDecimal sumAllCostTotal;
+    private BigDecimal sumAllAvarageCost;
 
     @EJB
     InvPurchaseInvoiceService_1 invPurchaseInvoiceService_1;
@@ -72,11 +75,14 @@ public class SummitionItemReportMB extends Basic {
             sumDeliveryNumberTotal = BigDecimal.ZERO;
             sumCustomerNumberTotal = BigDecimal.ZERO;
             sumDifferentTotal = BigDecimal.ZERO;
+            setSumNumberTotal(BigDecimal.ZERO);
+            setSumAllCostTotal(BigDecimal.ZERO);
+            setSumAllAvarageCost(BigDecimal.ZERO);
             List<SummitionItemsView> itemsViewForGallaryinner = new ArrayList<>();
             for (InvInventoryDTO invInventoryDTO : getGallaryListSelected()) {
 
                 SummitionItemsView summitionItemsView = new SummitionItemsView();
-                BigDecimal sumFactoryNumber = BigDecimal.ZERO, sumSendNumber = BigDecimal.ZERO, sumDeliveryNumber = BigDecimal.ZERO, sumCustomerNumber = BigDecimal.ZERO, sumDifferentNumber = BigDecimal.ZERO;;
+                BigDecimal sumAverageCost = BigDecimal.ZERO, sumNumber = BigDecimal.ZERO, sumAllCost = BigDecimal.ZERO, sumFactoryNumber = BigDecimal.ZERO, sumSendNumber = BigDecimal.ZERO, sumDeliveryNumber = BigDecimal.ZERO, sumCustomerNumber = BigDecimal.ZERO, sumDifferentNumber = BigDecimal.ZERO;;
 
                 summitionItemsView.setName(invInventoryDTO.getName());
                 summitionItemsView.setRowType(1);
@@ -95,6 +101,10 @@ public class SummitionItemReportMB extends Basic {
                             sumDeliveryNumber = sumDeliveryNumber.add(view.getDeliveryNumber());
                             sumCustomerNumber = sumCustomerNumber.add(view.getCustomerNumber());
                             sumDifferentNumber = sumDifferentNumber.add(view.getDifferent());
+                            sumAllCost = sumAllCost.add(view.getAllCost());
+                            sumNumber = sumNumber.add(view.getNumber());
+                            sumAverageCost = sumAverageCost.add(view.getAllAvarageCost());
+
                         }
                     }
 
@@ -103,6 +113,9 @@ public class SummitionItemReportMB extends Basic {
                     summitionItemsView.setDeliveryNumber(sumDeliveryNumber);
                     summitionItemsView.setCustomerNumber(sumCustomerNumber);
                     summitionItemsView.setDifferent(sumDifferentNumber);
+                    summitionItemsView.setNumber(sumNumber);
+                    summitionItemsView.setAllCost(sumAllCost);
+                    summitionItemsView.setAllAvarageCost(sumAverageCost);
 
                     getItemsViewList().add(summitionItemsView);
                     getItemsViewList().addAll(itemsViewForGallaryinner);
@@ -112,6 +125,9 @@ public class SummitionItemReportMB extends Basic {
                     setSumDeliveryNumberTotal(getSumDeliveryNumberTotal().add(sumDeliveryNumber));
                     setSumCustomerNumberTotal(getSumCustomerNumberTotal().add(sumCustomerNumber));
                     setSumDifferentTotal(getSumDifferentTotal().add(sumDifferentNumber));
+                    setSumNumberTotal(getSumNumberTotal().add(sumNumber));
+                    setSumAllCostTotal(getSumAllCostTotal().add(sumAllCost));
+                    setSumAllAvarageCost(getSumAllAvarageCost().add(sumAverageCost));
                 }
 
             }
@@ -179,7 +195,7 @@ public class SummitionItemReportMB extends Basic {
         hashMap.put("codeText", "الكود ");
         hashMap.put("nameText", "الفئة ");
         hashMap.put("numberText", "العدد ");
-        hashMap.put("allCostText", "التكلفة ");
+        hashMap.put("allCostText", "سعر البيع ");
         hashMap.put("factoryNumberText", "استلام بالمشغل ");
         hashMap.put("sendNumberText", "ارسال للمعرض ");
         hashMap.put("differentText", "الفرق ");
@@ -393,6 +409,48 @@ public class SummitionItemReportMB extends Basic {
      */
     public void setSumDifferentTotal(BigDecimal sumDifferentTotal) {
         this.sumDifferentTotal = sumDifferentTotal;
+    }
+
+    /**
+     * @return the sumNumberTotal
+     */
+    public BigDecimal getSumNumberTotal() {
+        return sumNumberTotal;
+    }
+
+    /**
+     * @param sumNumberTotal the sumNumberTotal to set
+     */
+    public void setSumNumberTotal(BigDecimal sumNumberTotal) {
+        this.sumNumberTotal = sumNumberTotal;
+    }
+
+    /**
+     * @return the sumAllCostTotal
+     */
+    public BigDecimal getSumAllCostTotal() {
+        return sumAllCostTotal;
+    }
+
+    /**
+     * @param sumAllCostTotal the sumAllCostTotal to set
+     */
+    public void setSumAllCostTotal(BigDecimal sumAllCostTotal) {
+        this.sumAllCostTotal = sumAllCostTotal;
+    }
+
+    /**
+     * @return the sumAllAvarageCost
+     */
+    public BigDecimal getSumAllAvarageCost() {
+        return sumAllAvarageCost;
+    }
+
+    /**
+     * @param sumAllAvarageCost the sumAllAvarageCost to set
+     */
+    public void setSumAllAvarageCost(BigDecimal sumAllAvarageCost) {
+        this.sumAllAvarageCost = sumAllAvarageCost;
     }
 
 }

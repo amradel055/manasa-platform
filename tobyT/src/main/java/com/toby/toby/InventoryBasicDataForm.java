@@ -468,7 +468,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
         if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getId() != null) {
 
-            organizationSiteService.updateOrganizationSiteMobile(getInvInvoiceDTO().getOrganizationSiteId());
+            organizationSiteService.updateOrganizationSiteMobile(getInvInvoiceDTO() == null ? null : getInvInvoiceDTO().getOrganizationSiteId());
         }
     }
 
@@ -527,7 +527,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     public void putCurrency() {
         try {
             getInvInvoiceDTO().setMsg(null);
-            setInvInvoiceDTO(invPurchaseInvoiceService.putCurrency(getInvInvoiceDTO()));
+            setInvInvoiceDTO(invPurchaseInvoiceService.putCurrency(getInvInvoiceDTO() == null ? null : getInvInvoiceDTO()));
             getInvInvoiceDTO().setCustomerNotice(companyService.getNoticeByCustomerId(getInvInvoiceDTO() == null ? null : getInvInvoiceDTO().getOrganizationSiteId().getId()));
 
             errorMsg(getInvInvoiceDTO().getMsg());

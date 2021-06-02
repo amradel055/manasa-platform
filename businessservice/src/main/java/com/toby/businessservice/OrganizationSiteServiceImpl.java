@@ -61,6 +61,9 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         if (organizationSiteDTO != null && organizationSiteDTO.getId() != null) {
             InvOrganizationSite entity = dao.findEntityById(InvOrganizationSite.class, organizationSiteDTO.getId());
             entity.setMobile(organizationSiteDTO.getMobile());
+            entity.setLength(organizationSiteDTO.getLength());
+            entity.setShoulder(organizationSiteDTO.getShoulder());
+            entity.setStep(organizationSiteDTO.getStep());
             dao.updateEntity(entity);
         }
     }
@@ -76,6 +79,22 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
                 dao.updateEntity(entity);
             }
         }
+    }
+
+    @Override
+    public List<InvOrganizationSiteDTO> getDetailsByCustomerId(InvOrganizationSiteDTO organizationSiteDTO) {
+
+        List<InvOrganizationSiteDTO> organizationSiteDTOList = new ArrayList<>();
+        String sql = " SELECT length,shoulder,step FROM toby.inv_organization_site\n"
+                + " where id = " + organizationSiteDTO.getId() + " ";
+        List<Object[]> res = dao.executeNativeQuery(sql);
+        for (Object[] object : res) {
+            organizationSiteDTO.setLength((BigDecimal) object[0]);
+            organizationSiteDTO.setShoulder((BigDecimal) object[1]);
+            organizationSiteDTO.setStep((BigDecimal) object[2]);
+            organizationSiteDTOList.add(organizationSiteDTO);
+        }
+        return organizationSiteDTOList;
     }
 
     @Override
@@ -437,6 +456,9 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         invOrganizationSite.setPhone2(invOrganizationSiteDTO.getPhone2());
         invOrganizationSite.setPostBox(invOrganizationSiteDTO.getPostBox());
         invOrganizationSite.setRemark(invOrganizationSiteDTO.getRemark());
+        invOrganizationSite.setLength(invOrganizationSiteDTO.getLength());
+        invOrganizationSite.setShoulder(invOrganizationSiteDTO.getShoulder());
+        invOrganizationSite.setStep(invOrganizationSiteDTO.getStep());
 
         if (invOrganizationSiteDTO.getGallaryIdDTO() != null && invOrganizationSiteDTO.getGallaryIdDTO().getId() != null) {
             InvInventory invInventory = new InvInventory();
@@ -553,6 +575,9 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         invOrganizationSiteDTO.setPhone2(invOrganizationSite.getPhone2());
         invOrganizationSiteDTO.setPostBox(invOrganizationSite.getPostBox());
         invOrganizationSiteDTO.setRemark(invOrganizationSite.getRemark());
+        invOrganizationSiteDTO.setLength(invOrganizationSite.getLength());
+        invOrganizationSiteDTO.setShoulder(invOrganizationSite.getShoulder());
+        invOrganizationSiteDTO.setStep(invOrganizationSite.getStep());
 
         if (invOrganizationSite.getParent() != null) {
             InvOrganizationSiteDTO invOrganizationSiteDTO1 = new InvOrganizationSiteDTO();
@@ -1572,6 +1597,9 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         invOrganizationSiteDTO.setName(invOrganizationSite.getName());
         invOrganizationSiteDTO.setCode(invOrganizationSite.getCode());
         invOrganizationSiteDTO.setMobile(invOrganizationSite.getMobile());
+        invOrganizationSiteDTO.setLength(invOrganizationSite.getLength());
+        invOrganizationSiteDTO.setShoulder(invOrganizationSite.getShoulder());
+        invOrganizationSiteDTO.setStep(invOrganizationSite.getStep());
         invOrganizationSiteDTO.setDiscount(invOrganizationSite.getDiscount());
         if (invOrganizationSite.getCurrencyId() != null) {
             CurrencyDTO currencyDTO = new CurrencyDTO();
