@@ -268,4 +268,9 @@ public class ProProductionItemsTransactionDTO extends BaseEntityDTO {
     public void setGalleryName(String galleryName) {
         this.galleryName = galleryName;
     }
+
+    /**
+     * @return the dateTo
+     */
+   
 }

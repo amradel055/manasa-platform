@@ -46,6 +46,7 @@ public class ProProductionTransactionFactoryMB extends Basic {
 
     public void search() {
         if (getProProductionTransactionFactoryView() != null && getProProductionTransactionFactoryView().getGallerySelectedList() != null && !getProProductionTransactionFactoryView().getGallerySelectedList().isEmpty()) {
+            proProductionItemsTransactionDTOList = new ArrayList<>();
             for (InvInventoryDTO invInventoryDTO : getProProductionTransactionFactoryView().getGallerySelectedList()) {
                 getProProductionTransactionFactoryView().setGallerySelected(invInventoryDTO);
                 getProProductionItemsTransactionDTOList().addAll(proProductionItemsTransactionService.getALLProProductionItemsTransactionDTO(proProductionTransactionFactoryView, getUserData().getUserBranch().getId()));
