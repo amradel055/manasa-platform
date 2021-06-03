@@ -50,7 +50,6 @@ public class ProfitOfItemsSoldReport extends Basic {
             for (InvInventoryDTO invInventoryDTO : getProfitOfItemsSold().getGallarySelected()) {
                 getProfitOfItemsSold().setGallaryFrom(invInventoryDTO);
                 getProfitOfItemsSoldList().addAll(reportsService.getProfitOfItemsSold(getProfitOfItemsSold(), getUserData().getUserBranch().getId(), type));
-
             }
         }
     }
@@ -96,6 +95,14 @@ public class ProfitOfItemsSoldReport extends Basic {
             hashMap.put("companyImage", null);
         }
 
+        hashMap.put("gallarySelectedText", " المعرض");
+        hashMap.put("gallarySelectedValue", getProfitOfItemsSold() == null ? null : getProfitOfItemsSold().getGallaryFrom().getName());
+        hashMap.put("typeText", " الحالة");
+        hashMap.put("typeValue", getType());
+        hashMap.put("dateFromText", " من تاريخ");
+        hashMap.put("dateFromValue", getProfitOfItemsSold().getDateFrom());
+        hashMap.put("dateToText", " الى تاريخ");
+        hashMap.put("dateToValue", getProfitOfItemsSold().getDateTo());
         hashMap.put("codeText", " الكود");
         hashMap.put("nameText", " الاسم");
         hashMap.put("costAverageText", " متوسط التكلفة");
