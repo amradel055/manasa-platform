@@ -334,11 +334,11 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
     }
 
     private void appendProProductionDate1(ProProductionTransactionFactoryView transactionFactoryView, StringBuilder query, Map<String, Object> params) {
-        if (transactionFactoryView != null && transactionFactoryView.getDate() != null) {
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
-//            params.put("date", dateFormat.format(transactionFactoryView.getDate()));
+        if (transactionFactoryView != null && transactionFactoryView.getDate() != null && transactionFactoryView.getDateTo() != null ) {
             params.put("date", transactionFactoryView.getDate());
-            query.append(" and s.proFactoryDeliveryDetailId.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.date = :date ");
+            params.put("dateTo", transactionFactoryView.getDateTo());
+            query.append(" and s.proFactoryDeliveryDetailId.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.date >= :date and s.proFactoryDeliveryDetailId.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.date <= :dateTo ");
+
         }
     }
 

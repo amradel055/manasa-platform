@@ -556,7 +556,7 @@ public class ReportsServiceImpl implements ReportsService {
 
     private void appendGallery7(ProfitOfItemsSold profitOfItemsSold, StringBuilder sql) {
         if (profitOfItemsSold.getGallaryFrom() != null) {
-            sql.append(" and ipi.inv_inventory_id =  ").append(profitOfItemsSold.getGallaryFrom().getId());
+            sql.append(" and ipi.galary_Id =  ").append(profitOfItemsSold.getGallaryFrom().getId());
         }
     }
     

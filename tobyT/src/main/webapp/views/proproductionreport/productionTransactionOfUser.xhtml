@@ -237,13 +237,13 @@
                     <p:column headerText="الاجمالي" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
                         <h:outputText value="#{data.totalNumber}" />
                     </p:column>
-                    <p:column headerText="الكمية" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                    <p:column headerText="المتوسط" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
                         <h:outputText value="#{data.avarage}" />
                     </p:column>
 
                     <p:columnGroup type="footer">
                         <p:row>
-                            <p:column colspan="4" style="text-align:right;border-radius: 0px;" footerText="#{userData.userDDs['TOTAL']}  :" />
+                            <p:column colspan="5" style="text-align:right;border-radius: 0px;" footerText="#{userData.userDDs['TOTAL']}  :" />
 
                             <p:column footerText="#{productionTransactionOfUserMB.totalQuantity}" style="font-size: 1.4vh;text-align: center!important;border-radius: 0px;" />
                             <p:column footerText="#{productionTransactionOfUserMB.total}"  style="font-size: 1.4vh;text-align: center!important;border-radius: 0px;"/>

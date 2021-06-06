@@ -139,13 +139,13 @@ public class ProductionTransactionOfUserMB extends BaseFormBean {
         }
 
         hashMap.put("fromStatusText", "من فئة");
-        hashMap.put("fromStatusValue", printProductionDTO.getFromStatus());
+        hashMap.put("fromStatusValue", getPrintProductionDTO().getFromStatus() == null ? null : getPrintProductionDTO().getFromStatus().getName());
         hashMap.put("toStatusText", "الى فئة");
-        hashMap.put("toStatusValue", printProductionDTO.getToStatus());
+        hashMap.put("toStatusValue", getPrintProductionDTO().getToStatus() == null ? null : getPrintProductionDTO().getToStatus().getName());
         hashMap.put("fromUserText", " من عامل");
-        hashMap.put("fromUserValue", printProductionDTO.getFromUser() == null ? null : printProductionDTO.getFromUser());
+        hashMap.put("fromUserValue", getPrintProductionDTO().getFromUser() == null ? null : getPrintProductionDTO().getFromUser().getName());
         hashMap.put("toUserText", " الى عامل");
-        hashMap.put("toUserValue", printProductionDTO.getToUser() == null ? null : printProductionDTO.getToUser());
+        hashMap.put("toUserValue", getPrintProductionDTO().getToUser() == null ? null : getPrintProductionDTO().getToUser().getName());
         hashMap.put("fromDateText", "  من تاريخ");
         hashMap.put("fromDateValue", printProductionDTO.getFromDate());
         hashMap.put("toDateText", "  الى تاريخ");
