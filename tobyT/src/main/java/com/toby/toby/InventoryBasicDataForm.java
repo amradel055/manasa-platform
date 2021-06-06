@@ -298,9 +298,10 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                 getInvInvoiceDTO().setInvDelegatorId(getInventoryDelegatorList(1, getInvInvoiceDTO().getGallaryId() == null ? null : getInvInvoiceDTO().getGallaryId().getId()).get(0));
             }
         }
-        getInvInvoiceDTO().setDueperiod(invGlobalService.getDeliveryDaysByGalleryId(getInvInvoiceDTO() == null ? null : getInvInvoiceDTO().getGallaryId().getId()));
+
         sumDateToDueDate();
         if (getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.PROWORKORDER)) {
+            getInvInvoiceDTO().setDueperiod(invGlobalService.getDeliveryDaysByGalleryId(getInvInvoiceDTO() == null ? null : getInvInvoiceDTO().getGallaryId().getId()));
             if (getInvInvoiceDTO().getPricetype() == null) {
                 getInvInvoiceDTO().setPricetype(1);
             }
