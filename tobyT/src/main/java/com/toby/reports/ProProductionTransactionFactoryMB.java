@@ -79,7 +79,7 @@ public class ProProductionTransactionFactoryMB extends Basic {
     }
 
     public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {
-        String reportName = "ProProductionTransactionFactoryReport.jasper";
+        String reportName = "ProProductionTransactionFactoryPrint.jasper";
         fillReport(prepareReport(), getUserData().getReportPath() + reportName, getProProductionItemsTransactionDTOList(), "pdf");
     }
 
@@ -106,6 +106,7 @@ public class ProProductionTransactionFactoryMB extends Basic {
         hashMap.put("invoiceNumberText", "رقم الفاتورة");
         hashMap.put("invoiceNumberValue", proProductionTransactionFactoryView.getInvoiceNumber());
         hashMap.put("serialText", "رقم الفاتورة");
+        hashMap.put("createdInvoiceByNameText", "اسم العميل");
         hashMap.put("createdByNameText", "اسم العامل ");
         hashMap.put("createdByCodeText", " رقم العامل");
         hashMap.put("numberText", "عدد الثياب");

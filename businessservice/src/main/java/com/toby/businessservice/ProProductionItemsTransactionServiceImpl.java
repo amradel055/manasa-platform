@@ -213,6 +213,7 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
         proProductionItemsTransactionDTO.setCreatedBy(proProductionItemsTransaction.getCreatedBy() != null ? proProductionItemsTransaction.getCreatedBy().getId() : null);
         proProductionItemsTransactionDTO.setCreatedByName(proProductionItemsTransaction.getCreatedBy() != null ? proProductionItemsTransaction.getCreatedBy().getName() : null);
         proProductionItemsTransactionDTO.setCreatedByCode(proProductionItemsTransaction.getCreatedBy() != null ? proProductionItemsTransaction.getCreatedBy().getUserCode() : null);
+        proProductionItemsTransactionDTO.setCreatedInvoiceByName(proProductionItemsTransaction.getProFactoryDeliveryDetailId() == null ? null : proProductionItemsTransaction.getProFactoryDeliveryDetailId().getInvPurchaseInvoiceDetailId().getInvPurchaseInvoiceId().getOrganizationSiteId().getName());
         proProductionItemsTransactionDTO.setCreatedDate(proProductionItemsTransaction.getCreationDate());
         proProductionItemsTransactionDTO.setBranchId(proProductionItemsTransaction.getBranchId() != null ? proProductionItemsTransaction.getBranchId().getId() : null);
 
@@ -334,7 +335,7 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
     }
 
     private void appendProProductionDate1(ProProductionTransactionFactoryView transactionFactoryView, StringBuilder query, Map<String, Object> params) {
-        if (transactionFactoryView != null && transactionFactoryView.getDate() != null && transactionFactoryView.getDateTo() != null ) {
+        if (transactionFactoryView != null && transactionFactoryView.getDate() != null && transactionFactoryView.getDateTo() != null) {
             params.put("date", transactionFactoryView.getDate());
             params.put("dateTo", transactionFactoryView.getDateTo());
             query.append(" and s.proFactoryDeliveryDetailId.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.date >= :date and s.proFactoryDeliveryDetailId.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.date <= :dateTo ");

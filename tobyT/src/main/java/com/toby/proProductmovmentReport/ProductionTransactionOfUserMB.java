@@ -157,7 +157,7 @@ public class ProductionTransactionOfUserMB extends BaseFormBean {
         hashMap.put("priceText", " السعر ");
         hashMap.put("numberExcuteText", " الكمية ");
         hashMap.put("totalNumberText", " الاجمالي ");
-        hashMap.put("avarageText", " الكمية ");
+        hashMap.put("avarageText", " المتوسط ");
 
         return hashMap;
     }
