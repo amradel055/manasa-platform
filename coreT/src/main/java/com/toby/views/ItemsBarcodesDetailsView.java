@@ -411,6 +411,9 @@ public class ItemsBarcodesDetailsView implements Serializable {
      * @return the numberMetersYoung
      */
     public BigDecimal getNumberMetersYoung() {
+        if(numberMetersYoung == null){
+            numberMetersYoung = BigDecimal.ZERO;
+        }
         return numberMetersYoung;
     }
 
@@ -425,6 +428,9 @@ public class ItemsBarcodesDetailsView implements Serializable {
      * @return the numberMetersMen
      */
     public BigDecimal getNumberMetersMen() {
+        if(numberMetersMen == null){
+            numberMetersMen = BigDecimal.ZERO;
+        }
         return numberMetersMen;
     }
 
@@ -439,6 +445,9 @@ public class ItemsBarcodesDetailsView implements Serializable {
      * @return the numberMetersFreeYoung
      */
     public BigDecimal getNumberMetersFreeYoung() {
+        if(numberMetersFreeYoung == null){
+            numberMetersFreeYoung = BigDecimal.ZERO;
+        }
         return numberMetersFreeYoung;
     }
 
@@ -453,6 +462,9 @@ public class ItemsBarcodesDetailsView implements Serializable {
      * @return the numberMetersFreeMen
      */
     public BigDecimal getNumberMetersFreeMen() {
+        if(numberMetersFreeMen == null){
+            numberMetersFreeMen = BigDecimal.ZERO;
+        }
         return numberMetersFreeMen;
     }
 
