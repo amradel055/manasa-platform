@@ -20,27 +20,26 @@ public class BaseEntityDTO implements Serializable, Cloneable {
     private Boolean markEdit;
 
     private String msg;
-    
+
     private Boolean markDisable;
-    
-    private Integer createdBy ;
-    
+
+    private Integer createdBy;
+
     private Date createdDate;
 
-    private Integer index ;
-    
+    private Integer index;
+
     private Integer companyId;
-    
+
     private Integer branchId;
+
+    private Integer serial;
+
+    private String createdByName;
     
-    private Integer serial ;  
-    
-    private String createdByName; 
-    
+    private String createdInvoiceByName;
+
     private String createdByCode;
-
-
-
 
     public Integer getId() {
         return id;
@@ -54,7 +53,7 @@ public class BaseEntityDTO implements Serializable, Cloneable {
      * @return the markEdit
      */
     public Boolean getMarkEdit() {
-         if(markEdit == null){
+        if (markEdit == null) {
             markEdit = false;
         }
         return markEdit;
@@ -222,5 +221,19 @@ public class BaseEntityDTO implements Serializable, Cloneable {
      */
     public void setCreatedByCode(String createdByCode) {
         this.createdByCode = createdByCode;
+    }
+
+    /**
+     * @return the createdInvoiceByName
+     */
+    public String getCreatedInvoiceByName() {
+        return createdInvoiceByName;
+    }
+
+    /**
+     * @param createdInvoiceByName the createdInvoiceByName to set
+     */
+    public void setCreatedInvoiceByName(String createdInvoiceByName) {
+        this.createdInvoiceByName = createdInvoiceByName;
     }
 }
