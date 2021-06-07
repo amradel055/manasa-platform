@@ -185,7 +185,6 @@
                                             </div>
                                         </div>-->
                     <div class="ui-g-12 ui-xl-12">
-
                         <div class="ui-g-6 ui-xl-6">
                             <p:inputText style="width: 38%!important" id="notes"
                                          value="#{SettlementDeedFormMB.glBankTransactionEntity.remark}">
@@ -195,6 +194,21 @@
                         </div>
                         <div class="ui-g-6 ui-xl-6">
                             <p:outputLabel style="width:64px;margin-right: 6%;" value="#{userData.userDDs['STATEMENT']}"/>
+                        </div>
+                    </div>
+
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:selectOneMenu id="group" value="#{SettlementDeedFormMB.gallaryDTOSelected}"
+                                             converter="#{SettlementDeedFormMB.gallaryDTOConverter}">
+                                <f:selectItems value="#{SettlementDeedFormMB.gallaryList}" 
+                                               var="gallary"
+                                               itemLabel="#{gallary}"
+                                               itemValue="#{gallary}" />
+                            </p:selectOneMenu>
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel style="width: 50px;margin-right: 1%" value="المعرض"/>
                         </div>
                     </div>
                 </div>

@@ -1655,7 +1655,6 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
 
     private void commonData(InvInvoiceDTO invInvoiceDTO, InvPurchaseInvoice entity) {
 
-
         invInvoiceDTO.setId(entity.getId());
         invInvoiceDTO.setSerial(entity.getSerial());
         invInvoiceDTO.setSerialTax(entity.getSerialTax());
@@ -1668,13 +1667,12 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         invInvoiceDTO.setNumberOfToob(invoiceMovementReportService.summitionTob(entity.getId()));
         String invoiceStatus = invPurchaseInvoiceService.findInvoiceStatus(entity.getId());
 
-        if(invoiceStatus != null && !invoiceStatus.isEmpty()){
+        if (invoiceStatus != null && !invoiceStatus.isEmpty()) {
             invInvoiceDTO.setInvoiceStatus(invoiceStatus);
-        }else{
+        } else {
             invInvoiceDTO.setInvoiceStatus("بالمعرض");
         }
-        
-       
+
         if (entity.getDueDate() != null) {
             invInvoiceDTO.setDiffrentTime(entity.getDueDate().getTime() - (new Date()).getTime());
         }
@@ -1934,7 +1932,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     }
 
     @Override
-    public List<SummitionItemsView> findSummitionQuantity(Integer gallaryId, Integer branchId, Date dateFrom, Date dateTo, Integer groupId) {
+    public List<SummitionItemsView> findSummitionQuantity(Integer gallaryId, Integer branchId, Date dateFrom, Date dateTo, Integer groupId, List<InvInventoryDTO> invInventoryDTOs) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         StringBuilder builder = new StringBuilder();
@@ -1957,9 +1955,23 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             params.put("dateTo", dateTo);
             builder.append(" AND i.invPurchaseInvoiceId.date <= :dateTo ");
         }
-        if (gallaryId != null) {
-            params.put("gallaryId", gallaryId);
-            builder.append(" AND i.invPurchaseInvoiceId.galaryId.id = :gallaryId ");
+
+        if (invInventoryDTOs != null && !invInventoryDTOs.isEmpty()) {
+            StringBuilder Selected = null;
+            for (InvInventoryDTO invInventoryDTO : invInventoryDTOs) {
+                if (Selected == null) {
+                    Selected = new StringBuilder();
+                    Selected.append(invInventoryDTO.getId());
+                } else {
+                    Selected.append(',').append(invInventoryDTO.getId());
+                }
+            }
+            builder.append(" AND i.invPurchaseInvoiceId.galaryId.id in ("  ).append(Selected.toString()).append(" )");
+        } else {
+            if (gallaryId != null) {
+                params.put("gallaryId", gallaryId);
+                builder.append(" AND i.invPurchaseInvoiceId.galaryId.id = :gallaryId ");
+            }
         }
         if (groupId != null) {
             params.put("groupId", groupId);
@@ -1967,6 +1979,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         }
         builder.append(" group by i.itemId.proGroupId.id order by i.itemId.proGroupId.code ");
         List<Object[]> res = dao.findListByQuery(builder.toString(), params);
+
         return getTheListBasedOnAccClass(res, gallaryId, dateFrom, dateTo);
     }
 

@@ -79,9 +79,11 @@ public class SummitionItemReportMB extends Basic {
             setSumAllCostTotal(BigDecimal.ZERO);
             setSumAllAvarageCost(BigDecimal.ZERO);
             List<SummitionItemsView> itemsViewForGallaryinner = new ArrayList<>();
+            List<SummitionItemsView> itemsViewForGallaryinnerForAll = new ArrayList<>();
+            SummitionItemsView summitionItemsView = null;
             for (InvInventoryDTO invInventoryDTO : getGallaryListSelected()) {
 
-                SummitionItemsView summitionItemsView = new SummitionItemsView();
+                summitionItemsView = new SummitionItemsView();
                 BigDecimal sumAverageCost = BigDecimal.ZERO, sumNumber = BigDecimal.ZERO, sumAllCost = BigDecimal.ZERO, sumFactoryNumber = BigDecimal.ZERO, sumSendNumber = BigDecimal.ZERO, sumDeliveryNumber = BigDecimal.ZERO, sumCustomerNumber = BigDecimal.ZERO, sumDifferentNumber = BigDecimal.ZERO;;
 
                 summitionItemsView.setName(invInventoryDTO.getName());
@@ -90,50 +92,63 @@ public class SummitionItemReportMB extends Basic {
                 if (getUri().contains("summitionItemReportPro")) {
                     itemsViewForGallaryinner = invPurchaseInvoiceService_1.getTheListBasedOnStagesList(invInventoryDTO.getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), getUserData().getUserBranch().getId(), getUserData().getUser());
                 } else {
-                    itemsViewForGallaryinner = invPurchaseInvoiceService_1.findSummitionQuantity(invInventoryDTO.getId(), getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId());
+                    itemsViewForGallaryinner = invPurchaseInvoiceService_1.findSummitionQuantity(invInventoryDTO.getId(), getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), null);
+                    itemsViewForGallaryinnerForAll = invPurchaseInvoiceService_1.findSummitionQuantity(invInventoryDTO.getId(), getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), null);
                 }
-
                 if (itemsViewForGallaryinner != null && !itemsViewForGallaryinner.isEmpty()) {
                     for (SummitionItemsView view : itemsViewForGallaryinner) {
                         if (view.getCode() == 1 || view.getCode() == 2) {
-                            sumFactoryNumber = sumFactoryNumber.add(view.getFactoryNumber());
-                            sumSendNumber = sumSendNumber.add(view.getSendNumber());
-                            sumDeliveryNumber = sumDeliveryNumber.add(view.getDeliveryNumber());
-                            sumCustomerNumber = sumCustomerNumber.add(view.getCustomerNumber());
-                            sumDifferentNumber = sumDifferentNumber.add(view.getDifferent());
-                            sumAllCost = sumAllCost.add(view.getAllCost());
-                            sumNumber = sumNumber.add(view.getNumber());
-                            sumAverageCost = sumAverageCost.add(view.getAllAvarageCost());
-
+                            setValueForGallary(summitionItemsView, view);
                         }
                     }
-
-                    summitionItemsView.setFactoryNumber(sumFactoryNumber);
-                    summitionItemsView.setSendNumber(sumSendNumber);
-                    summitionItemsView.setDeliveryNumber(sumDeliveryNumber);
-                    summitionItemsView.setCustomerNumber(sumCustomerNumber);
-                    summitionItemsView.setDifferent(sumDifferentNumber);
-                    summitionItemsView.setNumber(sumNumber);
-                    summitionItemsView.setAllCost(sumAllCost);
-                    summitionItemsView.setAllAvarageCost(sumAverageCost);
-
                     getItemsViewList().add(summitionItemsView);
                     getItemsViewList().addAll(itemsViewForGallaryinner);
-
-                    setSumFactoryNumberTotal(getSumFactoryNumberTotal().add(sumFactoryNumber));
-                    setSumSendNumberTotal(getSumSendNumberTotal().add(sumSendNumber));
-                    setSumDeliveryNumberTotal(getSumDeliveryNumberTotal().add(sumDeliveryNumber));
-                    setSumCustomerNumberTotal(getSumCustomerNumberTotal().add(sumCustomerNumber));
-                    setSumDifferentTotal(getSumDifferentTotal().add(sumDifferentNumber));
-                    setSumNumberTotal(getSumNumberTotal().add(sumNumber));
-                    setSumAllCostTotal(getSumAllCostTotal().add(sumAllCost));
-                    setSumAllAvarageCost(getSumAllAvarageCost().add(sumAverageCost));
+                    setFinalTotals(sumFactoryNumber, sumSendNumber, sumDeliveryNumber, sumCustomerNumber, sumDifferentNumber, sumNumber, sumAllCost, sumAverageCost);
                 }
 
             }
 
+            if (getUri().contains("summitionItemReportPro")) {
+            } else {
+                itemsViewForGallaryinnerForAll = invPurchaseInvoiceService_1.findSummitionQuantity(null, getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), getGallaryListSelected());
+                if (itemsViewForGallaryinnerForAll != null && !itemsViewForGallaryinnerForAll.isEmpty()) {
+                    summitionItemsView = new SummitionItemsView();
+                    summitionItemsView.setName("إجماليات المعارض");
+                    summitionItemsView.setRowType(1);
+                    for (SummitionItemsView view : itemsViewForGallaryinnerForAll) {
+                        if (view.getCode() == 1 || view.getCode() == 2) {
+                            setValueForGallary(summitionItemsView, view);
+                        }
+                    }
+                    getItemsViewList().add(summitionItemsView);
+                    getItemsViewList().addAll(itemsViewForGallaryinner);
+                }
+            }
+
         }
 
+    }
+
+    private void setValueForGallary(SummitionItemsView summitionItemsView, SummitionItemsView view) {
+        summitionItemsView.setFactoryNumber(summitionItemsView.getFactoryNumber().add(view.getFactoryNumber()));
+        summitionItemsView.setSendNumber(summitionItemsView.getSendNumber().add(view.getSendNumber()));
+        summitionItemsView.setDeliveryNumber(summitionItemsView.getDeliveryNumber().add(view.getDeliveryNumber()));
+        summitionItemsView.setCustomerNumber(summitionItemsView.getCustomerNumber().add(view.getCustomerNumber()));
+        summitionItemsView.setDifferent(summitionItemsView.getDifferent().add(view.getDifferent()));
+        summitionItemsView.setAllCost(summitionItemsView.getAllCost().add(view.getAllCost()));
+        summitionItemsView.setNumber(summitionItemsView.getNumber().add(view.getNumber()));
+        summitionItemsView.setAllAvarageCost(summitionItemsView.getAllAvarageCost().add(view.getAllAvarageCost()));
+    }
+
+    private void setFinalTotals(BigDecimal sumFactoryNumber, BigDecimal sumSendNumber, BigDecimal sumDeliveryNumber, BigDecimal sumCustomerNumber, BigDecimal sumDifferentNumber, BigDecimal sumNumber, BigDecimal sumAllCost, BigDecimal sumAverageCost) {
+        setSumFactoryNumberTotal(getSumFactoryNumberTotal().add(sumFactoryNumber));
+        setSumSendNumberTotal(getSumSendNumberTotal().add(sumSendNumber));
+        setSumDeliveryNumberTotal(getSumDeliveryNumberTotal().add(sumDeliveryNumber));
+        setSumCustomerNumberTotal(getSumCustomerNumberTotal().add(sumCustomerNumber));
+        setSumDifferentTotal(getSumDifferentTotal().add(sumDifferentNumber));
+        setSumNumberTotal(getSumNumberTotal().add(sumNumber));
+        setSumAllCostTotal(getSumAllCostTotal().add(sumAllCost));
+        setSumAllAvarageCost(getSumAllAvarageCost().add(sumAverageCost));
     }
 
     public void convertDateFrom() {

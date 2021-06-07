@@ -36,15 +36,15 @@ public class ProProductionStagesServiceImpl implements ProProductionStagesServic
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", proProductionStagesDTO.getMsg()));
             return null;
         } else {
-            if (proProductionStagesService.checkForLastStage(tobyUser) != null && proProductionStagesDTO.getTypeStage() == 0) {
+//            if (proProductionStagesService.checkForLastStage(tobyUser) != null && proProductionStagesDTO.getTypeStage() == 0) {
                 ProProductionStages proProductionStage = mapToEntity(proProductionStagesDTO, tobyUser);
                 proProductionStage = dao.updateEntity(proProductionStage);
                 return mapToDTO(proProductionStage);
-            } else {
-                proProductionStagesDTO.setMsg("فيه مرحلة متسجله الاخيرة قبل كده");
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", proProductionStagesDTO.getMsg()));
-                return null;
-            }
+//            } else {
+//                proProductionStagesDTO.setMsg("فيه مرحلة متسجله الاخيرة قبل كده");
+//                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", proProductionStagesDTO.getMsg()));
+//                return null;
+//            }
         }
 
     }
