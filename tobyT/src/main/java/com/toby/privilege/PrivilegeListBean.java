@@ -57,6 +57,13 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
     private UserData userData;
 
     private boolean operationMsg = Boolean.FALSE;
+    private Integer moduleSelect;
+    private List<TobyPrivilege> moduleName;
+    private List<TobyPrivilege> ListPackup;
+    private Boolean viewSelect;
+    private Boolean editSelect;
+    private Boolean addSelect;
+    private Boolean deleteSelect;
 
     @EJB
     private RoleService roleService;
@@ -119,6 +126,7 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
                 List<TobyScreen> unassignedScreens;
                 selectedRole = (TobyRole) event.getObject();
                 setPrivileges(privilegeService.getRolePrivileges(selectedRole.getId()));
+                setListPackup(getPrivileges());
                 if (getUserData().getIsAdmin()) {
                     unassignedScreens = screenService.getAllScreenNotAssignedToRole(selectedRole.getId(), null);
                 } else {
@@ -140,7 +148,7 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
                         privileges.add(priv);
                     }
                 }
-
+                checkAllSelecteActiveOrNot();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -266,51 +274,54 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
             saveError(e, "PrivilegeListBean", "onCheckBoxChecked");
         }
     }
-    public void behindDelete(){
-        if (tobyPrivilegeSelected != null && tobyPrivilegeSelected.getDelete() != null && tobyPrivilegeSelected.getDelete()){
+
+    public void behindDelete() {
+        if (tobyPrivilegeSelected != null && tobyPrivilegeSelected.getDelete() != null && tobyPrivilegeSelected.getDelete()) {
             tobyPrivilegeSelected.setAdd(true);
             tobyPrivilegeSelected.setEdit(true);
             tobyPrivilegeSelected.setView(true);
-        }else{
-            
-            
+        } else {
+
         }
+        replacedetail(tobyPrivilegeSelected);
     }
-    public void behindEdit(){
-        if (tobyPrivilegeSelected != null && tobyPrivilegeSelected.getEdit() != null && tobyPrivilegeSelected.getEdit()){
+
+    public void behindEdit() {
+        if (tobyPrivilegeSelected != null && tobyPrivilegeSelected.getEdit() != null && tobyPrivilegeSelected.getEdit()) {
             tobyPrivilegeSelected.setAdd(true);
             tobyPrivilegeSelected.setView(true);
-        }
-        else{
+        } else {
             tobyPrivilegeSelected.setDelete(false);
-            
-            
-            
+
         }
+        replacedetail(tobyPrivilegeSelected);
     }
-    public void behindAdd(){
-        if (tobyPrivilegeSelected != null &&tobyPrivilegeSelected.getAdd() != null &&  tobyPrivilegeSelected.getAdd()){
+
+    public void behindAdd() {
+        if (tobyPrivilegeSelected != null && tobyPrivilegeSelected.getAdd() != null && tobyPrivilegeSelected.getAdd()) {
             tobyPrivilegeSelected.setView(true);
-        }
-        else{
+        } else {
             tobyPrivilegeSelected.setEdit(false);
             tobyPrivilegeSelected.setDelete(false);
         }
+        replacedetail(tobyPrivilegeSelected);
     }
-    public void unSelectALL(){
-        if (tobyPrivilegeSelected != null && tobyPrivilegeSelected.getView() != null && !tobyPrivilegeSelected.getView()){
+
+    public void unSelectALL() {
+        if (tobyPrivilegeSelected != null && tobyPrivilegeSelected.getView() != null && !tobyPrivilegeSelected.getView()) {
             tobyPrivilegeSelected.setAdd(false);
             tobyPrivilegeSelected.setEdit(false);
             tobyPrivilegeSelected.setDelete(false);
         }
+        replacedetail(tobyPrivilegeSelected);
     }
-    
 
     public void updateAll() {
         try {
             operationMsg = Boolean.TRUE;
             if (selectedRoleId != null) {
                 try {
+                    privileges = ListPackup;
                     for (TobyPrivilege privilege : privileges) {
                         if (privilege.getId() == null) {
                             privilege.setCreatedBy(getUserData().getUser());
@@ -320,6 +331,8 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
                     }
                     privilegeService.save(privileges);
                     privilegeService.revokePrivileges();
+                    checkAllSelecteActiveOrNot();
+                    setModuleSelect(null);
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, userData.getUserDDs().get("INFO"), userData.getUserDDs().get("SAVED")));
                 } catch (Exception e) {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, userData.getUserDDs().get("ERROR"), userData.getUserDDs().get("PRIVILEGE_ERROR")));
@@ -390,7 +403,7 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
                         privileges.add(privilege);
                     }
                 } else {
-                    for ( TobyPrivilege privilege : privileges) {
+                    for (TobyPrivilege privilege : privileges) {
                         privilege.setAdd(Boolean.FALSE);
                         privilege.setView(Boolean.FALSE);
                         privilege.setDelete(Boolean.FALSE);
@@ -407,6 +420,118 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
 
     public void deletePrivlege(ActionEvent e) {
 
+    }
+
+    private void replacedetail(TobyPrivilege tobyPrivilege) {
+        if (tobyPrivilege != null) {
+            for (TobyPrivilege privilege : getListPackup()) {
+                if (privilege.getScreenId().getId().equals(tobyPrivilege.getScreenId().getId())) {
+                    int itemIndex = getListPackup().indexOf(privilege);
+                    if (itemIndex != -1) {
+                        getListPackup().set(itemIndex, tobyPrivilege);
+                    }
+                }
+            }
+        }
+    }
+
+    public void findScreenByModuleType() {
+        Integer filterText = getModuleSelect() == null ? null : getModuleSelect();
+        if (filterText == null || filterText.equals("")) {
+            setPrivileges(getListPackup());
+            checkAllSelecteActiveOrNot();
+            return;
+        }
+        setModuleName(new ArrayList<>());
+        if (filterText == null || filterText > 0) {
+            for (TobyPrivilege tobyPrivilege : getListPackup()) {
+                if (tobyPrivilege != null && tobyPrivilege.getScreenId() != null && tobyPrivilege.getScreenId().getModuleType() != null && tobyPrivilege.getScreenId().getModuleType().equals(filterText)) {
+                    getModuleName().add(tobyPrivilege);
+
+                }
+            }
+        }
+        setPrivileges(getModuleName());
+        updeteViewSelect();
+
+    }
+
+    private void checkAllSelecteActiveOrNot() {
+        Boolean[] selectedResult = updateViewAllSelect();
+        setViewSelect(selectedResult[0]);
+        setEditSelect(selectedResult[1]);
+        setAddSelect(selectedResult[2]);
+        setDeleteSelect(selectedResult[3]);
+    }
+
+    private void updeteViewSelect() {
+        checkAllSelecteActiveOrNot();
+        updateViewColumn();
+        updateEditColumn();
+        updateAddColumn();
+        updateDeleteColumn();
+
+    }
+
+    private Boolean[] updateViewAllSelect() {
+        Boolean notActiveView = Boolean.TRUE, notActiveEdit = Boolean.TRUE, notActiveAdd = Boolean.TRUE, notActiveDelete = Boolean.TRUE;
+        for (TobyPrivilege tobyPrivilege : getPrivileges()) {
+            if (!tobyPrivilege.getView() && notActiveView) {
+                notActiveView = Boolean.FALSE;
+            }
+            if (!tobyPrivilege.getEdit() && notActiveEdit) {
+                notActiveEdit = Boolean.FALSE;
+            }
+            if (!tobyPrivilege.getAdd() && notActiveAdd) {
+                notActiveAdd = Boolean.FALSE;
+            }
+            if (!tobyPrivilege.getDelete() && notActiveDelete) {
+                notActiveDelete = Boolean.FALSE;
+            }
+            if (!notActiveView && !notActiveEdit && !notActiveAdd && !notActiveDelete) {
+                break;
+            }
+        }
+        Boolean[] result = {notActiveView, notActiveEdit, notActiveAdd, notActiveDelete};
+        return result;
+    }
+
+    public void updateViewColumn() {
+        for (TobyPrivilege tobyPrivilege : getPrivileges()) {
+            tobyPrivilegeSelected = tobyPrivilege;
+            tobyPrivilegeSelected.setView(getViewSelect());
+            unSelectALL();
+            tobyPrivilegeSelected = null;
+        }
+    }
+
+    public void updateEditColumn() {
+
+        for (TobyPrivilege tobyPrivilege : getPrivileges()) {
+            tobyPrivilegeSelected = tobyPrivilege;
+            tobyPrivilegeSelected.setEdit(getEditSelect());
+            behindEdit();
+            tobyPrivilegeSelected = null;
+        }
+
+    }
+
+    public void updateAddColumn() {
+        for (TobyPrivilege tobyPrivilege : getPrivileges()) {
+            tobyPrivilegeSelected = tobyPrivilege;
+            tobyPrivilegeSelected.setAdd(getAddSelect());
+            behindAdd();
+            tobyPrivilegeSelected = null;
+        }
+    }
+
+    public void updateDeleteColumn() {
+        for (TobyPrivilege tobyPrivilege : getPrivileges()) {
+            tobyPrivilegeSelected = tobyPrivilege;
+            tobyPrivilegeSelected.setDelete(getDeleteSelect());
+            behindDelete();
+            tobyPrivilegeSelected = null;
+        }
     }
 
     /**
@@ -503,5 +628,106 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
      */
     public void setOperationMsg(boolean operationMsg) {
         this.operationMsg = operationMsg;
+    }
+
+    /**
+     * @return the moduleName
+     */
+    public List<TobyPrivilege> getModuleName() {
+        if (moduleName == null || moduleName.isEmpty()) {
+            moduleName = new ArrayList<>();
+        }
+        return moduleName;
+    }
+
+    /**
+     * @param moduleName the moduleName to set
+     */
+    public void setModuleName(List<TobyPrivilege> moduleName) {
+        this.moduleName = moduleName;
+    }
+
+    /**
+     * @return the ListPackup
+     */
+    public List<TobyPrivilege> getListPackup() {
+        return ListPackup;
+    }
+
+    /**
+     * @param ListPackup the ListPackup to set
+     */
+    public void setListPackup(List<TobyPrivilege> ListPackup) {
+        this.ListPackup = ListPackup;
+    }
+
+    /**
+     * @return the moduleSelect
+     */
+    public Integer getModuleSelect() {
+        return moduleSelect;
+    }
+
+    /**
+     * @param moduleSelect the moduleSelect to set
+     */
+    public void setModuleSelect(Integer moduleSelect) {
+        this.moduleSelect = moduleSelect;
+    }
+
+    /**
+     * @return the viewSelect
+     */
+    public Boolean getViewSelect() {
+        return viewSelect;
+    }
+
+    /**
+     * @param viewSelect the viewSelect to set
+     */
+    public void setViewSelect(Boolean viewSelect) {
+        this.viewSelect = viewSelect;
+    }
+
+    /**
+     * @return the addSelect
+     */
+    public Boolean getAddSelect() {
+        return addSelect;
+    }
+
+    /**
+     * @param addSelect the addSelect to set
+     */
+    public void setAddSelect(Boolean addSelect) {
+        this.addSelect = addSelect;
+    }
+
+    /**
+     * @return the deleteSelect
+     */
+    public Boolean getDeleteSelect() {
+        return deleteSelect;
+    }
+
+    /**
+     * @param deleteSelect the deleteSelect to set
+     */
+    public void setDeleteSelect(Boolean deleteSelect) {
+        this.deleteSelect = deleteSelect;
+    }
+
+    /**
+     * @return the editSelect
+     */
+    public Boolean getEditSelect() {
+        return editSelect;
+    }
+
+    /**
+     * @param editSelect the editSelect to set
+     */
+    public void setEditSelect(Boolean editSelect) {
+        this.editSelect = editSelect;
     }
 }

@@ -82,7 +82,7 @@
                                   filterBy="#{organizationSiteTable.name}"
                                   filterMatchMode="contains" 
                                   headerText="#{userData.userDDs['CUSTOM_NAME']}" sortBy="#{organizationSiteTable.name}" >
-                            <p:outputLabel value="#{organizationSiteTable.name}" />
+                            <p:inputText value="#{organizationSiteTable.name}" />
                         </p:column>
 
 
@@ -94,7 +94,7 @@
                                   headerText="الجوال"
                                   sortBy="#{organizationSiteTable.mobile}" 
                                   >
-                            <p:outputLabel value="#{organizationSiteTable.mobile}" />
+                            <p:inputText value="#{organizationSiteTable.mobile}" />
                         </p:column>
                         <p:column style="width:30vh;font-size: 2.5vh;text-align: center;border-radius: 0px " headerText="الشركة التابع لها">
                             <p:selectOneMenu  id="offerCompanyDTO" filter="true" filterMatchMode="contains"

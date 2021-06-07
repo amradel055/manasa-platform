@@ -40,6 +40,9 @@ public class TobyScreen extends BaseEntity{
     @Size(max = 200)
     @Column(name = "module_ar")
     private String moduleAr;
+    
+    @Column(name = "module_type")
+    private Integer moduleType;
 
     /**
      * @return the name
@@ -107,6 +110,20 @@ public class TobyScreen extends BaseEntity{
 
     public void setSerial(Integer serial) {
         this.serial = serial;
+    }
+
+    /**
+     * @return the moduleType
+     */
+    public Integer getModuleType() {
+        return moduleType;
+    }
+
+    /**
+     * @param moduleType the moduleType to set
+     */
+    public void setModuleType(Integer moduleType) {
+        this.moduleType = moduleType;
     }
     
 }

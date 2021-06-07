@@ -76,6 +76,8 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
                 OfferCompany offerCompany = new OfferCompany();
                 offerCompany.setId(organizationSiteDTO.getOfferCompanyDTO().getId());
                 entity.setOfferCompanyId(offerCompany);
+                entity.setMobile(organizationSiteDTO.getMobile());
+                entity.setName(organizationSiteDTO.getName());
                 dao.updateEntity(entity);
             }
         }
