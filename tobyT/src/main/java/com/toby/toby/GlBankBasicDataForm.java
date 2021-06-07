@@ -125,6 +125,12 @@ public abstract class GlBankBasicDataForm extends BaseFormBean {
         return organizationSiteDTOList;
 
     }
+    public List<InvOrganizationSiteDTO> completeCustomerFromAll(String query) {
+        organizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getUserData().getUserBranch().getId(), Boolean.TRUE, 0, query,null);
+        invOrganizationSiteDTOConverter = new InvOrganizationSiteDTOConverter(organizationSiteDTOList);
+        return organizationSiteDTOList;
+
+    }
 
     /**
      * @return the organizationList
