@@ -9,40 +9,18 @@
                 xmlns="http://www.w3.org/1999/xhtml">
     <ui:define name="content">
 
-        <f:event listener="#{userData.authorize}" type="preRenderView" />
-
         <h:form id="screenActionForm" dir="#{userData.dir}" class='formmargin'>
 
             <p:fieldset legend="#{userData.userDDs['PRIVILEGE_MANAGEMENT']}">
 
-                <p:dataTable 
-                    draggableColumns="true" 
-                    widgetVar="ptable" 
-                    var="role" 
-                    value="#{privilegeListBean.roles}" 
-                    rowIndexVar="index" 
-                    rows="7"
-                    emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" 
-                    paginator="true"  
-                    selectionMode="single" 
-                    selection="#{privilegeListBean.selectedRoleId}" 
-                    rowKey="#{role.id}" 
-                    id="roleList">
+                <p:dataTable var="role" 
+                             value="#{privilegeListBean.roles}"
+                             selectionMode="single" 
+                             selection="#{privilegeListBean.selectedRoleId}" 
+                             rowKey="#{role.id}" 
+                             id="roleList"
+                             >
                     <p:ajax event="rowSelect" listener="#{privilegeListBean.selectRole}" update="@form" />
-                    <p:ajax event="rowUnselect" listener="#{privilegeListBean.unselectRole}" update="@form" />
-
-                    <f:facet name="header">
-                        <p:outputPanel  >
-                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large"/>
-                            <p:inputText id="globalFilter" onkeyup="PF('ptable').filter()"  a:autofocus="true"  style="width:150px;" />
-
-                        </p:outputPanel>
-                    </f:facet>
-
-                    <p:column headerText="#" style="width: 5vh;font-size:15px;text-align:right;border-radius: 0px" >
-                        <h:outputText value="#{index + 1}" style="font-size:12px"  />
-                    </p:column>
-
                     <p:column filterStyle="display:none"  
                               style="width: 35vh;font-size:15px;text-align: -webkit-auto;border-radius: 0px" 
                               sortBy="#{role.name}" filterBy="#{role.name}"  filterMatchMode="contains" headerText="#{userData.userDDs['ROLE_NAME']}" >
@@ -58,186 +36,13 @@
                     <p:column  filterStyle="display:none" style="font-size:15px ; width: 12vh;border-radius: 0px" sortBy="#{role.companyId.code}" filterBy="#{role.companyId.code}"  filterMatchMode="contains"  headerText=" #{userData.userDDs['COMPANY_CODE']}" >
                         <h:outputText value="#{role.companyId.code}" style="font-size:12px "/>
                     </p:column>
-
                 </p:dataTable>
+
+
 
             </p:fieldset> 
 
 
-            <p:fieldset  id="pnl" legend="#{userData.userDDs['PRIVILEGES']}" style="margin-bottom:20px;">
-                <div>
-                    <p:messages autoUpdate="true"  id="cupmsg" showDetail="true" closable="true" rendered="true" />   
-                </div>
-                <p:dataTable  
-                    var="privilege"
-                    widgetVar="pritable" 
-                    value="#{privilegeListBean.privileges}" 
-                    rowIndexVar="index" 
-                    scrollable="false"
-                    scrollRows="5"
-                    scrollHeight="100%"
-                    rowKey="#{privilege.screenId}"
-                    emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
-                    editable="true"
-                    selection="#{privilegeListBean.isagPrivilegeSelected}" 
-                    selectionMode="single"
-                    id="privList" 
-                    >
-
-                    <p:ajax event="rowSelect" 
-                            listener="#{privilegeListBean.selectRolePrevelage}" 
-                            />
-
-                    <f:facet name="header" >
-
-                        <p:commandButton  class="deleteButton" id="revoke" value="#{userData.userDDs['REVOKE_ALL']}"
-                                          actionListener="#{privilegeListBean.revokeAll}"
-                                          style="float:left;width: 130px;color: #ecf0f1!important;margin-left: 2px;margin-top: 2px;background-color: #b12253e0 !important;" 
-                                          update=":screenActionForm:privList"
-                                          rendered="#{userData.userScreens['privilege'].add or userData.isAdmin}">
-                            <p:confirm header="#{userData.userDDs['COFIGRATION']}" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
-                        </p:commandButton>
-                        <p:commandButton  class="reloadButton" id="grant" value="#{userData.userDDs['GRANT_ALL']}" 
-                                          actionListener="#{privilegeListBean.grantAll}"
-                                          style="float:left;width: 100px;color: #ecf0f1!important;margin-top: 2px;background-color: #175C52!important;"
-                                          update=":screenActionForm:privList"
-                                          rendered="#{userData.userScreens['privilege'].add or userData.isAdmin}"/>
-                        <p:commandButton class="saveButton" id="save" value="#{userData.userDDs['SAVE']}"
-                                         actionListener="#{privilegeListBean.updateAll}"
-                                         style="float:left;color: #ecf0f1!important;margin-top: 2px;background-color: #3F51B5!important;" 
-                                         update=":screenActionForm:privList"
-                                         rendered="#{userData.userScreens['privilege'].add or userData.isAdmin}"/>
-                        <p:blockUI block="screenActionForm" trigger="save  grant  revoke" animate="true" >
-
-                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
-
-                        </p:blockUI> 
-
-
-
-
-
-                        <p:outputPanel >
-                            <h:outputText value="#{userData.userDDs['MODULE_NAME']} : "  style="font-size: large;width: 50%!important;padding-right: 50px;" />
-
-
-                            <p:selectOneMenu style="width:20%" value="#{privilegeListBean.moduleSelect}"  >
-                                <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"  itemValue="" />
-                                <f:selectItem itemLabel="اعدادات الانظمه العامة" itemValue="1"/>
-                                <f:selectItem itemLabel="تقارير الانظمه العامة" itemValue="2"/>
-                                <f:selectItem itemLabel="إداره الحسابات العامه" itemValue="3"/>
-                                <f:selectItem itemLabel="تقارير الحسابات العامه" itemValue="4"/>
-                                <f:selectItem itemLabel="إداره الخزائن والبنوك" itemValue="5"/>
-                                <f:selectItem itemLabel="تقارير الخزائن و البنوك" itemValue="6"/>
-                                <f:selectItem itemLabel="الترحيلات" itemValue="7"/>
-                                <f:selectItem itemLabel="إداره التوزيع و المخازن" itemValue="8"/>
-                                <f:selectItem itemLabel="تقارير التوزيع والمخازن" itemValue="9"/>
-                                <f:selectItem itemLabel="اداره العيادات" itemValue="10"/>
-                                <f:selectItem itemLabel="تقارير اداره العيادات" itemValue="11"/>  
-                                <f:selectItem itemLabel="اداره التقسيط" itemValue="12"/>
-                                <f:selectItem itemLabel="تقارير اداره التقسيط" itemValue="13"/>
-                                <f:selectItem itemLabel="اداره المشاريع" itemValue="14"/>
-                                <f:selectItem itemLabel="تقارير اداره المشاريع" itemValue="15"/>  
-                                <f:selectItem itemLabel="اداره الموارد البشريه 2" itemValue="16"/>
-                                <f:selectItem itemLabel="اداره الاصول الثابته" itemValue="17"/>
-                                <f:selectItem itemLabel="اداره النقليات" itemValue="18"/> 
-                                <f:selectItem itemLabel="اداره علاقات العملاء" itemValue="19"/> 
-                                <p:ajax update="screenActionForm:privList" listener="#{privilegeListBean.findScreenByModuleType()}" />
-                            </p:selectOneMenu>
-
-
-                        </p:outputPanel >
-
-                    </f:facet>
-
-                    <f:facet name="header">
-                        <div></div>
-                        <div></div>
-                        <div id="asmaa">
-                            <p:selectBooleanCheckbox id="viewSelect" style="width:5%; margin-right: 68%;" value="#{privilegeListBean.viewSelect}">
-                                <p:ajax update="screenActionForm:privList" listener="#{privilegeListBean.updateViewColumn()}" />
-                            </p:selectBooleanCheckbox>
-                            <p:selectBooleanCheckbox id="addSelect" style="width:5%; margin-right: 3%;" value="#{privilegeListBean.addSelect}">
-                                <p:ajax update="screenActionForm:privList" listener="#{privilegeListBean.updateAddColumn()}" />
-                            </p:selectBooleanCheckbox>
-                            <p:selectBooleanCheckbox id="editSelect" style="width:5%; margin-right: 3%;" value="#{privilegeListBean.editSelect}">
-                                <p:ajax update="screenActionForm:privList" listener="#{privilegeListBean.updateEditColumn()}" />
-                            </p:selectBooleanCheckbox>
-                            <p:selectBooleanCheckbox id="deleteSelect" style="width:5%; margin-right: 3%;" value="#{privilegeListBean.deleteSelect}">
-                                <p:ajax update="screenActionForm:privList" listener="#{privilegeListBean.updateDeleteColumn()}" />
-                            </p:selectBooleanCheckbox>
-                        </div>
-                    </f:facet>
-
-                    <p:column sortBy="#{privilege.screenId.serial}"
-                              style="font-size: 13px;width: 8vh;text-align: center!important;border-radius: 0px;" filterStyle="display:none"
-                              filterBy="#{privilege.screenId.serial}"  filterMatchMode="startsWith" headerText="#{userData.userDDs['CODE']}">
-                        <h:outputText value="#{privilege.screenId.serial}"  />
-                    </p:column>
-
-                    <p:column sortBy="#{privilege.screenId.moduleAr}" 
-                              style="font-size: 13px;width: 11vh;text-align: center!important;border-radius: 0px;" filterStyle="display:none"
-                              filterBy="#{privilege.screenId.moduleAr}"  
-                              filterMatchMode="contains" headerText="#{userData.userDDs['MODULE_NAME']}">
-                        <h:outputText value="#{privilege.screenId.moduleAr}"/>
-                    </p:column>
-
-                    <p:column sortBy="#{privilege.screenId.tabAr}" 
-                              style="font-size: 13px;width: 14vh;text-align: center!important;border-radius: 0px;" filterStyle="display:none" filterBy="#{privilege.screenId.tabAr}"  
-                              filterMatchMode="contains" headerText="#{userData.userDDs['SUB-MODULE_NAME']}">
-                        <h:outputText value="#{privilege.screenId.tabAr}"    
-                                      />
-                    </p:column>
-
-                    <p:column sortBy="#{privilege.screenId.name}"  style="font-size: 13px;width: 13vh;text-align: center!important;border-radius: 0px;" filterStyle="display:none" filterBy="#{privilege.screenId.name}"  filterMatchMode="contains" headerText=" #{userData.userDDs['SCREEN_NAME']}">
-                        <h:outputText value="#{privilege.screenId.name}"    style="width: 90vw!important"  />
-                    </p:column>
-
-                    <p:column sortBy="#{privilege.screenId.namear}"  style="font-size: 13px;width: 13vh;text-align: center!important;border-radius: 0px;" filterStyle="display:none" filterBy="#{privilege.screenId.namear}"  filterMatchMode="contains" headerText=" #{userData.userDDs['SCREEN_NAME']}">
-                        <h:outputText value="#{privilege.screenId.namear}"    style="width: 90vw!important"  />
-                    </p:column>
-
-                    <p:column  headerText="#{userData.userDDs['VIEW']}"  style="font-size: 13px;width: 7vh;text-align: center!important;border-radius: 0px;">
-
-
-
-                        <h:selectBooleanCheckbox value="#{privilege.view}" >
-                            <p:ajax  event="click"  listener="#{privilegeListBean.unSelectALL()}" update="privList"/>
-                        </h:selectBooleanCheckbox>
-                    </p:column>
-
-                    <p:column  headerText="#{userData.userDDs['ADD']}" style="font-size: 13px;width: 7vh;text-align: center!important;border-radius: 0px;"  >
-                        <h:selectBooleanCheckbox value="#{privilege.add}" >
-                            <p:ajax  event="click"  listener="#{privilegeListBean.behindAdd}" update="privList"/>
-
-                        </h:selectBooleanCheckbox>
-                    </p:column>
-
-                    <p:column  headerText=" #{userData.userDDs['EDIT']}" style="font-size: 13px;width: 7vh;text-align: center!important;border-radius: 0px;" >
-                        <h:selectBooleanCheckbox value="#{privilege.edit}" >
-                            <p:ajax  event="click"  listener="#{privilegeListBean.behindEdit}" update="privList"/>
-
-                        </h:selectBooleanCheckbox>
-
-
-                    </p:column>
-
-                    <p:column headerText=" #{userData.userDDs['DELETE']}" style="font-size: 13px;width: 7vh;text-align: center!important;border-radius: 0px;" >
-                        <h:selectBooleanCheckbox value="#{privilege.delete}" >
-                            <p:ajax  event="click"  listener="#{privilegeListBean.behindDelete}" update="privList"/>
-                        </h:selectBooleanCheckbox>
-                    </p:column>
-
-                    <p:blockUI block="pnl" trigger="grant"/>
-                    <p:blockUI block="privList" trigger="revoke"/>
-
-                </p:dataTable>
-
-            </p:fieldset> 
-            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
-                <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-                <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
-            </p:confirmDialog>
 
         </h:form>
     </ui:define>

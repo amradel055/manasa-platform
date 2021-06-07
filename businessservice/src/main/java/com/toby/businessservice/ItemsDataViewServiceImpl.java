@@ -411,8 +411,8 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
     public InvItem mapToEntity(InvItemDTO invItemDTO, TobyUser tobyUser) {
 
         InvItem invItem = new InvItem();
-        invItem.setId(invItemDTO.getId());
-        invItem.setCode(invItemDTO.getCode());
+        invItem.setId(invItemDTO.getId());AaaSasA
+//        invItem.setCode(invItemDTO.getCode());
         invItem.setContractPrice(invItemDTO.getContractPrice());
         invItem.setCostAverage(invItemDTO.getCostAverage());
         invItem.setDateCreateCat(invItemDTO.getDateCreateCat());
