@@ -1613,7 +1613,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             params.put("dateTo", printProductionDTO.getToDate());
             builder.append(" AND   s.date <= :dateTo ");
         }
-        builder.append(" order by s.serial DESC");
+        builder.append(" order by s.serial ");
         List<InvPurchaseInvoice> details = dao.findListByQuery(builder.toString(), params);
         return returnListDTOForList(details);
     }
