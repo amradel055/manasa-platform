@@ -78,17 +78,17 @@
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:outputLabel value="#{invNoticeFormMB.invNoticeEntity.invoiceSerial}" 
-                                               rendered="#{invNoticeFormMB.invNoticeEntity.id ne null}" />
+                                                   rendered="#{invNoticeFormMB.invNoticeEntity.id ne null}" />
 
-                                <p:selectOneMenu  id="invoice" style="width:100%"  
-                                                  rendered="#{invNoticeFormMB.invNoticeEntity.id eq null}"
-                                                  value="#{invNoticeFormMB.invNoticeEntity.invoiceId}">
-                                    <f:selectItem itemLabel="اختر الفاتوره "/>
-                                    <f:selectItems  var="inninvoice"
-                                                    value="#{invNoticeFormMB.glBankTransactionInvoiceViewList}"
-                                                    itemLabel="#{inninvoice.serial}"
-                                                    itemValue="#{inninvoice.invoiceId}"/>
-                                </p:selectOneMenu>
+                                    <p:selectOneMenu  id="invoice" style="width:100%"  
+                                                      rendered="#{invNoticeFormMB.invNoticeEntity.id eq null}"
+                                                      value="#{invNoticeFormMB.invNoticeEntity.invoiceId}">
+                                        <f:selectItem itemLabel="اختر الفاتوره "/>
+                                        <f:selectItems  var="inninvoice"
+                                                        value="#{invNoticeFormMB.glBankTransactionInvoiceViewList}"
+                                                        itemLabel="#{inninvoice.serial}"
+                                                        itemValue="#{inninvoice.invoiceId}"/>
+                                    </p:selectOneMenu>
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:outputLabel style="width: 85px;" value="الفاتورة"/>
@@ -135,6 +135,20 @@
 
                                 </div>
                             </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:selectOneMenu id="group" value="#{invNoticeFormMB.gallaryDTOSelected}"
+                                                     converter="#{invNoticeFormMB.gallaryDTOConverter}">
+                                        <f:selectItems value="#{invNoticeFormMB.gallaryList}" 
+                                                       var="gallary"
+                                                       itemLabel="#{gallary}"
+                                                       itemValue="#{gallary}" />
+                                    </p:selectOneMenu>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 50px;margin-right: 1%" value="المعرض"/>
+                                </div>
+                            </div>
                         </div>                        
                     </div>
                 </div>
@@ -148,7 +162,7 @@
                                           value="#{userData.userDDs['SAVE']}" 
                                           action="#{invNoticeFormMB.save()}"
                                           update="form curmsg"/>
-                        
+
                         <p:commandButton 
                             class="printButtons"
                             id="b71" value="كشف حساب" 
