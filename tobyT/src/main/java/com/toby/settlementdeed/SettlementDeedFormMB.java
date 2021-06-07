@@ -16,13 +16,16 @@ import com.toby.businessservice.GlBankTransactionService;
 import com.toby.businessservice.TobyUserBankService;
 import com.toby.businessservice.OrganizationSiteService;
 import com.toby.businessservice.SymbolService;
+import com.toby.businessservice.TobyUserInventoryService;
 import com.toby.converter.CostCenterConverter;
 import com.toby.converter.GlAdminUnitConverter;
 import com.toby.converter.GlBankConverter;
 import com.toby.converter.GlaccountConverter;
+import com.toby.converter.InvInventoryDTOConverter;
 import com.toby.converter.InvOrganizationSiteConverter;
 import com.toby.converter.SymbolConverter;
 import com.toby.dto.GlAccountDTO;
+import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.entity.AccountsSystemSettings;
 import com.toby.entity.CostCenter;
@@ -170,6 +173,10 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
 
     private AccountsSystemSettings accountsSystemSettings;
 
+    private InvInventoryDTOConverter gallaryDTOConverter;
+    private List<InvInventoryDTO> gallaryList;
+    private InvInventoryDTO gallaryDTOSelected;
+
     @EJB
     AccountsSystemSettingsService accountsSystemSettingsService;
 
@@ -202,6 +209,9 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
 
     @EJB
     private GlBankTransactionInvoiceViewService bankTransactionInvoiceViewService;
+
+    @EJB
+    private TobyUserInventoryService tobyUserInventoryService;
 
     @Override
     @PostConstruct
@@ -275,8 +285,8 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
             saveError(e, "SettlementDeedFormMB", "init");
         }
     }
-    
-      public void convertDateFrom() {
+
+    public void convertDateFrom() {
         getGlBankTransactionEntity().setDate(findDateFromHijriFrom());
     }
 
@@ -338,7 +348,6 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
             saveError(e, "SettlementDeedFormMB", "load");
         }
     }
-    
 
     private void fillLists() {
         try {
@@ -680,7 +689,7 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
                     invOrganizationSiteDTO.setName(ios.getName());
                     invOrganizationSiteDTO.setCode(ios.getCode());
                     invOrganizationSiteDTO.setMobile(ios.getMobile());
-                    if(ios.getAccountId() != null){
+                    if (ios.getAccountId() != null) {
                         GlAccountDTO glAccountDTO = new GlAccountDTO();
                         glAccountDTO.setId(ios.getAccountId().getId());
                         glAccountDTO.setName(ios.getAccountId().getName());
@@ -2641,5 +2650,54 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
      */
     public void setGlBankTransactionListPre(List<GlBankTransaction> glBankTransactionListPre) {
         this.glBankTransactionListPre = glBankTransactionListPre;
+    }
+
+    /**
+     * @return the gallaryDTOConverter
+     */
+    public InvInventoryDTOConverter getGallaryDTOConverter() {
+        return gallaryDTOConverter;
+    }
+
+    /**
+     * @param gallaryDTOConverter the gallaryDTOConverter to set
+     */
+    public void setGallaryDTOConverter(InvInventoryDTOConverter gallaryDTOConverter) {
+        this.gallaryDTOConverter = gallaryDTOConverter;
+    }
+
+    /**
+     * @return the gallaryList
+     */
+    public List<InvInventoryDTO> getGallaryList() {
+        if (gallaryList == null || gallaryList.isEmpty()) {
+            gallaryList = tobyUserInventoryService.getAllGallaryByUserAndBranch(getUserData().getUser());
+            setGallaryDTOConverter(new InvInventoryDTOConverter(gallaryList));
+        }
+        return gallaryList;
+    }
+
+    /**
+     * @param gallaryList the gallaryList to set
+     */
+    public void setGallaryList(List<InvInventoryDTO> gallaryList) {
+        this.gallaryList = gallaryList;
+    }
+
+    /**
+     * @return the gallaryDTOSelected
+     */
+    public InvInventoryDTO getGallaryDTOSelected() {
+        if (gallaryDTOSelected == null) {
+            gallaryDTOSelected = new InvInventoryDTO();
+        }
+        return gallaryDTOSelected;
+    }
+
+    /**
+     * @param gallaryDTOSelected the gallaryDTOSelected to set
+     */
+    public void setGallaryDTOSelected(InvInventoryDTO gallaryDTOSelected) {
+        this.gallaryDTOSelected = gallaryDTOSelected;
     }
 }

@@ -82,7 +82,7 @@ public class ProProductionStagesListMB extends BaseFormBean {
                 ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
                 context.getSessionMap().put("proProductionStagesDTOSelected", proProductionStagesDTOSelected.getId());
                 context.getSessionMap().put("ScreenMode", "Edit");
-                exit("../proProduction/proProductionForm.xhtml");
+                exit("../proproductionstages/proProductionForm.xhtml");
                 return "";
             } else {
                 return "";

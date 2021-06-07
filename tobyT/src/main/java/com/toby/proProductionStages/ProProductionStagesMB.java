@@ -57,12 +57,14 @@ public class ProProductionStagesMB extends BaseFormBean {
     public String save() {
         if (getProProductionStagesDTO() != null) {
             proProductionStagesService.saveProProductionStage(getProProductionStagesDTO(), getUserData().getUser());
-            if(proProductionStagesDTO.getName()!=null&&!"".equals(proProductionStagesDTO.getName())&&!"".equals(proProductionStagesDTO.getNameEn())&&proProductionStagesDTO.getNameEn()!=null&&proProductionStagesDTO.getPrice()!=null&&(proProductionStagesService.checkForLastStage(getUserData().getUser()) == null ||proProductionStagesDTO.getTypeStage()==0)){
+            if(proProductionStagesDTO.getName()!=null&&!"".equals(proProductionStagesDTO.getName())&&!"".equals(proProductionStagesDTO.getNameEn())&&proProductionStagesDTO.getNameEn()!=null&&proProductionStagesDTO.getPrice()!=null
+//                    &&(proProductionStagesService.checkForLastStage(getUserData().getUser()) == null ||proProductionStagesDTO.getTypeStage()==0)
+                    ){
            try {
                 ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
                 context.getSessionMap().put("ScreenMode", "save");
                 context.getSessionMap().put("proProductionStageSelected", proProductionStagesDTO);
-                exit("../proProduction/proProductionList.xhtml");
+                exit("../proproductionstages/proProductionList.xhtml");
                 return "";
             } catch (Exception e) {
                 saveError(e, "proProductionStagesMB", "save");
