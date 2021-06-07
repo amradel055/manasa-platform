@@ -120,19 +120,6 @@
                     <div class="ui-g-12 ui-xl-12">
 
                         <div class="ui-g-6 ui-xl-6">
-                            <p:selectOneMenu id="inventory" value="#{SettlementDeedFormMB.invInventorySelection}"
-                                             converter="#{SettlementDeedFormMB.invInventoryConverter}" 
-                                             style="float:right;width: 20%!important;color:#fff;height: 30px!important;margin-right: 0.5%;">
-
-                                <f:selectItems value="#{SettlementDeedFormMB.inventoryList}" 
-                                               var="inventory" itemLabel="#{inventory.name}"
-                                               itemValue="#{inventory}"/> 
-                            </p:selectOneMenu>
-                        </div>
-                    </div>
-                    <div class="ui-g-12 ui-xl-12">
-
-                        <div class="ui-g-6 ui-xl-6">
                             <p:inputText style="width: 38%!important" id="notes2"
                                          value="#{SettlementDeedFormMB.glBankTransactionEntity.remark2}">
 
@@ -382,7 +369,7 @@
                                         itemLabel="#{supplier}" 
                                         itemValue="#{supplier}" 
                                         forceSelection="true" 
-                                        completeMethod="#{SettlementDeedFormMB.completeCustomerFromAll}"
+                                        completeMethod="#{SettlementDeedFormMB.completeCustomerFrom}"
                                         rendered="#{glBankTransactionDetailsTable.markEdit}"
                                         widgetVar="supplier"
                                         >
