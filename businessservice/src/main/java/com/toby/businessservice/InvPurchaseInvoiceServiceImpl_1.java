@@ -1613,7 +1613,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             params.put("dateTo", printProductionDTO.getToDate());
             builder.append(" AND   s.date <= :dateTo ");
         }
-        builder.append(" order by s.serial DESC");
+        builder.append(" order by s.serial ");
         List<InvPurchaseInvoice> details = dao.findListByQuery(builder.toString(), params);
         return returnListDTOForList(details);
     }
@@ -1966,13 +1966,14 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                     Selected.append(',').append(invInventoryDTO.getId());
                 }
             }
-            builder.append(" AND i.invPurchaseInvoiceId.galaryId.id in ("  ).append(Selected.toString()).append(" )");
+            builder.append(" AND i.invPurchaseInvoiceId.galaryId.id in (").append(Selected.toString()).append(" )");
         } else {
             if (gallaryId != null) {
                 params.put("gallaryId", gallaryId);
                 builder.append(" AND i.invPurchaseInvoiceId.galaryId.id = :gallaryId ");
             }
         }
+
         if (groupId != null) {
             params.put("groupId", groupId);
             builder.append(" AND i.itemId.proGroupId.id = :groupId ");
@@ -1980,10 +1981,10 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         builder.append(" group by i.itemId.proGroupId.id order by i.itemId.proGroupId.code ");
         List<Object[]> res = dao.findListByQuery(builder.toString(), params);
 
-        return getTheListBasedOnAccClass(res, gallaryId, dateFrom, dateTo);
+        return getTheListBasedOnAccClass(res, gallaryId, dateFrom, dateTo, invInventoryDTOs);
     }
 
-    private BigDecimal tobNumberFactoryDelivary(Integer gallaryId, Date dateFrom, Date dateTo, Integer groupId, Integer type) {
+    private BigDecimal tobNumberFactoryDelivary(Integer gallaryId, Date dateFrom, Date dateTo, Integer groupId, Integer type, List<InvInventoryDTO> invInventoryDTOs) {
         Map<String, Object> params = new HashMap<>();
         StringBuilder builder = new StringBuilder();
         params.put("type", type);
@@ -1997,10 +1998,28 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             params.put("dateTo", dateTo);
             builder.append(" AND pfdd.proFactoryDeliveryId.date <= :dateTo ");
         }
-        if (gallaryId != null) {
-            params.put("gallaryId", gallaryId);
-            builder.append(" AND pfdd.proFactoryDeliveryId.invPurchaseInvoiceId.galaryId.id = :gallaryId ");
+        if (invInventoryDTOs != null && !invInventoryDTOs.isEmpty()) {
+            StringBuilder Selected = null;
+            for (InvInventoryDTO invInventoryDTO : invInventoryDTOs) {
+                if (Selected == null) {
+                    Selected = new StringBuilder();
+                    Selected.append(invInventoryDTO.getId());
+                } else {
+                    Selected.append(',').append(invInventoryDTO.getId());
+                }
+            }
+            builder.append(" AND pfdd.proFactoryDeliveryId.invPurchaseInvoiceId.galaryId.id in (").append(Selected.toString()).append(" )");
+        } else {
+            if (gallaryId != null) {
+                params.put("gallaryId", gallaryId);
+                builder.append(" AND pfdd.proFactoryDeliveryId.invPurchaseInvoiceId.galaryId.id = :gallaryId ");
+            }
         }
+
+//        if (gallaryId != null) {
+//            params.put("gallaryId", gallaryId);
+//            builder.append(" AND pfdd.proFactoryDeliveryId.invPurchaseInvoiceId.galaryId.id = :gallaryId ");
+//        }
         if (groupId != null) {
             params.put("groupId", groupId);
             builder.append(" AND pfdd.itemId.proGroupId.id = :groupId ");
@@ -2011,7 +2030,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         return (res != null && !res.isEmpty()) ? res.get(0) : BigDecimal.ZERO;
     }
 
-    public List<SummitionItemsView> getTheListBasedOnAccClass(List<Object[]> res, Integer gallaryId, Date dateFrom, Date dateTo) {
+    public List<SummitionItemsView> getTheListBasedOnAccClass(List<Object[]> res, Integer gallaryId, Date dateFrom, Date dateTo, List<InvInventoryDTO> invInventoryDTOs) {
 
         List<SummitionItemsView> summitionItemsViews = new ArrayList<>();
 
@@ -2028,9 +2047,9 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             Integer groupId = (Integer) line[3];
             summitionItemsView.setCode((Integer) line[4]);
             summitionItemsView.setName((String) line[5]);
-            summitionItemsView.setFactoryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupId, 0));
-            summitionItemsView.setSendNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupId, 1));
-            summitionItemsView.setDeliveryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupId, 2));
+            summitionItemsView.setFactoryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupId, 0, invInventoryDTOs));
+            summitionItemsView.setSendNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupId, 1, invInventoryDTOs));
+            summitionItemsView.setDeliveryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupId, 2, invInventoryDTOs));
             summitionItemsViews.add(summitionItemsView);
         }
         TreeMap<Integer, SummitionItemsView> params = new TreeMap<>();
@@ -2088,7 +2107,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     }
 
     @Override
-    public List<SummitionItemsView> getTheListBasedOnStagesList(Integer gallaryId, Date dateFrom, Date dateTo, Integer groupId, Integer branchId, TobyUser tobyUser) {
+    public List<SummitionItemsView> getTheListBasedOnStagesList(Integer gallaryId, Date dateFrom, Date dateTo, Integer groupId, Integer branchId, TobyUser tobyUser, List<InvInventoryDTO> invInventoryDTOs) {
 
         List<ProGroupDTO> proGrouplist = new ArrayList<>();
         if (groupId == null) {
@@ -2102,10 +2121,10 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             SummitionItemsView summitionItemsView = new SummitionItemsView();
             summitionItemsView.setCode(groupDTO.getCode());
             summitionItemsView.setName(groupDTO.getName());
-            summitionItemsView.setFactoryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupDTO.getId(), 0));
-            summitionItemsView.setSendNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupDTO.getId(), 1));
-            summitionItemsView.setDeliveryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupDTO.getId(), 2));
-            summitionItemsView.setCustomerNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupDTO.getId(), 3));
+            summitionItemsView.setFactoryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupDTO.getId(), 0, invInventoryDTOs));
+            summitionItemsView.setSendNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupDTO.getId(), 1, invInventoryDTOs));
+            summitionItemsView.setDeliveryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupDTO.getId(), 2, invInventoryDTOs));
+            summitionItemsView.setCustomerNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupDTO.getId(), 3, invInventoryDTOs));
             if (summitionItemsView.getFactoryNumber().compareTo(BigDecimal.ZERO) == 1
                     || summitionItemsView.getSendNumber().compareTo(BigDecimal.ZERO) == 1
                     || summitionItemsView.getDeliveryNumber().compareTo(BigDecimal.ZERO) == 1) {
