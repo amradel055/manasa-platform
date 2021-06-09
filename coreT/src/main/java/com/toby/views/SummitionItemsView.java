@@ -198,9 +198,12 @@ public class SummitionItemsView implements Serializable {
      * @return the Different
      */
     public BigDecimal getDifferent() {
-
-        Different = factoryNumber.subtract(sendNumber);
-        return Different;
+        if (Different == null) {
+            return BigDecimal.ZERO;
+        } else {
+            Different = factoryNumber.subtract(sendNumber);
+            return Different;
+        }
     }
 
     /**
