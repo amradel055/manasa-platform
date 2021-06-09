@@ -1786,7 +1786,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         if (invPurchaseInvoiceId != null && invPurchaseInvoiceId > 0) {
             BigDecimal payment = findPayed(invPurchaseInvoiceId);
             BigDecimal total = finalNetForInvPurchaseInvoice(invPurchaseInvoiceId);
-            BigDecimal remain = (total.subtract(payment)).setScale(0, RoundingMode.HALF_UP);
+            BigDecimal remain = (total.subtract(payment)).setScale(3, RoundingMode.HALF_UP);
             return remain;
         }
         return BigDecimal.ZERO;
