@@ -38,6 +38,8 @@ public class InvAddingOrderDetailsServiceImpl implements InvAddingOrderDetailsSe
     InvGlobalService invGlobalService;
     @EJB
     GenericService genericService;
+    @EJB
+    InvPurchaseInvoiceDetailsService invPurchaseInvoiceDetailsService;
 
     @Override
     public void addInvAddingOrderDetails(InvAddingorderDetail invAddingOrderDetail) {
@@ -106,15 +108,26 @@ public class InvAddingOrderDetailsServiceImpl implements InvAddingOrderDetailsSe
         return returnListDTO(details, dto);
     }
 
-    private List<InvDetailDTO> returnListDTO(List<InvAddingorderDetail> list, InvInvoiceDTO dto) {
+    private List<InvDetailDTO> returnListDTO(List<InvAddingorderDetail> list, InvInvoiceDTO invInvoiceDTO) {
+//        List<InvDetailDTO> dTOList = new ArrayList<>();
+//        List<ItemsBarcodesDetailsView> itemsBarcodesDetailsViewList = itemsBarcodesDetailsViewService.findItemsBarcodesDetailsViewBranchId(dto.getBranchId());
+//        Map<String, ItemsBarcodesDetailsView> itemsBarcodeMap = new HashMap<>();
+//        for (ItemsBarcodesDetailsView itemsBarcodesDetailsView : itemsBarcodesDetailsViewList) {
+//            itemsBarcodeMap.put(itemsBarcodesDetailsView.getBarcode(), itemsBarcodesDetailsView);
+//        }
+//        for (InvAddingorderDetail entity : list) {
+//            dTOList.add(mapTODTO(entity, itemsBarcodeMap, dto));
+//        }
+//        return dTOList;
+        
         List<InvDetailDTO> dTOList = new ArrayList<>();
-        List<ItemsBarcodesDetailsView> itemsBarcodesDetailsViewList = itemsBarcodesDetailsViewService.findItemsBarcodesDetailsViewBranchId(dto.getBranchId());
         Map<String, ItemsBarcodesDetailsView> itemsBarcodeMap = new HashMap<>();
+        List<ItemsBarcodesDetailsView> itemsBarcodesDetailsViewList = invPurchaseInvoiceDetailsService.findItemBarcodeDetails(list, 182);
         for (ItemsBarcodesDetailsView itemsBarcodesDetailsView : itemsBarcodesDetailsViewList) {
             itemsBarcodeMap.put(itemsBarcodesDetailsView.getBarcode(), itemsBarcodesDetailsView);
         }
         for (InvAddingorderDetail entity : list) {
-            dTOList.add(mapTODTO(entity, itemsBarcodeMap, dto));
+            dTOList.add(mapTODTO(entity, itemsBarcodeMap, invInvoiceDTO));
         }
         return dTOList;
     }

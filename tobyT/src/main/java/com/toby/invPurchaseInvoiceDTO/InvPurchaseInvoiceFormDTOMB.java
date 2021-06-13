@@ -5,6 +5,7 @@
  */
 package com.toby.invPurchaseInvoiceDTO;
 
+import com.toby.businessservice.InvGlobalService;
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
 import com.toby.define.ScreenNameClassEnum;
 import com.toby.toby.InventoryBasicDataForm;
@@ -27,6 +28,8 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
     // EJBs
     @EJB
     private InvPurchaseInvoiceService_1 invPurchaseInvoiceService;
+    @EJB
+    private InvGlobalService invGlobalService;
 
     @Override
     @PostConstruct
@@ -51,6 +54,10 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
                     fillDefaultList();
                     putCurrency();
                     getInvInvoiceDTO().setOrganizationSiteId(null);
+                    if (getInvInvoiceDTO().getInventorySetupDTO() != null) {
+                        getInvInvoiceDTO().setDueperiod(invGlobalService.getDeliveryDaysByGalleryId((getInvInvoiceDTO() == null || getInvInvoiceDTO().getGallaryId() == null) ? null : getInvInvoiceDTO().getGallaryId().getId()));
+                        sumDateToDueDate();
+                    }
                 } else {
                     setErrorGlobal(error);
                     exit("../base/error.xhtml");

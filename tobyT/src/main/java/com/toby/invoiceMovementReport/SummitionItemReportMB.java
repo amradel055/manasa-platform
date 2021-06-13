@@ -63,7 +63,7 @@ public class SummitionItemReportMB extends Basic {
     @PostConstruct
     public void init() {
         gallaryListSelected = new ArrayList<>();
-        getGallaryListSelected().addAll(getGallaryList());
+        getGallaryListSelected().addAll(getGallaryListRole1());
     }
 
     public void search() {
@@ -219,7 +219,7 @@ public class SummitionItemReportMB extends Basic {
         return hashMap;
     }
 
-    public List<InvInventoryDTO> getGallaryList() {
+    public List<InvInventoryDTO> getGallaryListRole1() {
         if (gallaryList == null || gallaryList.isEmpty()) {
             gallaryList = tobyUserInventoryService.getAllGallaryByUserAndBranch(getUserData().getUser());
             setGallaryDTOConverter(new InvInventoryDTOConverter(gallaryList));

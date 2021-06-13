@@ -41,7 +41,7 @@ public class ProfitOfItemsSoldReport extends Basic {
 
     @PostConstruct
     public void init() {
-        getProfitOfItemsSold().getGallarySelected().addAll(getGallaryList());
+        getProfitOfItemsSold().getGallarySelected().addAll(getGallaryListRole1());
     }
 
     public void search() {
@@ -130,7 +130,7 @@ public class ProfitOfItemsSoldReport extends Basic {
     /**
      * @return the gallaryList
      */
-    public List<InvInventoryDTO> getGallaryList() {
+    public List<InvInventoryDTO> getGallaryListRole1() {
 
         if (gallaryList == null || gallaryList.isEmpty()) {
             gallaryList = tobyUserInventoryService.getAllGallaryByUserAndBranch(getUserData().getUser());

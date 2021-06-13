@@ -6,9 +6,13 @@
 package com.toby.toby;
 
 import com.toby.businessservice.TobyErrorService;
+import com.toby.businessservice.TobyUserInventoryService;
 import com.toby.businessservice.TobyUserLoginService;
 import com.toby.common.FindClientData;
 import com.toby.common.SendEmailSMTP;
+import com.toby.converter.InvInventoryDTOConverter;
+import com.toby.define.HttpMethode;
+import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.TobyErrorDTO;
 import com.toby.entity.Branch;
 import com.toby.entity.GlYear;
@@ -18,6 +22,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
@@ -30,10 +35,13 @@ import java.time.LocalDate;
 import java.time.chrono.HijrahChronology;
 import java.time.chrono.HijrahDate;
 import java.time.chrono.IsoChronology;
+import java.util.Base64;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -46,14 +54,17 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.HttpHeaders;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import org.apache.commons.lang.StringEscapeUtils;
 
 /**
  *
@@ -67,6 +78,8 @@ public class Basic implements Serializable {
     TobyUserLoginService tobyUserLoginService;
     @EJB
     TobyErrorService tobyErrorService;
+    @EJB
+    private TobyUserInventoryService tobyUserInventoryService;
 
     private TobyUser userlogin;
 
@@ -101,16 +114,26 @@ public class Basic implements Serializable {
     HijrahDate islamyMonth;
     HijrahDate islamyDay;
 
+    private InvInventoryDTOConverter gallaryDTOConverters;
+    private List<InvInventoryDTO> gallaryLists;
+    private InvInventoryDTO gallaryDTOSelect;
+
     public Date findDateFromHijriFrom() {
-        HijrahDate date = HijrahChronology.INSTANCE.date(getYearHijriFrom(), getMonthHijriFrom(), getDayHijriFrom());
-        LocalDate dateFrom = IsoChronology.INSTANCE.date(date);
-        return java.sql.Date.valueOf(dateFrom);
+        if (getYearHijriFrom() != null && getMonthHijriFrom() != null && getDayHijriFrom() != null) {
+            HijrahDate date = HijrahChronology.INSTANCE.date(getYearHijriFrom(), getMonthHijriFrom(), getDayHijriFrom());
+            LocalDate dateFrom = IsoChronology.INSTANCE.date(date);
+            return java.sql.Date.valueOf(dateFrom);
+        }
+        return null;
     }
 
     public Date findDateFromHijriTo() {
-        HijrahDate date = HijrahChronology.INSTANCE.date(getYearHijriTo(), getMonthHijriTo(), getDayHijriTo());
-        LocalDate dateFrom = IsoChronology.INSTANCE.date(date);
-        return java.sql.Date.valueOf(dateFrom);
+        if (getYearHijriTo() != null && getMonthHijriTo() != null && getDayHijriTo() != null) {
+            HijrahDate date = HijrahChronology.INSTANCE.date(getYearHijriTo(), getMonthHijriTo(), getDayHijriTo());
+            LocalDate dateFrom = IsoChronology.INSTANCE.date(date);
+            return java.sql.Date.valueOf(dateFrom);
+        }
+        return null;
     }
 
     public HijrahDate findHijriYear() {
@@ -148,7 +171,7 @@ public class Basic implements Serializable {
 
         return islamyDay;
     }
-    
+
     public String goTOrganizationSiteacoount(Integer organizationSiteId) {
         try {
             if (organizationSiteId != null && organizationSiteId > 0) {
@@ -165,8 +188,6 @@ public class Basic implements Serializable {
             return null;
         }
     }
-    
-    
 
     public void exit(String url) {
         FacesContext fc = FacesContext.getCurrentInstance();
@@ -176,7 +197,6 @@ public class Basic implements Serializable {
             Logger.getLogger(null).log(Level.SEVERE, null, ex);
         }
     }
-    
 
     public void saveError(Exception e, String className, String methodName) {
         getTobyErrorDTO().setClassName(className);
@@ -187,8 +207,6 @@ public class Basic implements Serializable {
 //        getSendEmailSMTP().sendEmail(getUserlogin(), "Class Name -> " + className + "\n" + "Method Name -> " + methodName + "\n" + "ISAG ERROR \n" + System.err,"errorerp@toby-it.com", "123456");
 //        getSendEmailSMTP().sendEmail(getUserlogin(), "Class Name -> " + className + "\n" + "Method Name -> " + methodName + "\n" + "ISAG ERROR \n" + System.err, "devError@toby-it.com", "toby@2020");
     }
-    
-    
 
     public boolean isFileExist(String filePath) {
         try {
@@ -268,6 +286,83 @@ public class Basic implements Serializable {
         return userlogin;
     }
 
+    public String callApiPostBasic(String url, String userName, String password, String jsonInputString, Map<String, Object> LinkParams, HttpMethode httpMethode) {
+        try {
+            String auth = userName + ":" + password;
+            String link = url;
+            if (LinkParams != null) {
+                link = link + getParamsString(LinkParams);
+            }
+            URL url1 = new URL(link);
+            HttpURLConnection conn = (HttpURLConnection) url1.openConnection();
+
+            conn.setRequestMethod(httpMethode.name());
+            conn.setRequestProperty("Content-Type", "application/json; utf-8");
+            conn.setRequestProperty("Accept", "application/json");
+            conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
+            conn.setDoOutput(true);
+            if (userName != null && password != null) {
+                conn.setRequestProperty(HttpHeaders.AUTHORIZATION, "Basic " + Base64.getEncoder().encodeToString(
+                        (auth).getBytes()));
+            }
+            if (jsonInputString != null && !jsonInputString.isEmpty()) {
+                try (OutputStream os = conn.getOutputStream()) {
+                    byte[] input = jsonInputString.getBytes("utf-8");
+                    os.write(input, 0, input.length);
+                    os.close();
+                }
+            }
+
+            BufferedReader br;
+            String strCurrentLine;
+            StringBuilder json = new StringBuilder();
+
+            br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            while ((strCurrentLine = br.readLine()) != null) {
+                json.append(strCurrentLine);
+            }
+
+//             if (conn.getResponseCode() == 200) { } else {
+//                br = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+//                while ((strCurrentLine = br.readLine()) != null) {
+//                    json.append(strCurrentLine);
+//                }
+//            }
+            br.close();
+            conn.disconnect();
+            String result = StringEscapeUtils.unescapeJava(json.toString());
+            result = result.replaceAll("null", "\"null\"");
+            result.replaceAll("\"\"", "\"null\"");
+            return result.replaceAll("(?<=[^{,:])\\\"(?![},:])(?!$)", "\'");//((?<!^)\")(?<!$)
+        } catch (Exception ex) {
+            Logger.getLogger(Basic.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+
+    private String getParamsString(Map<String, Object> params) {
+        try {
+            StringBuilder result = new StringBuilder();
+            Map<String, Object> param = new LinkedHashMap<>();
+            param.putAll(params);
+
+            for (Map.Entry<String, Object> entry : param.entrySet()) {
+                result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
+                result.append("=");
+                result.append(URLEncoder.encode(entry.getValue().toString(), "UTF-8"));
+                result.append("&");
+            }
+
+            String resultString = result.toString();
+            return resultString.length() > 0
+                    ? resultString.substring(0, resultString.length() - 1)
+                    : resultString;
+        } catch (Exception ex) {
+            Logger.getLogger(Basic.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+
     public void sentSMS() {
         String to = "amradel055@gmail.com";
         String from = "amradel@toby-it.com";
@@ -297,57 +392,61 @@ public class Basic implements Serializable {
 
     public String sendSms(String mobile, String sender, String message) {
         try {
-
-            String username = "l3TTd3Ur";
-            String password = "lC2DacCyTH";
+            String username = "20099319";
+            String password = "0564933202";
             String language = "2";
+            StringBuilder json = new StringBuilder();
+            json.append("[{\"user\":\"").append(username).append("\",\"pwd\":\"").append(password).append("\",\"number\":\"").append(mobile).append("\",\"msg\":\"").append(message);
+            json.append("\",\"sender\":\"SMSAlert\",\"language\":\"Unicode\"}]");
+            return callApiPostBasic("http://mshastra.com/sendsms_api_json.aspx", null, null, json.toString(), null, HttpMethode.POST);
 
-            String requestUrl = "https://mshastra.com/sendurl.aspx?"
-//                    + "user=20099319"
-//                    + "&pwd=0564933202"
-//                    + "&senderid=SMSAlert"
-//                    + "&mobileno=966564933202"
-//                    + "&msgtext=HelloFromAmr"
-//                    + "&priority=High"
-//                    + "&CountryCode=ALL";
-                    + "user=" + URLEncoder.encode("20099319", "UTF-8")
-                    + "&pwd=" + URLEncoder.encode("0564933202", "UTF-8")
-                    + "&senderid=" + URLEncoder.encode("SMSAlert", "UTF-8")
-                    + "&mobileno=" + URLEncoder.encode("966564933202", "UTF-8")
-                    + "&msgtext=" + URLEncoder.encode("HelloFromAmr", "UTF-8")
-                    + "&priority=" + URLEncoder.encode("High", "UTF-8")
-                    + "&CountryCode=" + URLEncoder.encode("ALL", "UTF-8");
-//            String requestUrl = "https://mshastra.com/sendurl.aspx/?"
+//
+//            String requestUrl = "https://mshastra.com/sendurl.aspx?"
+////                    + "user=20099319"
+////                    + "&pwd=0564933202"
+////                    + "&senderid=SMSAlert"
+////                    + "&mobileno=966564933202"
+////                    + "&msgtext=HelloFromAmr"
+////                    + "&priority=High"
+////                    + "&CountryCode=ALL";
 //                    + "user=" + URLEncoder.encode("20099319", "UTF-8")
 //                    + "&pwd=" + URLEncoder.encode("0564933202", "UTF-8")
-//                    //                    + "&language=" + URLEncoder.encode(language, "UTF-8")
-//                    + "&senderid=" + URLEncoder.encode(sender, "UTF-8")
-//                    + "&mobileno=" + URLEncoder.encode("0201015926792", "UTF-8")
-//                    + "&msgtext=" + URLEncoder.encode(message, "UTF-8")
+//                    + "&senderid=" + URLEncoder.encode("SMSAlert", "UTF-8")
+//                    + "&mobileno=" + URLEncoder.encode("966564933202", "UTF-8")
+//                    + "&msgtext=" + URLEncoder.encode("HelloFromAmr", "UTF-8")
+//                    + "&priority=" + URLEncoder.encode("High", "UTF-8")
 //                    + "&CountryCode=" + URLEncoder.encode("ALL", "UTF-8");
-
-            URL url = new URL(requestUrl);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-            conn.setDoOutput(true);
-            conn.setDoInput(true);
-            conn.setUseCaches(true);
-            conn.connect();
-            
-//            conn.setRequestMethod("POST");
-//            conn.setRequestProperty("Content-Length", Integer.toString(requestUrl.length()));
-//            conn.getOutputStream().write(requestUrl.getBytes("UTF-8")); // here
-            final BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            final StringBuffer stringBuffer = new StringBuffer();
-            String line;
-            while ((line = rd.readLine()) != null) {
-                stringBuffer.append(line);
-            }
-            rd.close();
-            System.out.println(conn.getResponseMessage());
-
-            conn.disconnect();
-            return conn.getResponseMessage();
+////            String requestUrl = "https://mshastra.com/sendurl.aspx/?"
+////                    + "user=" + URLEncoder.encode("20099319", "UTF-8")
+////                    + "&pwd=" + URLEncoder.encode("0564933202", "UTF-8")
+////                    //                    + "&language=" + URLEncoder.encode(language, "UTF-8")
+////                    + "&senderid=" + URLEncoder.encode(sender, "UTF-8")
+////                    + "&mobileno=" + URLEncoder.encode("0201015926792", "UTF-8")
+////                    + "&msgtext=" + URLEncoder.encode(message, "UTF-8")
+////                    + "&CountryCode=" + URLEncoder.encode("ALL", "UTF-8");
+//
+//            URL url = new URL(requestUrl);
+//            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//            conn.setRequestMethod("GET");
+//            conn.setDoOutput(true);
+//            conn.setDoInput(true);
+//            conn.setUseCaches(true);
+//            conn.connect();
+//            
+////            conn.setRequestMethod("POST");
+////            conn.setRequestProperty("Content-Length", Integer.toString(requestUrl.length()));
+////            conn.getOutputStream().write(requestUrl.getBytes("UTF-8")); // here
+//            final BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+//            final StringBuffer stringBuffer = new StringBuffer();
+//            String line;
+//            while ((line = rd.readLine()) != null) {
+//                stringBuffer.append(line);
+//            }
+//            rd.close();
+//            System.out.println(conn.getResponseMessage());
+//
+//            conn.disconnect();
+//            return conn.getResponseMessage();
         } catch (Exception e) {
             System.out.println("Error SMS " + e);
             return "Error " + e;
@@ -631,6 +730,63 @@ public class Basic implements Serializable {
      */
     public void setYearHijriTo(Integer yearHijriTo) {
         this.yearHijriTo = yearHijriTo;
+    }
+
+    /**
+     * @return the gallaryDTOSelect
+     */
+    public InvInventoryDTO getGallaryDTOSelect() {
+        if (gallaryDTOSelect == null) {
+            if (getUserData().getGallaryDTOList() == null || getUserData().getGallaryDTOList().isEmpty()) {
+                gallaryDTOSelect = null;
+            } else {
+                gallaryDTOSelect = getUserData().getGallaryDTOList().get(0);
+            }
+        }
+        return gallaryDTOSelect;
+    }
+
+    /**
+     * @param gallaryDTOSelect the gallaryDTOSelect to set
+     */
+    public void setGallaryDTOSelect(InvInventoryDTO gallaryDTOSelect) {
+        this.gallaryDTOSelect = gallaryDTOSelect;
+    }
+
+    /**
+     * @return the gallaryLists
+     */
+    public List<InvInventoryDTO> getGallaryLists() {
+        if (gallaryLists == null || gallaryLists.isEmpty()) {
+            gallaryLists = tobyUserInventoryService.getAllGallaryByUserAndBranch(getUserData().getUser());
+            setGallaryDTOConverters(new InvInventoryDTOConverter(gallaryLists));
+        }
+        return gallaryLists;
+    }
+
+    /**
+     * @param gallaryLists the gallaryLists to set
+     */
+    public void setGallaryLists(List<InvInventoryDTO> gallaryLists) {
+        this.gallaryLists = gallaryLists;
+    }
+
+    /**
+     * @return the gallaryDTOConverters
+     */
+    public InvInventoryDTOConverter getGallaryDTOConverters() {
+        return gallaryDTOConverters;
+    }
+
+    /**
+     * @param gallaryDTOConverters the gallaryDTOConverters to set
+     */
+    public void setGallaryDTOConverters(InvInventoryDTOConverter gallaryDTOConverters) {
+        this.gallaryDTOConverters = gallaryDTOConverters;
+    }
+
+    public void hishis() {
+        System.out.println("HisHis");
     }
 
 }

@@ -45,7 +45,7 @@ public class PurchaseOfItemsByCompanyReportMB extends BaseInventoryReportBean {
 
     @PostConstruct
     public void init() {
-        getPurchaseOfItemsBySuppliersSearchBean().getGalleryFrom().addAll(getGallaryList());
+        getPurchaseOfItemsBySuppliersSearchBean().getGalleryFrom().addAll(getGallaryListRole1());
     }
 
     @Override
@@ -174,7 +174,7 @@ public class PurchaseOfItemsByCompanyReportMB extends BaseInventoryReportBean {
     /**
      * @return the gallaryList
      */
-    public List<InvInventoryDTO> getGallaryList() {
+    public List<InvInventoryDTO> getGallaryListRole1() {
         if (gallaryList == null || gallaryList.isEmpty()) {
             gallaryList = tobyUserInventoryService.getAllGallaryByUserAndBranch(getUserData().getUser());
             setGallaryDTOConverter(new InvInventoryDTOConverter(gallaryList));

@@ -13,6 +13,7 @@ import com.toby.define.ScreenNameClassEnum;
 import com.toby.dto.InvDetailDTO;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.entity.GlYear;
+import com.toby.entity.InvAddingorderDetail;
 import com.toby.entity.InvInventory;
 import com.toby.entity.InvItem;
 import com.toby.entity.InvPurchaseInvoice;
@@ -500,6 +501,9 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
                 barcodeList.add(entity.getItemBarcode());
             } else if (Entity.getClass().equals(TempInvPurchaseInvoiceNotLoadedYet.class)) {
                 TempInvPurchaseInvoiceNotLoadedYet entity = (TempInvPurchaseInvoiceNotLoadedYet) Entity;
+                barcodeList.add(entity.getItemBarcode());
+            } else if (Entity.getClass().equals(InvAddingorderDetail.class)) {
+                InvAddingorderDetail entity = (InvAddingorderDetail) Entity;
                 barcodeList.add(entity.getItemBarcode());
             }
         }

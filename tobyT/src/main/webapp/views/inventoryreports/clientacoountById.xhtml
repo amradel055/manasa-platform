@@ -21,6 +21,22 @@
                         <div class="ui-g-6 ui-xl-6">
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
+                                    <p:selectOneMenu id="group" value="#{supplierAccountReportMB.gallaryDTOSelect}"
+                                                     converter="#{supplierAccountReportMB.gallaryDTOConverters}">
+                                        <f:selectItem itemLabel="اختر معرض" itemValue=""/>
+                                        <f:selectItems value="#{supplierAccountReportMB.gallaryLists}" 
+                                                       var="gallary"
+                                                       itemLabel="#{gallary}"
+                                                       itemValue="#{gallary}" />
+                                        <p:ajax listener="#{supplierAccountReportMB.hishis()}" />
+                                    </p:selectOneMenu>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 50px;margin-right: 1%" value="المعرض"/>
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
                                     <p:autoComplete style="width:40%!important"
                                                     dropdown="true"
                                                     converter="#{supplierAccountReportMB.invOrgSiteConverter}"

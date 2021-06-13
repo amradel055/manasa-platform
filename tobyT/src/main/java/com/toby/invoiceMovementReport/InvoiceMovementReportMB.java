@@ -75,7 +75,7 @@ public class InvoiceMovementReportMB extends BaseListBean {
         setUserData((UserData) context.getSessionMap().get("userLogInData"));
         proProductionStagesDTOList = new ArrayList<>();
         proProductionTransactionDTOList = new ArrayList<>();
-        getPrintProductionDTO().getGallaryFromList().addAll(getGallaryList());
+        getPrintProductionDTO().getGallaryFromList().addAll(getGallaryListRole1());
 //        getPrintProductionDTO().getGallaryToList().addAll(getGallaryList());
         if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("AddFromInvInvoice")) {
             InvInvoiceDTO invInvoiceDTO = (InvInvoiceDTO) context.getSessionMap().get("invInvoiceDTOSelected");
@@ -286,7 +286,7 @@ public class InvoiceMovementReportMB extends BaseListBean {
     /**
      * @return the gallaryList
      */
-    public List<InvInventoryDTO> getGallaryList() {
+    public List<InvInventoryDTO> getGallaryListRole1() {
 
         if (gallaryList == null || gallaryList.isEmpty()) {
             gallaryList = tobyUserInventoryService.getAllGallaryByUserAndBranch(getUserData().getUser());

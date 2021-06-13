@@ -41,7 +41,7 @@ public class ProProductionTransactionFactoryMB extends Basic {
 
     @PostConstruct
     public void init() {
-        getProProductionTransactionFactoryView().getGallerySelectedList().addAll(getGallaryList());
+        getProProductionTransactionFactoryView().getGallerySelectedList().addAll(getGallaryListRole1());
     }
 
     public void search() {
@@ -167,7 +167,7 @@ public class ProProductionTransactionFactoryMB extends Basic {
     /**
      * @return the gallaryList
      */
-    public List<InvInventoryDTO> getGallaryList() {
+    public List<InvInventoryDTO> getGallaryListRole1() {
         if (gallaryList == null || gallaryList.isEmpty()) {
             gallaryList = tobyUserInventoryService.getAllGallaryByUserAndBranch(getUserData().getUser());
             setGallaryDTOConverter(new InvInventoryDTOConverter(gallaryList));

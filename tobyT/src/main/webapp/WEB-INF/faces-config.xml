@@ -58,13 +58,6 @@
     <managed-bean>
         <managed-bean-name>userListBean</managed-bean-name>
         <managed-bean-class>com.toby.user.UserListBean</managed-bean-class>
-    
-        <managed-bean-scope>view</managed-bean-scope>
-    </managed-bean>
-    <managed-bean>
-        <managed-bean-name>privilegeListBean</managed-bean-name>
-        <managed-bean-class>com.toby.privilege.PrivilegeListBean</managed-bean-class>
-    
         <managed-bean-scope>view</managed-bean-scope>
     </managed-bean>
     <managed-bean>

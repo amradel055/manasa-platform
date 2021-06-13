@@ -52,6 +52,7 @@ public class invAddingOrderFormDTOMB extends InventoryBasicDataForm implements S
                 reset();
                 fillDefaultList();                
                 putCurrency();
+                completeGallary(null);
             } else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("Editinvorder")) {
                 fillInvInvoiceDTO();
             } else {

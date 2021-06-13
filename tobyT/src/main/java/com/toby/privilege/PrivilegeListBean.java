@@ -6,9 +6,12 @@
 package com.toby.privilege;
 
 import com.toby.businessservice.TobyUserRoleService;
+import com.toby.businessservice.PrivilegeService;
 import com.toby.entity.TobyCompany;
 import com.toby.entity.TobyPrivilege;
 import com.toby.entity.TobyRole;
+import com.toby.toby.BaseListBean;
+import com.toby.toby.UserData;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,13 +21,10 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
-import com.toby.entity.TobyScreen;
-import com.toby.entity.TobyUserRole;
-import com.toby.businessservice.PrivilegeService;
 import com.toby.businessservice.RoleService;
 import com.toby.businessservice.ScreenService;
-import com.toby.toby.BaseListBean;
-import com.toby.toby.UserData;
+import com.toby.entity.TobyScreen;
+import com.toby.entity.TobyUserRole;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -41,7 +41,7 @@ import org.primefaces.event.ToggleSelectEvent;
  */
 @Named(value = "privilegeListBean")
 @ViewScoped
-public class PrivilegeListBean extends BaseListBean implements Serializable {
+public class PrivilegeListBean implements Serializable {
 
     private TobyPrivilege tobyPrivilegeSelected = new TobyPrivilege();
     private Set<TobyPrivilege> tobyPrivilegeSelectedList = new HashSet<>();
@@ -78,32 +78,10 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
     private TobyUserRoleService tobyUserRoleService;
 
     @PostConstruct
-    @Override
     public void init() {
-        load();
+            load();
     }
 
-    @Override
-    public void delete() {
-
-    }
-
-    @Override
-    public void filter() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public String goToAdd() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public String goToEdit() {
-        return "";
-    }
-
-    @Override
     public void load() {
         try {
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
@@ -115,7 +93,7 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
                 roles = roleService.getAllRoles();
             }
         } catch (Exception e) {
-            saveError(e, "PrivilegeListBean", "load");
+//            saveError(e, "PrivilegeListBean", "load");
         }
     }
 
@@ -153,7 +131,7 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
                 e.printStackTrace();
             }
         } catch (Exception e) {
-            saveError(e, "PrivilegeListBean", "selectRole");
+//            saveError(e, "PrivilegeListBean", "selectRole");
         }
     }
 
@@ -168,7 +146,7 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
                 e.printStackTrace();
             }
         } catch (Exception e) {
-            saveError(e, "PrivilegeListBean", "selectRolePrevelage");
+//            saveError(e, "PrivilegeListBean", "selectRolePrevelage");
         }
     }
 
@@ -176,7 +154,7 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
 
     }
 
-    @Override
+//    @Override
     public String getScreenName() {
         return "Privilege";
     }
@@ -213,7 +191,7 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
                 }
             }
         } catch (Exception e) {
-            saveError(e, "PrivilegeListBean", "onRowEdit");
+//            saveError(e, "PrivilegeListBean", "onRowEdit");
         }
     }
 
@@ -222,7 +200,7 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
             FacesMessage msg = new FacesMessage("Edit Cancelled", "rdu");
             FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (Exception e) {
-            saveError(e, "PrivilegeListBean", "onRowCancel");
+//            saveError(e, "PrivilegeListBean", "onRowCancel");
         }
     }
 
@@ -243,7 +221,7 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
             String[] parts = column_name.split("screenActionForm:privList:1:");
             String part1 = parts[0];
         } catch (Exception e) {
-            saveError(e, "PrivilegeListBean", "onCheckBoxEdit");
+//            saveError(e, "PrivilegeListBean", "onCheckBoxEdit");
         }
 
     }
@@ -257,7 +235,7 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
             String[] parts = column_name.split("screenActionForm:privList:1:");
             String part1 = parts[0];
         } catch (Exception e) {
-            saveError(e, "PrivilegeListBean", "onCellEdit");
+//            saveError(e, "PrivilegeListBean", "onCellEdit");
         }
 
     }
@@ -271,7 +249,7 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
                 privilegesSelected.add(tobyPrivilegeSelected);
             }
         } catch (Exception e) {
-            saveError(e, "PrivilegeListBean", "onCheckBoxChecked");
+//            saveError(e, "PrivilegeListBean", "onCheckBoxChecked");
         }
     }
 
@@ -341,7 +319,7 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, userData.getUserDDs().get("ERROR"), userData.getUserDDs().get("CHOOSE_GROUP_ERROR")));
             }
         } catch (Exception e) {
-            saveError(e, "PrivilegeListBean", "updateAll");
+//            saveError(e, "PrivilegeListBean", "updateAll");
         }
 
     }
@@ -371,7 +349,7 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
                 setPrivileges(privilegeService.getRolePrivileges(selectedRoleId.getId()));
             }
         } catch (Exception e) {
-            saveError(e, "PrivilegeListBean", "grantAll");
+//            saveError(e, "PrivilegeListBean", "grantAll");
         }
     }
 
@@ -413,7 +391,7 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
 
             }
         } catch (Exception e) {
-            saveError(e, "PrivilegeListBean", "revokeAll");
+//            saveError(e, "PrivilegeListBean", "revokeAll");
         }
 
     }

@@ -229,7 +229,7 @@ public abstract class ProductionBasicDataForm extends BaseFormBean {
     }
     
     public List<InvInventoryDTO> completeGallary(String query) {
-        return AutoComplete.completeInventoryDTO(query, getGallaryList(), getGallaryDTOConverter());
+        return AutoComplete.completeInventoryDTO(query, getGallaryListRole1(), getGallaryDTOConverter());
     }
 
     /**
@@ -371,7 +371,7 @@ public abstract class ProductionBasicDataForm extends BaseFormBean {
     /**
      * @return the gallaryList
      */
-    public List<InvInventoryDTO> getGallaryList() {
+    public List<InvInventoryDTO> getGallaryListRole1() {
         if (gallaryList == null || gallaryList.isEmpty()) {
             gallaryList = tobyUserInventoryService.getAllGallaryByUserAndBranch(getUserData().getUser());
             setGallaryDTOConverter(new InvInventoryDTOConverter(gallaryList));

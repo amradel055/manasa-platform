@@ -48,7 +48,7 @@ public class ProInvoiceStatusReportMB extends Basic {
 
     @PostConstruct
     public void init() {
-        getPrintProductionDTO().getGallaryListSelected().addAll(getGallaryList());
+        getPrintProductionDTO().getGallaryListSelected().addAll(getGallaryListRole1());
     }
 
     public void search() {
@@ -212,7 +212,7 @@ public class ProInvoiceStatusReportMB extends Basic {
     /**
      * @return the gallaryList
      */
-    public List<InvInventoryDTO> getGallaryList() {
+    public List<InvInventoryDTO> getGallaryListRole1() {
 
         if (gallaryList == null || gallaryList.isEmpty()) {
             gallaryList = tobyUserInventoryService.getAllGallaryByUserAndBranch(getUserData().getUser());

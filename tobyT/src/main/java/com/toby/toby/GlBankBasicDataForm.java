@@ -41,12 +41,9 @@ public abstract class GlBankBasicDataForm extends BaseFormBean {
     CurrencyOperationService currencyOperationService;
     @EJB
     AutoCompleteService autoCompleteService;
-    @EJB
-    private TobyUserInventoryService tobyUserInventoryService;
+    
 
-    private InvInventoryDTOConverter gallaryDTOConverter;
-    private List<InvInventoryDTO> gallaryList;
-    private InvInventoryDTO gallaryDTOSelected;
+    
     
     private List<InvOrganizationSite> organizationList;
     private List<InvOrganizationSiteDTO> organizationSiteDTOList;
@@ -129,7 +126,7 @@ public abstract class GlBankBasicDataForm extends BaseFormBean {
 //
 //    }
     public List<InvOrganizationSiteDTO> completeCustomerFrom(String query) {
-        organizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getUserData().getUserBranch().getId(), Boolean.TRUE, 0, query,(getGallaryDTOSelected() != null ? getGallaryDTOSelected().getId() : null));
+        organizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getUserData().getUserBranch().getId(), Boolean.TRUE, 0, query,(getGallaryDTOSelect() != null ? getGallaryDTOSelect().getId() : null));
         invOrganizationSiteDTOConverter = new InvOrganizationSiteDTOConverter(organizationSiteDTOList);
         return organizationSiteDTOList;
 
@@ -194,55 +191,6 @@ public abstract class GlBankBasicDataForm extends BaseFormBean {
      */
     public void setOrganizationSiteDTOList(List<InvOrganizationSiteDTO> organizationSiteDTOList) {
         this.organizationSiteDTOList = organizationSiteDTOList;
-    }
-
-    /**
-     * @return the gallaryDTOConverter
-     */
-    public InvInventoryDTOConverter getGallaryDTOConverter() {
-        return gallaryDTOConverter;
-    }
-
-    /**
-     * @param gallaryDTOConverter the gallaryDTOConverter to set
-     */
-    public void setGallaryDTOConverter(InvInventoryDTOConverter gallaryDTOConverter) {
-        this.gallaryDTOConverter = gallaryDTOConverter;
-    }
-
-    /**
-     * @return the gallaryList
-     */
-    public List<InvInventoryDTO> getGallaryList() {
-        if (gallaryList == null || gallaryList.isEmpty()) {
-            gallaryList = tobyUserInventoryService.getAllGallaryByUserAndBranch(getUserData().getUser());
-            setGallaryDTOConverter(new InvInventoryDTOConverter(gallaryList));
-        }
-        return gallaryList;
-    }
-
-    /**
-     * @param gallaryList the gallaryList to set
-     */
-    public void setGallaryList(List<InvInventoryDTO> gallaryList) {
-        this.gallaryList = gallaryList;
-    }
-
-    /**
-     * @return the gallaryDTOSelected
-     */
-    public InvInventoryDTO getGallaryDTOSelected() {
-        if (gallaryDTOSelected == null) {
-            gallaryDTOSelected = new InvInventoryDTO();
-        }
-        return gallaryDTOSelected;
-    }
-
-    /**
-     * @param gallaryDTOSelected the gallaryDTOSelected to set
-     */
-    public void setGallaryDTOSelected(InvInventoryDTO gallaryDTOSelected) {
-        this.gallaryDTOSelected = gallaryDTOSelected;
     }
 
 }

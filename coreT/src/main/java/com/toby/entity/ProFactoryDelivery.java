@@ -60,7 +60,7 @@ public class ProFactoryDelivery extends BaseEntity {
     @JoinColumn(name = "factory_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private InvInventory factoryId;    
-    @Size(max = 100)
+    @Size(max = 250)
     @Column(name = "remark")
     private String remark;
     @JoinColumn(name = "gallary_id", referencedColumnName = "id")

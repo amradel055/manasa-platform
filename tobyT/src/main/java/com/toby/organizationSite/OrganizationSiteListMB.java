@@ -122,14 +122,14 @@ public class OrganizationSiteListMB extends BaseListBean implements Serializable
             if (getInventoryList() != null && !inventoryList.isEmpty()) {
                 setInvInventoryConverter(new InvInventoryConverter(getInventoryList()));
             }
-            if (getGallaryList() != null && !getGallaryList().isEmpty()) {
-                setGallaryDTOConverter(new InvInventoryDTOConverter(getGallaryList()));
+            if (getGallaryListRole1() != null && !getGallaryListRole1().isEmpty()) {
+                setGallaryDTOConverter(new InvInventoryDTOConverter(getGallaryListRole1()));
             }
             if (getInvInventorySelection().getId() == null) {
                 setInvInventorySelection(getInventoryList() == null || getInventoryList().isEmpty() ? null : getInventoryList().get(0));
             }
             if (getInvGallarySelection().getId() == null) {
-                setInvGallarySelection(getGallaryList() == null || getGallaryList().isEmpty() ? null : getGallaryList().get(0));
+                setInvGallarySelection(getGallaryListRole1() == null || getGallaryListRole1().isEmpty() ? null : getGallaryListRole1().get(0));
             }
         } catch (Exception e) {
             saveError(e, "OrganizationSiteListMB", "load");
@@ -321,7 +321,7 @@ public class OrganizationSiteListMB extends BaseListBean implements Serializable
     /**
      * @return the gallaryList
      */
-    public List<InvInventoryDTO> getGallaryList() {
+    public List<InvInventoryDTO> getGallaryListRole1() {
         if (gallaryList == null) {
             gallaryList = new ArrayList<>();
         }
