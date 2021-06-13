@@ -124,7 +124,6 @@ public class SummitionItemReportMB extends Basic {
                 getItemsViewList().addAll(itemsViewForGallaryinnerForAll);
 
             }
-
         }
 
     }
@@ -414,7 +413,7 @@ public class SummitionItemReportMB extends Basic {
      */
     public BigDecimal getSumDifferentTotal() {
         if (sumDifferentTotal == null) {
-            return BigDecimal.ZERO;
+            sumDifferentTotal = BigDecimal.ZERO;
         }
         return sumDifferentTotal;
     }

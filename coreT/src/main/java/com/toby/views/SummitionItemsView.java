@@ -199,11 +199,11 @@ public class SummitionItemsView implements Serializable {
      */
     public BigDecimal getDifferent() {
         if (Different == null) {
-            return BigDecimal.ZERO;
+            Different = getFactoryNumber().subtract(getSendNumber());
         } else {
-            Different = factoryNumber.subtract(sendNumber);
-            return Different;
+            Different = getFactoryNumber().subtract(getSendNumber());
         }
+        return Different;
     }
 
     /**
