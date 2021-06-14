@@ -34,17 +34,11 @@ import org.apache.poi.hssf.util.HSSFColor;
 @ViewScoped
 public class SummitionItemReportMB extends Basic {
 
-    private InvInventoryDTO gallaryDTOSelected;
     private Date dateFrom;
     private Date dateTo;
     private ProGroupDTO proGroupDTOSelected;
-    private List<InvInventoryDTO> gallaryList;
 
     private List<SummitionItemsView> itemsViewList;
-
-    private List<InvInventoryDTO> gallaryListSelected;
-
-    private InvInventoryDTOConverter gallaryDTOConverter;
 
     private BigDecimal sumFactoryNumberTotal;
     private BigDecimal sumSendNumberTotal;
@@ -57,13 +51,10 @@ public class SummitionItemReportMB extends Basic {
 
     @EJB
     InvPurchaseInvoiceService_1 invPurchaseInvoiceService_1;
-    @EJB
-    private TobyUserInventoryService tobyUserInventoryService;
 
     @PostConstruct
     public void init() {
-        gallaryListSelected = new ArrayList<>();
-        getGallaryListSelected().addAll(getGallaryListRole1());
+
     }
 
     public void search() {
@@ -203,7 +194,7 @@ public class SummitionItemReportMB extends Basic {
         hashMap.put("dateToText", "  الى تاريخ");
         hashMap.put("dateToValue", getDateTo());
         hashMap.put("gallaryText", "المعرض ");
-        hashMap.put("gallaryValue", getGallaryDTOSelected() == null ? null : getGallaryDTOSelected().getName());
+//        hashMap.put("gallaryValue", getGallaryDTOSelected() == null ? null : getGallaryDTOSelected().getName());
         hashMap.put("proGroupText", "الفئة ");
         hashMap.put("proGroupValue", getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getName());
         hashMap.put("codeText", "الكود ");
@@ -216,35 +207,6 @@ public class SummitionItemReportMB extends Basic {
         hashMap.put("deliveryNumberText", "المستلم بالمعرض ");
 
         return hashMap;
-    }
-
-    public List<InvInventoryDTO> getGallaryListRole1() {
-        if (gallaryList == null || gallaryList.isEmpty()) {
-            gallaryList = tobyUserInventoryService.getAllGallaryByUserAndBranch(getUserData().getUser());
-            setGallaryDTOConverter(new InvInventoryDTOConverter(gallaryList));
-        }
-        return gallaryList;
-    }
-
-    /**
-     * @param gallaryList the gallaryList to set
-     */
-    public void setGallaryList(List<InvInventoryDTO> gallaryList) {
-        this.gallaryList = gallaryList;
-    }
-
-    /**
-     * @return the gallaryDTOSelected
-     */
-    public InvInventoryDTO getGallaryDTOSelected() {
-        return gallaryDTOSelected;
-    }
-
-    /**
-     * @param gallaryDTOSelected the gallaryDTOSelected to set
-     */
-    public void setGallaryDTOSelected(InvInventoryDTO gallaryDTOSelected) {
-        this.gallaryDTOSelected = gallaryDTOSelected;
     }
 
     /**
@@ -304,40 +266,6 @@ public class SummitionItemReportMB extends Basic {
      */
     public void setItemsViewList(List<SummitionItemsView> itemsViewList) {
         this.itemsViewList = itemsViewList;
-    }
-
-    /**
-     * @return the gallaryDTOConverter
-     */
-    public InvInventoryDTOConverter getGallaryDTOConverter() {
-        return gallaryDTOConverter;
-    }
-
-    /**
-     * @param gallaryDTOConverter the gallaryDTOConverter to set
-     */
-    public void setGallaryDTOConverter(InvInventoryDTOConverter gallaryDTOConverter) {
-        this.gallaryDTOConverter = gallaryDTOConverter;
-    }
-
-    /**
-     * @return the gallaryListSelected
-     */
-    public List<InvInventoryDTO> getGallaryListSelected() {
-
-        if (gallaryListSelected == null) {
-
-            gallaryListSelected = new ArrayList<>();
-        }
-
-        return gallaryListSelected;
-    }
-
-    /**
-     * @param gallaryListSelected the gallaryListSelected to set
-     */
-    public void setGallaryListSelected(List<InvInventoryDTO> gallaryListSelected) {
-        this.gallaryListSelected = gallaryListSelected;
     }
 
     /**

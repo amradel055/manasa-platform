@@ -116,6 +116,7 @@ public class Basic implements Serializable {
 
     private InvInventoryDTOConverter gallaryDTOConverters;
     private List<InvInventoryDTO> gallaryLists;
+    private List<InvInventoryDTO> gallaryListSelected;
     private InvInventoryDTO gallaryDTOSelect;
 
     public Date findDateFromHijriFrom() {
@@ -489,6 +490,11 @@ public class Basic implements Serializable {
             branch = (Branch) externalContext.getSessionMap().get("branch");
         }
         return branch;
+    } 
+    
+
+    public void hishis() {
+        System.out.println("HisHis");
     }
 
     /**
@@ -785,8 +791,21 @@ public class Basic implements Serializable {
         this.gallaryDTOConverters = gallaryDTOConverters;
     }
 
-    public void hishis() {
-        System.out.println("HisHis");
+    /**
+     * @return the gallaryListSelected
+     */
+    public List<InvInventoryDTO> getGallaryListSelected() {
+        if(gallaryListSelected == null){
+            gallaryListSelected = getGallaryLists();
+        }
+        return gallaryListSelected;
+    }
+
+    /**
+     * @param gallaryListSelected the gallaryListSelected to set
+     */
+    public void setGallaryListSelected(List<InvInventoryDTO> gallaryListSelected) {
+        this.gallaryListSelected = gallaryListSelected;
     }
 
 }

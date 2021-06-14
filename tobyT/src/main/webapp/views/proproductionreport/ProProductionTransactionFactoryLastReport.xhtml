@@ -16,10 +16,10 @@
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
                                 <p:selectCheckboxMenu id="gallary_From" value="#{proProductionTransactionFactoryLastMB.proProductionTransactionFactoryView.gallerySelectedList}" 
-                                                      converter="#{proProductionTransactionFactoryLastMB.gallaryDTOConverter}"
+                                                      converter="#{proProductionTransactionFactoryLastMB.gallaryDTOConverters}"
                                                       label="المعرض" style="width: 15rem"
                                                       filter="true" filterMatchMode="startsWith" panelStyle="width: 15rem" scrollHeight="250">
-                                    <f:selectItems value="#{proProductionTransactionFactoryLastMB.gallaryList}" 
+                                    <f:selectItems value="#{proProductionTransactionFactoryLastMB.gallaryLists}" 
                                                    var="gallary"
                                                    itemLabel="#{gallary}"
                                                    itemValue="#{gallary}"/>

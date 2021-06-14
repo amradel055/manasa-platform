@@ -2,8 +2,6 @@ package com.toby.reports;
 
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
 import com.toby.businessservice.ProFactoryDeliveryService;
-import com.toby.businessservice.TobyUserInventoryService;
-import com.toby.converter.InvInventoryDTOConverter;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.PrintProductionDTO;
@@ -36,19 +34,14 @@ public class ProInvoiceStatusReportMB extends Basic {
 
     private Integer number;
 
-    private InvInventoryDTOConverter gallaryDTOConverter;
-    private List<InvInventoryDTO> gallaryList;
-
     @EJB
     private InvPurchaseInvoiceService_1 invPurchaseInvoiceService;
     @EJB
     private ProFactoryDeliveryService proFactoryDeliveryService;
-    @EJB
-    private TobyUserInventoryService tobyUserInventoryService;
 
     @PostConstruct
     public void init() {
-        getPrintProductionDTO().getGallaryListSelected().addAll(getGallaryListRole1());
+        getPrintProductionDTO().getGallaryListSelected().addAll(getGallaryLists());
     }
 
     public void search() {
@@ -193,38 +186,5 @@ public class ProInvoiceStatusReportMB extends Basic {
      */
     public void setNumber(Integer number) {
         this.number = number;
-    }
-
-    /**
-     * @return the gallaryDTOConverter
-     */
-    public InvInventoryDTOConverter getGallaryDTOConverter() {
-        return gallaryDTOConverter;
-    }
-
-    /**
-     * @param gallaryDTOConverter the gallaryDTOConverter to set
-     */
-    public void setGallaryDTOConverter(InvInventoryDTOConverter gallaryDTOConverter) {
-        this.gallaryDTOConverter = gallaryDTOConverter;
-    }
-
-    /**
-     * @return the gallaryList
-     */
-    public List<InvInventoryDTO> getGallaryListRole1() {
-
-        if (gallaryList == null || gallaryList.isEmpty()) {
-            gallaryList = tobyUserInventoryService.getAllGallaryByUserAndBranch(getUserData().getUser());
-            setGallaryDTOConverter(new InvInventoryDTOConverter(gallaryList));
-        }
-        return gallaryList;
-    }
-
-    /**
-     * @param gallaryList the gallaryList to set
-     */
-    public void setGallaryList(List<InvInventoryDTO> gallaryList) {
-        this.gallaryList = gallaryList;
     }
 }
