@@ -27,6 +27,8 @@
                     selection="#{privilegeListBean.selectedRoleId}" 
                     rowKey="#{role.id}" 
                     id="roleList">
+                    <p:ajax event="rowSelect" listener="#{privilegeListBean.selectRole}" update="@form" />
+                    <p:ajax event="rowUnselect" listener="#{privilegeListBean.unselectRole}" update="@form" />
 
                     <f:facet name="header">
                         <p:outputPanel  >
@@ -81,6 +83,9 @@
                     id="privList" 
                     >
 
+                    <p:ajax event="rowSelect" 
+                            listener="#{privilegeListBean.selectRolePrevelage}" 
+                            />
 
                     <f:facet name="header" >
 
@@ -136,6 +141,7 @@
                                 <f:selectItem itemLabel="اداره الاصول الثابته" itemValue="17"/>
                                 <f:selectItem itemLabel="اداره النقليات" itemValue="18"/> 
                                 <f:selectItem itemLabel="اداره علاقات العملاء" itemValue="19"/> 
+                                <p:ajax update="screenActionForm:privList" listener="#{privilegeListBean.findScreenByModuleType()}" />
                             </p:selectOneMenu>
 
 
@@ -148,12 +154,16 @@
                         <div></div>
                         <div id="asmaa">
                             <p:selectBooleanCheckbox id="viewSelect" style="width:5%; margin-right: 68%;" value="#{privilegeListBean.viewSelect}">
+                                <p:ajax update="screenActionForm:privList" listener="#{privilegeListBean.updateViewColumn()}" />
                             </p:selectBooleanCheckbox>
                             <p:selectBooleanCheckbox id="addSelect" style="width:5%; margin-right: 3%;" value="#{privilegeListBean.addSelect}">
+                                <p:ajax update="screenActionForm:privList" listener="#{privilegeListBean.updateAddColumn()}" />
                             </p:selectBooleanCheckbox>
                             <p:selectBooleanCheckbox id="editSelect" style="width:5%; margin-right: 3%;" value="#{privilegeListBean.editSelect}">
+                                <p:ajax update="screenActionForm:privList" listener="#{privilegeListBean.updateEditColumn()}" />
                             </p:selectBooleanCheckbox>
                             <p:selectBooleanCheckbox id="deleteSelect" style="width:5%; margin-right: 3%;" value="#{privilegeListBean.deleteSelect}">
+                                <p:ajax update="screenActionForm:privList" listener="#{privilegeListBean.updateDeleteColumn()}" />
                             </p:selectBooleanCheckbox>
                         </div>
                     </f:facet>
@@ -191,17 +201,20 @@
 
 
                         <h:selectBooleanCheckbox value="#{privilege.view}" >
+                            <p:ajax  event="click"  listener="#{privilegeListBean.unSelectALL()}" update="privList"/>
                         </h:selectBooleanCheckbox>
                     </p:column>
 
                     <p:column  headerText="#{userData.userDDs['ADD']}" style="font-size: 13px;width: 7vh;text-align: center!important;border-radius: 0px;"  >
                         <h:selectBooleanCheckbox value="#{privilege.add}" >
+                            <p:ajax  event="click"  listener="#{privilegeListBean.behindAdd}" update="privList"/>
 
                         </h:selectBooleanCheckbox>
                     </p:column>
 
                     <p:column  headerText=" #{userData.userDDs['EDIT']}" style="font-size: 13px;width: 7vh;text-align: center!important;border-radius: 0px;" >
                         <h:selectBooleanCheckbox value="#{privilege.edit}" >
+                            <p:ajax  event="click"  listener="#{privilegeListBean.behindEdit}" update="privList"/>
 
                         </h:selectBooleanCheckbox>
 
@@ -210,6 +223,7 @@
 
                     <p:column headerText=" #{userData.userDDs['DELETE']}" style="font-size: 13px;width: 7vh;text-align: center!important;border-radius: 0px;" >
                         <h:selectBooleanCheckbox value="#{privilege.delete}" >
+                            <p:ajax  event="click"  listener="#{privilegeListBean.behindDelete}" update="privList"/>
                         </h:selectBooleanCheckbox>
                     </p:column>
 

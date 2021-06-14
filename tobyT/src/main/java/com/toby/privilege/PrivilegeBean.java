@@ -12,16 +12,18 @@ import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.faces.bean.ViewScoped;
 import javax.inject.Named;
 import com.toby.businessservice.RoleService;
 import com.toby.businessservice.ScreenService;
 import com.toby.businessservice.TobyUserRoleService;
+import com.toby.converter.TobyRoleDTOConverter;
+import com.toby.dto.TobyRoleDTO;
 import com.toby.entity.TobyScreen;
 import com.toby.entity.TobyUserRole;
 import com.toby.toby.UserData;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
 import org.primefaces.event.SelectEvent;
 
 /**
@@ -32,7 +34,7 @@ import org.primefaces.event.SelectEvent;
 @ViewScoped
 public class PrivilegeBean implements Serializable {
 
-    private List<TobyRole> roles;
+    private List<TobyRoleDTO> roles;
     private TobyRole selectedRoleId;
 
     private List<TobyPrivilege> privileges;
@@ -48,6 +50,7 @@ public class PrivilegeBean implements Serializable {
     private Boolean editSelect;
     private Boolean addSelect;
     private Boolean deleteSelect;
+    private TobyRoleDTOConverter tobyRoleDTOConverter ;
 
     @EJB
     private RoleService roleService;
@@ -137,9 +140,10 @@ public class PrivilegeBean implements Serializable {
     /**
      * @return the roles
      */
-    public List<TobyRole> getRoles() {
+    public List<TobyRoleDTO> getRoles() {
         if (roles == null) {
-            roles = roleService.getAllRolesListByCompanyId(125);
+            roles = roleService.getAllRolesListByCompanyIdDTO(125);
+            setTobyRoleDTOConverter(new TobyRoleDTOConverter(roles));
         }
         return roles;
     }
@@ -147,7 +151,7 @@ public class PrivilegeBean implements Serializable {
     /**
      * @param roles the roles to set
      */
-    public void setRoles(List<TobyRole> roles) {
+    public void setRoles(List<TobyRoleDTO> roles) {
         this.roles = roles;
     }
 
@@ -323,5 +327,19 @@ public class PrivilegeBean implements Serializable {
      */
     public void setDeleteSelect(Boolean deleteSelect) {
         this.deleteSelect = deleteSelect;
+    }
+
+    /**
+     * @return the tobyRoleDTOConverter
+     */
+    public TobyRoleDTOConverter getTobyRoleDTOConverter() {
+        return tobyRoleDTOConverter;
+    }
+
+    /**
+     * @param tobyRoleDTOConverter the tobyRoleDTOConverter to set
+     */
+    public void setTobyRoleDTOConverter(TobyRoleDTOConverter tobyRoleDTOConverter) {
+        this.tobyRoleDTOConverter = tobyRoleDTOConverter;
     }
 }

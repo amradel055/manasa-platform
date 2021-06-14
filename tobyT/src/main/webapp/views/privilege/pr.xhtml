@@ -11,10 +11,10 @@
         <h:form id="screenActionForm" dir="#{userData.dir}" >
             <p:fieldset legend="#{userData.userDDs['PRIVILEGE_MANAGEMENT']}">
                 <p:outputLabel  value="Basic"/>
-                <p:selectOneMenu id="roles" value="#{privilegeBean.selectedRoleId}">
+                <p:selectOneMenu id="roles" value="#{privilegeBean.selectedRoleId}" 
+                                            converter="#{privilegeBean.tobyRoleDTOConverter}" >
                     <f:selectItem itemLabel="Select One" itemValue=""/>
                     <f:selectItems value="#{privilegeBean.roles}" var="role" itemValue="#{role}" itemLabel="#{role.name}"/>
-                    <p:ajax event="itemSelect" listener="#{privilegeBean.selectRole}" />
                 </p:selectOneMenu>
             </p:fieldset> 
         </h:form>

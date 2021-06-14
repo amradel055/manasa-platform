@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice;
 
+import com.toby.dto.TobyRoleDTO;
 import com.toby.entity.TobyRole;
 import java.util.List;
 import javax.ejb.Remote;
@@ -27,4 +28,6 @@ public interface RoleService {
     public TobyRole updateRole(TobyRole role);
 
     public void deleteRole(TobyRole role);
+    
+    public List<TobyRoleDTO> getAllRolesListByCompanyIdDTO(Integer companyId);
 }

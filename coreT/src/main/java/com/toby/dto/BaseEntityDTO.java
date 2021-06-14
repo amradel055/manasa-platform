@@ -81,7 +81,7 @@ public class BaseEntityDTO implements Serializable, Cloneable {
 
     @Override
     public String toString() {
-        return "com.entity.GeneralJornal[ id=" + id + " ]";
+        return "EntityDTO -> id=" + id + " ]";
     }
 
     @Override

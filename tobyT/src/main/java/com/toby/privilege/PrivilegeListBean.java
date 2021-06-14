@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
@@ -32,6 +31,7 @@ import javax.faces.application.FacesMessage;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.event.SelectEvent;
 import javax.faces.event.ActionEvent;
+import javax.faces.view.ViewScoped;
 import org.primefaces.event.CellEditEvent;
 import org.primefaces.event.ToggleSelectEvent;
 
