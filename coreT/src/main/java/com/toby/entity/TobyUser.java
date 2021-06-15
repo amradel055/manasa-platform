@@ -40,9 +40,12 @@ public class TobyUser extends BaseEntity {
     @JoinColumn(name = "lang", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.EAGER)
     private Symbol lang;
-    
+
     @Column(name = "master")
     private Integer master;
+    
+    @Column(name = "residency_number")
+    private Integer residencyNumber;
 
     @JoinColumn(name = "branch_id", referencedColumnName = "id")
     @ManyToOne
@@ -54,11 +57,9 @@ public class TobyUser extends BaseEntity {
     private Collection<TobyUserYear> tobyUserYearCollection1;
     @OneToMany(mappedBy = "modifiedBy")
     private Collection<TobyUserYear> tobyUserYearCollection2;
-    
+
     @Transient
     private BigDecimal sallary;
-
-    
 
     public TobyUser() {
     }
@@ -193,5 +194,18 @@ public class TobyUser extends BaseEntity {
         this.sallary = sallary;
     }
 
+    /**
+     * @return the residencyNumber
+     */
+    public Integer getResidencyNumber() {
+        return residencyNumber;
+    }
+
+    /**
+     * @param residencyNumber the residencyNumber to set
+     */
+    public void setResidencyNumber(Integer residencyNumber) {
+        this.residencyNumber = residencyNumber;
+    }
 
 }

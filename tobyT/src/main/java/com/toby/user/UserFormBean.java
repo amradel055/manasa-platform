@@ -55,6 +55,7 @@ public class UserFormBean extends BaseFormBean implements Serializable {
     private Integer userId;
     private Integer selectedLangId;
     private Integer master;
+    private Integer residencyNumber;
     private List<Symbol> languages;
     private Branch branch;
     @EJB
@@ -82,12 +83,13 @@ public class UserFormBean extends BaseFormBean implements Serializable {
     public String save() {
         try {
             userDetails = new TobyUser();
-            if (userName != null && userPassword != null && userCode != null && selectedLangId != null) {
+            if (userName != null && userPassword != null && userCode != null && selectedLangId != null ) {
 
                 userDetails.setName(userName.trim());
                 userDetails.setPassword(userPassword);
                 userCode = userCompanyCode + "" + userCode;
                 userDetails.setUserCode(userCode);
+                userDetails.setResidencyNumber(residencyNumber);
                 Symbol sym = new Symbol();
                 sym.setId(selectedLangId);
                 userDetails.setLang(sym);
@@ -463,6 +465,20 @@ public class UserFormBean extends BaseFormBean implements Serializable {
      */
     public void setMaster(Integer master) {
         this.master = master;
+    }
+
+    /**
+     * @return the residencyNumber
+     */
+    public Integer getResidencyNumber() {
+        return residencyNumber;
+    }
+
+    /**
+     * @param residencyNumber the residencyNumber to set
+     */
+    public void setResidencyNumber(Integer residencyNumber) {
+        this.residencyNumber = residencyNumber;
     }
 
 }

@@ -12,18 +12,17 @@ import java.util.List;
  *
  * @author AhmedEssam
  */
-public class TobyUserDTO  extends BaseEntityDTO {
-    
+public class TobyUserDTO extends BaseEntityDTO {
+
     private String userCode;
     private String password;
     private String name;
     private SymbolDTO lang;
     private Integer master;
+    private Integer residencyNumber;
     private Integer branchId;
     private List<TobyUserProproductionDTO> tobyUserProproductionDTOList;
     private List<ProProductionStagesDTO> productionStagesDTOList;
-
-    
 
     public String getUserCode() {
         return userCode;
@@ -95,7 +94,7 @@ public class TobyUserDTO  extends BaseEntityDTO {
     public void setBranchId(Integer branchId) {
         this.branchId = branchId;
     }
- 
+
     public Integer getMaster() {
         return master;
     }
@@ -108,14 +107,15 @@ public class TobyUserDTO  extends BaseEntityDTO {
      * @return the tobyUserProproductionDTOList
      */
     public List<TobyUserProproductionDTO> getTobyUserProproductionDTOList() {
-        if(tobyUserProproductionDTOList == null){
+        if (tobyUserProproductionDTOList == null) {
             tobyUserProproductionDTOList = new ArrayList<>();
         }
         return tobyUserProproductionDTOList;
     }
 
     /**
-     * @param tobyUserProproductionDTOList the tobyUserProproductionDTOList to set
+     * @param tobyUserProproductionDTOList the tobyUserProproductionDTOList to
+     * set
      */
     public void setTobyUserProproductionDTOList(List<TobyUserProproductionDTO> tobyUserProproductionDTOList) {
         this.tobyUserProproductionDTOList = tobyUserProproductionDTOList;
@@ -125,7 +125,7 @@ public class TobyUserDTO  extends BaseEntityDTO {
      * @return the productionStagesDTOList
      */
     public List<ProProductionStagesDTO> getProductionStagesDTOList() {
-        if(productionStagesDTOList == null){
+        if (productionStagesDTOList == null) {
             productionStagesDTOList = new ArrayList<>();
         }
         return productionStagesDTOList;
@@ -136,6 +136,20 @@ public class TobyUserDTO  extends BaseEntityDTO {
      */
     public void setProductionStagesDTOList(List<ProProductionStagesDTO> productionStagesDTOList) {
         this.productionStagesDTOList = productionStagesDTOList;
+    }
+
+    /**
+     * @return the residencyNumber
+     */
+    public Integer getResidencyNumber() {
+        return residencyNumber;
+    }
+
+    /**
+     * @param residencyNumber the residencyNumber to set
+     */
+    public void setResidencyNumber(Integer residencyNumber) {
+        this.residencyNumber = residencyNumber;
     }
 
 }

@@ -50,6 +50,9 @@
                         <p:column filterStyle="display:none"  style="width: 20vh;font-size: 1.8vh;text-align: right" filterBy="#{user.lang.name}"  filterMatchMode="contains" headerText="#{userData.userDDs['USER_LANGUAGE']}" >
                             <h:outputText value="#{user.lang.name}" style="font-size: 1.5vh;font-weight: 100;"  />
                         </p:column>
+                        <p:column filterStyle="display:none"  style="width: 20vh;font-size: 1.8vh;text-align: right" filterBy="#{user.residencyNumber}"  filterMatchMode="contains" headerText="رقم الاقامة" >
+                            <h:outputText value="#{user.residencyNumber}" style="font-size: 1.5vh;font-weight: 100;"  />
+                        </p:column>
                         
                         <p:column style="width: 20vh;font-size: 1.8vh;text-align: right" filterStyle="display:none" sortBy="#{user.companyId.name}" filterBy="#{user.companyId.name}" filterMatchMode="contains" headerText="#{userData.userDDs['COMPANY_NAME']}" rendered="#{userData.isAdmin}"  >
                             <h:outputText value="#{user.companyId.name}" />

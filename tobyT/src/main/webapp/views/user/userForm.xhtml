@@ -99,7 +99,24 @@
                         </h:panelGroup>
 
                     </h:panelGroup>
-                    
+                    <h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 55px" value="رقم الاقامة*"/>
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:inputText style="width: 50%!important" id="residencyNumber" 
+                                         value="#{userFormBean.residencyNumber}"
+                                         required="true" 
+                                         requiredMessage="#{userData.userDDs['REQUIRED']}" >
+                                
+                            </p:inputText>
+
+
+                        </h:panelGroup>
+
+                    </h:panelGroup>
 
 
                     <h:panelGroup>

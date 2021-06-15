@@ -203,6 +203,7 @@ public class TobyUserServiceImpl implements TobyUserService {
         TobyUserDTO tobyUserDTO = new TobyUserDTO();
         tobyUserDTO.setId(tobyUser.getId());
         tobyUserDTO.setMaster(tobyUser.getMaster());
+        tobyUserDTO.setResidencyNumber(tobyUser.getResidencyNumber());
         tobyUserDTO.setMsg(tobyUser.getMsg());
         tobyUserDTO.setName(tobyUser.getName());
         tobyUserDTO.setPassword(tobyUser.getPassword());
