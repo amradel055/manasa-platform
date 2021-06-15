@@ -1,8 +1,6 @@
 package com.toby.reports;
 
 import com.toby.businessservice.ReportsService;
-import com.toby.businessservice.TobyUserInventoryService;
-import com.toby.converter.InvInventoryDTOConverter;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.toby.Basic;
 import com.toby.views.ProfitOfItemsSold;
@@ -31,17 +29,12 @@ public class ProfitOfItemsSoldReport extends Basic {
     private ProfitOfItemsSold profitOfItemsSold;
     private Integer type;
 
-    private InvInventoryDTOConverter gallaryDTOConverter;
-    private List<InvInventoryDTO> gallaryList;
-
     @EJB
     private ReportsService reportsService;
-    @EJB
-    private TobyUserInventoryService tobyUserInventoryService;
 
     @PostConstruct
     public void init() {
-        getProfitOfItemsSold().getGallarySelected().addAll(getGallaryListRole1());
+        getProfitOfItemsSold().getGallarySelected().addAll(getGallaryLists());
     }
 
     public void search() {
@@ -111,39 +104,6 @@ public class ProfitOfItemsSoldReport extends Basic {
         hashMap.put("totallNetText", " اجمالى سعر البيع");
 
         return hashMap;
-    }
-
-    /**
-     * @return the gallaryDTOConverter
-     */
-    public InvInventoryDTOConverter getGallaryDTOConverter() {
-        return gallaryDTOConverter;
-    }
-
-    /**
-     * @param gallaryDTOConverter the gallaryDTOConverter to set
-     */
-    public void setGallaryDTOConverter(InvInventoryDTOConverter gallaryDTOConverter) {
-        this.gallaryDTOConverter = gallaryDTOConverter;
-    }
-
-    /**
-     * @return the gallaryList
-     */
-    public List<InvInventoryDTO> getGallaryListRole1() {
-
-        if (gallaryList == null || gallaryList.isEmpty()) {
-            gallaryList = tobyUserInventoryService.getAllGallaryByUserAndBranch(getUserData().getUser());
-            setGallaryDTOConverter(new InvInventoryDTOConverter(gallaryList));
-        }
-        return gallaryList;
-    }
-
-    /**
-     * @param gallaryList the gallaryList to set
-     */
-    public void setGallaryList(List<InvInventoryDTO> gallaryList) {
-        this.gallaryList = gallaryList;
     }
 
     /**

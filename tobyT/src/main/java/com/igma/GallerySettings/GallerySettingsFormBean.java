@@ -1,13 +1,9 @@
 package com.igma.GallerySettings;
 
 import com.toby.businessservice.GallerySettingsService;
-import com.toby.businessservice.TobyUserInventoryService;
-import com.toby.converter.InvInventoryDTOConverter;
 import com.toby.dto.GallerySettingsDTO;
-import com.toby.dto.InvInventoryDTO;
 import com.toby.toby.BaseFormBean;
 import com.toby.toby.UserData;
-import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Named;
@@ -24,13 +20,9 @@ import javax.faces.view.ViewScoped;
 public class GallerySettingsFormBean extends BaseFormBean {
 
     private GallerySettingsDTO gallerySettingsDTO;
-    private InvInventoryDTOConverter gallaryDTOConverter;
-    private List<InvInventoryDTO> gallaryList;
 
     @EJB
     GallerySettingsService gallerySettingsService;
-    @EJB
-    private TobyUserInventoryService tobyUserInventoryService;
 
     public GallerySettingsFormBean() {
     }
@@ -113,39 +105,6 @@ public class GallerySettingsFormBean extends BaseFormBean {
      */
     public void setGallerySettingsDTO(GallerySettingsDTO gallerySettingsDTO) {
         this.gallerySettingsDTO = gallerySettingsDTO;
-    }
-
-    /**
-     * @return the gallaryDTOConverter
-     */
-    public InvInventoryDTOConverter getGallaryDTOConverter() {
-        return gallaryDTOConverter;
-    }
-
-    /**
-     * @param gallaryDTOConverter the gallaryDTOConverter to set
-     */
-    public void setGallaryDTOConverter(InvInventoryDTOConverter gallaryDTOConverter) {
-        this.gallaryDTOConverter = gallaryDTOConverter;
-    }
-
-    /**
-     * @return the gallaryList
-     */
-    public List<InvInventoryDTO> getGallaryListRole1() {
-
-        if (gallaryList == null || gallaryList.isEmpty()) {
-            gallaryList = tobyUserInventoryService.getAllGallaryByUserAndBranch(getUserData().getUser());
-            setGallaryDTOConverter(new InvInventoryDTOConverter(gallaryList));
-        }
-        return gallaryList;
-    }
-
-    /**
-     * @param gallaryList the gallaryList to set
-     */
-    public void setGallaryList(List<InvInventoryDTO> gallaryList) {
-        this.gallaryList = gallaryList;
     }
 
 }

@@ -1,9 +1,6 @@
 package com.toby.reports;
 
 import com.toby.businessservice.ReportsService;
-import com.toby.businessservice.TobyUserInventoryService;
-import com.toby.converter.InvInventoryDTOConverter;
-import com.toby.dto.InvInventoryDTO;
 import com.toby.toby.Basic;
 import com.toby.views.CustomerBalances;
 import java.io.IOException;
@@ -28,13 +25,8 @@ public class CustomerBalancesReport extends Basic {
     private List<CustomerBalances> customerBalancesesList;
     private CustomerBalances customerBalances;
 
-    private InvInventoryDTOConverter gallaryDTOConverter;
-    private List<InvInventoryDTO> gallaryList;
-
     @EJB
     private ReportsService reportsService;
-    @EJB
-    private TobyUserInventoryService tobyUserInventoryService;
 
     public void search() {
         setCustomerBalancesesList(reportsService.getCustomerBalances(customerBalances, getUserData().getUserBranch().getId()));
@@ -111,41 +103,4 @@ public class CustomerBalancesReport extends Basic {
     public void setCustomerBalances(CustomerBalances customerBalances) {
         this.customerBalances = customerBalances;
     }
-
-    /**
-     * @return the gallaryDTOConverter
-     */
-    public InvInventoryDTOConverter getGallaryDTOConverter() {
-        return gallaryDTOConverter;
-    }
-
-    /**
-     * @param gallaryDTOConverter the gallaryDTOConverter to set
-     */
-    public void setGallaryDTOConverter(InvInventoryDTOConverter gallaryDTOConverter) {
-        this.gallaryDTOConverter = gallaryDTOConverter;
-    }
-
-    /**
-     * @return the gallaryList
-     */
-    public List<InvInventoryDTO> getGallaryListRole1() {
-        
-        if (gallaryList == null || gallaryList.isEmpty()) {
-            gallaryList = tobyUserInventoryService.getAllGallaryByUserAndBranch(getUserData().getUser());
-            setGallaryDTOConverter(new InvInventoryDTOConverter(gallaryList));
-        }
-        return gallaryList;
-    }
-
-    /**
-     * @param gallaryList the gallaryList to set
-     */
-    public void setGallaryList(List<InvInventoryDTO> gallaryList) {
-        this.gallaryList = gallaryList;
-    }
-
-    /**
-     * @return the salesReportByValueAdedDetailsList
-     */
 }

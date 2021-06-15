@@ -22,11 +22,8 @@ import com.toby.converter.GlBankConverter;
 import com.toby.converter.GlYearConverter;
 import com.toby.converter.InvInventoryConverter;
 import com.toby.converter.ProProductionStagesConverter;
-import com.toby.converter.ProProductionStagesDTOConverter;
 import com.toby.converter.TobyRoleConverter;
 import com.toby.converter.TobyUserConverter;
-import com.toby.dto.ProProductionStagesDTO;
-import com.toby.dto.TobyUserProproductionDTO;
 import com.toby.entity.Branch;
 import com.toby.entity.GlBank;
 import com.toby.entity.GlYear;
@@ -88,7 +85,7 @@ public class UserRoleFormBean extends BaseFormBean implements Serializable {
     private List<TobyUserInventory> tobyUserInventoryListAdded = new ArrayList<>();
     private InvInventoryConverter inventoryConverter;
 
-    private List<InvInventory> gallaryListRole1 = new ArrayList<>();
+    private List<InvInventory> gallaryList = new ArrayList<>();
     private List<InvInventory> gallaryOldList = new ArrayList<>();
     private List<InvInventory> gallaryListDeleted = new ArrayList<>();
     private List<TobyUserInventory> tobyUsergallaryListAdded = new ArrayList<>();
@@ -169,21 +166,21 @@ public class UserRoleFormBean extends BaseFormBean implements Serializable {
                 productionStagesList = proProductionStagesService.getAllProproductionStagesByBranchId(getUserData().getUserBranch().getId(), getUserData().getUser());
 
                 inventoryList = invInventoryService.getALLInventoriesByBranchByType(getUserData().getUserBranch().getId(),0);
-                setGallaryListRole1(invInventoryService.getALLInventoriesByBranchByType(getUserData().getUserBranch().getId(),2));
+                gallaryList = invInventoryService.getALLInventoriesByBranchByType(getUserData().getUserBranch().getId(),2);
             } else {
                 companiesList = companyService.getAllCompanies();
 
                 yearsList = glYearService.getAllYear();
                 bankList = glBankService.getAllGlBank();
                 inventoryList = invInventoryService.getALLInventoriesByType(0);
-                setGallaryListRole1(invInventoryService.getALLInventoriesByType(1));
+                gallaryList = invInventoryService.getALLInventoriesByType(1);
 
             }
 
             glYearConverter = new GlYearConverter(yearsList);
             glBankConverter = new GlBankConverter(bankList);
             inventoryConverter = new InvInventoryConverter(inventoryList);
-            gallaryConverter = new InvInventoryConverter(getGallaryListRole1());
+            gallaryConverter = new InvInventoryConverter(gallaryList);
             proProductionStagesConverter = new ProProductionStagesConverter(productionStagesList);
         } catch (Exception e) {
             saveError(e, "UserRoleFormBean", "load");
@@ -911,6 +908,20 @@ public class UserRoleFormBean extends BaseFormBean implements Serializable {
     }
 
     /**
+     * @return the gallaryList
+     */
+    public List<InvInventory> getGallaryList() {
+        return gallaryList;
+    }
+
+    /**
+     * @param gallaryList the gallaryList to set
+     */
+    public void setGallaryList(List<InvInventory> gallaryList) {
+        this.gallaryList = gallaryList;
+    }
+
+    /**
      * @return the gallaryOldList
      */
     public List<InvInventory> getGallaryOldList() {
@@ -964,19 +975,5 @@ public class UserRoleFormBean extends BaseFormBean implements Serializable {
      */
     public void setGallaryConverter(InvInventoryConverter gallaryConverter) {
         this.gallaryConverter = gallaryConverter;
-    }
-
-    /**
-     * @return the gallaryListRole1
-     */
-    public List<InvInventory> getGallaryListRole1() {
-        return gallaryListRole1;
-    }
-
-    /**
-     * @param gallaryListRole1 the gallaryListRole1 to set
-     */
-    public void setGallaryListRole1(List<InvInventory> gallaryListRole1) {
-        this.gallaryListRole1 = gallaryListRole1;
     }
 }

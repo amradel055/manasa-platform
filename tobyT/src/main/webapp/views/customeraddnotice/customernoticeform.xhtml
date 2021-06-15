@@ -137,9 +137,9 @@
                             </div>
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:selectOneMenu id="group" value="#{invNoticeFormMB.gallaryDTOSelected}"
-                                                     converter="#{invNoticeFormMB.gallaryDTOConverter}">
-                                        <f:selectItems value="#{invNoticeFormMB.gallaryList}" 
+                                    <p:selectOneMenu id="group" value="#{invNoticeFormMB.gallaryDTOSelect}"
+                                                     converter="#{invNoticeFormMB.gallaryDTOConverters}">
+                                        <f:selectItems value="#{invNoticeFormMB.gallaryListSelected}" 
                                                        var="gallary"
                                                        itemLabel="#{gallary}"
                                                        itemValue="#{gallary}" />

@@ -8,7 +8,6 @@ package com.toby.reports;
 import com.toby.businessservice.TobyUserInventoryService;
 import com.toby.businessservice.report.PurchaseOfItemsBySuppliersReportService;
 import com.toby.businessservice.reports.searchBean.PurchaseOfItemsBySuppliersSearchBean;
-import com.toby.converter.InvInventoryDTOConverter;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.toby.BaseInventoryReportBean;
 import com.toby.views.SalesOfItemsByCompany;
@@ -35,9 +34,6 @@ public class PurchaseOfItemsByCompanyReportMB extends BaseInventoryReportBean {
 
     private List<SalesOfItemsByCompany> salesOfItemsByCompanyList;
 
-    private InvInventoryDTOConverter gallaryDTOConverter;
-    private List<InvInventoryDTO> gallaryList;
-
     @EJB
     PurchaseOfItemsBySuppliersReportService purchaseOfItemsBySuppliersReportService;
     @EJB
@@ -45,7 +41,7 @@ public class PurchaseOfItemsByCompanyReportMB extends BaseInventoryReportBean {
 
     @PostConstruct
     public void init() {
-        getPurchaseOfItemsBySuppliersSearchBean().getGalleryFrom().addAll(getGallaryListRole1());
+        getPurchaseOfItemsBySuppliersSearchBean().getGalleryFrom().addAll(getGallaryLists());
     }
 
     @Override
@@ -155,38 +151,6 @@ public class PurchaseOfItemsByCompanyReportMB extends BaseInventoryReportBean {
      */
     public void setSalesOfItemsByCompanyList(List<SalesOfItemsByCompany> salesOfItemsByCompanyList) {
         this.salesOfItemsByCompanyList = salesOfItemsByCompanyList;
-    }
-
-    /**
-     * @return the gallaryDTOConverter
-     */
-    public InvInventoryDTOConverter getGallaryDTOConverter() {
-        return gallaryDTOConverter;
-    }
-
-    /**
-     * @param gallaryDTOConverter the gallaryDTOConverter to set
-     */
-    public void setGallaryDTOConverter(InvInventoryDTOConverter gallaryDTOConverter) {
-        this.gallaryDTOConverter = gallaryDTOConverter;
-    }
-
-    /**
-     * @return the gallaryList
-     */
-    public List<InvInventoryDTO> getGallaryListRole1() {
-        if (gallaryList == null || gallaryList.isEmpty()) {
-            gallaryList = tobyUserInventoryService.getAllGallaryByUserAndBranch(getUserData().getUser());
-            setGallaryDTOConverter(new InvInventoryDTOConverter(gallaryList));
-        }
-        return gallaryList;
-    }
-
-    /**
-     * @param gallaryList the gallaryList to set
-     */
-    public void setGallaryList(List<InvInventoryDTO> gallaryList) {
-        this.gallaryList = gallaryList;
     }
 
 }

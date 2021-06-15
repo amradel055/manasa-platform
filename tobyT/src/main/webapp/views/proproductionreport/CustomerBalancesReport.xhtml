@@ -19,8 +19,8 @@
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
                                 <p:selectOneMenu  id="gallary_From" value="#{customerBalancesReport.customerBalances.gallerySelected}"
-                                                  converter="#{customerBalancesReport.gallaryDTOConverter}">
-                                    <f:selectItems value="#{customerBalancesReport.gallaryList}" 
+                                                  converter="#{customerBalancesReport.gallaryDTOConverters}">
+                                    <f:selectItems value="#{customerBalancesReport.gallaryLists}" 
                                                    var="gallaryFrom"
                                                    itemLabel="#{gallaryFrom}"
                                                    itemValue="#{gallaryFrom}" />

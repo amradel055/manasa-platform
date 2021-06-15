@@ -1,12 +1,8 @@
 package com.toby.invoiceMovementReport;
 
-import com.toby.businessservice.InvPurchaseInvoiceService;
 import com.toby.businessservice.InvoiceMovementReportService;
 import com.toby.businessservice.ProProductionStagesService;
 import com.toby.businessservice.ProProductionTransactionService;
-import com.toby.businessservice.ProductionReportService;
-import com.toby.businessservice.TobyUserInventoryService;
-import com.toby.converter.InvInventoryDTOConverter;
 import com.toby.converter.ProProductionStagesDTOConverter;
 import com.toby.converter.ProProductionTransactionDTOConverter;
 import com.toby.dto.InvInventoryDTO;
@@ -51,21 +47,12 @@ public class InvoiceMovementReportMB extends BaseListBean {
     private ProProductionStagesDTOConverter proProductionStagesDTOConverter;
     private ProProductionTransactionDTOConverter proProductionTransactionDTOConverter;
 
-    private InvInventoryDTOConverter gallaryDTOConverter;
-    private List<InvInventoryDTO> gallaryList;
-
-    @EJB
-    private ProductionReportService productionReportService;
     @EJB
     private ProProductionStagesService proProductionStagesService;
     @EJB
     private ProProductionTransactionService proProductionTransactionService;
     @EJB
-    private InvPurchaseInvoiceService invPurchaseInvoiceService;
-    @EJB
     private InvoiceMovementReportService invoiceMovementReportService;
-    @EJB
-    private TobyUserInventoryService tobyUserInventoryService;
 
     @Override
     @PostConstruct
@@ -75,8 +62,7 @@ public class InvoiceMovementReportMB extends BaseListBean {
         setUserData((UserData) context.getSessionMap().get("userLogInData"));
         proProductionStagesDTOList = new ArrayList<>();
         proProductionTransactionDTOList = new ArrayList<>();
-        getPrintProductionDTO().getGallaryFromList().addAll(getGallaryListRole1());
-//        getPrintProductionDTO().getGallaryToList().addAll(getGallaryList());
+        getPrintProductionDTO().getGallaryFromList().addAll(getGallaryLists());
         if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("AddFromInvInvoice")) {
             InvInvoiceDTO invInvoiceDTO = (InvInvoiceDTO) context.getSessionMap().get("invInvoiceDTOSelected");
             getPrintProductionDTO().setFromInvInvoice(invInvoiceDTO.getSerial());
@@ -268,38 +254,4 @@ public class InvoiceMovementReportMB extends BaseListBean {
     public void setInvoiceMovementReportList(List<InvoiceMovementReport> invoiceMovementReportList) {
         this.invoiceMovementReportList = invoiceMovementReportList;
     }
-
-    /**
-     * @return the gallaryDTOConverter
-     */
-    public InvInventoryDTOConverter getGallaryDTOConverter() {
-        return gallaryDTOConverter;
-    }
-
-    /**
-     * @param gallaryDTOConverter the gallaryDTOConverter to set
-     */
-    public void setGallaryDTOConverter(InvInventoryDTOConverter gallaryDTOConverter) {
-        this.gallaryDTOConverter = gallaryDTOConverter;
-    }
-
-    /**
-     * @return the gallaryList
-     */
-    public List<InvInventoryDTO> getGallaryListRole1() {
-
-        if (gallaryList == null || gallaryList.isEmpty()) {
-            gallaryList = tobyUserInventoryService.getAllGallaryByUserAndBranch(getUserData().getUser());
-            setGallaryDTOConverter(new InvInventoryDTOConverter(gallaryList));
-        }
-        return gallaryList;
-    }
-
-    /**
-     * @param gallaryList the gallaryList to set
-     */
-    public void setGallaryList(List<InvInventoryDTO> gallaryList) {
-        this.gallaryList = gallaryList;
-    }
-
 }

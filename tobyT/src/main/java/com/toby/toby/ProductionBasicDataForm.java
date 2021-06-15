@@ -48,9 +48,6 @@ public abstract class ProductionBasicDataForm extends BaseFormBean {
     private LazyDataModel<InvInvoiceDTO> dataModel;
     private LazyDataModel<InvDailogueData> dataModelInvDailogueData;
     
-    private InvInventoryDTOConverter gallaryDTOConverter;
-    private List<InvInventoryDTO> gallaryList;
-    
     @EJB
     AutoCompleteService autoCompleteService;
     @EJB
@@ -229,7 +226,7 @@ public abstract class ProductionBasicDataForm extends BaseFormBean {
     }
     
     public List<InvInventoryDTO> completeGallary(String query) {
-        return AutoComplete.completeInventoryDTO(query, getGallaryListRole1(), getGallaryDTOConverter());
+        return AutoComplete.completeInventoryDTO(query, getGallaryLists(), getGallaryDTOConverters());
     }
 
     /**
@@ -352,38 +349,6 @@ public abstract class ProductionBasicDataForm extends BaseFormBean {
      */
     public void setDataModelInvDailogueData(LazyDataModel<InvDailogueData> dataModelInvDailogueData) {
         this.dataModelInvDailogueData = dataModelInvDailogueData;
-    }
-
-    /**
-     * @return the gallaryDTOConverter
-     */
-    public InvInventoryDTOConverter getGallaryDTOConverter() {
-        return gallaryDTOConverter;
-    }
-
-    /**
-     * @param gallaryDTOConverter the gallaryDTOConverter to set
-     */
-    public void setGallaryDTOConverter(InvInventoryDTOConverter gallaryDTOConverter) {
-        this.gallaryDTOConverter = gallaryDTOConverter;
-    }
-
-    /**
-     * @return the gallaryList
-     */
-    public List<InvInventoryDTO> getGallaryListRole1() {
-        if (gallaryList == null || gallaryList.isEmpty()) {
-            gallaryList = tobyUserInventoryService.getAllGallaryByUserAndBranch(getUserData().getUser());
-            setGallaryDTOConverter(new InvInventoryDTOConverter(gallaryList));
-        }
-        return gallaryList;
-    }
-
-    /**
-     * @param gallaryList the gallaryList to set
-     */
-    public void setGallaryList(List<InvInventoryDTO> gallaryList) {
-        this.gallaryList = gallaryList;
     }
 
     /**

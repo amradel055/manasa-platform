@@ -42,14 +42,14 @@
                                               action="#{organizationSiteListMB.goToAdd()}" style="float:right"
                                               rendered="#{userData.userScreens['customer'].add or userData.isAdmin}"/>
 
-                            <p:selectOneMenu id="inventory" value="#{organizationSiteListMB.invGallarySelection}"
-                                             converter="#{organizationSiteListMB.gallaryDTOConverter}" 
+                            <p:selectOneMenu id="inventory" value="#{organizationSiteListMB.gallaryDTOSelect}"
+                                             converter="#{organizationSiteListMB.gallaryDTOConverters}" 
                                              style="float:right;width: 20%!important;color:#fff;height: 30px!important;margin-right: 0.5%;">
 
                                 <p:ajax listener="#{organizationSiteListMB.loadGallaryList()}" update="form" />
                                 <f:selectItem itemLabel="#{userData.userDDs['ALL']}" itemValue="" />
 
-                                <f:selectItems value="#{organizationSiteListMB.gallaryList}" 
+                                <f:selectItems value="#{organizationSiteListMB.gallaryLists}" 
                                                var="inventory" itemLabel="#{inventory.name}"
                                                itemValue="#{inventory}"/> 
                             </p:selectOneMenu>

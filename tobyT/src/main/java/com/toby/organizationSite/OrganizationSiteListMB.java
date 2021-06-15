@@ -49,10 +49,7 @@ public class OrganizationSiteListMB extends BaseListBean implements Serializable
     private LazyDataModel<InvOrganizationSiteDTO> dataModel;
 
     private List<InvInventory> inventoryList;
-    private List<InvInventoryDTO> gallaryList;
     private InvInventory invInventorySelection;
-    private InvInventoryDTO invGallarySelection;
-    private InvInventoryDTOConverter gallaryDTOConverter;
     private InvInventoryConverter invInventoryConverter;
 
     private List<OfferCompanyDTO> offerCompanyDTOList;
@@ -89,7 +86,7 @@ public class OrganizationSiteListMB extends BaseListBean implements Serializable
                 public List<InvOrganizationSiteDTO> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
                     Integer invGallarySelectionId = null, invInventorySelectionId = null;
                     invInventorySelectionId = getInvInventorySelection() != null ? getInvInventorySelection().getId() : null;
-                    invGallarySelectionId = getInvGallarySelection() != null ? getInvGallarySelection().getId() : null;
+                    invGallarySelectionId = getGallaryDTOSelect() != null ? getGallaryDTOSelect().getId() : null;
                     if (url.contains("customer")) {
                         setRowCount(organizationSiteService.getTotalRegistors(userData.getUserBranch().getId(), filters, 0, invGallarySelectionId).intValue());
                         setInvOrganizationSitesDTOList(organizationSiteService.getALLCustomerDTOByBranchIdAndType(first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), userData.getUserBranch().getId(), filters, 0, invGallarySelectionId));
@@ -118,18 +115,14 @@ public class OrganizationSiteListMB extends BaseListBean implements Serializable
 //
 //            }
             setInventoryList(tobyUserInventoryService.getAllInventroisByUserAndBranchPer(getUserData().getUser().getId(), getUserlogin().getBranchId().getId()));
-            setGallaryList(tobyUserInventoryService.getAllGallaryByUserAndBranch(getUserData().getUser()));
             if (getInventoryList() != null && !inventoryList.isEmpty()) {
                 setInvInventoryConverter(new InvInventoryConverter(getInventoryList()));
-            }
-            if (getGallaryListRole1() != null && !getGallaryListRole1().isEmpty()) {
-                setGallaryDTOConverter(new InvInventoryDTOConverter(getGallaryListRole1()));
             }
             if (getInvInventorySelection().getId() == null) {
                 setInvInventorySelection(getInventoryList() == null || getInventoryList().isEmpty() ? null : getInventoryList().get(0));
             }
-            if (getInvGallarySelection().getId() == null) {
-                setInvGallarySelection(getGallaryListRole1() == null || getGallaryListRole1().isEmpty() ? null : getGallaryListRole1().get(0));
+            if (getGallaryDTOSelect().getId() == null) {
+                setGallaryDTOSelect(getGallaryLists()== null || getGallaryLists().isEmpty() ? null : getGallaryLists().get(0));
             }
         } catch (Exception e) {
             saveError(e, "OrganizationSiteListMB", "load");
@@ -319,23 +312,6 @@ public class OrganizationSiteListMB extends BaseListBean implements Serializable
     }
 
     /**
-     * @return the gallaryList
-     */
-    public List<InvInventoryDTO> getGallaryListRole1() {
-        if (gallaryList == null) {
-            gallaryList = new ArrayList<>();
-        }
-        return gallaryList;
-    }
-
-    /**
-     * @param gallaryList the gallaryList to set
-     */
-    public void setGallaryList(List<InvInventoryDTO> gallaryList) {
-        this.gallaryList = gallaryList;
-    }
-
-    /**
      * @return the invInventorySelection
      */
     public InvInventory getInvInventorySelection() {
@@ -350,37 +326,6 @@ public class OrganizationSiteListMB extends BaseListBean implements Serializable
      */
     public void setInvInventorySelection(InvInventory invInventorySelection) {
         this.invInventorySelection = invInventorySelection;
-    }
-
-    /**
-     * @return the invGallarySelection
-     */
-    public InvInventoryDTO getInvGallarySelection() {
-        if (invGallarySelection == null) {
-            invGallarySelection = new InvInventoryDTO();
-        }
-        return invGallarySelection;
-    }
-
-    /**
-     * @param invGallarySelection the invGallarySelection to set
-     */
-    public void setInvGallarySelection(InvInventoryDTO invGallarySelection) {
-        this.invGallarySelection = invGallarySelection;
-    }
-
-    /**
-     * @return the gallaryDTOConverter
-     */
-    public InvInventoryDTOConverter getGallaryDTOConverter() {
-        return gallaryDTOConverter;
-    }
-
-    /**
-     * @param gallaryDTOConverter the gallaryDTOConverter to set
-     */
-    public void setGallaryDTOConverter(InvInventoryDTOConverter gallaryDTOConverter) {
-        this.gallaryDTOConverter = gallaryDTOConverter;
     }
 
     /**
