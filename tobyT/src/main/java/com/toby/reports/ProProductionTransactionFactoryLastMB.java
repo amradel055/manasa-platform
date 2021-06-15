@@ -2,6 +2,7 @@ package com.toby.reports;
 
 import com.toby.businessservice.ProProductionItemsTransactionService;
 import com.toby.dto.InvInventoryDTO;
+import com.toby.dto.ProGroupDTO;
 import com.toby.dto.ProProductionItemsTransactionDTO;
 import com.toby.toby.Basic;
 import com.toby.views.ProProductionTransactionFactoryView;
@@ -28,6 +29,7 @@ public class ProProductionTransactionFactoryLastMB extends Basic {
 
     private List<ProProductionItemsTransactionDTO> proProductionItemsTransactionDTOList;
     private ProProductionTransactionFactoryView proProductionTransactionFactoryView;
+    
 
     @EJB
     private ProProductionItemsTransactionService proProductionItemsTransactionService;
@@ -139,5 +141,7 @@ public class ProProductionTransactionFactoryLastMB extends Basic {
     public void setProProductionTransactionFactoryView(ProProductionTransactionFactoryView proProductionTransactionFactoryView) {
         this.proProductionTransactionFactoryView = proProductionTransactionFactoryView;
     }
+
+   
 
 }

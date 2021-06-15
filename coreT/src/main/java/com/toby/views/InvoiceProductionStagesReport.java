@@ -15,6 +15,7 @@ public class InvoiceProductionStagesReport implements Serializable {
     private BigDecimal quantity;
     private String stage;
     private String empName;
+    private String productName;
     private BigDecimal number;
 
     public InvoiceProductionStagesReport() {
@@ -117,6 +118,20 @@ public class InvoiceProductionStagesReport implements Serializable {
      */
     public void setNumber(BigDecimal number) {
         this.number = number;
+    }
+
+    /**
+     * @return the productName
+     */
+    public String getProductName() {
+        return productName;
+    }
+
+    /**
+     * @param productName the productName to set
+     */
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
 }

@@ -31,11 +31,13 @@ public class InvoiceProductionStagesReportServiceImpl implements InvoiceProducti
                 + "        `ios`.`name` AS `client_name`,\n"
                 + "        `ppit`.`number` AS `quantity`,\n"
                 + "        `pps`.`name` AS `stage`,\n"
-                + "        `tu`.`name` AS `emp_name`,`ipid`.`cloth_number` as clothNumber\n"
+                + "        `tu`.`name` AS `emp_name`,`ipid`.`cloth_number` as `clothNumber` ,\n"
+                + "        `ii`.`name` AS `productName`\n"
                 + "    FROM\n"
                 + "        `pro_production_items_transaction` `ppit`\n"
                 + "        left join pro_factory_delivery_detail pfdd on ppit.pro_factory_delivery_detail_id = pfdd.id\n"
-                + "        LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipid`.`id` = `pfdd`.`inv_purchase_invoice_detail_id`        \n"
+                + "        LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipid`.`id` = `pfdd`.`inv_purchase_invoice_detail_id`\n"
+                + "        LEFT JOIN `inv_item` `ii` ON `ii`.`id` = `pfdd`.`item_id`\n"
                 + "        LEFT JOIN `inv_purchase_invoice` `ipi` ON `ipid`.`inv_purchase_invoice_id` = `ipi`.`id`\n"
                 + "        LEFT JOIN `inv_organization_site` `ios` ON `ipi`.`organization_site_id` = `ios`.`id`\n"
                 + "        LEFT JOIN `pro_production_stages` `pps` ON `ppit`.`pro_production_stages_id` = `pps`.`id`\n"
@@ -54,8 +56,9 @@ public class InvoiceProductionStagesReportServiceImpl implements InvoiceProducti
             invoiceProductionStagesReport.setStage((String) object[5]);
             invoiceProductionStagesReport.setEmpName((String) object[6]);
             invoiceProductionStagesReport.setClothNumber((Integer) object[7]);
+            invoiceProductionStagesReport.setProductName((String) object[8]);
             invoiceProductionStagesReport.setNumber(number);
-            
+
             list.add(invoiceProductionStagesReport);
         }
 
@@ -80,7 +83,7 @@ public class InvoiceProductionStagesReportServiceImpl implements InvoiceProducti
     private String appendProProductionDate(PrintProductionDTO productionDTO) {
         StringBuilder query = new StringBuilder();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        
+
         if (productionDTO.getFromDate() != null) {
             String strDate = dateFormat.format(productionDTO.getFromDate());
             query.append(" and ppit.date >=  '").append(strDate).append("'");

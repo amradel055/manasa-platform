@@ -32,9 +32,10 @@ public class ProductionTransactionOfUser implements Serializable {
     private Integer productionLineId;
     private Integer branchId;
     private Integer userId;
+    private Integer residencyNumber;
     private String userName;
     private BigDecimal price;
-    private String  userCode;
+    private String userCode;
 
     public ProductionTransactionOfUser() {
     }
@@ -178,14 +179,14 @@ public class ProductionTransactionOfUser implements Serializable {
     /**
      * @return the userCode
      */
-    public String  getUserCode() {
+    public String getUserCode() {
         return userCode;
     }
 
     /**
      * @param userCode the userCode to set
      */
-    public void setUserCode(String  userCode) {
+    public void setUserCode(String userCode) {
         this.userCode = userCode;
     }
 
@@ -216,5 +217,19 @@ public class ProductionTransactionOfUser implements Serializable {
     public void setAvarage(BigDecimal avarage) {
         this.avarage = avarage;
     }
-    
+
+    /**
+     * @return the residencyNumber
+     */
+    public Integer getResidencyNumber() {
+        return residencyNumber;
+    }
+
+    /**
+     * @param residencyNumber the residencyNumber to set
+     */
+    public void setResidencyNumber(Integer residencyNumber) {
+        this.residencyNumber = residencyNumber;
+    }
+
 }
