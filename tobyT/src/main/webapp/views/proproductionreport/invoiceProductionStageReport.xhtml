@@ -222,7 +222,7 @@
                             <p:column colspan="1" style="width: 15vh;font-size: 2vh;border-radius: 0px;" >
                                 <h:outputText value="عدد الثوب" />
                             </p:column>
-                            <p:column colspan="4" style="width: 15vh;font-size: 2vh;border-radius: 0px;" >
+                            <p:column colspan="5" style="width: 15vh;font-size: 2vh;border-radius: 0px;" >
                                 <h:outputText value="#{data.number}" />
                             </p:column>
                         </p:headerRow>
@@ -234,6 +234,9 @@
                             <h:outputText value="#{data.date}">
                                 <f:convertDateTime pattern="dd/MM/yyyy hh:mm:ss" />
                             </h:outputText>
+                        </p:column>
+                        <p:column headerText="اسم الصنف" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.productName}" />
                         </p:column>
                         <p:column headerText="الكمية" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
                             <h:outputText value="#{data.quantity}" />

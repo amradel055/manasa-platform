@@ -29,6 +29,26 @@
                                 <p:outputLabel style="width: 50px;margin-right: 1%" value="المعرض"/>
                             </div>
                         </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:autoComplete style="width:85%" 
+                                                dropdown="true"
+                                                converter="#{autoComplete.proProductionStagesDTOConverter}"
+                                                value="#{proProductionTransactionFactoryLastMB.proProductionTransactionFactoryView.status}"  
+                                                var="proGroup"
+                                                itemLabel="#{proGroup}"
+                                                itemValue="#{proGroup}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{autoComplete.completeProProductionStagesDTO}" >
+                                </p:autoComplete>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:outputLabel style="width: 50px;margin-right: 1%" value="المرحلة"/>
+
+                            </div>
+                        </div>
                     </div>
                     <div class="ui-g-6 ui-xl-6">
                         <div class="ui-g-12 ui-xl-12">
