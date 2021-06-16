@@ -31,6 +31,8 @@ import javax.ejb.Remote;
 @Remote
 public interface InvPurchaseInvoiceService_1 {
 
+    public Integer getInvoiceBySerial(Integer serial);
+
     public InvPurchaseReturnSave addInvPurchaseInvoice(InvPurchaseInvoice invPurchaseInvoice,
             List<InvPurchaseInvoiceDetail> invPurchaseInvoiceDetailList,
             List<InvPurchaseInvoiceDetail> invPurchaseInvoiceDetailListDeleted,
@@ -77,7 +79,7 @@ public interface InvPurchaseInvoiceService_1 {
 
     public InvInvoiceDTO updateRate(InvInvoiceDTO invPurchaseInvoiceDTO);
 
-    public String validateloginDistributedScreens(UserDataDTO userDataDTO, ScreenNameClassEnum screenNameClassEnum,Integer gallaryId);
+    public String validateloginDistributedScreens(UserDataDTO userDataDTO, ScreenNameClassEnum screenNameClassEnum, Integer gallaryId);
 
     public InvInvoiceDTO putCurrency(InvInvoiceDTO invPurchaseInvoiceDTO);
 

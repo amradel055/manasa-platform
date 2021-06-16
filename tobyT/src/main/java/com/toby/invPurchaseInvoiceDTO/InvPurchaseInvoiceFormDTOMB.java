@@ -30,6 +30,8 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
     private InvPurchaseInvoiceService_1 invPurchaseInvoiceService;
     @EJB
     private InvGlobalService invGlobalService;
+    @EJB
+    InvPurchaseInvoiceService_1 invPurchaseInvoiceService_1;
 
     @Override
     @PostConstruct
@@ -188,6 +190,21 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceListMB", "goToEdit");
             return null;
+        }
+    }
+
+    public void searchInvoiceBySerial() {
+        try {
+            if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getSearchBySerial() > 0) {
+                Integer invoiceId = invPurchaseInvoiceService_1.getInvoiceBySerial(getInvInvoiceDTO().getSearchBySerial());
+                ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+                context.getSessionMap().put("invPurchaseInvoiceIdSeclected", invoiceId);
+                context.getSessionMap().put("ScreenMode", "editInvoice");
+                init();
+
+            }
+        } catch (Exception e) {
+            saveError(e, "invPurchaseInvoiceFormDTOMB", "searchInvoiceBySerial");
         }
     }
 

@@ -20,6 +20,19 @@
 
 
                     <div class="ui-g-6 ui-xl-6">
+
+
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:inputText id="searchBySerial"  style="width:48%" value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.searchBySerial}" >
+                                    <p:ajax event="blur" update="@form"  listener="#{invPurchaseInvoiceFormDTOMB.searchInvoiceBySerial()}"  />
+                                </p:inputText>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel for="searchBySerial" style="width: 95px;"  value="بحث برقم الفاتورة" />
+                            </div>
+                        </div>
+
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
 
@@ -213,7 +226,7 @@
 
                             </div>
                             <div class="ui-g-6 ui-xl-6">
-                                
+
 
                                 <p:dialog header="إضافة عميل جديد" 
                                           rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id eq null}" 

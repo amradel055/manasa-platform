@@ -129,6 +129,23 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     InvPurchaseReturnSave invPurchaseReturnSave;
 
     @Override
+    public Integer getInvoiceBySerial(Integer serial) {
+        if (serial != null && serial > 0) {
+            StringBuilder builder = new StringBuilder();
+            builder.append(" select id from inv_purchase_invoice ").
+                    append(" where serial = \n").
+                    append(serial).
+                    append(" and type = 4  and branch_id = 182 ");
+            List<Integer> details = dao.executeNativeQuery(builder.toString());
+            if(details != null && !details.isEmpty()){
+                return details.get(0);
+            }
+            return null;
+        }
+        return null;
+    }
+
+    @Override
     public synchronized InvPurchaseReturnSave addInvPurchaseInvoice(InvPurchaseInvoice invPurchaseInvoice,
             List<InvPurchaseInvoiceDetail> invPurchaseInvoiceDetailList,
             List<InvPurchaseInvoiceDetail> invPurchaseInvoiceDetailListDeleted,
