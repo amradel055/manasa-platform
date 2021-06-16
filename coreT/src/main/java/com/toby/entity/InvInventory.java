@@ -65,6 +65,8 @@ public class InvInventory extends BaseEntity {
     private String daribaValue;
     @Column(name = "segil_value")
     private String segilValue;
+    @Column(name = "inv_name")
+    private Integer invName;
 
     public InvInventory() {
     }
@@ -207,5 +209,19 @@ public class InvInventory extends BaseEntity {
      */
     public void setSegilValue(String segilValue) {
         this.segilValue = segilValue;
+    }
+
+    /**
+     * @return the invName
+     */
+    public Integer getInvName() {
+        return invName;
+    }
+
+    /**
+     * @param invName the invName to set
+     */
+    public void setInvName(Integer invName) {
+        this.invName = invName;
     }
 }

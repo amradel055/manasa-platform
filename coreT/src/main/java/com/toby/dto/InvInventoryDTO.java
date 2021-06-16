@@ -25,6 +25,7 @@ public class InvInventoryDTO extends BaseEntityDTO {
     private String segilValue;
     
      private Integer invType;
+    private Integer invName;
     
     /**
      * @return the code
@@ -214,6 +215,20 @@ public class InvInventoryDTO extends BaseEntityDTO {
      */
     public void setSegilValue(String segilValue) {
         this.segilValue = segilValue;
+    }
+
+    /**
+     * @return the invName
+     */
+    public Integer getInvName() {
+        return invName;
+    }
+
+    /**
+     * @param invName the invName to set
+     */
+    public void setInvName(Integer invName) {
+        this.invName = invName;
     }
     
 }

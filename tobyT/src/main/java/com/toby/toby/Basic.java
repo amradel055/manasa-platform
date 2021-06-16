@@ -391,10 +391,10 @@ public class Basic implements Serializable {
         }
     }
 
-    public String sendSms(String mobile, String sender, String message) {
+    public String sendSms(String mobile, String sender, String message,String username,String password) {
         try {
-            String username = "20099319";
-            String password = "0564933202";
+//            String username = ;
+//            String password = ;
             String language = "2";
             StringBuilder json = new StringBuilder();
             json.append("[{\"user\":\"").append(username).append("\",\"pwd\":\"").append(password).append("\",\"number\":\"").append(mobile).append("\",\"msg\":\"").append(message);

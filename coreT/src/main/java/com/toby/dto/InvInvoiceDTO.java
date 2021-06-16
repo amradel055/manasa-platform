@@ -132,6 +132,7 @@ public class InvInvoiceDTO extends BaseEntityDTO {
     private Integer year;
     private Boolean proof;
     private String invoiceStatus;
+    private Integer invnameType;
 
     /// production //
     private Date time;
@@ -1661,6 +1662,20 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * @return the invnameType
+     */
+    public Integer getInvnameType() {
+        return invnameType;
+    }
+
+    /**
+     * @param invnameType the invnameType to set
+     */
+    public void setInvnameType(Integer invnameType) {
+        this.invnameType = invnameType;
     }
 
 }
