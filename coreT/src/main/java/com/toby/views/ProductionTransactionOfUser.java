@@ -32,7 +32,7 @@ public class ProductionTransactionOfUser implements Serializable {
     private Integer productionLineId;
     private Integer branchId;
     private Integer userId;
-    private Integer residencyNumber;
+    private String residencyNumber;
     private String userName;
     private BigDecimal price;
     private String userCode;
@@ -221,15 +221,16 @@ public class ProductionTransactionOfUser implements Serializable {
     /**
      * @return the residencyNumber
      */
-    public Integer getResidencyNumber() {
+    public String getResidencyNumber() {
         return residencyNumber;
     }
 
     /**
      * @param residencyNumber the residencyNumber to set
      */
-    public void setResidencyNumber(Integer residencyNumber) {
+    public void setResidencyNumber(String residencyNumber) {
         this.residencyNumber = residencyNumber;
     }
 
+   
 }

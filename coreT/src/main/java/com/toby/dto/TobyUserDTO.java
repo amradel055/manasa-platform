@@ -19,7 +19,7 @@ public class TobyUserDTO extends BaseEntityDTO {
     private String name;
     private SymbolDTO lang;
     private Integer master;
-    private Integer residencyNumber;
+    private String residencyNumber;
     private Integer branchId;
     private List<TobyUserProproductionDTO> tobyUserProproductionDTOList;
     private List<ProProductionStagesDTO> productionStagesDTOList;
@@ -141,15 +141,17 @@ public class TobyUserDTO extends BaseEntityDTO {
     /**
      * @return the residencyNumber
      */
-    public Integer getResidencyNumber() {
+    public String getResidencyNumber() {
         return residencyNumber;
     }
 
     /**
      * @param residencyNumber the residencyNumber to set
      */
-    public void setResidencyNumber(Integer residencyNumber) {
+    public void setResidencyNumber(String residencyNumber) {
         this.residencyNumber = residencyNumber;
     }
+
+   
 
 }

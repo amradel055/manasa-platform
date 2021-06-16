@@ -254,7 +254,7 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
             productionTransactionOfUser.setStageName((String) object[1]);
             productionTransactionOfUser.setUserCode((String) object[2]);
             productionTransactionOfUser.setUserName((String) object[3]);
-            productionTransactionOfUser.setResidencyNumber((Integer) object[4]);
+            productionTransactionOfUser.setResidencyNumber((String) object[4]);
             productionTransactionOfUser.setNumberExcute((BigDecimal) object[5]);
             productionTransactionOfUser.setPrice((BigDecimal) object[6]);
             productionTransactionOfUser.setTotalNumber((BigDecimal) object[7]);
