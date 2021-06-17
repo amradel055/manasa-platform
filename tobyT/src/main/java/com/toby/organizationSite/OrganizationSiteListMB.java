@@ -40,7 +40,6 @@ public class OrganizationSiteListMB extends BaseListBean implements Serializable
 
     private List<InvOrganizationSiteDTO> invOrganizationSitesDTOList;
     private InvOrganizationSiteDTO invOrganizationSiteDTO;
-    private UserData userData;
     private Integer invOrganizationSiteSelected;
     private HttpServletRequest request;
     private String url;
@@ -87,17 +86,17 @@ public class OrganizationSiteListMB extends BaseListBean implements Serializable
                     invInventorySelectionId = getInvInventorySelection() != null ? getInvInventorySelection().getId() : null;
                     invGallarySelectionId = getGallaryDTOSelect() != null ? getGallaryDTOSelect().getId() : null;
                     if (url.contains("customer")) {
-                        setRowCount(organizationSiteService.getTotalRegistors(userData.getUserBranch().getId(), filters, 0, invGallarySelectionId).intValue());
-                        setInvOrganizationSitesDTOList(organizationSiteService.getALLCustomerDTOByBranchIdAndType(first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), userData.getUserBranch().getId(), filters, 0, invGallarySelectionId));
+                        setRowCount(organizationSiteService.getTotalRegistors(getUserData().getUserBranch().getId(), filters, 0, invGallarySelectionId).intValue());
+                        setInvOrganizationSitesDTOList(organizationSiteService.getALLCustomerDTOByBranchIdAndType(first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), getUserData().getUserBranch().getId(), filters, 0, invGallarySelectionId));
                     } else if (url.contains("supplier")) {
-                        setRowCount(organizationSiteService.getTotalRegistors(userData.getUserBranch().getId(), filters, 1, invGallarySelectionId).intValue());
-                        setInvOrganizationSitesDTOList(organizationSiteService.getALLCustomerDTOByBranchIdAndType(first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), userData.getUserBranch().getId(), filters, 1, invGallarySelectionId));
+                        setRowCount(organizationSiteService.getTotalRegistors(getUserData().getUserBranch().getId(), filters, 1, invGallarySelectionId).intValue());
+                        setInvOrganizationSitesDTOList(organizationSiteService.getALLCustomerDTOByBranchIdAndType(first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), getUserData().getUserBranch().getId(), filters, 1, invGallarySelectionId));
                     } else if (url.contains("contractor")) {
-                        setRowCount(organizationSiteService.getTotalRegistors(userData.getUserBranch().getId(), filters, 4, invGallarySelectionId).intValue());
-                        setInvOrganizationSitesDTOList(organizationSiteService.getALLCustomerDTOByBranchIdAndType(first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), userData.getUserBranch().getId(), filters, 4, invGallarySelectionId));
+                        setRowCount(organizationSiteService.getTotalRegistors(getUserData().getUserBranch().getId(), filters, 4, invGallarySelectionId).intValue());
+                        setInvOrganizationSitesDTOList(organizationSiteService.getALLCustomerDTOByBranchIdAndType(first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), getUserData().getUserBranch().getId(), filters, 4, invGallarySelectionId));
                     } else if (url.contains("crmLeads")) {
-                        setRowCount(organizationSiteService.getTotalRegistors(userData.getUserBranch().getId(), filters, 5, invGallarySelectionId).intValue());
-                        setInvOrganizationSitesDTOList(organizationSiteService.getALLCustomerDTOByBranchIdAndType(first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), userData.getUserBranch().getId(), filters, 5, invGallarySelectionId));
+                        setRowCount(organizationSiteService.getTotalRegistors(getUserData().getUserBranch().getId(), filters, 5, invGallarySelectionId).intValue());
+                        setInvOrganizationSitesDTOList(organizationSiteService.getALLCustomerDTOByBranchIdAndType(first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), getUserData().getUserBranch().getId(), filters, 5, invGallarySelectionId));
                     }
 
                     return invOrganizationSitesDTOList;
@@ -145,7 +144,7 @@ public class OrganizationSiteListMB extends BaseListBean implements Serializable
     @Override
     public void delete() {
         try {
-            Map<String, String> userDDs = userData.getUserDDs();
+            Map<String, String> userDDs = getUserData().getUserDDs();
             if (invOrganizationSiteDTO != null) {
                 try {
                     organizationSiteService.deleteOrganizationSiteDTO(invOrganizationSiteDTO, getUserData().getUserlogin());
@@ -232,20 +231,6 @@ public class OrganizationSiteListMB extends BaseListBean implements Serializable
     @Override
     public String getScreenName() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    /**
-     * @return the userData
-     */
-    public UserData getUserData() {
-        return userData;
-    }
-
-    /**
-     * @param userData the userData to set
-     */
-    public void setUserData(UserData userData) {
-        this.userData = userData;
     }
 
     /**

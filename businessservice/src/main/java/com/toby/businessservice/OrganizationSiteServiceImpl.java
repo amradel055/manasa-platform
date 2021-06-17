@@ -848,9 +848,9 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             params.put("code", code);
             StringBuilder builder = new StringBuilder();
             builder.append("SELECT i FROM InvOrganizationSite i WHERE i.branchId.id = :branchId  AND i.type = :type  AND  i.gallaryId.id = :gallaryId ");
-            builder.append(" and i.code like CONCAT('%',:code ,'%') )");
+            builder.append(" and (i.code = :code or i.mobile = :code) ");
             builder.append(" ORDER BY i.id DESC");
-            List<InvOrganizationSite> details = dao.findListByQuery(builder.toString());
+            List<InvOrganizationSite> details = dao.findListByQuery(builder.toString(),params);
             List<InvOrganizationSiteDTO> dTOList = new ArrayList<>();
             returnListDTO(details, dTOList);
             return dTOList;
