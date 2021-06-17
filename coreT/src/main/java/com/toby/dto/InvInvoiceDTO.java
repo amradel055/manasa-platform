@@ -62,6 +62,7 @@ public class InvInvoiceDTO extends BaseEntityDTO {
     private Date supplierInvoiceDate;
     private Integer serial;
     private Integer serialTax;
+    private Integer searchBySerial;
     private String address;
     private String customerNotice;
     private InvDetailDTO invPurchaseInvoiceDetailsSelected;
@@ -1662,6 +1663,20 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * @return the searchBySerial
+     */
+    public Integer getSearchBySerial() {
+        return searchBySerial;
+    }
+
+    /**
+     * @param searchBySerial the searchBySerial to set
+     */
+    public void setSearchBySerial(Integer searchBySerial) {
+        this.searchBySerial = searchBySerial;
     }
 
     /**

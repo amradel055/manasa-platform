@@ -44,8 +44,11 @@ public class TobyUser extends BaseEntity {
     @Column(name = "master")
     private Integer master;
     
+    @Size(min = 1, max = 45)
     @Column(name = "residency_number")
-    private Integer residencyNumber;
+    private String residencyNumber;
+    
+    
 
     @JoinColumn(name = "branch_id", referencedColumnName = "id")
     @ManyToOne
@@ -197,15 +200,17 @@ public class TobyUser extends BaseEntity {
     /**
      * @return the residencyNumber
      */
-    public Integer getResidencyNumber() {
+    public String getResidencyNumber() {
         return residencyNumber;
     }
 
     /**
      * @param residencyNumber the residencyNumber to set
      */
-    public void setResidencyNumber(Integer residencyNumber) {
+    public void setResidencyNumber(String residencyNumber) {
         this.residencyNumber = residencyNumber;
     }
+
+   
 
 }

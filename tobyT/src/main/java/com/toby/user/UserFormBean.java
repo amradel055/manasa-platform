@@ -55,7 +55,7 @@ public class UserFormBean extends BaseFormBean implements Serializable {
     private Integer userId;
     private Integer selectedLangId;
     private Integer master;
-    private Integer residencyNumber;
+    private String residencyNumber;
     private List<Symbol> languages;
     private Branch branch;
     @EJB
@@ -470,15 +470,17 @@ public class UserFormBean extends BaseFormBean implements Serializable {
     /**
      * @return the residencyNumber
      */
-    public Integer getResidencyNumber() {
+    public String getResidencyNumber() {
         return residencyNumber;
     }
 
     /**
      * @param residencyNumber the residencyNumber to set
      */
-    public void setResidencyNumber(Integer residencyNumber) {
+    public void setResidencyNumber(String residencyNumber) {
         this.residencyNumber = residencyNumber;
     }
 
+    
+    
 }
