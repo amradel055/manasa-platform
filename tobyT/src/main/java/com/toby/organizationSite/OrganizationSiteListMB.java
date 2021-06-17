@@ -9,9 +9,7 @@ import com.toby.businessservice.OfferCompanyService;
 import com.toby.businessservice.OrganizationSiteService;
 import com.toby.businessservice.TobyUserInventoryService;
 import com.toby.converter.InvInventoryConverter;
-import com.toby.converter.InvInventoryDTOConverter;
 import com.toby.converter.OfferCompanyDTOConverter;
-import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.dto.OfferCompanyDTO;
 import com.toby.entity.InvInventory;
@@ -54,6 +52,7 @@ public class OrganizationSiteListMB extends BaseListBean implements Serializable
 
     private List<OfferCompanyDTO> offerCompanyDTOList;
     private OfferCompanyDTOConverter offerCompanyDTOConverter;
+    private String code ;
 
     @EJB
     private OrganizationSiteService organizationSiteService;
@@ -68,7 +67,7 @@ public class OrganizationSiteListMB extends BaseListBean implements Serializable
         try {
             request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
             url = request.getRequestURL().toString();
-            load();
+//            load();
         } catch (Exception e) {
             saveError(e, "OrganizationSiteListMB", "init");
         }
@@ -126,6 +125,20 @@ public class OrganizationSiteListMB extends BaseListBean implements Serializable
             }
         } catch (Exception e) {
             saveError(e, "OrganizationSiteListMB", "load");
+        }
+    }
+    
+    public void search() {
+        try {
+            if (code != null && !code.isEmpty()) {
+                try {
+                    setInvOrganizationSitesDTOList(organizationSiteService.getALLCustomerDTOByBranchIdAndTypeAndCode(getCode(), getUserData().getUserBranch().getId(), 0, getGallaryDTOSelect() != null ? getGallaryDTOSelect().getId() : null));
+                } catch (Exception e) {
+                    
+                }
+            }
+        } catch (Exception e) {
+            saveError(e, "OrganizationSiteListMB", "delete");
         }
     }
 
@@ -372,5 +385,19 @@ public class OrganizationSiteListMB extends BaseListBean implements Serializable
      */
     public void setOfferCompanyDTOConverter(OfferCompanyDTOConverter offerCompanyDTOConverter) {
         this.offerCompanyDTOConverter = offerCompanyDTOConverter;
+    }
+
+    /**
+     * @return the code
+     */
+    public String getCode() {
+        return code;
+    }
+
+    /**
+     * @param code the code to set
+     */
+    public void setCode(String code) {
+        this.code = code;
     }
 }

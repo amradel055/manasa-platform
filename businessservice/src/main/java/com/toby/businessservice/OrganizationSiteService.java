@@ -105,6 +105,8 @@ public interface OrganizationSiteService {
 
     public List<InvOrganizationSiteDTO> getALLCustomerDTOByBranchIdAndType(int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters, Integer type, Integer gallaryId);
 
+    public List<InvOrganizationSiteDTO> getALLCustomerDTOByBranchIdAndTypeAndCode(String code, Integer branchId, Integer type, Integer gallaryId) ;
+    
     public void deleteOrganizationSiteDTO(InvOrganizationSiteDTO invOrganizationSiteDTO, TobyUser isagUser);
 
     public List<InvOrganizationSiteDTO> getCustomerByBranchIdForReportDTO(Integer branchId);

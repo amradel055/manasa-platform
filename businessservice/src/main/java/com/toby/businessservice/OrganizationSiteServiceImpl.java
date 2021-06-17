@@ -838,6 +838,26 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         return dTOList;
     }
 
+    @Override
+    public List<InvOrganizationSiteDTO> getALLCustomerDTOByBranchIdAndTypeAndCode(String code, Integer branchId, Integer type, Integer gallaryId) {
+        if (code != null && !code.isEmpty()) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("branchId", branchId);
+            params.put("type", type);
+            params.put("gallaryId", gallaryId);
+            params.put("code", code);
+            StringBuilder builder = new StringBuilder();
+            builder.append("SELECT i FROM InvOrganizationSite i WHERE i.branchId.id = :branchId  AND i.type = :type  AND  i.gallaryId.id = :gallaryId ");
+            builder.append(" and i.code like CONCAT('%',:code ,'%') )");
+            builder.append(" ORDER BY i.id DESC");
+            List<InvOrganizationSite> details = dao.findListByQuery(builder.toString());
+            List<InvOrganizationSiteDTO> dTOList = new ArrayList<>();
+            returnListDTO(details, dTOList);
+            return dTOList;
+        }
+        return null;
+    }
+
     public InvOrganizationSiteDTO mapTODTO(InvOrganizationSite entity) {
         InvOrganizationSiteDTO dTO = new InvOrganizationSiteDTO();
         initMapToDTO(dTO, entity);

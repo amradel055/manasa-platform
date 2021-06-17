@@ -19,15 +19,24 @@
                                 showDetail="true" 
                                 rendered="true" closable="true"/>   
                 </div>
+                <p:selectOneMenu id="inventory" value="#{organizationSiteListMB.gallaryDTOSelect}"
+                                 converter="#{organizationSiteListMB.gallaryDTOConverters}" 
+                                 style="float:right;width: 20%!important;color:#fff;height: 30px!important;margin-right: 0.5%;">
+
+                    <p:ajax listener="#{organizationSiteListMB.loadGallaryList()}" update="form" />
+                    <f:selectItem itemLabel="#{userData.userDDs['ALL']}" itemValue="" />
+
+                    <f:selectItems value="#{organizationSiteListMB.gallaryLists}" 
+                                   var="inventory" itemLabel="#{inventory.name}"
+                                   itemValue="#{inventory}"/> 
+                </p:selectOneMenu>
                 <div>
                     <p:dataTable 
                         id="organizationSiteTable"
-                        draggableColumns="true"
                         var="organizationSiteTable" 
                         widgetVar="bTable" 
                         rowIndexVar="index" 
-                        value="#{organizationSiteListMB.dataModel}"     
-                        lazy="true" 
+                        value="#{organizationSiteListMB.invOrganizationSitesDTOList}"     
                         rows="20"
                         paginator="true"
                         paginatorTemplate="{CurrentPageReport} {FirstPageLink}
@@ -42,28 +51,13 @@
                                               action="#{organizationSiteListMB.goToAdd()}" style="float:right"
                                               rendered="#{userData.userScreens['customer'].add or userData.isAdmin}"/>
 
-                            <p:selectOneMenu id="inventory" value="#{organizationSiteListMB.gallaryDTOSelect}"
-                                             converter="#{organizationSiteListMB.gallaryDTOConverters}" 
-                                             style="float:right;width: 20%!important;color:#fff;height: 30px!important;margin-right: 0.5%;">
 
-                                <p:ajax listener="#{organizationSiteListMB.loadGallaryList()}" update="form" />
-                                <f:selectItem itemLabel="#{userData.userDDs['ALL']}" itemValue="" />
-
-                                <f:selectItems value="#{organizationSiteListMB.gallaryLists}" 
-                                               var="inventory" itemLabel="#{inventory.name}"
-                                               itemValue="#{inventory}"/> 
-                            </p:selectOneMenu>
 
                             <p:blockUI block="form" trigger="addA" animate="true" >
 
                                 <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
 
                             </p:blockUI> 
-
-                            <p:outputPanel  >
-                                <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
-                                <p:inputText id="globalFilter" a:autofocus="true" onkeyup="PF('bTable').filter()" style="width:150px" />
-                            </p:outputPanel>
                         </f:facet>
 
 
