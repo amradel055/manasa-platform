@@ -12,7 +12,7 @@
         <h:form id="form" dir="#{userData.dir}" style="margin-right: 15px">
             <p:fieldset id="whole" style="margin-bottom:20px">
 
-                
+
 
 
                 <div class="ui-g-6 ui-xl-6">
@@ -220,7 +220,7 @@
 
                         </div>
                     </div>
-                    
+
                     <div class="ui-g-12 ui-xl-12">
                         <div class="ui-g-6 ui-xl-6">
                             <p:selectOneMenu value="#{itemDataFormMB.itemDataEntity.itemNatural}" >
@@ -237,7 +237,7 @@
 
                         </div>
                     </div>
-                   
+
                 </div>
 
                 <div class="ui-g-6 ui-xl-6">
@@ -266,9 +266,7 @@
                     <div class="ui-g-12 ui-xl-12">
                         <div class="ui-g-6 ui-xl-6">
 
-                            <p:inputText rendered="#{itemDataFormMB.itemDataEntity.id eq null}" style="width: 49%!important" id="itemNumber" a:autofocus="true" value="#{itemDataFormMB.itemDataEntity.code}" >
-                            </p:inputText>
-                            <p:outputLabel rendered="#{itemDataFormMB.itemDataEntity.id ne null}" style="width: 49%!important" id="itemNumber2"  value="#{itemDataFormMB.itemDataEntity.code}" />
+                            <p:outputLabel  style="width: 49%!important" id="itemNumber2"  value="#{itemDataFormMB.itemDataEntity.code}" />
 
                         </div>
                         <div class="ui-g-6 ui-xl-6">
@@ -319,7 +317,7 @@
 
                         </div>
                     </div>
-                    
+
                     <div class="ui-g-12 ui-xl-12">
                         <div class="ui-g-6 ui-xl-6">
                             <p:autoComplete style="width:85%" id="progroup"  
@@ -337,8 +335,8 @@
                             <p:outputLabel  style="width: 70px" value="المرحلة"/>
                         </div>
                     </div>
-                    
-                    
+
+
                     <div class="ui-g-12 ui-xl-12" >
                         <div class="ui-g-6 ui-xl-6">
                             <p:selectOneMenu style="width: 50.5%"  id="typeCat" filter="true" filterMatchMode="startsWith"  rendered="false"
@@ -393,7 +391,7 @@
 
                         </div>
                     </div>
-                    
+
                     <div class="ui-g-12 ui-xl-12">
                         <div class="ui-g-6 ui-xl-6">
                             <p:inputText style="width:49%!important" id="LastPrice"
@@ -653,7 +651,7 @@
                         <p:commandButton  class="newButtons" 
                                           id="newN"
                                           ajax="false"
-                                          
+
                                           value="#{userData.userDDs['NEW']}" 
                                           onclick="form.target = ''" 
                                           actionListener="#{itemDataFormMB.reset()}"/>
@@ -662,19 +660,19 @@
                                          id="saveB" 
                                          title="#{userData.userDDs['SAVE']}" 
                                          value="#{userData.userDDs['SAVE']}" 
-                                         
+
                                          action="#{itemDataFormMB.save()}" update="@form"/>
 
                         <p:commandButton class="closeButtons" id="cancel" 
                                          immediate="true" title="#{userData.userDDs['CANCEL']}" 
                                          value="#{userData.userDDs['CANCEL']}" 
-                                          action="#{itemDataFormMB.cancel()}" update="@form"/>
-                         <p:commandButton  class="printButtons"
-                                      ajax="false"
-                                      onclick="form.target = '_blank'"  
-                                      title="#{userData.userDDs['PRINT']}"
-                                      value="#{userData.userDDs['PRINT']}" 
-                                      actionListener="#{itemDataFormMB.print}"/>
+                                         action="#{itemDataFormMB.cancel()}" update="@form"/>
+                        <p:commandButton  class="printButtons"
+                                          ajax="false"
+                                          onclick="form.target = '_blank'"  
+                                          title="#{userData.userDDs['PRINT']}"
+                                          value="#{userData.userDDs['PRINT']}" 
+                                          actionListener="#{itemDataFormMB.print}"/>
 
                     </h:panelGroup>
 

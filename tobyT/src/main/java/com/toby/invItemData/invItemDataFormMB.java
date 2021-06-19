@@ -392,7 +392,7 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
 
     public void saveItem() {
         System.out.println("");
-        if (itemDataEntity != null && itemDataEntity.getName() != null) {
+        if (itemDataEntity != null && itemDataEntity.getName() != null && getItemDataEntity().getSiteId().getId() != null) {
             itemDataEntity = itemsDataViewService.addItemsData(itemDataEntity, getUserData().getUser());
 
         }

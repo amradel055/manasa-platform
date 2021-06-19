@@ -412,7 +412,12 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
 
         InvItem invItem = new InvItem();
         invItem.setId(invItemDTO.getId());
-//        invItem.setCode(invItemDTO.getCode());
+        if (invItemDTO.getId() == null && invItemDTO.getSiteId() != null && invItemDTO.getSiteId().getId() != null && invItemDTO.getSiteId().getCode() != null) {
+          invItem.setCode((findMaxItemCode(0, invItemDTO.getSiteId().getId(), invItemDTO.getSiteId().getCode())).toString());  
+        } else {
+            invItem.setCode(invItemDTO.getCode());
+
+        }
         invItem.setContractPrice(invItemDTO.getContractPrice());
         invItem.setCostAverage(invItemDTO.getCostAverage());
         invItem.setDateCreateCat(invItemDTO.getDateCreateCat());
@@ -513,7 +518,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             symbol.setName(invItemDTO.getAddon2().getName());
             invItem.setAddon2(symbol);
         }
-        
+
         InvGroup invGroup = new InvGroup();
         invGroup.setId(56);
         invItem.setGroupId(invGroup);
@@ -577,6 +582,38 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
 
         invItemDTO1 = mapToDTO(invItem, tobyUser);
         return invItemDTO1;
+    }
+
+    @Override
+    public BigDecimal findMaxItemCode(Integer settingType, Integer searchId, String searchCode) {
+
+        Map<String, Object> params = new HashMap<>();
+        StringBuilder query = new StringBuilder();
+
+        params.put("id", searchId);
+
+        if (settingType == 0) {
+            query.append("SELECT max(i.code) FROM InvItem i WHERE i.siteId.id = :id");
+        } else if (settingType == 1) {
+            query.append("SELECT max(i.code) FROM InvItem i WHERE i.groupId.id = :id");
+        }
+
+        String q = query.toString();
+
+        List<String> invItems = dao.findListByQuery(q, params);
+
+        if (invItems == null || invItems.isEmpty()) {
+            String ccode = searchId + "001";
+            return new BigDecimal(ccode.trim());
+        }
+
+        String code = invItems.get(invItems.size() - 1);
+        if (code != null && !code.isEmpty()) {
+            BigDecimal x = new BigDecimal(code.trim()).add(BigDecimal.ONE);
+            return x;
+        }
+        String ccode = searchCode + "001";
+        return new BigDecimal(ccode.trim());
     }
 
     @Override
