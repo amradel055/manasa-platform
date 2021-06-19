@@ -11,6 +11,7 @@ import com.toby.dto.InvItemDTO;
 import com.toby.entity.GlYear;
 import com.toby.entity.TobyUser;
 import com.toby.views.ItemsDataView;
+import java.math.BigDecimal;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -25,13 +26,15 @@ public interface ItemsDataViewService {
 
     public InvItemDTO addItemsData(InvItemDTO invItemDTO, TobyUser tobyUser);
 
+    public BigDecimal findMaxItemCode(Integer settingType, Integer searchId, String searchCode);
+
 //    public List<ItemsDataView> getAllItemCardByInvStripSearchBean(ItemCardReportSerachBean itemCardReportSerachBean, GlYear glYear);
 //    
 //    public List<ItemsDataView> getAllInvStripListByInvStripSearchBean(InvItemSalesSearchBean invStripSearchBean);
     public List<ItemsDataView> getAllInvStripListByInvStripSearchBean(InvItemSalesSearchBean invStripSearchBean);
 
     public List<ItemsDataView> getAllItemCardByInvStripSearchBean(ItemCardReportSerachBean itemCardReportSerachBean, GlYear glYear);
-    
+
     public InvItemDTO findInvItem(Integer invItemById, TobyUser tobyUser);
 
 }
