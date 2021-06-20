@@ -18,7 +18,7 @@
 
                 <h:panelGrid  columns="1" cellspacing="2" cellpadding="0" >
                     <p:fieldset >
-                        <p:selectOneRadio id="console"  value ="#{organizationSiteFormMB.invOrganizationSiteDTO.type}" >
+                        <p:selectOneRadio id="console"  value ="#{organizationSiteFormMB.invOrganizationSiteEntity.type}" >
 
                             <f:selectItem itemLabel="#{userData.userDDs['SUPPLIER']}" itemValue="1" />
                             <f:selectItem itemLabel="#{userData.userDDs['CUSTOMER_SUPPLIER']}" itemValue="2" />
@@ -37,7 +37,7 @@
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:inputText style="width: 25%"
                                                  id="SNOSCode"
-                                                 value="#{organizationSiteFormMB.invOrganizationSiteDTO.code}">
+                                                 value="#{organizationSiteFormMB.invOrganizationSiteEntity.code}">
                                         <p:ajax event="blur" listener="#{organizationSiteFormMB.validateCode()}"/>
                                     </p:inputText>
                                 </div>
@@ -50,8 +50,7 @@
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:inputText style="width: 25%" 
                                                  id="SNOSName"
-                                                 value="#{organizationSiteFormMB.invOrganizationSiteDTO.name}" >
-                                        <p:ajax event="blur" listener="#{organizationSiteFormMB.validateName()}"/>
+                                                 value="#{organizationSiteFormMB.invOrganizationSiteEntity.name}" >
                                     </p:inputText>
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
@@ -79,7 +78,7 @@
 
                                                     dropdown="true"
                                                     converter="#{organizationSiteFormMB.salesConverter}"
-                                                    value="#{organizationSiteFormMB.invOrganizationSiteDTO.delegatorId}" 
+                                                    value="#{organizationSiteFormMB.invOrganizationSiteEntity.delegateId}" 
 rendered="#{organizationSiteFormMB.supplierAndCustomer}"
                                                     var="person"
                                                     itemLabel="#{person}" 
@@ -103,13 +102,13 @@ rendered="#{organizationSiteFormMB.supplierAndCustomer}"
                                         <p:autoComplete style="width:75%" 
                                                         dropdown="true"
                                                         converter="#{organizationSiteFormMB.customerConvertor}"
-                                                        value="#{organizationSiteFormMB.invOrganizationSiteDTO.parent}"
+                                                        value="#{organizationSiteFormMB.invOrganizationSiteEntity.parent}"
 
                                                         var="customerVar"
                                                         itemLabel="#{customerVar}" 
                                                         itemValue="#{customerVar}" 
                                                         forceSelection="true" 
-                                                        completeMethod="#{organizationSiteFormMB. completOrgSite}" >
+                                                        completeMethod="#{organizationSiteFormMB. completeCustomers}" >
 
                                         </p:autoComplete>
 
@@ -126,7 +125,7 @@ rendered="#{organizationSiteFormMB.supplierAndCustomer}"
                                     <p:autoComplete style="width:75%" 
                                                     dropdown="true"
                                                     converter="#{organizationSiteFormMB.regionConverter}"
-                                                    value="#{organizationSiteFormMB.invOrganizationSiteDTO.regionId}"
+                                                    value="#{organizationSiteFormMB.invOrganizationSiteEntity.regionId}"
 
                                                     var="region"
                                                     itemLabel="#{region}" 
@@ -143,7 +142,7 @@ rendered="#{organizationSiteFormMB.supplierAndCustomer}"
                             </div>
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:inputText style="width: 75%" id="POST_BOX" value="#{organizationSiteFormMB.invOrganizationSiteDTO.postBox}"/>
+                                    <p:inputText style="width: 75%" id="POST_BOX" value="#{organizationSiteFormMB.invOrganizationSiteEntity.postBox}"/>
 
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
@@ -153,7 +152,7 @@ rendered="#{organizationSiteFormMB.supplierAndCustomer}"
                             </div>
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:inputText style="width:75%" id="zip" value="#{organizationSiteFormMB.invOrganizationSiteDTO.zip}"/>
+                                    <p:inputText style="width:75%" id="zip" value="#{organizationSiteFormMB.invOrganizationSiteEntity.zip}"/>
 
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
@@ -163,7 +162,7 @@ rendered="#{organizationSiteFormMB.supplierAndCustomer}"
                             </div>
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:inputText  style="width:75%" id="PHONE1" value="#{organizationSiteFormMB.invOrganizationSiteDTO.phone}"/>
+                                    <p:inputText  style="width:75%" id="PHONE1" value="#{organizationSiteFormMB.invOrganizationSiteEntity.phone1}"/>
 
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
@@ -173,7 +172,7 @@ rendered="#{organizationSiteFormMB.supplierAndCustomer}"
                             </div>
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:inputText style="width: 75%" id="ADDRESS" value="#{organizationSiteFormMB.invOrganizationSiteDTO.address}"/>
+                                    <p:inputText style="width: 75%" id="ADDRESS" value="#{organizationSiteFormMB.invOrganizationSiteEntity.address}"/>
 
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
@@ -183,7 +182,7 @@ rendered="#{organizationSiteFormMB.supplierAndCustomer}"
                             </div>
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:inputText style="width: 75%" id="PHONEt" value="#{organizationSiteFormMB.invOrganizationSiteDTO.phone2}"/>
+                                    <p:inputText style="width: 75%" id="PHONEt" value="#{organizationSiteFormMB.invOrganizationSiteEntity.phone2}"/>
 
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
@@ -193,7 +192,7 @@ rendered="#{organizationSiteFormMB.supplierAndCustomer}"
                             </div>
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:inputText style="width: 75%" id="EMAIL" value="#{organizationSiteFormMB.invOrganizationSiteDTO.email}"/>
+                                    <p:inputText style="width: 75%" id="EMAIL" value="#{organizationSiteFormMB.invOrganizationSiteEntity.email}"/>
 
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
@@ -203,7 +202,7 @@ rendered="#{organizationSiteFormMB.supplierAndCustomer}"
                             </div>
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:inputText style="width: 75%" id="FAX" value="#{organizationSiteFormMB.invOrganizationSiteDTO.fax}"/>
+                                    <p:inputText style="width: 75%" id="FAX" value="#{organizationSiteFormMB.invOrganizationSiteEntity.fax}"/>
 
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
@@ -213,7 +212,7 @@ rendered="#{organizationSiteFormMB.supplierAndCustomer}"
                             </div>
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:inputText style="width: 75%"  id="NOTM" value="#{organizationSiteFormMB.invOrganizationSiteDTO.contactPerson}"/>
+                                    <p:inputText style="width: 75%"  id="NOTM" value="#{organizationSiteFormMB.invOrganizationSiteEntity.contactPerson}"/>
 
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
@@ -227,7 +226,7 @@ rendered="#{organizationSiteFormMB.supplierAndCustomer}"
                         <div class="ui-g-6 ui-xl-6">
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:inputText style="width: 75%" id="MOBILE" value="#{organizationSiteFormMB.invOrganizationSiteDTO.mobile}"/>
+                                    <p:inputText style="width: 75%" id="MOBILE" value="#{organizationSiteFormMB.invOrganizationSiteEntity.mobile}"/>
 
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
@@ -242,8 +241,8 @@ rendered="#{organizationSiteFormMB.supplierAndCustomer}"
                                         <p:autoComplete id="GlAccount_ID" 
                                                         style="width: 75%" 
                                                         dropdown="true"
-                                                        converter="#{organizationSiteFormMB.glAccountDTOConverter}"
-                                                        value="#{organizationSiteFormMB.invOrganizationSiteDTO.accountId}"
+                                                        converter="#{organizationSiteFormMB.accountConverter}"
+                                                        value="#{organizationSiteFormMB.invOrganizationSiteEntity.accountId}"
 
                                                         var="account"
                                                         itemLabel="#{account}" 
@@ -267,8 +266,8 @@ rendered="#{organizationSiteFormMB.supplierAndCustomer}"
                                         <p:autoComplete id="Currency_ID" 
                                                         style="width: 75%" 
                                                         dropdown="true"
-                                                        converter="#{organizationSiteFormMB.currencyDTOConverter}"
-                                                        value="#{organizationSiteFormMB.invOrganizationSiteDTO.currencyId}"
+                                                        converter="#{organizationSiteFormMB.currencyConverter}"
+                                                        value="#{organizationSiteFormMB.invOrganizationSiteEntity.currencyId}"
 
                                                         var="currency"
                                                         itemLabel="#{currency}" 
@@ -289,7 +288,7 @@ rendered="#{organizationSiteFormMB.supplierAndCustomer}"
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:inputText style="width: 75%" id="crdtLmt" 
-                                                 value="#{organizationSiteFormMB.invOrganizationSiteDTO.balanceLimit}"
+                                                 value="#{organizationSiteFormMB.invOrganizationSiteEntity.balanceLimit}"
                                                  rendered="#{organizationSiteFormMB.supplier or organizationSiteFormMB.supplierAndCustomer }"/>
 
                                 </div>
@@ -303,7 +302,7 @@ rendered="#{organizationSiteFormMB.supplierAndCustomer}"
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:outputLabel style="width: 75%" id="OPBACR"
-                                                   value="#{organizationSiteFormMB.invOrganizationSiteDTO.openBalanceCredit}"
+                                                   value="#{organizationSiteFormMB.invOrganizationSiteEntity.openBalanceCredit}"
                                                    rendered="#{organizationSiteFormMB.supplier or organizationSiteFormMB.supplierAndCustomer }"/>
 
                                 </div>
@@ -316,7 +315,7 @@ rendered="#{organizationSiteFormMB.supplierAndCustomer}"
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:outputLabel style="width: 75%" id="OPBD"
-                                                   value="#{organizationSiteFormMB.invOrganizationSiteDTO.openBalanceDebit}"
+                                                   value="#{organizationSiteFormMB.invOrganizationSiteEntity.openBalanceDebit}"
                                                    rendered="#{organizationSiteFormMB.supplier or organizationSiteFormMB.supplierAndCustomer }"/>
 
                                 </div>
@@ -328,7 +327,7 @@ rendered="#{organizationSiteFormMB.supplierAndCustomer}"
                             </div>
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:inputText style="width: 75%" id="NOTE" value="#{organizationSiteFormMB.invOrganizationSiteDTO.remark}"/>
+                                    <p:inputText style="width: 75%" id="NOTE" value="#{organizationSiteFormMB.invOrganizationSiteEntity.remarks}"/>
 
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
@@ -339,7 +338,7 @@ rendered="#{organizationSiteFormMB.supplierAndCustomer}"
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:selectOneMenu style="width: 75%"  id="active" 
-                                                     value="#{organizationSiteFormMB.invOrganizationSiteDTO.active}" >
+                                                     value="#{organizationSiteFormMB.invOrganizationSiteEntity.active}" >
                                         <f:selectItem itemLabel="#{userData.userDDs['INACTIVE']}" itemValue="0" />
                                         <f:selectItem itemLabel="#{userData.userDDs['CS_ACTIVE']}" itemValue="1" />
                                         <f:selectItem itemLabel="#{userData.userDDs['BLACK_LIST']}" itemValue="2" />
