@@ -25,9 +25,11 @@ import javax.ejb.Remote;
 public interface InvItemService {
 
     public List<InvItemDTO> findInvItemDTOList(TobyUser tobyUser);
-    
+
+    public List<InvItemDTO> invItemsReport( InvItemDTO invItemDTO ,Integer branchId);
+
     public Map<String, String> findInvItemDTOMap(Integer branchId);
-    
+
     public Map<String, String> findInvItemDTOMapForNewItem(Integer branchId);
 
     public InvItem addInvItem(InvItem invItem, List<InvBarcode> invBarcodeList, List<InvBarcode> invBarcodeDeletedList);
@@ -35,7 +37,7 @@ public interface InvItemService {
     public InvItem updateInvItem(InvItem invItem);
 
     public void deleteInvItem(InvItem invItem);
-    
+
     public void deleteInvItemDTO(InvItemDTO invItem);
 
     public InvItem findInvItem(Integer invItemById);
@@ -65,7 +67,8 @@ public interface InvItemService {
     public void updateAllInvItems(List<InvItem> invItemList);
 
     public List<InvItem> findInventoryItem(Integer inventoryId);
-    public List<InvItemDTO> findInventoryDTOItem(Integer inventoryId ,TobyUser tobyUser);
+
+    public List<InvItemDTO> findInventoryDTOItem(Integer inventoryId, TobyUser tobyUser);
 
     public Boolean checkIfGroupHasItems(InvGroup invGroup);
 
@@ -80,23 +83,22 @@ public interface InvItemService {
     public Long getTotalRegistors(Integer branchId, Map<String, Object> filters);
 
     public List<InvItem> getInvItemReportForInvItemMainDataByGroupReportMB(ItemMainDataByGroupSearchBean ItemMainDataByGroupSearchBean);
-    
-    
+
     public List<InvItemDTO> findInvItemDTOCompletedList(TobyUser tobyUser);
-    
+
     public List<InvItemDTO> getInvItemDTOView(int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters, TobyUser tobyUser);
-    
-    public List<InvItemDTO> getInvItemDTOByBranchId(Integer branchId,TobyUser tobyUser) ;
-    
-     public List<InvItemDTO> getInvItemListByBranchIdForOpeningBalanceItemFormDTO(TobyUser tobyUser);
-     
-     public void updateInvItem2(Map<String, InvItem> invItemMap, TobyUser tobyUser);
-     
-     public void findInvItemMap(Integer branchId,List<InvItemDTO> invItemDTOList) ;
-     
-     public void getInvItemListByBranchId(Integer branchId);
-     
-     public void updateInvItemCostAverageToZero(Integer branchId);
-     
-     public List<Integer> getInvItemListByBranchIdNotInInvPurchaseInvoice(Integer branchId);
+
+    public List<InvItemDTO> getInvItemDTOByBranchId(Integer branchId, TobyUser tobyUser);
+
+    public List<InvItemDTO> getInvItemListByBranchIdForOpeningBalanceItemFormDTO(TobyUser tobyUser);
+
+    public void updateInvItem2(Map<String, InvItem> invItemMap, TobyUser tobyUser);
+
+    public void findInvItemMap(Integer branchId, List<InvItemDTO> invItemDTOList);
+
+    public void getInvItemListByBranchId(Integer branchId);
+
+    public void updateInvItemCostAverageToZero(Integer branchId);
+
+    public List<Integer> getInvItemListByBranchIdNotInInvPurchaseInvoice(Integer branchId);
 }

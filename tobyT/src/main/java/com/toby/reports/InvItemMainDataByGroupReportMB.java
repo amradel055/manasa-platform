@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.toby.report;
+package com.toby.reports;
 
 import com.toby.businessservice.TobyUserInventoryService;
 import com.toby.businessservice.InvGroupService;
@@ -120,7 +120,7 @@ public class InvItemMainDataByGroupReportMB extends BaseReportBean {
         itemGroupmap = new HashMap<>();
         setItemGroupTreeMap(new TreeMap<>());
         setItemMainMap(new HashMap<>());
-        setitemMainDataByGroupBeanList(new ArrayList<>());
+        setItemMainDataByGroupBeanList(new ArrayList<>());
     }
 
     private void fillLists() {
@@ -164,7 +164,7 @@ public class InvItemMainDataByGroupReportMB extends BaseReportBean {
     @Override
     public void search() {
         stripMapReference = 0;
-        setitemMainDataByGroupBeanList(new ArrayList<>());
+        setItemMainDataByGroupBeanList(new ArrayList<>());
         setItemMainDataByGroupSearchViewBean(new ItemMainDataByGroupSearchBean());
         getItemMainDataByGroupSearchBean().setBranchId(getUserData().getUserBranch().getId());
         getItemMainDataByGroupSearchBean().setDateFrom(getUserData().getGlYear().getDateFrom());
@@ -178,9 +178,9 @@ public class InvItemMainDataByGroupReportMB extends BaseReportBean {
                 dataByGroupBean.setItemName(inv.getName());
                 IntializeSearchLab();
                 repositoryBalance = BigDecimal.ZERO;
-                itemMainDataByGroupViewBean = new itemMainDataByGroupBean();
-                itemMainDataByGroupViewBean.setInventoryName(inv.getName());
-                itemMainDataByGroupViewBean.setItemName("المستودع");
+                setItemMainDataByGroupViewBean(new itemMainDataByGroupBean());
+                getItemMainDataByGroupViewBean().setInventoryName(inv.getName());
+                getItemMainDataByGroupViewBean().setItemName("المستودع");
                 getItemMainDataByGroupSearchViewBean().setFrominventory(inv);
                 getItemMainDataByGroupSearchViewBean().setToinventory(inv);
                 getItemMainDataByGroupSearchViewBean().setBranchId(getUserData().getUserBranch().getId());
@@ -198,7 +198,7 @@ public class InvItemMainDataByGroupReportMB extends BaseReportBean {
         } else {
             // dataByGroupBean = new itemMainDataByGroupBean();
             IntializeSearchLab();
-            itemMainDataByGroupViewBean = new itemMainDataByGroupBean();
+            setItemMainDataByGroupViewBean(new itemMainDataByGroupBean());
             getItemMainDataByGroupSearchViewBean().setBranchId(getUserData().getUserBranch().getId());
             getItemMainDataByGroupSearchViewBean().setFromGroup(itemMainDataByGroupSearchBean.getFromGroup());
             getItemMainDataByGroupSearchViewBean().setToGroup(itemMainDataByGroupSearchBean.getToGroup());
@@ -214,7 +214,7 @@ public class InvItemMainDataByGroupReportMB extends BaseReportBean {
             if (itemMainDataByGroupSearchBean.getGroupSelected() != null && !itemMainDataByGroupSearchBean.getGroupSelected().isEmpty()
                     && itemMainDataByGroupSearchBean.getGroupSelected().size() > 0) {
                 List<itemMainDataByGroupBean> finalBean = new ArrayList<>();
-                for (itemMainDataByGroupBean v : getitemMainDataByGroupBeanList()) {
+                for (itemMainDataByGroupBean v : getItemMainDataByGroupBeanList()) {
                     if (v.getLevel() != null) {
                         if (itemMainDataByGroupSearchBean.getGroupSelected() != null
                                 && itemMainDataByGroupSearchBean.getGroupSelected().contains(v.getGroupId().toString())) {
@@ -225,7 +225,7 @@ public class InvItemMainDataByGroupReportMB extends BaseReportBean {
                     }
 
                 }
-                setitemMainDataByGroupBeanList(finalBean);
+                setItemMainDataByGroupBeanList(finalBean);
             }
         }
 
@@ -343,10 +343,10 @@ public class InvItemMainDataByGroupReportMB extends BaseReportBean {
 
     public void mergeGroupsWithItems() {
         dataByGroupBean.setQty(repositoryBalance.setScale(2, BigDecimal.ROUND_UP));
-        getitemMainDataByGroupBeanList().add(dataByGroupBean);
+        getItemMainDataByGroupBeanList().add(dataByGroupBean);
         for (Map.Entry<Integer, itemMainDataByGroupBean> entry : getItemGroupTreeMap().entrySet()) {
             itemMainDataByGroupBean viewBean = entry.getValue();
-            getitemMainDataByGroupBeanList().add(viewBean);
+            getItemMainDataByGroupBeanList().add(viewBean);
             if (itemGroupmap.containsKey(viewBean.getGroupId())) {
                 if (itemGroupmap.get(viewBean.getGroupId()) != null && !itemGroupmap.get(viewBean.getGroupId()).isEmpty()) {
                     for (ItemMainDataByGroupView idv : itemGroupmap.get(viewBean.getGroupId())) {
@@ -359,7 +359,7 @@ public class InvItemMainDataByGroupReportMB extends BaseReportBean {
                         reportViewBean.setItemId(idv.getItemId());
                         reportViewBean.setQty(idv.getQty());
 
-                        getitemMainDataByGroupBeanList().add(reportViewBean);
+                        getItemMainDataByGroupBeanList().add(reportViewBean);
                     }
                 }
             }
@@ -371,7 +371,7 @@ public class InvItemMainDataByGroupReportMB extends BaseReportBean {
 
         for (Map.Entry<Integer, itemMainDataByGroupBean> entry : getItemGroupTreeMap().entrySet()) {
             itemMainDataByGroupBean viewBean = entry.getValue();
-            getitemMainDataByGroupBeanList().add(viewBean);
+            getItemMainDataByGroupBeanList().add(viewBean);
             if (itemGroupmap.containsKey(viewBean.getGroupId())) {
                 if (itemGroupmap.get(viewBean.getGroupId()) != null && !itemGroupmap.get(viewBean.getGroupId()).isEmpty()) {
                     for (ItemMainDataByGroupView idv : itemGroupmap.get(viewBean.getGroupId())) {
@@ -384,7 +384,7 @@ public class InvItemMainDataByGroupReportMB extends BaseReportBean {
                         reportViewBean.setQty(idv.getQty());
                         reportViewBean.setItemName(idv.getItemName());
                         reportViewBean.setCost(idv.getSellPrice() != null ? new BigDecimal(idv.getSellPrice()) : BigDecimal.ZERO);
-                        getitemMainDataByGroupBeanList().add(reportViewBean);
+                        getItemMainDataByGroupBeanList().add(reportViewBean);
                     }
                 }
             }
@@ -439,11 +439,11 @@ public class InvItemMainDataByGroupReportMB extends BaseReportBean {
 
     @Override
     public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {
-        if (getitemMainDataByGroupBeanList() != null && !getitemMainDataByGroupBeanList().isEmpty()) {
+        if (getItemMainDataByGroupBeanList() != null && !getItemMainDataByGroupBeanList().isEmpty()) {
             if (uri.contains("basicdataofitemsbygroupsreport")) {
-                fillReport(prepareReport(), getUserData().getReportPath() + "InvItemMainDataByGroupReport.jasper", getitemMainDataByGroupBeanList(), "pdf");
+                fillReport(prepareReport(), getUserData().getReportPath() + "InvItemMainDataByGroupReport.jasper", getItemMainDataByGroupBeanList(), "pdf");
             } else {
-                fillReport(prepareReport(), getUserData().getReportPath() + "basicdataofitemsbygroupsreport.jasper", getitemMainDataByGroupBeanList(), "pdf");
+                fillReport(prepareReport(), getUserData().getReportPath() + "basicdataofitemsbygroupsreport.jasper", getItemMainDataByGroupBeanList(), "pdf");
             }
         }
     }
@@ -519,8 +519,9 @@ public class InvItemMainDataByGroupReportMB extends BaseReportBean {
                 hashMap.put("toItem", itemMainDataByGroupSearchBean.getToItem().getName());
             }
         }
-            return hashMap;
+        return hashMap;
     }
+
     public List<InvGroup> completGroup(String query) {
         List<InvGroup> invGroList = getInvGroupList();
         if (query == null || query.trim().equals("")) {
@@ -654,6 +655,9 @@ public class InvItemMainDataByGroupReportMB extends BaseReportBean {
      this.isSales = isSales;
      } */
     public ItemMainDataByGroupSearchBean getItemMainDataByGroupSearchBean() {
+        if (itemMainDataByGroupSearchBean == null) {
+            itemMainDataByGroupSearchBean = new ItemMainDataByGroupSearchBean();
+        }
         return itemMainDataByGroupSearchBean;
     }
 
@@ -817,23 +821,6 @@ public class InvItemMainDataByGroupReportMB extends BaseReportBean {
         this.itemGroupTreeMap = itemGroupTreeMap;
     }
 
-    /**
-     * @return the itemMainDataByGroupBeanList
-     */
-    public List<itemMainDataByGroupBean> getitemMainDataByGroupBeanList() {
-        return itemMainDataByGroupBeanList;
-    }
-
-    /**
-     * @param itemMainDataByGroupBeanList the itemMainDataByGroupBeanList to set
-     */
-    public void setitemMainDataByGroupBeanList(List<itemMainDataByGroupBean> itemMainDataByGroupBeanList) {
-        this.itemMainDataByGroupBeanList = itemMainDataByGroupBeanList;
-    }
-
-    /**
-     * @return the invInventoryList
-     */
     public List<InvInventory> getInvInventoryList() {
         return invInventoryList;
     }
@@ -914,6 +901,37 @@ public class InvItemMainDataByGroupReportMB extends BaseReportBean {
      */
     public void setLevel(Integer level) {
         this.level = level;
+    }
+
+    /**
+     * @return the itemMainDataByGroupViewBean
+     */
+    public itemMainDataByGroupBean getItemMainDataByGroupViewBean() {
+        return itemMainDataByGroupViewBean;
+    }
+
+    /**
+     * @param itemMainDataByGroupViewBean the itemMainDataByGroupViewBean to set
+     */
+    public void setItemMainDataByGroupViewBean(itemMainDataByGroupBean itemMainDataByGroupViewBean) {
+        this.itemMainDataByGroupViewBean = itemMainDataByGroupViewBean;
+    }
+
+    /**
+     * @return the itemMainDataByGroupBeanList
+     */
+    public List<itemMainDataByGroupBean> getItemMainDataByGroupBeanList() {
+        if (itemMainDataByGroupBeanList == null) {
+            itemMainDataByGroupBeanList = new ArrayList<>();
+        }
+        return itemMainDataByGroupBeanList;
+    }
+
+    /**
+     * @param itemMainDataByGroupBeanList the itemMainDataByGroupBeanList to set
+     */
+    public void setItemMainDataByGroupBeanList(List<itemMainDataByGroupBean> itemMainDataByGroupBeanList) {
+        this.itemMainDataByGroupBeanList = itemMainDataByGroupBeanList;
     }
 
 }

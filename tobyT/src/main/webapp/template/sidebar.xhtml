@@ -628,7 +628,7 @@
                             <p:submenu id="sr_sm4" label="#{userData.userDDs['DISTRIB_REPORTS_STORES']}" icon="&#xE8D2;"
                                        rendered="#{userData.userScreens['groupDataReport'].view 
                                                    or userData.userScreens['basicdataofitemsbysuppliersreport'].view   
-                                                   or userData.userScreens['basicdataofitemsreport'].view 
+                                                   or userData.userScreens['itemDataReport'].view 
                                                    or userData.userScreens['itemSalesReport'].view
                                                    or userData.userScreens['SalesOfItemsBySuppliers'].view   
                                                    or userData.userScreens['SalesOfItemsBySuppliersToby'].view   
@@ -751,14 +751,14 @@
                                 </p:submenu>
                                 <p:submenu id="sr_sm41" label="#{userData.userDDs['MAIN_DATA_REP']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['groupDataReport'].view  
-                                                       or userData.userScreens['basicdataofitemsreport'].view  
+                                                       or userData.userScreens['itemDataReport'].view  
                                                        or userData.userScreens['basicdataofitemsbysuppliersreport'].view 
                                                        or userData.isAdmin}" >
                                     <p:menuitem id="sr_lnk411" value="#{userData.userDDs['GROUP_ITEMS']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/groupDataReport.xhtml" 
                                                 rendered="#{userData.userScreens['groupDataReport'].view or userData.isAdmin}"
                                                 />
-                                    <p:menuitem id="sr_lnk412" value="#{userData.userDDs['REPORT_DATA_ITEM']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/basicdataofitemsreport.xhtml"
-                                                rendered="#{userData.userScreens['basicdataofitemsreport'].view or userData.isAdmin}"
+                                    <p:menuitem id="sr_lnk412" value="#{userData.userDDs['REPORT_DATA_ITEM']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/itemDataReport.xhtml"
+                                                rendered="#{userData.userScreens['itemDataReport'].view or userData.isAdmin}"
                                                 />
                                     <p:menuitem id="sr_lnk413" value="#{userData.userDDs['DATA_ITEMS_ACCO']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/basicdataofitemsbysuppliersreport.xhtml" 
                                                 rendered="#{userData.userScreens['basicdataofitemsbysuppliersreport'].view or userData.isAdmin}"

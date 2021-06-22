@@ -23,6 +23,7 @@ import com.toby.entity.Symbol;
 import com.toby.entity.TobyCompany;
 import com.toby.entity.TobyUser;
 import com.toby.views.ItemsBarcodesDetailsView;
+import com.toby.views.SalesReportByValueAdedDetails;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -290,6 +291,42 @@ public class InvItemServiceImpl implements InvItemService {
         }
         return invItemDTOList;
     }
+
+    @Override
+    public List<InvItemDTO> invItemsReport( InvItemDTO invItemDTO ,Integer branchId) {
+        StringBuilder sql = new StringBuilder();
+        List<InvItemDTO> list = new ArrayList<>();
+        sql.append("select i.id ,i.name,i.sell_price,i.max_price_men,i.max_price_young,i.min_price_men,i.min_price_young\n"
+                + ",i.number_meters_free_men,i.number_meters_free_young,i.number_meters_men,i.number_meters_young \n"
+                + ",i.item_natural from inv_item i\n"
+                + " where i.branch_id = ").append(branchId);
+        appendProGroup(invItemDTO, sql);
+        List<Object[]> res = dao.executeNativeQuery(sql.toString());
+        for (Object[] object : res) {
+            invItemDTO = new InvItemDTO();
+            invItemDTO.setId((Integer) object[0]);
+            invItemDTO.setName((String) object[1]);
+            invItemDTO.setSellPrice((BigDecimal) object[2]);
+            invItemDTO.setMaxpricemen((BigDecimal) object[3]);
+            invItemDTO.setMaxpriceyoung((BigDecimal) object[4]);
+            invItemDTO.setMinpricemen((BigDecimal) object[5]);
+            invItemDTO.setMinpriceyoung((BigDecimal) object[6]);
+            invItemDTO.setNumbermetersfreemen((BigDecimal) object[7]);
+            invItemDTO.setNumbermetersfreeyoung((BigDecimal) object[8]);
+            invItemDTO.setNumbermetersmen((BigDecimal) object[9]);
+            invItemDTO.setNumbermetersyoung((BigDecimal) object[10]);
+            invItemDTO.setItemNatural((Integer) object[11]);
+            list.add(invItemDTO);
+        }
+        return list;
+
+    }
+     private void appendProGroup(InvItemDTO invItemDTO, StringBuilder sql) {
+        if (invItemDTO.getProGroupId() != null) {
+            sql.append(" and i.pro_group_id =  ").append(invItemDTO.getProGroupId().getId());
+        }
+    }
+    
 
     @Override
     public List<InvItemDTO> findInvItemDTOList(TobyUser tobyUser) {
@@ -1040,8 +1077,8 @@ public class InvItemServiceImpl implements InvItemService {
             }
         }
     }
-    
-     @Override
+
+    @Override
     public void getInvItemListByBranchId(Integer branchId) {
         updateInvItemCostAverageToZero(branchId);
         List<Integer> invItemIdList = getInvItemListByBranchIdNotInInvPurchaseInvoice(branchId);
@@ -1053,7 +1090,7 @@ public class InvItemServiceImpl implements InvItemService {
             dao.executeUpdateQuery(builder, params);
         }
     }
-    
+
     @Override
     public void updateInvItemCostAverageToZero(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
@@ -1061,7 +1098,7 @@ public class InvItemServiceImpl implements InvItemService {
         String builder_Zero = "UPDATE  InvItem i set i.costAverage = null WHERE i.id > 0 and i.branchId.id = :branchId";
         dao.executeUpdateQuery(builder_Zero, params);
     }
-    
+
     @Override
     public List<Integer> getInvItemListByBranchIdNotInInvPurchaseInvoice(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
