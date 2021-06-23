@@ -1,0 +1,143 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+
+
+
+        <h:form id="form" dir="#{userData.dir}" class='formmargin'>
+
+
+
+            <p:fieldset legend="#{userData.userDDs['REPORT_DATA_ITEM']}" 
+
+                        style=" position: relative">
+
+
+
+                <div class="ui-g-12 ui-xl-12">
+                    <div class="ui-g-6 ui-xl-6">
+                        <p:selectCheckboxMenu id="proGroup" value="#{invItemMainDataReport.groupDTOSelected}" 
+                                              converter="#{invItemMainDataReport.proGroupDTOConverter}"
+                                              label="الفئة" style="width: 15rem"
+                                              filter="true" filterMatchMode="startsWith" panelStyle="width: 15rem" scrollHeight="250">
+                            <f:selectItems value="#{invItemMainDataReport.groupDTOList}" 
+                                           var="proGroup"
+                                           itemLabel="#{proGroup}"
+                                           itemValue="#{proGroup}"/>
+                        </p:selectCheckboxMenu>
+                    </div>
+                    <div class="ui-g-6 ui-xl-6">
+                        <p:outputLabel style="width: 50px;margin-right: 1%" value="الفئة"/>
+                    </div>
+                </div>
+
+
+
+
+                <p:commandButton   class="searchButtons"
+                                   title="#{userData.userDDs['SEARCH']}"
+                                   action="#{invItemMainDataReport.search()}"
+                                   id="saveB"
+                                   value="#{userData.userDDs['SEARCH']}"
+                                   update="data" 
+                                   />
+
+
+
+                <h:commandLink  class="sdcreenimg" style="margin-right: 4px;">  
+
+                    <p:graphicImage name="/img/excel.jpg" width="24"/>  
+
+                    <p:dataExporter type="xls"
+                                    target="ItemMainDataByGroupViewTable" 
+                                    fileName=" تقرير البيانات الأساسية للأصناف حسب المجموعات"
+                                    postProcessor="#{invItemMainDataReport.postProcessXLS}" />  
+                </h:commandLink>
+
+                <p:blockUI block="form" trigger="saveB " animate="true" >
+
+                    <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                </p:blockUI> 
+
+
+
+
+            </p:fieldset>
+
+            <p:fieldset style=" margin: 10px 0">
+                <p:dataTable  id="data"
+                              var="data"
+                              value="#{invItemMainDataReport.list}"
+                              draggableColumns="true"
+                              paginator="true"
+                              rows="20"
+                              widgetVar="data" 
+                              rowIndexVar="index" 
+                              emptyMessage="EMPTY_TABLE"
+                              >
+                    <p:column headerText="رقم الصنف" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                        <h:outputText value="#{data.id}" />
+                    </p:column>
+                    <p:column headerText=" اسم الصنف" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                        <h:outputText value="#{data.name}" />
+                    </p:column>
+                    <p:column headerText=" التكلفة" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                        <h:outputText value="#{data.sellPrice}" />
+                    </p:column>
+                    <p:column headerText="اعلى سعر للرجال" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                        <h:outputText value="#{data.maxpricemen}" />
+                    </p:column>
+                    <p:column headerText="اعلى سعر للشباب" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                        <h:outputText value="#{data.maxpriceyoung}" />
+                    </p:column>
+                    <p:column headerText=" اقل سعر للرجال" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                        <h:outputText value="#{data.minpricemen}" />
+                    </p:column>
+                    <p:column headerText=" اقل سعر للشباب" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                        <h:outputText value="#{data.minpriceyoung}" />
+                    </p:column>
+                    <p:column headerText="عدد الامتار المجانية للرجال" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                        <h:outputText value="#{data.numbermetersfreemen}" />
+                    </p:column>
+                    <p:column headerText="عدد الامتار المجانية للشباب" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                        <h:outputText value="#{data.numbermetersfreeyoung}" />
+                    </p:column>
+                    <p:column headerText=" عدد الامتار  للرجال" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                        <h:outputText value="#{data.numbermetersmen}" />
+                    </p:column>
+                    <p:column headerText=" عدد الامتار  للشباب" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                        <h:outputText value="#{data.numbermetersyoung}" />
+                    </p:column>
+                    <p:column headerText=" طبيعة الصنف" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                        <h:outputText value="#{data.itemNatural}" />
+                    </p:column>
+
+                </p:dataTable>
+
+                <div class="ui-g-12 ui-md-6">
+                    <p:commandButton class="printButton"  icon="fa fa-fw fa-print"
+                                     onclick="form.target = '_blank'" ajax="false"
+                                     value="#{userData.userDDs['PRINT']}"
+                                     actionListener="#{invItemMainDataReport.exportPDF(actionEvent)}"/>
+                </div>
+
+            </p:fieldset>
+            <script>
+                function selectAll() {
+                    $(':checkbox[id*="groups"]').prop('checked', true);
+                    document.getElementById("form:fromItem_hinput").value = null;
+                    document.getElementById("form:toItem_hinput").value = null;
+                }
+
+            </script>
+        </h:form>
+    </ui:define>
+</ui:composition>

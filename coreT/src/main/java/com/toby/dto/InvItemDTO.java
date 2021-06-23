@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @author amr
  */
-public class InvItemDTO  extends BaseEntityDTO{
+public class InvItemDTO extends BaseEntityDTO {
 
     private String msg;
     private String code;
@@ -55,7 +55,7 @@ public class InvItemDTO  extends BaseEntityDTO{
     private BigDecimal weight;
     private BigDecimal length;
     private BigDecimal width;
-    
+
     private Integer typeshow;
     private Integer itemNatural;
     private BigDecimal discountrate;
@@ -76,10 +76,12 @@ public class InvItemDTO  extends BaseEntityDTO{
     private Integer isinventoryitem;
     private BigDecimal quantity;
     private ProGroupDTO proGroupId;
-    
+
     //barcode    
     private List<InvBarcodeDTO> invBarcodeEntity;
     private List<InvBarcodeDTO> invBarcodeDeletedList;
+
+   
 
     /**
      * @return the id
@@ -108,8 +110,6 @@ public class InvItemDTO  extends BaseEntityDTO{
     public void setMsg(String msg) {
         this.msg = msg;
     }
-
-
 
     /**
      * @return the code
@@ -419,10 +419,6 @@ public class InvItemDTO  extends BaseEntityDTO{
         this.ispurchase = ispurchase;
     }
 
-    
-
-    
-
     /**
      * @return the groupId
      */
@@ -437,8 +433,6 @@ public class InvItemDTO  extends BaseEntityDTO{
         this.groupId = groupId;
     }
 
-   
-
     /**
      * @return the siteId
      */
@@ -452,8 +446,6 @@ public class InvItemDTO  extends BaseEntityDTO{
     public void setSiteId(InvOrganizationSite siteId) {
         this.siteId = siteId;
     }
-
-    
 
     /**
      * @return the height
@@ -510,7 +502,7 @@ public class InvItemDTO  extends BaseEntityDTO{
     public void setWidth(BigDecimal width) {
         this.width = width;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -666,7 +658,7 @@ public class InvItemDTO  extends BaseEntityDTO{
      * @return the discountrate
      */
     public BigDecimal getDiscountrate() {
-        if(discountrate == null){
+        if (discountrate == null) {
             discountrate = BigDecimal.ZERO;
         }
         return discountrate;
@@ -683,7 +675,7 @@ public class InvItemDTO  extends BaseEntityDTO{
      * @return the discountvalue
      */
     public BigDecimal getDiscountvalue() {
-        if(discountvalue == null){
+        if (discountvalue == null) {
             discountvalue = BigDecimal.ZERO;
         }
         return discountvalue;
@@ -700,7 +692,7 @@ public class InvItemDTO  extends BaseEntityDTO{
      * @return the maxpriceyoung
      */
     public BigDecimal getMaxpriceyoung() {
-        if(maxpriceyoung == null){
+        if (maxpriceyoung == null) {
             maxpriceyoung = BigDecimal.ZERO;
         }
         return maxpriceyoung;
@@ -717,7 +709,7 @@ public class InvItemDTO  extends BaseEntityDTO{
      * @return the maxpricemen
      */
     public BigDecimal getMaxpricemen() {
-        if(maxpricemen == null){
+        if (maxpricemen == null) {
             maxpricemen = BigDecimal.ZERO;
         }
         return maxpricemen;
@@ -734,7 +726,7 @@ public class InvItemDTO  extends BaseEntityDTO{
      * @return the minpriceyoung
      */
     public BigDecimal getMinpriceyoung() {
-        if(minpriceyoung == null){
+        if (minpriceyoung == null) {
             minpriceyoung = BigDecimal.ZERO;
         }
         return minpriceyoung;
@@ -751,7 +743,7 @@ public class InvItemDTO  extends BaseEntityDTO{
      * @return the minpricemen
      */
     public BigDecimal getMinpricemen() {
-        if(minpricemen == null){
+        if (minpricemen == null) {
             minpricemen = BigDecimal.ZERO;
         }
         return minpricemen;
@@ -768,7 +760,7 @@ public class InvItemDTO  extends BaseEntityDTO{
      * @return the numbermetersyoung
      */
     public BigDecimal getNumbermetersyoung() {
-        if(numbermetersyoung == null){
+        if (numbermetersyoung == null) {
             numbermetersyoung = BigDecimal.ZERO;
         }
         return numbermetersyoung;
@@ -785,7 +777,7 @@ public class InvItemDTO  extends BaseEntityDTO{
      * @return the numbermetersmen
      */
     public BigDecimal getNumbermetersmen() {
-        if(numbermetersmen == null){
+        if (numbermetersmen == null) {
             numbermetersmen = BigDecimal.ZERO;
         }
         return numbermetersmen;
@@ -802,7 +794,7 @@ public class InvItemDTO  extends BaseEntityDTO{
      * @return the numbermetersfreeyoung
      */
     public BigDecimal getNumbermetersfreeyoung() {
-        if(numbermetersfreeyoung == null){
+        if (numbermetersfreeyoung == null) {
             numbermetersfreeyoung = BigDecimal.ZERO;
         }
         return numbermetersfreeyoung;
@@ -819,7 +811,7 @@ public class InvItemDTO  extends BaseEntityDTO{
      * @return the numbermetersfreemen
      */
     public BigDecimal getNumbermetersfreemen() {
-        if(numbermetersfreemen == null){
+        if (numbermetersfreemen == null) {
             numbermetersfreemen = BigDecimal.ZERO;
         }
         return numbermetersfreemen;
@@ -836,7 +828,7 @@ public class InvItemDTO  extends BaseEntityDTO{
      * @return the bounsepriceyoung
      */
     public BigDecimal getBounsepriceyoung() {
-        if(bounsepriceyoung == null){
+        if (bounsepriceyoung == null) {
             bounsepriceyoung = BigDecimal.ZERO;
         }
         return bounsepriceyoung;
@@ -853,7 +845,7 @@ public class InvItemDTO  extends BaseEntityDTO{
      * @return the bounsepricemen
      */
     public BigDecimal getBounsepricemen() {
-        if(bounsepricemen == null){
+        if (bounsepricemen == null) {
             bounsepricemen = BigDecimal.ZERO;
         }
         return bounsepricemen;
@@ -870,7 +862,7 @@ public class InvItemDTO  extends BaseEntityDTO{
      * @return the commissionrate
      */
     public BigDecimal getCommissionrate() {
-        if(commissionrate == null){
+        if (commissionrate == null) {
             commissionrate = BigDecimal.ZERO;
         }
         return commissionrate;
@@ -887,7 +879,7 @@ public class InvItemDTO  extends BaseEntityDTO{
      * @return the commissionvalue
      */
     public BigDecimal getCommissionvalue() {
-        if(commissionvalue == null){
+        if (commissionvalue == null) {
             commissionvalue = BigDecimal.ZERO;
         }
         return commissionvalue;
@@ -991,7 +983,7 @@ public class InvItemDTO  extends BaseEntityDTO{
      * @return the quantity
      */
     public BigDecimal getQuantity() {
-        if(quantity == null){
+        if (quantity == null) {
             quantity = BigDecimal.ZERO;
         }
         return quantity;
@@ -1017,4 +1009,6 @@ public class InvItemDTO  extends BaseEntityDTO{
     public void setProGroupId(ProGroupDTO proGroupId) {
         this.proGroupId = proGroupId;
     }
+
+   
 }
