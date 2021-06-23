@@ -22,74 +22,41 @@
     
 
     <ui:define name="content">
-        <div class="new-dashboard" style="margin: 2%;">
-            <div style="display: inline-block;padding: 25px;border: solid 1px grey;margin-left: 1%;">
-                block 1
+        <div class="new-dashboard">
+            <div class="blocks-h2">
+                <h2>ادارة الخزائن والبنوك</h2>
             </div>
-            <div style="display: inline-block;padding: 25px;border: solid 1px grey;margin-left: 1%;">
-                block 2
-            </div>
-            <div style="display: inline-block;padding: 25px;border: solid 1px grey;margin-left: 1%;">
-                block 3
-            </div>
-            <div style="display: inline-block;padding: 25px;border: solid 1px grey;margin-left: 1%;">
-                block 4
-            </div>
-            <div style="display: inline-block;padding: 25px;border: solid 1px grey;margin-left: 1%;">
-                block 5
-            </div>
-            <div style="display: inline-block;padding: 25px;border: solid 1px grey;margin-left: 1%;">
-                block 6
-            </div>
-            <div style="display: inline-block;padding: 25px;border: solid 1px grey;margin-left: 1%;">
-                block 7
-            </div>
-            <div style="display: inline-block;padding: 25px;border: solid 1px grey;margin-left: 1%;">
-                block 8
-            </div>
-            <div style="display: inline-block;padding: 25px;border: solid 1px grey;margin-left: 1%;">
-                block 9
-            </div>
-            <div style="display: inline-block;padding: 25px;border: solid 1px grey;margin-left: 1%;">
-                block 10
+            <div  class="dashboard-block">
+                <p:link class="blockDash" outcome="/faces/views/notesreceivablesadmin/notesreceivablesListAdmin.xhtml" value="المقبوضات">
+                    rendered="#{userData.userScreens['notesreceivablesadmin'].view or userData.isAdmin}"
+                </p:link>
+                
+                <p:link class="blockDash" outcome="/faces/views/glBankTransaction/glBankTransactionList.xhtml" value="تحويلات الخزائن">
+                    rendered="#{userData.userScreens['notesreceivablesadmin'].view or userData.isAdmin}"
+                </p:link>
             </div>
             
             
         </div>
-        <div class="new-dashboard" style="margin: 2%;">
-            <div style="display: inline-block;padding: 25px;border: solid 1px grey;margin-left: 1%;">
-                block 1
+        
+        <div class="new-dashboard">
+            <div class="blocks-h2">
+                <h2>تقارير الخزائن والبنوك</h2>
             </div>
-            <div style="display: inline-block;padding: 25px;border: solid 1px grey;margin-left: 1%;">
-                block 2
-            </div>
-            <div style="display: inline-block;padding: 25px;border: solid 1px grey;margin-left: 1%;">
-                block 3
-            </div>
-            <div style="display: inline-block;padding: 25px;border: solid 1px grey;margin-left: 1%;">
-                block 4
-            </div>
-            <div style="display: inline-block;padding: 25px;border: solid 1px grey;margin-left: 1%;">
-                block 5
-            </div>
-            <div style="display: inline-block;padding: 25px;border: solid 1px grey;margin-left: 1%;">
-                block 6
-            </div>
-            <div style="display: inline-block;padding: 25px;border: solid 1px grey;margin-left: 1%;">
-                block 7
-            </div>
-            <div style="display: inline-block;padding: 25px;border: solid 1px grey;margin-left: 1%;">
-                block 8
-            </div>
-            <div style="display: inline-block;padding: 25px;border: solid 1px grey;margin-left: 1%;">
-                block 9
-            </div>
-            <div style="display: inline-block;padding: 25px;border: solid 1px grey;margin-left: 1%;">
-                block 10
+            <div  class="dashboard-block">
+                <p:link class="blockDash" outcome="/faces/views/accountreport/banksBalanceReport.xhtml" value="أرصدة الخزائن والبنوك">
+                    rendered="#{userData.userScreens['notesreceivablesadmin'].view or userData.isAdmin}"
+                </p:link>
+                
+                <p:link class="blockDash" outcome="/faces/views/bankreport/cashaccountsettlement_1.xhtml" value=" كشف حساب خزينة - بنك">
+                    rendered="#{userData.userScreens['notesreceivablesadmin'].view or userData.isAdmin}"
+                </p:link>
             </div>
             
             
         </div>
+        
+           
     </ui:define>
 
 </ui:composition>

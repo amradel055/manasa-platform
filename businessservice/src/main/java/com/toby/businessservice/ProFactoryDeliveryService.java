@@ -21,17 +21,19 @@ public interface ProFactoryDeliveryService {
 
     public Long getTotalRegistors(Integer type, Integer branchId, Map<String, Object> filters);
 
+    public Boolean checkProFactoryDelivery(Integer id);
+
     public List<InvInvoiceDTO> getALLProFactoryDeliveryDTOByBranchId(Integer type, int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters);
 
     public InvInvoiceDTO findProFactoryDeliveryById(InvInvoiceDTO invPurchaseInvoiceDto);
-    
+
     public InvInvoiceDTO convertProFactoryDeliveryToInvInvoice(InvInvoiceDTO invPurchaseInvoiceDTO, Integer type);
-    
+
     public InvInvoiceDTO save(InvInvoiceDTO invInvoiceDTO, TobyUser tobyUser);
-    
+
     public void deleteInvAddingOrder(InvInvoiceDTO invoiceDTO);
-    
-    public List<InvInvoiceDTO> getALLProFactoryDeliveryDTOByStatus(PrintProductionDTO printProductionDTO,Integer branchId);
-    
-    public List<InvInvoiceDTO> getALLProFactoryDeliveryDTOByStatusRemain(PrintProductionDTO printProductionDTO, Integer branchId) ;
+
+    public List<InvInvoiceDTO> getALLProFactoryDeliveryDTOByStatus(PrintProductionDTO printProductionDTO, Integer branchId);
+
+    public List<InvInvoiceDTO> getALLProFactoryDeliveryDTOByStatusRemain(PrintProductionDTO printProductionDTO, Integer branchId);
 }

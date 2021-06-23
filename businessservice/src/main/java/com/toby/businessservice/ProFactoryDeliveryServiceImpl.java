@@ -68,6 +68,19 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
         }
     }
 
+      @Override
+    public Boolean checkProFactoryDelivery(Integer id) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", id);
+        StringBuilder builder = new StringBuilder();
+        builder.append(" select pfd from ProFactoryDelivery pfd where pfd.invPurchaseInvoiceId.id = :id ");
+        List<ProFactoryDelivery> details = dao.findListByQuery(builder.toString(), params);
+        if (details != null && !details.isEmpty()) {
+            return false;
+        }
+        return true;
+    }
+
     @Override
     public List<InvInvoiceDTO> getALLProFactoryDeliveryDTOByBranchId(Integer type, int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters) {
         filters.put("branchId", branchId);
@@ -204,7 +217,7 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
         ProFactoryDelivery proFactoryDelivery = null;
         if (invInvoiceDTO.getNeedLoadedSerial() != null && invInvoiceDTO.getNeedLoadedSerial() != 0) {
             proFactoryDelivery = findProFactoryDeliveryByInvInvoiceId(invInvoiceDTO.getNeedLoadedSerial(), type, invInvoiceDTO.getBranchId());
-            
+
             if (proFactoryDelivery != null && proFactoryDelivery.getInvPurchaseInvoiceId() != null && proFactoryDelivery.getInvPurchaseInvoiceId().getId() != null) {
                 invInvoiceDTO.setInvPurchaseInvoiceId(proFactoryDelivery.getInvPurchaseInvoiceId().getId());
                 invInvoiceDTO.setRemain(invPurchaseInvoiceService_1.remainForInvPurchaseInvoice(proFactoryDelivery.getInvPurchaseInvoiceId().getId()));

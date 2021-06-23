@@ -125,6 +125,8 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     private OrganizationSiteService organizationSiteService;
     @EJB
     private InvPurchaseInvoiceService_1 invPurchaseInvoiceService;
+    @EJB
+    ProFactoryDeliveryService proFactoryDeliveryService;
 
     InvPurchaseReturnSave invPurchaseReturnSave;
 
@@ -137,7 +139,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                     append(serial).
                     append(" and type = 4  and branch_id = 182 ");
             List<Integer> details = dao.executeNativeQuery(builder.toString());
-            if(details != null && !details.isEmpty()){
+            if (details != null && !details.isEmpty()) {
                 return details.get(0);
             }
             return null;
