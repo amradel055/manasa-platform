@@ -68,10 +68,12 @@ import com.toby.views.QuantityItemsStore;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -149,6 +151,11 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     private ItemDTOConverter itemDTOParentConverter;
     private InvInventory invInventorySelection;
     private List<InvInventory> inventoryList;
+
+    // offer test 
+    Map<Integer, BigDecimal> groupAndNumberMap = new HashMap<>();
+    Map<Integer, List<InvDetailDTO>> groupAndListMap = new HashMap<>();
+    Map<Integer, Integer> groupAndNumberRemainMap = new HashMap<>();
 
     @EJB
     AutoCompleteService autoCompleteService;
@@ -274,27 +281,26 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         }
 
         if (getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVPURCHASEORDERFORM)
-//                || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVADDINGORDERFORM)
-//                || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVADDINGORDERFORM)
-                || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVADDINGORDERFORM)
-                ) {
+                //                || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVADDINGORDERFORM)
+                //                || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVADDINGORDERFORM)
+                || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVADDINGORDERFORM)) {
             getInvOrganizationSiteDTOList(true, 1);
 //            getInventoryDelegatorList(0, getInvInvoiceDTO().getGallaryId() == null ? null : getInvInvoiceDTO().getGallaryId().getId());
             if (getInvInvoiceDTO().getInvDelegatorId() == null) {
                 getInvInvoiceDTO().setInvDelegatorId(getInventoryDelegatorList(0, getInvInvoiceDTO().getGallaryId() == null ? null : getInvInvoiceDTO().getGallaryId().getId()).get(0));
             }
         } else if (getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVSALESINVOICEFORM)
-//                || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVADDINGORDERFORM)
+                //                || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVADDINGORDERFORM)
                 || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVRESERVATIONFORM)
                 || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVQUOTATIONFORM)
-//                || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVADDINGORDERFORM)
+                //                || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVADDINGORDERFORM)
                 || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.PROWORKORDER)) {
             getInvOrganizationSiteDTOList(true, 0);
 //            getInventoryDelegatorList(1, getInvInvoiceDTO().getGallaryId() == null ? null : getInvInvoiceDTO().getGallaryId().getId());
             if (getInvInvoiceDTO().getInvDelegatorId() == null) {
                 getInvInvoiceDTO().setInvDelegatorId(getInventoryDelegatorList(1, getInvInvoiceDTO().getGallaryId() == null ? null : getInvInvoiceDTO().getGallaryId().getId()).get(0));
             }
-        }else if (getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVPERMISSIONORDERFORM)) {
+        } else if (getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVPERMISSIONORDERFORM)) {
             if (getInvInvoiceDTO().getInvDelegatorId() == null) {
                 getInvInvoiceDTO().setInvDelegatorId(getInventoryDelegatorList(1, getInvInvoiceDTO().getGallaryId() == null ? null : getInvInvoiceDTO().getGallaryId().getId()).get(0));
             }
@@ -446,6 +452,157 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
             return null;
         }
         return true;
+    }
+
+    public void testMethod() {
+
+        Map<Integer, Integer> groupNotUsed = new HashMap<>();
+        groupNotUsed.put(5, 5);
+        groupNotUsed.put(7, 7);
+        groupNotUsed.put(13, 13);
+        groupNotUsed.put(14, 14);
+        groupNotUsed.put(15, 15);
+        groupNotUsed.put(17, 17);
+        groupNotUsed.put(18, 18);
+        groupNotUsed.put(19, 19);
+        groupNotUsed.put(21, 21);
+        groupNotUsed.put(26, 26);
+        groupNotUsed.put(27, 27);
+        groupNotUsed.put(28, 28);
+        groupNotUsed.put(29, 29);
+        groupNotUsed.put(30, 30);
+        groupNotUsed.put(31, 31);
+        groupNotUsed.put(32, 32);
+        groupNotUsed.put(33, 33);
+        groupNotUsed.put(35, 35);
+        groupNotUsed.put(36, 36);
+        groupNotUsed.put(37, 37);
+        groupNotUsed.put(39, 39);
+        for (InvDetailDTO detailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
+//            Integer itemId = detailDTO.getItemsBarcodesDetail().getItemId();
+//            InvItem item = invItemService.findInvItem(itemId);
+
+            if (detailDTO.getItemsBarcodesDetail() == null && detailDTO.getItemsBarcodesDetailTrans() != null) {
+                detailDTO.setItemsBarcodesDetail(detailDTO.getItemsBarcodesDetailTrans());
+            }
+
+            if (detailDTO.getItemId() != null
+                    && detailDTO.getItemId().getProGroupId() != null
+                    && detailDTO.getItemId().getProGroupId().getId() != null) {
+                Integer groupId = detailDTO.getItemId().getProGroupId().getId();
+
+                if (!groupNotUsed.containsKey(groupId)) {
+                    if (groupId != 1) {
+                        groupId = 2;
+                    }
+                    if (!groupAndNumberMap.containsKey(groupId)) {
+                        groupAndNumberMap.put(groupId, detailDTO.getNumber());
+                    } else {
+                        BigDecimal number = groupAndNumberMap.get(groupId);
+                        number = number.add(detailDTO.getNumber());
+                        groupAndNumberMap.put(groupId, number);
+                    }
+
+                    if (!groupAndListMap.containsKey(groupId)) {
+                        List<InvDetailDTO> list = new ArrayList<>();
+                        list.add(detailDTO);
+                        groupAndListMap.put(groupId, list);
+                    } else {
+                        List<InvDetailDTO> list = groupAndListMap.get(groupId);
+                        list.add(detailDTO);
+                        Collections.sort(list);
+//                    TreeMap<BigDecimal, InvDetailDTO> tree_map = new TreeMap<>();
+//                    for (InvDetailDTO dTO : list) {
+//                        tree_map.put(dTO.getCost(), dTO);
+//                    }
+//                    List<InvDetailDTO> list2 = new ArrayList<>(tree_map.values());
+                        groupAndListMap.put(groupId, list);
+                    }
+                }
+            }
+        }
+        for (InvDetailDTO detailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
+            if (detailDTO.getItemsBarcodesDetail() == null && detailDTO.getItemsBarcodesDetailTrans() != null) {
+                detailDTO.setItemsBarcodesDetail(detailDTO.getItemsBarcodesDetailTrans());
+            }
+
+            if (detailDTO.getItemId() != null
+                    && detailDTO.getItemId().getProGroupId() != null
+                    && detailDTO.getItemId().getProGroupId().getId() != null) {
+                Integer groupId = detailDTO.getItemId().getProGroupId().getId();
+                if (!groupNotUsed.containsKey(groupId)) {
+                    if (groupId != 1) {
+                        groupId = 2;
+                    }
+                    if (groupAndNumberMap.containsKey(groupId)) {
+                        BigDecimal totalNumberOffer = groupAndNumberMap.get(groupId);
+                        BigDecimal nuberOffer = totalNumberOffer.divide(new BigDecimal(3), 3, RoundingMode.HALF_UP);
+                        int numberOffer = nuberOffer.intValue();
+                        if (numberOffer > 0) {
+                            groupAndNumberRemainMap.put(groupId, numberOffer);
+                        }
+                    }
+                }
+            }
+        }
+
+        for (InvDetailDTO detailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
+            if (detailDTO.getItemsBarcodesDetail() == null && detailDTO.getItemsBarcodesDetailTrans() != null) {
+                detailDTO.setItemsBarcodesDetail(detailDTO.getItemsBarcodesDetailTrans());
+            }
+
+            if (detailDTO.getItemId() != null
+                    && detailDTO.getItemId().getProGroupId() != null
+                    && detailDTO.getItemId().getProGroupId().getId() != null) {
+                Integer groupId = detailDTO.getItemId().getProGroupId().getId();
+                if (!groupNotUsed.containsKey(groupId)) {
+                    if (groupId != 1) {
+                        groupId = 2;
+                    }
+                    if (groupAndNumberRemainMap.containsKey(groupId)) {
+                        int totalNumberOffer = groupAndNumberRemainMap.get(groupId);
+                        if (totalNumberOffer > 0) {
+                            List<InvDetailDTO> list = groupAndListMap.get(groupId);
+                            InvDetailDTO dTO = list.get(0);
+//                        for (InvDetailDTO dTO : list) {
+                            if (groupAndNumberRemainMap.containsKey(groupId)) {
+                                if (detailDTO.getIndex().equals(dTO.getIndex())
+                                        && (dTO.getDiscount() == null || dTO.getDiscount().compareTo(BigDecimal.ZERO) != 1)) {
+                                    if (detailDTO.getNumber().compareTo(new BigDecimal(totalNumberOffer)) != -1) {
+                                        if (detailDTO.getItemId().getProGroupId().getId() != 22) {
+                                            BigDecimal net = detailDTO.getNet();
+                                            BigDecimal offer = detailDTO.getCost().multiply(new BigDecimal(totalNumberOffer));
+                                            detailDTO.setNet(net.subtract(offer));
+                                            detailDTO.setDiscount(((offer.multiply(new BigDecimal(100))).divide(net, 3, RoundingMode.HALF_UP)));
+                                            groupAndNumberRemainMap.remove(groupId);
+                                            list.remove(0);
+                                        } else {
+                                            detailDTO.setNet(BigDecimal.ZERO);
+                                            detailDTO.setDiscount(new BigDecimal(100));
+                                            int totalNumberOffer2 = groupAndNumberRemainMap.get(groupId);
+                                            int newNumber = totalNumberOffer2 - detailDTO.getNumber().intValue();
+                                            groupAndNumberRemainMap.put(groupId, newNumber);
+                                            list.remove(0);
+                                        }
+                                    } else if (detailDTO.getNumber().compareTo(new BigDecimal(totalNumberOffer)) == -1) {
+                                        detailDTO.setNet(BigDecimal.ZERO);
+                                        detailDTO.setDiscount(new BigDecimal(100));
+                                        int totalNumberOffer2 = groupAndNumberRemainMap.get(groupId);
+                                        int newNumber = totalNumberOffer2 - detailDTO.getNumber().intValue();
+                                        groupAndNumberRemainMap.put(groupId, newNumber);
+                                        list.remove(0);
+                                    }
+                                }
+                            }
+//                        }
+                        } else {
+                            groupAndNumberRemainMap.remove(groupId);
+                        }
+                    }
+                }
+            }
+        }
+        updateSummition();
     }
 
     public void updatePriceAndQuantityForDetail() {
@@ -1435,7 +1592,6 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         invInvoiceDTO.setBranchId(getUserData().getUserBranch().getId());
 
         invInvoiceDTO.setTaxflag(invInvoiceDTO.getInventorySetupDTO().getDefaultSalesTax());
-        
 
         return invInvoiceDTO;
     }

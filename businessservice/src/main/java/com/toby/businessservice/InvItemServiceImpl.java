@@ -12,6 +12,7 @@ import com.toby.dto.CurrencyDTO;
 import com.toby.dto.InvGroupDTO;
 import com.toby.dto.InvItemDTO;
 import com.toby.dto.InvOrganizationSiteDTO;
+import com.toby.dto.ProGroupDTO;
 import com.toby.dto.SymbolDTO;
 import com.toby.entity.Branch;
 import com.toby.entity.InvBarcode;
@@ -186,11 +187,12 @@ public class InvItemServiceImpl implements InvItemService {
         invItemDTO.setCreatedBy(invItem.getCreatedBy() != null ? invItem.getCreatedBy().getId() : null);
         invItemDTO.setCreatedDate(invItem.getCreationDate());
         invItemDTO.setBranchId(invItem.getBranchId() != null ? invItem.getBranchId().getId() : null);
-        invItemDTO.setId(invItem.getId());
+        mapToDTOSmall(invItemDTO, invItem);
+
         invItemDTO.setCompanyId(invItem.getCompanyId() != null ? invItem.getCompanyId().getId() : null);
         invItemDTO.setTypeCat(invItem.getTypeCat());
         invItemDTO.setName(invItem.getName());
-        invItemDTO.setCode(invItem.getCode());
+
         invItemDTO.setSellPrice(invItem.getSellPrice());
         invItemDTO.setMsg(invItem.getMsg());
         invItemDTO.setIspurchase(invItem.getIspurchase());
@@ -280,6 +282,19 @@ public class InvItemServiceImpl implements InvItemService {
             invItemDTO.setUnitId(symbolDTO);
         }
 
+        return invItemDTO;
+    }
+
+    private InvItemDTO mapToDTOSmall(InvItemDTO invItemDTO, InvItem invItem) {
+        invItemDTO.setId(invItem.getId());
+        invItemDTO.setCode(invItem.getCode());
+        if (invItem.getProGroupId() != null) {
+            ProGroupDTO invGroupDTO = new ProGroupDTO();
+            invGroupDTO.setId(invItem.getProGroupId().getId());
+            invGroupDTO.setName(invItem.getProGroupId().getName());
+            invItemDTO.setProGroupId(invGroupDTO);
+
+        }
         return invItemDTO;
     }
 
@@ -380,6 +395,14 @@ public class InvItemServiceImpl implements InvItemService {
         InvItem invItem = new InvItem();
         invItem = dao.findEntityById(InvItem.class, invItemById);
         return invItem;
+    }
+
+    @Override
+    public InvItemDTO findInvItemDTO(Integer invItemById) {
+        InvItem invItem = dao.findEntityById(InvItem.class, invItemById);
+        InvItemDTO invItemDTO = new InvItemDTO();
+        invItemDTO = mapToDTOSmall(invItemDTO, invItem);
+        return invItemDTO;
     }
 
     @Override
@@ -1040,8 +1063,8 @@ public class InvItemServiceImpl implements InvItemService {
             }
         }
     }
-    
-     @Override
+
+    @Override
     public void getInvItemListByBranchId(Integer branchId) {
         updateInvItemCostAverageToZero(branchId);
         List<Integer> invItemIdList = getInvItemListByBranchIdNotInInvPurchaseInvoice(branchId);
@@ -1053,7 +1076,7 @@ public class InvItemServiceImpl implements InvItemService {
             dao.executeUpdateQuery(builder, params);
         }
     }
-    
+
     @Override
     public void updateInvItemCostAverageToZero(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
@@ -1061,7 +1084,7 @@ public class InvItemServiceImpl implements InvItemService {
         String builder_Zero = "UPDATE  InvItem i set i.costAverage = null WHERE i.id > 0 and i.branchId.id = :branchId";
         dao.executeUpdateQuery(builder_Zero, params);
     }
-    
+
     @Override
     public List<Integer> getInvItemListByBranchIdNotInInvPurchaseInvoice(Integer branchId) {
         Map<String, Object> params = new HashMap<>();

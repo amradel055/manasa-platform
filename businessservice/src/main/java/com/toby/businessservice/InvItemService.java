@@ -39,6 +39,8 @@ public interface InvItemService {
     public void deleteInvItemDTO(InvItemDTO invItem);
 
     public InvItem findInvItem(Integer invItemById);
+    
+    public InvItemDTO findInvItemDTO(Integer invItemById);
 
     public List<InvItem> getInvItemByCompanyId(Integer companyId);
 

@@ -14,7 +14,7 @@ import java.util.List;
  *
  * @author amr
  */
-public class InvDetailDTO extends BaseEntityDTO {
+public class InvDetailDTO extends BaseEntityDTO implements  Comparable< InvDetailDTO >{
 
     private Integer discountType;
     private Integer transferFrom;
@@ -55,6 +55,7 @@ public class InvDetailDTO extends BaseEntityDTO {
     private BigDecimal screwing;
     private Integer isInventoryItem;
     private String barCode;
+    private BigDecimal costComparable;
 
     //////Coth ////////
     private Boolean showPrice;
@@ -821,6 +822,25 @@ public class InvDetailDTO extends BaseEntityDTO {
      */
     public void setDiscountValue(BigDecimal discountValue) {
         this.discountValue = discountValue;
+    }
+
+    @Override
+    public int compareTo(InvDetailDTO o) {
+        return this.getCostComparable().compareTo(o.getCostComparable());
+    }
+
+    /**
+     * @return the costComparable
+     */
+    public BigDecimal getCostComparable() {
+        return costComparable;
+    }
+
+    /**
+     * @param costComparable the costComparable to set
+     */
+    public void setCostComparable(BigDecimal costComparable) {
+        this.costComparable = costComparable;
     }
 
 }

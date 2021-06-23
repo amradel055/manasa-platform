@@ -510,6 +510,14 @@
 
 
             </div>
+            <p:commandButton     class="saveButton"  
+                                 title="العرض"
+                                 value="العرض" 
+                                 icon="fa fa-fw fa-save" 
+                                 action="#{invPurchaseInvoiceFormDTOMB.testMethod}"
+                                 update="@form"
+                                 >
+            </p:commandButton>
             <div class="ui-g-12 ui-xl-12" >
                 <p:fieldset id="fieldSetId" legend="تفاصيل أمر الشغل"   >
                     <div >
@@ -704,11 +712,12 @@
                         <p:column style="width: 14vh;text-align: -webkit-auto;border-radius: 0px" id="DISCOUNT" headerText="#{userData.userDDs['DISCOUNT']}">
                             <p:inputText id="discountT" 
                                          value="#{invPurchaseInvoiceDetailsTable.discount}" 
-                                         disabled="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail == null or invPurchaseInvoiceDetailsTable.showPrice}"
+                                         disabled="#{not userData.userScreens['proworkorder'].edit or invPurchaseInvoiceDetailsTable.showPrice}"
                                          style="width:70%!important;display: inline!important">
                                 <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.validateDiscountColumn(invPurchaseInvoiceDetailsTable)}"
                                         update="discountT netId totalQuantity  totalNet form:totalActualWeight form:totalNetAfterDiscount  form:taxvalue form:totalWithTaxValue form:remain  "/>
                             </p:inputText>  
+                            
                             <p:outputLabel value="%"  style="display: inline!important"  />
                         </p:column>
 
