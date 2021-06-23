@@ -1,12 +1,16 @@
 package com.toby.reports;
 
 import com.toby.businessservice.InvItemService;
+import com.toby.businessservice.ProGroupService;
+import com.toby.converter.ProGroupDTOConverter;
 import com.toby.dto.InvItemDTO;
+import com.toby.dto.ProGroupDTO;
 import com.toby.toby.Basic;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.event.ActionEvent;
 import javax.inject.Named;
@@ -26,15 +30,30 @@ public class InvItemMainDataReport extends Basic {
     private List<InvItemDTO> list;
     private InvItemDTO invItemDTO;
 
-  
+    private List<ProGroupDTO> groupDTOSelected;
+    private List<ProGroupDTO> groupDTOList;
+    private ProGroupDTOConverter proGroupDTOConverter;
+
     @EJB
     private InvItemService invItemService;
+    @EJB
+    ProGroupService proGroupService;
 
-    public void search() {
-        setList(invItemService.invItemsReport(getInvItemDTO(),getUserData().getUserBranch().getId()));
+    @PostConstruct
+    public void init() {
+        getGroupDTOSelected().addAll(getGroupDTOList());
     }
 
-   
+    public void search() {
+        if (getGroupDTOSelected() != null && !getGroupDTOSelected().isEmpty()) {
+            list = new ArrayList<>();
+            for (ProGroupDTO proGroupDTO : getGroupDTOSelected()) {
+                getInvItemDTO().setProGroupId(proGroupDTO);
+                getList().addAll(invItemService.invItemsReport(getInvItemDTO(), getUserData().getUserBranch().getId()));
+            }
+        }
+
+    }
 
     public void postProcessXLS(Object document) {
         HSSFWorkbook wb = (HSSFWorkbook) document;
@@ -69,19 +88,20 @@ public class InvItemMainDataReport extends Basic {
             hashMap.put("companyImage", null);
         }
 
-       
-        hashMap.put("codeText", " رقم الصنف");
-        hashMap.put("nameText", "اسم الصنف ");
-        hashMap.put("dateText", " تاريخ اخر فاتورة");
-        hashMap.put("sallaryText", " سعر البيع");
-        hashMap.put("costAverageText", " متوسط التكلفة");
-        hashMap.put("costAverageText", " متوسط التكلفة");
-        hashMap.put("costAverageText", " متوسط التكلفة");
-        hashMap.put("costAverageText", " متوسط التكلفة");
-        hashMap.put("costAverageText", " متوسط التكلفة");
-        hashMap.put("costAverageText", " متوسط التكلفة");
-        hashMap.put("costAverageText", " متوسط التكلفة");
-        hashMap.put("costAverageText", " متوسط التكلفة");
+        hashMap.put("groupDTOSelectedText", " الفئة");
+        hashMap.put("groupDTOSelectedValue", getInvItemDTO().getProGroupId() == null ? null : getInvItemDTO().getProGroupId().getName());
+        hashMap.put("idText", "رقم الصنف");
+        hashMap.put("nameText", " اسم الصنف");
+        hashMap.put("sellPriceText", "التكلفة");
+        hashMap.put("maxpricemenText", "اعلى سعر للرجال");
+        hashMap.put("maxpriceyoungText", "اعلى سعر للشباب");
+        hashMap.put("minpricemenText", "اقل سعر للرجال");
+        hashMap.put("minpriceyoungText", " اقل سعر للشباب");
+        hashMap.put("numbermetersfreemenText", "عدد الامتار المجانية للرجال");
+        hashMap.put("numbermetersfreeyoungText", "عدد الامتار المجانية للشباب");
+        hashMap.put("numbermetersmenText", "عدد الامتار  للرجال");
+        hashMap.put("numbermetersyoungText", " عدد الامتار  للشباب");
+        hashMap.put("itemNaturalText", "طبيعة الصنف");
 
         return hashMap;
     }
@@ -120,7 +140,53 @@ public class InvItemMainDataReport extends Basic {
         this.invItemDTO = invItemDTO;
     }
 
-  
+    /**
+     * @return the groupDTOSelected
+     */
+    public List<ProGroupDTO> getGroupDTOSelected() {
+        if (groupDTOSelected == null) {
+            groupDTOSelected = new ArrayList<>();
+        }
+        return groupDTOSelected;
+    }
 
-   
+    /**
+     * @param groupDTOSelected the groupDTOSelected to set
+     */
+    public void setGroupDTOSelected(List<ProGroupDTO> groupDTOSelected) {
+        this.groupDTOSelected = groupDTOSelected;
+    }
+
+    /**
+     * @return the groupDTOList
+     */
+    public List<ProGroupDTO> getGroupDTOList() {
+        if (groupDTOList == null || groupDTOList.isEmpty()) {
+            groupDTOList = proGroupService.getallProGroupByBranchIdDTO(getUserData().getUser());
+            setProGroupDTOConverter(new ProGroupDTOConverter(groupDTOList));
+        }
+        return groupDTOList;
+    }
+
+    /**
+     * @param groupDTOList the groupDTOList to set
+     */
+    public void setGroupDTOList(List<ProGroupDTO> groupDTOList) {
+        this.groupDTOList = groupDTOList;
+    }
+
+    /**
+     * @return the proGroupDTOConverter
+     */
+    public ProGroupDTOConverter getProGroupDTOConverter() {
+        return proGroupDTOConverter;
+    }
+
+    /**
+     * @param proGroupDTOConverter the proGroupDTOConverter to set
+     */
+    public void setProGroupDTOConverter(ProGroupDTOConverter proGroupDTOConverter) {
+        this.proGroupDTOConverter = proGroupDTOConverter;
+    }
+
 }
