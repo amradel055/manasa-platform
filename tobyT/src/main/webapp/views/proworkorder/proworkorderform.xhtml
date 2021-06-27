@@ -512,9 +512,17 @@
             </div>
             <p:commandButton     class="saveButton"  
                                  title="العرض"
-                                 value="العرض" 
+                                 value="عرض القطعتين و الثالثة هدية" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 1}"
                                  icon="fa fa-fw fa-save" 
-                                 action="#{invPurchaseInvoiceFormDTOMB.testMethod}"
+                                 action="#{invPurchaseInvoiceFormDTOMB.twoPieceAndThirdFreeOffer()}"
+                                 update="@form"
+                                 >
+            </p:commandButton>
+            <p:commandButton     class="saveButton"  
+                                 title="العرض"
+                                 value="عرض الخصم 25 %" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 0}"
+                                 icon="fa fa-fw fa-save" 
+                                 action="#{invPurchaseInvoiceFormDTOMB.discount25ForAll()}"
                                  update="@form"
                                  >
             </p:commandButton>
@@ -717,7 +725,7 @@
                                 <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.validateDiscountColumn(invPurchaseInvoiceDetailsTable)}"
                                         update="discountT netId totalQuantity  totalNet form:totalActualWeight form:totalNetAfterDiscount  form:taxvalue form:totalWithTaxValue form:remain  "/>
                             </p:inputText>  
-                            
+
                             <p:outputLabel value="%"  style="display: inline!important"  />
                         </p:column>
 

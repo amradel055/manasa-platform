@@ -662,10 +662,10 @@ public class ImportMB extends Basic implements Serializable {
         Cell remarks = sheet.getCell(0, i);
         Cell accClass = sheet.getCell(1, i);
         Cell levalAcc = sheet.getCell(2, i);
-        Cell accNumber = sheet.getCell(3, i);
+        Cell accNumber = sheet.getCell(6, i);
         Cell parent = sheet.getCell(4, i);
         Cell name = sheet.getCell(5, i);
-        Cell shotCode = sheet.getCell(6, i);
+        Cell shotCode = sheet.getCell(3, i);
 
         item.setRemarks(remarks.getContents());
         item.setAccNumber(Integer.parseInt(!accNumber.getContents().isEmpty() ? accNumber.getContents() : null));

@@ -456,6 +456,32 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
     public void testMethod() {
 
+        if (getInvInvoiceDTO().getGallaryId() != null && getInvInvoiceDTO().getGallaryId().getInvName() != null) {
+            if (getInvInvoiceDTO().getGallaryId().getInvName() == 1) {
+                twoPieceAndThirdFreeOffer();
+            } else if (getInvInvoiceDTO().getGallaryId().getInvName() == 0) {
+                discount25ForAll();
+            }
+            updateSummition();
+        }
+    }
+
+    public void discount25ForAll() {
+        for (InvDetailDTO detailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
+            if (detailDTO.getItemsBarcodesDetail() == null && detailDTO.getItemsBarcodesDetailTrans() != null) {
+                detailDTO.setItemsBarcodesDetail(detailDTO.getItemsBarcodesDetailTrans());
+            }
+
+            if (detailDTO.getItemId() != null
+                    && detailDTO.getItemId().getProGroupId() != null
+                    && detailDTO.getItemId().getProGroupId().getId() != null && detailDTO.getItemId().getProGroupId().getId() != 5 && detailDTO.getItemId().getId() != 22194) {
+                detailDTO.setDiscount(new BigDecimal(25));
+            }
+        }
+        updateSummition();
+    }
+
+    public void twoPieceAndThirdFreeOffer() {
         Map<Integer, Integer> groupNotUsed = new HashMap<>();
         groupNotUsed.put(5, 5);
         groupNotUsed.put(7, 7);
@@ -545,7 +571,17 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                 }
             }
         }
+        ArrayList<Integer> keyList = new ArrayList<Integer>(groupAndNumberRemainMap.keySet());
 
+        for (Integer key : keyList) {
+            while (groupAndNumberRemainMap.get(key) > 0) {
+                discountItems(groupNotUsed);
+            }
+        }
+        updateSummition();
+    }
+
+    private void discountItems(Map<Integer, Integer> groupNotUsed) {
         for (InvDetailDTO detailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
             if (detailDTO.getItemsBarcodesDetail() == null && detailDTO.getItemsBarcodesDetailTrans() != null) {
                 detailDTO.setItemsBarcodesDetail(detailDTO.getItemsBarcodesDetailTrans());
@@ -574,7 +610,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                                             BigDecimal offer = detailDTO.getCost().multiply(new BigDecimal(totalNumberOffer));
                                             detailDTO.setNet(net.subtract(offer));
                                             detailDTO.setDiscount(((offer.multiply(new BigDecimal(100))).divide(net, 3, RoundingMode.HALF_UP)));
-                                            groupAndNumberRemainMap.remove(groupId);
+//                                            groupAndNumberRemainMap.remove(groupId);
+                                            groupAndNumberRemainMap.put(groupId, 0);
                                             list.remove(0);
                                         } else {
                                             detailDTO.setNet(BigDecimal.ZERO);
@@ -596,13 +633,13 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                             }
 //                        }
                         } else {
-                            groupAndNumberRemainMap.remove(groupId);
+//                            groupAndNumberRemainMap.remove(groupId);
+                            groupAndNumberRemainMap.put(groupId, 0);
                         }
                     }
                 }
             }
         }
-        updateSummition();
     }
 
     public void updatePriceAndQuantityForDetail() {
