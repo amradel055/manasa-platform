@@ -6,6 +6,7 @@
 package com.toby.invPurchaseInvoiceDTO;
 
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
+import com.toby.businessservice.ProFactoryDeliveryService;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.toby.InventoryBasicDataForm;
 import com.toby.toby.UserData;
@@ -32,6 +33,8 @@ public class InvPurchaseInvoiceListDTOMB extends InventoryBasicDataForm {
     private List<InvInvoiceDTO> invInvoiceList;
     @EJB
     private InvPurchaseInvoiceService_1 invPurchaseInvoiceService;
+    @EJB
+    ProFactoryDeliveryService proFactoryDeliveryService;
 
     @Override
     @PostConstruct
@@ -186,9 +189,14 @@ public class InvPurchaseInvoiceListDTOMB extends InventoryBasicDataForm {
     public void delete() {
         try {
             if (getInvInvoiceDTOSelected() != null && getInvInvoiceDTOSelected().getId().toString() != null) {
-                invPurchaseInvoiceService.deleteInvPurchaseInvoiceDTO(getInvInvoiceDTOSelected(), 1);
-                load();
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, getUserDDs().get("INFO"), getUserDDs().get("DELETED")));
+                if (proFactoryDeliveryService.checkProFactoryDelivery(getInvInvoiceDTOSelected().getId())) {
+                    invPurchaseInvoiceService.deleteInvPurchaseInvoiceDTO(getInvInvoiceDTOSelected(), 1);
+                    load();
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, getUserDDs().get("INFO"), getUserDDs().get("DELETED")));
+                } else {
+                    FacesContext.getCurrentInstance().addMessage(null,
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "تم التسليم للمشغل"));
+                }
             }
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), getUserDDs().get("UNIQE_KEY_ERROR")));

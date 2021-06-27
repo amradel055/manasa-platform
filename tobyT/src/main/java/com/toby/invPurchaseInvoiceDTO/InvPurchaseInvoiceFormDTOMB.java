@@ -7,6 +7,7 @@ package com.toby.invPurchaseInvoiceDTO;
 
 import com.toby.businessservice.InvGlobalService;
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
+import com.toby.businessservice.ProFactoryDeliveryService;
 import com.toby.define.ScreenNameClassEnum;
 import com.toby.toby.InventoryBasicDataForm;
 import javax.annotation.PostConstruct;
@@ -32,6 +33,8 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
     private InvGlobalService invGlobalService;
     @EJB
     InvPurchaseInvoiceService_1 invPurchaseInvoiceService_1;
+    @EJB
+    ProFactoryDeliveryService proFactoryDeliveryService;
 
     @Override
     @PostConstruct
@@ -84,14 +87,20 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
     @Override
     public String save() {
         if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getInvPurchaseInvoiceDetailList() != null && !getInvInvoiceDTO().getInvPurchaseInvoiceDetailList().isEmpty()) {
-            getInvInvoiceDTO().setMsg(null);
-            setInvInvoiceDTO(invPurchaseInvoiceService.save(getInvInvoiceDTO(), getUserData().getUser()));
-            setOrganizationSiteId(getInvInvoiceDTO().getOrganizationSiteId());
-            msgSave(getInvInvoiceDTO().getMsg());
+            if (proFactoryDeliveryService.checkProFactoryDelivery(getInvInvoiceDTO().getId())) {
+                getInvInvoiceDTO().setMsg(null);
+                setInvInvoiceDTO(invPurchaseInvoiceService.save(getInvInvoiceDTO(), getUserData().getUser()));
+                setOrganizationSiteId(getInvInvoiceDTO().getOrganizationSiteId());
+                msgSave(getInvInvoiceDTO().getMsg());
+            } else {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "تم التسليم للمشغل"));
+            }
         } else {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "لا يوجد تفاصيل للفاتورة"));
         }
+
         return "";
     }
 
