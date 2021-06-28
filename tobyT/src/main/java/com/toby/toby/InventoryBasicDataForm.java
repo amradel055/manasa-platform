@@ -482,28 +482,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     }
 
     public void twoPieceAndThirdFreeOffer() {
-        Map<Integer, Integer> groupNotUsed = new HashMap<>();
-        groupNotUsed.put(5, 5);
-        groupNotUsed.put(7, 7);
-        groupNotUsed.put(13, 13);
-        groupNotUsed.put(14, 14);
-        groupNotUsed.put(15, 15);
-        groupNotUsed.put(17, 17);
-        groupNotUsed.put(18, 18);
-        groupNotUsed.put(19, 19);
-        groupNotUsed.put(21, 21);
-        groupNotUsed.put(26, 26);
-        groupNotUsed.put(27, 27);
-        groupNotUsed.put(28, 28);
-        groupNotUsed.put(29, 29);
-        groupNotUsed.put(30, 30);
-        groupNotUsed.put(31, 31);
-        groupNotUsed.put(32, 32);
-        groupNotUsed.put(33, 33);
-        groupNotUsed.put(35, 35);
-        groupNotUsed.put(36, 36);
-        groupNotUsed.put(37, 37);
-        groupNotUsed.put(39, 39);
+        Map<Integer, Integer> groupNotUsed = unUsedGroup();
         for (InvDetailDTO detailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
 //            Integer itemId = detailDTO.getItemsBarcodesDetail().getItemId();
 //            InvItem item = invItemService.findInvItem(itemId);
@@ -514,7 +493,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
             if (detailDTO.getItemId() != null
                     && detailDTO.getItemId().getProGroupId() != null
-                    && detailDTO.getItemId().getProGroupId().getId() != null) {
+                    && detailDTO.getItemId().getProGroupId().getId() != null
+                    && detailDTO.getCost().compareTo(BigDecimal.ZERO) == 1) {
                 Integer groupId = detailDTO.getItemId().getProGroupId().getId();
 
                 if (!groupNotUsed.containsKey(groupId)) {
@@ -554,7 +534,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
             if (detailDTO.getItemId() != null
                     && detailDTO.getItemId().getProGroupId() != null
-                    && detailDTO.getItemId().getProGroupId().getId() != null) {
+                    && detailDTO.getItemId().getProGroupId().getId() != null
+                    && detailDTO.getCost().compareTo(BigDecimal.ZERO) == 1) {
                 Integer groupId = detailDTO.getItemId().getProGroupId().getId();
                 if (!groupNotUsed.containsKey(groupId)) {
                     if (groupId != 1) {
@@ -581,6 +562,32 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         updateSummition();
     }
 
+    private Map<Integer, Integer> unUsedGroup() {
+        Map<Integer, Integer> groupNotUsed = new HashMap<>();
+        groupNotUsed.put(5, 5);
+        groupNotUsed.put(7, 7);
+        groupNotUsed.put(13, 13);
+        groupNotUsed.put(14, 14);
+        groupNotUsed.put(15, 15);
+        groupNotUsed.put(17, 17);
+        groupNotUsed.put(18, 18);
+        groupNotUsed.put(19, 19);
+        groupNotUsed.put(21, 21);
+        groupNotUsed.put(26, 26);
+        groupNotUsed.put(27, 27);
+        groupNotUsed.put(28, 28);
+        groupNotUsed.put(29, 29);
+        groupNotUsed.put(30, 30);
+        groupNotUsed.put(31, 31);
+        groupNotUsed.put(32, 32);
+        groupNotUsed.put(33, 33);
+        groupNotUsed.put(35, 35);
+        groupNotUsed.put(36, 36);
+        groupNotUsed.put(37, 37);
+        groupNotUsed.put(39, 39);
+        return groupNotUsed;
+    }
+
     private void discountItems(Map<Integer, Integer> groupNotUsed) {
         for (InvDetailDTO detailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
             if (detailDTO.getItemsBarcodesDetail() == null && detailDTO.getItemsBarcodesDetailTrans() != null) {
@@ -589,7 +596,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
             if (detailDTO.getItemId() != null
                     && detailDTO.getItemId().getProGroupId() != null
-                    && detailDTO.getItemId().getProGroupId().getId() != null) {
+                    && detailDTO.getItemId().getProGroupId().getId() != null
+                    && detailDTO.getCost().compareTo(BigDecimal.ZERO) == 1) {
                 Integer groupId = detailDTO.getItemId().getProGroupId().getId();
                 if (!groupNotUsed.containsKey(groupId)) {
                     if (groupId != 1) {
