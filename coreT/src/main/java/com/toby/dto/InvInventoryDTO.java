@@ -23,6 +23,7 @@ public class InvInventoryDTO extends BaseEntityDTO {
     private GlAdminUnitDTO glAdminUnitId;
     private String daribaValue;
     private String segilValue;
+    private String phone;
     
      private Integer invType;
     private Integer invName;
@@ -229,6 +230,20 @@ public class InvInventoryDTO extends BaseEntityDTO {
      */
     public void setInvName(Integer invName) {
         this.invName = invName;
+    }
+
+    /**
+     * @return the phone
+     */
+    public String getPhone() {
+        return phone;
+    }
+
+    /**
+     * @param phone the phone to set
+     */
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
     
 }

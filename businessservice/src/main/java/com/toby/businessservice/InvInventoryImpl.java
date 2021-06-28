@@ -57,6 +57,7 @@ public class InvInventoryImpl implements InvInventoryService {
             invInventory.setTypeItem(invInventoryDTO.getTypeItem());
             invInventory.setDaribaValue(invInventoryDTO.getDaribaValue());
             invInventory.setSegilValue(invInventoryDTO.getSegilValue());
+            invInventory.setPhone(invInventoryDTO.getPhone());
 
             if (invInventoryDTO.getGlAdminUnitId() != null) {
                 GlAdminUnit glAdminUnit = new GlAdminUnit();
@@ -123,6 +124,7 @@ public class InvInventoryImpl implements InvInventoryService {
         invInventoryDTO.setCompanyId(invInventory.getCompanyId() != null ? invInventory.getCompanyId().getId() : null);
         invInventoryDTO.setDaribaValue(invInventory.getDaribaValue());
         invInventoryDTO.setSegilValue(invInventory.getSegilValue());
+        invInventoryDTO.setPhone(invInventory.getPhone());
 
         invInventoryDTO.setTypeItem(invInventory.getTypeItem());
         invInventoryDTO.setName(invInventory.getName());

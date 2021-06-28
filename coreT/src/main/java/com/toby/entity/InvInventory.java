@@ -67,6 +67,8 @@ public class InvInventory extends BaseEntity {
     private String segilValue;
     @Column(name = "inv_name")
     private Integer invName;
+    @Column(name = "phone")
+    private String phone;
 
     public InvInventory() {
     }
@@ -223,5 +225,19 @@ public class InvInventory extends BaseEntity {
      */
     public void setInvName(Integer invName) {
         this.invName = invName;
+    }
+
+    /**
+     * @return the phone
+     */
+    public String getPhone() {
+        return phone;
+    }
+
+    /**
+     * @param phone the phone to set
+     */
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }
