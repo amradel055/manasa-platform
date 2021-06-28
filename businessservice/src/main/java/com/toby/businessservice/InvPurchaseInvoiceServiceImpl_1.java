@@ -1241,6 +1241,11 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         if (invInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.INVSALESINVOICEFORM) || ScreenNameClassEnum.PROWORKORDER.equals(invInvoiceDTO.getScreenName())) {
             checkIfLoaded(invInvoiceDTO, error);
         }
+        if (invInvoiceDTO.getId() != null) {
+            if (proFactoryDeliveryService.checkProFactoryDelivery(invInvoiceDTO.getId())) {
+                error.append("\n  تم التسليم للمشغل");
+            }
+        }
 
         if (!error.toString().isEmpty()) {
             invInvoiceDTO.setMsg(error.toString());
@@ -1314,6 +1319,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                     invInvoiceDTO = mapToDTO(invPurchaseInvoice, invInvoiceDTO, false);
                     invInvoiceDTO = invGlobalService.updateSummition(invInvoiceDTO);
                 }
+
             }
         } catch (Exception e) {
             invInvoiceDTO.setMsg(e.toString());
@@ -1740,15 +1746,21 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     }
 
     @Override
-    public void deleteInvPurchaseInvoiceDTO(InvInvoiceDTO invPurchaseInvoice, Integer isPurchaseOrSales) {
+    public String deleteInvPurchaseInvoiceDTO(InvInvoiceDTO invPurchaseInvoice, Integer isPurchaseOrSales) {
         if (invPurchaseInvoice != null && invPurchaseInvoice.getId() > 0) {
-            glBankTransactionService.deleteGlBankTransactionByInvoiceId(invPurchaseInvoice.getId());
-            List<InvPurchaseInvoiceDetail> detailList = invPurchaseInvoiceDetailsService.getAllInvPurchaseInvoiceDetailsByInvPurchaseInvoiceId(invPurchaseInvoice.getId());
-            deleteDetails(detailList, isPurchaseOrSales);
-            InvPurchaseInvoice invPurchaseInvoice1 = new InvPurchaseInvoice();
-            invPurchaseInvoice1.setId(invPurchaseInvoice != null ? invPurchaseInvoice.getId() : null);
-            dao.deleteEntity(invPurchaseInvoice1);
+            if (proFactoryDeliveryService.checkProFactoryDelivery(invPurchaseInvoice.getId())) {
+                glBankTransactionService.deleteGlBankTransactionByInvoiceId(invPurchaseInvoice.getId());
+                List<InvPurchaseInvoiceDetail> detailList = invPurchaseInvoiceDetailsService.getAllInvPurchaseInvoiceDetailsByInvPurchaseInvoiceId(invPurchaseInvoice.getId());
+                deleteDetails(detailList, isPurchaseOrSales);
+                InvPurchaseInvoice invPurchaseInvoice1 = new InvPurchaseInvoice();
+                invPurchaseInvoice1.setId(invPurchaseInvoice != null ? invPurchaseInvoice.getId() : null);
+                dao.deleteEntity(invPurchaseInvoice1);
+                return null;
+            } else {
+                return "تم التسليم للمشغل";
+            }
         }
+        return null;
     }
 
     @Override
