@@ -189,13 +189,12 @@ public class InvPurchaseInvoiceListDTOMB extends InventoryBasicDataForm {
     public void delete() {
         try {
             if (getInvInvoiceDTOSelected() != null && getInvInvoiceDTOSelected().getId().toString() != null) {
-                if (proFactoryDeliveryService.checkProFactoryDelivery(getInvInvoiceDTOSelected().getId())) {
-                    invPurchaseInvoiceService.deleteInvPurchaseInvoiceDTO(getInvInvoiceDTOSelected(), 1);
+                String msg = invPurchaseInvoiceService.deleteInvPurchaseInvoiceDTO(getInvInvoiceDTOSelected(), 1);
+                if (msg == null) {
                     load();
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, getUserDDs().get("INFO"), getUserDDs().get("DELETED")));
                 } else {
-                    FacesContext.getCurrentInstance().addMessage(null,
-                            new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "تم التسليم للمشغل"));
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), msg));
                 }
             }
         } catch (Exception e) {

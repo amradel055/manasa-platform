@@ -87,15 +87,11 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
     @Override
     public String save() {
         if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getInvPurchaseInvoiceDetailList() != null && !getInvInvoiceDTO().getInvPurchaseInvoiceDetailList().isEmpty()) {
-            if (proFactoryDeliveryService.checkProFactoryDelivery(getInvInvoiceDTO().getId())) {
-                getInvInvoiceDTO().setMsg(null);
-                setInvInvoiceDTO(invPurchaseInvoiceService.save(getInvInvoiceDTO(), getUserData().getUser()));
-                setOrganizationSiteId(getInvInvoiceDTO().getOrganizationSiteId());
-                msgSave(getInvInvoiceDTO().getMsg());
-            } else {
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "تم التسليم للمشغل"));
-            }
+            getInvInvoiceDTO().setMsg(null);
+            setInvInvoiceDTO(invPurchaseInvoiceService.save(getInvInvoiceDTO(), getUserData().getUser()));
+            setOrganizationSiteId(getInvInvoiceDTO().getOrganizationSiteId());
+            msgSave(getInvInvoiceDTO().getMsg());
+
         } else {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "لا يوجد تفاصيل للفاتورة"));
