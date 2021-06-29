@@ -8,10 +8,10 @@
                 xmlns="http://www.w3.org/1999/xhtml">
     <ui:define name="content">
 
-        
+
 
         <h:form style="margin-right: 20px" id="form" dir="#{userData.dir}">
-            <p:fieldset id="whole" legend="اضافة عميل جديد" style="margin-bottom:20px">
+            <p:fieldset id="whole" legend="تسجيل بيانات العميل" style="margin-bottom:20px">
 
                 <div class="col-xs-12">
                     <p:messages id="curmsg" showDetail="true" rendered="true" closable="true"/>   
@@ -28,13 +28,25 @@
 
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 65px" value="اسم العميل"/>
+                                    <p:outputLabel style="width: 65px" value="اسم العميل رباعي"/>
 
                                 </div>
                             </div>
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:inputText style="width: 49%!important" value="#{glBankFromMB.glBankEntity.name}"/>
+                                    <p:calendar id="dateFrom"  locale="es"
+                                                pattern="dd/MM/yyyy"
+                                                style="width:50%!important"/>
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="تاريخ الميلاد "/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 49%!important" />
 
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
@@ -44,7 +56,7 @@
                             </div>
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:inputText style="width: 49%!important" value="#{glBankFromMB.glBankEntity.name}"/>
+                                    <p:inputText style="width: 49%!important" />
 
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
@@ -54,7 +66,17 @@
                             </div>
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:inputText style="width: 49%!important" value="#{glBankFromMB.glBankEntity.name}"/>
+                                    <p:inputText style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="رقم البطاقة"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 49%!important" />
 
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
@@ -62,20 +84,56 @@
 
                                 </div>
                             </div>
-                          
+
+
+
+                        </div>
+
+                        <div class="ui-g-6 ui-xl-6">
+
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="محل السكن كما هو متواجد بالبطاقة"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="الوظيفة"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:selectOneRadio id="console" >
+                                        <f:selectItem itemLabel="متزوج" itemValue="1"/>
+                                        <f:selectItem itemLabel="أعزب" itemValue="2"/>
+                                    </p:selectOneRadio>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <h5 class="p-mt-0">الحالة الاجتماعية</h5>
+                                </div>
+
+                            </div>
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:autoComplete id="GlAccount_ID" 
                                                     style="width: 85%" 
                                                     dropdown="true"
-                                                    converter="#{glBankFromMB.accountConverter}"
                                                     value=""
 
                                                     var="p"
                                                     itemLabel="#{p}" 
                                                     itemValue="#{p}" 
-                                                    forceSelection="true" 
-                                                    completeMethod="#{glBankFromMB.completeGlAccount}" >
+                                                    forceSelection="true"  >
 
 
                                     </p:autoComplete>
@@ -91,21 +149,13 @@
                                     <p:autoComplete id="Currency_ID" 
                                                     style="width: 85%" 
                                                     dropdown="true"
-                                                    converter="#{glBankFromMB.currencyConverter}"
                                                     value=""
 
                                                     var="p"
                                                     itemLabel="#{p}" 
                                                     itemValue="#{p}" 
-                                                    forceSelection="true" 
-                                                    completeMethod="#{glBankFromMB.completeCurrency}">
+                                                    forceSelection="true" >
 
-                                        <p:ajax update="@form"
-                                                event="itemSelect"
-                                                listener="#{glBankFromMB.updateGlAccounts}" />
-                                        <p:ajax update="@form"
-                                                event="change"
-                                                listener="#{glBankFromMB.updateGlAccounts}" />
 
 
                                     </p:autoComplete>
@@ -118,30 +168,29 @@
                             </div>
 
                         </div>
-                        
 
                     </div>
                 </div>
 
-                
-                <panelGrid class="centerButtons col-md-12">
+
+                <panelGrid class="centerButtons col-md-12" style='display: block; text-align: center;'>
 
                     <h:panelGroup>
 
                         <p:commandButton  class="saveButton" id="saveB" 
+                                          style="margin: 0 auto;text-align: center;display: inline-block;"
                                           title="#{userData.userDDs['SAVE']}" 
                                           value="#{userData.userDDs['SAVE']}" 
                                           icon="fa fa-fw fa-save" 
-                                          action="#{glBankFromMB.save()}" 
-                                          disabled="#{glBankFromMB.disableSave}"
                                           update="@form"
                                           />
-                        <p:commandButton  class="closeButton" id="cancelC" 
-                                          title="#{userData.userDDs['CANCEL']}" 
-                                          value="#{userData.userDDs['CANCEL']}" 
-                                          icon="fa fa-fw fa-backward" 
-                                          action="#{glBankFromMB.exit()}" 
-                                          update="@form"/>
+                        <p:commandButton value="طباعة" 
+                                         type="button" 
+                                         icon="fa fa-fw fa-print" 
+                                         class="printButton" 
+                                         id="printB" 
+                                         style="margin: 0 auto;text-align: center;display: inline-block;margin-right: 1%;" 
+                                         />
 
                         <p:blockUI block="form" trigger="saveB" animate="true" >
 

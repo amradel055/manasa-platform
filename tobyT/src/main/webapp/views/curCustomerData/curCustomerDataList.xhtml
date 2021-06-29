@@ -11,7 +11,7 @@
         
 
         <h:form style="margin-right: 20px" id="form" dir="#{userData.dir}">
-            <p:fieldset id="whole" legend="البحث عن عميل" style="margin-bottom:20px">
+            <p:fieldset id="whole" legend="البحث عن ملف عميل" style="margin-bottom:20px">
 
                 <div class="col-xs-12">
                     <p:messages id="curmsg" showDetail="true" rendered="true" closable="true"/>   
@@ -23,17 +23,13 @@
                         draggableColumns="true"
                         var="glyear"  
                         rowIndexVar="index" 
-                         value="#{glyearListBean.glYears}" 
-                         rows="#{userData.rowListCount}" 
                          paginator="true" emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
                                  id="gLyear">
                         
                         <f:facet name="header" class="col-md-12">
                             
                             <p:commandButton icon="fa fa-plus" class="saddButton"
-                                             title="#{userData.userDDs['ADD']}" 
-                                             action="#{glyearListBean.goToAdd()}" style="float:right" 
-                                             rendered="#{userData.userScreens['Glyear'].add or userData.isAdmin}"/>
+                                             title="#{userData.userDDs['ADD']}"  style="float:right" />
                              
                             <p:outputPanel >
                                  <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
@@ -48,16 +44,22 @@
                       
                         
                         <p:column headerText="اسم العميل" style="width: 15vh;text-align: -webkit-auto;font-size: 1.8vh;border-radius: 0px" >
-                            <p:outputLabel value="#{glyear.name}" style="font-size: 1.5vh" />
+                            <p:outputLabel  style="font-size: 1.5vh" />
                         </p:column>
-                        <p:column headerText="رقم التليفون" style="width: 15vh;text-align: -webkit-auto;font-size: 1.8vh;border-radius: 0px" >
-                            <p:outputLabel value="#{glyear.isDefault ? 'الافتراضية' : ''}" style="font-size: 1.5vh" />
+                        <p:column headerText="الرقم القومي" style="width: 15vh;text-align: -webkit-auto;font-size: 1.8vh;border-radius: 0px" >
+                            <p:outputLabel  style="font-size: 1.5vh" />
                         </p:column>
                         <p:column headerText="رقم الباسبور" style="width: 15vh;text-align: -webkit-auto;font-size: 1.8vh;border-radius: 0px" >
-                            <p:outputLabel value="#{glyear.isDefault ? 'الافتراضية' : ''}" style="font-size: 1.5vh" />
+                            <p:outputLabel  style="font-size: 1.5vh" />
+                        </p:column>
+                        <p:column headerText="رقم التليفون" style="width: 15vh;text-align: -webkit-auto;font-size: 1.8vh;border-radius: 0px" >
+                            <p:outputLabel  style="font-size: 1.5vh" />
                         </p:column>
                         <p:column headerText="المحافظة" style="width: 15vh;text-align: -webkit-auto;font-size: 1.8vh;border-radius: 0px" >
-                            <p:outputLabel value="#{glyear.isDefault ? 'الافتراضية' : ''}" style="font-size: 1.5vh" />
+                            <p:outputLabel  style="font-size: 1.5vh" />
+                        </p:column>
+                        <p:column headerText="المركز الطبي" style="width: 15vh;text-align: -webkit-auto;font-size: 1.8vh;border-radius: 0px" >
+                            <p:outputLabel  style="font-size: 1.5vh" />
                         </p:column>
                         <p:column headerText="#{userData.userDDs['TRANSACTION']}" style="width: 8vh;text-align:center;font-size: 1.8vh;border-radius: 0px">
                            

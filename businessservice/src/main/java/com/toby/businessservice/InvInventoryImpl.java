@@ -57,6 +57,7 @@ public class InvInventoryImpl implements InvInventoryService {
             invInventory.setTypeItem(invInventoryDTO.getTypeItem());
             invInventory.setDaribaValue(invInventoryDTO.getDaribaValue());
             invInventory.setSegilValue(invInventoryDTO.getSegilValue());
+            invInventory.setPhone(invInventoryDTO.getPhone());
             invInventory.setInvName(invInventoryDTO.getInvName());
 
             if (invInventoryDTO.getGlAdminUnitId() != null) {
@@ -124,6 +125,7 @@ public class InvInventoryImpl implements InvInventoryService {
         invInventoryDTO.setCompanyId(invInventory.getCompanyId() != null ? invInventory.getCompanyId().getId() : null);
         invInventoryDTO.setDaribaValue(invInventory.getDaribaValue());
         invInventoryDTO.setSegilValue(invInventory.getSegilValue());
+        invInventoryDTO.setPhone(invInventory.getPhone());
         invInventoryDTO.setInvName(invInventory.getInvName());
 
         invInventoryDTO.setTypeItem(invInventory.getTypeItem());

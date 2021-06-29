@@ -73,7 +73,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -256,7 +255,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                     getInvInvoiceDTO().setInvInventoryIdTo(getInvInventoryDTOList().get(getInvInventoryDTOList().size() - 1));
                 }
             }
-
+            setOrganizationSiteId(new InvOrganizationSiteDTO());
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceFormMB", "resetInvPurchaseInvoiceForm");
         }
@@ -368,7 +367,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
     public void removeHalala() {
         Integer num = getInvInvoiceDTO().getFinalNet().intValue();
-        BigDecimal remain = getInvInvoiceDTO().getFinalNet().subtract(new BigDecimal(num));
+        BigDecimal remain = getInvInvoiceDTO().getFinalNet().subtract(new BigDecimal(num));  // here remove halala 1
         BigDecimal discHalala = remain.divide(BigDecimal.valueOf(1.15), 5, RoundingMode.HALF_UP);
         getInvInvoiceDTO().setDiscHalala(discHalala);
         calcDiscountValue();
