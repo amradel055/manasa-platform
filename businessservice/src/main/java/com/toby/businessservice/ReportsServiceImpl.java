@@ -6,6 +6,8 @@
 package com.toby.businessservice;
 
 import com.toby.core.GenericDAO;
+import com.toby.dto.InvInventoryDTO;
+import com.toby.dto.ProGroupDTO;
 import com.toby.views.CompanyInvoicesWithoutSewing;
 import com.toby.views.CustomerBalances;
 import com.toby.views.InvoicesIssuedWithinAperiod;
@@ -426,13 +428,33 @@ public class ReportsServiceImpl implements ReportsService {
         List<ProfitOfItemsSold> profitOfItemsSoldList = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         sql.append("select ii.id , ii.code , ii.name , IFNULL(ii.cost_average,0) as cost_average , sum(IFNULL(ipid.quantity,0)) as totalSell , \n"
-                + "sum(IFNULL(ipid.discount,0)) as totalDiscount  , sum(IFNULL(ipid.net,0)) as totalNet\n"
+                + "sum(IFNULL(ipid.discount,0)) as totalDiscount  , sum(IFNULL(ipid.net,0)) as totalNet , sum(IFNULL(ipid.number,0)) as totalNumber\n"
                 + "from inv_purchase_invoice_detail ipid \n"
-                + "left join inv_purchase_invoice ipi on ipi.id = ipid.inv_purchase_invoice_id left join inv_item ii on ii.id = ipid.item_id");
+                + "left join inv_purchase_invoice ipi on ipi.id = ipid.inv_purchase_invoice_id left join inv_item ii on ii.id = ipid.item_id\n"
+                + "left join pro_group p on p.id = ii.pro_group_id");
         sql.append(" where ipid.branch_id = ").append(branchId);
         sql.append(" and ipi.type = ").append(type);
         appendDate7(profitOfItemsSold, sql);
-        appendGallery7(profitOfItemsSold, sql);
+        StringBuilder gallaryIds = null;
+        StringBuilder groupId = null;
+        for (InvInventoryDTO invInventoryDTO : profitOfItemsSold.getGallarySelected()) {
+            if (gallaryIds == null) {
+                gallaryIds = new StringBuilder();
+                gallaryIds.append(invInventoryDTO.getId());
+            } else {
+                gallaryIds.append(",").append(invInventoryDTO.getId());
+            }
+        }
+        for (ProGroupDTO proGroupDTO : profitOfItemsSold.getGroupDTOSelected()) {
+            if (groupId == null) {
+                groupId = new StringBuilder();
+                groupId.append(proGroupDTO.getId());
+            } else {
+                groupId.append(",").append(proGroupDTO.getId());
+            }
+        }
+        appendGallery7(gallaryIds, sql);
+        appendProGroup(groupId, sql);
         sql.append(" group by ii.id");
         List<Object[]> res = dao.executeNativeQuery(sql.toString());
         for (Object[] object : res) {
@@ -443,6 +465,7 @@ public class ReportsServiceImpl implements ReportsService {
             profitOfItemsSold.setTotallSell((BigDecimal) object[4]);
             profitOfItemsSold.setTotallDiscount((BigDecimal) object[5]);
             profitOfItemsSold.setTotallNet((BigDecimal) object[6]);
+            profitOfItemsSold.setTotallNumber((BigDecimal) object[7]);
             profitOfItemsSoldList.add(profitOfItemsSold);
         }
         return profitOfItemsSoldList;
@@ -542,7 +565,7 @@ public class ReportsServiceImpl implements ReportsService {
             query.append(" and ipi.date <=   '").append(dateFormat.format(itemBalancesStatement.getDateTo())).append("' ");
         }
     }
-
+    
     private void appendDate7(ProfitOfItemsSold profitOfItemsSold, StringBuilder sql) {
         if (profitOfItemsSold.getDateFrom() != null) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
@@ -553,10 +576,16 @@ public class ReportsServiceImpl implements ReportsService {
             sql.append(" and ipi.date <=   '").append(dateFormat.format(profitOfItemsSold.getDateTo())).append("' ");
         }
     }
-
-    private void appendGallery7(ProfitOfItemsSold profitOfItemsSold, StringBuilder sql) {
-        if (profitOfItemsSold.getGallaryFrom() != null) {
-            sql.append(" and ipi.galary_Id =  ").append(profitOfItemsSold.getGallaryFrom().getId());
+    
+    private void appendGallery7(StringBuilder gallaryIds, StringBuilder sql) {
+        if (gallaryIds != null) {
+            sql.append(" and ipi.galary_Id in ( ").append(gallaryIds.toString()).append(" )");
+        }
+    }
+    
+    private void appendProGroup(StringBuilder groupId, StringBuilder sql) {
+        if (groupId != null) {
+            sql.append(" and ii.pro_group_id in(  ").append(groupId).append(" )");
         }
     }
     
