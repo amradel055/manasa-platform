@@ -69,10 +69,15 @@ public class ProFactoryDeliveryFormDTOMB extends ProductionBasicDataForm {
             setInvInvoiceDTO(proFactoryDeliveryService.save(getInvInvoiceDTO(), getUserData().getUser()));
             msgSave(getInvInvoiceDTO().getMsg());
             if (getUri().contains("proRecieveGallary")) {
+                StringBuilder message = new StringBuilder();
                 if (getInvInvoiceDTO().getInvnameType() != null && getInvInvoiceDTO().getInvnameType() == 0) {
-                    sendSms(getInvInvoiceDTO().getCustomerMobile(), "التوبى العالمى", "برنس للخياطة يبلغكم بأن الثياب جاهزة للتسليم  للاستفسار الاتصال على الرقم 920027070 - 0553016270","20099319","0564933202");
-                }else if (getInvInvoiceDTO().getInvnameType() != null && getInvInvoiceDTO().getInvnameType() == 1) {
-                    sendSms(getInvInvoiceDTO().getCustomerMobile(), "التوبى العالمى", "لي رويال للخياطة الرجالية يبلغكم بان الثياب جاهزة للاستلام ت : 920027711","20099320","Royal@e12z");
+                    message.append("برنس للخياطة يبلغكم بأن الثياب جاهزة للتسليم  للاستفسار الاتصال على الرقم");
+                    message.append(getInvInvoiceDTO().getGallaryPhone());
+                    sendSms(getInvInvoiceDTO().getCustomerMobile(), "التوبى العالمى", message.toString(), "20099319", "0564933202");
+                } else if (getInvInvoiceDTO().getInvnameType() != null && getInvInvoiceDTO().getInvnameType() == 1) {
+                    message.append("لي رويال للخياطة الرجالية يبلغكم بان الثياب جاهزة للاستلام ت ");
+                    message.append(getInvInvoiceDTO().getGallaryPhone());
+                    sendSms(getInvInvoiceDTO().getCustomerMobile(), "التوبى العالمى", message.toString(), "20099320", "Royal@e12z");
                 }
             }
             reset();

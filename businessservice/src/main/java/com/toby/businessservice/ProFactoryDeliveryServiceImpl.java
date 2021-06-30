@@ -10,7 +10,6 @@ import com.toby.define.ScreenNameClassEnum;
 import com.toby.dto.InvDetailDTO;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.InvInvoiceDTO;
-import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.dto.PrintProductionDTO;
 import com.toby.entity.Branch;
 import com.toby.entity.InvPurchaseInvoice;
@@ -222,6 +221,7 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
                 invInvoiceDTO.setInvPurchaseInvoiceId(proFactoryDelivery.getInvPurchaseInvoiceId().getId());
                 invInvoiceDTO.setRemain(invPurchaseInvoiceService_1.remainForInvPurchaseInvoice(proFactoryDelivery.getInvPurchaseInvoiceId().getId()));
                 invInvoiceDTO.setInvnameType(proFactoryDelivery.getInvPurchaseInvoiceId().getGalaryId().getInvName());
+                invInvoiceDTO.setGallaryPhone(proFactoryDelivery.getInvPurchaseInvoiceId().getGalaryId().getPhone());
             } else {
                 invInvoiceDTO.setMsg("لم يتم استلام الفاتوره");
             }
