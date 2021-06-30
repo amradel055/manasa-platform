@@ -827,9 +827,12 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
     public List<InvOrganizationSiteDTO> getALLCustomerDTOByBranchIdAndType(int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters, Integer type, Integer gallaryId) {
         filters.put("branchId", branchId);
         filters.put("type", type);
-        filters.put("gallaryId", gallaryId);
         StringBuilder builder = new StringBuilder();
-        builder.append("SELECT i FROM InvOrganizationSite i WHERE i.branchId.id = :branchId  AND i.type = :type  AND  i.gallaryId.id = :gallaryId ");
+        builder.append("SELECT i FROM InvOrganizationSite i WHERE i.branchId.id = :branchId  AND i.type = :type  ");
+        if (gallaryId != null) {
+            filters.put("gallaryId", gallaryId);
+            builder.append(" AND  i.gallaryId.id = :gallaryId  ");
+        }
         appendFilter(filters, builder);
         builder.append(" ORDER BY i.id DESC");
         List<InvOrganizationSite> details = dao.findListByQuery(builder.toString(), filters, first, pageSize);
@@ -850,7 +853,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             builder.append("SELECT i FROM InvOrganizationSite i WHERE i.branchId.id = :branchId  AND i.type = :type  AND  i.gallaryId.id = :gallaryId ");
             builder.append(" and (i.code = :code or i.mobile = :code) ");
             builder.append(" ORDER BY i.id DESC");
-            List<InvOrganizationSite> details = dao.findListByQuery(builder.toString(),params);
+            List<InvOrganizationSite> details = dao.findListByQuery(builder.toString(), params);
             List<InvOrganizationSiteDTO> dTOList = new ArrayList<>();
             returnListDTO(details, dTOList);
             return dTOList;

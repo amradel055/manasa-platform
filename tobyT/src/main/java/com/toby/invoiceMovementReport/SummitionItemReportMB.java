@@ -1,12 +1,9 @@
 package com.toby.invoiceMovementReport;
 
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
-import com.toby.businessservice.TobyUserInventoryService;
-import com.toby.converter.InvInventoryDTOConverter;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.ProGroupDTO;
 import com.toby.toby.Basic;
-import com.toby.toby.UserData;
 import com.toby.views.SummitionItemsView;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -17,7 +14,6 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.inject.Named;

@@ -20,16 +20,18 @@
 
             <p:fieldset legend="#{userData.userDDs['SUPPLIERS_DATA']}" >
                 <p:dataTable 
-                    draggableColumns="true"
-                    draggableRows="true"
-                    var="organizationSiteTable" 
-                    widgetVar="bTable" 
-                    rowIndexVar="index" 
-                    value="#{organizationSiteListMB.invOrganizationSitesDTOList}" 
-                    rows="#{userData.rowListCount}" 
-                    paginator="true"
-                    emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
-                    id="organizationSiteTable">
+                    id="organizationSiteTable"
+                        var="organizationSiteTable" 
+                        widgetVar="bTable" 
+                        rowIndexVar="index" 
+                        value="#{organizationSiteListMB.invOrganizationSitesDTOList}"     
+                        rows="20"
+                        paginator="true"
+                        paginatorTemplate="{CurrentPageReport} {FirstPageLink}
+                        {PreviousPageLink} {PageLinks} {NextPageLink}
+                        {LastPageLink} {RowsPerPageDropdown}" 
+                        emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                        >
 
                     <f:facet name="header" >
                         <p:commandButton  class="saddButton" icon="fa fa-plus" title="#{userData.userDDs['ADD']}" 

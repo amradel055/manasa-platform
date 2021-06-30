@@ -165,7 +165,7 @@ public class ProProductionTransactionFormMBNew extends BaseListBean {
     @Override
     @PostConstruct
     public void init() {
-
+        System.out.println("com.toby.proProductionTransaction.ProProductionTransactionFormMBNew.init()");
     }
 
     @Override

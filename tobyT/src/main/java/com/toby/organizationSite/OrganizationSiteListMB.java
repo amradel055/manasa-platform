@@ -95,7 +95,9 @@ public class OrganizationSiteListMB extends BaseListBean implements Serializable
         try {
             request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
             url = request.getRequestURL().toString();
-//            load();
+            if (url.contains("supplier")) {
+                setInvOrganizationSitesDTOList(organizationSiteService.getorganizationSiteByBranchIdDTOSmall(getUserData().getUserBranch().getId(), Boolean.TRUE, 1));
+            }
         } catch (Exception e) {
             saveError(e, "OrganizationSiteListMB", "init");
         }
@@ -114,18 +116,19 @@ public class OrganizationSiteListMB extends BaseListBean implements Serializable
                     Integer invGallarySelectionId = null, invInventorySelectionId = null;
                     invInventorySelectionId = getInvInventorySelection() != null ? getInvInventorySelection().getId() : null;
                     invGallarySelectionId = getGallaryDTOSelect() != null ? getGallaryDTOSelect().getId() : null;
-                    if (url.contains("customer")) {
-                        setRowCount(organizationSiteService.getTotalRegistors(getUserData().getUserBranch().getId(), filters, 0, invGallarySelectionId).intValue());
-                        setInvOrganizationSitesDTOList(organizationSiteService.getALLCustomerDTOByBranchIdAndType(first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), getUserData().getUserBranch().getId(), filters, 0, invGallarySelectionId));
-                    } else if (url.contains("supplier")) {
+//                    if (url.contains("customer")) {
+//                        setRowCount(organizationSiteService.getTotalRegistors(getUserData().getUserBranch().getId(), filters, 0, invGallarySelectionId).intValue());
+//                        setInvOrganizationSitesDTOList(organizationSiteService.getALLCustomerDTOByBranchIdAndType(first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), getUserData().getUserBranch().getId(), filters, 0, invGallarySelectionId));
+//                    } else 
+                    if (url.contains("supplier")) {
                         setRowCount(organizationSiteService.getTotalRegistors(getUserData().getUserBranch().getId(), filters, 1, invGallarySelectionId).intValue());
-                        setInvOrganizationSitesDTOList(organizationSiteService.getALLCustomerDTOByBranchIdAndType(first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), getUserData().getUserBranch().getId(), filters, 1, invGallarySelectionId));
+                        setInvOrganizationSitesDTOList(organizationSiteService.getALLCustomerDTOByBranchIdAndType(first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), getUserData().getUserBranch().getId(), filters, 1, null));
                     } else if (url.contains("contractor")) {
                         setRowCount(organizationSiteService.getTotalRegistors(getUserData().getUserBranch().getId(), filters, 4, invGallarySelectionId).intValue());
-                        setInvOrganizationSitesDTOList(organizationSiteService.getALLCustomerDTOByBranchIdAndType(first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), getUserData().getUserBranch().getId(), filters, 4, invGallarySelectionId));
+                        setInvOrganizationSitesDTOList(organizationSiteService.getALLCustomerDTOByBranchIdAndType(first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), getUserData().getUserBranch().getId(), filters, 4, null));
                     } else if (url.contains("crmLeads")) {
                         setRowCount(organizationSiteService.getTotalRegistors(getUserData().getUserBranch().getId(), filters, 5, invGallarySelectionId).intValue());
-                        setInvOrganizationSitesDTOList(organizationSiteService.getALLCustomerDTOByBranchIdAndType(first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), getUserData().getUserBranch().getId(), filters, 5, invGallarySelectionId));
+                        setInvOrganizationSitesDTOList(organizationSiteService.getALLCustomerDTOByBranchIdAndType(first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), getUserData().getUserBranch().getId(), filters, 5, null));
                     }
 
                     return invOrganizationSitesDTOList;

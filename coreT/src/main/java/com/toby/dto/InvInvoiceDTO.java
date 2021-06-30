@@ -134,6 +134,7 @@ public class InvInvoiceDTO extends BaseEntityDTO {
     private Boolean proof;
     private String invoiceStatus;
     private Integer invnameType;
+    private String gallaryPhone;
 
     /// production //
     private Date time;
@@ -1691,6 +1692,20 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      */
     public void setInvnameType(Integer invnameType) {
         this.invnameType = invnameType;
+    }
+
+    /**
+     * @return the gallaryPhone
+     */
+    public String getGallaryPhone() {
+        return gallaryPhone;
+    }
+
+    /**
+     * @param gallaryPhone the gallaryPhone to set
+     */
+    public void setGallaryPhone(String gallaryPhone) {
+        this.gallaryPhone = gallaryPhone;
     }
 
 }

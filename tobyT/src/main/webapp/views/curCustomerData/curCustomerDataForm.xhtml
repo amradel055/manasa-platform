@@ -8,7 +8,7 @@
                 xmlns="http://www.w3.org/1999/xhtml">
     <ui:define name="content">
 
-        
+
 
         <h:form style="margin-right: 20px" id="form" dir="#{userData.dir}">
             <p:fieldset id="whole" legend="بيانات ملف العميل" style="margin-bottom:20px">
@@ -17,24 +17,54 @@
                     <p:messages id="curmsg" showDetail="true" rendered="true" closable="true"/>   
                 </div>
 
-                <div  id="firstLine" class="ui-g-12 ui-g-nopad">
+                
+                
+                <div>
+                
+                <p:accordionPanel widgetVar="basic">
+            <p:tab title="CANDIDATE INFORMATION ">
+                <p class="p-m-0">
+                    
+                    <div  id="firstLine" class="ui-g-12 ui-g-nopad">
                     <div class="ui-g">
+                        
+                        
+                        <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="تاريخ الملف"/>
+
+                                </div>
+                            </div>
 
 
                         <div class="ui-g-6 ui-xl-6">
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 49%!important" value="#{glBankFromMB.glBankEntity.name}"/>
+                                    <p:outputLabel style="width: 49%!important" />
 
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 65px" value="اسم العميل"/>
+                                    <p:outputLabel style="width: 65px" value="اسم العميل رباعي"/>
 
                                 </div>
                             </div>
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 49%!important" value="#{glBankFromMB.glBankEntity.name}"/>
+                                    <p:outputLabel style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="تاريخ الميلاد "/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 49%!important" />
 
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
@@ -44,7 +74,7 @@
                             </div>
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 49%!important" value="#{glBankFromMB.glBankEntity.name}"/>
+                                    <p:outputLabel style="width: 49%!important" />
 
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
@@ -54,7 +84,17 @@
                             </div>
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 49%!important" value="#{glBankFromMB.glBankEntity.name}"/>
+                                    <p:outputLabel style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="رقم البطاقة"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 49%!important" />
 
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
@@ -62,113 +102,639 @@
 
                                 </div>
                             </div>
-                          
-                            
-                                <div class="ui-g-12 ui-xl-12">
+
+
+
+                        </div>
+
+                        <div class="ui-g-6 ui-xl-6">
+
+                            <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 49%!important" value="#{glBankFromMB.glBankEntity.name}"/>
+                                    <p:outputLabel style="width: 49%!important" />
 
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 65px" value="المحافظة"/>
+                                    <p:outputLabel style="width: 65px" value="محل السكن كما هو متواجد بالبطاقة"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="الوظيفة"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 49%!important" />
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <h5 class="p-mt-0">الحالة الاجتماعية</h5>
+                                </div>
+
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+
+                                    <h:form enctype="multipart/form-data">
+                                        <p:fileUpload value="#{fileUploadView.file}" mode="simple" skinSimple="true"/>
+
+                                        <p:commandButton value="Submit" ajax="false" action="#{fileUploadView.upload}" styleClass="p-mt-3 ui-button-outlined p-d-block"/>
+                                    </h:form>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="صورة العميل"/>
 
                                 </div>
                             </div>
                             
+
+                        </div>
+
+                    </div>
+                </div>
+                    
+                </p>
+            </p:tab>
+            <p:tab title="MEDICAL EXAMINATION: General ">
+                <p class="p-m-0">
+                    <div  id="firstLine" class="ui-g-12 ui-g-nopad">
+                    <div class="ui-g">
+                        
+                        <div class="ui-g-6 ui-xl-6">
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 49%!important" value="#{glBankFromMB.glBankEntity.name}"/>
+                                    <p:inputText style="width: 49%!important" />
 
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 65px" value="المراكز الطبية"/>
+                                    <p:outputLabel style="width: 65px" value="Height"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="Weight"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="B.P"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="Pulse"/>
+
+                                </div>
+                            </div>
+                            
+
+
+
+                        </div>
+
+                        <div class="ui-g-6 ui-xl-6">
+                            
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="RR"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="Visual Acuity "/>
+
+                                </div>
+                            </div>
+
+                            
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="Colour Vision "/>
+
+                                </div>
+                            </div>
+                            
+                           
+                            
+
+                        </div>
+
+                    </div>
+                </div>
+                </p>
+            </p:tab>
+            <p:tab title="MEDICAL EXAMINATION: ' Systemic ' ">
+                <p class="p-m-0">
+                    <div  id="firstLine" class="ui-g-12 ui-g-nopad">
+                    <div class="ui-g">
+                        
+                        <div class="ui-g-6 ui-xl-6">
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="GENERAL APPEARANCE "/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="CARDIOVASCULAR"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="RESPIRATORY"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="ENT"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="GASTRO INTESTINAL"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="ABDOMEN "/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="GENITOURINARY"/>
 
                                 </div>
                             </div>
 
                         </div>
+
+                        <div class="ui-g-6 ui-xl-6">
+                            
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="MUSCULOSKELETAL"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="EXTREMITIES"/>
+
+                                </div>
+                            </div>
+
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="BACK "/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="SKIN"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="C.N.S"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="DEFORMITIES"/>
+
+                                </div>
+                            </div>
+                           
+                            
+
+                        </div>
+
+                    </div>
+                </div>
+                </p>
+            </p:tab>
+                <p:tab title="MENTAL STATUS EXAMINATION">
+                <p class="p-m-0">
+                    <div  id="firstLine" class="ui-g-12 ui-g-nopad">
+                    <div class="ui-g">
+                        
+                        <div class="ui-g-6 ui-xl-6">
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="Appearance"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="Speech"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="Behaviour"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="Cognition"/>
+
+                                </div>
+                            </div>
+                            
+
+
+
+                        </div>
+
                         
 
                     </div>
                 </div>
+                </p>
+            </p:tab>
+                    <p:tab title="INVESTIGATION">
+                <p class="p-m-0">
+                    <div  id="firstLine" class="ui-g-12 ui-g-nopad">
+                    <div class="ui-g">
+                        
+                        <div class="ui-g-6 ui-xl-6">
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="CHEST X-RAY"/>
+
+                                </div>
+                            </div>
+                            
+
+
+                        </div>
+
+                        
+
+                    </div>
+                </div>
+                </p>
+            </p:tab>
+                    <p:tab title="LABORATORY INVESTIGATION ">
+                <p class="p-m-0">
+                    <div  id="firstLine" class="ui-g-12 ui-g-nopad">
+                    <div class="ui-g">
+                        
+                        <div class="ui-g-6 ui-xl-6">
+                            
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="BLOOD GROUP "/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="HAEMOGLOBIN"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px; font-weight: 600; text-decoration: underline;" value="BIOCHEMISTRY"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="Creatinine"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="L.F.T. "/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="R.B.S "/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px; font-weight: 600; text-decoration: underline;" value="SEROLOGY"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="Anti HCV "/>
+
+                                </div>
+                            </div>
+                            
+
+
+
+                        </div>
+
+                        <div class="ui-g-6 ui-xl-6">
+                            
+                            
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="HBs Ag "/>
+
+                                </div>
+                            </div>
+
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="HIV "/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="TPHA (IF VDRL POSITIVE) "/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px; font-weight: 600; text-decoration: underline;" value="URINE "/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="SUGAR"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="ALBUMIN"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 49%!important" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="STOOL"/>
+
+                                </div>
+                            </div>
+                            
+                           
+                            
+
+                        </div>
+
+                    </div>
+                </div>
+                </p>
+            </p:tab>
+        </p:accordionPanel>
+                </div>
+                   
+                        <div class="ui-g-12 ui-xl-12">
+                            <div>
+                                <p:outputLabel style="width: 65px" value="حالة الملف"/>
+                            </div>
+                            <div>
+                                <p:selectOneRadio id="console" >
+                                    <f:selectItem itemLabel="لائق" itemValue="1"/>
+                                    <f:selectItem itemLabel="غير لائق" itemValue="2"/>
+                                    <f:selectItem itemLabel="تحت الاجراء" itemValue="3"/>
+                                </p:selectOneRadio>
+                            </div>
+                            
+
+                        </div>
                 
-                
-                
-                
-                
+                            <div class="ui-g-12 ui-xl-12">
+                                <div>
+                                    <p:outputLabel style="width: 65px" value="ملاحظات"/>
+
+                                </div>
+                                <div>
+                                    <p:inputText style="width: 49%!important" />
+
+                                </div>
+                                
+                            </div>
+                    
+
+                <panelGrid class="centerButtons col-md-12" style='display: block; text-align: center;'>
+
+                    <h:panelGroup>
+
+                        <p:commandButton  class="saveButton" id="saveB" 
+                                          style="margin: 0 auto;text-align: center;display: inline-block;"
+                                          title="#{userData.userDDs['SAVE']}" 
+                                          value="#{userData.userDDs['SAVE']}" 
+                                          icon="fa fa-fw fa-save" 
+                                          update="@form"
+                                          />
+                        <p:commandButton value="طباعة" 
+                                         type="button" 
+                                         icon="fa fa-fw fa-print" 
+                                         class="printButton" 
+                                         id="printB" 
+                                         style="margin: 0 auto;text-align: center;display: inline-block;margin-right: 1%;" 
+                                         />
+                            
+                        
+
+                        <p:blockUI block="form" trigger="saveB" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI> 
+
+
+                    </h:panelGroup>
+                </panelGrid>
 
             </p:fieldset>
 
-            <div class="">
-                    <p:dataTable 
-                        draggableColumns="true"
-                        var="glyear"  
-                        rowIndexVar="index" 
-                         value="#{glyearListBean.glYears}" 
-                         rows="#{userData.rowListCount}" 
-                         paginator="true" emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
-                                 id="gLyear">
-                        
-                        <f:facet name="header" class="col-md-12">
-                            
-                            <p:commandButton icon="fa fa-plus" class="saddButton"
-                                             title="#{userData.userDDs['ADD']}" 
-                                             action="#{glyearListBean.goToAdd()}" style="float:right" 
-                                             rendered="#{userData.userScreens['Glyear'].add or userData.isAdmin}"/>
-                             
-                            <p:outputPanel >
-                                 <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
-                                <p:inputText id="globalFilter"  onkeyup="PF('bTable').filter()" style="width:150px" />
-                            </p:outputPanel>
-                        </f:facet>
-                        
-                      
-                        <p:column headerText="#" style="width: 4vh;text-align:right;font-size: 1.8vh;border-radius: 0px" >
-                            <p:outputLabel value="#{index+1}" style="font-size: 1.5vh"/>
-                        </p:column>
-                      
-                        
-                        <p:column headerText="كود الفحص" style="width: 15vh;text-align: -webkit-auto;font-size: 1.8vh;border-radius: 0px" >
-                            <p:outputLabel value="#{glyear.name}" style="font-size: 1.5vh" />
-                        </p:column>
-                        <p:column headerText="اسم الفحص" style="width: 15vh;text-align: -webkit-auto;font-size: 1.8vh;border-radius: 0px" >
-                            <p:outputLabel value="#{glyear.isDefault ? 'الافتراضية' : ''}" style="font-size: 1.5vh" />
-                        </p:column>
-                        <p:column headerText="صورة الفحص" style="width: 15vh;text-align: -webkit-auto;font-size: 1.8vh;border-radius: 0px" >
-                            <p:outputLabel value="#{glyear.isDefault ? 'الافتراضية' : ''}" style="font-size: 1.5vh" />
-                        </p:column>
-                        <p:column headerText="#{userData.userDDs['TRANSACTION']}" style="width: 8vh;text-align:center;font-size: 1.8vh;border-radius: 0px">
-                           
-                            <p:commandButton class="seditButtons" update="@form"
-                                             icon="fa fa-fw fa-edit" title="#{userData.userDDs['EDIT']}"
-                                              style="background-color: #6a6967;border-radius: 3px;margin-bottom:3px"
-                                             action="#{glyearListBean.goToEdit()}" 
-                                             rendered="#{userData.userScreens['Glyear'].view or userData.isAdmin}">
-                                <f:setPropertyActionListener value="#{glyear}"  target="#{glyearListBean.glYearselected}" />
-                           
-                            </p:commandButton>
-                           
-                            <p:commandButton class="scloseButtons"
-                                             update="@form" icon="fa fa-remove"
-                                             title="#{userData.userDDs['DELETE']}" 
-                                             style="background-color: red;border-radius: 3px;margin-bottom:3px"
-                                             action="#{glyearListBean.delete()}"
-                                             rendered="#{userData.userScreens['Glyear'].delete or userData.isAdmin}">
-                                <f:setPropertyActionListener value="#{glyear}" target="#{glyearListBean.glYearselected}" />
-                                <p:confirm header="Confirmation" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
-                            </p:commandButton>
-                        </p:column>
-                    </p:dataTable>
-                    
-                    
-                    
-                    
-                    
-                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
-                        <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-                        <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
-                    </p:confirmDialog>
-                </div>
+
 
         </h:form>
     </ui:define>
