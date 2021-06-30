@@ -6,7 +6,6 @@
 package com.toby.invPurchaseInvoiceDTO;
 
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
-import com.toby.businessservice.ProFactoryDeliveryService;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.toby.InventoryBasicDataForm;
 import com.toby.toby.UserData;
@@ -31,10 +30,9 @@ import org.primefaces.model.SortOrder;
 public class InvPurchaseInvoiceListDTOMB extends InventoryBasicDataForm {
 
     private List<InvInvoiceDTO> invInvoiceList;
+
     @EJB
     private InvPurchaseInvoiceService_1 invPurchaseInvoiceService;
-    @EJB
-    ProFactoryDeliveryService proFactoryDeliveryService;
 
     @Override
     @PostConstruct
@@ -231,4 +229,5 @@ public class InvPurchaseInvoiceListDTOMB extends InventoryBasicDataForm {
     public void setInvInvoiceList(List<InvInvoiceDTO> invInvoiceList) {
         this.invInvoiceList = invInvoiceList;
     }
+
 }

@@ -25,6 +25,7 @@ import com.toby.businessservice.ItemsBarcodesDetailsViewService;
 import com.toby.businessservice.OfferCompanyService;
 import com.toby.businessservice.OrganizationSiteService;
 import com.toby.businessservice.ProDetailTypeService;
+import com.toby.businessservice.ProFactoryDeliveryService;
 import com.toby.businessservice.QuantityItemsStoreService;
 import com.toby.businessservice.ReportManagementService;
 import com.toby.businessservice.SymbolService;
@@ -209,6 +210,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     OfferCompanyService companyService;
     @EJB
     SupplierAccountService supplierAccountService;
+ 
 
     @Override
     public abstract String save();
@@ -1122,6 +1124,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
             validateItems(getInvInvoiceDTO().getInvPurchaseInvoiceDetailsSelected());
         }
     }
+
+    
 
     public List<ItemsBarcodesDetailsView> completeItemsData(String query, Integer invPurchaseInvoiceId) {
         return AutoComplete.completeItemsData(query, getItemsBarcodesDetailsViewList(invPurchaseInvoiceId), getItemsBarcodesDetailsViewConverter());
@@ -2086,4 +2090,6 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     public void setInventoryList(List<InvInventory> inventoryList) {
         this.inventoryList = inventoryList;
     }
+
+    
 }
