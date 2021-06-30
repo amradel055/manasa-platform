@@ -5,16 +5,24 @@
  */
 package com.toby.organizationSite;
 
+import com.toby.businessservice.GlBankTransactionInvoiceViewService;
 import com.toby.businessservice.OfferCompanyService;
 import com.toby.businessservice.OrganizationSiteService;
 import com.toby.businessservice.TobyUserInventoryService;
+import com.toby.businessservice.report.SupplierAccountService;
+import com.toby.bussinessservice.global.AutoCompleteService;
 import com.toby.converter.InvInventoryConverter;
+import com.toby.converter.InvOrganizationSiteConverter;
+import com.toby.converter.InvOrganizationSiteDTOConverter;
 import com.toby.converter.OfferCompanyDTOConverter;
 import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.dto.OfferCompanyDTO;
 import com.toby.entity.InvInventory;
+import com.toby.entiy.GlBankTransactionDetailEntity;
+import com.toby.entiy.GlBankTransactionEntity;
 import com.toby.toby.BaseListBean;
 import com.toby.toby.UserData;
+import com.toby.views.GlBankTransactionInvoiceView;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +35,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.collections4.list.AbstractLinkedList;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 
@@ -39,7 +48,10 @@ import org.primefaces.model.SortOrder;
 public class OrganizationSiteListMB extends BaseListBean implements Serializable {
 
     private List<InvOrganizationSiteDTO> invOrganizationSitesDTOList;
+    private List<InvOrganizationSiteDTO> OrganizationSitesDTOList;
     private InvOrganizationSiteDTO invOrganizationSiteDTO;
+    private InvOrganizationSiteConverter invOrganizationSiteConverter;
+    private InvOrganizationSiteDTOConverter invOrganizationSiteDTOConverter;
     private Integer invOrganizationSiteSelected;
     private HttpServletRequest request;
     private String url;
@@ -51,7 +63,22 @@ public class OrganizationSiteListMB extends BaseListBean implements Serializable
 
     private List<OfferCompanyDTO> offerCompanyDTOList;
     private OfferCompanyDTOConverter offerCompanyDTOConverter;
-    private String code ;
+    private String code;
+
+    private GlBankTransactionDetailEntity glBankTransactionDetailEntity;
+    private GlBankTransactionDetailEntity glBankTransactionDetailEntitySelected;
+
+    private List<GlBankTransactionDetailEntity> glBankTransactionDetailEntityList;
+
+    private List<GlBankTransactionInvoiceView> glBankTransactionInvoiceViewList;
+    private GlBankTransactionEntity glBankTransactionEntity;
+
+    private Boolean isEdit;
+
+    @EJB
+    private GlBankTransactionInvoiceViewService bankTransactionInvoiceViewService;
+    @EJB
+    SupplierAccountService supplierAccountService;
 
     @EJB
     private OrganizationSiteService organizationSiteService;
@@ -59,6 +86,8 @@ public class OrganizationSiteListMB extends BaseListBean implements Serializable
     private TobyUserInventoryService tobyUserInventoryService;
     @EJB
     private OfferCompanyService offerCompanyService;
+    @EJB
+    AutoCompleteService autoCompleteService;
 
     @Override
     @PostConstruct
@@ -120,20 +149,20 @@ public class OrganizationSiteListMB extends BaseListBean implements Serializable
                 setInvInventorySelection(getInventoryList() == null || getInventoryList().isEmpty() ? null : getInventoryList().get(0));
             }
             if (getGallaryDTOSelect().getId() == null) {
-                setGallaryDTOSelect(getGallaryLists()== null || getGallaryLists().isEmpty() ? null : getGallaryLists().get(0));
+                setGallaryDTOSelect(getGallaryLists() == null || getGallaryLists().isEmpty() ? null : getGallaryLists().get(0));
             }
         } catch (Exception e) {
             saveError(e, "OrganizationSiteListMB", "load");
         }
     }
-    
+
     public void search() {
         try {
             if (code != null && !code.isEmpty()) {
                 try {
                     setInvOrganizationSitesDTOList(organizationSiteService.getALLCustomerDTOByBranchIdAndTypeAndCode(getCode(), getUserData().getUserBranch().getId(), 0, getGallaryDTOSelect() != null ? getGallaryDTOSelect().getId() : null));
                 } catch (Exception e) {
-                    
+
                 }
             }
         } catch (Exception e) {
@@ -226,6 +255,28 @@ public class OrganizationSiteListMB extends BaseListBean implements Serializable
     public void updateCompany(InvOrganizationSiteDTO invOrganizationSiteDTO2) {
         organizationSiteService.updateOrganizationSiteCompany(invOrganizationSiteDTO2);
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "تم الحفظ بنجاح", "تم الحفظ بنجاح"));
+    }
+
+    public void check() {
+        if (getGlBankTransactionDetailEntity().getInvOrganizationSite() != null
+                && getGlBankTransactionDetailEntity().getInvOrganizationSite().getId() != null) {
+            setGlBankTransactionInvoiceViewList(bankTransactionInvoiceViewService.getGlBankTransactionInvoiceViewList(getGlBankTransactionDetailEntity().getInvOrganizationSite().getId(), getUserData().getUser()));
+            getGlBankTransactionEntity().setAccountStatement(supplierAccountService.getAccountForOrganizationSite(getGlBankTransactionDetailEntity().getInvOrganizationSite().getId()));
+        }
+    }
+
+    public Boolean getIsEdit() {
+        if (isEdit == null) {
+            isEdit = Boolean.FALSE;
+        }
+        return isEdit;
+    }
+
+    public List<InvOrganizationSiteDTO> completeCustomerFrom(String query) {
+        OrganizationSitesDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getUserData().getUserBranch().getId(), Boolean.TRUE, 0, query, (getGallaryDTOSelect() != null ? getGallaryDTOSelect().getId() : null));
+        invOrganizationSiteDTOConverter = new InvOrganizationSiteDTOConverter(OrganizationSitesDTOList);
+        return OrganizationSitesDTOList;
+
     }
 
     @Override
@@ -384,5 +435,126 @@ public class OrganizationSiteListMB extends BaseListBean implements Serializable
      */
     public void setCode(String code) {
         this.code = code;
+    }
+
+    /**
+     * @return the glBankTransactionDetailEntity
+     */
+    public GlBankTransactionDetailEntity getGlBankTransactionDetailEntity() {
+        return glBankTransactionDetailEntity;
+    }
+
+    /**
+     * @param glBankTransactionDetailEntity the glBankTransactionDetailEntity to
+     * set
+     */
+    public void setGlBankTransactionDetailEntity(GlBankTransactionDetailEntity glBankTransactionDetailEntity) {
+        this.glBankTransactionDetailEntity = glBankTransactionDetailEntity;
+    }
+
+    /**
+     * @return the glBankTransactionDetailEntitySelected
+     */
+    public GlBankTransactionDetailEntity getGlBankTransactionDetailEntitySelected() {
+        return glBankTransactionDetailEntitySelected;
+    }
+
+    /**
+     * @param glBankTransactionDetailEntitySelected the
+     * glBankTransactionDetailEntitySelected to set
+     */
+    public void setGlBankTransactionDetailEntitySelected(GlBankTransactionDetailEntity glBankTransactionDetailEntitySelected) {
+        this.glBankTransactionDetailEntitySelected = glBankTransactionDetailEntitySelected;
+    }
+
+    /**
+     * @return the glBankTransactionDetailEntityList
+     */
+    public List<GlBankTransactionDetailEntity> getGlBankTransactionDetailEntityList() {
+        return glBankTransactionDetailEntityList;
+    }
+
+    /**
+     * @param glBankTransactionDetailEntityList the
+     * glBankTransactionDetailEntityList to set
+     */
+    public void setGlBankTransactionDetailEntityList(List<GlBankTransactionDetailEntity> glBankTransactionDetailEntityList) {
+        this.glBankTransactionDetailEntityList = glBankTransactionDetailEntityList;
+    }
+
+    /**
+     * @return the glBankTransactionInvoiceViewList
+     */
+    public List<GlBankTransactionInvoiceView> getGlBankTransactionInvoiceViewList() {
+        return glBankTransactionInvoiceViewList;
+    }
+
+    /**
+     * @param glBankTransactionInvoiceViewList the
+     * glBankTransactionInvoiceViewList to set
+     */
+    public void setGlBankTransactionInvoiceViewList(List<GlBankTransactionInvoiceView> glBankTransactionInvoiceViewList) {
+        this.glBankTransactionInvoiceViewList = glBankTransactionInvoiceViewList;
+    }
+
+    /**
+     * @return the glBankTransactionEntity
+     */
+    public GlBankTransactionEntity getGlBankTransactionEntity() {
+        return glBankTransactionEntity;
+    }
+
+    /**
+     * @param glBankTransactionEntity the glBankTransactionEntity to set
+     */
+    public void setGlBankTransactionEntity(GlBankTransactionEntity glBankTransactionEntity) {
+        this.glBankTransactionEntity = glBankTransactionEntity;
+    }
+
+    /**
+     * @return the invOrganizationSiteConverter
+     */
+    public InvOrganizationSiteConverter getInvOrganizationSiteConverter() {
+        return invOrganizationSiteConverter;
+    }
+
+    /**
+     * @param invOrganizationSiteConverter the invOrganizationSiteConverter to
+     * set
+     */
+    public void setInvOrganizationSiteConverter(InvOrganizationSiteConverter invOrganizationSiteConverter) {
+        this.invOrganizationSiteConverter = invOrganizationSiteConverter;
+    }
+
+    /**
+     * @return the invOrganizationSiteDTOConverter
+     */
+    public InvOrganizationSiteDTOConverter getInvOrganizationSiteDTOConverter() {
+        return invOrganizationSiteDTOConverter;
+    }
+
+    /**
+     * @param invOrganizationSiteDTOConverter the
+     * invOrganizationSiteDTOConverter to set
+     */
+    public void setInvOrganizationSiteDTOConverter(InvOrganizationSiteDTOConverter invOrganizationSiteDTOConverter) {
+        this.invOrganizationSiteDTOConverter = invOrganizationSiteDTOConverter;
+    }
+
+    /**
+     * @return the OrganizationSitesDTOList
+     */
+    public List<InvOrganizationSiteDTO> getOrganizationSitesDTOList() {
+        if (OrganizationSitesDTOList == null) {
+            OrganizationSitesDTOList = new ArrayList<>();
+        }
+        return OrganizationSitesDTOList;
+    }
+
+    /**
+     * @param OrganizationSitesDTOList the OrganizationSitesDTOList to set
+     */
+    public void setOrganizationSitesDTOList(List<InvOrganizationSiteDTO> OrganizationSitesDTOList) {
+        this.OrganizationSitesDTOList = OrganizationSitesDTOList;
     }
 }
