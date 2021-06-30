@@ -6,6 +6,7 @@
 package com.toby.views;
 
 import com.toby.dto.InvInventoryDTO;
+import com.toby.dto.ProGroupDTO;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,10 +24,13 @@ public class ProfitOfItemsSold {
     private BigDecimal totallSell;
     private BigDecimal totallDiscount;
     private BigDecimal totallNet;
+    private BigDecimal totallNumber;
     private Date dateFrom;
     private Date dateTo;
     private List<InvInventoryDTO> gallarySelected;
+    private List<ProGroupDTO> groupDTOSelected;
     private InvInventoryDTO gallaryFrom;
+    private ProGroupDTO proGroupId;
 
     /**
      * @return the code
@@ -185,5 +189,54 @@ public class ProfitOfItemsSold {
     public void setGallarySelected(List<InvInventoryDTO> gallarySelected) {
         this.gallarySelected = gallarySelected;
     }
+
+    /**
+     * @return the totallNumber
+     */
+    public BigDecimal getTotallNumber() {
+        if (totallNumber == null) {
+            totallNumber = BigDecimal.ZERO;
+        }
+        return totallNumber;
+    }
+
+    /**
+     * @param totallNumber the totallNumber to set
+     */
+    public void setTotallNumber(BigDecimal totallNumber) {
+        this.totallNumber = totallNumber;
+    }
+
+    /**
+     * @return the proGroupId
+     */
+    public ProGroupDTO getProGroupId() {
+        return proGroupId;
+    }
+
+    /**
+     * @param proGroupId the proGroupId to set
+     */
+    public void setProGroupId(ProGroupDTO proGroupId) {
+        this.proGroupId = proGroupId;
+    }
+
+     /**
+     * @return the groupDTOSelected
+     */
+    public List<ProGroupDTO> getGroupDTOSelected() {
+        if (groupDTOSelected == null) {
+            groupDTOSelected = new ArrayList<>();
+        }
+        return groupDTOSelected;
+    }
+
+    /**
+     * @param groupDTOSelected the groupDTOSelected to set
+     */
+    public void setGroupDTOSelected(List<ProGroupDTO> groupDTOSelected) {
+        this.groupDTOSelected = groupDTOSelected;
+    }
+
 
 }

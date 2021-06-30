@@ -1,7 +1,10 @@
 package com.toby.reports;
 
+import com.toby.businessservice.ProGroupService;
 import com.toby.businessservice.ReportsService;
+import com.toby.converter.ProGroupDTOConverter;
 import com.toby.dto.InvInventoryDTO;
+import com.toby.dto.ProGroupDTO;
 import com.toby.toby.Basic;
 import com.toby.views.ProfitOfItemsSold;
 import java.io.IOException;
@@ -28,23 +31,23 @@ public class ProfitOfItemsSoldReport extends Basic {
     private List<ProfitOfItemsSold> profitOfItemsSoldList;
     private ProfitOfItemsSold profitOfItemsSold;
     private Integer type;
+    private List<ProGroupDTO> groupDTOList;
+    private ProGroupDTOConverter proGroupDTOConverter;
 
     @EJB
     private ReportsService reportsService;
+    @EJB
+    ProGroupService proGroupService;
 
     @PostConstruct
     public void init() {
         getProfitOfItemsSold().getGallarySelected().addAll(getGallaryLists());
+        getProfitOfItemsSold().getGroupDTOSelected().addAll(getGroupDTOList());
     }
 
     public void search() {
-        if (getProfitOfItemsSold() != null && getProfitOfItemsSold().getGallarySelected() != null && !getProfitOfItemsSold().getGallarySelected().isEmpty()) {
-            profitOfItemsSoldList = new ArrayList<>();
-            for (InvInventoryDTO invInventoryDTO : getProfitOfItemsSold().getGallarySelected()) {
-                getProfitOfItemsSold().setGallaryFrom(invInventoryDTO);
-                getProfitOfItemsSoldList().addAll(reportsService.getProfitOfItemsSold(getProfitOfItemsSold(), getUserData().getUserBranch().getId(), type));
-            }
-        }
+        profitOfItemsSoldList = new ArrayList<>();
+        getProfitOfItemsSoldList().addAll(reportsService.getProfitOfItemsSold(getProfitOfItemsSold(), getUserData().getUserBranch().getId(), type));
     }
 
     public void convertDateFrom() {
@@ -149,6 +152,38 @@ public class ProfitOfItemsSoldReport extends Basic {
      */
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    /**
+     * @return the groupDTOList
+     */
+    public List<ProGroupDTO> getGroupDTOList() {
+        if (groupDTOList == null || groupDTOList.isEmpty()) {
+            groupDTOList = proGroupService.getallProGroupByBranchIdDTO(getUserData().getUser());
+            setProGroupDTOConverter(new ProGroupDTOConverter(groupDTOList));
+        }
+        return groupDTOList;
+    }
+
+    /**
+     * @param groupDTOList the groupDTOList to set
+     */
+    public void setGroupDTOList(List<ProGroupDTO> groupDTOList) {
+        this.groupDTOList = groupDTOList;
+    }
+
+    /**
+     * @return the proGroupDTOConverter
+     */
+    public ProGroupDTOConverter getProGroupDTOConverter() {
+        return proGroupDTOConverter;
+    }
+
+    /**
+     * @param proGroupDTOConverter the proGroupDTOConverter to set
+     */
+    public void setProGroupDTOConverter(ProGroupDTOConverter proGroupDTOConverter) {
+        this.proGroupDTOConverter = proGroupDTOConverter;
     }
 
     /**
