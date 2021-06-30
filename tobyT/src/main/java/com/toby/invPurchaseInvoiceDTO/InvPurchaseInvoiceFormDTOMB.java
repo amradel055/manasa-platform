@@ -26,7 +26,9 @@ import javax.inject.Named;
 @ViewScoped
 public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
 
-    // EJBs
+    private boolean checkFactory;
+
+// EJBs
     @EJB
     private InvPurchaseInvoiceService_1 invPurchaseInvoiceService;
     @EJB
@@ -76,6 +78,7 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
                 findAccountStatement();
                 getInvOrganizationSiteDTOList(Boolean.TRUE, 0).add(0, getInvInvoiceDTO().getOrganizationSiteId());
                 setOrganizationSiteId(getInvInvoiceDTO().getOrganizationSiteId());
+                checkFactoryId();
             } else {
                 exit("../base/error.xhtml");
             }
@@ -211,6 +214,24 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
         } catch (Exception e) {
             saveError(e, "invPurchaseInvoiceFormDTOMB", "searchInvoiceBySerial");
         }
+    }
+
+    public void checkFactoryId() {
+        checkFactory = proFactoryDeliveryService.checkProFactoryDelivery(getInvInvoiceDTO().getId());
+    }
+
+    /**
+     * @return the checkFactory
+     */
+    public boolean isCheckFactory() {
+        return checkFactory;
+    }
+
+    /**
+     * @param checkFactory the checkFactory to set
+     */
+    public void setCheckFactory(boolean checkFactory) {
+        this.checkFactory = checkFactory;
     }
 
 }

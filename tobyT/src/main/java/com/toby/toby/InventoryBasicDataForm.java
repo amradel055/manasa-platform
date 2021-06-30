@@ -25,6 +25,7 @@ import com.toby.businessservice.ItemsBarcodesDetailsViewService;
 import com.toby.businessservice.OfferCompanyService;
 import com.toby.businessservice.OrganizationSiteService;
 import com.toby.businessservice.ProDetailTypeService;
+import com.toby.businessservice.ProFactoryDeliveryService;
 import com.toby.businessservice.QuantityItemsStoreService;
 import com.toby.businessservice.ReportManagementService;
 import com.toby.businessservice.SymbolService;
@@ -149,6 +150,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     private ItemDTOConverter itemDTOParentConverter;
     private InvInventory invInventorySelection;
     private List<InvInventory> inventoryList;
+    
 
     @EJB
     AutoCompleteService autoCompleteService;
@@ -203,6 +205,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     OfferCompanyService companyService;
     @EJB
     SupplierAccountService supplierAccountService;
+ 
 
     @Override
     public abstract String save();
@@ -274,27 +277,26 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         }
 
         if (getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVPURCHASEORDERFORM)
-//                || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVADDINGORDERFORM)
-//                || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVADDINGORDERFORM)
-                || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVADDINGORDERFORM)
-                ) {
+                //                || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVADDINGORDERFORM)
+                //                || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVADDINGORDERFORM)
+                || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVADDINGORDERFORM)) {
             getInvOrganizationSiteDTOList(true, 1);
 //            getInventoryDelegatorList(0, getInvInvoiceDTO().getGallaryId() == null ? null : getInvInvoiceDTO().getGallaryId().getId());
             if (getInvInvoiceDTO().getInvDelegatorId() == null) {
                 getInvInvoiceDTO().setInvDelegatorId(getInventoryDelegatorList(0, getInvInvoiceDTO().getGallaryId() == null ? null : getInvInvoiceDTO().getGallaryId().getId()).get(0));
             }
         } else if (getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVSALESINVOICEFORM)
-//                || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVADDINGORDERFORM)
+                //                || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVADDINGORDERFORM)
                 || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVRESERVATIONFORM)
                 || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVQUOTATIONFORM)
-//                || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVADDINGORDERFORM)
+                //                || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVADDINGORDERFORM)
                 || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.PROWORKORDER)) {
             getInvOrganizationSiteDTOList(true, 0);
 //            getInventoryDelegatorList(1, getInvInvoiceDTO().getGallaryId() == null ? null : getInvInvoiceDTO().getGallaryId().getId());
             if (getInvInvoiceDTO().getInvDelegatorId() == null) {
                 getInvInvoiceDTO().setInvDelegatorId(getInventoryDelegatorList(1, getInvInvoiceDTO().getGallaryId() == null ? null : getInvInvoiceDTO().getGallaryId().getId()).get(0));
             }
-        }else if (getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVPERMISSIONORDERFORM)) {
+        } else if (getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVPERMISSIONORDERFORM)) {
             if (getInvInvoiceDTO().getInvDelegatorId() == null) {
                 getInvInvoiceDTO().setInvDelegatorId(getInventoryDelegatorList(1, getInvInvoiceDTO().getGallaryId() == null ? null : getInvInvoiceDTO().getGallaryId().getId()).get(0));
             }
@@ -922,6 +924,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         }
     }
 
+    
+
     public List<ItemsBarcodesDetailsView> completeItemsData(String query, Integer invPurchaseInvoiceId) {
         return AutoComplete.completeItemsData(query, getItemsBarcodesDetailsViewList(invPurchaseInvoiceId), getItemsBarcodesDetailsViewConverter());
     }
@@ -1435,7 +1439,6 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         invInvoiceDTO.setBranchId(getUserData().getUserBranch().getId());
 
         invInvoiceDTO.setTaxflag(invInvoiceDTO.getInventorySetupDTO().getDefaultSalesTax());
-        
 
         return invInvoiceDTO;
     }
@@ -1886,4 +1889,6 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     public void setInventoryList(List<InvInventory> inventoryList) {
         this.inventoryList = inventoryList;
     }
+
+    
 }

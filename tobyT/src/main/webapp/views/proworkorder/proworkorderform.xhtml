@@ -536,7 +536,7 @@
                                               class="saddButton"
                                               icon="fa fa-plus"
                                               title="#{userData.userDDs['ADD']}" 
-                                              rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.loadedSerial eq null}"
+                                              rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.loadedSerial eq null and invPurchaseInvoiceFormDTOMB.checkFactory }"
                                               actionListener="#{invPurchaseInvoiceFormDTOMB.addInvDetail()}" 
                                               update=":form:fieldSetId"  
                                               oncomplete="PrimeFaces.focus('form:invPurchaseInvoiceDetailsTable:'+#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.invPurchaseInvoiceDetailList.size()}+':invItemNameIn')"
@@ -747,7 +747,7 @@
                         </p:summaryRow>
 
                         <p:column 
-                            rendered="#{invPurchaseInvoiceFormDTOMB.columnRender}"
+                            rendered="#{invPurchaseInvoiceFormDTOMB.columnRender and invPurchaseInvoiceFormDTOMB.checkFactory }"
                             style="width: 26vh;text-align: center;border-radius: 0px" 
                             headerText="#{userData.userDDs['TRANSACTION']}">
 
