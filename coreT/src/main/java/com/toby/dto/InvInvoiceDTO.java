@@ -135,6 +135,9 @@ public class InvInvoiceDTO extends BaseEntityDTO {
     private String invoiceStatus;
     private Integer invnameType;
     private String gallaryPhone;
+    private String raghiCode;
+    private BigDecimal raghiValue;
+    private Boolean checkRaghiCode;
 
     /// production //
     private Date time;
@@ -1706,6 +1709,48 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      */
     public void setGallaryPhone(String gallaryPhone) {
         this.gallaryPhone = gallaryPhone;
+    }
+
+    /**
+     * @return the raghiCode
+     */
+    public String getRaghiCode() {
+        return raghiCode;
+    }
+
+    /**
+     * @param raghiCode the raghiCode to set
+     */
+    public void setRaghiCode(String raghiCode) {
+        this.raghiCode = raghiCode;
+    }
+
+    /**
+     * @return the raghiValue
+     */
+    public BigDecimal getRaghiValue() {
+        return raghiValue;
+    }
+
+    /**
+     * @param raghiValue the raghiValue to set
+     */
+    public void setRaghiValue(BigDecimal raghiValue) {
+        this.raghiValue = raghiValue;
+    }
+
+    /**
+     * @return the checkRaghiCode
+     */
+    public Boolean getCheckRaghiCode() {
+        return checkRaghiCode;
+    }
+
+    /**
+     * @param checkRaghiCode the checkRaghiCode to set
+     */
+    public void setCheckRaghiCode(Boolean checkRaghiCode) {
+        this.checkRaghiCode = checkRaghiCode;
     }
 
 }

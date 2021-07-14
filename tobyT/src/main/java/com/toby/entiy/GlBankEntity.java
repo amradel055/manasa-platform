@@ -29,6 +29,7 @@ public class GlBankEntity extends BaseEntity {
     
     private Integer type;
     private String typeName;
+    private Integer raghiPoint;
 
     public String getName() {
         return name;
@@ -120,5 +121,19 @@ public class GlBankEntity extends BaseEntity {
      */
     public void setOpeningBalanceDate(Date openingBalanceDate) {
         this.openingBalanceDate = openingBalanceDate;
+    }
+
+    /**
+     * @return the raghiPoint
+     */
+    public Integer getRaghiPoint() {
+        return raghiPoint;
+    }
+
+    /**
+     * @param raghiPoint the raghiPoint to set
+     */
+    public void setRaghiPoint(Integer raghiPoint) {
+        this.raghiPoint = raghiPoint;
     }
 }

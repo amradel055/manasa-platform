@@ -98,6 +98,30 @@ public class GlBankServiceImpl implements GlBankService {
 
         return glBanks;
     }
+    
+    @Override
+    public Boolean getGlBankByBranchIdAndraghiPoints(Integer branchId, Integer raghiPoint, Integer bankId) {
+//        Map<String, Object> params = new HashMap<>();
+//        List<GlBank> glBanks = null;
+//        String query = null;
+//        params.put("branchId", branchId);
+//        params.put("raghiPoint", raghiPoint);
+//
+//        if (bankId == null) {
+//            query = "SELECT e FROM GlBank e WHERE e.branchId.id = :branchId AND e.raghiPoint = :raghiPoint";
+//        } else {
+//            params.put("bankId", bankId);
+//            query = "SELECT e FROM GlBank e WHERE e.id != :bankId AND e.branchId.id = :branchId AND e.raghiPoint = :raghiPoint";
+//        }
+//
+//        glBanks = dao.findListByQuery(query, params);
+//
+//        if(glBanks != null && !glBanks.isEmpty()){
+//            return false;
+//        }
+        
+        return true;
+    }
 
     @Override
     public List<GlBank> findAllGlBankForReport(GlBankEntitySearch glBankEntitySearch) {
@@ -176,6 +200,7 @@ public class GlBankServiceImpl implements GlBankService {
         glBank.setName(glBankDTO.getName());
         glBank.setOpeninngBalance(glBankDTO.getOpeninngBalance());
         glBank.setType(glBankDTO.getType());
+//        glBank.setRaghiPoint(glBankDTO.getRaghiPoint());
         if (glBankDTO.getAccountId()!=null){
             GlAccount glAccount =new GlAccount();
             glAccount.setId(glBankDTO.getAccountId());
@@ -231,7 +256,7 @@ public class GlBankServiceImpl implements GlBankService {
         glBankDTO.setCode(glBank.getCode());
         glBankDTO.setMsg(glBank.getMsg());
         glBankDTO.setType(glBank.getType());
-        
+//        glBankDTO.setRaghiPoint(glBank.getRaghiPoint());
         
         if (glBank.getAccountId()!=null){
             GlAccount glAccount =new GlAccount();

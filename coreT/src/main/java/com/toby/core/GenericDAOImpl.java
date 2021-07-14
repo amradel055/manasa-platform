@@ -189,7 +189,7 @@ public class GenericDAOImpl implements GenericDAO {
 
     @Override
     public <T> T updateEntity(T entity) {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();  
         Validator validator = factory.getValidator();
         Set<ConstraintViolation<T>> constraintViolations = validator.validate(entity);
         if (constraintViolations.size() > 0) {

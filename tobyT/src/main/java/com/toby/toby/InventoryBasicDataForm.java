@@ -25,7 +25,6 @@ import com.toby.businessservice.ItemsBarcodesDetailsViewService;
 import com.toby.businessservice.OfferCompanyService;
 import com.toby.businessservice.OrganizationSiteService;
 import com.toby.businessservice.ProDetailTypeService;
-import com.toby.businessservice.ProFactoryDeliveryService;
 import com.toby.businessservice.QuantityItemsStoreService;
 import com.toby.businessservice.ReportManagementService;
 import com.toby.businessservice.SymbolService;
@@ -755,6 +754,13 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     public void calculateRemainValue() {
         try {
             getInvInvoiceDTO().setRemain(getInvInvoiceDTO().getFinalNet().subtract(getInvInvoiceDTO().getPayed()));
+        } catch (Exception e) {
+            saveError(e, "SalesInvoiceFormMB", "calculateRemainValue");
+        }
+    }
+    public void checkRaghiCode() {
+        try {
+           getInvInvoiceDTO().setCheckRaghiCode(invPurchaseInvoiceService_1.getInvoiceByRaghiCode(getInvInvoiceDTO().getRaghiCode()));
         } catch (Exception e) {
             saveError(e, "SalesInvoiceFormMB", "calculateRemainValue");
         }

@@ -18,6 +18,7 @@ public class GlBankDTO extends BaseEntityDTO {
     private Integer accountId;
     private Integer type;
     private Integer currencyId;
+    private Integer raghiPoint;
 
     public GlBankDTO() {
     }
@@ -127,6 +128,20 @@ public class GlBankDTO extends BaseEntityDTO {
      */
     public void setDateHegry(Date dateHegry) {
         this.dateHegry = dateHegry;
+    }
+
+    /**
+     * @return the raghiPoint
+     */
+    public Integer getRaghiPoint() {
+        return raghiPoint;
+    }
+
+    /**
+     * @param raghiPoint the raghiPoint to set
+     */
+    public void setRaghiPoint(Integer raghiPoint) {
+        this.raghiPoint = raghiPoint;
     }
 
 }

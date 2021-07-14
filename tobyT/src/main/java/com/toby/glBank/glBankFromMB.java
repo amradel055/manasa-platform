@@ -161,6 +161,7 @@ public class glBankFromMB extends BaseFormBean {
             glBankEntity.setName(glBank.getName() != null ? glBank.getName() : null);
             glBankEntity.setOpeningBalance(glBank.getOpeninngBalance() != null ? glBank.getOpeninngBalance() : BigDecimal.ZERO);
             glBankEntity.setOpeningBalanceDate(glBank.getDateOpeninngBalance() != null ? glBank.getDateOpeninngBalance() : null);
+//            glBankEntity.setRaghiPoint(glBank.getRaghiPoint());
             if (glBank.getType() != null) {
                 glBankEntity.setType(glBank.getType());
             }
@@ -206,6 +207,7 @@ public class glBankFromMB extends BaseFormBean {
                 glBank.setDateOpeninngBalance(glBankEntity.getOpeningBalanceDate());
                 glBank.setCurrencyId(glBankEntity.getCurrencyId());
                 glBank.setAccountId(glBankEntity.getAccountId());
+//                glBank.setRaghiPoint(glBankEntity.getRaghiPoint());
 
                 if (glBank.getId() == null) {
                     glBank.setCreationDate(new Date());
@@ -234,6 +236,7 @@ public class glBankFromMB extends BaseFormBean {
             validateAccount();
             validateCode();
             validateOpeningBalance();
+            validateRaghiPoints();
         } catch (Exception e) {
             saveError(e, "glBankFromMB", "validateSave");
         }
@@ -296,6 +299,18 @@ public class glBankFromMB extends BaseFormBean {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, userDDs.get("ERROR"), "لا يمكن انشاء خزنة بدون كود"));
                 showMessage = true;
             }
+        } catch (Exception e) {
+            saveError(e, "glBankFromMB", "validateCode");
+        }
+    }
+    
+    public void validateRaghiPoints() {
+        try {
+                Boolean check = glBankService.getGlBankByBranchIdAndraghiPoints(getUserData().getUserBranch().getId(), glBankEntity.getRaghiPoint(), glBankEntity.getId());
+                if (!check) {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, userDDs.get("ERROR"), "يجب الغاء نقاط الراجحى من الخزينة "));
+                    showMessage = true;
+                }
         } catch (Exception e) {
             saveError(e, "glBankFromMB", "validateCode");
         }

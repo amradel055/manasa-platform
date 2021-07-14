@@ -26,7 +26,7 @@ import javax.inject.Named;
 @ViewScoped
 public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
 
-    private boolean checkFactory;
+    private Boolean checkFactory;
 
 // EJBs
     @EJB
@@ -223,14 +223,17 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
     /**
      * @return the checkFactory
      */
-    public boolean isCheckFactory() {
+    public Boolean isCheckFactory() {
+        if (checkFactory == null) {
+            checkFactory = Boolean.TRUE;
+        }
         return checkFactory;
     }
 
     /**
      * @param checkFactory the checkFactory to set
      */
-    public void setCheckFactory(boolean checkFactory) {
+    public void setCheckFactory(Boolean checkFactory) {
         this.checkFactory = checkFactory;
     }
 

@@ -523,10 +523,10 @@
                                     <p:menuitem id="sr_lnk311" value="#{userData.userDDs['ITEMS_GROUP']}" icon="&#xE8D2;" url="/faces/views/invgroup/invgroupList.xhtml" 
                                                 rendered="#{userData.userScreens['invgroup'].view or userData.isAdmin}"
                                                 />
-                                    <p:menuitem id="sr_lnk312" value="#{userData.userDDs['ITEMS_DATA']}" icon="&#xE8D2;" url="/faces/views/itemsdata/itemsdatalist.xhtml" 
+                                    <p:menuitem id="sr_lnk312" value="#{userData.userDDs['ITEMS_DATA']}" icon="&#xE8D2;" url="/faces/views/itemsdata/.xhtml" 
                                                 rendered="#{userData.userScreens['itemsdata'].view or userData.isAdmin}"
                                                 />
-                                    <p:menuitem id="sr_lnk313" value="#{userData.userDDs['CHANGE_PRICE']}" icon="&#xE8D2;" url="/faces/views/changeprice/changeprice.xhtml" 
+                                    <p:menuitem id="sr_lnk313" value="#{userData.userDDs['CHANGE_PRICE']}" icon="&#xE8D2;" url="/faces/views/changeprice/.xhtml" 
                                                 rendered="#{userData.userScreens['changeprice'].view or userData.isAdmin}"
                                                 />
                                 </p:submenu>
@@ -537,16 +537,16 @@
                                                        or userData.userScreens['supplieraddnotice'].view 
                                                        or userData.isAdmin}"
                                            >
-                                    <p:menuitem id="sr_lnk321" value="#{userData.userDDs['PURCHASES_DELEGATE']}" icon="&#xE8D2;" url="/faces/views/purchasesrepresentative/purchasesrepresentativeList.xhtml" 
+                                    <p:menuitem id="sr_lnk321" value="#{userData.userDDs['PURCHASES_DELEGATE']}" icon="&#xE8D2;" url="/faces/views/purchasesrepresentative/.xhtml" 
                                                 rendered="#{userData.userScreens['purchasesrepresentative'].view or userData.isAdmin}"
                                                 />
-                                    <p:menuitem id="sr_lnk322" value="#{userData.userDDs['SUPPLIERS_DATA']}" icon="&#xE8D2;" url="/faces/views/supplier/supplierList.xhtml" 
+                                    <p:menuitem id="sr_lnk322" value="#{userData.userDDs['SUPPLIERS_DATA']}" icon="&#xE8D2;" url="/faces/views/supplier/.xhtml" 
                                                 rendered="#{userData.userScreens['supplier'].view or userData.isAdmin}"
                                                 />
-                                    <p:menuitem id="sr_lnk323" value="#{userData.userDDs['START_BALAN_SUPPLIER']}" icon="&#xE8D2;" url="/faces/views/supplierOpeningBalance/supplierOpenningBalanceList.xhtml" 
+                                    <p:menuitem id="sr_lnk323" value="#{userData.userDDs['START_BALAN_SUPPLIER']}" icon="&#xE8D2;" url="/faces/views/supplierOpeningBalance/.xhtml" 
                                                 rendered="#{userData.userScreens['supplierOpeningBalance'].view or userData.isAdmin}"
                                                 />
-                                    <p:menuitem id="sr_lnk324" value="#{userData.userDDs['ADD_DISCOUNT_NOTI']}" icon="&#xE8D2;" url="/faces/views/supplieraddnotice/suppliernoticelist.xhtml" 
+                                    <p:menuitem id="sr_lnk324" value="#{userData.userDDs['ADD_DISCOUNT_NOTI']}" icon="&#xE8D2;" url="/faces/views/supplieraddnotice/.xhtml" 
                                                 rendered="#{userData.userScreens['supplieraddnotice'].view or userData.isAdmin}"
                                                 />
                                 </p:submenu>
@@ -758,11 +758,11 @@
                                            rendered="#{userData.userScreens['groupDataReport'].view  
                                                        or userData.userScreens['basicdataofitemsbysuppliersreport'].view 
                                                        or userData.isAdmin}" >
-                                    <p:menuitem id="sr_lnk411" value="#{userData.userDDs['GROUP_ITEMS']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/groupDataReport.xhtml" 
+                                    <p:menuitem id="sr_lnk411" value="#{userData.userDDs['GROUP_ITEMS']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/.xhtml" 
                                                 rendered="#{userData.userScreens['groupDataReport'].view or userData.isAdmin}"
                                                 />
                                     
-                                    <p:menuitem id="sr_lnk413" value="#{userData.userDDs['DATA_ITEMS_ACCO']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/basicdataofitemsbysuppliersreport.xhtml" 
+                                    <p:menuitem id="sr_lnk413" value="#{userData.userDDs['DATA_ITEMS_ACCO']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/.xhtml" 
                                                 rendered="#{userData.userScreens['basicdataofitemsbysuppliersreport'].view or userData.isAdmin}"
                                                 />
                                 </p:submenu>
@@ -773,14 +773,14 @@
                                                        or userData.userScreens['purchaseDataReport'].view 
                                                        or userData.isAdmin}"
                                            >
-                                    <p:menuitem id="sr_lnk421" value="#{userData.userDDs['BASIC_DATA_PROCURMENT_DELEGATE']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/purchaseDataReport.xhtml" 
+                                    <p:menuitem id="sr_lnk421" value="#{userData.userDDs['BASIC_DATA_PROCURMENT_DELEGATE']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/.xhtml" 
                                                 rendered="#{userData.userScreens['purchaseDataReport'].view or userData.isAdmin}"
                                                 />
 
-                                    <p:menuitem id="sr_lnk423" value="#{userData.userDDs['SUPPLIER_REVEAL_ACC']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/supplayeraccount.xhtml" 
+                                    <p:menuitem id="sr_lnk423" value="#{userData.userDDs['SUPPLIER_REVEAL_ACC']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/.xhtml" 
                                                 rendered="#{userData.userScreens['supplayeraccount'].view or userData.isAdmin}"
                                                 />
-                                    <p:menuitem id="sr_lnk424" value="#{userData.userDDs['ACC_BALA_SUPPLIERS']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/accountbalancesupplier.xhtml" 
+                                    <p:menuitem id="sr_lnk424" value="#{userData.userDDs['ACC_BALA_SUPPLIERS']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/.xhtml" 
                                                 rendered="#{userData.userScreens['accountbalancesupplier'].view or userData.isAdmin}"
                                                 />
                                 </p:submenu>
@@ -796,25 +796,25 @@
                                                        or userData.userScreens['invreturnpurchasereport'].view 
                                                        or userData.isAdmin}"
                                            >
-                                    <p:menuitem id="sr_lnk431" value="#{userData.userDDs['PURCHASES_ITE_GRO']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/itemPurchaseReport.xhtml" 
+                                    <p:menuitem id="sr_lnk431" value="#{userData.userDDs['PURCHASES_ITE_GRO']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/.xhtml" 
                                                 rendered="#{userData.userScreens['itemPurchaseReport'].view or userData.isAdmin}"
                                                 />
-                                    <p:menuitem id="sr_lnk432" value="#{userData.userDDs['PURCHASES_ITM_SUPP']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/PurchaseOfItemsBySuppliers.xhtml" 
+                                    <p:menuitem id="sr_lnk432" value="#{userData.userDDs['PURCHASES_ITM_SUPP']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/.xhtml" 
                                                 rendered="#{userData.userScreens['PurchaseOfItemsBySuppliers'].view or userData.isAdmin}"
                                                 />
-                                    <p:menuitem id="sr_lnk433" value="#{userData.userDDs['PURCHASES_ITM_DELE']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/PurchaseOfItemsByDelegators.xhtml" 
+                                    <p:menuitem id="sr_lnk433" value="#{userData.userDDs['PURCHASES_ITM_DELE']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/.xhtml" 
                                                 rendered="#{userData.userScreens['PurchaseOfItemsByDelegators'].view or userData.isAdmin}"
                                                 />
-                                    <p:menuitem id="sr_lnk434" value="#{userData.userDDs['PURCHASES_DUR_PER']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/PurchasesDuringPeriod.xhtml" 
+                                    <p:menuitem id="sr_lnk434" value="#{userData.userDDs['PURCHASES_DUR_PER']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/.xhtml" 
                                                 rendered="#{userData.userScreens['PurchasesDuringPeriod'].view or userData.isAdmin}"
                                                 />
-                                    <p:menuitem id="sr_lnk435" value="#{userData.userDDs['MONTHLY_PURCHASE']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/PurchasesByCategoriesOfItems.xhtml" 
+                                    <p:menuitem id="sr_lnk435" value="#{userData.userDDs['MONTHLY_PURCHASE']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/.xhtml" 
                                                 rendered="#{userData.userScreens['PurchasesByCategoriesOfItems'].view or userData.isAdmin}"
                                                 />
-                                    <p:menuitem id="sr_lnk436" value="#{userData.userDDs['PROCUR_JOURNAL']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/PurchaseJournal.xhtml" 
+                                    <p:menuitem id="sr_lnk436" value="#{userData.userDDs['PROCUR_JOURNAL']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/.xhtml" 
                                                 rendered="#{userData.userScreens['PurchaseJournal'].view or userData.isAdmin}"
                                                 />
-                                    <p:menuitem id="sr_lnk437" value="#{userData.userDDs['PUR_RET']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/invreturnpurchasereport.xhtml" 
+                                    <p:menuitem id="sr_lnk437" value="#{userData.userDDs['PUR_RET']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/.xhtml" 
                                                 rendered="#{userData.userScreens['invreturnpurchasereport'].view or userData.isAdmin}"
                                                 />
                                 </p:submenu>
@@ -826,19 +826,19 @@
                                                        or userData.userScreens['accountbalancecustomer'].view 
                                                        or userData.isAdmin}"
                                            >
-                                    <p:menuitem id="sr_lnk441" value="#{userData.userDDs['BASIC_DATA_SALES_REPRESENTATIVES']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/salesDataReport.xhtml" 
+                                    <p:menuitem id="sr_lnk441" value="#{userData.userDDs['BASIC_DATA_SALES_REPRESENTATIVES']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/.xhtml" 
                                                 rendered="#{userData.userScreens['salesDataReport'].view or userData.isAdmin}"
                                                 />
-                                    <p:menuitem id="sr_lnk442" value="#{userData.userDDs['BASIC_DATA_CUSTOMERS']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/customerData.xhtml"
+                                    <p:menuitem id="sr_lnk442" value="#{userData.userDDs['BASIC_DATA_CUSTOMERS']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/.xhtml"
                                                 rendered="#{userData.userScreens['customerData'].view or userData.isAdmin}"
                                                 />
-                                    <p:menuitem id="sr_lnk443" value="#{userData.userDDs['Customer_Account_Statement']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/clientacoount.xhtml" 
+                                    <p:menuitem id="sr_lnk443" value="#{userData.userDDs['Customer_Account_Statement']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/.xhtml" 
                                                 rendered="#{userData.userScreens['clientacoount'].view or userData.isAdmin}"
                                                 />
                                     <p:menuitem id="sr_lnk444" value="كشف حساب عميل" icon="&#xE8D2;" url="/faces/views/inventoryreports/clientacoountById.xhtml" 
                                                 rendered="#{userData.userScreens['clientacoountById'].view or userData.isAdmin}"
                                                 />
-                                    <p:menuitem id="sr_lnk445" value="#{userData.userDDs['CUSTOM_ACC_BALA']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/accountbalancecustomer.xhtml" 
+                                    <p:menuitem id="sr_lnk445" value="#{userData.userDDs['CUSTOM_ACC_BALA']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/.xhtml" 
                                                 rendered="#{userData.userScreens['accountbalancecustomer'].view or userData.isAdmin}"
                                                 />
                                     <p:menuitem id="sr_lnk446" value="#{userData.userDDs['CUSTOM_ACT_REP']}" icon="&#xE8D2;" url="#" 
@@ -862,10 +862,10 @@
 
                                                        or userData.isAdmin}"
                                            >
-                                    <p:menuitem id="sr_lnk451" value="#{userData.userDDs['ITEM_SALE_GROUP']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/itemSalesReport.xhtml" 
+                                    <p:menuitem id="sr_lnk451" value="#{userData.userDDs['ITEM_SALE_GROUP']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/.xhtml" 
                                                 rendered="#{userData.userScreens['itemSalesReport'].view or userData.isAdmin}"
                                                 />
-                                    <p:menuitem id="sr_lnk452" value="#{userData.userDDs['ITEM_SALE_CUST']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/SalesOfItemsBySuppliers.xhtml" 
+                                    <p:menuitem id="sr_lnk452" value="#{userData.userDDs['ITEM_SALE_CUST']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/.xhtml" 
                                                 rendered="#{userData.userScreens['SalesOfItemsBySuppliers'].view or userData.isAdmin}"
                                                 />
                                     <p:menuitem id="sr_lnk4511" value="#{userData.userDDs['ITEM_SALE_CUST']} تفصيلى" icon="&#xE8D2;" url="/faces/views/inventoryreports/SalesOfItemsBySuppliersToby.xhtml" 
@@ -874,17 +874,17 @@
                                     <p:menuitem id="sr_lnk451345" value="#{userData.userDDs['ITEM_SALE_CUST']} تفصيلى" icon="&#xE8D2;" url="/faces/views/inventoryreports/SalesOfItemsBySuppliersTobyForUser.xhtml" 
                                                 rendered="#{userData.userScreens['SalesOfItemsBySuppliersTobyForUser'].view or userData.isAdmin}"
                                                 />
-                                    <p:menuitem id="sr_lnk453" value="#{userData.userDDs['ITEM_SALE_DELE']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/SalesOfItemsByDelegator.xhtml" 
+                                    <p:menuitem id="sr_lnk453" value="#{userData.userDDs['ITEM_SALE_DELE']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/.xhtml" 
                                                 rendered="#{userData.userScreens['SalesOfItemsByDelegator'].view or userData.isAdmin}"
                                                 />
 
-                                    <p:menuitem id="sr_lnk455" value="#{userData.userDDs['SALE_DUR_PER']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/SalesDuringPeriod.xhtml" 
+                                    <p:menuitem id="sr_lnk455" value="#{userData.userDDs['SALE_DUR_PER']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/.xhtml" 
                                                 rendered="#{userData.userScreens['SalesDuringPeriod'].view or userData.isAdmin}"
                                                 />
-                                    <p:menuitem id="sr_lnk456" value="#{userData.userDDs['MONTHLY_SALES']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/SalesByCategoriesOfItems.xhtml"
+                                    <p:menuitem id="sr_lnk456" value="#{userData.userDDs['MONTHLY_SALES']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/.xhtml"
                                                 rendered="#{userData.userScreens['SalesByCategoriesOfItems'].view or userData.isAdmin}"
                                                 />
-                                    <p:menuitem id="sr_lnk457" value="#{userData.userDDs['SALES_JOURNAL']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/SalesJournal.xhtml" 
+                                    <p:menuitem id="sr_lnk457" value="#{userData.userDDs['SALES_JOURNAL']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/.xhtml" 
                                                 rendered="#{userData.userScreens['SalesJournal'].view or userData.isAdmin}"
                                                 />
                                     <p:menuitem id="sr_lnk459" value="#{userData.userDDs['SALES_JOURNAL']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/SalesJournalForUser.xhtml" 
@@ -900,7 +900,7 @@
                                                          or userData.isAdmin}"
                                            >
 
-                                    <p:menuitem id="sr_lnk462" value="#{userData.userDDs['INV_STORES_REP']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/invstripReport.xhtml" 
+                                    <p:menuitem id="sr_lnk462" value="#{userData.userDDs['INV_STORES_REP']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/.xhtml" 
                                                 rendered="#{userData.userScreens['invstripReport'].view or userData.isAdmin}"
                                                 />
                                 </p:submenu>
