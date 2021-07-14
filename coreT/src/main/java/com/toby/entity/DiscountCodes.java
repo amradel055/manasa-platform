@@ -5,6 +5,7 @@
  */
 package com.toby.entity;
 
+import java.math.BigDecimal;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -36,7 +37,7 @@ public class DiscountCodes extends BaseEntity{
     @Column(name = "bank_name")
     private String bankName;
     @Column(name = "discount_value")
-    private String discountValue;
+    private BigDecimal discountValue;
     @JoinColumn(name = "branch_id", referencedColumnName = "id")
     @ManyToOne
     private Branch branchId;
@@ -65,14 +66,6 @@ public class DiscountCodes extends BaseEntity{
 
     public void setBankName(String bankName) {
         this.bankName = bankName;
-    }
-
-    public String getDiscountValue() {
-        return discountValue;
-    }
-
-    public void setDiscountValue(String discountValue) {
-        this.discountValue = discountValue;
     }
 
 
@@ -108,6 +101,20 @@ public class DiscountCodes extends BaseEntity{
     @Override
     public String toString() {
         return "com.mycompany.mavenproject1.DiscountCodes[ id=" + id + " ]";
+    }
+
+    /**
+     * @return the discountValue
+     */
+    public BigDecimal getDiscountValue() {
+        return discountValue;
+    }
+
+    /**
+     * @param discountValue the discountValue to set
+     */
+    public void setDiscountValue(BigDecimal discountValue) {
+        this.discountValue = discountValue;
     }
     
 }

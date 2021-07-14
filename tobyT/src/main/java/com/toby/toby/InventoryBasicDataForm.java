@@ -753,14 +753,14 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
     public void calculateRemainValue() {
         try {
-            getInvInvoiceDTO().setRemain(getInvInvoiceDTO().getFinalNet().subtract(getInvInvoiceDTO().getPayed()));
+            getInvInvoiceDTO().setRemain(getInvInvoiceDTO().getFinalNet().subtract(getInvInvoiceDTO().getPayed().subtract(getInvInvoiceDTO().getRaghiValue())));
         } catch (Exception e) {
             saveError(e, "SalesInvoiceFormMB", "calculateRemainValue");
         }
     }
     public void checkRaghiCode() {
         try {
-           getInvInvoiceDTO().setCheckRaghiCode(invPurchaseInvoiceService_1.getInvoiceByRaghiCode(getInvInvoiceDTO().getRaghiCode()));
+           getInvInvoiceDTO().setRaghiValue(invPurchaseInvoiceService_1.getInvoiceByRaghiCode(getInvInvoiceDTO().getRaghiCode()));
         } catch (Exception e) {
             saveError(e, "SalesInvoiceFormMB", "calculateRemainValue");
         }

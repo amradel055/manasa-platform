@@ -5,6 +5,8 @@
  */
 package com.toby.dto;
 
+import java.math.BigDecimal;
+
 /**
  *
  * @author m lapan
@@ -13,7 +15,7 @@ public class DiscountCodesDTO extends BaseEntityDTO {
 
     private String code;
     private String bankName;
-    private String discountValue;
+    private BigDecimal discountValue;
 
     public DiscountCodesDTO() {
     }
@@ -38,11 +40,11 @@ public class DiscountCodesDTO extends BaseEntityDTO {
         this.bankName = bankName;
     }
 
-    public String getDiscountValue() {
+    public BigDecimal getDiscountValue() {
         return discountValue;
     }
 
-    public void setDiscountValue(String discountValue) {
+    public void setDiscountValue(BigDecimal discountValue) {
         this.discountValue = discountValue;
     }
 
