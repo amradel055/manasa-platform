@@ -6,7 +6,6 @@
 package com.toby.entity;
 
 import java.math.BigDecimal;
-import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,13 +13,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -64,8 +61,9 @@ public class GlBank extends BaseEntity {
     @JoinColumn(name = "currency_id", referencedColumnName = "id")
     @ManyToOne
     private Currency currencyId;
-    @OneToMany(mappedBy = "glBankId")
-    private Collection<GlBankTransaction> glBankTransactionCollection;
+//    @Column(name = "raghi_point")
+//    private Integer raghiPoint;
+    
 
     public GlBank() {
     }
@@ -130,15 +128,6 @@ public class GlBank extends BaseEntity {
         this.type = type;
     }
 
-    @XmlTransient
-    public Collection<GlBankTransaction> getGlBankTransactionCollection() {
-        return glBankTransactionCollection;
-    }
-
-    public void setGlBankTransactionCollection(Collection<GlBankTransaction> glBankTransactionCollection) {
-        this.glBankTransactionCollection = glBankTransactionCollection;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -193,5 +182,19 @@ public class GlBank extends BaseEntity {
     public void setDateHegry(Date dateHegry) {
         this.dateHegry = dateHegry;
     }
+
+//    /**
+//     * @return the raghiPoint
+//     */
+//    public Integer getRaghiPoint() {
+//        return raghiPoint;
+//    }
+//
+//    /**
+//     * @param raghiPoint the raghiPoint to set
+//     */
+//    public void setRaghiPoint(Integer raghiPoint) {
+//        this.raghiPoint = raghiPoint;
+//    }
 
 }

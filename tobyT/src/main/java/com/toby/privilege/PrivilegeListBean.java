@@ -10,7 +10,6 @@ import com.toby.businessservice.PrivilegeService;
 import com.toby.entity.TobyCompany;
 import com.toby.entity.TobyPrivilege;
 import com.toby.entity.TobyRole;
-import com.toby.toby.BaseListBean;
 import com.toby.toby.UserData;
 import java.io.Serializable;
 import java.util.ArrayList;

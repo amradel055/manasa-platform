@@ -54,7 +54,6 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -391,7 +390,7 @@ public class Basic implements Serializable {
         }
     }
 
-    public String sendSms(String mobile, String sender, String message,String username,String password) {
+    public void sendSms(String mobile, String sender, String message,String username,String password) {
         try {
 //            String username = ;
 //            String password = ;
@@ -399,7 +398,8 @@ public class Basic implements Serializable {
             StringBuilder json = new StringBuilder();
             json.append("[{\"user\":\"").append(username).append("\",\"pwd\":\"").append(password).append("\",\"number\":\"").append(mobile).append("\",\"msg\":\"").append(message);
             json.append("\",\"sender\":\"SMSAlert\",\"language\":\"Unicode\"}]");
-            return callApiPostBasic("http://mshastra.com/sendsms_api_json.aspx", null, null, json.toString(), null, HttpMethode.POST);
+            callApiPostBasic("http://mshastra.com/sendsms_api_json.aspx", null, null, json.toString(), null, HttpMethode.POST);
+//            return 
 
 //
 //            String requestUrl = "https://mshastra.com/sendurl.aspx?"
@@ -450,7 +450,7 @@ public class Basic implements Serializable {
 //            return conn.getResponseMessage();
         } catch (Exception e) {
             System.out.println("Error SMS " + e);
-            return "Error " + e;
+//            return "Error " + e;
         }
     }
 

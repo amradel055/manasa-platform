@@ -229,7 +229,10 @@ public class InvPurchaseInvoice extends BaseEntity {
     private Integer stopped;
     @JoinColumn(name = "offer_company_id", referencedColumnName = "id")
     @ManyToOne
-    private OfferCompany offerCompanyId;
+    private OfferCompany offerCompanyId;    
+    @Size(max = 45)
+    @Column(name = "raghi_code")
+    private String raghiCode;
             
     public InvPurchaseInvoice() {
     }
@@ -854,6 +857,20 @@ public class InvPurchaseInvoice extends BaseEntity {
      */
     public void setDateHegry(Date dateHegry) {
         this.dateHegry = dateHegry;
+    }
+
+    /**
+     * @return the raghiCode
+     */
+    public String getRaghiCode() {
+        return raghiCode;
+    }
+
+    /**
+     * @param raghiCode the raghiCode to set
+     */
+    public void setRaghiCode(String raghiCode) {
+        this.raghiCode = raghiCode;
     }
 
 }

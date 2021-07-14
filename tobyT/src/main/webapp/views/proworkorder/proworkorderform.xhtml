@@ -719,7 +719,7 @@
             </div>
             <p:commandButton     class="saveButton"  
                                  title="العرض"
-                                 value="عرض القطعتين و الثالثة هدية" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 1}"
+                                 value="عرض القطعتين و الثالثة هدية" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 1 and false}"
                                  icon="fa fa-fw fa-save" 
                                  action="#{invPurchaseInvoiceFormDTOMB.twoPieceAndThirdFreeOffer()}"
                                  update="@form"
@@ -727,7 +727,7 @@
             </p:commandButton>
             <p:commandButton     class="saveButton"  
                                  title="العرض"
-                                 value="عرض الخصم 25 %" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 0}"
+                                 value="عرض الخصم 25 %" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 0 and false}"
                                  icon="fa fa-fw fa-save" 
                                  action="#{invPurchaseInvoiceFormDTOMB.discount25ForAll()}"
                                  update="@form"
@@ -759,7 +759,7 @@
                                               class="saddButton"
                                               icon="fa fa-plus"
                                               title="#{userData.userDDs['ADD']}" 
-                                              rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.loadedSerial eq null and invPurchaseInvoiceFormDTOMB.checkFactory }"
+                                              rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.loadedSerial eq null  }"
                                               actionListener="#{invPurchaseInvoiceFormDTOMB.addInvDetail()}" 
                                               update=":form:fieldSetId"  
                                               oncomplete="PrimeFaces.focus('form:invPurchaseInvoiceDetailsTable:'+#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.invPurchaseInvoiceDetailList.size()}+':invItemNameIn')"
@@ -971,7 +971,7 @@
                         </p:summaryRow>
 
                         <p:column 
-                            rendered="#{invPurchaseInvoiceFormDTOMB.columnRender and invPurchaseInvoiceFormDTOMB.checkFactory }"
+                            rendered="#{invPurchaseInvoiceFormDTOMB.columnRender  }"
                             style="width: 26vh;text-align: center;border-radius: 0px" 
                             headerText="#{userData.userDDs['TRANSACTION']}">
 
@@ -1025,17 +1025,93 @@
 
 
                         <div class="ui-g-4 ui-xl-4">
-                            
-                            
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <h:outputText id="totalWithTaxValue" 
+                                                  style="text-align:right" 
+                                                  value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.finalNet}" />
 
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+
+
+
+                                    <p:outputLabel style="width: 105px" value="#{userData.userDDs['NET_TAX']}"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:selectBooleanCheckbox 
+                                        value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.taxFlagFinal}"
+                                        >
+                                    </p:selectBooleanCheckbox>
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+
+
+                                    <p:outputLabel style="width: 148px;" value="فاتورة ضريبية"/>
+
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:autoComplete style="width:37%" 
+                                                    dropdown="true"
+                                                    converter="#{invPurchaseInvoiceFormDTOMB.glBankConverter}"
+                                                    value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.glBankId}"
+                                                    id="glbank1"
+                                                    var="bank"
+                                                    itemLabel="#{bank}" 
+                                                    itemValue="#{bank}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{invPurchaseInvoiceFormDTOMB.completeGlBank}"
+
+                                                    >
+
+                                    </p:autoComplete>
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+
+                                    <p:outputLabel style="width: 100px;" value="#{userData.userDDs['TREASURY']}"/>
+
+
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <h:inputText id="payed"  rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id eq null}"
+                                                 style="width:50%;text-align:right" 
+                                                 value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.payed}" >
+                                        <p:ajax  listener="#{invPurchaseInvoiceFormDTOMB.calculateRemainValue()}" update="remain" />
+                                    </h:inputText>
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 80px;" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id eq null}"
+                                                   value="#{userData.userDDs['AMOUNT_PAID']}"/>
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <h:inputText id="raghiPoint"  rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id eq null }"
+                                                 style="width:50%;text-align:right" 
+                                                 value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.raghiCode}" >
+                                        <p:ajax  listener="#{invPurchaseInvoiceFormDTOMB.checkRaghiCode()}" update="@form" />
+                                    </h:inputText>
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 80px;" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id eq null}"
+                                                   value="كود الراجحي"/>
+                                </div>
+                            </div>
                         </div>    
-
-                        <h:panelGroup id="test2">
-
-
-
-
-                        </h:panelGroup>
                     </div>
                     <div style="text-align: center">
 
@@ -1193,7 +1269,7 @@
 
                         </p:dataTable> 
 
-                        <p:commandButton  update="invPurchaseInvoiceDetailsTable test test2"  
+                        <p:commandButton  update="invPurchaseInvoiceDetailsTable test "  
                                           class="reloadButtons"
                                           style="color: #fff!important;background-color: #00BCD4"   
                                           action="#{invPurchaseInvoiceFormDTOMB.loadDlg()}" 

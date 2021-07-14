@@ -456,7 +456,7 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
                 + "	left join inv_inventory ii2 on ii2.id = ipi.galary_Id \n"
                 + "               where pfd2.branch_id = \n  ").
                 append(branchId).append(" ");
-        //appendProProductionDate(builder, transactionFactoryView);
+        appendProProductionDate(builder, transactionFactoryView);
         appendProProductionGellery(builder, transactionFactoryView);
         builder.append(" and pfd2.type = 0 and pfd2.id  not in (select distinct(pfd.id)\n"
                 + "                from pro_production_items_transaction ppit\n"

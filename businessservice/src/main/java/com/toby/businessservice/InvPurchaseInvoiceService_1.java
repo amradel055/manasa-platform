@@ -32,6 +32,8 @@ import javax.ejb.Remote;
 public interface InvPurchaseInvoiceService_1 {
 
     public Integer getInvoiceBySerial(Integer serial);
+    
+    public Boolean getInvoiceByRaghiCode(String raghiCode);
 
     public InvPurchaseReturnSave addInvPurchaseInvoice(InvPurchaseInvoice invPurchaseInvoice,
             List<InvPurchaseInvoiceDetail> invPurchaseInvoiceDetailList,
