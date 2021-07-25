@@ -12,6 +12,7 @@ import com.toby.views.ItemBalancesStatement;
 import com.toby.views.ProfitOfItemsSold;
 import com.toby.views.SalesReportByValueAded;
 import com.toby.views.SalesReportByValueAdedDetails;
+import com.toby.views.SalesStatementForThePeriod;
 import com.toby.views.StatementOfBondsByBranche;
 import java.util.List;
 import javax.ejb.Remote;
@@ -37,5 +38,7 @@ public interface ReportsService {
 
     public List<ItemBalancesStatement> getItemBalancesStatement(ItemBalancesStatement itemBalancesStatement, Integer branchId);
 
-    public List<ProfitOfItemsSold> getProfitOfItemsSold(ProfitOfItemsSold profitOfItemsSold, Integer branchId , Integer type);
+    public List<ProfitOfItemsSold> getProfitOfItemsSold(ProfitOfItemsSold profitOfItemsSold, Integer branchId, Integer type);
+
+    public List<SalesStatementForThePeriod> getSalesStatementForThePeriod(SalesStatementForThePeriod statementForThePeriod);
 }
