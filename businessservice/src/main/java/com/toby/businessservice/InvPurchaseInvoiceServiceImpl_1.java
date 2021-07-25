@@ -28,6 +28,7 @@ import com.toby.dto.ProGroupDTO;
 import com.toby.entity.Branch;
 import com.toby.entity.CostCenter;
 import com.toby.entity.Currency;
+import com.toby.entity.DiscountCodes;
 import com.toby.entity.GlAccount;
 import com.toby.entity.GlAdminUnit;
 import com.toby.entity.GlBank;
@@ -148,15 +149,26 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     }
 
     @Override
-    public Boolean getInvoiceByRaghiCode(String raghiCode) {
+    public BigDecimal getInvoiceByRaghiCode(String raghiCode) {
         if (raghiCode != null && !raghiCode.isEmpty()) {
             StringBuilder builder = new StringBuilder();
             builder.append(" select id from inv_purchase_invoice ").append(" where raghi_code = '").append(raghiCode).append("' and type = 4  and branch_id = 182 ");
             List<Integer> details = dao.executeNativeQuery(builder.toString());
             if (details != null && !details.isEmpty()) {
-                return false;
+                return BigDecimal.ZERO;
             }
-            return true;
+            DiscountCodes discountCodes = validateDiscountCode(raghiCode);
+            return discountCodes == null ? BigDecimal.ZERO : discountCodes.getDiscountValue();
+        }
+        return BigDecimal.ZERO;
+    }
+
+    public DiscountCodes validateDiscountCode(String code) {
+        Map<String, Object> params = new HashMap();
+        params.put("code", code);
+        List<DiscountCodes> discount = dao.findListByQuery("SELECT d FROM DiscountCodes d WHERE d.code = :code ", params);
+        if (discount != null && !discount.isEmpty()) {
+            return discount.get(0);
         }
         return null;
     }
@@ -1265,9 +1277,9 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
 //            if (invInvoiceDTO.getRaghiValue() == null) {
 //                error.append("\n  يجب ادخال قيمة الكود او الغاء الكود");
 //            } else {
-                if (!getInvoiceByRaghiCode(invInvoiceDTO.getRaghiCode())) {
-                    error.append("\n  تم استخدام الكود من قبل");
-                }
+            if (getInvoiceByRaghiCode(invInvoiceDTO.getRaghiCode()).compareTo(BigDecimal.ZERO) == 0) {
+                error.append("\n  تم استخدام الكود من قبل");
+            }
 //            }
         }
 

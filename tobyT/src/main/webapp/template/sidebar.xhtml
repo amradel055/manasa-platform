@@ -447,6 +447,7 @@
                                                    or userData.userScreens['inventorysetup'].view 
                                                    or userData.userScreens['gallerySettingsList'].view 
                                                    or userData.userScreens['offerCompany'].view 
+                                                   or userData.userScreens['DiscountCodes'].view 
 
                                                    or userData.userScreens['invgroup'].view 
                                                    or userData.userScreens['itemsdata'].view 
@@ -498,6 +499,7 @@
                                                        or userData.userScreens['inventorysetup'].view 
                                                        or userData.userScreens['gallerySettingsList'].view 
                                                        or userData.userScreens['offerCompany'].view 
+                                                       or userData.userScreens['DiscountCodes'].view 
                                                        or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk9999311" value="#{userData.userDDs['CREATE_INVENTORY']}" icon="&#xE8D2;" url="/faces/views/invcreate/setupNewInventoryList.xhtml" 
@@ -511,6 +513,9 @@
                                                 />
                                     <p:menuitem id="sr_lnk9999313" value="انشاء شركة" icon="&#xE8D2;" url="/faces/views/offerCompany/offerCompanyList.xhtml" 
                                                 rendered="#{userData.userScreens['offerCompany'].view or userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="sr_lnk9999314" value="انشاء كود خصم" icon="&#xE8D2;" url="/faces/views/DiscountCodes/discountCodesList.xhtml" 
+                                                rendered="#{userData.userScreens['DiscountCodes'].view or userData.isAdmin}"
                                                 />
                                 </p:submenu>
                                 <p:submenu id="sr_sm31" label="#{userData.userDDs['MAIN_DATA']}" icon="&#xE8D2;"
@@ -688,6 +693,7 @@
                                                        or userData.userScreens['itemCardReport'].view 
                                                        or userData.userScreens['ProfitOfItemsSoldReport'].view 
                                                        or userData.userScreens['InvoiceMovementReport'].view 
+                                                       or userData.userScreens['SalesStatementForThePeriod'].view 
 
 
                                                    or userData.isAdmin}"
@@ -708,6 +714,7 @@
                                                        or userData.userScreens['itemCardReport'].view 
                                                        or userData.userScreens['ProfitOfItemsSoldReport'].view 
                                                        or userData.userScreens['InvoiceMovementReport'].view 
+                                                       or userData.userScreens['SalesStatementForThePeriod'].view 
                                                        or userData.isAdmin}" >
                                     <p:menuitem id="sr_sm71" value=" بيان الفواتير حسب الضريبة " icon="&#xE8D2;" url="/faces/views/proproductionreport/SalesReportByValueAdedReport.xhtml" 
                                                 rendered="#{userData.userScreens['SalesReportByValueAdedReport'].view or   userData.isAdmin}"
@@ -753,6 +760,9 @@
                                                 />
                                     <p:menuitem id="sr_lnk33324" value="حركة الثياب حسب الفاتورة" icon="&#xE8D2;" url="/faces/views/proproductionreport/InvoiceMovementReport.xhtml" 
                                                 rendered="#{userData.userScreens['InvoiceMovementReport'].view or userData.isAdmin}"/>
+                                     <p:menuitem id="sr_lnk33339" value=" بيان المبيعات لفترة" icon="&#xE8D2;" url="/faces/views/proproductionreport/SalesStatementForThePeriod.xhtml" 
+                                                rendered="#{userData.userScreens['SalesStatementForThePeriod'].view or userData.isAdmin}"/>
+                                   
                                 </p:submenu>
                                 <p:submenu id="sr_sm41" label="#{userData.userDDs['MAIN_DATA_REP']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['groupDataReport'].view  

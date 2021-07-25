@@ -8,6 +8,7 @@ package com.toby.businessservice;
 import com.toby.core.GenericDAO;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.ProGroupDTO;
+import com.toby.entity.InvPurchaseInvoice;
 import com.toby.views.CompanyInvoicesWithoutSewing;
 import com.toby.views.CustomerBalances;
 import com.toby.views.InvoicesIssuedWithinAperiod;
@@ -15,6 +16,7 @@ import com.toby.views.ItemBalancesStatement;
 import com.toby.views.ProfitOfItemsSold;
 import com.toby.views.SalesReportByValueAded;
 import com.toby.views.SalesReportByValueAdedDetails;
+import com.toby.views.SalesStatementForThePeriod;
 import com.toby.views.StatementOfBondsByBranche;
 import java.math.BigDecimal;
 import java.text.DateFormat;
@@ -31,13 +33,15 @@ import javax.ejb.Stateless;
  */
 @Stateless
 public class ReportsServiceImpl implements ReportsService {
-    
+
     @EJB
     private GenericDAO dao;
-    
+    @EJB
+    private InvPurchaseInvoiceService_1 invPurchaseInvoiceService;
+
     @Override
     public List<SalesReportByValueAded> getSalesReportByValueAded(SalesReportByValueAded salesReportByValueAded, Integer branchId) {
-        
+
         List<SalesReportByValueAded> salesReportByValueAdeds = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         sql.append("select sum(s.net) , sum(s.netBeforTax) , s.gallary_name  from ( SELECT \n"
@@ -62,14 +66,14 @@ public class ReportsServiceImpl implements ReportsService {
             salesReportByValueAded1.setTotalBeforeTax((BigDecimal) object[1]);
             salesReportByValueAded1.setGalleryName((String) object[2]);
             salesReportByValueAdeds.add(salesReportByValueAded1);
-            
+
         }
         return salesReportByValueAdeds;
     }
-    
+
     @Override
     public List<SalesReportByValueAdedDetails> getSalesReportByValueAdedDetails(SalesReportByValueAdedDetails salesReportByValueAdedDetails, Integer branchId) {
-        
+
         List<SalesReportByValueAdedDetails> salesReportByValueAdeds = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT \n"
@@ -118,10 +122,10 @@ public class ReportsServiceImpl implements ReportsService {
         }
         return salesReportByValueAdeds;
     }
-    
+
     @Override
     public List<CustomerBalances> getCustomerBalances(CustomerBalances customerBalances, Integer branchId) {
-        
+
         List<CustomerBalances> customerBalanceses = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT organization_code , organization_name , sum(exitt) as exitt , sum(adding) as adding\n"
@@ -142,10 +146,10 @@ public class ReportsServiceImpl implements ReportsService {
         }
         return customerBalanceses;
     }
-    
+
     @Override
     public List<StatementOfBondsByBranche> getStatementOfBondsByBranch(StatementOfBondsByBranche statementOfBondsByBranche, Integer branchId) {
-        
+
         List<StatementOfBondsByBranche> statementOfBondsByBrancheList = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         sql.append(" select s.ScreenName , s.gl_bank_name , s.adding , s.gallary_id , s.gallary_code , s.gallary_name from (SELECT \n"
@@ -306,10 +310,10 @@ public class ReportsServiceImpl implements ReportsService {
         }
         return statementOfBondsByBrancheList;
     }
-    
+
     @Override
     public List<InvoicesIssuedWithinAperiod> getInvoiceWithinAperiod(InvoicesIssuedWithinAperiod issuedWithinAperiod, Integer branchId) {
-        
+
         List<InvoicesIssuedWithinAperiod> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT \n"
@@ -346,10 +350,10 @@ public class ReportsServiceImpl implements ReportsService {
         }
         return list;
     }
-    
+
     @Override
     public List<CompanyInvoicesWithoutSewing> getCompanyInvoicesWithoutSewing(CompanyInvoicesWithoutSewing invoicesWithoutSewing, Integer branchId) {
-        
+
         List<CompanyInvoicesWithoutSewing> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         sql.append(" SELECT inv.id , inv.name , oc.name as name , oc.code code , sum(ipid.net) as sum \n"
@@ -375,14 +379,14 @@ public class ReportsServiceImpl implements ReportsService {
             invoicesWithoutSewing.setCode((Integer) object[3]);
             invoicesWithoutSewing.setTotal((BigDecimal) object[4]);
             list.add(invoicesWithoutSewing);
-            
+
         }
         return list;
     }
-    
+
     @Override
     public List<ItemBalancesStatement> getItemBalancesStatement(ItemBalancesStatement itemBalancesStatement, Integer branchId) {
-        
+
         List<ItemBalancesStatement> itemBalancesStatementList = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         sql.append(" select ii.code , ii.name  ,\n"
@@ -417,10 +421,10 @@ public class ReportsServiceImpl implements ReportsService {
         }
         return itemBalancesStatementList;
     }
-    
+
     @Override
     public List<ProfitOfItemsSold> getProfitOfItemsSold(ProfitOfItemsSold profitOfItemsSold, Integer branchId, Integer type) {
-        
+
         List<ProfitOfItemsSold> profitOfItemsSoldList = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         sql.append("select ii.id , ii.code , ii.name , IFNULL(ii.cost_average,0) as cost_average , sum(IFNULL(ipid.quantity,0)) as totalSell , \n"
@@ -466,13 +470,47 @@ public class ReportsServiceImpl implements ReportsService {
         }
         return profitOfItemsSoldList;
     }
-    
+
+    @Override
+    public List<SalesStatementForThePeriod> getSalesStatementForThePeriod(SalesStatementForThePeriod statementForThePeriod) {
+
+        List<SalesStatementForThePeriod> list = new ArrayList<>();
+        StringBuilder sql = new StringBuilder();
+        sql.append("select ipi.serial , ipi.date , ios.code , ios.name,\n"
+                + "IFNULL(SUM(`ipid`.`net`), 0) as total_net,\n"
+                + "IFNULL(NET(IFNULL(SUM(`ipid`.`net`), 0),   IFNULL(`ipi`.`discount_type`, 0.0), IFNULL(`ipi`.`discount`, 0.0), IFNULL(`ipi`.`tax_flag`, 0.0),  15, IFNULL(`ipi`.`disc_halala`, 0.0)), 0.0) AS `net` ,ipi.id\n"
+                + "from inv_purchase_invoice ipi\n"
+                + "left join  inv_purchase_invoice_detail ipid on ipi.id = ipid.inv_purchase_invoice_id\n"
+                + "left join inv_organization_site ios on ios.id = ipi.organization_site_id  \n"
+                + " where ipi.type = 4 ");
+        appendGallery5(statementForThePeriod, sql);
+        appendDate8(statementForThePeriod, sql);
+        sql.append(" group by ipi.id ");
+        List<Object[]> res = dao.executeNativeQuery(sql.toString());
+        for (Object[] object : res) {
+            if (object[0] != null) {
+                statementForThePeriod = new SalesStatementForThePeriod();
+                statementForThePeriod.setSerial((Integer) object[0]);
+                statementForThePeriod.setInvoiceDate((Date) object[1]);
+                statementForThePeriod.setCode((String) object[2]);
+                statementForThePeriod.setName((String) object[3]);
+                statementForThePeriod.setTotalNet((BigDecimal) object[4]);
+                statementForThePeriod.setNet((BigDecimal) object[5]);
+                statementForThePeriod.setInvoiceId((Integer) object[6]);
+                statementForThePeriod.setInvoiceStatus(invPurchaseInvoiceService.findInvoiceStatus(statementForThePeriod.getInvoiceId()));
+                statementForThePeriod.setRemain(invPurchaseInvoiceService.remainForInvPurchaseInvoice(statementForThePeriod.getInvoiceId()));
+                list.add(statementForThePeriod);
+            }
+        }
+        return list;
+    }
+
     private void appendGallery(SalesReportByValueAded salesReportByValueAded, StringBuilder query) {
         if (salesReportByValueAded.getGallerySelected() != null) {
             query.append(" and ip.galary_Id =  ").append(salesReportByValueAded.getGallerySelected().getId());
         }
     }
-    
+
     private void appendDate(SalesReportByValueAded salesReportByValueAded, StringBuilder query) {
         if (salesReportByValueAded.getDateFrom() != null) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
@@ -483,13 +521,13 @@ public class ReportsServiceImpl implements ReportsService {
             query.append(" and ip.date <=  '").append(dateFormat.format(salesReportByValueAded.getDateTo())).append("' ");
         }
     }
-    
+
     private void appendGallery1(SalesReportByValueAdedDetails salesReportByValueAded, StringBuilder query) {
         if (salesReportByValueAded.getGallerySelected() != null) {
             query.append(" and ip.galary_Id =  ").append(salesReportByValueAded.getGallerySelected().getId());
         }
     }
-    
+
     private void appendDate1(SalesReportByValueAdedDetails salesReportByValueAded, StringBuilder query) {
         if (salesReportByValueAded.getDateFrom() != null) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
@@ -500,13 +538,13 @@ public class ReportsServiceImpl implements ReportsService {
             query.append(" and ip.date <=  '").append(dateFormat.format(salesReportByValueAded.getDateTo())).append("' ");
         }
     }
-    
+
     private void appendGallery2(CustomerBalances customerBalances, StringBuilder query) {
         if (customerBalances.getGallerySelected() != null) {
             query.append(" and organization_gallary_id =  ").append(customerBalances.getGallerySelected().getId());
         }
     }
-    
+
     private void appendDate2(StatementOfBondsByBranche statementOfBondsByBranche, StringBuilder query) {
         if (statementOfBondsByBranche.getDateFrom() != null) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
@@ -517,7 +555,7 @@ public class ReportsServiceImpl implements ReportsService {
             query.append("  AND `gbt`.`date` <=  '").append(dateFormat.format(statementOfBondsByBranche.getDateTo())).append("' ");
         }
     }
-    
+
     private void appendDate3(StatementOfBondsByBranche statementOfBondsByBranche, StringBuilder query) {
         if (statementOfBondsByBranche.getDateFrom() != null) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
@@ -528,7 +566,7 @@ public class ReportsServiceImpl implements ReportsService {
             query.append("  AND `inc`.`date` <=  '").append(dateFormat.format(statementOfBondsByBranche.getDateTo())).append("' ");
         }
     }
-    
+
     private void appendDate4(InvoicesIssuedWithinAperiod issuedWithinAperiod, StringBuilder query) {
         if (issuedWithinAperiod.getDateFrom() != null) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
@@ -539,7 +577,7 @@ public class ReportsServiceImpl implements ReportsService {
             query.append(" and `ipi`.`date` <=  '").append(dateFormat.format(issuedWithinAperiod.getDateTo())).append("' ");
         }
     }
-    
+
     private void appendDate5(CompanyInvoicesWithoutSewing invoicesWithoutSewing, StringBuilder query) {
         if (invoicesWithoutSewing.getDateFrom() != null) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
@@ -550,7 +588,7 @@ public class ReportsServiceImpl implements ReportsService {
             query.append(" and `ipi`.`date` <=  '").append(dateFormat.format(invoicesWithoutSewing.getDateTo())).append("' ");
         }
     }
-    
+
     private void appendDate6(ItemBalancesStatement itemBalancesStatement, StringBuilder query) {
         if (itemBalancesStatement.getDateFrom() != null) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
@@ -561,7 +599,7 @@ public class ReportsServiceImpl implements ReportsService {
             query.append(" and ipi.date <=   '").append(dateFormat.format(itemBalancesStatement.getDateTo())).append("' ");
         }
     }
-    
+
     private void appendDate7(ProfitOfItemsSold profitOfItemsSold, StringBuilder sql) {
         if (profitOfItemsSold.getDateFrom() != null) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
@@ -572,17 +610,34 @@ public class ReportsServiceImpl implements ReportsService {
             sql.append(" and ipi.date <=   '").append(dateFormat.format(profitOfItemsSold.getDateTo())).append("' ");
         }
     }
-    
+
     private void appendGallery7(StringBuilder gallaryIds, StringBuilder sql) {
         if (gallaryIds != null) {
             sql.append(" and ipi.galary_Id in ( ").append(gallaryIds.toString()).append(" )");
         }
     }
-    
+
     private void appendProGroup(StringBuilder groupId, StringBuilder sql) {
         if (groupId != null) {
             sql.append(" and ii.pro_group_id in(  ").append(groupId).append(" )");
         }
     }
-    
+
+    private void appendDate8(SalesStatementForThePeriod statementForThePeriod, StringBuilder sql) {
+        if (statementForThePeriod.getDateFrom() != null) {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+            sql.append(" AND ipi.date >=  '").append(dateFormat.format(statementForThePeriod.getDateFrom())).append("' ");
+        }
+        if (statementForThePeriod.getDateTo() != null) {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 23:59:59");
+            sql.append(" and ipi.date <=   '").append(dateFormat.format(statementForThePeriod.getDateTo())).append("' ");
+        }
+    }
+
+    private void appendGallery5(SalesStatementForThePeriod statementForThePeriod, StringBuilder query) {
+        if (statementForThePeriod.getGallerySelected() != null) {
+            query.append(" and ipi.galary_Id =  ").append(statementForThePeriod.getGallerySelected().getId());
+        }
+    }
+
 }
