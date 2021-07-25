@@ -5,7 +5,7 @@
  */
 package com.toby.comparators;
 
-import com.toby.report.entity.SubAccountSummaryReport;
+import com.toby.views.SubAccountSummaryReport;
 import java.util.Comparator;
 
 /**

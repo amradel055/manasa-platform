@@ -15,7 +15,7 @@ import com.toby.entity.CostCenter;
 import com.toby.entity.GlAccount;
 import com.toby.entity.GlAdminUnit;
 import com.toby.report.entity.MainTransactionStatementBean;
-import com.toby.report.entity.SubAccountSummaryReport;
+import com.toby.views.SubAccountSummaryReport;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;

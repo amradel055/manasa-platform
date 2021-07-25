@@ -13,9 +13,9 @@ import com.toby.entity.CostCenter;
 import com.toby.entity.GlAccount;
 import com.toby.entity.GlAdminUnit;
 import com.toby.entity.GlYear;
-import com.toby.report.entity.SubAccountSummaryReport;
 import com.toby.toby.BaseGlAccountReportBean;
 import com.toby.views.SubAccountSummary;
+import com.toby.views.SubAccountSummaryReport;
 import net.sf.jasperreports.engine.JRException;
 
 import javax.annotation.PostConstruct;

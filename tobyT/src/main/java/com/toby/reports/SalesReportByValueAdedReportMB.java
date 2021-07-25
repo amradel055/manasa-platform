@@ -1,11 +1,13 @@
 package com.toby.reports;
 
 import com.toby.businessservice.ReportsService;
+import com.toby.dto.InvInventoryDTO;
 import com.toby.toby.Basic;
 import com.toby.views.SalesReportByValueAded;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.event.ActionEvent;
 import javax.inject.Named;
@@ -28,8 +30,24 @@ public class SalesReportByValueAdedReportMB extends Basic {
     @EJB
     private ReportsService reportsService;
 
+    @PostConstruct
+    public void init() {
+        setGallaryListSelected(getGallaryLists());
+    }
+
     public void search() {
         setSalesReportByValueAdedList(reportsService.getSalesReportByValueAded(salesReportByValueAded, getUserData().getUserBranch().getId()));
+
+        if (getGallaryListSelected() != null && !getGallaryListSelected().isEmpty()) {
+            for (InvInventoryDTO invInventoryDTO : getGallaryListSelected()) {
+                salesReportByValueAded.setGallerySelected(invInventoryDTO);
+                List<SalesReportByValueAded> list = reportsService.getSalesReportByValueAded(salesReportByValueAded, getUserData().getUserBranch().getId());
+                getSalesReportByValueAdedList().addAll(list);
+            }
+        }
+        salesReportByValueAded.setGallerySelected(null);
+        List<SalesReportByValueAded> list = reportsService.getSalesReportByValueAded(salesReportByValueAded, getUserData().getUserBranch().getId());
+        getSalesReportByValueAdedList().addAll(list);
     }
 
     public void convertDateFrom() {
@@ -82,7 +100,7 @@ public class SalesReportByValueAdedReportMB extends Basic {
         hashMap.put("galleryNameText", " اسم المعرض");
         hashMap.put("totalBeforeTaxText", "قبل الضريبة");
         hashMap.put("totalAfterTaxText", "بعد الضريبة");
-        hashMap.put("taxText", " بالضريبة");
+        hashMap.put("taxText", " الضريبة");
 
         return hashMap;
     }

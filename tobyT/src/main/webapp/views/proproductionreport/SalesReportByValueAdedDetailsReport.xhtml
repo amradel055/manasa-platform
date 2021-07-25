@@ -16,18 +16,16 @@
 
                     <div class="ui-g-6 ui-xl-6">
                         <div class="ui-g-12 ui-xl-12">
-                            <div class="ui-g-6 ui-xl-6">
-
-                                <p:autoComplete style="width:85%" id="gallary_from" 
-                                                dropdown="true"
-                                                converter="#{autoComplete.invInventoryDTOConverter}"
-                                                value="#{salesReportByValueAdedDetailsReportMB.salesReportByValueAdedDetails.gallerySelected}" 
-                                                var="gallaryFrom"
-                                                itemLabel="#{gallaryFrom}"
-                                                itemValue="#{gallaryFrom}" 
-                                                forceSelection="true" 
-                                                completeMethod="#{autoComplete.completeGallaryDTO}" >
-                                </p:autoComplete>
+                            <div class="ui-g-6 ui-xl-6">                                
+                                <p:selectCheckboxMenu id="gallary_From" value="#{salesReportByValueAdedDetailsReportMB.gallaryListSelected}" 
+                                                      converter="#{salesReportByValueAdedDetailsReportMB.gallaryDTOConverters}"
+                                                      label="المعرض" style="width: 15rem"
+                                                      filter="true" filterMatchMode="startsWith" panelStyle="width: 15rem" scrollHeight="250">
+                                    <f:selectItems value="#{salesReportByValueAdedDetailsReportMB.gallaryLists}" 
+                                                   var="gallary"
+                                                   itemLabel="#{gallary}"
+                                                   itemValue="#{gallary}"/>
+                                </p:selectCheckboxMenu>
                             </div>
                             <div class="ui-g-6 ui-xl-6">
                                 <p:outputLabel style="width: 50px;margin-right: 1%" value="معرض"/>
@@ -154,9 +152,6 @@
                         </p:column>
                         <p:column headerText="اسم الموظف" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
                             <h:outputText value="#{data.employeeName}" />
-                        </p:column>
-                        <p:column headerText="الخصم" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
-                            <h:outputText value="#{data.discount}" />
                         </p:column>
                         <p:column headerText="اجمالى قبل الضريبة" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
                             <h:outputText value="#{data.totalBeforeTax}" />

@@ -7,6 +7,7 @@ package com.toby.businessservice.report;
 
 import com.toby.businessservice.reports.searchBean.SubAccountSummarySearchBean;
 import com.toby.entity.GlYear;
+import com.toby.views.CashAccountSettlementBean;
 import com.toby.views.CashAccountSettlmentView;
 import java.math.BigDecimal;
 import java.util.List;
@@ -25,11 +26,13 @@ public interface CashAccountSettlmentService {
 
     public List<CashAccountSettlmentView> findAllCashAccountSettlmentForLineCheck(SubAccountSummarySearchBean cashAccountSettlementSearchBean);
 
-    public BigDecimal findOpeningBalancesForSpecificCashAccount(SubAccountSummarySearchBean cashAccountSettlementSearchBean, Integer bankId, Integer type, GlYear glYear);
+    public BigDecimal findOpeningBalancesForSpecificCashAccount(SubAccountSummarySearchBean cashAccountSettlementSearchBean, Integer bankId, Integer type );
 
-    public BigDecimal findOpeningBalancesForSpecificCashAccount2(SubAccountSummarySearchBean cashAccountSettlementSearchBean, Integer bankId, Integer type, GlYear glYear);
+    public BigDecimal findOpeningBalancesForSpecificCashAccount2(SubAccountSummarySearchBean cashAccountSettlementSearchBean, Integer bankId, Integer type );
 
     public List<CashAccountSettlmentView> findOpeningBalancesForSpecificCashAccountByGroups(SubAccountSummarySearchBean cashAccountSettlementSearchBean, Integer type, GlYear glYear);
 
     public List<CashAccountSettlmentView> findAllRemainingCashAccountSettlment(SubAccountSummarySearchBean cashAccountSettlementSearchBean, StringBuilder stringBuilder);
+
+    public CashAccountSettlementBean search(SubAccountSummarySearchBean cashAccountSettlementSearchBean );
 }

@@ -1,6 +1,7 @@
 package com.toby.businessservice.reports.searchBean;
 
 import com.toby.dto.GlBankDTO;
+import com.toby.dto.GlYearDTO;
 import com.toby.entity.Symbol;
 import java.io.Serializable;
 import java.util.Date;
@@ -33,6 +34,9 @@ public class SubAccountSummarySearchBean implements Serializable {
     private String TobyUserTo;    
     private Integer bankId;
     private List<GlBankDTO>  glBankToListSelected;
+    
+    private GlYearDTO glYearSelected;
+    private List<GlBankDTO> glBankDTOListSelected;
     
     public GlBankDTO getGlBankFrom() {
         return glBankFrom;
@@ -290,6 +294,34 @@ public class SubAccountSummarySearchBean implements Serializable {
      */
     public void setGlBankToListSelected(List<GlBankDTO> glBankToListSelected) {
         this.glBankToListSelected = glBankToListSelected;
+    }
+
+    /**
+     * @return the glYearSelected
+     */
+    public GlYearDTO getGlYearSelected() {
+        return glYearSelected;
+    }
+
+    /**
+     * @param glYearSelected the glYearSelected to set
+     */
+    public void setGlYearSelected(GlYearDTO glYearSelected) {
+        this.glYearSelected = glYearSelected;
+    }
+
+    /**
+     * @return the glBankDTOListSelected
+     */
+    public List<GlBankDTO> getGlBankDTOListSelected() {
+        return glBankDTOListSelected;
+    }
+
+    /**
+     * @param glBankDTOListSelected the glBankDTOListSelected to set
+     */
+    public void setGlBankDTOListSelected(List<GlBankDTO> glBankDTOListSelected) {
+        this.glBankDTOListSelected = glBankDTOListSelected;
     }
 
 }

@@ -44,9 +44,9 @@ public class ReportsServiceImpl implements ReportsService {
                 + "        `ip`.`serial` AS `serial`, `ip`.`type` AS `type`,`ip`.`date` AS `date`,`inv`.`name` AS `gallary_name`,\n"
                 + "        `ios`.`name` AS `organization_site_name`,`ip`.`discount` AS `head_discount`,\n"
                 + "        IFNULL(NET(IFNULL(SUM(`ipd`.`net`), 0.0),IFNULL(`ip`.`discount_type`, 0.0),IFNULL(`ip`.`discount`, 0.0),\n"
-                + "                        IFNULL(`ip`.`tax_flag`, 0.0),15,0.0,0.0,0.0),0.0) AS `net`,\n"
+                + "                        IFNULL(`ip`.`tax_flag`, 0.0),15,IFNULL(`ip`.`disc_halala`, 0.0)),0.0) AS `net`,\n"
                 + "                IFNULL(NET(IFNULL(SUM(`ipd`.`net`), 0.0),IFNULL(`ip`.`discount_type`, 0.0),\n"
-                + "                        IFNULL(`ip`.`discount`, 0.0),IFNULL(`ip`.`tax_flag`, 0.0),0.0,0.0,0.0,0.0),0.0) AS `netBeforTax`\n"
+                + "                        IFNULL(`ip`.`discount`, 0.0),IFNULL(`ip`.`tax_flag`, 0.0),0,IFNULL(`ip`.`disc_halala`, 0.0)),0.0) AS `netBeforTax`\n"
                 + "    FROM\n"
                 + "        `inv_purchase_invoice` `ip` LEFT JOIN `inv_purchase_invoice_detail` `ipd` ON `ip`.`id` = `ipd`.`inv_purchase_invoice_id`\n"
                 + "        LEFT JOIN `inv_inventory` `inv` ON `inv`.`id` = `ip`.`galary_Id` LEFT JOIN `inv_organization_site` `ios` ON `ios`.`id` = `ip`.`organization_site_id`\n"
@@ -84,18 +84,13 @@ public class ReportsServiceImpl implements ReportsService {
                 + "                        IFNULL(`ip`.`discount`, 0.0),\n"
                 + "                        IFNULL(`ip`.`tax_flag`, 0.0),\n"
                 + "                        15,\n"
-                + "                        0.0,\n"
-                + "                        0.0,\n"
-                + "                        0.0),\n"
+                + "                        IFNULL(`ip`.`disc_halala`, 0.0)),\n"
                 + "                0.0) AS `net`,\n"
                 + "                IFNULL(NET(IFNULL(SUM(`ipd`.`net`), 0.0),\n"
                 + "                        IFNULL(`ip`.`discount_type`, 0.0),\n"
                 + "                        IFNULL(`ip`.`discount`, 0.0),\n"
                 + "                        IFNULL(`ip`.`tax_flag`, 0.0),\n"
-                + "                        0.0,\n"
-                + "                        0.0,\n"
-                + "                        0.0,\n"
-                + "                        0.0),\n"
+                + "                        0,IFNULL(`ip`.`disc_halala`, 0.0)),\n"
                 + "                0.0) AS `netBeforTax`\n"
                 + "    FROM\n"
                 + "        `inv_purchase_invoice` `ip`\n"
@@ -118,6 +113,7 @@ public class ReportsServiceImpl implements ReportsService {
             reportByValueAdedDetails.setDiscount((BigDecimal) object[5]);
             reportByValueAdedDetails.setTotalAfterTax((BigDecimal) object[6]);
             reportByValueAdedDetails.setTotalBeforeTax((BigDecimal) object[7]);
+            reportByValueAdedDetails.setTax(reportByValueAdedDetails.getTotalAfterTax().subtract(reportByValueAdedDetails.getTotalBeforeTax()));
             salesReportByValueAdeds.add(reportByValueAdedDetails);
         }
         return salesReportByValueAdeds;
@@ -318,12 +314,12 @@ public class ReportsServiceImpl implements ReportsService {
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT \n"
                 + "        `ipi`.`id` AS `id`, `ipi`.`serial` AS `serial`,  `ipi`.`date` AS `date`, `ios`.`code` AS `organization_code`, `ios`.`name` AS `organization_name`,\n"
-                + "        (CASE WHEN (SUM(IFNULL(`ipid`.`net`, 0)) = 0) THEN 0 ELSE NET(TRUNCATE(SUM(IFNULL(`ipid`.`net`, 0)),2),0,0,`ipi`.`tax_flag`,15,0,0,0)END) AS `total`,\n"
-                + "        (CASE WHEN (SUM(IFNULL(`ipid`.`net`, 0)) = 0) THEN 0 ELSE NET(TRUNCATE(SUM(IFNULL(`ipid`.`net`, 0)),2),`ipi`.`discount_type`,`ipi`.`discount`,`ipi`.`tax_flag`,15,0,0, 0) END) AS `net`,\n"
+                + "        (CASE WHEN (SUM(IFNULL(`ipid`.`net`, 0)) = 0) THEN 0 ELSE NET(TRUNCATE(SUM(IFNULL(`ipid`.`net`, 0)),2),0,0,`ipi`.`tax_flag`,15,IFNULL(`ip`.`disc_halala`, 0.0))END) AS `total`,\n"
+                + "        (CASE WHEN (SUM(IFNULL(`ipid`.`net`, 0)) = 0) THEN 0 ELSE NET(TRUNCATE(SUM(IFNULL(`ipid`.`net`, 0)),2),`ipi`.`discount_type`,`ipi`.`discount`,`ipi`.`tax_flag`,15,IFNULL(`ip`.`disc_halala`, 0.0)) END) AS `net`,\n"
                 + "        (SELECT sum(IFNULL(`gbtd`.`value_local`, 0)) AS `adding` FROM  `gl_bank_transaction` `gbt` LEFT JOIN `gl_bank_transaction_detail` `gbtd` \n"
                 + "        ON `gbt`.`id` = `gbtd`.`gl_bank_transaction_id` WHERE gbt.invoice_id = ipi.id) as payed,\n"
                 + "        IFNULL((SELECT (CASE WHEN (SUM(IFNULL(`ipid2`.`net`, 0)) = 0) THEN 0 ELSE NET(TRUNCATE(SUM(IFNULL(`ipid2`.`net`, 0)),2),\n"
-                + "       `ipi2`.`discount_type`,`ipi2`.`discount`,`ipi2`.`tax_flag`,15,0,0, 0) END) AS `net` FROM `inv_purchase_invoice` `ipi2` \n"
+                + "       `ipi2`.`discount_type`,`ipi2`.`discount`,`ipi2`.`tax_flag`,15,IFNULL(`ip`.`disc_halala`, 0.0)) END) AS `net` FROM `inv_purchase_invoice` `ipi2` \n"
                 + "        LEFT JOIN `inv_purchase_invoice_detail` `ipid2` ON `ipi2`.`id` = `ipid2`.`inv_purchase_invoice_id` WHERE  `ipi2`.`parent` = ipi.id),0) as returnn\n"
                 + "\n"
                 + "    FROM\n"
@@ -473,7 +469,7 @@ public class ReportsServiceImpl implements ReportsService {
     
     private void appendGallery(SalesReportByValueAded salesReportByValueAded, StringBuilder query) {
         if (salesReportByValueAded.getGallerySelected() != null) {
-            query.append(" and ip.gallery =  ").append(salesReportByValueAded.getGallerySelected());
+            query.append(" and ip.galary_Id =  ").append(salesReportByValueAded.getGallerySelected().getId());
         }
     }
     
@@ -490,7 +486,7 @@ public class ReportsServiceImpl implements ReportsService {
     
     private void appendGallery1(SalesReportByValueAdedDetails salesReportByValueAded, StringBuilder query) {
         if (salesReportByValueAded.getGallerySelected() != null) {
-            query.append(" and ip.gallery =  ").append(salesReportByValueAded.getGallerySelected());
+            query.append(" and ip.galary_Id =  ").append(salesReportByValueAded.getGallerySelected().getId());
         }
     }
     

@@ -265,6 +265,14 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     public void convertDateFrom() {
         getInvInvoiceDTO().setDate(findDateFromHijriFrom());
     }
+    
+    public void chagePaymentType() {
+        if (getInvInvoiceDTO().getPaymentType() == 1) {
+            getInvInvoiceDTO().setGlBankId(null);
+        } else {
+            getInvInvoiceDTO().setGlBankId(getUserData().getGlBankDTODefault());
+        }
+    }
 
     public void fillDefaultList() {
         getInvInventoryDTOList();

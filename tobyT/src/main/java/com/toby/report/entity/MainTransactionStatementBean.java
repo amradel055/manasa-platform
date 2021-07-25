@@ -5,6 +5,7 @@
  */
 package com.toby.report.entity;
 
+import com.toby.views.SubAccountSummaryReport;
 import java.math.BigDecimal;
 import java.util.List;
 

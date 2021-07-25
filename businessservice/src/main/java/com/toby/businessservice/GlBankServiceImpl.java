@@ -299,4 +299,13 @@ public class GlBankServiceImpl implements GlBankService {
 
         return dao.findEntityByQuery(sql, params);
     }
+    @Override
+    public List<GlBankDTO> findGlBankDTOList(StringBuilder stringBuilder) {
+        StringBuilder sql = new StringBuilder(); 
+        sql.append("SELECT e FROM GlBank e WHERE e.id  in ( ");
+        sql.append(stringBuilder);
+        sql.append(" )");        
+        List<GlBank> glBankList = dao.findListByQuery(sql.toString());
+        return mapToDTOList(glBankList,null);
+    }
 }

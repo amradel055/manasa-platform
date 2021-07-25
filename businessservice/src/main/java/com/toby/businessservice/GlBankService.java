@@ -41,4 +41,6 @@ public interface GlBankService {
     public BigDecimal findGlBankOpeninngBalance(Integer branchId , Integer bankId);
     
     public List<GlBankDTO> getAllGlBankDTOByBranchId(TobyUser tobyUser);
+    
+    public List<GlBankDTO> findGlBankDTOList(StringBuilder stringBuilder);
 }

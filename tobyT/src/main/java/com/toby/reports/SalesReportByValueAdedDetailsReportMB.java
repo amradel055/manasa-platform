@@ -1,11 +1,15 @@
 package com.toby.reports;
 
 import com.toby.businessservice.ReportsService;
+import com.toby.dto.InvInventoryDTO;
 import com.toby.toby.Basic;
 import com.toby.views.SalesReportByValueAdedDetails;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.event.ActionEvent;
 import javax.inject.Named;
@@ -28,8 +32,22 @@ public class SalesReportByValueAdedDetailsReportMB extends Basic {
     @EJB
     private ReportsService reportsService;
 
+    @PostConstruct
+    public void init() {
+        setGallaryListSelected(getGallaryLists());
+    }
+
     public void search() {
-        setSalesReportByValueAdedDetailsList(reportsService.getSalesReportByValueAdedDetails(salesReportByValueAdedDetails, getUserData().getUserBranch().getId()));
+        if (getGallaryListSelected() != null && !getGallaryListSelected().isEmpty()) {
+            for (InvInventoryDTO invInventoryDTO : getGallaryListSelected()) {
+                salesReportByValueAdedDetails.setGallerySelected(invInventoryDTO);
+                List<SalesReportByValueAdedDetails> list = reportsService.getSalesReportByValueAdedDetails(salesReportByValueAdedDetails, getUserData().getUserBranch().getId());
+                getSalesReportByValueAdedDetailsList().addAll(list);
+            }
+        }
+//        salesReportByValueAdedDetails.setGallerySelected(null);
+//        List<SalesReportByValueAdedDetails> list = reportsService.getSalesReportByValueAdedDetails(salesReportByValueAdedDetails, getUserData().getUserBranch().getId());
+//        getSalesReportByValueAdedDetailsList().addAll(list);
     }
 
     public void convertDateFrom() {
@@ -87,7 +105,8 @@ public class SalesReportByValueAdedDetailsReportMB extends Basic {
         hashMap.put("discountText", "الخصم");
         hashMap.put("totalBeforeTaxText", "قبل الضريبة");
         hashMap.put("totalAfterTaxText", "بعد الضريبة");
-        hashMap.put("taxText", " بالضريبة");
+        hashMap.put("taxText", " الضريبة");
+        hashMap.put("reportDate", new Date());
 
         return hashMap;
     }
@@ -96,6 +115,9 @@ public class SalesReportByValueAdedDetailsReportMB extends Basic {
      * @return the salesReportByValueAdedDetailsList
      */
     public List<SalesReportByValueAdedDetails> getSalesReportByValueAdedDetailsList() {
+        if (salesReportByValueAdedDetailsList == null) {
+            salesReportByValueAdedDetailsList = new ArrayList<>();
+        }
         return salesReportByValueAdedDetailsList;
     }
 
