@@ -32,3 +32,43 @@
     width: 100%;
     padding: 0px;
 }
+
+/* ProWorkForm Custom CSS */
+
+.ui-g-4.ui-xl-4 {
+    float: right;
+}
+
+span.ui-sortable-column-icon.ui-icon.ui-icon-carat-2-n-s {
+    display: none;
+}
+
+.section-edit1 .ui-g-8.ui-xl-8 {
+    overflow: hidden;
+}
+
+label#form\:PURCHASE_NUMBER_label {
+    text-align: right;
+}
+
+.section-edit .ui-g-4.ui-xl-4 {
+    float: left !important;
+    overflow: hidden;
+}
+
+.section-edit .ui-g-8.ui-xl-8 {
+    float: right !important;
+    overflow: hidden;
+}
+
+input#form\:customer_input {
+    width: 200%;
+}
+
+.secondPart .ui-g-6.ui-xl-6 {
+    margin-top: -3%;
+}
+
+thead#form\:invPurchaseInvoiceDetailsTable_head {
+    line-height: 3px;
+}
