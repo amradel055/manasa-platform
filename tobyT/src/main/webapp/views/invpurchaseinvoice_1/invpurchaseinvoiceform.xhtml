@@ -244,14 +244,9 @@
                                                         itemLabel="#{supplier}" 
                                                         itemValue="#{supplier}" 
                                                         forceSelection="true" 
-                                                        completeMethod="#{invPurchaseInvoiceFormDTOMB.completeSuppllier}" 
+                                                        completeMethod="#{invPurchaseInvoiceFormDTOMB.completeSupplier}" 
                                                         disabled="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id != null and invPurchaseInvoiceFormDTOMB.invInvoiceDTO.checkData }">
 
-
-                                            <p:ajax update="@form"
-                                                    event="change"
-                                                    process="@form"
-                                                    listener="#{invPurchaseInvoiceFormDTOMB.putCurrency()}" />
                                             <p:ajax update="@form"
                                                     process="@form"
                                                     event="itemSelect"

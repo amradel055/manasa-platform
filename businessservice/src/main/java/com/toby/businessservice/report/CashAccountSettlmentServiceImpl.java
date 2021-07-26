@@ -663,31 +663,59 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
             params.put("branchId", cashAccountSettlementSearchBean.getBranchId());
             params.put("bankId", cashAccountSettlementSearchBean.getBankId());
             StringBuilder builder = new StringBuilder();
-            builder.append("SELECT g , sum(g.net) FROM InvPurchaseInvoiceDetail g WHERE g.invPurchaseInvoiceId.glBankId.id  = :bankId  AND g.invPurchaseInvoiceId.paymentType = 0  AND g.invPurchaseInvoiceId.branchId.id = :branchId ");
+
+            builder.append("select  IFNULL(NET(IFNULL(SUM(`ipd`.`net`), 0.0), IFNULL(`ip`.`discount_type`, 0.0), IFNULL(`ip`.`discount`, 0.0), IFNULL(`ip`.`tax_flag`, 0.0), "
+                    + " 15, IFNULL(`ip`.`disc_halala`, 0.0)), 0.0) AS `net` from inv_purchase_invoice_detail ipd  left join inv_purchase_invoice ip on ip.id = ipd.inv_purchase_invoice_id ");
 
             if (cashAccountSettlementSearchBean.getDateTo() != null) {
                 String d3 = new SimpleDateFormat("yyyy-MM-dd").format(cashAccountSettlementSearchBean.getDateFrom());
-                builder.append(" and g.invPurchaseInvoiceId.date < '").append(d3).append("'");
+                builder.append(" and ip.date < '").append(d3).append("'");
             }
 
             if (cashAccountSettlementSearchBean.getType() != null) {
-                builder.append(" and g.invPurchaseInvoiceId.type = :type");
-                params.put("type", cashAccountSettlementSearchBean.getType());
+                builder.append(" and ip.type = ").append(cashAccountSettlementSearchBean.getType());
             }
-            builder.append(" Group by g.invPurchaseInvoiceId.id");
-            List<Object[]> objectlList = dao.findListByQuery(builder.toString(), params);
-            for (Object[] objects : objectlList) {
-                InvPurchaseInvoiceDetail entity = (InvPurchaseInvoiceDetail) objects[0];
-                entity.setSumDetailNet((BigDecimal) objects[objects.length - 1]);
-                InvInvoiceDTO invInvoiceDTO = invPurchaseInvoiceService_1.returnInvInvoiceSummarySumation(entity.getInvPurchaseInvoiceId(), entity.getSumDetailNet());
-                selesValue = selesValue.add(invInvoiceDTO.getFinalNet().multiply(invInvoiceDTO.getRate()));
-            }
-
+            List<Object[]> objectlList = dao.executeNativeQuery(builder.toString());
+            selesValue = (BigDecimal) objectlList.get(0)[0];
             return selesValue;
         } catch (Exception ex) {
             return BigDecimal.ZERO;
         }
     }
+
+    
+//    private BigDecimal findSalesSum(SubAccountSummarySearchBean cashAccountSettlementSearchBean) {
+//        try {
+//            selesValue = BigDecimal.ZERO;
+//            Map<String, Object> params = new HashMap();
+//            params.put("branchId", cashAccountSettlementSearchBean.getBranchId());
+//            params.put("bankId", cashAccountSettlementSearchBean.getBankId());
+//            StringBuilder builder = new StringBuilder();
+//            builder.append("SELECT g , sum(g.net) FROM InvPurchaseInvoiceDetail g WHERE g.invPurchaseInvoiceId.glBankId.id  = :bankId  AND g.invPurchaseInvoiceId.paymentType = 0  AND g.invPurchaseInvoiceId.branchId.id = :branchId ");
+//
+//            if (cashAccountSettlementSearchBean.getDateTo() != null) {
+//                String d3 = new SimpleDateFormat("yyyy-MM-dd").format(cashAccountSettlementSearchBean.getDateFrom());
+//                builder.append(" and g.invPurchaseInvoiceId.date < '").append(d3).append("'");
+//            }
+//
+//            if (cashAccountSettlementSearchBean.getType() != null) {
+//                builder.append(" and g.invPurchaseInvoiceId.type = :type");
+//                params.put("type", cashAccountSettlementSearchBean.getType());
+//            }
+//            builder.append(" Group by g.invPurchaseInvoiceId.id");
+//            List<Object[]> objectlList = dao.findListByQuery(builder.toString(), params);
+//            for (Object[] objects : objectlList) {
+//                InvPurchaseInvoiceDetail entity = (InvPurchaseInvoiceDetail) objects[0];
+//                entity.setSumDetailNet((BigDecimal) objects[objects.length - 1]);
+//                InvInvoiceDTO invInvoiceDTO = invPurchaseInvoiceService_1.returnInvInvoiceSummarySumation(entity.getInvPurchaseInvoiceId(), entity.getSumDetailNet());
+//                selesValue = selesValue.add(invInvoiceDTO.getFinalNet().multiply(invInvoiceDTO.getRate()));
+//            }
+//
+//            return selesValue;
+//        } catch (Exception ex) {
+//            return BigDecimal.ZERO;
+//        }
+//    }
 
 //   private List<CashAccountSettlmentView> findReturnSales(SubAccountSummarySearchBean cashAccountSettlementSearchBean) {
 //        Map<String, Object> params = new HashMap();
@@ -1234,9 +1262,9 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
         calculateExceedDateOpeningBalance(cashAccountSettlementBean, cashAccountSettlementSearchBean);
         if (cashAccountSettlementBean.getCashAccountSettlementReports() != null && !cashAccountSettlementBean.getCashAccountSettlementReports().isEmpty()) {
             for (SubAccountSummaryReport cash : cashAccountSettlementBean.getCashAccountSettlementReports()) {
-                cash.setTotalCredit(cashAccountSettlementBean.getTotalForCreditMap().get(cash.getBankId()).setScale(2, RoundingMode.UP));
-                cash.setTotalDebit(cashAccountSettlementBean.getTotalForDebitMap().get(cash.getBankId()).setScale(2, RoundingMode.UP));
-                cash.setOpeningBalance(cashAccountSettlementBean.getOpeningBalanceMap().get(cash.getBankId()).setScale(2, RoundingMode.UP));
+                cash.setTotalCredit(cashAccountSettlementBean.getTotalForCreditMap() == null ? BigDecimal.ZERO : cashAccountSettlementBean.getTotalForCreditMap().get(cash.getBankId()).setScale(2, RoundingMode.UP));
+                cash.setTotalDebit(cashAccountSettlementBean.getTotalForDebitMap() == null ? BigDecimal.ZERO : cashAccountSettlementBean.getTotalForDebitMap().get(cash.getBankId()).setScale(2, RoundingMode.UP));
+                cash.setOpeningBalance(cashAccountSettlementBean.getOpeningBalanceMap() == null ? BigDecimal.ZERO : cashAccountSettlementBean.getOpeningBalanceMap().get(cash.getBankId()).setScale(2, RoundingMode.UP));
             }
         }
         cashAccountSettlementBean.setCashAccountSettlementList(null);

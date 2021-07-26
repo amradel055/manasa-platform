@@ -740,7 +740,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         try {
             getInvInvoiceDTO().setMsg(null);
             setInvInvoiceDTO(invPurchaseInvoiceService.putCurrency(getInvInvoiceDTO() == null ? null : getInvInvoiceDTO()));
-            getInvInvoiceDTO().setCustomerNotice(companyService.getNoticeByCustomerId(getInvInvoiceDTO() == null ? null : getInvInvoiceDTO().getOrganizationSiteId().getId()));
+            getInvInvoiceDTO().setCustomerNotice(companyService.getNoticeByCustomerId((getInvInvoiceDTO() == null || getInvInvoiceDTO().getOrganizationSiteId() == null) ? null : getInvInvoiceDTO().getOrganizationSiteId().getId()));
 
             errorMsg(getInvInvoiceDTO().getMsg());
         } catch (Exception e) {
@@ -1014,6 +1014,13 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
     public List<InvOrganizationSiteDTO> completeCustomerFrom(String query) {
         invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getUserData().getUserBranch().getId(), Boolean.TRUE, 0, query, getInvInvoiceDTO().getGallaryId() == null ? (getGallaryDTOSelect() == null ? null : getGallaryDTOSelect().getId()) : getInvInvoiceDTO().getGallaryId().getId());
+        organizationSiteDTOConvertor = new InvOrganizationSiteDTOConverter(invOrganizationSiteDTOList);
+        return invOrganizationSiteDTOList;
+
+    }
+    
+    public List<InvOrganizationSiteDTO> completeSupplier(String query) {
+        invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getUserData().getUserBranch().getId(), Boolean.TRUE, 1, query, null);
         organizationSiteDTOConvertor = new InvOrganizationSiteDTOConverter(invOrganizationSiteDTOList);
         return invOrganizationSiteDTOList;
 

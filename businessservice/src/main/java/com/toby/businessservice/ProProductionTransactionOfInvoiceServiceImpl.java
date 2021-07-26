@@ -100,7 +100,7 @@ public class ProProductionTransactionOfInvoiceServiceImpl implements ProProducti
                 + "        LEFT JOIN `pro_production_stages` `pps` ON ((`pps`.`id` = `ppit`.`pro_production_stages_id`)))\n"
                 + "        LEFT JOIN `toby_user` `tu` ON ((`tu`.`id` = `ppit`.`created_by`)))\n"
                 + "    WHERE \n"
-                + "        `pfdd`.`item_id` IS NOT NULL AND `pfd`.`type` = 0 AND `pfdd`.`item_id` = ").append(itemId).append(" AND `ppit`.`pro_production_stages_id` = ").append(proProductionStage).append("  and `ppit`.`branch_id`= ").append(tobyUser.getBranchId().getId()).append("  AND `ipi`.`serial`= ").append(invInvoiceSerial).append(" GROUP BY `pfdd`.`item_id`  , `pfdd`.`inv_item_parent_id` , `ppit`.`pro_production_stages_id` , `pfdd`.`cloth_number` ");
+                + "        `pfdd`.`item_id` IS NOT NULL AND `pfd`.`type` = 0 AND `pfdd`.`item_id` = ").append(itemId).append(" AND `ppit`.`pro_production_stages_id` = ").append(proProductionStage).append("  and `ppit`.`branch_id`= ").append(tobyUser.getBranchId().getId()).append("  AND `ipi`.`serial`= ").append(invInvoiceSerial).append(" GROUP BY `pfdd`.`item_id`  , `ppit`.`pro_production_stages_id` , `pfdd`.`cloth_number` ");
 
         List<Object[]> res = dao.executeNativeQuery(query.toString());
 

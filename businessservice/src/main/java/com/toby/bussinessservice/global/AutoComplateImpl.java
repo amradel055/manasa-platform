@@ -137,9 +137,9 @@ public class AutoComplateImpl implements AutoCompleteService {
             params.put("gallaryId", gallaryId);
         }
         appendOrganizationTypeAndActive(params, type, sql, active, gallaryId);
-        List<InvOrganizationSite> detailses = dao.findListByQuery(sql.toString(), params, 0, 10000);
+        List<InvOrganizationSite> detailses = dao.findListByQuery(sql.toString(), params, 0, 10);
         list = returnListDTO(detailses);
-        return list;
+        return list; 
     }
 
     @Override
