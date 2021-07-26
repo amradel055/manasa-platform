@@ -149,10 +149,13 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     }
 
     @Override
-    public BigDecimal getInvoiceByRaghiCode(String raghiCode) {
+    public BigDecimal getInvoiceByRaghiCode(String raghiCode, Integer invoiceId) {
         if (raghiCode != null && !raghiCode.isEmpty()) {
             StringBuilder builder = new StringBuilder();
             builder.append(" select id from inv_purchase_invoice ").append(" where raghi_code = '").append(raghiCode).append("' and type = 4  and branch_id = 182 ");
+            if (invoiceId != null) {
+                builder.append(" and id != ").append(invoiceId);
+            }
             List<Integer> details = dao.executeNativeQuery(builder.toString());
             if (details != null && !details.isEmpty()) {
                 return BigDecimal.ZERO;
@@ -1273,11 +1276,11 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             }
         }
 
-        if (invInvoiceDTO.getRaghiCode() != null) {
+        if (invInvoiceDTO.getRaghiCode() != null && !invInvoiceDTO.getRaghiCode().isEmpty()) {
 //            if (invInvoiceDTO.getRaghiValue() == null) {
 //                error.append("\n  يجب ادخال قيمة الكود او الغاء الكود");
 //            } else {
-            if (getInvoiceByRaghiCode(invInvoiceDTO.getRaghiCode()).compareTo(BigDecimal.ZERO) == 0) {
+            if (getInvoiceByRaghiCode(invInvoiceDTO.getRaghiCode(), invInvoiceDTO.getId()).compareTo(BigDecimal.ZERO) == 0) {
                 error.append("\n  تم استخدام الكود من قبل");
             }
 //            }

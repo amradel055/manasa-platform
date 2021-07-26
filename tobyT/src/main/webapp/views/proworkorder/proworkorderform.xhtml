@@ -12,10 +12,7 @@
 
         <h:form id="form" dir="#{userData.dir}" class='formmargin'  >
             <p:hotkey bind="F2" handler="PF('dlg4').show()"/>
-            <div >
-                <p:messages id="curmsg" autoUpdate="true" showDetail="true" rendered="true" closable="true"/>   
-            </div>
-            
+
             <div class="ui-g-4 ui-xl-4 " style="margin-top: -2%;" >
                 <p:fieldset class="last-part" style="max-height: available ;background-color: #e6e4e4;width: 25%;" >
 
@@ -260,7 +257,9 @@
 
 
                     </div>
-
+                    <div class="ui-g-12 ui-xl-12"  >
+                        <p:messages id="curmsg" autoUpdate="true" showDetail="true" rendered="true" closable="true"/>   
+                    </div>
 
                 </p:fieldset>
 
@@ -487,7 +486,7 @@
                                         process="@form"
                                         event="itemSelect"
                                         listener="#{invPurchaseInvoiceFormDTOMB.validatedetail()}" 
-                                        update="curmsg2" />
+                                        update="curmsg" />
                                 </p:autoComplete>
                             </div>
                             <div class="ui-g-6 ui-xl-6">
@@ -569,7 +568,7 @@
 
 
 
-                        
+
 
                     </div>
 
@@ -634,9 +633,9 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="ui-g-8 ui-xl-8" style="margin-top: -2%;" >
-                    <div style="text-align: center">
+                        <div style="text-align: center">
 
                             <p:commandButton  class="printButtons"
                                               ajax="false"
@@ -681,82 +680,78 @@
                                               />
 
                         </div>
-                        
-                        
-                        
+
+
+
                     </div>
-                    
+
                     <div class="ui-g-4 ui-xl-4" style="margin-top: -2%;" >
-                    
-                    <div style="text-align: center">
 
-                                <p:commandButton  id="saveB" 
-                                                  class="saveButtons"
-                                                  title="#{userData.userDDs['SAVE']}"
-                                                  value="#{userData.userDDs['SAVE']}" 
-                                                  action="#{invPurchaseInvoiceFormDTOMB.save()}"
-                                                  rendered="#{(userData.userScreens['proworkorder'].edit) or invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id eq null or userData.isAdmin}"
-                                                  update="@form"/>
+                        <div style="text-align: center">
 
-
-                                <p:commandButton 
-                                    id="newN"
-                                    ajax="false"
-                                    value="#{userData.userDDs['NEW']}" 
-                                    class="newButtons"
-                                    onclick="form.target = ''" 
-                                    rendered="#{(userData.userScreens['proworkorder'].add) or  userData.isAdmin}"
-                                    actionListener="#{invPurchaseInvoiceFormDTOMB.reset()}"/>
-
-                                <p:commandButton 
-                                    id="removeHalala"
-                                    value="حذف الهلله" 
-                                    class="newButtons" rendered="#{(userData.userScreens['proworkorder'].add) or  userData.isAdmin}"
-                                    update="form:totalActualWeight form:totalNetAfterDiscount form:taxvalue form:totalWithTaxValue form:remain " 
-                                    actionListener="#{invPurchaseInvoiceFormDTOMB.removeHalala()}"/>
-
-                                <p:commandButton  class="printButtons"
-                                                  ajax="false"
-                                                  onclick="form.target = '_blank'"  
-                                                  rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id != null}"
-                                                  value="#{userData.userDDs['PRINT']}" 
-                                                  title="#{userData.userDDs['PRINT']}" 
-                                                  actionListener="#{invPurchaseInvoiceFormDTOMB.print}"/>
-
-                                <p:commandButton  class="deleteButtons" 
-                                                  id="cancel" 
-                                                  title="#{userData.userDDs['CANCEL']}" 
-                                                  value="#{userData.userDDs['CANCEL']}" 
-                                                  immediate="true"
-                                                  action="#{invPurchaseInvoiceFormDTOMB.exit()}" 
-                                                  update="@form"/>
-
-                                <h:commandLink  style="float:left" class="sdcreenimg" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id ne null}">  
-                                    <p:graphicImage name="/img/excel.jpg" width="24" style='margin-right:25%;'/>  
-                                    <p:dataExporter type="xls"
-                                                    target="invPurchaseInvoiceDetailsTable" 
-                                                    fileName="فاتورة المبيعات"
-                                                    preProcessor="#{invPurchaseInvoiceFormDTOMB.preProcessXLS()}"
-                                                    postProcessor="#{invPurchaseInvoiceFormDTOMB.postProcessXLS}" />  
-                                </h:commandLink>
-
-                                <p:blockUI block="form" trigger="saveB removeHalala" animate="true" >
-
-                                    <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
-
-                                </p:blockUI> 
+                            <p:commandButton  id="saveB" 
+                                              class="saveButtons"
+                                              title="#{userData.userDDs['SAVE']}"
+                                              value="#{userData.userDDs['SAVE']}" 
+                                              action="#{invPurchaseInvoiceFormDTOMB.save()}"
+                                              rendered="#{(userData.userScreens['proworkorder'].edit) or invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id eq null or userData.isAdmin}"
+                                              update="@form"/>
 
 
-                            </div>
-            </div>
+                            <p:commandButton 
+                                id="newN"
+                                ajax="false"
+                                value="#{userData.userDDs['NEW']}" 
+                                class="newButtons"
+                                onclick="form.target = ''" 
+                                rendered="#{(userData.userScreens['proworkorder'].add) or  userData.isAdmin}"
+                                actionListener="#{invPurchaseInvoiceFormDTOMB.reset()}"/>
+
+                            <p:commandButton 
+                                id="removeHalala"
+                                value="حذف الهلله" 
+                                class="newButtons" rendered="#{(userData.userScreens['proworkorder'].add) or  userData.isAdmin}"
+                                update="form:totalActualWeight form:totalNetAfterDiscount form:taxvalue form:totalWithTaxValue form:remain " 
+                                actionListener="#{invPurchaseInvoiceFormDTOMB.removeHalala()}"/>
+
+                            <p:commandButton  class="printButtons"
+                                              ajax="false"
+                                              onclick="form.target = '_blank'"  
+                                              rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id != null}"
+                                              value="#{userData.userDDs['PRINT']}" 
+                                              title="#{userData.userDDs['PRINT']}" 
+                                              actionListener="#{invPurchaseInvoiceFormDTOMB.print}"/>
+
+                            <p:commandButton  class="deleteButtons" 
+                                              id="cancel" 
+                                              title="#{userData.userDDs['CANCEL']}" 
+                                              value="#{userData.userDDs['CANCEL']}" 
+                                              immediate="true"
+                                              action="#{invPurchaseInvoiceFormDTOMB.exit()}" 
+                                              update="@form"/>
+
+                            <h:commandLink  style="float:left" class="sdcreenimg" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id ne null}">  
+                                <p:graphicImage name="/img/excel.jpg" width="24" style='margin-right:25%;'/>  
+                                <p:dataExporter type="xls"
+                                                target="invPurchaseInvoiceDetailsTable" 
+                                                fileName="فاتورة المبيعات"
+                                                preProcessor="#{invPurchaseInvoiceFormDTOMB.preProcessXLS()}"
+                                                postProcessor="#{invPurchaseInvoiceFormDTOMB.postProcessXLS}" />  
+                            </h:commandLink>
+
+                            <p:blockUI block="form" trigger="saveB removeHalala" animate="true" >
+
+                                <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                            </p:blockUI> 
+
+
+                        </div>
+                    </div>
 
 
                     <div class="ui-g-12 ui-xl-12" >
                         <p:fieldset id="fieldSetId" legend="تفاصيل أمر الشغل"   >
-                            <div style="margin-top: -2%;" >
-                                <p:messages id="curmsg2" autoUpdate="true" showDetail="true" rendered="true" closable="true"/>   
-                            </div>
-
                             <p:dataTable id="invPurchaseInvoiceDetailsTable"
                                          widgetVar="invPurchaseInvoiceDetailsTable"
                                          style="margin-bottom:20px; width: auto"
@@ -1004,7 +999,7 @@
 
                             </p:dataTable>
 
-                            
+
                         </p:fieldset>
 
                     </div>

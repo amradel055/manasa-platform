@@ -768,7 +768,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     }
     public void checkRaghiCode() {
         try {
-           getInvInvoiceDTO().setRaghiValue(invPurchaseInvoiceService_1.getInvoiceByRaghiCode(getInvInvoiceDTO().getRaghiCode()));
+           getInvInvoiceDTO().setRaghiValue(invPurchaseInvoiceService_1.getInvoiceByRaghiCode(getInvInvoiceDTO().getRaghiCode(),getInvInvoiceDTO().getId()));
         } catch (Exception e) {
             saveError(e, "SalesInvoiceFormMB", "calculateRemainValue");
         }
@@ -1681,6 +1681,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         } else if (getUri().contains("proworkorder")) {
             getInvInvoiceDTO().setScreenName(ScreenNameClassEnum.PROWORKORDER);
             getInvInvoiceDTO().setType(4);
+            getInvInvoiceDTO().setPaymentType(1);
         } else if (getUri().contains("invpurchaseorder_1")) {
             getInvInvoiceDTO().setScreenName(ScreenNameClassEnum.INVPURCHASEORDERFORM);
             getInvInvoiceDTO().setType(0);

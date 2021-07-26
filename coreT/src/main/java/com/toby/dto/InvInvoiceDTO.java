@@ -1729,6 +1729,9 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      * @return the raghiValue
      */
     public BigDecimal getRaghiValue() {
+        if(raghiValue == null){
+            raghiValue = BigDecimal.ZERO;
+        }
         return raghiValue;
     }
 
