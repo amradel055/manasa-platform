@@ -28,6 +28,8 @@ public interface ProFactoryDeliveryService {
     public InvInvoiceDTO findProFactoryDeliveryById(InvInvoiceDTO invPurchaseInvoiceDto);
 
     public InvInvoiceDTO convertProFactoryDeliveryToInvInvoice(InvInvoiceDTO invPurchaseInvoiceDTO, Integer type);
+    
+    public InvInvoiceDTO preSave(InvInvoiceDTO invInvoiceDTO, TobyUser tobyUser);
 
     public InvInvoiceDTO save(InvInvoiceDTO invInvoiceDTO, TobyUser tobyUser);
 
