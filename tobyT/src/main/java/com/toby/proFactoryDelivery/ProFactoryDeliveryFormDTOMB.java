@@ -66,7 +66,7 @@ public class ProFactoryDeliveryFormDTOMB extends ProductionBasicDataForm {
         if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getInvPurchaseInvoiceDetailList() != null && !getInvInvoiceDTO().getInvPurchaseInvoiceDetailList().isEmpty()) {
             getInvInvoiceDTO().setMsg(null);
             findScreenName();
-            setInvInvoiceDTO(proFactoryDeliveryService.save(getInvInvoiceDTO(), getUserData().getUser()));
+            setInvInvoiceDTO(proFactoryDeliveryService.preSave(getInvInvoiceDTO(), getUserData().getUser()));
             msgSave(getInvInvoiceDTO().getMsg());
             if (getUri().contains("proRecieveGallary")) {
                 StringBuilder message = new StringBuilder();

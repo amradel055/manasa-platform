@@ -67,7 +67,7 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
         }
     }
 
-      @Override
+    @Override
     public Boolean checkProFactoryDelivery(Integer id) {
         Map<String, Object> params = new HashMap<>();
         params.put("id", id);
@@ -320,6 +320,44 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
         }
 
         return entity;
+    }
+
+    @Override
+    public InvInvoiceDTO preSave(InvInvoiceDTO invInvoiceDTO, TobyUser tobyUser) {
+        if (invInvoiceDTO.getType() == 0 && invInvoiceDTO.getInvPurchaseInvoiceId() != null) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("invPurchaseInvoiceId", invInvoiceDTO.getInvPurchaseInvoiceId());
+            params.put("type", 1);
+            StringBuilder builder = new StringBuilder();
+            builder.append("SELECT s FROM ProFactoryDelivery s WHERE   s.invPurchaseInvoiceId.id = :invPurchaseInvoiceId AND s.type = :type ");
+            builder.append(" order by s.id DESC ");
+            List<ProFactoryDelivery> details = dao.findListByQuery(builder.toString(), params);
+            if (details != null && !details.isEmpty()) {
+                invInvoiceDTO = save(invInvoiceDTO, tobyUser);
+            } else {
+//                ProFactoryDelivery factoryDelivery = dao.findEntityById(ProFactoryDelivery.class, details.get(0).getId());
+                params.put("type", 0);
+                details = dao.findListByQuery(builder.toString(), params);
+                if (details != null && !details.isEmpty()) {
+                    invInvoiceDTO.setId(details.get(0).getId());
+                    String error = proFactoryDeliveryDetailService.addProFactoryDeliveryDetailsDTO(invInvoiceDTO.getInvPurchaseInvoiceDetailList(), invInvoiceDTO, tobyUser);
+
+                    if (error != null && !error.isEmpty()) {
+                        invInvoiceDTO.setMsg(error);
+                        dao.rollbackQuery();
+                    } else {
+//                    invInvoiceDTO = mapToDTO(proFactoryDelivery, invInvoiceDTO, false);
+                        return invInvoiceDTO;
+                    }
+                } else {
+                    invInvoiceDTO = save(invInvoiceDTO, tobyUser);
+                }
+            }
+        } else {
+            invInvoiceDTO = save(invInvoiceDTO, tobyUser);
+        }
+        return invInvoiceDTO;
+
     }
 
     @Override
