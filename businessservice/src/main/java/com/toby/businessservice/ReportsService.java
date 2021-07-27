@@ -8,6 +8,7 @@ package com.toby.businessservice;
 import com.toby.views.CompanyInvoicesWithoutSewing;
 import com.toby.views.CustomerBalances;
 import com.toby.views.InvoicesIssuedWithinAperiod;
+import com.toby.views.InvoicesRegisteredMoreThanOnce;
 import com.toby.views.ItemBalancesStatement;
 import com.toby.views.ProfitOfItemsSold;
 import com.toby.views.SalesReportByValueAded;
@@ -41,4 +42,6 @@ public interface ReportsService {
     public List<ProfitOfItemsSold> getProfitOfItemsSold(ProfitOfItemsSold profitOfItemsSold, Integer branchId, Integer type);
 
     public List<SalesStatementForThePeriod> getSalesStatementForThePeriod(SalesStatementForThePeriod statementForThePeriod);
+
+    public List<InvoicesRegisteredMoreThanOnce> getInvoicesRegisteredMoreThanOnce(InvoicesRegisteredMoreThanOnce registeredMoreThanOnce, Integer serial);
 }
