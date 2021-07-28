@@ -34,15 +34,15 @@ import javax.ejb.Stateless;
  */
 @Stateless
 public class ReportsServiceImpl implements ReportsService {
-    
+
     @EJB
     private GenericDAO dao;
     @EJB
     private InvPurchaseInvoiceService_1 invPurchaseInvoiceService;
-    
+
     @Override
     public List<SalesReportByValueAded> getSalesReportByValueAded(SalesReportByValueAded salesReportByValueAded, Integer branchId) {
-        
+
         List<SalesReportByValueAded> salesReportByValueAdeds = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         sql.append("select sum(s.net) , sum(s.netBeforTax) , s.gallary_name  from ( SELECT \n"
@@ -67,14 +67,14 @@ public class ReportsServiceImpl implements ReportsService {
             salesReportByValueAded1.setTotalBeforeTax((BigDecimal) object[1]);
             salesReportByValueAded1.setGalleryName((String) object[2]);
             salesReportByValueAdeds.add(salesReportByValueAded1);
-            
+
         }
         return salesReportByValueAdeds;
     }
-    
+
     @Override
     public List<SalesReportByValueAdedDetails> getSalesReportByValueAdedDetails(SalesReportByValueAdedDetails salesReportByValueAdedDetails, Integer branchId) {
-        
+
         List<SalesReportByValueAdedDetails> salesReportByValueAdeds = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT \n"
@@ -123,10 +123,10 @@ public class ReportsServiceImpl implements ReportsService {
         }
         return salesReportByValueAdeds;
     }
-    
+
     @Override
     public List<CustomerBalances> getCustomerBalances(CustomerBalances customerBalances, Integer branchId) {
-        
+
         List<CustomerBalances> customerBalanceses = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT organization_code , organization_name , sum(exitt) as exitt , sum(adding) as adding\n"
@@ -147,10 +147,10 @@ public class ReportsServiceImpl implements ReportsService {
         }
         return customerBalanceses;
     }
-    
+
     @Override
     public List<StatementOfBondsByBranche> getStatementOfBondsByBranch(StatementOfBondsByBranche statementOfBondsByBranche, Integer branchId) {
-        
+
         List<StatementOfBondsByBranche> statementOfBondsByBrancheList = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         sql.append(" select s.ScreenName , s.gl_bank_name , s.adding , s.gallary_id , s.gallary_code , s.gallary_name from (SELECT \n"
@@ -311,10 +311,10 @@ public class ReportsServiceImpl implements ReportsService {
         }
         return statementOfBondsByBrancheList;
     }
-    
+
     @Override
     public List<InvoicesIssuedWithinAperiod> getInvoiceWithinAperiod(InvoicesIssuedWithinAperiod issuedWithinAperiod, Integer branchId) {
-        
+
         List<InvoicesIssuedWithinAperiod> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT \n"
@@ -351,10 +351,10 @@ public class ReportsServiceImpl implements ReportsService {
         }
         return list;
     }
-    
+
     @Override
     public List<CompanyInvoicesWithoutSewing> getCompanyInvoicesWithoutSewing(CompanyInvoicesWithoutSewing invoicesWithoutSewing, Integer branchId) {
-        
+
         List<CompanyInvoicesWithoutSewing> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         sql.append(" SELECT inv.id , inv.name , oc.name as name , oc.code code , sum(ipid.net) as sum \n"
@@ -380,14 +380,14 @@ public class ReportsServiceImpl implements ReportsService {
             invoicesWithoutSewing.setCode((Integer) object[3]);
             invoicesWithoutSewing.setTotal((BigDecimal) object[4]);
             list.add(invoicesWithoutSewing);
-            
+
         }
         return list;
     }
-    
+
     @Override
     public List<ItemBalancesStatement> getItemBalancesStatement(ItemBalancesStatement itemBalancesStatement, Integer branchId) {
-        
+
         List<ItemBalancesStatement> itemBalancesStatementList = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         sql.append(" select ii.code , ii.name  ,\n"
@@ -422,10 +422,10 @@ public class ReportsServiceImpl implements ReportsService {
         }
         return itemBalancesStatementList;
     }
-    
+
     @Override
     public List<ProfitOfItemsSold> getProfitOfItemsSold(ProfitOfItemsSold profitOfItemsSold, Integer branchId, Integer type) {
-        
+
         List<ProfitOfItemsSold> profitOfItemsSoldList = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         sql.append("select ii.id , ii.code , ii.name , IFNULL(ii.cost_average,0) as cost_average , sum(IFNULL(ipid.quantity,0)) as totalSell , \n"
@@ -471,10 +471,10 @@ public class ReportsServiceImpl implements ReportsService {
         }
         return profitOfItemsSoldList;
     }
-    
+
     @Override
     public List<SalesStatementForThePeriod> getSalesStatementForThePeriod(SalesStatementForThePeriod statementForThePeriod) {
-        
+
         List<SalesStatementForThePeriod> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         sql.append("select ipi.serial , ipi.date , ios.code , ios.name,\n"
@@ -505,20 +505,32 @@ public class ReportsServiceImpl implements ReportsService {
         }
         return list;
     }
-    
+
     @Override
-    public List<InvoicesRegisteredMoreThanOnce> getInvoicesRegisteredMoreThanOnce(InvoicesRegisteredMoreThanOnce registeredMoreThanOnce,Integer serial) {
-        
+    public List<InvoicesRegisteredMoreThanOnce> getInvoicesRegisteredMoreThanOnce(InvoicesRegisteredMoreThanOnce registeredMoreThanOnce, Integer serial, Date date, Integer branchId) {
+
         List<InvoicesRegisteredMoreThanOnce> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT ipi.id ,pps.name,ii.name , sum(ppit.number) as workNumber , ipid.number as originNumber, pps.id , ii.id FROM toby.pro_production_items_transaction ppit\n"
+        sql.append(" SELECT ipi.id ,pps.name,ii.name , ifnull(sum(ppit.number),0) as workNumber , ifnull(ipid.number,0) as originNumber, pps.id , ii.id \n"
+                + "FROM toby.pro_production_items_transaction ppit\n"
                 + "left join pro_production_stages pps on pps.id = ppit.pro_production_stages_id\n"
                 + "left join pro_factory_delivery_detail pfdd on pfdd.id = ppit.pro_factory_delivery_detail_id\n"
+                + "left join pro_factory_delivery pfd on pfd.id = pfdd.pro_factory_delivery_id\n"
                 + "left join inv_purchase_invoice_detail ipid on ipid.id = pfdd.inv_purchase_invoice_detail_id\n"
                 + "left join inv_item ii on ii.id = ipid.item_id\n"
-                + "left join inv_purchase_invoice ipi on ipi.id = ipid.inv_purchase_invoice_id\n"
-                + " where ipi.serial = ").append(serial);
-        sql.append(" group by pps.id , ii.id ");
+                + "left join inv_purchase_invoice ipi on ipi.id = ipid.inv_purchase_invoice_id\n");
+        sql.append(" where ");
+        sql.append(" ipi.branch_id = ").append(branchId);
+        
+        if (serial != null) {
+            sql.append(" AND ipi.serial = ").append(serial);
+        }
+        
+        appendDate9(registeredMoreThanOnce, sql,serial);
+        sql.append(" group by pps.id , ii.id , ipi.id\n");
+        if (serial == null) {
+            sql.append(" having workNumber > originNumber ");
+        }
         List<Object[]> res = dao.executeNativeQuery(sql.toString());
         for (Object[] object : res) {
             registeredMoreThanOnce = new InvoicesRegisteredMoreThanOnce();
@@ -527,17 +539,18 @@ public class ReportsServiceImpl implements ReportsService {
             registeredMoreThanOnce.setWorkNumber((BigDecimal) object[3]);
             registeredMoreThanOnce.setOriginNumber((BigDecimal) object[4]);
             list.add(registeredMoreThanOnce);
+
         }
-        
+
         return list;
     }
-    
+
     private void appendGallery(SalesReportByValueAded salesReportByValueAded, StringBuilder query) {
         if (salesReportByValueAded.getGallerySelected() != null) {
             query.append(" and ip.galary_Id =  ").append(salesReportByValueAded.getGallerySelected().getId());
         }
     }
-    
+
     private void appendDate(SalesReportByValueAded salesReportByValueAded, StringBuilder query) {
         if (salesReportByValueAded.getDateFrom() != null) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
@@ -548,13 +561,13 @@ public class ReportsServiceImpl implements ReportsService {
             query.append(" and ip.date <=  '").append(dateFormat.format(salesReportByValueAded.getDateTo())).append("' ");
         }
     }
-    
+
     private void appendGallery1(SalesReportByValueAdedDetails salesReportByValueAded, StringBuilder query) {
         if (salesReportByValueAded.getGallerySelected() != null) {
             query.append(" and ip.galary_Id =  ").append(salesReportByValueAded.getGallerySelected().getId());
         }
     }
-    
+
     private void appendDate1(SalesReportByValueAdedDetails salesReportByValueAded, StringBuilder query) {
         if (salesReportByValueAded.getDateFrom() != null) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
@@ -565,13 +578,13 @@ public class ReportsServiceImpl implements ReportsService {
             query.append(" and ip.date <=  '").append(dateFormat.format(salesReportByValueAded.getDateTo())).append("' ");
         }
     }
-    
+
     private void appendGallery2(CustomerBalances customerBalances, StringBuilder query) {
         if (customerBalances.getGallerySelected() != null) {
             query.append(" and organization_gallary_id =  ").append(customerBalances.getGallerySelected().getId());
         }
     }
-    
+
     private void appendDate2(StatementOfBondsByBranche statementOfBondsByBranche, StringBuilder query) {
         if (statementOfBondsByBranche.getDateFrom() != null) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
@@ -582,7 +595,7 @@ public class ReportsServiceImpl implements ReportsService {
             query.append("  AND `gbt`.`date` <=  '").append(dateFormat.format(statementOfBondsByBranche.getDateTo())).append("' ");
         }
     }
-    
+
     private void appendDate3(StatementOfBondsByBranche statementOfBondsByBranche, StringBuilder query) {
         if (statementOfBondsByBranche.getDateFrom() != null) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
@@ -593,7 +606,7 @@ public class ReportsServiceImpl implements ReportsService {
             query.append("  AND `inc`.`date` <=  '").append(dateFormat.format(statementOfBondsByBranche.getDateTo())).append("' ");
         }
     }
-    
+
     private void appendDate4(InvoicesIssuedWithinAperiod issuedWithinAperiod, StringBuilder query) {
         if (issuedWithinAperiod.getDateFrom() != null) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
@@ -604,7 +617,7 @@ public class ReportsServiceImpl implements ReportsService {
             query.append(" and `ipi`.`date` <=  '").append(dateFormat.format(issuedWithinAperiod.getDateTo())).append("' ");
         }
     }
-    
+
     private void appendDate5(CompanyInvoicesWithoutSewing invoicesWithoutSewing, StringBuilder query) {
         if (invoicesWithoutSewing.getDateFrom() != null) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
@@ -615,7 +628,7 @@ public class ReportsServiceImpl implements ReportsService {
             query.append(" and `ipi`.`date` <=  '").append(dateFormat.format(invoicesWithoutSewing.getDateTo())).append("' ");
         }
     }
-    
+
     private void appendDate6(ItemBalancesStatement itemBalancesStatement, StringBuilder query) {
         if (itemBalancesStatement.getDateFrom() != null) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
@@ -626,7 +639,7 @@ public class ReportsServiceImpl implements ReportsService {
             query.append(" and ipi.date <=   '").append(dateFormat.format(itemBalancesStatement.getDateTo())).append("' ");
         }
     }
-    
+
     private void appendDate7(ProfitOfItemsSold profitOfItemsSold, StringBuilder sql) {
         if (profitOfItemsSold.getDateFrom() != null) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
@@ -637,19 +650,19 @@ public class ReportsServiceImpl implements ReportsService {
             sql.append(" and ipi.date <=   '").append(dateFormat.format(profitOfItemsSold.getDateTo())).append("' ");
         }
     }
-    
+
     private void appendGallery7(StringBuilder gallaryIds, StringBuilder sql) {
         if (gallaryIds != null) {
             sql.append(" and ipi.galary_Id in ( ").append(gallaryIds.toString()).append(" )");
         }
     }
-    
+
     private void appendProGroup(StringBuilder groupId, StringBuilder sql) {
         if (groupId != null) {
             sql.append(" and ii.pro_group_id in(  ").append(groupId).append(" )");
         }
     }
-    
+
     private void appendDate8(SalesStatementForThePeriod statementForThePeriod, StringBuilder sql) {
         if (statementForThePeriod.getDateFrom() != null) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
@@ -660,7 +673,7 @@ public class ReportsServiceImpl implements ReportsService {
             sql.append(" and ipi.date <=   '").append(dateFormat.format(statementForThePeriod.getDateTo())).append("' ");
         }
     }
-    
+
     private void appendGallery5(SalesStatementForThePeriod statementForThePeriod, StringBuilder query) {
         if (statementForThePeriod.getGallerySelected() != null) {
             query.append(" and ipi.galary_Id =  ").append(statementForThePeriod.getGallerySelected().getId());
@@ -672,5 +685,13 @@ public class ReportsServiceImpl implements ReportsService {
             query.append(" where ipi.serial = ").append(registeredMoreThanOnce.getSerialSelected().getSerial());
         }
     }
-    
+
+    private void appendDate9(InvoicesRegisteredMoreThanOnce registeredMoreThanOnce, StringBuilder sql, Integer serial) {
+        if (registeredMoreThanOnce.getDate() != null && serial == null) {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+            sql.append("  and pfd.date =  '").append(dateFormat.format(registeredMoreThanOnce.getDate())).append("' ");
+        }
+
+    }
+
 }

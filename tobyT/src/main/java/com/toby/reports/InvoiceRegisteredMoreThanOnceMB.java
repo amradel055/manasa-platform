@@ -4,8 +4,10 @@ import com.toby.businessservice.ReportsService;
 import com.toby.toby.Basic;
 import com.toby.views.InvoicesRegisteredMoreThanOnce;
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.event.ActionEvent;
 import javax.inject.Named;
@@ -27,9 +29,15 @@ public class InvoiceRegisteredMoreThanOnceMB extends Basic {
 
     @EJB
     private ReportsService reportsService;
+    
+    @PostConstruct
+    public void init(){
+        getRegisteredMoreThanOnce().setDate(new Date());
+    }
 
     public void search() {
-        setList(reportsService.getInvoicesRegisteredMoreThanOnce(registeredMoreThanOnce,getRegisteredMoreThanOnce().getSerial()));
+
+        setList(reportsService.getInvoicesRegisteredMoreThanOnce(registeredMoreThanOnce, getRegisteredMoreThanOnce().getSerial(), getRegisteredMoreThanOnce().getDate(), getUserData().getUserBranch().getId()));
 
     }
 
@@ -66,7 +74,6 @@ public class InvoiceRegisteredMoreThanOnceMB extends Basic {
             hashMap.put("companyImage", null);
         }
 
-        
         hashMap.put("serialText", " رقم الفاتورة");
         hashMap.put("serialValue", getRegisteredMoreThanOnce().getSerial());
         hashMap.put("stageNameText", "اسم المرحلة");
@@ -74,7 +81,6 @@ public class InvoiceRegisteredMoreThanOnceMB extends Basic {
         hashMap.put("workNumberText", " عدد مرات الشغل");
         hashMap.put("originNumberText", "العدد بالفاتورة");
         hashMap.put("titleText", " الفواتير المسجلة اكثر من مرة");
-       
 
         return hashMap;
     }

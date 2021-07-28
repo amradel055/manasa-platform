@@ -14,21 +14,38 @@
                 <p:fieldset  legend=" الفواتير المسجلة اكثر من مرة" id="stages"  style=" position: relative">
                     <p:messages id="messages" showDetail="true" closable="true"/> 
 
-                   
-                        <div class="ui-g-12 ui-xl-12">
-                            <div class="ui-g-6 ui-xl-6">
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
 
-                                <p:inputText style="width: 35%!important" id="ad1" value="#{invoiceRegisteredMoreThanOnceMB.registeredMoreThanOnce.serial}"
-                                             required="true" requiredMessage="يجب ادخال رقم الفاتورة"/>
+                            <p:calendar style="width: 50%"  id="dateFrom"
+                                        value="#{invoiceRegisteredMoreThanOnceMB.registeredMoreThanOnce.date}"
+                                        pattern="dd/MM/yyyy"  showButtonPanel="true" >
 
-                            </div>
-                            <div class="ui-g-6 ui-xl-6">
-                                <p:outputLabel style="width: 50px;margin-right: 1%" value="رقم الفاتورة"/>
-
-                            </div>
+                            </p:calendar>
                         </div>
+                        <div class="ui-g-6 ui-xl-6">
 
-                    
+                            <p:outputLabel style="width: 50px"  value="من تاريخ" />
+
+
+
+                        </div>
+                    </div>
+
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
+
+                            <p:inputText style="width: 35%!important" id="ad1" value="#{invoiceRegisteredMoreThanOnceMB.registeredMoreThanOnce.serial}"
+                                        />
+
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel style="width: 50px;margin-right: 1%" value="رقم الفاتورة"/>
+
+                        </div>
+                    </div>
+
+
 
 
                 </p:fieldset>
@@ -74,6 +91,9 @@
                         </p:column>
                         <p:column headerText="العدد بالفاتورة" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
                             <h:outputText value="#{data.originNumber}" />
+                        </p:column>
+                        <p:column headerText=" الفرق" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.subtraction}" />
                         </p:column>
 
                     </p:dataTable>

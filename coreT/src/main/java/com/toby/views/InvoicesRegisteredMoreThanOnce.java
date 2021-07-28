@@ -7,6 +7,7 @@ package com.toby.views;
 
 import com.toby.dto.InvPurchaseInvoiceDTO;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  *
@@ -20,7 +21,8 @@ public class InvoicesRegisteredMoreThanOnce {
     private BigDecimal workNumber;
     private BigDecimal originNumber;
     private InvPurchaseInvoiceDTO serialSelected;
-   
+    private Date date;
+    private BigDecimal subtraction;
 
     /**
      * @return the stageName
@@ -54,6 +56,9 @@ public class InvoicesRegisteredMoreThanOnce {
      * @return the workNumber
      */
     public BigDecimal getWorkNumber() {
+        if (workNumber == null) {
+            workNumber = BigDecimal.ZERO;
+        }
         return workNumber;
     }
 
@@ -68,6 +73,9 @@ public class InvoicesRegisteredMoreThanOnce {
      * @return the originNumber
      */
     public BigDecimal getOriginNumber() {
+        if (originNumber == null) {
+            originNumber = BigDecimal.ZERO;
+        }
         return originNumber;
     }
 
@@ -106,6 +114,35 @@ public class InvoicesRegisteredMoreThanOnce {
         this.serial = serial;
     }
 
-   
+    /**
+     * @return the date
+     */
+    public Date getDate() {
+        return date;
+    }
+
+    /**
+     * @param date the date to set
+     */
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    /**
+     * @return the subtraction
+     */
+    public BigDecimal getSubtraction() {
+        if (subtraction == null) {
+            subtraction = getWorkNumber().subtract(getOriginNumber());
+        }
+        return subtraction;
+    }
+
+    /**
+     * @param subtraction the subtraction to set
+     */
+    public void setSubtraction(BigDecimal subtraction) {
+        this.subtraction = subtraction;
+    }
 
 }
