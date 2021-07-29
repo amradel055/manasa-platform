@@ -4,6 +4,7 @@ import com.toby.businessservice.ReportsService;
 import com.toby.toby.Basic;
 import com.toby.views.InvoicesRegisteredMoreThanOnce;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -26,12 +27,13 @@ public class InvoiceRegisteredMoreThanOnceMB extends Basic {
 
     private List<InvoicesRegisteredMoreThanOnce> list;
     private InvoicesRegisteredMoreThanOnce registeredMoreThanOnce;
+    private InvoicesRegisteredMoreThanOnce registeredMoreThanOnceSelected;
 
     @EJB
     private ReportsService reportsService;
-    
+
     @PostConstruct
-    public void init(){
+    public void init() {
         getRegisteredMoreThanOnce().setDate(new Date());
     }
 
@@ -39,6 +41,11 @@ public class InvoiceRegisteredMoreThanOnceMB extends Basic {
 
         setList(reportsService.getInvoicesRegisteredMoreThanOnce(registeredMoreThanOnce, getRegisteredMoreThanOnce().getSerial(), getRegisteredMoreThanOnce().getDate(), getUserData().getUserBranch().getId()));
 
+    }
+
+    public void delete() {
+        reportsService.deleteIncrease(getRegisteredMoreThanOnceSelected().getStageId(), getRegisteredMoreThanOnceSelected().getFactoryId(), getRegisteredMoreThanOnceSelected().getWorkNumber(), getRegisteredMoreThanOnceSelected().getOriginNumber());
+        list.remove(getRegisteredMoreThanOnceSelected());
     }
 
     public void postProcessXLS(Object document) {
@@ -114,6 +121,24 @@ public class InvoiceRegisteredMoreThanOnceMB extends Basic {
      */
     public void setRegisteredMoreThanOnce(InvoicesRegisteredMoreThanOnce registeredMoreThanOnce) {
         this.registeredMoreThanOnce = registeredMoreThanOnce;
+    }
+
+    /**
+     * @return the registeredMoreThanOnceSelected
+     */
+    public InvoicesRegisteredMoreThanOnce getRegisteredMoreThanOnceSelected() {
+        if (registeredMoreThanOnceSelected == null) {
+            registeredMoreThanOnceSelected = new InvoicesRegisteredMoreThanOnce();
+        }
+        return registeredMoreThanOnceSelected;
+    }
+
+    /**
+     * @param registeredMoreThanOnceSelected the registeredMoreThanOnceSelected
+     * to set
+     */
+    public void setRegisteredMoreThanOnceSelected(InvoicesRegisteredMoreThanOnce registeredMoreThanOnceSelected) {
+        this.registeredMoreThanOnceSelected = registeredMoreThanOnceSelected;
     }
 
 }

@@ -15,6 +15,7 @@ import com.toby.views.SalesReportByValueAded;
 import com.toby.views.SalesReportByValueAdedDetails;
 import com.toby.views.SalesStatementForThePeriod;
 import com.toby.views.StatementOfBondsByBranche;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Remote;
@@ -45,4 +46,6 @@ public interface ReportsService {
     public List<SalesStatementForThePeriod> getSalesStatementForThePeriod(SalesStatementForThePeriod statementForThePeriod);
 
     public List<InvoicesRegisteredMoreThanOnce> getInvoicesRegisteredMoreThanOnce(InvoicesRegisteredMoreThanOnce registeredMoreThanOnce, Integer serial, Date date, Integer branchId);
+
+    public void deleteIncrease(Integer proProductionStagesId, Integer proFactoryDeliveryDetailId, BigDecimal workNumber, BigDecimal originNumber);
 }

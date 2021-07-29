@@ -9,6 +9,7 @@ import com.toby.core.GenericDAO;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.ProGroupDTO;
 import com.toby.entity.InvPurchaseInvoice;
+import com.toby.entity.ProProductionItemsTransaction;
 import com.toby.views.CompanyInvoicesWithoutSewing;
 import com.toby.views.CustomerBalances;
 import com.toby.views.InvoicesIssuedWithinAperiod;
@@ -511,7 +512,8 @@ public class ReportsServiceImpl implements ReportsService {
 
         List<InvoicesRegisteredMoreThanOnce> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
-        sql.append(" SELECT ipi.id ,pps.name,ii.name , ifnull(sum(ppit.number),0) as workNumber , ifnull(ipid.number,0) as originNumber, pps.id , ii.id \n"
+        sql.append(" SELECT ipi.id ,pps.name,ii.name , ifnull(sum(ppit.number),0) as workNumber , ifnull(ipid.number,0) as originNumber, pps.id , ii.id ,pfdd.id,\n"
+                + "sum(ppit.number)-(ipid.number) as subtraction ,pfd.date,ipi.serial\n"
                 + "FROM toby.pro_production_items_transaction ppit\n"
                 + "left join pro_production_stages pps on pps.id = ppit.pro_production_stages_id\n"
                 + "left join pro_factory_delivery_detail pfdd on pfdd.id = ppit.pro_factory_delivery_detail_id\n"
@@ -521,12 +523,11 @@ public class ReportsServiceImpl implements ReportsService {
                 + "left join inv_purchase_invoice ipi on ipi.id = ipid.inv_purchase_invoice_id\n");
         sql.append(" where ");
         sql.append(" ipi.branch_id = ").append(branchId);
-        
+
         if (serial != null) {
             sql.append(" AND ipi.serial = ").append(serial);
         }
-        
-        appendDate9(registeredMoreThanOnce, sql,serial);
+        appendDate9(registeredMoreThanOnce, sql, serial);
         sql.append(" group by pps.id , ii.id , ipi.id\n");
         if (serial == null) {
             sql.append(" having workNumber > originNumber ");
@@ -538,11 +539,32 @@ public class ReportsServiceImpl implements ReportsService {
             registeredMoreThanOnce.setItemName((String) object[2]);
             registeredMoreThanOnce.setWorkNumber((BigDecimal) object[3]);
             registeredMoreThanOnce.setOriginNumber((BigDecimal) object[4]);
+            registeredMoreThanOnce.setStageId((Integer) object[5]);
+            registeredMoreThanOnce.setFactoryId((Integer) object[7]);
+            registeredMoreThanOnce.setSubtraction((BigDecimal) object[8]);
+            registeredMoreThanOnce.setReceivedDate((Date) object[9]);
+            registeredMoreThanOnce.setSerial((Integer) object[10]);
             list.add(registeredMoreThanOnce);
-
         }
 
         return list;
+    }
+
+    @Override
+    public void deleteIncrease(Integer proProductionStagesId, Integer proFactoryDeliveryDetailId, BigDecimal workNumber, BigDecimal originNumber) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("select  id , number from pro_production_items_transaction where pro_production_stages_id = ").append(proProductionStagesId);
+        sql.append(" AND pro_factory_delivery_detail_id = ").append(proFactoryDeliveryDetailId);
+        List<Object[]> res = dao.executeNativeQuery(sql.toString());
+        for (Object[] object : res) {
+            BigDecimal number = (BigDecimal) object[1];
+            if (workNumber.compareTo(originNumber) == 1) {
+                ProProductionItemsTransaction itemsTransaction = new ProProductionItemsTransaction();
+                itemsTransaction.setId((Integer) object[0]);
+                dao.deleteEntity(itemsTransaction);
+                workNumber = workNumber.subtract(number);
+            }
+        }
     }
 
     private void appendGallery(SalesReportByValueAded salesReportByValueAded, StringBuilder query) {
