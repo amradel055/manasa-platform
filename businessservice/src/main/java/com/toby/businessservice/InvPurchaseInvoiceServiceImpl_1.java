@@ -1831,7 +1831,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             } else if (entity.getTaxdiscflag() == null || !entity.getTaxdiscflag()) {
                 invInvoiceDTO.setTaxDiscValue(BigDecimal.ZERO);
             }
-            invInvoiceDTO.setTaxDiscValueLocal((invInvoiceDTO.getTaxDiscValue().multiply(entity.getRate())).add(entity.getDiscHalala()));
+            invInvoiceDTO.setTaxDiscValueLocal((invInvoiceDTO.getTaxDiscValue().multiply(entity.getRate())));
             invInvoiceDTO.setRate(entity.getRate());
             invInvoiceDTO.setFinalNet(invInvoiceDTO.getValue().add(invInvoiceDTO.getTaxValue()).subtract(invInvoiceDTO.getTaxDiscValue()));
         }
