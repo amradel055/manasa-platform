@@ -7,6 +7,7 @@ package com.toby.views;
 
 import com.toby.dto.InvPurchaseInvoiceDTO;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  *
@@ -20,7 +21,11 @@ public class InvoicesRegisteredMoreThanOnce {
     private BigDecimal workNumber;
     private BigDecimal originNumber;
     private InvPurchaseInvoiceDTO serialSelected;
-   
+    private Date date;
+    private Date receivedDate ;
+    private BigDecimal subtraction;
+    private Integer stageId;
+    private Integer factoryId;
 
     /**
      * @return the stageName
@@ -54,6 +59,9 @@ public class InvoicesRegisteredMoreThanOnce {
      * @return the workNumber
      */
     public BigDecimal getWorkNumber() {
+        if (workNumber == null) {
+            workNumber = BigDecimal.ZERO;
+        }
         return workNumber;
     }
 
@@ -68,6 +76,9 @@ public class InvoicesRegisteredMoreThanOnce {
      * @return the originNumber
      */
     public BigDecimal getOriginNumber() {
+        if (originNumber == null) {
+            originNumber = BigDecimal.ZERO;
+        }
         return originNumber;
     }
 
@@ -106,6 +117,77 @@ public class InvoicesRegisteredMoreThanOnce {
         this.serial = serial;
     }
 
-   
+    /**
+     * @return the date
+     */
+    public Date getDate() {
+        return date;
+    }
+
+    /**
+     * @param date the date to set
+     */
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    /**
+     * @return the subtraction
+     */
+    public BigDecimal getSubtraction() {
+        if (subtraction == null) {
+            subtraction = getWorkNumber().subtract(getOriginNumber());
+        }
+        return subtraction;
+    }
+
+    /**
+     * @param subtraction the subtraction to set
+     */
+    public void setSubtraction(BigDecimal subtraction) {
+        this.subtraction = subtraction;
+    }
+
+    /**
+     * @return the stageId
+     */
+    public Integer getStageId() {
+        return stageId;
+    }
+
+    /**
+     * @param stageId the stageId to set
+     */
+    public void setStageId(Integer stageId) {
+        this.stageId = stageId;
+    }
+
+    /**
+     * @return the factoryId
+     */
+    public Integer getFactoryId() {
+        return factoryId;
+    }
+
+    /**
+     * @param factoryId the factoryId to set
+     */
+    public void setFactoryId(Integer factoryId) {
+        this.factoryId = factoryId;
+    }
+
+    /**
+     * @return the receivedDate
+     */
+    public Date getReceivedDate() {
+        return receivedDate;
+    }
+
+    /**
+     * @param receivedDate the receivedDate to set
+     */
+    public void setReceivedDate(Date receivedDate) {
+        this.receivedDate = receivedDate;
+    }
 
 }

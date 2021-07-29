@@ -4,8 +4,11 @@ import com.toby.businessservice.ReportsService;
 import com.toby.toby.Basic;
 import com.toby.views.InvoicesRegisteredMoreThanOnce;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.event.ActionEvent;
 import javax.inject.Named;
@@ -24,13 +27,25 @@ public class InvoiceRegisteredMoreThanOnceMB extends Basic {
 
     private List<InvoicesRegisteredMoreThanOnce> list;
     private InvoicesRegisteredMoreThanOnce registeredMoreThanOnce;
+    private InvoicesRegisteredMoreThanOnce registeredMoreThanOnceSelected;
 
     @EJB
     private ReportsService reportsService;
 
-    public void search() {
-        setList(reportsService.getInvoicesRegisteredMoreThanOnce(registeredMoreThanOnce,getRegisteredMoreThanOnce().getSerial()));
+    @PostConstruct
+    public void init() {
+        getRegisteredMoreThanOnce().setDate(new Date());
+    }
 
+    public void search() {
+
+        setList(reportsService.getInvoicesRegisteredMoreThanOnce(registeredMoreThanOnce, getRegisteredMoreThanOnce().getSerial(), getRegisteredMoreThanOnce().getDate(), getUserData().getUserBranch().getId()));
+
+    }
+
+    public void delete() {
+        reportsService.deleteIncrease(getRegisteredMoreThanOnceSelected().getStageId(), getRegisteredMoreThanOnceSelected().getFactoryId(), getRegisteredMoreThanOnceSelected().getWorkNumber(), getRegisteredMoreThanOnceSelected().getOriginNumber());
+        list.remove(getRegisteredMoreThanOnceSelected());
     }
 
     public void postProcessXLS(Object document) {
@@ -66,7 +81,6 @@ public class InvoiceRegisteredMoreThanOnceMB extends Basic {
             hashMap.put("companyImage", null);
         }
 
-        
         hashMap.put("serialText", " رقم الفاتورة");
         hashMap.put("serialValue", getRegisteredMoreThanOnce().getSerial());
         hashMap.put("stageNameText", "اسم المرحلة");
@@ -74,7 +88,6 @@ public class InvoiceRegisteredMoreThanOnceMB extends Basic {
         hashMap.put("workNumberText", " عدد مرات الشغل");
         hashMap.put("originNumberText", "العدد بالفاتورة");
         hashMap.put("titleText", " الفواتير المسجلة اكثر من مرة");
-       
 
         return hashMap;
     }
@@ -108,6 +121,24 @@ public class InvoiceRegisteredMoreThanOnceMB extends Basic {
      */
     public void setRegisteredMoreThanOnce(InvoicesRegisteredMoreThanOnce registeredMoreThanOnce) {
         this.registeredMoreThanOnce = registeredMoreThanOnce;
+    }
+
+    /**
+     * @return the registeredMoreThanOnceSelected
+     */
+    public InvoicesRegisteredMoreThanOnce getRegisteredMoreThanOnceSelected() {
+        if (registeredMoreThanOnceSelected == null) {
+            registeredMoreThanOnceSelected = new InvoicesRegisteredMoreThanOnce();
+        }
+        return registeredMoreThanOnceSelected;
+    }
+
+    /**
+     * @param registeredMoreThanOnceSelected the registeredMoreThanOnceSelected
+     * to set
+     */
+    public void setRegisteredMoreThanOnceSelected(InvoicesRegisteredMoreThanOnce registeredMoreThanOnceSelected) {
+        this.registeredMoreThanOnceSelected = registeredMoreThanOnceSelected;
     }
 
 }
