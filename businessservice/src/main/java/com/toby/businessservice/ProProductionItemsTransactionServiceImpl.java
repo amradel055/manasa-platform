@@ -340,7 +340,7 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
         if (transactionFactoryView != null && transactionFactoryView.getDate() != null && transactionFactoryView.getDateTo() != null) {
             params.put("date", transactionFactoryView.getDate());
             params.put("dateTo", transactionFactoryView.getDateTo());
-            query.append(" and s.proFactoryDeliveryDetailId.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.date >= :date and s.proFactoryDeliveryDetailId.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.date <= :dateTo ");
+            query.append(" and s.proFactoryDeliveryDetailId.proFactoryDeliveryId.date >= :date and s.proFactoryDeliveryDetailId.proFactoryDeliveryId.date <= :dateTo ");
             
         }
     }

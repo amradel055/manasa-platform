@@ -42,24 +42,18 @@
                         </div>
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
-
-                                <p:autoComplete style="width:85%" 
-                                                dropdown="true"
-                                                converter="#{autoComplete.proGroupDTOConverter}"
-                                                value="#{summitionItemReportMB.proGroupDTOSelected}"  
-                                                var="proGroup"
-                                                itemLabel="#{proGroup}"
-                                                itemValue="#{proGroup}" 
-                                                forceSelection="true" 
-                                                completeMethod="#{autoComplete.completeProGroup}" >
-                                </p:autoComplete>
+                                <p:selectCheckboxMenu id="proGroup" value="#{summitionItemReportMB.proGroupListSelected}" 
+                                                      converter="#{summitionItemReportMB.proGroupDTOConverter}"
+                                                      label="الفئة" style="width: 15rem"
+                                                      filter="true" filterMatchMode="startsWith" panelStyle="width: 15rem" scrollHeight="250">
+                                    <f:selectItems value="#{summitionItemReportMB.groupDTOList}" 
+                                                   var="proGroup"
+                                                   itemLabel="#{proGroup}"
+                                                   itemValue="#{proGroup}"/>
+                                </p:selectCheckboxMenu>
                             </div>
                             <div class="ui-g-6 ui-xl-6">
-
                                 <p:outputLabel style="width: 50px;margin-right: 1%" value="الفئة"/>
-
-
-
                             </div>
                         </div>
 
@@ -213,8 +207,8 @@
                                 <h:outputText value="#{summitionItemReportMB.sumCustomerNumberTotal}"/>
                             </p:column>
                         </p:summaryRow>
-                        
-                        
+
+
                         <p:columnGroup type="footer">
                             <p:row>
                                 <p:column colspan="2" style="text-align:right;border-radius: 0px" footerText="#{userData.userDDs['TOTAL']}  :" />
@@ -224,7 +218,7 @@
                                             value="#{summitionItemReportMB.sumFactoryNumberTotal}" />
                                     </f:facet>
                                 </p:column>
-                                
+
                                 <p:column  >
                                     <f:facet name="footer">
                                         <p:inputNumber
@@ -237,16 +231,16 @@
                                             value="#{summitionItemReportMB.sumDifferentTotal}" />
                                     </f:facet>
                                 </p:column>
-                                
-                             
-                                
+
+
+
                                 <p:column  >
                                     <f:facet name="footer">
                                         <p:inputNumber
                                             value="#{summitionItemReportMB.sumDeliveryNumberTotal}" />
                                     </f:facet>
                                 </p:column>
-                                
+
                                 <p:column  >
                                     <f:facet name="footer">
                                         <p:inputNumber
@@ -257,7 +251,7 @@
 
                             </p:row>
                         </p:columnGroup>
-                        
+
                     </p:dataTable>
 
 
