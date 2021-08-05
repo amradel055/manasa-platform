@@ -36,7 +36,7 @@
                             <div class="ui-g-12 ui-xl-12">
 
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:inputText style="width: 35%!important" id="ad1" value="#{proProductionTransactionListMB1.proProductionItemsTransactionDTOSelected.serial}"/>
+                                    <p:inputText style="width: 35%!important" id="ad1" value="#{proProductionTransactionListMB1.proProductionItemsTransactionDTOSelected.serialSelected}"/>
 
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
@@ -53,7 +53,7 @@
                                          value="بحث" 
                                          icon="fa fa-fw fa-save"
                                          action="#{proProductionTransactionListMB1.search()}"
-                                          update="details curmsg"
+                                          update="@form"
                                          >
 
                     </p:commandButton>

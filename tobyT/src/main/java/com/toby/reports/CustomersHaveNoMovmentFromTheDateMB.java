@@ -84,8 +84,13 @@ public class CustomersHaveNoMovmentFromTheDateMB extends Basic {
             hashMap.put("companyImage", null);
         }
 
-        hashMap.put("invoiceNumberText", "رقم الفاتورة");
-        hashMap.put("galleryText", "المعرض");
+        hashMap.put("titleText", " عمال ليس لديهم حركة من تاريخ");
+        hashMap.put("dateText", " التاريخ");
+        hashMap.put("dateValue", getNoMovementFromTheDate().getDate());
+        hashMap.put("gallarySelectedText", " المعرض");
+        hashMap.put("gallarySelectedValue", getNoMovementFromTheDate() == null ? null : getNoMovementFromTheDate().getGallerySelected().getName());
+        hashMap.put("nameText", "اسم الموظف");
+        hashMap.put("mobileText", "التليفون");
 
         return hashMap;
     }

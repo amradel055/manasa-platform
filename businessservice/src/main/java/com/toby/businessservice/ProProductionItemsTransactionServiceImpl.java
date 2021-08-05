@@ -42,12 +42,12 @@ import javax.ejb.Stateless;
  */
 @Stateless
 public class ProProductionItemsTransactionServiceImpl implements ProProductionItemsTransactionService {
-    
+
     @EJB
     GenericDAO dao;
     @EJB
     InvoiceMovementReportService movementReportService;
-    
+
     @Override
     public ProProductionItemsTransactionDTO deleteproProductionItemsTransactionDTO(ProProductionItemsTransactionDTO proProductionItemsTransactionDTO, TobyUser tobyUser) {
 //        ProProductionItemsTransaction proProductionItemsTransaction = mapToEntity(proProductionItemsTransactionDTO, tobyUser);
@@ -56,11 +56,11 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
         ProProductionItemsTransaction proProductionItemsTransaction = new ProProductionItemsTransaction();
         proProductionItemsTransaction.setId(proProductionItemsTransactionDTO.getId());
         dao.deleteEntity(proProductionItemsTransaction);
-        
+
         return mapToDTO(proProductionItemsTransaction);
-        
+
     }
-    
+
     public ProProductionItemsTransaction mapToEntity(ProProductionItemsTransactionDTO proProductionItemsTransactionDTO, TobyUser tobyUser) {
         ProProductionItemsTransaction proProductionItemsTransaction = new ProProductionItemsTransaction();
         proProductionItemsTransaction.setId(proProductionItemsTransactionDTO.getId());
@@ -69,13 +69,13 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
         proProductionItemsTransaction.setProductionStageCost(proProductionItemsTransactionDTO.getProductionStageCost());
         proProductionItemsTransaction.setSerial(proProductionItemsTransactionDTO.getSerial());
         proProductionItemsTransaction.setStatus(proProductionItemsTransactionDTO.getStatus());
-        
+
         if (proProductionItemsTransactionDTO.getInvPurchaseInvoiceDetailId() != null) {
             InvPurchaseInvoiceDetail invPurchaseInvoiceDetail = new InvPurchaseInvoiceDetail();
             invPurchaseInvoiceDetail.setId(proProductionItemsTransactionDTO.getInvPurchaseInvoiceDetailId().getId());
             proProductionItemsTransaction.setInvPurchaseInvoiceDetailId(invPurchaseInvoiceDetail);
         }
-        
+
         if (proProductionItemsTransactionDTO.getProProductionStagesId() != null) {
             ProProductionStages proProductionStages = new ProProductionStages();
             proProductionStages.setId(proProductionItemsTransactionDTO.getProProductionStagesId().getId());
@@ -86,17 +86,17 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
             proProductionTransaction.setId(proProductionItemsTransactionDTO.getProProductionTransactionId().getId());
             proProductionItemsTransaction.setProProductionTransactionId(proProductionTransaction);
         }
-        
+
         return proProductionItemsTransaction;
     }
-    
+
     @Override
     public ProProductionItemsTransaction saveProProductionItemsTransaction(ProProductionTransactionDetailDetailViewDTO proProductionTransactionDetailDetailViewDTOSelected, ProProductionTransactionDTO proProductionTransactionDTO, TobyUser tobyUser) {
         ProProductionItemsTransaction proProductionItemsTransaction = mapToEntity1(proProductionTransactionDetailDetailViewDTOSelected, proProductionTransactionDTO, tobyUser);
         dao.updateEntity(proProductionItemsTransaction);
         return proProductionItemsTransaction;
     }
-    
+
     public ProProductionItemsTransaction mapToEntity1(ProProductionTransactionDetailDetailViewDTO proProductionTransactionDetailDetailViewDTOSelected, ProProductionTransactionDTO proProductionTransactionDTO, TobyUser tobyUser) {
         ProProductionItemsTransaction proProductionItemsTransaction = new ProProductionItemsTransaction();
         proProductionItemsTransaction.setSerial(1);
@@ -104,7 +104,7 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
         proProductionItemsTransaction.setStatus(1);
         proProductionItemsTransaction.setDate(new Date());
         proProductionItemsTransaction.setProductionStageCost(proProductionTransactionDetailDetailViewDTOSelected.getCost());
-        
+
         if (proProductionTransactionDetailDetailViewDTOSelected.getProFactoryDeliveryDetailId() != null) {
             ProFactoryDeliveryDetail deliveryDetail = new ProFactoryDeliveryDetail();
             deliveryDetail.setId(proProductionTransactionDetailDetailViewDTOSelected.getProFactoryDeliveryDetailId());
@@ -117,7 +117,7 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
             proProductionItemsTransaction.setProProductionStagesId(proProductionStages);
         }
         if (proProductionTransactionDetailDetailViewDTOSelected.getCreatedBy() != null) {
-            
+
             TobyUser user = new TobyUser();
             user.setId(proProductionTransactionDetailDetailViewDTOSelected.getCreatedBy());
             proProductionItemsTransaction.setCreatedBy(user);
@@ -129,7 +129,7 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
                 company.setId(proProductionTransactionDetailDetailViewDTOSelected.getCompanyId());
                 proProductionItemsTransaction.setCompanyId(company);
             }
-            
+
             if (proProductionTransactionDetailDetailViewDTOSelected.getBranchId() != null) {
                 Branch branch = new Branch();
                 branch.setId(proProductionTransactionDetailDetailViewDTOSelected.getBranchId());
@@ -141,10 +141,10 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
             proProductionItemsTransaction.setCompanyId(tobyUser.getCompanyId());
             proProductionItemsTransaction.setBranchId(tobyUser.getBranchId());
         }
-        
+
         return proProductionItemsTransaction;
     }
-    
+
     @Override
     public List<ProProductionItemsTransactionDTO> getProProductionItemsTransaction(TobyUser tobyUser) {
         Map<String, Object> params = new HashMap<>();
@@ -152,7 +152,7 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
         List<ProProductionItemsTransaction> proProductionItemsTransaction = dao.findListByQuery("SELECT e FROM ProProductionItemsTransaction e where e.branchId.id =:branchId and( e.isDeleted != 1 or e.isDeleted is NULL ) order by e.id desc", params);
         return mapToDTOList(proProductionItemsTransaction, tobyUser);
     }
-    
+
     public List<ProProductionItemsTransactionDTO> mapToDTOList(List<ProProductionItemsTransaction> ProProductionItemsTransactionlist, TobyUser tobyUser) {
         List<ProProductionItemsTransactionDTO> invInventoryTransactionDetailDTOList = new ArrayList<>();
         for (ProProductionItemsTransaction proProductionItemsTransaction : ProProductionItemsTransactionlist) {
@@ -160,16 +160,16 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
         }
         return invInventoryTransactionDetailDTOList;
     }
-    
+
     public ProProductionItemsTransactionDTO mapToDTO(ProProductionItemsTransaction proProductionItemsTransaction) {
-        
+
         ProProductionItemsTransactionDTO proProductionItemsTransactionDTO = new ProProductionItemsTransactionDTO();
-        
+
         proProductionItemsTransactionDTO.setId(proProductionItemsTransaction.getId());
         proProductionItemsTransactionDTO.setCreatedDate(proProductionItemsTransaction.getCreationDate());
         proProductionItemsTransactionDTO.setDate(proProductionItemsTransaction.getDate());
         proProductionItemsTransactionDTO.setIndex(proProductionItemsTransaction.getId());
-        
+
         if (proProductionItemsTransaction.getProFactoryDeliveryDetailId() != null
                 && proProductionItemsTransaction.getProFactoryDeliveryDetailId().getInvPurchaseInvoiceDetailId() != null) {
             InvPurchaseInvoiceDetailDTO invPurchaseInvoiceDetailDTO = new InvPurchaseInvoiceDetailDTO();
@@ -191,41 +191,41 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
             invPurchaseInvoiceDetailDTO.setId(proProductionItemsTransaction.getProFactoryDeliveryDetailId().getInvPurchaseInvoiceDetailId().getId());
             proProductionItemsTransactionDTO.setInvPurchaseInvoiceDetailId(invPurchaseInvoiceDetailDTO);
         }
-        
+
         proProductionItemsTransactionDTO.setNumber(proProductionItemsTransaction.getNumber());
-        
+
         if (proProductionItemsTransaction.getProProductionStagesId() != null) {
             ProProductionStagesDTO proProductionStagesDTO = new ProProductionStagesDTO();
             proProductionStagesDTO.setId(proProductionItemsTransaction.getProProductionStagesId().getId());
             proProductionStagesDTO.setName(proProductionItemsTransaction.getProProductionStagesId().getName());
             proProductionItemsTransactionDTO.setProProductionStagesId(proProductionStagesDTO);
-            
+
         }
-        
+
         if (proProductionItemsTransaction.getProProductionTransactionId() != null) {
             ProProductionTransactionDTO proProductionTransactionDTO = new ProProductionTransactionDTO();
             proProductionTransactionDTO.setId(proProductionItemsTransaction.getProProductionTransactionId().getId());
-            
+
             proProductionItemsTransactionDTO.setProProductionTransactionId(proProductionTransactionDTO);
         }
         proProductionItemsTransactionDTO.setStatus(proProductionItemsTransaction.getStatus());
         proProductionItemsTransactionDTO.setSerial(proProductionItemsTransaction.getSerial());
         proProductionItemsTransactionDTO.setCreatedInvoiceByName(proProductionItemsTransaction.getProFactoryDeliveryDetailId().getInvPurchaseInvoiceDetailId().getInvPurchaseInvoiceId().getOrganizationSiteId().getName());
-        
+
         proProductionItemsTransactionDTO.setCreatedBy(proProductionItemsTransaction.getCreatedBy() != null ? proProductionItemsTransaction.getCreatedBy().getId() : null);
         proProductionItemsTransactionDTO.setCreatedByName(proProductionItemsTransaction.getCreatedBy() != null ? proProductionItemsTransaction.getCreatedBy().getName() : null);
         proProductionItemsTransactionDTO.setCreatedByCode(proProductionItemsTransaction.getCreatedBy() != null ? proProductionItemsTransaction.getCreatedBy().getUserCode() : null);
         proProductionItemsTransactionDTO.setCreatedDate(proProductionItemsTransaction.getCreationDate());
         proProductionItemsTransactionDTO.setBranchId(proProductionItemsTransaction.getBranchId() != null ? proProductionItemsTransaction.getBranchId().getId() : null);
-        
+
         return proProductionItemsTransactionDTO;
     }
-    
+
     @Override
     public List<ProductionTransactionOfUser> getProProductionTransactionDTOForAllUsersList(PrintProductionDTO printProductionDTO, Integer branchId) {
-        
+
         List<ProductionTransactionOfUser> productionTransactionOfUsers = new ArrayList<>();
-        
+
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT pps.serial as stageSerial , pps.name as stageName , \n"
                 + "tu.user_code as userCode , tu.name as userName , tu.residency_number as residencyNumber, \n"
@@ -237,17 +237,17 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
                 + "left join toby_user tu on tu.id = ppit.created_by\n"
                 + "left join pro_production_stages pps on pps.id = ppit.pro_production_stages_id\n"
                 + " ");
-        
+
         sql.append(" where ppit.branch_id = ").append(branchId);
-        
+
         appendProProductionStatus(printProductionDTO, sql);
         appendProProductionDate(printProductionDTO, sql);
         appendProProductionUser(printProductionDTO, sql);
-        
+
         sql.append(" group by ppit.created_by , ppit.pro_production_stages_id order by pps.serial ");
-        
+
         List<Object[]> res = dao.executeNativeQuery(sql.toString());
-        
+
         for (Object[] object : res) {
             ProductionTransactionOfUser productionTransactionOfUser = new ProductionTransactionOfUser();
             productionTransactionOfUser.setProductionStagesId((Integer) object[0]);
@@ -259,12 +259,12 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
             productionTransactionOfUser.setPrice((BigDecimal) object[6]);
             productionTransactionOfUser.setTotalNumber((BigDecimal) object[7]);
             productionTransactionOfUser.setAvarage(((BigDecimal) object[8]).setScale(3, RoundingMode.HALF_UP));
-            
+
             productionTransactionOfUsers.add(productionTransactionOfUser);
         }
         return productionTransactionOfUsers;
     }
-    
+
     private void appendProProductionStatus(PrintProductionDTO printProductionDTO, StringBuilder query) {
         if (printProductionDTO.getFromStatus() != null) {
             query.append(" and pps.serial >=  ").append(printProductionDTO.getFromStatus().getSerial());
@@ -273,7 +273,7 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
             query.append(" and pps.serial <=  ").append(printProductionDTO.getToStatus().getSerial());
         }
     }
-    
+
     private void appendProProductionDate(PrintProductionDTO printProductionDTO, StringBuilder query) {
         if (printProductionDTO.getFromDate() != null) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
@@ -284,7 +284,7 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
             query.append(" and ppit.date  <=  '").append(dateFormat.format(printProductionDTO.getToDate())).append("' ");
         }
     }
-    
+
     private void appendProProductionUser(PrintProductionDTO printProductionDTO, StringBuilder query) {
         if (printProductionDTO.getFromUser() != null) {
             query.append(" and tu.user_code >=  '").append(printProductionDTO.getFromUser().getUserCode()).append("' ");
@@ -293,7 +293,7 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
             query.append(" and tu.user_code <=  '").append(printProductionDTO.getToUser().getUserCode()).append("' ");
         }
     }
-    
+
     @Override
     public List<ProProductionItemsTransactionDTO> getALLProProductionItemsTransactionDTO(int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters) {
         filters.put("branchId", branchId);
@@ -302,7 +302,7 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
         List<ProProductionItemsTransaction> details = dao.findListByQuery(builder.toString(), filters, first, pageSize);
         return mapToDTOList(details, null);
     }
-    
+
     @Override
     public List<ProProductionItemsTransactionDTO> getALLProProductionItemsTransactionByInvoicesSerial(Integer serial) {
         Map<String, Object> params = new HashMap<>();
@@ -311,11 +311,13 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
         builder.append(" SELECT s FROM ProProductionItemsTransaction s WHERE s.proFactoryDeliveryDetailId.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial = :serial  ");
         List<ProProductionItemsTransaction> details = dao.findListByQuery(builder.toString(), params);
         return mapToDTOList(details, null);
-    }
+        }
+        
     
+
     @Override
     public List<ProProductionItemsTransactionDTO> getALLProProductionItemsTransactionDTO(ProProductionTransactionFactoryView transactionFactoryView, Integer branchId) {
-        
+
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         StringBuilder builder = new StringBuilder();
@@ -328,44 +330,44 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
         List<ProProductionItemsTransaction> details = dao.findListByQuery(builder.toString(), params);
         return mapToDTOList(details, null);
     }
-    
+
     private void appendProProductionStatus1(ProProductionTransactionFactoryView transactionFactoryView, StringBuilder query, Map<String, Object> params) {
         if (transactionFactoryView != null && transactionFactoryView.getStatus() != null) {
             params.put("status", transactionFactoryView.getStatus().getId());
             query.append(" and s.proProductionStagesId.id = :status  ");
         }
     }
-    
+
     private void appendProProductionDate1(ProProductionTransactionFactoryView transactionFactoryView, StringBuilder query, Map<String, Object> params) {
         if (transactionFactoryView != null && transactionFactoryView.getDate() != null && transactionFactoryView.getDateTo() != null) {
             params.put("date", transactionFactoryView.getDate());
             params.put("dateTo", transactionFactoryView.getDateTo());
             query.append(" and s.proFactoryDeliveryDetailId.proFactoryDeliveryId.date >= :date and s.proFactoryDeliveryDetailId.proFactoryDeliveryId.date <= :dateTo ");
-            
+
         }
     }
-    
+
     private void appendProProductionUser1(ProProductionTransactionFactoryView transactionFactoryView, StringBuilder query, Map<String, Object> params) {
         if (transactionFactoryView != null && transactionFactoryView.getUser() != null) {
             params.put("user", transactionFactoryView.getUser().getId());
             query.append(" and s.createdBy.id = :user ");
         }
     }
-    
+
     private void appendProProductionInvoiceNumber1(ProProductionTransactionFactoryView transactionFactoryView, StringBuilder query, Map<String, Object> params) {
         if (transactionFactoryView != null && transactionFactoryView.getInvoiceNumber() != null && transactionFactoryView.getInvoiceNumber() > 0) {
             params.put("invoiceNumber", transactionFactoryView.getInvoiceNumber());
             query.append(" and s.proFactoryDeliveryDetailId.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial = :invoiceNumber ");
         }
     }
-    
+
     private void appendProProductionGellery1(ProProductionTransactionFactoryView transactionFactoryView, StringBuilder query, Map<String, Object> params) {
         if (transactionFactoryView != null && transactionFactoryView.getGallerySelected() != null) {
             params.put("galleryList", transactionFactoryView.getGallerySelected().getId());
             query.append(" and s.proFactoryDeliveryDetailId.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.galaryId.id = :galleryList ");
         }
     }
-    
+
     private void appendProProductionDate(StringBuilder builder, ProProductionTransactionFactoryView transactionFactoryView) {
         if (transactionFactoryView.getDate() != null) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
@@ -375,9 +377,9 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
             builder.append(" and ipi.date <=  '").append(dateFormat.format(transactionFactoryView.getDateTo())).append("'");
         }
-        
+
     }
-    
+
     private void appendProProductionGellery(StringBuilder builder, ProProductionTransactionFactoryView transactionFactoryView) {
         if (transactionFactoryView != null && transactionFactoryView.getGallerySelected() != null) {
             builder.append(" AND ipi.galary_Id = ").append(transactionFactoryView.getGallerySelected().getId());
@@ -389,7 +391,7 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
             builder.append(" AND pps.id = ").append(transactionFactoryView.getStatus().getId());
         }
     }
-    
+
     private String appendFilter(ProProductionTransactionFactoryView transactionFactoryView) {
         StringBuilder query = new StringBuilder();
         if (transactionFactoryView != null) {
@@ -398,10 +400,10 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
         if (!query.toString().isEmpty()) {
             return query.toString();
         }
-        
+
         return "";
     }
-    
+
     @Override
     public List<ProProductionItemsTransactionDTO> getALLProProductionItemsTransactionLastDTO(ProProductionTransactionFactoryView transactionFactoryView, Integer branchId) {
         List<ProProductionItemsTransactionDTO> list = new ArrayList<>();
@@ -446,10 +448,10 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
             itemsTransactionDTO.setId((Integer) object[8]);
             itemsTransactionDTO.setGalleryName((String) object[9]);
             itemsTransactionDTO.setClothNumber(movementReportService.summitionTob(itemsTransactionDTO.getId()));
-            
+
             list.add(itemsTransactionDTO);
         }
-        
+
         builder = new StringBuilder();
         builder.append("select ipi.id , ipi.serial , ipi.date,ii2.name from pro_factory_delivery pfd2\n"
                 + "	left join inv_purchase_invoice ipi on ipi.id = pfd2.inv_purchase_invoice_id\n"
@@ -464,7 +466,7 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
                 + "                LEFT JOIN pro_factory_delivery pfd on pfd.id = pfdd.pro_factory_delivery_id\n"
                 + "                where ppit.pro_factory_delivery_detail_id is not null \n"
                 + "                and pfd.id is not null) order by ipi.serial ");
-        
+
         List<Object[]> details1 = dao.executeNativeQuery(builder.toString());
         for (Object[] object : details1) {
             ProProductionItemsTransactionDTO itemsTransactionDTO = new ProProductionItemsTransactionDTO();
@@ -473,12 +475,12 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
             itemsTransactionDTO.setInvoiceDate((Date) object[2]);
             itemsTransactionDTO.setGalleryName((String) object[3]);
             itemsTransactionDTO.setClothNumber(movementReportService.summitionTob(itemsTransactionDTO.getId()));
-            
+
             list.add(itemsTransactionDTO);
         }
         return list;
     }
-    
+
     @Override
     public Long getTotalRegistors(Integer branchId, Map<String, Object> filters) {
         StringBuilder builder = new StringBuilder();
