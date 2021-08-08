@@ -311,13 +311,18 @@
                                           value="#{userData.userDDs['SAVE']}" 
                                           action="#{invTransferFormMB1.save()}"
                                           update="@form"/>
+                        <p:commandButton 
+                            id="copy"
+                            ajax="false"
+                            value="نسخ" 
+                            class="newButtons"
+                            actionListener="#{invTransferFormMB1.copy()}"/>
 
                         <p:commandButton 
                             id="newN"
                             ajax="false"
                             value="#{userData.userDDs['NEW']}" 
                             class="newButtons"
-                            onclick="form.target = ''" 
                             actionListener="#{invTransferFormMB1.reset()}"/>
 
                         <p:commandButton  

@@ -95,7 +95,7 @@ public class invAddingOrderListDTOMB extends InventoryBasicDataForm {
 
     public void loadGallaryList() {
         try {
-            if (getInvInventorySelection() != null && getInvInventorySelection().getId() != null && getInvInventorySelection().getId() > 0) {
+            if (getGallaryDTOSelect() != null && getGallaryDTOSelect().getId() != null && getGallaryDTOSelect().getId() > 0) {
                 load();
             } else {
             }
