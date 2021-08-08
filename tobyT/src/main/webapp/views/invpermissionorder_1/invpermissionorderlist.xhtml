@@ -55,14 +55,13 @@
                                               rendered="#{userData.userScreens['invpermissionorder_1'].add or userData.isAdmin}"/>
 
 
-                            <p:selectOneMenu id="inventory" value="#{invAddingOrderListDTOMB.invInventorySelection}"
-                                         converter="#{invAddingOrderListDTOMB.invInventoryConverter}" 
+                            <p:selectOneMenu id="inventory" value="#{invAddingOrderListDTOMB.gallaryDTOSelect}"
+                                         converter="#{invAddingOrderListDTOMB.gallaryDTOConverters}" 
                                          style="float:right;width: 20%!important;color:#fff;height: 30px!important;margin-right: 0.5%;">
 
-                            <p:ajax listener="#{invAddingOrderListDTOMB.loadInventoryList()}" update="form" />
-                            <f:selectItem itemLabel="#{userData.userDDs['ALL']}" itemValue="" />
+                            <p:ajax listener="#{invAddingOrderListDTOMB.loadGallaryList()}" update="form" />
 
-                            <f:selectItems value="#{invAddingOrderListDTOMB.inventoryList}" 
+                            <f:selectItems value="#{invAddingOrderListDTOMB.gallaryLists}" 
                                            var="inventory" itemLabel="#{inventory.name}"
                                            itemValue="#{inventory}"/> 
                         </p:selectOneMenu>
