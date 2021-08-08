@@ -1,6 +1,7 @@
 package com.toby.invtransfer;
 
 import com.toby.businessservice.InvTransferService;
+import com.toby.dto.InvDetailDTO;
 import com.toby.toby.InventoryBasicDataForm;
 
 import javax.annotation.PostConstruct;
@@ -43,6 +44,22 @@ public class InvTransferFormMB1 extends InventoryBasicDataForm {
             getInvInvoiceDTO().setMsg(null);
             setInvInvoiceDTO(invTransferService.save(getInvInvoiceDTO(), getUserData().getUser()));
             msgSave(getInvInvoiceDTO().getMsg());
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "لا يوجد تفاصيل للفاتورة"));
+        }
+        return "";
+    }
+    
+    public String copy() {
+        if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getInvPurchaseInvoiceDetailList() != null && !getInvInvoiceDTO().getInvPurchaseInvoiceDetailList().isEmpty()) {
+            getInvInvoiceDTO().setId(null);
+            getInvInvoiceDTO().setSerial(null);
+            getInvInvoiceDTO().setSerialTax(null);            
+            getInvInvoiceDTO().setCreatedBy(null);
+            for(InvDetailDTO detailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()){
+                detailDTO.setId(null);
+            }
         } else {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "لا يوجد تفاصيل للفاتورة"));
