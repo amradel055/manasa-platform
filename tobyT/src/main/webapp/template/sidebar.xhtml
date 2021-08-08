@@ -947,6 +947,7 @@
                                                    or userData.userScreens['StatementOfBondsByBranchReport'].view
                                                    or userData.userScreens['CustomerBalancesReport'].view
                                                    or userData.userScreens['InvoiceRegisterdMoreThanOnce'].view
+                                                   or userData.userScreens['CustomersHaveNoMovementFromTheDate'].view
                                                    or userData.userScreens[''].view 
                                                    or userData.isAdmin}"
                                        >
@@ -1024,6 +1025,7 @@
                                                        or userData.userScreens['StatementOfBondsByBranchReport'].view
                                                        or userData.userScreens['CustomerBalancesReport'].view
                                                        or userData.userScreens['InvoiceRegisterdMoreThanOnce'].view
+                                                       or userData.userScreens['CustomersHaveNoMovementFromTheDate'].view
                                                        or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk33321" value="تتبع مراحل الفاتورة" icon="&#xE8D2;" url="/faces/views/proproductionreport/invoiceProductionStageReport.xhtml" 
@@ -1052,6 +1054,9 @@
                                                 />
                                     <p:menuitem id="sr_lnk33340" value="  الفواتير المسجلة اكثر من مرة" icon="&#xE8D2;" url="/faces/views/proproductionreport/InvoiceRegisterdMoreThanOnce.xhtml" 
                                                 rendered="#{userData.userScreens['InvoiceRegisterdMoreThanOnce'].view or   userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="sr_lnk33341" value=" عمال ليس لديهم حركة من تاريخ" icon="&#xE8D2;" url="/faces/views/proproductionreport/CustomersHaveNoMovementFromTheDate.xhtml" 
+                                                rendered="#{userData.userScreens['CustomersHaveNoMovementFromTheDate'].view or   userData.isAdmin}"
                                                 />
 
                                 </p:submenu>

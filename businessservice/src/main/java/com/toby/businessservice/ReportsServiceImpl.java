@@ -8,10 +8,10 @@ package com.toby.businessservice;
 import com.toby.core.GenericDAO;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.ProGroupDTO;
-import com.toby.entity.InvPurchaseInvoice;
 import com.toby.entity.ProProductionItemsTransaction;
 import com.toby.views.CompanyInvoicesWithoutSewing;
 import com.toby.views.CustomerBalances;
+import com.toby.views.CustomersHaveNoMovementFromTheDate;
 import com.toby.views.InvoicesIssuedWithinAperiod;
 import com.toby.views.InvoicesRegisteredMoreThanOnce;
 import com.toby.views.ItemBalancesStatement;
@@ -458,6 +458,7 @@ public class ReportsServiceImpl implements ReportsService {
         appendGallery7(gallaryIds, sql);
         appendProGroup(groupId, sql);
         sql.append(" group by ii.id");
+        sql.append(" order by sum(ipid.number) desc ");
         List<Object[]> res = dao.executeNativeQuery(sql.toString());
         for (Object[] object : res) {
             profitOfItemsSold = new ProfitOfItemsSold();
@@ -565,6 +566,29 @@ public class ReportsServiceImpl implements ReportsService {
                 workNumber = workNumber.subtract(number);
             }
         }
+    }
+
+    @Override
+    public List<CustomersHaveNoMovementFromTheDate> getCustomersHaveNoMovementFromTheDate(CustomersHaveNoMovementFromTheDate noMovementFromTheDate, Integer branchId) {
+
+        List<CustomersHaveNoMovementFromTheDate> list = new ArrayList<>();
+        StringBuilder sql = new StringBuilder();
+        sql.append(" select ios.name,ios.mobile from inv_organization_site ios\n"
+                + " where ios.branch_id = ").append(branchId);
+        appendGallery6(noMovementFromTheDate, sql);
+        sql.append(" and ios.id not in( "
+                + " select ipi.organization_site_id from inv_purchase_invoice ipi\n"
+                + " where ipi.branch_id = ").append(branchId);
+        appendDate10(noMovementFromTheDate, sql);
+        sql.append(" ) ");
+        List<Object[]> res = dao.executeNativeQuery(sql.toString());
+        for (Object[] object : res) {
+            noMovementFromTheDate = new CustomersHaveNoMovementFromTheDate();
+            noMovementFromTheDate.setName((String) object[0]);
+            noMovementFromTheDate.setMobile((String) object[1]);
+            list.add(noMovementFromTheDate);
+        }
+        return list;
     }
 
     private void appendGallery(SalesReportByValueAded salesReportByValueAded, StringBuilder query) {
@@ -714,6 +738,20 @@ public class ReportsServiceImpl implements ReportsService {
             sql.append("  and pfd.date =  '").append(dateFormat.format(registeredMoreThanOnce.getDate())).append("' ");
         }
 
+    }
+
+    private void appendDate10(CustomersHaveNoMovementFromTheDate noMovementFromTheDate, StringBuilder sql) {
+        if (noMovementFromTheDate.getDate() != null) {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+            sql.append("  and ipi.date >=  '").append(dateFormat.format(noMovementFromTheDate.getDate())).append("' ");
+        }
+
+    }
+
+    private void appendGallery6(CustomersHaveNoMovementFromTheDate noMovementFromTheDate, StringBuilder query) {
+        if (noMovementFromTheDate.getGallerySelected() != null) {
+            query.append(" and ios.gallary_id =  ").append(noMovementFromTheDate.getGallerySelected().getId());
+        }
     }
 
 }

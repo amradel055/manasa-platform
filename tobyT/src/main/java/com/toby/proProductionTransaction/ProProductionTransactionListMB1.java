@@ -59,7 +59,7 @@ public class ProProductionTransactionListMB1 extends BaseListBean {
 
     public void search() {
         proProductionItemsTransactionDTOList = new ArrayList<>();
-        setProProductionItemsTransactionDTOList(proProductionItemsTransactionService.getALLProProductionItemsTransactionByInvoicesSerial(getProProductionItemsTransactionDTOSelected().getInvPurchaseInvoiceDetailId().getInvPurchaseInvoiceId().getSerial()));
+        setProProductionItemsTransactionDTOList(proProductionItemsTransactionService.getALLProProductionItemsTransactionByInvoicesSerial(14862));
     }
 
     @Override

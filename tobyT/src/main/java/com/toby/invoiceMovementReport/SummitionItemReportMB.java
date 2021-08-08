@@ -1,6 +1,8 @@
 package com.toby.invoiceMovementReport;
 
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
+import com.toby.businessservice.ProGroupService;
+import com.toby.converter.ProGroupDTOConverter;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.ProGroupDTO;
 import com.toby.toby.Basic;
@@ -33,6 +35,10 @@ public class SummitionItemReportMB extends Basic {
     private Date dateFrom;
     private Date dateTo;
     private ProGroupDTO proGroupDTOSelected;
+    private List<ProGroupDTO> proGroupListSelected;
+
+    private List<ProGroupDTO> groupDTOList;
+    private ProGroupDTOConverter proGroupDTOConverter;
 
     private List<SummitionItemsView> itemsViewList;
 
@@ -47,6 +53,8 @@ public class SummitionItemReportMB extends Basic {
 
     @EJB
     InvPurchaseInvoiceService_1 invPurchaseInvoiceService_1;
+    @EJB
+    ProGroupService proGroupService;
 
     @PostConstruct
     public void init() {
@@ -56,63 +64,72 @@ public class SummitionItemReportMB extends Basic {
     public void search() {
 //        List<SummitionItemsView> itemsViewForGallary = null;
         if (getGallaryListSelected() != null && !getGallaryListSelected().isEmpty()) {
-            itemsViewList = new ArrayList<>();
-            sumFactoryNumberTotal = BigDecimal.ZERO;
-            sumSendNumberTotal = BigDecimal.ZERO;
-            sumDeliveryNumberTotal = BigDecimal.ZERO;
-            sumCustomerNumberTotal = BigDecimal.ZERO;
-            sumDifferentTotal = BigDecimal.ZERO;
-            setSumNumberTotal(BigDecimal.ZERO);
-            setSumAllCostTotal(BigDecimal.ZERO);
-            setSumAllAvarageCost(BigDecimal.ZERO);
-            List<SummitionItemsView> itemsViewForGallaryinner = new ArrayList<>();
-            List<SummitionItemsView> itemsViewForGallaryinnerForAll = new ArrayList<>();
-            SummitionItemsView summitionItemsView = null;
-            for (InvInventoryDTO invInventoryDTO : getGallaryListSelected()) {
+            if (getProGroupListSelected() != null && !getProGroupListSelected().isEmpty()) {
+                itemsViewList = new ArrayList<>();
+                sumFactoryNumberTotal = BigDecimal.ZERO;
+                sumSendNumberTotal = BigDecimal.ZERO;
+                sumDeliveryNumberTotal = BigDecimal.ZERO;
+                sumCustomerNumberTotal = BigDecimal.ZERO;
+                sumDifferentTotal = BigDecimal.ZERO;
+                setSumNumberTotal(BigDecimal.ZERO);
+                setSumAllCostTotal(BigDecimal.ZERO);
+                setSumAllAvarageCost(BigDecimal.ZERO);
+                List<SummitionItemsView> itemsViewForGallaryinner = new ArrayList<>();
+                List<SummitionItemsView> itemsViewForGallaryinnerForAll = new ArrayList<>();
+                SummitionItemsView summitionItemsView = null;
 
-                summitionItemsView = new SummitionItemsView();
+                for (InvInventoryDTO invInventoryDTO : getGallaryListSelected()) {
+                    for (ProGroupDTO proGroupDTO : getProGroupListSelected()) {
+                        setProGroupDTOSelected(proGroupDTO);
 
-                summitionItemsView.setName(invInventoryDTO.getName());
-                summitionItemsView.setRowType(1);
+                        summitionItemsView = new SummitionItemsView();
 
-                if (getUri().contains("summitionItemReportPro")) {
-                    itemsViewForGallaryinner = invPurchaseInvoiceService_1.getTheListBasedOnStagesList(invInventoryDTO.getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), getUserData().getUserBranch().getId(), getUserData().getUser(), null);
-                } else {
-                    itemsViewForGallaryinner = invPurchaseInvoiceService_1.findSummitionQuantity(invInventoryDTO.getId(), getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), null);
-                }
-                if (itemsViewForGallaryinner != null && !itemsViewForGallaryinner.isEmpty()) {
-                    for (SummitionItemsView view : itemsViewForGallaryinner) {
-                        if (view.getCode() == 1 || view.getCode() == 2) {
-                            setValueForGallary(summitionItemsView, view);
+                        summitionItemsView.setName(invInventoryDTO.getName());
+                        summitionItemsView.setRowType(1);
+
+                        if (getUri().contains("summitionItemReportPro")) {
+                            itemsViewForGallaryinner = invPurchaseInvoiceService_1.getTheListBasedOnStagesList(invInventoryDTO.getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), getUserData().getUserBranch().getId(), getUserData().getUser(), null);
+                        } else {
+                            itemsViewForGallaryinner = invPurchaseInvoiceService_1.findSummitionQuantity(invInventoryDTO.getId(), getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), null);
                         }
-                    }
-                    getItemsViewList().add(summitionItemsView);
-                    getItemsViewList().addAll(itemsViewForGallaryinner);
-                    setFinalTotals(summitionItemsView);
-                }
+                        if (itemsViewForGallaryinner != null && !itemsViewForGallaryinner.isEmpty()) {
+                            for (SummitionItemsView view : itemsViewForGallaryinner) {
+                                if (view.getCode() == 1 || view.getCode() == 2) {
+                                    setValueForGallary(summitionItemsView, view);
+                                }
+                            }
+                            getItemsViewList().add(summitionItemsView);
+                            getItemsViewList().addAll(itemsViewForGallaryinner);
+                            setFinalTotals(summitionItemsView);
+                        }
 
-            }
-
-            if (getUri().contains("summitionItemReportPro")) {
-                itemsViewForGallaryinnerForAll = invPurchaseInvoiceService_1.getTheListBasedOnStagesList(null, getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), getUserData().getUserBranch().getId(), getUserData().getUser(), getGallaryListSelected());
-            } else {
-                itemsViewForGallaryinnerForAll = invPurchaseInvoiceService_1.findSummitionQuantity(null, getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), getGallaryListSelected());
-            }
-            if (itemsViewForGallaryinnerForAll != null && !itemsViewForGallaryinnerForAll.isEmpty()) {
-                summitionItemsView = new SummitionItemsView();
-                summitionItemsView.setName("إجماليات المعارض");
-                summitionItemsView.setRowType(1);
-                for (SummitionItemsView view : itemsViewForGallaryinnerForAll) {
-                    if (view.getCode() == 1 || view.getCode() == 2) {
-                        setValueForGallary(summitionItemsView, view);
                     }
                 }
-                getItemsViewList().add(summitionItemsView);
-                getItemsViewList().addAll(itemsViewForGallaryinnerForAll);
+
+                for (ProGroupDTO proGroupDTO : getProGroupListSelected()) {
+                    setProGroupDTOSelected(proGroupDTO);
+                    if (getUri().contains("summitionItemReportPro")) {
+                        itemsViewForGallaryinnerForAll = invPurchaseInvoiceService_1.getTheListBasedOnStagesList(null, getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), getUserData().getUserBranch().getId(), getUserData().getUser(), getGallaryListSelected());
+                    } else {
+                        itemsViewForGallaryinnerForAll = invPurchaseInvoiceService_1.findSummitionQuantity(null, getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), getGallaryListSelected());
+                    }
+                    if (itemsViewForGallaryinnerForAll != null && !itemsViewForGallaryinnerForAll.isEmpty()) {
+                        summitionItemsView = new SummitionItemsView();
+                        summitionItemsView.setName("إجماليات المعارض");
+                        summitionItemsView.setRowType(1);
+                        for (SummitionItemsView view : itemsViewForGallaryinnerForAll) {
+                            if (view.getCode() == 1 || view.getCode() == 2) {
+                                setValueForGallary(summitionItemsView, view);
+                            }
+                        }
+                        getItemsViewList().add(summitionItemsView);
+                        getItemsViewList().addAll(itemsViewForGallaryinnerForAll);
+
+                    }
+                }
 
             }
         }
-
     }
 
     private void setValueForGallary(SummitionItemsView summitionItemsView, SummitionItemsView view) {
@@ -389,6 +406,55 @@ public class SummitionItemReportMB extends Basic {
      */
     public void setSumAllAvarageCost(BigDecimal sumAllAvarageCost) {
         this.sumAllAvarageCost = sumAllAvarageCost;
+    }
+
+    /**
+     * @return the groupDTOList
+     */
+    public List<ProGroupDTO> getGroupDTOList() {
+        if (groupDTOList == null || groupDTOList.isEmpty()) {
+            groupDTOList = proGroupService.getallProGroupByBranchIdDTO(getUserData().getUser());
+            setProGroupDTOConverter(new ProGroupDTOConverter(groupDTOList));
+        }
+        return groupDTOList;
+    }
+
+    /**
+     * @param groupDTOList the groupDTOList to set
+     */
+    public void setGroupDTOList(List<ProGroupDTO> groupDTOList) {
+        this.groupDTOList = groupDTOList;
+    }
+
+    /**
+     * @return the proGroupDTOConverter
+     */
+    public ProGroupDTOConverter getProGroupDTOConverter() {
+        return proGroupDTOConverter;
+    }
+
+    /**
+     * @param proGroupDTOConverter the proGroupDTOConverter to set
+     */
+    public void setProGroupDTOConverter(ProGroupDTOConverter proGroupDTOConverter) {
+        this.proGroupDTOConverter = proGroupDTOConverter;
+    }
+
+    /**
+     * @return the proGroupListSelected
+     */
+    public List<ProGroupDTO> getProGroupListSelected() {
+        if (proGroupListSelected == null) {
+            proGroupListSelected = getGroupDTOList();
+        }
+        return proGroupListSelected;
+    }
+
+    /**
+     * @param proGroupListSelected the proGroupListSelected to set
+     */
+    public void setProGroupListSelected(List<ProGroupDTO> proGroupListSelected) {
+        this.proGroupListSelected = proGroupListSelected;
     }
 
 }

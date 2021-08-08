@@ -19,7 +19,7 @@ public class ProProductionItemsTransactionDTO extends BaseEntityDTO {
 
     private Date modificationDate;
 
-    private Integer serial;
+    private Integer serialSelected;
     private Integer invoiceSerial;
     private Integer serialNumber;
 
@@ -241,20 +241,7 @@ public class ProProductionItemsTransactionDTO extends BaseEntityDTO {
         this.OrderDate = OrderDate;
     }
 
-    /**
-     * @return the serial
-     */
-    public Integer getSerial() {
-        return serial;
-    }
-
-    /**
-     * @param serial the serial to set
-     */
-    public void setSerial(Integer serial) {
-        this.serial = serial;
-    }
-
+  
     /**
      * @return the galleryName
      */
@@ -267,6 +254,20 @@ public class ProProductionItemsTransactionDTO extends BaseEntityDTO {
      */
     public void setGalleryName(String galleryName) {
         this.galleryName = galleryName;
+    }
+
+    /**
+     * @return the serialSelected
+     */
+    public Integer getSerialSelected() {
+        return serialSelected;
+    }
+
+    /**
+     * @param serialSelected the serialSelected to set
+     */
+    public void setSerialSelected(Integer serialSelected) {
+        this.serialSelected = serialSelected;
     }
 
     /**

@@ -7,6 +7,7 @@ package com.toby.businessservice;
 
 import com.toby.views.CompanyInvoicesWithoutSewing;
 import com.toby.views.CustomerBalances;
+import com.toby.views.CustomersHaveNoMovementFromTheDate;
 import com.toby.views.InvoicesIssuedWithinAperiod;
 import com.toby.views.InvoicesRegisteredMoreThanOnce;
 import com.toby.views.ItemBalancesStatement;
@@ -48,4 +49,6 @@ public interface ReportsService {
     public List<InvoicesRegisteredMoreThanOnce> getInvoicesRegisteredMoreThanOnce(InvoicesRegisteredMoreThanOnce registeredMoreThanOnce, Integer serial, Date date, Integer branchId);
 
     public void deleteIncrease(Integer proProductionStagesId, Integer proFactoryDeliveryDetailId, BigDecimal workNumber, BigDecimal originNumber);
+
+    public List<CustomersHaveNoMovementFromTheDate> getCustomersHaveNoMovementFromTheDate(CustomersHaveNoMovementFromTheDate noMovementFromTheDate, Integer branchId);
 }
