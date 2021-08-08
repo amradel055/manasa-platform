@@ -870,7 +870,7 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
     
     private void appendFilter(Map<String, Object> filters, StringBuilder builder) {
         if (filters.get("globalFilter") != null && !filters.get("globalFilter").toString().isEmpty()) {
-            String filter = " and s.serial like CONCAT('%',:globalFilter ,'%')  ";
+            String filter = " and ( s.serial like CONCAT('%',:globalFilter ,'%') OR s.invPurchaseInvoice.serial like CONCAT('%',:globalFilter ,'%')) ";
             builder.append(filter);
         } else {
             filters.remove("globalFilter");
