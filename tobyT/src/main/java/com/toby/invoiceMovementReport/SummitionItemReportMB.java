@@ -77,20 +77,17 @@ public class SummitionItemReportMB extends Basic {
                 List<SummitionItemsView> itemsViewForGallaryinner = new ArrayList<>();
                 List<SummitionItemsView> itemsViewForGallaryinnerForAll = new ArrayList<>();
                 SummitionItemsView summitionItemsView = null;
-
                 for (InvInventoryDTO invInventoryDTO : getGallaryListSelected()) {
-                    for (ProGroupDTO proGroupDTO : getProGroupListSelected()) {
-                        setProGroupDTOSelected(proGroupDTO);
-
+                    
                         summitionItemsView = new SummitionItemsView();
 
                         summitionItemsView.setName(invInventoryDTO.getName());
                         summitionItemsView.setRowType(1);
 
                         if (getUri().contains("summitionItemReportPro")) {
-                            itemsViewForGallaryinner = invPurchaseInvoiceService_1.getTheListBasedOnStagesList(invInventoryDTO.getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), getUserData().getUserBranch().getId(), getUserData().getUser(), null);
+                            itemsViewForGallaryinner = invPurchaseInvoiceService_1.getTheListBasedOnStagesList(invInventoryDTO.getId(), getDateFrom(), getDateTo(), getUserData().getUserBranch().getId(), getUserData().getUser(), null,getProGroupListSelected());
                         } else {
-                            itemsViewForGallaryinner = invPurchaseInvoiceService_1.findSummitionQuantity(invInventoryDTO.getId(), getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), null);
+                            itemsViewForGallaryinner = invPurchaseInvoiceService_1.findSummitionQuantity(invInventoryDTO.getId(), getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), null,getProGroupListSelected());
                         }
                         if (itemsViewForGallaryinner != null && !itemsViewForGallaryinner.isEmpty()) {
                             for (SummitionItemsView view : itemsViewForGallaryinner) {
@@ -103,15 +100,12 @@ public class SummitionItemReportMB extends Basic {
                             setFinalTotals(summitionItemsView);
                         }
 
-                    }
                 }
 
-                for (ProGroupDTO proGroupDTO : getProGroupListSelected()) {
-                    setProGroupDTOSelected(proGroupDTO);
                     if (getUri().contains("summitionItemReportPro")) {
-                        itemsViewForGallaryinnerForAll = invPurchaseInvoiceService_1.getTheListBasedOnStagesList(null, getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), getUserData().getUserBranch().getId(), getUserData().getUser(), getGallaryListSelected());
+                        itemsViewForGallaryinnerForAll = invPurchaseInvoiceService_1.getTheListBasedOnStagesList(null, getDateFrom(), getDateTo(), getUserData().getUserBranch().getId(), getUserData().getUser(), getGallaryListSelected(),getProGroupListSelected());
                     } else {
-                        itemsViewForGallaryinnerForAll = invPurchaseInvoiceService_1.findSummitionQuantity(null, getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), getGallaryListSelected());
+                        itemsViewForGallaryinnerForAll = invPurchaseInvoiceService_1.findSummitionQuantity(null, getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), getGallaryListSelected(),getProGroupListSelected());
                     }
                     if (itemsViewForGallaryinnerForAll != null && !itemsViewForGallaryinnerForAll.isEmpty()) {
                         summitionItemsView = new SummitionItemsView();
@@ -126,7 +120,7 @@ public class SummitionItemReportMB extends Basic {
                         getItemsViewList().addAll(itemsViewForGallaryinnerForAll);
 
                     }
-                }
+                
 
             }
         }
@@ -445,7 +439,7 @@ public class SummitionItemReportMB extends Basic {
      */
     public List<ProGroupDTO> getProGroupListSelected() {
         if (proGroupListSelected == null) {
-            proGroupListSelected = getGroupDTOList();
+            proGroupListSelected = new ArrayList<>();
         }
         return proGroupListSelected;
     }

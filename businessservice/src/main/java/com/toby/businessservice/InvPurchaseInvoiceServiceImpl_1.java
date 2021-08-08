@@ -2002,7 +2002,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     }
 
     @Override
-    public List<SummitionItemsView> findSummitionQuantity(Integer gallaryId, Integer branchId, Date dateFrom, Date dateTo, Integer groupId, List<InvInventoryDTO> invInventoryDTOs) {
+    public List<SummitionItemsView> findSummitionQuantity(Integer gallaryId, Integer branchId, Date dateFrom, Date dateTo, Integer groupId, List<InvInventoryDTO> invInventoryDTOs, List<ProGroupDTO> proGroupListSelected ) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         StringBuilder builder = new StringBuilder();
@@ -2025,9 +2025,10 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             params.put("dateTo", dateTo);
             builder.append(" AND i.invPurchaseInvoiceId.date <= :dateTo ");
         }
-
+       
         if (invInventoryDTOs != null && !invInventoryDTOs.isEmpty()) {
             StringBuilder Selected = null;
+
             for (InvInventoryDTO invInventoryDTO : invInventoryDTOs) {
                 if (Selected == null) {
                     Selected = new StringBuilder();
@@ -2043,18 +2044,33 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 builder.append(" AND i.invPurchaseInvoiceId.galaryId.id = :gallaryId ");
             }
         }
+        
+         if (proGroupListSelected != null && !proGroupListSelected.isEmpty()) {
+             StringBuilder group = null;
 
-        if (groupId != null) {
-            params.put("groupId", groupId);
-            builder.append(" AND i.itemId.proGroupId.id = :groupId ");
+            for (ProGroupDTO proGroupDTO : proGroupListSelected) {
+                if (group == null) {
+                    group = new StringBuilder();
+                    group.append(proGroupDTO.getId());
+                } else {
+                    group.append(',').append(proGroupDTO.getId());
+                }
+            }
+            builder.append(" AND i.itemId.proGroupId.id in (").append(group.toString()).append(" )");
+        } else {
+            if (groupId != null) {
+                params.put("groupId", groupId);
+                builder.append(" AND i.itemId.proGroupId.id = :groupId ");
+            }
         }
+
         builder.append(" group by i.itemId.proGroupId.id order by i.itemId.proGroupId.code ");
         List<Object[]> res = dao.findListByQuery(builder.toString(), params);
 
-        return getTheListBasedOnAccClass(res, gallaryId, dateFrom, dateTo, invInventoryDTOs);
+        return getTheListBasedOnAccClass(res, gallaryId, dateFrom, dateTo, invInventoryDTOs,proGroupListSelected);
     }
 
-    private BigDecimal tobNumberFactoryDelivary(Integer gallaryId, Date dateFrom, Date dateTo, Integer groupId, Integer type, List<InvInventoryDTO> invInventoryDTOs) {
+    private BigDecimal tobNumberFactoryDelivary(Integer gallaryId, Date dateFrom, Date dateTo, Integer groupId, Integer type, List<InvInventoryDTO> invInventoryDTOs,List<ProGroupDTO> proGroupListSelected) {
         Map<String, Object> params = new HashMap<>();
         StringBuilder builder = new StringBuilder();
         params.put("type", type);
@@ -2085,22 +2101,37 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 builder.append(" AND pfdd.proFactoryDeliveryId.invPurchaseInvoiceId.galaryId.id = :gallaryId ");
             }
         }
-
-//        if (gallaryId != null) {
-//            params.put("gallaryId", gallaryId);
-//            builder.append(" AND pfdd.proFactoryDeliveryId.invPurchaseInvoiceId.galaryId.id = :gallaryId ");
-//        }
-        if (groupId != null) {
-            params.put("groupId", groupId);
-            builder.append(" AND pfdd.itemId.proGroupId.id = :groupId ");
+        
+          if (proGroupListSelected != null && !proGroupListSelected.isEmpty()) {
+            StringBuilder group = null;
+            for (ProGroupDTO proGroupDTO : proGroupListSelected) {
+                if (group == null) {
+                    group = new StringBuilder();
+                    group.append(proGroupDTO.getId());
+                } else {
+                    group.append(',').append(proGroupDTO.getId());
+                }
+            }
+            builder.append(" AND pfdd.itemId.proGroupId.id in (").append(group.toString()).append(" )");
+        } else {
+            if (groupId != null) {
+                params.put("groupId", groupId);
+                builder.append(" AND pfdd.itemId.proGroupId.id = :groupId ");
+            }
         }
+
+      
+//        if (groupId != null) {
+//            params.put("groupId", groupId);
+//            builder.append(" AND pfdd.itemId.proGroupId.id = :groupId ");
+//        }
         builder.append(" group by pfdd.itemId.proGroupId.id ");
 
         List<BigDecimal> res = dao.findListByQuery(builder.toString(), params);
         return (res != null && !res.isEmpty()) ? res.get(0) : BigDecimal.ZERO;
     }
 
-    public List<SummitionItemsView> getTheListBasedOnAccClass(List<Object[]> res, Integer gallaryId, Date dateFrom, Date dateTo, List<InvInventoryDTO> invInventoryDTOs) {
+    public List<SummitionItemsView> getTheListBasedOnAccClass(List<Object[]> res, Integer gallaryId, Date dateFrom, Date dateTo, List<InvInventoryDTO> invInventoryDTOs,List<ProGroupDTO> proGroupListSelected) {
 
         List<SummitionItemsView> summitionItemsViews = new ArrayList<>();
 
@@ -2117,9 +2148,9 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             Integer groupId = (Integer) line[3];
             summitionItemsView.setCode((Integer) line[4]);
             summitionItemsView.setName((String) line[5]);
-            summitionItemsView.setFactoryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupId, 0, invInventoryDTOs));
-            summitionItemsView.setSendNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupId, 1, invInventoryDTOs));
-            summitionItemsView.setDeliveryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupId, 2, invInventoryDTOs));
+            summitionItemsView.setFactoryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupId, 0, invInventoryDTOs,proGroupListSelected));
+            summitionItemsView.setSendNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupId, 1, invInventoryDTOs,proGroupListSelected));
+            summitionItemsView.setDeliveryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupId, 2, invInventoryDTOs,proGroupListSelected));
             summitionItemsViews.add(summitionItemsView);
         }
         TreeMap<Integer, SummitionItemsView> params = new TreeMap<>();
@@ -2177,35 +2208,38 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     }
 
     @Override
-    public List<SummitionItemsView> getTheListBasedOnStagesList(Integer gallaryId, Date dateFrom, Date dateTo, Integer groupId, Integer branchId, TobyUser tobyUser, List<InvInventoryDTO> invInventoryDTOs) {
+    public List<SummitionItemsView> getTheListBasedOnStagesList(Integer gallaryId, Date dateFrom,
+            Date dateTo, Integer branchId, TobyUser tobyUser, List<InvInventoryDTO> invInventoryDTOs, List<ProGroupDTO> proGrouplist) {
 
-        List<ProGroupDTO> proGrouplist = new ArrayList<>();
-        if (groupId == null) {
-            proGrouplist = proGroupService.getallProGroupByBranchIdDTO(tobyUser);
-        } else {
-            ProGroupDTO dTO = proGroupService.findProGroupDTO(groupId);
-            proGrouplist.add(dTO);
-        }
+//        List<ProGroupDTO> proGrouplist = new ArrayList<>();
+//        if (groupId == null) {
+//            proGrouplist = proGroupService.getallProGroupByBranchIdDTO(tobyUser);
+//        } else {
+//            ProGroupDTO dTO = proGroupService.findProGroupDTO(groupId);
+//            proGrouplist.add(dTO);
+//        }
         List<SummitionItemsView> summitionItemsViews = new ArrayList<>();
-        for (ProGroupDTO groupDTO : proGrouplist) {
-            SummitionItemsView summitionItemsView = new SummitionItemsView();
-            summitionItemsView.setCode(groupDTO.getCode());
-            summitionItemsView.setName(groupDTO.getName());
-            summitionItemsView.setFactoryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupDTO.getId(), 0, invInventoryDTOs));
-            summitionItemsView.setSendNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupDTO.getId(), 1, invInventoryDTOs));
-            summitionItemsView.setDeliveryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupDTO.getId(), 2, invInventoryDTOs));
-            summitionItemsView.setCustomerNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupDTO.getId(), 3, invInventoryDTOs));
-            if (summitionItemsView.getFactoryNumber().compareTo(BigDecimal.ZERO) == 1
-                    || summitionItemsView.getSendNumber().compareTo(BigDecimal.ZERO) == 1
-                    || summitionItemsView.getDeliveryNumber().compareTo(BigDecimal.ZERO) == 1) {
-                summitionItemsViews.add(summitionItemsView);
-            }
+        if (proGrouplist != null && !proGrouplist.isEmpty()) {
+            for (ProGroupDTO groupDTO : proGrouplist) {
+                SummitionItemsView summitionItemsView = new SummitionItemsView();
+                summitionItemsView.setCode(groupDTO.getCode());
+                summitionItemsView.setName(groupDTO.getName());
+                summitionItemsView.setFactoryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupDTO.getId(), 0, invInventoryDTOs,proGrouplist));
+                summitionItemsView.setSendNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupDTO.getId(), 1, invInventoryDTOs,proGrouplist));
+                summitionItemsView.setDeliveryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupDTO.getId(), 2, invInventoryDTOs,proGrouplist));
+                summitionItemsView.setCustomerNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupDTO.getId(), 3, invInventoryDTOs,proGrouplist));
+                if (summitionItemsView.getFactoryNumber().compareTo(BigDecimal.ZERO) == 1
+                        || summitionItemsView.getSendNumber().compareTo(BigDecimal.ZERO) == 1
+                        || summitionItemsView.getDeliveryNumber().compareTo(BigDecimal.ZERO) == 1) {
+                    summitionItemsViews.add(summitionItemsView);
+                }
 
-            TreeMap<Integer, SummitionItemsView> params = new TreeMap<>();
-            for (SummitionItemsView summitionItemsViewNew : summitionItemsViews) {
-                params.put(summitionItemsViewNew.getCode(), summitionItemsViewNew);
+                TreeMap<Integer, SummitionItemsView> params = new TreeMap<>();
+                for (SummitionItemsView summitionItemsViewNew : summitionItemsViews) {
+                    params.put(summitionItemsViewNew.getCode(), summitionItemsViewNew);
+                }
+                summitionItemsViews = new ArrayList<SummitionItemsView>(params.values());
             }
-            summitionItemsViews = new ArrayList<SummitionItemsView>(params.values());
         }
         return summitionItemsViews;
     }
