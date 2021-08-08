@@ -3,7 +3,6 @@ package com.igma.OfferText;
 import com.toby.businessservice.OfferTextService;
 import com.toby.dto.OfferTextDTO;
 import com.toby.toby.BaseFormBean;
-import com.toby.toby.UserData;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Named;

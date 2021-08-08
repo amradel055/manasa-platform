@@ -870,7 +870,7 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
     
     private void appendFilter(Map<String, Object> filters, StringBuilder builder) {
         if (filters.get("globalFilter") != null && !filters.get("globalFilter").toString().isEmpty()) {
-            String filter = " and ( FUNCTION('DATE_FORMAT',s.date, '%d-%m-%Y')  like CONCAT('%',:globalFilter ,'%') OR  s.serial like CONCAT('%',:globalFilter ,'%')  OR s.organizationSiteId.name  like CONCAT('%',:globalFilter ,'%') OR s.supplierInvoice like CONCAT('%',:globalFilter ,'%') OR  s.purchaseOrderId.serial like CONCAT('%',:globalFilter ,'%') OR  s.invPurchaseInvoice.serial like CONCAT('%',:globalFilter ,'%')) or s.purchaseOrderId IS NULL  or s.invPurchaseInvoice IS NULL ";
+            String filter = " and s.serial like CONCAT('%',:globalFilter ,'%')  ";
             builder.append(filter);
         } else {
             filters.remove("globalFilter");

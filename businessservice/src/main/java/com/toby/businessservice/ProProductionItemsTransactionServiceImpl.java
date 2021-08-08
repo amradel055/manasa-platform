@@ -236,6 +236,8 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
                 + "FROM toby.pro_production_items_transaction ppit\n"
                 + "left join toby_user tu on tu.id = ppit.created_by\n"
                 + "left join pro_production_stages pps on pps.id = ppit.pro_production_stages_id\n"
+                + "left join pro_factory_delivery_detail pfdd on pfdd.id = ppit.pro_factory_delivery_detail_id\n"
+                + "left join pro_factory_delivery pfd on pfd.id = pfdd.pro_factory_delivery_id\n"
                 + " ");
 
         sql.append(" where ppit.branch_id = ").append(branchId);
@@ -277,11 +279,11 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
     private void appendProProductionDate(PrintProductionDTO printProductionDTO, StringBuilder query) {
         if (printProductionDTO.getFromDate() != null) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
-            query.append(" and ppit.date  >=  '").append(dateFormat.format(printProductionDTO.getFromDate())).append("' ");
+            query.append(" and pfd.date  >=  '").append(dateFormat.format(printProductionDTO.getFromDate())).append("' ");
         }
         if (printProductionDTO.getToDate() != null) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 23:59:59");
-            query.append(" and ppit.date  <=  '").append(dateFormat.format(printProductionDTO.getToDate())).append("' ");
+            query.append(" and pfd.date  <=  '").append(dateFormat.format(printProductionDTO.getToDate())).append("' ");
         }
     }
 
