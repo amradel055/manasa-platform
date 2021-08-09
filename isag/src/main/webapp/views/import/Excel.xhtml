@@ -1,0 +1,302 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <h:form id="form" enctype="multipart/form-data" dir="#{userData.dir}" style="margin-right: 20px">
+
+            <p:fieldset  legend="استيراد الادله من شركات اخري" id="trans"  style="margin-bottom:20px">
+
+
+                <div class="ui-g-12 ui-md-6">
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 100px;margin-right: 6%;" value="إلي فرع"/>
+                        </h:panelGroup> 
+                        <h:panelGroup>
+                            <p:selectOneMenu id="branch2" value="#{importMB.brachListSelectTo}" converter="#{importMB.branchConverterTo}">
+                                <f:selectItems value="#{importMB.brachListTo}" var="branchTo"  itemLabel="#{branchTo.nameAr}" itemValue="#{branchTo}" />
+                            </p:selectOneMenu>
+                        </h:panelGroup> 
+
+                    </h:panelGroup>
+                </div>
+
+                <div class="ui-g-12 ui-md-6">
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 100px;margin-right: 6%;" value=" من فرع"/>
+                        </h:panelGroup> 
+                        <p:selectOneMenu id="branch1" value="#{importMB.brachListSelectFrom}" converter="#{importMB.branchConverterFrom}">
+                            <f:selectItems value="#{importMB.brachListFrom}" var="branchFrom" itemLabel="#{branchFrom.nameAr}" itemValue="#{branchFrom}" />
+                        </p:selectOneMenu>
+                        <h:panelGroup>
+
+                        </h:panelGroup> 
+
+                    </h:panelGroup>
+                </div>
+                <div class="ui-g-12 ui-md-6">
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 100px;margin-right: 6%;" value="الموديول"/>
+                        </h:panelGroup> 
+                        <p:selectOneMenu id="console" value="#{importMB.moduleId}" style="width:125px">
+                            <f:selectItem itemLabel="اختر" itemValue="" />
+                            <f:selectItem itemLabel="دليل الحسابات" itemValue="1" />
+                            <f:selectItem itemLabel="دليل البنود" itemValue="2" />
+                        </p:selectOneMenu>
+                    </h:panelGroup>
+                </div>
+                <div>
+                    <p:inputText value="#{importMB.level}" label="المستوي" /> 
+                </div>
+                <h:panelGrid  class="col-md-12" columns="1"  style="margin-top:2%">
+
+                    <h:panelGroup  class="centerButtons">
+
+                        <p:commandButton  id="excute12" 
+                                          class="saveButtons"
+                                          title="#{userData.userDDs['SAVE']}"
+                                          value="#{userData.userDDs['SAVE']}" 
+                                          style="color: #fff!important;background-color: #2196F3;margin-left: 5px" 
+                                          action="#{importMB.excuteTransfer()}"
+                                          update="@form"/>
+                    </h:panelGroup>
+
+                </h:panelGrid>
+            </p:fieldset>
+
+            <p:fieldset  legend="ادخال مراكز التكاليف" id="costcenter"  style="margin-bottom:20px">
+                <div id="costcenterloader" class="form-group col-md-12">
+
+                    <p:fileUpload value="#{importMB.costCenterFile}" mode="simple" onstart="disableChoosing()" 
+                                  oncomplete="enableChoosing()" />
+                </div>
+
+                <div class="form-group col-md-12">
+                    <p:commandButton id="btncostcenter"  actionListener="#{importMB.readCostCenter()}" ajax="false" value="تحميل">
+                        <f:ajax execute="@all" render="@form"/>
+                        <p:ajax/>
+                    </p:commandButton> 
+                </div>
+
+
+            </p:fieldset>
+
+            <p:fieldset  legend="ادخال الوحدات الادارية" id="adminunit"  style="margin-bottom:20px">
+                <div id="adminunitloader" class="form-group col-md-12">
+
+                    <p:fileUpload value="#{importMB.adminUnitFile}" mode="simple" onstart="disableChoosing()" 
+                                  oncomplete="enableChoosing()" />
+                </div>
+
+                <div class="form-group col-md-12">
+                    <p:commandButton id="btnadminunit"  actionListener="#{importMB.readAdminUnit()}" ajax="false" value="تحميل">
+                        <f:ajax execute="@all" render="@form"/>
+                        <p:ajax/>
+                    </p:commandButton>
+                </div>
+
+
+            </p:fieldset>
+
+            <p:fieldset  legend="ادخال السنين المالية" id="year"  style="margin-bottom:20px">
+                <div id="yearloader" class="form-group col-md-12">
+
+                    <p:fileUpload value="#{importMB.yearFile}" mode="simple" onstart="disableChoosing()" 
+                                  oncomplete="enableChoosing()" />
+                </div>
+
+                <div class="form-group col-md-12">
+                    <p:commandButton id="btnyear"  actionListener="#{importMB.readYear()}" ajax="false" value="تحميل">
+                        <f:ajax execute="@all" render="@form"/>
+                        <p:ajax/>
+                    </p:commandButton>
+                </div>
+
+
+            </p:fieldset>
+
+            <p:fieldset  legend="ادخال العملات" id="currency"  style="margin-bottom:20px">
+                <div id="currencyloader" class="form-group col-md-12">
+
+                    <p:fileUpload value="#{importMB.currencyFile}" mode="simple" onstart="disableChoosing()" 
+                                  oncomplete="enableChoosing()" />
+                </div>
+
+                <div class="form-group col-md-12">
+                    <p:commandButton id="btnglcurrency"  actionListener="#{importMB.readCurrency()}" ajax="false" value="تحميل">
+                        <f:ajax execute="@all" render="@form"/>
+                        <p:ajax/>
+                    </p:commandButton>
+                </div>
+
+
+            </p:fieldset>
+
+            <p:fieldset  legend="ادخال دليل الحسابات" id="glaccount"  style="margin-bottom:20px">
+                <div id="glaccountloader" class="form-group col-md-12">
+
+                    <p:fileUpload value="#{importMB.glAccountFile}" mode="simple" onstart="disableChoosing()" 
+                                  oncomplete="enableChoosing()" />
+                </div>
+
+                <div class="form-group col-md-12">
+                    <p:commandButton id="btnglaccount"  actionListener="#{importMB.readGlAccount()}" ajax="false" value="تحميل">
+                        <f:ajax execute="@all" render="@form"/>
+                        <p:ajax/>
+                    </p:commandButton>
+                </div>
+
+
+            </p:fieldset>
+
+            <p:fieldset  legend="ادخال  قيود اليومية" id="generalJournalID"  style="margin-bottom:20px">
+                <div id="generalJournalloader" class="form-group col-md-12">
+
+                    <p:fileUpload value="#{importMB.generalJournalHeadFile}" mode="simple" onstart="disableChoosing()" 
+                                  oncomplete="enableChoosing()" />
+                </div>
+
+                <div class="form-group col-md-12">
+                    <p:commandButton id="generalJournalBTN"  actionListener="#{importMB.readGeneralJournalHead()}" ajax="false" value="تحميل">
+                        <f:ajax execute="@all" render="@form"/>
+                        <p:ajax/>
+                    </p:commandButton>
+                </div>
+
+
+
+            </p:fieldset>
+
+            <p:fieldset  legend="ادخال دليل الاصناف" id="invitem"  style="margin-bottom:20px">
+                <div id="invitemloader" class="form-group col-md-12">
+
+                    <p:fileUpload value="#{importMB.invItemFile}" mode="simple" onstart="disableChoosing()" 
+                                  oncomplete="enableChoosing()" />
+                </div>
+
+                <div class="form-group col-md-12">
+                    <p:commandButton id="btninvitem"  actionListener="#{importMB.readInvItem()}" ajax="false" value="تحميل">
+                        <f:ajax execute="@all" render="@form"/>
+                        <p:ajax/>
+                    </p:commandButton>
+                </div>
+
+
+            </p:fieldset>
+
+            <p:fieldset  legend="ادخال الرصيد الافتتاحي للمخازن" id="invOpeiningBalance"  style="margin-bottom:20px">
+                <div id="invOpeiningBalanceloader" class="form-group col-md-12">
+
+                    <p:fileUpload value="#{importMB.invOpeningBalanceFile}" mode="simple" onstart="disableChoosing()" 
+                                  oncomplete="enableChoosing()" />
+                </div>
+
+                <div class="form-group col-md-12">
+                    <p:commandButton id="btninvOpeiningBalance"  actionListener="#{importMB.readInvOpeiningBalance()}" ajax="false" value="تحميل">
+                        <f:ajax execute="@all" render="@form"/>
+                        <p:ajax/>
+                    </p:commandButton>
+                </div>
+
+
+            </p:fieldset>
+
+            <p:fieldset  legend="ادخال العملاء" id="customer"  style="margin-bottom:20px">
+                <div id="customerloader" class="form-group col-md-12">
+
+                    <p:fileUpload value="#{importMB.customerFile}" mode="simple" onstart="disableChoosing()" 
+                                  oncomplete="enableChoosing()" />
+                </div>
+
+                <div class="form-group col-md-12">
+                    <p:commandButton id="btncustomer"  actionListener="#{importMB.readCustomer()}" ajax="false" value="تحميل">
+                        <f:ajax execute="@all" render="@form"/>
+                        <p:ajax/>
+                    </p:commandButton>
+                </div>
+
+
+            </p:fieldset>
+
+            <p:fieldset  legend="ادخال عملاء تساهيل" id="customertasahel"  style="margin-bottom:20px">
+                <div id="customertasahelloader" class="form-group col-md-12">
+
+                    <p:fileUpload value="#{importMB.customerFile}" mode="simple" onstart="disableChoosing()" 
+                                  oncomplete="enableChoosing()" />
+                </div>
+
+                <div class="form-group col-md-12">
+                    <p:commandButton id="btncustomertasahel"  actionListener="#{importMB.readCustomerTasahel()}" ajax="false" value="تحميل">
+                        <f:ajax execute="@all" render="@form"/>
+                        <p:ajax/>
+                    </p:commandButton>
+                </div>
+
+
+            </p:fieldset>
+            <p:fieldset  legend="ادخال سندات قبض تساهيل" id="contracttasahel"  style="margin-bottom:20px">
+                <div id="customertasahelloader" class="form-group col-md-12">
+
+                    <p:fileUpload value="#{importMB.contractFile}" mode="simple" onstart="disableChoosing()" 
+                                  oncomplete="enableChoosing()" />
+                </div>
+
+                <div class="form-group col-md-12">
+                    <p:commandButton id="btncontracttasahel"  actionListener="#{importMB.readCashTasahel()}" ajax="false" value="تحميل">
+                        <f:ajax execute="@all" render="@form"/>
+                        <p:ajax/>
+                    </p:commandButton>
+                </div>
+
+
+            </p:fieldset>
+
+            <p:fieldset  legend="ادخال هيد الفواتير" id="invPurchase"  style="margin-bottom:20px">
+                <div id="invPurchase1" class="form-group col-md-12">
+
+                    <p:fileUpload value="#{importMB.contractFile}" mode="simple" onstart="disableChoosing()" 
+                                  oncomplete="enableChoosing()" />
+                </div>
+
+                <div class="form-group col-md-12">
+                    <p:commandButton id="invPurchase2"  actionListener="#{importMB.readInvPurchaseInvoice()}" ajax="false" value="تحميل">
+                        <f:ajax execute="@all" render="@form"/>
+                        <p:ajax/>
+                    </p:commandButton>
+                </div>
+            </p:fieldset>
+            
+            <p:fieldset  legend="ادخال الإشعارات" id="invNotice"  style="margin-bottom:20px">
+                <div id="invNotice1" class="form-group col-md-12">
+
+                    <p:fileUpload value="#{importMB.contractFile}" mode="simple" onstart="disableChoosing()" 
+                                  oncomplete="enableChoosing()" />
+                </div>
+
+                <div class="form-group col-md-12">
+                    <p:commandButton id="invNotice2"  actionListener="#{importMB.readInvNotice()}" ajax="false" value="تحميل">
+                        <f:ajax execute="@all" render="@form"/>
+                        <p:ajax/>
+                    </p:commandButton>
+                </div>
+            </p:fieldset>
+
+
+            <p:blockUI block="form" trigger="btncustomertasahel generalJournalBTN  btncustomer btninvOpeiningBalance btninvitem btnglaccount btnglcurrency btnyear btnadminunit btncostcenter " animate="true" >
+
+                <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+            </p:blockUI>
+
+            <p:dialog header="رسالة" widgetVar="sucesses" minHeight="40">
+                <h:outputText value="تم الحفظ بنجاح" />
+            </p:dialog>
+        </h:form>
+    </ui:define>
+</ui:composition>

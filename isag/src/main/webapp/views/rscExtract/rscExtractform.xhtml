@@ -1,0 +1,910 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form  dir="#{userData.dir}" class='formmargin' id="form">
+
+            <p:fieldset id="extract" legend="المستخلص" style="font-size: 17px !important;">
+                <div class="col-xs-12">
+                    <p:messages id="curmsg" showDetail="true" rendered="true" closable="true"/>   
+                </div>
+                <div class="ui-g-12 ui-g-nopad">
+
+                    <div class="ui-g">
+
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 115px" value="رقم المستخلص"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:inputText style="width: 38%" readonly="true" value="#{rscExtractFormMB.extractRegisterDTO.serial}"/>
+                                    </h:panelGroup> 
+
+
+                                </h:panelGroup> 
+                            </h:panelGroup>
+
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6"></div>
+
+
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 115px" value="#{userData.userDDs['DOCUM_NO']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:inputText   style="width: 38%" value="#{rscExtractFormMB.extractRegisterDTO.docNumber}"/>
+                                    </h:panelGroup> 
+
+
+                                </h:panelGroup> 
+                            </h:panelGroup>
+
+                        </div>
+
+
+                        <div class="ui-g-12 ui-md-6">
+
+                            <p:outputLabel style="width: 135px" value="#{userData.userDDs['TEXT_DATE']}"/>
+                            <p:calendar  pattern="dd/MM/yyyy" style="width: 50%"  id="date" value="#{rscExtractFormMB.extractRegisterDTO.date}"   
+                                         />
+
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+
+                            <p:outputLabel style="width: 115px" value="تاريخ التسليم للعميل"/>
+                            <p:calendar  pattern="dd/MM/yyyy" style="width: 50%"  id="recievedate" value="#{rscExtractFormMB.extractRegisterDTO.receivedDate}"   
+                                         />
+
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+
+                            <p:outputLabel style="width: 135px" value="تاريخ موافقة الاستشارى"/>
+                            <p:calendar pattern="dd/MM/yyyy" style="width: 50%"  id="acceptdate" value="#{rscExtractFormMB.extractRegisterDTO.profissionaiAcceptedDate}"   
+                                        />
+
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+
+                            <p:outputLabel style="width: 115px" value="تاريخ موافقة العميل"/>
+                            <p:calendar pattern="dd/MM/yyyy" style="width: 50%"  id="clientdate" value="#{rscExtractFormMB.extractRegisterDTO.clientAcceptedDate}"   
+                                        />
+
+                        </div>
+
+
+
+
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 135px" value="الملاحظات"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:inputText   style="width: 50%" value="#{rscExtractFormMB.extractRegisterDTO.remarks}"/>
+                                    </h:panelGroup> 
+
+
+                                </h:panelGroup> 
+                            </h:panelGroup>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </p:fieldset>
+
+            <p:fieldset id="tender" legend="المناقصه" style="font-size: 18px !important;">
+                <div class="ui-g-12 ui-md-6">
+
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel  style="width: 90px; font-size: 16px !important;" value="رقم المناقصه"/>
+                        </h:panelGroup> 
+
+                        <h:panelGroup>
+
+                            <h:panelGroup>
+                                <p:inputText readonly="true" id="tennum"  style="width: 50%" value="#{rscExtractFormMB.extractRegisterDTO.tenderId.serial}"/>
+                            </h:panelGroup> 
+
+
+                        </h:panelGroup> 
+                    </h:panelGroup>
+
+                </div>
+
+                <div class="ui-g-12 ui-md-6">
+
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel  style="width: 90px; font-size: 16px !important;" value="تاريخ المناقصه"/>
+                        </h:panelGroup> 
+
+                        <h:panelGroup>
+
+                            <h:panelGroup>
+                                <p:outputLabel id="tendate" style="width: 50%" value="#{rscExtractFormMB.extractRegisterDTO.tenderId.date}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                                </p:outputLabel>
+                            </h:panelGroup> 
+
+
+                        </h:panelGroup> 
+                    </h:panelGroup>
+
+                </div>
+
+
+                <div class="ui-g-12 ui-md-6">
+
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel  style="width: 90px; font-size: 16px !important;" value="الوصف"/>
+                        </h:panelGroup> 
+
+                        <h:panelGroup>
+
+                            <h:panelGroup>
+                                <p:inputText readonly="true" id="tenRemark" style="width: 50%" value="#{rscExtractFormMB.extractRegisterDTO.tenderId.remark}"/>
+                            </h:panelGroup> 
+
+
+                        </h:panelGroup> 
+                    </h:panelGroup>
+
+                </div>
+
+
+
+            </p:fieldset>
+
+            <p:fieldset id="contract" legend="العقد" style="font-size: 18px !important;" >
+                <div class="ui-g-12 ui-md-6">
+
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel  style="width: 140px; font-size: 16px !important;" value="رقم العقد"/>
+                        </h:panelGroup> 
+
+                        <h:panelGroup>
+
+                            <h:panelGroup>
+                                <p:inputText readonly="true" id="contractnum" style="width: 50%; font-size: 15px !important;" value="#{rscExtractFormMB.extractRegisterDTO.contractId.serial}"/>
+                            </h:panelGroup> 
+
+
+                        </h:panelGroup> 
+                    </h:panelGroup>
+
+                </div>
+                <div class="ui-g-12 ui-md-6"> 
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel  style="width: 140px; font-size: 14px !important;" value="الرقم الدفترى للعقد"/>
+                        </h:panelGroup> 
+
+                        <h:panelGroup>
+
+                            <h:panelGroup>
+                                <p:inputText readonly="true"  id="contractdocnum" style="width: 50%; font-size: 15px !important;" value="#{rscExtractFormMB.extractRegisterDTO.contractId.documentNumber}"/>
+                            </h:panelGroup>  
+                        </h:panelGroup> 
+                    </h:panelGroup> 
+                </div>
+                 <div class="ui-g-12 ui-md-6"> 
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel  style="width: 140px; font-size: 14px !important;" value="إجمالي المستخلصات"/>
+                        </h:panelGroup>  
+                        <h:panelGroup> 
+                            <h:panelGroup>
+                                <p:inputText readonly="true" id="extracttotal" style="width: 50%; font-size: 15px !important;" value="#{rscExtractFormMB.extractRegisterDTO.netOldExtracts}"/>
+                            </h:panelGroup>  
+                        </h:panelGroup> 
+                    </h:panelGroup> 
+                </div>
+                  <div class="ui-g-12 ui-md-6"> 
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel  style="width: 140px; font-size: 14px !important;" value="الباقي من المستخلص"/>
+                        </h:panelGroup>  
+                        <h:panelGroup> 
+                            <h:panelGroup>
+                                <p:inputText readonly="true" id="remain" style="width: 50%; font-size: 15px !important;" value="#{rscExtractFormMB.extractRegisterDTO.remain}"/>
+                            </h:panelGroup>  
+                        </h:panelGroup> 
+                    </h:panelGroup> 
+                </div>
+
+            </p:fieldset>
+
+
+
+            <p:fieldset id="data" style=" margin-top: 2%">
+
+
+                <p:tabView id="tabsBar1">
+                    <p:tab id="tab11" title="تفاصيل المستخلص" >
+
+                        <p:dataTable id="detail"
+                                     style="margin-bottom:20px"
+                                     editable="true"
+                                     editMode="cell"
+                                     selectionMode="single"
+                                     sortBy="#{1}"
+                                     draggableColumns="true"
+                                     var="detail"
+                                     dir="rtl" 
+                                     rows="#{userData.rowListCount}"
+                                     rowKey="#{detail}"
+                                     rowIndexVar="index" 
+                                     paginator="true"
+                                     emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                                     widgetVar="detail"
+                                     selection="#{rscExtractFormMB.rscExtractRegisterDetailDTOSelected}"
+                                     value="#{rscExtractFormMB.extractRegisterDTO.rscExtractRegisterDetailDTOList}" >
+
+
+
+                            <f:facet name="header" class="col-md-12">
+                                <p:commandButton   class="saddButton" id="addnew1"
+                                                   icon="fa fa-plus"
+                                                   title="#{userData.userDDs['ADD']}" 
+                                                   actionListener="#{rscExtractFormMB.addChildDetail()}" 
+                                                   update="form"                                         
+                                                   ajax="true"
+                                                   style="float:right"/>
+                                <p:outputPanel>
+                                    <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                                    <p:inputText id="globalFilter" onkeyup="PF('detail').filter()" style="width:150px" />
+                                </p:outputPanel>
+                            </f:facet>
+                            <p:column style="width: 10vh;text-align: -webkit-auto;border-radius: 0px" id="itemName" headerText="البند" 
+                                      filterBy="#{detail.guideDTO}" 
+                                      filterMatchMode="contains" 
+                                      sortBy="#{detail.guideDTO}"
+                                      filterable="false">
+                                <p:autoComplete id="itemNameIn"  
+                                                style="width:95%"
+                                                converter="#{rscExtractFormMB.rscWorkUnitsGuideDTOConverter}"
+                                                value="#{detail.guideDTO}"
+                                                var="item"
+                                                itemLabel="#{item}" 
+                                                itemValue="#{item}" 
+                                                forceSelection="true"  
+                                                completeMethod="#{rscExtractFormMB.completeWorkUnitsGuideDTO}" >
+                                    <p:ajax update="code unitName contractQuantity oldQuantity excuteQty  currentQuantity sellPrice rampOld total form:NetExtract form:totalDetailExtract" listener="#{rscExtractFormMB.validateUnitGuide()}"
+                                            event="itemSelect"  />
+                                    <p:ajax update="code unitName contractQuantity oldQuantity excuteQty  currentQuantity sellPrice rampOld total form:NetExtract form:totalDetailExtract" listener="#{rscExtractFormMB.validateUnitGuide()}"
+                                            event="change"  />
+
+                                </p:autoComplete>            
+                            </p:column>
+                            <p:column style="width: 17vh;font-size: 1.8vh;text-align: right;border-radius: 0px" headerText="الكود" >
+                                <p:outputLabel  id="code" value="#{detail.guideDTO.code}"/>
+                            </p:column>
+                            <p:column style="width: 17vh;font-size: 1.8vh;text-align: right;border-radius: 0px" headerText="#{userData.userDDs['UNIT']}" >
+                                <p:outputLabel  id="unitName" value="#{detail.guideDTO.unitName.name}"/>
+                            </p:column>
+                            <p:column style="width: 17vh;font-size: 1.8vh;text-align: right;border-radius: 0px" headerText="الكمية بالعقد" >
+                                <p:outputLabel  id="contractQuantity" value="#{detail.contractQty}"/>
+                            </p:column>
+                            <p:column style="width: 17vh;font-size: 1.8vh;text-align: right;border-radius: 0px" headerText="الكمية السابقة" >
+                                <p:outputLabel  id="oldQuantity" value="#{detail.oldQty}"/>
+                            </p:column>
+                            <p:column style="width: 17vh;font-size: 1.8vh;text-align: right;border-radius: 0px" headerText="الكمية الحالية" >
+                                <p:outputLabel  id="currentQuantity" value="#{detail.currentQty}"/> 
+                            </p:column>
+                            <p:column style="width: 17vh;font-size: 1.8vh;text-align: right;border-radius: 0px" headerText="الكمية المنفذه" >
+                                <p:inputText rendered="#{not rscExtractFormMB.staticText}"
+                                             id="excuteQty" value="#{detail.excuteQty}">
+                                    <p:ajax  event="blur" listener="#{rscExtractFormMB.calculateExtractDetailValues(detail)}"
+                                             update="value total totalReturnRamp   form:NetExtract form:totalDetailExtract" />
+                                </p:inputText> 
+                            </p:column>
+                            <p:column style="width: 17vh;font-size: 1.8vh;text-align: right;border-radius: 0px" headerText="سعر البيع" >
+                                <p:outputLabel  id="sellPrice" value="#{detail.priceSell}"/>
+                            </p:column>
+                            <p:column style="width: 17vh;font-size: 1.8vh;text-align: right;border-radius: 0px" headerText="القيمة الحالية" >
+                                <p:outputLabel  id="value" value="#{detail.currentValue}"/>
+                            </p:column>
+                            <p:column style="width: 17vh;font-size: 1.8vh;text-align: right;border-radius: 0px" headerText="قيمة التعلية" >
+                                <p:inputNumber  id="rampVal" value="#{detail.rampValue}">
+                                    <p:ajax  event="blur" listener="#{rscExtractFormMB.calculateExtractDetailValues(detail)}"
+                                             update="rampPer totalReturnRamp discountPer total net totalDetailNet form:NetExtract form:totalDetailExtract" />
+                                </p:inputNumber> 
+                            </p:column>
+                            <p:column style="width: 17vh;font-size: 1.8vh;text-align: right;border-radius: 0px" headerText="نسبة التعلية" >
+                                <p:inputNumber  id="rampPer" value="#{detail.rampPercentage}">
+                                    <p:ajax  event="blur" listener="#{rscExtractFormMB.calculateExtractDetailPercentage(detail)}"
+                                             update="rampVal totalReturnRamp discountPer total net totalDetailNet  form:NetExtract form:totalDetailExtract" />
+                                </p:inputNumber> 
+                            </p:column>
+                            <p:column style="width: 17vh;font-size: 1.8vh;text-align: right;border-radius: 0px" headerText="تعلية سابقة" >
+                                <p:outputLabel  id="rampOld" value="#{detail.oldRamp}"/>
+                            </p:column>
+                            <p:column style="width: 17vh;font-size: 1.8vh;text-align: right;border-radius: 0px" headerText="رد تعلية سابقة" >
+                                <p:inputText  id="returnOldRampVal" value="#{detail.returnRamp}">
+                                    <p:ajax  event="blur" listener="#{rscExtractFormMB.calculateExtractDetailValues(detail)}"
+                                             update="returnOldRampPer  totalReturnRamp discountPer total net totalDetailNet form:NetExtract form:totalDetailExtract"  />
+                                </p:inputText> 
+                            </p:column>
+                            <p:column style="width: 17vh;font-size: 1.8vh;text-align: right;border-radius: 0px" headerText="رد تعلية سابقة نسبة" >
+                                <p:outputLabel id="returnOldRampPer" value="#{detail.returnRamp}"/>
+
+                            </p:column>
+                            <p:column style="width: 17vh;font-size: 1.8vh;text-align: right;border-radius: 0px" headerText="صافى التعلية بعد الرد" >
+                                <p:outputLabel  id="totalReturnRamp" value="#{detail.totalRamp}"/>
+
+                            </p:column>
+                            <p:column style="width: 17vh;font-size: 1.8vh;text-align: right;border-radius: 0px" headerText="الاجمالى" >
+                                <p:outputLabel  id="total" value="#{detail.netRamp}"/>
+                            </p:column>
+                            <p:column style="width: 17vh;font-size: 1.8vh;text-align: right;border-radius: 0px" headerText="خصم قيمة" >
+                                <p:inputText  id="discountVal" value="#{detail.discountValue}">
+                                    <p:ajax  event="blur" listener="#{rscExtractFormMB.calculateExtractDetailValues(detail)}"
+                                             update="discountPer total net totalDetailNet form:NetExtract form:totalDetailExtract" />
+                                    <p:ajax  event="blur" listener="#{rscExtractFormMB.calculateExtractDetailValues(detail)}"
+                                             update="discountPer total net totalDetailNet form:NetExtract form:totalDetailExtract" />
+                                </p:inputText> 
+                            </p:column>
+                            <p:column style="width: 17vh;font-size: 1.8vh;text-align: right;border-radius: 0px" headerText="خصم نسبة" > 
+                                <p:inputText  id="discountPer" value="#{detail.discountPercentage}">
+                                    <p:ajax  event="blur" listener="#{rscExtractFormMB.calculateExtractDetailPercentage(detail)}"
+                                             update="discountVal total net totalDetailNet form:NetExtract form:totalDetailExtract" />
+                                    <p:ajax  event="blur" listener="#{rscExtractFormMB.calculateExtractDetailPercentage(detail)}"
+                                             update="discountVal total net totalDetailNet form:NetExtract form:totalDetailExtract" />
+                                </p:inputText> 
+                            </p:column>
+                            <p:column style="width: 17vh;font-size: 1.8vh;text-align: right;border-radius: 0px" headerText="صافى بند المستخلص " >
+                                <p:outputLabel  id="net" value="#{detail.netCost}">
+
+                                </p:outputLabel>
+                            </p:column>
+                            <p:column style="width: 17vh;font-size: 1.8vh;text-align: right;border-radius: 0px" headerText="الملاحظات" >
+                                <p:inputText  id="remark" value="#{detail.remarks}"/>
+                            </p:column>
+                            <p:summaryRow>
+                                <p:column colspan="17" style="text-align:right;border-radius: 0px">
+                                    <h:outputText style="text-align:right" value="#{userData.userDDs['TOTAL']}  :" />
+                                </p:column>
+
+                                <p:column style="border-radius: 0px">
+                                    <h:outputText id="totalDetailNet" value="#{rscExtractFormMB.extractRegisterDTO.totalDetailNet}"/>
+                                </p:column>
+                                <p:column style="border-radius: 0px"/>
+                                <p:column style="border-radius: 0px"/>
+                            </p:summaryRow>
+
+                            <p:column style="width: 10vh;font-size: 1.8vh;text-align: center;border-radius: 0px"  headerText="#{userData.userDDs['TRANSACTION']}"
+                                      rendered="#{!rscExtractFormMB.extractRegisterDTO.closed}">
+
+                                <p:commandButton  class="saddButtons" id="addnew2"
+                                                  icon="fa fa-plus" style="background-color: #6a6967;border-radius: 3px;float:right"
+                                                  title="#{userData.userDDs['ADD']}" 
+                                                  actionListener="#{rscExtractFormMB.addChildDetail()}" 
+                                                  update="detail"                                         
+                                                  ajax="true"
+                                                  />
+
+                                <p:commandButton  class="sdeleteButtons" update="detail"
+                                                  title="#{userData.userDDs['DELETE']}" style="background-color: red;border-radius: 3px;"
+                                                  action="#{rscExtractFormMB.deleteRscExtractDetail()}"
+                                                  icon="fa fa-remove" >
+
+                                    <f:setPropertyActionListener value="#{detail}"
+                                                                 target="#{rscExtractFormMB.rscExtractRegisterDetailDTOSelected}"/>
+                                    <p:confirm header="#{userData.userDDs['COFIGRATION']}" 
+                                               message="#{userData.userDDs['ARE_YOU_SURE']}"
+                                               icon="ui-icon-alert" />
+                                </p:commandButton>
+
+                                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                    <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                    <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                                </p:confirmDialog>
+                            </p:column >
+
+
+
+
+
+                        </p:dataTable>
+                    </p:tab>
+                    <p:tab id="tab2" title="الاستحقاقات"   >
+                        <p:dataTable id="rscextractaccrual"
+                                     style="margin-bottom:20px"
+                                     editable="true"
+                                     editMode="cell"
+                                     selectionMode="single"
+                                     sortBy="#{1}"
+
+                                     draggableColumns="true"
+                                     var="rscextractaccrual"
+                                     dir="rtl" 
+                                     rows="#{userData.rowListCount}"
+                                     rowKey="#{rscextractaccrual}"
+                                     rowIndexVar="index" 
+                                     paginator="true"
+                                     emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                                     widgetVar="rscextractaccrual"
+                                     selection="#{rscExtractFormMB.rscExtractAccrualDTOSelected}"
+                                     value="#{rscExtractFormMB.extractRegisterDTO.rscExtractAccuralList}" >
+
+
+                            <f:facet name="header" class="col-md-12">
+                                <p:commandButton   class="saddButton" id="addnew3"
+                                                   icon="fa fa-plus"
+                                                   title="#{userData.userDDs['ADD']}" 
+                                                   actionListener="#{rscExtractFormMB.addChildAccrual()}" 
+                                                   update="form"                                         
+                                                   ajax="true"
+                                                   style="float:right"/>
+                                <p:outputPanel>
+                                    <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                                    <p:inputText id="globalFilter" onkeyup="PF('rscextractaccrual').filter()" style="width:150px" />
+                                </p:outputPanel>
+                            </f:facet>
+                            <p:column style="width: 10vh;text-align: -webkit-auto;border-radius: 0px" id="rscaccrual" headerText="الاستحقاق" 
+                                      filterBy="#{rscextractaccrual.rscAccrualDeductionDTO}" 
+                                      filterMatchMode="contains" 
+                                      sortBy="#{rscextractaccrual.rscAccrualDeductionDTO}"
+                                      filterable="false">
+                                <p:autoComplete id="rscaccrualId"  
+                                                style="width:95%"
+                                                converter="#{rscExtractFormMB.rscAccuralConverter}"
+                                                value="#{rscextractaccrual.rscAccrualDeductionDTO}"
+                                                var="accrual"
+                                                itemLabel="#{accrual}" 
+                                                itemValue="#{accrual}" 
+                                                forceSelection="true"  
+                                                completeMethod="#{rscExtractFormMB.completeAccural}" >
+                                    <p:ajax update="value" listener="#{rscExtractFormMB.validateAccrual()}"
+                                            event="itemSelect"  />
+                                    <p:ajax update="value" listener="#{rscExtractFormMB.validateAccrual()}"
+                                            event="change"  />
+
+                                </p:autoComplete>            
+                            </p:column>
+                            <p:column style="width: 17vh;font-size: 1.8vh;text-align: right;border-radius: 0px" headerText="القيمة" >
+                                <p:inputText  id="value" value="#{rscextractaccrual.rscAccuralDeductionValue}">
+                                    <p:ajax event="blur"  listener="#{rscExtractFormMB.calculateAccrualPercentage()}"
+                                            update="@form" />
+                                    <p:ajax event="blur"  listener="#{rscExtractFormMB.allUpdateSummition()}"
+                                            update="@form" />
+
+                                </p:inputText> 
+                            </p:column>
+
+                            <p:column style="width: 17vh;font-size: 1.8vh;text-align: right;border-radius: 0px" headerText="النسبة" >
+                                <p:inputText   id="percentage" value="#{rscextractaccrual.rscAccuralDeductionPercentage}">
+                                    <p:ajax  event="blur" listener="#{rscExtractFormMB.calculateAccrualValue()}"
+                                             update="@form" />
+                                    <p:ajax event="blur"  listener="#{rscExtractFormMB.allUpdateSummition()}"
+                                            update="totalaccrualNet totalaccrualNetPer form:totalAccural" />
+
+                                </p:inputText>
+                            </p:column>
+                            <p:summaryRow>
+                                <p:column colspan="1" style="text-align:right;border-radius: 0px">
+                                    <h:outputText style="text-align:right" value="#{userData.userDDs['TOTAL']}  :" />
+                                </p:column>
+
+                                <p:column >
+                                    <h:outputText id="totalaccrualNet" value="#{rscExtractFormMB.extractRegisterDTO.totalAccrualNetvalue}"/>
+                                </p:column>
+                                <p:column>
+                                    <h:outputText id="totalaccrualNetPer" value="#{rscExtractFormMB.extractRegisterDTO.totalAccrualNetpercentage}"/>
+                                </p:column>
+
+                                <p:column />
+                            </p:summaryRow>
+
+                            <p:column style="width: 10vh;font-size: 1.8vh;text-align: center;border-radius: 0px"  headerText="#{userData.userDDs['TRANSACTION']}">
+
+                                <p:commandButton  class="saddButton" id="addnew4"
+                                                  icon="fa fa-plus"
+                                                  title="#{userData.userDDs['ADD']}" 
+                                                  actionListener="#{rscExtractFormMB.addChildAccrual()}" 
+                                                  update="rscextractaccrual"                                         
+                                                  ajax="true" style="background-color: #6a6967;border-radius: 3px;float:right"
+                                                  />
+                                <p:commandButton  class="sdeleteButton" update="rscextractaccrual"
+                                                  title="#{userData.userDDs['DELETE']}" style="background-color: red;border-radius: 3px;" 
+                                                  action="#{rscExtractFormMB.deleteRscAccrual()}"
+                                                  icon="fa fa-remove" >
+
+                                    <f:setPropertyActionListener value="#{rscextractaccrual}"
+                                                                 target="#{rscExtractFormMB.rscExtractAccrualDTOSelected}"/>
+                                    <p:confirm header="#{userData.userDDs['COFIGRATION']}" 
+                                               message="#{userData.userDDs['ARE_YOU_SURE']}"
+                                               icon="ui-icon-alert" />
+                                </p:commandButton>
+
+
+
+                                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                    <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                    <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                                </p:confirmDialog>
+                            </p:column >
+                        </p:dataTable>
+                    </p:tab>
+                    <p:tab id="tab3" title="الاستقطاعات"  >
+                        <p:dataTable id="rscextractdeduction"
+                                     style="margin-bottom:20px"
+                                     editable="true"
+                                     editMode="cell"
+                                     selectionMode="single"
+                                     sortBy="#{1}"
+                                     draggableColumns="true"
+                                     var="rscextractdeduction"
+                                     dir="rtl" 
+                                     rows="#{userData.rowListCount}"
+                                     rowKey="#{rscextractdeduction}"
+                                     rowIndexVar="index" 
+                                     paginator="true"
+                                     emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                                     widgetVar="rscextractdeduction"
+                                     selection="#{rscExtractFormMB.rscExtractDeductionDTOSelected}"
+                                     value="#{rscExtractFormMB.extractRegisterDTO.rscExtractDeductionList}" >
+
+                            <f:facet name="header" class="col-md-12">
+                                <p:commandButton   class="saddButton" id="addnew5"
+                                                   icon="fa fa-plus"
+                                                   title="#{userData.userDDs['ADD']}" 
+                                                   actionListener="#{rscExtractFormMB.addChildDeduction()}" 
+                                                   update="form"                                         
+                                                   ajax="true"
+                                                   style="float:right"/>
+                                <p:outputPanel>
+                                    <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                                    <p:inputText id="globalFilter" onkeyup="PF('rscextractdeduction').filter()" style="width:150px" />
+                                </p:outputPanel>
+                            </f:facet>
+                            <p:column style="width: 10vh;text-align: -webkit-auto;border-radius: 0px" id="rscdeduction" headerText="الاستقطاع" 
+                                      filterBy="#{rscextractdeduction.rscAccrualDeductionDTO}" 
+                                      filterMatchMode="contains" 
+                                      sortBy="#{rscextractdeduction.rscAccrualDeductionDTO}"
+                                      filterable="false">
+                                <p:autoComplete id="rscdeductionId"  
+                                                style="width:95%"
+                                                converter="#{rscExtractFormMB.rscDeductionConverter}"
+                                                value="#{rscextractdeduction.rscAccrualDeductionDTO}"
+                                                var="deduction"
+                                                itemLabel="#{deduction}" 
+                                                itemValue="#{deduction}" 
+                                                forceSelection="true"  
+                                                completeMethod="#{rscExtractFormMB.completeDeduction}" >
+                                    <p:ajax update="value1" listener="#{rscExtractFormMB.validateAccrualDeduction()}"
+                                            event="itemSelect"  />
+                                    <p:ajax  update="value1" listener="#{rscExtractFormMB.validateAccrualDeduction()}"
+                                             event="change"  />
+
+                                </p:autoComplete>            
+                            </p:column>
+                            <p:column style="width: 17vh;font-size: 1.8vh;text-align: right;border-radius: 0px" headerText="القيمة" >
+                                <p:inputText  id="value1" value="#{rscextractdeduction.rscAccuralDeductionValue}">
+                                    <p:ajax listener="#{rscExtractFormMB.calculateDeductionPercentage()}"
+                                            update="@form" />
+                                    <p:ajax  listener="#{rscExtractFormMB.allUpdateSummition()}"
+                                             update="@form"  />
+
+                                </p:inputText> 
+                            </p:column>
+
+                            <p:column style="width: 17vh;font-size: 1.8vh;text-align: right;border-radius: 0px" headerText="النسبة" >
+                                <p:inputText id="percentage1" value="#{rscextractdeduction.rscAccuralDeductionPercentage}">
+                                    <p:ajax   listener="#{rscExtractFormMB.calculateDeductionValue()}"
+                                              update="@form" />
+                                    <p:ajax   listener="#{rscExtractFormMB.allUpdateSummition()}"
+                                              update="@form" />
+
+                                </p:inputText>
+                            </p:column>
+                            <p:summaryRow>
+                                <p:column colspan="1" style="text-align:right;border-radius: 0px">
+                                    <h:outputText style="text-align:right" value="#{userData.userDDs['TOTAL']}  :" />
+                                </p:column>
+
+                                <p:column>
+                                    <h:outputText id="totalDeductionNet" value="#{rscExtractFormMB.extractRegisterDTO.totalDeductionNetvalue}"/>
+                                </p:column>
+                                <p:column>
+                                    <h:outputText id="totalDeductionNetper" value="#{rscExtractFormMB.extractRegisterDTO.totalDeductionNetpercentage}"/>
+                                </p:column>
+                                <p:column />
+                            </p:summaryRow>
+
+
+                            <p:column style="width: 10vh;font-size: 1.8vh;text-align: center;border-radius: 0px"  headerText="#{userData.userDDs['TRANSACTION']}">
+
+                                <p:commandButton  class="saddButton" id="addnew6"
+                                                  icon="fa fa-plus"
+                                                  title="#{userData.userDDs['ADD']}" 
+                                                  actionListener="#{rscExtractFormMB.addChildDeduction()}" 
+                                                  update="rscextractdeduction"                                         
+                                                  ajax="true" style="background-color: #6a6967;border-radius: 3px;float:right"
+                                                  />
+                                <p:commandButton  class="sdeleteButton" update="rscextractdeduction"
+                                                  title="#{userData.userDDs['DELETE']}" style="background-color: red;border-radius: 3px;" 
+                                                  action="#{rscExtractFormMB.deleteRscDeduction()}"
+                                                  icon="fa fa-remove" >
+
+                                    <f:setPropertyActionListener value="#{rscextractdeduction}"
+                                                                 target="#{rscExtractFormMB.rscExtractDeductionDTOSelected}"/>
+                                    <p:confirm header="#{userData.userDDs['COFIGRATION']}" 
+                                               message="#{userData.userDDs['ARE_YOU_SURE']}"
+                                               icon="ui-icon-alert" />
+                                </p:commandButton>
+
+
+                                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                    <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                    <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                                </p:confirmDialog>
+                            </p:column >
+                        </p:dataTable>
+
+                    </p:tab>
+                </p:tabView>
+                <div  id="firstSegment" class="ui-g-12 ui-g-nopad">
+                    <h:panelGroup id="test2">
+                        <div class="ui-g">
+                            <div class="ui-g-12 ui-md-4">
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 155px; margin-right: 3%;" value="#{userData.userDDs['TOTAL']} "/>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <h:outputText id="totalDetailExtract" 
+                                                      style="text-align:right" 
+                                                      value="#{rscExtractFormMB.extractRegisterDTO.totalDetailNet}" />
+                                    </h:panelGroup>
+                                </h:panelGroup>
+
+                            </div>
+
+
+                            <div class="ui-g-12 ui-md-4">
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 155px;margin-right: 3%;" value="اجمال الاستحقاق"/>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <h:outputText id="totalAccural" 
+                                                      style="text-align:right" 
+                                                      value="#{rscExtractFormMB.extractRegisterDTO.totalAccrualNetvalue}" />
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </div> 
+
+                            <div class="ui-g-12 ui-md-4">
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 155px;margin-right: 3%;" value="اجمالي الاستقطاعات"/>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <h:outputText id="totalDeductions" 
+                                                      style="text-align:right" 
+                                                      value="#{rscExtractFormMB.extractRegisterDTO.totalDeductionNetvalue}" />
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </div> 
+                            <div class="ui-g-12 ui-md-4">
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 155px;margin-right: 3%;" value="صافي المستخلص"/>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <h:outputText id="NetExtract" 
+                                                      style="text-align:right" 
+                                                      value="#{rscExtractFormMB.extractRegisterDTO.totalFinal}" > 
+                                        </h:outputText>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </div> 
+                        </div>
+                    </h:panelGroup>
+                </div>
+                <h:panelGroup> 
+                    <div class="centerButtons" style="margin-top:2%">
+
+                        <p:commandButton class="saveButton" 
+                                         title="#{userData.userDDs['SAVE']}"
+                                         value="#{userData.userDDs['SAVE']}"
+                                         style="color: #ecf0f1!important;border-radius: 5px;
+                                         background-color:#116400 !important;margin-left: 5px;"
+                                         action="#{rscExtractFormMB.OpenDlg('dlg3')}" 
+                                         id="saveB"
+                                         disabled="#{rscExtractFormMB.extractRegisterDTO.closed}"
+                                         update="@form"/>
+
+
+                        <p:commandButton class="newButton" 
+                                         value="#{userData.userDDs['NEW']}"
+                                         title="#{userData.userDDs['NEW']}"
+                                         style="color: #ecf0f1!important;border-radius: 5px;
+                                         background-color: #175C52!important;margin-left: 5px;"   
+                                         action="#{rscExtractFormMB.reset}" 
+                                         update="form" id="undo"/>
+                        <p:commandButton   class="reloadButton"
+                                           id="loadL"  title="#{userData.userDDs['UPLOAD']}"
+                                           value="#{userData.userDDs['UPLOAD']}" 
+                                           style="color: #ecf0f1!important;border-radius: 5px;
+                                           background-color: #736413 !important;margin-left: 5px;"
+                                           action="#{rscExtractFormMB.OpenDlg('dlg2')}"
+                                           update="@form"/>
+
+                        <p:commandButton  class="deleteButton" id="cancel" title="#{userData.userDDs['CANCEL']}"
+                                          value="#{userData.userDDs['CANCEL']}" style="color: #ecf0f1!important;border-radius: 5px;
+                                          background-color: #b5212c !important;margin-left: 5px;"
+                                          action="#{rscExtractFormMB.exit()}"
+                                          update="form"/>
+                        <p:commandButton  class="PrintButton"
+                                          id="PrintB"
+                                          ajax="false"
+                                          onclick="form.target = '_blank'"  
+                                          style="color: #ecf0f1!important;border-radius: 5px;
+                                          background-color: #2d21b5e6 !important;margin-left: 5px;"
+                                          value="#{userData.userDDs['PRINT']}" 
+                                          actionListener="#{rscExtractFormMB.print()}"
+                                          title="#{userData.userDDs['PRINT']}"
+                                          immediate="true" />
+
+                        <p:blockUI block="form" trigger="saveB  undo" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI>
+
+
+                    </div>
+                </h:panelGroup>
+
+            </p:fieldset>
+            <h:panelGrid columns="1" cellpadding="5"> 
+                <h:panelGroup> 
+
+                    <p:dialog id="dlg2" header="تحميل حصر الكميات" widgetVar="dlg2" modal="true" style="height: fit-content;width: fit-content">
+
+                        <p:tabView id="tabsBar">
+                            <p:tab id="tab1" title="الكميات"  >
+
+                                <p:dataTable id="quantitiesList"
+                                             draggableColumns="true" 
+                                             var="quantity"
+                                             widgetVar="quantity"  
+                                             rowIndexVar="index" 
+                                             dir="rtl"  selectionMode="single"
+                                             selection="#{rscExtractFormMB.extractRegisterDTO.restrictionId}"
+                                             value="#{rscExtractFormMB.rscRestrictionQuantitiesDTOList}" 
+                                             rowKey="#{quantity}"
+                                             rows="#{userData.rowListCount}" 
+                                             paginator="true" 
+                                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" >
+
+
+                                    <p:column style="width: 12vh;font-size: 1.5vh;text-align: -webkit-auto;border-radius: 0px" 
+                                              filterStyle="display:none" filterBy="#{quantity.serial}"
+                                              filterMatchMode="contains" 
+                                              headerText="#">
+                                        <p:outputLabel value="#{index + 1}" />
+                                    </p:column>
+
+                                    <p:column style="width: 12vh;font-size: 1.5vh;text-align: -webkit-auto;border-radius: 0px" 
+                                              filterStyle="display:none" filterBy="#{quantity.serial}"
+                                              filterMatchMode="contains" 
+                                              headerText="رقم الحصر"
+                                              sortBy="#{quantity.serial}">
+                                        <p:outputLabel value="#{quantity.serial}" />
+                                    </p:column>
+                                    <p:column style="width: 12vh;font-size: 1.5vh;text-align: -webkit-auto;border-radius: 0px" 
+                                              filterStyle="display:none" filterBy="#{quantity.date}"
+                                              filterMatchMode="contains" 
+                                              headerText="تاريخ الحصر"
+                                              sortBy="#{quantity.date}">
+                                        <p:outputLabel id="tendate" style="width: 50%" value="#{quantity.date}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                                        </p:outputLabel> 
+                                    </p:column>
+                                    <p:column style="width: 12vh;font-size: 1.5vh;text-align: -webkit-auto;border-radius: 0px" 
+                                              filterStyle="display:none" filterBy="#{quantity.tenderId.serial}"
+                                              filterMatchMode="contains" 
+                                              headerText="رقم  المناقصة"
+                                              sortBy="#{quantity.tenderId.serial}">
+                                        <p:outputLabel value="#{quantity.tenderId.serial}" />
+                                    </p:column>
+                                    <p:column style="width: 12vh;font-size: 1.5vh;text-align: -webkit-auto;border-radius: 0px" 
+                                              filterStyle="display:none" filterBy="#{quantity.tenderId.docNumber}"
+                                              filterMatchMode="contains" 
+                                              headerText="رقم الدفتري للمناقصة"
+                                              sortBy="#{quantity.tenderId.docNumber}">
+                                        <p:outputLabel value="#{quantity.tenderId.docNumber}" />
+                                    </p:column> 
+                                </p:dataTable> 
+                            </p:tab>
+                        </p:tabView>
+
+                        <p:commandButton class="reloadButtons" update="contract tender extract data contractnum" 
+                                         style="color: #ecf0f1!important;border-radius: 5px;
+                                         background-color: #2d21b5e6 !important;margin-left: 5px;width: 10%;"
+                                         action="#{rscExtractFormMB.loadcontract()}"
+                                         title="#{userData.userDDs['UPLOAD']}"  >
+
+                        </p:commandButton>
+
+
+                    </p:dialog>
+
+                </h:panelGroup>
+                <h:panelGroup>
+
+
+
+
+                    <p:dialog id="dlg3" header="حفظ" widgetVar="dlg3" modal="true" style="height: fit-content;width: fit-content">
+
+
+
+                        <p:outputLabel value="هل تريد حفظ هذا المستخلص وغلق المستخلص السابق ؟" />
+
+
+                        <p:commandButton class="saveButton" update="contract tender extract data"
+                                         icon="fa fa-fw fa-save"
+                                         action="#{rscExtractFormMB.save()}"
+                                         title="نعم"  >
+
+                        </p:commandButton>
+                        <p:commandButton class="saveButton" update="contract tender extract data" 
+                                         icon="fa fa-fw fa-undo" 
+                                         action="#{rscExtractFormMB.CloseDlg('dlg3')}"
+                                         title="لا"  >
+
+                        </p:commandButton>
+
+
+                    </p:dialog>
+
+                </h:panelGroup>
+
+
+            </h:panelGrid>
+
+        </h:form>
+
+    </ui:define>
+
+
+</ui:composition>

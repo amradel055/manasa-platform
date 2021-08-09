@@ -1,0 +1,659 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+
+        <h:form  class='formmargin' id="form" dir="#{userData.dir}">
+
+            <p:fieldset legend="#{userData.userDDs['CUSTOMER_DATA']}">
+                <div class="col-xs-12">
+                    <p:messages autoUpdate="true"  id="msg" showDetail="true" closable="true" />
+                </div>
+
+                <div  id="firstSegment" class="ui-g-12 ui-g-nopad">
+
+                    <div class="ui-g">
+
+                        <div class="ui-g-12 ui-md-6">
+                            <p:fieldset style="width: 73%;margin-right: 6%!important;border-radius: 5px">
+                                <p:selectOneRadio id="console"  value ="#{organizationSiteFormMB.invOrganizationSiteEntity.type}" >
+                                    <f:selectItem itemLabel="#{userData.userDDs['CUSTOMER']}"  itemValue="0"  />   
+
+                                    <f:selectItem itemLabel="#{userData.userDDs['CUSTOMER_SUPPLIER']}" itemValue="2" />
+                                    <p:ajax  listener="#{organizationSiteFormMB.checkVisability}" update="form" />
+                                </p:selectOneRadio>
+                            </p:fieldset>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-12">
+                            <p:accordionPanel>
+                                <p:tab title="بيانات أساسية *">
+
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <div class="ui-g-12 ui-xl-12">
+
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:inputText style="width: 22%!important"
+                                                             id="SNOSName"
+                                                             a:autofocus="true"
+                                                             required="true"
+                                                             value="#{organizationSiteFormMB.invOrganizationSiteEntity.code}" >
+                                                    <p:ajax event="blur" listener="#{organizationSiteFormMB.validateCode()}" />
+                                                </p:inputText>
+                                            </div>
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:outputLabel style="width: 110px;" value="رمز جهة التعامل*"/>
+
+                                            </div>
+                                        </div>
+                                        <div class="ui-g-12 ui-xl-12">
+
+                                            <div class="ui-g-6 ui-xl-6">
+
+
+
+
+                                                <p:autoComplete style="width: 40%" 
+
+                                                                dropdown="true"
+                                                                converter="#{organizationSiteFormMB.salesConverter}"
+                                                                value="#{organizationSiteFormMB.invOrganizationSiteEntity.salesPerson}" required="true"
+                                                                requiredMessage="يجب اختيار مندوب العميل"
+                                                                var="person"
+                                                                itemLabel="#{person}" 
+                                                                itemValue="#{person}" 
+                                                                forceSelection="true" 
+                                                                completeMethod="#{organizationSiteFormMB.completeSalesPerson}" >
+
+                                                </p:autoComplete>
+
+                                            </div>
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:outputLabel style="width:90px ;" value="#{userData.userDDs['DELEGATE_CUSTOMER']}*" 
+                                                               rendered="#{organizationSiteFormMB.customer and not organizationSiteFormMB.supplierAndCustomer}" />
+                                                <p:outputLabel style="width:90px; " value="#{userData.userDDs['CUSTOMER/SUPPLIER']}" 
+                                                               rendered="#{organizationSiteFormMB.supplierAndCustomer}"/>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <div class="ui-g-12 ui-xl-12">
+
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:inputText required="true"
+                                                             style="width: 22%!important" 
+                                                             id="custName"
+                                                             value="#{organizationSiteFormMB.invOrganizationSiteEntity.name}" />
+                                            </div>
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:outputLabel style="width: 90px;" value="اسم جهة التعامل*"  />
+
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+
+
+
+
+
+
+
+
+                                </p:tab>
+                                <p:tab title="بيانات شخصية">
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <div class="ui-g-12 ui-xl-12">
+
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:inputText style="width: 20.3%!important" id="nationId"  
+                                                             value="#{organizationSiteFormMB.invOrganizationSiteEntity.nationId}" />
+                                            </div>
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:outputLabel style="width:110px; "
+                                                               value="رقم الهوية "/>  
+                                            </div>
+                                        </div>
+                                        <div class="ui-g-12 ui-xl-12">
+
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:calendar pattern="dd/MM/yyyy" 
+                                                            value="#{organizationSiteFormMB.invOrganizationSiteEntity.birthdate}"
+                                                            style="width: 20%"
+                                                            id="birthdate">
+
+                                                </p:calendar>
+                                            </div>
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:outputLabel style="width: 110px;"  value="تاريخ الميلاد" />
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <div class="ui-g-12 ui-xl-12">
+
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:inputText style="width: 20%!important" id="companyName"  
+                                                             value="#{organizationSiteFormMB.invOrganizationSiteEntity.companyName}"
+                                                             />
+                                            </div>
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:outputLabel style="width: 110px;"
+                                                               value="اسم  الشركة " />
+                                            </div>
+                                        </div>
+                                        <div class="ui-g-12 ui-xl-12">
+
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:autoComplete style="width:20%" 
+                                                                dropdown="true"
+                                                                converter="#{organizationSiteFormMB.workTypeConverter}"
+                                                                value="#{organizationSiteFormMB.invOrganizationSiteEntity.workTypeId}"
+
+                                                                var="workType"
+                                                                itemLabel="#{workType}" 
+                                                                itemValue="#{workType}" 
+                                                                forceSelection="true" 
+                                                                completeMethod="#{organizationSiteFormMB.completeWorkType}" >
+
+                                                </p:autoComplete>
+                                            </div>
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:outputLabel style="width: 113px;" value="نوع العمل"/>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </p:tab>
+
+                                <p:tab title="بيانات التواصل">
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <div class="ui-g-12 ui-xl-12">
+
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:inputText style="width: 50%!important" id="MOBILE" value="#{organizationSiteFormMB.invOrganizationSiteEntity.mobile}"/>
+
+                                            </div>
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:outputLabel style="width: 102px" value="#{userData.userDDs['MOBILE']}"/>
+
+                                            </div>
+                                        </div>
+                                        <div class="ui-g-12 ui-xl-12">
+
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:inputText style="width: 50%!important" id="EMAIL" value="#{organizationSiteFormMB.invOrganizationSiteEntity.email}"/>
+
+                                            </div>
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:outputLabel style="width: 102px"  value="#{userData.userDDs['EMAIL']}"/>
+
+                                            </div>
+                                        </div>
+                                        <div class="ui-g-12 ui-xl-12">
+
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:inputText  style="width:50%!important" id="PHONE1" value="#{organizationSiteFormMB.invOrganizationSiteEntity.phone1}"/>
+
+                                            </div>
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:outputLabel  style="width:102px" value="#{userData.userDDs['PHONE1']}"/>
+
+                                            </div>
+                                        </div>
+                                        <div class="ui-g-12 ui-xl-12">
+
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:inputText style="width: 50%!important" id="PHONEt" value="#{organizationSiteFormMB.invOrganizationSiteEntity.phone2}"/>
+
+                                            </div>
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:outputLabel style="width: 102px" value="#{userData.userDDs['PHONE2']}"/>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <div class="ui-g-12 ui-xl-12">
+
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:inputText style="width: 50%!important" id="ADDRESS" value="#{organizationSiteFormMB.invOrganizationSiteEntity.address}"/>
+
+                                            </div>
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:outputLabel style="width: 102px" value="#{userData.userDDs['ADDRESS']}"/>
+
+                                            </div>
+                                        </div>
+                                        <div class="ui-g-12 ui-xl-12">
+
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:inputText style="width: 50%!important" id="FAX" value="#{organizationSiteFormMB.invOrganizationSiteEntity.fax}"/>
+
+                                            </div>
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:outputLabel  style="width: 102px" value="#{userData.userDDs['FAX']}"/>
+
+                                            </div>
+                                        </div>
+                                        <div class="ui-g-12 ui-xl-12">
+
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:inputText style="width: 50%!important" id="POST_BOX" value="#{organizationSiteFormMB.invOrganizationSiteEntity.postBox}"/>
+
+                                            </div>
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:outputLabel style="width:102px" value="#{userData.userDDs['POST_BOX']}"/>
+
+                                            </div>
+                                        </div>
+                                        <div class="ui-g-12 ui-xl-12">
+
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:inputText style="width:50%!important"  id="zip" value="#{organizationSiteFormMB.invOrganizationSiteEntity.zip}"/>
+
+                                            </div>
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:outputLabel style="width:102px" value="#{userData.userDDs['P.B']}"/>
+
+                                            </div>
+                                        </div>
+                                        <div class="ui-g-12 ui-xl-12">
+
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:autoComplete style="width:49%" 
+                                                                dropdown="true"
+                                                                converter="#{organizationSiteFormMB.regionConverter}"
+                                                                value="#{organizationSiteFormMB.invOrganizationSiteEntity.regionId}"
+
+                                                                var="region"
+                                                                itemLabel="#{region}" 
+                                                                itemValue="#{region}" 
+                                                                forceSelection="true" 
+                                                                completeMethod="#{organizationSiteFormMB.completeRegion}" >
+
+                                                </p:autoComplete>
+                                            </div>
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:outputLabel style="width: 109px;" value="#{userData.userDDs['AREA']}"/>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </p:tab>
+
+                                <p:tab title="المسئولين">
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <div class="ui-g-12 ui-xl-12">
+
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:autoComplete style="width:40%" 
+                                                                dropdown="true"
+                                                                converter="#{organizationSiteFormMB.customerConvertor}"
+                                                                value="#{organizationSiteFormMB.invOrganizationSiteEntity.parent}"
+
+                                                                var="customerVar"
+                                                                itemLabel="#{customerVar}" 
+                                                                itemValue="#{customerVar}" 
+                                                                forceSelection="true" 
+                                                                completeMethod="#{organizationSiteFormMB.completeCustomers}" >
+                                                </p:autoComplete>
+                                            </div>
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:outputLabel style="width: 110px;" value="#{userData.userDDs['MAIN_CUSTOMER']}"
+                                                               rendered="#{organizationSiteFormMB.customer}"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+
+                                        <div class="ui-g-12 ui-xl-12">
+
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:inputText style="width: 50%!important"  id="NOTM" value="#{organizationSiteFormMB.invOrganizationSiteEntity.contactPerson}"/>
+
+                                            </div>
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:outputLabel style="width: 102px"  value="#{userData.userDDs['NAME_OF THE_MANAGER']}"/>
+
+                                            </div>
+                                        </div>
+                                    </div>				
+                                </p:tab>
+
+
+
+                                <p:tab title="بيانات مالية">
+
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <div class="ui-g-12 ui-xl-12">
+
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:autoComplete id="GlAccount_ID" 
+                                                                style="width: 49%" 
+                                                                dropdown="true"
+                                                                converter="#{organizationSiteFormMB.accountConverter}"
+                                                                value="#{organizationSiteFormMB.invOrganizationSiteEntity.accountId}"
+
+                                                                var="account"
+                                                                itemLabel="#{account}" 
+                                                                itemValue="#{account}" 
+                                                                forceSelection="true" 
+                                                                completeMethod="#{organizationSiteFormMB.completeGlAccount}" >
+
+                                                </p:autoComplete>
+                                            </div>
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:outputLabel style="width: 115px;margin-right: 6%;"
+                                                               value="#{userData.userDDs['ACCOUNT_NUMBER']}" 
+                                                               /> 
+                                            </div>
+                                        </div>
+                                        <div class="ui-g-12 ui-xl-12">
+
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:autoComplete id="Currency_ID" 
+                                                                style="width: 49%" 
+                                                                dropdown="true"
+                                                                converter="#{organizationSiteFormMB.currencyConverter}"
+                                                                value="#{organizationSiteFormMB.invOrganizationSiteEntity.currencyId}"
+
+                                                                var="currency"
+                                                                itemLabel="#{currency}" 
+                                                                itemValue="#{currency}" 
+                                                                forceSelection="true" 
+                                                                completeMethod="#{organizationSiteFormMB.completeCurrency}">
+
+                                                </p:autoComplete>
+                                            </div>
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:outputLabel style="width: 115px;margin-right: 6%;" value="#{userData.userDDs['CURRENCY']}" 
+                                                               />
+                                            </div>
+                                        </div>
+                                        <div class="ui-g-12 ui-xl-12">
+
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:inputText style="width: 50%!important" id="accountBankNumber"  
+                                                             value="#{organizationSiteFormMB.invOrganizationSiteEntity.accountBankNumber}"
+                                                             />
+                                            </div>
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:outputLabel style="width:109px; margin-right: 6%;"
+                                                               value="رقم الحساب البنكي "
+                                                               />
+                                            </div>
+                                        </div>
+                                        <div class="ui-g-12 ui-xl-12">
+
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:selectOneMenu  id="active" value="#{organizationSiteFormMB.invOrganizationSiteEntity.active}"
+                                                                  style="width:50%">
+                                                    <f:selectItem itemLabel="#{userData.userDDs['INACTIVE']}" itemValue="0" />
+                                                    <f:selectItem itemLabel="#{userData.userDDs['CS_ACTIVE']}" itemValue="1" />
+                                                    <f:selectItem itemLabel="#{userData.userDDs['BLACK_LIST']}" itemValue="2" />
+                                                </p:selectOneMenu>
+                                            </div>
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:outputLabel style="width: 115px;margin-right: 6%;" value="#{userData.userDDs['CS_ACTIVE']}" />
+
+                                            </div>
+                                        </div>
+                                        <div class="ui-g-12 ui-xl-12">
+
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:inputText style="width: 50%!important" id="OPBACR"  readonly="true"
+                                                             value="#{organizationSiteFormMB.invOrganizationSiteEntity.openBalanceCredit}"
+                                                             />
+                                            </div>
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:outputLabel style="width:109px;margin-right: 6%;"
+                                                               value="#{userData.userDDs['OPENING_BALANCE_CREDIT']}"
+                                                               />
+                                            </div>
+                                        </div>
+                                        <div class="ui-g-12 ui-xl-12">
+
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:inputText style="width: 50%!important" id="OPBD" readonly="true"
+                                                             value="#{organizationSiteFormMB.invOrganizationSiteEntity.openBalanceDebit}" 
+                                                             />
+                                            </div>
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:outputLabel style="width:109px;margin-right: 6%;" 
+                                                               value="#{userData.userDDs['OPENING_BALANCE_DEBIT']}" 
+                                                               />
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <div class="ui-g-12 ui-xl-12">
+
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:inputText style="width: 50%!important" id="sponsorName1"  
+                                                             value="#{organizationSiteFormMB.invOrganizationSiteEntity.sponsorName1}"
+                                                             />
+                                            </div>
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:outputLabel style="width: 109px; margin-right: 6%;"
+                                                               value="اسم الضامن الأول  "
+                                                               />
+                                            </div>
+                                        </div>
+                                        <div class="ui-g-12 ui-xl-12">
+
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:inputText style="width: 50%!important" id="sponsorPhone1"  
+                                                             value="#{organizationSiteFormMB.invOrganizationSiteEntity.sponsorPhone1}"
+                                                             />
+                                            </div>
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:outputLabel style="width: 109px;margin-right: 6%;"
+                                                               value="رقم الضامن الأول "
+                                                               />
+                                            </div>
+                                        </div>
+                                        <div class="ui-g-12 ui-xl-12">
+
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:inputText style="width: 50%!important" id="sponsorName2"  
+                                                             value="#{organizationSiteFormMB.invOrganizationSiteEntity.sponsorName2}"
+                                                             />
+                                            </div>
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:outputLabel style="width: 109px; margin-right: 6%;"
+                                                               value="اسم الضامن الثاني "
+                                                               />
+                                            </div>
+                                        </div>
+                                        <div class="ui-g-12 ui-xl-12">
+
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:inputText style="width:50%!important" id="sponsorPhone2"  
+                                                             value="#{organizationSiteFormMB.invOrganizationSiteEntity.sponsorPhone2}"
+                                                             />
+                                            </div>
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:outputLabel style="width: 109px;margin-right: 6%;"
+                                                               value="رقم الضامن الثاني "
+                                                               />
+                                            </div>
+                                        </div>
+
+                                        <div class="ui-g-12 ui-xl-12">
+
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:inputText style="width: 50%!important" id="crdtLmt"
+                                                             value="#{organizationSiteFormMB.invOrganizationSiteEntity.balanceLimit}"
+                                                             />
+                                            </div>
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:outputLabel style="width: 109px; margin-right: 6%;"
+                                                               value="#{userData.userDDs['CREDIT_LIMIT']}" 
+                                                               />
+                                            </div>
+                                        </div>
+                                        <div class="ui-g-12 ui-xl-12">
+
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:autoComplete style="width:49%" 
+                                                                dropdown="true"
+                                                                converter="#{organizationSiteFormMB.storeRegionConverter}"
+                                                                value="#{organizationSiteFormMB.invOrganizationSiteEntity.storeRegionId}"
+
+                                                                var="storeRegion"
+                                                                itemLabel="#{storeRegion}" 
+                                                                itemValue="#{storeRegion}" 
+                                                                forceSelection="true" 
+                                                                completeMethod="#{organizationSiteFormMB.completeStoreRegion}" >
+
+                                                </p:autoComplete>
+                                            </div>
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:outputLabel style="width: 115px; margin-right: 6%;" value="بيانات ال�?رع "/>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                </p:tab>
+
+                                <p:tab title="بيانات عامة">
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <div class="ui-g-12 ui-xl-12">
+
+                                            <div class="ui-g-6 ui-xl-6">
+
+                                            </div>
+                                            <div class="ui-g-6 ui-xl-6">
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="ui-g-6 ui-xl-6">
+
+                                        <div class="ui-g-12 ui-xl-12">
+
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:inputText style="width: 50%!important; " id="legalAffairsRemark"  
+                                                             value="#{organizationSiteFormMB.invOrganizationSiteEntity.legalAffairsRemark}"
+                                                             />
+                                            </div>
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:outputLabel style="width:150px;"
+                                                               value="ملاحظات الشئون القانونية"
+                                                               />
+                                            </div>
+                                        </div>
+                                        <div class="ui-g-12 ui-xl-12">
+
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:inputText style="width: 50%!important; " id="NOTE" value="#{organizationSiteFormMB.invOrganizationSiteEntity.remarks}"/>
+
+                                            </div>
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:outputLabel style="width: 150px;" value="#{userData.userDDs['NOTE']}" />
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </p:tab>
+
+                            </p:accordionPanel>
+                        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    </div>
+                </div>
+
+
+
+
+
+
+
+            </p:fieldset>    
+            <div id="buttunss" class="asmaa">
+
+                <p:commandButton   class="saveButton" 
+                                   id="saveB" 
+                                   title="#{userData.userDDs['SAVE']}" 
+                                   value="#{userData.userDDs['SAVE']}" 
+                                   style="" 
+                                   action="#{organizationSiteFormMB.save()}" 
+                                   update="@form"/>
+
+                <p:commandButton  class="newButton" 
+                                  id="newN"
+                                  ajax="false"
+                                  style=""
+                                  value="#{userData.userDDs['NEW']}" 
+                                  title="#{userData.userDDs['NEW']}"
+
+                                  actionListener="#{organizationSiteFormMB.reset()}"/>
+
+
+                <p:commandButton  class="closeButton" 
+                                  title="#{userData.userDDs['BACK']}"
+                                  immediate="true"
+                                  value="#{userData.userDDs['BACK']}"
+                                  style=""
+                                  action="#{organizationSiteFormMB.exit()}"   />`
+
+                <p:blockUI block="form" trigger="saveB" animate="true" >
+
+                    <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                </p:blockUI> 
+
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

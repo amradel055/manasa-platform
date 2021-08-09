@@ -1,0 +1,151 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <h:form class='formmargin'  id="form" enctype="multipart/form-data" dir="#{userData.dir}">
+           
+            <p:fieldset legend="#{userData.userDDs['EDIT_BALA']}" >
+                <p:messages autoUpdate="true"
+                            id="messages"
+                            showDetail="true" closable="true" />
+
+
+                <div class="ui-g-12 ui-g-nopad">
+                    <div class="ui-g">
+
+                        <div class="ui-g-6 ui-xl-6">
+                                <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:fieldset legend="#{userData.userDDs['ORGANIZATION SITE TYPE']}" 
+                                                style="width: 74%;">
+                                        <p:selectOneRadio id="console" value ="#{organizationSiteOpeningBalanceFormMB.organizationSiteOpeningBalanceEntity.type}"  disabled="true">
+                                            <f:selectItem itemLabel="#{userData.userDDs['CUSTOMER']}"
+                                                          itemValue="0" />
+                                            <f:selectItem itemLabel="#{userData.userDDs['SUPPLIER']}"
+                                                          itemValue="1" />
+                                            <f:selectItem
+                                                itemLabel="#{userData.userDDs['CUSTOMER_SUPPLIER']}"
+                                                itemValue="2" />
+                                        </p:selectOneRadio>
+                                    </p:fieldset> 
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText readonly="true"
+                                                 value="#{organizationSiteOpeningBalanceFormMB.organizationSiteOpeningBalanceEntity.organizationSiteName}" />
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 105px;" value="#{userData.userDDs['ORGAN_SIDE_NA']}" />
+
+                                </div>
+                            </div>
+                        
+                         
+                      
+                        </div>
+
+                        <div class="ui-g-6 ui-xl-6">
+                                
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText a:autofocus="true"
+                                                 style="width:50%!important" disabled="#{organizationSiteOpeningBalanceFormMB.organizationSiteOpeningBalanceEntity.openBalanceCredit != null}"
+                                                 value="#{organizationSiteOpeningBalanceFormMB.organizationSiteOpeningBalanceEntity.openBalanceDebit}" >
+                                        <p:ajax update="form"/>
+                                    </p:inputText>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 60px" value="#{userData.userDDs['Debit_BALANC']}" />
+
+                                </div>
+                            </div>
+                              <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width:50%!important" disabled="#{organizationSiteOpeningBalanceFormMB.organizationSiteOpeningBalanceEntity.openBalanceDebit != null}"
+                                                 value="#{organizationSiteOpeningBalanceFormMB.organizationSiteOpeningBalanceEntity.openBalanceCredit}" >
+                                        <p:ajax update="form"/>
+                                    </p:inputText>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 105px;"  value="#{userData.userDDs['CREDIT_BALANC']}" />
+
+                                </div>
+                            </div>
+                              <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:calendar id="dateFrom"
+                                                value="#{organizationSiteOpeningBalanceFormMB.organizationSiteOpeningBalanceEntity.organizationBalanceDate}"
+                                                pattern="MM/dd/yyyy"
+                                                style="width:50%"
+                                                showButtonPanel="true" />
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 60px" value="#{userData.userDDs['DATEE']}" />
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </div>
+
+                <h:panelGrid id="pnl" columns="1"  class="col-md-12">
+
+                </h:panelGrid>
+
+                <h:panelGrid  class="col-md-12"  columns="1">
+
+                    <h:panelGroup  class="centerButtons">
+
+                        <p:commandButton class="saveButtons" 
+                                         id="saveB" 
+                                         title="#{userData.userDDs['SAVE']}"
+                                         value="#{userData.userDDs['SAVE']}" 
+                                         action="#{organizationSiteOpeningBalanceFormMB.save()}"
+                                         update="@form" />
+
+                        <p:commandButton  class="newButtons" 
+                                          id="newN"
+                                          ajax="false"
+                                          value="#{userData.userDDs['NEW']}" 
+                                          title="#{userData.userDDs['NEW']}" 
+                                          onclick="form.target = ''" 
+                                          actionListener="#{organizationSiteOpeningBalanceFormMB.reset()}"/>
+
+                        <p:commandButton class="closeButtons"  
+                                         title="#{userData.userDDs['CANCEL']}"
+                                         immediate="true" 
+                                         value="#{userData.userDDs['CANCEL']}"
+                                         action="#{organizationSiteOpeningBalanceFormMB.exit}" />
+
+                    </h:panelGroup>
+                    <p:blockUI block="pnl" trigger="saveB" animate="true" >
+
+                        <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                    </p:blockUI> 
+
+                </h:panelGrid>
+            </p:fieldset>
+        </h:form>
+
+    </ui:define>
+</ui:composition>

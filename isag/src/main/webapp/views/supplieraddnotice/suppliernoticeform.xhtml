@@ -1,0 +1,186 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <div class="col-xs-12"> 
+            <p:messages id="curmsg" showDetail="true" rendered="true" closable="true"/>   
+        </div>
+        <h:form class='formmargin' id="form"  enctype="multipart/form-data"  dir="#{userData.dir}">
+            <div style=" position: absolute;left: 20px"> 
+
+                <p:commandButton  style="z-index: 2;
+                                  margin-top: 24%;
+                                  color: #035c70!important; 
+                                  background-color: #223238!important;
+                                  border: 1px solid #22323a!important;
+                                  background: #22323a 50% 50% repeat-x!important;"
+                                  icon="fa fa-fw fa-home"
+                                  title="#{userData.userDDs['HOME']}"
+                                  class="smhomeButton" 
+                                  action="exit" />
+
+            </div>
+
+            <p:fieldset legend="#{userData.userDDs['ADD_DISCOUNT_NOTI']}" >
+
+
+                <div class="ui-g-6 ui-xl-6">
+                   
+                  
+                    <div class="ui-g-12 ui-xl-12">
+
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:calendar required="true" 
+                                        value="#{invNoticeFormMB.invNoticeEntity.date}"
+                                        pattern="dd/MM/yyyy" style="width:50%"/>
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel style="width: 68px" value="#{userData.userDDs['DATEE']}"/>
+
+                        </div>
+                    </div>
+                      <div class="ui-g-12 ui-xl-12">
+
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:inputText style="width: 50%!important" required="true" value="#{invNoticeFormMB.invNoticeEntity.amount}" />
+
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel style="width: 68px" value="#{userData.userDDs['AMOUNT']}"/>
+
+                        </div>
+                    </div>
+                                        <div class="ui-g-12 ui-xl-12">
+
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:autoComplete style="width: 40%" id="GlAccount_ID_to" 
+
+                                            dropdown="true"
+                                            converter="#{invNoticeFormMB.glAccountConverter}"
+                                            value="#{invNoticeFormMB.invNoticeEntity.accountId}"
+                                            var="account"
+                                            itemLabel="#{account}" 
+                                            itemValue="#{account}" 
+                                            forceSelection="false" 
+                                            completeMethod="#{invNoticeFormMB.completeGlAccount}" >
+                            </p:autoComplete>
+
+
+
+                            <p:inputText  style="width: 51%!important" value="#{invNoticeFormMB.invNoticeEntity.remarks}" />
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel style="width: 75px" value="#{userData.userDDs['ACCOUNT_NO']}" />
+
+                        </div>
+                    </div>
+                </div>
+
+                
+                
+                
+                <div class="ui-g-6 ui-xl-6">
+                      <div class="ui-g-12 ui-xl-12">
+
+                        <div class="ui-g-6 ui-xl-6">
+                            <h:outputLabel value="#{invNoticeFormMB.invNoticeEntity.serial}"/>
+
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel style="width: 50px" value="#{userData.userDDs['NUMB']}"/>
+
+                        </div>
+                    </div>
+                     <div class="ui-g-12 ui-xl-12">
+
+                        <div class="ui-g-6 ui-xl-6">
+
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:fieldset style="width: 63%;margin-top: auto;border-radius: 5px">
+                                <p:selectOneRadio  id="console"  value ="#{invNoticeFormMB.invNoticeEntity.type}" >
+                                    <f:selectItem itemLabel="#{userData.userDDs['ADD_NOTIF']}" itemValue="2" />
+                                    <f:selectItem itemLabel="#{userData.userDDs['DISC_NOTIF']}" itemValue="3" />
+                                </p:selectOneRadio>
+                            </p:fieldset>
+                        </div>
+                    </div>
+                    <div class="ui-g-12 ui-xl-12">
+
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:autoComplete style="width:41%!important" 
+                                            dropdown="true"
+                                            required="true"
+                                            converter="#{invNoticeFormMB.organizationSiteConvertor}"
+                                            value="#{invNoticeFormMB.invNoticeEntity.organizationSiteId}"
+
+                                            var="supplier"
+                                            itemLabel="#{supplier}" 
+                                            itemValue="#{supplier}" 
+                                            forceSelection="true" 
+                                            completeMethod="#{invNoticeFormMB.completeOrganizationSite}">
+                            </p:autoComplete>
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel style="width: 54px;" value="#{userData.userDDs['SUPPLIER']}"/>
+
+                        </div>
+                    </div>
+
+                  
+                </div>
+
+
+
+
+
+
+
+
+                <h:panelGrid class="centerButtons col-md-12" columns="1">     
+
+                    <h:panelGroup  class="centerButtons"> 
+                        <p:commandButton  class="saveButtons" 
+                                          id="saveB" 
+                                          title="#{userData.userDDs['SAVE']}"
+                                          value="#{userData.userDDs['SAVE']}"
+                                         
+                                          action="#{invNoticeFormMB.save()}"
+                                          update="form curmsg"/>
+
+                        <p:commandButton  class="newButtons" 
+                                          id="newN"
+                                          ajax="false"
+                                          
+                                          value="#{userData.userDDs['NEW']}" 
+                                          title="#{userData.userDDs['NEW']}" 
+                                          onclick="form.target = ''" 
+                                          actionListener="#{invNoticeFormMB.reset()}"/>
+
+                        <p:commandButton  class="closeButtons" 
+                                          id="cancel" 
+                                          title="#{userData.userDDs['CANCEL']}" 
+                                          value="#{userData.userDDs['CANCEL']}" 
+                                          immediate="true"
+                                          
+                                          action="#{invNoticeFormMB.exit()}"
+                                          update="@form"/>
+                    </h:panelGroup>
+
+                </h:panelGrid>     
+
+            </p:fieldset>
+
+
+
+
+        </h:form>
+    </ui:define>
+</ui:composition>

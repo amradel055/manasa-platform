@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml" >
+    <link rel="stylesheet" type="text/css" href="../../resources/css/main.css" /> 
+
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form id="form" dir="#{userData.dir}" class='formmargin'>
+            <div style=" position: absolute;left: 20px"> 
+
+                <p:commandButton  style="z-index: 2;
+                                  margin-top: 12%;
+                                  color: #035c70!important; 
+                                  background-color: #223238!important;
+                                  border: 1px solid #22323a!important;
+                                  background: #22323a 50% 50% repeat-x!important;"
+                                  icon="fa fa-fw fa-home"
+                                  title="#{userData.userDDs['HOME']}"
+                                  class="smhomeButton" 
+                                  action="exit" />  
+            </div>
+            <p:fieldset legend="#{userData.userDDs['USER_ROLE_BRANCH']}">
+                <h:panelGroup id="users" >
+                    <h:panelGroup>
+                        <p:outputLabel style="width:75px;margin-right: 6%; margin-top: 4%;" value= "المستخدمين"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:selectOneMenu style="width: 40%!important;" id="user"  value="#{userRoleFieldFormBean.isagUserSelected}"               
+                                         filterMatchMode="contains" filter="true" converter="#{userRoleFieldFormBean.isagUserDTOConverter}">
+                            <f:selectItems value="#{userRoleFieldFormBean.isagList}" var="user" itemLabel="#{user.name}" itemValue="#{user}" />
+                            <p:ajax update="@form"  />
+                        </p:selectOneMenu>
+                    </h:panelGroup>
+                </h:panelGroup>
+                
+                 <h:panelGroup id="branches" >
+                    <h:panelGroup>
+                        <p:outputLabel style="width:75px;margin-right: 6%; margin-top: 4%;" value= "الفروع"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:selectOneMenu id="branch2" value="#{userRoleFieldFormBean.branchDTOSelected}" converter="#{userRoleFieldFormBean.branchConverter}">
+                            <f:selectItems value="#{userRoleFieldFormBean.branchList}" var="branchTo"  itemLabel="#{branchTo.nameAr}" itemValue="#{branchTo}" />
+                            <p:ajax update="@form" listener="#{userRoleFieldFormBean.selectBranch()}"/>   
+                        </p:selectOneMenu>
+                    </h:panelGroup>
+                </h:panelGroup>
+                <p:selectBooleanCheckbox value="#{userRoleFieldFormBean.costAvarageView}" itemLabel="الاطلاع على متوسط التكلفة"/>
+                <p:selectBooleanCheckbox value="#{userRoleFieldFormBean.sellPriceUpdate}" itemLabel="تحديث سعر البيع"/>
+            <p:commandButton  class="ssaveButtons" update="@form"  title="#{userData.userDDs['SAVE']}" 
+                                  action="#{userRoleFieldFormBean.save()}" 
+                                  icon="fa fa-fw fa-save" style="background-color:#193cc4;margin-bottom:3px">
+                </p:commandButton>
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <link rel="stylesheet" type="text/css" href="../../resources/css/main.css" /> 
+    <ui:define name="content">
+        <h:form id="formAccount" dir="RTL">
+            <p:fieldset>
+              <p:dataTable 
+                  draggableColumns="true" draggableRows="true"
+                  var="account" value="#{createAccountListBean.accountList}" rowIndexVar="index" 
+                                 class="col-xs-12" paginator="true" rows="#{userData.rowListCount}"
+                                 emptyMessage="#{userData.userDDs['EMPTY_TABLE']}">
+                                          
+                                <f:facet name="header" class="col-md-12">
+                                <p:commandButton id="b2" title="ADD" icon="fa fa-plus"  style="float:right"  action="#{createAccountListBean.goToAdd()}" />
+                                 <p:commandButton update=":formAccount" icon="fa fa-fw fa-edit"  title="EDIT" />
+                              </f:facet>
+                        <p:column headerText="#{userData.userDDs['SERIAL']}" class="col-xs-1">
+                            <h:outputText value="#{index + 1}"  />
+                        </p:column>
+                        <p:column headerText="#{userData.userDDs['ACCOUNT_NUMBER']}" class="col-xs-1">
+                            <h:outputText value="#{account.accNumber}" />
+                        </p:column>
+                        <p:column headerText="#{userData.userDDs['ACCOUNT_NAME']}" class="col-xs-3">
+                            <h:outputText value="#{account.name}"  />
+                        </p:column>
+                        <p:column headerText="#{userData.userDDs['ACCOUNT_MAIN']}" class="col-xs-3">
+                            <h:outputText value="#{account.parentAcc.name}"  />
+                        </p:column>
+                        
+                        </p:dataTable>
+                       </p:fieldset>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

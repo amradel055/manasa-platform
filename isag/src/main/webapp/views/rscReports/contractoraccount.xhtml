@@ -1,0 +1,290 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+      
+        <h:form  id="form" dir="#{userData.dir}"  style="margin-right: 20px">
+
+            <div style=" position: absolute;left: 20px"> 
+
+                <p:commandButton  style="width: 90px;background-image: none!important;z-index: 2" 
+                                  class="viewButton searchButton"
+                                  value="Hide/Show"/>  
+            </div>
+
+            <p:fieldset  id="head"  legend="#{userData.userDDs['SUPPLIER_REVEAL_ACC']}"
+
+                         style=" position: relative"> 
+
+                <div  id="firstSegment" class="ui-g-12 ui-g-nopad firstset">
+                    
+                    <div class="ui-g">
+
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 40px" value="#{userData.userDDs['FROM_SUPPLIER']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:75%!important"
+                                                    id="fromSupplier"
+                                                    dropdown="true"
+                                                    converter="#{supplierAccountReportMB.invOrgSiteConverter}"
+                                                    value="#{supplierAccountReportMB.supplierAccountSearchBean.fromorganizationNameDTO}"
+                                                    var="organization"
+                                                    itemLabel="#{organization}" 
+                                                    itemValue="#{organization}"
+                                                    forceSelection="true" 
+                                                    completeMethod="#{supplierAccountReportMB.completOrgSiteFrom}"
+                                                    >
+
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 40px"
+                                                   value="#{userData.userDDs['TO_SUPPLIER']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:75%!important" 
+                                                    id="toSupplier"
+                                                    dropdown="true"
+                                                    converter="#{supplierAccountReportMB.invOrgSiteConverter}"
+                                                    value="#{supplierAccountReportMB.supplierAccountSearchBean.toorganizationNameDTO}"
+                                                    var="organization"
+                                                    itemLabel="#{organization}" 
+                                                    itemValue="#{organization}"
+                                                    forceSelection="true"
+                                                    completeMethod="#{supplierAccountReportMB.completOrgSiteTo}" >
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 40px" value="#{userData.userDDs['FROM_DATE']}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:calendar pattern="dd/MM/yyyy" 
+                                                value="#{supplierAccountReportMB.supplierAccountSearchBean.dateFrom}"
+                                                style="width: 55%"
+                                                id="dateFrom">
+
+                                    </p:calendar>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 40px" value="#{userData.userDDs['TO_DATE']}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:calendar pattern="dd/MM/yyyy" 
+                                                value="#{supplierAccountReportMB.supplierAccountSearchBean.dateTo}"
+                                                style="width: 55%"
+                                                id="dateTo">
+
+                                    </p:calendar>
+                                </h:panelGroup>
+                            </h:panelGroup>
+
+                        </div>
+                    </div>
+                </div>
+
+                <h:panelGrid columns="1"  class="col-md-12" >
+
+                    <h:panelGroup class="centerButtons" style="margin-top: 2%">
+
+                        <p:commandButton   class="searchButton"
+                                           title="#{userData.userDDs['SEARCH']}"
+                                           action="#{supplierAccountReportMB.search()}"
+                                           id="search"
+                                           value="#{userData.userDDs['SEARCH']}"
+                                           update="ContractorAccountViewTable" 
+                                           icon="fa fa-search"  />
+
+                        <p:commandButton  class="newButton"
+                                          id="NewB"
+                                          title="#{userData.userDDs['NEW']}" 
+                                          immediate="true" 
+                                          action="#{supplierAccountReportMB.reset()}"
+                                          update="ContractorAccountViewTable toSupplier fromSupplier"
+                                          value="#{userData.userDDs['NEW']}"
+                                          icon="fa fa-plus"
+                                          onclick="clearDate();"/>
+
+                        <p:commandButton  class="printButton" 
+                                          ajax="false"
+                                          id="PrintB"
+                                          onclick="form.target = '_blank'"  
+                                          icon="fa fa-fw fa-print"
+                                          value="#{userData.userDDs['PRINT']}" 
+                                          actionListener="#{supplierAccountReportMB.exportPDF}"
+                                          title="#{userData.userDDs['PRINT']}"
+                                          immediate="true" />
+
+                        <p:commandButton  class="cancelButton"
+                                          title="#{userData.userDDs['BACK']}"
+                                          id="CloseB"
+                                          action="exit"
+                                          icon="fa fa-fw fa-backward"  
+                                          value="#{userData.userDDs['BACK']}"/>
+
+                        <h:commandLink class="sdcreenimg">  
+                            <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                            <p:dataExporter type="xls"
+                                            target="ContractorAccountViewTable" 
+                                            fileName=" تقرير كشف حساب مقاول باطن"
+                                            postProcessor="#{supplierAccountReportMB.postProcessXLS}" />  
+                        </h:commandLink>
+
+                        <p:blockUI block="form" trigger="NewB search PrintB CloseB" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI> 
+
+
+                    </h:panelGroup>
+
+                </h:panelGrid>
+              
+            </p:fieldset>
+
+            <p:fieldset  style="margin-top: 2%">
+                <p:dataTable style="margin-top: 2%"
+                             draggableColumns="true" 
+                             paginator="true"
+                             rows="20"
+                             var="ContractorAccountViewTable" 
+                             widgetVar="ContractorAccountViewTable"  
+                             rowKey="#{ContractorAccountViewTable}"
+                             rowIndexVar="index" 
+                             value="#{supplierAccountReportMB.supplierAccountViewBeanList}" 
+                             dir="rtl" 
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                             id="ContractorAccountViewTable">
+
+                    <f:facet name="header">
+
+
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('ContractorAccountViewTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+
+                    </f:facet>
+
+                    <p:column   style="width: 8vh;text-align: right;font-size: 1.8vh" headerText="#{userData.userDDs['INVOICE_NO']}" 
+
+                                filterBy="#{ContractorAccountViewTable.serial}" 
+                                filterMatchMode="contains" 
+                                sortBy="#{ContractorAccountViewTable.serial}"
+                                filterable="false">
+
+                        <h:outputText value="#{ContractorAccountViewTable.serial}" style="font-size: 1.5vh"/>
+                    </p:column>
+
+                    <p:column style="width: 12vh;text-align: right;font-size: 1.8vh" 
+                              headerText="#{userData.userDDs['DATEE']}"
+
+                              filterBy="#{ContractorAccountViewTable.date}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{ContractorAccountViewTable.date}"
+                              filterable="false">
+                        <p:outputLabel value="#{ContractorAccountViewTable.date}">
+                            <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                        </p:outputLabel>
+                    </p:column>
+
+                    <p:column style="width: 12vh;text-align: right;font-size: 1.8vh" filterStyle="display:none"
+                              headerText="#{userData.userDDs['SUPPLIER']}" 
+
+                              filterBy="#{ContractorAccountViewTable.organizationName}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{ContractorAccountViewTable.organizationName}"
+                              filterable="false">
+
+                        <h:outputText value="#{ContractorAccountViewTable.organizationName}" style="font-size: 1.5vh;width: 95%"/>
+                    </p:column>
+                    <p:column style="width: 12vh;text-align: right;font-size: 1.8vh" filterStyle="display:none"
+                              headerText="#{userData.userDDs['TRANSACTION_TYPE']}" 
+
+                              filterBy="#{ContractorAccountViewTable.screenName}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{ContractorAccountViewTable.screenName}"
+                              filterable="false">
+
+                        <h:outputText value="#{ContractorAccountViewTable.screenName}" style="font-size: 1.5vh;width: 95%"/>
+                    </p:column>
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh" 
+                              headerText="#{userData.userDDs['DEBIT']}" 
+
+                              filterBy="#{ContractorAccountViewTable.exitt}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{ContractorAccountViewTable.exitt}"
+                              filterable="false">
+                        <p:inputNumber readonly="true" value="#{ContractorAccountViewTable.exitt}" style="font-size: 1.5vh;width: 95%"/>
+
+                    </p:column>
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh" 
+                              headerText="#{userData.userDDs['CREDIT']}" 
+
+                              filterBy="#{ContractorAccountViewTable.adding}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{ContractorAccountViewTable.adding}"
+                              filterable="false">
+
+                        <p:inputNumber readonly="true" value="#{ContractorAccountViewTable.adding}" style="font-size: 1.5vh;width: 90%"/>
+                    </p:column>
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh" 
+                              headerText="#{userData.userDDs['BALANCE']}"
+
+                              filterBy="#{ContractorAccountViewTable.balance}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{ContractorAccountViewTable.balance}"
+                              filterable="false">
+
+                        <p:inputNumber readonly="true" value="#{ContractorAccountViewTable.balance}" style="font-size: 1.5vh;width: 95%"/>
+
+                    </p:column>
+                    <p:columnGroup type="footer">
+                        <p:row>
+                            <p:column colspan="4" style="text-align:right" footerText="#{userData.userDDs['TOTAL']}  :" />
+                            <p:column footerText="#{supplierAccountReportMB.totalDebit}"  style="font-size: 1.4vh"/>
+                            <p:column footerText="#{supplierAccountReportMB.totalCredit}" style="font-size: 1.4vh"/>
+                            <p:column  style="font-size: 1.4vh" />
+                        </p:row>
+                    </p:columnGroup>
+                </p:dataTable>
+            </p:fieldset>
+             <script>
+                function clearDate() {
+               document.getElementById("form:dateFrom_input").value = null;
+               document.getElementById("form:dateTo_input").value = null;
+               }
+            </script>
+        </h:form>
+    </ui:define>
+</ui:composition>

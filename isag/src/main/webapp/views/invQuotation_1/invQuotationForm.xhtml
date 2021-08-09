@@ -1,0 +1,548 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+
+        <style>
+
+            .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+                border: 1px solid #c5dbec;
+                background:#fff;
+
+            }
+            .ui-dialog {
+                position: absolute !important;
+                left: 1vw!important;
+                top: 25vh!important;}
+            </style>
+
+            <h:form id="form" dir="#{userData.dir}" class='formmargin'>
+            <div style=" position: absolute;left: 20px"> 
+
+                <p:commandButton  style="z-index: 2;
+                                  margin-top: 24%;
+                                  color: #035c70!important; 
+                                  background-color: #223238!important;
+                                  border: 1px solid #22323a!important;
+                                  background: #22323a 50% 50% repeat-x!important;"
+                                  icon="fa fa-fw fa-home"
+                                  title="#{userData.userDDs['HOME']}"
+                                  class="smhomeButton" 
+                                  action="exit" />
+
+            </div>
+            <div >
+                <p:messages id="curmsg" autoUpdate="true" showDetail="true" rendered="true" closable="true"/>   
+            </div>
+
+            <p:fieldset legend="#{userData.userDDs['QUOTATIONS']}"> 
+
+                <div  id="firstSegment" class="ui-g-12 ui-g-nopad">
+
+                    <div class="ui-g">
+                        <h:panelGroup id="test">
+                            <div class="ui-g-12 ui-md-6">
+
+                                <h:panelGroup>
+
+                                    <p:outputLabel style="width: 95px;margin-right: 6%;" id="purchId" value="#{userData.userDDs['QUOTATION_NO']}" />
+                                    <p:inputText style="width: 35%" 
+                                                 id="purchIdVal" readonly="true"
+                                                 value="#{invQuotationFormDTOMB.invInvoiceDTO.serial}" />
+
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 95px; margin-right: 6%;" value="#{userData.userDDs['DATEE']}*"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:calendar id="dateFrom" 
+                                                    value="#{invQuotationFormDTOMB.invInvoiceDTO.date}"
+                                                    pattern="dd/MM/yyyy"
+                                                    style="width:50%!important"/>
+                                    </h:panelGroup>
+
+                                </h:panelGroup>
+                            </div>
+
+                            <div class="ui-g-12 ui-md-6" >
+
+                                <h:panelGroup id="pdueDate" >
+
+                                    <h:panelGroup>
+                                        <p:outputLabel for="dueDate" style="width: 95px; margin-right: 6%;" value="#{userData.userDDs['OFFER_END_DATE']}"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:calendar id="dueDate" value="#{invQuotationFormDTOMB.invInvoiceDTO.dateEndOffer}"
+                                                    pattern="dd/MM/yyyy"
+                                                    style="width:50%"/>
+                                    </h:panelGroup>
+
+                                </h:panelGroup>
+                            </div>
+
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 100px;margin-right: 6%;" value="#{userData.userDDs['CUSTOMERS']}"/>
+                                    </h:panelGroup> 
+
+                                    <h:panelGroup>
+                                        <p:autoComplete style="width:34%!important" 
+                                                        dropdown="true"
+                                                        converter="#{invQuotationFormDTOMB.organizationSiteDTOConvertor}"
+                                                        value="#{invQuotationFormDTOMB.invInvoiceDTO.organizationSiteId}"
+
+                                                        var="supplier"
+                                                        itemLabel="#{supplier}" 
+                                                        itemValue="#{supplier}" 
+                                                        forceSelection="true" 
+                                                        completeMethod="#{invQuotationFormDTOMB.completeToCustomer}" 
+                                                        >
+
+
+                                            <p:ajax update="@form"
+                                                    event="change"
+                                                    process="@form"
+                                                    listener="#{invQuotationFormDTOMB.putCurrency()}" />
+                                            <p:ajax update="@form"
+                                                    process="@form"
+                                                    event="itemSelect"
+                                                    listener="#{invQuotationFormDTOMB.putCurrency()}" />
+
+
+                                        </p:autoComplete>
+                                    </h:panelGroup> 
+
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 100px;margin-right: 6%;" value="#{userData.userDDs['SALESPERSON']}"/>
+                                    </h:panelGroup> 
+
+                                    <h:panelGroup>
+                                        <p:autoComplete style="width:34%!important " 
+                                                        dropdown="true"
+                                                        converter="#{invQuotationFormDTOMB.invDelegatorDTOConvertor}"
+                                                        value="#{invQuotationFormDTOMB.invInvoiceDTO.invDelegatorId}"
+
+                                                        var="purchasePerson"
+                                                        itemLabel="#{purchasePerson}" 
+                                                        itemValue="#{purchasePerson}" 
+                                                        forceSelection="true" 
+                                                        completeMethod="#{invQuotationFormDTOMB.completeDelegatorSales}"
+                                                        >
+
+                                        </p:autoComplete>
+                                    </h:panelGroup> 
+                                </h:panelGroup>
+                            </div>
+
+                            <div class="ui-g-12 ui-md-12">
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 95px; margin-right: 3%;" value="#{userData.userDDs['NOTE']}"/>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:inputText style="width:68%"  value="#{invQuotationFormDTOMB.invInvoiceDTO.remarks}"
+                                                     />
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </div>
+                        </h:panelGroup>
+                    </div>
+                </div>
+
+            </p:fieldset>
+
+            <p:fieldset id="fieldSetId" legend="#{userData.userDDs['OFFER_DATA']}"  style="margin:2% 0">
+
+
+                <p:dataTable id="invPurchaseInvoiceDetailsTable"
+                             widgetVar="invPurchaseInvoiceDetailsTable"
+                             style="margin-bottom:20px"
+                             var="invPurchaseInvoiceDetailsTable"
+                             rowIndexVar="index" 
+                             dir="rtl" 
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                             editable="true"
+                             editMode="cell"
+                             selectionMode="single"
+                             sortBy="#{1}"
+                             rowKey="#{invPurchaseInvoiceDetailsTable.index}"
+                             selection="#{invQuotationFormDTOMB.invInvoiceDTO.invPurchaseInvoiceDetailsSelected}"
+                             value="#{invQuotationFormDTOMB.invInvoiceDTO.invPurchaseInvoiceDetailList}" >
+
+                    <f:facet name="header" >
+                        <p:commandButton  id="addnew"
+                                          class="saddButton"
+                                          icon="fa fa-plus"
+                                          title="#{userData.userDDs['ADD']}" 
+
+                                          actionListener="#{invQuotationFormDTOMB.addInvDetail()}" 
+                                          update=":form:fieldSetId"  
+                                          oncomplete="PrimeFaces.focus('form:invPurchaseInvoiceDetailsTable:'+#{invQuotationFormDTOMB.invInvoiceDTO.invPurchaseInvoiceDetailList.size()}+':invItemNameIn')"
+                                          immediate="true"
+                                          ajax="true"
+                                          style="float:right"/>
+
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('invPurchaseInvoiceDetailsTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:column headerText="#" style="width: 4vh;text-align:center;border-radius: 0px" >
+                        <h:outputText value="#{invPurchaseInvoiceDetailsTable.serial}"  />
+                    </p:column>
+
+                    <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="itemName" headerText="#{userData.userDDs['ITEM']}" 
+                              filterBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}"
+                              filterable="false">
+                        <p:outputLabel value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}" 
+                                       rendered="#{invPurchaseInvoiceDetailsTable.isEdit}" />
+                        <p:autoComplete id="invItemNameIn"  
+                                        rendered="#{not invPurchaseInvoiceDetailsTable.isEdit}"
+                                        style="width:100%"
+                                        converter="#{invQuotationFormDTOMB.itemsBarcodesDetailsViewConverter}"
+                                        value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}"
+                                        maxResults="5"
+                                        var="item"
+                                        itemLabel="#{item}" 
+                                        itemValue="#{item}" 
+                                        forceSelection="true" 
+                                        completeMethod="#{invQuotationFormDTOMB.completeItemsDatas}" >
+                            <p:ajax update=" unitvalue length paintColor QuantityT WeightT costTt discountT netId totalQuantity totalWeight  totalNet  form:totalActualWeight form:totalNetAfterDiscount    "
+                                    event="itemSelect" listener="#{invQuotationFormDTOMB.validateItems(invPurchaseInvoiceDetailsTable)}" />
+
+
+
+                        </p:autoComplete>            
+                    </p:column>
+
+                    <p:column  style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="Unit"
+
+                               filterBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.unitName}" 
+                               filterMatchMode="contains" 
+                               sortBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.unitName}"
+                               filterable="false"
+                               headerText="#{userData.userDDs['UNIT_NUMBER']}">
+                        <p:inputText id="unitvalue" readonly="true" 
+                                     disabled="true"
+                                     value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.unitName}" style="width: 95%" />  
+
+                    </p:column>
+
+                    <p:column style="width: 12vh;text-align: -webkit-auto;border-radius: 0px" id="tall" headerText="الطول"
+                              rendered="#{invQuotationFormDTOMB.invInvoiceDTO.companyActivity eq 'Alumetal'}"
+                              filterBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.length}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.length}"
+                              filterable="false" >
+                        <p:inputText style="width:99%" 
+                                     disabled="true" 
+                                     id="length" readonly="true"  
+                                     value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.length}"/>
+                    </p:column>
+
+                    <p:column style="width: 12vh;text-align: -webkit-auto;border-radius: 0px" id="color" headerText="اللون"
+                              rendered="#{invQuotationFormDTOMB.invInvoiceDTO.companyActivity eq 'Alumetal'}"
+                              filterBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.paintColorName}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.paintColorName}"
+                              filterable="false" >
+                        <p:inputText style="width:99%" 
+                                     disabled="true" 
+                                     id="paintColor" readonly="true"  
+                                     value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.paintColorName}"/>
+                    </p:column>
+
+
+                    <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px"
+                              id="Quantity"
+                              headerText="#{userData.userDDs['NUMBER']}"
+                              filterBy="#{invPurchaseInvoiceDetailsTable.quantity}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{invPurchaseInvoiceDetailsTable.quantity}"
+                              filterable="false">
+
+                        <p:inputText id="QuantityT"  
+                                     value="#{invPurchaseInvoiceDetailsTable.quantity}" 
+
+                                     style="width:95%">
+                            <p:ajax listener="#{invQuotationFormDTOMB.validateQuantityColum(invPurchaseInvoiceDetailsTable)}" 
+                                    update="netId totalQuantity totalWeight  totalNet form:totalNetAfterDiscount form:totalActualWeight    "/>
+                        </p:inputText>        
+
+                    </p:column>
+
+                    <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" rendered="#{invQuotationFormDTOMB.invInvoiceDTO.companyActivity eq 'Alumetal'}"
+                              id="Weight"
+                              headerText="#{userData.userDDs['WEIGHT']}"
+                              filterBy="#{invPurchaseInvoiceDetailsTable.weight}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{invPurchaseInvoiceDetailsTable.weight}"
+                              filterable="false">
+
+                        <p:inputNumber id="WeightT" decimalPlaces="3"
+                                       value="#{invPurchaseInvoiceDetailsTable.weight}"  
+                                       style="width:100%">
+                            <p:ajax listener="#{invQuotationFormDTOMB.updateSummition()}" update="netId totalQuantity  totalWeight totalNet form:totalActualWeight form:totalNetAfterDiscount  "/>
+                        </p:inputNumber>
+                    </p:column>
+
+                    <p:column style="width: 12vh;text-align: -webkit-auto;border-radius: 0px" id="COST" headerText="#{userData.userDDs['PRICE']}"
+                              filterBy="#{invPurchaseInvoiceDetailsTable.cost}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{invPurchaseInvoiceDetailsTable.cost}"
+                              filterable="false">
+                        <p:inputText id="costTt" 
+                                     value="#{invPurchaseInvoiceDetailsTable.cost}"
+
+                                     style="width:95%">
+                            <p:ajax listener="#{invQuotationFormDTOMB.validatePriceColumn(invPurchaseInvoiceDetailsTable)}" 
+                                    update="netId totalQuantity  totalWeight totalNet form:totalActualWeight form:totalNetAfterDiscount  "/>
+                        </p:inputText>       
+                    </p:column>
+
+                    <p:column style="width: 14vh;text-align: -webkit-auto;border-radius: 0px" id="DISCOUNT" headerText="#{userData.userDDs['DISCOUNT']}">
+                        <p:inputText id="discountT" 
+                                     value="#{invPurchaseInvoiceDetailsTable.discount}" 
+                                     disabled="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail == null}"
+                                     style="width:70%!important;display: inline!important">
+                            <p:ajax listener="#{invQuotationFormDTOMB.validateDiscountColumn(invPurchaseInvoiceDetailsTable)}"
+                                    update="discountT netId totalQuantity totalWeight totalNet form:totalActualWeight form:totalNetAfterDiscount     "/>
+                        </p:inputText>  
+                        <p:outputLabel value="%"  style="display: inline!important"  />
+                    </p:column>
+
+
+                    <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="net" headerText="#{userData.userDDs['TOTAL']}" 
+                              filterBy="#{invPurchaseInvoiceDetailsTable.net}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{invPurchaseInvoiceDetailsTable.net}"
+                              filterable="false">
+                        <p:outputLabel id="netId" value="#{invPurchaseInvoiceDetailsTable.net}"   />
+                    </p:column>
+
+                    <p:summaryRow>
+                        <p:column colspan="3" style="text-align:right">
+                            <h:outputText style="text-align:right" value="#{userData.userDDs['TOTAL']}  :" />
+                        </p:column>
+                        <p:column>
+                            <h:outputText id="totalQuantity" value="#{invQuotationFormDTOMB.invInvoiceDTO.totalQuatity}"/>
+                        </p:column>
+                        <p:column>
+                            <h:outputText id="totalWeight" value="#{invQuotationFormDTOMB.invInvoiceDTO.totalWeight}"/>
+                        </p:column>
+                        <p:column rendered="#{invQuotationFormDTOMB.invInvoiceDTO.companyActivity eq 'Alumetal'}" />
+                        <p:column rendered="#{invQuotationFormDTOMB.invInvoiceDTO.companyActivity eq 'Alumetal'}" />
+                        <p:column rendered="#{invQuotationFormDTOMB.invInvoiceDTO.companyActivity eq 'Alumetal'}" />
+                        <p:column>
+                            <h:outputText id="totalNet" value="#{invQuotationFormDTOMB.invInvoiceDTO.totalNet}"/>
+                        </p:column>
+                        <p:column />
+                    </p:summaryRow>
+
+                    <p:column style="width: 13vh;text-align: center;border-radius: 0px" headerText="#{userData.userDDs['TRANSACTION']}">
+
+                        <p:commandButton  id="b7" icon="fa fa-plus" 
+                                          class="saddbuttonins" style="color: #fff!important;background-color: #00BCD4"
+                                          title="#{userData.userDDs['ADD']}" 
+
+                                          actionListener="#{invQuotationFormDTOMB.addInvDetail()}" 
+                                          update=":form:fieldSetId"  
+                                          immediate="true"
+                                          oncomplete="PrimeFaces.focus('form:invPurchaseInvoiceDetailsTable:'+#{invQuotationFormDTOMB.invInvoiceDTO.invPurchaseInvoiceDetailList.size()}+':invItemNameIn')"
+                                          ajax="true" />
+
+                        <p:commandButton  update="invPurchaseInvoiceDetailsTable netId totalQuantity  totalWeight  totalNet form:totalActualWeight form:totalNetAfterDiscount   "
+                                          title="#{userData.userDDs['DELETE']}" 
+                                          class="sdeleteButtons" style="color: #fff!important;background-color: red"
+
+                                          action="#{invQuotationFormDTOMB.deleteInvDetail(invPurchaseInvoiceDetailsTable)}"
+                                          icon="fa fa-remove" >
+                            <p:confirm header="#{userData.userDDs['COFIGRATION']}" 
+                                       message="#{userData.userDDs['ARE_YOU_SURE']}"
+                                       icon="ui-icon-alert" />
+                        </p:commandButton>
+
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column >
+
+                </p:dataTable>
+
+                <div  id="firstSegment" class="ui-g-12 ui-g-nopad">
+                    <h:panelGroup id="test2">
+                        <div class="ui-g">
+                            <div class="ui-g-12 ui-md-4">
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 155px; margin-right: 3%;" value="#{userData.userDDs['TOTAL']} "/>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <h:outputText id="totalActualWeight" 
+                                                      style="text-align:right" 
+                                                      value="#{invQuotationFormDTOMB.invInvoiceDTO.totalNet}" />
+                                    </h:panelGroup>
+                                </h:panelGroup>
+
+                            </div>
+                            <div class="ui-g-12 ui-md-4">
+                                <h:panelGroup>
+
+                                    <h:panelGroup>
+
+                                        <h:panelGroup>
+                                            <p:outputLabel style="width: 70px;margin-right: 6%;" value="#{userData.userDDs['DISCOUNT_TYPE']}"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:selectOneMenu style="width: 50%" id="PURCHASE_NUMBER" 
+
+                                                             value="#{invQuotationFormDTOMB.invInvoiceDTO.discountType}"  >                                                             
+                                                <f:selectItem itemLabel="#{userData.userDDs['VALUE']}"  itemValue="0"  />
+                                                <f:selectItem itemLabel="#{userData.userDDs['RATIO']}"  itemValue="1"  />
+
+                                                <p:ajax 
+                                                    update="form:totalActualWeight form:totalNetAfterDiscount    "
+                                                    listener="#{invQuotationFormDTOMB.recalcHeadValues()}" />
+                                            </p:selectOneMenu>                  
+                                        </h:panelGroup>
+
+                                    </h:panelGroup>
+
+
+
+                                </h:panelGroup>  
+
+                            </div>
+                            <div class="ui-g-12 ui-md-4">
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 102px" value="#{userData.userDDs['DISC_ON_INVOICE']}"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:inputText id="discount" value="#{invQuotationFormDTOMB.invInvoiceDTO.discount}"  
+                                                     style="width: 50%;display: inline!important" >
+                                            <p:ajax event="blur"
+
+                                                    listener="#{invQuotationFormDTOMB.recalcHeadValues()}"
+                                                    update="form:totalActualWeight form:totalNetAfterDiscount   "  />
+                                        </p:inputText>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup rendered="#{invQuotationFormDTOMB.invInvoiceDTO.discountType eq 1}" style="margin-right: 5px">
+                                        <h:panelGroup>
+                                            <p:outputLabel id="per" style="display: inline!important" value="%"/>
+                                        </h:panelGroup>
+                                    </h:panelGroup>
+
+                                </h:panelGroup>
+
+                            </div>
+                            <div class="ui-g-12 ui-md-4">
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 155px;margin-right: 3%;" value="#{userData.userDDs['TOT_AF_TOT_DIS']}"/>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <h:outputText id="totalNetAfterDiscount" 
+                                                      style="text-align:right" 
+                                                      value="#{invQuotationFormDTOMB.invInvoiceDTO.totalNetAfterDiscount}" />
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </div>
+
+                        </div>
+                    </h:panelGroup>
+                </div>
+
+                <h:panelGrid  class="col-md-12" columns="1"  style="margin-top:2%">
+
+                    <h:panelGroup  class="centerButtons">
+
+                        <p:commandButton  id="saveB" 
+                                          class="saveButton"
+                                          title="#{userData.userDDs['SAVE']}"
+                                          value="#{userData.userDDs['SAVE']}" 
+                                          style="" 
+                                          action="#{invQuotationFormDTOMB.save()}"
+                                          update="@form"/>
+
+                        <p:commandButton 
+                            id="newN"
+                            ajax="false"
+                            style=""
+                            value="#{userData.userDDs['NEW']}" 
+                            class="newButton"
+                            onclick="form.target = ''" 
+                            actionListener="#{invQuotationFormDTOMB.reset()}"/>
+
+                        <p:commandButton  class="closeButton" 
+                                          id="cancel" 
+                                          title="#{userData.userDDs['BACK']}" 
+                                          value="#{userData.userDDs['BACK']}" 
+                                          style=""  
+                                          immediate="true"
+                                          action="#{invQuotationFormDTOMB.exit()}" 
+                                          update="@form"/>
+
+                        <h:commandLink  style="float:left" class="sdcreenimg">  
+                            <p:graphicImage name="/img/excel.jpg" width="24" style='margin-right:25%;'/>  
+                            <p:dataExporter type="xls"
+                                            target="invPurchaseInvoiceDetailsTable" 
+                                            fileName="عروض الاسعار"
+                                            postProcessor="#{invQuotationFormDTOMB.postProcessXLS}" />  
+                        </h:commandLink>
+
+                        <p:blockUI block="form" trigger="saveB" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI> 
+
+
+                    </h:panelGroup>
+
+                </h:panelGrid>
+            </p:fieldset>
+        </h:form>
+
+
+        <script>
+
+            document.addEventListener("keydown", function (e) {
+                console.log(e.which);
+                if (e.which === 13) {
+                    e.preventDefault();
+                    return false;
+                }
+                ;
+            });
+
+        </script>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,599 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <style >
+            .colored {                
+                background: #0064bc ;
+                color: #fff ;
+                font-size: 12px;
+            }
+        </style>
+
+        <h:form  id="form" dir="#{userData.dir}"  style="margin-right: 20px">
+
+            <div style=" position: absolute;left: 20px"> 
+
+            </div>
+
+            <p:fieldset id="data" legend="تسجيل عقد"
+
+                        style=" position: relative"> 
+                <div class="col-xs-12">
+                    <p:messages id="curmsg" showDetail="true" rendered="true" closable="true"/>   
+                </div>
+
+                <div  id="firstSegment" class="ui-g-12 ui-g-nopad firstset">
+
+                    <div class="ui-g">
+
+
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 70px" value="#{userData.userDDs['DATE']}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:calendar pattern="dd/MM/yyyy" 
+                                                style="width: 55%"
+                                                value="#{rscContractRegisterFormMB.rscContractRegisterDTO.date}">
+
+                                    </p:calendar>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+
+
+
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 70px" value="رقم العقد"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 55%" value="#{rscContractRegisterFormMB.rscContractRegisterDTO.serial}" />
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 70px" value="الرقم الدفترى"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:inputText   style="width: 55%!important" value="#{rscContractRegisterFormMB.rscContractRegisterDTO.documentNumber}"/>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 70px" value="حالة العقد"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:selectOneMenu id="status" value="#{rscContractRegisterFormMB.rscContractRegisterDTO.status}" style="width:55%">
+
+                                        <f:selectItem itemLabel="اختر" itemValue="" noSelectionOption="true" /> 
+                                        <f:selectItem itemLabel="لم يتم" itemValue="0" noSelectionOption="true" />
+                                        <f:selectItem itemLabel="تم" itemValue="1" noSelectionOption="true" />
+                                        <f:selectItems  />
+                                    </p:selectOneMenu>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 70px;font-size: 9px!important" value="تاريخ الإستلام الإبتدائى"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:calendar pattern="dd/MM/yyyy" 
+                                                    style="width: 55%"
+                                                    value="#{rscContractRegisterFormMB.rscContractRegisterDTO.initialReceivedDate}">
+
+                                        </p:calendar>
+                                    </h:panelGroup>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 70px;font-size: 9px!important" value="تاريخ الإستلام النهائى"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:calendar pattern="dd/MM/yyyy" 
+                                                    style="width: 55%"
+                                                    value="#{rscContractRegisterFormMB.rscContractRegisterDTO.finallReceivedDate}">
+
+                                        </p:calendar>
+                                    </h:panelGroup>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 70px;font-size: 11px!important" value="إجمالى قيمة التعاقد"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:inputNumber id="total" style="width: 55%" value="#{rscContractRegisterFormMB.rscContractRegisterDTO.contractTotal}">
+                                            <p:ajax  event="blur" listener="#{rscContractRegisterFormMB.hishis()}" />
+                                        </p:inputNumber>
+                                    </h:panelGroup>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6"></div>
+
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 70px;font-size: 11px!important" value=" قيمة الدفعة المقدمة"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:inputNumber id="proftValue" style="width: 55%" value="#{rscContractRegisterFormMB.rscContractRegisterDTO.initialValue}">
+                                            <p:ajax  event="blur" listener="#{rscContractRegisterFormMB.calprofitValue()}"
+                                                     update="proftpercntage" />
+                                        </p:inputNumber>
+                                    </h:panelGroup>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+
+
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 75px;font-size: 11px!important" value="نسبة الدفعة المقدمة%"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:inputNumber  id="proftpercntage" style="width: 55%" value="#{rscContractRegisterFormMB.rscContractRegisterDTO.initialPercentage}">
+                                            <p:ajax  event="blur" listener="#{rscContractRegisterFormMB.calpercentage()}"
+                                                     update="proftValue" />
+                                        </p:inputNumber>
+                                    </h:panelGroup>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                         
+
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 70px" value="مقاول الباطن"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:75%!important "  id="customerId"
+                                                    dropdown="true"
+                                                    scrollHeight="350"
+                                                    value="#{rscContractRegisterFormMB.rscContractRegisterDTO.siteId}"
+                                                    converter="#{rscContractRegisterFormMB.invOrganizationSiteDTOConverter}"
+                                                    var="contract"
+                                                    itemLabel="#{contract}" 
+                                                    itemValue="#{contract}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{rscContractRegisterFormMB.completeContructor}">
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 70px" value="الملاحظات"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:inputText   style="width: 55%!important" value="#{rscContractRegisterFormMB.rscContractRegisterDTO.remarks}"/>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                    </div>
+
+                    <div class="ui-g-12 ui-md-6">
+
+                        <p:fieldset id="tenderdata" legend="#{userData.userDDs['TENDER_DATA']}">
+
+                            <div class="ui-g-12">
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width:60px; font-size: 17px !important;" value="#{userData.userDDs['NUMB']}"/>
+                                    </h:panelGroup> 
+
+                                    <h:panelGroup>
+
+                                        <h:panelGroup>
+                                            <p:outputLabel   style="width: 70%!important; font-size: 15px !important;" value="#{rscContractRegisterFormMB.rscContractRegisterDTO.rscQotationPriceTenderId.rscPriceTenderId.rscTenderDTO.serial}"/>
+                                        </h:panelGroup> 
+
+
+                                    </h:panelGroup> 
+                                </h:panelGroup>
+
+                            </div>
+                            <div class="ui-g-12 ui-md-12">
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width:60px; font-size: 17px !important;" value="#{userData.userDDs['OWNER']}"/>
+                                    </h:panelGroup> 
+
+                                    <h:panelGroup>
+                                        <p:outputLabel   style="width: 70%!important; font-size: 15px !important;" value="#{rscContractRegisterFormMB.rscContractRegisterDTO.rscQotationPriceTenderId.rscPriceTenderId.rscTenderDTO.customerId.name}"/>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+
+                            </div>
+
+                            <div class="ui-g-12">
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel  style="width: 60px; font-size: 17.5px !important;" value="#{userData.userDDs['DESCRIPTION']}"/>
+                                    </h:panelGroup> 
+                                    <h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:outputLabel   style="width: 60%!important; font-size: 15px !important;" value="#{rscContractRegisterFormMB.rscContractRegisterDTO.rscQotationPriceTenderId.rscPriceTenderId.rscTenderDTO.remark}"/>
+                                        </h:panelGroup> 
+                                    </h:panelGroup> 
+                                </h:panelGroup>
+                            </div>
+
+
+                        </p:fieldset> 
+
+                    </div>
+
+                    <div class="ui-g-12 ui-md-6">
+
+                        <p:fieldset id="tenderPrice" legend="عرض السعر">
+
+                            <div class="ui-g-12">
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width:60px; font-size: 17px !important;" value="#{userData.userDDs['NUMB']}"/>
+                                    </h:panelGroup> 
+
+                                    <h:panelGroup>
+
+                                        <h:panelGroup>
+                                            <p:outputLabel   style="width: 70%!important; font-size: 15px !important;" value="#{rscContractRegisterFormMB.rscContractRegisterDTO.rscQotationPriceTenderId.serial}"/>
+                                        </h:panelGroup> 
+
+
+                                    </h:panelGroup> 
+                                </h:panelGroup>
+
+                            </div>
+                            <div class="ui-g-12 ui-md-12">
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width:80px; font-size: 17px !important;" value="تاريخ التحرير"/>
+                                    </h:panelGroup> 
+
+                                    <h:panelGroup>
+                                        <p:outputLabel   style="width: 70%!important; font-size: 15px !important;" value="#{rscContractRegisterFormMB.rscContractRegisterDTO.rscQotationPriceTenderId.date}">
+                                             <f:convertDateTime pattern="dd/MM/yyyy" />
+                                        </p:outputLabel>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+
+                            </div>
+
+                            <div class="ui-g-12 ui-md-12">
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width:80px; font-size: 17px !important;" value="حالة التسعير"/>
+                                    </h:panelGroup> 
+
+                                    <h:panelGroup>
+                                        <p:outputLabel   style="width: 70%!important; font-size: 15px !important;" value="#{rscContractRegisterFormMB.rscContractRegisterDTO.rscQotationPriceTenderId.qotationStatus}"/>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+
+                            </div>
+
+
+                        </p:fieldset> 
+
+                    </div>
+
+                </div>
+
+
+            </p:fieldset>
+
+            <p:fieldset id="fieldSetId" legend="تفاصيل العقد" style="margin-top:2%">
+                <p:dataTable id="rscContractDetail"
+                             var="rscContractDetail"
+                             rowIndexVar="index" 
+                             dir="rtl" 
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                             editable="true"
+                             editMode="cell"
+                             sortBy="#{1}"
+                             widgetVar="rscContractDetail"
+                             rowKey="#{rscContractDetail}"
+                             style="margin-top: 2%; margin-bottom: 15px"
+                             rows="20"
+                             paginator="true" 
+                             value="#{rscContractRegisterFormMB.rscContractRegisterDTO.contractRegisterDetailList}">
+
+                    <f:facet name="header" class="col-md-12">
+                        <p:commandButton icon="fa fa-plus" 
+                                         title="#{userData.userDDs['ADD']}" 
+                                         class="saddButton" update="rscContractDetail"
+                                         action="#{rscContractRegisterFormMB.addChild}" 
+                                         style="float:right;margin: 0"/>
+
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('bTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+
+                    </f:facet>
+
+
+                    <p:column   style="width: 21vh;text-align: right;font-size: 2.2vh"
+                                headerText="البند">
+                        <p:autoComplete style="width:160px" id="UnitIdd" 
+                                        dropdown="true"
+                                        scrollHeight="350"
+                                        converter="#{rscContractRegisterFormMB.rscWorkUnitsGuideDTOConverter}"
+                                        value="#{rscContractDetail.guideDTO}"
+                                        var="unit"
+                                        itemLabel="#{unit}" 
+                                        itemValue="#{unit}" 
+                                        forceSelection="true" 
+                                        completeMethod="#{rscContractRegisterFormMB.completeWorkUnitsGuideDTO}" >
+                            <p:ajax update=" nameText qtyUnits priceUnitt totalsUnit totalQuantity totalPrice netTotal" listener="#{rscContractRegisterFormMB.validateUnitGuide()}"
+                                    event="itemSelect"  />
+                            <p:ajax update=" nameText qtyUnits priceUnitt totalsUnit totalQuantity totalPrice netTotal" listener="#{rscContractRegisterFormMB.validateUnitGuide()}"
+                                    event="change"  />
+                        </p:autoComplete>
+                    </p:column>
+
+
+                    <p:column   style="width: 14vh;text-align: right;font-size: 2.2vh"
+                                headerText="الوحدة">
+                        <h:outputText  id="nameText" value="#{rscContractDetail.guideDTO.unitName.name}" />
+                    </p:column>
+
+                    <p:column   style="width: 16vh;text-align: right;font-size: 2.2vh"
+                                headerText="الكمية">
+                        <p:inputText id="qtyUnits" value="#{rscContractDetail.quantity}" >
+                            <p:ajax  event="blur" listener="#{rscContractRegisterFormMB.calculateTotalUnits()}"
+                                     update="totalsUnit totalQuantity totalPrice netTotal" />
+                        </p:inputText> 
+                    </p:column>
+
+                    <p:column   style="width: 16vh;text-align: right;font-size: 2.2vh"
+                                headerText="الفئة تحليلى">
+                        <p:inputText id="priceUnitt" value="#{rscContractDetail.price}">
+                            <p:ajax  event="blur" listener="#{rscContractRegisterFormMB.calculateTotalUnits()}"
+                                     update="totalsUnit totalQuantity totalPrice netTotal" />
+                        </p:inputText> 
+                    </p:column>
+
+                    <p:column   style="width: 14vh;text-align: right;font-size: 2.2vh"
+                                headerText=" القيمة">
+                        <h:outputText id="totalsUnit" value="#{rscContractDetail.total}" />
+                    </p:column>
+
+
+                    <p:column   style="width: 16vh;text-align: right;font-size: 2.2vh"
+                                headerText=" الملاحظات">
+                        <p:inputText id="remark" value="#{rscContractDetail.remark}"   />
+                    </p:column>
+
+                    <p:column headerText="العمليات" style=" width: 14vh">
+                        <p:commandButton class="saddButton" update="rscContractDetail"
+                                         icon="fa fa-fw fa-plus"
+                                         title="#{userData.userDDs['ADD']}" 
+                                         action="#{rscContractRegisterFormMB.addChild()}"
+                                         />
+
+                        <p:commandButton  class="sdeleteButton" update="rscContractDetail"
+                                          title="#{userData.userDDs['DELETE']}" 
+                                          action="#{rscContractRegisterFormMB.deleteRscTenderDetail()}"
+                                          icon="fa fa-remove" >
+
+                            <f:setPropertyActionListener value="#{rscContractDetail}"
+                                                         target="#{rscContractRegisterFormMB.rscContractRegisterDetailWorkUnitDTOSelected}"/>
+                            <p:confirm header="#{userData.userDDs['COFIGRATION']}" 
+                                       message="#{userData.userDDs['ARE_YOU_SURE']}"
+                                       icon="ui-icon-alert" />
+                        </p:commandButton>
+
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+
+
+
+                    </p:column>
+
+
+                    <p:summaryRow>
+                        <p:column colspan="2" style="text-align:right">
+                            <h:outputText style="text-align:right" value="#{userData.userDDs['TOTAL']}  :" />
+                        </p:column>
+
+                        
+                        <p:column>
+                            <h:outputText id="totalQuantity" value="#{rscContractRegisterFormMB.rscContractRegisterDTO.totalquantity}"/>
+                        </p:column>
+                        <p:column>
+                            <h:outputText id="totalPrice" value="#{rscContractRegisterFormMB.rscContractRegisterDTO.totalprice}"/>
+                        </p:column>
+                        <p:column>
+                            <h:outputText id="netTotal" value="#{rscContractRegisterFormMB.rscContractRegisterDTO.nettotal}"/>
+                        </p:column>
+                        <p:column  style="text-align:right">
+                            <h:outputText style="text-align:right" value="" />
+                        </p:column>
+                        <p:column  style="text-align:right">
+                            <h:outputText style="text-align:right" value="" />
+                        </p:column>
+                    </p:summaryRow>
+
+                </p:dataTable>
+                <h:panelGroup>
+
+                    <div class="centerButtons" style="margin-top:1%" >
+
+                        <p:commandButton class="saveButton" 
+                                         title="#{userData.userDDs['SAVE']}"
+                                         value="#{userData.userDDs['SAVE']}"
+                                         icon="fa fa-fw fa-save"
+                                         action="#{rscContractRegisterFormMB.valitdatetotal()}" update="@form" 
+                                         id="saveB"/>
+
+
+
+                        <p:commandButton class="newButton" 
+                                         value="#{userData.userDDs['NEW']}"
+                                         title="#{userData.userDDs['NEW']}"
+                                         icon="fa fa-fw fa-undo"  
+                                         action="#{rscContractRegisterFormMB.reset}" 
+                                         update="form" id="undo"/>
+
+                        <p:commandButton   class="reloadButton"
+                                           id="loadL"  title="#{userData.userDDs['UPLOAD']}"
+                                           value="#{userData.userDDs['UPLOAD']}" 
+                                           icon="fa fa-fw fa-spinner"
+                                           action="#{rscContractRegisterFormMB.OpenDlg('dlg2')}"
+                                           update="form"/>
+
+                        <p:commandButton class="cancelButton"
+                                         title="#{userData.userDDs['CANCEL']}" 
+                                         immediate="true" 
+                                         value="#{userData.userDDs['CANCEL']}" 
+                                         icon="fa fa-fw fa-backward" 
+                                         action="#{rscContractRegisterFormMB.exit()}"   />`
+                      
+                          <p:commandButton  class="PrintButton"
+                                          id="PrintB"
+                                          ajax="false"
+                                          onclick="form.target = '_blank'"  
+                                          icon="fa fa-fw fa-print"
+                                          value="#{userData.userDDs['PRINT']}" 
+                                          actionListener="#{rscContractRegisterFormMB.print()}"
+                                          title="#{userData.userDDs['PRINT']}"
+                                          immediate="true" />
+                        
+
+
+
+                        <p:blockUI block="form" trigger="saveB  undo" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI>
+
+                    </div>
+                </h:panelGroup>
+
+            </p:fieldset>
+
+            <h:panelGrid columns="1" cellpadding="5">
+
+                <h:panelGroup>
+
+
+
+
+                    <p:dialog id="dlg" header="#{userData.userDDs['UPLOAD_ORDERS']}" widgetVar="dlg2" modal="true" style="height: fit-content;width: fit-content">
+
+                        <p:tabView id="tabsBar">
+                            <p:tab id="tab1" title="#{userData.userDDs['ORDERS']}"  >
+
+                                <p:dataTable id="orderList"
+                                             draggableColumns="true" 
+                                             var="order"
+                                             widgetVar="order"  
+                                             rowIndexVar="index" 
+                                             dir="rtl"  selectionMode="single"
+                                             selection="#{rscContractRegisterFormMB.rscContractRegisterDTO.rscQotationPriceTenderId}"
+                                             value="#{rscContractRegisterFormMB.rscQotationPriceTenderDTOList}" 
+                                             rowKey="#{order}"
+                                             rows="#{userData.rowListCount}" 
+                                             paginator="true" 
+                                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" >
+
+                                    <p:column style="width: 12vh;font-size: 1.5vh;text-align: -webkit-auto" 
+                                              filterStyle="display:none" filterBy="#{order.docNumber}"
+                                              filterMatchMode="contains" 
+                                              headerText="رقم عرض السعر"
+                                              sortBy="#{order.docNumber}">
+                                        <p:outputLabel value="#{order.docNumber}" />
+                                    </p:column>
+
+
+                                    <p:column style="width: 14vh;text-align:right;font-size: 1.8vh" 
+                                              filterStyle="display:none"
+                                              filterBy="#{order.customerId.name}" 
+                                              filterMatchMode="contains"
+                                              headerText="المقاول" 
+                                              sortBy="#{order.customerId.name}">
+                                        <p:outputLabel value="#{order.customerId.name}" />
+                                    </p:column>
+                                </p:dataTable> 
+                            </p:tab>
+                        </p:tabView>
+
+                        <p:commandButton class="reloadButton" update="fieldSetId data tenderPrice tenderdata" 
+                                         icon="fa fa-fw fa-spinner" 
+                                         action="#{rscContractRegisterFormMB.loadOrder()}"
+                                         title="#{userData.userDDs['UPLOAD']}"  >
+
+                        </p:commandButton>
+
+                    </p:dialog>
+
+                </h:panelGroup>
+
+
+
+            </h:panelGrid>
+
+
+        </h:form>
+    </ui:define>
+</ui:composition>

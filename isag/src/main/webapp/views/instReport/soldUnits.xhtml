@@ -1,0 +1,263 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+
+
+
+
+        <h:form  id="form" dir="#{userData.dir}"  class='formmargin'>
+            <div style=" position: absolute;left: 20px"> 
+
+                <p:commandButton  style="z-index: 2;
+                                  margin-top: 12%;
+                                  color: #035c70!important; 
+                                  background-color: #223238!important;
+                                  border: 1px solid #22323a!important;
+                                  background: #22323a 50% 50% repeat-x!important;"
+                                  icon="fa fa-fw fa-home"
+                                  title="#{userData.userDDs['HOME']}"
+                                  class="smhomeButton" 
+                                  action="exit" />
+                <p:commandButton  style="z-index: 2;
+                                  margin-top: 9%!important;
+                                  color: #035c70!important; 
+                                  background-color: #223238!important;
+                                  border: 1px solid #22323a!important;
+                                  background: #22323a 50% 50% repeat-x!important;" 
+                                  class="viewButton sminimize"
+                                  icon="fa fa-window-minimize"
+                                  title="إظهار/إخفاء"/>  
+            </div>
+
+            <p:fieldset legend="الوحدات المباعه"> 
+
+
+                <div class="ui-g-12 ui-g-nopad  firstset" id="firstSegment" >
+
+                    <p:messages id="curmsg" showDetail="true" rendered="true" closable="true"/>   
+
+                    <div class="ui-g"> 
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 65px;margin-right: 5%;" value="#{userData.userDDs['FROM_PROJECT']}"/>
+                                </h:panelGroup>  
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:34%!important" 
+
+                                                    dropdown="true"
+                                                    converter="#{soldUnitsReportMB.instProjectGuideConverter}"
+                                                    value="#{soldUnitsReportMB.installmentSearchBean.projectGuideFrom}"
+                                                    var="projectGuideName"
+                                                    itemLabel="#{projectGuideName}" 
+                                                    itemValue="#{projectGuideName}"
+                                                    forceSelection="true" 
+                                                    completeMethod="#{soldUnitsReportMB.completProjectGuide}">
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 65px" value="#{userData.userDDs['TO_PROJECT']}"/>
+                                </h:panelGroup>  
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:34%!important" 
+
+                                                    dropdown="true"
+                                                    converter="#{soldUnitsReportMB.instProjectGuideConverter}"
+                                                    value="#{soldUnitsReportMB.installmentSearchBean.projectGuideTo}"
+                                                    var="projectGuideName"
+                                                    itemLabel="#{projectGuideName}" 
+                                                    itemValue="#{projectGuideName}"
+                                                    forceSelection="true" 
+                                                    completeMethod="#{soldUnitsReportMB.completProjectGuide}">
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 60px;margin-right: 5%;" value="#{userData.userDDs['FROM_DATE']}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:calendar pattern="yyyy-MM-dd"
+                                                value="#{soldUnitsReportMB.installmentSearchBean.fromDate}"
+                                                style="width: 50%">
+
+                                    </p:calendar>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 60px" value="#{userData.userDDs['TO_DATE']}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:calendar pattern="yyyy-MM-dd" 
+                                                value="#{soldUnitsReportMB.installmentSearchBean.toDate}"
+                                                style="width: 50%">
+
+                                    </p:calendar>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div> 
+                    </div>
+                </div>
+
+                <h:panelGrid  class="col-md-12 centerButtons" columns="1">
+
+                    <h:panelGroup >
+
+
+                        <p:commandButton     class="searchButtons"
+                                             title="#{userData.userDDs['SEARCH']}"
+                                             action="#{soldUnitsReportMB.search()}"
+                                             id="saveB"
+                                             value="#{userData.userDDs['SEARCH']}"
+                                             update="@form" 
+                                             style="color: #fff!important;background-color: #2196F3;margin-left: 5px;"/>
+
+                        <p:commandButton    class="newButtons"
+                                            title="#{userData.userDDs['NEW']}" 
+                                            immediate="true" 
+                                            action="#{soldUnitsReportMB.reset()}"
+                                            update="form"
+                                            value="#{userData.userDDs['NEW']}"
+                                            style=""
+                                            resetValues="true"
+                                            id="NewB"/>
+
+                        <p:commandButton    class="printButtons"
+                                            ajax="false"
+                                            onclick="form.target = '_blank'"  
+                                            style="color: #fff!important;background-color: rgb(1, 76, 134);margin-left: 5px;"
+                                            value="#{userData.userDDs['PRINT']}" 
+                                            actionListener="#{soldUnitsReportMB.exportPDF}"
+                                            title="#{userData.userDDs['PRINT']}"
+                                            immediate="true" 
+                                            id="PrintB"/>
+
+                        <p:commandButton    class="closeButton"
+                                            style=""   
+                                            title="#{userData.userDDs['BACK']}"
+                                            action="exit"
+                                            value="#{userData.userDDs['BACK']}"
+                                            id="CloseB"/>
+                        <h:commandLink  class="sdcreenimg" style="margin-right: 4px;">   
+                            <p:graphicImage name="/img/excel.jpg" width="24;"/>  
+                            <p:dataExporter type="xls"
+                                            target="instContractDTOList" 
+                                            fileName="تقرير الوحدات المباعه"
+                                            postProcessor="#{soldUnitsReportMB.postProcessXLS}" />  
+                        </h:commandLink>
+
+                        <p:blockUI block="form" trigger="saveB NewB PrintB CloseB" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI> 
+
+                    </h:panelGroup>
+
+                </h:panelGrid>
+
+            </p:fieldset>
+
+            <p:fieldset id="reportDB" style="margin-top: 2%">
+
+
+                <p:dataTable id="instContractDTOList"
+                             draggableColumns="true" 
+                             rows="20"
+                             paginator="true"
+                             value="#{soldUnitsReportMB.instContractDTOList}" 
+                             var="instContractDTOList" 
+                             widgetVar="bTable" 
+                             rowIndexVar="index" 
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}">  
+                    <f:facet name="header" class="col-md-12">
+
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('bTable').filter()" style="width:150px" />
+
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:column  style="width: 7vh;text-align: center;font-size: 1.6vh;border-radius: 0px;" headerText="رقم العقد"
+                               sortBy="#{instContractDTOList.serial}"
+                               filterBy="#{instContractDTOList.serial}" 
+                               filterMatchMode="contains"
+                               filterable="false" >
+                        <h:outputText value="#{instContractDTOList.serial}"  style="text-align: center;"/>
+                    </p:column>
+                    <p:column  style=" width: 8vh;text-align: center;font-size: 1.6vh;border-radius: 0px;" headerText="اسم المشروع"  
+
+                               sortBy="#{instContractDTOList.instProjectGuideDTO.name}"
+                               filterBy="#{instContractDTOList.instProjectGuideDTO.name}" 
+                               filterMatchMode="contains"
+                               filterable="false" >
+
+                        <h:outputText value="#{instContractDTOList.instProjectGuideDTO.name}"  style="text-align: center;"/>
+                    </p:column>
+
+                    <p:column style="width: 10vh;text-align: center;font-size:1.6vh;border-radius: 0px;" 
+                              headerText="اسم العميل" 
+                              sortBy="#{instContractDTOList.invOrganizationSiteDTO.name}"
+                              filterBy="#{instContractDTOList.invOrganizationSiteDTO.name}" 
+                              filterMatchMode="contains"
+                              filterable="false" > 
+                        <p:outputLabel value="#{instContractDTOList.invOrganizationSiteDTO.name}"/>
+                    </p:column>
+                    <p:column style="width: 9vh;text-align: center;font-size: 1.6vh;border-radius: 0px;" 
+                              headerText="تاريخ العقد"
+
+                              sortBy="#{instContractDTOList.date}"
+                              filterBy="#{instContractDTOList.date}" 
+                              filterMatchMode="contains"
+                              filterable="false" >
+
+                        <p:outputLabel value="#{instContractDTOList.date}">
+                            <f:convertDateTime type="date" pattern="yyyy-MM-dd"/>
+                        </p:outputLabel>
+                    </p:column>
+
+
+                    <p:column  style="width:8vh;font-size: 1.6vh;text-align: -webkit-auto;border-radius: 0px;" 
+                               headerText="مبلغ الوحده"
+
+                               sortBy="#{instContractDTOList.totalValue}"
+                               filterBy="#{instContractDTOList.totalValue}" 
+                               filterMatchMode="contains"
+                               filterable="false" >
+
+                        <h:outputText value="#{instContractDTOList.totalValue}"
+                                      style="font-size: 1.4vh; width: 80vh"/>
+                    </p:column>
+
+
+                    <p:columnGroup type="footer">
+                        <p:row> 
+                            <p:column colspan="5"  style="font-size: 1.4vh;border-radius: 0px;" />
+                        </p:row>
+                    </p:columnGroup>
+                </p:dataTable>
+
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>

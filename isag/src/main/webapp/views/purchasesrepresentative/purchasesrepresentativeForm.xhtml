@@ -1,0 +1,124 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+
+        <h:form id="form"  enctype="multipart/form-data"  dir="#{userData.dir}" class='formmargin'>
+            <div style=" position: absolute;left: 20px"> 
+
+                <p:commandButton  style="z-index: 2;
+                                  margin-top: 24%;
+                                  color: #035c70!important; 
+                                  background-color: #223238!important;
+                                  border: 1px solid #22323a!important;
+                                  background: #22323a 50% 50% repeat-x!important;"
+                                  icon="fa fa-fw fa-home"
+                                  title="#{userData.userDDs['HOME']}"
+                                  class="smhomeButton" 
+                                  action="exit" />
+
+            </div>
+            <p:fieldset legend="#{userData.userDDs['DETA_PURCHASE_ORDE']}" >    
+                <div class="ui-g-6 ui-xl-6">
+                    <div class="ui-g-12 ui-xl-12">
+
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:inputText style="width: 50%" 
+                                         id="ad2" 
+                                         value="#{inventoryDelegatorFormBean.inventoryDelegator.name}"/>
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel style="width:75px;margin-right: 6%;" value="#{userData.userDDs['DELEGATOR_NAME']}"/>
+
+                        </div>
+                    </div>
+                    <div class="ui-g-12 ui-xl-12">
+
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:inputNumber style="width: 50%!important"  id="ad4" 
+                                           value="#{inventoryDelegatorFormBean.inventoryDelegator.commission}"/>
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel style="width: 75px;margin-right: 6%;" value="#{userData.userDDs['COMMISSION']}"/>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="ui-g-6 ui-xl-6">
+                    <div class="ui-g-12 ui-xl-12">
+
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:inputText style="width: 50%"
+                                         id="code" 
+                                         a:autofocus="true" 
+                                         value="#{inventoryDelegatorFormBean.inventoryDelegator.code}">
+                                <p:ajax event="blur" listener="#{inventoryDelegatorFormBean.checkCodeExistence()}" update="form" />
+                            </p:inputText>
+
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel style="width:75px;margin-right: 6%;" value="#{userData.userDDs['DELEGATOR_COD']}"/>
+
+
+                        </div>
+                    </div>
+                    <div class="ui-g-12 ui-xl-12">
+
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:inputText style="width: 50%"  id="ad3" value="#{inventoryDelegatorFormBean.inventoryDelegator.mobile}"/>
+
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel style="width: 75px;margin-right: 6%;" value="#{userData.userDDs['MOBILE']}"/>
+
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+                <h:panelGrid id="secondSegment" columns="2" cellspacing="20" cellpadding="0"  >
+
+                    <h:panelGroup  class="centerButtons" style="margin-top: 1%">
+                        <p:commandButton  class="saveButtons" 
+                                          id="saveB"
+                                          title="#{userData.userDDs['SAVE']}"
+                                          value="#{userData.userDDs['SAVE']}" 
+                                      
+                                          action="#{inventoryDelegatorFormBean.save()}" 
+                                          update="@form"/>
+
+                        <p:commandButton  class="newButtons" 
+                                          id="newN"
+                                          ajax="false"
+                                          
+                                          value="#{userData.userDDs['NEW']}" 
+                                          title="#{userData.userDDs['NEW']}" 
+                                          onclick="form.target = ''" 
+                                          actionListener="#{inventoryDelegatorFormBean.reset()}"/>
+
+                        <p:commandButton  class="closeButtons" 
+                                          title="#{userData.userDDs['CANCEL']}"
+                                          immediate="true" 
+                                          value="#{userData.userDDs['CANCEL']}"
+                                       
+                                          action="#{inventoryDelegatorFormBean.cancel}"   />
+                    </h:panelGroup>
+
+                </h:panelGrid>
+
+            </p:fieldset>
+        </h:form>
+
+    </ui:define>
+</ui:composition>

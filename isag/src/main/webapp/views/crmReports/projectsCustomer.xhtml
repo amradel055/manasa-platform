@@ -1,0 +1,263 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+
+        <div style=" position: absolute;left: 20px"> 
+
+            <p:commandButton  style="z-index: 2;
+                              margin-top: 12%;
+                              color: #035c70!important; 
+                              background-color: #223238!important;
+                              border: 1px solid #22323a!important;
+                              background: #22323a 50% 50% repeat-x!important;"
+                              icon="fa fa-fw fa-home"
+                              title="#{userData.userDDs['HOME']}"
+                              class="smhomeButton" 
+                              action="exit" />
+            <p:commandButton  style="z-index: 2;
+                              margin-top: 9%!important;
+                              color: #035c70!important; 
+                              background-color: #223238!important;
+                              border: 1px solid #22323a!important;
+                              background: #22323a 50% 50% repeat-x!important;" 
+                              class="viewButton sminimize"
+                              icon="fa fa-window-minimize"
+                              title="إظهار/إخفاء"/> 
+        </div>
+
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form class='formmargin'  id="form" dir="#{userData.dir}">
+
+            <p:fieldset legend="عملاء المشاريع">
+
+
+                <div class="col-xs-12">
+                    <p:messages id="curmsg" showDetail="true" rendered="false" closable="true"/>   
+                </div>
+
+                <div class="ui-g-12 ui-g-nopad firstset" id="firstSegment" >
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 75px;margin-right: 5%;" value="#{userData.userDDs['FROM_CUSTOM']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:40%!important"
+                                                    dropdown="true"
+                                                    converter="#{autoComplete.organizationSiteDTOConvertor}"
+                                                    value="#{projectCustomerReportMB.crmEventsReportSearchBean.leadsFrom}"
+                                                    var="organization"
+                                                    itemLabel="#{organization}" 
+                                                    itemValue="#{organization}"
+                                                    forceSelection="true" 
+                                                    completeMethod="#{autoComplete.completeLeads}"
+                                                    >
+
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 75px" value="#{userData.userDDs['TO_CUSTOM']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:40%!important"
+                                                    dropdown="true"
+                                                    converter="#{autoComplete.organizationSiteDTOConvertor}"
+                                                    value="#{projectCustomerReportMB.crmEventsReportSearchBean.leadsTo}"
+                                                    var="organization"
+                                                    itemLabel="#{organization}" 
+                                                    itemValue="#{organization}"
+                                                    forceSelection="true" 
+                                                    completeMethod="#{autoComplete.completeLeads}"
+                                                    >
+
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 75px;margin-right: 5%;" value="#{userData.userDDs['FROM_PROJECT']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:40%!important"
+                                                    dropdown="true"
+                                                    converter="#{autoComplete.instProjectGuideDTOConverter}"
+                                                    value="#{projectCustomerReportMB.crmEventsReportSearchBean.instProjectGuideDTOFrom}"
+                                                    var="project"
+                                                    itemLabel="#{project}" 
+                                                    itemValue="#{project}"
+                                                    forceSelection="true" 
+                                                    completeMethod="#{autoComplete.completeInstProjectDTOAll}"
+                                                    >
+
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 75px" value="#{userData.userDDs['TO_PROJECT']}"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:40%!important"
+                                                    dropdown="true"
+                                                    converter="#{autoComplete.instProjectGuideDTOConverter}"
+                                                    value="#{projectCustomerReportMB.crmEventsReportSearchBean.instProjectGuideDTOTo}"
+                                                    var="project"
+                                                    itemLabel="#{project}" 
+                                                    itemValue="#{project}"
+                                                    forceSelection="true" 
+                                                    completeMethod="#{autoComplete.completeInstProjectDTOAll}"
+                                                    >
+
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                    </div>
+                </div>
+
+                <h:panelGrid  class="col-md-12 centerButtons" columns="1">
+
+                    <h:panelGroup     style="margin-top: 2%">
+
+                        <p:commandButton  class="searchButtons"
+                                          style="color: #fff!important;background-color: #2196F3;margin-left: 5px;" 
+                                          value="#{userData.userDDs['SEARCH']}" action="#{projectCustomerReportMB.search}"
+                                          id="searchS"
+                                          update="form" />
+                        <p:commandButton  class="newButtons"
+                                          style="color: #fff!important;background-color: #9c27b0d1;margin-left: 5px;"
+                                          value="#{userData.userDDs['NEW']}" action="#{projectCustomerReportMB.reset}"
+                                          id="reset"
+                                          update="@form" />
+                        <p:commandButton  class="printButtons"
+                                          style="color: #fff!important;background-color: rgb(1, 76, 134);margin-left: 5px;"
+                                          ajax="false" onclick="form.target = '_blank'"  value="#{userData.userDDs['PRINT']} "
+                                          actionListener="#{projectCustomerReportMB.exportPDF}" id="printButtons"/>
+
+                        <p:blockUI block="form" trigger="searchS reset printButtons" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI> 
+                    </h:panelGroup>
+
+                </h:panelGrid>
+
+                <h:panelGrid style="">  </h:panelGrid>
+
+
+            </p:fieldset>
+
+            <p:fieldset>
+
+                <p:dataTable id="accc" widgetVar="bTable"
+                             rows="20"
+                             paginator="true"
+                             draggableColumns="true" 
+                             value="#{projectCustomerReportMB.crmCustomerInterestedProductsDTOList}" 
+                             var="projects"
+                             sortBy="#{projects.projectId.code}" expandableRowGroups="true">
+
+                    <f:facet name="header" >
+
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('bTable').filter()" style="width:150px" />
+
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:headerRow>
+                        <p:column colspan="1" style="width: 15vh;font-size: 2vh;border-radius: 0px;" >
+                            <h:outputText value="#{projects.projectId.code}" />
+                        </p:column>
+                        <p:column colspan="5" style="width: 15vh;font-size: 2vh;border-radius: 0px;" >
+                            <h:outputText value="#{projects.projectId.name}" />
+                        </p:column>
+                    </p:headerRow>
+
+                    <p:column style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" headerText="#{userData.userDDs['SERIAL']}"
+
+
+                              sortBy="#{projects.organizationSiteId.code}"
+                              filterBy="#{projects.organizationSiteId.code}" 
+                              filterMatchMode="contains"
+                              filterable="false" >
+
+                        <h:outputText value="#{projects.organizationSiteId.code}" style="font-size: 1.5vh"/>
+                    </p:column>
+                    <p:column style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" headerText="#{userData.userDDs['CUSTOMER']}"
+
+                              sortBy="#{projects.organizationSiteId.name}"
+                              filterBy="#{projects.organizationSiteId.name}" 
+                              filterMatchMode="contains"
+                              filterable="false" >
+
+                        <h:outputText value="#{projects.organizationSiteId.name}" style="font-size: 1.5vh"/>
+                    </p:column>
+                    <p:column style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" headerText="الجوال"
+
+                              sortBy="#{projects.organizationSiteId.mobile}"
+                              filterBy="#{projects.organizationSiteId.mobile}" 
+                              filterMatchMode="contains"
+                              filterable="false" > 
+                        <h:outputText value="#{projects.organizationSiteId.mobile}" style="font-size: 1.5vh"/>
+                    </p:column>
+                    <p:column style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" headerText="الهاتف"
+
+                              sortBy="#{projects.organizationSiteId.phone}"
+                              filterBy="#{projects.organizationSiteId.phone}" 
+                              filterMatchMode="contains"
+                              filterable="false" >
+
+                        <h:outputText value="#{projects.organizationSiteId.phone}" style="font-size: 1.5vh"/>
+                    </p:column>
+                           <p:column style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" headerText="مصدر العميل"
+
+                                     sortBy="#{projects.organizationSiteId.learnAboutCompanyFrom.name}"
+                              filterBy="#{projects.organizationSiteId.learnAboutCompanyFrom.name}" 
+                              filterMatchMode="contains"
+                              filterable="false" >
+
+                        <h:outputText value="#{projects.organizationSiteId.learnAboutCompanyFrom.name}" style="font-size: 1.5vh"/>
+                    </p:column>
+
+                    <p:column style="width: 20vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" headerText="نسبة رضا العميل"
+
+                              sortBy="#{projects.interestedDegree}"
+                              filterBy="#{projects.interestedDegree}" 
+                              filterMatchMode="contains"
+                              filterable="false" >
+
+                        <h:outputText value="#{projects.interestedDegree}" style="font-size: 1.5vh">
+                        </h:outputText>
+                    </p:column>
+                </p:dataTable>
+
+
+            </p:fieldset>
+
+
+        </h:form>
+    </ui:define>
+</ui:composition>

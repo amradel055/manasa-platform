@@ -1,0 +1,110 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form class='formmargin' id="form" dir="#{userData.dir}">
+            
+            <p:fieldset legend="#{userData.userDDs['Register_Contract']}" >
+                <div class="col-xs-12">
+                    <p:messages id="curmsg" showDetail="true" rendered="true" closable="true"/>   
+                </div>
+
+                <div>
+                    <p:dataTable 
+                        var="rscContractTable"
+                        widgetVar="rscContractTable" 
+                        rowIndexVar="index"
+                        value="#{rscContractRegisterListMB.rscContractRegisterDTOList}" 
+                        style="margin-top: 2%; margin-bottom: 15px"
+                        dir="rtl" 
+                        rows="#{userData.rowListCount}"
+                        paginator="true"
+                        emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                        id="rscContractTable"
+                        class="datatable-dir-en">
+
+                        <f:facet name="header">
+                            <p:commandButton  class="saddButton" icon="fa fa-plus" title="#{userData.userDDs['ADD']}"
+                                              id="addA"
+                                              action="#{rscContractRegisterListMB.goToAdd()}" style="float:right"/>
+                            <p:blockUI block="form" trigger="addA" animate="true" >
+
+                                <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                            </p:blockUI> 
+
+
+                            <p:outputPanel>
+                                <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                                <p:inputText id="globalFilter" onkeyup="PF('itemSalesReportTable').filter()" style="width:150px" />
+                            </p:outputPanel>
+
+                        </f:facet>
+
+                        <p:column  style="width: 5vh;font-size: 1.9vh;text-align:center; border-radius: 0px;" 
+                                   headerText="#" >
+                            <p:outputLabel value="#{index +1}" />
+                        </p:column>
+
+                        <p:column   style="width: 15vh;text-align: center;font-size: 2.2vh;border-radius: 0px;"
+                                    headerText="#{userData.userDDs['Code']}">
+                            <p:outputLabel  value="#{rscContractTable.documentNumber}"  />
+                        </p:column>
+
+                        <p:column   style="width: 20vh;text-align: center;font-size: 2.2vh;border-radius: 0px;"
+                                    headerText="#{userData.userDDs['Item']}">
+                            <p:outputLabel value="#{rscContractTable.siteId.name}"  />
+                        </p:column>
+
+                        <p:column   style="width: 15vh;text-align: center;font-size: 2.2vh;border-radius: 0px;"
+                                    headerText="#{userData.userDDs['Status']}">
+                            <p:outputLabel  value="#{rscContractTable.statusText}" />
+                        </p:column>
+
+                        <p:column style="width: 9vh;font-size: 1.9vh;text-align: center;border-radius: 0px;" headerText="#{userData.userDDs['TRANSACTION']}">
+
+                            <p:commandButton  class="seditButtons" 
+                                              icon="fa fa-fw fa-edit" 
+                                              title="#{userData.userDDs['EDIT']}" style="background-color: #6a6967;border-radius: 3px;"
+                                              action="#{rscContractRegisterListMB.goToEdit()}">
+                                <f:setPropertyActionListener value="#{rscContractTable}"  
+                                                             target="#{rscContractRegisterListMB.rscContractRegisterDTOSelected}" />
+                            </p:commandButton>
+
+                            <p:commandButton class="sdeleteButtons" update="@form" icon="fa fa-remove"
+                                             title="#{userData.userDDs['DELETE']}" style="background-color: red;border-radius: 3px;" action="#{rscContractRegisterListMB.delete}" disabled="#{rscContractTable.active}">
+                                <f:setPropertyActionListener value="#{rscContractTable}" target="#{rscContractRegisterListMB.rscContractRegisterDTOSelected}" />
+                                <p:confirm header="Confirmation" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                            </p:commandButton>
+                            <p:commandButton 
+                                class="sprintButtons"
+                                update="@form" onclick="form.target = '_blank'"  ajax="false"
+                                icon="fa fa-fw fa-print" style="background-color: rgb(1, 76, 134)!important;border-radius: 3px;"
+                                title="print" 
+                                action="#{rscContractRegisterListMB.print()}" 
+                                >
+
+                                <f:setPropertyActionListener value="#{rscContractTable}" target="#{rscContractRegisterListMB.rscContractRegisterDTOSelected}" />
+                            </p:commandButton>
+                        </p:column>
+
+                    </p:dataTable> 
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                        <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog>
+                </div>
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>
+
+

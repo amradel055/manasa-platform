@@ -1,0 +1,1002 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <h:form id="ScreenAddEditForm" dir="#{userData.dir}" class='formmargin'>
+ <div style=" position: absolute;left: 20px"> 
+
+                <p:commandButton  style="z-index: 2;
+                                      margin-top: 12%;
+                                      color: #035c70!important; 
+                                      background-color: #223238!important;
+                                      border: 1px solid #22323a!important;
+                                      background: #22323a 50% 50% repeat-x!important;"
+                                      icon="fa fa-fw fa-home"
+                                      title="#{userData.userDDs['HOME']}"
+                                      class="smhomeButton" 
+                                      action="exit" />  
+            </div>
+
+            <p:fieldset legend="1. المعلومات الأساسية للموظف" style="margin-bottom:20px">
+                <div   class="ui-g-12 ui-g-nopad" style="padding: 0px;">
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:95px;margin-right: 5%"  value="الإسم بالعربية " />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText  style="width: 35%!important"  id="employeeName" a:autofocus="true" value="#{employeeFormMB.employeeDTO.name}">
+                                    </p:inputText>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <h:panelGroup>
+
+                                    <p:outputLabel style="width:95px"  value="الإسم بالإنجليزية" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText  style="width: 35%!important"  id="employeeNameEn" a:autofocus="true" value="#{employeeFormMB.employeeDTO.nameEn}">
+                                    </p:inputText>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <p:outputLabel style="width:101px;margin-right: 5%"  value="الجنس" />
+                            </h:panelGroup>
+                            <h:panelGroup>
+
+                                <p:autoComplete style="width:34%!important" 
+                                                dropdown="true" 
+                                                value="#{employeeFormMB.employeeDTO.gender}" 
+                                                converter="#{employeeFormMB.genderDTOConverter}"
+                                                completeMethod="#{employeeFormMB.completeGender}"
+                                                var="gender"
+                                                itemLabel="#{gender.name}"
+                                                itemValue="#{gender}" 
+                                                forceSelection="true" 
+                                                >
+
+                                </p:autoComplete>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:95px;"  value="تاريخ الإنضمام" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:calendar pattern="dd/MM/yyyy" 
+                                                value="#{employeeFormMB.employeeDTO.joinDate}"
+                                                style="width: 40%"
+                                                id="employeeJoinDate">
+
+                                    </p:calendar>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <h:panelGroup>
+
+                                    <p:outputLabel style="width:95px;margin-right: 5%"  value="البريد الإلكتروني" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText  style="width: 35%!important"  id="employeeEmail" a:autofocus="true" value="#{employeeFormMB.employeeDTO.email}" >
+                                    </p:inputText>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:95px"  value="تاريخ الميلاد" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:calendar pattern="dd/MM/yyyy" 
+                                                value="#{employeeFormMB.employeeDTO.dateBirth}"
+                                                style="width: 40%"
+                                                id="birthDate">
+
+                                    </p:calendar>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <p:outputLabel style="width:95px;margin-right: 5%"  value="كود الموظف" />
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:inputText  style="width: 35%!important"  id="employeeCode" a:autofocus="true" value="#{employeeFormMB.employeeDTO.code}">
+                                </p:inputText>
+                            </h:panelGroup>
+                        </div>
+
+
+
+
+                    </div>
+                </div>
+            </p:fieldset>
+            <p:fieldset legend="2. معلومات الهوية أو الإقامة" style="margin-bottom:20px">
+                <div   class="ui-g-12 ui-g-nopad" style="padding: 0px;">
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:125px;margin-right: 5%"  value="رقم الهوية أو الإقامة " />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText  style="width: 35%!important"  id="employeeIdNumber" a:autofocus="true" value="#{employeeFormMB.employeeDTO.idNumber}" >
+                                    </p:inputText>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width:99px"  value="تاريخ  الإصدار" />
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:calendar pattern="dd/MM/yyyy" 
+                                                    value="#{employeeFormMB.employeeDTO.idNumberReleaseDate}"
+                                                    style="width: 40%"
+                                                    id="employeeIdNumberStartDate">
+
+                                        </p:calendar>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width:125px;margin-right: 5%"  value="تاريخ الإنتهاء" />
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:calendar pattern="dd/MM/yyyy" 
+                                                    value="#{employeeFormMB.employeeDTO.idNumberEndDate}"
+                                                    style="width: 49%"
+                                                    id="employeeIdNumberEndDate">
+
+                                        </p:calendar>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:106px"  value=" مكان الميلاد"  />
+                                </h:panelGroup>
+                                <h:panelGroup>
+
+                                    <p:autoComplete style="width:34%!important" 
+                                                    dropdown="true" 
+                                                    value="#{employeeFormMB.employeeDTO.placeBirth}" 
+                                                    converter="#{employeeFormMB.placeBirthDTOConverter}"
+                                                    completeMethod="#{employeeFormMB.completePlaceBirth}"
+                                                    var="placeBirth"
+                                                    itemLabel="#{placeBirth.name}" 
+                                                    itemValue="#{placeBirth}" 
+                                                    forceSelection="true" 
+                                                    >
+
+                                    </p:autoComplete>
+
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:125px;margin-right: 5%"  value="رقم التأمينات الاجتماعية " />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText  style="width: 35%!important"  id="EmployeeSocialInsuranceID" a:autofocus="true" value="#{employeeFormMB.employeeDTO.socialInsuranceId}" >
+                                    </p:inputText>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+
+
+                    </div>
+                </div>
+
+
+
+            </p:fieldset>
+            <p:fieldset legend="3. تفاصيل العمل" style="margin-bottom:20px">   
+                <div   class="ui-g-12 ui-g-nopad" style="padding: 0px;">
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:105px;margin-right: 5%"  value="الحاله" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+
+                                    <p:selectOneMenu id="status" style="width:35%" value="#{employeeFormMB.employeeDTO.status}" >
+                                        <f:selectItem itemLabel="نشط" itemValue="1" noSelectionOption="true" />
+                                        <f:selectItem itemLabel="غير نشط" itemValue="0" noSelectionOption="true" />
+                                    </p:selectOneMenu>
+
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width:100px"  value=" تاريخ المباشرة" />
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:calendar pattern="dd/MM/yyyy" 
+                                                    value="#{employeeFormMB.employeeDTO.contractStartDate}"
+                                                    style="width: 40%"
+                                                    id="contractStartDate">
+
+                                        </p:calendar>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width:100px;margin-right: 5%"  value=" تاريخ نهاية العقد" />
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:calendar pattern="dd/MM/yyyy" 
+                                                    value="#{employeeFormMB.employeeDTO.contractEndDate}"
+                                                    style="width: 40%"
+                                                    id="contractEndDate">
+
+                                        </p:calendar>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width:100px"  value=" تاريخ التقاعد " />
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:calendar pattern="dd/MM/yyyy" 
+                                                    value="#{employeeFormMB.employeeDTO.retirementDate}"
+                                                    style="width: 40%"
+                                                    id="retirementDate">
+
+                                        </p:calendar>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+
+
+
+
+                    </div>
+                </div>
+
+            </p:fieldset>
+            <p:fieldset legend="4. الملف الشخصي للوظيفة" style="margin-bottom:20px">
+
+                <div   class="ui-g-12 ui-g-nopad" style="padding: 0px;">
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:110px;margin-right: 5%"  value="قسم" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:34%!important" 
+                                                    dropdown="true" 
+                                                    value="#{employeeFormMB.employeeDTO.departmentId}" 
+                                                    converter="#{employeeFormMB.departmentDTOConverter}"
+                                                    completeMethod="#{employeeFormMB.completeDepartment}"
+                                                    var="department"
+                                                    itemLabel="#{department.name}" 
+                                                    itemValue="#{department}" 
+                                                    forceSelection="true" 
+                                                    >
+
+                                    </p:autoComplete>
+
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:110px"  value="الدرجه الوظيقيه" />
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:34%!important" 
+                                                    dropdown="true" 
+                                                    value="#{employeeFormMB.employeeDTO.jobGrade}" 
+                                                    converter="#{employeeFormMB.jobGradDTOConverter}"
+                                                    completeMethod="#{employeeFormMB.completeJobGrade}"
+                                                    var="jobGrade"
+                                                    itemLabel="#{jobGrade.name}" 
+                                                    itemValue="#{jobGrade}" 
+                                                    forceSelection="true" 
+                                                    >
+
+                                    </p:autoComplete>
+
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:110px;margin-right: 5%"  value="المسمي الوظيفي" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+
+                                    <p:autoComplete style="width:34%!important" 
+                                                    dropdown="true" 
+                                                    value="#{employeeFormMB.employeeDTO.designation}" 
+                                                    converter="#{employeeFormMB.designationDTOConverter}"
+                                                    completeMethod="#{employeeFormMB.completeDesignation}"
+                                                    var="designation"
+                                                    itemLabel="#{designation.name}" 
+                                                    itemValue="#{designation}" 
+                                                    forceSelection="true" 
+                                                    >
+
+                                    </p:autoComplete>
+
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+
+                    </div>
+                </div>
+
+            </p:fieldset>
+            <p:fieldset legend="5. تفاصيل  شخصية" style="margin-bottom:20px">
+
+                <div   class="ui-g-12 ui-g-nopad" style="padding: 0px;">
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:105px;margin-right: 5%"  value="رقم جواز السفر " />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText  style="width: 35%!important"  id="passprotNumber" a:autofocus="true" value="#{employeeFormMB.employeeDTO.passportNumber}" >
+                                    </p:inputText>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width:105px"  value="  تاريخ الإصدار" />
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:calendar pattern="dd/MM/yyyy" 
+                                                    value="#{employeeFormMB.employeeDTO.passportReleaseDate}"
+                                                    style="width: 40%"
+                                                    id="passportReleaseDate">
+
+                                        </p:calendar>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width:105px;margin-right: 5%"  value=" صالحة لغاية" />
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:calendar pattern="dd/MM/yyyy" 
+                                                    value="#{employeeFormMB.employeeDTO.passportEndDate}"
+                                                    style="width: 40%"
+                                                    id="passportEndDate">
+
+                                        </p:calendar>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:110px"  value="الجنسية" />
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+
+                                    <p:autoComplete style="width:34%!important" 
+                                                    dropdown="true" 
+                                                    value="#{employeeFormMB.employeeDTO.nationality}" 
+                                                    converter="#{employeeFormMB.nationalityDTOConverter}"
+                                                    completeMethod="#{employeeFormMB.completeNationality}"
+                                                    var="nationality"
+                                                    itemLabel="#{nationality.name}" 
+                                                    itemValue="#{nationality}" 
+                                                    forceSelection="true" 
+                                                    >
+                                    </p:autoComplete>
+
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:110px;margin-right: 5%"  value=" الحالة الإجتماعية " />
+                                </h:panelGroup>
+                                <h:panelGroup>
+
+                                    <p:autoComplete style="width:34%!important" 
+                                                    dropdown="true" 
+                                                    value="#{employeeFormMB.employeeDTO.maritalStatus}" 
+                                                    converter="#{employeeFormMB.maritalStatusDTOConverter}"
+                                                    completeMethod="#{employeeFormMB.completeMaritalStatus}"
+                                                    var="maritalStatus"
+                                                    itemLabel="#{maritalStatus.name}" 
+                                                    itemValue="#{maritalStatus}"
+                                                    forceSelection="true" 
+                                                    >
+                                    </p:autoComplete>
+
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:110px"  value=" الديانة " />
+                                </h:panelGroup>
+                                <h:panelGroup>
+
+                                    <p:autoComplete style="width:34%!important" 
+                                                    dropdown="true" 
+                                                    value="#{employeeFormMB.employeeDTO.religion}" 
+                                                    converter="#{employeeFormMB.religionDTOConverter}"
+                                                    completeMethod="#{employeeFormMB.completeReligion}"
+                                                    var="religion"
+                                                    itemLabel="#{religion.name}" 
+                                                    itemValue="#{religion}" 
+                                                    forceSelection="true" 
+                                                    >
+
+                                    </p:autoComplete>
+
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+
+                    </div>
+                </div>
+            </p:fieldset>
+            <p:fieldset legend="6. تفاصيل جهة الاتصال" style="margin-bottom:20px">
+                <div   class="ui-g-12 ui-g-nopad" style="padding: 0px;">
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:155px;margin-right: 5%"  value="رقم الهاتف المحمول" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText  style="width: 35%!important"  id="mboile" a:autofocus="true" value="#{employeeFormMB.employeeDTO.mobile}">
+                                    </p:inputText>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:160px"  value="الشخص الذي يمكن الاتصال به" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText  style="width: 35%!important"  id="emergencyContact" a:autofocus="true" value="#{employeeFormMB.employeeDTO.hrEmergencyContactDTO.name}">
+                                    </p:inputText>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:155px;margin-right: 5%"  value="رقم الهاتف في حالات الطوارئ " />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText  style="width: 35%!important"  id="emergencyNumber" a:autofocus="true" value="#{employeeFormMB.employeeDTO.hrEmergencyContactDTO.mobile}">
+                                    </p:inputText>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:160px"  value="علاقة" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText  style="width: 35%!important"  id="relation" a:autofocus="true" value="#{employeeFormMB.employeeDTO.hrEmergencyContactDTO.relation}">
+                                    </p:inputText>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:155px;margin-right: 5%"  value="العنوان الدائم " />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText  style="width: 35%!important"  id="permentantAddress" a:autofocus="true" value="#{employeeFormMB.employeeDTO.hrEmergencyContactDTO.permenantAddress}">
+                                    </p:inputText>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:160px"  value="العنوان الحالي" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText  style="width: 35%!important"  id="currentAddress" a:autofocus="true" value="#{employeeFormMB.employeeDTO.hrEmergencyContactDTO.currentAddress}">
+                                    </p:inputText>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+
+
+                    </div>
+                </div>
+
+
+
+            </p:fieldset>
+
+            <p:fieldset legend="7.بيانات الكفيل " style="margin-bottom:20px">
+                <div   class="ui-g-12 ui-g-nopad" style="padding: 0px;">
+                    <div class="ui-g">
+
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width:105px;margin-right: 5%"  value=" اسم الكفيل  " />
+                                    </h:panelGroup>
+
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+
+                            <h:panelGroup>
+                                <p:autoComplete style="width:34%!important" 
+                                                dropdown="true" 
+                                                value="#{employeeFormMB.employeeDTO.sponsorDTO}" 
+                                                converter="#{employeeFormMB.sponsorDTOConverter}"
+                                                completeMethod="#{employeeFormMB.completeSponsor}"
+                                                var="sponsor"
+                                                itemLabel="#{sponsor.name}" 
+                                                itemValue="#{sponsor}" 
+                                                forceSelection="true" 
+                                                >
+                                </p:autoComplete>
+
+
+
+                            </h:panelGroup>
+                        </div>
+
+
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+
+
+                                <h:panelGroup>
+                                    <p:commandButton   class="saveButton"  
+                                                       id="saveBa" 
+                                                       title="إضافة"
+                                                       value="إضافة" 
+                                                       style="color: #ecf0f1!important;border-radius: 5px;
+height: 30px;background-color: #175C52!important;margin-left: 5px;" 
+                                                       action="#{employeeFormMB.OpenDlg('dlg1')}" 
+                                                       />
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </p:fieldset>
+            <p:fieldset legend="8.بيانات الرئيس المباشر " style="margin-bottom:20px">
+                <div   class="ui-g-12 ui-g-nopad" style="padding: 0px;">
+                    <div class="ui-g">
+
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width:105px;margin-right: 5%"  value="  الرئيس المباشر  " />
+                                    </h:panelGroup>
+
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+
+                            <h:panelGroup>
+                                <p:autoComplete style="width:34%!important" 
+                                                dropdown="true" 
+                                                value="#{employeeFormMB.employeeDTO.parentId}" 
+                                                converter="#{employeeFormMB.employeeDTOConverter}"
+                                                completeMethod="#{employeeFormMB.completeEmployee}"
+                                                var="parent"
+                                                itemLabel="#{parent.name}" 
+                                                itemValue="#{parent}" 
+                                                forceSelection="true" 
+                                                >
+                                </p:autoComplete>
+
+
+
+                            </h:panelGroup>
+                        </div>
+                    </div>
+                </div>
+            </p:fieldset>
+
+            <p:fieldset legend="9.بيانات التابعين " style="margin-bottom:20px">
+                <p:messages autoUpdate="true"  id="messagess" showDetail="true" closable="true"/>  
+
+                <p:dataTable 
+                    draggableColumns="true" 
+                    widgetVar="fellows" 
+                    id="table" 
+                    var="fellows" 
+                    dir="#{userData.dir}" 
+                    selectionMode="single"   
+                    rowKey="#{fellows.index}" 
+                    value="#{employeeFormMB.employeeDTO.hrEmployeeFellowsDTOList}"                    
+                    paginator="true" 
+                    rows="7"
+                    emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" >
+                    
+                    
+                
+
+                    <f:facet name="header" class="col-md-12">
+
+                        <p:commandButton id="b2" 
+                                         class="saddButton"
+
+                                         title="#{userData.userDDs['ADD']}" 
+                                         icon="fa fa-plus"
+                                         actionListener="#{employeeFormMB.addFellowRow()}" 
+                                         style="float:right;margin: 0" 
+                                         update="@form" />
+                        <p:outputPanel >
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('rolestable').filter()" style="width:150px" />
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:column filterStyle="display:none" 
+                              style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px"
+                              sortBy="#{fellows.name}"
+                              filterBy="#{fellows.name}" 
+                              filterMatchMode="contains"
+                              headerText=" اسم التابع">
+
+
+                        <p:inputText  
+                            value="#{fellows.name}"
+                            style="width:100%;font-size: 1.5vh"
+                            />
+                    </p:column>
+                    <p:column filterStyle="display:none" 
+                              sortBy="#{fellows.idNumber}" 
+                              filterBy="#{fellows.idNumber}" 
+                              filterMatchMode="contains"  
+                              style="width: 8vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px"
+                              headerText="الرقم (الهوية أو الإقامة)">
+
+
+
+                        <p:inputText id="SER" 
+                                     value="#{fellows.idNumber}"
+                                     style="width:100%">
+                        </p:inputText>
+                        <p:message id="msgSER" for="SER"/>
+                    </p:column>
+
+                    <p:column filterStyle="display:none" 
+                              style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px"
+                              sortBy="#{fellows.relation}"
+                              filterBy="#{fellows.relation}" 
+                              filterMatchMode="contains"
+                              headerText=" صلة القرابة">
+
+
+
+                        <p:inputText  id="Input3" 
+                                      value="#{fellows.relation}"
+                                      style="width:100%;font-size: 1.5vh"
+                                      />
+                    </p:column>
+
+
+
+                    <p:column filterStyle="display:none" 
+                              style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px"
+                              sortBy="#{fellows.relation}"
+                              filterBy="#{fellows.relation}" 
+                              filterMatchMode="contains"
+                              headerText=" تاريخ إنتهاء الإقامة">
+
+
+
+                        <h:panelGroup>
+                            <h:panelGroup>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:calendar pattern="dd/MM/yyyy" 
+                                            value="#{fellows.idEndDate}"
+                                            style="width: 56%"
+                                            id="employeeJoinDate">
+
+                                </p:calendar>
+                            </h:panelGroup>
+                        </h:panelGroup>
+
+                    </p:column>
+                    <p:column headerText="#{userData.userDDs['TRANSACTION']}" style="width: 10vh;font-size: 1.8vh;text-align:center;border-radius: 0px" >
+
+                        <p:commandButton  class="scloseButtons" update="@form"
+                                          title="#{userData.userDDs['DELETE']}" 
+                                          action="#{employeeFormMB.deleteFellows()}" icon="fa fa-remove"
+                                           style="background-color: red;border-radius: 3px;" 
+                                          >
+                            <f:setPropertyActionListener value="#{fellows}" target="#{employeeFormMB.hrEmployeeFellowsDTOSelected}" />
+
+                        </p:commandButton>
+                    </p:column>
+
+
+                </p:dataTable>
+            </p:fieldset>
+            <p:fieldset legend="10.المؤهلات العلمية " style="margin-bottom:20px">
+                <p:messages autoUpdate="true"  id="messages" showDetail="true" closable="true"/>  
+
+
+                <p:dataTable id="table2"
+                             draggableColumns="true" 
+                             widgetVar="qualificationsstable" 
+                             var="qualifications" 
+                             rowKey="#{qualifications.index}"
+                             value="#{employeeFormMB.employeeDTO.hrEmpQualificationsDTOList}"
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}">
+
+                    <f:facet name="header">
+                        <p:commandButton id="b3" 
+                                         class="saddButton"
+                                         title="#{userData.userDDs['ADD']}" 
+                                         icon="fa fa-plus"
+                                         actionListener="#{employeeFormMB.addQualificationsRow()}" 
+                                         style="float:right;margin: 0" 
+                                         update="@form table2" />
+                        <p:outputPanel >
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('rolestable').filter()" style="width:150px" />
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:column filterStyle="display:none" 
+                              style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px"
+                              sortBy="#{qualifications.schoolUniversity}"
+                              filterBy="#{qualifications.schoolUniversity}" 
+                              filterMatchMode="contains"
+                              headerText="  مدرسة / جامعة">
+
+
+                        <p:inputText  id="Input6" 
+                                      value="#{qualifications.schoolUniversity}"
+                                      style="width:100%;font-size: 1.5vh"
+                                      />
+                    </p:column>
+                    <p:column filterStyle="display:none" 
+                              sortBy="#{qualifications.graduationYear}" 
+                              filterBy="#{qualifications.graduationYear}" 
+                              filterMatchMode="contains"  
+                              style="width: 8vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px"
+                              headerText="سنة الإجتياز">
+
+
+                        <p:inputText id="SER" 
+                                     value="#{qualifications.graduationYear}"
+                                     style="width:100%">
+                        </p:inputText>
+                        <p:message id="msgSER" for="SER"/>
+                    </p:column>
+
+                    <p:column filterStyle="display:none" 
+                              style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px"
+                              sortBy="#{qualifications.percentage}"
+                              filterBy="#{qualifications.percentage}" 
+                              filterMatchMode="contains"
+                              headerText=" فئة / النسبة المئوية ">
+
+
+
+                        <p:inputText  id="Input7" 
+                                      value="#{qualifications.percentage}"
+                                      style="width:100%;font-size: 1.5vh"
+                                      />
+                    </p:column>
+                    <p:column filterStyle="display:none" 
+                              style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px"
+                              sortBy="#{qualifications.chosenTopics}"
+                              filterBy="#{qualifications.chosenTopics}" 
+                              filterMatchMode="contains"
+                              headerText=" مواضيع أساسية\اختيارية ">
+
+
+
+                        <p:inputText  id="Input8" 
+                                      value="#{qualifications.chosenTopics}"
+                                      style="width:100%;font-size: 1.5vh"
+                                      />
+                    </p:column>
+                    <p:column headerText="#{userData.userDDs['TRANSACTION']}" style="width: 10vh;font-size: 1.8vh;text-align:center;border-radius: 0px" >
+
+                        <p:commandButton  class="scloseButtons" update="@form"
+                                          title="#{userData.userDDs['DELETE']}" style="background-color: red;border-radius: 3px;"
+                                          action="#{employeeFormMB.deleteQualifications()}" 
+                                          icon="fa fa-fw fa-remove" 
+                                          >
+                            <f:setPropertyActionListener value="#{qualifications}" target="#{employeeFormMB.hrEmpQualificationsDTOSelected}" />
+
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+            </p:fieldset>
+
+
+            <h:panelGrid id="pn1"   class="centerButtons col-md-12" columns="1"  style="margin-top: 2%">
+
+
+                <h:panelGroup>
+
+
+                    <p:commandButton   class="saveButton"  
+                                       id="saveB" 
+                                       title="#{userData.userDDs['SAVE']}"
+                                       value="#{userData.userDDs['SAVE']}" 
+                                       style="color: #fff;"
+                                       action="#{employeeFormMB.save()}" 
+                                       update="@form" />
+                    <p:commandButton  class="newButton" 
+                                      id="newN"
+                                      ajax="false"
+                                   style="color: #fff;"
+                                      value="#{userData.userDDs['NEW']}" 
+                                      title="#{userData.userDDs['NEW']}"
+                                      onclick="form.target = ''" 
+                                      actionListener="#{employeeFormMB.reset()}"/>
+
+                    <p:commandButton class="closeButton" 
+                                     title="#{userData.userDDs['BACK']}" 
+                                     immediate="true" 
+                                     value="#{userData.userDDs['BACK']}" 
+                                   style=""
+                                     action="#{employeeFormMB.exit()}"   />
+
+
+
+
+                </h:panelGroup>
+            </h:panelGrid>
+            <p:blockUI block="ScreenAddEditForm" trigger="saveB " animate="true" >
+
+                <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+            </p:blockUI>
+
+
+
+            <p:dialog modal="true"
+                      position='center,center'
+                      minHeight="40" minWidth="100"
+                      header="إضافة  " widgetVar="dlg1"
+                      style="left: 50%;top: 50%;">
+
+
+
+                <h:panelGroup>
+                    <p:outputLabel style="width:65px"  value="كفيل جديد " />
+                </h:panelGroup>
+                <h:panelGroup>
+                    <p:inputText  style="width: 40%!important"  
+                                  id="newSponsor"
+                                  value="#{employeeFormMB.hrSponsorName}">
+                    </p:inputText>
+                </h:panelGroup>
+
+                <p:commandButton   class="saveButtons"  
+                                   id="saveC"
+                                   title="#{userData.userDDs['SAVE']}"
+                                   value="#{userData.userDDs['SAVE']}" 
+                                   style="color: #ecf0f1!important;border-radius: 5px;
+height: 30px;background-color: #270e80f0 !important;margin-left: 5px;"
+
+                                   action="#{employeeFormMB.saveDialog()}" 
+                                   />
+
+
+            </p:dialog>
+
+
+        </h:form>
+    </ui:define>
+
+</ui:composition>

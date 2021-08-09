@@ -1,0 +1,192 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form class='formmargin' id="form"  enctype="multipart/form-data"  dir="#{userData.dir}">
+
+            <p:fieldset legend="#{userData.userDDs['CREATE_INVENTORY']}"  style="margin-bottom:20px">
+
+
+                <div class="col-xs-12">
+                    <p:messages autoUpdate="true"  id="msgopp" showDetail="true" closable="true" rendered="#{setupNewInventoryFormMB.showGeneralMessage}"/>
+                </div>
+                <div  id="firstLine" class="ui-g-12 ui-g-nopad">
+                    <div class="ui-g">
+
+                        <div class="ui-g-6 ui-xl-6">
+
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 35%!important" id="ad1" a:autofocus="true" value="#{setupNewInventoryFormMB.invInventoryEntity.code}">
+                                        <p:ajax event="blur" listener="#{setupNewInventoryFormMB.checkCodeExistence()}" update="form" />
+                                    </p:inputText>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 85px;margin-right: 3%;" value="#{userData.userDDs['CODE']}"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:autoComplete style="width:35%" id="Cost_Center_From" 
+                                                    dropdown="true"
+                                                    converter="#{setupNewInventoryFormMB.costCenterConverter}"
+                                                    value="#{setupNewInventoryFormMB.invInventoryEntity.costCenterId}"
+
+                                                    var="cost"
+                                                    itemLabel="#{cost}" 
+                                                    itemValue="#{cost}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{setupNewInventoryFormMB.completeCostCenter}" >
+                                    </p:autoComplete>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 100px" value="#{userData.userDDs['CS_NAME']}"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 35%!important" id="ad2" value="#{setupNewInventoryFormMB.invInventoryEntity.name}"/>
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 85px;" value="#{userData.userDDs['REPOSITORY_NAME']}"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:autoComplete style="width:35%" id="ADMIN_UNIT_FROM" 
+                                                    dropdown="true"
+                                                    converter="#{setupNewInventoryFormMB.glAdminUnitConverter}"
+                                                    value="#{setupNewInventoryFormMB.invInventoryEntity.adminUnitId}"
+
+                                                    var="admin"
+                                                    itemLabel="#{admin}" 
+                                                    itemValue="#{admin}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{setupNewInventoryFormMB.completeAdminUnit}" >
+                                    </p:autoComplete>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width:100px" value="#{userData.userDDs['ADMIN_UNIT']}"/>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="ui-g-6 ui-xl-6">
+
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 35%!important" id="ad3" value="#{setupNewInventoryFormMB.invInventoryEntity.type}"/>
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 85px;" value="#{userData.userDDs['PRODUCT_TYPE']}"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:autoComplete style="width: 35%" id="GlAccount_ID_to" 
+
+                                                    dropdown="true"
+                                                    converter="#{setupNewInventoryFormMB.accountConverter}"
+                                                    value="#{setupNewInventoryFormMB.invInventoryEntity.accountId}"
+                                                    var="p"
+                                                    itemLabel="#{p}" 
+                                                    itemValue="#{p}" 
+                                                    forceSelection="false" 
+                                                    completeMethod="#{setupNewInventoryFormMB.completeGlAccount}" >
+                                    </p:autoComplete>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 100px" value="#{userData.userDDs['ACCOUNT_NUMBER']}"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:selectOneMenu style="width:35%;" id="accgrp"
+                                                     value="#{setupNewInventoryFormMB.invInventoryEntity.sellPriceType}"  
+                                                     required="true" requiredMessage="#{userData.userDDs['REQUIRED']}" >
+                                        <f:selectItems value="#{setupNewInventoryFormMB.accountGroups}" var="grop"
+                                                       itemLabel="#{userData.userDDs[''+= grop]}" itemValue="#{grop}" /> 
+                                    </p:selectOneMenu>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width:86px;" value="#{userData.userDDs['SELLING_PRICE']}"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+
+                                </div>
+                            </div>
+                        </div>
+
+                        
+                    </div>
+                </div>
+
+            </p:fieldset>
+            
+          <div class="asmaa">
+                        <p:commandButton  class="saveButton"  
+                                          id="saveB" 
+                                          title="#{userData.userDDs['SAVE']}"
+                                          value="#{userData.userDDs['SAVE']}" 
+                                          style=""
+                                          action="#{setupNewInventoryFormMB.save()}" 
+                                          update="@form"/>
+
+                        <p:commandButton  class="newButton" 
+                                          id="newN"
+                                          ajax="false"
+                                          style=""
+                                          value="#{userData.userDDs['NEW']}" 
+                                          title="#{userData.userDDs['NEW']}"
+                                          onclick="form.target = ''" 
+                                          actionListener="#{setupNewInventoryFormMB.reset()}"/>
+
+                        <p:commandButton class="closeButton" 
+                                         title="#{userData.userDDs['BACK']}" 
+                                         immediate="true" 
+                                         value="#{userData.userDDs['BACK']}" 
+                                         style="" 
+                                         action="#{setupNewInventoryFormMB.exit()}"   />
+
+              
+
+                    <p:blockUI block="form" trigger="saveB" animate="true" >
+
+                        <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                    </p:blockUI> 
+
+          </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

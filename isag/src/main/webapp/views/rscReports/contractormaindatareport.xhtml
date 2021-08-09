@@ -1,0 +1,246 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form  class='formmargin' dir="#{userData.dir}"  id="form">
+
+           
+
+            <p:fieldset  legend="تقرير البيانات الاساسية للمقاولين"
+
+                         style=" position: relative"> 
+
+                <div  id="firstSegment" class="ui-g-12 ui-g-nopad firstset">
+                    <div class="ui-g">
+
+                        <div class="ui-g-6 ui-xl-6">
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:autoComplete style="width:50%!important" 
+                                                    id="Codeto"
+                                                    dropdown="true"
+                                                    converter="#{contractorDataReportMB.invOrgSiteDTOConverter}"
+                                                    value="#{contractorDataReportMB.contarctorDataReportSearchBean.contractorCodeTo}"
+                                                    var="contractorCodeTo"
+                                                    itemLabel="#{contractorCodeTo}" 
+                                                    itemValue="#{contractorCodeTo}"
+
+                                                    forceSelection="true"
+                                                    completeMethod="#{contractorDataReportMB.completOrgSiteAsContractorTo}" 
+                                                    >
+                                    </p:autoComplete>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 60px" value="الي المقاول"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:autoComplete style="width:50%!important"
+                                                    id="Codefrom"
+                                                    dropdown="true"
+                                                    converter="#{contractorDataReportMB.invOrgSiteDTOConverter}"
+                                                    value="#{contractorDataReportMB.contarctorDataReportSearchBean.contractorCodeFrom}"
+                                                    var="conCodeFrom"
+                                                    itemLabel="#{conCodeFrom}" 
+                                                    itemValue="#{conCodeFrom}"
+                                                    forceSelection="true" 
+                                                    completeMethod="#{contractorDataReportMB.completOrgSiteAsContractorFrom}"
+                                                    >
+
+                                    </p:autoComplete>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 60px" value="من المقاول"/>
+
+                                </div>
+                            </div>
+                        </div>
+
+                      
+                        
+                    </div>
+                </div>
+
+                <div id="buttunss" class="asmaa">
+
+
+
+                        <p:commandButton   class="searchButton"
+                                           title="#{userData.userDDs['SEARCH']}"
+                                           action="#{contractorDataReportMB.search()}"
+                                           id="saveB"
+                                           value="#{userData.userDDs['SEARCH']}"
+                                           update="ContractorDataTable" 
+                                           />
+                        <p:commandButton   class="newButton"
+                                           title="#{userData.userDDs['NEW']}"
+                                           action="#{contractorDataReportMB.reset()}"
+                                           id="saveS"
+                                           value="#{userData.userDDs['NEW']}"
+                                           update="@form" 
+                                             />
+                        <p:commandButton  class="printButton" 
+                                          id="PrintB"
+                                          ajax="false"
+                                          onclick="form.target = '_blank'"  
+                                          
+                                          value="#{userData.userDDs['PRINT']}" 
+                                          actionListener="#{contractorDataReportMB.exportPDF}"
+
+                                          title="#{userData.userDDs['PRINT']}"
+                                          immediate="true" />
+
+                        <p:commandButton  class="closeButton"
+                                         
+                                          id="CloseB"
+                                          title="#{userData.userDDs['BACK']}"
+                                          action="exit"
+                                          value="#{userData.userDDs['BACK']}"/>
+
+
+                        <h:commandLink  class="sdcreenimg">
+
+                            <p:graphicImage name="/img/excel.jpg" width="24"/>  
+
+                            <p:dataExporter type="xls"
+                                            target="ContractorDataTable" 
+                                            fileName="Basic Data For Contractor Report"
+                                            postProcessor="#{contractorDataReportMB.postProcessXLS}" />  
+                        </h:commandLink>
+
+
+                        <p:blockUI block="form" trigger="saveB saveS" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI> 
+
+
+                        </div>
+
+            </p:fieldset>
+
+            <p:fieldset style="margin-top: 2%">
+
+                <p:dataTable 
+                    paginator="true"
+                    rows="20"
+                    draggableColumns="true" 
+                    var="ContractorDataTable" 
+                    widgetVar="ContractorDataTable"  
+
+                    rowIndexVar="index" 
+                    value="#{contractorDataReportMB.getcontractorDataReportEntityList()}" 
+                    dir="rtl" 
+                    emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                    id="ContractorDataTable">
+
+                    <f:facet name="header">
+
+
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('ContractorDataTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+
+                    </f:facet>
+
+                    <p:column   style="width: 8vh;text-align: right;font-size: 1.8vh;border-radius: 0px" headerText="الكود"  
+
+                                filterBy="#{ContractorDataTable}" 
+                                filterMatchMode="contains" 
+                                sortBy="#{ContractorDataTable.code}"
+                                filterable="false">
+                        <h:outputText value="#{ContractorDataTable.code}" style="font-size: 1.5vh"/>
+                    </p:column>
+
+
+
+                    <p:column style="width: 12vh;text-align: right;font-size: 1.8vh;border-radius: 0px" filterStyle="display:none"
+                              headerText="اسم المقاول" 
+
+                              filterBy="#{ContractorDataTable.name}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{ContractorDataTable.name}"
+                              filterable="false">
+                        <h:outputText value="#{ContractorDataTable.name}" style="font-size: 1.5vh;width: 95%"/>
+                    </p:column>
+                    <p:column style="width: 12vh;text-align: right;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
+                              headerText="openning balance " 
+
+                              filterBy="#{ContractorDataTable.openBalance}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{ContractorDataTable.openBalance}"
+                              filterable="false">
+
+                        <h:outputText value="#{ContractorDataTable.openBalance}" style="font-size: 1.5vh;width: 95%"/>
+                    </p:column>
+
+                    <p:column style="width: 12vh;text-align: right;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
+                              headerText="التاريخ" 
+
+                              filterBy="#{ContractorDataTable.openBalanceDate}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{ContractorDataTable.openBalanceDate}"
+                              filterable="false">
+
+                        <h:outputText value="#{ContractorDataTable.openBalanceDate}" style="font-size: 1.5vh;width: 95%"/>
+                    </p:column>
+                    <p:column style="width: 12vh;text-align: right;font-size: 1.8vh;border-radius: 0px" filterStyle="display:none"
+                              headerText="الموبايل" 
+
+                              filterBy="#{ContractorDataTable.mobile}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{ContractorDataTable.mobile}"
+                              filterable="false">
+                        <h:outputText value="#{ContractorDataTable.mobile}" style="font-size: 1.5vh;width: 95%"/>
+                    </p:column>
+                    <p:column style="width: 12vh;text-align: right;font-size: 1.8vh;border-radius: 0px" filterStyle="display:none"
+                              headerText="الايميل" 
+
+                              filterBy="#{ContractorDataTable.email}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{ContractorDataTable.email}"
+                              filterable="false">
+                        <h:outputText value="#{ContractorDataTable.email}" style="font-size: 1.5vh;width: 95%"/>
+                    </p:column>
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh;border-radius: 0px" 
+                              headerText="الفاكس" 
+
+                              filterBy="#{ContractorDataTable.fax}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{ContractorDataTable.fax}"
+                              filterable="false">
+                        <h:outputText value="#{ContractorDataTable.fax}" style="font-size: 1.5vh;width: 95%"/>
+                    </p:column>
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh;border-radius: 0px" 
+                              headerText="العنوان" 
+
+                              filterBy="#{ContractorDataTable.address}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{ContractorDataTable.address}"
+                              filterable="false">
+                        <h:outputText value="#{ContractorDataTable.address}" style="font-size: 1.5vh;width: 95%"/>
+                    </p:column>
+
+
+
+                </p:dataTable>
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>
+
+

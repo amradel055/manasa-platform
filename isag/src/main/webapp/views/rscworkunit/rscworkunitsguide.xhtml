@@ -1,0 +1,256 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml" >
+    <ui:define name="content">
+
+        <h:head>
+            <title>#{userData.userDDs['BUSINESS_ITE_GUI']}</title>
+        </h:head>
+
+      
+        <h:form id="form" class='formmargin'>
+   
+            <p:fieldset legend="#{userData.userDDs['BUSINESS_ITE_GUI']}" >
+
+
+                <p:messages autoUpdate="true"  id="messages" showDetail="true" closable="true" rendered="#{rscWorkUnitsGuideMB.showMessage}"/>
+                <div class="ui-g">
+
+
+
+
+                    <h:panelGrid  id="edit"    class="col-md-12" columns="1" >
+                        <h:panelGroup>
+                                   <div class="ui-g-6 ui-xl-6">
+                                <div class="ui-g-12 ui-xl-12">
+
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:tree value="#{rscWorkUnitsGuideMB.unitHierarchy}" var="acc" dir="#{userData.dir}"
+                                                selectionMode="single" selection="#{rscWorkUnitsGuideMB.selectedUnit}"
+                                                dynamic="false" id="csTree">
+                                            <p:ajax event="select"  listener="#{rscWorkUnitsGuideMB.onNodeSelect}" update=":form:edit" />
+                                            <p:treeNode expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed" >
+                                                <h:outputText value="#{acc.name} #{acc.code}" />
+                                            </p:treeNode>
+                                        </p:tree>
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <div class="ui-g-12 ui-xl-12">
+
+                                    <div class="ui-g-6 ui-xl-6">
+
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:selectBooleanCheckbox style='' value="#{rscWorkUnitsGuideMB.selectedAcc.active}" itemLabel="نشط   "/>
+
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-xl-12">
+
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <h:inputText style="width:50%;" id="value" value="#{rscWorkUnitsGuideMB.selectedAcc.value}" />
+
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 13%;" value="#{userData.userDDs['PRICE_UNIT']}"/>
+
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-xl-12">
+
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <h:inputText style="width:50%;" id="qty" value="#{rscWorkUnitsGuideMB.selectedAcc.quantity}" />
+
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 13%;" value="#{userData.userDDs['QUANTITY']}"/>
+
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-xl-12">
+
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:selectOneMenu style="width: 50%!important;margin: 1% 1px" id="unitType" value="#{rscWorkUnitsGuideMB.selectedAcc.type}" >
+                                            <f:selectItem itemLabel="#{userData.userDDs['MAIN']}" itemValue="0" />
+                                            <f:selectItem itemLabel="#{userData.userDDs['SUB']}" itemValue="1" />
+                                        </p:selectOneMenu>
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 13%;" value="#{userData.userDDs['ITEM_TYPE']}"/>
+
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-xl-12">
+
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:selectOneMenu style="width:50%;margin:1% 1px" id="unitName"  converter="#{rscWorkUnitsGuideMB.symbolConverter}"
+                                                         value="#{rscWorkUnitsGuideMB.selectedAcc.unitName}"               
+                                                         required="true" filter="true" filterMatchMode="contains" >
+                                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" itemValue="" />
+                                            <f:selectItems value="#{rscWorkUnitsGuideMB.unitList}" var="acc" itemLabel="#{acc.name}" itemValue="#{acc}" />
+                                        </p:selectOneMenu>
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 13%;" value="#{userData.userDDs['UNIT']}"/>
+
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-xl-12">
+
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:selectOneMenu style="width:50%;margin:1% 1px" id="parentunit"  converter="#{rscWorkUnitsGuideMB.rscWorkUnitsGuideConverter}"
+                                                         value="#{rscWorkUnitsGuideMB.selectedAcc.parent}"               
+                                                         required="false" filter="true" filterMatchMode="contains" >
+                                            <p:ajax listener="#{rscWorkUnitsGuideMB.selectParent}" process="@this" update="@form" />
+                                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" itemValue="" />
+                                            <f:selectItems value="#{rscWorkUnitsGuideMB.allUnits}" var="acc" itemLabel="#{acc.name} #{acc.code}" itemValue="#{acc}" />
+                                        </p:selectOneMenu>
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 13%;" value="#{userData.userDDs['MAIN_ITEM']}"/>
+
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-xl-12">
+
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel id="Level" value="#{rscWorkUnitsGuideMB.selectedAcc.level}"  />
+
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 13%;" value="#{userData.userDDs['LEVEL']}"/>
+
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-xl-12">
+
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:inputText style="width: 50%!important" id="acc_name" value="#{rscWorkUnitsGuideMB.selectedAcc.name}"  />
+
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel   style="width: 13%;" value="#{userData.userDDs['NAME']}"/>
+
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-xl-12">
+
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:inputText style="width: 50%!important" id="code_num" a:autofocus="true" value="#{rscWorkUnitsGuideMB.selectedAcc.code}"  >
+                                            <p:ajax event="blur" listener="#{rscWorkUnitsGuideMB.validateUnitNumberInputDublication}" update="form" />
+                                        </p:inputText>
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 13%;" value="#{userData.userDDs['CS_COD']}"/>
+
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                            
+                            
+                     
+
+                        </h:panelGroup>
+
+
+
+                        <p:dialog id="dlg" style="text-align: right" header="#{userData.userDDs['ITEM']}" widgetVar="dlg" modal="true" dynamic="true">
+                            <h:panelGrid  id="units"   columns="2" >
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:400px" id="Unit_ID" 
+                                                    dropdown="true"
+                                                    scrollHeight="350"
+                                                    converter="#{rscWorkUnitsGuideMB.rscWorkUnitsGuideConverter}"
+                                                    value="#{rscWorkUnitsGuideMB.rscWorkUnitsGuideSelected}"
+                                                    var="p"
+                                                    itemLabel="#{p}" 
+                                                    itemValue="#{p}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{rscWorkUnitsGuideMB.completeRscWorkUnitsGuide}" >
+                                        <p:ajax event="itemSelect" listener="#{rscWorkUnitsGuideMB.setValueToTheSelectedObject}"  />
+                                    </p:autoComplete>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:commandButton   value="#{userData.userDDs['UPLOAD_DATA']}" onclick="PF('dlg').hide();">
+                                        <p:ajax event="click" listener="#{rscWorkUnitsGuideMB.searchForRscWorkUnitsGuide}" update="form" />
+                                    </p:commandButton>
+                                </h:panelGroup>
+                            </h:panelGrid>
+                        </p:dialog>
+
+                        <h:panelGroup>
+                            <div class="centerButtons">
+
+                                <p:commandButton class="saveButton" 
+                                                 title="#{userData.userDDs['SAVE']}"
+                                                 value="#{userData.userDDs['SAVE']}"
+                                               
+                                                 action="#{rscWorkUnitsGuideMB.save()}" update="@form" 
+                                                 id="saveB"/>
+
+                                <p:commandButton class="searchButton"    
+                                                 value="#{userData.userDDs['SEARCH']}"
+                                                 type="button" onclick="PF('dlg').show();"/>
+
+                                <p:commandButton class="addButton"
+                                                 title="#{userData.userDDs['ADD']}" 
+                                                 value="#{userData.userDDs['ADD']}"
+                                                 action="#{rscWorkUnitsGuideMB.add}"  id="plus"
+                                                 update=":form:edit" process="@this"/>
+
+                                <p:commandButton class="reloadButton" 
+                                                 value="#{userData.userDDs['NEW']}"
+                                                 title="#{userData.userDDs['NEW']}"
+                                                 
+                                                 action="#{rscWorkUnitsGuideMB.reset}" 
+                                                 update="form" id="undo"/>
+
+
+
+
+
+
+                                <p:blockUI block="form" trigger="saveB plus undo" animate="true" >
+
+                                    <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                                </p:blockUI>
+
+
+
+                                <p:commandButton  class="deleteButton"  title="#{userData.userDDs['DELETE']}" 
+                                                  value="#{userData.userDDs['DELETE']}" 
+                                                  immediate="true"  action="#{rscWorkUnitsGuideMB.delete()}" update="@form" >
+                                    <p:confirm header="#{userData.userDDs['COFIGRATION']}" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                                </p:commandButton>
+                            </div>
+                        </h:panelGroup>
+                    </h:panelGrid>
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                        <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog>
+
+
+                </div>
+
+
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>

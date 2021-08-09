@@ -1,0 +1,169 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <link rel="stylesheet" type="text/css" href="../../resources/css/main.css" /> 
+    <link rel="stylesheet" type="text/css" href="./../../resources/css/custom.css" /> 
+    <ui:define name="content">
+
+        <style >
+
+        </style>
+
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form id="form" dir="#{userData.dir}" class='formmargin'>
+            <div class="col-xs-12">
+                <p:messages autoUpdate="true"  id="msg2" showDetail="true" closable="true" rendered="true" />
+            </div>
+
+
+
+            <p:fieldset legend="#{userData.userDDs['FINANCIAL_CENTER_MENU']}" 
+
+                        style=" position: relative">
+
+                <div class="ui-g-12 ui-g-nopad back firstset">
+                    <div class="ui-g">
+
+
+
+                        <div class="ui-g-6 ui-xl-6">
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText value="#{FinancialCenterMenuMB.level}" style="width:50%!important"/>
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel value="#{userData.userDDs['LEVEL']}" style="width:85px;margin-right: 4%;"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:calendar id="dateTo" value="#{FinancialCenterMenuMB.dateTo}" pattern="dd/MM/yyyy" style="width:50%">
+                                        <p:ajax listener="#{FinancialCenterMenuMB.checkDate(true)}" event="dateSelect" update="dateTo"/>
+                                    </p:calendar>    
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel value="#{userData.userDDs['UNTIL_DATE']}" style="width:85px;margin-right: 4%"/>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="ui-g-6 ui-xl-6">
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:selectOneMenu style="width:50%" id="year" filter="true" filterMatchMode="contains"   value="#{FinancialCenterMenuMB.glYearSelection}" converter="#{FinancialCenterMenuMB.glYearConverter}"   >
+                                        <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"  itemValue="" />
+                                        <f:selectItems value="#{FinancialCenterMenuMB.glYearList}"  var="year" itemLabel="#{year.name}" itemValue="#{year}"/>
+                                    </p:selectOneMenu>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width:90px;margin-right: 4%" value="#{userData.userDDs['FINANCE_YEAR']}"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:selectBooleanCheckbox value="#{FinancialCenterMenuMB.zeroAmount}">
+                                        <p:ajax  listener="#{FinancialCenterMenuMB.deleteZeroRecords}" update="@form" />
+                                    </p:selectBooleanCheckbox>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel value="#{userData.userDDs['ZERO_BALANCE']}" style="width:90px;margin-right: 4%"/>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    </div>
+                    <h:panelGrid class="col-md-12 centerButtons" columns="1">
+
+                        <h:panelGroup >
+
+                            <p:commandButton class="searchButtons"  
+                                             value="#{userData.userDDs['SEARCH']}" action="#{FinancialCenterMenuMB.search()}"
+                                             id="serachS"
+                                             update="dataTable"/>
+                            <p:blockUI block="form" trigger="serachS" animate="true" >
+
+                                <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                            </p:blockUI> 
+                            <p:commandButton class="printButtons" 
+                                             ajax="false" onclick="form.target = '_blank'" value="#{userData.userDDs['PRINT']}"
+                                             actionListener="#{FinancialCenterMenuMB.exportPDF}"/>
+                            <h:commandLink class="sdcreenimg">  
+                                <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                                <p:dataExporter type="xls"
+                                                target="dataTable" 
+                                                fileName="قائمة المركز المالي"
+                                                postProcessor="#{FinancialCenterMenuMB.postProcessXLS}" />  
+                            </h:commandLink>
+
+                        </h:panelGroup>
+
+                    </h:panelGrid>
+
+            </p:fieldset>
+
+            <p:fieldset>
+
+                <p:dataTable 
+                    paginator="true"
+                    rows="20"
+                    draggableColumns="true" 
+                    id="dataTable"  value="#{FinancialCenterMenuMB.incomeMenuBeanViewList}"
+                    var="menu" 
+                    widgetVar="finanCenter"
+                    rowStyleClass="#{(menu.level eq 1 or menu.level eq null) ? 'colored' : null}" >
+
+                    <f:facet name="header" class="col-md-12">
+
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large;" />
+                            <p:inputText   id="globalFilter"   onkeyup="PF('finanCenter').filter()" style="width:30%!important;" />
+                        </p:outputPanel>
+
+                    </f:facet>
+
+
+                    <p:column headerText="#{userData.userDDs['ACCOUNT_CODE']}" 
+                              filterBy="#{menu.accountNumber}"  filterMatchMode="contains" sortBy="#{menu.accountNumber}" filterable="false"
+                              style="width:12vh;font-size: 1.5vh;text-align: -webkit-auto;border-radius: 0px">
+                        <h:outputText value="#{menu.accountNumber}" style="font-size:12px"/>
+                    </p:column>
+
+                    <p:column headerText="#{userData.userDDs['ACCOUNT_NAME']}" 
+                              filterBy="#{menu.accountName}"  filterMatchMode="contains" sortBy="#{menu.accountName}" filterable="false"
+                              styleClass="highlight1" style="width:12vh;font-size: 1.5vh;text-align: -webkit-auto;border-radius: 0px">
+                        <h:outputText value="#{menu.accountName}" style="font-size:12px"/>
+                    </p:column>
+
+                    <p:column  headerText="#{userData.userDDs['LEVEL']}" 
+                               filterBy="#{menu.level}"  filterMatchMode="contains" sortBy="#{menu.level}" filterable="false"
+                               style="width:7vh;font-size: 1.5vh;text-align: -webkit-auto;border-radius: 0px">
+                        <h:outputText value="#{menu.level}" style="font-size:12px" rendered="#{menu.appearenceOfTotal eq false}"/>
+                    </p:column>
+                    <p:column headerText="#{userData.userDDs['AMOUNT']}" style="width:10vh;font-size: 1.5vh;text-align: -webkit-auto;border-radius: 0px">
+                        <h:outputText value="#{menu.value}" style="font-size:12px">
+                            <f:convertNumber pattern="###,###.00" />
+                        </h:outputText>
+                    </p:column>
+
+                </p:dataTable>     
+            </p:fieldset>
+
+        </h:form>
+    </ui:define>
+</ui:composition>
