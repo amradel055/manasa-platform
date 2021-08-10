@@ -59,7 +59,8 @@ public class GeneralImp implements GeneralService {
         String password = loginRoot.password;
         IsagUser loggedInUser = userService.authenticateUser(userName, password);
         //loggedInUser.getMaster() دي معناها لازم يكون مدير
-        if (loggedInUser != null && loggedInUser.getMaster()  == 1) {
+        //if (loggedInUser != null && loggedInUser.getMaster()  == 1) {
+        if (loggedInUser != null) {
             System.out.println("Logged In Successfully");
             isagUser = loggedInUser;
             branches = branchService.getBranchesForUser(loggedInUser.getId());

@@ -12,8 +12,10 @@ import com.isag.views.CashAccountSettlementBean;
 import javax.ejb.EJB;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -30,14 +32,13 @@ public class IgmaRest extends AccountBase {
     @EJB
     CashAccountSettlmentService cashAccountSettlmentService;
 
-    
     @Transactional
-    @Secured
-    @Path("/customer/{branshSerial}")
-    @POST
+    //@Secured
+    @Path("/customer/{branchId}")
+    @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public CashAccountSettlementBean search(Integer branchId) {
+    //@Consumes(MediaType.APPLICATION_JSON)
+    public CashAccountSettlementBean search(@PathParam("branchId") Integer branchId) {
         getCashAccountSettlementSearchBean().setBranchId(branchId);
         setAccountSettlementBean(cashAccountSettlmentService.search(getCashAccountSettlementSearchBean()));
         return getAccountSettlementBean();
@@ -47,6 +48,9 @@ public class IgmaRest extends AccountBase {
      * @return the cashAccountSettlementSearchBean
      */
     public SubAccountSummarySearchBean getCashAccountSettlementSearchBean() {
+        if (cashAccountSettlementSearchBean == null) {
+            cashAccountSettlementSearchBean = new SubAccountSummarySearchBean();
+        }
         return cashAccountSettlementSearchBean;
     }
 
