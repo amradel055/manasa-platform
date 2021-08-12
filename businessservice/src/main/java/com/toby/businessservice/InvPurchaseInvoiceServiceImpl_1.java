@@ -2224,10 +2224,10 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 SummitionItemsView summitionItemsView = new SummitionItemsView();
                 summitionItemsView.setCode(groupDTO.getCode());
                 summitionItemsView.setName(groupDTO.getName());
-                summitionItemsView.setFactoryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupDTO.getId(), 0, invInventoryDTOs,proGrouplist));
-                summitionItemsView.setSendNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupDTO.getId(), 1, invInventoryDTOs,proGrouplist));
-                summitionItemsView.setDeliveryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupDTO.getId(), 2, invInventoryDTOs,proGrouplist));
-                summitionItemsView.setCustomerNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupDTO.getId(), 3, invInventoryDTOs,proGrouplist));
+                summitionItemsView.setFactoryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupDTO.getId(), 0, invInventoryDTOs,null));
+                summitionItemsView.setSendNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupDTO.getId(), 1, invInventoryDTOs,null));
+                summitionItemsView.setDeliveryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupDTO.getId(), 2, invInventoryDTOs,null));
+                summitionItemsView.setCustomerNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupDTO.getId(), 3, invInventoryDTOs,null));
                 if (summitionItemsView.getFactoryNumber().compareTo(BigDecimal.ZERO) == 1
                         || summitionItemsView.getSendNumber().compareTo(BigDecimal.ZERO) == 1
                         || summitionItemsView.getDeliveryNumber().compareTo(BigDecimal.ZERO) == 1) {
