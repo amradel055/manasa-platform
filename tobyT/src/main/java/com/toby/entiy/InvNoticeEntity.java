@@ -5,6 +5,7 @@
  */
 package com.toby.entiy;
 
+import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.dto.SymbolDTO;
 import com.toby.entity.GlAccount;

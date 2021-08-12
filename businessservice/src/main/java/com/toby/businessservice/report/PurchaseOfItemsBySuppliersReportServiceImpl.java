@@ -12,6 +12,8 @@ import com.toby.views.ItemSalesView;
 import com.toby.views.ItemSalesViewGroup;
 import com.toby.views.SalesOfItemsByCompany;
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -29,7 +31,7 @@ public class PurchaseOfItemsBySuppliersReportServiceImpl implements PurchaseOfIt
 
     @EJB
     private GenericDAO dao;
-    @EJB 
+    @EJB
     InvoiceMovementReportService movementReportService;
 
     @Override
@@ -511,10 +513,13 @@ public class PurchaseOfItemsBySuppliersReportServiceImpl implements PurchaseOfIt
                 + "        `ipid`.`item_id` IS NOT NULL AND ipi.type = 4 \n"
                 + "        AND `ipi`.`branch_id` = 182 and ios.offer_company_id is not null\n");
         if (purchaseOfItemsBySuppliersSearchBean.getDateFrom() != null) {
-            stringBuilder.append(" AND ipi.date >= '").append(purchaseOfItemsBySuppliersSearchBean.getDateFrom()).append("'");
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+            stringBuilder.append(" AND ipi.date >= '").append(dateFormat.format(purchaseOfItemsBySuppliersSearchBean.getDateFrom())).append("'");
         }
+
         if (purchaseOfItemsBySuppliersSearchBean.getDateTo() != null) {
-            stringBuilder.append(" AND ipi.date <= '").append(purchaseOfItemsBySuppliersSearchBean.getDateTo()).append("'");
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 23:59:59");
+            stringBuilder.append(" AND ipi.date <= '").append(dateFormat.format(purchaseOfItemsBySuppliersSearchBean.getDateTo())).append("'");
         }
         if (purchaseOfItemsBySuppliersSearchBean.getFromInventoryDTOName() != null) {
             stringBuilder.append(" AND ipi.galary_Id = ").append(purchaseOfItemsBySuppliersSearchBean.getFromInventoryDTOName().getId());

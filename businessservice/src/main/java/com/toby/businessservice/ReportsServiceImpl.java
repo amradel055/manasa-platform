@@ -57,10 +57,45 @@ public class ReportsServiceImpl implements ReportsService {
                 + "        `inv_purchase_invoice` `ip` LEFT JOIN `inv_purchase_invoice_detail` `ipd` ON `ip`.`id` = `ipd`.`inv_purchase_invoice_id`\n"
                 + "        LEFT JOIN `inv_inventory` `inv` ON `inv`.`id` = `ip`.`galary_Id` LEFT JOIN `inv_organization_site` `ios` ON `ios`.`id` = `ip`.`organization_site_id`\n"
                 + " ");
-        sql.append("  where ip.branch_id = ").append(branchId);
+        sql.append("  where  ip.type = 4 and ip.branch_id = ").append(branchId);
         appendGallery(salesReportByValueAded, sql);
         appendDate(salesReportByValueAded, sql);
-        sql.append(" GROUP BY `ip`.`id` ) as s group by s.gallary_name ");
+        sql.append(" GROUP BY `ip`.`id` ");
+        
+        
+        sql.append(" union all ");
+        sql.append(" SELECT \n"
+                + "        `ip`.`serial` AS `serial`, `ip`.`type` AS `type`,`ip`.`date` AS `date`,`inv`.`name` AS `gallary_name`,\n"
+                + "        `ios`.`name` AS `organization_site_name`,`ip`.`discount` AS `head_discount`,\n"
+                + "        ((IFNULL(NET(IFNULL(SUM(`ipd`.`net`), 0.0),IFNULL(`ip`.`discount_type`, 0.0),IFNULL(`ip`.`discount`, 0.0),\n"
+                + "                        IFNULL(`ip`.`tax_flag`, 0.0),15,IFNULL(`ip`.`disc_halala`, 0.0)),0.0))*-1) AS `net`,\n"
+                + "                ((IFNULL(NET(IFNULL(SUM(`ipd`.`net`), 0.0),IFNULL(`ip`.`discount_type`, 0.0),\n"
+                + "                        IFNULL(`ip`.`discount`, 0.0),IFNULL(`ip`.`tax_flag`, 0.0),0,IFNULL(`ip`.`disc_halala`, 0.0)),0.0))*-1) AS `netBeforTax`\n"
+                + "    FROM\n"
+                + "        `inv_purchase_invoice` `ip` LEFT JOIN `inv_purchase_invoice_detail` `ipd` ON `ip`.`id` = `ipd`.`inv_purchase_invoice_id`\n"
+                + "        LEFT JOIN `inv_inventory` `inv` ON `inv`.`id` = `ip`.`galary_Id` LEFT JOIN `inv_organization_site` `ios` ON `ios`.`id` = `ip`.`organization_site_id`\n"
+                + " ");
+        sql.append("  where ip.type = 3 and ip.branch_id = ").append(branchId);
+        appendGallery(salesReportByValueAded, sql);
+        appendDate(salesReportByValueAded, sql);
+        sql.append(" GROUP BY `ip`.`id` ");
+        
+        sql.append(" union all ");
+        sql.append(" SELECT \n"
+                + "        `ip`.`serial` AS `serial`, `ip`.`type` AS `type`,`ip`.`date` AS `date`,`inv`.`name` AS `gallary_name`,\n"
+                + "        `ios`.`name` AS `organization_site_name`,`ip`.`discount` AS `head_discount`,\n"
+                + "        (invt.value * -1) AS `net`,\n"
+                + "                (((invt.value / 1.15) )* -1) AS `netBeforTax`\n"
+                + "    FROM\n"
+                + "        `inv_purchase_invoice` `ip` LEFT JOIN `inv_notice` `invt` ON `ip`.`id` = `invt`.`inv_invoice`\n"
+                + "        LEFT JOIN `inv_inventory` `inv` ON `inv`.`id` = `ip`.`galary_Id` LEFT JOIN `inv_organization_site` `ios` ON `ios`.`id` = `ip`.`organization_site_id`\n"
+                + " ");
+        sql.append("  where ( invt.type = 1 or invt.type = 4 ) and ip.branch_id = ").append(branchId);
+        appendGallery(salesReportByValueAded, sql);
+        appendDate(salesReportByValueAded, sql);
+        sql.append(" GROUP BY `ip`.`id` ");
+        
+        sql.append(" ) as s group by s.gallary_name ");
         List<Object[]> res = dao.executeNativeQuery(sql.toString());
         for (Object[] object : res) {
             SalesReportByValueAded salesReportByValueAded1 = new SalesReportByValueAded();

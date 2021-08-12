@@ -43,6 +43,7 @@ import com.toby.dto.GlYearDTO;
 import com.toby.dto.SymbolDTO;
 import com.toby.entity.GlYear;
 import com.toby.entity.Symbol;
+import com.toby.generaljournal.GeneralJournalBean;
 import com.toby.report.entity.JournalDocumentArrangedReportBean;
 import com.toby.reports.GeneralJournalShowBean;
 import com.toby.toby.BaseFormBean;
@@ -61,7 +62,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -216,7 +216,7 @@ public class generalJournalBean_new extends BaseFormBean implements Serializable
     @EJB
     private SymbolService symbolService;
     @EJB
-    private TobyUserYearService isagUserYearService;
+    private TobyUserYearService tobyUserYearService;
 
     @EJB
     private AccountsSystemSettingsService accountsSystemSettingsService;
@@ -341,7 +341,7 @@ public class generalJournalBean_new extends BaseFormBean implements Serializable
                         if (uri.contains("generaljournal")) {
 //                            generalDTOList = generaljournalService.getALLGeneralJournalDTOByBranchIdAndYear(getUserData().getSelectedBranch(), glYearSelection);
 //                            generalDTOList = generaljournalServiceDTO.getALLGeneralJournalDTOByBranchIdAndYear(getUserData().getSelectedBranch(), glYearDTOSelection);
-                            setDataLazyModel(null, false,false);
+                            setDataLazyModel(null, false, false);
                             isModifiable();
                         }
                         /*  else {
@@ -379,15 +379,10 @@ public class generalJournalBean_new extends BaseFormBean implements Serializable
         glYearDTO.setYear(getUserData().getGlYear().getYear());
         return glYearDTO;
     }
-    
+
     public void saveReviewAccountingForAll() throws CloneNotSupportedException {
         generalReviewList = generaljournalServiceDTO.getGeneralJournalDTOByBranchIdForRevision(glYearDTOSelection, getUserData().getSelectedBranch(), getDateFrom(), getDateTo(), revisionAccount, 0, null, new HashMap<>());
         saveReviewAccounting();
-    }
-    
-    public void undoReviewForAll() {
-        generalReviewList = generaljournalServiceDTO.getGeneralJournalDTOByBranchIdForRevision(glYearDTOSelection, getUserData().getSelectedBranch(), getDateFrom(), getDateTo(), revisionAccount, 0, null, new HashMap<>());
-        undoReview();
     }
 
     public void saveReviewAccounting() throws CloneNotSupportedException {
@@ -426,6 +421,11 @@ public class generalJournalBean_new extends BaseFormBean implements Serializable
         } catch (Exception e) {
             saveError(e, "GeneralJournalBean", "saveReviewAccounting");
         }
+    }
+
+    public void undoReviewForAll() {
+        generalReviewList = generaljournalServiceDTO.getGeneralJournalDTOByBranchIdForRevision(glYearDTOSelection, getUserData().getSelectedBranch(), getDateFrom(), getDateTo(), revisionAccount, 0, null, new HashMap<>());
+        undoReview();
     }
 
     public void undoReview() {
@@ -515,8 +515,8 @@ public class generalJournalBean_new extends BaseFormBean implements Serializable
             accountsSystemSettings = accountsSystemSettingsServiceDTO.getInventoryByCompanyId(getUserData().getCompany().getId());
             if (getUserData().getCompany() != null && getUserData().getCompany().getId() != null && getUserData().getUserBranch() != null) {
 
-//                glYearList = isagUserYearService.findYearByUserId(getUserData().getUser().getId(), getUserData().getUserBranch());
-                glYearDTOList = isagUserYearService.findYearDTOByUserId(getUserData().getUser().getId(), getUserData().getUserBranch());
+//                glYearList = tobyUserYearService.findYearByUserId(getUserData().getUser().getId(), getUserData().getUserBranch());
+                glYearDTOList = tobyUserYearService.findYearDTOByUserId(getUserData().getUser().getId(), getUserData().getUserBranch());
 
                 if (glYearDTOList != null && !glYearDTOList.isEmpty()) {
                     setGlYearDTOConverter(new GlYearDTOConverter(glYearDTOList));
@@ -530,7 +530,7 @@ public class generalJournalBean_new extends BaseFormBean implements Serializable
                 uri = ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getRequestURI();
 
                 if (glYearDTOSelection != null) {
-                    setDataLazyModel(null, false,false);
+                    setDataLazyModel(null, false, false);
 
                     isModifiable();
                 } else {
@@ -649,7 +649,7 @@ public class generalJournalBean_new extends BaseFormBean implements Serializable
                         iterator.remove();
                     }
                 }
-                   setDataLazyModel(null, false, false);
+                setDataLazyModel(null, false, false);
             } else {
                 selectedGeneralJournal = generalGeneralReset;
                 int f = 0;
@@ -820,6 +820,7 @@ public class generalJournalBean_new extends BaseFormBean implements Serializable
                         generalJournalNew.setCreatedBy(getUserData() != null ? getUserData().getUser().getId() : null);
                         generalJournalNew.setCreatedDate(new Date());
                         generalJournalNew.setPost_flag(false);
+                        generalJournalNew.setCompanyId(getUserData().getUser().getCompanyId().getId());
                         generalJournalNew = generaljournalServiceDTO.addGeneralJournalDTO(generalJournalNew, getUserlogin());
                         if (accountsSystemSettings != null) {
                             if (accountsSystemSettings.getJournalsEdit().equalsIgnoreCase("JOURNAL_ENTRY_ENOUGH")) {
@@ -835,7 +836,7 @@ public class generalJournalBean_new extends BaseFormBean implements Serializable
                             journal.setMarkEdit(Boolean.FALSE);
                         }
 
-                        generalDTOList.add(generalJournalNew);
+                        generalDTOList.add(0, generalJournalNew);
 
                         List<GeneralJournalDetailsDTO> gjds = new ArrayList<>();
 
@@ -1056,16 +1057,14 @@ public class generalJournalBean_new extends BaseFormBean implements Serializable
                     showMessageGeneral = Boolean.FALSE;
                     showMessageDetails = Boolean.FALSE;
 
-                      
-                       
                     if (selectedGeneralJournal.getGeneralDecument() != null) {
                         generalDocument = selectedGeneralJournal.getGeneralDecument();
                     }
-                    
+
                     setSelectedDocumentsType(selectedGeneralJournal.getGeneralType().getId());
-                     
-                        setDataLazyModel(selectedGeneralJournal, false, true);
-                    
+
+                    setDataLazyModel(selectedGeneralJournal, false, true);
+
                 } else {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب ادخال بيانات القيد اولا قبل ادخال قيد اخر"));
                     showMessageGeneral = Boolean.TRUE;
@@ -1126,10 +1125,10 @@ public class generalJournalBean_new extends BaseFormBean implements Serializable
                     }
 
                     // detailsList.add(detailsnew);
-                    TobyCompany isagCompany = new TobyCompany();
+                    TobyCompany tobyCompany = new TobyCompany();
 
-                    isagCompany.setId(selectedCompany);
-                    detailsnew.setCompanyId(isagCompany.getId());
+                    tobyCompany.setId(selectedCompany);
+                    detailsnew.setCompanyId(tobyCompany.getId());
                     detailsnew.setGeneralJournalId(selectedGeneralJournal);
                     detailsnew.setBranchId(getUserData().getUserBranch().getId());
                     detailsnew.setCreatedBy(getUserData().getUser().getId());
@@ -1193,7 +1192,7 @@ public class generalJournalBean_new extends BaseFormBean implements Serializable
             journalnew.setSerial(0);
             journalnew.setIndex(getIndex());
             selectedGeneralJournal = journalnew;
-            setDataLazyModel(journalnew, true,false);
+            setDataLazyModel(journalnew, true, false);
 
         } else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب ادخال بيانات القيد اولا قبل ادخال قيد اخر"));
@@ -1234,8 +1233,14 @@ public class generalJournalBean_new extends BaseFormBean implements Serializable
                 }
                 correctGlYear();
                 if (isAdd) {
-                    generalDTOList.remove(generalDTOList.size() - 1);
+                    if (generalDTOList.size() > 0) {
+                        generalDTOList.remove(generalDTOList.size() - 1);
+                    }
                     generalDTOList.add(0, journalnew);
+                    if (generalDTOList.size() == 1) {
+                     setRowCount(2);
+                       
+                    }
                 }
                 if (isupdate) {
                     for (GeneralJournalDTO generalJournal : generalDTOList) {
@@ -1808,20 +1813,6 @@ public class generalJournalBean_new extends BaseFormBean implements Serializable
 
     public void changeRowSelectedCancel() {
         selectedGeneralJournal = (GeneralJournalDTO) ev.getObject();
-    }
-
-    public boolean filterByDate(Object value, Object filter, Locale locale) {
-
-        if (filter == null) {
-            return true;
-        }
-
-        if (value == null) {
-            return false;
-        }
-
-//        return DateUtils.truncatedEquals((Date) filter, (Date) value, Calendar.DATE);
-        return true;
     }
 
     public void print() {

@@ -279,11 +279,11 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
     private void appendProProductionDate(PrintProductionDTO printProductionDTO, StringBuilder query) {
         if (printProductionDTO.getFromDate() != null) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
-            query.append(" and pfd.date  >=  '").append(dateFormat.format(printProductionDTO.getFromDate())).append("' ");
+            query.append(" and ppit.date  >=  '").append(dateFormat.format(printProductionDTO.getFromDate())).append("' ");
         }
         if (printProductionDTO.getToDate() != null) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 23:59:59");
-            query.append(" and pfd.date  <=  '").append(dateFormat.format(printProductionDTO.getToDate())).append("' ");
+            query.append(" and ppit.date  <=  '").append(dateFormat.format(printProductionDTO.getToDate())).append("' ");
         }
     }
 
@@ -344,7 +344,7 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
         if (transactionFactoryView != null && transactionFactoryView.getDate() != null && transactionFactoryView.getDateTo() != null) {
             params.put("date", transactionFactoryView.getDate());
             params.put("dateTo", transactionFactoryView.getDateTo());
-            query.append(" and s.proFactoryDeliveryDetailId.proFactoryDeliveryId.date >= :date and s.proFactoryDeliveryDetailId.proFactoryDeliveryId.date <= :dateTo ");
+            query.append(" and s.date >= :date and s.date <= :dateTo ");
 
         }
     }

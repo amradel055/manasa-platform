@@ -67,6 +67,9 @@ public class InvNotice extends BaseEntity {
     @JoinColumn(name = "inv_invoice", referencedColumnName = "id")
     @ManyToOne
     private InvPurchaseInvoice invInvoice;
+    @JoinColumn(name = "inv_inventory_id", referencedColumnName = "id")
+    @ManyToOne
+    private InvInventory invInventory;
 
     public InvNotice() {
     }
@@ -200,6 +203,20 @@ public class InvNotice extends BaseEntity {
      */
     public void setInvInvoice(InvPurchaseInvoice invInvoice) {
         this.invInvoice = invInvoice;
+    }
+
+    /**
+     * @return the invInventory
+     */
+    public InvInventory getInvInventory() {
+        return invInventory;
+    }
+
+    /**
+     * @param invInventory the invInventory to set
+     */
+    public void setInvInventory(InvInventory invInventory) {
+        this.invInventory = invInventory;
     }
 
 }
