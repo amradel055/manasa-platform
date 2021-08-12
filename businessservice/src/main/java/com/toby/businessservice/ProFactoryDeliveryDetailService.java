@@ -19,15 +19,17 @@ import javax.ejb.Remote;
 public interface ProFactoryDeliveryDetailService {
 
     public List<InvDetailDTO> getAllProFactoryDeliveryDetailList(InvInvoiceDTO dto);
-    
-    public List<InvDetailDTO> getAllInvPurchaseInvoiceDetailsByInvPurchaseInvoiceIdDTO(InvInvoiceDTO dto, Integer typeto, Integer typefrom) ;
+
+    public List<InvDetailDTO> getAllInvPurchaseInvoiceDetailsByInvPurchaseInvoiceIdDTO(InvInvoiceDTO dto, Integer typeto, Integer typefrom);
 
     public List<InvDetailDTO> getAllProFactoryDeliveryDetailListNotLoaded(InvInvoiceDTO dto);
 
     public List<InvDetailDTO> getAllProPurchaseInvoiceDetailsByInvPurchaseInvoiceIdDTO(InvInvoiceDTO dto);
-    
+
     public String addProFactoryDeliveryDetailsDTO(List<InvDetailDTO> invPurchaseInvoiceDetailList, InvInvoiceDTO invInvoiceDTO, TobyUser tobyUser);
-    
+
+    public void deleteInvDetail(InvDetailDTO detailDTO);
+
     public void deleteProFactoryDeliveryDetailListDTO(List<InvDetailDTO> invPurchaseInvoiceDetailList);
 
 }
