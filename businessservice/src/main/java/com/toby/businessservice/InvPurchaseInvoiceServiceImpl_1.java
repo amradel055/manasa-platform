@@ -2012,7 +2012,8 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 + " sum(i.costAvarage)  , "
                 + " i.itemId.proGroupId.id  , "
                 + " i.itemId.proGroupId.code  , "
-                + " i.itemId.proGroupId.name ");
+                + " i.itemId.proGroupId.name , "
+                + " i.netAfterDiscountHead ");
 //        tobNumberFactoryDelivary(builder, dateFrom, params, dateTo, gallaryId, groupId , 0);
 //        tobNumberFactoryDelivary(builder, dateFrom, params, dateTo, gallaryId, groupId , 1);
 //        tobNumberFactoryDelivary(builder, dateFrom, params, dateTo, gallaryId, groupId , 2);
@@ -2143,6 +2144,11 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             summitionItemsView.setNumber((BigDecimal) line[0]);
 //            summitionItemsView.setAllQuantity((BigDecimal) line[2]);
             summitionItemsView.setAllCost((BigDecimal) line[1]);
+            BigDecimal netFromHead = (BigDecimal) line[6];
+            if(netFromHead != null && netFromHead.compareTo(BigDecimal.ZERO) == 1){
+                BigDecimal x = netFromHead.divide(new BigDecimal(100));
+                summitionItemsView.setAllCost(summitionItemsView.getAllCost().subtract(summitionItemsView.getAllCost().multiply(x)));
+            }
             summitionItemsView.setAllAvarageCost((BigDecimal) line[2]);
 //            summitionItemsView.setAllAvarageCost((BigDecimal) line[4]);
             Integer groupId = (Integer) line[3];

@@ -532,18 +532,24 @@ public class PurchaseOfItemsBySuppliersReportServiceImpl implements PurchaseOfIt
 
     private List<SalesOfItemsByCompany> prepareListSalesOfItemsByCompany(List<Object[]> res) {
         List<SalesOfItemsByCompany> list = new ArrayList<>();
-        SalesOfItemsByCompany salesOfItemsByCompany;
-        for (Object[] object : res) {
+        if (res != null && res.size() > 0) {
+            SalesOfItemsByCompany salesOfItemsByCompany;
             salesOfItemsByCompany = new SalesOfItemsByCompany();
-            salesOfItemsByCompany.setGallaryId((Integer) object[0]);
-            salesOfItemsByCompany.setGallaryName((String) object[1]);
-            salesOfItemsByCompany.setCompanyName((String) object[2]);
-            salesOfItemsByCompany.setCompanyCode((Integer) object[3]);
-            salesOfItemsByCompany.setTotalSales((BigDecimal) object[4]);
-
-            list.add(salesOfItemsByCompany);
+            SalesOfItemsByCompany salesOfItemsByCompanyMain = new SalesOfItemsByCompany();
+            salesOfItemsByCompanyMain.setGallaryId((Integer) res.get(0)[0]);
+            salesOfItemsByCompanyMain.setGallaryName((String) res.get(0)[1]);
+            BigDecimal total = BigDecimal.ZERO;
+            for (Object[] object : res) {
+                salesOfItemsByCompany = new SalesOfItemsByCompany();
+                salesOfItemsByCompany.setCompanyName((String) object[2]);
+                salesOfItemsByCompany.setCompanyCode((Integer) object[3]);
+                salesOfItemsByCompany.setTotalSales((BigDecimal) object[4]);
+                total = total.add(salesOfItemsByCompany.getTotalSales());
+                list.add(salesOfItemsByCompany);
+            }
+            salesOfItemsByCompanyMain.setTotalSales(total);
+            list.add(0, salesOfItemsByCompanyMain);;
         }
-
         return list;
     }
 

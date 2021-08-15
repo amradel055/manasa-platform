@@ -101,6 +101,8 @@ public class InvPurchaseInvoiceDetail extends BaseEntity {
     private Integer isdeleted;
     @Column(name = "number")
     private BigDecimal number;
+    @Column(name = "net_after_discount_head")
+    private BigDecimal netAfterDiscountHead;
     @JoinColumn(name = "inv_item_parent_id", referencedColumnName = "id")
     @ManyToOne
     private InvItem invItemParentId;
@@ -481,6 +483,20 @@ public class InvPurchaseInvoiceDetail extends BaseEntity {
      */
     public void setSumDetailNet(BigDecimal sumDetailNet) {
         this.sumDetailNet = sumDetailNet;
+    }
+
+    /**
+     * @return the netAfterDiscountHead
+     */
+    public BigDecimal getNetAfterDiscountHead() {
+        return netAfterDiscountHead;
+    }
+
+    /**
+     * @param netAfterDiscountHead the netAfterDiscountHead to set
+     */
+    public void setNetAfterDiscountHead(BigDecimal netAfterDiscountHead) {
+        this.netAfterDiscountHead = netAfterDiscountHead;
     }
 
 }

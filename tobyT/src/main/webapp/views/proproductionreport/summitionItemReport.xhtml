@@ -228,6 +228,12 @@
                                          actionListener="#{summitionItemReportMB.exportPDF(actionEvent)}"/>
                     </div>
 
+                    <div class="ui-g-12 ui-md-6">
+                        <p:commandButton class="printButton"  icon="fa fa-fw fa-print"
+                                         onclick="form.target = '_blank'" ajax="false"
+                                         value="#{userData.userDDs['PRINT']} Old"
+                                         actionListener="#{summitionItemReportMB.print2()}"/>
+                    </div>
                 </p:fieldset>
             </h:form>
         </h:body>

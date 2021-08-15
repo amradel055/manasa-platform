@@ -5,6 +5,9 @@
  */
 package com.toby.views;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author IT Shop
@@ -31,6 +34,7 @@ public class Test {
     private TestDetail total;
     private Integer code;
     private String name;
+    private List<Test> testNew;
 
     /**
      * @return the b1
@@ -364,6 +368,23 @@ public class Test {
      */
     public void setB17(TestDetail b17) {
         this.b17 = b17;
+    }
+
+    /**
+     * @return the testNew
+     */
+    public List<Test> getTestNew() {
+        if(testNew == null){
+            testNew = new ArrayList<>();
+        }
+        return testNew;
+    }
+
+    /**
+     * @param testNew the testNew to set
+     */
+    public void setTestNew(List<Test> testNew) {
+        this.testNew = testNew;
     }
 
 }

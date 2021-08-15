@@ -66,6 +66,9 @@ public class SalesOfItemsByCompany {
      * @return the totalSales
      */
     public BigDecimal getTotalSales() {
+        if(totalSales == null){
+            return BigDecimal.ZERO;
+        }
         return totalSales;
     }
 

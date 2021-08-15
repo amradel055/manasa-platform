@@ -171,17 +171,14 @@
                     value="#{purchaseOfItemsByCompanyReportMB.salesOfItemsByCompanyList}" 
                     dir="rtl" 
                     emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
-                    id="PurchaseOfItemsBySuppliersViewTable"
-                    sortBy="#{PurchaseOfItemsBySuppliersViewTable.gallaryId}">
+                    id="PurchaseOfItemsBySuppliersViewTable">
 
-                    <p:headerRow >
 
-                        <p:column colspan="3">
-                            <div class="p-d-inline-flex p-ai-center" style="vertical-align: middle">
-                                <h:outputText styleClass="p-ml-2" value="#{PurchaseOfItemsBySuppliersViewTable.gallaryName}"/>
-                            </div>
-                        </p:column>
-                    </p:headerRow>
+                    <p:column style="width:5vh;text-align: right;font-size: 1.6vh;text-align: center" headerText="المعرض"  >
+                        <div class="p-d-inline-flex p-ai-center" style="vertical-align: middle">
+                            <h:outputText styleClass="p-ml-2" value="#{PurchaseOfItemsBySuppliersViewTable.gallaryName}"/>
+                        </div>
+                    </p:column>
 
                     <p:column   style="width:5vh;text-align: right;font-size: 1.6vh;text-align: center" headerText="كود الشركة" 
 

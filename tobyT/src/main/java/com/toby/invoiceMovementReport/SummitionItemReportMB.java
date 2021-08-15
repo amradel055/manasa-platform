@@ -7,6 +7,7 @@ import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.ProGroupDTO;
 import com.toby.toby.Basic;
 import com.toby.views.SummitionItemsView;
+import com.toby.views.Test;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ public class SummitionItemReportMB extends Basic {
     private ProGroupDTOConverter proGroupDTOConverter;
 
     private List<SummitionItemsView> itemsViewList;
+    private ArrayList<Test> list;
 
     private BigDecimal sumFactoryNumberTotal;
     private BigDecimal sumSendNumberTotal;
@@ -77,52 +79,279 @@ public class SummitionItemReportMB extends Basic {
                 List<SummitionItemsView> itemsViewForGallaryinner = new ArrayList<>();
                 List<SummitionItemsView> itemsViewForGallaryinnerForAll = new ArrayList<>();
                 SummitionItemsView summitionItemsView = null;
+                HashMap<Integer, Test> map = new HashMap();
                 for (InvInventoryDTO invInventoryDTO : getGallaryListSelected()) {
-                    
-                        summitionItemsView = new SummitionItemsView();
 
-                        summitionItemsView.setName(invInventoryDTO.getName());
-                        summitionItemsView.setRowType(1);
+                    summitionItemsView = new SummitionItemsView();
 
-                        if (getUri().contains("summitionItemReportPro")) {
-                            itemsViewForGallaryinner = invPurchaseInvoiceService_1.getTheListBasedOnStagesList(invInventoryDTO.getId(), getDateFrom(), getDateTo(), getUserData().getUserBranch().getId(), getUserData().getUser(), null,getProGroupListSelected());
-                        } else {
-                            itemsViewForGallaryinner = invPurchaseInvoiceService_1.findSummitionQuantity(invInventoryDTO.getId(), getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), null,getProGroupListSelected());
-                        }
-                        if (itemsViewForGallaryinner != null && !itemsViewForGallaryinner.isEmpty()) {
-                            for (SummitionItemsView view : itemsViewForGallaryinner) {
-                                if (view.getCode() == 1 || view.getCode() == 2) {
-                                    setValueForGallary(summitionItemsView, view);
-                                }
-                            }
-                            getItemsViewList().add(summitionItemsView);
-                            getItemsViewList().addAll(itemsViewForGallaryinner);
-                            setFinalTotals(summitionItemsView);
-                        }
-
-                }
+                    summitionItemsView.setName(invInventoryDTO.getName());
+                    summitionItemsView.setRowType(1);
 
                     if (getUri().contains("summitionItemReportPro")) {
-                        itemsViewForGallaryinnerForAll = invPurchaseInvoiceService_1.getTheListBasedOnStagesList(null, getDateFrom(), getDateTo(), getUserData().getUserBranch().getId(), getUserData().getUser(), getGallaryListSelected(),getProGroupListSelected());
+                        itemsViewForGallaryinner = invPurchaseInvoiceService_1.getTheListBasedOnStagesList(invInventoryDTO.getId(), getDateFrom(), getDateTo(), getUserData().getUserBranch().getId(), getUserData().getUser(), null, getProGroupListSelected());
                     } else {
-                        itemsViewForGallaryinnerForAll = invPurchaseInvoiceService_1.findSummitionQuantity(null, getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), getGallaryListSelected(),getProGroupListSelected());
+                        itemsViewForGallaryinner = invPurchaseInvoiceService_1.findSummitionQuantity(invInventoryDTO.getId(), getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), null, getProGroupListSelected());
                     }
-                    if (itemsViewForGallaryinnerForAll != null && !itemsViewForGallaryinnerForAll.isEmpty()) {
-                        summitionItemsView = new SummitionItemsView();
-                        summitionItemsView.setName("إجماليات المعارض");
-                        summitionItemsView.setRowType(1);
-                        for (SummitionItemsView view : itemsViewForGallaryinnerForAll) {
+                    if (itemsViewForGallaryinner != null && !itemsViewForGallaryinner.isEmpty()) {
+                        for (SummitionItemsView view : itemsViewForGallaryinner) {
                             if (view.getCode() == 1 || view.getCode() == 2) {
                                 setValueForGallary(summitionItemsView, view);
                             }
+                            distributeDate(invInventoryDTO, map, view);
                         }
                         getItemsViewList().add(summitionItemsView);
-                        getItemsViewList().addAll(itemsViewForGallaryinnerForAll);
-
+                        getItemsViewList().addAll(itemsViewForGallaryinner);
+                        setFinalTotals(summitionItemsView);
                     }
-                
 
+                }
+
+                if (getUri().contains("summitionItemReportPro")) {
+                    itemsViewForGallaryinnerForAll = invPurchaseInvoiceService_1.getTheListBasedOnStagesList(null, getDateFrom(), getDateTo(), getUserData().getUserBranch().getId(), getUserData().getUser(), getGallaryListSelected(), getProGroupListSelected());
+                } else {
+                    itemsViewForGallaryinnerForAll = invPurchaseInvoiceService_1.findSummitionQuantity(null, getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), getGallaryListSelected(), getProGroupListSelected());
+                }
+                if (itemsViewForGallaryinnerForAll != null && !itemsViewForGallaryinnerForAll.isEmpty()) {
+                    summitionItemsView = new SummitionItemsView();
+                    summitionItemsView.setName("إجماليات المعارض");
+                    summitionItemsView.setRowType(1);
+                    for (SummitionItemsView view : itemsViewForGallaryinnerForAll) {
+                        if (view.getCode() == 1 || view.getCode() == 2) {
+                            setValueForGallary(summitionItemsView, view);
+                        }
+                    }
+                    getItemsViewList().add(summitionItemsView);
+                    getItemsViewList().addAll(itemsViewForGallaryinnerForAll);
+
+                }
+                setList(new ArrayList<Test>(map.values()));
             }
+        }
+    }
+
+    private void distributeDate(InvInventoryDTO invInventoryDTO, HashMap<Integer, Test> map, SummitionItemsView view) {
+        Test test;
+        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("1")) {
+
+            test = map.get(view.getCode());
+            if (test == null) {
+                test = new Test();
+                test.setCode(view.getCode());
+                test.setName(view.getName());
+            }
+
+            test.getB1().setNumber(view.getNumber());
+            test.getB1().setPrice(view.getAllCost());
+            test.getB1().setTotalCost(view.getAllAvarageCost());
+            map.put(view.getCode(), test);
+        }
+        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("2")) {
+            test = map.get(view.getCode());
+            if (test == null) {
+                test = new Test();
+                test.setCode(view.getCode());
+                test.setName(view.getName());
+            }
+            test.getB2().setNumber(view.getNumber());
+            test.getB2().setPrice(view.getAllCost());
+            test.getB2().setTotalCost(view.getAllAvarageCost());
+            map.put(view.getCode(), test);
+
+        }
+        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("3")) {
+            test = map.get(view.getCode());
+            if (test == null) {
+                test = new Test();
+                test.setCode(view.getCode());
+                test.setName(view.getName());
+            }
+            test.getB3().setNumber(view.getNumber());
+            test.getB3().setPrice(view.getAllCost());
+            test.getB3().setTotalCost(view.getAllAvarageCost());
+            map.put(view.getCode(), test);
+
+        }
+        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("4")) {
+            test = map.get(view.getCode());
+            if (test == null) {
+                test = new Test();
+                test.setCode(view.getCode());
+                test.setName(view.getName());
+            }
+            test.getB4().setNumber(view.getNumber());
+            test.getB4().setPrice(view.getAllCost());
+            test.getB4().setTotalCost(view.getAllAvarageCost());
+            map.put(view.getCode(), test);
+
+        }
+        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("5")) {
+            test = map.get(view.getCode());
+            if (test == null) {
+                test = new Test();
+                test.setCode(view.getCode());
+                test.setName(view.getName());
+            }
+            test.getB5().setNumber(view.getNumber());
+            test.getB5().setPrice(view.getAllCost());
+            test.getB5().setTotalCost(view.getAllAvarageCost());
+            map.put(view.getCode(), test);
+
+        }
+        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("6")) {
+            test = map.get(view.getCode());
+            if (test == null) {
+                test = new Test();
+                test.setCode(view.getCode());
+                test.setName(view.getName());
+            }
+            test.getB6().setNumber(view.getNumber());
+            test.getB6().setPrice(view.getAllCost());
+            test.getB6().setTotalCost(view.getAllAvarageCost());
+            map.put(view.getCode(), test);
+
+        }
+        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("7")) {
+            test = map.get(view.getCode());
+            if (test == null) {
+                test = new Test();
+                test.setCode(view.getCode());
+                test.setName(view.getName());
+            }
+            test.getB7().setNumber(view.getNumber());
+            test.getB7().setPrice(view.getAllCost());
+            test.getB7().setTotalCost(view.getAllAvarageCost());
+            map.put(view.getCode(), test);
+
+        }
+        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("8")) {
+            test = map.get(view.getCode());
+            if (test == null) {
+                test = new Test();
+                test.setCode(view.getCode());
+                test.setName(view.getName());
+            }
+            test.getB8().setNumber(view.getNumber());
+            test.getB8().setPrice(view.getAllCost());
+            test.getB8().setTotalCost(view.getAllAvarageCost());
+            map.put(view.getCode(), test);
+
+        }
+        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("9")) {
+            test = map.get(view.getCode());
+            if (test == null) {
+                test = new Test();
+                test.setCode(view.getCode());
+                test.setName(view.getName());
+            }
+            test.getB9().setNumber(view.getNumber());
+            test.getB9().setPrice(view.getAllCost());
+            test.getB9().setTotalCost(view.getAllAvarageCost());
+            map.put(view.getCode(), test);
+
+        }
+        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("10")) {
+            test = map.get(view.getCode());
+            if (test == null) {
+                test = new Test();
+                test.setCode(view.getCode());
+                test.setName(view.getName());
+            }
+            test.getB10().setNumber(view.getNumber());
+            test.getB10().setPrice(view.getAllCost());
+            test.getB10().setTotalCost(view.getAllAvarageCost());
+            map.put(view.getCode(), test);
+
+        }
+        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("11")) {
+            test = map.get(view.getCode());
+            if (test == null) {
+                test = new Test();
+                test.setCode(view.getCode());
+                test.setName(view.getName());
+            }
+            test.getB11().setNumber(view.getNumber());
+            test.getB11().setPrice(view.getAllCost());
+            test.getB11().setTotalCost(view.getAllAvarageCost());
+            map.put(view.getCode(), test);
+
+        }
+        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("12")) {
+            test = map.get(view.getCode());
+            if (test == null) {
+                test = new Test();
+                test.setCode(view.getCode());
+                test.setName(view.getName());
+            }
+            test.getB12().setNumber(view.getNumber());
+            test.getB12().setPrice(view.getAllCost());
+            test.getB12().setTotalCost(view.getAllAvarageCost());
+            map.put(view.getCode(), test);
+
+        }
+        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("13")) {
+            test = map.get(view.getCode());
+            if (test == null) {
+                test = new Test();
+                test.setCode(view.getCode());
+                test.setName(view.getName());
+            }
+            test.getB13().setNumber(view.getNumber());
+            test.getB13().setPrice(view.getAllCost());
+            test.getB13().setTotalCost(view.getAllAvarageCost());
+            map.put(view.getCode(), test);
+
+        }
+        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("14")) {
+            test = map.get(view.getCode());
+            if (test == null) {
+                test = new Test();
+                test.setCode(view.getCode());
+                test.setName(view.getName());
+            }
+            test.getB14().setNumber(view.getNumber());
+            test.getB14().setPrice(view.getAllCost());
+            test.getB14().setTotalCost(view.getAllAvarageCost());
+            map.put(view.getCode(), test);
+
+        }
+        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("15")) {
+            test = map.get(view.getCode());
+            if (test == null) {
+                test = new Test();
+                test.setCode(view.getCode());
+                test.setName(view.getName());
+            }
+            test.getB15().setNumber(view.getNumber());
+            test.getB15().setPrice(view.getAllCost());
+            test.getB15().setTotalCost(view.getAllAvarageCost());
+            map.put(view.getCode(), test);
+
+        }
+        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("16")) {
+            test = map.get(view.getCode());
+            if (test == null) {
+                test = new Test();
+                test.setCode(view.getCode());
+                test.setName(view.getName());
+            }
+            test.getB16().setNumber(view.getNumber());
+            test.getB16().setPrice(view.getAllCost());
+            test.getB16().setTotalCost(view.getAllAvarageCost());
+            map.put(view.getCode(), test);
+
+        }
+        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("17")) {
+            test = map.get(view.getCode());
+            if (test == null) {
+                test = new Test();
+                test.setCode(view.getCode());
+                test.setName(view.getName());
+            }
+            test.getB17().setNumber(view.getNumber());
+            test.getB17().setPrice(view.getAllCost());
+            test.getB17().setTotalCost(view.getAllAvarageCost());
+            map.put(view.getCode(), test);
+
         }
     }
 
@@ -170,6 +399,22 @@ public class SummitionItemReportMB extends Basic {
 
             cell.setCellStyle(cellStyle);
         }
+    }
+
+    public void print2() throws JRException, IOException {
+        Test testNew = null;
+        for (Test t : getList()) {
+            testNew = new Test();
+            t.setTestNew(new ArrayList<>());
+            testNew.setB14(t.getB14());
+            testNew.setB15(t.getB15());
+            testNew.setB16(t.getB16());
+            testNew.setB17(t.getB17());
+            testNew.setTotal(t.getTotal());
+            t.getTestNew().add(testNew);
+        }
+        fillReport(prepareReport(), getUserData().getReportPath() + "testReportPro.jasper", getList(), "pdf");
+
     }
 
     public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {
@@ -449,6 +694,20 @@ public class SummitionItemReportMB extends Basic {
      */
     public void setProGroupListSelected(List<ProGroupDTO> proGroupListSelected) {
         this.proGroupListSelected = proGroupListSelected;
+    }
+
+    /**
+     * @return the list
+     */
+    public ArrayList<Test> getList() {
+        return list;
+    }
+
+    /**
+     * @param list the list to set
+     */
+    public void setList(ArrayList<Test> list) {
+        this.list = list;
     }
 
 }
