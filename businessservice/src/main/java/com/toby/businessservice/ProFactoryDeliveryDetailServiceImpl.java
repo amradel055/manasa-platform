@@ -249,6 +249,16 @@ public class ProFactoryDeliveryDetailServiceImpl implements ProFactoryDeliveryDe
         entity.setBranchId(tobyUser.getBranchId());
         return entity;
     }
+    
+    @Override
+    public void deleteInvDetail(InvDetailDTO detailDTO) {
+        if (detailDTO.getId() != null) {
+            ProFactoryDeliveryDetail proFactoryDeliveryDetail = new ProFactoryDeliveryDetail();
+            proFactoryDeliveryDetail.setId(detailDTO.getId());
+            dao.deleteEntity(proFactoryDeliveryDetail);
+        }
+    }
+
 
     @Override
     public void deleteProFactoryDeliveryDetailListDTO(List<InvDetailDTO> invPurchaseInvoiceDetailList) {

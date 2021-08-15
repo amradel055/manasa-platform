@@ -7,6 +7,7 @@ package com.toby.toby;
 
 import com.toby.businessservice.TobyUserInventoryService;
 import com.toby.businessservice.InvDialogueService;
+import com.toby.businessservice.ProFactoryDeliveryDetailService;
 import com.toby.businessservice.ProFactoryDeliveryService;
 import com.toby.businessservice.ReportManagementService;
 import com.toby.bussinessservice.global.AutoCompleteService;
@@ -57,6 +58,8 @@ public abstract class ProductionBasicDataForm extends BaseFormBean {
     private ReportManagementService reportManagementService;
     @EJB
     private InvDialogueService invDialogueService;
+    @EJB
+    private ProFactoryDeliveryDetailService deliveryDetailService;
     
     @Override
     public abstract String save();
@@ -102,6 +105,7 @@ public abstract class ProductionBasicDataForm extends BaseFormBean {
             if (invPurchaseInvoiceDetailsValidate.getId() != null) {
                 getInvInvoiceDTO().getInvPurchaseInvoiceDetailsDeletedList().add(invPurchaseInvoiceDetailsValidate);
             }
+            deliveryDetailService.deleteInvDetail(invPurchaseInvoiceDetailsValidate);
             getInvInvoiceDTO().getInvPurchaseInvoiceDetailList().remove(invPurchaseInvoiceDetailsValidate);
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceFormMB", "deleteInvPurchaseInvoiceDetail");
