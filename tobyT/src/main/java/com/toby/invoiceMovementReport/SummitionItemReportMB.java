@@ -441,14 +441,15 @@ public class SummitionItemReportMB extends Basic {
             hashMap.put("companyImage", null);
         }
 
+        hashMap.put("titleText", " مبيعات الصناف حسب الفروع و الفئات");
         hashMap.put("dateFromText", "  من تاريخ");
         hashMap.put("dateFromValue", getDateFrom());
         hashMap.put("dateToText", "  الى تاريخ");
         hashMap.put("dateToValue", getDateTo());
         hashMap.put("gallaryText", "المعرض ");
 //        hashMap.put("gallaryValue", getGallaryDTOSelected() == null ? null : getGallaryDTOSelected().getName());
-        hashMap.put("proGroupText", "الفئة ");
-        hashMap.put("proGroupValue", getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getName());
+        hashMap.put("proGroupListSelectedText", "الفئة ");
+        hashMap.put("proGroupListSelectedValue", getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getName());
         hashMap.put("codeText", "الكود ");
         hashMap.put("nameText", "الفئة ");
         hashMap.put("numberText", "العدد ");
