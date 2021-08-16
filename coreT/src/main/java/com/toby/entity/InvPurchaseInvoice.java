@@ -165,11 +165,11 @@ public class InvPurchaseInvoice extends BaseEntity {
     @JoinColumn(name = "inv_inventory_id", referencedColumnName = "id")
     @ManyToOne
     private InvInventory invInventoryId;
-    
+
     @JoinColumn(name = "galary_Id", referencedColumnName = "id")
     @ManyToOne
     private InvInventory galaryId;
-    
+
     @JoinColumn(name = "organization_site_id", referencedColumnName = "id")
     @ManyToOne
     private InvOrganizationSite organizationSiteId;
@@ -191,16 +191,16 @@ public class InvPurchaseInvoice extends BaseEntity {
 
     @Column(name = "serial_tax")
     private Integer serialTax;
-    
+
     @Column(name = "due_period")
     private Integer dueperiod;
-    
+
     @Column(name = "recieve_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date recievedate;
     @Column(name = "recieved")
     private Integer recieved;
-    
+
     @Column(name = "proof")
     private Integer proof;
     @Column(name = "customer_accept")
@@ -208,8 +208,8 @@ public class InvPurchaseInvoice extends BaseEntity {
     @Column(name = "is_deleted")
     private Integer isdeleted;
     @Column(name = "price_type")
-    private Integer pricetype;   
-    
+    private Integer pricetype;
+
     @JoinColumn(name = "inv_purchase_order_id", referencedColumnName = "id")
     @ManyToOne
     private InvPurchaseOrder invPurchaseOrderId;
@@ -229,11 +229,13 @@ public class InvPurchaseInvoice extends BaseEntity {
     private Integer stopped;
     @JoinColumn(name = "offer_company_id", referencedColumnName = "id")
     @ManyToOne
-    private OfferCompany offerCompanyId;    
+    private OfferCompany offerCompanyId;
     @Size(max = 45)
     @Column(name = "raghi_code")
     private String raghiCode;
-            
+    @Column(name = "invoice_type")
+    private Integer invoiceType;
+
     public InvPurchaseInvoice() {
     }
 
@@ -246,7 +248,7 @@ public class InvPurchaseInvoice extends BaseEntity {
     }
 
     public BigDecimal getRate() {
-        if(rate == null){
+        if (rate == null) {
             rate = BigDecimal.ONE;
         }
         return rate;
@@ -663,8 +665,8 @@ public class InvPurchaseInvoice extends BaseEntity {
      * @return the proof
      */
     public Integer getProof() {
-        if(proof == null){
-            proof = 0 ;
+        if (proof == null) {
+            proof = 0;
         }
         return proof;
     }
@@ -703,7 +705,6 @@ public class InvPurchaseInvoice extends BaseEntity {
     public void setIsdeleted(Integer isdeleted) {
         this.isdeleted = isdeleted;
     }
-
 
     public Integer getPricetype() {
         return pricetype;
@@ -832,7 +833,7 @@ public class InvPurchaseInvoice extends BaseEntity {
      * @return the discHalala
      */
     public BigDecimal getDiscHalala() {
-        if(discHalala == null){
+        if (discHalala == null) {
             discHalala = BigDecimal.ZERO;
         }
         return discHalala;
@@ -871,6 +872,20 @@ public class InvPurchaseInvoice extends BaseEntity {
      */
     public void setRaghiCode(String raghiCode) {
         this.raghiCode = raghiCode;
+    }
+
+    /**
+     * @return the invoiceType
+     */
+    public Integer getInvoiceType() {
+        return invoiceType;
+    }
+
+    /**
+     * @param invoiceType the invoiceType to set
+     */
+    public void setInvoiceType(Integer invoiceType) {
+        this.invoiceType = invoiceType;
     }
 
 }

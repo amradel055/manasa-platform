@@ -195,6 +195,7 @@ public class InvPurchaseInvoiceImpl implements InvPurchaseInvoiceService {
         invPurchaseInvoice.setDiscount(invPurchaseInvoiceDTO.getDiscount());
         invPurchaseInvoice.setDiscountType(invPurchaseInvoiceDTO.getDiscountType());
         invPurchaseInvoice.setDueDate(invPurchaseInvoiceDTO.getDueDate());
+        invPurchaseInvoice.setInvoiceType(invPurchaseInvoiceDTO.getInvoiceType());
 
         invPurchaseInvoice.setId(invPurchaseInvoiceDTO.getId());
         invPurchaseInvoice.setDueperiod(invPurchaseInvoiceDTO.getDueperiod());
@@ -320,6 +321,7 @@ public class InvPurchaseInvoiceImpl implements InvPurchaseInvoiceService {
         invPurchaseInvoiceDTO.setRecieved(invPurchaseInvoice.getRecieved());
         invPurchaseInvoiceDTO.setRemarks(invPurchaseInvoice.getRemarks());
         invPurchaseInvoiceDTO.setIsdeleted(invPurchaseInvoice.getIsdeleted());
+        invPurchaseInvoiceDTO.setInvoiceType(invPurchaseInvoice.getInvoiceType());
 //        invPurchaseInvoiceDTO.setType(invPurchaseInvoice.getType());
 
         invPurchaseInvoiceDTO.setCompanyId(invPurchaseInvoice.getCompanyId().getId() != null ? invPurchaseInvoice.getCompanyId().getId() : null);
@@ -401,6 +403,7 @@ public class InvPurchaseInvoiceImpl implements InvPurchaseInvoiceService {
         invPurchaseInvoiceDTO.setRecieved(invPurchaseInvoice.getRecieved());
         invPurchaseInvoiceDTO.setRemarks(invPurchaseInvoice.getRemarks());
         invPurchaseInvoiceDTO.setIsdeleted(invPurchaseInvoice.getIsdeleted());
+        invPurchaseInvoiceDTO.setInvoiceType(invPurchaseInvoice.getInvoiceType());
 //        invPurchaseInvoiceDTO.setType(invPurchaseInvoice.getType());
 
         invPurchaseInvoiceDTO.setCompanyId(invPurchaseInvoice.getCompanyId().getId() != null ? invPurchaseInvoice.getCompanyId().getId() : null);

@@ -45,6 +45,7 @@ public class SalesOfItemsBySupplierMB extends BaseInventoryReportBean {
     private Integer branchId;
     private String uri;
     private String screenMode;
+    private Integer invoiceType;
 
     private Boolean isSales;
 
@@ -665,4 +666,18 @@ public class SalesOfItemsBySupplierMB extends BaseInventoryReportBean {
      public void setChart(Boolean chart) {
      this.chart = chart;
      }*/
+
+    /**
+     * @return the invoiceType
+     */
+    public Integer getInvoiceType() {
+        return invoiceType;
+    }
+
+    /**
+     * @param invoiceType the invoiceType to set
+     */
+    public void setInvoiceType(Integer invoiceType) {
+        this.invoiceType = invoiceType;
+    }
 }

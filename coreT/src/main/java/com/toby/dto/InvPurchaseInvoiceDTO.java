@@ -57,6 +57,7 @@ public class InvPurchaseInvoiceDTO extends BaseEntityDTO {
     private InvDetailDTO invPurchaseInvoiceDetailsSelected;
     private InvDetailDTO invPurchaseInvoiceDetails1;
     private Integer dueperiod;
+    private Integer invoiceType;
 
     private BigDecimal totalQuatity = BigDecimal.ZERO;
     private BigDecimal totalWeight = BigDecimal.ZERO;
@@ -708,6 +709,20 @@ public class InvPurchaseInvoiceDTO extends BaseEntityDTO {
      */
     public void setDateHegry(Date dateHegry) {
         this.dateHegry = dateHegry;
+    }
+
+    /**
+     * @return the invoiceType
+     */
+    public Integer getInvoiceType() {
+        return invoiceType;
+    }
+
+    /**
+     * @param invoiceType the invoiceType to set
+     */
+    public void setInvoiceType(Integer invoiceType) {
+        this.invoiceType = invoiceType;
     }
 
 }

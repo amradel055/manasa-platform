@@ -155,6 +155,7 @@ public class InvInvoiceDTO extends BaseEntityDTO {
     private String customerCode;
     private String customerName;
     private String customerMobile;
+    private Integer invoiceType;
 
     public InvInvoiceDTO() {
     }
@@ -1729,7 +1730,7 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      * @return the raghiValue
      */
     public BigDecimal getRaghiValue() {
-        if(raghiValue == null){
+        if (raghiValue == null) {
             raghiValue = BigDecimal.ZERO;
         }
         return raghiValue;
@@ -1754,6 +1755,20 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      */
     public void setCheckRaghiCode(Boolean checkRaghiCode) {
         this.checkRaghiCode = checkRaghiCode;
+    }
+
+    /**
+     * @return the invoiceType
+     */
+    public Integer getInvoiceType() {
+        return invoiceType;
+    }
+
+    /**
+     * @param invoiceType the invoiceType to set
+     */
+    public void setInvoiceType(Integer invoiceType) {
+        this.invoiceType = invoiceType;
     }
 
 }

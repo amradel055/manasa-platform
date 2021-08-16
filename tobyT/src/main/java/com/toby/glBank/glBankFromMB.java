@@ -161,6 +161,8 @@ public class glBankFromMB extends BaseFormBean {
             glBankEntity.setName(glBank.getName() != null ? glBank.getName() : null);
             glBankEntity.setOpeningBalance(glBank.getOpeninngBalance() != null ? glBank.getOpeninngBalance() : BigDecimal.ZERO);
             glBankEntity.setOpeningBalanceDate(glBank.getDateOpeninngBalance() != null ? glBank.getDateOpeninngBalance() : null);
+            glBankEntity.setCommition(glBank.getCommition());
+            glBankEntity.setRate(glBank.getRate());
 //            glBankEntity.setRaghiPoint(glBank.getRaghiPoint());
             if (glBank.getType() != null) {
                 glBankEntity.setType(glBank.getType());
@@ -207,6 +209,8 @@ public class glBankFromMB extends BaseFormBean {
                 glBank.setDateOpeninngBalance(glBankEntity.getOpeningBalanceDate());
                 glBank.setCurrencyId(glBankEntity.getCurrencyId());
                 glBank.setAccountId(glBankEntity.getAccountId());
+                glBank.setCommition(glBankEntity.getCommition());
+                glBank.setRate(glBankEntity.getRate());
 //                glBank.setRaghiPoint(glBankEntity.getRaghiPoint());
 
                 if (glBank.getId() == null) {

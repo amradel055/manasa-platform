@@ -35,6 +35,7 @@ public class SummitionItemReportMB extends Basic {
 
     private Date dateFrom;
     private Date dateTo;
+    private Integer invoiceType;
     private ProGroupDTO proGroupDTOSelected;
     private List<ProGroupDTO> proGroupListSelected;
 
@@ -90,7 +91,7 @@ public class SummitionItemReportMB extends Basic {
                     if (getUri().contains("summitionItemReportPro")) {
                         itemsViewForGallaryinner = invPurchaseInvoiceService_1.getTheListBasedOnStagesList(invInventoryDTO.getId(), getDateFrom(), getDateTo(), getUserData().getUserBranch().getId(), getUserData().getUser(), null, getProGroupListSelected());
                     } else {
-                        itemsViewForGallaryinner = invPurchaseInvoiceService_1.findSummitionQuantity(invInventoryDTO.getId(), getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), null, getProGroupListSelected());
+                        itemsViewForGallaryinner = invPurchaseInvoiceService_1.findSummitionQuantity(invInventoryDTO.getId(), getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), null, getProGroupListSelected(),getInvoiceType());
                     }
                     if (itemsViewForGallaryinner != null && !itemsViewForGallaryinner.isEmpty()) {
                         for (SummitionItemsView view : itemsViewForGallaryinner) {
@@ -109,7 +110,7 @@ public class SummitionItemReportMB extends Basic {
                 if (getUri().contains("summitionItemReportPro")) {
                     itemsViewForGallaryinnerForAll = invPurchaseInvoiceService_1.getTheListBasedOnStagesList(null, getDateFrom(), getDateTo(), getUserData().getUserBranch().getId(), getUserData().getUser(), getGallaryListSelected(), getProGroupListSelected());
                 } else {
-                    itemsViewForGallaryinnerForAll = invPurchaseInvoiceService_1.findSummitionQuantity(null, getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), getGallaryListSelected(), getProGroupListSelected());
+                    itemsViewForGallaryinnerForAll = invPurchaseInvoiceService_1.findSummitionQuantity(null, getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), getGallaryListSelected(), getProGroupListSelected(),getInvoiceType());
                 }
                 if (itemsViewForGallaryinnerForAll != null && !itemsViewForGallaryinnerForAll.isEmpty()) {
                     summitionItemsView = new SummitionItemsView();
@@ -709,6 +710,20 @@ public class SummitionItemReportMB extends Basic {
      */
     public void setList(ArrayList<Test> list) {
         this.list = list;
+    }
+
+    /**
+     * @return the invoiceType
+     */
+    public Integer getInvoiceType() {
+        return invoiceType;
+    }
+
+    /**
+     * @param invoiceType the invoiceType to set
+     */
+    public void setInvoiceType(Integer invoiceType) {
+        this.invoiceType = invoiceType;
     }
 
 }

@@ -34,6 +34,26 @@
                             </div>
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 49%!important" value="#{glBankFromMB.glBankEntity.commition}"/>
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="العمولة"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 49%!important" value="#{glBankFromMB.glBankEntity.rate}"/>
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="المعدل"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
                                     <p:inputText style="width: 49%!important" value="#{glBankFromMB.glBankEntity.code}">
                                         <p:ajax event="blur" listener="#{glBankFromMB.validateSave()}" update="curmsg" />
                                     </p:inputText>
@@ -43,7 +63,7 @@
 
                                 </div>
                             </div>
-                          
+
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:autoComplete id="GlAccount_ID" 
@@ -92,7 +112,7 @@
 
                                 </div>
                             </div>
-                              <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:autoComplete id="Currency_ID" 
                                                     style="width: 85%" 
@@ -150,12 +170,12 @@
 
 
                         </div>
-                        
+
                         <div class="ui-g-12 ui-md-6">
                             <h:panelGroup>
 
                                 <h:panelGroup>
-                                     
+
                                 </h:panelGroup> 
                             </h:panelGroup>
 
@@ -163,7 +183,7 @@
                         </div>
                     </div>
                 </div>
-                
+
 
                 <panelGrid class="centerButtons col-md-12">
 

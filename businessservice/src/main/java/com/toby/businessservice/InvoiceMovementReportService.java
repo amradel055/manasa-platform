@@ -9,7 +9,7 @@ import javax.ejb.Remote;
 @Remote
 public interface InvoiceMovementReportService {
 
-    public List<InvoiceMovementReport> searchReport(PrintProductionDTO printProductionDTO, Integer branchId);
+    public List<InvoiceMovementReport> searchReport(PrintProductionDTO printProductionDTO, Integer branchId, Integer invoiceType);
     
     public BigDecimal summitionTob(Integer id);
     

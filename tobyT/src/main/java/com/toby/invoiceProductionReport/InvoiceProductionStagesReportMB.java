@@ -131,7 +131,7 @@ public class InvoiceProductionStagesReportMB extends BaseListBean {
         PrintProductionDTO printProductionDTOSearch = new PrintProductionDTO();
         printProductionDTOSearch.setFromInvInvoice(printProductionDTO.getFromInvInvoice());
         printProductionDTOSearch.setToInvInvoice(printProductionDTO.getFromInvInvoice());
-        List<InvoiceMovementReport> invoiceMovementReportList = invoiceMovementReportService.searchReport(printProductionDTOSearch, getUserData().getUserBranch().getId());
+        List<InvoiceMovementReport> invoiceMovementReportList = invoiceMovementReportService.searchReport(printProductionDTOSearch, getUserData().getUserBranch().getId(),null);
         if (invoiceMovementReportList != null && !invoiceMovementReportList.isEmpty()) {
             setInvoiceMovementReport(invoiceMovementReportList.get(0));
         }

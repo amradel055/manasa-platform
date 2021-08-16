@@ -30,7 +30,7 @@ public class InvoiceMovementReportServiceImpl implements InvoiceMovementReportSe
     private GenericDAO dao;
 
     @Override
-    public List<InvoiceMovementReport> searchReport(PrintProductionDTO printProductionDTO, Integer branchId) {
+    public List<InvoiceMovementReport> searchReport(PrintProductionDTO printProductionDTO, Integer branchId, Integer invoiceType) {
         StringBuilder query = new StringBuilder();
         query.append("select ipi.serial as serial , ios.name as customerName , inv.name as inventoryName , pfd.date , pfd.type , ipi.id as id , pfd.id as idFactory , pfd.parent as parent  from pro_factory_delivery pfd \n").
                 append(" left join inv_purchase_invoice ipi on ipi.id = pfd.inv_purchase_invoice_id\n").
@@ -38,8 +38,11 @@ public class InvoiceMovementReportServiceImpl implements InvoiceMovementReportSe
                 append(" left join inv_inventory inv on inv.id = ipi.inv_inventory_id ").
                 append(" left join inv_inventory inv2 on inv2.id = ipi.galary_Id ").
                 append(" where ipi.branch_id = \n ").
-                append(branchId).append(" ").
-                append(appendProProductionInvoice(printProductionDTO)).
+                append(branchId).append(" ");
+        if (invoiceType != null) {
+            query.append(" and ipi.invoice_type =   ").append(invoiceType);
+        }
+        query.append(appendProProductionInvoice(printProductionDTO)).
                 append(appendGallary(printProductionDTO)).
                 append(appendDateProFactoryDelivery(printProductionDTO)).
                 append(" union all select ipi.serial as serial , ios.name as customerName , inv.name as inventoryName , ipi.date , 3 , ipi.id as id , null  as idFactory, null as parent  from inv_purchase_invoice ipi \n").
@@ -47,8 +50,11 @@ public class InvoiceMovementReportServiceImpl implements InvoiceMovementReportSe
                 append(" left join inv_inventory inv on inv.id = ipi.inv_inventory_id ").
                 append(" left join inv_inventory inv2 on inv2.id = ipi.galary_Id  ").
                 append(" where ipi.type = 1 AND ipi.branch_id = \n ").
-                append(branchId).append(" ").
-                append(appendProProductionInvoice(printProductionDTO)).
+                append(branchId).append(" ");
+        if (invoiceType != null) {
+            query.append(" and ipi.invoice_type =   ").append(invoiceType);
+        }
+        query.append(appendProProductionInvoice(printProductionDTO)).
                 append(appendGallary(printProductionDTO)).
                 append(appendDateInvoice(printProductionDTO));
 
@@ -170,7 +176,6 @@ public class InvoiceMovementReportServiceImpl implements InvoiceMovementReportSe
 //        if (productionDTO.getToInvoice() != null) {
 //            query.append(" and ipi.serial <=  ").append(productionDTO.getToInvoice().getSerial());
 //        }
-        
         if (productionDTO.getToInvInvoice() != null) {
             query.append(" and ipi.serial <=  ").append(productionDTO.getToInvInvoice());
         }
@@ -185,15 +190,13 @@ public class InvoiceMovementReportServiceImpl implements InvoiceMovementReportSe
         if (productionDTO.getGallaryFrom() != null) {
             query.append(" and inv2.id =  ").append(productionDTO.getGallaryFrom().getId());
         }
-        
+
 //        if (productionDTO.getGallaryFrom() != null) {
 //            query.append(" and inv2.code >=  '").append(productionDTO.getGallaryFrom().getCode()).append("'");
 //        }
-
 //        if (productionDTO.getGallaryTo() != null) {
 //            query.append(" and inv2.code <=  '").append(productionDTO.getGallaryTo().getCode()).append("'");
 //        }
-
         if (!query.toString().isEmpty()) {
             return query.toString();
         }

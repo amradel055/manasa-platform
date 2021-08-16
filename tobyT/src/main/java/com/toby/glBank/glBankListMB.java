@@ -10,6 +10,7 @@ import com.toby.entity.GlBank;
 import com.toby.entiy.GlBankEntity;
 import com.toby.toby.BaseListBean;
 import com.toby.toby.UserData;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -72,6 +73,8 @@ public class glBankListMB extends BaseListBean {
             glBankEntity.setCurrencyId(gbank.getCurrencyId() != null ? gbank.getCurrencyId() : null);
             glBankEntity.setCode(gbank.getCode() != null ? gbank.getCode() : null);
             glBankEntity.setName(gbank.getName() != null ? gbank.getName() : null);
+            glBankEntity.setCommition(gbank.getCommition() != null ? gbank.getCommition() : BigDecimal.ZERO);
+            glBankEntity.setRate(gbank.getRate() != null ? gbank.getRate() : BigDecimal.ZERO);
 
             if (gbank.getType() != null) {
 
