@@ -100,7 +100,7 @@ public class PostRestrictionsDetailsServiceImpl implements PostRestrictionsDetai
         params.put("branchId", branchId);
         List<PostRestrictionsDetailsView> list = new ArrayList();
         index = 0;
-        if (moduleCode == 1) {
+        if (moduleCode == 1) { // here قبض نقدي
             List<GlBankTransactionDetail> details = dao.findListByQuery("SELECT g FROM GlBankTransactionDetail g WHERE g.glBankTransactionId.id = :glBankTransactionId AND g.glBankTransactionId.branchId.id = :branchId ", params);
             list = returnListView(details, 1);
         } else if (moduleCode == 2) {
@@ -125,7 +125,7 @@ public class PostRestrictionsDetailsServiceImpl implements PostRestrictionsDetai
         StringBuilder error = new StringBuilder();
         PostRestrictionsDetailsView view = new PostRestrictionsDetailsView();
         index++;
-        if (moduleCode == 1) {
+        if (moduleCode == 1) { // قبض نقدي
             GlBankTransactionDetail entity = (GlBankTransactionDetail) Entity;
             view.setRowNum(index);
             view.setGlBankTransactionId(entity.getId());

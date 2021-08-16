@@ -19,6 +19,8 @@ public class GlBankDTO extends BaseEntityDTO {
     private Integer type;
     private Integer currencyId;
     private Integer raghiPoint;
+    private BigDecimal commition;
+    private BigDecimal rate;
 
     public GlBankDTO() {
     }
@@ -142,6 +144,34 @@ public class GlBankDTO extends BaseEntityDTO {
      */
     public void setRaghiPoint(Integer raghiPoint) {
         this.raghiPoint = raghiPoint;
+    }
+
+    /**
+     * @return the commition
+     */
+    public BigDecimal getCommition() {
+        return commition;
+    }
+
+    /**
+     * @param commition the commition to set
+     */
+    public void setCommition(BigDecimal commition) {
+        this.commition = commition;
+    }
+
+    /**
+     * @return the rate
+     */
+    public BigDecimal getRate() {
+        return rate;
+    }
+
+    /**
+     * @param rate the rate to set
+     */
+    public void setRate(BigDecimal rate) {
+        this.rate = rate;
     }
 
 }

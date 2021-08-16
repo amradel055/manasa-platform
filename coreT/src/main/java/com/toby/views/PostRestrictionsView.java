@@ -93,6 +93,7 @@ public class PostRestrictionsView implements Serializable {
     @Transient
     private String screenName;
     
+    
     public PostRestrictionsView() {
     }
 
@@ -267,7 +268,4 @@ public class PostRestrictionsView implements Serializable {
     public void setScreenName(String screenName) {
         this.screenName = screenName;
     }
-
-
-
 }

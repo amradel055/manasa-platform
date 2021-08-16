@@ -61,6 +61,10 @@ public class GlBank extends BaseEntity {
     @JoinColumn(name = "currency_id", referencedColumnName = "id")
     @ManyToOne
     private Currency currencyId;
+    @Column(name = "commition")
+    private BigDecimal commition;
+    @Column(name = "rate")
+    private BigDecimal rate;
 //    @Column(name = "raghi_point")
 //    private Integer raghiPoint;
     
@@ -196,5 +200,33 @@ public class GlBank extends BaseEntity {
 //    public void setRaghiPoint(Integer raghiPoint) {
 //        this.raghiPoint = raghiPoint;
 //    }
+
+    /**
+     * @return the commition
+     */
+    public BigDecimal getCommition() {
+        return commition;
+    }
+
+    /**
+     * @param commition the commition to set
+     */
+    public void setCommition(BigDecimal commition) {
+        this.commition = commition;
+    }
+
+    /**
+     * @return the rate
+     */
+    public BigDecimal getRate() {
+        return rate;
+    }
+
+    /**
+     * @param rate the rate to set
+     */
+    public void setRate(BigDecimal rate) {
+        this.rate = rate;
+    }
 
 }

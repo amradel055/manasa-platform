@@ -343,7 +343,7 @@ public class ShiftingJournalMB_New extends GeneralJournalBean {
                 if (postRestrictionsView.getScreenCode() < 1009) {
                     if (postRestrictionsView.getScreenCode() < 0) {
                         postRestrictionsDetailsViewList = postRestrictionsDetailsService.getPostRestrictionsDetailsByBankIdDebitAccountAndDate(postRestrictionsView, postRestrictionsView.getDate());
-                    } else {
+                    } else { // here قبض نقدي 
                         postRestrictionsDetailsViewList = postRestrictionsDetailsService.getPostRestrictionsDetailsByPostRestrictionsId(postRestrictionsView.getBranchId(), postRestrictionsView.getId(), 1);
                     }
                 } else if (postRestrictionsView.getScreenCode() >= 1009 && postRestrictionsView.getScreenCode() < 1021) {
