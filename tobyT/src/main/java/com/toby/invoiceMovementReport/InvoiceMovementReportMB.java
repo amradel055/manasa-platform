@@ -43,6 +43,7 @@ public class InvoiceMovementReportMB extends BaseListBean {
     private List<ProductionReport> productionReports;
     private List<InvoiceMovementReport> invoiceMovementReportList;
     private PrintProductionDTO printProductionDTO;
+    private Integer invoiceType;
 
     private ProProductionStagesDTOConverter proProductionStagesDTOConverter;
     private ProProductionTransactionDTOConverter proProductionTransactionDTOConverter;
@@ -77,7 +78,7 @@ public class InvoiceMovementReportMB extends BaseListBean {
             invoiceMovementReportList = new ArrayList<>();
             for (InvInventoryDTO inventoryDTOFrom : getPrintProductionDTO().getGallaryFromList()) {
                 getPrintProductionDTO().setGallaryFrom(inventoryDTOFrom);
-                getInvoiceMovementReportList().addAll(invoiceMovementReportService.searchReport(printProductionDTO, getUserData().getUserBranch().getId()));
+                getInvoiceMovementReportList().addAll(invoiceMovementReportService.searchReport(printProductionDTO, getUserData().getUserBranch().getId(),getInvoiceType()));
             }
         }
     }
@@ -253,5 +254,19 @@ public class InvoiceMovementReportMB extends BaseListBean {
      */
     public void setInvoiceMovementReportList(List<InvoiceMovementReport> invoiceMovementReportList) {
         this.invoiceMovementReportList = invoiceMovementReportList;
+    }
+
+    /**
+     * @return the invoiceType
+     */
+    public Integer getInvoiceType() {
+        return invoiceType;
+    }
+
+    /**
+     * @param invoiceType the invoiceType to set
+     */
+    public void setInvoiceType(Integer invoiceType) {
+        this.invoiceType = invoiceType;
     }
 }

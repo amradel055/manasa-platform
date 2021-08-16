@@ -748,6 +748,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             stringBuilder.append(appendTillDate(itemCardReportSerachBean, glYear, params));
             stringBuilder.append(appendInventory(itemCardReportSerachBean, params));
             stringBuilder.append(appendInvItem(itemCardReportSerachBean, params));
+           
 
             stringBuilder.append(" group by IDV.itemId ,IDV.itemName");
 //            stringBuilder.append(" order by IDV.itemId ,IDV.date ASC");
@@ -902,6 +903,18 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             params.put("dateTo", itemCardReportSerachBean.getDateTo());
             appendQuery.append(" AND IDV.date <= :dateTo");
         }
+
+        return appendQuery.toString();
+    }
+    
+      private String appendInvoiceType(ItemCardReportSerachBean itemCardReportSerachBean, Map<String, Object> params) {
+        StringBuilder appendQuery = new StringBuilder();
+        if (itemCardReportSerachBean.getInvoiceType() != null) {
+            params.put("invoiceType", itemCardReportSerachBean.getInvItemForm().getCode());
+            appendQuery.append(" AND IDV.itemCode >= :itemCodeFrom");
+        }
+
+      
 
         return appendQuery.toString();
     }

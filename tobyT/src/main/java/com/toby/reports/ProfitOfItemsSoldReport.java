@@ -33,6 +33,7 @@ public class ProfitOfItemsSoldReport extends Basic {
     private Integer type;
     private List<ProGroupDTO> groupDTOList;
     private ProGroupDTOConverter proGroupDTOConverter;
+    private Integer invoiceType;
 
     @EJB
     private ReportsService reportsService;
@@ -47,7 +48,7 @@ public class ProfitOfItemsSoldReport extends Basic {
 
     public void search() {
         profitOfItemsSoldList = new ArrayList<>();
-        getProfitOfItemsSoldList().addAll(reportsService.getProfitOfItemsSold(getProfitOfItemsSold(), getUserData().getUserBranch().getId(), type));
+        getProfitOfItemsSoldList().addAll(reportsService.getProfitOfItemsSold(getProfitOfItemsSold(), getUserData().getUserBranch().getId(), type,getInvoiceType()));
     }
 
     public void convertDateFrom() {
@@ -184,6 +185,20 @@ public class ProfitOfItemsSoldReport extends Basic {
      */
     public void setProGroupDTOConverter(ProGroupDTOConverter proGroupDTOConverter) {
         this.proGroupDTOConverter = proGroupDTOConverter;
+    }
+
+    /**
+     * @return the invoiceType
+     */
+    public Integer getInvoiceType() {
+        return invoiceType;
+    }
+
+    /**
+     * @param invoiceType the invoiceType to set
+     */
+    public void setInvoiceType(Integer invoiceType) {
+        this.invoiceType = invoiceType;
     }
 
     /**

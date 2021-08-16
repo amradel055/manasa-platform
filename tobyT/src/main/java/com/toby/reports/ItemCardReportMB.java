@@ -47,6 +47,7 @@ public class ItemCardReportMB extends BaseReportBean {
     private InvInventoryConverter invInventoryConverter;
     private List<InvItemDTO> invItemList;
     private ItemDTOConverter itemConverter;
+    private Integer invoiceType;
 
     // Bean Objs and Lists
     private List<ItemsDataView> itemsDataViewList;
@@ -388,5 +389,19 @@ public class ItemCardReportMB extends BaseReportBean {
      */
     public void setQtyoutTotal(BigDecimal qtyoutTotal) {
         this.qtyoutTotal = qtyoutTotal;
+    }
+
+    /**
+     * @return the invoiceType
+     */
+    public Integer getInvoiceType() {
+        return invoiceType;
+    }
+
+    /**
+     * @param invoiceType the invoiceType to set
+     */
+    public void setInvoiceType(Integer invoiceType) {
+        this.invoiceType = invoiceType;
     }
 }

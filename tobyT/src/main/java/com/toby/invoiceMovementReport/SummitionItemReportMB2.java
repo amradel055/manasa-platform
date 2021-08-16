@@ -34,6 +34,7 @@ public class SummitionItemReportMB2 extends Basic {
     private Date dateFrom;
     private Date dateTo;
     private ProGroupDTO proGroupDTOSelected;
+    private Integer invoiceType;
 
     private List<SummitionItemsView> itemsViewList;
     private ArrayList<Test> list;
@@ -86,7 +87,7 @@ public class SummitionItemReportMB2 extends Basic {
                 if (getUri().contains("summitionItemReportPro")) {
                     itemsViewForGallaryinner = invPurchaseInvoiceService_1.getTheListBasedOnStagesList(invInventoryDTO.getId(), getDateFrom(), getDateTo(), getUserData().getUserBranch().getId(), getUserData().getUser(), null, null);
                 } else {
-                    itemsViewForGallaryinner = invPurchaseInvoiceService_1.findSummitionQuantity(invInventoryDTO.getId(), getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), null, null);
+                    itemsViewForGallaryinner = invPurchaseInvoiceService_1.findSummitionQuantity(invInventoryDTO.getId(), getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), null, null,null);
                 }
                 if (itemsViewForGallaryinner != null && !itemsViewForGallaryinner.isEmpty()) {
                     for (SummitionItemsView view : itemsViewForGallaryinner) {
@@ -107,7 +108,7 @@ public class SummitionItemReportMB2 extends Basic {
             if (getUri().contains("summitionItemReportPro")) {
                 itemsViewForGallaryinnerForAll = invPurchaseInvoiceService_1.getTheListBasedOnStagesList(null, getDateFrom(), getDateTo(), getUserData().getUserBranch().getId(), getUserData().getUser(), getGallaryListSelected(), null);
             } else {
-                itemsViewForGallaryinnerForAll = invPurchaseInvoiceService_1.findSummitionQuantity(null, getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), getGallaryListSelected(), null);
+                itemsViewForGallaryinnerForAll = invPurchaseInvoiceService_1.findSummitionQuantity(null, getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), getGallaryListSelected(), null,null);
             }
             if (itemsViewForGallaryinnerForAll != null && !itemsViewForGallaryinnerForAll.isEmpty()) {
                 summitionItemsView = new SummitionItemsView();
@@ -140,14 +141,14 @@ public class SummitionItemReportMB2 extends Basic {
     private void distributeDate(InvInventoryDTO invInventoryDTO, HashMap<Integer, Test> map, SummitionItemsView view) {
         Test test;
         if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("1")) {
-            
+
             test = map.get(view.getCode());
             if (test == null) {
                 test = new Test();
                 test.setCode(view.getCode());
                 test.setName(view.getName());
             }
-            
+
             test.getB1().setNumber(view.getNumber());
             test.getB1().setPrice(view.getAllCost());
             test.getB1().setTotalCost(view.getAllAvarageCost());
@@ -164,7 +165,7 @@ public class SummitionItemReportMB2 extends Basic {
             test.getB2().setPrice(view.getAllCost());
             test.getB2().setTotalCost(view.getAllAvarageCost());
             map.put(view.getCode(), test);
-            
+
         }
         if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("3")) {
             test = map.get(view.getCode());
@@ -177,7 +178,7 @@ public class SummitionItemReportMB2 extends Basic {
             test.getB3().setPrice(view.getAllCost());
             test.getB3().setTotalCost(view.getAllAvarageCost());
             map.put(view.getCode(), test);
-            
+
         }
         if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("4")) {
             test = map.get(view.getCode());
@@ -190,7 +191,7 @@ public class SummitionItemReportMB2 extends Basic {
             test.getB4().setPrice(view.getAllCost());
             test.getB4().setTotalCost(view.getAllAvarageCost());
             map.put(view.getCode(), test);
-            
+
         }
         if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("5")) {
             test = map.get(view.getCode());
@@ -203,7 +204,7 @@ public class SummitionItemReportMB2 extends Basic {
             test.getB5().setPrice(view.getAllCost());
             test.getB5().setTotalCost(view.getAllAvarageCost());
             map.put(view.getCode(), test);
-            
+
         }
         if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("6")) {
             test = map.get(view.getCode());
@@ -216,7 +217,7 @@ public class SummitionItemReportMB2 extends Basic {
             test.getB6().setPrice(view.getAllCost());
             test.getB6().setTotalCost(view.getAllAvarageCost());
             map.put(view.getCode(), test);
-            
+
         }
         if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("7")) {
             test = map.get(view.getCode());
@@ -229,7 +230,7 @@ public class SummitionItemReportMB2 extends Basic {
             test.getB7().setPrice(view.getAllCost());
             test.getB7().setTotalCost(view.getAllAvarageCost());
             map.put(view.getCode(), test);
-            
+
         }
         if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("8")) {
             test = map.get(view.getCode());
@@ -242,7 +243,7 @@ public class SummitionItemReportMB2 extends Basic {
             test.getB8().setPrice(view.getAllCost());
             test.getB8().setTotalCost(view.getAllAvarageCost());
             map.put(view.getCode(), test);
-            
+
         }
         if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("9")) {
             test = map.get(view.getCode());
@@ -255,7 +256,7 @@ public class SummitionItemReportMB2 extends Basic {
             test.getB9().setPrice(view.getAllCost());
             test.getB9().setTotalCost(view.getAllAvarageCost());
             map.put(view.getCode(), test);
-            
+
         }
         if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("10")) {
             test = map.get(view.getCode());
@@ -268,7 +269,7 @@ public class SummitionItemReportMB2 extends Basic {
             test.getB10().setPrice(view.getAllCost());
             test.getB10().setTotalCost(view.getAllAvarageCost());
             map.put(view.getCode(), test);
-            
+
         }
         if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("11")) {
             test = map.get(view.getCode());
@@ -281,7 +282,7 @@ public class SummitionItemReportMB2 extends Basic {
             test.getB11().setPrice(view.getAllCost());
             test.getB11().setTotalCost(view.getAllAvarageCost());
             map.put(view.getCode(), test);
-            
+
         }
         if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("12")) {
             test = map.get(view.getCode());
@@ -294,7 +295,7 @@ public class SummitionItemReportMB2 extends Basic {
             test.getB12().setPrice(view.getAllCost());
             test.getB12().setTotalCost(view.getAllAvarageCost());
             map.put(view.getCode(), test);
-            
+
         }
         if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("13")) {
             test = map.get(view.getCode());
@@ -307,7 +308,7 @@ public class SummitionItemReportMB2 extends Basic {
             test.getB13().setPrice(view.getAllCost());
             test.getB13().setTotalCost(view.getAllAvarageCost());
             map.put(view.getCode(), test);
-            
+
         }
         if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("14")) {
             test = map.get(view.getCode());
@@ -320,7 +321,7 @@ public class SummitionItemReportMB2 extends Basic {
             test.getB14().setPrice(view.getAllCost());
             test.getB14().setTotalCost(view.getAllAvarageCost());
             map.put(view.getCode(), test);
-            
+
         }
         if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("15")) {
             test = map.get(view.getCode());
@@ -333,7 +334,7 @@ public class SummitionItemReportMB2 extends Basic {
             test.getB15().setPrice(view.getAllCost());
             test.getB15().setTotalCost(view.getAllAvarageCost());
             map.put(view.getCode(), test);
-            
+
         }
         if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("16")) {
             test = map.get(view.getCode());
@@ -346,7 +347,7 @@ public class SummitionItemReportMB2 extends Basic {
             test.getB16().setPrice(view.getAllCost());
             test.getB16().setTotalCost(view.getAllAvarageCost());
             map.put(view.getCode(), test);
-            
+
         }
         if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("17")) {
             test = map.get(view.getCode());
@@ -359,7 +360,7 @@ public class SummitionItemReportMB2 extends Basic {
             test.getB17().setPrice(view.getAllCost());
             test.getB17().setTotalCost(view.getAllAvarageCost());
             map.put(view.getCode(), test);
-            
+
         }
     }
 
@@ -678,6 +679,20 @@ public class SummitionItemReportMB2 extends Basic {
      */
     public void setList(ArrayList<Test> list) {
         this.list = list;
+    }
+
+    /**
+     * @return the invoiceType
+     */
+    public Integer getInvoiceType() {
+        return invoiceType;
+    }
+
+    /**
+     * @param invoiceType the invoiceType to set
+     */
+    public void setInvoiceType(Integer invoiceType) {
+        this.invoiceType = invoiceType;
     }
 
 }

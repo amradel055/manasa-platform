@@ -61,8 +61,7 @@ public class ReportsServiceImpl implements ReportsService {
         appendGallery(salesReportByValueAded, sql);
         appendDate(salesReportByValueAded, sql);
         sql.append(" GROUP BY `ip`.`id` ");
-        
-        
+
         sql.append(" union all ");
         sql.append(" SELECT \n"
                 + "        `ip`.`serial` AS `serial`, `ip`.`type` AS `type`,`ip`.`date` AS `date`,`inv`.`name` AS `gallary_name`,\n"
@@ -79,7 +78,7 @@ public class ReportsServiceImpl implements ReportsService {
         appendGallery(salesReportByValueAded, sql);
         appendDate(salesReportByValueAded, sql);
         sql.append(" GROUP BY `ip`.`id` ");
-        
+
         sql.append(" union all ");
         sql.append(" SELECT \n"
                 + "        `ip`.`serial` AS `serial`, `ip`.`type` AS `type`,`ip`.`date` AS `date`,`inv`.`name` AS `gallary_name`,\n"
@@ -94,7 +93,7 @@ public class ReportsServiceImpl implements ReportsService {
         appendGallery(salesReportByValueAded, sql);
         appendDate(salesReportByValueAded, sql);
         sql.append(" GROUP BY `ip`.`id` ");
-        
+
         sql.append(" ) as s group by s.gallary_name ");
         List<Object[]> res = dao.executeNativeQuery(sql.toString());
         for (Object[] object : res) {
@@ -460,7 +459,7 @@ public class ReportsServiceImpl implements ReportsService {
     }
 
     @Override
-    public List<ProfitOfItemsSold> getProfitOfItemsSold(ProfitOfItemsSold profitOfItemsSold, Integer branchId, Integer type) {
+    public List<ProfitOfItemsSold> getProfitOfItemsSold(ProfitOfItemsSold profitOfItemsSold, Integer branchId, Integer type, Integer invoiceType) {
 
         List<ProfitOfItemsSold> profitOfItemsSoldList = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
@@ -471,6 +470,10 @@ public class ReportsServiceImpl implements ReportsService {
                 + "left join pro_group p on p.id = ii.pro_group_id");
         sql.append(" where ipid.branch_id = ").append(branchId);
         sql.append(" and ipi.type = ").append(type);
+
+        if (invoiceType != null) {
+            sql.append(" and ipi.invoice_type =  ").append(invoiceType);
+        }
         appendDate7(profitOfItemsSold, sql);
         StringBuilder gallaryIds = null;
         StringBuilder groupId = null;

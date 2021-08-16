@@ -2004,7 +2004,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     }
 
     @Override
-    public List<SummitionItemsView> findSummitionQuantity(Integer gallaryId, Integer branchId, Date dateFrom, Date dateTo, Integer groupId, List<InvInventoryDTO> invInventoryDTOs, List<ProGroupDTO> proGroupListSelected ) {
+    public List<SummitionItemsView> findSummitionQuantity(Integer gallaryId, Integer branchId, Date dateFrom, Date dateTo, Integer groupId, List<InvInventoryDTO> invInventoryDTOs, List<ProGroupDTO> proGroupListSelected, Integer invoiceType) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         StringBuilder builder = new StringBuilder();
@@ -2028,7 +2028,11 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             params.put("dateTo", dateTo);
             builder.append(" AND i.invPurchaseInvoiceId.date <= :dateTo ");
         }
-       
+        if (invoiceType != null) {
+            params.put("invoiceType", invoiceType);
+            builder.append(" and i.invPurchaseInvoiceId.invoiceType = :invoiceType ");
+        }
+
         if (invInventoryDTOs != null && !invInventoryDTOs.isEmpty()) {
             StringBuilder Selected = null;
 
@@ -2047,9 +2051,9 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 builder.append(" AND i.invPurchaseInvoiceId.galaryId.id = :gallaryId ");
             }
         }
-        
-         if (proGroupListSelected != null && !proGroupListSelected.isEmpty()) {
-             StringBuilder group = null;
+
+        if (proGroupListSelected != null && !proGroupListSelected.isEmpty()) {
+            StringBuilder group = null;
 
             for (ProGroupDTO proGroupDTO : proGroupListSelected) {
                 if (group == null) {
@@ -2070,10 +2074,10 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         builder.append(" group by i.itemId.proGroupId.id order by i.itemId.proGroupId.code ");
         List<Object[]> res = dao.findListByQuery(builder.toString(), params);
 
-        return getTheListBasedOnAccClass(res, gallaryId, dateFrom, dateTo, invInventoryDTOs,proGroupListSelected);
+        return getTheListBasedOnAccClass(res, gallaryId, dateFrom, dateTo, invInventoryDTOs, proGroupListSelected);
     }
 
-    private BigDecimal tobNumberFactoryDelivary(Integer gallaryId, Date dateFrom, Date dateTo, Integer groupId, Integer type, List<InvInventoryDTO> invInventoryDTOs,List<ProGroupDTO> proGroupListSelected) {
+    private BigDecimal tobNumberFactoryDelivary(Integer gallaryId, Date dateFrom, Date dateTo, Integer groupId, Integer type, List<InvInventoryDTO> invInventoryDTOs, List<ProGroupDTO> proGroupListSelected) {
         Map<String, Object> params = new HashMap<>();
         StringBuilder builder = new StringBuilder();
         params.put("type", type);
@@ -2104,8 +2108,8 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 builder.append(" AND pfdd.proFactoryDeliveryId.invPurchaseInvoiceId.galaryId.id = :gallaryId ");
             }
         }
-        
-          if (proGroupListSelected != null && !proGroupListSelected.isEmpty()) {
+
+        if (proGroupListSelected != null && !proGroupListSelected.isEmpty()) {
             StringBuilder group = null;
             for (ProGroupDTO proGroupDTO : proGroupListSelected) {
                 if (group == null) {
@@ -2123,7 +2127,6 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             }
         }
 
-      
 //        if (groupId != null) {
 //            params.put("groupId", groupId);
 //            builder.append(" AND pfdd.itemId.proGroupId.id = :groupId ");
@@ -2134,7 +2137,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         return (res != null && !res.isEmpty()) ? res.get(0) : BigDecimal.ZERO;
     }
 
-    public List<SummitionItemsView> getTheListBasedOnAccClass(List<Object[]> res, Integer gallaryId, Date dateFrom, Date dateTo, List<InvInventoryDTO> invInventoryDTOs,List<ProGroupDTO> proGroupListSelected) {
+    public List<SummitionItemsView> getTheListBasedOnAccClass(List<Object[]> res, Integer gallaryId, Date dateFrom, Date dateTo, List<InvInventoryDTO> invInventoryDTOs, List<ProGroupDTO> proGroupListSelected) {
 
         List<SummitionItemsView> summitionItemsViews = new ArrayList<>();
 
@@ -2147,7 +2150,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
 //            summitionItemsView.setAllQuantity((BigDecimal) line[2]);
             summitionItemsView.setAllCost((BigDecimal) line[1]);
             BigDecimal netFromHead = (BigDecimal) line[6];
-            if(netFromHead != null && netFromHead.compareTo(BigDecimal.ZERO) == 1){
+            if (netFromHead != null && netFromHead.compareTo(BigDecimal.ZERO) == 1) {
                 BigDecimal x = netFromHead.divide(new BigDecimal(100));
                 summitionItemsView.setAllCost(summitionItemsView.getAllCost().subtract(summitionItemsView.getAllCost().multiply(x)));
             }
@@ -2156,9 +2159,9 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             Integer groupId = (Integer) line[3];
             summitionItemsView.setCode((Integer) line[4]);
             summitionItemsView.setName((String) line[5]);
-            summitionItemsView.setFactoryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupId, 0, invInventoryDTOs,proGroupListSelected));
-            summitionItemsView.setSendNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupId, 1, invInventoryDTOs,proGroupListSelected));
-            summitionItemsView.setDeliveryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupId, 2, invInventoryDTOs,proGroupListSelected));
+            summitionItemsView.setFactoryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupId, 0, invInventoryDTOs, proGroupListSelected));
+            summitionItemsView.setSendNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupId, 1, invInventoryDTOs, proGroupListSelected));
+            summitionItemsView.setDeliveryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupId, 2, invInventoryDTOs, proGroupListSelected));
             summitionItemsViews.add(summitionItemsView);
         }
         TreeMap<Integer, SummitionItemsView> params = new TreeMap<>();
@@ -2232,10 +2235,10 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 SummitionItemsView summitionItemsView = new SummitionItemsView();
                 summitionItemsView.setCode(groupDTO.getCode());
                 summitionItemsView.setName(groupDTO.getName());
-                summitionItemsView.setFactoryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupDTO.getId(), 0, invInventoryDTOs,null));
-                summitionItemsView.setSendNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupDTO.getId(), 1, invInventoryDTOs,null));
-                summitionItemsView.setDeliveryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupDTO.getId(), 2, invInventoryDTOs,null));
-                summitionItemsView.setCustomerNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupDTO.getId(), 3, invInventoryDTOs,null));
+                summitionItemsView.setFactoryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupDTO.getId(), 0, invInventoryDTOs, null));
+                summitionItemsView.setSendNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupDTO.getId(), 1, invInventoryDTOs, null));
+                summitionItemsView.setDeliveryNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupDTO.getId(), 2, invInventoryDTOs, null));
+                summitionItemsView.setCustomerNumber(tobNumberFactoryDelivary(gallaryId, dateFrom, dateTo, groupDTO.getId(), 3, invInventoryDTOs, null));
                 if (summitionItemsView.getFactoryNumber().compareTo(BigDecimal.ZERO) == 1
                         || summitionItemsView.getSendNumber().compareTo(BigDecimal.ZERO) == 1
                         || summitionItemsView.getDeliveryNumber().compareTo(BigDecimal.ZERO) == 1) {

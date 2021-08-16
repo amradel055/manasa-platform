@@ -22,6 +22,7 @@ public class ItemCardReportSerachBean {
     private InvItemDTO invItemForm;
     private InvItemDTO invItemTo;
     private Integer branchId;
+    private Integer invoiceType;
 
     public Date getDateFrom() {
         return dateFrom;
@@ -77,5 +78,19 @@ public class ItemCardReportSerachBean {
 
     public void setBranchId(Integer branchId) {
         this.branchId = branchId;
+    }
+
+    /**
+     * @return the invoiceType
+     */
+    public Integer getInvoiceType() {
+        return invoiceType;
+    }
+
+    /**
+     * @param invoiceType the invoiceType to set
+     */
+    public void setInvoiceType(Integer invoiceType) {
+        this.invoiceType = invoiceType;
     }
 }
