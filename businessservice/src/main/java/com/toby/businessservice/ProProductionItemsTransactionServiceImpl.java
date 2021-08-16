@@ -222,9 +222,10 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
     }
 
     @Override
-    public List<ProductionTransactionOfUser> getProProductionTransactionDTOForAllUsersList(PrintProductionDTO printProductionDTO, Integer branchId) {
+    public List<ProductionTransactionOfUser> getProProductionTransactionDTOForAllUsersList(PrintProductionDTO printProductionDTO, Integer branchId, Integer stageId, List<ProProductionStagesDTO> productionStagesDTOs) {
 
         List<ProductionTransactionOfUser> productionTransactionOfUsers = new ArrayList<>();
+        Map<String, Object> params = new HashMap<>();
 
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT pps.serial as stageSerial , pps.name as stageName , \n"
@@ -245,6 +246,25 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
         appendProProductionStatus(printProductionDTO, sql);
         appendProProductionDate(printProductionDTO, sql);
         appendProProductionUser(printProductionDTO, sql);
+
+        if (productionStagesDTOs != null && !productionStagesDTOs.isEmpty()) {
+            StringBuilder stage = null;
+
+            for (ProProductionStagesDTO stagesDTO : productionStagesDTOs) {
+                if (stage == null) {
+                    stage = new StringBuilder();
+                    stage.append(stagesDTO.getSerial());
+                } else {
+                    stage.append(',').append(stagesDTO.getSerial());
+                }
+            }
+            sql.append(" and pps.serial in (").append(stage.toString()).append(" )");
+        } else {
+            if (stageId != null) {
+                params.put("stageId", stageId);
+                sql.append(" and pps.serial = :stageId ");
+            }
+        }
 
         sql.append(" group by ppit.created_by , ppit.pro_production_stages_id order by pps.serial ");
 
@@ -313,9 +333,7 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
         builder.append(" SELECT s FROM ProProductionItemsTransaction s WHERE s.proFactoryDeliveryDetailId.invPurchaseInvoiceDetailId.invPurchaseInvoiceId.serial = :serial  ");
         List<ProProductionItemsTransaction> details = dao.findListByQuery(builder.toString(), params);
         return mapToDTOList(details, null);
-        }
-        
-    
+    }
 
     @Override
     public List<ProProductionItemsTransactionDTO> getALLProProductionItemsTransactionDTO(ProProductionTransactionFactoryView transactionFactoryView, Integer branchId) {

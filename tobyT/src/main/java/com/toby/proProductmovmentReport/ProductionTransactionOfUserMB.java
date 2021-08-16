@@ -57,6 +57,12 @@ public class ProductionTransactionOfUserMB extends BaseFormBean {
     private BigDecimal totalQuantity;
     private BigDecimal Total;
 
+    private ProProductionStagesDTO productionStagesDTOSelected;
+    private List<ProProductionStagesDTO> productionStagesListSelected;
+
+    private List<ProProductionStagesDTO> productionStagesList;
+    private ProProductionStagesDTOConverter stagesDTOConverter;
+
     @EJB
     private TobyUserService tobyUserService;
     @EJB
@@ -83,7 +89,7 @@ public class ProductionTransactionOfUserMB extends BaseFormBean {
         //  ||(printProductionDTO.getFromStatus()!=null)&&(printProductionDTO.getToStatus()!=null)){
         totalQuantity = BigDecimal.ZERO;
         Total = BigDecimal.ZERO;
-        productionTransactionOfUserList = proProductionItemsTransactionService.getProProductionTransactionDTOForAllUsersList(printProductionDTO, getUserData().getUserBranch().getId());
+        productionTransactionOfUserList = proProductionItemsTransactionService.getProProductionTransactionDTOForAllUsersList(printProductionDTO, getUserData().getUserBranch().getId(), getProductionStagesDTOSelected() == null ? null : getProductionStagesDTOSelected().getSerial(), getProductionStagesListSelected());
         for (ProductionTransactionOfUser productionTransactionOfUser : productionTransactionOfUserList) {
             setTotal(productionTransactionOfUser.getTotalNumber().add(getTotal()));
             setTotalQuantity(productionTransactionOfUser.getNumberExcute().add(getTotalQuantity()));
@@ -324,6 +330,73 @@ public class ProductionTransactionOfUserMB extends BaseFormBean {
      */
     public void setTotal(BigDecimal Total) {
         this.Total = Total;
+    }
+
+    /**
+     * @return the productionStagesDTOSelected
+     */
+    public ProProductionStagesDTO getProductionStagesDTOSelected() {
+        if (productionStagesDTOSelected == null) {
+            productionStagesDTOSelected = new ProProductionStagesDTO();
+        }
+        return productionStagesDTOSelected;
+    }
+
+    /**
+     * @param productionStagesDTOSelected the productionStagesDTOSelected to set
+     */
+    public void setProductionStagesDTOSelected(ProProductionStagesDTO productionStagesDTOSelected) {
+        this.productionStagesDTOSelected = productionStagesDTOSelected;
+    }
+
+    /**
+     * @return the productionStagesListSelected
+     */
+    public List<ProProductionStagesDTO> getProductionStagesListSelected() {
+        if (productionStagesListSelected == null) {
+            productionStagesListSelected = new ArrayList<>();
+        }
+        return productionStagesListSelected;
+    }
+
+    /**
+     * @param productionStagesListSelected the productionStagesListSelected to
+     * set
+     */
+    public void setProductionStagesListSelected(List<ProProductionStagesDTO> productionStagesListSelected) {
+        this.productionStagesListSelected = productionStagesListSelected;
+    }
+
+    /**
+     * @return the productionStagesList
+     */
+    public List<ProProductionStagesDTO> getProductionStagesList() {
+        if (productionStagesList == null || productionStagesList.isEmpty()) {
+            productionStagesList = proProductionStagesService.getAllProproductionByBranchId(getUserData().getUser());
+            setProProductionStagesDTOConverter(new ProProductionStagesDTOConverter(productionStagesList));
+        }
+        return productionStagesList;
+    }
+
+    /**
+     * @param productionStagesList the productionStagesList to set
+     */
+    public void setProductionStagesList(List<ProProductionStagesDTO> productionStagesList) {
+        this.productionStagesList = productionStagesList;
+    }
+
+    /**
+     * @return the stagesDTOConverter
+     */
+    public ProProductionStagesDTOConverter getStagesDTOConverter() {
+        return stagesDTOConverter;
+    }
+
+    /**
+     * @param stagesDTOConverter the stagesDTOConverter to set
+     */
+    public void setStagesDTOConverter(ProProductionStagesDTOConverter stagesDTOConverter) {
+        this.stagesDTOConverter = stagesDTOConverter;
     }
 
 }

@@ -30,7 +30,7 @@ public interface ProProductionStagesService {
 
     public ProProductionStagesDTO findProProductionStages(Integer id);
 
-    public List<ProProductionStagesDTO> getAllProproductionByBranchId(Integer branchId, TobyUser tobyUser);
+    public List<ProProductionStagesDTO> getAllProproductionByBranchId(TobyUser tobyUser);
     
     public List<ProProductionStages> getAllProproductionStagesByBranchId(Integer branchId, TobyUser tobyUser);
 
