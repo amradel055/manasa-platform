@@ -1,4 +1,4 @@
- /*
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -9,10 +9,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+public class InvPurchaseInvoiceDTO1 extends BaseEntityDTO {
 
-public class InvPurchaseInvoiceDTO1 extends  BaseEntityDTO {
-
-    
     private Date date;
     private BigDecimal rate;
     private Integer paymentType;
@@ -50,8 +48,8 @@ public class InvPurchaseInvoiceDTO1 extends  BaseEntityDTO {
     private Date recievedate;
     private Integer dueperiod;
     private Integer recieved;
-    private BigDecimal sumTotal ;
-    private BigDecimal sumQuantity ;
+    private BigDecimal sumTotal;
+    private BigDecimal sumQuantity;
     private Integer proof;
     private Integer customeraccept;
     private Integer detectPrice;
@@ -59,14 +57,12 @@ public class InvPurchaseInvoiceDTO1 extends  BaseEntityDTO {
     private Integer proFactoryDeliveryId;
     private Integer proFactoryDeliverySerial;
     private String createdByName;
-    
+    private Integer invoiceType;
+
     private List<InvPurchaseInvoiceDetailDTO> invPurchaseInvoiceDetailDTOList;
-    
-    
-    
 
     public InvPurchaseInvoiceDTO1() {
-        
+
     }
 
     public Date getDate() {
@@ -124,6 +120,7 @@ public class InvPurchaseInvoiceDTO1 extends  BaseEntityDTO {
     public void setDiscountType(Integer discountType) {
         this.discountType = discountType;
     }
+
     /**
      * @return the paymentType
      */
@@ -137,7 +134,6 @@ public class InvPurchaseInvoiceDTO1 extends  BaseEntityDTO {
     public void setPaymentType(Integer paymentType) {
         this.paymentType = paymentType;
     }
-
 
     public Integer getPostFlag() {
         return postFlag;
@@ -339,7 +335,6 @@ public class InvPurchaseInvoiceDTO1 extends  BaseEntityDTO {
         this.taxdiscvalue = taxdiscvalue;
     }
 
-
     /**
      * @return the accountId
      */
@@ -354,9 +349,6 @@ public class InvPurchaseInvoiceDTO1 extends  BaseEntityDTO {
         this.accountId = accountId;
     }
 
-    
-
-    
     /**
      * @return the currencyId
      */
@@ -371,7 +363,6 @@ public class InvPurchaseInvoiceDTO1 extends  BaseEntityDTO {
         this.currencyId = currencyId;
     }
 
-
     public SymbolDTO getDocumentTypeId() {
         return documentTypeId;
     }
@@ -382,7 +373,7 @@ public class InvPurchaseInvoiceDTO1 extends  BaseEntityDTO {
     public void setDocumentTypeId(SymbolDTO documentTypeId) {
         this.documentTypeId = documentTypeId;
     }
-    
+
     public InvOrganizationSiteDTO getOrganizationSiteIdDTO() {
         return organizationSiteIdDTO;
     }
@@ -487,7 +478,8 @@ public class InvPurchaseInvoiceDTO1 extends  BaseEntityDTO {
     }
 
     /**
-     * @param invPurchaseInvoiceDetailDTOList the invPurchaseInvoiceDetailDTOList to set
+     * @param invPurchaseInvoiceDetailDTOList the
+     * invPurchaseInvoiceDetailDTOList to set
      */
     public void setInvPurchaseInvoiceDetailDTOList(List<InvPurchaseInvoiceDetailDTO> invPurchaseInvoiceDetailDTOList) {
         this.invPurchaseInvoiceDetailDTOList = invPurchaseInvoiceDetailDTOList;
@@ -673,6 +665,20 @@ public class InvPurchaseInvoiceDTO1 extends  BaseEntityDTO {
      */
     public void setProFactoryDeliverySerial(Integer proFactoryDeliverySerial) {
         this.proFactoryDeliverySerial = proFactoryDeliverySerial;
+    }
+
+    /**
+     * @return the invoiceType
+     */
+    public Integer getInvoiceType() {
+        return invoiceType;
+    }
+
+    /**
+     * @param invoiceType the invoiceType to set
+     */
+    public void setInvoiceType(Integer invoiceType) {
+        this.invoiceType = invoiceType;
     }
 
 }

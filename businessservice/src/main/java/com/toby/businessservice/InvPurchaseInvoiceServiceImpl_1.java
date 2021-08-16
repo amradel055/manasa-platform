@@ -1219,6 +1219,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         invPurchaseInvoice.setTaxFlagFinal(invInvoiceDTO.getTaxFlagFinal());
         invPurchaseInvoice.setPricetype(invInvoiceDTO.getPricetype());
         invPurchaseInvoice.setDueperiod(invInvoiceDTO.getDueperiod());
+        invPurchaseInvoice.setInvoiceType(invInvoiceDTO.getInvoiceType());
         invPurchaseInvoice.setProof(invInvoiceDTO.getProof() ? 1 : 0);
 
         if (invInvoiceDTO.getCreatedBy() != null) {
@@ -1484,6 +1485,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         invInvoiceDTO.setProFactoryDeliveryId(entity.getProFactoryDeliveryId() != null ? entity.getProFactoryDeliveryId().getId() : null);
         invInvoiceDTO.setDueperiod(entity.getDueperiod());
         invInvoiceDTO.setPricetype(entity.getPricetype());
+        invInvoiceDTO.setInvoiceType(entity.getInvoiceType());
         invInvoiceDTO.setProof(entity.getProof() == 1);
 
         if (entity.getOrganizationSiteId() != null) {
