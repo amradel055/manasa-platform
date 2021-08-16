@@ -26,10 +26,12 @@ public class GlBankEntity extends BaseEntity {
     private Branch branchId;
     private Currency currencyId;
     private List<GlBankTransactionEntity> glBankTransactionCollection;
-    
+
     private Integer type;
     private String typeName;
     private Integer raghiPoint;
+    private BigDecimal commition;
+    private BigDecimal rate;
 
     public String getName() {
         return name;
@@ -135,5 +137,33 @@ public class GlBankEntity extends BaseEntity {
      */
     public void setRaghiPoint(Integer raghiPoint) {
         this.raghiPoint = raghiPoint;
+    }
+
+    /**
+     * @return the commition
+     */
+    public BigDecimal getCommition() {
+        return commition;
+    }
+
+    /**
+     * @param commition the commition to set
+     */
+    public void setCommition(BigDecimal commition) {
+        this.commition = commition;
+    }
+
+    /**
+     * @return the rate
+     */
+    public BigDecimal getRate() {
+        return rate;
+    }
+
+    /**
+     * @param rate the rate to set
+     */
+    public void setRate(BigDecimal rate) {
+        this.rate = rate;
     }
 }
