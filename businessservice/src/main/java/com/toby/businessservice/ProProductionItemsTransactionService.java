@@ -7,6 +7,7 @@ package com.toby.businessservice;
 
 import com.toby.dto.PrintProductionDTO;
 import com.toby.dto.ProProductionItemsTransactionDTO;
+import com.toby.dto.ProProductionStagesDTO;
 import com.toby.dto.ProProductionTransactionDTO;
 import com.toby.dto.ProProductionTransactionDetailDetailViewDTO;
 import com.toby.entity.ProProductionItemsTransaction;
@@ -30,7 +31,7 @@ public interface ProProductionItemsTransactionService {
 
     public ProProductionItemsTransactionDTO deleteproProductionItemsTransactionDTO(ProProductionItemsTransactionDTO proProductionItemsTransactionDTO, TobyUser tobyUser);
 
-    public List<ProductionTransactionOfUser> getProProductionTransactionDTOForAllUsersList(PrintProductionDTO printProductionDTO, Integer branchId);
+    public List<ProductionTransactionOfUser> getProProductionTransactionDTOForAllUsersList(PrintProductionDTO printProductionDTO, Integer branchId, Integer stageId, List<ProProductionStagesDTO> productionStagesDTOs);
 
     public List<ProProductionItemsTransactionDTO> getALLProProductionItemsTransactionDTO(int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters);
 

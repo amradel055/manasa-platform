@@ -80,9 +80,9 @@ public class ProProductionStagesServiceImpl implements ProProductionStagesServic
     }
 
     @Override
-    public List<ProProductionStagesDTO> getAllProproductionByBranchId(Integer branchId, TobyUser tobyUser) {
+    public List<ProProductionStagesDTO> getAllProproductionByBranchId(TobyUser tobyUser) {
         Map<String, Object> params = new HashMap<>();
-        params.put("branchId", branchId);
+        params.put("branchId", tobyUser.getBranchId().getId());
         List<ProProductionStages> proProductionStageseList = dao.findListByQuery("SELECT e FROM ProProductionStages e WHERE e.branchId.id = :branchId ", params);
         return mapToDTOList(proProductionStageseList, tobyUser);
     }
