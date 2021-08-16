@@ -134,6 +134,12 @@ public class PostRestrictionsDetailsView implements Serializable {
     private String thirdAccNameCredit;
     @Transient
     private Integer thirdAccNumberCredit;
+    @Transient
+    private Integer thirdAccountDebitId;
+    @Transient
+    private String thirdAccNameDebit;
+    @Transient
+    private Integer thirdAccNumberDebit;
 
     public PostRestrictionsDetailsView() {
     }
@@ -528,6 +534,48 @@ public class PostRestrictionsDetailsView implements Serializable {
      */
     public void setSecondAccNumberDebit(Integer secondAccNumberDebit) {
         this.secondAccNumberDebit = secondAccNumberDebit;
+    }
+
+    /**
+     * @return the thirdAccountDebitId
+     */
+    public Integer getThirdAccountDebitId() {
+        return thirdAccountDebitId;
+    }
+
+    /**
+     * @param thirdAccountDebitId the thirdAccountDebitId to set
+     */
+    public void setThirdAccountDebitId(Integer thirdAccountDebitId) {
+        this.thirdAccountDebitId = thirdAccountDebitId;
+    }
+
+    /**
+     * @return the thirdAccNameDebit
+     */
+    public String getThirdAccNameDebit() {
+        return thirdAccNameDebit;
+    }
+
+    /**
+     * @param thirdAccNameDebit the thirdAccNameDebit to set
+     */
+    public void setThirdAccNameDebit(String thirdAccNameDebit) {
+        this.thirdAccNameDebit = thirdAccNameDebit;
+    }
+
+    /**
+     * @return the thirdAccNumberDebit
+     */
+    public Integer getThirdAccNumberDebit() {
+        return thirdAccNumberDebit;
+    }
+
+    /**
+     * @param thirdAccNumberDebit the thirdAccNumberDebit to set
+     */
+    public void setThirdAccNumberDebit(Integer thirdAccNumberDebit) {
+        this.thirdAccNumberDebit = thirdAccNumberDebit;
     }
 
 }
