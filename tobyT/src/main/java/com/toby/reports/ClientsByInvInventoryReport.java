@@ -75,6 +75,7 @@ public class ClientsByInvInventoryReport extends Basic {
             hashMap.put("companyImage", null);
         }
 
+        hashMap.put("titleText", " العمال حسب المعرض");
         hashMap.put("gallaryListSelectedText", " المعرض");
         hashMap.put("gallaryListSelectedValue", getInvInventory() == null ? null : getInvInventory().getInventoryDTO().getName());
         hashMap.put("clientMobileText", " الموبايل");
