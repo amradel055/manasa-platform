@@ -9,6 +9,7 @@ import com.toby.core.GenericDAO;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.ProGroupDTO;
 import com.toby.entity.ProProductionItemsTransaction;
+import com.toby.views.ClientsByInvInventory;
 import com.toby.views.CompanyInvoicesWithoutSewing;
 import com.toby.views.CustomerBalances;
 import com.toby.views.CustomersHaveNoMovementFromTheDate;
@@ -25,7 +26,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
@@ -629,6 +632,37 @@ public class ReportsServiceImpl implements ReportsService {
         return list;
     }
 
+    @Override
+    public List<ClientsByInvInventory> getClientsByInvInventory(ClientsByInvInventory invInventory, Integer branchId) {
+
+        List<ClientsByInvInventory> list = new ArrayList<>();
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT ios.name,ios.code,ios.mobile FROM toby.inv_organization_site ios\n"
+                + "left join inv_inventory ii on ii.id = ios.gallary_id\n"
+                + " where ios.branch_id = ").append(branchId);
+
+        StringBuilder gallaryIds = null;
+        for (InvInventoryDTO invInventoryDTO : invInventory.getGallaryListSelected()) {
+            if (gallaryIds == null) {
+                gallaryIds = new StringBuilder();
+                gallaryIds.append(invInventoryDTO.getId());
+            } else {
+                gallaryIds.append(",").append(invInventoryDTO.getId());
+            }
+        }
+        appendGallery9(gallaryIds, sql);
+        List<Object[]> res = dao.executeNativeQuery(sql.toString());
+        for (Object[] object : res) {
+            invInventory = new ClientsByInvInventory();
+            invInventory.setClientName((String) object[0]);
+            invInventory.setClientCode((String) object[1]);
+            invInventory.setClientMobile((String) object[2]);
+            list.add(invInventory);
+        }
+
+        return list;
+    }
+
     private void appendGallery(SalesReportByValueAded salesReportByValueAded, StringBuilder query) {
         if (salesReportByValueAded.getGallerySelected() != null) {
             query.append(" and ip.galary_Id =  ").append(salesReportByValueAded.getGallerySelected().getId());
@@ -789,6 +823,11 @@ public class ReportsServiceImpl implements ReportsService {
     private void appendGallery6(CustomersHaveNoMovementFromTheDate noMovementFromTheDate, StringBuilder query) {
         if (noMovementFromTheDate.getGallerySelected() != null) {
             query.append(" and ios.gallary_id =  ").append(noMovementFromTheDate.getGallerySelected().getId());
+        }
+    }
+      private void appendGallery9(StringBuilder gallaryIds, StringBuilder sql) {
+        if (gallaryIds != null) {
+            sql.append("  and ios.gallary_id in ( ").append(gallaryIds.toString()).append(" )");
         }
     }
 
