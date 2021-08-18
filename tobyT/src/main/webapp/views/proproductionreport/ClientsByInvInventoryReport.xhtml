@@ -17,7 +17,7 @@
 
 
                     <div class="ui-g-12 ui-xl-12">
-                        <div class="ui-g-6 ui-xl-6">
+                        <div class="ui-g-6 ui-xl-6" >
                             <p:selectCheckboxMenu id="gallary_From" value="#{clientsByInvInventoryReport.invInventory.gallaryListSelected}" 
                                                   converter="#{clientsByInvInventoryReport.gallaryDTOConverters}"
                                                   label="المعرض" style="width: 15rem"
@@ -29,15 +29,16 @@
                             </p:selectCheckboxMenu>
                         </div>
                         <div class="ui-g-6 ui-xl-6">
-                            <p:outputLabel style="width: 50px;margin-right: 1%" value="المعرض"/>
+                            <p:outputLabel style="width: 50px;margin-right: 2%" value="المعرض "/>
                         </div>
                     </div>
 
                 </p:fieldset>
-                <div class="ui-g-12 ui-xl-12">
+                <div class="ui-g-12 ui-xl-12" align="center">
 
                     <p:commandButton     class="saveButton" id="saveB" 
                                          value="بحث" 
+                                         style="margin-right: 2%"
                                          icon="fa fa-fw fa-save"
                                          action="#{clientsByInvInventoryReport.search()}"
                                          update="table messages"
