@@ -5,6 +5,8 @@
  */
 package com.toby.businessservice.report;
 
+import com.toby.bean.BankBalanceReportBean;
+import com.toby.bean.BankBalanceReportSearchBean;
 import com.toby.entity.GlYear;
 import com.toby.views.BankBalanceView;
 import java.util.Date;
@@ -20,5 +22,7 @@ public interface BankBalanceViewService {
 
     public List<BankBalanceView> getAllBankBalancesTransactions(Integer branchId, Date dateFrom, Date dateTo, Integer bankIdFrom, Integer bankIdTo);
 
-    public List<BankBalanceView> getAllBankBalancesTransactionsByBankId(Integer branchId, GlYear glYear, Date dateTo, StringBuilder builder);
+    public List<BankBalanceView> getAllBankBalancesTransactionsByBankId(Integer branchId, Date dateTo, StringBuilder builder, Date dateFrom);
+    
+    public List<BankBalanceReportBean> search(BankBalanceReportSearchBean bankBalanceReportSearchBean);
 }

@@ -35,6 +35,7 @@ public class SummitionItemReportMB2 extends Basic {
     private Date dateTo;
     private ProGroupDTO proGroupDTOSelected;
     private Integer invoiceType;
+    private List<ProGroupDTO> proGroupListSelected;
 
     private List<SummitionItemsView> itemsViewList;
     private ArrayList<Test> list;
@@ -47,6 +48,7 @@ public class SummitionItemReportMB2 extends Basic {
     private BigDecimal sumNumberTotal;
     private BigDecimal sumAllCostTotal;
     private BigDecimal sumAllAvarageCost;
+    private boolean tobAndKhiata;
 
     @EJB
     InvPurchaseInvoiceService_1 invPurchaseInvoiceService_1;
@@ -85,13 +87,21 @@ public class SummitionItemReportMB2 extends Basic {
                 summitionItemsView.setRowType(1);
 
                 if (getUri().contains("summitionItemReportPro")) {
-                    itemsViewForGallaryinner = invPurchaseInvoiceService_1.getTheListBasedOnStagesList(invInventoryDTO.getId(), getDateFrom(), getDateTo(), getUserData().getUserBranch().getId(), getUserData().getUser(), null, null);
+//                    itemsViewForGallaryinner = invPurchaseInvoiceService_1.getTheListBasedOnStagesList(invInventoryDTO.getId(), getDateFrom(), getDateTo(), getUserData().getUserBranch().getId(), getUserData().getUser(), null, null);
+                    itemsViewForGallaryinner = invPurchaseInvoiceService_1.getTheListBasedOnStagesList(invInventoryDTO.getId(), getDateFrom(), getDateTo(), getUserData().getUserBranch().getId(), getUserData().getUser(), null, getProGroupListSelected());
+
                 } else {
-                    itemsViewForGallaryinner = invPurchaseInvoiceService_1.findSummitionQuantity(invInventoryDTO.getId(), getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), null, null,null);
+//                    itemsViewForGallaryinner = invPurchaseInvoiceService_1.findSummitionQuantity(invInventoryDTO.getId(), getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), null, null, null);
+                    itemsViewForGallaryinner = invPurchaseInvoiceService_1.findSummitionQuantity(invInventoryDTO.getId(), getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), null, getProGroupListSelected(),getInvoiceType());
+
                 }
                 if (itemsViewForGallaryinner != null && !itemsViewForGallaryinner.isEmpty()) {
                     for (SummitionItemsView view : itemsViewForGallaryinner) {
-                        if (view.getCode() == 1 || view.getCode() == 2) {
+                        if (tobAndKhiata) {
+                            if (view.getCode() == 1 || view.getCode() == 2) {
+                                setValueForGallary(summitionItemsView, view);
+                            }
+                        } else {
                             setValueForGallary(summitionItemsView, view);
                         }
 
@@ -106,9 +116,11 @@ public class SummitionItemReportMB2 extends Basic {
             }
 
             if (getUri().contains("summitionItemReportPro")) {
-                itemsViewForGallaryinnerForAll = invPurchaseInvoiceService_1.getTheListBasedOnStagesList(null, getDateFrom(), getDateTo(), getUserData().getUserBranch().getId(), getUserData().getUser(), getGallaryListSelected(), null);
+//                itemsViewForGallaryinnerForAll = invPurchaseInvoiceService_1.getTheListBasedOnStagesList(null, getDateFrom(), getDateTo(), getUserData().getUserBranch().getId(), getUserData().getUser(), getGallaryListSelected(), null);
+                itemsViewForGallaryinnerForAll = invPurchaseInvoiceService_1.getTheListBasedOnStagesList(null, getDateFrom(), getDateTo(), getUserData().getUserBranch().getId(), getUserData().getUser(), getGallaryListSelected(), getProGroupListSelected());
             } else {
-                itemsViewForGallaryinnerForAll = invPurchaseInvoiceService_1.findSummitionQuantity(null, getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), getGallaryListSelected(), null,null);
+//                itemsViewForGallaryinnerForAll = invPurchaseInvoiceService_1.findSummitionQuantity(null, getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), getGallaryListSelected(), null, null);
+                itemsViewForGallaryinnerForAll = invPurchaseInvoiceService_1.findSummitionQuantity(null, getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), getGallaryListSelected(), getProGroupListSelected(),getInvoiceType());
             }
             if (itemsViewForGallaryinnerForAll != null && !itemsViewForGallaryinnerForAll.isEmpty()) {
                 summitionItemsView = new SummitionItemsView();
@@ -140,7 +152,7 @@ public class SummitionItemReportMB2 extends Basic {
 
     private void distributeDate(InvInventoryDTO invInventoryDTO, HashMap<Integer, Test> map, SummitionItemsView view) {
         Test test;
-        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("1")) {
+        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("001")) {
 
             test = map.get(view.getCode());
             if (test == null) {
@@ -154,7 +166,7 @@ public class SummitionItemReportMB2 extends Basic {
             test.getB1().setTotalCost(view.getAllAvarageCost());
             map.put(view.getCode(), test);
         }
-        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("2")) {
+        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("002")) {
             test = map.get(view.getCode());
             if (test == null) {
                 test = new Test();
@@ -167,7 +179,7 @@ public class SummitionItemReportMB2 extends Basic {
             map.put(view.getCode(), test);
 
         }
-        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("3")) {
+        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("003")) {
             test = map.get(view.getCode());
             if (test == null) {
                 test = new Test();
@@ -180,7 +192,7 @@ public class SummitionItemReportMB2 extends Basic {
             map.put(view.getCode(), test);
 
         }
-        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("4")) {
+        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("004")) {
             test = map.get(view.getCode());
             if (test == null) {
                 test = new Test();
@@ -193,7 +205,7 @@ public class SummitionItemReportMB2 extends Basic {
             map.put(view.getCode(), test);
 
         }
-        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("5")) {
+        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("005")) {
             test = map.get(view.getCode());
             if (test == null) {
                 test = new Test();
@@ -206,7 +218,7 @@ public class SummitionItemReportMB2 extends Basic {
             map.put(view.getCode(), test);
 
         }
-        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("6")) {
+        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("006")) {
             test = map.get(view.getCode());
             if (test == null) {
                 test = new Test();
@@ -219,7 +231,7 @@ public class SummitionItemReportMB2 extends Basic {
             map.put(view.getCode(), test);
 
         }
-        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("7")) {
+        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("007")) {
             test = map.get(view.getCode());
             if (test == null) {
                 test = new Test();
@@ -232,7 +244,7 @@ public class SummitionItemReportMB2 extends Basic {
             map.put(view.getCode(), test);
 
         }
-        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("8")) {
+        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("008")) {
             test = map.get(view.getCode());
             if (test == null) {
                 test = new Test();
@@ -245,7 +257,7 @@ public class SummitionItemReportMB2 extends Basic {
             map.put(view.getCode(), test);
 
         }
-        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("9")) {
+        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("009")) {
             test = map.get(view.getCode());
             if (test == null) {
                 test = new Test();
@@ -258,7 +270,7 @@ public class SummitionItemReportMB2 extends Basic {
             map.put(view.getCode(), test);
 
         }
-        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("10")) {
+        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("010")) {
             test = map.get(view.getCode());
             if (test == null) {
                 test = new Test();
@@ -271,7 +283,7 @@ public class SummitionItemReportMB2 extends Basic {
             map.put(view.getCode(), test);
 
         }
-        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("11")) {
+        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("011")) {
             test = map.get(view.getCode());
             if (test == null) {
                 test = new Test();
@@ -284,7 +296,7 @@ public class SummitionItemReportMB2 extends Basic {
             map.put(view.getCode(), test);
 
         }
-        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("12")) {
+        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("012")) {
             test = map.get(view.getCode());
             if (test == null) {
                 test = new Test();
@@ -297,7 +309,7 @@ public class SummitionItemReportMB2 extends Basic {
             map.put(view.getCode(), test);
 
         }
-        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("13")) {
+        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("013")) {
             test = map.get(view.getCode());
             if (test == null) {
                 test = new Test();
@@ -310,7 +322,7 @@ public class SummitionItemReportMB2 extends Basic {
             map.put(view.getCode(), test);
 
         }
-        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("14")) {
+        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("014")) {
             test = map.get(view.getCode());
             if (test == null) {
                 test = new Test();
@@ -323,7 +335,7 @@ public class SummitionItemReportMB2 extends Basic {
             map.put(view.getCode(), test);
 
         }
-        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("15")) {
+        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("015")) {
             test = map.get(view.getCode());
             if (test == null) {
                 test = new Test();
@@ -336,7 +348,7 @@ public class SummitionItemReportMB2 extends Basic {
             map.put(view.getCode(), test);
 
         }
-        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("16")) {
+        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("016")) {
             test = map.get(view.getCode());
             if (test == null) {
                 test = new Test();
@@ -349,7 +361,7 @@ public class SummitionItemReportMB2 extends Basic {
             map.put(view.getCode(), test);
 
         }
-        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("17")) {
+        if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("017")) {
             test = map.get(view.getCode());
             if (test == null) {
                 test = new Test();
@@ -693,6 +705,37 @@ public class SummitionItemReportMB2 extends Basic {
      */
     public void setInvoiceType(Integer invoiceType) {
         this.invoiceType = invoiceType;
+    }
+
+    /**
+     * @return the tobAndKhiata
+     */
+    public boolean isTobAndKhiata() {
+        return tobAndKhiata;
+    }
+
+    /**
+     * @param tobAndKhiata the tobAndKhiata to set
+     */
+    public void setTobAndKhiata(boolean tobAndKhiata) {
+        this.tobAndKhiata = tobAndKhiata;
+    }
+
+    /**
+     * @return the proGroupListSelected
+     */
+    public List<ProGroupDTO> getProGroupListSelected() {
+        if (proGroupListSelected == null) {
+            proGroupListSelected = new ArrayList<>();
+        }
+        return proGroupListSelected;
+    }
+
+    /**
+     * @param proGroupListSelected the proGroupListSelected to set
+     */
+    public void setProGroupListSelected(List<ProGroupDTO> proGroupListSelected) {
+        this.proGroupListSelected = proGroupListSelected;
     }
 
 }

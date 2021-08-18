@@ -5,6 +5,7 @@
  */
 package com.toby.reports;
 
+import com.toby.bean.BankBalanceReportBean;
 import com.toby.views.ItemsBalanceView;
 import com.toby.businessservice.GeneraljournalDetailsService;
 import com.toby.businessservice.GlBankService;
@@ -15,7 +16,6 @@ import com.toby.converter.GlBankConverter;
 import com.toby.converter.SymbolConverter;
 import com.toby.entity.GlBank;
 import com.toby.entity.Symbol;
-import com.toby.report.entity.BankBalanceReportBean;
 import com.toby.toby.BaseGlAccountReportBean;
 import java.io.IOException;
 import java.math.BigDecimal;

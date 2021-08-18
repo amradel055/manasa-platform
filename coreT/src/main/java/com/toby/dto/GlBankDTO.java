@@ -5,10 +5,11 @@
  */
 package com.toby.dto;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class GlBankDTO extends BaseEntityDTO {
+public class GlBankDTO extends BaseEntityDTO implements Comparable<GlBankDTO> , Serializable{
 
     private String name;
     private Integer code;
@@ -172,6 +173,11 @@ public class GlBankDTO extends BaseEntityDTO {
      */
     public void setRate(BigDecimal rate) {
         this.rate = rate;
+    }
+
+    @Override
+    public int compareTo(GlBankDTO o) {
+        return this.getCode().compareTo(o.getCode());
     }
 
 }

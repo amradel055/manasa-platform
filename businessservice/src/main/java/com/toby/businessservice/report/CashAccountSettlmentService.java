@@ -35,4 +35,5 @@ public interface CashAccountSettlmentService {
     public List<CashAccountSettlmentView> findAllRemainingCashAccountSettlment(SubAccountSummarySearchBean cashAccountSettlementSearchBean, StringBuilder stringBuilder);
 
     public CashAccountSettlementBean search(SubAccountSummarySearchBean cashAccountSettlementSearchBean );
+    
 }
