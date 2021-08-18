@@ -21,12 +21,14 @@ public interface PurchaseOfItemsBySuppliersReportService {
 
     public List<ItemSalesView> getAllPurchaseOfItemsBySuppliersSearchBean(PurchaseOfItemsBySuppliersSearchBean purchaseOfItemsBySuppliersSearchBean);
 
+    public List<ItemSalesView> getAllPurchaseOfItemsBySuppliersSearchBeanNew(PurchaseOfItemsBySuppliersSearchBean purchaseOfItemsBySuppliersSearchBean, Integer invoiceType);
+
     public List<ItemSalesViewGroup> getAllPurchaseOfItemsBySuppliersSearchBeanByGroup(PurchaseOfItemsBySuppliersSearchBean purchaseOfItemsBySuppliersSearchBean);
 
     public List<ItemSalesView> getAllSalesOfItemsBySuppliersSearchBean(PurchaseOfItemsBySuppliersSearchBean purchaseOfItemsBySuppliersSearchBean);
 
     public List<ItemSalesView> getAllInvoiceDetailBySuppliersSearchBean(PurchaseOfItemsBySuppliersSearchBean purchaseOfItemsBySuppliersSearchBean);
-    
+
     public List<SalesOfItemsByCompany> getAllSalesOfItemsByCompany(PurchaseOfItemsBySuppliersSearchBean purchaseOfItemsBySuppliersSearchBean);
-    
+
 }

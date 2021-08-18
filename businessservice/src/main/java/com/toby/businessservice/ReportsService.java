@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice;
 
+import com.toby.views.ClientsByInvInventory;
 import com.toby.views.CompanyInvoicesWithoutSewing;
 import com.toby.views.CustomerBalances;
 import com.toby.views.CustomersHaveNoMovementFromTheDate;
@@ -51,4 +52,6 @@ public interface ReportsService {
     public void deleteIncrease(Integer proProductionStagesId, Integer proFactoryDeliveryDetailId, BigDecimal workNumber, BigDecimal originNumber);
 
     public List<CustomersHaveNoMovementFromTheDate> getCustomersHaveNoMovementFromTheDate(CustomersHaveNoMovementFromTheDate noMovementFromTheDate, Integer branchId);
+
+    public List<ClientsByInvInventory> getClientsByInvInventory(ClientsByInvInventory invInventory, Integer branchId);
 }

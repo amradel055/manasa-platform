@@ -177,7 +177,7 @@ public class SalesOfItemsBySupplierMB extends BaseInventoryReportBean {
         purchaseOfItemsBySuppliersSearchBean.setType(4);
 
         //itemSalesViewList = invItemSalesReportService.getAllInvPurchaseInvoiceDetailsByInvItemSalesSearchBean(invItemSalesSearchBean);
-        itemSalesViewList = purchaseOfItemsBySuppliersReportService.getAllSalesOfItemsBySuppliersSearchBean(purchaseOfItemsBySuppliersSearchBean);
+        itemSalesViewList = purchaseOfItemsBySuppliersReportService.getAllPurchaseOfItemsBySuppliersSearchBeanNew(getPurchaseOfItemsBySuppliersSearchBean(),getInvoiceType());
 
         if (itemSalesViewList != null && !itemSalesViewList.isEmpty()) {
             fillEachGroupWithItsCorrespondingList();
@@ -657,16 +657,6 @@ public class SalesOfItemsBySupplierMB extends BaseInventoryReportBean {
         this.sumTotal = sumTotal;
     }
 
-    /*
-     public Boolean getChart() {
-     return chart;
-     }
-
-
-     public void setChart(Boolean chart) {
-     this.chart = chart;
-     }*/
-
     /**
      * @return the invoiceType
      */
@@ -680,4 +670,19 @@ public class SalesOfItemsBySupplierMB extends BaseInventoryReportBean {
     public void setInvoiceType(Integer invoiceType) {
         this.invoiceType = invoiceType;
     }
+
+    /*
+     public Boolean getChart() {
+     return chart;
+     }
+
+
+     public void setChart(Boolean chart) {
+     this.chart = chart;
+     }*/
+
+    /**
+     * @return the invoiceType
+     */
+  
 }

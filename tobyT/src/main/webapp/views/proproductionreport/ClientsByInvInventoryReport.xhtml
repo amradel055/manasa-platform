@@ -1,0 +1,90 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <h:body>
+
+            <h:form dir="RTL" style="margin-right: 20px" id="form" >
+                <p:fieldset  legend=" العمال حسب المعرض" id="stages"  style=" position: relative">
+                    <p:messages id="messages" showDetail="true" closable="true"/> 
+
+
+
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:selectCheckboxMenu id="gallary_From" value="#{clientsByInvInventoryReport.invInventory.gallaryListSelected}" 
+                                                  converter="#{clientsByInvInventoryReport.gallaryDTOConverters}"
+                                                  label="المعرض" style="width: 15rem"
+                                                  filter="true" filterMatchMode="startsWith" panelStyle="width: 15rem" scrollHeight="250">
+                                <f:selectItems value="#{clientsByInvInventoryReport.gallaryLists}" 
+                                               var="gallary"
+                                               itemLabel="#{gallary}"
+                                               itemValue="#{gallary}"/>
+                            </p:selectCheckboxMenu>
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel style="width: 50px;margin-right: 1%" value="المعرض"/>
+                        </div>
+                    </div>
+
+                </p:fieldset>
+                <div class="ui-g-12 ui-xl-12">
+
+                    <p:commandButton     class="saveButton" id="saveB" 
+                                         value="بحث" 
+                                         icon="fa fa-fw fa-save"
+                                         action="#{clientsByInvInventoryReport.search()}"
+                                         update="table messages"
+                                         >
+
+                    </p:commandButton>
+                    <h:commandLink  class="sdcreenimg">  
+                        <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                        <p:dataExporter type="xls"
+                                        target="table" 
+                                        fileName=" العمال حسب المعرض"
+                                        postProcessor="#{clientsByInvInventoryReport.postProcessXLS}" />  
+                    </h:commandLink> 
+
+                </div>
+                <p:fieldset  legend="البيانات"   style="margin-bottom:20px">
+                    <p:dataTable  id="table"
+                                  var="data"
+                                  value="#{clientsByInvInventoryReport.list}"
+                                  draggableColumns="true"
+                                  paginator="true"
+                                  widgetVar="data" 
+                                  rowIndexVar="index" 
+                                  rows="30"
+                                  emptyMessage="EMPTY_TABLE"
+                                  >
+
+                        <p:column headerText="الاسم" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.clientName}" />
+                        </p:column>
+                        <p:column headerText="الكود" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.clientCode}" />
+                        </p:column>
+                        <p:column headerText="الجوال" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.clientMobile}" />
+                        </p:column>
+                    </p:dataTable>
+                    <div class="ui-g-12 ui-md-6">
+                        <p:commandButton class="printButton"  icon="fa fa-fw fa-print"
+                                         onclick="form.target = '_blank'" ajax="false"
+                                         value="#{userData.userDDs['PRINT']}"
+                                         actionListener="#{clientsByInvInventoryReport.exportPDF(actionEvent)}"/>
+                    </div>
+
+                </p:fieldset>
+            </h:form>
+        </h:body>
+    </ui:define>
+</ui:composition>
+

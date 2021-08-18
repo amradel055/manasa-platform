@@ -3,7 +3,6 @@ package com.toby.reports;
 import com.toby.businessservice.ProGroupService;
 import com.toby.businessservice.ReportsService;
 import com.toby.converter.ProGroupDTOConverter;
-import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.ProGroupDTO;
 import com.toby.toby.Basic;
 import com.toby.views.ProfitOfItemsSold;
