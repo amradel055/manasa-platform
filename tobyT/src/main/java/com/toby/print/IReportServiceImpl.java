@@ -402,15 +402,15 @@ public class IReportServiceImpl implements IReportService {
             hashMap.put("addressEn", userData.getUserBranch().getAddress2());
             hashMap.put("cashier", invPurchaseInvoiceDTO.getCreatedByName());
 
-            if (invPurchaseInvoiceDTO.getTaxFlagFinal()) {
+//            if (invPurchaseInvoiceDTO.getTaxFlagFinal()) {
                 hashMap.put("taxCodeText", userData.getUserBranch().getTaxCode());
                 hashMap.put("salesReceiptText", "فاتورة مبيعات ");
 
                 hashMap.put("receiptNumberText", "رقم الفاتورة");
-            } else {
-                hashMap.put("salesReceiptText", userData.getUserDDs().get("TITLE_INVOICE_SALES_NOT_TAX"));
-                hashMap.put("receiptNumberText", userData.getUserDDs().get("NUMBER_INVOICE_SALES_NOT_TAX"));
-            }
+//            } else {
+//                hashMap.put("salesReceiptText", userData.getUserDDs().get("TITLE_INVOICE_SALES_NOT_TAX"));
+//                hashMap.put("receiptNumberText", userData.getUserDDs().get("NUMBER_INVOICE_SALES_NOT_TAX"));
+//            }
 
             if (invPurchaseInvoiceDTO.getDiscountType() != null && invPurchaseInvoiceDTO.getDiscountType() == 1) {
                 hashMap.put("percentage", "%");

@@ -416,6 +416,9 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      * @return the taxFlagFinal
      */
     public Boolean getTaxFlagFinal() {
+        if(taxFlagFinal == null){
+            taxFlagFinal = Boolean.FALSE;
+        }
         return taxFlagFinal;
     }
 

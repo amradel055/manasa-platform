@@ -819,7 +819,8 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
 
     public String createSql(SubAccountSummarySearchBean cashAccountSettlementSearchBean, Map<String, Object> params) {
         StringBuilder sql = new StringBuilder();
-        addGlBankFromAndTo(sql, params, cashAccountSettlementSearchBean);
+//        addGlBankFromAndTo(sql, params, cashAccountSettlementSearchBean);
+        addGlBankSelected(sql, params, cashAccountSettlementSearchBean);
         addDateFromAndTo(sql, cashAccountSettlementSearchBean);
         addType(sql, params, cashAccountSettlementSearchBean);
         addtransactionType(sql, params, cashAccountSettlementSearchBean);
@@ -838,6 +839,22 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
         if (cashAccountSettlementSearchBean.getGlBankTo() != null && cashAccountSettlementSearchBean.getGlBankTo().getId() > 0) {
             sql.append(" and cas.code <= :glBankTo");
             params.put("glBankTo", cashAccountSettlementSearchBean.getGlBankTo().getCode());
+        }
+    }
+    
+    private void addGlBankSelected(StringBuilder sql, Map<String, Object> params, SubAccountSummarySearchBean cashAccountSettlementSearchBean) {
+        if(cashAccountSettlementSearchBean != null && cashAccountSettlementSearchBean.getGlBankDTOListSelected() != null && !cashAccountSettlementSearchBean.getGlBankDTOListSelected().isEmpty()){
+            StringBuilder q = null;
+            for(GlBankDTO glBankDTO : cashAccountSettlementSearchBean.getGlBankDTOListSelected()){
+                if(q == null){
+                    q = new StringBuilder();
+                    q.append(glBankDTO.getId());
+                }else{
+                    q.append(" , ").append(glBankDTO.getId());
+                }
+                
+            }
+            sql.append(" and cas.bankId in ( ").append(q.toString()).append(" )");
         }
     }
 

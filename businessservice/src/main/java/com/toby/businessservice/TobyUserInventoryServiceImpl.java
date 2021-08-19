@@ -12,6 +12,7 @@ import com.toby.entity.TobyUser;
 import com.toby.entity.TobyUserInventory;
 import com.toby.entity.TobyUserRole;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 
 import java.util.HashMap;
@@ -34,9 +35,9 @@ public class TobyUserInventoryServiceImpl implements TobyUserInventoryService {
     TobyUserInventoryService tobyUserInventoryService;
 
     @Override
-    public List<InvInventory> getAllInventroisByUserAndBranch(Integer userId, Integer branchId,Integer type) {
+    public List<InvInventory> getAllInventroisByUserAndBranch(Integer userId, Integer branchId, Integer type) {
 
-        List<TobyUserInventory> tobyUserBankList = getAllTobyUserInventroiesByUserAndBranchByType(userId, branchId,type);
+        List<TobyUserInventory> tobyUserBankList = getAllTobyUserInventroiesByUserAndBranchByType(userId, branchId, type);
 
         List<InvInventory> inventoryList = new ArrayList<>();
 
@@ -46,7 +47,7 @@ public class TobyUserInventoryServiceImpl implements TobyUserInventoryService {
 
         return inventoryList;
     }
-    
+
     @Override
     public List<InvInventory> getAllInventroisByUserAndBranchPer(Integer userId, Integer branchId) {
 
@@ -56,7 +57,7 @@ public class TobyUserInventoryServiceImpl implements TobyUserInventoryService {
 
         for (TobyUserInventory tobyUserBank : tobyUserBankList) {
             InvInventory inventory = new InvInventory();
-            if(tobyUserBank.getInvInventoryId() != null){
+            if (tobyUserBank.getInvInventoryId() != null) {
                 inventory.setId(tobyUserBank.getInvInventoryId().getId());
                 inventory.setCode(tobyUserBank.getInvInventoryId().getCode());
                 inventory.setName(tobyUserBank.getInvInventoryId().getName());
@@ -66,17 +67,17 @@ public class TobyUserInventoryServiceImpl implements TobyUserInventoryService {
 
         return inventoryList;
     }
-    
-    @Override
-    public List<InvInventory> getAllInventroisByUserAndBranchPerByType(Integer userId, Integer branchId,Integer invType) {
 
-        List<TobyUserInventory> tobyUserBankList = tobyUserInventoryService.getAllTobyUserInventroiesByUserAndBranchByType(userId, branchId,invType);
+    @Override
+    public List<InvInventory> getAllInventroisByUserAndBranchPerByType(Integer userId, Integer branchId, Integer invType) {
+
+        List<TobyUserInventory> tobyUserBankList = tobyUserInventoryService.getAllTobyUserInventroiesByUserAndBranchByType(userId, branchId, invType);
 
         List<InvInventory> inventoryList = new ArrayList<>();
 
         for (TobyUserInventory tobyUserBank : tobyUserBankList) {
             InvInventory inventory = new InvInventory();
-            if(tobyUserBank.getInvInventoryId() != null){
+            if (tobyUserBank.getInvInventoryId() != null) {
                 inventory.setId(tobyUserBank.getInvInventoryId().getId());
                 inventory.setCode(tobyUserBank.getInvInventoryId().getCode());
                 inventory.setName(tobyUserBank.getInvInventoryId().getName());
@@ -97,7 +98,7 @@ public class TobyUserInventoryServiceImpl implements TobyUserInventoryService {
     }
 
     @Override
-    public List<TobyUserInventory> getAllTobyUserInventroiesByUserAndBranchByType(Integer userId, Integer branchId,Integer invType) {
+    public List<TobyUserInventory> getAllTobyUserInventroiesByUserAndBranchByType(Integer userId, Integer branchId, Integer invType) {
         Map<String, Object> params = new HashMap();
         params.put("branchId", branchId);
         params.put("userId", userId);
@@ -116,12 +117,12 @@ public class TobyUserInventoryServiceImpl implements TobyUserInventoryService {
                 + " AND e.userId.id = " + tobyUserRole.getUserId().getId() + " AND e.invInventoryId.id = " + inventory.getId();
         dao.executeDeleteQuery(sql);
     }
-    
+
     @Override
     public void deleteTobyUserInventory(List<TobyUserInventory> tobyUserInventoryList) {
         dao.deleteEntity(tobyUserInventoryList);
     }
-    
+
     @Override
     public List<InvInventoryDTO> getAllInventroyDTOByUserAndBranch(TobyUser tobyUser) {
 // صفحة فواتير المبيعات
@@ -136,11 +137,11 @@ public class TobyUserInventoryServiceImpl implements TobyUserInventoryService {
 
         return inventoryList;
     }
-    
-    @Override
-    public List<InvInventoryDTO> getAllInventroyDTOByUserAndBranchByType(TobyUser tobyUser,Integer invType) {
 
-        List<TobyUserInventory> tobyUserBankList = getAllTobyUserInventroiesByUserAndBranchByType(tobyUser.getId(), tobyUser.getBranchId().getId(),invType);
+    @Override
+    public List<InvInventoryDTO> getAllInventroyDTOByUserAndBranchByType(TobyUser tobyUser, Integer invType) {
+
+        List<TobyUserInventory> tobyUserBankList = getAllTobyUserInventroiesByUserAndBranchByType(tobyUser.getId(), tobyUser.getBranchId().getId(), invType);
 
         List<InvInventoryDTO> inventoryList = new ArrayList<>();
 
@@ -152,7 +153,6 @@ public class TobyUserInventoryServiceImpl implements TobyUserInventoryService {
         return inventoryList;
     }
 
-    
     public List<TobyUserInventory> getAllTobyUserGallaryByUserAndBranch(Integer userId, Integer branchId) {
         Map<String, Object> params = new HashMap();
         params.put("branchId", branchId);
@@ -161,7 +161,7 @@ public class TobyUserInventoryServiceImpl implements TobyUserInventoryService {
 
         return dao.findListByQuery("SELECT e FROM TobyUserInventory e WHERE (e.branchId.id = :branchId  AND e.userId.id = :userId AND e.invInventoryId.invType = :invType)", params);
     }
-    
+
     @Override
     public List<InvInventoryDTO> getAllGallaryByUserAndBranch(TobyUser tobyUser) {
 
@@ -173,10 +173,10 @@ public class TobyUserInventoryServiceImpl implements TobyUserInventoryService {
         for (TobyUserInventory tobyUserBank : tobyUserBankList) {
             inventoryList.add(inventoryImpl.mapToDTO(tobyUserBank.getInvInventoryId(), tobyUser));
         }
-
+        Collections.sort(inventoryList);
         return inventoryList;
     }
-    
+
     @Override
     public List<InvInventoryDTO> getAllInventroisByUserAndBranchPerDTO(Integer userId, Integer branchId) {
 
@@ -186,7 +186,7 @@ public class TobyUserInventoryServiceImpl implements TobyUserInventoryService {
 
         for (TobyUserInventory tobyUserBank : tobyUserBankList) {
             InvInventory inventory = new InvInventory();
-            if(tobyUserBank.getInvInventoryId() != null){
+            if (tobyUserBank.getInvInventoryId() != null) {
                 inventory.setId(tobyUserBank.getInvInventoryId().getId());
                 inventory.setCode(tobyUserBank.getInvInventoryId().getCode());
                 inventory.setName(tobyUserBank.getInvInventoryId().getName());
@@ -196,9 +196,8 @@ public class TobyUserInventoryServiceImpl implements TobyUserInventoryService {
 
         return returnListDTO(inventoryList);
     }
-    
-    
-     private List<InvInventoryDTO> returnListDTO(List<InvInventory> list) {
+
+    private List<InvInventoryDTO> returnListDTO(List<InvInventory> list) {
         List<InvInventoryDTO> dTOList = new ArrayList<>();
         for (InvInventory entity : list) {
             dTOList.add(mapTODTO(entity, false));
@@ -223,7 +222,7 @@ public class TobyUserInventoryServiceImpl implements TobyUserInventoryService {
         dTO.setName(entity.getName());
         dTO.setIndex(entity.getId());
         dTO.setCreatedDate(entity.getCreationDate());
-        dTO.setCreatedBy(entity.getCreatedBy() != null ? entity.getCreatedBy().getId(): null);
+        dTO.setCreatedBy(entity.getCreatedBy() != null ? entity.getCreatedBy().getId() : null);
 
         return dTO;
     }
