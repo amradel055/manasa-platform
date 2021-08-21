@@ -186,7 +186,7 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
 //        search();
         try {
             if (getAccountSettlementBean().getCashAccountSettlementReports() != null && !getAccountSettlementBean().getCashAccountSettlementReports().isEmpty()) {
-                fillReport(prepareReportNew(), getUserData().getReportPath() + "cashAccountSettlementReportIsag.jasper", getAccountSettlementBean().getCashAccountSettlementReports(), "pdf");
+                fillReport(prepareReportNew(), getUserData().getReportPath() + "cashAccountSettlementReportToby.jasper", getAccountSettlementBean().getCashAccountSettlementReports(), "pdf");
             }
         } catch (Exception e) {
             System.out.println(e + "    exeption ++++++++++++++++++++++++++++++ ");

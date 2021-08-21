@@ -103,13 +103,13 @@ public class CashAccountSettlmentView implements Serializable {
     private String remark2;
     @Column(name = "createdBy")
     private String createdBy;
-    @Transient
+    @Column(name = "customerName")
     private String customerName;
-    @Transient
+    @Column(name = "customerCode")
     private String customerCode;
-    @Transient
+    @Column(name = "customerMobile")
     private String customerMobile;
-    @Transient
+    @Column(name = "invoiceNumber")
     private Integer invoiceNumber;
 
     public CashAccountSettlmentView() {

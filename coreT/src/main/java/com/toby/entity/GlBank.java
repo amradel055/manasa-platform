@@ -67,6 +67,9 @@ public class GlBank extends BaseEntity {
     private BigDecimal rate;
 //    @Column(name = "raghi_point")
 //    private Integer raghiPoint;
+    @JoinColumn(name = "gallary_id", referencedColumnName = "id")
+    @ManyToOne
+    private InvInventory gallaryId;
     
 
     public GlBank() {
@@ -227,6 +230,20 @@ public class GlBank extends BaseEntity {
      */
     public void setRate(BigDecimal rate) {
         this.rate = rate;
+    }
+
+    /**
+     * @return the gallaryId
+     */
+    public InvInventory getGallaryId() {
+        return gallaryId;
+    }
+
+    /**
+     * @param gallaryId the gallaryId to set
+     */
+    public void setGallaryId(InvInventory gallaryId) {
+        this.gallaryId = gallaryId;
     }
 
 }

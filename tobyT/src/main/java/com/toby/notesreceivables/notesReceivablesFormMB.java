@@ -953,6 +953,24 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
                         if (bankTransaction != null && bankTransaction.getId() != null) {
                             findnotesReceivablesObject(bankTransaction.getId());
                         }
+                        if (getUri().contains("notesreceivablesForm")) {
+                            StringBuilder message = new StringBuilder();
+                            message.append("عميلنا العزيز ، شكراً لتسوقك من برنس تمت عملية دفع رقم ");
+                            message.append(getGlBankTransactionEntity().getSerial());
+                            message.append(" المدفوع ");
+                            message.append(getGlBankTransactionEntity().getValue());
+                            message.append(" المتبقي ");
+                            message.append(getGlBankTransactionEntity().getRemainInvoice());
+                            if (getGlBankTransactionEntity().getGlBank().getGallaryId() != null && 
+                                    getGlBankTransactionEntity().getGlBank().getGallaryId().getInvName() != null && 
+                                    getGlBankTransactionEntity().getGlBank().getGallaryId().getInvName() == 0) {
+                                sendSms(getGlBankTransactionDetailEntity().getInvOrganizationSite().getMobile(), "التوبى العالمى", message.toString(), "20099319", "0564933202");
+                            } else if (getGlBankTransactionEntity().getGlBank().getGallaryId() != null && 
+                                    getGlBankTransactionEntity().getGlBank().getGallaryId().getInvName() != null && 
+                                    getGlBankTransactionEntity().getGlBank().getGallaryId().getInvName() == 1) {
+                                sendSms(getGlBankTransactionDetailEntity().getInvOrganizationSite().getMobile(), "التوبى العالمى", message.toString(), "20099320", "Royal@e12z");
+                            }
+                        }
                         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, userDDs.get("INFO"), userDDs.get("SAVED")));
 //                        exit();
                     } catch (Exception e) {

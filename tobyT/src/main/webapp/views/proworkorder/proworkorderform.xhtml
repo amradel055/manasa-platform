@@ -10,11 +10,11 @@
     <ui:define name="content" >
 
 
-        <h:form id="form"  class='formmargin'  >
+        <h:form id="form" dir="RTL" class='formmargin'  >
             <p:hotkey bind="F2" handler="PF('dlg4').show()"/>
 
-            <div class="ui-g-4 ui-xl-4 " style="margin-top: -2%;" >
-                <p:fieldset class="last-part" style="max-height: available ;background-color: #e6e4e4;width: 25%;" >
+            <div class="ui-g-4 ui-xl-4 " style=" position: static; margin-top: -2%;" >
+                <p:fieldset class="last-part" style=" position: static; max-height: available ;background-color: #e6e4e4;width: 25%;" >
 
                     <div class="ui-g-12 ui-xl-12" style="">
 
@@ -34,7 +34,7 @@
 
                             </div>
                         </div>
-                        
+
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
                                 <p:selectOneMenu style="width: 100%" id="PURCHASE_NUMBER" 
@@ -81,7 +81,7 @@
 
                             </div>
                         </div>
-                        
+
                         <div class="ui-g-12 ui-xl-12 section-edit">
                             <div class="ui-g-4 ui-xl-4">
 
@@ -98,8 +98,8 @@
 
                             </div>
                         </div>
-                        
-                        
+
+
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
 
@@ -115,8 +115,8 @@
 
                             </div>
                         </div>
-                        
-                        
+
+
 
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
@@ -134,8 +134,8 @@
 
                             </div>
                         </div>
-                      
-                        
+
+
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
                                 <h:inputText id="payed"  rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id eq null}"
@@ -151,7 +151,7 @@
 
                             </div>
                         </div>
-                        
+
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
                                 <h:outputText id="remain"  
@@ -213,6 +213,152 @@
                     <div class="ui-g-12 ui-xl-12"  >
                         <p:messages id="curmsg" autoUpdate="true" showDetail="true" rendered="true" closable="true"/>   
                     </div>
+
+                    <div class="ui-g-12 ui-xl-12" style="margin-top: -2%;" >
+
+                        <div style="text-align: center">
+                            <p:commandButton     class="saveButton"  
+                                                 title="العرض"
+                                                 value="عرض القطعتين و الثالثة هدية" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 1 and false}"
+                                                 icon="fa fa-fw fa-save" 
+                                                 action="#{invPurchaseInvoiceFormDTOMB.twoPieceAndThirdFreeOffer()}"
+                                                 update="@form"
+                                                 >
+                            </p:commandButton>
+                            <p:commandButton     class="saveButton"  
+                                                 title="العرض"
+                                                 value="عرض الخصم 20 %" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 0 }"
+                                                 icon="fa fa-fw fa-save" 
+                                                 action="#{invPurchaseInvoiceFormDTOMB.discount25ForAll(20)}"
+                                                 update="@form"
+                                                 >
+                            </p:commandButton>
+                        </div>
+                    </div>
+
+                    <div class="ui-g-12 ui-xl-12" style="margin-top: -2%;" >
+
+                        <div style="text-align: center">
+
+                            <p:commandButton  id="saveB" 
+                                              class="saveButtons"
+                                              title="#{userData.userDDs['SAVE']}"
+                                              value="#{userData.userDDs['SAVE']}" 
+                                              action="#{invPurchaseInvoiceFormDTOMB.save()}"
+                                              rendered="#{(userData.userScreens['proworkorder'].edit) or invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id eq null or userData.isAdmin}"
+                                              update="@form"/>
+
+
+                            <p:commandButton 
+                                id="newN"
+                                ajax="false"
+                                value="#{userData.userDDs['NEW']}" 
+                                class="newButtons"
+                                onclick="form.target = ''" 
+                                rendered="#{(userData.userScreens['proworkorder'].add) or  userData.isAdmin}"
+                                actionListener="#{invPurchaseInvoiceFormDTOMB.reset()}"/>
+
+
+
+                            <p:commandButton  class="printButtons"
+                                              ajax="false"
+                                              onclick="form.target = '_blank'"  
+                                              rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id != null}"
+                                              value="#{userData.userDDs['PRINT']}" 
+                                              title="#{userData.userDDs['PRINT']}" 
+                                              actionListener="#{invPurchaseInvoiceFormDTOMB.print}"/>
+
+                            <p:commandButton  class="deleteButtons" 
+                                              id="cancel" 
+                                              title="#{userData.userDDs['CANCEL']}" 
+                                              value="#{userData.userDDs['CANCEL']}" 
+                                              immediate="true"
+                                              action="#{invPurchaseInvoiceFormDTOMB.exit()}" 
+                                              update="@form"/>
+
+                            <h:commandLink  style="float:left" class="sdcreenimg" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id ne null}">  
+                                <p:graphicImage name="/img/excel.jpg" width="24" style='margin-right:25%;'/>  
+                                <p:dataExporter type="xls"
+                                                target="invPurchaseInvoiceDetailsTable" 
+                                                fileName="فاتورة المبيعات"
+                                                preProcessor="#{invPurchaseInvoiceFormDTOMB.preProcessXLS()}"
+                                                postProcessor="#{invPurchaseInvoiceFormDTOMB.postProcessXLS}" />  
+                            </h:commandLink>
+
+                            <p:blockUI block="form" trigger="saveB " animate="true" >
+
+                                <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                            </p:blockUI> 
+
+
+                        </div>
+                    </div>
+
+
+                    <div class="ui-g-12 ui-xl-12" style="margin-top: -2%;" >
+                        <div style="text-align: center">
+
+                            <p:commandButton  class="printButtons"
+                                              ajax="false"
+                                              onclick="form.target = '_blank'"  
+                                              value="كشف حساب" 
+                                              title="كشف حساب" 
+                                              rendered="#{(userData.userScreens['proworkorder'].add) or  userData.isAdmin}"
+                                              actionListener="#{invPurchaseInvoiceFormDTOMB.goTClientacoount}"/>
+                            <p:commandButton  id="r2"  
+                                              ajax="false"
+                                              onclick="form.target = '_blank'" 
+                                              class="saveButtons"
+                                              title="سند قبض"
+                                              value="سند قبض" 
+                                              rendered="#{(userData.userScreens['proworkorder'].add) or  userData.isAdmin}"
+                                              actionListener="#{invPurchaseInvoiceFormDTOMB.goTNotesreceivables()}"
+                                              />
+
+
+                        </div>
+
+
+
+                    </div>
+
+                    <div class="ui-g-12 ui-xl-12" style="margin-top: -2%;" >
+                        <div style="text-align: center">
+
+                            <p:commandButton  id="r3"  
+                                              ajax="false"
+                                              onclick="form.target = '_blank'" 
+                                              class="saveButtons"
+                                              title="مراحل الانتاج"
+                                              value="مراحل الانتاج" 
+                                              action="#{invPurchaseInvoiceFormDTOMB.goTInvoiceMovementReport()}"
+                                              />
+                            <p:commandButton  id="r4"  
+                                              ajax="false"
+                                              onclick="form.target = '_blank'" 
+                                              class="saveButtons"
+                                              title="تسليم الفاتورة"
+                                              value="تسليم الفاتورة" 
+                                              rendered="#{(userData.userScreens['proworkorder'].add) or  userData.isAdmin}"
+                                              actionListener="#{invPurchaseInvoiceFormDTOMB.goTProProductionMovement()}"
+                                              />
+                            <p:commandButton  id="r5"  
+                                              ajax="false"
+                                              onclick="form.target = '_blank'" 
+                                              class="saveButtons"
+                                              title="مراحل الانتاج"
+                                              value="مراحل الانتاج" 
+                                              actionListener="#{invPurchaseInvoiceFormDTOMB.goToInvoiceProductionStageReport()}"
+                                              />
+
+                        </div>
+
+
+
+                    </div>
+
+
 
                 </p:fieldset>
 
@@ -302,7 +448,7 @@
                             </div>
                         </div>
 
-                        
+
 
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
@@ -607,116 +753,6 @@
                         </div>
                     </div>
 
-                    <div class="ui-g-8 ui-xl-8" style="margin-top: -2%;" >
-                        <div style="text-align: center">
-
-                            <p:commandButton  class="printButtons"
-                                              ajax="false"
-                                              onclick="form.target = '_blank'"  
-                                              value="كشف حساب" 
-                                              title="كشف حساب" 
-                                              rendered="#{(userData.userScreens['proworkorder'].add) or  userData.isAdmin}"
-                                              actionListener="#{invPurchaseInvoiceFormDTOMB.goTClientacoount}"/>
-                            <p:commandButton  id="r2"  
-                                              ajax="false"
-                                              onclick="form.target = '_blank'" 
-                                              class="saveButtons"
-                                              title="سند قبض"
-                                              value="سند قبض" 
-                                              rendered="#{(userData.userScreens['proworkorder'].add) or  userData.isAdmin}"
-                                              actionListener="#{invPurchaseInvoiceFormDTOMB.goTNotesreceivables()}"
-                                              />
-                            <p:commandButton  id="r3"  
-                                              ajax="false"
-                                              onclick="form.target = '_blank'" 
-                                              class="saveButtons"
-                                              title="مراحل الانتاج"
-                                              value="مراحل الانتاج" 
-                                              action="#{invPurchaseInvoiceFormDTOMB.goTInvoiceMovementReport()}"
-                                              />
-                            <p:commandButton  id="r4"  
-                                              ajax="false"
-                                              onclick="form.target = '_blank'" 
-                                              class="saveButtons"
-                                              title="تسليم الفاتورة"
-                                              value="تسليم الفاتورة" 
-                                              rendered="#{(userData.userScreens['proworkorder'].add) or  userData.isAdmin}"
-                                              actionListener="#{invPurchaseInvoiceFormDTOMB.goTProProductionMovement()}"
-                                              />
-                            <p:commandButton  id="r5"  
-                                              ajax="false"
-                                              onclick="form.target = '_blank'" 
-                                              class="saveButtons"
-                                              title="مراحل الانتاج"
-                                              value="مراحل الانتاج" 
-                                              actionListener="#{invPurchaseInvoiceFormDTOMB.goToInvoiceProductionStageReport()}"
-                                              />
-
-                        </div>
-
-
-
-                    </div>
-
-                    <div class="ui-g-4 ui-xl-4" style="margin-top: -2%;" >
-
-                        <div style="text-align: center">
-
-                            <p:commandButton  id="saveB" 
-                                              class="saveButtons"
-                                              title="#{userData.userDDs['SAVE']}"
-                                              value="#{userData.userDDs['SAVE']}" 
-                                              action="#{invPurchaseInvoiceFormDTOMB.save()}"
-                                              rendered="#{(userData.userScreens['proworkorder'].edit) or invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id eq null or userData.isAdmin}"
-                                              update="@form"/>
-
-
-                            <p:commandButton 
-                                id="newN"
-                                ajax="false"
-                                value="#{userData.userDDs['NEW']}" 
-                                class="newButtons"
-                                onclick="form.target = ''" 
-                                rendered="#{(userData.userScreens['proworkorder'].add) or  userData.isAdmin}"
-                                actionListener="#{invPurchaseInvoiceFormDTOMB.reset()}"/>
-
-                            
-
-                            <p:commandButton  class="printButtons"
-                                              ajax="false"
-                                              onclick="form.target = '_blank'"  
-                                              rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id != null}"
-                                              value="#{userData.userDDs['PRINT']}" 
-                                              title="#{userData.userDDs['PRINT']}" 
-                                              actionListener="#{invPurchaseInvoiceFormDTOMB.print}"/>
-
-                            <p:commandButton  class="deleteButtons" 
-                                              id="cancel" 
-                                              title="#{userData.userDDs['CANCEL']}" 
-                                              value="#{userData.userDDs['CANCEL']}" 
-                                              immediate="true"
-                                              action="#{invPurchaseInvoiceFormDTOMB.exit()}" 
-                                              update="@form"/>
-
-                            <h:commandLink  style="float:left" class="sdcreenimg" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id ne null}">  
-                                <p:graphicImage name="/img/excel.jpg" width="24" style='margin-right:25%;'/>  
-                                <p:dataExporter type="xls"
-                                                target="invPurchaseInvoiceDetailsTable" 
-                                                fileName="فاتورة المبيعات"
-                                                preProcessor="#{invPurchaseInvoiceFormDTOMB.preProcessXLS()}"
-                                                postProcessor="#{invPurchaseInvoiceFormDTOMB.postProcessXLS}" />  
-                            </h:commandLink>
-
-                            <p:blockUI block="form" trigger="saveB " animate="true" >
-
-                                <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
-
-                            </p:blockUI> 
-
-
-                        </div>
-                    </div>
-
 
                     <div class="ui-g-12 ui-xl-12" >
                         <p:fieldset id="fieldSetId" legend="تفاصيل أمر الشغل"   >
@@ -800,7 +836,7 @@
 
 
 
-                                <p:column style="width: 11vh;text-align: -webkit-auto;border-radius: 0px; font-size: 14px;"
+                                <p:column style="width: 10vh;text-align: -webkit-auto;border-radius: 0px; font-size: 14px;"
                                           id="QuantityOu" 
                                           headerText="الكمية"
                                           filterBy="#{invPurchaseInvoiceDetailsTable.quantityOfOneUnit}" 
@@ -817,7 +853,7 @@
 
                                 </p:column>
 
-                                <p:column style="width: 11vh;text-align: -webkit-auto;border-radius: 0px; font-size: 14px;"
+                                <p:column style="width: 9vh;text-align: -webkit-auto;border-radius: 0px; font-size: 14px;"
                                           id="NUMBERe"
                                           headerText="#{userData.userDDs['NUMBER']}"
                                           filterBy="#{invPurchaseInvoiceDetailsTable.number}" 
@@ -837,7 +873,7 @@
                                 </p:column>
 
 
-                                <p:column style="width: 11vh;text-align: left;border-radius: 0px; font-size: 14px;"
+                                <p:column style="width: 9vh;text-align: left;border-radius: 0px; font-size: 14px;"
                                           id="Quantity"
                                           headerText="ك ك"
                                           filterBy="#{invPurchaseInvoiceDetailsTable.quantity}" 
@@ -866,7 +902,7 @@
 
                                 </p:column>
 
-                                <p:column style="width: 10vh;text-align: -webkit-auto;border-radius: 0px" id="COST" headerText="#{userData.userDDs['PRICE']}"
+                                <p:column style="width: 15vh;text-align: -webkit-auto;border-radius: 0px" id="COST" headerText="#{userData.userDDs['PRICE']}"
                                           filterBy="#{invPurchaseInvoiceDetailsTable.cost}" 
                                           filterMatchMode="contains" 
                                           sortBy="#{invPurchaseInvoiceDetailsTable.cost}"
@@ -874,7 +910,7 @@
                                     <p:inputText id="costTt" 
                                                  value="#{invPurchaseInvoiceDetailsTable.cost}"
                                                  disabled="#{invPurchaseInvoiceDetailsTable.showPrice}"
-                                                 style="width:95%; text-align: left;">
+                                                 style="width:95%; text-align: right;">
                                         <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.validatePriceColumn(invPurchaseInvoiceDetailsTable)}" 
                                                 update="netId totalQuantity   totalNet form:totalActualWeight form:totalNetAfterDiscount form:totalWithTaxValue form:remain form:taxvalue QuantityT NUMBER QuantityOu "/>
                                     </p:inputText>      
@@ -974,22 +1010,7 @@
 
                 </p:fieldset>
             </div>
-            <p:commandButton     class="saveButton"  
-                                 title="العرض"
-                                 value="عرض القطعتين و الثالثة هدية" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 1 and false}"
-                                 icon="fa fa-fw fa-save" 
-                                 action="#{invPurchaseInvoiceFormDTOMB.twoPieceAndThirdFreeOffer()}"
-                                 update="@form"
-                                 >
-            </p:commandButton>
-            <p:commandButton     class="saveButton"  
-                                 title="العرض"
-                                 value="عرض الخصم 25 %" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 0 and false}"
-                                 icon="fa fa-fw fa-save" 
-                                 action="#{invPurchaseInvoiceFormDTOMB.discount25ForAll()}"
-                                 update="@form"
-                                 >
-            </p:commandButton>
+            x
 
 
             <h:panelGrid columns="1" cellpadding="5">

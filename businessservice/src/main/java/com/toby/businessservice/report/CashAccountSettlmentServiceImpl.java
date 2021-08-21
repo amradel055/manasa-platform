@@ -547,7 +547,8 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
         } else if (cashAccountSettlementSearchBean.getOrderBy() == 2) {
             sql = sql + " order by cas.serial asc , cas.bankId asc ,cas.date ,cas.ordered ";
         }
-        return dao.findListByQuery(sql, params);
+        List<CashAccountSettlmentView> list = dao.findListByQuery(sql, params);
+        return list;
     }
 
     @Override
@@ -1237,6 +1238,9 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
             cashAccountSettlment.setSerial(cashAccountSettlmentView.getSerial() != null ? cashAccountSettlmentView.getSerial() + "" : null);
             cashAccountSettlment.setTransactionTypeNumber(cashAccountSettlmentView.getTypeId());
             cashAccountSettlment.setCreatedBy(cashAccountSettlmentView.getCreatedBy());
+            cashAccountSettlment.setCustomerName(cashAccountSettlmentView.getCustomerName());
+            cashAccountSettlment.setCustomerCode(cashAccountSettlmentView.getCustomerCode());
+            cashAccountSettlment.setInvoiceNumber(cashAccountSettlmentView.getInvoiceNumber());
 
             if (cashAccountSettlmentView.getStatus() != null) {
                 if (cashAccountSettlementSearchBean.getCurrencyType() == 1) {

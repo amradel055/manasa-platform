@@ -45,7 +45,7 @@ public class PurchaseOfItemsBySuppliersReportServiceImpl implements PurchaseOfIt
         appendDate(purchaseOfItemsBySuppliersSearchBean, stringBuilder, params);
         appendSupplier(purchaseOfItemsBySuppliersSearchBean, stringBuilder, params);
         appendSerial(purchaseOfItemsBySuppliersSearchBean, stringBuilder, params);
-        appendInventory(purchaseOfItemsBySuppliersSearchBean, stringBuilder, params);
+        appendInventoryNew(purchaseOfItemsBySuppliersSearchBean, stringBuilder, params);
         appendItem(purchaseOfItemsBySuppliersSearchBean, stringBuilder, params);
         appendPaymentType(purchaseOfItemsBySuppliersSearchBean, stringBuilder, params);
         stringBuilder.append(" order by isv.date ASC,isv.itemId ASC");
@@ -87,7 +87,7 @@ public class PurchaseOfItemsBySuppliersReportServiceImpl implements PurchaseOfIt
         appendDate(purchaseOfItemsBySuppliersSearchBean, stringBuilder, params);
         appendSupplier(purchaseOfItemsBySuppliersSearchBean, stringBuilder, params);
         appendSerial(purchaseOfItemsBySuppliersSearchBean, stringBuilder, params);
-        appendInventory(purchaseOfItemsBySuppliersSearchBean, stringBuilder, params);
+        appendInventoryNew(purchaseOfItemsBySuppliersSearchBean, stringBuilder, params);
         appendItem(purchaseOfItemsBySuppliersSearchBean, stringBuilder, params);
         appendPaymentType(purchaseOfItemsBySuppliersSearchBean, stringBuilder, params);
         stringBuilder.append(" order by isv.date ASC,isv.itemId ASC");
@@ -175,6 +175,19 @@ public class PurchaseOfItemsBySuppliersReportServiceImpl implements PurchaseOfIt
         if (purchaseOfItemsBySuppliersSearchBean.getToInventoryName() != null) {
             params.put("ToInventory", purchaseOfItemsBySuppliersSearchBean.getToInventoryName().getId());
             stringBuilder.append(" AND ipid.invInventoryId.id <= :ToInventory");
+        }
+
+    }
+    private void appendInventoryNew(PurchaseOfItemsBySuppliersSearchBean purchaseOfItemsBySuppliersSearchBean, StringBuilder stringBuilder, Map<String, Object> params) {
+
+        if (purchaseOfItemsBySuppliersSearchBean.getFromInventoryName() != null) {
+            params.put("FromInventory", purchaseOfItemsBySuppliersSearchBean.getFromInventoryName().getId());
+            stringBuilder.append(" AND isv.inventoryId >= :FromInventory");
+        }
+
+        if (purchaseOfItemsBySuppliersSearchBean.getToInventoryName() != null) {
+            params.put("ToInventory", purchaseOfItemsBySuppliersSearchBean.getToInventoryName().getId());
+            stringBuilder.append(" AND isv.inventoryId <= :ToInventory");
         }
 
     }
@@ -339,7 +352,7 @@ public class PurchaseOfItemsBySuppliersReportServiceImpl implements PurchaseOfIt
         appendDate(purchaseOfItemsBySuppliersSearchBean, stringBuilder, params);
         appendSupplier(purchaseOfItemsBySuppliersSearchBean, stringBuilder, params);
         appendSerial(purchaseOfItemsBySuppliersSearchBean, stringBuilder, params);
-        appendInventory(purchaseOfItemsBySuppliersSearchBean, stringBuilder, params);
+        appendInventoryNew(purchaseOfItemsBySuppliersSearchBean, stringBuilder, params);
         appendItem(purchaseOfItemsBySuppliersSearchBean, stringBuilder, params);
         appendPaymentType(purchaseOfItemsBySuppliersSearchBean, stringBuilder, params);
 

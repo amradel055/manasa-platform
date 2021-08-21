@@ -94,7 +94,20 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
             setInvInvoiceDTO(invPurchaseInvoiceService.save(getInvInvoiceDTO(), getUserData().getUser()));
             setOrganizationSiteId(getInvInvoiceDTO().getOrganizationSiteId());
             msgSave(getInvInvoiceDTO().getMsg());
-
+            if (getUri().contains("proworkorderform")) {
+                StringBuilder message = new StringBuilder();
+                message.append("عميلنا العزيز ، شكراً لتسوقك من برنس تمت عملية شراء رقم ");
+                message.append(getInvInvoiceDTO().getSerial());
+                message.append(" المدفوع ");
+                message.append(getInvInvoiceDTO().getPayed());
+                message.append(" المتبقي ");
+                message.append(getInvInvoiceDTO().getRemain());
+                if (getInvInvoiceDTO().getInvnameType() != null && getInvInvoiceDTO().getInvnameType() == 0) {
+                    sendSms(getInvInvoiceDTO().getCustomerMobile(), "التوبى العالمى", message.toString(), "20099319", "0564933202");
+                } else if (getInvInvoiceDTO().getInvnameType() != null && getInvInvoiceDTO().getInvnameType() == 1) {
+                    sendSms(getInvInvoiceDTO().getCustomerMobile(), "التوبى العالمى", message.toString(), "20099320", "Royal@e12z");
+                }
+            }
         } else {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "لا يوجد تفاصيل للفاتورة"));

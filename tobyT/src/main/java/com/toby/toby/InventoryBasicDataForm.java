@@ -468,13 +468,13 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
             if (getInvInvoiceDTO().getGallaryId().getInvName() == 1) {
                 twoPieceAndThirdFreeOffer();
             } else if (getInvInvoiceDTO().getGallaryId().getInvName() == 0) {
-                discount25ForAll();
+                discount25ForAll(25);
             }
             updateSummition();
         }
     }
 
-    public void discount25ForAll() {
+    public void discount25ForAll(Integer number) {
         for (InvDetailDTO detailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
             if (detailDTO.getItemsBarcodesDetail() == null && detailDTO.getItemsBarcodesDetailTrans() != null) {
                 detailDTO.setItemsBarcodesDetail(detailDTO.getItemsBarcodesDetailTrans());
@@ -483,7 +483,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
             if (detailDTO.getItemId() != null
                     && detailDTO.getItemId().getProGroupId() != null
                     && detailDTO.getItemId().getProGroupId().getId() != null && detailDTO.getItemId().getProGroupId().getId() != 5 && detailDTO.getItemId().getId() != 22194) {
-                detailDTO.setDiscount(new BigDecimal(25));
+                detailDTO.setDiscount(new BigDecimal(number));
             }
         }
         updateSummition();
