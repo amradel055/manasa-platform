@@ -5,7 +5,7 @@
  */
 package com.isag.businessservice;
 
-import com.isag.entity.IsagPrivilege;
+import com.isag.entity.IgmaPrivilege;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -16,15 +16,15 @@ import javax.ejb.Remote;
 @Remote
 public interface PrivilegeService {
 
-    public List<IsagPrivilege> getRolePrivileges(Integer roleId);
+    public List<IgmaPrivilege> getRolePrivileges(Integer roleId);
 
-    public IsagPrivilege save(IsagPrivilege privilege);
+    public IgmaPrivilege save(IgmaPrivilege privilege);
     
-    public void save(List<IsagPrivilege> privilege);
+    public void save(List<IgmaPrivilege> privilege);
 
-    public IsagPrivilege getUserPrivilegeOnScreen(Integer userId, String entityName);
+    public IgmaPrivilege getUserPrivilegeOnScreen(Integer userId, String entityName);
 
-    public List<IsagPrivilege> getUserPrivileges(Integer userId, Integer branchId);
+    public List<IgmaPrivilege> getUserPrivileges(Integer userId, Integer branchId);
 
     public void revokeAllPrivilege(Integer id);
     

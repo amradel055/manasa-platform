@@ -5,15 +5,14 @@
  */
 package com.isag.isag;
 
-import com.isag.businessservice.IsagUserRoleService;
 import com.isag.businessservice.PathService;
 import com.isag.businessservice.PrivilegeService;
-import com.isag.dto.IsagNotificationSettingDTO;
+import com.isag.dto.IgmaNotificationSettingDTO;
 import com.isag.entity.Branch;
-import com.isag.entity.IsagCompany;
-import com.isag.entity.IsagPrivilege;
-import com.isag.entity.IsagUser;
-import com.isag.entity.IsagUserRole;
+import com.isag.entity.IgmaCompany;
+import com.isag.entity.IgmaPrivilege;
+import com.isag.entity.IgmaUser;
+import com.isag.entity.IgmaUserRole;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -37,6 +36,7 @@ import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
+import com.isag.businessservice.IgmaUserRoleService;
 
 /**
  *
@@ -49,15 +49,15 @@ public class UserData extends Basic implements Serializable {
     @EJB
     private PrivilegeService privilegeService;
     @EJB
-    private IsagUserRoleService userRoleService;
+    private IgmaUserRoleService userRoleService;
     @EJB
     private PathService pathService;
     private String dir;
-    private IsagUser user;
+    private IgmaUser user;
     private StreamedContent graphicImage;
-    private IsagCompany company;
-    private List<IsagPrivilege> userPrivileges;
-    private Map<String, IsagPrivilege> userScreens = new HashMap<>();
+    private IgmaCompany company;
+    private List<IgmaPrivilege> userPrivileges;
+    private Map<String, IgmaPrivilege> userScreens = new HashMap<>();
     private Integer rowListCount;
     private Integer rowListMasterDetails;
     private Integer master;
@@ -71,7 +71,7 @@ public class UserData extends Basic implements Serializable {
 
     private Branch userBranch;
 
-    private IsagUserRole isagUserRole;
+    private IgmaUserRole isagUserRole;
 
     private List<Branch> branches;
 
@@ -81,7 +81,7 @@ public class UserData extends Basic implements Serializable {
 
     private String imageReportPath;
 
-    private IsagNotificationSettingDTO isagNotificationSettingDTO;
+    private IgmaNotificationSettingDTO isagNotificationSettingDTO;
 
     Path path;
 
@@ -239,48 +239,48 @@ public class UserData extends Basic implements Serializable {
     /**
      * @return the user
      */
-    public IsagUser getUser() {
+    public IgmaUser getUser() {
         return user;
     }
 
     /**
      * @param user the user to set
      */
-    public void setUser(IsagUser user) {
+    public void setUser(IgmaUser user) {
         this.user = user;
     }
 
     /**
      * @return the company
      */
-    public IsagCompany getCompany() {
+    public IgmaCompany getCompany() {
         return company;
     }
 
     /**
      * @param company the company to set
      */
-    public void setCompany(IsagCompany company) {
+    public void setCompany(IgmaCompany company) {
         this.company = company;
     }
 
     /**
      * @return the userPrivileges
      */
-    public List<IsagPrivilege> getUserPrivileges() {
+    public List<IgmaPrivilege> getUserPrivileges() {
         return userPrivileges;
     }
 
     /**
      * @param userPrivileges the userPrivileges to set
      */
-    public void setUserPrivileges(List<IsagPrivilege> userPrivileges) {
+    public void setUserPrivileges(List<IgmaPrivilege> userPrivileges) {
         this.userPrivileges = userPrivileges;
         userScreens = new HashMap();
         if (userPrivileges == null) {
             return;
         }
-        for (IsagPrivilege priv : userPrivileges) {
+        for (IgmaPrivilege priv : userPrivileges) {
             if (userScreens.get(priv.getScreenId().getName()) == null && priv.getView()) {
                 userScreens.put(priv.getScreenId().getName(), priv);
             }
@@ -350,8 +350,8 @@ public class UserData extends Basic implements Serializable {
                 return;
             }
             if (!userData.isAdmin) {
-                IsagUserRole userRole = userRoleService.findUserRoleByUserIdAndBranch(userData.getUser().getId(), selectedBranch);
-                IsagPrivilege privilege = privilegeService.getUserPrivilegeOnScreen(userRole.getRoleId().getId(), entity);
+                IgmaUserRole userRole = userRoleService.findUserRoleByUserIdAndBranch(userData.getUser().getId(), selectedBranch);
+                IgmaPrivilege privilege = privilegeService.getUserPrivilegeOnScreen(userRole.getRoleId().getId(), entity);
                 setIsagUserRole(userRole);
                 if (privilege == null || privilege.getView() == null || !privilege.getView()) {
                     fc.getExternalContext().redirect("../base/error.xhtml");
@@ -369,14 +369,14 @@ public class UserData extends Basic implements Serializable {
     /**
      * @return the userScreens
      */
-    public Map<String, IsagPrivilege> getUserScreens() {
+    public Map<String, IgmaPrivilege> getUserScreens() {
         return userScreens;
     }
 
     /**
      * @param userScreens the userScreens to set
      */
-    public void setUserScreens(Map<String, IsagPrivilege> userScreens) {
+    public void setUserScreens(Map<String, IgmaPrivilege> userScreens) {
         this.userScreens = userScreens;
     }
 
@@ -573,28 +573,28 @@ public class UserData extends Basic implements Serializable {
     /**
      * @return the isagNotificationSettingDTO
      */
-    public IsagNotificationSettingDTO getIsagNotificationSettingDTO() {
+    public IgmaNotificationSettingDTO getIsagNotificationSettingDTO() {
         return isagNotificationSettingDTO;
     }
 
     /**
      * @param isagNotificationSettingDTO the isagNotificationSettingDTO to set
      */
-    public void setIsagNotificationSettingDTO(IsagNotificationSettingDTO isagNotificationSettingDTO) {
+    public void setIsagNotificationSettingDTO(IgmaNotificationSettingDTO isagNotificationSettingDTO) {
         this.isagNotificationSettingDTO = isagNotificationSettingDTO;
     }
 
     /**
      * @return the isagUserRole
      */
-    public IsagUserRole getIsagUserRole() {
+    public IgmaUserRole getIsagUserRole() {
         return isagUserRole;
     }
 
     /**
      * @param isagUserRole the isagUserRole to set
      */
-    public void setIsagUserRole(IsagUserRole isagUserRole) {
+    public void setIsagUserRole(IgmaUserRole isagUserRole) {
         this.isagUserRole = isagUserRole;
     }
 

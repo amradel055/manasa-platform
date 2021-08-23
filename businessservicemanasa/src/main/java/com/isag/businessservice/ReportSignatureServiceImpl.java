@@ -7,7 +7,7 @@ package com.isag.businessservice;
 
 import com.isag.core.GenericDAO;
 import com.isag.dto.ReportSignatureDTO;
-import com.isag.entity.IsagUser;
+import com.isag.entity.IgmaUser;
 import com.isag.entity.ReportSignature;
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,7 +28,7 @@ public class ReportSignatureServiceImpl implements ReportSignatureService {
     private GenericDAO dao;
 
     @Override
-    public ReportSignatureDTO addReportSignature(ReportSignatureDTO reportSignatureDTO, IsagUser isagUser) {
+    public ReportSignatureDTO addReportSignature(ReportSignatureDTO reportSignatureDTO, IgmaUser isagUser) {
         String error = validation(reportSignatureDTO);
         if (error == null || error.isEmpty()) {
             ReportSignature reportSignature = mapFromDTO(reportSignatureDTO, isagUser);
@@ -41,7 +41,7 @@ public class ReportSignatureServiceImpl implements ReportSignatureService {
     }
 
     @Override
-    public void deleteReportSignatureDTO(ReportSignatureDTO reportSignatureDTO, IsagUser isagUser) {
+    public void deleteReportSignatureDTO(ReportSignatureDTO reportSignatureDTO, IgmaUser isagUser) {
         ReportSignature reportSignature = mapFromDTO(reportSignatureDTO, isagUser);
         dao.deleteEntity(reportSignature);
     }
@@ -108,7 +108,7 @@ public class ReportSignatureServiceImpl implements ReportSignatureService {
         return dTO;
     }
 
-    private ReportSignature mapFromDTO(ReportSignatureDTO dTO, IsagUser isagUser) {
+    private ReportSignature mapFromDTO(ReportSignatureDTO dTO, IgmaUser isagUser) {
         ReportSignature entity = new ReportSignature();
         entity.setSignature1(dTO.getSignature1());
         entity.setSignature2(dTO.getSignature2());
@@ -121,7 +121,7 @@ public class ReportSignatureServiceImpl implements ReportSignatureService {
             entity.setCreatedBy(isagUser);
             entity.setCreationDate(new Date());
         } else {
-            IsagUser isagUser1 = new IsagUser();
+            IgmaUser isagUser1 = new IgmaUser();
             isagUser1.setId(dTO.getCreatedBy());
             entity.setCreatedBy(isagUser1);
             entity.setCreationDate(dTO.getCreatedDate());

@@ -10,9 +10,9 @@ import com.isag.dto.DocumentsDTO;
 import com.isag.dto.LessonDTO;
 import com.isag.dto.SchoolStagesGuideDTO;
 import com.isag.entity.Branch;
-import com.isag.entity.IsagCompany;
+import com.isag.entity.IgmaCompany;
 import com.isag.entity.Lesson;
-import com.isag.entity.IsagUser;
+import com.isag.entity.IgmaUser;
 import com.isag.entity.SchoolStagesGuide;
 import java.util.ArrayList;
 import java.util.Date;
@@ -126,7 +126,7 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
-    public LessonDTO save(LessonDTO lessonDTO, IsagUser isagUser) {
+    public LessonDTO save(LessonDTO lessonDTO, IgmaUser isagUser) {
         LessonDTO msg = new LessonDTO();
         Lesson lesson = null;
         if (lessonDTO.getId() != null) {
@@ -137,12 +137,12 @@ public class LessonServiceImpl implements LessonService {
                 && lessonDTO.getLessonType() != null
                 && lessonDTO.getMonthId() != null) {
             if (isagUser == null) {
-                isagUser = new IsagUser();
+                isagUser = new IgmaUser();
                 isagUser.setId(61);
                 Branch branch = new Branch();
                 branch.setId(lessonDTO.getBranchId());
                 isagUser.setBranchId(branch);
-                IsagCompany isagCompany = new IsagCompany();
+                IgmaCompany isagCompany = new IgmaCompany();
                 isagCompany.setId(lessonDTO.getCompanyId());
                 isagUser.setCompanyId(isagCompany);
             }
@@ -216,7 +216,7 @@ public class LessonServiceImpl implements LessonService {
         return dTO;
     }
 
-    private Lesson mapToEntity(LessonDTO dTO, IsagUser isagUser, Lesson entity) {
+    private Lesson mapToEntity(LessonDTO dTO, IgmaUser isagUser, Lesson entity) {
         if (entity == null) {
             entity = new Lesson();
         }

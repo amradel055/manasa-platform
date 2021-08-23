@@ -8,9 +8,9 @@ package com.isag.businessservice;
 import com.isag.core.GenericDAO;
 import com.isag.dto.MediaDTO;
 import com.isag.entity.Branch;
-import com.isag.entity.IsagCompany;
+import com.isag.entity.IgmaCompany;
 import com.isag.entity.Media;
-import com.isag.entity.IsagUser;
+import com.isag.entity.IgmaUser;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -46,7 +46,7 @@ public class MediaServiceImpl implements MediaService {
     }
 
     @Override
-    public MediaDTO save(MediaDTO mediaDTO, IsagUser isagUser) {
+    public MediaDTO save(MediaDTO mediaDTO, IgmaUser isagUser) {
         MediaDTO msg = new MediaDTO();
         Media media = null;
         if (mediaDTO.getId() != null) {
@@ -55,12 +55,12 @@ public class MediaServiceImpl implements MediaService {
         if (mediaDTO != null && mediaDTO.getMediaLink() != null
                 && mediaDTO.getMediaType() != null) {
             if (isagUser == null) {
-                isagUser = new IsagUser();
+                isagUser = new IgmaUser();
                 isagUser.setId(61);
                 Branch branch = new Branch();
                 branch.setId(mediaDTO.getBranchId());
                 isagUser.setBranchId(branch);
-                IsagCompany isagCompany = new IsagCompany();
+                IgmaCompany isagCompany = new IgmaCompany();
                 isagCompany.setId(mediaDTO.getCompanyId());
                 isagUser.setCompanyId(isagCompany);
             }
@@ -120,7 +120,7 @@ public class MediaServiceImpl implements MediaService {
         return dTO;
     }
 
-    private Media mapToEntity(MediaDTO dTO, IsagUser isagUser, Media entity) {
+    private Media mapToEntity(MediaDTO dTO, IgmaUser isagUser, Media entity) {
         if (entity == null) {
             entity = new Media();
         }

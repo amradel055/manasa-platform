@@ -9,9 +9,9 @@ import com.isag.core.GenericDAO;
 import com.isag.dto.MnsLoginExamDTO;
 import com.isag.entity.Branch;
 import com.isag.entity.Exams;
-import com.isag.entity.IsagCompany;
+import com.isag.entity.IgmaCompany;
 import com.isag.entity.MnsLoginExam;
-import com.isag.entity.IsagUser;
+import com.isag.entity.IgmaUser;
 import com.isag.entity.Student;
 import java.util.ArrayList;
 import java.util.Date;
@@ -58,19 +58,19 @@ public class MnsLoginExamServiceImpl implements MnsLoginExamService {
         return null;
     }
 
-    public MnsLoginExamDTO save(MnsLoginExamDTO loginExamDTO, IsagUser isagUser) {
+    public MnsLoginExamDTO save(MnsLoginExamDTO loginExamDTO, IgmaUser isagUser) {
         MnsLoginExamDTO msg = new MnsLoginExamDTO();
         MnsLoginExam loginExam = null;
 
         if (loginExamDTO != null && loginExamDTO.getExamId() != null
                 && loginExamDTO.getStudentId() != null) {
             if (isagUser == null) {
-                isagUser = new IsagUser();
+                isagUser = new IgmaUser();
                 isagUser.setId(61);
                 Branch branch = new Branch();
                 branch.setId(loginExamDTO.getBranchId());
                 isagUser.setBranchId(branch);
-                IsagCompany isagCompany = new IsagCompany();
+                IgmaCompany isagCompany = new IgmaCompany();
                 isagCompany.setId(loginExamDTO.getCompanyId());
                 isagUser.setCompanyId(isagCompany);
             }
@@ -136,7 +136,7 @@ public class MnsLoginExamServiceImpl implements MnsLoginExamService {
         return dTO;
     }
 
-    private MnsLoginExam mapToEntity(MnsLoginExamDTO dTO, IsagUser isagUser, MnsLoginExam entity) {
+    private MnsLoginExam mapToEntity(MnsLoginExamDTO dTO, IgmaUser isagUser, MnsLoginExam entity) {
 
         if (entity == null) {
             entity = new MnsLoginExam();

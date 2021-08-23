@@ -7,7 +7,7 @@ package com.isag.branch;
 
 import com.isag.businessservice.BranchService;
 import com.isag.entity.Branch;
-import com.isag.entity.IsagCompany;
+import com.isag.entity.IgmaCompany;
 import com.isag.isag.BaseListBean;
 import com.isag.isag.UserData;
 import java.io.Serializable;
@@ -165,7 +165,7 @@ public class BranchListBean extends BaseListBean implements Serializable {
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
             userData = (UserData) context.getSessionMap().get("userLogInData");
             if (userData != null) {
-                IsagCompany companyId = userData.getCompany();
+                IgmaCompany companyId = userData.getCompany();
                 if (companyId != null && companyId.getId() != null) {
                     branches = brancheService.getAllBranchByCompanyId(companyId.getId());
                 } else {

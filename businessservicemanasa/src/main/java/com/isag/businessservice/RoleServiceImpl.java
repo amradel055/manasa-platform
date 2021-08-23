@@ -6,7 +6,7 @@
 package com.isag.businessservice;
 
 import com.isag.core.GenericDAO;
-import com.isag.entity.IsagRole;
+import com.isag.entity.IgmaRole;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -22,33 +22,33 @@ public class RoleServiceImpl implements RoleService {
     private GenericDAO dao;
 
     @Override
-    public List<IsagRole> getAllRoles() {
-        return dao.findAll(IsagRole.class);
+    public List<IgmaRole> getAllRoles() {
+        return dao.findAll(IgmaRole.class);
 
     }
 
     @Override
-    public IsagRole addRole(IsagRole role) {
+    public IgmaRole addRole(IgmaRole role) {
         return dao.updateEntity(role);
     }
 
     @Override
-    public IsagRole findRole(Integer roleId) {
-        return dao.findEntityById(IsagRole.class, roleId);
+    public IgmaRole findRole(Integer roleId) {
+        return dao.findEntityById(IgmaRole.class, roleId);
     }
 
     @Override
-    public IsagRole updateRole(IsagRole role) {
+    public IgmaRole updateRole(IgmaRole role) {
         return dao.updateEntity(role);
     }
 
     @Override
-    public List<IsagRole> getAllRolesListByCompanyId(Integer companyId ) {
-        return dao.findEntityListByCompanyId(IsagRole.class,companyId);
+    public List<IgmaRole> getAllRolesListByCompanyId(Integer companyId ) {
+        return dao.findEntityListByCompanyId(IgmaRole.class,companyId);
     }
 
     @Override
-    public void deleteRole(IsagRole role) {
+    public void deleteRole(IgmaRole role) {
       dao.deleteEntity(role);
     }
 

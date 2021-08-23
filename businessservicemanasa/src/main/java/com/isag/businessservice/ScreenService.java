@@ -5,7 +5,7 @@
  */
 package com.isag.businessservice;
 
-import com.isag.entity.IsagScreen;
+import com.isag.entity.IgmaScreen;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -16,7 +16,7 @@ import javax.ejb.Remote;
 @Remote
 public interface ScreenService {
 
-    public List<IsagScreen> getAllScreenNotAssignedToRole(Integer roleId, Integer roleParentId);
+    public List<IgmaScreen> getAllScreenNotAssignedToRole(Integer roleId, Integer roleParentId);
     
-    public List<IsagScreen> getAllScreens();
+    public List<IgmaScreen> getAllScreens();
 }

@@ -5,9 +5,9 @@
  */
 package com.isag.bussinessservice.global;
 
-import com.isag.businessservice.IsagErrorService;
-import com.isag.dto.IsagErrorDTO;
+import com.isag.dto.IgmaErrorDTO;
 import javax.ejb.EJB;
+import com.isag.businessservice.IgmaErrorService;
 
 /**
  *
@@ -16,9 +16,9 @@ import javax.ejb.EJB;
 public class ErorrHandle {
 //    
 //    @EJB
-//    IsagErrorService isagErrorService;
+//    IgmaErrorService isagErrorService;
 //    
-//    public  void saveError(IsagErrorDTO isagErrorDTO){
+//    public  void saveError(IgmaErrorDTO isagErrorDTO){
 //        isagErrorService.save(isagErrorDTO);
 //    }
 }

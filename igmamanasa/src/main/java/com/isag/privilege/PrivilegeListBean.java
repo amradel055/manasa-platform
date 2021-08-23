@@ -5,11 +5,10 @@
  */
 package com.isag.privilege;
 
-import com.isag.businessservice.IsagUserRoleService;
 import com.isag.businessservice.PrivilegeService;
-import com.isag.entity.IsagCompany;
-import com.isag.entity.IsagPrivilege;
-import com.isag.entity.IsagRole;
+import com.isag.entity.IgmaCompany;
+import com.isag.entity.IgmaPrivilege;
+import com.isag.entity.IgmaRole;
 import com.isag.isag.BaseListBean;
 import com.isag.isag.UserData;
 import java.io.Serializable;
@@ -23,8 +22,8 @@ import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import com.isag.businessservice.RoleService;
 import com.isag.businessservice.ScreenService;
-import com.isag.entity.IsagScreen;
-import com.isag.entity.IsagUserRole;
+import com.isag.entity.IgmaScreen;
+import com.isag.entity.IgmaUserRole;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -34,6 +33,7 @@ import org.primefaces.event.SelectEvent;
 import javax.faces.event.ActionEvent;
 import org.primefaces.event.CellEditEvent;
 import org.primefaces.event.ToggleSelectEvent;
+import com.isag.businessservice.IgmaUserRoleService;
 
 /**
  *
@@ -43,23 +43,23 @@ import org.primefaces.event.ToggleSelectEvent;
 @ViewScoped
 public class PrivilegeListBean extends BaseListBean implements Serializable {
 
-    private IsagPrivilege isagPrivilegeSelected = new IsagPrivilege();
-    private Set<IsagPrivilege> isagPrivilegeSelectedList = new HashSet<>();
+    private IgmaPrivilege isagPrivilegeSelected = new IgmaPrivilege();
+    private Set<IgmaPrivilege> isagPrivilegeSelectedList = new HashSet<>();
 
-    private List<IsagPrivilege> privileges = new ArrayList<>();
+    private List<IgmaPrivilege> privileges = new ArrayList<>();
 
-    private List<IsagPrivilege> privilegesSelected = new ArrayList<>();
+    private List<IgmaPrivilege> privilegesSelected = new ArrayList<>();
 
-    private List<IsagRole> roles = new ArrayList<>();
-    private IsagRole selectedRoleId;
+    private List<IgmaRole> roles = new ArrayList<>();
+    private IgmaRole selectedRoleId;
 
     private boolean rowSelected;
     private UserData userData;
 
     private boolean operationMsg = Boolean.FALSE;
     private Integer moduleSelect;
-    private List<IsagPrivilege> moduleName;
-    private List<IsagPrivilege> ListPackup;
+    private List<IgmaPrivilege> moduleName;
+    private List<IgmaPrivilege> ListPackup;
     private Boolean viewSelect;
     private Boolean editSelect;
     private Boolean addSelect;
@@ -75,7 +75,7 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
     private ScreenService screenService;
 
     @EJB
-    private IsagUserRoleService isagUserRoleService;
+    private IgmaUserRoleService isagUserRoleService;
 
     @PostConstruct
     @Override
@@ -108,7 +108,7 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
         try {
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
             userData = (UserData) context.getSessionMap().get("userLogInData");
-            IsagCompany companyId = userData.getCompany();
+            IgmaCompany companyId = userData.getCompany();
             if (companyId != null && companyId.getId() != null) {
                 roles = roleService.getAllRolesListByCompanyId(companyId.getId());
             } else {
@@ -122,20 +122,20 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
     public void selectRole(SelectEvent event) {
         try {
             try {
-                IsagRole selectedRole;
-                List<IsagScreen> unassignedScreens;
-                selectedRole = (IsagRole) event.getObject();
+                IgmaRole selectedRole;
+                List<IgmaScreen> unassignedScreens;
+                selectedRole = (IgmaRole) event.getObject();
                 setPrivileges(privilegeService.getRolePrivileges(selectedRole.getId()));
                 setListPackup(getPrivileges());
                 if (getUserData().getIsAdmin()) {
                     unassignedScreens = screenService.getAllScreenNotAssignedToRole(selectedRole.getId(), null);
                 } else {
-                    IsagUserRole loginrole = isagUserRoleService.findUserRoleByUserIdAndBranch(userData.getUser().getId(), userData.getUserBranch().getId());
+                    IgmaUserRole loginrole = isagUserRoleService.findUserRoleByUserIdAndBranch(userData.getUser().getId(), userData.getUserBranch().getId());
                     unassignedScreens = screenService.getAllScreenNotAssignedToRole(selectedRole.getId(), loginrole.getRoleId().getId());
                 }
                 for (int i = 0; i < unassignedScreens.size(); i++) {
-                    IsagScreen screen = unassignedScreens.get(i);
-                    IsagPrivilege priv = new IsagPrivilege();
+                    IgmaScreen screen = unassignedScreens.get(i);
+                    IgmaPrivilege priv = new IgmaPrivilege();
                     priv.setAdd(Boolean.FALSE);
                     priv.setDelete(Boolean.FALSE);
                     priv.setEdit(Boolean.FALSE);
@@ -160,7 +160,7 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
     public void selectRolePrevelage(SelectEvent event) {
         try {
             try {
-                isagPrivilegeSelected = (IsagPrivilege) event.getObject();
+                isagPrivilegeSelected = (IgmaPrivilege) event.getObject();
 
                 setRowSelected(true);
                 int x = 5;
@@ -183,8 +183,8 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
 
     public void onRowEdit(RowEditEvent event) {
         try {
-            IsagPrivilege privilege = (IsagPrivilege) event.getObject();
-            List<IsagScreen> unassignedScreens;
+            IgmaPrivilege privilege = (IgmaPrivilege) event.getObject();
+            List<IgmaScreen> unassignedScreens;
             privilege.setModifiedBy(userData.getUser());
             privilege.setModificationDate(new Date());
             if (privilege.getId() != null) {
@@ -196,13 +196,13 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
                 if (getUserData().getIsAdmin()) {
                     unassignedScreens = screenService.getAllScreenNotAssignedToRole(selectedRoleId.getId(), null);
                 } else {
-                    IsagUserRole loginrole = isagUserRoleService.findUserRoleByUserIdAndBranch(userData.getUser().getId(), userData.getUserBranch().getId());
+                    IgmaUserRole loginrole = isagUserRoleService.findUserRoleByUserIdAndBranch(userData.getUser().getId(), userData.getUserBranch().getId());
                     unassignedScreens = screenService.getAllScreenNotAssignedToRole(selectedRoleId.getId(), loginrole.getId());
                 }
 //                unassignedScreens = screenService.getAllScreenNotAssignedToRole(selectedRoleId.getId());
                 for (int i = 0; i < unassignedScreens.size(); i++) {
-                    IsagScreen screen = unassignedScreens.get(i);
-                    IsagPrivilege priv = new IsagPrivilege();
+                    IgmaScreen screen = unassignedScreens.get(i);
+                    IgmaPrivilege priv = new IgmaPrivilege();
                     priv.setAdd(Boolean.FALSE);
                     priv.setDelete(Boolean.FALSE);
                     priv.setEdit(Boolean.FALSE);
@@ -322,7 +322,7 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
             if (selectedRoleId != null) {
                 try {
                     privileges = ListPackup;
-                    for (IsagPrivilege privilege : privileges) {
+                    for (IgmaPrivilege privilege : privileges) {
                         if (privilege.getId() == null) {
                             privilege.setCreatedBy(getUserData().getUser());
                             privilege.setCreationDate(new Date());
@@ -348,14 +348,14 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
 
     public void grantAll() {
         try {
-            List<IsagScreen> screens = screenService.getAllScreens();
+            List<IgmaScreen> screens = screenService.getAllScreens();
             if (privileges != null && selectedRoleId != null) {
                 privilegeService.revokeAllPrivilege(selectedRoleId.getId());
-                IsagPrivilege privilege;
+                IgmaPrivilege privilege;
                 if (getUserData().getIsAdmin()) {
-                    for (IsagScreen screen : screens) {
+                    for (IgmaScreen screen : screens) {
                         if (!"company".equals(screen.getName())) {
-                            privilege = new IsagPrivilege();
+                            privilege = new IgmaPrivilege();
                             fillPrivilage(privilege);
                             privilege.setScreenId(screen);
                             privilegeService.save(privilege);
@@ -363,7 +363,7 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
 
                     }
                 } else {
-                    for (IsagPrivilege isagPrivilege : privileges) {
+                    for (IgmaPrivilege isagPrivilege : privileges) {
                         fillPrivilage(isagPrivilege);
                         privilegeService.save(isagPrivilege);
                     }
@@ -375,7 +375,7 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
         }
     }
 
-    private void fillPrivilage(IsagPrivilege privilege) {
+    private void fillPrivilage(IgmaPrivilege privilege) {
         privilege.setAdd(Boolean.TRUE);
         privilege.setView(Boolean.TRUE);
         privilege.setDelete(Boolean.TRUE);
@@ -388,13 +388,13 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
     public void revokeAll() {
         try {
             if (privileges != null && selectedRoleId != null) {
-                List<IsagScreen> screens = screenService.getAllScreens();
+                List<IgmaScreen> screens = screenService.getAllScreens();
                 privilegeService.revokeAllPrivilege(selectedRoleId.getId());
                 // setPrivileges(privilegeService.getRolePrivileges(selectedRoleId.getId()));   
                 privileges = new ArrayList<>();
                 if (getUserData().getIsAdmin()) {
-                    for (IsagScreen screen : screens) {
-                        IsagPrivilege privilege = new IsagPrivilege();
+                    for (IgmaScreen screen : screens) {
+                        IgmaPrivilege privilege = new IgmaPrivilege();
                         privilege.setAdd(Boolean.FALSE);
                         privilege.setView(Boolean.FALSE);
                         privilege.setDelete(Boolean.FALSE);
@@ -403,7 +403,7 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
                         privileges.add(privilege);
                     }
                 } else {
-                    for (IsagPrivilege privilege : privileges) {
+                    for (IgmaPrivilege privilege : privileges) {
                         privilege.setAdd(Boolean.FALSE);
                         privilege.setView(Boolean.FALSE);
                         privilege.setDelete(Boolean.FALSE);
@@ -422,9 +422,9 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
 
     }
 
-    private void replacedetail(IsagPrivilege isagPrivilege) {
+    private void replacedetail(IgmaPrivilege isagPrivilege) {
         if (isagPrivilege != null) {
-            for (IsagPrivilege privilege : getListPackup()) {
+            for (IgmaPrivilege privilege : getListPackup()) {
                 if (privilege.getScreenId().getId().equals(isagPrivilege.getScreenId().getId())) {
                     int itemIndex = getListPackup().indexOf(privilege);
                     if (itemIndex != -1) {
@@ -444,7 +444,7 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
         }
         setModuleName(new ArrayList<>());
         if (filterText == null || filterText > 0) {
-            for (IsagPrivilege isagPrivilege : getListPackup()) {
+            for (IgmaPrivilege isagPrivilege : getListPackup()) {
                 if (isagPrivilege != null && isagPrivilege.getScreenId() != null && isagPrivilege.getScreenId().getModuleType() != null && isagPrivilege.getScreenId().getModuleType().equals(filterText)) {
                     getModuleName().add(isagPrivilege);
 
@@ -475,7 +475,7 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
 
     private Boolean[] updateViewAllSelect() {
         Boolean notActiveView = Boolean.TRUE, notActiveEdit = Boolean.TRUE, notActiveAdd = Boolean.TRUE, notActiveDelete = Boolean.TRUE;
-        for (IsagPrivilege isagPrivilege : getPrivileges()) {
+        for (IgmaPrivilege isagPrivilege : getPrivileges()) {
             if (!isagPrivilege.getView() && notActiveView) {
                 notActiveView = Boolean.FALSE;
             }
@@ -497,7 +497,7 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
     }
 
     public void updateViewColumn() {
-        for (IsagPrivilege isagPrivilege : getPrivileges()) {
+        for (IgmaPrivilege isagPrivilege : getPrivileges()) {
             isagPrivilegeSelected = isagPrivilege;
             isagPrivilegeSelected.setView(getViewSelect());
             unSelectALL();
@@ -507,7 +507,7 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
 
     public void updateEditColumn() {
 
-        for (IsagPrivilege isagPrivilege : getPrivileges()) {
+        for (IgmaPrivilege isagPrivilege : getPrivileges()) {
             isagPrivilegeSelected = isagPrivilege;
             isagPrivilegeSelected.setEdit(getEditSelect());
             behindEdit();
@@ -517,7 +517,7 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
     }
 
     public void updateAddColumn() {
-        for (IsagPrivilege isagPrivilege : getPrivileges()) {
+        for (IgmaPrivilege isagPrivilege : getPrivileges()) {
             isagPrivilegeSelected = isagPrivilege;
             isagPrivilegeSelected.setAdd(getAddSelect());
             behindAdd();
@@ -526,7 +526,7 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
     }
 
     public void updateDeleteColumn() {
-        for (IsagPrivilege isagPrivilege : getPrivileges()) {
+        for (IgmaPrivilege isagPrivilege : getPrivileges()) {
             isagPrivilegeSelected = isagPrivilege;
             isagPrivilegeSelected.setDelete(getDeleteSelect());
             behindDelete();
@@ -537,58 +537,58 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
     /**
      * @return the privileges
      */
-    public List<IsagPrivilege> getPrivileges() {
+    public List<IgmaPrivilege> getPrivileges() {
         return privileges;
     }
 
     /**
      * @param privileges the privileges to set
      */
-    public void setPrivileges(List<IsagPrivilege> privileges) {
+    public void setPrivileges(List<IgmaPrivilege> privileges) {
         this.privileges = privileges;
     }
 
-    public IsagPrivilege getIsagPrivilegeSelected() {
+    public IgmaPrivilege getIsagPrivilegeSelected() {
         return isagPrivilegeSelected;
     }
 
-    public void setIsagPrivilegeSelected(IsagPrivilege isagPrivilegeSelected) {
+    public void setIsagPrivilegeSelected(IgmaPrivilege isagPrivilegeSelected) {
         this.isagPrivilegeSelected = isagPrivilegeSelected;
     }
 
     /**
      * @return the roles
      */
-    public List<IsagRole> getRoles() {
+    public List<IgmaRole> getRoles() {
         return roles;
     }
 
     /**
      * @param roles the roles to set
      */
-    public void setRoles(List<IsagRole> roles) {
+    public void setRoles(List<IgmaRole> roles) {
         this.roles = roles;
     }
 
     /**
      * @return the selectedRoleId
      */
-    public IsagRole getSelectedRoleId() {
+    public IgmaRole getSelectedRoleId() {
         return selectedRoleId;
     }
 
     /**
      * @param selectedRoleId the selectedRoleId to set
      */
-    public void setSelectedRoleId(IsagRole selectedRoleId) {
+    public void setSelectedRoleId(IgmaRole selectedRoleId) {
         this.selectedRoleId = selectedRoleId;
     }
 
-    public Set<IsagPrivilege> getIsagPrivilegeSelectedList() {
+    public Set<IgmaPrivilege> getIsagPrivilegeSelectedList() {
         return isagPrivilegeSelectedList;
     }
 
-    public void setIsagPrivilegeSelectedList(Set<IsagPrivilege> isagPrivilegeSelectedList) {
+    public void setIsagPrivilegeSelectedList(Set<IgmaPrivilege> isagPrivilegeSelectedList) {
         this.isagPrivilegeSelectedList = isagPrivilegeSelectedList;
     }
 
@@ -608,11 +608,11 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
         this.rowSelected = rowSelected;
     }
 
-    public List<IsagPrivilege> getPrivilegesSelected() {
+    public List<IgmaPrivilege> getPrivilegesSelected() {
         return privilegesSelected;
     }
 
-    public void setPrivilegesSelected(List<IsagPrivilege> privilegesSelected) {
+    public void setPrivilegesSelected(List<IgmaPrivilege> privilegesSelected) {
         this.privilegesSelected = privilegesSelected;
     }
 
@@ -633,7 +633,7 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
     /**
      * @return the moduleName
      */
-    public List<IsagPrivilege> getModuleName() {
+    public List<IgmaPrivilege> getModuleName() {
         if (moduleName == null || moduleName.isEmpty()) {
             moduleName = new ArrayList<>();
         }
@@ -643,21 +643,21 @@ public class PrivilegeListBean extends BaseListBean implements Serializable {
     /**
      * @param moduleName the moduleName to set
      */
-    public void setModuleName(List<IsagPrivilege> moduleName) {
+    public void setModuleName(List<IgmaPrivilege> moduleName) {
         this.moduleName = moduleName;
     }
 
     /**
      * @return the ListPackup
      */
-    public List<IsagPrivilege> getListPackup() {
+    public List<IgmaPrivilege> getListPackup() {
         return ListPackup;
     }
 
     /**
      * @param ListPackup the ListPackup to set
      */
-    public void setListPackup(List<IsagPrivilege> ListPackup) {
+    public void setListPackup(List<IgmaPrivilege> ListPackup) {
         this.ListPackup = ListPackup;
     }
 

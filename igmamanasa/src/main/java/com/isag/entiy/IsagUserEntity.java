@@ -1,6 +1,6 @@
 package com.isag.entiy;
 
-import com.isag.entity.IsagRole;
+import com.isag.entity.IgmaRole;
 import com.isag.entity.Symbol;
 
 /*
@@ -18,7 +18,7 @@ public class IsagUserEntity extends NewBaseEntity {
     private String password;
     private String name;
     private Symbol lang;
-    private IsagRole roleId;
+    private IgmaRole roleId;
     private Integer branchId;
 
     public String getUserCode() {
@@ -53,11 +53,11 @@ public class IsagUserEntity extends NewBaseEntity {
         this.lang = lang;
     }
 
-    public IsagRole getRoleId() {
+    public IgmaRole getRoleId() {
         return roleId;
     }
 
-    public void setRoleId(IsagRole roleId) {
+    public void setRoleId(IgmaRole roleId) {
         this.roleId = roleId;
     }
 

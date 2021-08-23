@@ -7,7 +7,7 @@ package com.isag.businessservice;
 
 import com.isag.core.GenericDAO;
 import com.isag.dto.SymbolDTO;
-import com.isag.entity.IsagUser;
+import com.isag.entity.IgmaUser;
 import com.isag.entity.Symbol;
 import java.util.ArrayList;
 import java.util.Date;
@@ -446,7 +446,7 @@ public class SymbolServiceImpl implements SymbolService {
 
     }
 
-    public Symbol mapFromDTO(SymbolDTO dTO, IsagUser isagUser) {
+    public Symbol mapFromDTO(SymbolDTO dTO, IgmaUser isagUser) {
         Symbol entity = new Symbol();
         entity.setName(dTO.getName());
         entity.setSerial(dTO.getSerial());
@@ -457,7 +457,7 @@ public class SymbolServiceImpl implements SymbolService {
             entity.setCreationDate(new Date());
 
         } else {
-            IsagUser isagUser1 = new IsagUser();
+            IgmaUser isagUser1 = new IgmaUser();
             isagUser1.setId(dTO.getCreatedBy());
             entity.setCreatedBy(isagUser1);
             entity.setCreationDate(dTO.getCreatedDate());

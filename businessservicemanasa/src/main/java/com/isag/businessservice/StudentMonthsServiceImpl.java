@@ -8,9 +8,9 @@ package com.isag.businessservice;
 import com.isag.core.GenericDAO;
 import com.isag.dto.StudentMonthsDTO;
 import com.isag.entity.Branch;
-import com.isag.entity.IsagCompany;
+import com.isag.entity.IgmaCompany;
 import com.isag.entity.StudentMonths;
-import com.isag.entity.IsagUser;
+import com.isag.entity.IgmaUser;
 import com.isag.entity.Student;
 import java.util.ArrayList;
 import java.util.Date;
@@ -89,7 +89,7 @@ public class StudentMonthsServiceImpl implements StudentMonthsService {
     }
 
     @Override
-    public StudentMonthsDTO save(StudentMonthsDTO studentMonthsDTO, IsagUser isagUser) {
+    public StudentMonthsDTO save(StudentMonthsDTO studentMonthsDTO, IgmaUser isagUser) {
         StudentMonthsDTO msg = new StudentMonthsDTO();
         StudentMonths studentMonths = null;
         if (studentMonthsDTO.getId() != null) {
@@ -101,12 +101,12 @@ public class StudentMonthsServiceImpl implements StudentMonthsService {
                 && studentMonthsDTO.getCompanyId() != null
                 && studentMonthsDTO.getValue() != null) {
             if (isagUser == null) {
-                isagUser = new IsagUser();
+                isagUser = new IgmaUser();
                 isagUser.setId(61);
                 Branch branch = new Branch();
                 branch.setId(studentMonthsDTO.getBranchId());
                 isagUser.setBranchId(branch);
-                IsagCompany isagCompany = new IsagCompany();
+                IgmaCompany isagCompany = new IgmaCompany();
                 isagCompany.setId(studentMonthsDTO.getCompanyId());
                 isagUser.setCompanyId(isagCompany);
             }
@@ -169,7 +169,7 @@ public class StudentMonthsServiceImpl implements StudentMonthsService {
         return dTO;
     }
 
-    private StudentMonths mapToEntity(StudentMonthsDTO dTO, IsagUser isagUser, StudentMonths entity) {
+    private StudentMonths mapToEntity(StudentMonthsDTO dTO, IgmaUser isagUser, StudentMonths entity) {
         if (entity == null) {
             entity = new StudentMonths();
         }

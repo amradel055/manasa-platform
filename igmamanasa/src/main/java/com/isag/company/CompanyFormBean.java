@@ -8,7 +8,7 @@ package com.isag.company;
 import com.isag.businessservice.CompanyService;
 import com.isag.businessservice.SymbolService;
 import com.isag.entity.CompanyLanguage;
-import com.isag.entity.IsagCompany;
+import com.isag.entity.IgmaCompany;
 import com.isag.entity.Symbol;
 import com.isag.isag.BaseFormBean;
 import com.isag.isag.UserData;
@@ -51,7 +51,7 @@ public class CompanyFormBean extends BaseFormBean {
     private String address;
     private String addressEn;
     private UserData userData;
-    private IsagCompany companySave;
+    private IgmaCompany companySave;
     private String fileName;
     private String uploadedImage;
 
@@ -78,7 +78,7 @@ public class CompanyFormBean extends BaseFormBean {
     public void init() {
         try {
             load();
-            companySave = new IsagCompany();
+            companySave = new IgmaCompany();
         } catch (Exception e) {
             saveError(e, "CompanyFormBean", "init");
         }
@@ -105,7 +105,7 @@ public class CompanyFormBean extends BaseFormBean {
                         selectedLanguagesBackup.add(selectedLanguage.getId().toString());
                         selectedLanguageIds.add(selectedLanguage.getId().toString());
                     }
-                    IsagCompany company = companyService.findCompany(getCompanyId());
+                    IgmaCompany company = companyService.findCompany(getCompanyId());
                     setCompanyName(company.getName());
                     setCompanyNameEn(company.getNameEn());
                     setCompanyCode(company.getCode());
@@ -315,11 +315,11 @@ public class CompanyFormBean extends BaseFormBean {
         this.userData = userData;
     }
 
-    public IsagCompany getCompanySave() {
+    public IgmaCompany getCompanySave() {
         return companySave;
     }
 
-    public void setCompanySave(IsagCompany companySave) {
+    public void setCompanySave(IgmaCompany companySave) {
         this.companySave = companySave;
     }
 

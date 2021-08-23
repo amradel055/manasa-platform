@@ -5,10 +5,9 @@
  */
 package com.isag.report;
 
-import com.isag.businessservice.IsagScreenService;
 import com.isag.converter.IsagScreenDTOConverter;
-import com.isag.dto.IsagScreenDTO;
-import com.isag.dto.IsagSupportDTO;
+import com.isag.dto.IgmaScreenDTO;
+import com.isag.dto.IgmaSupportDTO;
 import com.isag.isag.UserData;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -17,6 +16,7 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
+import com.isag.businessservice.IgmaScreenService;
 
 /**
  *
@@ -26,18 +26,18 @@ import javax.inject.Named;
 @ViewScoped
 public class IsagSupportReportMB implements Serializable {
 
-    private IsagSupportDTO support;
+    private IgmaSupportDTO support;
     private IsagScreenDTOConverter isagScreenConverter;
 
-    private List<IsagSupportDTO> supportreturn;
+    private List<IgmaSupportDTO> supportreturn;
     
     
     private UserData userData = new UserData();
 
   
     @EJB
-    private IsagScreenService isagScreenService;
-    private List<IsagScreenDTO> isagScreenList;
+    private IgmaScreenService isagScreenService;
+    private List<IgmaScreenDTO> isagScreenList;
 
    
     @PostConstruct
@@ -46,20 +46,20 @@ public class IsagSupportReportMB implements Serializable {
     }
     
     public void reset() {
-        setSupport(new IsagSupportDTO());
+        setSupport(new IgmaSupportDTO());
     }
    
     /**
      * @return the support
      */
-    public IsagSupportDTO getSupport() {
+    public IgmaSupportDTO getSupport() {
         if (support == null) {
-            support = new IsagSupportDTO();
+            support = new IgmaSupportDTO();
         }
         return support;
     }
 
-    public List<IsagScreenDTO> findScreenBymodeule() {
+    public List<IgmaScreenDTO> findScreenBymodeule() {
         if (support != null && support.getModule() != null) {
             setIsagScreenList(isagScreenService.getAllScreens(support.getModule()));
             setIsagScreenConverter(new IsagScreenDTOConverter(isagScreenList));
@@ -70,7 +70,7 @@ public class IsagSupportReportMB implements Serializable {
     /**
      * @param support the support to set
      */
-    public void setSupport(IsagSupportDTO support) {
+    public void setSupport(IgmaSupportDTO support) {
         this.support = support;
     }
 
@@ -91,7 +91,7 @@ public class IsagSupportReportMB implements Serializable {
     /**
      * @return the isagScreenList
      */
-    public List<IsagScreenDTO> getIsagScreenList() {
+    public List<IgmaScreenDTO> getIsagScreenList() {
         if (isagScreenList == null || isagScreenList.isEmpty()) {
             isagScreenList = new ArrayList<>();
         }
@@ -101,7 +101,7 @@ public class IsagSupportReportMB implements Serializable {
     /**
      * @param isagScreenList the isagScreenList to set
      */
-    public void setIsagScreenList(List<IsagScreenDTO> isagScreenList) {
+    public void setIsagScreenList(List<IgmaScreenDTO> isagScreenList) {
         this.isagScreenList = isagScreenList;
     }
 
@@ -121,14 +121,14 @@ public class IsagSupportReportMB implements Serializable {
     /**
      * @return the supportreturn
      */
-    public List<IsagSupportDTO> getSupportreturn() {
+    public List<IgmaSupportDTO> getSupportreturn() {
         return supportreturn;
     }
 
     /**
      * @param supportreturn the supportreturn to set
      */
-    public void setSupportreturn(List<IsagSupportDTO> supportreturn) {
+    public void setSupportreturn(List<IgmaSupportDTO> supportreturn) {
         this.supportreturn = supportreturn;
     }
 

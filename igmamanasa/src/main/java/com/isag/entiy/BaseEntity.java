@@ -5,7 +5,7 @@
  */
 package com.isag.entiy;
 
-import com.isag.entity.IsagUser;
+import com.isag.entity.IgmaUser;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -19,7 +19,7 @@ public class BaseEntity implements Serializable, Cloneable {
     private Integer serial;
     private Integer counter = 0;
     private Boolean markEdit;
-    private IsagUser createdBy;
+    private IgmaUser createdBy;
     private Date creationDate;
 
     public Integer getId() {
@@ -54,11 +54,11 @@ public class BaseEntity implements Serializable, Cloneable {
         this.serial = serial;
     }
 
-    public IsagUser getCreatedBy() {
+    public IgmaUser getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(IsagUser createdBy) {
+    public void setCreatedBy(IgmaUser createdBy) {
         this.createdBy = createdBy;
     }
 

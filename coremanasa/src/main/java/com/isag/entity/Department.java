@@ -56,13 +56,13 @@ public class Department extends BaseEntity {
     private Collection<Employee> employeeCollection;
     @JoinColumn(name = "company_id", referencedColumnName = "id")
     @ManyToOne
-    private IsagCompany companyId;
+    private IgmaCompany companyId;
     @JoinColumn(name = "created_by", referencedColumnName = "id")
     @ManyToOne
-    private IsagUser createdBy;
+    private IgmaUser createdBy;
     @JoinColumn(name = "modified_by", referencedColumnName = "id")
     @ManyToOne
-    private IsagUser modifiedBy;
+    private IgmaUser modifiedBy;
     @OneToMany(mappedBy = "parentId")
     private Collection<Department> departmentCollection;
 
@@ -175,27 +175,27 @@ public class Department extends BaseEntity {
         this.employeeCollection = employeeCollection;
     }
 
-    public IsagCompany getCompanyId() {
+    public IgmaCompany getCompanyId() {
         return companyId;
     }
 
-    public void setCompanyId(IsagCompany companyId) {
+    public void setCompanyId(IgmaCompany companyId) {
         this.companyId = companyId;
     }
 
-    public IsagUser getCreatedBy() {
+    public IgmaUser getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(IsagUser createdBy) {
+    public void setCreatedBy(IgmaUser createdBy) {
         this.createdBy = createdBy;
     }
 
-    public IsagUser getModifiedBy() {
+    public IgmaUser getModifiedBy() {
         return modifiedBy;
     }
 
-    public void setModifiedBy(IsagUser modifiedBy) {
+    public void setModifiedBy(IgmaUser modifiedBy) {
         this.modifiedBy = modifiedBy;
     }
 

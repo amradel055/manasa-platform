@@ -5,10 +5,10 @@
  */
 package com.isag.isag;
 
-import com.isag.businessservice.IsagTokensService;
 import javax.ejb.EJB;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import com.isag.businessservice.IgmaTokensService;
 
 /**
  *
@@ -18,11 +18,11 @@ import javax.servlet.ServletContextListener;
 public class ServerConfig implements ServletContextListener {
 
     @EJB
-    IsagTokensService isagTokensService;
+    IgmaTokensService isagTokensService;
     
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        isagTokensService.UpdateActiveAllIsagTokenDTO(Boolean.FALSE);
+        isagTokensService.UpdateActiveAllIgmaTokenDTO(Boolean.FALSE);
     }
     
     @Override

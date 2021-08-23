@@ -6,10 +6,8 @@
 package com.isag.config;
 
 import com.isag.businessservice.BranchService;
-import com.isag.businessservice.IsagApiTokenService;
-import com.isag.businessservice.IsagUserRoleService;
 import com.isag.businessservice.PrivilegeService;
-import com.isag.dto.IsagApiTokenDTO;
+import com.isag.dto.IgmaApiTokenDTO;
 import com.isag.entity.Branch;
 import com.isag.general.GeneralService;
 import com.sun.jersey.core.util.Priority;
@@ -25,6 +23,8 @@ import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
+import com.isag.businessservice.IgmaApiTokenService;
+import com.isag.businessservice.IgmaUserRoleService;
 
 /**
  *
@@ -41,9 +41,9 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     @EJB
     private GeneralService generalService;
     @EJB
-    private IsagApiTokenService isagApiTokenService;
+    private IgmaApiTokenService isagApiTokenService;
     @EJB
-    private IsagUserRoleService userRoleService;
+    private IgmaUserRoleService userRoleService;
     @EJB
     private PrivilegeService privilegeService;
     @EJB
@@ -131,10 +131,10 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         Boolean verifyToken = generalService.verifyToken(token);
         if (verifyToken) {
             String tokenId = generalService.DecodeJWT(token);
-            IsagApiTokenDTO isagApiTokenDTO = new IsagApiTokenDTO();
+            IgmaApiTokenDTO isagApiTokenDTO = new IgmaApiTokenDTO();
             isagApiTokenDTO.setToken(token);
             isagApiTokenDTO.setTokenId(tokenId);
-            IsagApiTokenDTO apiTokenDTO = isagApiTokenService.getIsagApiTokenDTOByTokenAndTokenID(isagApiTokenDTO);
+            IgmaApiTokenDTO apiTokenDTO = isagApiTokenService.getIsagApiTokenDTOByTokenAndTokenID(isagApiTokenDTO);
             List<Branch> branchList = branchService.getAllBranchByCompanyId(apiTokenDTO.getCompanyId());
             if (branchList != null && !branchList.isEmpty()) {
                 //return Boolean.FALSE;

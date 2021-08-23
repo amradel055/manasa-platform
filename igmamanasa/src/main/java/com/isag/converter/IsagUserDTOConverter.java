@@ -5,7 +5,7 @@
  */
 package com.isag.converter;
 
-import com.isag.dto.IsagUserDTO;
+import com.isag.dto.IgmaUserDTO;
 import java.util.List;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -16,16 +16,16 @@ import javax.faces.convert.Converter;
  * @author ahmed
  */
 public class IsagUserDTOConverter implements Converter {
-     private List<IsagUserDTO> isagUserDTOList;
+     private List<IgmaUserDTO> isagUserDTOList;
 
-    public IsagUserDTOConverter(List<IsagUserDTO> users) {
+    public IsagUserDTOConverter(List<IgmaUserDTO> users) {
         this.isagUserDTOList = users;
     }
 
 
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
-        for (IsagUserDTO item : isagUserDTOList) {
+        for (IgmaUserDTO item : isagUserDTOList) {
             try {
                 Long.parseLong(value);
             } catch (Exception e) {
@@ -44,8 +44,8 @@ public class IsagUserDTOConverter implements Converter {
         try {
 
             if (value != null && !value.equals("") && !value.equals(" ")) {
-                if (((IsagUserDTO) value).getId()!= null && ((IsagUserDTO) value).getId().longValue() != 0) {
-                    IsagUserDTO codegenerator = (IsagUserDTO) value;
+                if (((IgmaUserDTO) value).getId()!= null && ((IgmaUserDTO) value).getId().longValue() != 0) {
+                    IgmaUserDTO codegenerator = (IgmaUserDTO) value;
                     return codegenerator.getId().longValue() + "";
                 } else {
                     return "";

@@ -25,8 +25,8 @@ public class NotificationDTO {
     private String token;
     private List<String> tokens;
     private List<String> images;
-    private List<IsagUserDTO> isagUserDTOList;
-    private IsagUserDTO isagUserDTOSelected;
+    private List<IgmaUserDTO> isagUserDTOList;
+    private IgmaUserDTO isagUserDTOSelected;
 
     /**
      * @return the title
@@ -174,7 +174,7 @@ public class NotificationDTO {
     /**
      * @return the isagUserDTOList
      */
-    public List<IsagUserDTO> getIsagUserDTOList() {
+    public List<IgmaUserDTO> getIsagUserDTOList() {
         if (isagUserDTOList == null || isagUserDTOList.isEmpty()) {
             isagUserDTOList = new ArrayList<>();
         }
@@ -184,21 +184,21 @@ public class NotificationDTO {
     /**
      * @param isagUserDTOList the isagUserDTOList to set
      */
-    public void setIsagUserDTOList(List<IsagUserDTO> isagUserDTOList) {
+    public void setIsagUserDTOList(List<IgmaUserDTO> isagUserDTOList) {
         this.isagUserDTOList = isagUserDTOList;
     }
 
     /**
      * @return the isagUserDTOSelected
      */
-    public IsagUserDTO getIsagUserDTOSelected() {
+    public IgmaUserDTO getIsagUserDTOSelected() {
         return isagUserDTOSelected;
     }
 
     /**
      * @param isagUserDTOSelected the isagUserDTOSelected to set
      */
-    public void setIsagUserDTOSelected(IsagUserDTO isagUserDTOSelected) {
+    public void setIsagUserDTOSelected(IgmaUserDTO isagUserDTOSelected) {
         this.isagUserDTOSelected = isagUserDTOSelected;
     }
 

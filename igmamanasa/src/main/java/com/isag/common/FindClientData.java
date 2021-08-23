@@ -5,7 +5,7 @@
  */
 package com.isag.common;
 
-import com.isag.entity.IsagUserLogin;
+import com.isag.entity.IgmaUserLogin;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 
 public class FindClientData {
 
-    public void getClientData(IsagUserLogin isagUserLogin) throws UnknownHostException, SocketException {
+    public void getClientData(IgmaUserLogin isagUserLogin) throws UnknownHostException, SocketException {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String ipAddress = request.getHeader("x_forwarded_for");
         String browserDetails = request.getHeader("User-Agent");

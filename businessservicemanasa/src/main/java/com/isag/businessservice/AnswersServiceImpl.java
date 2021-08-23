@@ -8,10 +8,10 @@ package com.isag.businessservice;
 import com.isag.core.GenericDAO;
 import com.isag.dto.AnswersDTO;
 import com.isag.entity.Branch;
-import com.isag.entity.IsagCompany;
+import com.isag.entity.IgmaCompany;
 import com.isag.entity.Answers;
 import com.isag.entity.Exams;
-import com.isag.entity.IsagUser;
+import com.isag.entity.IgmaUser;
 import com.isag.entity.Questions;
 import java.util.ArrayList;
 import java.util.Date;
@@ -56,7 +56,7 @@ public class AnswersServiceImpl implements AnswersService {
     }
 
     @Override
-    public AnswersDTO saveList(List<AnswersDTO> answersDTOList, IsagUser isagUser, Integer questionId, Integer examId) {
+    public AnswersDTO saveList(List<AnswersDTO> answersDTOList, IgmaUser isagUser, Integer questionId, Integer examId) {
         AnswersDTO answersDTO = null;
         for (AnswersDTO answersDTO1 : answersDTOList) {
             answersDTO = save(answersDTO1, isagUser, questionId, examId);
@@ -83,7 +83,7 @@ public class AnswersServiceImpl implements AnswersService {
     }
 
     @Override
-    public AnswersDTO save(AnswersDTO answersDTO, IsagUser isagUser, Integer questionId, Integer examId) {
+    public AnswersDTO save(AnswersDTO answersDTO, IgmaUser isagUser, Integer questionId, Integer examId) {
         AnswersDTO msg = new AnswersDTO();
         Answers answers = null;
         if (answersDTO.getId() != null) {
@@ -91,12 +91,12 @@ public class AnswersServiceImpl implements AnswersService {
         }
         if (answersDTO != null && questionId != null && examId != null) {
             if (isagUser == null) {
-                isagUser = new IsagUser();
+                isagUser = new IgmaUser();
                 isagUser.setId(61);
                 Branch branch = new Branch();
                 branch.setId(answersDTO.getBranchId());
                 isagUser.setBranchId(branch);
-                IsagCompany isagCompany = new IsagCompany();
+                IgmaCompany isagCompany = new IgmaCompany();
                 isagCompany.setId(answersDTO.getCompanyId());
                 isagUser.setCompanyId(isagCompany);
             }
@@ -171,7 +171,7 @@ public class AnswersServiceImpl implements AnswersService {
         return dTO;
     }
 
-    private Answers mapToEntity(AnswersDTO dTO, IsagUser isagUser, Answers entity, Integer questionId, Integer examId) {
+    private Answers mapToEntity(AnswersDTO dTO, IgmaUser isagUser, Answers entity, Integer questionId, Integer examId) {
         if (entity == null) {
             entity = new Answers();
         }

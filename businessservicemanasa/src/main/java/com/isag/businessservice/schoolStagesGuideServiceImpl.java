@@ -8,7 +8,7 @@ package com.isag.businessservice;
 import com.isag.core.GenericDAO;
 import com.isag.dto.SchoolStagesGuideDTO;
 import com.isag.entity.SchoolStagesGuide;
-import com.isag.entity.IsagUser;
+import com.isag.entity.IgmaUser;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -73,7 +73,7 @@ public class schoolStagesGuideServiceImpl implements SchoolStagesGuideService {
         return dTO;
     }
 
-    private SchoolStagesGuide mapToEntity(SchoolStagesGuideDTO dTO, IsagUser isagUser) {
+    private SchoolStagesGuide mapToEntity(SchoolStagesGuideDTO dTO, IgmaUser isagUser) {
         SchoolStagesGuide entity = new SchoolStagesGuide();
 
         entity.setName(dTO.getName());
@@ -87,7 +87,7 @@ public class schoolStagesGuideServiceImpl implements SchoolStagesGuideService {
             entity.setCreatedBy(isagUser);
             entity.setCreationDate(new Date());
         } else {
-            IsagUser isagUser1 = new IsagUser();
+            IgmaUser isagUser1 = new IgmaUser();
             isagUser1.setId(dTO.getCreatedBy());
             entity.setCreatedBy(isagUser1);
             entity.setCreationDate(dTO.getCreatedDate());

@@ -5,15 +5,12 @@
  */
 package com.isag.isag;
 
-import com.isag.businessservice.IsagErrorService;
-import com.isag.businessservice.IsagTokensService;
-import com.isag.businessservice.IsagUserLoginService;
 import com.isag.common.FindClientData;
 import com.isag.common.SendEmailSMTP;
-import com.isag.dto.IsagErrorDTO;
+import com.isag.dto.IgmaErrorDTO;
 import com.isag.entity.Branch;
-import com.isag.entity.IsagUser;
-import com.isag.entity.IsagUserLogin;
+import com.isag.entity.IgmaUser;
+import com.isag.entity.IgmaUserLogin;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -43,6 +40,9 @@ import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import com.isag.businessservice.IgmaErrorService;
+import com.isag.businessservice.IgmaTokensService;
+import com.isag.businessservice.IgmaUserLoginService;
 
 /**
  *
@@ -53,13 +53,13 @@ public class Basic implements Serializable {
     private FindClientData findClientData;
 
     @EJB
-    IsagUserLoginService isagUserLoginService;
+    IgmaUserLoginService isagUserLoginService;
     @EJB
-    IsagErrorService isagErrorService;
+    IgmaErrorService isagErrorService;
     @EJB
-    IsagTokensService isagTokensService;
+    IgmaTokensService isagTokensService;
 
-    private IsagUser userlogin;
+    private IgmaUser userlogin;
     
     private UserData userData;
     
@@ -67,7 +67,7 @@ public class Basic implements Serializable {
 
     private Branch branch;
 
-    private IsagErrorDTO isagErrorDTO;
+    private IgmaErrorDTO isagErrorDTO;
 
     private SendEmailSMTP sendEmailSMTP;
 
@@ -133,7 +133,7 @@ public class Basic implements Serializable {
     public void saveUserData(UserData userData, Boolean state) {
         try {
 
-            IsagUserLogin isagUserLogin = new IsagUserLogin();
+            IgmaUserLogin isagUserLogin = new IgmaUserLogin();
             isagUserLogin.setBranchId(userData.getUserBranch());
             isagUserLogin.setCompanyId(userData.getCompany());
             isagUserLogin.setCreatedBy(userData.getUser());
@@ -148,7 +148,7 @@ public class Basic implements Serializable {
 
 //        isagUserLogin.setMacId(getMacId());
             isagUserLogin.setUserId(userData.getUser());
-            isagTokensService.UpdateActiveIsagTokenDTObyUserID(userData.getUser().getId(), Boolean.FALSE);
+            isagTokensService.UpdateActiveIgmaTokenDTObyUserID(userData.getUser().getId(), Boolean.FALSE);
             isagUserLoginService.addIsagUserLogin(isagUserLogin);
         } catch (Exception ex) {
             saveError(ex, "Basic", "saveUserData");
@@ -156,11 +156,11 @@ public class Basic implements Serializable {
         }
     }
 
-    public IsagUser getUserlogin() {
+    public IgmaUser getUserlogin() {
         if (userlogin == null) {
-            userlogin = new IsagUser();
+            userlogin = new IgmaUser();
             ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-            userlogin = (IsagUser) externalContext.getSessionMap().get("userlogin");
+            userlogin = (IgmaUser) externalContext.getSessionMap().get("userlogin");
         }
         return userlogin;
     }
@@ -254,9 +254,9 @@ public class Basic implements Serializable {
     /**
      * @return the isagErrorDTO
      */
-    public IsagErrorDTO getIsagErrorDTO() {
+    public IgmaErrorDTO getIsagErrorDTO() {
         if (isagErrorDTO == null) {
-            isagErrorDTO = new IsagErrorDTO();
+            isagErrorDTO = new IgmaErrorDTO();
         }
         return isagErrorDTO;
     }
@@ -264,7 +264,7 @@ public class Basic implements Serializable {
     /**
      * @param isagErrorDTO the isagErrorDTO to set
      */
-    public void setIsagErrorDTO(IsagErrorDTO isagErrorDTO) {
+    public void setIsagErrorDTO(IgmaErrorDTO isagErrorDTO) {
         this.isagErrorDTO = isagErrorDTO;
     }
 

@@ -5,7 +5,7 @@
  */
 package com.isag.converter;
 
-import com.isag.dto.IsagScreenDTO;
+import com.isag.dto.IgmaScreenDTO;
 import java.util.List;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -17,16 +17,16 @@ import javax.faces.convert.Converter;
  */
 public class IsagScreenDTOConverter implements Converter {
 
-    private List<IsagScreenDTO> isagScreen;
+    private List<IgmaScreenDTO> isagScreen;
 
-    public IsagScreenDTOConverter(List<IsagScreenDTO> isagScreen) {
+    public IsagScreenDTOConverter(List<IgmaScreenDTO> isagScreen) {
         this.isagScreen = isagScreen;
     }
 
 
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
-        for (IsagScreenDTO item : isagScreen) {
+        for (IgmaScreenDTO item : isagScreen) {
             try {
                 Long.parseLong(value);
             } catch (Exception e) {
@@ -44,8 +44,8 @@ public class IsagScreenDTOConverter implements Converter {
         try {
 
             if (value != null && !value.equals("") && !value.equals(" ")) {
-                if (((IsagScreenDTO) value).getId()!= null && ((IsagScreenDTO) value).getId().longValue() != 0) {
-                    IsagScreenDTO codegenerator = (IsagScreenDTO) value;
+                if (((IgmaScreenDTO) value).getId()!= null && ((IgmaScreenDTO) value).getId().longValue() != 0) {
+                    IgmaScreenDTO codegenerator = (IgmaScreenDTO) value;
                     return codegenerator.getId().longValue() + "";
                 } else {
                     return "";

@@ -6,7 +6,7 @@
 package com.isag.businessservice;
 
 import com.isag.dto.MnsLoginExamDTO;
-import com.isag.entity.IsagUser;
+import com.isag.entity.IgmaUser;
 import javax.ejb.Remote;
 
 /**

@@ -9,7 +9,7 @@ import com.isag.businessservice.CompanyService;
 import com.isag.businessservice.GeneralSymbolService;
 import com.isag.businessservice.SymbolService;
 import com.isag.entity.GeneralSymbol;
-import com.isag.entity.IsagCompany;
+import com.isag.entity.IgmaCompany;
 import com.isag.entity.Symbol;
 import com.isag.isag.BaseFormBean;
 import com.isag.isag.UserData;
@@ -32,9 +32,9 @@ public class GeneralSymbolBean extends BaseFormBean {
 
     private List<GeneralSymbol> generalSymbol;
     private List<Symbol> symbols = new ArrayList<>();
-    private List<IsagCompany> company;
+    private List<IgmaCompany> company;
     private Integer selectedCompany;
-    private IsagCompany companyId;
+    private IgmaCompany companyId;
     private GeneralSymbol generalSymbolSelected = new GeneralSymbol();
     private Symbol symbol = new Symbol();
     private Symbol selectedSymbol = new Symbol();
@@ -161,7 +161,7 @@ public class GeneralSymbolBean extends BaseFormBean {
 //                        newSymbol.setAccountId(account);
 //                    }
                     if (userData.getIsAdmin() && selectedCompany != null) {
-                        companyId = new IsagCompany();
+                        companyId = new IgmaCompany();
                         companyId.setId(selectedCompany);
                         symbol.setCompanyId(companyId);
                         try {
@@ -335,11 +335,11 @@ public class GeneralSymbolBean extends BaseFormBean {
         this.userData = userData;
     }
 
-    public IsagCompany getCompanyId() {
+    public IgmaCompany getCompanyId() {
         return companyId;
     }
 
-    public void setCompanyId(IsagCompany companyId) {
+    public void setCompanyId(IgmaCompany companyId) {
         this.companyId = companyId;
     }
 
@@ -357,11 +357,11 @@ public class GeneralSymbolBean extends BaseFormBean {
         this.symbols = symbols;
     }
 
-    public List<IsagCompany> getCompany() {
+    public List<IgmaCompany> getCompany() {
         return company;
     }
 
-    public void setCompany(List<IsagCompany> company) {
+    public void setCompany(List<IgmaCompany> company) {
         this.company = company;
     }
 

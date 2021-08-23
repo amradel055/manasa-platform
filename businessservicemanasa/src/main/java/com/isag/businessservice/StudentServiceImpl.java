@@ -11,9 +11,9 @@ import com.isag.dto.SchoolStagesGuideDTO;
 import com.isag.dto.StatesDTO;
 import com.isag.dto.StudentDTO;
 import com.isag.entity.Branch;
-import com.isag.entity.IsagCompany;
+import com.isag.entity.IgmaCompany;
 import com.isag.entity.Student;
-import com.isag.entity.IsagUser;
+import com.isag.entity.IgmaUser;
 import com.isag.entity.SchoolStagesGuide;
 import com.isag.entity.States;
 import java.util.ArrayList;
@@ -34,9 +34,9 @@ public class StudentServiceImpl implements StudentService {
     @EJB
     private GenericDAO dao;
     @EJB
-    private IsagUserLoginService isagUserLoginService;
+    private IgmaUserLoginService isagUserLoginService;
     @EJB
-    private IsagApiTokenService isagApiTokenService;
+    private IgmaApiTokenService isagApiTokenService;
     @EJB
     private StudentMonthsService studentMonthsService;
     @EJB
@@ -110,7 +110,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public StudentDTO addStudent(StudentDTO studentDTO, IsagUser isagUser) {
+    public StudentDTO addStudent(StudentDTO studentDTO, IgmaUser isagUser) {
         // Add method which includes the 4 tables data in .
         Student entity = mapFromDTO(studentDTO, isagUser);
         entity = dao.updateEntity(entity);
@@ -517,7 +517,7 @@ public class StudentServiceImpl implements StudentService {
 
     }
 
-    public Student mapFromDTO(StudentDTO dTO, IsagUser isagUser) {
+    public Student mapFromDTO(StudentDTO dTO, IgmaUser isagUser) {
         Student entity = new Student();
 
         entity.setUserName(dTO.getUserName());
@@ -565,7 +565,7 @@ public class StudentServiceImpl implements StudentService {
     private Student mapAPIToEntity(APIStudentDataDTO dTO, Student entity) {
         if (entity == null) {
             entity = new Student();
-            IsagUser isagUser = new IsagUser();
+            IgmaUser isagUser = new IgmaUser();
             isagUser.setId(61);
 
             entity.setCreatedBy(isagUser);
@@ -575,7 +575,7 @@ public class StudentServiceImpl implements StudentService {
             branch.setId(dTO.getBranchId());
             entity.setBranchId(branch);
 
-            IsagCompany isagCompany = new IsagCompany();
+            IgmaCompany isagCompany = new IgmaCompany();
             isagCompany.setId(dTO.getCompanyId());
             entity.setCompanyId(isagCompany);
         }

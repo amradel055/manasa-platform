@@ -5,15 +5,12 @@
  */
 package com.isag.general;
 
-import com.isag.businessservice.IsagApiTokenService;
-import com.isag.businessservice.IsagUserLoginService;
-import com.isag.businessservice.IsagUserService;
 import com.isag.businessservice.StudentMonthsService;
 import com.isag.businessservice.StudentService;
 import com.isag.dto.APIDataDTO;
 import com.isag.dto.APIStudentDataDTO;
 import com.isag.dto.APIWorkOrderDTO;
-import com.isag.dto.IsagApiTokenDTO;
+import com.isag.dto.IgmaApiTokenDTO;
 import com.isag.dto.APIloginDTO;
 import com.isag.dto.ApiPoint;
 import com.isag.dto.StudentDTO;
@@ -32,12 +29,15 @@ import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import com.isag.entity.Employee;
-import com.isag.entity.IsagUser;
-import com.isag.entity.IsagUserLogin;
+import com.isag.entity.IgmaUser;
+import com.isag.entity.IgmaUserLogin;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import com.isag.businessservice.IgmaApiTokenService;
+import com.isag.businessservice.IgmaUserLoginService;
+import com.isag.businessservice.IgmaUserService;
 
 /**
  *
@@ -52,17 +52,17 @@ public class GeneralImp implements GeneralService {
     @EJB
     private StudentService studentService;
     @EJB
-    private IsagApiTokenService isagApiTokenService;
+    private IgmaApiTokenService isagApiTokenService;
     @EJB
     StudentMonthsService monthsService;
     @EJB
-    private IsagUserService userService;
+    private IgmaUserService userService;
     @EJB
-    private IsagUserLoginService isagUserLoginService;
+    private IgmaUserLoginService isagUserLoginService;
 
 //    private Employee emp;
     private StudentDTO studentDTO;
-//    private IsagUser isagUser;
+//    private IgmaUser isagUser;
 
     @Override
     public APIloginDTO authenticateStudent(LoginRoot loginRoot) {
@@ -70,7 +70,7 @@ public class GeneralImp implements GeneralService {
         String userName = loginRoot.userName;
         String password = loginRoot.password;
         studentDTO = studentService.authenticateUser(userName, password, loginRoot.branchId, loginRoot.companyId);
-        IsagUserLogin isagUserLogin = isagUserLoginService.findIsagUserLoginByStudentIdLast(studentDTO.getId());
+        IgmaUserLogin isagUserLogin = isagUserLoginService.findIsagUserLoginByStudentIdLast(studentDTO.getId());
 
         if (isagUserLogin != null && isagUserLogin.getState() == 1) {
             if (isagUserLogin.getMacId() != null && loginRoot.macId != null && !isagUserLogin.getMacId().equals(loginRoot.macId) && studentDTO.getMacId() != null) {
@@ -94,7 +94,7 @@ public class GeneralImp implements GeneralService {
 
         String userName = loginRoot.userName;
         String password = loginRoot.password;
-        IsagUser loggedInUser = userService.authenticateUser(userName, password);
+        IgmaUser loggedInUser = userService.authenticateUser(userName, password);
         //loggedInUser.getMaster() دي معناها لازم يكون مدير
         if (loggedInUser != null) {
             System.out.println("Logged In Successfully");
@@ -109,7 +109,7 @@ public class GeneralImp implements GeneralService {
         try {
             String token = createJWT();
             String tokenId = DecodeJWT(token);
-            IsagApiTokenDTO isagApiTokenDTO = new IsagApiTokenDTO();
+            IgmaApiTokenDTO isagApiTokenDTO = new IgmaApiTokenDTO();
             isagApiTokenDTO.setToken(token);
             isagApiTokenDTO.setTokenId(tokenId);
             isagApiTokenService.addIsagApiToken(isagApiTokenDTO, studentDTO);
@@ -122,11 +122,11 @@ public class GeneralImp implements GeneralService {
     }
 
     @Override
-    public APIloginDTO issueTokenManasa(IsagUser isagUser) {
+    public APIloginDTO issueTokenManasa(IgmaUser isagUser) {
         try {
             String token = createJWT();
             String tokenId = DecodeJWT(token);
-            IsagApiTokenDTO isagApiTokenDTO = new IsagApiTokenDTO();
+            IgmaApiTokenDTO isagApiTokenDTO = new IgmaApiTokenDTO();
             isagApiTokenDTO.setToken(token);
             isagApiTokenDTO.setTokenId(tokenId);
             isagApiTokenService.addIsagApiToken(isagApiTokenDTO, isagUser);
@@ -139,7 +139,7 @@ public class GeneralImp implements GeneralService {
     }
 
         
-    private APIloginDTO jsonTokenManasa(String token, Boolean success, String msg, IsagUser isagUser) {
+    private APIloginDTO jsonTokenManasa(String token, Boolean success, String msg, IgmaUser isagUser) {
         APIloginDTO dTO = new APIloginDTO();
         dTO.setSuccess(success);
         dTO.setMsg(msg);

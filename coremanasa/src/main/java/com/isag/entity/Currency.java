@@ -80,10 +80,10 @@ public class Currency implements Serializable {
     private int serial;
     @JoinColumn(name = "created_by", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private IsagUser createdBy;
+    private IgmaUser createdBy;
     @JoinColumn(name = "modified_by", referencedColumnName = "id")
     @ManyToOne
-    private IsagUser modifiedBy;
+    private IgmaUser modifiedBy;
     @OneToMany(mappedBy = "currencyId")
     private Collection<GlAccount> glAccountCollection;
 
@@ -157,19 +157,19 @@ public class Currency implements Serializable {
         this.serial = serial;
     }
 
-    public IsagUser getCreatedBy() {
+    public IgmaUser getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(IsagUser createdBy) {
+    public void setCreatedBy(IgmaUser createdBy) {
         this.createdBy = createdBy;
     }
 
-    public IsagUser getModifiedBy() {
+    public IgmaUser getModifiedBy() {
         return modifiedBy;
     }
 
-    public void setModifiedBy(IsagUser modifiedBy) {
+    public void setModifiedBy(IgmaUser modifiedBy) {
         this.modifiedBy = modifiedBy;
     }
 

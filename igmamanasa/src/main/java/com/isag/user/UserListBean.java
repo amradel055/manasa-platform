@@ -5,9 +5,8 @@
  */
 package com.isag.user;
 
-import com.isag.businessservice.IsagUserRoleService;
-import com.isag.entity.IsagCompany;
-import com.isag.entity.IsagUser;
+import com.isag.entity.IgmaCompany;
+import com.isag.entity.IgmaUser;
 import com.isag.isag.BaseListBean;
 import com.isag.isag.UserData;
 import java.io.Serializable;
@@ -19,7 +18,8 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import java.util.Map;
-import com.isag.businessservice.IsagUserService;
+import com.isag.businessservice.IgmaUserRoleService;
+import com.isag.businessservice.IgmaUserService;
 
 /**
  *
@@ -28,13 +28,13 @@ import com.isag.businessservice.IsagUserService;
 public class UserListBean extends BaseListBean implements Serializable {
 
     @EJB
-    private IsagUserService userService;
+    private IgmaUserService userService;
     @EJB
-    private IsagUserRoleService isagUserRoleService;
+    private IgmaUserRoleService isagUserRoleService;
 
-    private List<IsagUser> users;
+    private List<IgmaUser> users;
 
-    private IsagUser isagUser;
+    private IgmaUser isagUser;
     private Integer selecteduser;
     private UserData userData;
 
@@ -54,7 +54,7 @@ public class UserListBean extends BaseListBean implements Serializable {
         try {
             Map<String, String> userDDs = userData.getUserDDs();
             if (selecteduser != null) {
-                isagUser = new IsagUser();
+                isagUser = new IgmaUser();
                 getIsagUser().setId(selecteduser);
                 setIsagUser(getIsagUser());
                 try {
@@ -113,7 +113,7 @@ public class UserListBean extends BaseListBean implements Serializable {
             users = new ArrayList<>();
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
             userData = (UserData) context.getSessionMap().get("userLogInData");
-            IsagCompany companyId = userData.getCompany();
+            IgmaCompany companyId = userData.getCompany();
             if (companyId != null && companyId.getId() != null) {
                 //  get all user to all roles to this branch
                 if (userData.getSelectedBranch() != null) {
@@ -129,9 +129,9 @@ public class UserListBean extends BaseListBean implements Serializable {
 
     }
 
-    public List<IsagUser> getAllUsersByCompanyId(Integer companyId) {
+    public List<IgmaUser> getAllUsersByCompanyId(Integer companyId) {
         try {
-            setUsers(new ArrayList<IsagUser>());
+            setUsers(new ArrayList<IgmaUser>());
             return userService.getAllUsersListByCompanyId(companyId);
         } catch (Exception e) {
             saveError(e, "UserListBean", "getAllUsersByCompanyId");
@@ -140,9 +140,9 @@ public class UserListBean extends BaseListBean implements Serializable {
 
     }
 
-    public List<IsagUser> getAllUsers() {
+    public List<IgmaUser> getAllUsers() {
         try {
-            setUsers(new ArrayList<IsagUser>());
+            setUsers(new ArrayList<IgmaUser>());
             return userService.getAllUsers();
         } catch (Exception e) {
             saveError(e, "UserListBean", "getAllUsers");
@@ -156,27 +156,27 @@ public class UserListBean extends BaseListBean implements Serializable {
 
     }
 
-    public IsagUserService getUserService() {
+    public IgmaUserService getUserService() {
         return userService;
     }
 
-    public void setUserService(IsagUserService userService) {
+    public void setUserService(IgmaUserService userService) {
         this.userService = userService;
     }
 
-    public List<IsagUser> getUsers() {
+    public List<IgmaUser> getUsers() {
         return users;
     }
 
-    public void setUsers(List<IsagUser> users) {
+    public void setUsers(List<IgmaUser> users) {
         this.users = users;
     }
 
-    public IsagUser getIsagUser() {
+    public IgmaUser getIsagUser() {
         return isagUser;
     }
 
-    public void setIsagUser(IsagUser isagUser) {
+    public void setIsagUser(IgmaUser isagUser) {
         this.isagUser = isagUser;
     }
 

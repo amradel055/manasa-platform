@@ -62,13 +62,13 @@ public class Symbol extends BaseEntity {
     private Date modificationDate;
     @JoinColumn(name = "company_id", referencedColumnName = "id")
     @ManyToOne
-    private IsagCompany companyId;
+    private IgmaCompany companyId;
     @JoinColumn(name = "created_by", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private IsagUser createdBy;
+    private IgmaUser createdBy;
     @JoinColumn(name = "modified_by", referencedColumnName = "id")
     @ManyToOne
-    private IsagUser modifiedBy;
+    private IgmaUser modifiedBy;
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     @ManyToOne
     private GlAccount accountId;
@@ -106,7 +106,7 @@ public class Symbol extends BaseEntity {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "lang")
     private Collection<DataDictionary> dataDictionaryCollection;
     @OneToMany(mappedBy = "lang")
-    private Collection<IsagUser> isagUserCollection;
+    private Collection<IgmaUser> isagUserCollection;
 
     public Symbol() {
     }
@@ -178,11 +178,11 @@ public class Symbol extends BaseEntity {
     }
 
     @XmlTransient
-    public Collection<IsagUser> getIsagUserCollection() {
+    public Collection<IgmaUser> getIsagUserCollection() {
         return isagUserCollection;
     }
 
-    public void setIsagUserCollection(Collection<IsagUser> isagUserCollection) {
+    public void setIsagUserCollection(Collection<IgmaUser> isagUserCollection) {
         this.isagUserCollection = isagUserCollection;
     }
 
@@ -265,27 +265,27 @@ public class Symbol extends BaseEntity {
         this.modificationDate = modificationDate;
     }
 
-    public IsagCompany getCompanyId() {
+    public IgmaCompany getCompanyId() {
         return companyId;
     }
 
-    public void setCompanyId(IsagCompany companyId) {
+    public void setCompanyId(IgmaCompany companyId) {
         this.companyId = companyId;
     }
 
-    public IsagUser getCreatedBy() {
+    public IgmaUser getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(IsagUser createdBy) {
+    public void setCreatedBy(IgmaUser createdBy) {
         this.createdBy = createdBy;
     }
 
-    public IsagUser getModifiedBy() {
+    public IgmaUser getModifiedBy() {
         return modifiedBy;
     }
 
-    public void setModifiedBy(IsagUser modifiedBy) {
+    public void setModifiedBy(IgmaUser modifiedBy) {
         this.modifiedBy = modifiedBy;
     }
 

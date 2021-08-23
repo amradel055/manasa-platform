@@ -6,7 +6,7 @@
 package com.isag.businessservice;
 
 import com.isag.dto.AnswersDTO;
-import com.isag.entity.IsagUser;
+import com.isag.entity.IgmaUser;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.Remote;
@@ -22,7 +22,7 @@ public interface AnswersService {
     
     public Map<Integer, String> findAnswersByExamId(Integer examId);
 
-    public AnswersDTO save(AnswersDTO answersDTO, IsagUser isagUser, Integer questionId,Integer examId);
+    public AnswersDTO save(AnswersDTO answersDTO, IgmaUser isagUser, Integer questionId,Integer examId);
 
     public void deleteAnswers(AnswersDTO answersDTO);
 
@@ -32,7 +32,7 @@ public interface AnswersService {
 
     public void deleteList(List<AnswersDTO> answersDTOsList);
 
-    public AnswersDTO saveList(List<AnswersDTO> answersDTOList, IsagUser isagUser, Integer questionId,Integer examId);
+    public AnswersDTO saveList(List<AnswersDTO> answersDTOList, IgmaUser isagUser, Integer questionId,Integer examId);
     
     public void deleteAnswersFromQuestion(Integer questionId);
 }

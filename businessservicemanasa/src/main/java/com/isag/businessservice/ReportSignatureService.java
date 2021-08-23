@@ -6,7 +6,7 @@
 package com.isag.businessservice;
 
 import com.isag.dto.ReportSignatureDTO;
-import com.isag.entity.IsagUser;
+import com.isag.entity.IgmaUser;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -17,9 +17,9 @@ import javax.ejb.Remote;
 @Remote
 public interface ReportSignatureService {
 
-    public ReportSignatureDTO addReportSignature(ReportSignatureDTO reportSignatureDTO, IsagUser isagUser);
+    public ReportSignatureDTO addReportSignature(ReportSignatureDTO reportSignatureDTO, IgmaUser isagUser);
 
-    public void deleteReportSignatureDTO(ReportSignatureDTO reportSignatureDTO, IsagUser isagUser);
+    public void deleteReportSignatureDTO(ReportSignatureDTO reportSignatureDTO, IgmaUser isagUser);
 
     public List<ReportSignatureDTO> getAllReportSignatureDTOByBranchId(Integer branchId);
 

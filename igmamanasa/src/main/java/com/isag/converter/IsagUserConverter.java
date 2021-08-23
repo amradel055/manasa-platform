@@ -5,7 +5,7 @@
  */
 package com.isag.converter;
 
-import com.isag.entity.IsagUser;
+import com.isag.entity.IgmaUser;
 import java.util.List;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -17,16 +17,16 @@ import javax.faces.convert.Converter;
  */
 public class IsagUserConverter implements Converter {
 
-    private List<IsagUser> userlogin;
+    private List<IgmaUser> userlogin;
 
-    public IsagUserConverter(List<IsagUser> users) {
+    public IsagUserConverter(List<IgmaUser> users) {
         this.userlogin = users;
     }
 
 
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
-        for (IsagUser item : userlogin) {
+        for (IgmaUser item : userlogin) {
             try {
                 Long.parseLong(value);
             } catch (Exception e) {
@@ -45,8 +45,8 @@ public class IsagUserConverter implements Converter {
         try {
 
             if (value != null && !value.equals("") && !value.equals(" ")) {
-                if (((IsagUser) value).getId()!= null && ((IsagUser) value).getId().longValue() != 0) {
-                    IsagUser codegenerator = (IsagUser) value;
+                if (((IgmaUser) value).getId()!= null && ((IgmaUser) value).getId().longValue() != 0) {
+                    IgmaUser codegenerator = (IgmaUser) value;
                     return codegenerator.getId().longValue() + "";
                 } else {
                     return "";

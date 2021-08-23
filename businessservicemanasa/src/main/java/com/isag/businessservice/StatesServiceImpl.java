@@ -10,7 +10,7 @@ import com.isag.dto.GovernoratesDTO;
 import com.isag.dto.StatesDTO;
 import com.isag.entity.Governorates;
 import com.isag.entity.States;
-import com.isag.entity.IsagUser;
+import com.isag.entity.IgmaUser;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -79,7 +79,7 @@ public class StatesServiceImpl implements StatesService {
         return dTO;
     }
 
-    private States mapToEntity(StatesDTO dTO, IsagUser isagUser) {
+    private States mapToEntity(StatesDTO dTO, IgmaUser isagUser) {
         States entity = new States();
 
         entity.setName(dTO.getName());
@@ -96,7 +96,7 @@ public class StatesServiceImpl implements StatesService {
             entity.setBranchId(isagUser.getBranchId());
             entity.setCreationDate(new Date());
         } else {
-            IsagUser isagUser1 = new IsagUser();
+            IgmaUser isagUser1 = new IgmaUser();
             isagUser1.setId(dTO.getCreatedBy());
             entity.setCreatedBy(isagUser1);
             entity.setCreationDate(dTO.getCreatedDate());

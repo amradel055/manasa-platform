@@ -5,7 +5,7 @@
  */
 package com.isag.userprofile;
 
-import com.isag.entity.IsagUser;
+import com.isag.entity.IgmaUser;
 import com.isag.isag.BaseFormBean;
 import com.isag.isag.UserData;
 import javax.annotation.PostConstruct;
@@ -13,7 +13,7 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import com.isag.businessservice.IsagUserService;
+import com.isag.businessservice.IgmaUserService;
 
 public class UserProfileFormBean extends BaseFormBean {
 
@@ -26,12 +26,12 @@ public class UserProfileFormBean extends BaseFormBean {
     private String newUserPassword;
     private String newPasswordConfirm;
 
-    private IsagUser isagUser;
+    private IgmaUser isagUser;
 
     private Boolean showPassInput = Boolean.TRUE;
 
     @EJB
-    IsagUserService isagUserService;
+    IgmaUserService isagUserService;
 
     @Override
     @PostConstruct

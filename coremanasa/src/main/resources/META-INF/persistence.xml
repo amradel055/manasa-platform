@@ -3,8 +3,6 @@
   <persistence-unit name="ISAG_PU" transaction-type="JTA">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <jta-data-source>manasaDS</jta-data-source>
-    <class>com.isag.views.ItemMainDataByGroupView</class>
-    <class>com.isag.views.OrganizationSiteStatementView</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <shared-cache-mode>NONE</shared-cache-mode>
     <validation-mode>NONE</validation-mode>

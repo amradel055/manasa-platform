@@ -6,8 +6,8 @@
 package com.isag.roles;
 
 import com.isag.businessservice.CompanyService;
-import com.isag.entity.IsagCompany;
-import com.isag.entity.IsagRole;
+import com.isag.entity.IgmaCompany;
+import com.isag.entity.IgmaRole;
 import com.isag.isag.BaseFormBean;
 import com.isag.isag.UserData;
 import java.io.Serializable;
@@ -36,10 +36,10 @@ public class RoleFormBean extends BaseFormBean implements Serializable {
     private Integer companyId;
     private Integer roleId;
     private String screenMode;
-    private IsagRole isagRole;
+    private IgmaRole isagRole;
     private UserData userData;
-    private IsagCompany company;
-    private List<IsagCompany> userCompany;
+    private IgmaCompany company;
+    private List<IgmaCompany> userCompany;
     private boolean setRendered = false;
     /**
      * Creates a new instance of NewJSFManagedBean
@@ -58,7 +58,7 @@ public class RoleFormBean extends BaseFormBean implements Serializable {
     @PostConstruct
     public void init() {
         try {
-            isagRole = new IsagRole();
+            isagRole = new IgmaRole();
             load();
         } catch (Exception e) {
             saveError(e, "RoleFormBean", "init");
@@ -72,7 +72,7 @@ public class RoleFormBean extends BaseFormBean implements Serializable {
             if (roleName != null && roleName.trim().length() > 0) {
                 isagRole.setName(roleName);
 
-                IsagCompany companySelected = new IsagCompany();
+                IgmaCompany companySelected = new IgmaCompany();
                 companySelected.setId(companyId);
                 isagRole.setCompanyId(companySelected);
                 isagRole.setModifiedBy(userData.getUser());
@@ -201,11 +201,11 @@ public class RoleFormBean extends BaseFormBean implements Serializable {
         this.screenMode = screenMode;
     }
 
-    public IsagRole getIsagRole() {
+    public IgmaRole getIsagRole() {
         return isagRole;
     }
 
-    public void setIsagRole(IsagRole isagRole) {
+    public void setIsagRole(IgmaRole isagRole) {
         this.isagRole = isagRole;
     }
 
@@ -233,11 +233,11 @@ public class RoleFormBean extends BaseFormBean implements Serializable {
         this.userData = userData;
     }
 
-    public List<IsagCompany> getUserCompany() {
+    public List<IgmaCompany> getUserCompany() {
         return userCompany;
     }
 
-    public void setUserCompany(List<IsagCompany> userCompany) {
+    public void setUserCompany(List<IgmaCompany> userCompany) {
         this.userCompany = userCompany;
     }
 
@@ -249,11 +249,11 @@ public class RoleFormBean extends BaseFormBean implements Serializable {
         this.companyService = companyService;
     }
 
-    public IsagCompany getCompany() {
+    public IgmaCompany getCompany() {
         return company;
     }
 
-    public void setCompany(IsagCompany company) {
+    public void setCompany(IgmaCompany company) {
         this.company = company;
     }
 

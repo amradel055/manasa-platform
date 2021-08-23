@@ -5,9 +5,9 @@
  */
 package com.isag.roles;
 
-import com.isag.entity.IsagCompany;
-import com.isag.entity.IsagRole;
-import com.isag.entity.IsagUser;
+import com.isag.entity.IgmaCompany;
+import com.isag.entity.IgmaRole;
+import com.isag.entity.IgmaUser;
 import com.isag.isag.BaseListBean;
 import com.isag.isag.UserData;
 import java.util.ArrayList;
@@ -29,9 +29,9 @@ public class RoleListBean extends BaseListBean {
     @EJB
     private RoleService rolesService;
 
-    private List<IsagRole> roles;
-    private IsagRole role;
-    private IsagUser isagUser;
+    private List<IgmaRole> roles;
+    private IgmaRole role;
+    private IgmaUser isagUser;
 
     private Integer selectedRole;
     private UserData userData;
@@ -54,7 +54,7 @@ public class RoleListBean extends BaseListBean {
         try {
             Map<String, String> userDDs = userData.getUserDDs();
             if (selectedRole != null) {
-                role = new IsagRole();
+                role = new IgmaRole();
                 getRole().setId(selectedRole);
                 setRole(getRole());
 
@@ -114,7 +114,7 @@ public class RoleListBean extends BaseListBean {
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
             userData = (UserData) context.getSessionMap().get("userLogInData");
             if (userData != null) {
-                IsagCompany companyId = userData.getCompany();
+                IgmaCompany companyId = userData.getCompany();
                 if (companyId != null && companyId.getId() != null) {
                     //  get all user to all roles to this company
                     roles = getAllRolesByCompanyId(companyId.getId());
@@ -128,13 +128,13 @@ public class RoleListBean extends BaseListBean {
         }
     }
 
-    public List<IsagRole> getAllRolesByCompanyId(Integer companyId) {
-        setRoles(new ArrayList<IsagRole>());
+    public List<IgmaRole> getAllRolesByCompanyId(Integer companyId) {
+        setRoles(new ArrayList<IgmaRole>());
         return rolesService.getAllRolesListByCompanyId(companyId);
     }
 
-    public List<IsagRole> getAllRoles() {
-        setRoles(new ArrayList<IsagRole>());
+    public List<IgmaRole> getAllRoles() {
+        setRoles(new ArrayList<IgmaRole>());
         return rolesService.getAllRoles();
     }
 
@@ -146,22 +146,22 @@ public class RoleListBean extends BaseListBean {
     /**
      * @return the roles
      */
-    public List<IsagRole> getRoles() {
+    public List<IgmaRole> getRoles() {
         return roles;
     }
 
     /**
      * @param roles the roles to set
      */
-    public void setRoles(List<IsagRole> roles) {
+    public void setRoles(List<IgmaRole> roles) {
         this.roles = roles;
     }
 
-    public IsagUser getIsagUser() {
+    public IgmaUser getIsagUser() {
         return isagUser;
     }
 
-    public void setIsagUser(IsagUser isagUser) {
+    public void setIsagUser(IgmaUser isagUser) {
         this.isagUser = isagUser;
     }
 
@@ -181,11 +181,11 @@ public class RoleListBean extends BaseListBean {
         this.selectedRole = selectedRole;
     }
 
-    public IsagRole getRole() {
+    public IgmaRole getRole() {
         return role;
     }
 
-    public void setRole(IsagRole role) {
+    public void setRole(IgmaRole role) {
         this.role = role;
     }
 

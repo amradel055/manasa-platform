@@ -6,7 +6,7 @@
 package com.isag.businessservice;
 
 import com.isag.dto.LessonDTO;
-import com.isag.entity.IsagUser;
+import com.isag.entity.IgmaUser;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -29,5 +29,5 @@ public interface LessonService {
 
     public void deleteLesson(Integer lessonDTO);
 
-    public LessonDTO save(LessonDTO lessonDTO, IsagUser isagUser);
+    public LessonDTO save(LessonDTO lessonDTO, IgmaUser isagUser);
 }

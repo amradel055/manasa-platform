@@ -8,7 +8,7 @@ package com.isag.businessservice;
 import com.isag.core.GenericDAO;
 import com.isag.dto.GovernoratesDTO;
 import com.isag.entity.Governorates;
-import com.isag.entity.IsagUser;
+import com.isag.entity.IgmaUser;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -69,7 +69,7 @@ public class GovernoratesServiceImpl implements GovernoratesService {
         return dTO;
     }
 
-    private Governorates mapToEntity(GovernoratesDTO dTO, IsagUser isagUser) {
+    private Governorates mapToEntity(GovernoratesDTO dTO, IgmaUser isagUser) {
         Governorates entity = new Governorates();
 
         entity.setName(dTO.getName());
@@ -80,7 +80,7 @@ public class GovernoratesServiceImpl implements GovernoratesService {
             entity.setBranchId(isagUser.getBranchId());
             entity.setCreationDate(new Date());
         } else {
-            IsagUser isagUser1 = new IsagUser();
+            IgmaUser isagUser1 = new IgmaUser();
             isagUser1.setId(dTO.getCreatedBy());
             entity.setCreatedBy(isagUser1);
             entity.setCreationDate(dTO.getCreatedDate());

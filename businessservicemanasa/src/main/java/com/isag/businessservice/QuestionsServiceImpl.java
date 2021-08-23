@@ -10,8 +10,8 @@ import com.isag.dto.AnswersDTO;
 import com.isag.dto.QuestionsDTO;
 import com.isag.entity.Branch;
 import com.isag.entity.Exams;
-import com.isag.entity.IsagCompany;
-import com.isag.entity.IsagUser;
+import com.isag.entity.IgmaCompany;
+import com.isag.entity.IgmaUser;
 import com.isag.entity.Questions;
 import com.isag.entity.Student;
 import java.math.BigDecimal;
@@ -46,7 +46,7 @@ public class QuestionsServiceImpl implements QuestionsService {
     }
 
     @Override
-    public QuestionsDTO saveList(List<QuestionsDTO> questionsDTOsList, IsagUser isagUser, Integer examsId) {
+    public QuestionsDTO saveList(List<QuestionsDTO> questionsDTOsList, IgmaUser isagUser, Integer examsId) {
 
         QuestionsDTO questionsDTO = null;
         for (QuestionsDTO questionsDTO1 : questionsDTOsList) {
@@ -61,7 +61,7 @@ public class QuestionsServiceImpl implements QuestionsService {
     }
 
     @Override
-    public QuestionsDTO saveListForStudent(List<QuestionsDTO> questionsDTOsList, IsagUser isagUser, Integer examsId, Integer studentId, Integer parentExamId) {
+    public QuestionsDTO saveListForStudent(List<QuestionsDTO> questionsDTOsList, IgmaUser isagUser, Integer examsId, Integer studentId, Integer parentExamId) {
 
         QuestionsDTO questionsDTO = null;
         BigDecimal total = BigDecimal.ZERO;
@@ -108,7 +108,7 @@ public class QuestionsServiceImpl implements QuestionsService {
     }
 
     @Override
-    public QuestionsDTO save(QuestionsDTO questionsDTO, IsagUser isagUser, Integer examsId) {
+    public QuestionsDTO save(QuestionsDTO questionsDTO, IgmaUser isagUser, Integer examsId) {
         QuestionsDTO msg = new QuestionsDTO();
         Questions questions = null;
         if (questionsDTO.getId() != null) {
@@ -116,12 +116,12 @@ public class QuestionsServiceImpl implements QuestionsService {
         }
         if (questionsDTO != null && examsId != null) {
             if (isagUser == null) {
-                isagUser = new IsagUser();
+                isagUser = new IgmaUser();
                 isagUser.setId(61);
                 Branch branch = new Branch();
                 branch.setId(questionsDTO.getBranchId());
                 isagUser.setBranchId(branch);
-                IsagCompany isagCompany = new IsagCompany();
+                IgmaCompany isagCompany = new IgmaCompany();
                 isagCompany.setId(questionsDTO.getCompanyId());
                 isagUser.setCompanyId(isagCompany);
             }
@@ -208,7 +208,7 @@ public class QuestionsServiceImpl implements QuestionsService {
         return dTO;
     }
 
-    private Questions mapToEntity(QuestionsDTO dTO, IsagUser isagUser, Questions entity, Integer examsId) {
+    private Questions mapToEntity(QuestionsDTO dTO, IgmaUser isagUser, Questions entity, Integer examsId) {
         if (entity == null) {
             entity = new Questions();
         }

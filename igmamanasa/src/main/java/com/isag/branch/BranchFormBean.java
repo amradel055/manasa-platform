@@ -9,7 +9,7 @@ import com.isag.businessservice.BranchService;
 import com.isag.businessservice.CompanyService;
 import com.isag.define.CompanyActivityClassEnum;
 import com.isag.entity.Branch;
-import com.isag.entity.IsagCompany;
+import com.isag.entity.IgmaCompany;
 import com.isag.isag.BaseFormBean;
 import com.isag.isag.UserData;
 import com.isag.test.Message;
@@ -50,7 +50,7 @@ public class BranchFormBean extends BaseFormBean {
     private UserData user;
     private String ScreenMode;
     private byte[] contents;
-    private List<IsagCompany> userCompany;
+    private List<IgmaCompany> userCompany;
     private Integer selectedCompanyId;
     private String fileName;
     private String imageName;
@@ -189,7 +189,7 @@ public class BranchFormBean extends BaseFormBean {
                 if (user.getCompany() != null) {
                     branch.setCompanyId(user.getCompany());
                 } else if (selectedCompanyId != null) {
-                    IsagCompany companySelected = new IsagCompany();
+                    IgmaCompany companySelected = new IgmaCompany();
                     companySelected.setId(selectedCompanyId);
                     branch.setCompanyId(companySelected);
                 }
@@ -568,11 +568,11 @@ public class BranchFormBean extends BaseFormBean {
         this.contents = contents;
     }
 
-    public List<IsagCompany> getUserCompany() {
+    public List<IgmaCompany> getUserCompany() {
         return userCompany;
     }
 
-    public void setUserCompany(List<IsagCompany> userCompany) {
+    public void setUserCompany(List<IgmaCompany> userCompany) {
         this.userCompany = userCompany;
     }
 

@@ -6,7 +6,7 @@
 package com.isag.businessservice;
 
 import com.isag.dto.CommentsDTO;
-import com.isag.entity.IsagUser;
+import com.isag.entity.IgmaUser;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -19,7 +19,7 @@ public interface CommentsService {
 
     public List<CommentsDTO> findCommentsByLessonId(Integer lessonId);
 
-    public CommentsDTO save(CommentsDTO commentsDTO, IsagUser isagUser);
+    public CommentsDTO save(CommentsDTO commentsDTO, IgmaUser isagUser);
 
     public void deleteComments(CommentsDTO commentsDTO);
 

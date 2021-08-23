@@ -8,16 +8,14 @@ package com.isag.isag;
 import com.isag.businessservice.BranchService;
 import com.isag.businessservice.CompanyService;
 import com.isag.businessservice.DDService;
-import com.isag.businessservice.IsagNotificationSettingService;
-import com.isag.businessservice.IsagUserRoleService;
 import com.isag.businessservice.PathService;
 import com.isag.businessservice.PrivilegeService;
 import com.isag.core.UserDataDTO;
 import com.isag.entity.Branch;
-import com.isag.entity.IsagCompany;
-import com.isag.entity.IsagPrivilege;
-import com.isag.entity.IsagScreen;
-import com.isag.entity.IsagUser;
+import com.isag.entity.IgmaCompany;
+import com.isag.entity.IgmaPrivilege;
+import com.isag.entity.IgmaScreen;
+import com.isag.entity.IgmaUser;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -28,9 +26,11 @@ import javax.ejb.EJB;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
-import com.isag.businessservice.IsagUserService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import com.isag.businessservice.IgmaNotificationSettingService;
+import com.isag.businessservice.IgmaUserRoleService;
+import com.isag.businessservice.IgmaUserService;
 
 /**
  *
@@ -46,14 +46,14 @@ public class LoginBean extends Basic implements Serializable {
     private CompanyService companyService;
 
     @EJB
-    private IsagUserService userService;
+    private IgmaUserService userService;
 
     @EJB
     private DDService ddService;
     @EJB
     private PrivilegeService privilegeService;
     @EJB
-    private IsagUserRoleService userRoleService;
+    private IgmaUserRoleService userRoleService;
 
     @EJB
     private BranchService branchService;
@@ -62,13 +62,13 @@ public class LoginBean extends Basic implements Serializable {
     private PathService pathService;
     
     @EJB
-    private IsagNotificationSettingService isagNotificationSettingService;
+    private IgmaNotificationSettingService isagNotificationSettingService;
 
-    private List<IsagPrivilege> userPrivileges;
+    private List<IgmaPrivilege> userPrivileges;
 
-    private List<IsagScreen> userScreens;
+    private List<IgmaScreen> userScreens;
 
-    private List<IsagCompany> allCompanies = new ArrayList<>();
+    private List<IgmaCompany> allCompanies = new ArrayList<>();
 
     private Integer selectedCompanyId;
     private String userCode;
@@ -98,7 +98,7 @@ public class LoginBean extends Basic implements Serializable {
 
             System.out.println("session: " + session);
             FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-            IsagUser loggedInUser = userService.authenticateUser(userCode, password);
+            IgmaUser loggedInUser = userService.authenticateUser(userCode, password);
 
             System.out.println("loggedInUser: " + loggedInUser);
             if (loggedInUser != null) {
@@ -208,7 +208,7 @@ public class LoginBean extends Basic implements Serializable {
         }
     }
 
-    public void adminValues(IsagUser loggedInUser) {
+    public void adminValues(IgmaUser loggedInUser) {
 //        List<GlYear> years = yearService.getALLGlyearByCompanyId(selectedCompanyId);
 //        userData.setAllCompanyYears(years);
 //        Date today = new Date();
@@ -225,7 +225,7 @@ public class LoginBean extends Basic implements Serializable {
 
     }
 
-    public void userValues(IsagUser loggedInUser) {
+    public void userValues(IgmaUser loggedInUser) {
         List<Branch> branches = branchService.getBranchesForUser(loggedInUser.getId());
 //        List<GlYear> years = yearService.getALLGlyearByCompanyId(selectedCompanyId);
 
@@ -358,14 +358,14 @@ public class LoginBean extends Basic implements Serializable {
     /**
      * @return the allCompanies
      */
-    public List<IsagCompany> getAllCompanies() {
+    public List<IgmaCompany> getAllCompanies() {
         return allCompanies;
     }
 
     /**
      * @param allCompanies the allCompanies to set
      */
-    public void setAllCompanies(List<IsagCompany> allCompanies) {
+    public void setAllCompanies(List<IgmaCompany> allCompanies) {
         this.allCompanies = allCompanies;
     }
 
@@ -414,28 +414,28 @@ public class LoginBean extends Basic implements Serializable {
     /**
      * @return the userPrivileges
      */
-    public List<IsagPrivilege> getUserPrivileges() {
+    public List<IgmaPrivilege> getUserPrivileges() {
         return userPrivileges;
     }
 
     /**
      * @param userPrivileges the userPrivileges to set
      */
-    public void setUserPrivileges(List<IsagPrivilege> userPrivileges) {
+    public void setUserPrivileges(List<IgmaPrivilege> userPrivileges) {
         this.userPrivileges = userPrivileges;
     }
 
     /**
      * @return the userScreens
      */
-    public List<IsagScreen> getUserScreens() {
+    public List<IgmaScreen> getUserScreens() {
         return userScreens;
     }
 
     /**
      * @param userScreens the userScreens to set
      */
-    public void setUserScreens(List<IsagScreen> userScreens) {
+    public void setUserScreens(List<IgmaScreen> userScreens) {
         this.userScreens = userScreens;
     }
 

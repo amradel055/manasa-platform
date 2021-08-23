@@ -5,9 +5,8 @@
  */
 package com.isag.notification;
 
-import com.isag.businessservice.IsagTokensService;
 import com.isag.converter.IsagUserDTOConverter;
-import com.isag.dto.IsagTokensDTO;
+import com.isag.dto.IgmaTokensDTO;
 import com.isag.dto.NotificationDTO;
 import com.isag.isag.BaseFormBean;
 import com.isag.test.Message;
@@ -29,6 +28,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.json.JSONObject;
 import org.primefaces.model.StreamedContent;
+import com.isag.businessservice.IgmaTokensService;
 
 /**
  *
@@ -61,7 +61,7 @@ public class NotificationMB extends BaseFormBean {
     private IsagUserDTOConverter isagUserDTOConverter;
 
     @EJB
-    IsagTokensService isagTokensService;
+    IgmaTokensService isagTokensService;
 
     @Override
     @PostConstruct
@@ -72,7 +72,7 @@ public class NotificationMB extends BaseFormBean {
             getNotificationDTO().setSendType(0);
             setStep(0);
             preperImages();
-            getNotificationDTO().setIsagUserDTOList(isagTokensService.getAllIsagUserDTO());
+            getNotificationDTO().setIsagUserDTOList(isagTokensService.getAllIgmaUserDTO());
         }
     }
 
@@ -237,13 +237,13 @@ public class NotificationMB extends BaseFormBean {
         if (url.contains("home") && getNotificationDTO().getToken() != null) {
             if (getRequest().getAttribute("sessionId") == null || (getRequest().getAttribute("sessionId") != null && !request.getAttribute("sessionId").equals(request.getSession().getId()))) {
                 getRequest().setAttribute("sessionId", getRequest().getSession().getId());
-                IsagTokensDTO isagTokensDTO = new IsagTokensDTO();
+                IgmaTokensDTO isagTokensDTO = new IgmaTokensDTO();
                 isagTokensDTO.setToken(getNotificationDTO().getToken());
-                isagTokensService.addIsagTokenAlreadyExist(isagTokensDTO, getUserData().getUserlogin());
+                isagTokensService.addIgmaTokenAlreadyExist(isagTokensDTO, getUserData().getUserlogin());
             }
 //            if (getRequest().getAttribute("sessionId").equals(getRequest().getSession().getId())) {
 //                getRequest().setAttribute("sessionId", getRequest().getSession().getId());
-//                IsagTokensDTO isagTokensDTO = new IsagTokensDTO();
+//                IgmaTokensDTO isagTokensDTO = new IgmaTokensDTO();
 //                isagTokensDTO.setToken(notificationDTO.getToken());
 //                isagTokensService.addIsagTokenAlreadyExist(isagTokensDTO, getUserData().getUserlogin());
 //            }

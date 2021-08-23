@@ -6,7 +6,7 @@
 package com.isag.businessservice;
 
 import com.isag.dto.ExamsDTO;
-import com.isag.entity.IsagUser;
+import com.isag.entity.IgmaUser;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -25,7 +25,7 @@ public interface ExamsService {
 
     public List<ExamsDTO> findExamsListForStudent(Integer schoolStagesId, Integer branchId, Integer lessonId, Integer companyId, Integer studentId, Integer monthId);
 
-    public ExamsDTO save(ExamsDTO examsDTO, IsagUser isagUser);
+    public ExamsDTO save(ExamsDTO examsDTO, IgmaUser isagUser);
 
     public List<ExamsDTO> deleteExamsListForStudent(Integer studentId);
 

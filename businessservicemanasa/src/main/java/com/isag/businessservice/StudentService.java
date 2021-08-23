@@ -8,7 +8,7 @@ package com.isag.businessservice;
 import com.isag.dto.APIStudentDataDTO;
 import com.isag.dto.StudentDTO;
 import com.isag.entity.Student;
-import com.isag.entity.IsagUser;
+import com.isag.entity.IgmaUser;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -57,7 +57,7 @@ public interface StudentService {
 
     public void deleteStudent(Integer student);
 
-    public StudentDTO addStudent(StudentDTO student, IsagUser isagUser);
+    public StudentDTO addStudent(StudentDTO student, IgmaUser isagUser);
 
     public void deleteIdfromFellowsQualifications(Integer studentId);
 

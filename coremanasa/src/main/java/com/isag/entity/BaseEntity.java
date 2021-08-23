@@ -43,15 +43,15 @@ public class BaseEntity implements Serializable, Cloneable {
 
     @JoinColumn(name = "company_id", referencedColumnName = "id")
     @ManyToOne()
-    private IsagCompany companyId;
+    private IgmaCompany companyId;
 
     @JoinColumn(name = "created_by", referencedColumnName = "id")
     @ManyToOne()
-    private IsagUser createdBy;
+    private IgmaUser createdBy;
 
     @JoinColumn(name = "modified_by", referencedColumnName = "id")
     @ManyToOne()
-    private IsagUser modifiedBy;
+    private IgmaUser modifiedBy;
 
     @Column(name = "modification_date")
     @Temporal(TemporalType.TIMESTAMP)
@@ -69,39 +69,39 @@ public class BaseEntity implements Serializable, Cloneable {
         this.id = id;
     }
 
-    public IsagCompany getCompanyId() {
+    public IgmaCompany getCompanyId() {
         return companyId;
     }
 
-    public void setCompanyId(IsagCompany companyId) {
+    public void setCompanyId(IgmaCompany companyId) {
         this.companyId = companyId;
     }
 
     /**
      * @return the createdBy
      */
-    public IsagUser getCreatedBy() {
+    public IgmaUser getCreatedBy() {
         return createdBy;
     }
 
     /**
      * @param createdBy the createdBy to set
      */
-    public void setCreatedBy(IsagUser createdBy) {
+    public void setCreatedBy(IgmaUser createdBy) {
         this.createdBy = createdBy;
     }
 
     /**
      * @return the modifiedBy
      */
-    public IsagUser getModifiedBy() {
+    public IgmaUser getModifiedBy() {
         return modifiedBy;
     }
 
     /**
      * @param modifiedBy the modifiedBy to set
      */
-    public void setModifiedBy(IsagUser modifiedBy) {
+    public void setModifiedBy(IgmaUser modifiedBy) {
         if (createdBy == null) {
             this.createdBy = modifiedBy;
         }

@@ -5,7 +5,6 @@
  */
 package com.isag.rest;
 
-import com.isag.businessservice.IsagUserLoginService;
 import com.isag.dto.APIStudentDataDTO;
 import com.isag.dto.APIloginDTO;
 import com.isag.general.GeneralService;
@@ -18,6 +17,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import com.isag.businessservice.IgmaUserLoginService;
 
 /**
  *
@@ -29,7 +29,7 @@ public class LoginStudentRest {
     @EJB
     private GeneralService generalService;
     @EJB
-    private IsagUserLoginService isagUserLoginService;
+    private IgmaUserLoginService isagUserLoginService;
 
     @Transactional
     @Path("/login")

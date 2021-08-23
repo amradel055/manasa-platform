@@ -5,16 +5,16 @@
  */
 package com.isag.isag;
 
-import com.isag.businessservice.IsagScreenService;
 import com.isag.businessservice.SymbolService;
 import com.isag.converter.IsagScreenDTOConverter;
 import com.isag.converter.SymbolDTOConverter;
-import com.isag.dto.IsagScreenDTO;
-import com.isag.dto.IsagSupportDTO;
+import com.isag.dto.IgmaScreenDTO;
+import com.isag.dto.IgmaSupportDTO;
 import com.isag.dto.SymbolDTO;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
+import com.isag.businessservice.IgmaScreenService;
 
 /**
  *
@@ -22,14 +22,14 @@ import javax.ejb.EJB;
  */
 public abstract class SupportForm extends BaseFormBean {
 
-    private IsagSupportDTO support;
+    private IgmaSupportDTO support;
     
     @EJB
-    private IsagScreenService isagScreenService;
+    private IgmaScreenService isagScreenService;
     @EJB
     private SymbolService symbolService;
     
-    private List<IsagScreenDTO> isagScreenList;
+    private List<IgmaScreenDTO> isagScreenList;
     private IsagScreenDTOConverter isagScreenConverter;
     
     @Override
@@ -44,7 +44,7 @@ public abstract class SupportForm extends BaseFormBean {
     @Override
     public abstract String getScreenName();
 
-    public List<IsagScreenDTO> findScreenBymodeule() {
+    public List<IgmaScreenDTO> findScreenBymodeule() {
         if (support != null && support.getModule() != null) {
             setIsagScreenList(isagScreenService.getAllScreens(support.getModule()));
             setIsagScreenConverter(new IsagScreenDTOConverter(isagScreenList));
@@ -69,7 +69,7 @@ public abstract class SupportForm extends BaseFormBean {
     /**
      * @return the isagScreenList
      */
-    public List<IsagScreenDTO> getIsagScreenList() {
+    public List<IgmaScreenDTO> getIsagScreenList() {
         if (isagScreenList == null || isagScreenList.isEmpty()) {
             isagScreenList = new ArrayList<>();
         }
@@ -79,16 +79,16 @@ public abstract class SupportForm extends BaseFormBean {
     /**
      * @param isagScreenList the isagScreenList to set
      */
-    public void setIsagScreenList(List<IsagScreenDTO> isagScreenList) {
+    public void setIsagScreenList(List<IgmaScreenDTO> isagScreenList) {
         this.isagScreenList = isagScreenList;
     }
 
     /**
      * @return the support
      */
-    public IsagSupportDTO getSupport() {
+    public IgmaSupportDTO getSupport() {
         if (support == null) {
-            support = new IsagSupportDTO();
+            support = new IgmaSupportDTO();
         }
         return support;
     }
@@ -96,7 +96,7 @@ public abstract class SupportForm extends BaseFormBean {
     /**
      * @param support the support to set
      */
-    public void setSupport(IsagSupportDTO support) {
+    public void setSupport(IgmaSupportDTO support) {
         this.support = support;
     }
 

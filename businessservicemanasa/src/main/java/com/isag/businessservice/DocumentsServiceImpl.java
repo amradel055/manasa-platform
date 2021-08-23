@@ -9,9 +9,9 @@ import com.isag.core.GenericDAO;
 import com.isag.dto.DocumentsDTO;
 import com.isag.dto.LessonDTO;
 import com.isag.entity.Branch;
-import com.isag.entity.IsagCompany;
+import com.isag.entity.IgmaCompany;
 import com.isag.entity.Documents;
-import com.isag.entity.IsagUser;
+import com.isag.entity.IgmaUser;
 import com.isag.entity.Lesson;
 import java.util.ArrayList;
 import java.util.Date;
@@ -54,7 +54,7 @@ public class DocumentsServiceImpl implements DocumentsService {
     }
 
     @Override
-    public DocumentsDTO save(DocumentsDTO documentsDTO, IsagUser isagUser) {
+    public DocumentsDTO save(DocumentsDTO documentsDTO, IgmaUser isagUser) {
         DocumentsDTO msg = new DocumentsDTO();
         Documents documents = null;
         if (documentsDTO.getId() != null) {
@@ -63,12 +63,12 @@ public class DocumentsServiceImpl implements DocumentsService {
         if (documentsDTO != null && documentsDTO.getLessonId() != null
                 && documentsDTO.getLink() != null) {
             if (isagUser == null) {
-                isagUser = new IsagUser();
+                isagUser = new IgmaUser();
                 isagUser.setId(61);
                 Branch branch = new Branch();
                 branch.setId(documentsDTO.getBranchId());
                 isagUser.setBranchId(branch);
-                IsagCompany isagCompany = new IsagCompany();
+                IgmaCompany isagCompany = new IgmaCompany();
                 isagCompany.setId(documentsDTO.getCompanyId());
                 isagUser.setCompanyId(isagCompany);
             }
@@ -95,11 +95,11 @@ public class DocumentsServiceImpl implements DocumentsService {
                 branch.setId(branchId);
                 documents.setBranchId(branch);
 
-                IsagUser isagUser = new IsagUser();
+                IgmaUser isagUser = new IgmaUser();
                 isagUser.setId(61);
                 documents.setCreatedBy(isagUser);
 
-                IsagCompany isagCompany = new IsagCompany();
+                IgmaCompany isagCompany = new IgmaCompany();
                 isagCompany.setId(companyId);
                 documents.setCompanyId(isagCompany);
                 
@@ -170,7 +170,7 @@ public class DocumentsServiceImpl implements DocumentsService {
         return dTO;
     }
 
-    private Documents mapToEntity(DocumentsDTO dTO, IsagUser isagUser, Documents entity) {
+    private Documents mapToEntity(DocumentsDTO dTO, IgmaUser isagUser, Documents entity) {
         if (entity == null) {
             entity = new Documents();
         }

@@ -88,18 +88,18 @@ public class Employee extends BaseEntity {
     private String permenantAddress;
     @JoinColumn(name = "company_id", referencedColumnName = "id")
     @ManyToOne
-    private IsagCompany companyId;
+    private IgmaCompany companyId;
     @JoinColumn(name = "created_by", referencedColumnName = "id")
     @ManyToOne
-    private IsagUser createdBy;
+    private IgmaUser createdBy;
     @JoinColumn(name = "sponsor_id", referencedColumnName = "id")
     @ManyToOne
     private HrSponsor sponsorId;
     @JoinColumn(name = "modified_by", referencedColumnName = "id")
     @ManyToOne
-    private IsagUser modifiedBy;
+    private IgmaUser modifiedBy;
     @OneToMany(mappedBy = "employeeId")
-    private Collection<IsagUser> isagUserCollection;
+    private Collection<IgmaUser> isagUserCollection;
     @Size(max = 45)
     @Column(name = "name")
     private String name;
@@ -591,19 +591,19 @@ public class Employee extends BaseEntity {
         this.permenantAddress = permenantAddress;
     }
 
-    public IsagCompany getCompanyId() {
+    public IgmaCompany getCompanyId() {
         return companyId;
     }
 
-    public void setCompanyId(IsagCompany companyId) {
+    public void setCompanyId(IgmaCompany companyId) {
         this.companyId = companyId;
     }
 
-    public IsagUser getCreatedBy() {
+    public IgmaUser getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(IsagUser createdBy) {
+    public void setCreatedBy(IgmaUser createdBy) {
         this.createdBy = createdBy;
     }
 
@@ -615,20 +615,20 @@ public class Employee extends BaseEntity {
         this.sponsorId = sponsorId;
     }
 
-    public IsagUser getModifiedBy() {
+    public IgmaUser getModifiedBy() {
         return modifiedBy;
     }
 
-    public void setModifiedBy(IsagUser modifiedBy) {
+    public void setModifiedBy(IgmaUser modifiedBy) {
         this.modifiedBy = modifiedBy;
     }
 
     @XmlTransient
-    public Collection<IsagUser> getIsagUserCollection() {
+    public Collection<IgmaUser> getIsagUserCollection() {
         return isagUserCollection;
     }
 
-    public void setIsagUserCollection(Collection<IsagUser> isagUserCollection) {
+    public void setIsagUserCollection(Collection<IgmaUser> isagUserCollection) {
         this.isagUserCollection = isagUserCollection;
     }
 }

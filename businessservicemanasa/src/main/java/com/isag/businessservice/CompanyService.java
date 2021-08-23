@@ -5,9 +5,9 @@
  */
 package com.isag.businessservice;
 
-import com.isag.dto.IsagCompanyDTO;
+import com.isag.dto.IgmaCompanyDTO;
 import com.isag.entity.CompanyLanguage;
-import com.isag.entity.IsagCompany;
+import com.isag.entity.IgmaCompany;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -18,19 +18,19 @@ import javax.ejb.Remote;
 @Remote
 public interface CompanyService {
 
-    public void deleteCompany(IsagCompany isagCompany);
+    public void deleteCompany(IgmaCompany isagCompany);
 
-    public List<IsagCompany> getAllCompanies();
+    public List<IgmaCompany> getAllCompanies();
 
-    public IsagCompany addCompany(IsagCompany company);
+    public IgmaCompany addCompany(IgmaCompany company);
 
-    public IsagCompany findCompany(Integer companyId);
+    public IgmaCompany findCompany(Integer companyId);
 
-    public IsagCompany updateCompany(IsagCompany company);
+    public IgmaCompany updateCompany(IgmaCompany company);
 
     public CompanyLanguage updateCompanyLanguage(CompanyLanguage companyLanguage);
 
-    public void removeCompanyLanguages(IsagCompany company);
+    public void removeCompanyLanguages(IgmaCompany company);
 
     public CompanyLanguage addCompanyLanguage(CompanyLanguage companyLanguage);
 
@@ -38,9 +38,9 @@ public interface CompanyService {
 
     public void removeCompanyLanguage(Integer companyId, Integer langId);
 
-    public List<IsagCompany> getImageByCompanyId(String imageName, Integer companyId);
+    public List<IgmaCompany> getImageByCompanyId(String imageName, Integer companyId);
     
-    public List<IsagCompany> findImageOfCompanyById(String imageName, Integer companyId);
+    public List<IgmaCompany> findImageOfCompanyById(String imageName, Integer companyId);
     
-    public List<IsagCompanyDTO> getAllCompaniesDTO();
+    public List<IgmaCompanyDTO> getAllCompaniesDTO();
 }

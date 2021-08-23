@@ -80,13 +80,13 @@ public class Branch extends BaseEntity {
     private Collection<Employee> employeeCollection;
     @JoinColumn(name = "company_id", referencedColumnName = "id")
     @ManyToOne
-    private IsagCompany companyId;
+    private IgmaCompany companyId;
     @JoinColumn(name = "created_by", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private IsagUser createdBy;
+    private IgmaUser createdBy;
     @JoinColumn(name = "modified_by", referencedColumnName = "id")
     @ManyToOne
-    private IsagUser modifiedBy;
+    private IgmaUser modifiedBy;
     @OneToMany(mappedBy = "branchId")
     private Collection<Department> departmentCollection;
     @OneToMany(mappedBy = "branchId")
@@ -122,7 +122,7 @@ public class Branch extends BaseEntity {
     @Column(name = "tax_code")
     private String taxCode;
     @OneToMany(mappedBy = "branchId")
-    private Collection<IsagUser> isagUserCollection;
+    private Collection<IgmaUser> isagUserCollection;
 
 
     public Branch() {
@@ -218,11 +218,11 @@ public class Branch extends BaseEntity {
     }
 
     @XmlTransient
-    public Collection<IsagUser> getIsagUserCollection() {
+    public Collection<IgmaUser> getIsagUserCollection() {
         return isagUserCollection;
     }
 
-    public void setIsagUserCollection(Collection<IsagUser> isagUserCollection) {
+    public void setIsagUserCollection(Collection<IgmaUser> isagUserCollection) {
         this.isagUserCollection = isagUserCollection;
     }
 
@@ -338,27 +338,27 @@ public class Branch extends BaseEntity {
         this.employeeCollection = employeeCollection;
     }
 
-    public IsagCompany getCompanyId() {
+    public IgmaCompany getCompanyId() {
         return companyId;
     }
 
-    public void setCompanyId(IsagCompany companyId) {
+    public void setCompanyId(IgmaCompany companyId) {
         this.companyId = companyId;
     }
 
-    public IsagUser getCreatedBy() {
+    public IgmaUser getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(IsagUser createdBy) {
+    public void setCreatedBy(IgmaUser createdBy) {
         this.createdBy = createdBy;
     }
 
-    public IsagUser getModifiedBy() {
+    public IgmaUser getModifiedBy() {
         return modifiedBy;
     }
 
-    public void setModifiedBy(IsagUser modifiedBy) {
+    public void setModifiedBy(IgmaUser modifiedBy) {
         this.modifiedBy = modifiedBy;
     }
 

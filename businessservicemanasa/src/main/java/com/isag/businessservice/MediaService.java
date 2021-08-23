@@ -6,7 +6,7 @@
 package com.isag.businessservice;
 
 import com.isag.dto.MediaDTO;
-import com.isag.entity.IsagUser;
+import com.isag.entity.IgmaUser;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -21,7 +21,7 @@ public interface MediaService {
 
     public void deleteMedia(Integer mediaId);
 
-    public MediaDTO save(MediaDTO mediaDTO, IsagUser isagUser);
+    public MediaDTO save(MediaDTO mediaDTO, IgmaUser isagUser);
 
     public List<MediaDTO> findMedia(Integer branchId, Integer mediaType);
 }

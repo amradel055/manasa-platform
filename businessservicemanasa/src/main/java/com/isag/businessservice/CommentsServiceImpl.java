@@ -8,9 +8,9 @@ package com.isag.businessservice;
 import com.isag.core.GenericDAO;
 import com.isag.dto.CommentsDTO;
 import com.isag.entity.Branch;
-import com.isag.entity.IsagCompany;
+import com.isag.entity.IgmaCompany;
 import com.isag.entity.Comments;
-import com.isag.entity.IsagUser;
+import com.isag.entity.IgmaUser;
 import com.isag.entity.Lesson;
 import com.isag.entity.Student;
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ public class CommentsServiceImpl implements CommentsService {
     }
 
     @Override
-    public CommentsDTO save(CommentsDTO commentsDTO, IsagUser isagUser) {
+    public CommentsDTO save(CommentsDTO commentsDTO, IgmaUser isagUser) {
         CommentsDTO msg = new CommentsDTO();
         Comments comments = null;
         if (commentsDTO.getId() != null) {
@@ -50,12 +50,12 @@ public class CommentsServiceImpl implements CommentsService {
         }
         if (commentsDTO != null && commentsDTO.getLessonId() != null) {
             if (isagUser == null) {
-                isagUser = new IsagUser();
+                isagUser = new IgmaUser();
                 isagUser.setId(61);
                 Branch branch = new Branch();
                 branch.setId(commentsDTO.getBranchId());
                 isagUser.setBranchId(branch);
-                IsagCompany isagCompany = new IsagCompany();
+                IgmaCompany isagCompany = new IgmaCompany();
                 isagCompany.setId(commentsDTO.getCompanyId());
                 isagUser.setCompanyId(isagCompany);
             }
@@ -137,7 +137,7 @@ public class CommentsServiceImpl implements CommentsService {
         return dTO;
     }
 
-    private Comments mapToEntity(CommentsDTO dTO, IsagUser isagUser, Comments entity) {
+    private Comments mapToEntity(CommentsDTO dTO, IgmaUser isagUser, Comments entity) {
         if (entity == null) {
             entity = new Comments();
         }

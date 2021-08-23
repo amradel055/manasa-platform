@@ -8,7 +8,7 @@ package com.isag.businessservice;
 import com.isag.core.GenericDAO;
 import com.isag.dto.APIBranchDTO;
 import com.isag.entity.Branch;
-import com.isag.entity.IsagUser;
+import com.isag.entity.IgmaUser;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -63,7 +63,7 @@ public class BranchServiceImp implements BranchService {
     }
 
     @Override
-    public Branch addBranch(Branch branch, IsagUser userData) {
+    public Branch addBranch(Branch branch, IgmaUser userData) {
         Branch branch1 = null;
         if (!validateBranch(branch.getCompanyId().getId(), branch, branch.getSerial())) {
             branch1 = dao.updateEntity(branch);

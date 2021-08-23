@@ -6,11 +6,11 @@
 package com.isag.businessservice;
 
 import com.isag.core.GenericDAO;
-import com.isag.dto.IsagCompanyDTO;
+import com.isag.dto.IgmaCompanyDTO;
 import com.isag.entity.CompanyLanguage;
 import com.isag.entity.DataDictionary;
-import com.isag.entity.IsagCompany;
-import com.isag.entity.IsagUser;
+import com.isag.entity.IgmaCompany;
+import com.isag.entity.IgmaUser;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -33,27 +33,27 @@ public class CompanyServiceImpl implements CompanyService {
     private DDService ddService;
 
     @Override
-    public List<IsagCompany> getAllCompanies() {
-        return dao.findAll(IsagCompany.class);
+    public List<IgmaCompany> getAllCompanies() {
+        return dao.findAll(IgmaCompany.class);
     }
 
     @Override
-    public IsagCompany addCompany(IsagCompany company) {
+    public IgmaCompany addCompany(IgmaCompany company) {
         return dao.updateEntity(company);
     }
 
     @Override
-    public IsagCompany findCompany(Integer companyId) {
-        return dao.findEntityById(IsagCompany.class, companyId);
+    public IgmaCompany findCompany(Integer companyId) {
+        return dao.findEntityById(IgmaCompany.class, companyId);
     }
 
     @Override
-    public IsagCompany updateCompany(IsagCompany company) {
+    public IgmaCompany updateCompany(IgmaCompany company) {
         return dao.updateEntity(company);
     }
 
     @Override
-    public void deleteCompany(IsagCompany company) {
+    public void deleteCompany(IgmaCompany company) {
         dao.deleteEntity(company);
     }
 
@@ -63,7 +63,7 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public void removeCompanyLanguages(IsagCompany company) {
+    public void removeCompanyLanguages(IgmaCompany company) {
 
     }
 
@@ -98,43 +98,43 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public List<IsagCompany> getImageByCompanyId(String imageName, Integer companyId) {
+    public List<IgmaCompany> getImageByCompanyId(String imageName, Integer companyId) {
         Map<String, Object> params = new HashMap<>();
         params.put("imageName", imageName);
         params.put("companyId", companyId);
-        List<IsagCompany> isagCompanyList = dao.findListByQuery("SELECT c FROM IsagCompany c WHERE c.id != :companyId AND c.image = :imageName", params);
+        List<IgmaCompany> isagCompanyList = dao.findListByQuery("SELECT c FROM IsagCompany c WHERE c.id != :companyId AND c.image = :imageName", params);
 
         return isagCompanyList;
     }
 
     @Override
-    public List<IsagCompany> findImageOfCompanyById(String imageName, Integer companyId) {
+    public List<IgmaCompany> findImageOfCompanyById(String imageName, Integer companyId) {
         Map<String, Object> params = new HashMap<>();
         params.put("imageName", imageName);
         params.put("companyId", companyId);
-        List<IsagCompany> isagCompanyList = dao.findListByQuery("SELECT c FROM IsagCompany c WHERE c.id = :companyId AND c.image = :imageName", params);
+        List<IgmaCompany> isagCompanyList = dao.findListByQuery("SELECT c FROM IsagCompany c WHERE c.id = :companyId AND c.image = :imageName", params);
 
         return isagCompanyList;
 
     }
 
     @Override
-    public List<IsagCompanyDTO> getAllCompaniesDTO() {
-        List<IsagCompany> list = dao.findAll(IsagCompany.class);
-        List<IsagCompanyDTO> dTOList = new ArrayList<>();
+    public List<IgmaCompanyDTO> getAllCompaniesDTO() {
+        List<IgmaCompany> list = dao.findAll(IgmaCompany.class);
+        List<IgmaCompanyDTO> dTOList = new ArrayList<>();
         returnListDTO(list,dTOList);
         return dTOList;
     }
 
-    private IsagCompanyDTO mapTODTO(IsagCompany entity, IsagCompanyDTO dTO) {
+    private IgmaCompanyDTO mapTODTO(IgmaCompany entity, IgmaCompanyDTO dTO) {
         if (dTO == null) {
-            dTO = new IsagCompanyDTO();
+            dTO = new IgmaCompanyDTO();
         }
         initMapToDTO(dTO, entity);
         return dTO;
     }
 
-    private void initMapToDTO(IsagCompanyDTO dTO, IsagCompany entity) {
+    private void initMapToDTO(IgmaCompanyDTO dTO, IgmaCompany entity) {
 
         dTO.setName(entity.getName());
         dTO.setCode(entity.getCode());
@@ -157,8 +157,8 @@ public class CompanyServiceImpl implements CompanyService {
 
     }
 
-    private IsagCompany mapFromDTO(IsagCompanyDTO dTO, IsagUser isagUser) {
-        IsagCompany entity = new IsagCompany();
+    private IgmaCompany mapFromDTO(IgmaCompanyDTO dTO, IgmaUser isagUser) {
+        IgmaCompany entity = new IgmaCompany();
 
         entity.setName(dTO.getName());
         entity.setCode(dTO.getCode());
@@ -180,7 +180,7 @@ public class CompanyServiceImpl implements CompanyService {
             entity.setCreationDate(new Date());
 
         } else {
-            IsagUser isagUser1 = new IsagUser();
+            IgmaUser isagUser1 = new IgmaUser();
             isagUser1.setId(dTO.getCreatedBy());
             entity.setCreatedBy(isagUser1);
             entity.setCreationDate(dTO.getCreatedDate());
@@ -193,8 +193,8 @@ public class CompanyServiceImpl implements CompanyService {
         return entity;
     }
 
-    private void returnListDTO(List<IsagCompany> list, List<IsagCompanyDTO> dTOList) {
-        for (IsagCompany entity : list) {
+    private void returnListDTO(List<IgmaCompany> list, List<IgmaCompanyDTO> dTOList) {
+        for (IgmaCompany entity : list) {
             dTOList.add(mapTODTO(entity, null));
         }
     }

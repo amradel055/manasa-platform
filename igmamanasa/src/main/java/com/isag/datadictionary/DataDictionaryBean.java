@@ -10,7 +10,7 @@ import com.isag.businessservice.CompanyService;
 import com.isag.businessservice.DDService;
 import com.isag.entity.Branch;
 import com.isag.entity.DataDictionary;
-import com.isag.entity.IsagCompany;
+import com.isag.entity.IgmaCompany;
 import com.isag.entity.Symbol;
 import com.isag.isag.BaseListBean;
 import com.isag.isag.UserData;
@@ -38,10 +38,10 @@ public class DataDictionaryBean extends BaseListBean implements Serializable {
     private List<DataDictionary> dataDictionaryList;
     private Integer companyId;
     ;
-    private List<IsagCompany> listCompanies;
-    private List<IsagCompany> listCompaniesSave;
+    private List<IgmaCompany> listCompanies;
+    private List<IgmaCompany> listCompaniesSave;
     private UserData userData;
-    private IsagCompany companyvar;
+    private IgmaCompany companyvar;
     private boolean addToSettingFlag = false;
     @EJB
     private CompanyService companyService;
@@ -100,7 +100,7 @@ public class DataDictionaryBean extends BaseListBean implements Serializable {
 
     public void onCompanyChange() {
         try {
-            IsagCompany company = new IsagCompany();
+            IgmaCompany company = new IgmaCompany();
             if (getCompanyId() != null) {
                 company.setId(getCompanyId());
                 setDataDictionaryList(getdDService().getALLDataDictionaryByCompanyId(getCompanyId()));
@@ -119,7 +119,7 @@ public class DataDictionaryBean extends BaseListBean implements Serializable {
             langF.setId(27);
             listCompaniesSave = companyService.getAllCompanies();
 
-            for (IsagCompany company : listCompaniesSave) {
+            for (IgmaCompany company : listCompaniesSave) {
                 settingDataDicionary(langM, company, langF, dataDicionaryList);
             }
 
@@ -139,7 +139,7 @@ public class DataDictionaryBean extends BaseListBean implements Serializable {
         }
     }
 
-    public void settingDataDicionary(Symbol langM, IsagCompany company, Symbol langF, List<DataDictionary> dataDicionaryList) {
+    public void settingDataDicionary(Symbol langM, IgmaCompany company, Symbol langF, List<DataDictionary> dataDicionaryList) {
         try {
             DataDictionary dataDicionaryMother;
             DataDictionary dataDicionaryForiegn;
@@ -193,7 +193,7 @@ public class DataDictionaryBean extends BaseListBean implements Serializable {
         try {
             setDataDicionarySelected((DataDictionary) e.getObject());
             if (getDataDicionarySelected() != null) {
-                IsagCompany company = new IsagCompany();
+                IgmaCompany company = new IgmaCompany();
                 company.setId(getCompanyId());
                 getDataDicionarySelected().setCompanyId(company);
                 getDataDicionarySelected().setModificationDate(new Date());
@@ -223,11 +223,11 @@ public class DataDictionaryBean extends BaseListBean implements Serializable {
         this.companyId = companyId;
     }
 
-    public void setListCompanies(List<IsagCompany> listCompanies) {
+    public void setListCompanies(List<IgmaCompany> listCompanies) {
         this.listCompanies = listCompanies;
     }
 
-    public List<IsagCompany> getListCompanies() {
+    public List<IgmaCompany> getListCompanies() {
         return listCompanies;
     }
 
@@ -286,14 +286,14 @@ public class DataDictionaryBean extends BaseListBean implements Serializable {
     /**
      * @return the companyvar
      */
-    public IsagCompany getCompanyvar() {
+    public IgmaCompany getCompanyvar() {
         return companyvar;
     }
 
     /**
      * @param companyvar the companyvar to set
      */
-    public void setCompanyvar(IsagCompany companyvar) {
+    public void setCompanyvar(IgmaCompany companyvar) {
         this.companyvar = companyvar;
     }
 

@@ -6,7 +6,7 @@
 package com.isag.businessservice;
 
 import com.isag.dto.QuestionsDTO;
-import com.isag.entity.IsagUser;
+import com.isag.entity.IgmaUser;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -19,7 +19,7 @@ public interface QuestionsService {
 
     public List<QuestionsDTO> findQuestionsByQuestionId(Integer examsId);
 
-    public QuestionsDTO save(QuestionsDTO questionsDTO, IsagUser isagUser, Integer examsId);
+    public QuestionsDTO save(QuestionsDTO questionsDTO, IgmaUser isagUser, Integer examsId);
     
     public void deleteQuestionAndAnswer(Integer questionsId);
 
@@ -27,9 +27,9 @@ public interface QuestionsService {
 
     public void deleteQuestions(Integer questionId);
 
-    public QuestionsDTO saveList(List<QuestionsDTO> questionsDTOsList, IsagUser isagUser, Integer examsId);
+    public QuestionsDTO saveList(List<QuestionsDTO> questionsDTOsList, IgmaUser isagUser, Integer examsId);
 
-    public QuestionsDTO saveListForStudent(List<QuestionsDTO> questionsDTOsList, IsagUser isagUser, Integer examsId, Integer studentId, Integer parentExamId);
+    public QuestionsDTO saveListForStudent(List<QuestionsDTO> questionsDTOsList, IgmaUser isagUser, Integer examsId, Integer studentId, Integer parentExamId);
 
     public void deleteList(List<Integer> questionsDTOsList);
     

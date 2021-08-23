@@ -6,7 +6,7 @@
 package com.isag.uploadfile;
 
 import com.isag.entity.Branch;
-import com.isag.entity.IsagCompany;
+import com.isag.entity.IgmaCompany;
 import com.isag.isag.OperatingSystem;
 import com.isag.isag.UserData;
 import java.io.File;
@@ -34,7 +34,7 @@ public class FileUploadController {
     private String notificationDestination;
     private String imageName;
     String imageId ;
-    List<IsagCompany> isagCompanyList;
+    List<IgmaCompany> isagCompanyList;
 
     List<Branch> branchList;
 //    List<InvItem> otherItems;

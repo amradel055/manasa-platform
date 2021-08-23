@@ -5,7 +5,7 @@
  */
 package com.isag.converter;
 
-import com.isag.entity.IsagPrivilege;
+import com.isag.entity.IgmaPrivilege;
 import java.util.List;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -18,16 +18,16 @@ import javax.faces.convert.Converter;
 public class IsagPrivilegeConverter implements Converter {
     
     
-       private List<IsagPrivilege> isagPrivileges;
+       private List<IgmaPrivilege> isagPrivileges;
 
-    public IsagPrivilegeConverter(List<IsagPrivilege> isagPrivileges) {
+    public IsagPrivilegeConverter(List<IgmaPrivilege> isagPrivileges) {
         this.isagPrivileges = isagPrivileges;
     }
 
 
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
-        for (IsagPrivilege isagPrivilege : isagPrivileges) {
+        for (IgmaPrivilege isagPrivilege : isagPrivileges) {
             try {
                 Long.parseLong(value);
             } catch (Exception e) {
@@ -45,8 +45,8 @@ public class IsagPrivilegeConverter implements Converter {
         try {
 
             if (value != null && !value.equals("") && !value.equals(" ")) {
-                if (((IsagPrivilege) value).getId()!= null && ((IsagPrivilege) value).getId().longValue() != 0) {
-                    IsagPrivilege codegenerator = (IsagPrivilege) value;
+                if (((IgmaPrivilege) value).getId()!= null && ((IgmaPrivilege) value).getId().longValue() != 0) {
+                    IgmaPrivilege codegenerator = (IgmaPrivilege) value;
                     return codegenerator.getId().longValue() + "";
                 } else {
                     return "";

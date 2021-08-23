@@ -12,9 +12,9 @@ import com.isag.businessservice.SymbolService;
 import com.isag.entity.Branch;
 import com.isag.entity.CompanyLanguage;
 import com.isag.entity.Employee;
-import com.isag.entity.IsagCompany;
-import com.isag.entity.IsagRole;
-import com.isag.entity.IsagUser;
+import com.isag.entity.IgmaCompany;
+import com.isag.entity.IgmaRole;
+import com.isag.entity.IgmaUser;
 import com.isag.entity.Symbol;
 import com.isag.isag.BaseFormBean;
 import com.isag.isag.UserData;
@@ -30,7 +30,7 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import org.primefaces.context.RequestContext;
-import com.isag.businessservice.IsagUserService;
+import com.isag.businessservice.IgmaUserService;
 
 /**
  *
@@ -47,13 +47,13 @@ public class UserFormBean extends BaseFormBean implements Serializable {
     private Symbol userLang;
     private String userCompanyCode;
     private Employee employeeSelected;
-    private List<IsagCompany> userCompany;
+    private List<IgmaCompany> userCompany;
     private UserData userData;
-    private IsagCompany company;
-    private IsagRole role;
-    private IsagUser userDetails;
+    private IgmaCompany company;
+    private IgmaRole role;
+    private IgmaUser userDetails;
     private Integer selectedCompanyId;
-    private IsagRole roleId;
+    private IgmaRole roleId;
     private Integer userId;
     private Integer selectedLangId;
     private Integer master;
@@ -63,7 +63,7 @@ public class UserFormBean extends BaseFormBean implements Serializable {
 
 
     @EJB
-    private IsagUserService userService;
+    private IgmaUserService userService;
 
     @EJB
     private RoleService roleService;
@@ -86,7 +86,7 @@ public class UserFormBean extends BaseFormBean implements Serializable {
     @Override
     public String save() {
         try {
-            userDetails = new IsagUser();
+            userDetails = new IgmaUser();
             if (userName != null && userPassword != null && userCode != null && selectedLangId != null) {
 
                 userDetails.setName(userName.trim());
@@ -97,7 +97,7 @@ public class UserFormBean extends BaseFormBean implements Serializable {
                 sym.setId(selectedLangId);
                 userDetails.setLang(sym);
                 userDetails.setMaster(getMaster());
-                IsagCompany companySelected = new IsagCompany();
+                IgmaCompany companySelected = new IgmaCompany();
                 companySelected.setId(selectedCompanyId);
                 userDetails.setCompanyId(companySelected);
 //                if (getRemCompanyDTO != null) {
@@ -207,7 +207,7 @@ public class UserFormBean extends BaseFormBean implements Serializable {
                 for (CompanyLanguage companyLanguage : companyLanguages) {
                     languages.add(companyLanguage.getSymbol());
                 }
-                for (IsagCompany usercom : userCompany) {
+                for (IgmaCompany usercom : userCompany) {
                     if (usercom.getId().equals(selectedCompanyId)) {
                         setUserCompanyCode(usercom.getCode());
 
@@ -360,11 +360,11 @@ public class UserFormBean extends BaseFormBean implements Serializable {
         this.userCompanyCode = userCompanyCode;
     }
 
-    public List<IsagCompany> getUserCompany() {
+    public List<IgmaCompany> getUserCompany() {
         return userCompany;
     }
 
-    public void setUserCompany(List<IsagCompany> userCompanies) {
+    public void setUserCompany(List<IgmaCompany> userCompanies) {
         this.userCompany = userCompanies;
     }
 
@@ -376,27 +376,27 @@ public class UserFormBean extends BaseFormBean implements Serializable {
         this.userData = userData;
     }
 
-    public IsagCompany getCompany() {
+    public IgmaCompany getCompany() {
         return company;
     }
 
-    public void setCompany(IsagCompany company) {
+    public void setCompany(IgmaCompany company) {
         this.company = company;
     }
 
-    public IsagRole getRole() {
+    public IgmaRole getRole() {
         return role;
     }
 
-    public void setRole(IsagRole role) {
+    public void setRole(IgmaRole role) {
         this.role = role;
     }
 
-    public IsagUser getUserDetails() {
+    public IgmaUser getUserDetails() {
         return userDetails;
     }
 
-    public void setUserDetails(IsagUser userDetails) {
+    public void setUserDetails(IgmaUser userDetails) {
         this.userDetails = userDetails;
     }
 
@@ -416,11 +416,11 @@ public class UserFormBean extends BaseFormBean implements Serializable {
         this.selectedCompanyId = CompanyId;
     }
 
-    public IsagRole getRoleId() {
+    public IgmaRole getRoleId() {
         return roleId;
     }
 
-    public void setRoleId(IsagRole roleId) {
+    public void setRoleId(IgmaRole roleId) {
         this.roleId = roleId;
     }
 

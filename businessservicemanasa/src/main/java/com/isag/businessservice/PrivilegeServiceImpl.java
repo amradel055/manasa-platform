@@ -6,7 +6,7 @@
 package com.isag.businessservice;
 
 import com.isag.core.GenericDAO;
-import com.isag.entity.IsagPrivilege;
+import com.isag.entity.IgmaPrivilege;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,10 +23,10 @@ public class PrivilegeServiceImpl implements PrivilegeService {
 
     @EJB
     private GenericDAO dao;
-    private List<IsagPrivilege> IsagPrivilegeList = new ArrayList<>();
+    private List<IgmaPrivilege> IsagPrivilegeList = new ArrayList<>();
 
     @Override
-    public List<IsagPrivilege> getRolePrivileges(Integer roleId) {
+    public List<IgmaPrivilege> getRolePrivileges(Integer roleId) {
         Map<String, Object> params = new HashMap();
         params.put("id", roleId);
         return dao.findListByQuery("SELECT priv FROM IsagPrivilege priv WHERE priv.roleId.id = :id order by priv.screenId.serial", params);
@@ -35,17 +35,17 @@ public class PrivilegeServiceImpl implements PrivilegeService {
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
     @Override
-    public IsagPrivilege save(IsagPrivilege privilege) {
+    public IgmaPrivilege save(IgmaPrivilege privilege) {
         return dao.updateEntity(privilege);
     }
 
     @Override
-    public IsagPrivilege getUserPrivilegeOnScreen(Integer roleId, String entityName) {
-        IsagPrivilege userPrivilege = new IsagPrivilege();
+    public IgmaPrivilege getUserPrivilegeOnScreen(Integer roleId, String entityName) {
+        IgmaPrivilege userPrivilege = new IgmaPrivilege();
         Map<String, Object> params = new HashMap();
         params.put("roleId", roleId);
         params.put("entityName", entityName);
-        List<IsagPrivilege> privileges = dao.findListByQuery("SELECT priv FROM IsagPrivilege "
+        List<IgmaPrivilege> privileges = dao.findListByQuery("SELECT priv FROM IsagPrivilege "
                 + "priv WHERE priv.view = 1 AND priv.screenId.name = :entityName AND "
                 + "priv.roleId.id = :roleId", params);
         if (privileges.size() > 0) {
@@ -55,11 +55,11 @@ public class PrivilegeServiceImpl implements PrivilegeService {
     }
  
     @Override
-    public List<IsagPrivilege> getUserPrivileges(Integer userId, Integer branchId) {
+    public List<IgmaPrivilege> getUserPrivileges(Integer userId, Integer branchId) {
         Map<String, Object> params = new HashMap();
         params.put("userId", userId);
         params.put("branchId", branchId);
-        List<IsagPrivilege> privileges = dao.findListByQuery("SELECT priv FROM "
+        List<IgmaPrivilege> privileges = dao.findListByQuery("SELECT priv FROM "
                 + "IsagPrivilege priv WHERE (priv.view = 1 OR priv.edit = 1 OR priv.delete = 1 OR priv.add = 1) AND priv.roleId.id IN "
                 + "(SELECT userrole.roleId.id FROM IsagUserRole userrole WHERE userrole.userId.id = :userId AND userrole.branchId.id=:branchId)", params);
         return privileges;
@@ -79,8 +79,8 @@ public class PrivilegeServiceImpl implements PrivilegeService {
     }
      
     @Override
-    public void save(List<IsagPrivilege> privilege ) {
-        for(IsagPrivilege isagPrivilege : privilege){
+    public void save(List<IgmaPrivilege> privilege ) {
+        for(IgmaPrivilege isagPrivilege : privilege){
             dao.updateEntity(isagPrivilege);
         }
     }

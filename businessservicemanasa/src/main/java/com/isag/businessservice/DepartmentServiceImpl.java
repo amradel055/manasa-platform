@@ -8,7 +8,7 @@ package com.isag.businessservice;
 import com.isag.core.GenericDAO;
 import com.isag.dto.DepartmentDTO;
 import com.isag.entity.Department;
-import com.isag.entity.IsagUser;
+import com.isag.entity.IgmaUser;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -47,7 +47,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public void deleteDepartment(DepartmentDTO departmentDTO, IsagUser isagUser) {
+    public void deleteDepartment(DepartmentDTO departmentDTO, IgmaUser isagUser) {
         Department entity = new Department();
         entity.setId(departmentDTO.getId());
         dao.deleteEntity(entity);
@@ -88,7 +88,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         dTO.setCreatedBy(entity.getCreatedBy().getId());
     }
 
-    public Department mapFromDTO(DepartmentDTO dTO, IsagUser isagUser) {
+    public Department mapFromDTO(DepartmentDTO dTO, IgmaUser isagUser) {
         Department entity = new Department();
         if (dTO.getParentId() != null) {
             Department parent = new Department();
@@ -105,7 +105,7 @@ public class DepartmentServiceImpl implements DepartmentService {
             entity.setCreationDate(new Date());
 
         } else {
-            IsagUser isagUser1 = new IsagUser();
+            IgmaUser isagUser1 = new IgmaUser();
             isagUser1.setId(dTO.getCreatedBy());
             entity.setCreatedBy(isagUser1);
             entity.setCreationDate(dTO.getCreatedDate());
@@ -132,7 +132,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public DepartmentDTO addDepartment(DepartmentDTO department, IsagUser isagUser) {
+    public DepartmentDTO addDepartment(DepartmentDTO department, IgmaUser isagUser) {
         Department entity = mapFromDTO(department, isagUser);
 
         entity = dao.updateEntity(entity);

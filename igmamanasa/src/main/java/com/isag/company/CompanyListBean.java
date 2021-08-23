@@ -6,8 +6,8 @@
 package com.isag.company;
 
 import com.isag.businessservice.CompanyService;
-import com.isag.entity.IsagCompany;
-import com.isag.entity.IsagPrivilege;
+import com.isag.entity.IgmaCompany;
+import com.isag.entity.IgmaPrivilege;
 import com.isag.isag.BaseListBean;
 import com.isag.isag.UserData;
 import java.io.Serializable;
@@ -31,13 +31,13 @@ public class CompanyListBean extends BaseListBean implements Serializable {
 
     @EJB
     private CompanyService companyService;
-    private List<IsagCompany> companies;
-    private IsagCompany company;
+    private List<IgmaCompany> companies;
+    private IgmaCompany company;
 
-    private IsagPrivilege privilege;
+    private IgmaPrivilege privilege;
 
     private Integer selectedCompany;
-    private IsagCompany selectedComp;
+    private IgmaCompany selectedComp;
 
     @Override
     @PostConstruct
@@ -56,7 +56,7 @@ public class CompanyListBean extends BaseListBean implements Serializable {
             UserData userData = (UserData) context.getSessionMap().get("userLogInData");
             Map<String, String> userDDs = userData.getUserDDs();
             if (selectedCompany != null && selectedCompany > 0) {
-                company = new IsagCompany();
+                company = new IgmaCompany();
                 company.setId(selectedCompany);
                 setCompany(company);
                 try {
@@ -95,14 +95,14 @@ public class CompanyListBean extends BaseListBean implements Serializable {
     /**
      * @return the companies
      */
-    public List<IsagCompany> getCompanies() {
+    public List<IgmaCompany> getCompanies() {
         return companies;
     }
 
     /**
      * @param companies the companies to set
      */
-    public void setCompanies(List<IsagCompany> companies) {
+    public void setCompanies(List<IgmaCompany> companies) {
         this.companies = companies;
     }
 
@@ -121,7 +121,7 @@ public class CompanyListBean extends BaseListBean implements Serializable {
 
     public void add() {
         try {
-            IsagCompany newCompany = new IsagCompany();
+            IgmaCompany newCompany = new IgmaCompany();
 //        newCompany.setMarkEdit(Boolean.TRUE);
             companies.add(0, newCompany);
         } catch (Exception e) {
@@ -157,14 +157,14 @@ public class CompanyListBean extends BaseListBean implements Serializable {
     /**
      * @return the privilege
      */
-    public IsagPrivilege getPrivilege() {
+    public IgmaPrivilege getPrivilege() {
         return privilege;
     }
 
     /**
      * @param privilege the privilege to set
      */
-    public void setPrivilege(IsagPrivilege privilege) {
+    public void setPrivilege(IgmaPrivilege privilege) {
         this.privilege = privilege;
     }
 
@@ -185,28 +185,28 @@ public class CompanyListBean extends BaseListBean implements Serializable {
     /**
      * @return the company
      */
-    public IsagCompany getCompany() {
+    public IgmaCompany getCompany() {
         return company;
     }
 
     /**
      * @param company the company to set
      */
-    public void setCompany(IsagCompany company) {
+    public void setCompany(IgmaCompany company) {
         this.company = company;
     }
 
     /**
      * @return the selectedComp
      */
-    public IsagCompany getSelectedComp() {
+    public IgmaCompany getSelectedComp() {
         return selectedComp;
     }
 
     /**
      * @param selectedComp the selectedComp to set
      */
-    public void setSelectedComp(IsagCompany selectedComp) {
+    public void setSelectedComp(IgmaCompany selectedComp) {
         this.selectedComp = selectedComp;
     }
 

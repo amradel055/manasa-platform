@@ -6,7 +6,7 @@
 package com.isag.businessservice;
 
 import com.isag.dto.DepartmentDTO;
-import com.isag.entity.IsagUser;
+import com.isag.entity.IgmaUser;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -29,8 +29,8 @@ public interface DepartmentService {
 
     public DepartmentDTO updateDepartment(DepartmentDTO department);
 
-    public void deleteDepartment(DepartmentDTO department, IsagUser isagUser);
+    public void deleteDepartment(DepartmentDTO department, IgmaUser isagUser);
 
-    public DepartmentDTO addDepartment(DepartmentDTO department, IsagUser isagUser);
+    public DepartmentDTO addDepartment(DepartmentDTO department, IgmaUser isagUser);
 
 }

@@ -75,13 +75,13 @@ public class Generalbudgetguide implements Serializable {
     private GlAccount accountGroup;
     @JoinColumn(name = "company_id", referencedColumnName = "id")
     @ManyToOne
-    private IsagCompany companyId;
+    private IgmaCompany companyId;
     @JoinColumn(name = "created_by", referencedColumnName = "id")
     @ManyToOne
-    private IsagUser createdBy;
+    private IgmaUser createdBy;
     @JoinColumn(name = "modified_by", referencedColumnName = "id")
     @ManyToOne
-    private IsagUser modifiedBy;
+    private IgmaUser modifiedBy;
     @JoinColumn(name = "branch_id", referencedColumnName = "id")
     @ManyToOne
     private Branch branchId;
@@ -168,27 +168,27 @@ public class Generalbudgetguide implements Serializable {
         this.accountGroup = accountGroup;
     }
 
-    public IsagCompany getCompanyId() {
+    public IgmaCompany getCompanyId() {
         return companyId;
     }
 
-    public void setCompanyId(IsagCompany companyId) {
+    public void setCompanyId(IgmaCompany companyId) {
         this.companyId = companyId;
     }
 
-    public IsagUser getCreatedBy() {
+    public IgmaUser getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(IsagUser createdBy) {
+    public void setCreatedBy(IgmaUser createdBy) {
         this.createdBy = createdBy;
     }
 
-    public IsagUser getModifiedBy() {
+    public IgmaUser getModifiedBy() {
         return modifiedBy;
     }
 
-    public void setModifiedBy(IsagUser modifiedBy) {
+    public void setModifiedBy(IgmaUser modifiedBy) {
         this.modifiedBy = modifiedBy;
     }
 

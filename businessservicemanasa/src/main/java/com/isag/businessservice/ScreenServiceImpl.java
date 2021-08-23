@@ -6,7 +6,7 @@
 package com.isag.businessservice;
 
 import com.isag.core.GenericDAO;
-import com.isag.entity.IsagScreen;
+import com.isag.entity.IgmaScreen;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,9 +24,9 @@ public class ScreenServiceImpl implements ScreenService {
     private GenericDAO dao;
 
     @Override
-    public List<IsagScreen> getAllScreenNotAssignedToRole(Integer roleId, Integer roleParentId) {
+    public List<IgmaScreen> getAllScreenNotAssignedToRole(Integer roleId, Integer roleParentId) {
         Map<String, Object> params = new HashMap();
-        List<IsagScreen> screens;
+        List<IgmaScreen> screens;
         params.put("roleId", roleId);
         String sql = "";
         if (roleParentId == null) {
@@ -52,8 +52,8 @@ public class ScreenServiceImpl implements ScreenService {
     }
 
     @Override
-    public List<IsagScreen> getAllScreens() {
-        List<IsagScreen> screens = dao.findListByQuery("SELECT s FROM IsagScreen s WHERE s.id > 0 ");
+    public List<IgmaScreen> getAllScreens() {
+        List<IgmaScreen> screens = dao.findListByQuery("SELECT s FROM IsagScreen s WHERE s.id > 0 ");
         return screens;
     }
 

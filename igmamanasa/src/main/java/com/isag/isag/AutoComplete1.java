@@ -11,7 +11,7 @@ import com.isag.converter.SymbolConverter;
 import com.isag.converter.SymbolDTOConverter;
 import com.isag.dto.SymbolDTO;
 import com.isag.entity.InvOrganizationSite;
-import com.isag.entity.IsagUser;
+import com.isag.entity.IgmaUser;
 import com.isag.entity.Symbol;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -139,7 +139,7 @@ public class AutoComplete1 implements Serializable {
     private Integer getBranchId() {
         if (branchId == null) {
             ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-            IsagUser isagUser = (IsagUser) externalContext.getSessionMap().get("userlogin");
+            IgmaUser isagUser = (IgmaUser) externalContext.getSessionMap().get("userlogin");
             branchId = isagUser.getBranchId().getId();
         }
         return branchId;

@@ -10,8 +10,8 @@ import com.isag.dto.AnswersDTO;
 import com.isag.dto.ExamsDTO;
 import com.isag.dto.QuestionsDTO;
 import com.isag.entity.Branch;
-import com.isag.entity.IsagCompany;
-import com.isag.entity.IsagUser;
+import com.isag.entity.IgmaCompany;
+import com.isag.entity.IgmaUser;
 import com.isag.entity.Exams;
 import com.isag.entity.Lesson;
 import com.isag.entity.SchoolStagesGuide;
@@ -139,7 +139,7 @@ public class ExamsServiceImpl implements ExamsService {
 
     }
 
-    public ExamsDTO saveList(List<ExamsDTO> examsDTOsList, IsagUser isagUser) {
+    public ExamsDTO saveList(List<ExamsDTO> examsDTOsList, IgmaUser isagUser) {
 
         ExamsDTO exams = null;
         for (ExamsDTO examsDTO : examsDTOsList) {
@@ -157,7 +157,7 @@ public class ExamsServiceImpl implements ExamsService {
     }
 
     @Override
-    public ExamsDTO save(ExamsDTO examsDTO, IsagUser isagUser) {
+    public ExamsDTO save(ExamsDTO examsDTO, IgmaUser isagUser) {
         ExamsDTO msg = new ExamsDTO();
         Exams exams = null;
         if (examsDTO.getId() != null) {
@@ -166,12 +166,12 @@ public class ExamsServiceImpl implements ExamsService {
         if (examsDTO != null && examsDTO.getSchoolStagesId() != null
                 && examsDTO.getLessonId() != null) {
             if (isagUser == null) {
-                isagUser = new IsagUser();
+                isagUser = new IgmaUser();
                 isagUser.setId(61);
                 Branch branch = new Branch();
                 branch.setId(examsDTO.getBranchId());
                 isagUser.setBranchId(branch);
-                IsagCompany isagCompany = new IsagCompany();
+                IgmaCompany isagCompany = new IgmaCompany();
                 isagCompany.setId(examsDTO.getCompanyId());
                 isagUser.setCompanyId(isagCompany);
             }
@@ -276,7 +276,7 @@ public class ExamsServiceImpl implements ExamsService {
         return dTO;
     }
 
-    private Exams mapToEntity(ExamsDTO dTO, IsagUser isagUser, Exams entity) {
+    private Exams mapToEntity(ExamsDTO dTO, IgmaUser isagUser, Exams entity) {
         if (entity == null) {
             entity = new Exams();
         }

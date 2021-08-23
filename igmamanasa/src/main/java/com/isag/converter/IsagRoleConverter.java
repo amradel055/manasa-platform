@@ -5,7 +5,7 @@
  */
 package com.isag.converter;
 
-import com.isag.entity.IsagRole;
+import com.isag.entity.IgmaRole;
 import java.util.List;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -17,16 +17,16 @@ import javax.faces.convert.Converter;
  */
 public class IsagRoleConverter implements Converter {
 
-    private List<IsagRole> role;
+    private List<IgmaRole> role;
 
-    public IsagRoleConverter(List<IsagRole> role) {
+    public IsagRoleConverter(List<IgmaRole> role) {
         this.role = role;
     }
 
 
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
-        for (IsagRole item : role) {
+        for (IgmaRole item : role) {
             try {
                 Long.parseLong(value);
             } catch (Exception e) {
@@ -45,8 +45,8 @@ public class IsagRoleConverter implements Converter {
         try {
 
             if (value != null && !value.equals("") && !value.equals(" ")) {
-                if (((IsagRole) value).getId()!= null && ((IsagRole) value).getId().longValue() != 0) {
-                    IsagRole codegenerator = (IsagRole) value;
+                if (((IgmaRole) value).getId()!= null && ((IgmaRole) value).getId().longValue() != 0) {
+                    IgmaRole codegenerator = (IgmaRole) value;
                     return codegenerator.getId().longValue() + "";
                 } else {
                     return "";

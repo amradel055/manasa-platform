@@ -5,7 +5,7 @@
  */
 package com.isag.common;
 
-import com.isag.entity.IsagUser;
+import com.isag.entity.IgmaUser;
 import com.sun.mail.smtp.SMTPTransport;
 import java.util.*;
 import javax.mail.*;
@@ -26,7 +26,7 @@ public class SendEmailSMTP {
 //    private static final String EMAIL_TO = "errorerp@isag-it.com";
     private static final String EMAIL_TO_CC = "";
 
-    public void sendEmail(IsagUser isagUser , String error , String  userName , String password) {
+    public void sendEmail(IgmaUser isagUser , String error , String  userName , String password) {
         StringBuilder EMAIL_TEXT = new StringBuilder();
         String EMAIL_SUBJECT = "Error branchId :> "+ isagUser.getBranchId().getId() +" name : "+isagUser.getBranchId().getNameAr();
         
@@ -85,7 +85,7 @@ public class SendEmailSMTP {
 }
     
     
-    public void sendTicketEmail(IsagUser isagUser , String message ,String module,String screen, String  userName , String password) {
+    public void sendTicketEmail(IgmaUser isagUser , String message ,String module,String screen, String  userName , String password) {
         StringBuilder EMAIL_TEXT = new StringBuilder();
         String EMAIL_SUBJECT = "Ticket From branchId :> "+ isagUser.getBranchId().getId() +" name : "+isagUser.getBranchId().getNameAr();
         

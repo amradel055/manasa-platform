@@ -7,15 +7,14 @@ package com.isag.userrole;
 
 import com.isag.businessservice.BranchService;
 import com.isag.businessservice.CompanyService;
-import com.isag.businessservice.IsagUserRoleService;
 import com.isag.businessservice.RoleService;
 import com.isag.converter.IsagRoleConverter;
 import com.isag.converter.IsagUserConverter;
 import com.isag.entity.Branch;
-import com.isag.entity.IsagCompany;
-import com.isag.entity.IsagRole;
-import com.isag.entity.IsagUser;
-import com.isag.entity.IsagUserRole;
+import com.isag.entity.IgmaCompany;
+import com.isag.entity.IgmaRole;
+import com.isag.entity.IgmaUser;
+import com.isag.entity.IgmaUserRole;
 import com.isag.isag.BaseFormBean;
 import com.isag.isag.UserData;
 import java.io.Serializable;
@@ -29,7 +28,8 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import org.primefaces.event.SelectEvent;
-import com.isag.businessservice.IsagUserService;
+import com.isag.businessservice.IgmaUserRoleService;
+import com.isag.businessservice.IgmaUserService;
 
 /**
  *
@@ -38,15 +38,15 @@ import com.isag.businessservice.IsagUserService;
 public class UserRoleFormBean extends BaseFormBean implements Serializable {
 
     private List<Branch> branchList = new ArrayList<>();
-    private List<IsagRole> roleListByCompany = new ArrayList<>();
-    private List<IsagUser> userListByCompany = new ArrayList<>();
-    private List<IsagUserRole> userRoleList = new ArrayList<>();
+    private List<IgmaRole> roleListByCompany = new ArrayList<>();
+    private List<IgmaUser> userListByCompany = new ArrayList<>();
+    private List<IgmaUserRole> userRoleList = new ArrayList<>();
     private IsagUserConverter isagUserConverter;
     private IsagRoleConverter isagRoleConverter;
     private Branch selectedBranch;
-    private List<IsagCompany> companiesList;
+    private List<IgmaCompany> companiesList;
     private Integer selectedCompanyId;
-    private IsagUserRole selectedUserRole;
+    private IgmaUserRole selectedUserRole;
 
 //    private List<Employee> employeeList = new ArrayList<>();
 //    private List<Employee> employeeOldList = new ArrayList<>();
@@ -58,9 +58,9 @@ public class UserRoleFormBean extends BaseFormBean implements Serializable {
     @EJB
     RoleService roleService;
     @EJB
-    IsagUserService iSAGUserService;
+    IgmaUserService iSAGUserService;
     @EJB
-    IsagUserRoleService isagUserRoleService;
+    IgmaUserRoleService isagUserRoleService;
     @EJB
     CompanyService companyService;
 
@@ -68,7 +68,7 @@ public class UserRoleFormBean extends BaseFormBean implements Serializable {
 //    EmployeeService employeeService;
 //    @EJB
 //    IsagUserEmployeeService isagUserEmployeeService;
-    private IsagCompany companyId;
+    private IgmaCompany companyId;
     Integer branchId;
 
     public UserRoleFormBean() {
@@ -117,7 +117,7 @@ public class UserRoleFormBean extends BaseFormBean implements Serializable {
     public void addUserWithRole() {
         try {
             Map<String, String> userDDs = getUserData().getUserDDs();
-            IsagUserRole isagUserRole = selectedUserRole;
+            IgmaUserRole isagUserRole = selectedUserRole;
             isagUserRole.setBranchId(selectedBranch);
             isagUserRole.setModificationDate(new Date());
             isagUserRole.setModifiedBy(getUserData().getUser());
@@ -330,7 +330,7 @@ public class UserRoleFormBean extends BaseFormBean implements Serializable {
 
     public void edit() {
         try {
-            for (IsagUserRole isagUserRole : userRoleList) {
+            for (IgmaUserRole isagUserRole : userRoleList) {
                 isagUserRole.setMarkEdit(Boolean.FALSE);
             }
             selectedUserRole.setMarkEdit(Boolean.TRUE);
@@ -371,9 +371,9 @@ public class UserRoleFormBean extends BaseFormBean implements Serializable {
     public void addRow() {
         try {
             if (selectedBranch != null) {
-                IsagUserRole isagUserRole = new IsagUserRole();
-                isagUserRole.setRoleId(new IsagRole());
-                isagUserRole.setUserId(new IsagUser());
+                IgmaUserRole isagUserRole = new IgmaUserRole();
+                isagUserRole.setRoleId(new IgmaRole());
+                isagUserRole.setUserId(new IgmaUser());
                 isagUserRole.setMarkEdit(Boolean.TRUE);
                 userRoleList.add(0, isagUserRole);
             }
@@ -417,7 +417,7 @@ public class UserRoleFormBean extends BaseFormBean implements Serializable {
     }
 
     public void onSelect(SelectEvent event) {
-        selectedUserRole = (IsagUserRole) event.getObject();
+        selectedUserRole = (IgmaUserRole) event.getObject();
 
     }
 
@@ -438,28 +438,28 @@ public class UserRoleFormBean extends BaseFormBean implements Serializable {
     /**
      * @return the userListByCompany
      */
-    public List<IsagUser> getUserListByCompany() {
+    public List<IgmaUser> getUserListByCompany() {
         return userListByCompany;
     }
 
     /**
      * @param userListByCompany the userListByCompany to set
      */
-    public void setUserListByCompany(List<IsagUser> userListByCompany) {
+    public void setUserListByCompany(List<IgmaUser> userListByCompany) {
         this.userListByCompany = userListByCompany;
     }
 
     /**
      * @return the userRoleList
      */
-    public List<IsagUserRole> getUserRoleList() {
+    public List<IgmaUserRole> getUserRoleList() {
         return userRoleList;
     }
 
     /**
      * @param userRoleList the userRoleList to set
      */
-    public void setUserRoleList(List<IsagUserRole> userRoleList) {
+    public void setUserRoleList(List<IgmaUserRole> userRoleList) {
         this.userRoleList = userRoleList;
     }
 
@@ -491,11 +491,11 @@ public class UserRoleFormBean extends BaseFormBean implements Serializable {
         this.isagRoleConverter = isagRoleConverter;
     }
 
-    public List<IsagCompany> getCompaniesList() {
+    public List<IgmaCompany> getCompaniesList() {
         return companiesList;
     }
 
-    public void setCompaniesList(List<IsagCompany> companiesList) {
+    public void setCompaniesList(List<IgmaCompany> companiesList) {
         this.companiesList = companiesList;
     }
 
@@ -507,11 +507,11 @@ public class UserRoleFormBean extends BaseFormBean implements Serializable {
         this.selectedCompanyId = selectedCompanyId;
     }
 
-    public List<IsagRole> getRoleListByCompany() {
+    public List<IgmaRole> getRoleListByCompany() {
         return roleListByCompany;
     }
 
-    public void setRoleListByCompany(List<IsagRole> roleListByCompany) {
+    public void setRoleListByCompany(List<IgmaRole> roleListByCompany) {
         this.roleListByCompany = roleListByCompany;
     }
 
@@ -523,11 +523,11 @@ public class UserRoleFormBean extends BaseFormBean implements Serializable {
         this.selectedBranch = selectedBranch;
     }
 
-    public IsagUserRole getSelectedUserRole() {
+    public IgmaUserRole getSelectedUserRole() {
         return selectedUserRole;
     }
 
-    public void setSelectedUserRole(IsagUserRole selectedUserRole) {
+    public void setSelectedUserRole(IgmaUserRole selectedUserRole) {
         this.selectedUserRole = selectedUserRole;
     }
 

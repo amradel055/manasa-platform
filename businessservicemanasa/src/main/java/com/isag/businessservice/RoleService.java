@@ -5,7 +5,7 @@
  */
 package com.isag.businessservice;
 
-import com.isag.entity.IsagRole;
+import com.isag.entity.IgmaRole;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -16,15 +16,15 @@ import javax.ejb.Remote;
 @Remote
 public interface RoleService {
 
-    public List<IsagRole> getAllRoles();
+    public List<IgmaRole> getAllRoles();
 
-    public List<IsagRole> getAllRolesListByCompanyId(Integer companyId);
+    public List<IgmaRole> getAllRolesListByCompanyId(Integer companyId);
 
-    public IsagRole addRole(IsagRole role);
+    public IgmaRole addRole(IgmaRole role);
 
-    public IsagRole findRole(Integer roleId);
+    public IgmaRole findRole(Integer roleId);
 
-    public IsagRole updateRole(IsagRole role);
+    public IgmaRole updateRole(IgmaRole role);
 
-    public void deleteRole(IsagRole role);
+    public void deleteRole(IgmaRole role);
 }

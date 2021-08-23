@@ -6,7 +6,7 @@
 package com.isag.businessservice;
 
 import com.isag.dto.StudentMonthsDTO;
-import com.isag.entity.IsagUser;
+import com.isag.entity.IgmaUser;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -21,7 +21,7 @@ public interface StudentMonthsService {
 
     public List<StudentMonthsDTO> findStudentMonths(Integer branchId, Integer id);
 
-    public StudentMonthsDTO save(StudentMonthsDTO studentMonthsDTO, IsagUser isagUser);
+    public StudentMonthsDTO save(StudentMonthsDTO studentMonthsDTO, IgmaUser isagUser);
 
     public void deleteStudentMontsByStudent(Integer studentDTO);
 

@@ -5,13 +5,11 @@
  */
 package com.isag.userrole;
 
-import com.isag.businessservice.IsagUserRoleService;
-import com.isag.businessservice.IsagUserService;
 import com.isag.converter.BranchConverter;
 import com.isag.converter.IsagUserDTOConverter;
-import com.isag.dto.IsagUserDTO;
+import com.isag.dto.IgmaUserDTO;
 import com.isag.entity.Branch;
-import com.isag.entity.IsagUserRole;
+import com.isag.entity.IgmaUserRole;
 import com.isag.isag.BaseFormBean;
 import com.isag.isag.UserData;
 import java.io.Serializable;
@@ -22,6 +20,8 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
+import com.isag.businessservice.IgmaUserRoleService;
+import com.isag.businessservice.IgmaUserService;
 
 /**
  *
@@ -31,12 +31,12 @@ import javax.inject.Named;
 @ViewScoped
 public class UserRoleFieldFormBean extends BaseFormBean implements Serializable {
 
-    private List<IsagUserDTO> isagList;
+    private List<IgmaUserDTO> isagList;
     private List<Branch> branchList;
 
-    private IsagUserDTO isagUserSelected;
+    private IgmaUserDTO isagUserSelected;
     private Branch branchDTOSelected;
-    private IsagUserRole isagUserRole;
+    private IgmaUserRole isagUserRole;
 
     private IsagUserDTOConverter isagUserDTOConverter;
     private BranchConverter branchConverter;
@@ -45,9 +45,9 @@ public class UserRoleFieldFormBean extends BaseFormBean implements Serializable 
     private Boolean sellPriceUpdate;
 
     @EJB
-    IsagUserRoleService isagUserRoleService;
+    IgmaUserRoleService isagUserRoleService;
     @EJB
-    IsagUserService isagUserService;
+    IgmaUserService isagUserService;
 
     public UserRoleFieldFormBean() {
     }
@@ -103,7 +103,7 @@ public class UserRoleFieldFormBean extends BaseFormBean implements Serializable 
     /**
      * @return the isagList
      */
-    public List<IsagUserDTO> getIsagList() {
+    public List<IgmaUserDTO> getIsagList() {
         if (isagList == null || isagList.isEmpty()) {
             isagList = isagUserService.getUsersByCompanyId(getUserData().getCompany().getId());
             if (isagList != null && !isagList.isEmpty()) {
@@ -117,21 +117,21 @@ public class UserRoleFieldFormBean extends BaseFormBean implements Serializable 
     /**
      * @param isagList the isagList to set
      */
-    public void setIsagList(List<IsagUserDTO> isagList) {
+    public void setIsagList(List<IgmaUserDTO> isagList) {
         this.isagList = isagList;
     }
 
     /**
      * @return the isagUserRole
      */
-    public IsagUserRole getIsagUserRole() {
+    public IgmaUserRole getIsagUserRole() {
         return isagUserRole;
     }
 
     /**
      * @param isagUserRole the isagUserRole to set
      */
-    public void setIsagUserRole(IsagUserRole isagUserRole) {
+    public void setIsagUserRole(IgmaUserRole isagUserRole) {
         this.isagUserRole = isagUserRole;
     }
 
@@ -152,14 +152,14 @@ public class UserRoleFieldFormBean extends BaseFormBean implements Serializable 
     /**
      * @return the isagUserSelected
      */
-    public IsagUserDTO getIsagUserSelected() {
+    public IgmaUserDTO getIsagUserSelected() {
         return isagUserSelected;
     }
 
     /**
      * @param isagUserSelected the isagUserSelected to set
      */
-    public void setIsagUserSelected(IsagUserDTO isagUserSelected) {
+    public void setIsagUserSelected(IgmaUserDTO isagUserSelected) {
         this.isagUserSelected = isagUserSelected;
     }
 

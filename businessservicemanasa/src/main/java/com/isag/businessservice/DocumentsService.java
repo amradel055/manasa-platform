@@ -6,7 +6,7 @@
 package com.isag.businessservice;
 
 import com.isag.dto.DocumentsDTO;
-import com.isag.entity.IsagUser;
+import com.isag.entity.IgmaUser;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -21,7 +21,7 @@ public interface DocumentsService {
     
     public List<String> findDocumentsByLessonIdLinks(Integer lessonId);
 
-    public DocumentsDTO save(DocumentsDTO documentsDTO, IsagUser isagUser);
+    public DocumentsDTO save(DocumentsDTO documentsDTO, IgmaUser isagUser);
     
     public DocumentsDTO saveList(List<String> documentsDTOist, Integer lessonId, Integer branchId, Integer companyId);
 

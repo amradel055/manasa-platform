@@ -7,7 +7,7 @@ package com.isag.businessservice;
 
 import com.isag.dto.APIBranchDTO;
 import com.isag.entity.Branch;
-import com.isag.entity.IsagUser;
+import com.isag.entity.IgmaUser;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -26,7 +26,7 @@ public interface BranchService {
 
     public Branch updateBranch(Branch branch);
 
-    public Branch addBranch(Branch branch , IsagUser userData);
+    public Branch addBranch(Branch branch , IgmaUser userData);
 
     public Branch findBranch(Integer id);
 
