@@ -96,7 +96,7 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
             msgSave(getInvInvoiceDTO().getMsg());
             if (getUri().contains("proworkorderform")) {
                 StringBuilder message = new StringBuilder();
-                message.append("عميلنا العزيز ، شكراً لتسوقك من برنس تمت عملية شراء رقم ");
+                message.append("عميلنا العزيز ، شكراً لتسوقك تمت عملية شراء رقم ");
                 message.append(getInvInvoiceDTO().getSerial());
                 message.append(" المدفوع ");
                 message.append(getInvInvoiceDTO().getPayed());

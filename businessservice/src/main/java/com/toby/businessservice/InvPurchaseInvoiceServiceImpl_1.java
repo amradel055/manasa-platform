@@ -2003,7 +2003,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
 
     }
 
-    @Override
+    @Override // إجماليات الفئات 
     public List<SummitionItemsView> findSummitionQuantity(Integer gallaryId, Integer branchId, Date dateFrom, Date dateTo, Integer groupId, List<InvInventoryDTO> invInventoryDTOs, List<ProGroupDTO> proGroupListSelected, Integer invoiceType) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
@@ -2150,10 +2150,10 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
 //            summitionItemsView.setAllQuantity((BigDecimal) line[2]);
             summitionItemsView.setAllCost((BigDecimal) line[1]);
             BigDecimal netAfterDiscountHead = (BigDecimal) line[6];
-            if (netAfterDiscountHead != null && netAfterDiscountHead.compareTo(BigDecimal.ZERO) == 1) {
+//            if (netAfterDiscountHead != null && netAfterDiscountHead.compareTo(BigDecimal.ZERO) == 1) {
 //                BigDecimal x = netAfterDiscountHead.divide(new BigDecimal(100));
                 summitionItemsView.setAllCost(netAfterDiscountHead);
-            }
+//            }
             summitionItemsView.setAllAvarageCost((BigDecimal) line[2]);
 //            summitionItemsView.setAllAvarageCost((BigDecimal) line[4]);
             Integer groupId = (Integer) line[3];

@@ -45,6 +45,7 @@ public class PurchaseOfItemsBySuppliersReportMB extends BaseInventoryReportBean 
     private Integer branchId;
     private String uri;
     private String screenMode;
+    private Integer invoiceType;
 
     BigDecimal balance = BigDecimal.ZERO;
     private Boolean isSales;
@@ -211,7 +212,7 @@ public class PurchaseOfItemsBySuppliersReportMB extends BaseInventoryReportBean 
          } else {
          itemSalesViewList = purchaseOfItemsBySuppliersReportService.getAllPurchaseOfItemsBySuppliersSearchBean(purchaseOfItemsBySuppliersSearchBean);
          }*/
-        setItemSalesViewList(purchaseOfItemsBySuppliersReportService.getAllPurchaseOfItemsBySuppliersSearchBean(getPurchaseOfItemsBySuppliersSearchBean()));
+        setItemSalesViewList(purchaseOfItemsBySuppliersReportService.getAllPurchaseOfItemsBySuppliersSearchBeanNew(getPurchaseOfItemsBySuppliersSearchBean(),getInvoiceType()));
         if (getItemSalesViewList() != null && !itemSalesViewList.isEmpty()) {
             fillGroupMapWithCorrespondingItem();
             if (purchaseOfItemsBySuppliersSearchBean.getShowReport() != null && purchaseOfItemsBySuppliersSearchBean.getShowReport()) {
@@ -778,6 +779,20 @@ public class PurchaseOfItemsBySuppliersReportMB extends BaseInventoryReportBean 
      */
     public void setTotal(BigDecimal total) {
         this.total = total;
+    }
+
+    /**
+     * @return the invoiceType
+     */
+    public Integer getInvoiceType() {
+        return invoiceType;
+    }
+
+    /**
+     * @param invoiceType the invoiceType to set
+     */
+    public void setInvoiceType(Integer invoiceType) {
+        this.invoiceType = invoiceType;
     }
 
     /**

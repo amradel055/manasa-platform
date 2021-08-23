@@ -955,7 +955,7 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
                         }
                         if (getUri().contains("notesreceivablesForm")) {
                             StringBuilder message = new StringBuilder();
-                            message.append("عميلنا العزيز ، شكراً لتسوقك من برنس تمت عملية دفع رقم ");
+                            message.append("عميلنا العزيز ، شكراً لتسوقك  تمت عملية دفع رقم ");
                             message.append(getGlBankTransactionEntity().getSerial());
                             message.append(" المدفوع ");
                             message.append(getGlBankTransactionEntity().getValue());

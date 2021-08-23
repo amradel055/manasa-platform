@@ -44,7 +44,7 @@ public class ReportsServiceImpl implements ReportsService {
     @EJB
     private InvPurchaseInvoiceService_1 invPurchaseInvoiceService;
 
-    @Override
+    @Override  // بيان الفواتير حسب الضريبة 
     public List<SalesReportByValueAded> getSalesReportByValueAded(SalesReportByValueAded salesReportByValueAded, Integer branchId) {
 
         List<SalesReportByValueAded> salesReportByValueAdeds = new ArrayList<>();

@@ -136,6 +136,13 @@ public class ItemSalesView implements Serializable {
     private Integer proGroupId;
     @Column(name = "pro_group_name")
     private String proGroupName;
+    
+    @Column(name = "gallaryId")
+    private Integer gallaryId;
+    @Column(name = "gallaryCode")
+    private String gallaryCode;
+    @Column(name = "gallaryName")
+    private String gallaryName;
 
     public ItemSalesView() {
     }
@@ -285,6 +292,9 @@ public class ItemSalesView implements Serializable {
     }
 
     public BigDecimal getNet() {
+        if(net == null){
+            net = BigDecimal.ZERO;
+        }
         return net;
     }
 
@@ -454,6 +464,48 @@ public class ItemSalesView implements Serializable {
      */
     public void setSerialTax(Integer serialTax) {
         this.serialTax = serialTax;
+    }
+
+    /**
+     * @return the gallaryId
+     */
+    public Integer getGallaryId() {
+        return gallaryId;
+    }
+
+    /**
+     * @param gallaryId the gallaryId to set
+     */
+    public void setGallaryId(Integer gallaryId) {
+        this.gallaryId = gallaryId;
+    }
+
+    /**
+     * @return the gallaryCode
+     */
+    public String getGallaryCode() {
+        return gallaryCode;
+    }
+
+    /**
+     * @param gallaryCode the gallaryCode to set
+     */
+    public void setGallaryCode(String gallaryCode) {
+        this.gallaryCode = gallaryCode;
+    }
+
+    /**
+     * @return the gallaryName
+     */
+    public String getGallaryName() {
+        return gallaryName;
+    }
+
+    /**
+     * @param gallaryName the gallaryName to set
+     */
+    public void setGallaryName(String gallaryName) {
+        this.gallaryName = gallaryName;
     }
 
 }
