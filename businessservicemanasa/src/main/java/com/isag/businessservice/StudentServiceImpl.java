@@ -448,6 +448,10 @@ public class StudentServiceImpl implements StudentService {
         dTO.setId(entity.getId());
         dTO.setEmail(entity.getEmail());
         dTO.setFullName(entity.getFullName());
+        dTO.setFirstName(entity.getFirstName());
+        dTO.setFatherName(entity.getFatherName());
+        dTO.setGrandFatherName(entity.getGrandFatherName());
+        dTO.setFamilyName(entity.getFamilyName());
         dTO.setCode(entity.getCode());
         dTO.setMobile(entity.getMobile());
         dTO.setFatherMobile(entity.getFatherMobile());
@@ -490,6 +494,10 @@ public class StudentServiceImpl implements StudentService {
         dTO.setId(entity.getId());
         dTO.setEmail(entity.getEmail());
         dTO.setFullName(entity.getFullName());
+        dTO.setFirstName(entity.getFirstName());
+        dTO.setFatherName(entity.getFatherName());
+        dTO.setGrandFatherName(entity.getGrandFatherName());
+        dTO.setFamilyName(entity.getFamilyName());
         dTO.setCode(entity.getCode());
         dTO.setMobile(entity.getMobile());
         dTO.setFatherMobile(entity.getFatherMobile());
@@ -526,6 +534,10 @@ public class StudentServiceImpl implements StudentService {
         entity.setEmail(dTO.getEmail());
         entity.setCode(dTO.getCode());
         entity.setFullName(dTO.getFullName());
+        entity.setFirstName(dTO.getFirstName());
+        entity.setFatherName(dTO.getFatherName());
+        entity.setGrandFatherName(dTO.getGrandFatherName());
+        entity.setFamilyName(dTO.getFamilyName());
         entity.setMobile(dTO.getMobile());
         entity.setFatherMobile(dTO.getFatherMobile());
         entity.setGender(dTO.getGender());
@@ -581,6 +593,10 @@ public class StudentServiceImpl implements StudentService {
         }
 
         entity.setFullName(dTO.getFullName());
+        entity.setFirstName(dTO.getFirstName());
+        entity.setFatherName(dTO.getFatherName());
+        entity.setGrandFatherName(dTO.getGrandFatherName());
+        entity.setFamilyName(dTO.getFamilyName());
         entity.setCode(dTO.getCode());
         entity.setEmail(dTO.getEmail());
         entity.setFatherMobile(dTO.getFatherMobile());

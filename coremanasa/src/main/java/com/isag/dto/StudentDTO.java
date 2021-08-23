@@ -28,6 +28,10 @@ public class StudentDTO extends BaseEntityDTO {
     private String macId;
     private String ipAddress;
     private String fatherJob;
+    private String firstName;
+    private String fatherName;
+    private String grandFatherName;
+    private String familyName;
 
     public StudentDTO() {
     }
@@ -233,6 +237,62 @@ public class StudentDTO extends BaseEntityDTO {
      */
     public void setFatherJob(String fatherJob) {
         this.fatherJob = fatherJob;
+    }
+
+    /**
+     * @return the firstName
+     */
+    public String getFirstName() {
+        return firstName;
+    }
+
+    /**
+     * @param firstName the firstName to set
+     */
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    /**
+     * @return the fatherName
+     */
+    public String getFatherName() {
+        return fatherName;
+    }
+
+    /**
+     * @param fatherName the fatherName to set
+     */
+    public void setFatherName(String fatherName) {
+        this.fatherName = fatherName;
+    }
+
+    /**
+     * @return the grandFatherName
+     */
+    public String getGrandFatherName() {
+        return grandFatherName;
+    }
+
+    /**
+     * @param grandFatherName the grandFatherName to set
+     */
+    public void setGrandFatherName(String grandFatherName) {
+        this.grandFatherName = grandFatherName;
+    }
+
+    /**
+     * @return the familyName
+     */
+    public String getFamilyName() {
+        return familyName;
+    }
+
+    /**
+     * @param familyName the familyName to set
+     */
+    public void setFamilyName(String familyName) {
+        this.familyName = familyName;
     }
 
     /**

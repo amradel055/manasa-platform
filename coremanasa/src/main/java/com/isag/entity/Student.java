@@ -44,6 +44,18 @@ public class Student extends BaseEntity {
     @Column(name = "full_name")
     private String fullName;
     @Size(max = 45)
+    @Column(name = "first_name")
+    private String firstName;
+    @Size(max = 45)
+    @Column(name = "father_name")
+    private String fatherName;
+    @Size(max = 45)
+    @Column(name = "grand_father_name")
+    private String grandFatherName;
+    @Size(max = 45)
+    @Column(name = "family_name")
+    private String familyName;
+    @Size(max = 45)
     @Column(name = "user_name")
     private String userName;
     @Size(max = 45)
@@ -336,6 +348,62 @@ public class Student extends BaseEntity {
      */
     public void setFatherJob(String fatherJob) {
         this.fatherJob = fatherJob;
+    }
+
+    /**
+     * @return the firstName
+     */
+    public String getFirstName() {
+        return firstName;
+    }
+
+    /**
+     * @param firstName the firstName to set
+     */
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    /**
+     * @return the fatherName
+     */
+    public String getFatherName() {
+        return fatherName;
+    }
+
+    /**
+     * @param fatherName the fatherName to set
+     */
+    public void setFatherName(String fatherName) {
+        this.fatherName = fatherName;
+    }
+
+    /**
+     * @return the grandFatherName
+     */
+    public String getGrandFatherName() {
+        return grandFatherName;
+    }
+
+    /**
+     * @param grandFatherName the grandFatherName to set
+     */
+    public void setGrandFatherName(String grandFatherName) {
+        this.grandFatherName = grandFatherName;
+    }
+
+    /**
+     * @return the familyName
+     */
+    public String getFamilyName() {
+        return familyName;
+    }
+
+    /**
+     * @param familyName the familyName to set
+     */
+    public void setFamilyName(String familyName) {
+        this.familyName = familyName;
     }
 
     

@@ -17,6 +17,10 @@ public class APIStudentDataDTO {
 
     private Integer id;
     private String fullName;
+    private String firstName;
+    private String fatherName;
+    private String grandFatherName;
+    private String familyName;
     private String userName;
     private String password;
     private String code;
@@ -388,6 +392,62 @@ public class APIStudentDataDTO {
      */
     public void setGovernorateName(String governorateName) {
         this.governorateName = governorateName;
+    }
+
+    /**
+     * @return the firstName
+     */
+    public String getFirstName() {
+        return firstName;
+    }
+
+    /**
+     * @param firstName the firstName to set
+     */
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    /**
+     * @return the fatherName
+     */
+    public String getFatherName() {
+        return fatherName;
+    }
+
+    /**
+     * @param fatherName the fatherName to set
+     */
+    public void setFatherName(String fatherName) {
+        this.fatherName = fatherName;
+    }
+
+    /**
+     * @return the grandFatherName
+     */
+    public String getGrandFatherName() {
+        return grandFatherName;
+    }
+
+    /**
+     * @param grandFatherName the grandFatherName to set
+     */
+    public void setGrandFatherName(String grandFatherName) {
+        this.grandFatherName = grandFatherName;
+    }
+
+    /**
+     * @return the familyName
+     */
+    public String getFamilyName() {
+        return familyName;
+    }
+
+    /**
+     * @param familyName the familyName to set
+     */
+    public void setFamilyName(String familyName) {
+        this.familyName = familyName;
     }
 
 }
