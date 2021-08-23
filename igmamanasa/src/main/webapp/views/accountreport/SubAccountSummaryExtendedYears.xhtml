@@ -1,0 +1,323 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <link rel="stylesheet" type="text/css" href="../../resources/css/main.css" /> 
+    <ui:define name="content">
+        <div class="col-xs-12">
+            <p:messages autoUpdate="true"  showDetail="true" closable="true" rendered="true" />
+        </div>
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:head>
+            <title>#{userData.userDDs['ACCOUNT_REPORT']}</title>
+        </h:head>
+
+
+        <h:body> 
+            <h:form id="form" class='formmargin'>     
+
+
+                <p:fieldset  id="TopFielSet" legend="#{userData.userDDs['Sub_Account_Summary_Extended_Years']}"
+                             style=" position: relative; text-align: right" >
+                    <div class="firstset">
+                        <div class="col-xs-12">
+                            <p:messages autoUpdate="true" 
+                                        id="msg" showDetail="true" closable="true" 
+                                        rendered="#{subAccountSummaryReportMB.showMessageGeneral}"/>
+                        </div>
+                        <div class="ui-g-12 ui-g-nopad">
+                            <div class="ui-g">
+
+                           
+                                <div class="ui-g-6 ui-xl-6">
+                                    <div class="ui-g-12 ui-xl-12">
+
+                                        <div class="ui-g-6 ui-xl-6">
+                                            <p:autoComplete style="width:37%" id="ADMIN_UNIT_TO" 
+                                                            dropdown="true"
+                                                            converter="#{subAccountSummaryReportMB.glAdminUnitConverter}"
+                                                            value="#{subAccountSummaryReportMB.glAdminUnitToSelected}"
+
+                                                            var="adminn"
+                                                            itemLabel="#{adminn}" 
+                                                            itemValue="#{adminn}" 
+                                                            forceSelection="true" 
+                                                            completeMethod="#{subAccountSummaryReportMB.completeAdminUnit}" >
+
+
+                                            </p:autoComplete>
+                                        </div>
+                                        <div class="ui-g-6 ui-xl-6">
+                                            <p:outputLabel style="width: 95px;" value="#{userData.userDDs['TO_ADMIN_UNIT']}" for="ADMIN_UNIT_TO"/>
+
+                                        </div>
+                                    </div>
+                                    <div class="ui-g-12 ui-xl-12">
+
+                                        <div class="ui-g-6 ui-xl-6">
+                                            <p:selectOneMenu style="width:38%;margin-right: 1%" id="paymentType"  value="#{subAccountSummaryReportMB.subAccountSummarySearchBean.currencyType}"  >                                                             
+                                                <f:selectItem itemLabel="#{userData.userDDs['LOCAL_CURRENCY']}"  itemValue="0"  />
+                                                <f:selectItem itemLabel="#{userData.userDDs['FOREIGN_CURRENCY']}"  itemValue="1"  />
+                                            </p:selectOneMenu>             
+                                        </div>
+                                        <div class="ui-g-6 ui-xl-6">
+                                            <p:outputLabel style="width: 90px; margin-top: 2%;"
+                                                           value="#{userData.userDDs['CURRENCY']}"/>
+
+                                        </div>
+                                    </div>
+                                    <div class="ui-g-12 ui-xl-12">
+
+                                        <div class="ui-g-6 ui-xl-6">
+                                            <p:calendar id="dateFrom" 
+                                                        value="#{subAccountSummaryReportMB.subAccountSummarySearchBean.dateFrom}" 
+                                                        pattern="dd/MM/yyyy" 
+                                                        style="width:57%" 
+                                                        showButtonPanel="true"
+                                                        >
+                                            </p:calendar>
+                                        </div>
+                                        <div class="ui-g-6 ui-xl-6">
+                                            <p:outputLabel  style="width: 89px;" value="#{userData.userDDs['YEAR_FROM']}"/>
+
+                                        </div>
+                                    </div>
+                                    <div class="ui-g-12 ui-xl-12">
+
+                                        <div class="ui-g-6 ui-xl-6">
+                                            <p:calendar  style="width:50%"
+                                                         id="dateTo" 
+                                                         value="#{subAccountSummaryReportMB.subAccountSummarySearchBean.dateTo}" 
+
+                                                         pattern="dd/MM/yyyy">
+                                            </p:calendar>
+                                            <h:outputText value="">
+                                                <f:convertDateTime pattern="MM/dd/yyyy" />
+                                            </h:outputText>
+
+                                        </div>
+                                        <div class="ui-g-6 ui-xl-6">
+                                            <p:outputLabel  style="width: 90px;" 
+                                                            value="#{userData.userDDs['YEAR_TO']}"/>
+                                        </div>
+                                    </div>
+                                </div>
+     <div class="ui-g-6 ui-xl-6">
+                                    <div class="ui-g-12 ui-xl-12">
+
+                                        <div class="ui-g-6 ui-xl-6">
+                                            <p:autoComplete style="width: 37%" id="GlAccount_ID" 
+
+                                                            dropdown="true"
+                                                            converter="#{subAccountSummaryReportMB.accountConverter}"
+                                                            value="#{subAccountSummaryReportMB.glAccountSelected}"
+                                                            var="p"
+                                                            itemLabel="#{p}" 
+                                                            itemValue="#{p}" 
+                                                            forceSelection="false" 
+                                                            completeMethod="#{subAccountSummaryReportMB.completeGlAccount}" >
+                                            </p:autoComplete>
+                                        </div>
+                                        <div class="ui-g-6 ui-xl-6">
+                                            <p:outputLabel style="width: 95px;" value="#{userData.userDDs['ACCOUNT_NAME']}" for="GlAccount_ID"/>
+
+                                        </div>
+                                    </div>
+                                    <div class="ui-g-12 ui-xl-12">
+
+                                        <div class="ui-g-6 ui-xl-6">
+                                            <p:autoComplete style="width:37%" id="Cost_Center_From" 
+                                                            dropdown="true"
+                                                            converter="#{subAccountSummaryReportMB.costCenterConverter}"
+                                                            value="#{subAccountSummaryReportMB.costCenterFromSelected}"
+
+                                                            var="cost"
+                                                            itemLabel="#{cost}" 
+                                                            itemValue="#{cost}" 
+                                                            forceSelection="true" 
+                                                            completeMethod="#{subAccountSummaryReportMB.completeCostCenter}" >
+                                            </p:autoComplete>
+                                        </div>
+                                        <div class="ui-g-6 ui-xl-6">
+                                            <p:outputLabel style="width: 95px;" value="#{userData.userDDs['FROM_COST_CENTER']}" for="Cost_Center_From"/>
+
+                                        </div>
+                                    </div>
+                                    <div class="ui-g-12 ui-xl-12">
+
+                                        <div class="ui-g-6 ui-xl-6">
+                                            <p:autoComplete style="width:37%" id="COST_CENTER_TO" 
+                                                            dropdown="true"
+                                                            converter="#{subAccountSummaryReportMB.costCenterConverter}"
+                                                            value="#{subAccountSummaryReportMB.costCenterToSelected}"
+
+                                                            var="costt"
+                                                            itemLabel="#{costt}" 
+                                                            itemValue="#{costt}" 
+                                                            forceSelection="true" 
+                                                            completeMethod="#{subAccountSummaryReportMB.completeCostCenter}" >
+
+
+                                            </p:autoComplete>
+                                        </div>
+                                        <div class="ui-g-6 ui-xl-6">
+                                            <p:outputLabel style="width:95px;" value="#{userData.userDDs['COST_CENTER_TO']}" for="COST_CENTER_TO"/>
+
+                                        </div>
+                                    </div>
+                                    <div class="ui-g-12 ui-xl-12">
+
+                                        <div class="ui-g-6 ui-xl-6">
+                                            <p:autoComplete style="width:37%" id="ADMIN_UNIT_FROM" 
+                                                            dropdown="true"
+                                                            converter="#{subAccountSummaryReportMB.glAdminUnitConverter}"
+                                                            value="#{subAccountSummaryReportMB.glAdminUnitFromSelected}"
+
+                                                            var="admin"
+                                                            itemLabel="#{admin}" 
+                                                            itemValue="#{admin}" 
+                                                            forceSelection="true" 
+                                                            completeMethod="#{subAccountSummaryReportMB.completeAdminUnit}" >
+
+
+                                            </p:autoComplete>
+                                        </div>
+                                        <div class="ui-g-6 ui-xl-6">
+                                            <p:outputLabel style="width: 95px;" value="#{userData.userDDs['FROM_ADMIN_UNIT']}" for="ADMIN_UNIT_FROM"/>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                               </div>
+                        </div>
+                    </div>
+
+
+
+                    <h:panelGrid class="col-md-12 centerButtons" columns="1" style="margin-top:2%"> 
+
+                        <h:panelGroup class="centerButtons"> 
+
+
+                            <p:commandButton class="searchButtons"  
+                                             id="searchS"
+                                             value="#{userData.userDDs['SEARCH']}"
+                                             action="#{subAccountSummaryReportMB.search()}" 
+                                             update="subaccc" />
+
+                            <p:commandButton class="newButtons" 
+                                             id="newN"
+                                             value="#{userData.userDDs['NEW']}" 
+                                             action="#{subAccountSummaryReportMB.reset}"
+                                             update="subaccc" />
+                            <p:commandButton   class="printButtons"  
+                                               ajax="false" 
+                                               onclick="form.target = '_blank'" 
+                                               value="#{userData.userDDs['PRINT']}"
+                                               actionListener="#{subAccountSummaryReportMB.exportPDF}"/>
+                            <h:commandLink class="sdcreenimg">  
+                                <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                                <p:dataExporter type="xls"
+                                                target="subaccc" 
+                                                fileName="كشف حساب فرعى"
+                                                postProcessor="#{subAccountSummaryReportMB.postProcessXLS}" />  
+                            </h:commandLink>
+
+                            <p:blockUI block="TopFielSet" trigger="searchS  newN" animate="true" >
+
+                                <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                            </p:blockUI> 
+
+
+                        </h:panelGroup>
+
+                    </h:panelGrid>
+
+                </p:fieldset>
+
+                <p:fieldset legend="" style="margin-bottom:20px">
+
+
+                    <p:dataTable 
+                        draggableColumns="true" 
+                        widgetVar="sub" 
+                        id="subaccc"                   
+                        var="subaccReport" 
+                        dir="#{userData.dir}" 
+                        rowKey="#{subaccReport}" 
+                        value="#{subAccountSummaryReportMB.subAccountSummaryReports}" 
+                        rows="20"
+                        paginator="true" 
+                        emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" >
+                        <f:facet name="header" class="col-md-12">
+
+                            <p:outputPanel>
+                                <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large;" />
+                                <p:inputText   id="globalFilter"   onkeyup="PF('sub').filter()" style="width:16%important" />
+                            </p:outputPanel>
+                        </f:facet>
+                        <p:column style="width:10vh ;text-align: -webkit-auto;font-size:1.8vh;border-radius: 0px"
+                                  filterBy="#{subaccReport.date}"  filterMatchMode="contains" sortBy="#{subaccReport.date}" filterable="false"
+                                  headerText="#{userData.userDDs['DATEE']}">
+                            <h:outputText value="#{subaccReport.date}" style="font-size: 1.2vh">
+                                <f:convertDateTime id="datee"  pattern="dd-MM-yyyy" />
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column style="width:10vh ;text-align: -webkit-auto;font-size:1.8vh;border-radius: 0px"  
+                                  headerText="#{userData.userDDs['GENERAL_NUMBER']}"
+                                  filterBy="#{subaccReport.serial}"  filterMatchMode="contains" sortBy="#{subaccReport.serial}" filterable="false">
+                            <h:outputText value="#{subaccReport.serial}" style="font-size: 12px"/>
+                        </p:column>
+
+                        <p:column style="width:10vh ;text-align: -webkit-auto;font-size:1.8vh;border-radius: 0px"
+                                  headerText="#{userData.userDDs['DOCUMENT_NUMBER']}"
+                                  filterBy="#{subaccReport.generalDecument}"  filterMatchMode="contains" sortBy="#{subaccReport.generalDecument}" filterable="false">
+                            <h:outputText value="#{subaccReport.generalDecument}" style="font-size: 12px"/>
+                        </p:column>
+
+                        <p:column style="width:15vh ;text-align: -webkit-auto;font-size:1.8vh;border-radius: 0px"
+                                  headerText="#{userData.userDDs['JOURNAL_TYPE']}"
+                                  filterBy="#{subaccReport.symbolName}"  filterMatchMode="contains" sortBy="#{subaccReport.symbolName}" filterable="false">
+                            <h:outputText value="#{subaccReport.symbolName}" style="font-size: 12px"/>
+                        </p:column>
+
+                        <p:column style="width:20vh ;text-align: -webkit-auto;font-size:1.8vh;border-radius: 0px"  headerText="#{userData.userDDs['GERNAL_STATEMENT']}">
+                            <h:outputText value="#{subaccReport.generalStatement}" style="font-size: 12px"/>
+                        </p:column>
+
+                        <p:column style="width:10vh ;text-align: -webkit-auto;font-size:1.8vh;border-radius: 0px"  headerText="#{userData.userDDs['DEBIT']}">
+                            <h:outputText value="#{subaccReport.debitAmount}" style="font-size: 12px ; width: 95%"/>
+                        </p:column>
+
+                        <p:column style="width:10vh ;text-align: -webkit-auto;font-size:1.8vh;border-radius: 0px"  headerText="#{userData.userDDs['CREDIT']}">
+                            <h:outputText value="#{subaccReport.creditAmount}" style="font-size: 12px; width: 95%"/>
+                        </p:column>
+
+                        <p:column style="width:10vh ;text-align: -webkit-auto;font-size:1.8vh;border-radius: 0px" headerText="#{userData.userDDs['BALANCE']}">
+                            <h:outputText value="#{subaccReport.balance}" style="font-size: 12px; width: 95%"/>
+                        </p:column>
+                        <p:columnGroup type="footer">
+                            <p:row>
+                                <p:column colspan="5" style="border-radius: 0px" footerText="#{userData.userDDs['TOTAL']}" /> 
+                                <p:column style="border-radius: 0px" footerText="#{subAccountSummaryReportMB.totalDebitString}" /> 
+                                <p:column  style="border-radius: 0px" footerText="#{subAccountSummaryReportMB.totalCreditString}" /> 
+                                <p:column style="border-radius: 0px" footerText="" /> 
+                            </p:row>
+
+                        </p:columnGroup>
+                    </p:dataTable>
+
+                </p:fieldset>
+            </h:form>
+        </h:body>
+    </ui:define>
+</ui:composition>
+
