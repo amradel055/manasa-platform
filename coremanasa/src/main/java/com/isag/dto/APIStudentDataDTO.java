@@ -1,0 +1,393 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.isag.dto;
+
+import java.util.List;
+
+/**
+ *
+ * @author ahmed
+ */
+public class APIStudentDataDTO {
+
+    private List<Integer> monthList;
+
+    private Integer id;
+    private String fullName;
+    private String userName;
+    private String password;
+    private String code;
+    private String imagePath;
+    private String email;
+    private Integer gender;
+    private Integer stateId;
+    private Integer governorateId;
+    private String mobile;
+    private String fatherMobile;
+    private Integer schoolStagesId;
+    private Integer branchId;
+    private Integer companyId;
+    private Integer typeLogin;
+    private String macId;
+    private String ipAddress;
+    private String msg;
+    private String msgType;
+    private String schoolStagesName;
+    private String stateName;
+    private String governorateName;
+    private String fatherJob;
+
+    /**
+     * @return the monthList
+     */
+    public List<Integer> getMonthList() {
+        return monthList;
+    }
+
+    /**
+     * @param monthList the monthList to set
+     */
+    public void setMonthList(List<Integer> monthList) {
+        this.monthList = monthList;
+    }
+
+    /**
+     * @return the fullName
+     */
+    public String getFullName() {
+        return fullName;
+    }
+
+    /**
+     * @param fullName the fullName to set
+     */
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    /**
+     * @return the userName
+     */
+    public String getUserName() {
+        return userName;
+    }
+
+    /**
+     * @param userName the userName to set
+     */
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    /**
+     * @return the password
+     */
+    public String getPassword() {
+        return password;
+    }
+
+    /**
+     * @param password the password to set
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    /**
+     * @return the code
+     */
+    public String getCode() {
+        return code;
+    }
+
+    /**
+     * @param code the code to set
+     */
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    /**
+     * @return the imagePath
+     */
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    /**
+     * @param imagePath the imagePath to set
+     */
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
+    /**
+     * @return the email
+     */
+    public String getEmail() {
+        return email;
+    }
+
+    /**
+     * @param email the email to set
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    /**
+     * @return the gender
+     */
+    public Integer getGender() {
+        return gender;
+    }
+
+    /**
+     * @param gender the gender to set
+     */
+    public void setGender(Integer gender) {
+        this.gender = gender;
+    }
+
+    /**
+     * @return the stateId
+     */
+    public Integer getStateId() {
+        return stateId;
+    }
+
+    /**
+     * @param stateId the stateId to set
+     */
+    public void setStateId(Integer stateId) {
+        this.stateId = stateId;
+    }
+
+    /**
+     * @return the mobile
+     */
+    public String getMobile() {
+        return mobile;
+    }
+
+    /**
+     * @param mobile the mobile to set
+     */
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    /**
+     * @return the fatherMobile
+     */
+    public String getFatherMobile() {
+        return fatherMobile;
+    }
+
+    /**
+     * @param fatherMobile the fatherMobile to set
+     */
+    public void setFatherMobile(String fatherMobile) {
+        this.fatherMobile = fatherMobile;
+    }
+
+    /**
+     * @return the branchId
+     */
+    public Integer getBranchId() {
+        return branchId;
+    }
+
+    /**
+     * @param branchId the branchId to set
+     */
+    public void setBranchId(Integer branchId) {
+        this.branchId = branchId;
+    }
+
+    /**
+     * @return the companyId
+     */
+    public Integer getCompanyId() {
+        return companyId;
+    }
+
+    /**
+     * @param companyId the companyId to set
+     */
+    public void setCompanyId(Integer companyId) {
+        this.companyId = companyId;
+    }
+
+    /**
+     * @return the schoolStagesId
+     */
+    public Integer getSchoolStagesId() {
+        return schoolStagesId;
+    }
+
+    /**
+     * @param schoolStagesId the schoolStagesId to set
+     */
+    public void setSchoolStagesId(Integer schoolStagesId) {
+        this.schoolStagesId = schoolStagesId;
+    }
+
+    /**
+     * @return the typeLogin
+     */
+    public Integer getTypeLogin() {
+        return typeLogin;
+    }
+
+    /**
+     * @param typeLogin the typeLogin to set
+     */
+    public void setTypeLogin(Integer typeLogin) {
+        this.typeLogin = typeLogin;
+    }
+
+    /**
+     * @return the macId
+     */
+    public String getMacId() {
+        return macId;
+    }
+
+    /**
+     * @param macId the macId to set
+     */
+    public void setMacId(String macId) {
+        this.macId = macId;
+    }
+
+    /**
+     * @return the ipAddress
+     */
+    public String getIpAddress() {
+        return ipAddress;
+    }
+
+    /**
+     * @param ipAddress the ipAddress to set
+     */
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
+    }
+
+    /**
+     * @return the msg
+     */
+    public String getMsg() {
+        return msg;
+    }
+
+    /**
+     * @param msg the msg to set
+     */
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
+    /**
+     * @return the msgType
+     */
+    public String getMsgType() {
+        return msgType;
+    }
+
+    /**
+     * @param msgType the msgType to set
+     */
+    public void setMsgType(String msgType) {
+        this.msgType = msgType;
+    }
+
+    /**
+     * @return the id
+     */
+    public Integer getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    /**
+     * @return the schoolStagesName
+     */
+    public String getSchoolStagesName() {
+        return schoolStagesName;
+    }
+
+    /**
+     * @param schoolStagesName the schoolStagesName to set
+     */
+    public void setSchoolStagesName(String schoolStagesName) {
+        this.schoolStagesName = schoolStagesName;
+    }
+
+    /**
+     * @return the stateName
+     */
+    public String getStateName() {
+        return stateName;
+    }
+
+    /**
+     * @param stateName the stateName to set
+     */
+    public void setStateName(String stateName) {
+        this.stateName = stateName;
+    }
+
+    /**
+     * @return the fatherJob
+     */
+    public String getFatherJob() {
+        return fatherJob;
+    }
+
+    /**
+     * @param fatherJob the fatherJob to set
+     */
+    public void setFatherJob(String fatherJob) {
+        this.fatherJob = fatherJob;
+    }
+
+    /**
+     * @return the governorateId
+     */
+    public Integer getGovernorateId() {
+        return governorateId;
+    }
+
+    /**
+     * @param governorateId the governorateId to set
+     */
+    public void setGovernorateId(Integer governorateId) {
+        this.governorateId = governorateId;
+    }
+
+    /**
+     * @return the governorateName
+     */
+    public String getGovernorateName() {
+        return governorateName;
+    }
+
+    /**
+     * @param governorateName the governorateName to set
+     */
+    public void setGovernorateName(String governorateName) {
+        this.governorateName = governorateName;
+    }
+
+}

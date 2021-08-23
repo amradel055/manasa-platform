@@ -1,0 +1,225 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml" >
+
+
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <div>
+            <h:form id="form" dir="#{userData.dir}" enctype="multipart/form-data"> 
+                <p:fieldset legend="#{userData.userDDs['COMPANY']}" style="margin-bottom:20px">
+                    <h:panelGrid id="pnl"  columns="2" class="col-md-12"   >
+
+                        <h:panelGroup>
+
+                            <h:panelGroup>
+                                <p:outputLabel style="width: 65px" id="comname" value=" #{userData.userDDs['COMPANY_NAME']}*"  />  
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:inputText style="width:50%" id="arName" value="#{companyFormBean.companyName}" required="true" requiredMessage="#{userData.userDDs['REQUIRED']}" >
+                                    <p:ajax event="keyup" update="msgName" />
+                                </p:inputText> 
+                                <p:message  id="msgName" for="arName"/> 
+
+                            </h:panelGroup>
+
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+
+                            <h:panelGroup>
+                                <p:outputLabel style="width: 65px" id="comnameen" value=" #{userData.userDDs['COMPANY_NAME']} EN*"  />  
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:inputText style="width:50%" id="enName" value="#{companyFormBean.companyNameEn}" required="true" requiredMessage="#{userData.userDDs['REQUIRED']}" >
+                                    <p:ajax event="keyup" update="msgNameen" />
+                                </p:inputText> 
+                                <p:message  id="msgNameen" for="enName"/> 
+
+                            </h:panelGroup>
+
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <h:panelGroup>
+                                <p:outputLabel style="width: 65px" value="#{userData.userDDs['COMPANY_CODE']}*"   />
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:inputText style="width:50%" id="code" maxlength="3" value="#{companyFormBean.companyCode}" required="true" requiredMessage="#{userData.userDDs['REQUIRED']}"  >
+                                    <p:ajax event="keyup" update="msgcode" />
+                                </p:inputText> 
+                                <p:message id="msgcode" for="code"/>
+                            </h:panelGroup>
+                        </h:panelGroup>
+
+
+                        <h:panelGroup>
+
+                            <h:panelGroup>
+                                <p:outputLabel style="width: 65px" value=" #{userData.userDDs['COMPANY_ACTIVITIES']}"   />
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:inputText style="width:50%" id="code_bussiness" value="#{companyFormBean.code_bussiness}" />
+                                <p:message for="code_bussiness"/>
+                            </h:panelGroup>
+
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+
+                            <h:panelGroup>
+                                <p:outputLabel style="width: 65px" value="#{userData.userDDs['RESPONSABLE_PERSON']}"  />
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:inputText style="width:50%" id="responsable"  value="#{companyFormBean.resposibility}"  />
+                                <p:message for="responsable"/>
+                            </h:panelGroup>
+
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+
+                            <h:panelGroup>
+                                <p:outputLabel style="width: 65px" value=" #{userData.userDDs['PHONE']}"  />
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:inputText style="width:50%" id="phone"  value="#{companyFormBean.phone}"   />
+                                <p:message for="phone"/>
+                            </h:panelGroup>
+
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <h:panelGroup>
+                                <p:outputLabel style="width: 65px" value="#{userData.userDDs['FAX']}"  />
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:inputText style="width:50%" id="fax"  value="#{companyFormBean.fax}"  />
+                                <p:message for="fax"/>
+                            </h:panelGroup>
+
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+
+                            <h:panelGroup>
+                                <p:outputLabel style="width: 65px" value=" #{userData.userDDs['ADDRESS']}"  />
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:inputText style="width:50%" id="address" value="#{companyFormBean.address}"   />
+                                <p:message for="address"/>
+                            </h:panelGroup>
+
+
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+
+                            <h:panelGroup>
+                                <p:outputLabel style="width: 65px" value=" #{userData.userDDs['ADDRESS']} EN"  />
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:inputText style="width:50%" id="addressen" value="#{companyFormBean.addressEn}"   />
+                                <p:message for="addressen"/>
+                            </h:panelGroup>
+
+
+                        </h:panelGroup>
+
+
+                        <h:panelGroup>
+                            <h:panelGroup> 
+                                <p:outputLabel style="width: 65px;vertical-align: super;" value=" #{userData.userDDs['LANGUAGE']}*" /></h:panelGroup>  
+                            <h:panelGroup>
+
+
+                                <p:selectCheckboxMenu style="width:50%" id="multipleLang" value="#{companyFormBean.selectedLanguageIds}" label="Languages" required="true" requiredMessage="#{userData.userDDs['REQUIRED']}" multiple="true" filterMatchMode="startsWith">
+                                    <f:selectItems value="#{companyFormBean.allSupportedLanguages}"  var="lang" itemValue="#{lang.id}" itemLabel="#{lang.name}" />
+                                </p:selectCheckboxMenu>
+                                <p:message for="multipleLang"/>
+
+                            </h:panelGroup>
+
+                        </h:panelGroup>
+
+
+                        <h:panelGroup> 
+
+                            <h:panelGroup>
+                                <p:outputLabel style="width: 65px" value="#{userData.userDDs['LOGO']}"  />
+                            </h:panelGroup>
+
+                            <h:panelGroup>
+                                <p:fileUpload id="logo" 
+                                              label="#{userData.userDDs['CHOOSE']}"
+                                              dragDropSupport="true"  
+                                              cancelLabel="#{userData.userDDs['CANCEL']}" 
+                                              uploadLabel="#{userData.userDDs['UPLOAD']}"
+                                              fileUploadListener="#{companyFormBean.upload}"
+                                              mode="advanced" 
+                                              update="img"
+                                              style="width:67%"
+                                              allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+                                              />
+                                <p:message for="logo"/>
+
+                            </h:panelGroup>
+
+                        </h:panelGroup>
+
+
+
+
+                        <h:panelGroup>
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 65px" value="الشعار المختار"  />
+                                </h:panelGroup>
+                                <p:graphicImage id="img" library="img" style="margin:10px 5px;" width="160px" height="60px" name="/company/#{companyFormBean.fileName}" />
+                                <p:dialog header="نحذير" widgetVar="dlg1" minHeight="60" minWidth="120">
+                                    <h:outputText value="هذه الصورة موجودة بالفعل لدى شركة أخرى قم بتغيير اسم الصورة" style="margin: 10px" />
+
+                                    <p:commandButton title="#{userData.userDDs['CANCEL']}" 
+                                                     value="#{userData.userDDs['CANCEL']}" 
+                                                     icon="fa fa-fw fa-cancel" 
+                                                     immediate="true" 
+                                                     validateClient="true" 
+                                                     onclick="PF('dlg1').hide();"
+                                                     update="@form" />
+
+                                </p:dialog>
+                            </h:panelGroup>
+
+                        </h:panelGroup>
+
+                    </h:panelGrid>
+                    
+                    <h:panelGrid  class="col-md-12" columns="1">
+                        <h:panelGroup  class="centerButtons">
+
+                            <p:commandButton   class="saveButton" id="saveB" title="#{userData.userDDs['SAVE']}" value="#{userData.userDDs['SAVE']}" 
+                                               icon="fa fa-fw fa-save"  action="#{companyFormBean.save}" validateClient="true" update="@form" />
+
+
+                            <p:commandButton   class="cancelButton" title="#{userData.userDDs['CANCEL']}" immediate="true"
+                                               value="#{userData.userDDs['CANCEL']}" icon="fa fa-fw fa-backward" action="#{companyFormBean.cancel}"   />
+
+                            <p:commandButton  class="closeButton" icon="fa fa-fw fa-close"   action="exit" value="اغلاق"/>
+
+
+                        </h:panelGroup>
+                        <p:blockUI block="pnl" trigger="saveB"/>
+                        
+                    </h:panelGrid>
+                    
+                </p:fieldset>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

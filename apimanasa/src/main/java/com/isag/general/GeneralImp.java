@@ -1,0 +1,241 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.isag.general;
+
+import com.isag.businessservice.IsagApiTokenService;
+import com.isag.businessservice.IsagUserLoginService;
+import com.isag.businessservice.IsagUserService;
+import com.isag.businessservice.StudentMonthsService;
+import com.isag.businessservice.StudentService;
+import com.isag.dto.APIDataDTO;
+import com.isag.dto.APIStudentDataDTO;
+import com.isag.dto.APIWorkOrderDTO;
+import com.isag.dto.IsagApiTokenDTO;
+import com.isag.dto.APIloginDTO;
+import com.isag.dto.ApiPoint;
+import com.isag.dto.StudentDTO;
+import com.isag.root.LoginRoot;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import java.io.UnsupportedEncodingException;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import com.isag.entity.Employee;
+import com.isag.entity.IsagUser;
+import com.isag.entity.IsagUserLogin;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
+/**
+ *
+ * @author ahmedEssam
+ */
+@Stateless
+public class GeneralImp implements GeneralService {
+
+    private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    private static final String secret = "remas@2019@Secret";
+
+    @EJB
+    private StudentService studentService;
+    @EJB
+    private IsagApiTokenService isagApiTokenService;
+    @EJB
+    StudentMonthsService monthsService;
+    @EJB
+    private IsagUserService userService;
+    @EJB
+    private IsagUserLoginService isagUserLoginService;
+
+//    private Employee emp;
+    private StudentDTO studentDTO;
+//    private IsagUser isagUser;
+
+    @Override
+    public APIloginDTO authenticateStudent(LoginRoot loginRoot) {
+
+        String userName = loginRoot.userName;
+        String password = loginRoot.password;
+        studentDTO = studentService.authenticateUser(userName, password, loginRoot.branchId, loginRoot.companyId);
+        IsagUserLogin isagUserLogin = isagUserLoginService.findIsagUserLoginByStudentIdLast(studentDTO.getId());
+
+        if (isagUserLogin != null && isagUserLogin.getState() == 1) {
+            if (isagUserLogin.getMacId() != null && loginRoot.macId != null && !isagUserLogin.getMacId().equals(loginRoot.macId) && studentDTO.getMacId() != null) {
+                return jsonTokenStudent(null, Boolean.FALSE, "يجب الخروج أولا من الجهاز الاخر ");
+            }
+        }
+
+        studentDTO.setMacId(loginRoot.macId);
+        studentService.updateStudentMacId(studentDTO);
+        if (studentDTO != null && studentDTO.getBranchId() != null) {
+            System.out.println("Logged In Successfully");
+            isagUserLoginService.saveUserData(loginRoot.branchId, loginRoot.companyId, loginRoot.macId, studentDTO.getId(), 1);
+            return issueTokenStudent();
+        } else {
+            return jsonTokenStudent(null, Boolean.FALSE, "عفوا اسم المستخدم او كلمه المرور غير صحيحه");
+        }
+    }
+
+    @Override
+    public APIloginDTO authenticateManasa(LoginRoot loginRoot) {
+
+        String userName = loginRoot.userName;
+        String password = loginRoot.password;
+        IsagUser loggedInUser = userService.authenticateUser(userName, password);
+        //loggedInUser.getMaster() دي معناها لازم يكون مدير
+        if (loggedInUser != null) {
+            System.out.println("Logged In Successfully");
+//            isagUser = loggedInUser;
+            return issueTokenManasa(loggedInUser);
+        } else {
+            return jsonTokenManasa(null, Boolean.FALSE, "عفوا اسم المستخدم او كلمه المرور غير صحيحه", loggedInUser);
+        }
+    }
+    
+    public APIloginDTO issueTokenStudent() {
+        try {
+            String token = createJWT();
+            String tokenId = DecodeJWT(token);
+            IsagApiTokenDTO isagApiTokenDTO = new IsagApiTokenDTO();
+            isagApiTokenDTO.setToken(token);
+            isagApiTokenDTO.setTokenId(tokenId);
+            isagApiTokenService.addIsagApiToken(isagApiTokenDTO, studentDTO);
+            return jsonTokenStudent(token, Boolean.TRUE, null);
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(GeneralImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return jsonTokenStudent(null, Boolean.FALSE, null);
+
+    }
+
+    @Override
+    public APIloginDTO issueTokenManasa(IsagUser isagUser) {
+        try {
+            String token = createJWT();
+            String tokenId = DecodeJWT(token);
+            IsagApiTokenDTO isagApiTokenDTO = new IsagApiTokenDTO();
+            isagApiTokenDTO.setToken(token);
+            isagApiTokenDTO.setTokenId(tokenId);
+            isagApiTokenService.addIsagApiToken(isagApiTokenDTO, isagUser);
+            return jsonTokenManasa(token, Boolean.TRUE, null, isagUser);
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(GeneralImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return jsonTokenManasa(null, Boolean.FALSE, null, isagUser);
+
+    }
+
+        
+    private APIloginDTO jsonTokenManasa(String token, Boolean success, String msg, IsagUser isagUser) {
+        APIloginDTO dTO = new APIloginDTO();
+        dTO.setSuccess(success);
+        dTO.setMsg(msg);
+        dTO.setToken(token);
+        if (success.equals(Boolean.TRUE)) {
+            APIDataDTO data = new APIDataDTO();
+            data.setName(isagUser == null ? "" : isagUser.getName());
+            data.setUserId(isagUser == null ? null : isagUser.getId());
+            dTO.setData(data);
+        }
+        return dTO;
+    }
+
+    private APIloginDTO jsonTokenStudent(String token, Boolean success, String msg) {
+        APIloginDTO dTO = new APIloginDTO();
+        dTO.setSuccess(success);
+        dTO.setMsg(msg);
+        dTO.setToken(token);
+        if (success.equals(Boolean.TRUE)) {
+            APIStudentDataDTO data = new APIStudentDataDTO();
+            data.setCode(studentDTO.getCode());
+            data.setId(studentDTO.getId());
+            data.setFullName(studentDTO.getFullName());
+            data.setEmail(studentDTO.getEmail());
+            data.setMobile(studentDTO.getMobile());
+            data.setSchoolStagesId(studentDTO.getSchoolStagesId().getId());
+            data.setImagePath(studentDTO.getImagePath());
+            List<Integer> monthList = monthsService.findStudentMonthsByMonths(studentDTO.getId());
+            data.setMonthList(monthList);
+            dTO.setStudentData(data);
+        }
+        return dTO;
+    }
+
+    private String createJWT() throws UnsupportedEncodingException {
+        LocalDateTime dateTime = LocalDateTime.ofEpochSecond(1593872976, 0, ZoneOffset.UTC);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE,MMMM d,yyyy h:mm,a", Locale.ENGLISH);
+        String formattedDate = dateTime.format(formatter);
+        System.out.println(formattedDate);
+        String tokenid = tokenId();
+        String jwt = Jwts.builder()
+                .setIssuer("http://www.erp_isag.com")
+                .setSubject("isag")
+                .setId(tokenid)
+                .setIssuedAt(new Date())
+                .signWith(SignatureAlgorithm.HS256, secret.getBytes("UTF-8"))
+                .compact();
+        return jwt;
+    }
+
+    @Override
+    public Boolean verifyToken(String token) {
+        try {
+            Jwts.parser()
+                    .setSigningKey(secret.getBytes("UTF-8"))
+                    .parseClaimsJws(token).getBody();
+            return Boolean.TRUE;
+        } catch (Exception e) {
+            return Boolean.FALSE;
+        }
+
+    }
+
+    @Override
+    public String DecodeJWT(String token) throws UnsupportedEncodingException {
+        Claims claims = Jwts.parser()
+                .setSigningKey(secret.getBytes("UTF-8"))
+                .parseClaimsJws(token).getBody();
+        return claims.getId();
+    }
+
+    private String randomAlphaNumeric(int count) {
+        StringBuilder builder = new StringBuilder();
+        while (count-- != 0) {
+            int character = (int) (Math.random() * ALPHA_NUMERIC_STRING.length());
+            builder.append(ALPHA_NUMERIC_STRING.charAt(character));
+        }
+        return builder.toString();
+    }
+
+    private String tokenId() {
+        StringBuilder builder = new StringBuilder();
+        builder.append(randomAlphaNumeric(8));
+        builder.append("-");
+        builder.append(randomAlphaNumeric(4));
+        builder.append("-");
+        builder.append(randomAlphaNumeric(4));
+        builder.append("-");
+        builder.append(randomAlphaNumeric(4));
+        builder.append("-");
+        builder.append(randomAlphaNumeric(4));
+        builder.append("-");
+        builder.append(randomAlphaNumeric(12));
+        builder.append("-");
+        builder.append(new Date().toString());
+        return builder.toString();
+    }
+    
+}
