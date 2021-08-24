@@ -5,28 +5,29 @@
  */
 package com.isag.dto;
 
-import com.isag.entity.*;
 import java.math.BigDecimal;
 
 /**
  *
  * @author ahmed
  */
-
 public class StudentMonthsDTO extends BaseEntityDTO {
 
-   
     private Integer monthId;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     private BigDecimal value;
     private Integer confirm;
     private Integer studentId;
+    private Integer teacherId;
+    private Integer periodId;
     private String schoolStagesName;
     private Integer schoolStagesId;
     private String studentName;
     private String governorateName;
     private String stateName;
     private String studentMobile;
+    private String teacherName;
+    private String periodName;
 
     public StudentMonthsDTO() {
     }
@@ -34,8 +35,6 @@ public class StudentMonthsDTO extends BaseEntityDTO {
     public StudentMonthsDTO(Integer id) {
         this.id = id;
     }
-
-   
 
     public Integer getMonthId() {
         return monthId;
@@ -61,8 +60,6 @@ public class StudentMonthsDTO extends BaseEntityDTO {
         this.confirm = confirm;
     }
 
-   
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -87,7 +84,6 @@ public class StudentMonthsDTO extends BaseEntityDTO {
     public String toString() {
         return "com_igma_entity.StudentMonths[ id=" + id + " ]";
     }
-
 
     /**
      * @return the schoolStagesName
@@ -145,8 +141,6 @@ public class StudentMonthsDTO extends BaseEntityDTO {
         this.stateName = stateName;
     }
 
-   
-
     /**
      * @return the studentId
      */
@@ -188,5 +182,61 @@ public class StudentMonthsDTO extends BaseEntityDTO {
     public void setSchoolStagesId(Integer schoolStagesId) {
         this.schoolStagesId = schoolStagesId;
     }
-    
+
+    /**
+     * @return the teacherId
+     */
+    public Integer getTeacherId() {
+        return teacherId;
+    }
+
+    /**
+     * @param teacherId the teacherId to set
+     */
+    public void setTeacherId(Integer teacherId) {
+        this.teacherId = teacherId;
+    }
+
+    /**
+     * @return the periodId
+     */
+    public Integer getPeriodId() {
+        return periodId;
+    }
+
+    /**
+     * @param periodId the periodId to set
+     */
+    public void setPeriodId(Integer periodId) {
+        this.periodId = periodId;
+    }
+
+    /**
+     * @return the teacherName
+     */
+    public String getTeacherName() {
+        return teacherName;
+    }
+
+    /**
+     * @param teacherName the teacherName to set
+     */
+    public void setTeacherName(String teacherName) {
+        this.teacherName = teacherName;
+    }
+
+    /**
+     * @return the periodName
+     */
+    public String getPeriodName() {
+        return periodName;
+    }
+
+    /**
+     * @param periodName the periodName to set
+     */
+    public void setPeriodName(String periodName) {
+        this.periodName = periodName;
+    }
+
 }

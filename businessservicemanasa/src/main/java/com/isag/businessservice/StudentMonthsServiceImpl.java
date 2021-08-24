@@ -11,7 +11,9 @@ import com.isag.entity.Branch;
 import com.isag.entity.IgmaCompany;
 import com.isag.entity.StudentMonths;
 import com.isag.entity.IgmaUser;
+import com.isag.entity.Periods;
 import com.isag.entity.Student;
+import com.isag.entity.Teachers;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -31,12 +33,12 @@ public class StudentMonthsServiceImpl implements StudentMonthsService {
     private GenericDAO dao;
 
     @Override
-    public List<Integer> findStudentMonthsByMonths(Integer studentDTO) {
+    public List<Integer> findStudentMonthsByPeriod(Integer studentDTO) {
         Map<String, Object> params = new HashMap<>();
         String query = "";
         if (studentDTO != null) {
             params.put("studentId", studentDTO);
-            query = "SELECT b.monthId FROM StudentMonths b WHERE b.studentDTO.id = :studentId";
+            query = "SELECT b.periodDTO.id FROM StudentMonths b WHERE b.studentDTO.id = :studentId";
         }
         List<Integer> studentMonthsList = dao.findListByQuery(query, params);
         return studentMonthsList;
@@ -57,17 +59,28 @@ public class StudentMonthsServiceImpl implements StudentMonthsService {
         return returnListDTO(list);
     }
 
+    @Override
+    public List<StudentMonthsDTO> findStudentMonthsByTeacherId(Integer teacherId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("teacherId", teacherId);
+        StringBuilder builder = new StringBuilder();
+        builder.append(" SELECT d FROM StudentMonths d WHERE d.teacherDTO.id = :teacherId  ");
+        List<StudentMonths> list = dao.findListByQuery(builder.toString(), params);
+        return returnListDTO(list);
+    }
+
     public Boolean validateStudentMonth(StudentMonthsDTO studentMonthsDTO) {
         Map<String, Object> params = new HashMap();
-        params.put("monthId", studentMonthsDTO.getMonthId());
+        params.put("periodId", studentMonthsDTO.getPeriodId());
         params.put("studentId", studentMonthsDTO.getStudentId());
-        List<StudentMonths> studentMonth = dao.findListByQuery("SELECT e FROM StudentMonths e WHERE e.monthId = :monthId AND e.studentDTO.id = :studentId ", params);
+        List<StudentMonths> studentMonth = dao.findListByQuery(" SELECT e FROM StudentMonths e WHERE e.periodDTO.id = :periodId "
+                + " AND e.studentDTO.id = :studentId ", params);
         if (studentMonth != null && !studentMonth.isEmpty()) {
             return Boolean.FALSE;
         }
         return Boolean.TRUE;
     }
-    
+
     @Override
     public void deleteStudentMontsByStudent(Integer studentDTO) {
         String sql = " delete from StudentMonths s where s.id > 0 AND s.studentDTO.id = " + studentDTO;
@@ -96,10 +109,11 @@ public class StudentMonthsServiceImpl implements StudentMonthsService {
             studentMonths = dao.findEntityById(StudentMonths.class, studentMonthsDTO.getId());
         }
         if (studentMonthsDTO != null && studentMonthsDTO.getStudentId() != null
-                && studentMonthsDTO.getMonthId() != null
                 && studentMonthsDTO.getBranchId() != null
                 && studentMonthsDTO.getCompanyId() != null
-                && studentMonthsDTO.getValue() != null) {
+                && studentMonthsDTO.getValue() != null
+                && studentMonthsDTO.getTeacherId() != null
+                && studentMonthsDTO.getPeriodId() != null) {
             if (isagUser == null) {
                 isagUser = new IgmaUser();
                 isagUser.setId(61);
@@ -148,7 +162,7 @@ public class StudentMonthsServiceImpl implements StudentMonthsService {
         dTO.setId(entity.getId());
         dTO.setConfirm(entity.getConfirm());
         dTO.setValue(entity.getValue());
-        dTO.setMonthId(entity.getMonthId());
+        //dTO.setMonthId(entity.getMonthId());
         dTO.setStudentName(entity.getStudentDTO().getFullName());
         dTO.setGovernorateName(entity.getStudentDTO().getStateId().getGovernorateId().getName());
         dTO.setStateName(entity.getStudentDTO().getStateId().getName());
@@ -159,6 +173,14 @@ public class StudentMonthsServiceImpl implements StudentMonthsService {
         if (entity.getStudentDTO() != null) {
             dTO.setStudentId(entity.getStudentDTO().getId());
             dTO.setStateName(entity.getStudentDTO().getFullName());
+        }
+        if (entity.getTeacherDTO() != null) {
+            dTO.setTeacherId(entity.getTeacherDTO().getId());
+            dTO.setTeacherName(entity.getTeacherDTO().getName());
+        }
+        if (entity.getPeriodDTO() != null) {
+            dTO.setPeriodId(entity.getPeriodDTO().getId());
+            dTO.setPeriodName(entity.getPeriodDTO().getName());
         }
 
         dTO.setIndex(entity.getId());
@@ -176,12 +198,22 @@ public class StudentMonthsServiceImpl implements StudentMonthsService {
         entity.setValue(dTO.getValue());
         entity.setId(dTO.getId());
         entity.setConfirm(dTO.getConfirm());
-        entity.setMonthId(dTO.getMonthId());
+        //entity.setMonthId(dTO.getMonthId());
 
         if (dTO.getStudentId() != null) {
             Student student = new Student();
             student.setId(dTO.getStudentId());
             entity.setStudentDTO(student);
+        }
+        if (dTO.getTeacherId() != null) {
+            Teachers teachers = new Teachers();
+            teachers.setId(dTO.getTeacherId());
+            entity.setTeacherDTO(teachers);
+        }
+        if (dTO.getPeriodId() != null) {
+            Periods periods = new Periods();
+            periods.setId(dTO.getPeriodId());
+            entity.setPeriodDTO(periods);
         }
 
         if (dTO.getId() == null) {

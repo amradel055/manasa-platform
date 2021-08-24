@@ -27,11 +27,11 @@ import javax.ws.rs.core.Response;
  */
 @Path("/studentMonths")
 public class StudentMonthsRest {
-    
+
     private UserLoginData userLoginData;
     @EJB
     StudentMonthsService studentMonthsService;
-    
+
     @Transactional
     @Path("/allStudentMonths")
     @POST
@@ -40,22 +40,46 @@ public class StudentMonthsRest {
     public Response allStudentMonths(StudentMonthsDTO studentMonthsDTO) {
         if (studentMonthsDTO != null) {
             try {
-                List<StudentMonthsDTO> dTOs = studentMonthsService.findStudentMonths(studentMonthsDTO.getBranchId() , studentMonthsDTO.getId());
+                List<StudentMonthsDTO> dTOs = studentMonthsService.findStudentMonths(studentMonthsDTO.getBranchId(), studentMonthsDTO.getId());
                 GenericEntity<List<StudentMonthsDTO>> list = new GenericEntity<List<StudentMonthsDTO>>(dTOs) {
                 };
                 return Response.ok(list).build();
-                
+
             } catch (Exception e) {
                 return Response.status(Response.Status.FORBIDDEN).build();
             }
-            
+
         } else {
             studentMonthsDTO = new StudentMonthsDTO();
             studentMonthsDTO.setMsg("No Id is Sent");
             return Response.ok(studentMonthsDTO).build();
         }
     }
-    
+
+    @Transactional
+    @Path("/studentMonthsByTeacher")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response StudentMonthsByTeacherId(StudentMonthsDTO studentMonthsDTO) {
+        if (studentMonthsDTO != null) {
+            try {
+                List<StudentMonthsDTO> dTOs = studentMonthsService.findStudentMonthsByTeacherId(studentMonthsDTO.getTeacherId());
+                GenericEntity<List<StudentMonthsDTO>> list = new GenericEntity<List<StudentMonthsDTO>>(dTOs) {
+                };
+                return Response.ok(list).build();
+
+            } catch (Exception e) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+
+        } else {
+            studentMonthsDTO = new StudentMonthsDTO();
+            studentMonthsDTO.setMsg("No Id is Sent");
+            return Response.ok(studentMonthsDTO).build();
+        }
+    }
+
     @Transactional
     @Path("/saveStudentMonths")
     @POST
@@ -70,7 +94,7 @@ public class StudentMonthsRest {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
     }
-    
+
     @Transactional
     @Path("/deleteStudentMonths")
     @POST
@@ -87,7 +111,7 @@ public class StudentMonthsRest {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
     }
-    
+
     public UserLoginData getUserLoginData(@Context ContainerRequestContext crc) {
         userLoginData = (UserLoginData) crc.getProperty("userLogInData");
         return userLoginData;
@@ -106,5 +130,5 @@ public class StudentMonthsRest {
     public void setUserLoginData(UserLoginData userLoginData) {
         this.userLoginData = userLoginData;
     }
-    
+
 }

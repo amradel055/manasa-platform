@@ -14,6 +14,7 @@ import java.util.List;
 public class APIStudentDataDTO {
 
     private List<Integer> monthList;
+    private List<Integer> periodList;
 
     private Integer id;
     private String fullName;
@@ -448,6 +449,20 @@ public class APIStudentDataDTO {
      */
     public void setFamilyName(String familyName) {
         this.familyName = familyName;
+    }
+
+    /**
+     * @return the periodList
+     */
+    public List<Integer> getPeriodList() {
+        return periodList;
+    }
+
+    /**
+     * @param periodList the periodList to set
+     */
+    public void setPeriodList(List<Integer> periodList) {
+        this.periodList = periodList;
     }
 
 }

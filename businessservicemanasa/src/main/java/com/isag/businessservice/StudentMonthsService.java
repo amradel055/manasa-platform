@@ -17,7 +17,9 @@ import javax.ejb.Remote;
 @Remote
 public interface StudentMonthsService {
 
-    public List<Integer> findStudentMonthsByMonths(Integer studentId);
+    public List<Integer> findStudentMonthsByPeriod(Integer studentId);
+
+    public List<StudentMonthsDTO> findStudentMonthsByTeacherId(Integer teacherId);
 
     public List<StudentMonthsDTO> findStudentMonths(Integer branchId, Integer id);
 

@@ -9,10 +9,8 @@ import com.isag.businessservice.StudentMonthsService;
 import com.isag.businessservice.StudentService;
 import com.isag.dto.APIDataDTO;
 import com.isag.dto.APIStudentDataDTO;
-import com.isag.dto.APIWorkOrderDTO;
 import com.isag.dto.IgmaApiTokenDTO;
 import com.isag.dto.APIloginDTO;
-import com.isag.dto.ApiPoint;
 import com.isag.dto.StudentDTO;
 import com.isag.root.LoginRoot;
 import io.jsonwebtoken.Claims;
@@ -28,13 +26,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import com.isag.entity.Employee;
 import com.isag.entity.IgmaUser;
 import com.isag.entity.IgmaUserLogin;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import com.isag.businessservice.IgmaApiTokenService;
 import com.isag.businessservice.IgmaUserLoginService;
 import com.isag.businessservice.IgmaUserService;
@@ -79,7 +73,9 @@ public class GeneralImp implements GeneralService {
         }
 
         studentDTO.setMacId(loginRoot.macId);
-        studentService.updateStudentMacId(studentDTO);
+        if (studentDTO.getId() != null) {
+            studentService.updateStudentMacId(studentDTO);
+        }
         if (studentDTO != null && studentDTO.getBranchId() != null) {
             System.out.println("Logged In Successfully");
             isagUserLoginService.saveUserData(loginRoot.branchId, loginRoot.companyId, loginRoot.macId, studentDTO.getId(), 1);
@@ -104,7 +100,7 @@ public class GeneralImp implements GeneralService {
             return jsonTokenManasa(null, Boolean.FALSE, "عفوا اسم المستخدم او كلمه المرور غير صحيحه", loggedInUser);
         }
     }
-    
+
     public APIloginDTO issueTokenStudent() {
         try {
             String token = createJWT();
@@ -138,7 +134,6 @@ public class GeneralImp implements GeneralService {
 
     }
 
-        
     private APIloginDTO jsonTokenManasa(String token, Boolean success, String msg, IgmaUser isagUser) {
         APIloginDTO dTO = new APIloginDTO();
         dTO.setSuccess(success);
@@ -162,13 +157,16 @@ public class GeneralImp implements GeneralService {
             APIStudentDataDTO data = new APIStudentDataDTO();
             data.setCode(studentDTO.getCode());
             data.setId(studentDTO.getId());
-            data.setFullName(studentDTO.getFullName());
+            data.setFirstName(studentDTO.getFirstName());
+            data.setFatherName(studentDTO.getFatherName());
+            data.setGrandFatherName(studentDTO.getGrandFatherName());
+            data.setFamilyName(studentDTO.getFamilyName());
             data.setEmail(studentDTO.getEmail());
             data.setMobile(studentDTO.getMobile());
             data.setSchoolStagesId(studentDTO.getSchoolStagesId().getId());
             data.setImagePath(studentDTO.getImagePath());
-            List<Integer> monthList = monthsService.findStudentMonthsByMonths(studentDTO.getId());
-            data.setMonthList(monthList);
+            List<Integer> periodList = monthsService.findStudentMonthsByPeriod(studentDTO.getId());
+            data.setPeriodList(periodList);
             dTO.setStudentData(data);
         }
         return dTO;
@@ -237,5 +235,5 @@ public class GeneralImp implements GeneralService {
         builder.append(new Date().toString());
         return builder.toString();
     }
-    
+
 }

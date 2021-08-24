@@ -78,6 +78,42 @@ public class StudentServiceImpl implements StudentService {
         return Boolean.TRUE;
     }
 
+    public Boolean validateUserName(APIStudentDataDTO aPIStudentDataDTO) {
+        Map<String, Object> params = new HashMap();
+        StringBuilder query = new StringBuilder();
+        params.put("userName", aPIStudentDataDTO.getUserName());
+        query.append("SELECT e FROM Student e WHERE e.userName = :userName");
+        List<Student> student = dao.findListByQuery(query.toString(), params);
+        if (student != null && !student.isEmpty()) {
+            return Boolean.FALSE;
+        }
+        return Boolean.TRUE;
+    }
+
+    public Boolean validateMobile(APIStudentDataDTO aPIStudentDataDTO) {
+        Map<String, Object> params = new HashMap();
+        StringBuilder query = new StringBuilder();
+        params.put("mobile", aPIStudentDataDTO.getMobile());
+        query.append("SELECT e FROM Student e WHERE e.mobile = :mobile");
+        List<Student> student = dao.findListByQuery(query.toString(), params);
+        if (student != null && !student.isEmpty()) {
+            return Boolean.FALSE;
+        }
+        return Boolean.TRUE;
+    }
+
+    public Boolean validateEmail(APIStudentDataDTO aPIStudentDataDTO) {
+        Map<String, Object> params = new HashMap();
+        StringBuilder query = new StringBuilder();
+        params.put("email", aPIStudentDataDTO.getEmail());
+        query.append(" SELECT e FROM Student e WHERE e.email = :email ");
+        List<Student> student = dao.findListByQuery(query.toString(), params);
+        if (student != null && !student.isEmpty()) {
+            return Boolean.FALSE;
+        }
+        return Boolean.TRUE;
+    }
+
     @Override
     public APIStudentDataDTO save(APIStudentDataDTO aPIStudentDataDTO) {
         APIStudentDataDTO msg = new APIStudentDataDTO();
@@ -91,14 +127,26 @@ public class StudentServiceImpl implements StudentService {
                 && aPIStudentDataDTO.getMobile() != null
                 && aPIStudentDataDTO.getSchoolStagesId() != null
                 && aPIStudentDataDTO.getStateId() != null) {
-            if (validateUser(aPIStudentDataDTO)) {
-                student = mapAPIToEntity(aPIStudentDataDTO, student);
-                dao.updateEntity(student);
-                msg.setMsg("تم الحفظ بنجاح");
-                msg.setMsgType("success");
-                return msg;
+            if (validateUserName(aPIStudentDataDTO)) {
+                if (validateMobile(aPIStudentDataDTO)) {
+                    if (validateEmail(aPIStudentDataDTO)) {
+                        student = mapAPIToEntity(aPIStudentDataDTO, student);
+                        dao.updateEntity(student);
+                        msg.setMsg("تم الحفظ بنجاح");
+                        msg.setMsgType("success");
+                        return msg;
+                    } else {
+                        msg.setMsg(" الايميل مستخدم بالفعل");
+                        msg.setMsgType("fail");
+                        return msg;
+                    }
+                } else {
+                    msg.setMsg(" الهاتف مستخدم بالفعل");
+                    msg.setMsgType("fail");
+                    return msg;
+                }
             } else {
-                msg.setMsg(" مستخدم بالفعل");
+                msg.setMsg(" الاسم مستخدم بالفعل");
                 msg.setMsgType("fail");
                 return msg;
             }
@@ -447,7 +495,6 @@ public class StudentServiceImpl implements StudentService {
         dTO.setPassword(entity.getPassword());
         dTO.setId(entity.getId());
         dTO.setEmail(entity.getEmail());
-        dTO.setFullName(entity.getFullName());
         dTO.setFirstName(entity.getFirstName());
         dTO.setFatherName(entity.getFatherName());
         dTO.setGrandFatherName(entity.getGrandFatherName());
@@ -493,7 +540,6 @@ public class StudentServiceImpl implements StudentService {
         dTO.setPassword(entity.getPassword());
         dTO.setId(entity.getId());
         dTO.setEmail(entity.getEmail());
-        dTO.setFullName(entity.getFullName());
         dTO.setFirstName(entity.getFirstName());
         dTO.setFatherName(entity.getFatherName());
         dTO.setGrandFatherName(entity.getGrandFatherName());
@@ -533,7 +579,6 @@ public class StudentServiceImpl implements StudentService {
         entity.setId(dTO.getId());
         entity.setEmail(dTO.getEmail());
         entity.setCode(dTO.getCode());
-        entity.setFullName(dTO.getFullName());
         entity.setFirstName(dTO.getFirstName());
         entity.setFatherName(dTO.getFatherName());
         entity.setGrandFatherName(dTO.getGrandFatherName());
@@ -592,7 +637,6 @@ public class StudentServiceImpl implements StudentService {
             entity.setCompanyId(isagCompany);
         }
 
-        entity.setFullName(dTO.getFullName());
         entity.setFirstName(dTO.getFirstName());
         entity.setFatherName(dTO.getFatherName());
         entity.setGrandFatherName(dTO.getGrandFatherName());

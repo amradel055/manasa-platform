@@ -6,12 +6,8 @@
 package com.isag.entity;
 
 import java.math.BigDecimal;
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -36,7 +32,6 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "StudentMonths.findByModificationDate", query = "SELECT s FROM StudentMonths s WHERE s.modificationDate = :modificationDate")})
 public class StudentMonths extends BaseEntity {
 
-   
     @Column(name = "month_id")
     private Integer monthId;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -52,6 +47,12 @@ public class StudentMonths extends BaseEntity {
     @JoinColumn(name = "student_id", referencedColumnName = "id")
     @ManyToOne
     private Student studentDTO;
+    @JoinColumn(name = "teacher_id", referencedColumnName = "id")
+    @ManyToOne
+    private Teachers teacherDTO;
+    @JoinColumn(name = "period_id", referencedColumnName = "id")
+    @ManyToOne
+    private Periods periodDTO;
 
     public StudentMonths() {
     }
@@ -59,8 +60,6 @@ public class StudentMonths extends BaseEntity {
     public StudentMonths(Integer id) {
         this.id = id;
     }
-
-    
 
     public Integer getMonthId() {
         return monthId;
@@ -86,8 +85,6 @@ public class StudentMonths extends BaseEntity {
         this.confirm = confirm;
     }
 
-    
-
     public Branch getBranchId() {
         return branchId;
     }
@@ -95,9 +92,6 @@ public class StudentMonths extends BaseEntity {
     public void setBranchId(Branch branchId) {
         this.branchId = branchId;
     }
-
-   
-   
 
     @Override
     public int hashCode() {
@@ -136,6 +130,34 @@ public class StudentMonths extends BaseEntity {
      */
     public void setStudentDTO(Student studentDTO) {
         this.studentDTO = studentDTO;
+    }
+
+    /**
+     * @return the teacherDTO
+     */
+    public Teachers getTeacherDTO() {
+        return teacherDTO;
+    }
+
+    /**
+     * @param teacherDTO the teacherDTO to set
+     */
+    public void setTeacherDTO(Teachers teacherDTO) {
+        this.teacherDTO = teacherDTO;
+    }
+
+    /**
+     * @return the periodDTO
+     */
+    public Periods getPeriodDTO() {
+        return periodDTO;
+    }
+
+    /**
+     * @param periodDTO the periodDTO to set
+     */
+    public void setPeriodDTO(Periods periodDTO) {
+        this.periodDTO = periodDTO;
     }
 
 }
