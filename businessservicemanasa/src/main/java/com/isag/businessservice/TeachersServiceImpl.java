@@ -30,16 +30,18 @@ public class TeachersServiceImpl implements TeachersService {
     private GenericDAO dao;
 
     @Override
-    public List<TeachersDTO> findTeachers(Integer branchId, Integer id) {
+    public TeachersDTO findTeacher(Integer id) {
+        Teachers teacher = dao.findEntityById(Teachers.class, id);
+        TeachersDTO teachersDTO = mapTODTO(teacher);
+        return teachersDTO;
+    }
+
+    @Override
+    public List<TeachersDTO> findTeachers(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT d FROM Teachers d WHERE d.branchId.id = :branchId  ");
-        if (id != null) {
-            params.put("id", id);
-            builder.append(" AND d.id = :id ");
-        }
-        builder.append(" order by d.id desc ");
         List<Teachers> list = dao.findListByQuery(builder.toString(), params);
         return returnListDTO(list);
     }
@@ -75,9 +77,7 @@ public class TeachersServiceImpl implements TeachersService {
         if (teachersDTO.getId() != null) {
             teachers = dao.findEntityById(Teachers.class, teachersDTO.getId());
         }
-        if (teachersDTO != null && teachersDTO.getName() != null
-                && teachersDTO.getBranchId() != null
-                && teachersDTO.getCompanyId() != null
+        if ( teachersDTO.getName() != null
                 && teachersDTO.getSerial() != null
                 && teachersDTO.getDescription() != null) {
             if (isagUser == null) {

@@ -40,7 +40,7 @@ public class TeachersRest {
     public Response allTeachers(TeachersDTO teachersDTO) {
         if (teachersDTO != null) {
             try {
-                List<TeachersDTO> dTOs = teachersService.findTeachers(teachersDTO.getBranchId(), teachersDTO.getId());
+                List<TeachersDTO> dTOs = teachersService.findTeachers(teachersDTO.getBranchId());
                 GenericEntity<List<TeachersDTO>> list = new GenericEntity<List<TeachersDTO>>(dTOs) {
                 };
                 return Response.ok(list).build();

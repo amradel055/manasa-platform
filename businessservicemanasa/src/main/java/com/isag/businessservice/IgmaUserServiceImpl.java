@@ -37,7 +37,7 @@ public class IgmaUserServiceImpl implements IgmaUserService {
         params.put("userCode", userCode);
         System.out.println("userCode: " + userCode);
         IgmaUser user;
-        user = dao.findEntityByNamedQuery("IsagUser.authenticate", params);
+        user = dao.findEntityByNamedQuery("IgmaUser.authenticate", params);
         System.out.println("user: " + user);
         if (user != null && user.getPassword().equals(password)) {
             return user;
@@ -51,7 +51,7 @@ public class IgmaUserServiceImpl implements IgmaUserService {
         Map<String, Object> params = new HashMap();
         params.put("userCode", "admin");
         IgmaUser user;
-        user = dao.findEntityByNamedQuery("IsagUser.authenticate", params);
+        user = dao.findEntityByNamedQuery("IgmaUser.authenticate", params);
         System.out.println("user: " + user);
         if (user != null && user.getPassword().equals(password)) {
             return true;
@@ -76,7 +76,7 @@ public class IgmaUserServiceImpl implements IgmaUserService {
         List<IgmaUser> isagUserList = new ArrayList<>();
         Map<String, Object> params = new HashMap();
         params.put("id", selectedBranchId);
-        String sql = "SELECT iur FROM IsagUserRole iur where iur.branchId = :id";
+        String sql = "SELECT iur FROM IgmaUserRole iur where iur.branchId = :id";
         List<IgmaUserRole> isagUserRoleList = dao.findListByQuery(sql, params);
         for (IgmaUserRole isagUserRole : isagUserRoleList) {
             isagUserList.add(isagUserRole.getUserId());
@@ -127,7 +127,7 @@ public class IgmaUserServiceImpl implements IgmaUserService {
     public List<IgmaUser> getAllUsersByName(String name) {
         Map<String, Object> params = new HashMap();
         params.put("name", name);
-        return dao.findListByQuery("SELECT user FROM IsagUser user WHERE  user.name LIKE CONCAT('%',:name,'%')", params);
+        return dao.findListByQuery("SELECT user FROM IgmaUser user WHERE  user.name LIKE CONCAT('%',:name,'%')", params);
 
     }
 
@@ -135,7 +135,7 @@ public class IgmaUserServiceImpl implements IgmaUserService {
     public List<IgmaUser> getAllUsersByCode(String userCode) {
         Map<String, Object> params = new HashMap();
         params.put("userCode", userCode);
-        return dao.findListByQuery("SELECT user FROM IsagUser user WHERE  user.userCode= :userCode", params);
+        return dao.findListByQuery("SELECT user FROM IgmaUser user WHERE  user.userCode= :userCode", params);
 
     }
 
@@ -144,7 +144,7 @@ public class IgmaUserServiceImpl implements IgmaUserService {
         Map<String, Object> params = new HashMap();
         params.put("userCode", userCode);
         params.put("name", user_name);
-        return dao.findListByQuery("SELECT user FROM IsagUser user WHERE  user.userCode= :userCode AND user.name LIKE ':name%'", params);
+        return dao.findListByQuery("SELECT user FROM IgmaUser user WHERE  user.userCode= :userCode AND user.name LIKE ':name%'", params);
 
     }
 
@@ -153,7 +153,7 @@ public class IgmaUserServiceImpl implements IgmaUserService {
         List<IgmaUser> isagUserList = new ArrayList<>();
         Map<String, Object> params = new HashMap();
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT iur FROM IsagUserRole iur where iur.branchId.id = :id");
+        sql.append("SELECT iur FROM IgmaUserRole iur where iur.branchId.id = :id");
         params.put("id", selectedBranchId);
 
         if (isagUser.getName() != null && !isagUser.getName().isEmpty()) {
@@ -238,6 +238,6 @@ public class IgmaUserServiceImpl implements IgmaUserService {
         Map<String, Object> params = new HashMap();
         params.put("branchId", branchId);
         params.put("userId", userId);
-        return dao.findListByQuery("SELECT e.employeeId FROM IsagUser e WHERE e.branchId.id = :branchId  AND e.id = :userId", params);
+        return dao.findListByQuery("SELECT e.employeeId FROM IgmaUser e WHERE e.branchId.id = :branchId  AND e.id = :userId", params);
     }
 }

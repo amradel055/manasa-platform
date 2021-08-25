@@ -29,7 +29,7 @@ public class PrivilegeServiceImpl implements PrivilegeService {
     public List<IgmaPrivilege> getRolePrivileges(Integer roleId) {
         Map<String, Object> params = new HashMap();
         params.put("id", roleId);
-        return dao.findListByQuery("SELECT priv FROM IsagPrivilege priv WHERE priv.roleId.id = :id order by priv.screenId.serial", params);
+        return dao.findListByQuery("SELECT priv FROM IgmaPrivilege priv WHERE priv.roleId.id = :id order by priv.screenId.serial", params);
     }
 
     // Add business logic below. (Right-click in editor and choose
@@ -45,7 +45,7 @@ public class PrivilegeServiceImpl implements PrivilegeService {
         Map<String, Object> params = new HashMap();
         params.put("roleId", roleId);
         params.put("entityName", entityName);
-        List<IgmaPrivilege> privileges = dao.findListByQuery("SELECT priv FROM IsagPrivilege "
+        List<IgmaPrivilege> privileges = dao.findListByQuery("SELECT priv FROM IgmaPrivilege "
                 + "priv WHERE priv.view = 1 AND priv.screenId.name = :entityName AND "
                 + "priv.roleId.id = :roleId", params);
         if (privileges.size() > 0) {
@@ -60,8 +60,8 @@ public class PrivilegeServiceImpl implements PrivilegeService {
         params.put("userId", userId);
         params.put("branchId", branchId);
         List<IgmaPrivilege> privileges = dao.findListByQuery("SELECT priv FROM "
-                + "IsagPrivilege priv WHERE (priv.view = 1 OR priv.edit = 1 OR priv.delete = 1 OR priv.add = 1) AND priv.roleId.id IN "
-                + "(SELECT userrole.roleId.id FROM IsagUserRole userrole WHERE userrole.userId.id = :userId AND userrole.branchId.id=:branchId)", params);
+                + "IgmaPrivilege priv WHERE (priv.view = 1 OR priv.edit = 1 OR priv.delete = 1 OR priv.add = 1) AND priv.roleId.id IN "
+                + "(SELECT userrole.roleId.id FROM IgmaUserRole userrole WHERE userrole.userId.id = :userId AND userrole.branchId.id=:branchId)", params);
         return privileges;
     }
 
@@ -70,12 +70,12 @@ public class PrivilegeServiceImpl implements PrivilegeService {
 //     Map<String, Object> params = new HashMap();
 //        params.put("roleId", id);
 
-        dao.executeDeleteQuery("delete  from IsagPrivilege priv WHERE priv.id > 0 AND priv.roleId.id=" + id);
+        dao.executeDeleteQuery("delete  from IgmaPrivilege priv WHERE priv.id > 0 AND priv.roleId.id=" + id);
     }
     
     @Override
     public void revokePrivileges() {
-        dao.executeDeleteQuery("delete  from IsagPrivilege priv WHERE priv.id > 0  AND  (priv.add = 0 and priv.view = 0 and priv.delete = 0 and priv.edit = 0 )");
+        dao.executeDeleteQuery("delete  from IgmaPrivilege priv WHERE priv.id > 0  AND  (priv.add = 0 and priv.view = 0 and priv.delete = 0 and priv.edit = 0 )");
     }
      
     @Override

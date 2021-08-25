@@ -16,6 +16,8 @@ import javax.ejb.Remote;
 @Remote
 public interface SchoolStagesGuideService {
 
-    public List<SchoolStagesGuideDTO> findschoolStagesGuide(Integer branchId) ;
+    public List<SchoolStagesGuideDTO> findschoolStagesGuide(Integer branchId);
+
+    public List<SchoolStagesGuideDTO> findschoolStagesGuideByTeacherId(Integer teacherId);
 
 }

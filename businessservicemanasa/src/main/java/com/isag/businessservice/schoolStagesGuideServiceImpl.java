@@ -9,6 +9,7 @@ import com.isag.core.GenericDAO;
 import com.isag.dto.SchoolStagesGuideDTO;
 import com.isag.entity.SchoolStagesGuide;
 import com.isag.entity.IgmaUser;
+import com.isag.entity.Teachers;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -39,8 +40,19 @@ public class schoolStagesGuideServiceImpl implements SchoolStagesGuideService {
         List<SchoolStagesGuideDTO> listDTO = returnListDTO(schoolStagesGuideList);
         return listDTO;
     }
-    
-   
+
+    @Override
+    public List<SchoolStagesGuideDTO> findschoolStagesGuideByTeacherId(Integer teacherId) {
+        Map<String, Object> params = new HashMap<>();
+        String query = "";
+        if (teacherId != null) {
+            params.put("teacherId", teacherId);
+            query = " SELECT b FROM SchoolStagesGuide b WHERE b.teacherId.id = :teacherId ";
+        }
+        List<SchoolStagesGuide> schoolStagesGuideList = dao.findListByQuery(query, params);
+        List<SchoolStagesGuideDTO> listDTO = returnListDTO(schoolStagesGuideList);
+        return listDTO;
+    }
 
     private List<SchoolStagesGuideDTO> returnListDTO(List<SchoolStagesGuide> list) {
         List<SchoolStagesGuideDTO> dTOList = new ArrayList<>();
@@ -52,7 +64,7 @@ public class schoolStagesGuideServiceImpl implements SchoolStagesGuideService {
 
     private SchoolStagesGuideDTO mapTODTO(SchoolStagesGuide entity) {
         SchoolStagesGuideDTO dTO = initMapToDTO(entity);
-        
+
         return dTO;
     }
 
@@ -60,11 +72,14 @@ public class schoolStagesGuideServiceImpl implements SchoolStagesGuideService {
 
         SchoolStagesGuideDTO dTO = new SchoolStagesGuideDTO();
         dTO.setId(entity.getId());
-
         dTO.setName(entity.getName());
         dTO.setCode(entity.getCode());
         dTO.setLevel(entity.getLevel());
         dTO.setType(entity.getType());
+
+        if (entity.getTeacherId() != null) {
+            dTO.setTeacherId(entity.getTeacherId() == null ? null : entity.getTeacherId().getId());
+        }
 
         dTO.setIndex(entity.getId());
         dTO.setCreatedDate(entity.getCreationDate());
@@ -80,7 +95,12 @@ public class schoolStagesGuideServiceImpl implements SchoolStagesGuideService {
         entity.setCode(dTO.getCode());
         entity.setLevel(dTO.getLevel());
         entity.setType(dTO.getType());
-       
+
+        if (dTO.getTeacherId() != null) {
+            Teachers teachers = new Teachers();
+            teachers.setId(dTO.getTeacherId());
+            entity.setTeacherId(teachers);
+        }
 
         if (dTO.getId() == null) {
 

@@ -13,10 +13,8 @@ import javax.xml.bind.annotation.XmlTransient;
  *
  * @author ahmed
  */
-
 public class SchoolStagesGuideDTO extends BaseEntityDTO {
 
-   
     private String code;
     private String name;
     private Integer level;
@@ -27,6 +25,7 @@ public class SchoolStagesGuideDTO extends BaseEntityDTO {
     private Collection<StudyGroup> studyGroupCollection;
     private Collection<SchoolStagesGuideDTO> schoolStagesGuideCollection;
     private SchoolStagesGuideDTO parent;
+    private Integer teacherId;
 
     public SchoolStagesGuideDTO() {
     }
@@ -34,8 +33,6 @@ public class SchoolStagesGuideDTO extends BaseEntityDTO {
     public SchoolStagesGuideDTO(Integer id) {
         this.id = id;
     }
-
-   
 
     public String getCode() {
         return code;
@@ -52,8 +49,6 @@ public class SchoolStagesGuideDTO extends BaseEntityDTO {
     public void setName(String name) {
         this.name = name;
     }
-
-   
 
     public Integer getLevel() {
         return level;
@@ -107,8 +102,6 @@ public class SchoolStagesGuideDTO extends BaseEntityDTO {
         this.studyGroupCollection = studyGroupCollection;
     }
 
-    
-
     @XmlTransient
     public Collection<SchoolStagesGuideDTO> getSchoolStagesGuideCollection() {
         return schoolStagesGuideCollection;
@@ -150,5 +143,21 @@ public class SchoolStagesGuideDTO extends BaseEntityDTO {
     public String toString() {
         return "com_igma_entity.SchoolStagesGuide[ id=" + id + " ]";
     }
-    
+
+    /**
+     * @return the teacherId
+     */
+    public Integer getTeacherId() {
+        return teacherId;
+    }
+
+    /**
+     * @param teacherId the teacherId to set
+     */
+    public void setTeacherId(Integer teacherId) {
+        this.teacherId = teacherId;
+    }
+
+   
+
 }

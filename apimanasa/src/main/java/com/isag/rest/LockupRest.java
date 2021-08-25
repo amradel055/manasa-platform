@@ -108,6 +108,31 @@ public class LockupRest {
         }
     }
 
+    @Transactional
+    @Path("/schoolStagesGuideByTeacher")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response findSchoolStagesGuideByTeacher(SchoolStagesGuideDTO guideDTO) {
+        if (guideDTO != null) {
+            try {
+                List<SchoolStagesGuideDTO> dTOs = schoolStagesGuideService.findschoolStagesGuideByTeacherId(guideDTO.getTeacherId());
+                GenericEntity<List<SchoolStagesGuideDTO>> list = new GenericEntity<List<SchoolStagesGuideDTO>>(dTOs) {
+                };
+                return Response.ok(list).build();
+
+            } catch (Exception e) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+
+        } else {
+            guideDTO = new SchoolStagesGuideDTO();
+            guideDTO.setMsg("No teacherId is Sent");
+            return Response.ok(guideDTO).build();
+
+        }
+    }
+
     public UserLoginData getUserLoginData() {
         return userLoginData;
     }

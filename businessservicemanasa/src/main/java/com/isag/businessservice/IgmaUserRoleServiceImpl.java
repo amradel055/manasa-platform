@@ -56,7 +56,7 @@ public class IgmaUserRoleServiceImpl implements IgmaUserRoleService {
     public List<IgmaUserRole> findUserRoleByUserId(Integer userid) {
         Map<String, Object> params = new HashMap();
         params.put("userId", userid);
-        List<IgmaUserRole> userRoles = dao.findListByQuery("SELECT u FROM IsagUserRole u "
+        List<IgmaUserRole> userRoles = dao.findListByQuery("SELECT u FROM IgmaUserRole u "
                 + " WHERE u.id =:userId"
                 + " )", params);
         return userRoles;
@@ -67,7 +67,7 @@ public class IgmaUserRoleServiceImpl implements IgmaUserRoleService {
         Map<String, Object> params = new HashMap();
         params.put("userId", userid);
         params.put("branchId", branchId);
-        List<IgmaUserRole> userRoles = dao.findListByQuery("SELECT u FROM IsagUserRole u "
+        List<IgmaUserRole> userRoles = dao.findListByQuery("SELECT u FROM IgmaUserRole u "
                 + " WHERE u.userId.id =:userId AND u.branchId.id = :branchId", params);
         if (userRoles == null || userRoles.isEmpty()) {
             return null;
@@ -79,7 +79,7 @@ public class IgmaUserRoleServiceImpl implements IgmaUserRoleService {
     public List<IgmaUserRole> findUserRoleByBranch(Integer branchId) {
         Map<String, Object> params = new HashMap();
         params.put("branchId", branchId);
-        List<IgmaUserRole> userRoles = dao.findListByQuery("SELECT u FROM IsagUserRole u "
+        List<IgmaUserRole> userRoles = dao.findListByQuery("SELECT u FROM IgmaUserRole u "
                 + " WHERE u.branchId.id = :branchId", params);
         for (IgmaUserRole isagUserRole : userRoles) {
 //            isagUserRole.setGlYearList(isagUserYearService.findYearByUserId(isagUserRole.getUserId().getId(), isagUserRole.getBranchId()));
@@ -94,7 +94,7 @@ public class IgmaUserRoleServiceImpl implements IgmaUserRoleService {
         List<Branch> branchList = new ArrayList<>();
         Map<String, Object> params = new HashMap();
         params.put("userId", userId);
-        List<IgmaUserRole> userRoles = dao.findListByQuery("SELECT u FROM IsagUserRole u "
+        List<IgmaUserRole> userRoles = dao.findListByQuery("SELECT u FROM IgmaUserRole u "
                 + " WHERE u.userId.id =:userId AND u.roleId IS NOT NULL"
                 + " ", params);
         if (userRoles.isEmpty()) {
@@ -112,7 +112,7 @@ public class IgmaUserRoleServiceImpl implements IgmaUserRoleService {
         List<Branch> branchList = new ArrayList<>();
         Map<String, Object> params = new HashMap();
         params.put("userId", userId);
-        List<IgmaUserRole> userRoles = dao.findListByQuery("SELECT u FROM IsagUserRole u "
+        List<IgmaUserRole> userRoles = dao.findListByQuery("SELECT u FROM IgmaUserRole u "
                 + " WHERE u.userId.id =:userId AND u.roleId IS NOT NULL"
                 + " ", params);
         if (userRoles.isEmpty()) {
@@ -238,7 +238,7 @@ public class IgmaUserRoleServiceImpl implements IgmaUserRoleService {
         List<IgmaUser> isagUserList = new ArrayList<>();
         Map<String, Object> params = new HashMap();
         params.put("id", selectedBranchId);
-        String sql = "SELECT iurl FROM IsagUserRole iurl where iurl.branchId.id = :id";
+        String sql = "SELECT iurl FROM IgmaUserRole iurl where iurl.branchId.id = :id";
         List<IgmaUserRole> isagUserRoleList = dao.findListByQuery(sql, params);
         for (IgmaUserRole isagUserRole : isagUserRoleList) {
             isagUserList.add(isagUserRole.getUserId());
@@ -251,7 +251,7 @@ public class IgmaUserRoleServiceImpl implements IgmaUserRoleService {
         List<IgmaUser> isagUserList = new ArrayList<>();
         Map<String, Object> params = new HashMap();
         params.put("id", selectedCompany);
-        String sql = "SELECT iurl FROM IsagUserRole iurl where iurl.companyId.id = :id";
+        String sql = "SELECT iurl FROM IgmaUserRole iurl where iurl.companyId.id = :id";
         List<IgmaUserRole> isagUserRoleList = dao.findListByQuery(sql, params);
         for (IgmaUserRole isagUserRole : isagUserRoleList) {
             isagUserList.add(isagUserRole.getUserId());

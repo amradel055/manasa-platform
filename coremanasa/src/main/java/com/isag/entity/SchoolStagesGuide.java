@@ -48,6 +48,9 @@ public class SchoolStagesGuide extends BaseEntity {
     @JoinColumn(name = "branch_id", referencedColumnName = "id")
     @ManyToOne
     private Branch branchId;
+    @JoinColumn(name = "teacher_id", referencedColumnName = "id")
+    @ManyToOne
+    private Teachers teacherId;
 
     public SchoolStagesGuide() {
     }
@@ -133,6 +136,20 @@ public class SchoolStagesGuide extends BaseEntity {
      */
     public void setBranchId(Branch branchId) {
         this.branchId = branchId;
+    }
+
+    /**
+     * @return the teacherId
+     */
+    public Teachers getTeacherId() {
+        return teacherId;
+    }
+
+    /**
+     * @param teacherId the teacherId to set
+     */
+    public void setTeacherId(Teachers teacherId) {
+        this.teacherId = teacherId;
     }
 
 }

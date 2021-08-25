@@ -133,7 +133,7 @@ public class BranchServiceImp implements BranchService {
     public List<Branch> getBranchesForUser(Integer id) {
         Map<String, Object> params = new HashMap();
         params.put("id", id);
-        return dao.findListByQuery("SELECT userRole.branchId FROM IsagUserRole userRole WHERE userRole.userId.id = :id", params);
+        return dao.findListByQuery("SELECT userRole.branchId FROM IgmaUserRole userRole WHERE userRole.userId.id = :id", params);
     }
 
     @Override

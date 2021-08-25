@@ -17,7 +17,9 @@ import javax.ejb.Remote;
 @Remote
 public interface TeachersService {
 
-    public List<TeachersDTO> findTeachers(Integer branchId, Integer id);
+    public TeachersDTO findTeacher(Integer id);
+
+    public List<TeachersDTO> findTeachers(Integer branchId);
 
     public TeachersDTO save(TeachersDTO teachersDTO, IgmaUser isagUser);
 
