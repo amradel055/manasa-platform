@@ -96,7 +96,7 @@ public class IgmaUserLoginServiceImpl implements IgmaUserLoginService {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
 
-        return dao.findListByQuery("SELECT i FROM IsagUserLogin i WHERE i.branchId.id = :branchId", params);
+        return dao.findListByQuery("SELECT i FROM IgmaUserLogin i WHERE i.branchId.id = :branchId", params);
     }
 
     @Override
@@ -110,7 +110,7 @@ public class IgmaUserLoginServiceImpl implements IgmaUserLoginService {
         appendIsagUserLoginDateQueryBuilder(queryBuilder, isagUserLoginBeanSearch);
 
         appendIsagUserLoginCodeQueryBuilder(queryBuilder, params, isagUserLoginBeanSearch);
-        String query = "SELECT i FROM IsagUserLogin i WHERE i.branchId.id = :branchId " + queryBuilder.toString();
+        String query = "SELECT i FROM IgmaUserLogin i WHERE i.branchId.id = :branchId " + queryBuilder.toString();
         return dao.findListByQuery(query, params);
     }
 
@@ -148,7 +148,7 @@ public class IgmaUserLoginServiceImpl implements IgmaUserLoginService {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         params.put("userId", userId);
-        return dao.findListByQuery("SELECT i FROM IsagUserLogin i WHERE i.branchId.id = :branchId"
+        return dao.findListByQuery("SELECT i FROM IgmaUserLogin i WHERE i.branchId.id = :branchId"
                 + " and i.userId.id = :userId", params);
     }
     
@@ -162,13 +162,13 @@ public class IgmaUserLoginServiceImpl implements IgmaUserLoginService {
     
     @Override
     public void deleteByStudentId(Integer studentId) {
-        String sql = "delete from IsagUserLogin d where d.id > 0 AND d.studentId.id = " + studentId;
+        String sql = "delete from IgmaUserLogin d where d.id > 0 AND d.studentId.id = " + studentId;
         dao.executeDeleteQuery(sql);
     }
 
     @Override
     public boolean checkUserLogged(Integer userId, Integer branchId) {
-        int state = (int) em.createNamedQuery("IsagUserLogin.checkUserlogged")
+        int state = (int) em.createNamedQuery("IgmaUserLogin.checkUserlogged")
                 .setParameter("userId", userId)
                 .setParameter("branchId", branchId)
                 .setMaxResults(1)

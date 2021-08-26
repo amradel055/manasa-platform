@@ -539,6 +539,7 @@ public class StudentServiceImpl implements StudentService {
         dTO.setUserName(entity.getUserName());
         dTO.setPassword(entity.getPassword());
         dTO.setId(entity.getId());
+        dTO.setFullName(entity.getFullName());
         dTO.setEmail(entity.getEmail());
         dTO.setFirstName(entity.getFirstName());
         dTO.setFatherName(entity.getFatherName());
@@ -579,6 +580,7 @@ public class StudentServiceImpl implements StudentService {
         entity.setId(dTO.getId());
         entity.setEmail(dTO.getEmail());
         entity.setCode(dTO.getCode());
+        entity.setFullName(dTO.getFirstName() + " " + dTO.getFatherName() + " " + dTO.getGrandFatherName() + " " + dTO.getFamilyName());
         entity.setFirstName(dTO.getFirstName());
         entity.setFatherName(dTO.getFatherName());
         entity.setGrandFatherName(dTO.getGrandFatherName());
@@ -641,6 +643,7 @@ public class StudentServiceImpl implements StudentService {
         entity.setFatherName(dTO.getFatherName());
         entity.setGrandFatherName(dTO.getGrandFatherName());
         entity.setFamilyName(dTO.getFamilyName());
+        entity.setFullName(dTO.getFirstName() + " " + dTO.getFatherName() + " " + dTO.getGrandFatherName() + " " + dTO.getFamilyName());
         entity.setCode(dTO.getCode());
         entity.setEmail(dTO.getEmail());
         entity.setFatherMobile(dTO.getFatherMobile());

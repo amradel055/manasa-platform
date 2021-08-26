@@ -102,7 +102,7 @@ public class CompanyServiceImpl implements CompanyService {
         Map<String, Object> params = new HashMap<>();
         params.put("imageName", imageName);
         params.put("companyId", companyId);
-        List<IgmaCompany> isagCompanyList = dao.findListByQuery("SELECT c FROM IsagCompany c WHERE c.id != :companyId AND c.image = :imageName", params);
+        List<IgmaCompany> isagCompanyList = dao.findListByQuery("SELECT c FROM IgmaCompany c WHERE c.id != :companyId AND c.image = :imageName", params);
 
         return isagCompanyList;
     }
@@ -112,7 +112,7 @@ public class CompanyServiceImpl implements CompanyService {
         Map<String, Object> params = new HashMap<>();
         params.put("imageName", imageName);
         params.put("companyId", companyId);
-        List<IgmaCompany> isagCompanyList = dao.findListByQuery("SELECT c FROM IsagCompany c WHERE c.id = :companyId AND c.image = :imageName", params);
+        List<IgmaCompany> isagCompanyList = dao.findListByQuery("SELECT c FROM IgmaCompany c WHERE c.id = :companyId AND c.image = :imageName", params);
 
         return isagCompanyList;
 

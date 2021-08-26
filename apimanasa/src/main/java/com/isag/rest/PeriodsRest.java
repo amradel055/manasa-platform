@@ -40,7 +40,7 @@ public class PeriodsRest {
     public Response allPeriods(PeriodsDTO periodsDTO) {
         if (periodsDTO != null) {
             try {
-                List<PeriodsDTO> dTOs = periodsService.findPeriods(periodsDTO.getBranchId(), periodsDTO.getId());
+                List<PeriodsDTO> dTOs = periodsService.findPeriods(periodsDTO.getBranchId());
                 GenericEntity<List<PeriodsDTO>> list = new GenericEntity<List<PeriodsDTO>>(dTOs) {
                 };
                 return Response.ok(list).build();

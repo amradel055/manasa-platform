@@ -112,7 +112,6 @@ public class StudentMonthsServiceImpl implements StudentMonthsService {
                 && studentMonthsDTO.getBranchId() != null
                 && studentMonthsDTO.getCompanyId() != null
                 && studentMonthsDTO.getValue() != null
-                && studentMonthsDTO.getTeacherId() != null
                 && studentMonthsDTO.getPeriodId() != null) {
             if (isagUser == null) {
                 isagUser = new IgmaUser();
@@ -174,10 +173,10 @@ public class StudentMonthsServiceImpl implements StudentMonthsService {
             dTO.setStudentId(entity.getStudentDTO().getId());
             dTO.setStateName(entity.getStudentDTO().getFullName());
         }
-        if (entity.getTeacherDTO() != null) {
-            dTO.setTeacherId(entity.getTeacherDTO().getId());
-            dTO.setTeacherName(entity.getTeacherDTO().getName());
-        }
+//        if (entity.getTeacherDTO() != null) {
+//            dTO.setTeacherId(entity.getTeacherDTO().getId());
+//            dTO.setTeacherName(entity.getTeacherDTO().getName());
+//        }
         if (entity.getPeriodDTO() != null) {
             dTO.setPeriodId(entity.getPeriodDTO().getId());
             dTO.setPeriodName(entity.getPeriodDTO().getName());
@@ -205,11 +204,11 @@ public class StudentMonthsServiceImpl implements StudentMonthsService {
             student.setId(dTO.getStudentId());
             entity.setStudentDTO(student);
         }
-        if (dTO.getTeacherId() != null) {
-            Teachers teachers = new Teachers();
-            teachers.setId(dTO.getTeacherId());
-            entity.setTeacherDTO(teachers);
-        }
+//        if (dTO.getTeacherId() != null) {
+//            Teachers teachers = new Teachers();
+//            teachers.setId(dTO.getTeacherId());
+//            entity.setTeacherDTO(teachers);
+//        }
         if (dTO.getPeriodId() != null) {
             Periods periods = new Periods();
             periods.setId(dTO.getPeriodId());

@@ -106,7 +106,7 @@ public class StudentDTO extends BaseEntityDTO {
     }
 
     public String getFullName() {
-        return fullName;
+        return firstName + " " + fatherName + " " + grandFatherName + " " + familyName;
     }
 
     /**

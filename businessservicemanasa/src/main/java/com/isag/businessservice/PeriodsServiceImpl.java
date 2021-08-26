@@ -31,16 +31,11 @@ public class PeriodsServiceImpl implements PeriodsService {
     private GenericDAO dao;
     
     @Override
-    public List<PeriodsDTO> findPeriods(Integer branchId, Integer id) {
+    public List<PeriodsDTO> findPeriods(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT d FROM Periods d WHERE d.branchId.id = :branchId  ");
-        if (id != null) {
-            params.put("id", id);
-            builder.append(" AND d.id = :id ");
-        }
-        builder.append(" order by d.id desc ");
         List<Periods> list = dao.findListByQuery(builder.toString(), params);
         return returnListDTO(list);
     }
@@ -139,9 +134,9 @@ public class PeriodsServiceImpl implements PeriodsService {
         dTO.setId(entity.getId());
         dTO.setName(entity.getName());
         
-        if (entity.getTeacherId() != null) {
-            dTO.setTeacherDTO(entity.getTeacherId().getId());
-        }
+//        if (entity.getTeacherId() != null) {
+//            dTO.setTeacherDTO(entity.getTeacherId().getId());
+//        }
         
         dTO.setIndex(entity.getId());
         dTO.setCreatedDate(entity.getCreationDate());
@@ -159,11 +154,11 @@ public class PeriodsServiceImpl implements PeriodsService {
         entity.setId(dTO.getId());
         entity.setName(dTO.getName());
         
-        if (dTO.getTeacherDTO() != null) {
-            Teachers teachers = new Teachers();
-            teachers.setId(dTO.getTeacherDTO());
-            entity.setTeacherId(teachers);
-        }
+//        if (dTO.getTeacherDTO() != null) {
+//            Teachers teachers = new Teachers();
+//            teachers.setId(dTO.getTeacherDTO());
+//            entity.setTeacherId(teachers);
+//        }
         
         if (dTO.getId() == null) {
             

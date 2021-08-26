@@ -6,7 +6,6 @@
 package com.isag.businessservice;
 
 import com.isag.core.GenericDAO;
-import com.isag.dto.AnswersDTO;
 import com.isag.dto.ExamsDTO;
 import com.isag.dto.QuestionsDTO;
 import com.isag.entity.Branch;
@@ -245,7 +244,7 @@ public class ExamsServiceImpl implements ExamsService {
         dTO.setMonthId(entity.getMonthId());
         dTO.setScore(entity.getScore());
         dTO.setActive(entity.getActive());
-        dTO.setTimer(entity.getTimer());
+        //dTO.setTimer(entity.getTimer());
 
         if (entity.getSchoolStagesId() != null) {
             dTO.setSchoolStagesId(entity.getSchoolStagesId().getId());
@@ -287,7 +286,7 @@ public class ExamsServiceImpl implements ExamsService {
         entity.setActive(dTO.getActive());
         entity.setScore(dTO.getScore());
         entity.setMonthId(dTO.getMonthId());
-        entity.setTimer(dTO.getTimer());
+        //entity.setTimer(dTO.getTimer());
 
         if (dTO.getParent() != null) {
             Exams exams = new Exams();
