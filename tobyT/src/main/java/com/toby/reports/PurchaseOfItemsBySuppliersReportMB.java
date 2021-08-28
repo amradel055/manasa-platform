@@ -131,6 +131,8 @@ public class PurchaseOfItemsBySuppliersReportMB extends BaseInventoryReportBean 
         setPurchaseOfItemsBySuppliersViewBeanList(new ArrayList<>());
         purchaseOfItemsBySuppliersViewBeanShortList = new ArrayList<>();
         purchaseOfItemsBySuppliersViewBeanTempList = new ArrayList<>();
+        
+        getPurchaseOfItemsBySuppliersSearchBean().setGalleryFrom(getGallaryLists());
 
     }
 

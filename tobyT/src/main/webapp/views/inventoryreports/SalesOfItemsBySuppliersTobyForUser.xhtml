@@ -36,6 +36,29 @@
                     <div class="ui-g">
 
                         <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['TO_REPOS_NO']}"/>
+                                </h:panelGroup>
+                                
+
+                                <h:panelGroup>
+                                    <p:selectCheckboxMenu id="gallary_From" value="#{purchaseOfItemsBySuppliersReportMB.purchaseOfItemsBySuppliersSearchBean.galleryFrom}" 
+                                                          converter="#{purchaseOfItemsBySuppliersReportMB.gallaryDTOConverters}"
+                                                          label="المعرض" style="width: 15rem"
+                                                          filter="true" filterMatchMode="startsWith" panelStyle="width: 15rem" scrollHeight="250">
+                                        <f:selectItems value="#{purchaseOfItemsBySuppliersReportMB.gallaryLists}" 
+                                                       var="gallary"
+                                                       itemLabel="#{gallary}"
+                                                       itemValue="#{gallary}"/>
+                                    </p:selectCheckboxMenu>
+
+                                </h:panelGroup> 
+
+                            </h:panelGroup>
+                        </div>
+                        
+                        <div class="ui-g-12 ui-md-6">
 
                             <h:panelGroup>
                                 <h:panelGroup>

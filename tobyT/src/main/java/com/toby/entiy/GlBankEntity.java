@@ -32,6 +32,7 @@ public class GlBankEntity extends BaseEntity {
     private Integer raghiPoint;
     private BigDecimal commition;
     private BigDecimal rate;
+    private Integer cash;
 
     public String getName() {
         return name;
@@ -165,5 +166,19 @@ public class GlBankEntity extends BaseEntity {
      */
     public void setRate(BigDecimal rate) {
         this.rate = rate;
+    }
+
+    /**
+     * @return the cash
+     */
+    public Integer getCash() {
+        return cash;
+    }
+
+    /**
+     * @param cash the cash to set
+     */
+    public void setCash(Integer cash) {
+        this.cash = cash;
     }
 }

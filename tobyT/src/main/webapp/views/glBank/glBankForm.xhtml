@@ -158,11 +158,10 @@
                                 <h:panelGroup>
                                     <p:fieldset style="margin-bottom:20px;width: 65%"
                                                 legend="#{userData.userDDs['TYPE']}">
-                                        <p:selectOneRadio id="paymentType" 
-                                                          value="#{glBankFromMB.glBankEntity.type}"  >                                                             
-                                            <f:selectItem itemValue="0" itemLabel="#{userData.userDDs['SAFE']}"/>
-                                            <f:selectItem itemValue="1" itemLabel="#{userData.userDDs['BANK']}" />
-                                            <f:selectItem itemValue="2" itemLabel="#{userData.userDDs['CHECK_WRITTEN']}"/>
+                                        <p:selectOneRadio id="cash" 
+                                                          value="#{glBankFromMB.glBankEntity.cash}"  >                                                             
+                                            <f:selectItem itemValue="0" itemLabel="كاش"/>
+                                            <f:selectItem itemValue="1" itemLabel="شبكة" />
                                         </p:selectOneRadio>
                                     </p:fieldset>  
                                 </h:panelGroup> 

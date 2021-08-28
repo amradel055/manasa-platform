@@ -209,7 +209,6 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     OfferCompanyService companyService;
     @EJB
     SupplierAccountService supplierAccountService;
- 
 
     @Override
     public abstract String save();
@@ -265,7 +264,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     public void convertDateFrom() {
         getInvInvoiceDTO().setDate(findDateFromHijriFrom());
     }
-    
+
     public void chagePaymentType() {
         if (getInvInvoiceDTO().getPaymentType() == 1) {
             getInvInvoiceDTO().setGlBankId(null);
@@ -460,6 +459,53 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
             return null;
         }
         return true;
+    }
+
+    public void offer999() {
+        for (InvDetailDTO detailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
+            if (detailDTO.getItemsBarcodesDetail() == null && detailDTO.getItemsBarcodesDetailTrans() != null) {
+                detailDTO.setItemsBarcodesDetail(detailDTO.getItemsBarcodesDetailTrans());
+            }
+
+            if (detailDTO.getItemId() != null
+                    && detailDTO.getItemId().getProGroupId() != null
+                    && detailDTO.getItemId().getProGroupId().getId() != null) {
+
+                if (detailDTO.getItemId().getProGroupId().getId() == 6
+                        || detailDTO.getItemId().getProGroupId().getId() == 11
+                        || detailDTO.getItemId().getProGroupId().getId() == 12
+                        || detailDTO.getItemId().getProGroupId().getId() == 16
+                        || detailDTO.getItemId().getProGroupId().getId() == 20
+                        || detailDTO.getItemId().getProGroupId().getId() == 22
+                        || detailDTO.getItemId().getProGroupId().getId() == 24
+                        || detailDTO.getItemId().getProGroupId().getId() == 25) {
+                    detailDTO.setDiscount(new BigDecimal(50));
+                } else if (detailDTO.getItemId().getProGroupId().getId() == 1) {
+                    if (detailDTO.getItemsBarcodesDetail().getTypeShow() == 1) {
+                        if (detailDTO.getItemsBarcodesDetail().getSellPrice().compareTo(BigDecimal.valueOf(16.67)) != 1) {
+                            detailDTO.setCost(new BigDecimal(257.3913043));
+//detailDTO.setDiscount(((detailDTO.getCost().subtract(new BigDecimal(257.3913043))).divide(detailDTO.getCost(), 3, RoundingMode.HALF_DOWN)).multiply(new BigDecimal(100)));
+                        } else if (detailDTO.getItemsBarcodesDetail().getSellPrice().compareTo(BigDecimal.valueOf(16.67)) == 1
+                                && detailDTO.getItemsBarcodesDetail().getSellPrice().compareTo(BigDecimal.valueOf(25)) != 1) {
+                            detailDTO.setCost(new BigDecimal(386.0869565));
+//detailDTO.setDiscount(((detailDTO.getCost().subtract(new BigDecimal(386))).divide(detailDTO.getCost(), 3, RoundingMode.HALF_DOWN)).multiply(new BigDecimal(100)));
+                        }
+                    } else if (detailDTO.getItemsBarcodesDetail().getTypeShow() == 2) {
+                        if (detailDTO.getItemsBarcodesDetail().getSellPrice().compareTo(BigDecimal.valueOf(20)) != 1) {
+                            detailDTO.setCost(new BigDecimal(257.3913043));
+//detailDTO.setDiscount(((detailDTO.getCost().subtract(new BigDecimal(257.3913043))).divide(detailDTO.getCost(), 3, RoundingMode.HALF_DOWN)).multiply(new BigDecimal(100)));
+                        } else if (detailDTO.getItemsBarcodesDetail().getSellPrice().compareTo(BigDecimal.valueOf(20)) == 1
+                                && detailDTO.getItemsBarcodesDetail().getSellPrice().compareTo(BigDecimal.valueOf(35)) != 1) {
+                            detailDTO.setCost(new BigDecimal(386.0869565));
+//                            detailDTO.setDiscount(((detailDTO.getCost().subtract(new BigDecimal(386))).divide(detailDTO.getCost(), 3, RoundingMode.HALF_DOWN)).multiply(new BigDecimal(100)));
+                        }
+                    }
+                }
+
+            }
+
+        }
+        updateSummition();
     }
 
     public void testMethod() {
@@ -766,9 +812,10 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
             saveError(e, "SalesInvoiceFormMB", "calculateRemainValue");
         }
     }
+
     public void checkRaghiCode() {
         try {
-           getInvInvoiceDTO().setRaghiValue(invPurchaseInvoiceService_1.getInvoiceByRaghiCode(getInvInvoiceDTO().getRaghiCode(),getInvInvoiceDTO().getId()));
+            getInvInvoiceDTO().setRaghiValue(invPurchaseInvoiceService_1.getInvoiceByRaghiCode(getInvInvoiceDTO().getRaghiCode(), getInvInvoiceDTO().getId()));
         } catch (Exception e) {
             saveError(e, "SalesInvoiceFormMB", "calculateRemainValue");
         }
@@ -1018,7 +1065,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         return invOrganizationSiteDTOList;
 
     }
-    
+
     public List<InvOrganizationSiteDTO> completeSupplier(String query) {
         invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getUserData().getUserBranch().getId(), Boolean.TRUE, 1, query, null);
         organizationSiteDTOConvertor = new InvOrganizationSiteDTOConverter(invOrganizationSiteDTOList);
@@ -1145,8 +1192,6 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
             validateItems(getInvInvoiceDTO().getInvPurchaseInvoiceDetailsSelected());
         }
     }
-
-    
 
     public List<ItemsBarcodesDetailsView> completeItemsData(String query, Integer invPurchaseInvoiceId) {
         return AutoComplete.completeItemsData(query, getItemsBarcodesDetailsViewList(invPurchaseInvoiceId), getItemsBarcodesDetailsViewConverter());
@@ -2113,5 +2158,4 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         this.inventoryList = inventoryList;
     }
 
-    
 }

@@ -57,6 +57,7 @@ public class PurchaseOfItemsBySuppliersReportServiceImpl implements PurchaseOfIt
 
     @Override    //مبيعات الاصناف حسب العملاء  
     public List<ItemSalesView> getAllPurchaseOfItemsBySuppliersSearchBeanNew(PurchaseOfItemsBySuppliersSearchBean purchaseOfItemsBySuppliersSearchBean, Integer invoiceType) {
+        if(purchaseOfItemsBySuppliersSearchBean.getGalleryFrom() != null){
         Map<String, Object> params = new HashMap<>();
         params.put("type", purchaseOfItemsBySuppliersSearchBean.getType());
         params.put("branchId", purchaseOfItemsBySuppliersSearchBean.getBranchId());
@@ -77,6 +78,8 @@ public class PurchaseOfItemsBySuppliersReportServiceImpl implements PurchaseOfIt
         stringBuilder.append(" order by ipid.invPurchaseInvoiceId.date ASC,ipid.itemId ASC");
         List<InvPurchaseInvoiceDetail> details = dao.findListByQuery(stringBuilder.toString(), params);
         return prepareItemSalesViewList(details);
+        }
+        return null;
     }
     
      private List<ItemSalesView> prepareItemSalesViewList(List<InvPurchaseInvoiceDetail> entityList) {

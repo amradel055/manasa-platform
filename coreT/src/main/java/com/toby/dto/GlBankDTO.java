@@ -22,6 +22,7 @@ public class GlBankDTO extends BaseEntityDTO implements Comparable<GlBankDTO> , 
     private Integer raghiPoint;
     private BigDecimal commition;
     private BigDecimal rate;
+    private Integer cash;
 
     public GlBankDTO() {
     }
@@ -178,6 +179,20 @@ public class GlBankDTO extends BaseEntityDTO implements Comparable<GlBankDTO> , 
     @Override
     public int compareTo(GlBankDTO o) {
         return this.getCode().compareTo(o.getCode());
+    }
+
+    /**
+     * @return the cash
+     */
+    public Integer getCash() {
+        return cash;
+    }
+
+    /**
+     * @param cash the cash to set
+     */
+    public void setCash(Integer cash) {
+        this.cash = cash;
     }
 
 }

@@ -76,18 +76,18 @@ public class glBankListMB extends BaseListBean {
             glBankEntity.setCommition(gbank.getCommition() != null ? gbank.getCommition() : BigDecimal.ZERO);
             glBankEntity.setRate(gbank.getRate() != null ? gbank.getRate() : BigDecimal.ZERO);
 
-            if (gbank.getType() != null) {
-
-                if (gbank.getType() == 0) {
-                    glBankEntity.setTypeName("خزنة");
-                } else if (gbank.getType() == 1) {
-                    glBankEntity.setTypeName("بنك");
-                } else {
-                    glBankEntity.setTypeName("خزينة شيكات");
-                }
-
-                glBankEntity.setType(gbank.getType());
-            }
+//            if (gbank.getType() != null) {
+//
+//                if (gbank.getType() == 0) {
+//                    glBankEntity.setTypeName("خزنة");
+//                } else if (gbank.getType() == 1) {
+//                    glBankEntity.setTypeName("بنك");
+//                } else {
+//                    glBankEntity.setTypeName("خزينة شيكات");
+//                }
+//
+//                glBankEntity.setType(gbank.getType());
+//            }
 
             glBankEntityList.add(glBankEntity);
         }

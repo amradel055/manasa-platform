@@ -202,6 +202,7 @@ public class GlBankServiceImpl implements GlBankService {
         glBank.setType(glBankDTO.getType());
         glBank.setCommition(glBankDTO.getCommition());
         glBank.setRate(glBankDTO.getRate());
+        glBank.setCash(glBankDTO.getCash());
 //        glBank.setRaghiPoint(glBankDTO.getRaghiPoint());
         if (glBankDTO.getAccountId()!=null){
             GlAccount glAccount =new GlAccount();
@@ -260,6 +261,7 @@ public class GlBankServiceImpl implements GlBankService {
         glBankDTO.setType(glBank.getType());
         glBankDTO.setCommition(glBank.getCommition());
         glBankDTO.setRate(glBank.getRate());
+        glBankDTO.setCash(glBank.getCash());
 //        glBankDTO.setRaghiPoint(glBank.getRaghiPoint());
         
         if (glBank.getAccountId()!=null){

@@ -154,17 +154,17 @@ public class bankSymboleReportMB extends BaseGlAccountReportBean {
             bankReport.setAccounntName((glBank.getAccountId() != null && glBank.getAccountId().getName() != null) ? glBank.getAccountId().getName() : null);
             bankReport.setCurrencyName((glBank.getCurrencyId() != null && glBank.getCurrencyId().getName() != null) ? glBank.getCurrencyId().getName() : null);
 
-            if (glBank.getType() != null) {
-                if (glBank.getType() == 0) {
-                    bankReport.setTypeName("خزنة");
-                } else if (glBank.getType() == 1) {
-                    bankReport.setTypeName("بنك");
-                } else if (glBank.getType() == 2) {
-                    bankReport.setTypeName("خزينة شيكات خطية");
-                }
-
-                bankReport.setType(glBank.getType());
-            }
+//            if (glBank.getType() != null) {
+//                if (glBank.getType() == 0) {
+//                    bankReport.setTypeName("خزنة");
+//                } else if (glBank.getType() == 1) {
+//                    bankReport.setTypeName("بنك");
+//                } else if (glBank.getType() == 2) {
+//                    bankReport.setTypeName("خزينة شيكات خطية");
+//                }
+//
+//                bankReport.setType(glBank.getType());
+//            }
 
             glBankReportList.add(bankReport);
         }
