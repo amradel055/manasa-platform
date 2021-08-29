@@ -429,7 +429,7 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
             } else {
                 glBankList = tobyUserBankService.getAllGlBankForUserByTypeAndBranchId(getUserData().getUser().getId(), getBranchId(), 1);
             }
-
+            
             bankConverter = new GlBankConverter(glBankList);
         } catch (Exception e) {
             saveError(e, "notesReceivablesFormMB", "fillGlBanks");

@@ -20,6 +20,6 @@ public interface postRestrictionsViewService {
     
     public  List<PostRestrictionsView> getTransactionsIdForUpdatePostFlag(Integer BankIdDebitAccount, Date documentDate,Long  screenCode);
 
-    public List<PostRestrictionsView> getBankTransactions(Integer branchId, Date dateFrom, Date dateTo, Integer DocumentId, Integer postFlag);
+    public List<PostRestrictionsView> getBankTransactions(Integer branchId, Date dateFrom, Date dateTo, Integer DocumentId, Integer postFlag,String gallaryList,String glbankList);
 
 }

@@ -420,7 +420,7 @@ public class PurchaseOfItemsBySuppliersReportMB extends BaseInventoryReportBean 
         if (purchaseOfItemsBySuppliersSearchBean.getShowReport() != null && purchaseOfItemsBySuppliersSearchBean.getShowReport()) {
             fillReport(prepareReport(), getUserData().getReportPath() + "ItemSalesTotalReport.jasper", getPurchaseOfItemsBySuppliersViewBeanList(), "pdf");
         } else {
-            fillReport(prepareReport(), getUserData().getReportPath() + "ItemSalesReport.jasper", getPurchaseOfItemsBySuppliersViewBeanList(), "pdf");
+            fillReport(prepareReport(), getUserData().getReportPath() + "ItemSalesReporttoby.jasper", getPurchaseOfItemsBySuppliersViewBeanList(), "pdf");
         }
     }
 

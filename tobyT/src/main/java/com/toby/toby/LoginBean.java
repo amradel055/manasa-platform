@@ -312,7 +312,7 @@ public class LoginBean extends Basic implements Serializable {
                 userData.setInventoryDTODefault(tobyUserInventoryDTO.get(0));
             }
 
-            List<GlBankDTO> glBankDTOList = tobyUserBankService.getAllGlBankForUserByTypeAndBranchIdPerDTO(userData.getUser().getId(), userData.getUserBranch().getId(), null);
+            List<GlBankDTO> glBankDTOList = tobyUserBankService.getAllGlBankForUserByTypeAndBranchIdPerDTO(userData.getUser().getId(), userData.getUserBranch().getId(), null,null);
             userData.setGlBankDTOList(glBankDTOList);
             if (glBankDTOList != null && glBankDTOList.size() > 0) {
                 userData.setGlBankDTODefault(glBankDTOList.get(0));

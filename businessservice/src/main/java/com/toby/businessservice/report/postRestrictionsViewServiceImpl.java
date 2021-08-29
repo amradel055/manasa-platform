@@ -192,14 +192,17 @@ public class postRestrictionsViewServiceImpl implements postRestrictionsViewServ
     }
 
     @Override
-    public List<PostRestrictionsView> getBankTransactions(Integer branchId, Date dateFrom, Date dateTo, Integer DocumentId, Integer postFlag) {
+    public List<PostRestrictionsView> getBankTransactions(Integer branchId, Date dateFrom, Date dateTo, Integer DocumentId, Integer postFlag, String gallaryList, String glbankList) {
         List<PostRestrictionsView> list = new ArrayList<>();
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         params.put("postFlag", postFlag);
         StringBuilder queryBuilder = new StringBuilder();
         if (DocumentId >= 1001 && DocumentId < 1009) {
-            String query = "SELECT glb FROM GlBankTransaction glb WHERE glb.branchId.id = :branchId  AND glb.postFlag = :postFlag AND glb.transactionType =:transactionType AND glb.paymentType =:paymentType";
+            String query = "SELECT glb FROM GlBankTransaction glb WHERE glb.branchId.id = :branchId  AND glb.postFlag = :postFlag AND glb.transactionType =:transactionType AND glb.paymentType =:paymentType  ";
+            if (glbankList != null && !glbankList.isEmpty()) {
+                query = query +  "   AND glb.glBankId.id in ( " + glbankList + ")";
+            }
             queryBuilder.append(query);
             appendDateForQueryBuilder(queryBuilder, dateFrom, dateTo);
             transaction(DocumentId, params, 1);
@@ -267,7 +270,6 @@ public class postRestrictionsViewServiceImpl implements postRestrictionsViewServ
 
 //            List<RscExtractRegister> rscExtractRegisters = dao.findListByQuery(queryBuilder.toString(), params);
 //            list = returnListView(rscExtractRegisters, DocumentId);
-
         } else if (DocumentId >= 1030 && DocumentId < 1039) {
             String query;
             if (params.get("postFlag").equals(0)) {
@@ -430,7 +432,7 @@ public class postRestrictionsViewServiceImpl implements postRestrictionsViewServ
 //            view.setDocumentTypeId(null);
 //            view.setBranchId(entity.getBranchId().getId());
 
-        }else if (DocumentId >= 1030 && DocumentId < 1040 ) {
+        } else if (DocumentId >= 1030 && DocumentId < 1040) {
             //الاشعارات 
             InvNotice entity = (InvNotice) Entity;
             view.setRowNum(index);
@@ -452,14 +454,14 @@ public class postRestrictionsViewServiceImpl implements postRestrictionsViewServ
             } else if (entity.getType() == 1) {
                 view.setScreenCode(1031);
                 view.setScreenName("اشعار خصم عميل");
-            } else if (entity.getType() == 2 ) {
+            } else if (entity.getType() == 2) {
                 view.setScreenCode(1032);
                 view.setScreenName("اشعار اضافة مورد");
             } else if (entity.getType() == 3) {
                 view.setScreenCode(1033);
                 view.setScreenName("اشعار خصم مورد");
-            } 
-            
+            }
+
             view.setDocumentTypeId(null);
             view.setBranchId(entity.getBranchId().getId());
 
@@ -564,7 +566,7 @@ public class postRestrictionsViewServiceImpl implements postRestrictionsViewServ
                     break;
             }
         }
-        
+
         if (moduleCode == 5) {
             switch (screenCode) {
                 case 1030:
@@ -581,7 +583,6 @@ public class postRestrictionsViewServiceImpl implements postRestrictionsViewServ
                     break;
             }
         }
-        
 
     }
 }

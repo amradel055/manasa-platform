@@ -484,19 +484,27 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                     if (detailDTO.getItemsBarcodesDetail().getTypeShow() == 1) {
                         if (detailDTO.getItemsBarcodesDetail().getSellPrice().compareTo(BigDecimal.valueOf(16.67)) != 1) {
                             detailDTO.setCost(new BigDecimal(257.3913043));
+                            detailDTO.setDiscount(BigDecimal.ZERO);
+                            zeroDiscount();
 //detailDTO.setDiscount(((detailDTO.getCost().subtract(new BigDecimal(257.3913043))).divide(detailDTO.getCost(), 3, RoundingMode.HALF_DOWN)).multiply(new BigDecimal(100)));
                         } else if (detailDTO.getItemsBarcodesDetail().getSellPrice().compareTo(BigDecimal.valueOf(16.67)) == 1
                                 && detailDTO.getItemsBarcodesDetail().getSellPrice().compareTo(BigDecimal.valueOf(25)) != 1) {
                             detailDTO.setCost(new BigDecimal(386.0869565));
+                            detailDTO.setDiscount(BigDecimal.ZERO);
+                            zeroDiscount();
 //detailDTO.setDiscount(((detailDTO.getCost().subtract(new BigDecimal(386))).divide(detailDTO.getCost(), 3, RoundingMode.HALF_DOWN)).multiply(new BigDecimal(100)));
                         }
                     } else if (detailDTO.getItemsBarcodesDetail().getTypeShow() == 2) {
                         if (detailDTO.getItemsBarcodesDetail().getSellPrice().compareTo(BigDecimal.valueOf(20)) != 1) {
                             detailDTO.setCost(new BigDecimal(257.3913043));
+                            detailDTO.setDiscount(BigDecimal.ZERO);
+                            zeroDiscount();
 //detailDTO.setDiscount(((detailDTO.getCost().subtract(new BigDecimal(257.3913043))).divide(detailDTO.getCost(), 3, RoundingMode.HALF_DOWN)).multiply(new BigDecimal(100)));
                         } else if (detailDTO.getItemsBarcodesDetail().getSellPrice().compareTo(BigDecimal.valueOf(20)) == 1
                                 && detailDTO.getItemsBarcodesDetail().getSellPrice().compareTo(BigDecimal.valueOf(35)) != 1) {
                             detailDTO.setCost(new BigDecimal(386.0869565));
+                            detailDTO.setDiscount(BigDecimal.ZERO);
+                            zeroDiscount();
 //                            detailDTO.setDiscount(((detailDTO.getCost().subtract(new BigDecimal(386))).divide(detailDTO.getCost(), 3, RoundingMode.HALF_DOWN)).multiply(new BigDecimal(100)));
                         }
                     }
@@ -506,6 +514,16 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
         }
         updateSummition();
+
+    }
+
+    private void zeroDiscount() {
+        if (getInvInvoiceDTO().getOrganizationSiteId() != null) {
+            getInvInvoiceDTO().getOrganizationSiteId().setDiscount(BigDecimal.ZERO);
+        }
+        if (getInvInvoiceDTO().getOrganizationSiteId() != null && getInvInvoiceDTO().getOrganizationSiteId().getOfferCompanyDTO() != null) {
+            getInvInvoiceDTO().getOrganizationSiteId().getOfferCompanyDTO().setDiscount(BigDecimal.ZERO);
+        }
     }
 
     public void testMethod() {

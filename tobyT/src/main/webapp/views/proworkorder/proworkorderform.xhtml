@@ -167,6 +167,20 @@
 
                             </div>
                         </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <p:selectOneMenu id="inventory" value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId}"
+                                              rendered="#{(userData.userScreens['proworkorder'].edit)}"
+                                             converter="#{invPurchaseInvoiceFormDTOMB.gallaryDTOConverters}" 
+                                             style="float:right;width: 100%!important;color:#fff;height: 30px!important;margin-right: 0.5%;">
+
+                                <f:selectItems value="#{invPurchaseInvoiceFormDTOMB.gallaryLists}" 
+                                               var="inventory" itemLabel="#{inventory.name}"
+                                               itemValue="#{inventory}"/> 
+                                <p:ajax  listener="#{invPurchaseInvoiceFormDTOMB.hishis()}" update="remain" />
+
+                            </p:selectOneMenu>
+
+                        </div>
 
 
 
@@ -227,7 +241,7 @@
                             </p:commandButton>
                             <p:commandButton     class="saveButton"  
                                                  title="العرض"
-                                                 value="عرض الخصم 20 %" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 0 }"
+                                                 value="عرض الخصم 20 %" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 0 and false}"
                                                  icon="fa fa-fw fa-save" 
                                                  action="#{invPurchaseInvoiceFormDTOMB.discount25ForAll(20)}"
                                                  update="@form"

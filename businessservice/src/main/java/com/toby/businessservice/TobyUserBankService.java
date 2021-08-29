@@ -22,7 +22,7 @@ public interface TobyUserBankService {
 
     public List<GlBank> getAllGlBankForUserByTypeAndBranchId(Integer userId, Integer branchId, Integer type);
 
-    public List<GlBank> getAllGlBankForUserByTypeAndBranchIdPer(Integer userId, Integer branchId, Integer type);
+    public List<GlBank> getAllGlBankForUserByTypeAndBranchIdPer(Integer userId, Integer branchId, Integer type, Integer gallaryId);
 
     public List<GlBank> getAllGlBankByTypeAndBranchId(Integer branchId, Integer type);
 
@@ -40,7 +40,9 @@ public interface TobyUserBankService {
 
     public List<GlBankDTO> getAllGlBankDTOByUserAndBranch(TobyUser tobyUser);
 
-    public List<GlBankDTO> getAllGlBankForUserByTypeAndBranchIdPerDTO(Integer userId, Integer branchId, Integer type);
+    public List<GlBankDTO> getAllGlBankForUserByTypeAndBranchIdPerDTO(Integer userId, Integer branchId, Integer type, Integer gallaryId);
+    
+    public List<GlBankDTO> getAllGlBankForUserByTypeAndBranchIdAndGallaryListPerDTO(Integer userId, Integer branchId, Integer type, String gallaryId) ;
     
     public List<Integer> getAllGlBankIdForUserByTypeAndBranchId(Integer userId, Integer branchId, Integer type);
 

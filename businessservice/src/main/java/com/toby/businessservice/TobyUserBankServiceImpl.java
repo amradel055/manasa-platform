@@ -56,7 +56,7 @@ public class TobyUserBankServiceImpl implements TobyUserBankService {
     }
 
     @Override
-    public List<GlBank> getAllGlBankForUserByTypeAndBranchIdPer(Integer userId, Integer branchId, Integer type) {
+    public List<GlBank> getAllGlBankForUserByTypeAndBranchIdPer(Integer userId, Integer branchId, Integer type, Integer gallaryId) {
 
         List<GlBank> glBankList = new ArrayList<>();
 
@@ -64,11 +64,15 @@ public class TobyUserBankServiceImpl implements TobyUserBankService {
         params.put("userId", userId);
         params.put("branchId", branchId);
 //        params.put("type", type);
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT i FROM TobyUserBank i LEFT JOIN i.bankId b WHERE i.userId.id =:userId AND i.branchId.id = :branchId ");
 
-        List<TobyUserBank> tobyUserBankList = dao.findListByQuery("SELECT i FROM TobyUserBank i "
-                + "LEFT JOIN "
-                + "i.bankId b "
-                + "WHERE i.userId.id =:userId AND i.branchId.id = :branchId", params);
+        if (gallaryId != null) {
+            params.put("gallaryId", gallaryId);
+            query.append(" AND i.bankId.gallaryId.id = :gallaryId");
+        }
+
+        List<TobyUserBank> tobyUserBankList = dao.findListByQuery(query.toString(), params);
 
         for (TobyUserBank tobyUserBank : tobyUserBankList) {
             if (tobyUserBank.getBankId() != null) {
@@ -154,7 +158,7 @@ public class TobyUserBankServiceImpl implements TobyUserBankService {
     }
 
     @Override
-    public List<GlBankDTO> getAllGlBankForUserByTypeAndBranchIdPerDTO(Integer userId, Integer branchId, Integer type) {
+    public List<GlBankDTO> getAllGlBankForUserByTypeAndBranchIdPerDTO(Integer userId, Integer branchId, Integer type, Integer gallaryId) {
 
         List<GlBank> glBankList = new ArrayList<>();
 
@@ -162,11 +166,15 @@ public class TobyUserBankServiceImpl implements TobyUserBankService {
         params.put("userId", userId);
         params.put("branchId", branchId);
 //        params.put("type", type);
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT i FROM TobyUserBank i LEFT JOIN i.bankId b WHERE i.userId.id =:userId AND i.branchId.id = :branchId ");
 
-        List<TobyUserBank> tobyUserBankList = dao.findListByQuery("SELECT i FROM TobyUserBank i "
-                + "LEFT JOIN "
-                + "i.bankId b "
-                + "WHERE i.userId.id =:userId AND i.branchId.id = :branchId", params);
+        if (gallaryId != null) {
+            params.put("gallaryId", gallaryId);
+            query.append(" AND i.bankId.gallaryId.id = :gallaryId");
+        }
+
+        List<TobyUserBank> tobyUserBankList = dao.findListByQuery(query.toString(), params);
 
         for (TobyUserBank tobyUserBank : tobyUserBankList) {
             if (tobyUserBank.getBankId() != null) {
@@ -180,7 +188,38 @@ public class TobyUserBankServiceImpl implements TobyUserBankService {
 
         return returnListDTO(glBankList);
     }
-    
+
+    @Override
+    public List<GlBankDTO> getAllGlBankForUserByTypeAndBranchIdAndGallaryListPerDTO(Integer userId, Integer branchId, Integer type, String gallaryId) {
+
+        List<GlBank> glBankList = new ArrayList<>();
+
+        Map<String, Object> params = new HashMap();
+        params.put("userId", userId);
+        params.put("branchId", branchId);
+//        params.put("type", type);
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT i FROM TobyUserBank i LEFT JOIN i.bankId b WHERE i.userId.id =:userId AND i.branchId.id = :branchId ");
+
+        if (gallaryId != null) {
+            query.append(" AND i.bankId.gallaryId.id in ( ").append(gallaryId).append(" ) ");
+        }
+
+        List<TobyUserBank> tobyUserBankList = dao.findListByQuery(query.toString(), params);
+
+        for (TobyUserBank tobyUserBank : tobyUserBankList) {
+            if (tobyUserBank.getBankId() != null) {
+                GlBank glBank = new GlBank();
+                glBank.setId(tobyUserBank.getBankId().getId());
+                glBank.setName(tobyUserBank.getBankId().getName());
+                glBank.setCode(tobyUserBank.getBankId().getCode());
+            }
+            glBankList.add(tobyUserBank.getBankId());
+        }
+
+        return returnListDTO(glBankList);
+    }
+
     @Override
     public List<Integer> getAllGlBankIdForUserByTypeAndBranchId(Integer userId, Integer branchId, Integer type) {
 
@@ -202,7 +241,6 @@ public class TobyUserBankServiceImpl implements TobyUserBankService {
 
         return glBankIdList;
     }
-    
 
     private List<GlBankDTO> returnListDTO(List<GlBank> list) {
         List<GlBankDTO> dTOList = new ArrayList<>();

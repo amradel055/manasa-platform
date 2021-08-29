@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="./../../resources/css/custom.css" />
     <ui:define name="content">
         <p:messages id="curmsg" autoUpdate="true" showDetail="true" showSummary="true" rendered="true" closable="true"/>
-        
+
 
         <h:form  id="form"  class='formmargin' dir="#{userData.dir}">
             <div style=" position: absolute;left: 20px"> 
@@ -43,7 +43,49 @@
 
                 <div  id="firstLine" class="ui-g-12 ui-g-nopad">
                     <div class="ui-g">
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 75px;margin-right: 6%;" value="المعرض" 
+                                                   />
+                                </h:panelGroup>
 
+                                <h:panelGroup>                                    
+                                    <p:selectCheckboxMenu id="gallary_From" value="#{shiftingJournalMB_new.gallaryListSelected}" 
+                                                          converter="#{shiftingJournalMB_new.gallaryDTOConverters}"
+                                                          label="المعرض" style="width: 15rem"
+                                                          filter="true" filterMatchMode="startsWith" panelStyle="width: 15rem" scrollHeight="250">
+                                        <f:selectItems value="#{shiftingJournalMB_new.gallaryLists}" 
+                                                       var="gallary"
+                                                       itemLabel="#{gallary}"
+                                                       itemValue="#{gallary}"/>
+                                        <p:ajax event="change"  update="@form" />
+                                    </p:selectCheckboxMenu>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 75px;margin-right: 6%;" value="الخزائن" 
+                                                   />
+                                </h:panelGroup>
+
+                                <h:panelGroup>    
+                                    <p:selectCheckboxMenu id="glBank_From" value="#{shiftingJournalMB_new.glBankDTOListSelected}" 
+                                                          converter="#{shiftingJournalMB_new.glBankDTOConverter}"
+                                                          label="الخزينة" style="width: 15rem"
+                                                          filter="true" filterMatchMode="startsWith" panelStyle="width: 15rem" scrollHeight="250">
+                                        <f:selectItems value="#{shiftingJournalMB_new.glBankDTOLists}" 
+                                                       var="gallary"
+                                                       itemLabel="#{gallary}"
+                                                       itemValue="#{gallary}"/>
+                                    </p:selectCheckboxMenu>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        
                         <div class="ui-g-12 ui-md-6">
 
                             <h:panelGroup>
@@ -158,18 +200,18 @@
             <p:fieldset>
 
                 <p:dataTable  id="table1"
-                    style="margin-top: 0px"
-                    widgetVar="postRestrict" 
-                    var="postRestrict" 
-                    dir="#{userData.dir}" 
-                    rows="8"  
-                    selection="#{shiftingJournalMB_new.postRestrictionsView}" 
-                    selectionMode="single"   
-                    rowKey="#{postRestrict}" 
-                    value="#{shiftingJournalMB_new.postRestrictionsViewList}"                    
-                    paginator="true" 
-                    rowIndexVar="index" 
-                    emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" >
+                              style="margin-top: 0px"
+                              widgetVar="postRestrict" 
+                              var="postRestrict" 
+                              dir="#{userData.dir}" 
+                              rows="8"  
+                              selection="#{shiftingJournalMB_new.postRestrictionsView}" 
+                              selectionMode="single"   
+                              rowKey="#{postRestrict}" 
+                              value="#{shiftingJournalMB_new.postRestrictionsViewList}"                    
+                              paginator="true" 
+                              rowIndexVar="index" 
+                              emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" >
 
                     <f:facet name="header" class="col-md-12">
 
@@ -220,13 +262,13 @@
                         </p:commandButton>
 
                         <p:commandButton  id="undoShifting"  class="sreloadButtons" update="form" title="#{userData.userDDs['CANCEL_MIGRATION']}" 
-                                           action="#{shiftingJournalMB_new.undoShifting}" 
-                                           style="background-color: #1c993b;border-radius: 3px;"
-                                           onclick="this.disabled = true;"
-                                           oncomplete="this.disabled=false;"
-                                           icon="fa fa-fw fa-undo"
-                                           disabled="#{not shiftingJournalMB_new.shiftedJournals}"
-                                           >
+                                          action="#{shiftingJournalMB_new.undoShifting}" 
+                                          style="background-color: #1c993b;border-radius: 3px;"
+                                          onclick="this.disabled = true;"
+                                          oncomplete="this.disabled=false;"
+                                          icon="fa fa-fw fa-undo"
+                                          disabled="#{not shiftingJournalMB_new.shiftedJournals}"
+                                          >
                             <f:setPropertyActionListener value="#{postRestrict}" target="#{shiftingJournalMB_new.postRestrictionsSelected}" />
                         </p:commandButton>
                     </p:column>
@@ -266,7 +308,7 @@
                         <h:outputText  value="#{postRestrictDetails.valueCredit}" />
                     </p:column>
 
-                  
+
                     <p:columnGroup type="footer">
                         <p:row>
                             <p:column style="border-radius: 0px" colspan="3" footerText="#{userData.userDDs['TOTAL']} " />                           

@@ -21,7 +21,28 @@
                     <div class="ui-g">
 
 
+
                         <div class="ui-g-6 ui-xl-6">
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:selectOneMenu id="inventory" value="#{glBankFromMB.gallaryDTOSelect}"
+                                                     converter="#{glBankFromMB.gallaryDTOConverters}" 
+                                                     style="float:right;width: 20%!important;color:#fff;height: 30px!important;margin-right: 0.5%;">
+
+                                        <f:selectItem itemLabel="#{userData.userDDs['ALL']}" itemValue="" />
+
+                                        <f:selectItems value="#{glBankFromMB.gallaryLists}" 
+                                                       var="inventory" itemLabel="#{inventory.name}"
+                                                       itemValue="#{inventory}"/> 
+                                    </p:selectOneMenu>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px" value="المعرض"/>
+
+                                </div>
+                            </div>
+
+
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:inputText style="width: 49%!important" value="#{glBankFromMB.glBankEntity.name}"/>

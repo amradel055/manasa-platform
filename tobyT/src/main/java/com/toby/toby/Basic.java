@@ -6,12 +6,15 @@
 package com.toby.toby;
 
 import com.toby.businessservice.TobyErrorService;
+import com.toby.businessservice.TobyUserBankService;
 import com.toby.businessservice.TobyUserInventoryService;
 import com.toby.businessservice.TobyUserLoginService;
 import com.toby.common.FindClientData;
 import com.toby.common.SendEmailSMTP;
+import com.toby.converter.GlBankDTOConverter;
 import com.toby.converter.InvInventoryDTOConverter;
 import com.toby.define.HttpMethode;
+import com.toby.dto.GlBankDTO;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.TobyErrorDTO;
 import com.toby.entity.Branch;
@@ -79,6 +82,8 @@ public class Basic implements Serializable {
     TobyErrorService tobyErrorService;
     @EJB
     private TobyUserInventoryService tobyUserInventoryService;
+    @EJB
+    private TobyUserBankService tobyUserBankService;
 
     private TobyUser userlogin;
 
@@ -117,6 +122,13 @@ public class Basic implements Serializable {
     private List<InvInventoryDTO> gallaryLists;
     private List<InvInventoryDTO> gallaryListSelected;
     private InvInventoryDTO gallaryDTOSelect;
+    private String gallaryIdList;
+
+    private GlBankDTOConverter glBankDTOConverter;
+    private List<GlBankDTO> glBankDTOLists;
+    private List<GlBankDTO> glBankDTOListSelected;
+    private GlBankDTO glBankDTOSelect;
+    private String glBankDTOIdList;
 
     public Date findDateFromHijriFrom() {
         if (getYearHijriFrom() != null && getMonthHijriFrom() != null && getDayHijriFrom() != null) {
@@ -390,7 +402,7 @@ public class Basic implements Serializable {
         }
     }
 
-    public void sendSms(String mobile, String sender, String message,String username,String password) {
+    public void sendSms(String mobile, String sender, String message, String username, String password) {
         try {
 //            String username = ;
 //            String password = ;
@@ -490,8 +502,7 @@ public class Basic implements Serializable {
             branch = (Branch) externalContext.getSessionMap().get("branch");
         }
         return branch;
-    } 
-    
+    }
 
     public void hishis() {
         System.out.println("HisHis");
@@ -795,7 +806,7 @@ public class Basic implements Serializable {
      * @return the gallaryListSelected
      */
     public List<InvInventoryDTO> getGallaryListSelected() {
-        if(gallaryListSelected == null){
+        if (gallaryListSelected == null) {
             gallaryListSelected = getGallaryLists();
         }
         return gallaryListSelected;
@@ -806,6 +817,120 @@ public class Basic implements Serializable {
      */
     public void setGallaryListSelected(List<InvInventoryDTO> gallaryListSelected) {
         this.gallaryListSelected = gallaryListSelected;
+    }
+
+    /**
+     * @return the gallaryIdList
+     */
+    public String getGallaryIdList() {
+        if (getGallaryListSelected() != null && !getGallaryListSelected().isEmpty()) {
+            StringBuilder list = null;
+            for (InvInventoryDTO iidto : getGallaryListSelected()) {
+                if (list == null) {
+                    list = new StringBuilder();
+                    list.append(iidto.getId());
+                } else {
+                    list.append(" , ").append(iidto.getId());
+                }
+            }
+            return list.toString();
+        }
+        return gallaryIdList;
+    }
+
+    /**
+     * @param gallaryIdList the gallaryIdList to set
+     */
+    public void setGallaryIdList(String gallaryIdList) {
+        this.gallaryIdList = gallaryIdList;
+    }
+
+    /**
+     * @return the glBankDTOConverter
+     */
+    public GlBankDTOConverter getGlBankDTOConverter() {
+        return glBankDTOConverter;
+    }
+
+    /**
+     * @param glBankDTOConverter the glBankDTOConverter to set
+     */
+    public void setGlBankDTOConverter(GlBankDTOConverter glBankDTOConverter) {
+        this.glBankDTOConverter = glBankDTOConverter;
+    }
+
+    /**
+     * @return the glBankDTOLists
+     */
+    public List<GlBankDTO> getGlBankDTOLists() {
+            if (getGallaryIdList() != null && !getGallaryIdList().isEmpty()) {
+                glBankDTOLists = tobyUserBankService.getAllGlBankForUserByTypeAndBranchIdAndGallaryListPerDTO(getUserData().getUser().getId(), getUserData().getUserBranch().getId(), null, getGallaryIdList());
+            } else {
+                glBankDTOLists = tobyUserBankService.getAllGlBankForUserByTypeAndBranchIdPerDTO(getUserData().getUser().getId(), getUserData().getUserBranch().getId(), null, null);
+            }
+            setGlBankDTOConverter(new GlBankDTOConverter(glBankDTOLists));
+        return glBankDTOLists;
+    }
+
+    /**
+     * @param glBankDTOLists the glBankDTOLists to set
+     */
+    public void setGlBankDTOLists(List<GlBankDTO> glBankDTOLists) {
+        this.glBankDTOLists = glBankDTOLists;
+    }
+
+    /**
+     * @return the glBankDTOListSelected
+     */
+    public List<GlBankDTO> getGlBankDTOListSelected() {
+        return glBankDTOListSelected;
+    }
+
+    /**
+     * @param glBankDTOListSelected the glBankDTOListSelected to set
+     */
+    public void setGlBankDTOListSelected(List<GlBankDTO> glBankDTOListSelected) {
+        this.glBankDTOListSelected = glBankDTOListSelected;
+    }
+
+    /**
+     * @return the glBankDTOSelect
+     */
+    public GlBankDTO getGlBankDTOSelect() {
+        return glBankDTOSelect;
+    }
+
+    /**
+     * @param glBankDTOSelect the glBankDTOSelect to set
+     */
+    public void setGlBankDTOSelect(GlBankDTO glBankDTOSelect) {
+        this.glBankDTOSelect = glBankDTOSelect;
+    }
+
+    /**
+     * @return the glBankDTOIdList
+     */
+    public String getGlBankDTOIdList() {
+        if (getGlBankDTOListSelected() != null && !getGlBankDTOListSelected().isEmpty()) {
+            StringBuilder list = null;
+            for (GlBankDTO iidto : getGlBankDTOListSelected()) {
+                if (list == null) {
+                    list = new StringBuilder();
+                    list.append(iidto.getId());
+                } else {
+                    list.append(" , ").append(iidto.getId());
+                }
+            }
+            return list.toString();
+        }
+        return glBankDTOIdList;
+    }
+
+    /**
+     * @param glBankDTOIdList the glBankDTOIdList to set
+     */
+    public void setGlBankDTOIdList(String glBankDTOIdList) {
+        this.glBankDTOIdList = glBankDTOIdList;
     }
 
 }

@@ -10,9 +10,11 @@ import com.toby.businessservice.GlAccountService;
 import com.toby.businessservice.GlBankService;
 import com.toby.converter.CurrencyConverter;
 import com.toby.converter.GlaccountConverter;
+import com.toby.dto.InvInventoryDTO;
 import com.toby.entity.Currency;
 import com.toby.entity.GlAccount;
 import com.toby.entity.GlBank;
+import com.toby.entity.InvInventory;
 import com.toby.entiy.GlBankEntity;
 import com.toby.toby.BaseFormBean;
 import com.toby.toby.UserData;
@@ -164,6 +166,18 @@ public class glBankFromMB extends BaseFormBean {
             glBankEntity.setCommition(glBank.getCommition());
             glBankEntity.setRate(glBank.getRate());
             glBankEntity.setCash(glBank.getCash());
+            
+            if (glBank.getGallaryId() != null) {
+                InvInventoryDTO inventory = new InvInventoryDTO();
+                inventory.setId(glBank.getGallaryId().getId());
+                setGallaryDTOSelect(inventory);
+            }
+            
+            if (getGallaryDTOSelect() != null) {
+                InvInventory inventory = new InvInventory();
+                inventory.setId(getGallaryDTOSelect().getId());
+                glBank.setGallaryId(inventory);
+            }
 //            glBankEntity.setRaghiPoint(glBank.getRaghiPoint());
             if (glBank.getType() != null) {
                 glBankEntity.setType(glBank.getType());
@@ -213,8 +227,13 @@ public class glBankFromMB extends BaseFormBean {
                 glBank.setCommition(glBankEntity.getCommition());
                 glBank.setRate(glBankEntity.getRate());
                 glBank.setCash(glBankEntity.getCash());
-//                glBank.setRaghiPoint(glBankEntity.getRaghiPoint());
+                if (getGallaryDTOSelect() != null) {
+                    InvInventory inventory = new InvInventory();
+                    inventory.setId(getGallaryDTOSelect().getId());
+                    glBank.setGallaryId(inventory);
+                }
 
+//                glBank.setRaghiPoint(glBankEntity.getRaghiPoint());
                 if (glBank.getId() == null) {
                     glBank.setCreationDate(new Date());
                     glBank.setCreatedBy(getUserData().getUser());
@@ -295,7 +314,7 @@ public class glBankFromMB extends BaseFormBean {
 
     public void validateCode() {
         try {
-            if (glBankEntity.getCode() != null ) {
+            if (glBankEntity.getCode() != null) {
                 List<GlBank> banks = glBankService.getGlBankByBranchIdAndCode(getUserData().getUserBranch().getId(), glBankEntity.getCode(), glBankEntity.getId());
                 if (banks != null && !banks.isEmpty()) {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, userDDs.get("ERROR"), "لا يمكن تكرار الكود"));
@@ -309,14 +328,14 @@ public class glBankFromMB extends BaseFormBean {
             saveError(e, "glBankFromMB", "validateCode");
         }
     }
-    
+
     public void validateRaghiPoints() {
         try {
-                Boolean check = glBankService.getGlBankByBranchIdAndraghiPoints(getUserData().getUserBranch().getId(), glBankEntity.getRaghiPoint(), glBankEntity.getId());
-                if (!check) {
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, userDDs.get("ERROR"), "يجب الغاء نقاط الراجحى من الخزينة "));
-                    showMessage = true;
-                }
+            Boolean check = glBankService.getGlBankByBranchIdAndraghiPoints(getUserData().getUserBranch().getId(), glBankEntity.getRaghiPoint(), glBankEntity.getId());
+            if (!check) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, userDDs.get("ERROR"), "يجب الغاء نقاط الراجحى من الخزينة "));
+                showMessage = true;
+            }
         } catch (Exception e) {
             saveError(e, "glBankFromMB", "validateCode");
         }

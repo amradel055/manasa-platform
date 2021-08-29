@@ -291,9 +291,9 @@ public class ShiftingJournalMB_New extends GeneralJournalBean {
             documentFixedNumber = symbol != null ? symbol.getSerial() : null;
             setSelectedDocumentsType(symbol != null ? symbol.getId() : null);
             if (shiftedJournals) {
-                postRestrictionsViewList = restrictionsViewService.getBankTransactions(userData.getUserBranch().getId(), dateFrom, dateTo, documentFixedNumber, 1);
+                postRestrictionsViewList = restrictionsViewService.getBankTransactions(userData.getUserBranch().getId(), dateFrom, dateTo, documentFixedNumber, 1,getGallaryIdList(),getGlBankDTOIdList());
             } else {
-                postRestrictionsViewList = restrictionsViewService.getBankTransactions(userData.getUserBranch().getId(), dateFrom, dateTo, documentFixedNumber, 0);
+                postRestrictionsViewList = restrictionsViewService.getBankTransactions(userData.getUserBranch().getId(), dateFrom, dateTo, documentFixedNumber, 0,getGallaryIdList(),getGlBankDTOIdList());
             }
         } catch (Exception e) {
             saveError(e, "ShiftingJournalMB", "loadDataTableHead");

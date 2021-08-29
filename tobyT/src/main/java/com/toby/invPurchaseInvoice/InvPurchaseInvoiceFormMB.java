@@ -369,7 +369,7 @@ public class InvPurchaseInvoiceFormMB extends BaseFormBean {
             invInventoryConverter = new InvInventoryConverter(invInventoryList);
             setInvSetup(inventorySetupService.getInventoryByBranchId(branchId));
 
-            glBankList = isagUserBankService.getAllGlBankForUserByTypeAndBranchIdPer(getUserData().getUser().getId(), branchId, 0); //  ودا بردوا
+            glBankList = isagUserBankService.getAllGlBankForUserByTypeAndBranchIdPer(getUserData().getUser().getId(), branchId, 0,null); //  ودا بردوا
             glBankConverter = new GlBankConverter(glBankList);
 
 //        unitsMap = invBarcodeSevice.getAllUnitsForAllInvItemsByBranch(branchId);
