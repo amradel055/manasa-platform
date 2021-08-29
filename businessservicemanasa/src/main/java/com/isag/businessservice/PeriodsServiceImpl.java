@@ -50,7 +50,7 @@ public class PeriodsServiceImpl implements PeriodsService {
         return returnListDTO(list);
     }
     
-    public Boolean validateStudentMonth(PeriodsDTO periodsDTO) {
+    public Boolean validatePeriods(PeriodsDTO periodsDTO) {
         Map<String, Object> params = new HashMap();
         params.put("teacherId", periodsDTO.getTeacherDTO());
         params.put("name", periodsDTO.getName());
@@ -96,7 +96,7 @@ public class PeriodsServiceImpl implements PeriodsService {
                 isagCompany.setId(periodsDTO.getCompanyId());
                 isagUser.setCompanyId(isagCompany);
             }
-            if (validateStudentMonth(periodsDTO)) {
+            if (validatePeriods(periodsDTO)) {
                 periods = mapToEntity(periodsDTO, isagUser, periods);
                 dao.updateEntity(periods);
                 msg.setMsg("تم الحفظ بنجاح");

@@ -15,6 +15,7 @@ public class APIStudentDataDTO {
 
     private List<Integer> monthList;
     private List<Integer> periodList;
+    private List<Integer> teacherList;
 
     private Integer id;
     private String fullName;
@@ -463,6 +464,20 @@ public class APIStudentDataDTO {
      */
     public void setPeriodList(List<Integer> periodList) {
         this.periodList = periodList;
+    }
+
+    /**
+     * @return the teacherList
+     */
+    public List<Integer> getTeacherList() {
+        return teacherList;
+    }
+
+    /**
+     * @param teacherList the teacherList to set
+     */
+    public void setTeacherList(List<Integer> teacherList) {
+        this.teacherList = teacherList;
     }
 
 }

@@ -5,7 +5,7 @@
  */
 package com.isag.general;
 
-import com.isag.businessservice.StudentMonthsService;
+import com.isag.businessservice.StudentPeriodsService;
 import com.isag.businessservice.StudentService;
 import com.isag.dto.APIDataDTO;
 import com.isag.dto.APIStudentDataDTO;
@@ -48,7 +48,7 @@ public class GeneralImp implements GeneralService {
     @EJB
     private IgmaApiTokenService isagApiTokenService;
     @EJB
-    StudentMonthsService monthsService;
+    StudentPeriodsService periodsService;
     @EJB
     private IgmaUserService userService;
     @EJB
@@ -139,6 +139,11 @@ public class GeneralImp implements GeneralService {
         dTO.setSuccess(success);
         dTO.setMsg(msg);
         dTO.setToken(token);
+        if (isagUser.getParent() != null) {
+            dTO.setTeacherId(isagUser.getParent().getId());
+        } else {
+            dTO.setTeacherId(isagUser.getId());
+        }
         if (success.equals(Boolean.TRUE)) {
             APIDataDTO data = new APIDataDTO();
             data.setName(isagUser == null ? "" : isagUser.getName());
@@ -165,8 +170,10 @@ public class GeneralImp implements GeneralService {
             data.setMobile(studentDTO.getMobile());
             data.setSchoolStagesId(studentDTO.getSchoolStagesId().getId());
             data.setImagePath(studentDTO.getImagePath());
-            List<Integer> periodList = monthsService.findStudentMonthsByPeriod(studentDTO.getId());
+            List<Integer> periodList = periodsService.findPeriodsByStudentId(studentDTO.getId());
+            List<Integer> teachersList = periodsService.findteachersByStudentId(studentDTO.getId());
             data.setPeriodList(periodList);
+            data.setTeacherList(teachersList);
             dTO.setStudentData(data);
         }
         return dTO;

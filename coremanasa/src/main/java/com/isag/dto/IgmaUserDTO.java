@@ -16,6 +16,7 @@ public class IgmaUserDTO  extends BaseEntityDTO {
     private String name;
     private SymbolDTO lang;
     private Integer master;
+    private Integer parent;
     private Integer branchId;
     private String token;
 
@@ -112,6 +113,20 @@ public class IgmaUserDTO  extends BaseEntityDTO {
      */
     public void setToken(String token) {
         this.token = token;
+    }
+
+    /**
+     * @return the parent
+     */
+    public Integer getParent() {
+        return parent;
+    }
+
+    /**
+     * @param parent the parent to set
+     */
+    public void setParent(Integer parent) {
+        this.parent = parent;
     }
 
 }

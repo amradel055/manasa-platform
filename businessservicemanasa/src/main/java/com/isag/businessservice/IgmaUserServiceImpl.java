@@ -226,6 +226,8 @@ public class IgmaUserServiceImpl implements IgmaUserService {
         dTO.setName(entity.getName());
         dTO.setPassword(entity.getPassword());
         dTO.setUserCode(entity.getUserCode());
+        
+     
 
         dTO.setIndex(entity.getId());
         dTO.setCreatedDate(entity.getCreationDate());

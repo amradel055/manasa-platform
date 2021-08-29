@@ -16,8 +16,8 @@ public class APIloginDTO {
     private String token;
     private APIDataDTO data;
     private APIStudentDataDTO studentData;
-    private Integer employeeId;
-     
+    private Integer teacherId;
+
     /**
      * @return the success
      */
@@ -89,17 +89,17 @@ public class APIloginDTO {
     }
 
     /**
-     * @return the employeeId
+     * @return the teacherId
      */
-    public Integer getEmployeeId() {
-        return employeeId;
+    public Integer getTeacherId() {
+        return teacherId;
     }
 
     /**
-     * @param employeeId the employeeId to set
+     * @param teacherId the teacherId to set
      */
-    public void setEmployeeId(Integer employeeId) {
-        this.employeeId = employeeId;
+    public void setTeacherId(Integer teacherId) {
+        this.teacherId = teacherId;
     }
 
 }

@@ -15,6 +15,8 @@ import com.isag.rest.LoginStudentRest;
 import com.isag.rest.MediaRest;
 import com.isag.rest.PeriodsRest;
 import com.isag.rest.StudentMonthsRest;
+import com.isag.rest.StudentPeriodsRest;
+import com.isag.rest.StudentResetRest;
 import com.isag.rest.StudentRest;
 import com.isag.rest.TeachersRest;
 import java.util.HashSet;
@@ -46,6 +48,8 @@ public class MyApplication extends Application {
         resources.add(ExamsRest.class);
         resources.add(PeriodsRest.class);
         resources.add(TeachersRest.class);
+        resources.add(StudentPeriodsRest.class);
+        resources.add(StudentResetRest.class);
         return resources;
     }
 

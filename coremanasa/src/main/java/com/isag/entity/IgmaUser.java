@@ -18,7 +18,6 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "IgmaUser.authenticate", query = "SELECT i FROM IgmaUser i WHERE i.userCode = :userCode")})
 public class IgmaUser extends BaseEntity {
 
-    
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     @ManyToOne
     private IgmaRole roleId;
@@ -42,19 +41,20 @@ public class IgmaUser extends BaseEntity {
     @JoinColumn(name = "lang", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.EAGER)
     private Symbol lang;
-    
+
     @Column(name = "master")
     private Integer master;
 
     @JoinColumn(name = "branch_id", referencedColumnName = "id")
     @ManyToOne
     private Branch branchId;
-    
+
     @JoinColumn(name = "employee_id", referencedColumnName = "id")
     @ManyToOne
     private Employee employeeId;
-
-    
+    @JoinColumn(name = "parent", referencedColumnName = "id")
+    @ManyToOne
+    private IgmaUser parent;
 
     public IgmaUser() {
     }
@@ -168,5 +168,19 @@ public class IgmaUser extends BaseEntity {
 
     public void setRoleId(IgmaRole roleId) {
         this.roleId = roleId;
+    }
+
+    /**
+     * @return the parent
+     */
+    public IgmaUser getParent() {
+        return parent;
+    }
+
+    /**
+     * @param parent the parent to set
+     */
+    public void setParent(IgmaUser parent) {
+        this.parent = parent;
     }
 }
