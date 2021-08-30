@@ -105,7 +105,7 @@ public class UserFormBean extends BaseFormBean implements Serializable {
 //                    remCompany.setId(getRemCompanyDTO().getId());
 //                    userDetails.setRemCompanyId(remCompany);
 //                }
-                userDetails.setEmployeeId(employeeSelected);
+//                userDetails.setEmployeeId(employeeSelected);
                 if (screenMode.equalsIgnoreCase("add")) {
                     userDetails.setCreationDate(new Date());
                     userDetails.setCreatedBy(userData.getUser());
@@ -280,7 +280,7 @@ public class UserFormBean extends BaseFormBean implements Serializable {
                 master = userDetails.getMaster();
                 userPassword = userDetails.getPassword();
                 userCode = userDetails.getUserCode().substring(3);
-                employeeSelected = userDetails.getEmployeeId();
+//                employeeSelected = userDetails.getEmployeeId();
                 List<CompanyLanguage> companyLanguages = companyService.getCompanyLanguages(selectedCompanyId);
                 for (CompanyLanguage companyLanguage : companyLanguages) {
                     languages.add(companyLanguage.getSymbol());
@@ -302,7 +302,7 @@ public class UserFormBean extends BaseFormBean implements Serializable {
                 master = userDetails.getMaster();
                 userPassword = userDetails.getPassword();
                 userCode = userDetails.getUserCode();
-                employeeSelected = userDetails.getEmployeeId();
+                //employeeSelected = userDetails.getEmployeeId();
 
 //            userLang = userDetails.getLang();
                 try {

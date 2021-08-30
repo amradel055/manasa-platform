@@ -24,10 +24,10 @@ import javax.ejb.Stateless;
  */
 @Stateless
 public class schoolStagesGuideServiceImpl implements SchoolStagesGuideService {
-
+    
     @EJB
     private GenericDAO dao;
-
+    
     @Override
     public List<SchoolStagesGuideDTO> findschoolStagesGuide(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
@@ -40,7 +40,7 @@ public class schoolStagesGuideServiceImpl implements SchoolStagesGuideService {
         List<SchoolStagesGuideDTO> listDTO = returnListDTO(schoolStagesGuideList);
         return listDTO;
     }
-
+    
     @Override
     public List<SchoolStagesGuideDTO> findschoolStagesGuideByTeacherId(Integer teacherId) {
         Map<String, Object> params = new HashMap<>();
@@ -53,7 +53,7 @@ public class schoolStagesGuideServiceImpl implements SchoolStagesGuideService {
         List<SchoolStagesGuideDTO> listDTO = returnListDTO(schoolStagesGuideList);
         return listDTO;
     }
-
+    
     private List<SchoolStagesGuideDTO> returnListDTO(List<SchoolStagesGuide> list) {
         List<SchoolStagesGuideDTO> dTOList = new ArrayList<>();
         for (SchoolStagesGuide entity : list) {
@@ -61,49 +61,49 @@ public class schoolStagesGuideServiceImpl implements SchoolStagesGuideService {
         }
         return dTOList;
     }
-
+    
     private SchoolStagesGuideDTO mapTODTO(SchoolStagesGuide entity) {
         SchoolStagesGuideDTO dTO = initMapToDTO(entity);
-
+        
         return dTO;
     }
-
+    
     private SchoolStagesGuideDTO initMapToDTO(SchoolStagesGuide entity) {
-
+        
         SchoolStagesGuideDTO dTO = new SchoolStagesGuideDTO();
         dTO.setId(entity.getId());
         dTO.setName(entity.getName());
         dTO.setCode(entity.getCode());
         dTO.setLevel(entity.getLevel());
         dTO.setType(entity.getType());
-
+        
         if (entity.getTeacherId() != null) {
             dTO.setTeacherId(entity.getTeacherId() == null ? null : entity.getTeacherId().getId());
         }
-
+        
         dTO.setIndex(entity.getId());
         dTO.setCreatedDate(entity.getCreationDate());
         dTO.setCreatedBy(entity.getCreatedBy().getId());
-
+        
         return dTO;
     }
-
+    
     private SchoolStagesGuide mapToEntity(SchoolStagesGuideDTO dTO, IgmaUser isagUser) {
         SchoolStagesGuide entity = new SchoolStagesGuide();
-
+        
         entity.setName(dTO.getName());
         entity.setCode(dTO.getCode());
         entity.setLevel(dTO.getLevel());
         entity.setType(dTO.getType());
-
+        
         if (dTO.getTeacherId() != null) {
-            Teachers teachers = new Teachers();
-            teachers.setId(dTO.getTeacherId());
-            entity.setTeacherId(teachers);
+            IgmaUser igmaUser = new IgmaUser();
+            igmaUser.setId(dTO.getTeacherId());
+            entity.setTeacherId(igmaUser);
         }
-
+        
         if (dTO.getId() == null) {
-
+            
             entity.setCreatedBy(isagUser);
             entity.setCreationDate(new Date());
         } else {
@@ -115,9 +115,9 @@ public class schoolStagesGuideServiceImpl implements SchoolStagesGuideService {
             entity.setModificationDate(new Date());
             entity.setModifiedBy(isagUser);
         }
-
+        
         entity.setCompanyId(isagUser.getCompanyId());
         return entity;
     }
-
+    
 }

@@ -8,7 +8,7 @@ package com.isag.dto;
 public class PeriodsDTO extends BaseEntityDTO {
 
     private String name;
-    private Integer teacherDTO;
+    private Integer teacherId;
 
     public PeriodsDTO() {
     }
@@ -51,17 +51,17 @@ public class PeriodsDTO extends BaseEntityDTO {
     }
 
     /**
-     * @return the teacherDTO
+     * @return the teacherId
      */
-    public Integer getTeacherDTO() {
-        return teacherDTO;
+    public Integer getTeacherId() {
+        return teacherId;
     }
 
     /**
-     * @param teacherDTO the teacherDTO to set
+     * @param teacherId the teacherId to set
      */
-    public void setTeacherDTO(Integer teacherDTO) {
-        this.teacherDTO = teacherDTO;
+    public void setTeacherId(Integer teacherId) {
+        this.teacherId = teacherId;
     }
 
 }

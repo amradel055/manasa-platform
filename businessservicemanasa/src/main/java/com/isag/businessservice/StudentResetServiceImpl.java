@@ -52,10 +52,11 @@ public class StudentResetServiceImpl implements StudentResetService {
         dao.deleteEntity(entity);
     }
 
-    public void sentSMS(String code) {
-        String to = "amradel055@gmail.com";
+    public void sentSMS(String msg, StudentResetDTO studentResetDTO) {
+        String to = studentResetDTO.getStudentEmail();
         String from = "amradel@isag-it.com";
-        String host = "mail.isag-it.com"; //or IP address  
+        //String host = "mail.isag-it.com"; //or IP address  
+        String host = studentResetDTO.getMacId(); //or IP address  
 
         //Get the session object  
         Properties properties = System.getProperties();
@@ -70,7 +71,7 @@ public class StudentResetServiceImpl implements StudentResetService {
             //message.setSubject("Ping");
             message.setSubject(" verification code ");
             //message.setText(" Hello, this is example of sending email  ");
-            message.setText(code);
+            message.setText(msg);
 
             // Send message  
             Transport.send(message);
@@ -101,7 +102,7 @@ public class StudentResetServiceImpl implements StudentResetService {
     @Override
     public StudentResetDTO saveGeneratorCode(StudentResetDTO studentResetDTO, IgmaUser isagUser) {
         String code = GenerateRandomCode();
-        sentSMS(code);
+        sentSMS(code, studentResetDTO);
         studentResetDTO.setStudentCode(code);
         if (studentResetDTO.getId() != null) {
             StudentReset reset = mapToEntity(studentResetDTO, isagUser);
@@ -143,6 +144,8 @@ public class StudentResetServiceImpl implements StudentResetService {
 
         if (entity.getStudentId() != null) {
             dTO.setStudentId(entity.getStudentId().getId());
+            dTO.setStudentEmail(entity.getStudentId().getEmail());
+            dTO.setMacId(entity.getStudentId().getMacId());
         }
 
         dTO.setIndex(entity.getId());

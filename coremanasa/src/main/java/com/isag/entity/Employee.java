@@ -5,7 +5,6 @@
  */
 package com.isag.entity;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
@@ -25,7 +24,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -35,31 +33,56 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "employee")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Employee.findAll", query = "SELECT e FROM Employee e"),
-    @NamedQuery(name = "Employee.findById", query = "SELECT e FROM Employee e WHERE e.id = :id"),
-    @NamedQuery(name = "Employee.findByName", query = "SELECT e FROM Employee e WHERE e.name = :name"),
-    @NamedQuery(name = "Employee.findByNameEn", query = "SELECT e FROM Employee e WHERE e.nameEn = :nameEn"),
-    @NamedQuery(name = "Employee.findByDateBirth", query = "SELECT e FROM Employee e WHERE e.dateBirth = :dateBirth"),
-    @NamedQuery(name = "Employee.findByEmail", query = "SELECT e FROM Employee e WHERE e.email = :email"),
-    @NamedQuery(name = "Employee.findByJoinDate", query = "SELECT e FROM Employee e WHERE e.joinDate = :joinDate"),
-    @NamedQuery(name = "Employee.findByCode", query = "SELECT e FROM Employee e WHERE e.code = :code"),
-    @NamedQuery(name = "Employee.findByIdNumber", query = "SELECT e FROM Employee e WHERE e.idNumber = :idNumber"),
-    @NamedQuery(name = "Employee.findByIdNumberReleaseDate", query = "SELECT e FROM Employee e WHERE e.idNumberReleaseDate = :idNumberReleaseDate"),
-    @NamedQuery(name = "Employee.findByIdNumberEndDate", query = "SELECT e FROM Employee e WHERE e.idNumberEndDate = :idNumberEndDate"),
-    @NamedQuery(name = "Employee.findBySocialInsuranceId", query = "SELECT e FROM Employee e WHERE e.socialInsuranceId = :socialInsuranceId"),
-    @NamedQuery(name = "Employee.findByStatus", query = "SELECT e FROM Employee e WHERE e.status = :status"),
-    @NamedQuery(name = "Employee.findByContractStartDate", query = "SELECT e FROM Employee e WHERE e.contractStartDate = :contractStartDate"),
-    @NamedQuery(name = "Employee.findByContractEndDate", query = "SELECT e FROM Employee e WHERE e.contractEndDate = :contractEndDate"),
-    @NamedQuery(name = "Employee.findByRetirementDate", query = "SELECT e FROM Employee e WHERE e.retirementDate = :retirementDate"),
-    @NamedQuery(name = "Employee.findByDepartmentId", query = "SELECT e FROM Employee e WHERE e.departmentId = :departmentId"),
-    @NamedQuery(name = "Employee.findByMobile", query = "SELECT e FROM Employee e WHERE e.mobile = :mobile"),
-    @NamedQuery(name = "Employee.findByPhone", query = "SELECT e FROM Employee e WHERE e.phone = :phone"),
-    @NamedQuery(name = "Employee.findByPassportNumber", query = "SELECT e FROM Employee e WHERE e.passportNumber = :passportNumber"),
-    @NamedQuery(name = "Employee.findByPassportReleaseDate", query = "SELECT e FROM Employee e WHERE e.passportReleaseDate = :passportReleaseDate"),
-    @NamedQuery(name = "Employee.findByPassportEndDate", query = "SELECT e FROM Employee e WHERE e.passportEndDate = :passportEndDate"),
-    @NamedQuery(name = "Employee.findByImgName", query = "SELECT e FROM Employee e WHERE e.imgName = :imgName"),
-    @NamedQuery(name = "Employee.findByCvName", query = "SELECT e FROM Employee e WHERE e.cvName = :cvName"),
-    @NamedQuery(name = "Employee.findByModificationDate", query = "SELECT e FROM Employee e WHERE e.modificationDate = :modificationDate"),
+    @NamedQuery(name = "Employee.findAll", query = "SELECT e FROM Employee e")
+    ,
+    @NamedQuery(name = "Employee.findById", query = "SELECT e FROM Employee e WHERE e.id = :id")
+    ,
+    @NamedQuery(name = "Employee.findByName", query = "SELECT e FROM Employee e WHERE e.name = :name")
+    ,
+    @NamedQuery(name = "Employee.findByNameEn", query = "SELECT e FROM Employee e WHERE e.nameEn = :nameEn")
+    ,
+    @NamedQuery(name = "Employee.findByDateBirth", query = "SELECT e FROM Employee e WHERE e.dateBirth = :dateBirth")
+    ,
+    @NamedQuery(name = "Employee.findByEmail", query = "SELECT e FROM Employee e WHERE e.email = :email")
+    ,
+    @NamedQuery(name = "Employee.findByJoinDate", query = "SELECT e FROM Employee e WHERE e.joinDate = :joinDate")
+    ,
+    @NamedQuery(name = "Employee.findByCode", query = "SELECT e FROM Employee e WHERE e.code = :code")
+    ,
+    @NamedQuery(name = "Employee.findByIdNumber", query = "SELECT e FROM Employee e WHERE e.idNumber = :idNumber")
+    ,
+    @NamedQuery(name = "Employee.findByIdNumberReleaseDate", query = "SELECT e FROM Employee e WHERE e.idNumberReleaseDate = :idNumberReleaseDate")
+    ,
+    @NamedQuery(name = "Employee.findByIdNumberEndDate", query = "SELECT e FROM Employee e WHERE e.idNumberEndDate = :idNumberEndDate")
+    ,
+    @NamedQuery(name = "Employee.findBySocialInsuranceId", query = "SELECT e FROM Employee e WHERE e.socialInsuranceId = :socialInsuranceId")
+    ,
+    @NamedQuery(name = "Employee.findByStatus", query = "SELECT e FROM Employee e WHERE e.status = :status")
+    ,
+    @NamedQuery(name = "Employee.findByContractStartDate", query = "SELECT e FROM Employee e WHERE e.contractStartDate = :contractStartDate")
+    ,
+    @NamedQuery(name = "Employee.findByContractEndDate", query = "SELECT e FROM Employee e WHERE e.contractEndDate = :contractEndDate")
+    ,
+    @NamedQuery(name = "Employee.findByRetirementDate", query = "SELECT e FROM Employee e WHERE e.retirementDate = :retirementDate")
+    ,
+    @NamedQuery(name = "Employee.findByDepartmentId", query = "SELECT e FROM Employee e WHERE e.departmentId = :departmentId")
+    ,
+    @NamedQuery(name = "Employee.findByMobile", query = "SELECT e FROM Employee e WHERE e.mobile = :mobile")
+    ,
+    @NamedQuery(name = "Employee.findByPhone", query = "SELECT e FROM Employee e WHERE e.phone = :phone")
+    ,
+    @NamedQuery(name = "Employee.findByPassportNumber", query = "SELECT e FROM Employee e WHERE e.passportNumber = :passportNumber")
+    ,
+    @NamedQuery(name = "Employee.findByPassportReleaseDate", query = "SELECT e FROM Employee e WHERE e.passportReleaseDate = :passportReleaseDate")
+    ,
+    @NamedQuery(name = "Employee.findByPassportEndDate", query = "SELECT e FROM Employee e WHERE e.passportEndDate = :passportEndDate")
+    ,
+    @NamedQuery(name = "Employee.findByImgName", query = "SELECT e FROM Employee e WHERE e.imgName = :imgName")
+    ,
+    @NamedQuery(name = "Employee.findByCvName", query = "SELECT e FROM Employee e WHERE e.cvName = :cvName")
+    ,
+    @NamedQuery(name = "Employee.findByModificationDate", query = "SELECT e FROM Employee e WHERE e.modificationDate = :modificationDate")
+    ,
     @NamedQuery(name = "Employee.findByCreationDate", query = "SELECT e FROM Employee e WHERE e.creationDate = :creationDate")})
 public class Employee extends BaseEntity {
 
@@ -98,8 +121,7 @@ public class Employee extends BaseEntity {
     @JoinColumn(name = "modified_by", referencedColumnName = "id")
     @ManyToOne
     private IgmaUser modifiedBy;
-    @OneToMany(mappedBy = "employeeId")
-    private Collection<IgmaUser> isagUserCollection;
+
     @Size(max = 45)
     @Column(name = "name")
     private String name;
@@ -185,7 +207,7 @@ public class Employee extends BaseEntity {
     @JoinColumn(name = "religion", referencedColumnName = "id")
     @ManyToOne
     private Symbol religion;
-   
+
     @JoinColumn(name = "job_grade", referencedColumnName = "id")
     @ManyToOne
     private Symbol jobGrade;
@@ -197,7 +219,6 @@ public class Employee extends BaseEntity {
     private String password;
     @Column(name = "rem_type")
     private Integer remType;
-
 
     public Employee() {
     }
@@ -218,8 +239,6 @@ public class Employee extends BaseEntity {
         this.nameEn = nameEn;
     }
 
-    
-
     public void setDateBirth(Date dateBirth) {
         this.dateBirth = dateBirth;
     }
@@ -239,7 +258,6 @@ public class Employee extends BaseEntity {
     public void setJoinDate(Date joinDate) {
         this.joinDate = joinDate;
     }
-
 
     public Integer getIdNumber() {
         return idNumber;
@@ -304,6 +322,7 @@ public class Employee extends BaseEntity {
     public void setRetirementDate(Date retirementDate) {
         this.retirementDate = retirementDate;
     }
+
     public String getMobile() {
         return mobile;
     }
@@ -360,8 +379,6 @@ public class Employee extends BaseEntity {
         this.cvName = cvName;
     }
 
-   
-
     public Branch getBranchId() {
         return branchId;
     }
@@ -369,8 +386,6 @@ public class Employee extends BaseEntity {
     public void setBranchId(Branch branchId) {
         this.branchId = branchId;
     }
-
-
 
     public Symbol getDesignation() {
         return designation;
@@ -388,8 +403,6 @@ public class Employee extends BaseEntity {
         this.maritalStatus = maritalStatus;
     }
 
-  
-
     public Symbol getNationality() {
         return nationality;
     }
@@ -405,8 +418,6 @@ public class Employee extends BaseEntity {
     public void setPlaceBirth(Symbol placeBirth) {
         this.placeBirth = placeBirth;
     }
-
-  
 
     public Employee getParentId() {
         return parentId;
@@ -446,7 +457,7 @@ public class Employee extends BaseEntity {
 
     @Override
     public String toString() {
-        return   name + " "+code;
+        return name + " " + code;
     }
 
     /**
@@ -545,8 +556,6 @@ public class Employee extends BaseEntity {
         this.id = id;
     }
 
-   
-
     public void setGender(String gender) {
         this.gender = gender;
     }
@@ -623,12 +632,4 @@ public class Employee extends BaseEntity {
         this.modifiedBy = modifiedBy;
     }
 
-    @XmlTransient
-    public Collection<IgmaUser> getIsagUserCollection() {
-        return isagUserCollection;
-    }
-
-    public void setIsagUserCollection(Collection<IgmaUser> isagUserCollection) {
-        this.isagUserCollection = isagUserCollection;
-    }
 }

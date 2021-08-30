@@ -49,9 +49,6 @@ public class IgmaUser extends BaseEntity {
     @ManyToOne
     private Branch branchId;
 
-    @JoinColumn(name = "employee_id", referencedColumnName = "id")
-    @ManyToOne
-    private Employee employeeId;
     @JoinColumn(name = "parent", referencedColumnName = "id")
     @ManyToOne
     private IgmaUser parent;
@@ -151,17 +148,6 @@ public class IgmaUser extends BaseEntity {
     /**
      * @return the employeeId
      */
-    public Employee getEmployeeId() {
-        return employeeId;
-    }
-
-    /**
-     * @param employeeId the employeeId to set
-     */
-    public void setEmployeeId(Employee employeeId) {
-        this.employeeId = employeeId;
-    }
-
     public IgmaRole getRoleId() {
         return roleId;
     }

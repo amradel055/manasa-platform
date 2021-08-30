@@ -5,7 +5,6 @@
  */
 package com.isag.entity;
 
-import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,12 +12,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -52,8 +49,6 @@ public class Teachers extends BaseEntity {
     @Column(name = "modification_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date modificationDate;
-    @OneToMany(mappedBy = "teacherId")
-    private Collection<Periods> periodsCollection;
     @JoinColumn(name = "branch_id", referencedColumnName = "id")
     @ManyToOne
     private Branch branchId;
@@ -111,15 +106,6 @@ public class Teachers extends BaseEntity {
 
     public void setModificationDate(Date modificationDate) {
         this.modificationDate = modificationDate;
-    }
-
-    @XmlTransient
-    public Collection<Periods> getPeriodsCollection() {
-        return periodsCollection;
-    }
-
-    public void setPeriodsCollection(Collection<Periods> periodsCollection) {
-        this.periodsCollection = periodsCollection;
     }
 
     @Override

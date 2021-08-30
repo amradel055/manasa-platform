@@ -5,7 +5,6 @@
  */
 package com.isag.entity;
 
-import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -13,8 +12,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -34,15 +31,9 @@ public class Periods extends BaseEntity {
 
     @Column(name = "name")
     private String name;
-    @Column(name = "creation_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date creationDate;
-    @Column(name = "modification_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date modificationDate;
     @JoinColumn(name = "teacher_id", referencedColumnName = "id")
     @ManyToOne
-    private Teachers teacherId;
+    private IgmaUser teacherId;
     @JoinColumn(name = "branch_id", referencedColumnName = "id")
     @ManyToOne
     private Branch branchId;
@@ -60,30 +51,6 @@ public class Periods extends BaseEntity {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Date getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    public Date getModificationDate() {
-        return modificationDate;
-    }
-
-    public void setModificationDate(Date modificationDate) {
-        this.modificationDate = modificationDate;
-    }
-
-    public Teachers getTeacherId() {
-        return teacherId;
-    }
-
-    public void setTeacherId(Teachers teacherId) {
-        this.teacherId = teacherId;
     }
 
     @Override
@@ -123,6 +90,20 @@ public class Periods extends BaseEntity {
      */
     public void setBranchId(Branch branchId) {
         this.branchId = branchId;
+    }
+
+    /**
+     * @return the teacherId
+     */
+    public IgmaUser getTeacherId() {
+        return teacherId;
+    }
+
+    /**
+     * @param teacherId the teacherId to set
+     */
+    public void setTeacherId(IgmaUser teacherId) {
+        this.teacherId = teacherId;
     }
 
 }

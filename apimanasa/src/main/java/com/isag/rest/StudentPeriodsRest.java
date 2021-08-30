@@ -38,7 +38,7 @@ public class StudentPeriodsRest {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response allStudentPeriods(StudentPeriodsDTO studentPeriodsDTO) {
-        if (studentPeriodsDTO != null) {
+        if (studentPeriodsDTO.getTeacherId() != null) {
             try {
                 List<StudentPeriodsDTO> dTOs = studentPeriodsService.findStudentPeriods(studentPeriodsDTO);
                 GenericEntity<List<StudentPeriodsDTO>> list = new GenericEntity<List<StudentPeriodsDTO>>(dTOs) {
@@ -95,13 +95,20 @@ public class StudentPeriodsRest {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response deleteStudentPeriodsBy(StudentPeriodsDTO studentPeriodsDTO) {
         StudentPeriodsDTO msg = new StudentPeriodsDTO();
-        try {
-            studentPeriodsService.deleteStudentPeriodsBy(studentPeriodsDTO.getTeacherId(), studentPeriodsDTO.getPeriodId(), studentPeriodsDTO.getStudentId());
-            msg.setMsg("تم الحذف بنجاح");
-            msg.setMsgType("success");
+        if (studentPeriodsDTO.getTeacherId() != null && studentPeriodsDTO.getPeriodId() != null && studentPeriodsDTO.getStudentId() != null) {
+            try {
+                studentPeriodsService.deleteStudentPeriodsBy(studentPeriodsDTO.getTeacherId(), studentPeriodsDTO.getPeriodId(), studentPeriodsDTO.getStudentId());
+                msg.setMsg("تم الحذف بنجاح");
+                msg.setMsgType("success");
+                return Response.ok(msg).build();
+
+            } catch (Exception e) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+        } else {
+            msg.setMsg("لم يتم الحذف");
+            msg.setMsgType("No id is sent");
             return Response.ok(msg).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.FORBIDDEN).build();
         }
     }
 

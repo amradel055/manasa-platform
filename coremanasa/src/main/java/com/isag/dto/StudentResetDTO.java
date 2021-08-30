@@ -16,6 +16,8 @@ public class StudentResetDTO extends BaseEntityDTO {
     private String studentCode;
     private Date date;
     private Integer studentId;
+    private String studentEmail;
+    private String macId;
 
     public StudentResetDTO() {
     }
@@ -83,6 +85,34 @@ public class StudentResetDTO extends BaseEntityDTO {
      */
     public void setStudentId(Integer studentId) {
         this.studentId = studentId;
+    }
+
+    /**
+     * @return the studentEmail
+     */
+    public String getStudentEmail() {
+        return studentEmail;
+    }
+
+    /**
+     * @param studentEmail the studentEmail to set
+     */
+    public void setStudentEmail(String studentEmail) {
+        this.studentEmail = studentEmail;
+    }
+
+    /**
+     * @return the macId
+     */
+    public String getMacId() {
+        return macId;
+    }
+
+    /**
+     * @param macId the macId to set
+     */
+    public void setMacId(String macId) {
+        this.macId = macId;
     }
 
 }

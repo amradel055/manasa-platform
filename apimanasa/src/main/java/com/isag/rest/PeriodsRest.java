@@ -64,7 +64,7 @@ public class PeriodsRest {
     public Response PeriodsByTeacherId(PeriodsDTO periodsDTO) {
         if (periodsDTO != null) {
             try {
-                List<PeriodsDTO> dTOs = periodsService.findPeriodsByTeacherId(periodsDTO.getTeacherDTO());
+                List<PeriodsDTO> dTOs = periodsService.findPeriodsByTeacherId(periodsDTO.getTeacherId());
                 GenericEntity<List<PeriodsDTO>> list = new GenericEntity<List<PeriodsDTO>>(dTOs) {
                 };
                 return Response.ok(list).build();

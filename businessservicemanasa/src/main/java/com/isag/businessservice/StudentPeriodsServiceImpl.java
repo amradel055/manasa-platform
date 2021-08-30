@@ -73,9 +73,11 @@ public class StudentPeriodsServiceImpl implements StudentPeriodsService {
 
     @Override
     public void deleteStudentPeriodsBy(Integer teacherId, Integer periodId, Integer studentId) {
-        String sql = " delete from StudentPeriods s where s.teacherId.id = " + teacherId
-                + " AND s.periodId.id = " + periodId + " AND s.studentId.id = " + studentId;
-        dao.executeDeleteQuery(sql);
+        if (teacherId != null && periodId != null && studentId != null) {
+            String sql = " delete from StudentPeriods s where s.teacherId.id = " + teacherId
+                    + " AND s.periodId.id = " + periodId + " AND s.studentId.id = " + studentId;
+            dao.executeDeleteQuery(sql);
+        }
     }
 
     public Boolean validateStudentMonth(StudentPeriodsDTO studentPeriodsDTO) {
@@ -175,7 +177,7 @@ public class StudentPeriodsServiceImpl implements StudentPeriodsService {
 
         if (entity.getStudentId() != null) {
             dTO.setStudentId(entity.getStudentId().getId());
-            dTO.setStateName(entity.getStudentId().getFullName());
+            dTO.setStudentName(entity.getStudentId().getFullName());
         }
 
         if (entity.getTeacherId() != null) {
