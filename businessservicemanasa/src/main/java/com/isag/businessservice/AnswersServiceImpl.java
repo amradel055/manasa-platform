@@ -154,6 +154,7 @@ public class AnswersServiceImpl implements AnswersService {
         dTO.setCorrect(entity.getCorrect());
         dTO.setReason(entity.getReason());
         dTO.setSelection(entity.getSelection());
+        dTO.setImg(entity.getImg());
 
         if (entity.getQuestionId() != null) {
             dTO.setQuestionId(entity.getQuestionId().getId());
@@ -178,11 +179,12 @@ public class AnswersServiceImpl implements AnswersService {
 
         entity.setId(dTO.getId());
 
-            entity.setAnswer(dTO.getAnswer());
+        entity.setAnswer(dTO.getAnswer());
 
         entity.setCorrect(dTO.getCorrect());
         entity.setReason(dTO.getReason());
         entity.setSelection(dTO.getSelection());
+        entity.setImg(dTO.getImg());
 
         if (questionId != null) {
             Questions questions = new Questions();

@@ -6,7 +6,9 @@
 package com.isag.rest;
 
 import com.isag.businessservice.StudentPeriodsService;
+import com.isag.businessservice.StudentService;
 import com.isag.config.UserLoginData;
+import com.isag.dto.APIStudentDataDTO;
 import com.isag.dto.StudentPeriodsDTO;
 import java.util.List;
 import javax.ejb.EJB;
@@ -31,6 +33,8 @@ public class StudentPeriodsRest {
     private UserLoginData userLoginData;
     @EJB
     StudentPeriodsService studentPeriodsService;
+    @EJB
+    StudentService studentService;
 
     @Transactional
     @Path("/allStudentPeriods")
@@ -109,6 +113,21 @@ public class StudentPeriodsRest {
             msg.setMsg("لم يتم الحذف");
             msg.setMsgType("No id is sent");
             return Response.ok(msg).build();
+        }
+    }
+
+    @Transactional
+    @Path("/resetPassword")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response ResetPassword(APIStudentDataDTO aPIStudentDataDTO) {
+        APIStudentDataDTO msg;
+        try {
+            msg = studentService.ResetPassword(aPIStudentDataDTO);
+            return Response.ok(msg).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.FORBIDDEN).build();
         }
     }
 

@@ -9,6 +9,7 @@ public class PeriodsDTO extends BaseEntityDTO {
 
     private String name;
     private Integer teacherId;
+    private Integer parent;
 
     public PeriodsDTO() {
     }
@@ -62,6 +63,20 @@ public class PeriodsDTO extends BaseEntityDTO {
      */
     public void setTeacherId(Integer teacherId) {
         this.teacherId = teacherId;
+    }
+
+    /**
+     * @return the parent
+     */
+    public Integer getParent() {
+        return parent;
+    }
+
+    /**
+     * @param parent the parent to set
+     */
+    public void setParent(Integer parent) {
+        this.parent = parent;
     }
 
 }

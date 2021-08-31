@@ -57,6 +57,8 @@ public class Answers extends BaseEntity {
     private Exams examId;
     @Column(name = "selection")
     private Integer selection;
+    @Column(name = "img")
+    private String img;
 
     public Answers() {
     }
@@ -184,6 +186,20 @@ public class Answers extends BaseEntity {
      */
     public void setSelection(Integer selection) {
         this.selection = selection;
+    }
+
+    /**
+     * @return the img
+     */
+    public String getImg() {
+        return img;
+    }
+
+    /**
+     * @param img the img to set
+     */
+    public void setImg(String img) {
+        this.img = img;
     }
 
 }

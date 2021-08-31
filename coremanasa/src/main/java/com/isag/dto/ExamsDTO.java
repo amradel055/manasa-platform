@@ -29,9 +29,12 @@ public class ExamsDTO extends BaseEntityDTO {
     private Integer parent;
     private StudentDTO studentDTO;
     private Integer studentId;
+    private Integer teacherId;
+    private Integer periodId;
     private BigDecimal score;
     private Integer active;
     private Integer monthId;
+    private Integer examType;
 //    private Integer timer;
 
     public ExamsDTO() {
@@ -274,26 +277,42 @@ public class ExamsDTO extends BaseEntityDTO {
     }
 
     /**
-     * @return the timer
+     * @return the periodId
      */
-//    public Integer getTimer() {
-//        return timer;
-//    }
-//
-//    /**
-//     * @param timer the timer to set
-//     */
-//    public void setTimer(Integer timer) {
-//        this.timer = timer;
-//    }
+    public Integer getPeriodId() {
+        return periodId;
+    }
 
     /**
-     * @return the timer
+     * @param periodId the periodId to set
      */
-    
+    public void setPeriodId(Integer periodId) {
+        this.periodId = periodId;
+    }
+
+    public Integer getTeacherId() {
+        return teacherId;
+    }
+
     /**
-     * @return the timer
+     * @param teacherId the teacherId to set
      */
-   
+    public void setTeacherId(Integer teacherId) {
+        this.teacherId = teacherId;
+    }
+
+    /**
+     * @return the examType
+     */
+    public Integer getExamType() {
+        return examType;
+    }
+
+    /**
+     * @param examType the examType to set
+     */
+    public void setExamType(Integer examType) {
+        this.examType = examType;
+    }
 
 }

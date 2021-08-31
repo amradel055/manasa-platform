@@ -6,6 +6,7 @@
 package com.isag.businessservice;
 
 import com.isag.core.GenericDAO;
+import com.isag.dto.StudentDTO;
 import com.isag.dto.StudentPeriodsDTO;
 import com.isag.entity.Branch;
 import com.isag.entity.IgmaCompany;
@@ -146,6 +147,26 @@ public class StudentPeriodsServiceImpl implements StudentPeriodsService {
             msg.setMsgType("fail");
             return msg;
         }
+    }
+
+    public StudentDTO ResetPassword(StudentDTO studentDTO) {
+        StudentDTO msg = new StudentDTO();
+        Student student = null;
+        if (studentDTO.getId() != null && studentDTO.getPassword() != null) {
+            student = dao.findEntityById(Student.class, studentDTO.getId());
+        }
+        if (studentDTO.getPassword().equals(student.getPassword())) {
+            student.setMacId(null);
+            dao.updateEntity(student);
+            msg.setMsg("تم الحفظ بنجاح");
+            msg.setMsgType("success");
+            return msg;
+        } else {
+            msg.setMsg("خطأ فى الباسورد ");
+            msg.setMsgType("fail");
+            return msg;
+        }
+
     }
 
     private List<StudentPeriodsDTO> returnListDTO(List<StudentPeriods> list) {

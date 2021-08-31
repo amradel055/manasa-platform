@@ -23,6 +23,7 @@ public class QuestionsDTO extends BaseEntityDTO {
     private Integer parent;
     private StudentDTO studentDTO;
     private Integer studentId;
+    private String img;
     private List<AnswersDTO> answersdtoList;
 
     public QuestionsDTO() {
@@ -39,8 +40,6 @@ public class QuestionsDTO extends BaseEntityDTO {
     public void setQuestionName(String questionName) {
         this.questionName = questionName;
     }
-
-  
 
     @Override
     public int hashCode() {
@@ -66,8 +65,6 @@ public class QuestionsDTO extends BaseEntityDTO {
     public String toString() {
         return "com_igma_entity.Questions[ id=" + id + " ]";
     }
-
-   
 
     /**
      * @return the examsDTO
@@ -193,6 +190,20 @@ public class QuestionsDTO extends BaseEntityDTO {
      */
     public void setQuestionType(Integer questionType) {
         this.questionType = questionType;
+    }
+
+    /**
+     * @return the img
+     */
+    public String getImg() {
+        return img;
+    }
+
+    /**
+     * @param img the img to set
+     */
+    public void setImg(String img) {
+        this.img = img;
     }
 
 }

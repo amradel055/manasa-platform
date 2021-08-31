@@ -36,7 +36,7 @@ public class QuestionsServiceImpl implements QuestionsService {
     AnswersService answersService;
 
     @Override
-    public List<QuestionsDTO> findQuestionsByQuestionId(Integer examsId) {
+    public List<QuestionsDTO> findQuestionsByExamId(Integer examsId) {
         Map<String, Object> params = new HashMap<>();
         params.put("examsId", examsId);
         StringBuilder builder = new StringBuilder();
@@ -74,8 +74,8 @@ public class QuestionsServiceImpl implements QuestionsService {
                     if (answer != null && !answer.isEmpty() && answer.equals(answersDTO.getAnswer())) {
                         total = total.add(questionsDTO1.getQuestionDegree());
                         qestionDegree = questionsDTO1.getQuestionDegree();
-                    } 
-                } 
+                    }
+                }
             }
             questionsDTO1.setQuestionDegree(qestionDegree);
             questionsDTO = save(questionsDTO1, isagUser, examsId);
@@ -162,7 +162,7 @@ public class QuestionsServiceImpl implements QuestionsService {
 
     @Override
     public void deleteQuestionsForExam(Integer examId) {
-        List<QuestionsDTO> questionsDTOsList = findQuestionsByQuestionId(examId);
+        List<QuestionsDTO> questionsDTOsList = findQuestionsByExamId(examId);
         deleteListQuestionsDTO(questionsDTOsList);
     }
 
@@ -187,6 +187,7 @@ public class QuestionsServiceImpl implements QuestionsService {
         dTO.setQuestionName(entity.getQuestionName());
         dTO.setQuestionType(entity.getQuestionType());
         dTO.setQuestionDegree(entity.getQuestionDegree());
+        dTO.setImg(entity.getImg());
 
         if (entity.getExamsId() != null) {
             dTO.setExamsId(entity.getExamsId().getId());
@@ -217,6 +218,7 @@ public class QuestionsServiceImpl implements QuestionsService {
         entity.setQuestionName(dTO.getQuestionName());
         entity.setQuestionType(dTO.getQuestionType());
         entity.setQuestionDegree(dTO.getQuestionDegree());
+        entity.setImg(dTO.getImg());
 
         if (examsId != null) {
             Exams exams = new Exams();

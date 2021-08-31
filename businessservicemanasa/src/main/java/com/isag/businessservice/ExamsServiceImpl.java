@@ -13,6 +13,7 @@ import com.isag.entity.IgmaCompany;
 import com.isag.entity.IgmaUser;
 import com.isag.entity.Exams;
 import com.isag.entity.Lesson;
+import com.isag.entity.Periods;
 import com.isag.entity.SchoolStagesGuide;
 import com.isag.entity.Student;
 import java.util.ArrayList;
@@ -63,12 +64,11 @@ public class ExamsServiceImpl implements ExamsService {
     }
 
     @Override
-    public List<ExamsDTO> findExamsListForAdmin(Integer schoolStagesId, Integer branchId, Integer lessonId, Integer companyId) {
+    public List<ExamsDTO> findExamsListForTeacher(Integer schoolStagesId, Integer teacherId, Integer lessonId) {
         Map<String, Object> params = new HashMap<>();
-        params.put("branchId", branchId);
-        params.put("companyId", companyId);
+        params.put("teacherId", teacherId);
         StringBuilder builder = new StringBuilder();
-        builder.append("SELECT d FROM Exams d WHERE d.branchId.id = :branchId AND d.companyId.id = :companyId AND  d.parent IS NULL ");
+        builder.append("SELECT d FROM Exams d WHERE d.teacherId.id = :teacherId AND d.parent IS NULL ");
 
         if (lessonId != null) {
             params.put("lessonId", lessonId);
@@ -130,10 +130,10 @@ public class ExamsServiceImpl implements ExamsService {
         StringBuilder builder = new StringBuilder();
         builder.append(" SELECT d FROM Exams d WHERE d.studentId.id = :studentId order by d.id desc ");
         List<Exams> list = dao.findListByQuery(builder.toString(), params);
-         for (Exams examsDTO : list) {
-             deleteExams(examsDTO.getId());
+        for (Exams examsDTO : list) {
+            deleteExams(examsDTO.getId());
         }
-        
+
         return returnListDTO(list, false);
 
     }
@@ -162,7 +162,10 @@ public class ExamsServiceImpl implements ExamsService {
         if (examsDTO.getId() != null) {
             exams = dao.findEntityById(Exams.class, examsDTO.getId());
         }
-        if (examsDTO != null && examsDTO.getSchoolStagesId() != null
+        if (examsDTO.getSchoolStagesId() != null
+                && examsDTO.getPeriodId() != null
+                && examsDTO.getExamName() != null
+                && examsDTO.getTeacherId() != null
                 && examsDTO.getLessonId() != null) {
             if (isagUser == null) {
                 isagUser = new IgmaUser();
@@ -244,6 +247,15 @@ public class ExamsServiceImpl implements ExamsService {
         dTO.setMonthId(entity.getMonthId());
         dTO.setScore(entity.getScore());
         dTO.setActive(entity.getActive());
+        dTO.setExamType(entity.getExamType());
+
+        if (entity.getTeacherId() != null) {
+            dTO.setTeacherId(entity.getTeacherId().getId());
+        }
+
+        if (entity.getPeriodId() != null) {
+            dTO.setPeriodId(entity.getPeriodId().getId());
+        }
         //dTO.setTimer(entity.getTimer());
 
         if (entity.getSchoolStagesId() != null) {
@@ -264,7 +276,7 @@ public class ExamsServiceImpl implements ExamsService {
         }
 
         if (detail) {
-            dTO.setQuestionsList(questionsService.findQuestionsByQuestionId(entity.getId()));
+            dTO.setQuestionsList(questionsService.findQuestionsByExamId(entity.getId()));
         }
 
         dTO.setIndex(entity.getId());
@@ -286,7 +298,14 @@ public class ExamsServiceImpl implements ExamsService {
         entity.setActive(dTO.getActive());
         entity.setScore(dTO.getScore());
         entity.setMonthId(dTO.getMonthId());
+        entity.setExamType(dTO.getExamType());
         //entity.setTimer(dTO.getTimer());
+
+        if (dTO.getTeacherId() != null) {
+            IgmaUser igmaUser = new IgmaUser();
+            igmaUser.setId(dTO.getTeacherId());
+            entity.setTeacherId(igmaUser);
+        }
 
         if (dTO.getParent() != null) {
             Exams exams = new Exams();
@@ -310,6 +329,11 @@ public class ExamsServiceImpl implements ExamsService {
             Lesson lesson = new Lesson();
             lesson.setId(dTO.getLessonId());
             entity.setLessonId(lesson);
+        }
+        if (dTO.getPeriodId() != null) {
+            Periods periods = new Periods();
+            periods.setId(dTO.getPeriodId());
+            entity.setPeriodId(periods);
         }
 
         if (dTO.getId() == null) {

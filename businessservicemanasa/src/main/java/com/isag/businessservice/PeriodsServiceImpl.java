@@ -11,7 +11,6 @@ import com.isag.entity.Branch;
 import com.isag.entity.IgmaCompany;
 import com.isag.entity.IgmaUser;
 import com.isag.entity.Periods;
-import com.isag.entity.Teachers;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -133,6 +132,7 @@ public class PeriodsServiceImpl implements PeriodsService {
         PeriodsDTO dTO = new PeriodsDTO();
         dTO.setId(entity.getId());
         dTO.setName(entity.getName());
+        dTO.setParent(entity.getId());
 
         if (entity.getTeacherId() != null) {
             dTO.setTeacherId(entity.getTeacherId().getId());
@@ -152,6 +152,12 @@ public class PeriodsServiceImpl implements PeriodsService {
 
         entity.setId(dTO.getId());
         entity.setName(dTO.getName());
+
+        if (dTO.getParent() != null) {
+            Periods periods = new Periods();
+            periods.setId(dTO.getParent());
+            entity.setParent(periods);
+        }
 
         if (dTO.getTeacherId() != null) {
             IgmaUser igmaUser = new IgmaUser();

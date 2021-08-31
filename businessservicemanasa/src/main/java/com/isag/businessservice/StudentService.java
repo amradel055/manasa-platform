@@ -19,6 +19,8 @@ import javax.ejb.Remote;
 @Remote
 public interface StudentService {
 
+    public APIStudentDataDTO ResetPassword(APIStudentDataDTO aPIStudentDataDTO);
+
     public StudentDTO authenticateUser(String userName, String password, Integer branchId, Integer companyId);
 
     public APIStudentDataDTO save(APIStudentDataDTO aPIStudentDataDTO);
@@ -50,7 +52,7 @@ public interface StudentService {
     public StudentDTO findStudentByMobile(String mobile, Integer branchId);
 
     public StudentDTO updateStudent(StudentDTO student);
-    
+
     public StudentDTO updateStudentMacId(StudentDTO studentDTO);
 
     public void deleteStudent(StudentDTO student);

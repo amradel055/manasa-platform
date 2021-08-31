@@ -21,7 +21,7 @@ public interface ExamsService {
 
     public ExamsDTO checkExamForStudent(Integer studentId, Integer examId);
 
-    public List<ExamsDTO> findExamsListForAdmin(Integer schoolStagesId, Integer branchId, Integer lessonId, Integer companyId);
+    public List<ExamsDTO> findExamsListForTeacher(Integer schoolStagesId, Integer teacherId, Integer lessonId);
 
     public List<ExamsDTO> findExamsListForStudent(Integer schoolStagesId, Integer branchId, Integer lessonId, Integer companyId, Integer studentId, Integer monthId);
 

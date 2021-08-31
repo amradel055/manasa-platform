@@ -22,7 +22,7 @@ public class AnswersDTO extends BaseEntityDTO {
     private ExamsDTO examsDTO;
     private Integer examId;
     private Integer selection;
-
+    private String img;
 
     public AnswersDTO() {
     }
@@ -190,6 +190,20 @@ public class AnswersDTO extends BaseEntityDTO {
      */
     public void setSelection(Integer selection) {
         this.selection = selection;
+    }
+
+    /**
+     * @return the img
+     */
+    public String getImg() {
+        return img;
+    }
+
+    /**
+     * @param img the img to set
+     */
+    public void setImg(String img) {
+        this.img = img;
     }
 
 }

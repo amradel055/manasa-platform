@@ -50,6 +50,12 @@ public class Exams extends BaseEntity {
     @JoinColumn(name = "student_id", referencedColumnName = "id")
     @ManyToOne
     private Student studentId;
+    @JoinColumn(name = "period_id", referencedColumnName = "id")
+    @ManyToOne
+    private Periods periodId;
+    @JoinColumn(name = "teacher_id", referencedColumnName = "id")
+    @ManyToOne
+    private IgmaUser teacherId;
     @Column(name = "score")
     private BigDecimal score;
     @Column(name = "active")
@@ -58,6 +64,8 @@ public class Exams extends BaseEntity {
 //    private Integer timer;
     @Column(name = "monthId")
     private Integer monthId;
+    @Column(name = "exam_type")
+    private Integer examType;
 
     public Exams() {
     }
@@ -214,6 +222,46 @@ public class Exams extends BaseEntity {
     }
 
     /**
+     * @return the periodId
+     */
+    public Periods getPeriodId() {
+        return periodId;
+    }
+
+    /**
+     * @param periodId the periodId to set
+     */
+    public void setPeriodId(Periods periodId) {
+        this.periodId = periodId;
+    }
+
+   
+    public IgmaUser getTeacherId() {
+        return teacherId;
+    }
+
+    /**
+     * @param teacherId the teacherId to set
+     */
+    public void setTeacherId(IgmaUser teacherId) {
+        this.teacherId = teacherId;
+    }
+
+    /**
+     * @return the examType
+     */
+    public Integer getExamType() {
+        return examType;
+    }
+
+    /**
+     * @param examType the examType to set
+     */
+    public void setExamType(Integer examType) {
+        this.examType = examType;
+    }
+
+    /**
      * @return the timer
      */
 //    public Integer getTimer() {
@@ -226,11 +274,7 @@ public class Exams extends BaseEntity {
 //    public void setTimer(Integer timer) {
 //        this.timer = timer;
 //    }
-
     /**
      * @return the timer
      */
-  
-  
-
 }

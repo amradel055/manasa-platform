@@ -43,6 +43,27 @@ public class StudentServiceImpl implements StudentService {
     ExamsService examsService;
 
     @Override
+    public APIStudentDataDTO ResetPassword(APIStudentDataDTO aPIStudentDataDTO) {
+        APIStudentDataDTO msg = new APIStudentDataDTO();
+        Student student = null;
+        if (aPIStudentDataDTO.getId() != null && aPIStudentDataDTO.getPassword() != null) {
+            student = dao.findEntityById(Student.class, aPIStudentDataDTO.getId());
+        }
+        if (aPIStudentDataDTO.getPassword().equals(student.getPassword())) {
+            student.setMacId(null);
+            dao.updateEntity(student);
+            msg.setMsg("تم الحفظ بنجاح");
+            msg.setMsgType("success");
+            return msg;
+        } else {
+            msg.setMsg("خطأ فى الباسورد ");
+            msg.setMsgType("fail");
+            return msg;
+        }
+
+    }
+
+    @Override
     public StudentDTO authenticateUser(String userName, String password, Integer branchId, Integer companyId) {
         StudentDTO dTO = new StudentDTO();
         Map<String, Object> params = new HashMap();

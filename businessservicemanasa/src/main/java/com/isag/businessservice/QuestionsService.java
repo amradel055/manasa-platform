@@ -17,7 +17,7 @@ import javax.ejb.Remote;
 @Remote
 public interface QuestionsService {
 
-    public List<QuestionsDTO> findQuestionsByQuestionId(Integer examsId);
+    public List<QuestionsDTO> findQuestionsByExamId(Integer examsId);
 
     public QuestionsDTO save(QuestionsDTO questionsDTO, IgmaUser isagUser, Integer examsId);
     

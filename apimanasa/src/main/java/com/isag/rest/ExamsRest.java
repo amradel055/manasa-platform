@@ -52,7 +52,7 @@ public class ExamsRest {
     public Response findExamsForAdmin(ExamsDTO examsDTO) {
         if (examsDTO != null) {
             try {
-                List<ExamsDTO> dTOs = examsService.findExamsListForAdmin(examsDTO.getSchoolStagesId(), examsDTO.getBranchId(), examsDTO.getLessonId(), examsDTO.getCompanyId());
+                List<ExamsDTO> dTOs = examsService.findExamsListForTeacher(examsDTO.getSchoolStagesId(), examsDTO.getTeacherId(), examsDTO.getLessonId());
                 GenericEntity<List<ExamsDTO>> list = new GenericEntity<List<ExamsDTO>>(dTOs) {
                 };
                 return Response.ok(list).build();
@@ -76,7 +76,7 @@ public class ExamsRest {
     public Response findExamsForStudent(ExamsDTO examsDTO) {
         if (examsDTO != null) {
             try {
-                List<ExamsDTO> dTOs = examsService.findExamsListForStudent(examsDTO.getSchoolStagesId(), examsDTO.getBranchId(), examsDTO.getLessonId(), 
+                List<ExamsDTO> dTOs = examsService.findExamsListForStudent(examsDTO.getSchoolStagesId(), examsDTO.getBranchId(), examsDTO.getLessonId(),
                         examsDTO.getCompanyId(), examsDTO.getStudentId(), examsDTO.getMonthId());
                 GenericEntity<List<ExamsDTO>> list = new GenericEntity<List<ExamsDTO>>(dTOs) {
                 };
@@ -207,8 +207,8 @@ public class ExamsRest {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
     }
-    
-     @Transactional
+
+    @Transactional
     @Path("/findLoginExam")
     @POST
     @Produces(MediaType.APPLICATION_JSON)

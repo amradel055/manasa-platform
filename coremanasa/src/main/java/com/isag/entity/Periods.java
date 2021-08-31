@@ -37,6 +37,9 @@ public class Periods extends BaseEntity {
     @JoinColumn(name = "branch_id", referencedColumnName = "id")
     @ManyToOne
     private Branch branchId;
+    @JoinColumn(name = "parent", referencedColumnName = "id")
+    @ManyToOne
+    private Periods parent;
 
     public Periods() {
     }
@@ -104,6 +107,20 @@ public class Periods extends BaseEntity {
      */
     public void setTeacherId(IgmaUser teacherId) {
         this.teacherId = teacherId;
+    }
+
+    /**
+     * @return the parent
+     */
+    public Periods getParent() {
+        return parent;
+    }
+
+    /**
+     * @param parent the parent to set
+     */
+    public void setParent(Periods parent) {
+        this.parent = parent;
     }
 
 }

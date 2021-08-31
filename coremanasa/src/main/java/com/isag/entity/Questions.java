@@ -52,6 +52,8 @@ public class Questions extends BaseEntity {
     @JoinColumn(name = "student_id", referencedColumnName = "id")
     @ManyToOne
     private Student studentId;
+    @Column(name = "img")
+    private String img;
 
     public Questions() {
     }
@@ -66,7 +68,7 @@ public class Questions extends BaseEntity {
 
     public void setQuestionName(String questionName) {
         this.questionName = questionName;
-    }  
+    }
 
     public Branch getBranchId() {
         return branchId;
@@ -169,6 +171,20 @@ public class Questions extends BaseEntity {
      */
     public void setQuestionType(Integer questionType) {
         this.questionType = questionType;
+    }
+
+    /**
+     * @return the img
+     */
+    public String getImg() {
+        return img;
+    }
+
+    /**
+     * @param img the img to set
+     */
+    public void setImg(String img) {
+        this.img = img;
     }
 
 }
