@@ -94,6 +94,7 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
             setInvInvoiceDTO(invPurchaseInvoiceService.save(getInvInvoiceDTO(), getUserData().getUser()));
             setOrganizationSiteId(getInvInvoiceDTO().getOrganizationSiteId());
             msgSave(getInvInvoiceDTO().getMsg());
+            findAccountStatement();
             if (getUri().contains("proworkorderform")) {
                 StringBuilder message = new StringBuilder();
                 message.append("عميلنا العزيز ، شكراً لتسوقك تمت عملية شراء رقم ");
@@ -137,6 +138,21 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
         return "";
     }
 
+    public String goToInvNotice() {
+        try {
+            if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getOrganizationSiteId().getId() > 0) {
+                getContext().getSessionMap().put("customerFromInvNoticeEntitySelected", getInvInvoiceDTO().getOrganizationSiteId().getId());
+                getContext().getSessionMap().put("ScreenMode", "addClientFromInvoice");
+                exit("../customeraddnotice/customernoticeform.xhtml");
+                return "";
+            } else {
+                return "";
+            }
+        } catch (Exception e) {
+            saveError(e, "InvPurchaseInvoiceListMB", "goToEdit");
+            return null;
+        }
+    }
     public String goTClientacoount() {
         try {
             if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getOrganizationSiteId().getId() > 0) {

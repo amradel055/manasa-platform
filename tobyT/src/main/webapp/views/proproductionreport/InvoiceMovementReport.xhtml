@@ -122,8 +122,8 @@
                                 <p:outputLabel style="width: 50px;margin-right: 1%" value=" معرض"/>
                             </div>
                         </div>
-                        
-                         <div class="ui-g-12 ui-xl-12">
+
+                        <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
                                 <p:selectOneMenu style="width: 100%" id="invoiceType1" 
                                                  value="#{invoiceMovementReportMB.invoiceType}">                                                             
@@ -139,6 +139,15 @@
                             </div>
                             <div class="ui-g-6 ui-xl-6">
                                 <p:outputLabel style="width: 70px;" value="نوع الفاتورة"/>
+                            </div>
+                        </div>
+
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:selectBooleanCheckbox value="#{invoiceMovementReportMB.invoiceNotComplete}" itemLabel="Basic"/>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 70px;" value="فواتير لم تكتمل"/>
                             </div>
                         </div>
                     </div>

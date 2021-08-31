@@ -51,14 +51,14 @@
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:outputLabel value="#{invNoticeFormMB.invNoticeEntity.organizationSiteId}" 
-                                                   rendered="#{invNoticeFormMB.invNoticeEntity.id ne null}" />
+                                                   rendered="#{invNoticeFormMB.invNoticeEntity.id ne null or invNoticeFormMB.fromInvoice}" />
                                     <div class="ui-g-6 ui-xl-6"></div>
                                     <p:autoComplete style="width:35%!important" 
                                                     dropdown="true"
                                                     required="true"
                                                     converter="#{autoComplete.organizationSiteDTOConvertor}"
                                                     value="#{invNoticeFormMB.invNoticeEntity.organizationSiteId}"
-                                                    rendered="#{invNoticeFormMB.invNoticeEntity.id eq null}"
+                                                    rendered="#{invNoticeFormMB.invNoticeEntity.id eq null and ( not invNoticeFormMB.fromInvoice)}"
                                                     var="supplier"
                                                     itemLabel="#{supplier}" 
                                                     itemValue="#{supplier}" 
@@ -137,7 +137,8 @@
                             </div>
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:selectOneMenu id="group" value="#{invNoticeFormMB.gallaryDTOSelect}"
+                                    <p:outputLabel style="width: 50px;margin-right: 1%" value="#{invNoticeFormMB.gallaryDTOSelect}" rendered="#{invNoticeFormMB.fromInvoice}"/>
+                                    <p:selectOneMenu id="group" value="#{invNoticeFormMB.gallaryDTOSelect}" rendered="#{not invNoticeFormMB.fromInvoice}"
                                                      converter="#{invNoticeFormMB.gallaryDTOConverters}">
                                         <f:selectItems value="#{invNoticeFormMB.gallaryListSelected}" 
                                                        var="gallary"

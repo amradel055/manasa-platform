@@ -11,7 +11,7 @@ import com.toby.define.InventoryPricesGroupEnum;
  *
  * @author amr
  */
-public class InvInventoryDTO extends BaseEntityDTO implements Comparable<InvInventoryDTO>{
+public class InvInventoryDTO extends BaseEntityDTO implements Comparable<InvInventoryDTO> {
 
     private String msg;
     private String code;
@@ -24,10 +24,10 @@ public class InvInventoryDTO extends BaseEntityDTO implements Comparable<InvInve
     private String daribaValue;
     private String segilValue;
     private String phone;
-    
-     private Integer invType;
+
+    private Integer invType;
     private Integer invName;
-    
+
     /**
      * @return the code
      */
@@ -248,7 +248,10 @@ public class InvInventoryDTO extends BaseEntityDTO implements Comparable<InvInve
 
     @Override
     public int compareTo(InvInventoryDTO o) {
-        return this.getCode().compareTo(o.getCode());
+        if (this.getCode() != null && o.getCode() != null) {
+            return this.getCode().compareTo(o.getCode());
+        }
+        return 0;
     }
-    
+
 }

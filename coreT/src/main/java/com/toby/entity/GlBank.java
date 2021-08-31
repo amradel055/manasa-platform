@@ -38,7 +38,6 @@ public class GlBank extends BaseEntity {
     @Size(max = 45)
     @Column(name = "name")
     private String name;
-    @Size(max = 45)
     @Column(name = "code")
     private Integer code;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation

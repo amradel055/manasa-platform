@@ -160,11 +160,7 @@
 
                             </div>
                             <div class="ui-g-6 ui-xl-6">
-
                                 <p:outputLabel style="width: 110px" value="#{userData.userDDs['REMA_AMOUNT']}"/>
-
-
-
                             </div>
                         </div>
                         <div class="ui-g-12 ui-xl-12">
@@ -373,6 +369,13 @@
                                               value="مراحل الانتاج" 
                                               actionListener="#{invPurchaseInvoiceFormDTOMB.goToInvoiceProductionStageReport()}"
                                               />
+                            <p:commandButton  class="invnoticeButtons"
+                                              ajax="false"
+                                              onclick="form.target = '_blank'"  
+                                              value="اشعار خصم" 
+                                              title="اشعار خصم" 
+                                              rendered="#{(userData.userScreens['proworkorder'].edit) or  userData.isAdmin}"
+                                              actionListener="#{invPurchaseInvoiceFormDTOMB.goToInvNotice()}"/>
 
                         </div>
 

@@ -1465,11 +1465,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         sql.append(" ORDER BY e.code");
     }
 
-    public InvOrganizationSiteDTO mapTODTOSmall(InvOrganizationSite entity) {
-        InvOrganizationSiteDTO dTO = new InvOrganizationSiteDTO();
-        initMapToDTOSmall(dTO, entity);
-        return dTO;
-    }
+    
 
     private void initMapToDTOSmall(InvOrganizationSiteDTO dTO, InvOrganizationSite entity) {
         dTO.setId(entity.getId());
@@ -1615,6 +1611,12 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         }
     }
 
+    public InvOrganizationSiteDTO mapTODTOSmall(InvOrganizationSite entity) {
+        InvOrganizationSiteDTO dTO = new InvOrganizationSiteDTO();
+        initMapToDTOSmall(dTO, entity);
+        return dTO;
+    }
+    
     @Override
     public InvOrganizationSiteDTO mapToDTOSmall(InvOrganizationSite invOrganizationSite) {
         InvOrganizationSiteDTO invOrganizationSiteDTO = new InvOrganizationSiteDTO();
@@ -1650,6 +1652,14 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             offerCompanyDTO.setDiscount(invOrganizationSite.getOfferCompanyId().getDiscount());
             invOrganizationSiteDTO.setOfferCompanyDTO(offerCompanyDTO);
         }
+        
+        if (invOrganizationSite.getGallaryId() != null) {
+            InvInventoryDTO gallary = new InvInventoryDTO();
+            gallary.setId(invOrganizationSite.getGallaryId().getId());
+            gallary.setName(invOrganizationSite.getGallaryId().getName());
+            gallary.setCode(invOrganizationSite.getGallaryId().getCode());
+            invOrganizationSiteDTO.setGallaryIdDTO(gallary);
+        }
 
         if (invOrganizationSite.getAccountId() != null) {
             GlAccountDTO accountDTO = new GlAccountDTO();
@@ -1665,4 +1675,9 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         return invOrganizationSiteDTO;
     }
 
+    @Override
+     public InvOrganizationSiteDTO mapToDTOSmall(Integer invOrganizationSiteId){
+         InvOrganizationSite ios = dao.findEntityById(InvOrganizationSite.class, invOrganizationSiteId);
+         return mapToDTOSmall(ios);
+     }
 }

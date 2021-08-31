@@ -22,7 +22,6 @@ import com.toby.entity.InvOrganizationSite;
 import com.toby.entity.InvPurchaseInvoice;
 import com.toby.entiy.InvNoticeEntity;
 import com.toby.toby.BaseFormBean;
-import com.toby.toby.UserData;
 import com.toby.views.GlBankTransactionInvoiceView;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -33,12 +32,9 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-import javax.servlet.http.HttpServletRequest;
 import net.sf.jasperreports.engine.JRException;
 import tafqeet.Tafqeet;
 
@@ -58,8 +54,7 @@ public class InvNoticeFormMB extends BaseFormBean {
     private Integer invNoticeId;
     private Integer typeFlow;
     private InvNotice invNotice;
-    private String uri;
-    private Boolean installment;
+    private Boolean fromInvoice;
     private List<SymbolDTO> symbolDtoList;
     private SymbolDTOConverter symbolDTOConverter;
     private List<GlBankTransactionInvoiceView> glBankTransactionInvoiceViewList;
@@ -105,22 +100,20 @@ public class InvNoticeFormMB extends BaseFormBean {
     @Override
     public void load() {
         try {
-            ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-            setUserData((UserData) context.getSessionMap().get("userLogInData"));
-            setScreenMode((String) context.getSessionMap().get("ScreenMode"));
-            uri = ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getRequestURI();
-
             fillListts();
             if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("add")) {
                 resetInvNoticeData();
 
             } else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("edit")) {
                 try {
-                    invNoticeId = (Integer) context.getSessionMap().get("invNoticeEntitySelected");
+                    invNoticeId = (Integer) getContext().getSessionMap().get("invNoticeEntitySelected");
                     setEditedInvNoticeValues(invNoticeId);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            }else if(getScreenMode() != null && getScreenMode().equalsIgnoreCase("addClientFromInvoice")){
+                resetInvNoticeData();
+                setDataFromInvoice();
             }
         } catch (Exception e) {
             saveError(e, "InvNoticeFormMB", "load");
@@ -238,7 +231,7 @@ public class InvNoticeFormMB extends BaseFormBean {
             }
             hashMap.put("amountValueText", Tafqeet.numberToText(Double.parseDouble(getInvNoticeEntity().getAmount().toString()), getInvNoticeEntity().getAccountId().getCurrencyId().getName(), getInvNoticeEntity().getAccountId().getCurrencyId().getSubName()));
         }
-        if (uri.contains("supplier")) {
+        if (getUri().contains("supplier")) {
             hashMap.put("invOrganizationText", "مورد");
             hashMap.put("invOrganizationToText", "الي مورد");
         } else {
@@ -257,13 +250,13 @@ public class InvNoticeFormMB extends BaseFormBean {
 
     private Integer setType() {
         try {
-            if (uri.contains("supplieraddnotice")) {
+            if (getUri().contains("supplieraddnotice")) {
                 typeFlow = 2;
-            } else if (uri.contains("supplierdiscountnotice")) {
+            } else if (getUri().contains("supplierdiscountnotice")) {
                 typeFlow = 3;
-            } else if (uri.contains("customeraddnotice")) {
+            } else if (getUri().contains("customeraddnotice")) {
                 typeFlow = 0;
-            } else if (uri.contains("customerdiscountnotice")) {
+            } else if (getUri().contains("customerdiscountnotice")) {
                 typeFlow = 1;
             }
         } catch (Exception e) {
@@ -281,6 +274,17 @@ public class InvNoticeFormMB extends BaseFormBean {
             saveError(e, "InvNoticeFormMB", "resetInvNoticeData");
         }
 
+    }
+
+    public void setDataFromInvoice() {
+        Integer customerID = (Integer) getContext().getSessionMap().get("customerFromInvNoticeEntitySelected");
+        if (customerID != null) {;
+            invNoticeEntity.setOrganizationSiteId(organizationSiteService.mapToDTOSmall(customerID));
+            chooseInvoice();
+            setFromInvoice(Boolean.TRUE);
+            setGallaryDTOSelect(invNoticeEntity.getOrganizationSiteId().getGallaryIdDTO());
+            invNoticeEntity.setType(4);
+        }
     }
 
     public void setEditedInvNoticeValues(Integer invNoticeId) {
@@ -334,13 +338,13 @@ public class InvNoticeFormMB extends BaseFormBean {
 
     public void exit() {
         try {
-            if (uri.contains("supplieraddnotice")) {
+            if (getUri().contains("supplieraddnotice")) {
                 exit("../supplieraddnotice/suppliernoticelist.xhtml");
-            } else if (uri.contains("supplierdiscountnotice")) {
+            } else if (getUri().contains("supplierdiscountnotice")) {
                 exit("../supplierdiscountnotice/supplierdiscountnoticelist.xhtml");
-            } else if (uri.contains("customeraddnotice")) {
+            } else if (getUri().contains("customeraddnotice")) {
                 exit("../customeraddnotice/customernoticelist.xhtml");
-            } else if (uri.contains("customerdiscountnotice")) {
+            } else if (getUri().contains("customerdiscountnotice")) {
                 exit("../customerdiscountnotice/customerdiscountnoticelist.xhtml");
             }
         } catch (Exception e) {
@@ -468,40 +472,12 @@ public class InvNoticeFormMB extends BaseFormBean {
         this.typeFlow = typeFlow;
     }
 
-    /**
-     * @return the uri
-     */
-    public String getUri() {
-        return uri;
-    }
-
-    /**
-     * @param uri the uri to set
-     */
-    public void setUri(String uri) {
-        this.uri = uri;
-    }
-
     public GlaccountConverter getGlAccountConverter() {
         return glAccountConverter;
     }
 
     public void setGlAccountConverter(GlaccountConverter glAccountConverter) {
         this.glAccountConverter = glAccountConverter;
-    }
-
-    /**
-     * @return the installment
-     */
-    public Boolean getInstallment() {
-        return installment;
-    }
-
-    /**
-     * @param installment the installment to set
-     */
-    public void setInstallment(Boolean installment) {
-        this.installment = installment;
     }
 
     /**
@@ -549,6 +525,23 @@ public class InvNoticeFormMB extends BaseFormBean {
      */
     public void setGlBankTransactionInvoiceViewList(List<GlBankTransactionInvoiceView> glBankTransactionInvoiceViewList) {
         this.glBankTransactionInvoiceViewList = glBankTransactionInvoiceViewList;
+    }
+
+    /**
+     * @return the fromInvoice
+     */
+    public Boolean getFromInvoice() {
+        if(fromInvoice == null){
+            fromInvoice = Boolean.FALSE;
+        }
+        return fromInvoice;
+    }
+
+    /**
+     * @param fromInvoice the fromInvoice to set
+     */
+    public void setFromInvoice(Boolean fromInvoice) {
+        this.fromInvoice = fromInvoice;
     }
 
 }

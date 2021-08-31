@@ -223,7 +223,7 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "    FROM `inv_notice` `in`   WHERE (`in`.`type` = 0)  "
                 + "and `in`.organization_site_id =  " + organizationSiteId + "\n"
                 + "UNION ALL SELECT   0 AS `exitt`, IFNULL(`in`.`value`, 0) AS `adding`\n"
-                + "    FROM `inv_notice` `in` WHERE  (`in`.`type` = 1)  "
+                + "    FROM `inv_notice` `in` WHERE  (`in`.`type` = 1 or `in`.`type` = 4 )  "
                 + "and `in`.organization_site_id =  " + organizationSiteId + "\n"
                 + "UNION ALL SELECT  0 AS `exitt`,IFNULL(`in`.`value`, 0) AS `adding`\n"
                 + "    FROM `inv_notice` `in` WHERE  (`in`.`type` = 2) "

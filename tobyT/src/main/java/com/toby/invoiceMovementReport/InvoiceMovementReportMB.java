@@ -15,6 +15,7 @@ import com.toby.toby.UserData;
 import com.toby.views.InvoiceMovementReport;
 import com.toby.views.ProductionReport;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.annotation.PostConstruct;
@@ -48,6 +49,8 @@ public class InvoiceMovementReportMB extends BaseListBean {
     private ProProductionStagesDTOConverter proProductionStagesDTOConverter;
     private ProProductionTransactionDTOConverter proProductionTransactionDTOConverter;
 
+    private Boolean invoiceNotComplete;
+
     @EJB
     private ProProductionStagesService proProductionStagesService;
     @EJB
@@ -78,7 +81,16 @@ public class InvoiceMovementReportMB extends BaseListBean {
             invoiceMovementReportList = new ArrayList<>();
             for (InvInventoryDTO inventoryDTOFrom : getPrintProductionDTO().getGallaryFromList()) {
                 getPrintProductionDTO().setGallaryFrom(inventoryDTOFrom);
-                getInvoiceMovementReportList().addAll(invoiceMovementReportService.searchReport(printProductionDTO, getUserData().getUserBranch().getId(),getInvoiceType()));
+                getInvoiceMovementReportList().addAll(invoiceMovementReportService.searchReport(printProductionDTO, getUserData().getUserBranch().getId(), getInvoiceType()));
+            }
+            if (invoiceNotComplete) {
+                List<InvoiceMovementReport> list = new ArrayList<>();
+                for (InvoiceMovementReport report : getInvoiceMovementReportList()) {
+                    if (report.getNumberTobExitFactory().compareTo(report.getNumberToFactory()) != 0) {
+                        list.add(report);
+                    }
+                }
+                setInvoiceMovementReportList(list);
             }
         }
     }
@@ -268,5 +280,22 @@ public class InvoiceMovementReportMB extends BaseListBean {
      */
     public void setInvoiceType(Integer invoiceType) {
         this.invoiceType = invoiceType;
+    }
+
+    /**
+     * @return the invoiceNotComplete
+     */
+    public Boolean getInvoiceNotComplete() {
+        if (invoiceNotComplete == null) {
+            invoiceNotComplete = Boolean.FALSE;
+        }
+        return invoiceNotComplete;
+    }
+
+    /**
+     * @param invoiceNotComplete the invoiceNotComplete to set
+     */
+    public void setInvoiceNotComplete(Boolean invoiceNotComplete) {
+        this.invoiceNotComplete = invoiceNotComplete;
     }
 }

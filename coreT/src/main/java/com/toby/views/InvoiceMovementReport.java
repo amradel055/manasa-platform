@@ -160,6 +160,9 @@ public class InvoiceMovementReport implements Serializable {
      * @return the numberTobInvoice
      */
     public BigDecimal getNumberTobInvoice() {
+        if(numberTobInvoice == null){
+            numberTobInvoice = BigDecimal.ZERO;
+        }
         return numberTobInvoice;
     }
 
@@ -174,6 +177,9 @@ public class InvoiceMovementReport implements Serializable {
      * @return the numberToFactory
      */
     public BigDecimal getNumberToFactory() {
+        if(numberToFactory == null){
+            numberToFactory = BigDecimal.ZERO;
+        }
         return numberToFactory;
     }
 
@@ -188,6 +194,9 @@ public class InvoiceMovementReport implements Serializable {
      * @return the numberTobExitFactory
      */
     public BigDecimal getNumberTobExitFactory() {
+        if(numberTobExitFactory == null){
+            numberTobExitFactory = BigDecimal.ZERO;
+        }
         return numberTobExitFactory;
     }
 
@@ -202,6 +211,9 @@ public class InvoiceMovementReport implements Serializable {
      * @return the numberTobgallary
      */
     public BigDecimal getNumberTobgallary() {
+        if(numberTobgallary == null){
+            numberTobgallary = BigDecimal.ZERO;
+        }
         return numberTobgallary;
     }
 
@@ -216,6 +228,9 @@ public class InvoiceMovementReport implements Serializable {
      * @return the numberTobcustomer
      */
     public BigDecimal getNumberTobcustomer() {
+        if(numberTobcustomer == null){
+            numberTobcustomer = BigDecimal.ZERO;
+        }
         return numberTobcustomer;
     }
 
