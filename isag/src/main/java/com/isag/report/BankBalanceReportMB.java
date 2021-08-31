@@ -106,6 +106,17 @@ public class BankBalanceReportMB extends BaseGlAccountReportBean {
             }
         }
     }
+    
+    public void searchNew() {
+        fillBuilders();
+        bankBalanceViewList = new ArrayList<>();
+        balanceViewMap = new HashMap<>();
+        bankBalanceReportBeanList = new ArrayList<>();
+        dateFrom = commonSearchBean.getDateFrom() != null ? commonSearchBean.getDateFrom() : getGlYearSelection().getDateFrom();
+        dateTo = commonSearchBean.getDateTo() != null ? commonSearchBean.getDateTo() : getGlYearSelection().getDateTo();
+        bankBalanceViewList = bankBalanceViewService.getAllBankBalancesTransactionsByBankId(getUserData().getUserBranch().getId(), getGlYearSelection(), dateTo, bankBuilder);
+
+    }
 
     @Override
     public void search() {

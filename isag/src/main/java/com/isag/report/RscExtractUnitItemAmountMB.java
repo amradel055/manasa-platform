@@ -41,7 +41,6 @@ public class RscExtractUnitItemAmountMB extends BaseReportBean {
     private RscExtractUnitItemAmountSearchBean rscExtractUnitItemAmountSearchBean;
     private List<RscExtractUnitItemAmountViewBean> extractUnitItemAmountViewBeanList;
     private Boolean viewDetail;
-    
 
     @EJB
     RscExtractUnitItemAmountViewService rscExtractUnitItemAmountViewService;
@@ -60,8 +59,9 @@ public class RscExtractUnitItemAmountMB extends BaseReportBean {
     public void search() {
         setExtractUnitItemAmountViewBeanList(rscExtractUnitItemAmountViewService.findRscExtractUnitItemViewService(rscExtractUnitItemAmountSearchBean, getUserData().getUserBranch().getId()));
     }
+
     public void searchDetail(Integer itemId) {
-        setExtractUnitItemAmountViewBeanList(rscExtractUnitItemAmountViewService.findRscExtractUnitItemDetailViewService(rscExtractUnitItemAmountSearchBean, getUserData().getUserBranch().getId(),itemId));
+        setExtractUnitItemAmountViewBeanList(rscExtractUnitItemAmountViewService.findRscExtractUnitItemDetailViewService(rscExtractUnitItemAmountSearchBean, getUserData().getUserBranch().getId(), itemId));
     }
 
     @Override
@@ -107,7 +107,7 @@ public class RscExtractUnitItemAmountMB extends BaseReportBean {
         } else {
             hashMap.put("companyImage", null);
         }
-        
+
         hashMap.put("dateText", userDDs.get("DATE"));
 
         hashMap.put("dateFromText", userDDs.get("YEAR_FROM"));
@@ -118,20 +118,20 @@ public class RscExtractUnitItemAmountMB extends BaseReportBean {
         hashMap.put("projectText", "المشروع");
         hashMap.put("balanceText", "التكلفه");
         hashMap.put("serialText", "البند");
-        hashMap.put("siteText",  "المقاول");
-        hashMap.put("remarkText",  "العميل");
+        hashMap.put("siteText", "المقاول");
+        hashMap.put("remarkText", "العميل");
         hashMap.put("subreport", getUserData().getReportPath() + "workUnitAmountTotalDetail_sub.jasper");
         hashMap.put("totalText", userDDs.get("TOTAL"));
-       
+
         HashMap param = new HashMap();
-        hashMap.put("param", param); 
+
         param.put("guideNameTXt", "البند");
         param.put("excuteQtyTxt", "الكميه المنفذه");
         param.put("priceSellTxt", "سعر البيع");
         param.put("discountValueTxt", "المقاول");
         param.put("discountPercentageTxt", "المشروع");
         param.put("netCostTxt", "صافي بند المستخلص");
-
+        hashMap.put("param", param);
         return hashMap;
     }
 
@@ -154,7 +154,7 @@ public class RscExtractUnitItemAmountMB extends BaseReportBean {
      * @return the rscExtractUnitItemAmountSearchBean
      */
     public RscExtractUnitItemAmountSearchBean getRscExtractUnitItemAmountSearchBean() {
-        if(rscExtractUnitItemAmountSearchBean == null){
+        if (rscExtractUnitItemAmountSearchBean == null) {
             rscExtractUnitItemAmountSearchBean = new RscExtractUnitItemAmountSearchBean();
         }
         return rscExtractUnitItemAmountSearchBean;

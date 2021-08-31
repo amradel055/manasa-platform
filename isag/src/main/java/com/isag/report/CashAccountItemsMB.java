@@ -15,7 +15,9 @@ import com.isag.businessservice.reports.CashAccountItemsViewService;
 import com.isag.businessservice.reports.searchBean.SubAccountSummarySearchBean;
 import com.isag.comparatorsVars.CashAccountItemsViewComparator;
 import com.isag.converter.GlBankConverter;
+import com.isag.converter.GlBankDTOConverter;
 import com.isag.converter.SymbolConverter;
+import com.isag.dto.GlBankDTO;
 import com.isag.entity.AccountsSystemSettings;
 import com.isag.entity.GlBank;
 import com.isag.entity.Symbol;
@@ -51,12 +53,12 @@ import net.sf.jasperreports.engine.JRException;
 public class CashAccountItemsMB extends BaseGlAccountReportBean {
 
     private Integer branchId;
-    private GlBankConverter glBankConverter;
+    private GlBankDTOConverter glBankConverter;
     private SymbolConverter symbolConverterFrom;
     private SymbolConverter symbolConverterTo;
     private List<Symbol> itemsFrom;
     private List<Symbol> itemsTo;
-    private List<GlBank> glBankList;
+    private List<GlBankDTO> glBankList;
 
     private SubAccountSummarySearchBean cashAccountSettlementSearchBean;
     private List<CashAccountItemsView> cashAccountSettlementList;
@@ -66,8 +68,8 @@ public class CashAccountItemsMB extends BaseGlAccountReportBean {
     private BigDecimal totalDebit = BigDecimal.ZERO;
     private BigDecimal openingBalance = BigDecimal.ZERO;
 
-    private Map<Integer, GlBank> glBankMap = new HashMap<>();
-    private Map<Integer, GlBank> glBankCopyMap = new HashMap<>();
+    private Map<Integer, GlBankDTO> glBankMap = new HashMap<>();
+    private Map<Integer, GlBankDTO> glBankCopyMap = new HashMap<>();
     private Map<Integer, BigDecimal> totalForDebitMap = new HashMap<>();
     private Map<Integer, BigDecimal> totalForCreditMap = new HashMap<>();
     private Map<Integer, BigDecimal> totalForBalanceMap = new HashMap<>();
@@ -121,9 +123,9 @@ public class CashAccountItemsMB extends BaseGlAccountReportBean {
         cashAccountSettlementReports = new ArrayList<>();
         glBankList = new ArrayList<>();
         branchId = getUserData().getUserBranch().getId();
-        glBankList = glBankService.getAllGlBankByBranchId(branchId);
+        glBankList = glBankService.getAllGlBankDTOByBranchId(branchId);
         if (glBankList != null && !glBankList.isEmpty()) {
-            for (GlBank gb : glBankList) {
+            for (GlBankDTO gb : glBankList) {
                 glBankMap.put(gb.getId(), gb);
                 totalForDebitMap.put(gb.getId(), BigDecimal.ZERO);
                 totalForCreditMap.put(gb.getId(), BigDecimal.ZERO);
@@ -131,7 +133,7 @@ public class CashAccountItemsMB extends BaseGlAccountReportBean {
                 openingBalanceMap.put(gb.getId(), BigDecimal.ZERO);
             }
         }
-        glBankConverter = new GlBankConverter(glBankList);
+        glBankConverter = new GlBankDTOConverter(glBankList);
         setAccountsSystemSettings(accountsSystemSettingsService.getInventoryByCompanyId(getUserData().getCompany().getId()));
         getItemsFrom();
         getItemsTo();
@@ -148,7 +150,7 @@ public class CashAccountItemsMB extends BaseGlAccountReportBean {
     public void search() {
         glBankCopyMap = new HashMap<>();
         if (glBankList != null && !glBankList.isEmpty()) {
-            for (GlBank gb : glBankList) {
+            for (GlBankDTO gb : glBankList) {
                 glBankMap.put(gb.getId(), gb);
                 totalForDebitMap.put(gb.getId(), BigDecimal.ZERO);
                 totalForCreditMap.put(gb.getId(), BigDecimal.ZERO);
@@ -480,19 +482,19 @@ public class CashAccountItemsMB extends BaseGlAccountReportBean {
         }
     }
 
-    public GlBankConverter getGlBankConverter() {
+    public GlBankDTOConverter getGlBankConverter() {
         return glBankConverter;
     }
 
-    public void setGlBankConverter(GlBankConverter glBankConverter) {
+    public void setGlBankConverter(GlBankDTOConverter glBankConverter) {
         this.glBankConverter = glBankConverter;
     }
 
-    public List<GlBank> getGlBankList() {
+    public List<GlBankDTO> getGlBankList() {
         return glBankList;
     }
 
-    public void setGlBankList(List<GlBank> glBankList) {
+    public void setGlBankList(List<GlBankDTO> glBankList) {
         this.glBankList = glBankList;
     }
 
@@ -547,14 +549,14 @@ public class CashAccountItemsMB extends BaseGlAccountReportBean {
     /**
      * @return the glBankMap
      */
-    public Map<Integer, GlBank> getGlBankMap() {
+    public Map<Integer, GlBankDTO> getGlBankMap() {
         return glBankMap;
     }
 
     /**
      * @param glBankMap the glBankMap to set
      */
-    public void setGlBankMap(Map<Integer, GlBank> glBankMap) {
+    public void setGlBankMap(Map<Integer, GlBankDTO> glBankMap) {
         this.glBankMap = glBankMap;
     }
 
@@ -659,14 +661,14 @@ public class CashAccountItemsMB extends BaseGlAccountReportBean {
     /**
      * @return the glBankCopyMap
      */
-    public Map<Integer, GlBank> getGlBankCopyMap() {
+    public Map<Integer, GlBankDTO> getGlBankCopyMap() {
         return glBankCopyMap;
     }
 
     /**
      * @param glBankCopyMap the glBankCopyMap to set
      */
-    public void setGlBankCopyMap(Map<Integer, GlBank> glBankCopyMap) {
+    public void setGlBankCopyMap(Map<Integer, GlBankDTO> glBankCopyMap) {
         this.glBankCopyMap = glBankCopyMap;
     }
 
