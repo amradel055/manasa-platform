@@ -57,6 +57,7 @@ public class Answers extends BaseEntity {
     private Exams examId;
     @Column(name = "selection")
     private Integer selection;
+    @Size(max = 450)
     @Column(name = "img")
     private String img;
 

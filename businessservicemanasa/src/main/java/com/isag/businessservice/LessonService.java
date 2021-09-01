@@ -19,7 +19,7 @@ public interface LessonService {
 
     public List<LessonDTO> findAllLessons();
 
-    public List<LessonDTO> findLessonByMonth(Integer monthId, Integer branchId, Integer companyId, Integer schoolStagesGuideId, Integer lessonType, Integer id);
+    public List<LessonDTO> findLessonByPeriod(Integer monthId, Integer branchId, Integer companyId, Integer schoolStagesGuideId, Integer lessonType, Integer id);
 
     public List<LessonDTO> findFreeLesson(Integer branchId, Integer companyId);
 

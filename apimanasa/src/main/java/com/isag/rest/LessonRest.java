@@ -40,7 +40,7 @@ public class LessonRest {
     public Response findLessonList(LessonDTO lessonId) {
         if (lessonId != null) {
             try {
-                List<LessonDTO> dTOs = lessonService.findLessonByMonth(lessonId.getMonthId(), lessonId.getBranchId(), lessonId.getCompanyId(), lessonId.getSchoolId(), lessonId.getLessonType(), lessonId.getId());
+                List<LessonDTO> dTOs = lessonService.findLessonByPeriod(lessonId.getPeriodId(), lessonId.getBranchId(), lessonId.getCompanyId(), lessonId.getSchoolId(), lessonId.getLessonType(), lessonId.getId());
                 GenericEntity<List<LessonDTO>> list = new GenericEntity<List<LessonDTO>>(dTOs) {
                 };
                 return Response.ok(list).build();

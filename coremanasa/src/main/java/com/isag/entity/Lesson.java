@@ -46,7 +46,7 @@ public class Lesson extends BaseEntity {
     @Size(max = 450)
     @Column(name = "video_link")
     private String videoLink;
-     @Size(max = 450)
+    @Size(max = 450)
     @Column(name = "vimeo_link")
     private String vimeoLink;
 
@@ -66,6 +66,9 @@ public class Lesson extends BaseEntity {
     @Size(max = 450)
     @Column(name = "thumb")
     private String thumb;
+    @JoinColumn(name = "period_id", referencedColumnName = "id")
+    @ManyToOne
+    private Periods periodId;
 
     public Lesson() {
     }
@@ -217,6 +220,20 @@ public class Lesson extends BaseEntity {
      */
     public void setVimeoLink(String vimeoLink) {
         this.vimeoLink = vimeoLink;
+    }
+
+    /**
+     * @return the periodId
+     */
+    public Periods getPeriodId() {
+        return periodId;
+    }
+
+    /**
+     * @param periodId the periodId to set
+     */
+    public void setPeriodId(Periods periodId) {
+        this.periodId = periodId;
     }
 
 }

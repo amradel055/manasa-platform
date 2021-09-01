@@ -60,8 +60,8 @@ public class Exams extends BaseEntity {
     private BigDecimal score;
     @Column(name = "active")
     private Integer active;
-//    @Column(name = "timer")
-//    private Integer timer;
+    @Column(name = "timer")
+    private Integer timer;
     @Column(name = "monthId")
     private Integer monthId;
     @Column(name = "exam_type")
@@ -235,7 +235,6 @@ public class Exams extends BaseEntity {
         this.periodId = periodId;
     }
 
-   
     public IgmaUser getTeacherId() {
         return teacherId;
     }
@@ -264,16 +263,16 @@ public class Exams extends BaseEntity {
     /**
      * @return the timer
      */
-//    public Integer getTimer() {
-//        return timer;
-//    }
-//
-//    /**
-//     * @param timer the timer to set
-//     */
-//    public void setTimer(Integer timer) {
-//        this.timer = timer;
-//    }
+    public Integer getTimer() {
+        return timer;
+    }
+
+    /**
+     * @param timer the timer to set
+     */
+    public void setTimer(Integer timer) {
+        this.timer = timer;
+    }
     /**
      * @return the timer
      */

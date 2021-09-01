@@ -13,6 +13,7 @@ import com.isag.entity.Branch;
 import com.isag.entity.IgmaCompany;
 import com.isag.entity.Lesson;
 import com.isag.entity.IgmaUser;
+import com.isag.entity.Periods;
 import com.isag.entity.SchoolStagesGuide;
 import java.util.ArrayList;
 import java.util.Date;
@@ -43,15 +44,15 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
-    public List<LessonDTO> findLessonByMonth(Integer monthId, Integer branchId, Integer companyId, Integer schoolStagesGuideId, Integer lessonType, Integer id) {
+    public List<LessonDTO> findLessonByPeriod(Integer periodId, Integer branchId, Integer companyId, Integer schoolStagesGuideId, Integer lessonType, Integer id) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         params.put("companyId", companyId);
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT d FROM Lesson d WHERE d.branchId.id = :branchId AND d.companyId.id = :companyId ");
-        if (monthId != null) {
-            params.put("monthId", monthId);
-            builder.append(" AND d.monthId = :monthId ");
+        if (periodId != null) {
+            params.put("periodId", periodId);
+            builder.append(" AND d.periodId.id = :periodId ");
         }
         if (id != null) {
             params.put("id", id);
@@ -135,7 +136,7 @@ public class LessonServiceImpl implements LessonService {
         if (lessonDTO != null && lessonDTO.getLessonName() != null
                 && lessonDTO.getLessonDescription() != null
                 && lessonDTO.getLessonType() != null
-                && lessonDTO.getMonthId() != null) {
+                && lessonDTO.getPeriodId() != null) {
             if (isagUser == null) {
                 isagUser = new IgmaUser();
                 isagUser.setId(61);
@@ -207,6 +208,10 @@ public class LessonServiceImpl implements LessonService {
             dTO.setSchoolStagesGuideId(schoolStagesGuideDTO);
         }
 
+        if (entity.getPeriodId() != null) {
+            dTO.setPeriodId(entity.getPeriodId().getId());
+        }
+
         dTO.setIndex(entity.getId());
         dTO.setCreatedDate(entity.getCreationDate());
         dTO.setCreatedBy(entity.getCreatedBy().getId());
@@ -234,6 +239,12 @@ public class LessonServiceImpl implements LessonService {
             SchoolStagesGuide schoolStagesGuide = new SchoolStagesGuide();
             schoolStagesGuide.setId(dTO.getSchoolId());
             entity.setSchoolStagesGuideId(schoolStagesGuide);
+        }
+
+        if (dTO.getPeriodId() != null) {
+            Periods periods = new Periods();
+            periods.setId(dTO.getPeriodId());
+            entity.setPeriodId(periods);
         }
 
         if (dTO.getId() == null) {

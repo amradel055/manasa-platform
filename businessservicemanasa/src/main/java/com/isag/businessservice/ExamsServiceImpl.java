@@ -85,7 +85,7 @@ public class ExamsServiceImpl implements ExamsService {
     }
 
     @Override
-    public List<ExamsDTO> findExamsListForStudent(Integer schoolStagesId, Integer branchId, Integer lessonId, Integer companyId, Integer studentId, Integer monthId) {
+    public List<ExamsDTO> findExamsListForStudent(Integer schoolStagesId, Integer branchId, Integer lessonId, Integer companyId, Integer studentId, Integer periodId) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         params.put("companyId", companyId);
@@ -93,9 +93,9 @@ public class ExamsServiceImpl implements ExamsService {
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT d FROM Exams d WHERE d.active = 1 AND d.branchId.id = :branchId AND d.companyId.id = :companyId AND  d.parent IS NULL AND d.id not in (select e.parent.id from Exams e where e.studentId.id = :studentId)");
 
-        if (monthId != null) {
-            params.put("monthId", monthId);
-            builder.append(" AND d.monthId = :monthId ");
+        if (periodId != null) {
+            params.put("periodId", periodId);
+            builder.append(" AND d.periodId.id = :periodId ");
         }
         if (lessonId != null) {
             params.put("lessonId", lessonId);
@@ -248,7 +248,9 @@ public class ExamsServiceImpl implements ExamsService {
         dTO.setScore(entity.getScore());
         dTO.setActive(entity.getActive());
         dTO.setExamType(entity.getExamType());
-
+        dTO.setTimer(entity.getTimer());
+        
+        
         if (entity.getTeacherId() != null) {
             dTO.setTeacherId(entity.getTeacherId().getId());
         }
@@ -256,7 +258,6 @@ public class ExamsServiceImpl implements ExamsService {
         if (entity.getPeriodId() != null) {
             dTO.setPeriodId(entity.getPeriodId().getId());
         }
-        //dTO.setTimer(entity.getTimer());
 
         if (entity.getSchoolStagesId() != null) {
             dTO.setSchoolStagesId(entity.getSchoolStagesId().getId());
@@ -299,7 +300,7 @@ public class ExamsServiceImpl implements ExamsService {
         entity.setScore(dTO.getScore());
         entity.setMonthId(dTO.getMonthId());
         entity.setExamType(dTO.getExamType());
-        //entity.setTimer(dTO.getTimer());
+        entity.setTimer(dTO.getTimer());
 
         if (dTO.getTeacherId() != null) {
             IgmaUser igmaUser = new IgmaUser();

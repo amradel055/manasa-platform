@@ -77,7 +77,7 @@ public class ExamsRest {
         if (examsDTO != null) {
             try {
                 List<ExamsDTO> dTOs = examsService.findExamsListForStudent(examsDTO.getSchoolStagesId(), examsDTO.getBranchId(), examsDTO.getLessonId(),
-                        examsDTO.getCompanyId(), examsDTO.getStudentId(), examsDTO.getMonthId());
+                        examsDTO.getCompanyId(), examsDTO.getStudentId(), examsDTO.getPeriodId());
                 GenericEntity<List<ExamsDTO>> list = new GenericEntity<List<ExamsDTO>>(dTOs) {
                 };
                 return Response.ok(list).build();

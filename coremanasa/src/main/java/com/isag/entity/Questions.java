@@ -52,6 +52,7 @@ public class Questions extends BaseEntity {
     @JoinColumn(name = "student_id", referencedColumnName = "id")
     @ManyToOne
     private Student studentId;
+    @Size(max = 450)
     @Column(name = "img")
     private String img;
 

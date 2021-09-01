@@ -15,6 +15,7 @@ public class LessonDTO extends BaseEntityDTO {
 
     private String lessonName;
     private Integer lessonType;
+    private Integer periodId;
     private Integer monthId;
     private String lessonDescription;
     private String videoLink;
@@ -213,6 +214,20 @@ public class LessonDTO extends BaseEntityDTO {
      */
     public void setVimeoLink(String vimeoLink) {
         this.vimeoLink = vimeoLink;
+    }
+
+    /**
+     * @return the periodId
+     */
+    public Integer getPeriodId() {
+        return periodId;
+    }
+
+    /**
+     * @param periodId the periodId to set
+     */
+    public void setPeriodId(Integer periodId) {
+        this.periodId = periodId;
     }
 
 }
