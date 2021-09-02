@@ -1,7 +1,10 @@
 package com.toby.reports;
 
+import com.toby.businessservice.OfferCompanyService;
 import com.toby.businessservice.ReportsService;
+import com.toby.converter.OfferCompanyDTOConverter;
 import com.toby.dto.InvInventoryDTO;
+import com.toby.dto.OfferCompanyDTO;
 import com.toby.toby.Basic;
 import com.toby.views.ClientsByInvInventory;
 import java.io.IOException;
@@ -27,9 +30,13 @@ public class ClientsByInvInventoryReport extends Basic {
 
     private List<ClientsByInvInventory> List;
     private ClientsByInvInventory invInventory;
+    private List<OfferCompanyDTO> offerCompanyList;
+    private OfferCompanyDTOConverter offerCompanyDTOConverter;
 
     @EJB
     private ReportsService reportsService;
+    @EJB
+    private OfferCompanyService companyService;
 
     @PostConstruct
     public void init() {
@@ -117,6 +124,38 @@ public class ClientsByInvInventoryReport extends Basic {
      */
     public void setInvInventory(ClientsByInvInventory invInventory) {
         this.invInventory = invInventory;
+    }
+
+    /**
+     * @return the offerCompanyList
+     */
+    public List<OfferCompanyDTO> getOfferCompanyList() {
+        if (offerCompanyList == null || offerCompanyList.isEmpty()) {
+            offerCompanyList = companyService.getALLOfferCompanyByBranchId(getUserData().getUser());
+            setOfferCompanyDTOConverter(new OfferCompanyDTOConverter(offerCompanyList));
+        }
+        return offerCompanyList;
+    }
+
+    /**
+     * @param offerCompanyList the offerCompanyList to set
+     */
+    public void setOfferCompanyList(List<OfferCompanyDTO> offerCompanyList) {
+        this.offerCompanyList = offerCompanyList;
+    }
+
+    /**
+     * @return the offerCompanyDTOConverter
+     */
+    public OfferCompanyDTOConverter getOfferCompanyDTOConverter() {
+        return offerCompanyDTOConverter;
+    }
+
+    /**
+     * @param offerCompanyDTOConverter the offerCompanyDTOConverter to set
+     */
+    public void setOfferCompanyDTOConverter(OfferCompanyDTOConverter offerCompanyDTOConverter) {
+        this.offerCompanyDTOConverter = offerCompanyDTOConverter;
     }
 
 }

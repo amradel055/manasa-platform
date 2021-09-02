@@ -6,6 +6,7 @@
 package com.toby.views;
 
 import com.toby.dto.InvInventoryDTO;
+import com.toby.dto.OfferCompanyDTO;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class ClientsByInvInventory {
     private String clientCode;
     private String clientMobile;
     private List<InvInventoryDTO> gallaryListSelected;
+    private List<OfferCompanyDTO> offerCompanyListSelected;
     private InvInventoryDTO inventoryDTO;
 
     /**
@@ -97,6 +99,20 @@ public class ClientsByInvInventory {
      */
     public void setInventoryDTO(InvInventoryDTO inventoryDTO) {
         this.inventoryDTO = inventoryDTO;
+    }
+
+    /**
+     * @return the offerCompanyListSelected
+     */
+    public List<OfferCompanyDTO> getOfferCompanyListSelected() {
+        return offerCompanyListSelected;
+    }
+
+    /**
+     * @param offerCompanyListSelected the offerCompanyListSelected to set
+     */
+    public void setOfferCompanyListSelected(List<OfferCompanyDTO> offerCompanyListSelected) {
+        this.offerCompanyListSelected = offerCompanyListSelected;
     }
 
 }

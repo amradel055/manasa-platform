@@ -28,7 +28,7 @@ public interface OfferCompanyService {
 
     public List<OfferCompanyDTO> getALLGlofferCompanyByCompanyId(Integer companyId, TobyUser tobyUser);
 
-    public List<OfferCompanyDTO> getALLGlofferCompanyByBranchId(Integer branchId, TobyUser tobyUser);
+    public List<OfferCompanyDTO> getALLOfferCompanyByBranchId(TobyUser tobyUser);
 
     public String getNoticeByCustomerId(Integer id);
 }

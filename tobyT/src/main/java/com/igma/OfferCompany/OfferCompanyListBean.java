@@ -40,7 +40,7 @@ public class OfferCompanyListBean extends BaseFormBean {
         setScreenMode((String) context.getSessionMap().get("ScreenMode"));
         if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("save")) {
             try {
-                offerCompanyDTOList = offerCompanyService.getALLGlofferCompanyByBranchId(getUserData().getUserBranch().getId(), getUserData().getUser());
+                offerCompanyDTOList = offerCompanyService.getALLOfferCompanyByBranchId(getUserData().getUser());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -117,7 +117,7 @@ public class OfferCompanyListBean extends BaseFormBean {
     public List<OfferCompanyDTO> getOfferCompanyDTOList() {
 
         if (offerCompanyDTOList == null | offerCompanyDTOList.isEmpty()) {
-            offerCompanyDTOList = offerCompanyService.getALLGlofferCompanyByBranchId(getUserData().getUserBranch().getId(), getUserData().getUser());
+            offerCompanyDTOList = offerCompanyService.getALLOfferCompanyByBranchId(getUserData().getUser());
         }
 
         return offerCompanyDTOList;

@@ -7,6 +7,7 @@ package com.toby.businessservice;
 
 import com.toby.core.GenericDAO;
 import com.toby.dto.InvInventoryDTO;
+import com.toby.dto.OfferCompanyDTO;
 import com.toby.dto.ProGroupDTO;
 import com.toby.entity.ProProductionItemsTransaction;
 import com.toby.views.ClientsByInvInventory;
@@ -638,7 +639,8 @@ public class ReportsServiceImpl implements ReportsService {
         List<ClientsByInvInventory> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT ios.name,ios.code,ios.mobile FROM toby.inv_organization_site ios\n"
-                + "left join inv_inventory ii on ii.id = ios.gallary_id\n"
+//                + "left join inv_inventory ii on ii.id = ios.gallary_id\n"
+//                + "left join offer_company oc on oc.id = ios.offer_company_id\n"
                 + " where ios.branch_id = ").append(branchId);
 
         StringBuilder gallaryIds = null;
@@ -650,7 +652,17 @@ public class ReportsServiceImpl implements ReportsService {
                 gallaryIds.append(",").append(invInventoryDTO.getId());
             }
         }
+        StringBuilder offerCompanyId = null;
+        for (OfferCompanyDTO offerCompanyDTO : invInventory.getOfferCompanyListSelected()) {
+            if (offerCompanyId == null) {
+                offerCompanyId = new StringBuilder();
+                offerCompanyId.append(offerCompanyDTO.getId());
+            } else {
+                offerCompanyId.append(",").append(offerCompanyDTO.getId());
+            }
+        }
         appendGallery9(gallaryIds, sql);
+        appendOfferCompany(offerCompanyId, sql);
         List<Object[]> res = dao.executeNativeQuery(sql.toString());
         for (Object[] object : res) {
             invInventory = new ClientsByInvInventory();
@@ -825,9 +837,16 @@ public class ReportsServiceImpl implements ReportsService {
             query.append(" and ios.gallary_id =  ").append(noMovementFromTheDate.getGallerySelected().getId());
         }
     }
-      private void appendGallery9(StringBuilder gallaryIds, StringBuilder sql) {
+
+    private void appendGallery9(StringBuilder gallaryIds, StringBuilder sql) {
         if (gallaryIds != null) {
             sql.append("  and ios.gallary_id in ( ").append(gallaryIds.toString()).append(" )");
+        }
+    }
+
+    private void appendOfferCompany(StringBuilder offerCompanyId, StringBuilder sql) {
+        if (offerCompanyId != null) {
+            sql.append("  and ios.offer_company_id in ( ").append(offerCompanyId.toString()).append(" )");
         }
     }
 

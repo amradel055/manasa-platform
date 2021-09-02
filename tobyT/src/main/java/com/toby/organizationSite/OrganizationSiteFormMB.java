@@ -158,7 +158,7 @@ public class OrganizationSiteFormMB extends BaseFormBean implements Serializable
 //            mainCustomerList = organizationSiteService.getInvOrganizationSiteByBranchIdPer(getUserData().getUserBranch().getId());// here 
 //            customerConvertor = new InvOrganizationSiteConverter(mainCustomerList);
 
-            offerCompanyDTOList = offerCompanyService.getALLGlofferCompanyByBranchId(getUserData().getUserBranch().getId(), getUserData().getUser());
+            offerCompanyDTOList = offerCompanyService.getALLOfferCompanyByBranchId(getUserData().getUser());
             setOfferCompanyDTOConverter(new OfferCompanyDTOConverter(offerCompanyDTOList));
 
             accountIdList = getAccountService().getBranchGLAccountsActive(getUserData().getUserBranch().getId());
@@ -329,7 +329,7 @@ public class OrganizationSiteFormMB extends BaseFormBean implements Serializable
 
     public List<OfferCompanyDTO> completeOfferCompany(String query) {
         if (offerCompanyDTOList == null || offerCompanyDTOList.isEmpty()) {
-            offerCompanyDTOList = offerCompanyService.getALLGlofferCompanyByBranchId(getUserData().getUserBranch().getId(), getUserData().getUser());
+            offerCompanyDTOList = offerCompanyService.getALLOfferCompanyByBranchId(getUserData().getUser());
             setOfferCompanyDTOConverter(new OfferCompanyDTOConverter(offerCompanyDTOList));
         }
         return offerCompanyDTOList;
@@ -1470,7 +1470,7 @@ public class OrganizationSiteFormMB extends BaseFormBean implements Serializable
     public List<OfferCompanyDTO> getOfferCompanyDTOList() {
 
         if (offerCompanyDTOList == null || offerCompanyDTOList.isEmpty()) {
-            offerCompanyDTOList = offerCompanyService.getALLGlofferCompanyByBranchId(getUserData().getUserBranch().getId(), getUserData().getUser());
+            offerCompanyDTOList = offerCompanyService.getALLOfferCompanyByBranchId(getUserData().getUser());
             setOfferCompanyDTOConverter(new OfferCompanyDTOConverter(offerCompanyDTOList));
         }
 

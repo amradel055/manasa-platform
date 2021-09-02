@@ -67,9 +67,9 @@ public class OfferCompanyServiceImpl implements OfferCompanyService {
     }
 
     @Override
-    public List<OfferCompanyDTO> getALLGlofferCompanyByBranchId(Integer branchId, TobyUser tobyUser) {
+    public List<OfferCompanyDTO> getALLOfferCompanyByBranchId(TobyUser tobyUser) {
         Map<String, Object> params = new HashMap<>();
-        params.put("branchId", branchId);
+        params.put("branchId", tobyUser.getBranchId().getId());
         List<OfferCompany> offerCompanyList = dao.findListByQuery("SELECT e FROM OfferCompany e WHERE e.branchId.id =:branchId", params);
         return mapToDTOList(offerCompanyList, tobyUser);
     }
