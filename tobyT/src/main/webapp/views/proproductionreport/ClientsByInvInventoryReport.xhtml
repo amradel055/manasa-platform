@@ -32,6 +32,22 @@
                             <p:outputLabel style="width: 50px;margin-right: 2%" value="المعرض "/>
                         </div>
                     </div>
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6" >
+                            <p:selectCheckboxMenu id="offer_company" value="#{clientsByInvInventoryReport.invInventory.offerCompanyListSelected}" 
+                                                  converter="#{clientsByInvInventoryReport.offerCompanyDTOConverter}"
+                                                  label="الشركة" style="width: 15rem"
+                                                  filter="true" filterMatchMode="startsWith" panelStyle="width: 15rem" scrollHeight="250">
+                                <f:selectItems value="#{clientsByInvInventoryReport.offerCompanyList}" 
+                                               var="gallary"
+                                               itemLabel="#{offerComoany}"
+                                               itemValue="#{offerComoany}"/>
+                            </p:selectCheckboxMenu>
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel style="width: 50px;margin-right: 2%" value="الشركة "/>
+                        </div>
+                    </div>
 
                 </p:fieldset>
                 <div class="ui-g-12 ui-xl-12" align="center">

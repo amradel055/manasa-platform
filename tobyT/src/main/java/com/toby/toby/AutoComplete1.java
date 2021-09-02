@@ -313,7 +313,7 @@ public class AutoComplete1 extends Basic {
     
     public List<OfferCompanyDTO> completeOfferCompany(String query) {
         List<OfferCompanyDTO> offerCompanyDTOList = new ArrayList<>();
-        offerCompanyDTOList = offerCompanyService.getALLGlofferCompanyByBranchId(getUserData().getUserBranch().getId(),getUserData().getUser());
+        offerCompanyDTOList = offerCompanyService.getALLOfferCompanyByBranchId(getUserData().getUser());
         setOfferCompanyDTOConverter(new OfferCompanyDTOConverter(offerCompanyDTOList));
         return offerCompanyDTOList;
     }

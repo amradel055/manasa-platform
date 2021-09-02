@@ -399,7 +399,7 @@ public class OrganizationSiteListMB extends BaseListBean implements Serializable
      */
     public List<OfferCompanyDTO> getOfferCompanyDTOList() {
         if (offerCompanyDTOList == null || offerCompanyDTOList.isEmpty()) {
-            offerCompanyDTOList = offerCompanyService.getALLGlofferCompanyByBranchId(getUserData().getUserBranch().getId(), getUserData().getUser());
+            offerCompanyDTOList = offerCompanyService.getALLOfferCompanyByBranchId(getUserData().getUser());
             setOfferCompanyDTOConverter(new OfferCompanyDTOConverter(offerCompanyDTOList));
         }
         return offerCompanyDTOList;
