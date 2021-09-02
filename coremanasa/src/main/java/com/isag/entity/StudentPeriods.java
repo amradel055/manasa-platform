@@ -48,6 +48,9 @@ public class StudentPeriods extends BaseEntity {
     @JoinColumn(name = "teacher_id", referencedColumnName = "id")
     @ManyToOne
     private IgmaUser teacherId;
+    @JoinColumn(name = "material_id", referencedColumnName = "id")
+    @ManyToOne
+    private Materials materialId;
 
     public StudentPeriods() {
     }
@@ -133,6 +136,20 @@ public class StudentPeriods extends BaseEntity {
      */
     public void setTeacherId(IgmaUser teacherId) {
         this.teacherId = teacherId;
+    }
+
+    /**
+     * @return the materialId
+     */
+    public Materials getMaterialId() {
+        return materialId;
+    }
+
+    /**
+     * @param materialId the materialId to set
+     */
+    public void setMaterialId(Materials materialId) {
+        this.materialId = materialId;
     }
 
 }

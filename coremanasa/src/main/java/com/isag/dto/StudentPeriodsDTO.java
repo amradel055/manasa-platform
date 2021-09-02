@@ -26,6 +26,7 @@ public class StudentPeriodsDTO extends BaseEntityDTO {
     private String studentMobile;
     private String teacherName;
     private String periodName;
+    private Integer materialId;
 
     public StudentPeriodsDTO() {
     }
@@ -227,6 +228,20 @@ public class StudentPeriodsDTO extends BaseEntityDTO {
      */
     public void setPeriodName(String periodName) {
         this.periodName = periodName;
+    }
+
+    /**
+     * @return the materialId
+     */
+    public Integer getMaterialId() {
+        return materialId;
+    }
+
+    /**
+     * @param materialId the materialId to set
+     */
+    public void setMaterialId(Integer materialId) {
+        this.materialId = materialId;
     }
 
 }

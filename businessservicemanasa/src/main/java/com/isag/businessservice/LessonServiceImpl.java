@@ -13,6 +13,7 @@ import com.isag.entity.Branch;
 import com.isag.entity.IgmaCompany;
 import com.isag.entity.Lesson;
 import com.isag.entity.IgmaUser;
+import com.isag.entity.Materials;
 import com.isag.entity.Periods;
 import com.isag.entity.SchoolStagesGuide;
 import java.util.ArrayList;
@@ -136,6 +137,7 @@ public class LessonServiceImpl implements LessonService {
         if (lessonDTO != null && lessonDTO.getLessonName() != null
                 && lessonDTO.getLessonDescription() != null
                 && lessonDTO.getLessonType() != null
+                && lessonDTO.getMaterialId() != null
                 && lessonDTO.getPeriodId() != null) {
             if (isagUser == null) {
                 isagUser = new IgmaUser();
@@ -211,6 +213,9 @@ public class LessonServiceImpl implements LessonService {
         if (entity.getPeriodId() != null) {
             dTO.setPeriodId(entity.getPeriodId().getId());
         }
+        if (entity.getMaterialId() != null) {
+            dTO.setPeriodId(entity.getMaterialId().getId());
+        }
 
         dTO.setIndex(entity.getId());
         dTO.setCreatedDate(entity.getCreationDate());
@@ -245,6 +250,11 @@ public class LessonServiceImpl implements LessonService {
             Periods periods = new Periods();
             periods.setId(dTO.getPeriodId());
             entity.setPeriodId(periods);
+        }
+        if (dTO.getMaterialId() != null) {
+            Materials materials = new Materials();
+            materials.setId(dTO.getMaterialId());
+            entity.setMaterialId(materials);
         }
 
         if (dTO.getId() == null) {

@@ -69,6 +69,9 @@ public class Lesson extends BaseEntity {
     @JoinColumn(name = "period_id", referencedColumnName = "id")
     @ManyToOne
     private Periods periodId;
+    @JoinColumn(name = "material_id", referencedColumnName = "id")
+    @ManyToOne
+    private Materials materialId;
 
     public Lesson() {
     }
@@ -234,6 +237,20 @@ public class Lesson extends BaseEntity {
      */
     public void setPeriodId(Periods periodId) {
         this.periodId = periodId;
+    }
+
+    /**
+     * @return the materialId
+     */
+    public Materials getMaterialId() {
+        return materialId;
+    }
+
+    /**
+     * @param materialId the materialId to set
+     */
+    public void setMaterialId(Materials materialId) {
+        this.materialId = materialId;
     }
 
 }

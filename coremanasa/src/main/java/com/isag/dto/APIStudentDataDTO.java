@@ -5,6 +5,7 @@
  */
 package com.isag.dto;
 
+import com.isag.views.TeachersByStudentId;
 import java.util.List;
 
 /**
@@ -15,7 +16,7 @@ public class APIStudentDataDTO {
 
     private List<Integer> monthList;
     private List<Integer> periodList;
-    private List<Integer> teacherList;
+    private List<TeachersByStudentId> teacherList;
 
     private Integer id;
     private String fullName;
@@ -469,15 +470,17 @@ public class APIStudentDataDTO {
     /**
      * @return the teacherList
      */
-    public List<Integer> getTeacherList() {
+    public List<TeachersByStudentId> getTeacherList() {
         return teacherList;
     }
 
     /**
      * @param teacherList the teacherList to set
      */
-    public void setTeacherList(List<Integer> teacherList) {
+    public void setTeacherList(List<TeachersByStudentId> teacherList) {
         this.teacherList = teacherList;
     }
+
+
 
 }

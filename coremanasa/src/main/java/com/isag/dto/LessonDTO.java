@@ -27,7 +27,7 @@ public class LessonDTO extends BaseEntityDTO {
     private String thumb;
     private String schoolStagesName;
     private List<String> documents;
-
+    private Integer materialId;
 
     public LessonDTO() {
     }
@@ -228,6 +228,20 @@ public class LessonDTO extends BaseEntityDTO {
      */
     public void setPeriodId(Integer periodId) {
         this.periodId = periodId;
+    }
+
+    /**
+     * @return the materialId
+     */
+    public Integer getMaterialId() {
+        return materialId;
+    }
+
+    /**
+     * @param materialId the materialId to set
+     */
+    public void setMaterialId(Integer materialId) {
+        this.materialId = materialId;
     }
 
 }

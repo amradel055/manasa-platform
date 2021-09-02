@@ -7,6 +7,7 @@ package com.isag.businessservice;
 
 import com.isag.dto.StudentPeriodsDTO;
 import com.isag.entity.IgmaUser;
+import com.isag.views.TeachersByStudentId;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -21,7 +22,7 @@ public interface StudentPeriodsService {
 
     public List<Integer> findPeriodsByStudentId(Integer studentId);
 
-    public List<Integer> findteachersByStudentId(Integer studentId);
+    public List<TeachersByStudentId> findteachersByStudentId(Integer studentId);
 
     public void deleteStudentPeriodsBy(Integer teacherId, Integer periodId, Integer studentId);
 

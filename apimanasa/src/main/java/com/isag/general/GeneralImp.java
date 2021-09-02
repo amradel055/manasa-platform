@@ -32,6 +32,8 @@ import java.util.List;
 import com.isag.businessservice.IgmaApiTokenService;
 import com.isag.businessservice.IgmaUserLoginService;
 import com.isag.businessservice.IgmaUserService;
+import com.isag.dto.StudentPeriodsDTO;
+import com.isag.views.TeachersByStudentId;
 
 /**
  *
@@ -171,7 +173,7 @@ public class GeneralImp implements GeneralService {
             data.setSchoolStagesId(studentDTO.getSchoolStagesId().getId());
             data.setImagePath(studentDTO.getImagePath());
             List<Integer> periodList = periodsService.findPeriodsByStudentId(studentDTO.getId());
-            List<Integer> teachersList = periodsService.findteachersByStudentId(studentDTO.getId());
+            List<TeachersByStudentId> teachersList = periodsService.findteachersByStudentId(studentDTO.getId());
             data.setPeriodList(periodList);
             data.setTeacherList(teachersList);
             dTO.setStudentData(data);

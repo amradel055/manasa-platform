@@ -36,6 +36,7 @@ public class ExamsDTO extends BaseEntityDTO {
     private Integer monthId;
     private Integer examType;
     private Integer timer;
+    private Integer materialId;
 
     public ExamsDTO() {
     }
@@ -327,6 +328,20 @@ public class ExamsDTO extends BaseEntityDTO {
      */
     public void setTimer(Integer timer) {
         this.timer = timer;
+    }
+
+    /**
+     * @return the materialId
+     */
+    public Integer getMaterialId() {
+        return materialId;
+    }
+
+    /**
+     * @param materialId the materialId to set
+     */
+    public void setMaterialId(Integer materialId) {
+        this.materialId = materialId;
     }
 
 }

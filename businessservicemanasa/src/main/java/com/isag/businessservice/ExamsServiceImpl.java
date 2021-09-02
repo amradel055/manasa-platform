@@ -13,6 +13,7 @@ import com.isag.entity.IgmaCompany;
 import com.isag.entity.IgmaUser;
 import com.isag.entity.Exams;
 import com.isag.entity.Lesson;
+import com.isag.entity.Materials;
 import com.isag.entity.Periods;
 import com.isag.entity.SchoolStagesGuide;
 import com.isag.entity.Student;
@@ -166,6 +167,7 @@ public class ExamsServiceImpl implements ExamsService {
                 && examsDTO.getPeriodId() != null
                 && examsDTO.getExamName() != null
                 && examsDTO.getTeacherId() != null
+                && examsDTO.getMaterialId() != null
                 && examsDTO.getLessonId() != null) {
             if (isagUser == null) {
                 isagUser = new IgmaUser();
@@ -249,8 +251,7 @@ public class ExamsServiceImpl implements ExamsService {
         dTO.setActive(entity.getActive());
         dTO.setExamType(entity.getExamType());
         dTO.setTimer(entity.getTimer());
-        
-        
+
         if (entity.getTeacherId() != null) {
             dTO.setTeacherId(entity.getTeacherId().getId());
         }
@@ -274,6 +275,9 @@ public class ExamsServiceImpl implements ExamsService {
 
         if (entity.getStudentId() != null) {
             dTO.setStudentId(entity.getStudentId().getId());
+        }
+        if (entity.getMaterialId() != null) {
+            dTO.setStudentId(entity.getMaterialId().getId());
         }
 
         if (detail) {
@@ -335,6 +339,12 @@ public class ExamsServiceImpl implements ExamsService {
             Periods periods = new Periods();
             periods.setId(dTO.getPeriodId());
             entity.setPeriodId(periods);
+        }
+
+        if (dTO.getMaterialId() != null) {
+            Materials materials = new Materials();
+            materials.setId(dTO.getMaterialId());
+            entity.setMaterialId(materials);
         }
 
         if (dTO.getId() == null) {
