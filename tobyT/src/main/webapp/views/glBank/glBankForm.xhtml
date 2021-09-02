@@ -93,7 +93,6 @@
                                                     dropdown="true"
                                                     converter="#{glBankFromMB.accountConverter}"
                                                     value="#{glBankFromMB.glBankEntity.accountId}"
-
                                                     var="p"
                                                     itemLabel="#{p}" 
                                                     itemValue="#{p}" 
@@ -184,6 +183,7 @@
                                                           value="#{glBankFromMB.glBankEntity.cash}"  >                                                             
                                             <f:selectItem itemValue="0" itemLabel="كاش"/>
                                             <f:selectItem itemValue="1" itemLabel="شبكة" />
+                                            <f:selectItem itemValue="2" itemLabel="بنك الراجحي" />
                                         </p:selectOneRadio>
                                     </p:fieldset>  
                                 </h:panelGroup> 

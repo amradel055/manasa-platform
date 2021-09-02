@@ -78,6 +78,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
         discount = calcDiscount(detailEntity, invInvoiceDTO);
         valueAfterDiscount = total.subtract((total.multiply(discount).divide(new BigDecimal(100))));
         detailEntity.setValueAfterDiscount(valueAfterDiscount);
+        detailEntity.setValueBeforeDiscount(total);
         detailEntity.setNet(valueAfterDiscount.setScale(3, BigDecimal.ROUND_HALF_UP));
         detailEntity.setTotalQuantityWithScrewing(detailEntity.getQuantity().multiply(detailEntity.getScrewing()));
         if (isNeeadQuantity && invInvoiceDTO.getInventorySetupDTO() != null && !invInvoiceDTO.getInventorySetupDTO().getNegativeSell()) {

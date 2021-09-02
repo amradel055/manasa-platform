@@ -36,6 +36,7 @@ public class InvDetailDTO extends BaseEntityDTO implements  Comparable< InvDetai
     private SymbolDTO paintColor;
     private BigDecimal length;
     private BigDecimal valueAfterDiscount;
+    private BigDecimal valueBeforeDiscount;
     private BigDecimal availableQuantityRow;
     private BigDecimal totalQuantity;
     private BigDecimal totalQuantityWithScrewing;
@@ -841,6 +842,20 @@ public class InvDetailDTO extends BaseEntityDTO implements  Comparable< InvDetai
      */
     public void setCostComparable(BigDecimal costComparable) {
         this.costComparable = costComparable;
+    }
+
+    /**
+     * @return the valueBeforeDiscount
+     */
+    public BigDecimal getValueBeforeDiscount() {
+        return valueBeforeDiscount;
+    }
+
+    /**
+     * @param valueBeforeDiscount the valueBeforeDiscount to set
+     */
+    public void setValueBeforeDiscount(BigDecimal valueBeforeDiscount) {
+        this.valueBeforeDiscount = valueBeforeDiscount;
     }
 
 }

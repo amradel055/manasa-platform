@@ -840,7 +840,7 @@
                                                     forceSelection="true" 
                                                     completeMethod="#{autoComplete.completeItemsBarcodesDetailsView}" 
                                                     >
-                                        <p:ajax update=" proof2 proof QuantityT unitvalue QuantityTOU   costTt discountT netId totalQuantity   totalNet  form:totalActualWeight form:totalNetAfterDiscount   form:totalWithTaxValue form:remain  form:taxvalue"
+                                        <p:ajax update=" proof2 proof QuantityT unitvalue QuantityTOU   costTt DISCOUNTValueT discountT netId totalQuantity   totalNet  form:totalActualWeight form:totalNetAfterDiscount   form:totalWithTaxValue form:remain  form:taxvalue"
                                                 event="itemSelect" listener="#{invPurchaseInvoiceFormDTOMB.validateItems(invPurchaseInvoiceDetailsTable)}" />
                                     </p:autoComplete>            
                                 </p:column>
@@ -940,14 +940,25 @@
                                                 update="netId totalQuantity   totalNet form:totalActualWeight form:totalNetAfterDiscount form:totalWithTaxValue form:remain form:taxvalue QuantityT NUMBER QuantityOu "/>
                                     </p:inputText>      
                                 </p:column>
+                                
+                                <p:column style="width: 12vh;text-align: -webkit-auto;border-radius: 0px; font-size: 14px;" id="DISCOUNTValue" headerText="خ قيمة">
+                                    <p:inputText id="DISCOUNTValueT" 
+                                                 value="#{invPurchaseInvoiceDetailsTable.discountValue}" 
+                                                 disabled="#{not userData.userScreens['proworkorder'].edit or invPurchaseInvoiceDetailsTable.showPrice}"
+                                                 style="width:70%!important;display: inline!important; text-align: left;">
+                                        <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.calcDiscountPersentageDetail(invPurchaseInvoiceDetailsTable)}"
+                                                update="DISCOUNTValueT discountT netId totalQuantity  totalNet form:totalActualWeight form:totalNetAfterDiscount  form:taxvalue form:totalWithTaxValue form:remain  "/>
+                                    </p:inputText>  
+
+                                </p:column>
 
                                 <p:column style="width: 12vh;text-align: -webkit-auto;border-radius: 0px; font-size: 14px;" id="DISCOUNT" headerText="#{userData.userDDs['DISCOUNT']}">
                                     <p:inputText id="discountT" 
                                                  value="#{invPurchaseInvoiceDetailsTable.discount}" 
                                                  disabled="#{not userData.userScreens['proworkorder'].edit or invPurchaseInvoiceDetailsTable.showPrice}"
                                                  style="width:70%!important;display: inline!important; text-align: left;">
-                                        <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.validateDiscountColumn(invPurchaseInvoiceDetailsTable)}"
-                                                update="discountT netId totalQuantity  totalNet form:totalActualWeight form:totalNetAfterDiscount  form:taxvalue form:totalWithTaxValue form:remain  "/>
+                                        <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.calcDiscountValueDetail(invPurchaseInvoiceDetailsTable)}"
+                                                update="DISCOUNTValueT discountT netId totalQuantity  totalNet form:totalActualWeight form:totalNetAfterDiscount  form:taxvalue form:totalWithTaxValue form:remain  "/>
                                     </p:inputText>  
 
                                     <p:outputLabel value="%"  style="display: inline!important"  />

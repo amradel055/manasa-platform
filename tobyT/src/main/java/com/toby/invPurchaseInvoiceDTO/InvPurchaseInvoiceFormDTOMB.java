@@ -126,6 +126,8 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
     public String exit() {
         if (ScreenNameClassEnum.INVPURCHASEINVOICEFORM.equals(getInvInvoiceDTO().getScreenName())) {
             exit("../invpurchaseinvoice_1/invpurchaseinvoicelist.xhtml");
+        } else if (ScreenNameClassEnum.INVPURCHASEADDING.equals(getInvInvoiceDTO().getScreenName())) {
+            exit("../invpurchaseadding/invpurchaseaddinglist.xhtml");
         } else if (ScreenNameClassEnum.INVRETURNPURCHASEFORM.equals(getInvInvoiceDTO().getScreenName())) {
             exit("../invreturnpurchase_1/invreturnpurchaselist.xhtml");
         } else if (ScreenNameClassEnum.INVSALESINVOICEFORM.equals(getInvInvoiceDTO().getScreenName())) {

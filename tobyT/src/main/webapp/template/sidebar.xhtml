@@ -461,6 +461,7 @@
                                                    or userData.userScreens['invpurchaseorder_1'].view   
                                                    or userData.userScreens['invaddingorder'].view
                                                    or userData.userScreens['invpurchaseinvoice_1'].view
+                                                   or userData.userScreens['invpurchaseadding'].view
                                                    or userData.userScreens['invreturnpurchase_1'].view
 
                                                    or userData.userScreens['customer'].view
@@ -559,6 +560,7 @@
                                            rendered="#{userData.userScreens['invpurchaseorder_1'].view  
                                                        or userData.userScreens['invaddingorder'].view 
                                                        or userData.userScreens['invpurchaseinvoice_1'].view 
+                                                       or userData.userScreens['invpurchaseadding'].view 
                                                        or userData.userScreens['invreturnpurchase_1'].view 
 
                                                        or userData.isAdmin}"
@@ -568,6 +570,9 @@
                                                 />
                                     <p:menuitem id="sr_lnk331" value="#{userData.userDDs['PURCHASE_INVOICES']}" icon="&#xE8D2;" url="/faces/views/invpurchaseinvoice_1/invpurchaseinvoicelist.xhtml" 
                                                 rendered="#{userData.userScreens['invpurchaseinvoice_1'].view or userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="sr_lnk331332" value="فواتير استلام" icon="&#xE8D2;" url="/faces/views/invpurchaseadding/invpurchaseaddinglist.xhtml" 
+                                                rendered="#{userData.userScreens['invpurchaseadding'].view or userData.isAdmin}"
                                                 />
                                     <p:menuitem id="sr_lnk332" value="#{userData.userDDs['RETURN_PURCH']}" icon="&#xE8D2;" url="/faces/views/invreturnpurchase_1/invreturnpurchaselist.xhtml" 
                                                 rendered="#{userData.userScreens['invreturnpurchase_1'].view or userData.isAdmin}"

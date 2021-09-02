@@ -230,7 +230,9 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
             getInvInvoiceDTO().setInvInventoryId(getUserData().getInventoryDTODefault());
             getInvInvoiceDTO().setGlBankId(getUserData().getGlBankDTODefault());
             if (getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVPURCHASEINVOICEFORM)
+                    || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVPURCHASEADDING)
                     || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVPURCHASEORDERFORM)
+                    || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVPURCHASEADDING)
                     || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVADDINGORDERFORM)
                     || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVRETURNPURCHASEFORM)) {
                 getInvInvoiceDTO().setOrganizationSiteId(getInvOrganizationSiteDTOList(true, 1).get(0));
@@ -248,6 +250,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 //                getInvInvoiceDTO().setInvDelegatorId(getInventoryDelegatorList(1,getInvInvoiceDTO().getGallaryId() == null ? null : getInvInvoiceDTO().getGallaryId().getId()).get(0));
                 getInvInvoiceDTO().setGallaryId(getGallaryDTOSelect());
                 putCurrency();
+                sumDateToDueDate();
             } else if (getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVTRANSFERINVENTORY)
                     || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVTRANSFER)) {
                 if (getInvInventoryDTOList() != null && !getInvInventoryDTOList().isEmpty()) {
@@ -277,6 +280,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         getInvInventoryDTOList();
 
         if (getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVPURCHASEINVOICEFORM)
+                || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVPURCHASEADDING)
                 || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVRETURNPURCHASEFORM)
                 || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVSALESINVOICEFORM)
                 || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.PROWORKORDER)
@@ -313,7 +317,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
             }
         }
 
-        sumDateToDueDate();
+//        sumDateToDueDate();
         if (getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.PROWORKORDER)) {
             getInvInvoiceDTO().setDueperiod(invGlobalService.getDeliveryDaysByGalleryId(getInvInvoiceDTO() == null ? null : getInvInvoiceDTO().getGallaryId().getId()));
             if (getInvInvoiceDTO().getPricetype() == null) {
@@ -331,6 +335,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
             }
 //            getItemsBarcodesDetailsViewList(getInvInvoiceDTO().getParent());
             if (getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVPURCHASEINVOICEFORM)
+                    || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVPURCHASEADDING)
                     || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVRETURNPURCHASEFORM)
                     || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVSALESINVOICEFORM)
                     || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.PROWORKORDER)
@@ -389,6 +394,29 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                 setInvInvoiceDTO(invGlobalService.recalcHeadValues(getInvInvoiceDTO()));
             }
 
+        } catch (Exception e) {
+            saveError(e, "InvPurchaseInvoiceFormMB", "recalcHeadValues");
+        }
+    }
+    
+    public void calcDiscountValueDetail(InvDetailDTO invPurchaseInvoiceDetailsValidate) {
+        try {
+            if (invPurchaseInvoiceDetailsValidate.getDiscount() != null
+                    && invPurchaseInvoiceDetailsValidate.getDiscount().compareTo(BigDecimal.ZERO) == 1) {
+                invPurchaseInvoiceDetailsValidate.setDiscountValue((invPurchaseInvoiceDetailsValidate.getDiscount().divide(new BigDecimal(100))).multiply(invPurchaseInvoiceDetailsValidate.getValueBeforeDiscount()));
+                validateDiscountColumn(invPurchaseInvoiceDetailsValidate);
+            }
+        } catch (Exception e) {
+            saveError(e, "InvPurchaseInvoiceFormMB", "recalcHeadValues");
+        }
+    }
+    public void calcDiscountPersentageDetail(InvDetailDTO invPurchaseInvoiceDetailsValidate) {
+        try {
+            if (invPurchaseInvoiceDetailsValidate.getDiscountValue() != null
+                    && invPurchaseInvoiceDetailsValidate.getDiscountValue().compareTo(BigDecimal.ZERO) == 1) {
+                invPurchaseInvoiceDetailsValidate.setDiscount((invPurchaseInvoiceDetailsValidate.getDiscountValue().divide(invPurchaseInvoiceDetailsValidate.getValueBeforeDiscount(), 5, RoundingMode.HALF_UP)).multiply(new BigDecimal(100)));
+                validateDiscountColumn(invPurchaseInvoiceDetailsValidate);
+            }
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceFormMB", "recalcHeadValues");
         }
@@ -981,6 +1009,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     public void printList() {
         if (getUri().contains("invpurchaseinvoice_1")
                 || getUri().contains("invsalesinvoice_1")
+                || getUri().contains("invpurchaseadding")
                 || getUri().contains("proworkorder")
                 || getUri().contains("invreturnpurchase_1")
                 || getUri().contains("invreturnsales_1")) {
@@ -1732,6 +1761,9 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         if (getUri().contains("invpurchaseinvoice_1")) {
             getInvInvoiceDTO().setScreenName(ScreenNameClassEnum.INVPURCHASEINVOICEFORM);
             getInvInvoiceDTO().setType(0);
+        } else if (getUri().contains("invpurchaseadding")) {
+            getInvInvoiceDTO().setScreenName(ScreenNameClassEnum.INVPURCHASEADDING);
+            getInvInvoiceDTO().setType(5);
         } else if (getUri().contains("invsalesinvoice_1")) {
             getInvInvoiceDTO().setScreenName(ScreenNameClassEnum.INVSALESINVOICEFORM);
             getInvInvoiceDTO().setType(1);
@@ -1796,6 +1828,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     private void fillInvInvoiceDetailDTO() {
         if (getUri().contains("invpurchaseinvoice_1")
                 || getUri().contains("invsalesinvoice_1")
+                || getUri().contains("invpurchaseadding")
                 || getUri().contains("proworkorder")
                 || getUri().contains("invreturnpurchase_1")
                 || getUri().contains("proProductionTransactionDetail")

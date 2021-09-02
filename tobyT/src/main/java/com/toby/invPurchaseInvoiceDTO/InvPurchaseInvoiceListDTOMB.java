@@ -65,6 +65,8 @@ public class InvPurchaseInvoiceListDTOMB extends InventoryBasicDataForm {
                         type = 3;
                     } else if (getUri().contains("proworkorderlist")) {
                         type = 4;
+                    } else if (getUri().contains("invpurchaseaddinglist")) {
+                        type = 5;
                     }
                     Integer invInventorySelectionId = getInvInventorySelection() != null ? getInvInventorySelection().getId() : null;
                     Integer invGallarySelectionId = getGallaryDTOSelect() != null ? getGallaryDTOSelect().getId() : null;
@@ -91,6 +93,8 @@ public class InvPurchaseInvoiceListDTOMB extends InventoryBasicDataForm {
             type = 3;
         } else if (getUri().contains("proworkorderlist")) {
             type = 4;
+        }else if (getUri().contains("invpurchaseaddinglist")) {
+            type = 5;
         }
         setInvInvoiceList(invPurchaseInvoiceService.getALLInvPurchaseInvoiceDTOByTypeAndBranchIdFroGallary2(type, invGallarySelectionId, getInvInvoiceDTO().getOrganizationSiteId() == null ? null : getInvInvoiceDTO().getOrganizationSiteId().getId()));
     }
@@ -125,6 +129,8 @@ public class InvPurchaseInvoiceListDTOMB extends InventoryBasicDataForm {
             context.getSessionMap().put("ScreenMode", "addInvoice");
             if (getUri().contains("invpurchaseinvoicelist")) {
                 exit("../invpurchaseinvoice_1/invpurchaseinvoiceform.xhtml");
+            } else if (getUri().contains("invpurchaseadding")) {
+                exit("../invpurchaseadding/invpurchaseaddingform.xhtml");
             } else if (getUri().contains("invsalesinvoicelist")) {
                 exit("../invsalesinvoice_1/invsalesinvoiceform.xhtml");
             } else if (getUri().contains("invreturnpurchaselist")) {
@@ -165,6 +171,8 @@ public class InvPurchaseInvoiceListDTOMB extends InventoryBasicDataForm {
 
                 if (getUri().contains("invpurchaseinvoicelist")) {
                     exit("../invpurchaseinvoice_1/invpurchaseinvoiceform.xhtml");
+                } else if (getUri().contains("invpurchaseadding")) {
+                    exit("../invpurchaseadding/invpurchaseaddingform.xhtml");
                 } else if (getUri().contains("invsalesinvoicelist")) {
                     exit("../invsalesinvoice_1/invsalesinvoiceform.xhtml");
                 } else if (getUri().contains("invreturnpurchaselist")) {

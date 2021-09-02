@@ -83,10 +83,11 @@ public class InvoiceMovementReportMB extends BaseListBean {
                 getPrintProductionDTO().setGallaryFrom(inventoryDTOFrom);
                 getInvoiceMovementReportList().addAll(invoiceMovementReportService.searchReport(printProductionDTO, getUserData().getUserBranch().getId(), getInvoiceType()));
             }
-            if (invoiceNotComplete) {
+            if (getInvoiceNotComplete()) {
                 List<InvoiceMovementReport> list = new ArrayList<>();
                 for (InvoiceMovementReport report : getInvoiceMovementReportList()) {
-                    if (report.getNumberTobExitFactory().compareTo(report.getNumberToFactory()) != 0) {
+                    if (report.getNumberToFactory().compareTo(BigDecimal.ZERO) == 1 && 
+                            report.getNumberTobExitFactory().compareTo(report.getNumberToFactory()) != 0) {
                         list.add(report);
                     }
                 }

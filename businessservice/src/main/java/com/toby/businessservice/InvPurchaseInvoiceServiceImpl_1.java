@@ -1035,6 +1035,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         if (ScreenNameClassEnum.INVPURCHASEINVOICEFORM.equals(screenNameClassEnum)
                 || ScreenNameClassEnum.INVRETURNPURCHASEFORM.equals(screenNameClassEnum)
                 || ScreenNameClassEnum.INVADDINGORDERFORM.equals(screenNameClassEnum)
+                || ScreenNameClassEnum.INVPURCHASEADDING.equals(screenNameClassEnum)
                 || ScreenNameClassEnum.INVPURCHASEORDERFORM.equals(screenNameClassEnum)) {
 //            organizationSiteList = organizationSiteService.getorganizationSiteByBranchIdDTO(userDataDTO.getBranchId(), true, 1);
             organizationSiteList = autoCompleteService.autoCompleteOrganizationSiteDTO(userDataDTO.getBranchId(), true, 1, null, gallaryId);
@@ -1193,6 +1194,8 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 purchaseInvoice.setId(invInvoiceDTO.getInvPurchaseInvoiceId());
                 invPurchaseInvoice.setParent(purchaseInvoice);
             }
+        } else if (invInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.INVPURCHASEADDING)) {
+            invPurchaseInvoice.setType(5);
         }
 
         invPurchaseInvoice.setId(invInvoiceDTO.getId());
