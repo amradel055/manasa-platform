@@ -99,9 +99,11 @@ public class TeacherMaterialsServiceImpl implements TeacherMaterialsService {
 
         if (entity.getTeacherId() != null) {
             dTO.setTeacherId(entity.getTeacherId().getId());
+            dTO.setTeacherName(entity.getTeacherId().getName());
         }
         if (entity.getMaterialId() != null) {
             dTO.setMaterialId(entity.getMaterialId().getId());
+            dTO.setMaterialName(entity.getMaterialId().getName());
         }
 
         dTO.setIndex(entity.getId());
@@ -122,12 +124,14 @@ public class TeacherMaterialsServiceImpl implements TeacherMaterialsService {
         if (dTO.getTeacherId() != null) {
             IgmaUser igmaUser = new IgmaUser();
             igmaUser.setId(dTO.getTeacherId());
+            igmaUser.setName(dTO.getTeacherName());
             entity.setTeacherId(igmaUser);
         }
 
         if (dTO.getMaterialId() != null) {
             Materials materials = new Materials();
             materials.setId(dTO.getMaterialId());
+            materials.setName(dTO.getMaterialName());
             entity.setMaterialId(materials);
         }
 

@@ -23,9 +23,10 @@ public interface ExamsService {
 
     public List<ExamsDTO> findExamsListForTeacher(Integer schoolStagesId, Integer teacherId, Integer lessonId);
 
-    public List<ExamsDTO> findExamsListForStudent(Integer schoolStagesId, Integer branchId, Integer lessonId, Integer companyId, Integer studentId, Integer periodId);
-
+    //public List<ExamsDTO> findExamsListForStudent(Integer schoolStagesId, Integer branchId, Integer lessonId, Integer companyId, Integer studentId, Integer periodId);
     public ExamsDTO save(ExamsDTO examsDTO, IgmaUser isagUser);
+
+    public List<ExamsDTO> findExamsListForStudent(ExamsDTO examsDTO);
 
     public List<ExamsDTO> deleteExamsListForStudent(Integer studentId);
 

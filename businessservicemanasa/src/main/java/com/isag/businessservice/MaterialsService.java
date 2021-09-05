@@ -21,5 +21,7 @@ public interface MaterialsService {
 
     public MaterialsDTO save(MaterialsDTO materialsDTO, IgmaUser isagUser);
 
+    public List<MaterialsDTO> findMaterialsByTeacher(Integer teacherId);
+
     public void deleteMaterials(Integer materialsDTO);
 }

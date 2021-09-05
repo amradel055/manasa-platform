@@ -22,4 +22,5 @@ public interface TeacherMaterialsService {
     public TeacherMaterialsDTO save(TeacherMaterialsDTO teacherMaterialsDTO, IgmaUser isagUser);
 
     public void deleteTeacherMaterials(Integer teacherMaterialsDTO);
+
 }

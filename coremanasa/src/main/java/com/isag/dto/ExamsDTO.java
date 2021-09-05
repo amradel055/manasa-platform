@@ -37,6 +37,8 @@ public class ExamsDTO extends BaseEntityDTO {
     private Integer examType;
     private Integer timer;
     private Integer materialId;
+    private List<Integer> materialList;
+    private List<Integer> periodList;
 
     public ExamsDTO() {
     }
@@ -342,6 +344,34 @@ public class ExamsDTO extends BaseEntityDTO {
      */
     public void setMaterialId(Integer materialId) {
         this.materialId = materialId;
+    }
+
+    /**
+     * @return the materialList
+     */
+    public List<Integer> getMaterialList() {
+        return materialList;
+    }
+
+    /**
+     * @param materialList the materialList to set
+     */
+    public void setMaterialList(List<Integer> materialList) {
+        this.materialList = materialList;
+    }
+
+    /**
+     * @return the periodList
+     */
+    public List<Integer> getPeriodList() {
+        return periodList;
+    }
+
+    /**
+     * @param periodList the periodList to set
+     */
+    public void setPeriodList(List<Integer> periodList) {
+        this.periodList = periodList;
     }
 
 }

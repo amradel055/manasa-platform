@@ -6,12 +6,15 @@
 package com.isag.rest;
 
 import com.isag.businessservice.GovernoratesService;
+import com.isag.businessservice.MaterialsService;
 import com.isag.businessservice.SchoolStagesGuideService;
 import com.isag.businessservice.StatesService;
 import com.isag.config.UserLoginData;
 import com.isag.dto.GovernoratesDTO;
+import com.isag.dto.MaterialsDTO;
 import com.isag.dto.SchoolStagesGuideDTO;
 import com.isag.dto.StatesDTO;
+import com.isag.dto.TeacherMaterialsDTO;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.transaction.Transactional;
@@ -40,6 +43,8 @@ public class LockupRest {
     private StatesService statesService;
     @EJB
     SchoolStagesGuideService schoolStagesGuideService;
+    @EJB
+    MaterialsService materialsService;
 
     @Transactional
     @Path("/governorateList")
@@ -129,6 +134,31 @@ public class LockupRest {
             guideDTO = new SchoolStagesGuideDTO();
             guideDTO.setMsg("No teacherId is Sent");
             return Response.ok(guideDTO).build();
+
+        }
+    }
+
+    @Transactional
+    @Path("/materialList")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response findMaterials(TeacherMaterialsDTO materialsDTO) {
+        if (materialsDTO != null) {
+            try {
+                List<MaterialsDTO> dTOs = materialsService.findMaterialsByTeacher(materialsDTO.getTeacherId());
+                GenericEntity<List<MaterialsDTO>> list = new GenericEntity<List<MaterialsDTO>>(dTOs) {
+                };
+                return Response.ok(list).build();
+
+            } catch (Exception e) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+
+        } else {
+            materialsDTO = new TeacherMaterialsDTO();
+            materialsDTO.setMsg("No Id is Sent");
+            return Response.ok(materialsDTO).build();
 
         }
     }

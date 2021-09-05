@@ -13,6 +13,8 @@ public class TeacherMaterialsDTO extends BaseEntityDTO {
 
     private Integer materialId;
     private Integer teacherId;
+    private String materialName;
+    private String teacherName;
 
     public TeacherMaterialsDTO() {
     }
@@ -72,6 +74,34 @@ public class TeacherMaterialsDTO extends BaseEntityDTO {
      */
     public void setTeacherId(Integer teacherId) {
         this.teacherId = teacherId;
+    }
+
+    /**
+     * @return the materialName
+     */
+    public String getMaterialName() {
+        return materialName;
+    }
+
+    /**
+     * @param materialName the materialName to set
+     */
+    public void setMaterialName(String materialName) {
+        this.materialName = materialName;
+    }
+
+    /**
+     * @return the teacherName
+     */
+    public String getTeacherName() {
+        return teacherName;
+    }
+
+    /**
+     * @param teacherName the teacherName to set
+     */
+    public void setTeacherName(String teacherName) {
+        this.teacherName = teacherName;
     }
 
 }

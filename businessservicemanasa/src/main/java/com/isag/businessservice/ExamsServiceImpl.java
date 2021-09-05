@@ -7,6 +7,8 @@ package com.isag.businessservice;
 
 import com.isag.core.GenericDAO;
 import com.isag.dto.ExamsDTO;
+import com.isag.dto.MaterialsDTO;
+import com.isag.dto.PeriodsDTO;
 import com.isag.dto.QuestionsDTO;
 import com.isag.entity.Branch;
 import com.isag.entity.IgmaCompany;
@@ -85,41 +87,82 @@ public class ExamsServiceImpl implements ExamsService {
         return returnListDTO(list, false);
     }
 
+//    @Override
+//    public List<ExamsDTO> findExamsListForStudent(Integer schoolStagesId, Integer branchId, Integer lessonId, Integer companyId, Integer studentId, Integer periodId) {
+//        Map<String, Object> params = new HashMap<>();
+//        params.put("branchId", branchId);
+//        params.put("companyId", companyId);
+//        params.put("studentId", studentId);
+//        StringBuilder builder = new StringBuilder();
+//        builder.append("SELECT d FROM Exams d WHERE d.active = 1 AND d.branchId.id = :branchId AND d.companyId.id = :companyId AND  d.parent IS NULL AND d.id not in (select e.parent.id from Exams e where e.studentId.id = :studentId)");
+//
+//        if (periodId != null) {
+//            params.put("periodId", periodId);
+//            builder.append(" AND d.periodId.id = :periodId ");
+//        }
+//        if (lessonId != null) {
+//            params.put("lessonId", lessonId);
+//            builder.append(" AND d.lessonId.id = :lessonId ");
+//        }
+//        if (schoolStagesId != null) {
+//            params.put("schoolStagesId", schoolStagesId);
+//            builder.append(" AND d.schoolStagesId.id = :schoolStagesId ");
+//        }
+//        builder.append(" order by d.id desc ");
+//        List<Exams> list = dao.findListByQuery(builder.toString(), params);
+//
+//        Map<String, Object> params2 = new HashMap<>();
+//        params2.put("studentId", studentId);
+//        StringBuilder builder2 = new StringBuilder();
+//        builder2.append("SELECT d FROM Exams d WHERE d.studentId.id = :studentId");
+//        if (lessonId != null) {
+//            params2.put("lessonId", lessonId);
+//            builder2.append(" AND d.lessonId.id = :lessonId ");
+//        }
+//        builder2.append(" order by d.id desc ");
+//        List<Exams> list2 = dao.findListByQuery(builder2.toString(), params2);
+//        list.addAll(list2);
+//        return returnListDTO(list, false);
+//    }
     @Override
-    public List<ExamsDTO> findExamsListForStudent(Integer schoolStagesId, Integer branchId, Integer lessonId, Integer companyId, Integer studentId, Integer periodId) {
+    public List<ExamsDTO> findExamsListForStudent(ExamsDTO examsDTO) {
         Map<String, Object> params = new HashMap<>();
-        params.put("branchId", branchId);
-        params.put("companyId", companyId);
-        params.put("studentId", studentId);
+        params.put("teacherId", examsDTO.getTeacherId());
+//        params.put("materialId", examsDTO.getMaterialList());
+//        params.put("periodId", examsDTO.getPeriodList());
+        params.put("examType", examsDTO.getExamType());
         StringBuilder builder = new StringBuilder();
-        builder.append("SELECT d FROM Exams d WHERE d.active = 1 AND d.branchId.id = :branchId AND d.companyId.id = :companyId AND  d.parent IS NULL AND d.id not in (select e.parent.id from Exams e where e.studentId.id = :studentId)");
-
+        builder.append("SELECT d FROM Exams d WHERE d.active = 1 AND d.teacherId.id = :teacherId");
+        //
+        StringBuilder materialId = null, periodId = null;
+        //
+        for (Integer materialsDTO : examsDTO.getMaterialList()) {
+            if (materialId == null) {
+                materialId = new StringBuilder();
+                materialId.append(materialsDTO);
+            } else {
+                materialId.append(",").append(materialsDTO);
+            }
+        }
+        if (materialId != null) {
+            builder.append(" and d.materialId.id in(  ").append(materialId).append(" )");
+        }
+        for (Integer periodsDTO : examsDTO.getPeriodList()) {
+            if (periodId == null) {
+                periodId = new StringBuilder();
+                periodId.append(periodsDTO);
+            } else {
+                periodId.append(",").append(periodsDTO);
+            }
+        }
         if (periodId != null) {
-            params.put("periodId", periodId);
-            builder.append(" AND d.periodId.id = :periodId ");
+            builder.append(" and d.periodId.id in(  ").append(periodId).append(" )");
         }
-        if (lessonId != null) {
-            params.put("lessonId", lessonId);
-            builder.append(" AND d.lessonId.id = :lessonId ");
+        if (examsDTO.getExamType() != null) {
+            builder.append(" and d.examType = :examType ");
         }
-        if (schoolStagesId != null) {
-            params.put("schoolStagesId", schoolStagesId);
-            builder.append(" AND d.schoolStagesId.id = :schoolStagesId ");
-        }
-        builder.append(" order by d.id desc ");
-        List<Exams> list = dao.findListByQuery(builder.toString(), params);
 
-        Map<String, Object> params2 = new HashMap<>();
-        params2.put("studentId", studentId);
-        StringBuilder builder2 = new StringBuilder();
-        builder2.append("SELECT d FROM Exams d WHERE d.studentId.id = :studentId");
-        if (lessonId != null) {
-            params2.put("lessonId", lessonId);
-            builder2.append(" AND d.lessonId.id = :lessonId ");
-        }
-        builder2.append(" order by d.id desc ");
-        List<Exams> list2 = dao.findListByQuery(builder2.toString(), params2);
-        list.addAll(list2);
+        List<Exams> list = dao.findListByQuery(builder.toString(), params);
         return returnListDTO(list, false);
     }
 

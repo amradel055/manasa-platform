@@ -40,6 +40,16 @@ public class MaterialsServiceImpl implements MaterialsService {
     }
 
     @Override
+    public List<MaterialsDTO> findMaterialsByTeacher(Integer teacherId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("teacherId", teacherId);
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT d.materialId FROM TeacherMaterials d WHERE d.teacherId.id = :teacherId  ");
+        List<Materials> list = dao.findListByQuery(builder.toString(), params);
+        return returnListDTO(list);
+    }
+
+    @Override
     public void deleteMaterials(Integer materialsDTO) {
         Materials entity = new Materials();
         entity.setId(materialsDTO);
