@@ -128,8 +128,6 @@ public class ExamsServiceImpl implements ExamsService {
     public List<ExamsDTO> findExamsListForStudent(ExamsDTO examsDTO) {
         Map<String, Object> params = new HashMap<>();
         params.put("teacherId", examsDTO.getTeacherId());
-//        params.put("materialId", examsDTO.getMaterialList());
-//        params.put("periodId", examsDTO.getPeriodList());
         params.put("examType", examsDTO.getExamType());
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT d FROM Exams d WHERE d.active = 1 AND d.teacherId.id = :teacherId");
@@ -320,7 +318,7 @@ public class ExamsServiceImpl implements ExamsService {
             dTO.setStudentId(entity.getStudentId().getId());
         }
         if (entity.getMaterialId() != null) {
-            dTO.setStudentId(entity.getMaterialId().getId());
+            dTO.setMaterialId(entity.getMaterialId().getId());
         }
 
         if (detail) {
