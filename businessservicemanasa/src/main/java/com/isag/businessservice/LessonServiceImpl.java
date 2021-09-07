@@ -86,6 +86,23 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
+    public List<LessonDTO> findAllLessonsByTeacher(Integer branchId, Integer companyId, Integer teacherId, Integer materialId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        params.put("companyId", companyId);
+        params.put("teacherId", teacherId);
+        List<LessonDTO> dTOList = new ArrayList<>();
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT d FROM Lesson d WHERE d.branchId.id = :branchId AND d.companyId.id = :companyId AND d.teacherId.id = :teacherId ");
+        if (materialId != null) {
+            params.put("materialId", materialId);
+            builder.append(" AND d.materialId.id = :materialId");
+        }
+        List<Lesson> list = dao.findListByQuery(builder.toString(), params);
+        return returnListDTO(list);
+    }
+
+    @Override
     public List<LessonDTO> findAllLessonsByBranchId(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
@@ -138,6 +155,7 @@ public class LessonServiceImpl implements LessonService {
                 && lessonDTO.getLessonDescription() != null
                 && lessonDTO.getLessonType() != null
                 && lessonDTO.getMaterialId() != null
+                && lessonDTO.getTeacherId() != null
                 && lessonDTO.getPeriodId() != null) {
             if (isagUser == null) {
                 isagUser = new IgmaUser();
@@ -216,6 +234,9 @@ public class LessonServiceImpl implements LessonService {
         if (entity.getMaterialId() != null) {
             dTO.setPeriodId(entity.getMaterialId().getId());
         }
+        if (entity.getTeacherId() != null) {
+            dTO.setTeacherId(entity.getTeacherId().getId());
+        }
 
         dTO.setIndex(entity.getId());
         dTO.setCreatedDate(entity.getCreationDate());
@@ -255,6 +276,11 @@ public class LessonServiceImpl implements LessonService {
             Materials materials = new Materials();
             materials.setId(dTO.getMaterialId());
             entity.setMaterialId(materials);
+        }
+        if (dTO.getTeacherId() != null) {
+            IgmaUser teacher = new IgmaUser();
+            teacher.setId(dTO.getTeacherId());
+            entity.setTeacherId(teacher);
         }
 
         if (dTO.getId() == null) {

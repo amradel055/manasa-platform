@@ -28,6 +28,7 @@ public class LessonDTO extends BaseEntityDTO {
     private String schoolStagesName;
     private List<String> documents;
     private Integer materialId;
+    private Integer teacherId;
 
     public LessonDTO() {
     }
@@ -242,6 +243,20 @@ public class LessonDTO extends BaseEntityDTO {
      */
     public void setMaterialId(Integer materialId) {
         this.materialId = materialId;
+    }
+
+    /**
+     * @return the teacherId
+     */
+    public Integer getTeacherId() {
+        return teacherId;
+    }
+
+    /**
+     * @param teacherId the teacherId to set
+     */
+    public void setTeacherId(Integer teacherId) {
+        this.teacherId = teacherId;
     }
 
 }

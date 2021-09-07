@@ -161,7 +161,7 @@ public class ExamsServiceImpl implements ExamsService {
         }
 
         List<Exams> list = dao.findListByQuery(builder.toString(), params);
-        return returnListDTO(list, false);
+        return returnListDTO(list, true);
     }
 
     @Override

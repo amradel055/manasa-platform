@@ -5,6 +5,7 @@
  */
 package com.isag.config;
 
+import com.isag.rest.AppointmentsRest;
 import com.isag.rest.CommentsRest;
 import com.isag.rest.DocumentsRest;
 import com.isag.rest.ExamsRest;
@@ -50,6 +51,7 @@ public class MyApplication extends Application {
         resources.add(TeachersRest.class);
         resources.add(StudentPeriodsRest.class);
         resources.add(StudentResetRest.class);
+        resources.add(AppointmentsRest.class);
         return resources;
     }
 
