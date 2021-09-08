@@ -25,7 +25,7 @@ public interface LessonService {
 
     public List<LessonDTO> findAllLessonsByBranchId(Integer branchId);
 
-    public List<LessonDTO> findAllLessonsByTeacher(Integer branchId, Integer companyId, Integer teacherId, Integer materialId);
+    public List<LessonDTO> findAllLessonsByTeacher(Integer branchId, Integer companyId, Integer teacherId, Integer materialId, Integer id);
 
     public void deleteLesson(LessonDTO lessonDTO);
 

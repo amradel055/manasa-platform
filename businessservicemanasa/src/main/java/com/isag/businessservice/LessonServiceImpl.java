@@ -86,14 +86,17 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
-    public List<LessonDTO> findAllLessonsByTeacher(Integer branchId, Integer companyId, Integer teacherId, Integer materialId) {
+    public List<LessonDTO> findAllLessonsByTeacher(Integer branchId, Integer companyId, Integer teacherId, Integer materialId, Integer id) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         params.put("companyId", companyId);
         params.put("teacherId", teacherId);
-        List<LessonDTO> dTOList = new ArrayList<>();
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT d FROM Lesson d WHERE d.branchId.id = :branchId AND d.companyId.id = :companyId AND d.teacherId.id = :teacherId ");
+        if (id != null) {
+            params.put("id", id);
+            builder.append(" AND d.id = :id");
+        }
         if (materialId != null) {
             params.put("materialId", materialId);
             builder.append(" AND d.materialId.id = :materialId");
@@ -156,6 +159,7 @@ public class LessonServiceImpl implements LessonService {
                 && lessonDTO.getLessonType() != null
                 && lessonDTO.getMaterialId() != null
                 && lessonDTO.getTeacherId() != null
+                && lessonDTO.getVoiceLink() != null
                 && lessonDTO.getPeriodId() != null) {
             if (isagUser == null) {
                 isagUser = new IgmaUser();
@@ -216,6 +220,7 @@ public class LessonServiceImpl implements LessonService {
         dTO.setYoutubeLink(entity.getYoutubeLink());
         dTO.setVimeoLink(entity.getVimeoLink());
         dTO.setThumb(entity.getThumb());
+        dTO.setVoiceLink(entity.getVoiceLink());
 
         dTO.setDocuments(documentsService.findDocumentsByLessonIdLinks(entity.getId()));
 
@@ -260,6 +265,7 @@ public class LessonServiceImpl implements LessonService {
         entity.setYoutubeLink(dTO.getYoutubeLink());
         entity.setVimeoLink(dTO.getVimeoLink());
         entity.setThumb(dTO.getThumb());
+        entity.setVoiceLink(dTO.getVoiceLink());
 
         if (dTO.getSchoolId() != null) {
             SchoolStagesGuide schoolStagesGuide = new SchoolStagesGuide();

@@ -29,6 +29,7 @@ public class LessonDTO extends BaseEntityDTO {
     private List<String> documents;
     private Integer materialId;
     private Integer teacherId;
+    private String voiceLink;
 
     public LessonDTO() {
     }
@@ -257,6 +258,20 @@ public class LessonDTO extends BaseEntityDTO {
      */
     public void setTeacherId(Integer teacherId) {
         this.teacherId = teacherId;
+    }
+
+    /**
+     * @return the voiceLink
+     */
+    public String getVoiceLink() {
+        return voiceLink;
+    }
+
+    /**
+     * @param voiceLink the voiceLink to set
+     */
+    public void setVoiceLink(String voiceLink) {
+        this.voiceLink = voiceLink;
     }
 
 }

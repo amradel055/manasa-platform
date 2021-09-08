@@ -75,6 +75,9 @@ public class Lesson extends BaseEntity {
     @JoinColumn(name = "teacher_id", referencedColumnName = "id")
     @ManyToOne
     private IgmaUser teacherId;
+    @Size(max = 450)
+    @Column(name = "voice_link")
+    private String voiceLink;
 
     public Lesson() {
     }
@@ -268,6 +271,20 @@ public class Lesson extends BaseEntity {
      */
     public void setTeacherId(IgmaUser teacherId) {
         this.teacherId = teacherId;
+    }
+
+    /**
+     * @return the voiceLink
+     */
+    public String getVoiceLink() {
+        return voiceLink;
+    }
+
+    /**
+     * @param voiceLink the voiceLink to set
+     */
+    public void setVoiceLink(String voiceLink) {
+        this.voiceLink = voiceLink;
     }
 
 }
