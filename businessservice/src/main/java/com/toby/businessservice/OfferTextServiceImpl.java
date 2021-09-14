@@ -75,6 +75,14 @@ public class OfferTextServiceImpl implements OfferTextService {
         List<OfferText> offerTextList = dao.findListByQuery("SELECT e FROM OfferText e WHERE e.branchId.id =:branchId", params);
         return mapToDTOList(offerTextList, tobyUser);
     }
+    
+    @Override
+    public List<OfferTextDTO> getALLOfferTextByGallaryId(Integer galaryId, TobyUser tobyUser) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("galaryId", galaryId);
+        List<OfferText> offerTextList = dao.findListByQuery("SELECT e FROM OfferText e WHERE e.galaryId.id =:galaryId", params);
+        return mapToDTOList(offerTextList, tobyUser);
+    }
 
     @Override
     public String getNoticeByCustomerId(Integer id) {
