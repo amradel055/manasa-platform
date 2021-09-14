@@ -1024,7 +1024,8 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             if (invInventoryDTOList == null || invInventoryDTOList.isEmpty()) {
                 error.append("\n يجب اعطاء صلاحية للتعامل مع المخازن");
             }
-            if (!ScreenNameClassEnum.INVTRANSFERINVENTORY.equals(screenNameClassEnum)) {
+            if (!ScreenNameClassEnum.INVTRANSFERINVENTORY.equals(screenNameClassEnum) 
+                    && !ScreenNameClassEnum.PROWORKORDER.equals(screenNameClassEnum)) {
                 List<GlBankDTO> glBankList = userDataDTO.getGlBankDTOList();
                 if (glBankList == null || glBankList.isEmpty()) {
                     error.append("\n يجب اعطاء صلاحية للتعامل مع الخزائن");

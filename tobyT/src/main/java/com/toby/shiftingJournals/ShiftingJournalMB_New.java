@@ -26,6 +26,8 @@ import com.toby.businessservice.InvReturnPurchaseService;
 import com.toby.businessservice.ShiftingJournalService;
 import com.toby.businessservice.report.PostRestrictionsDetailsService;
 import com.toby.businessservice.report.postRestrictionsViewService;
+import com.toby.converter.CostCenterDTOConverter;
+import com.toby.dto.CostCenterDTO;
 import com.toby.entity.CostCenter;
 import com.toby.entity.GeneralJournalDetails;
 import com.toby.entity.GlAccount;
@@ -37,6 +39,8 @@ import com.toby.entity.InvPurchaseInvoice;
 import com.toby.entity.InvReturnPurchase;
 import com.toby.generaljournal.GeneralJournalBean;
 import com.toby.report.entity.PostRestrictionDetailsBean;
+import com.toby.toby.AutoComplete;
+import com.toby.toby.AutoComplete1;
 import com.toby.views.PostRestrictionsDetailsView;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -102,6 +106,11 @@ public class ShiftingJournalMB_New extends GeneralJournalBean {
     private Map<Integer, List<GeneralJournalDetails>> generalJournalDetailsMap;
     private Boolean cancelInstallment;
     private Integer selectedInstallmentId;
+    private List<CostCenterDTO> costCenterDTOList;
+    private CostCenterDTOConverter costCenterDTOConverter;
+    private CostCenterDTO costCenterDTOSelected;
+    private BigDecimal bankCommition;
+
     Map<Integer, Symbol> symbolsMap;
     @EJB
     SymbolService symbolService;
@@ -129,6 +138,7 @@ public class ShiftingJournalMB_New extends GeneralJournalBean {
     private InvPurchaseInvoiceService invPurchaseInvoiceService;
     @EJB
     private InvReturnPurchaseService invReturnPurchaseService;
+
 //    @EJB
 //    private InstContractService instContractService;
     @EJB
@@ -248,6 +258,43 @@ public class ShiftingJournalMB_New extends GeneralJournalBean {
         }
     }
 
+    public List<CostCenterDTO> completeCostCenter(String query) {
+        List<CostCenterDTO> filteredCostCenters = new ArrayList<>();
+        try {
+            List<CostCenterDTO> centersList = getCostCenterDTOList();
+            if (query == null || query.trim().equals("")) {
+
+                costCenterDTOConverter = new CostCenterDTOConverter(centersList);
+                return centersList;
+            }
+
+            String nameAr;
+            Integer code;
+            CostCenterDTO costCenterFilter;
+            for (int i = 0; i < getCostCenterDTOList().size(); i++) {
+                costCenterFilter = centersList.get(i);
+                nameAr = costCenterFilter.getName();
+                if (nameAr != null && nameAr.toLowerCase().contains(query.toLowerCase())) {
+                    if (!filteredCostCenters.contains(costCenterFilter)) {
+                        filteredCostCenters.add(costCenterFilter);
+                    }
+                }
+
+                code = costCenterFilter.getCode();
+                if (code != null && String.valueOf(code).contains(query.toLowerCase())) {
+                    if (!filteredCostCenters.contains(costCenterFilter)) {
+                        filteredCostCenters.add(costCenterFilter);
+                    }
+                }
+            }
+
+            costCenterDTOConverter = new CostCenterDTOConverter(filteredCostCenters);
+        } catch (Exception e) {
+//            saveError(e, "InvPurchaseInvoiceFormMB", "completeCostCenters");
+        }
+        return filteredCostCenters;
+    }
+
     public List<Symbol> completeSymbol(String query) {
         try {
             List<Symbol> symbolsList = specialDocumentsTypeList;
@@ -291,9 +338,9 @@ public class ShiftingJournalMB_New extends GeneralJournalBean {
             documentFixedNumber = symbol != null ? symbol.getSerial() : null;
             setSelectedDocumentsType(symbol != null ? symbol.getId() : null);
             if (shiftedJournals) {
-                postRestrictionsViewList = restrictionsViewService.getBankTransactions(userData.getUserBranch().getId(), dateFrom, dateTo, documentFixedNumber, 1,getGallaryIdList(),getGlBankDTOIdList());
+                postRestrictionsViewList = restrictionsViewService.getBankTransactions(userData.getUserBranch().getId(), dateFrom, dateTo, documentFixedNumber, 1, getGallaryIdList(), getGlBankDTOIdList());
             } else {
-                postRestrictionsViewList = restrictionsViewService.getBankTransactions(userData.getUserBranch().getId(), dateFrom, dateTo, documentFixedNumber, 0,getGallaryIdList(),getGlBankDTOIdList());
+                postRestrictionsViewList = restrictionsViewService.getBankTransactions(userData.getUserBranch().getId(), dateFrom, dateTo, documentFixedNumber, 0, getGallaryIdList(), getGlBankDTOIdList());
             }
         } catch (Exception e) {
             saveError(e, "ShiftingJournalMB", "loadDataTableHead");
@@ -393,7 +440,7 @@ public class ShiftingJournalMB_New extends GeneralJournalBean {
             Map<String, String> userDDs = getUserData().getUserDDs();
 
             switch (screenCode.intValue()) {
-                case 1001:
+                case 1001:   //  سندات الصرف
 
                     PostRestrictionDetailsBean bean = new PostRestrictionDetailsBean();
                     bean.setAccNumber(detailsView.getAccNumberDebit());
@@ -413,6 +460,29 @@ public class ShiftingJournalMB_New extends GeneralJournalBean {
                         prepareGeneralJounalDetialsList(bean);
                     }
 
+                    if (getBankCommition().compareTo(BigDecimal.ZERO) == 1) {
+
+                        PostRestrictionDetailsBean lastBean = new PostRestrictionDetailsBean();
+                        lastBean.setAccNumber(detailsView.getSecondAccNumberDebit());
+                        lastBean.setAccName(detailsView.getSecondAccNameDebit());
+                        lastBean.setValueDebit(getBankCommition());
+                        lastBean.setValueLocalDebit(getBankCommition());
+                        lastBean.setRemarks(restrictionsView.getRemark());
+                        fillCostCenterAndAdminUnit(detailsView, lastBean);
+
+                        if (detailsView.getSecondAccountDebitId() != null) {
+                            GlAccount glAccount = new GlAccount();
+                            glAccount.setId(detailsView.getSecondAccountDebitId());
+                            lastBean.setGlAccount(glAccount);
+                        }
+
+                        postRestrictionDetailsBeanList.add(lastBean);
+                        fillFinalSummary(lastBean);
+                        if (fillGeneralJournalDetailsFlow > 0) {
+                            prepareGeneralJounalDetialsList(lastBean);
+                        }
+                    }
+
                     if (postRestrictionsDetailsViewList.indexOf(detailsView) == postRestrictionsDetailsViewList.size() - 1) {
                         PostRestrictionDetailsBean lastBean = new PostRestrictionDetailsBean();
                         lastBean.setAccNumber(detailsView.getAccNumberCredit());
@@ -420,7 +490,29 @@ public class ShiftingJournalMB_New extends GeneralJournalBean {
                         lastBean.setValueCredit(postRestrictionsView.getValue().setScale(3, BigDecimal.ROUND_HALF_UP));
                         lastBean.setValueLocalCredit(postRestrictionsView.getValueLocal().setScale(3, BigDecimal.ROUND_HALF_UP));
                         lastBean.setRemarks(restrictionsView.getRemark());
-//                    fillCostCenterAndAdminUnit(detailsView, lastBean);
+                        fillCostCenterAndAdminUnit(detailsView, lastBean);
+
+                        if (detailsView.getAccountCreditId() != null) {
+                            GlAccount glAccount = new GlAccount();
+                            glAccount.setId(detailsView.getAccountCreditId());
+                            lastBean.setGlAccount(glAccount);
+                        }
+
+                        postRestrictionDetailsBeanList.add(lastBean);
+                        fillFinalSummary(lastBean);
+                        if (fillGeneralJournalDetailsFlow > 0) {
+                            prepareGeneralJounalDetialsList(lastBean);
+                        }
+                    }
+
+                    if (getBankCommition().compareTo(BigDecimal.ZERO) == 1) {
+                        PostRestrictionDetailsBean lastBean = new PostRestrictionDetailsBean();
+                        lastBean.setAccNumber(detailsView.getAccNumberCredit());
+                        lastBean.setAccName(detailsView.getAccNameCredit());
+                        lastBean.setValueCredit(getBankCommition());
+                        lastBean.setValueLocalCredit(getBankCommition());
+                        lastBean.setRemarks(restrictionsView.getRemark());
+                        fillCostCenterAndAdminUnit(detailsView, lastBean);
 
                         if (detailsView.getAccountCreditId() != null) {
                             GlAccount glAccount = new GlAccount();
@@ -530,14 +622,16 @@ public class ShiftingJournalMB_New extends GeneralJournalBean {
                     bean = new PostRestrictionDetailsBean();
                     bean.setAccNumber(detailsView.getAccNumberDebit());
                     bean.setAccName(detailsView.getAccNameDebit());
-                    bean.setValueDebit((detailsView.getValue().setScale(3, BigDecimal.ROUND_HALF_UP)).subtract(detailsView.getSecondValue()));
-                    bean.setValueLocalDebit((detailsView.getValueLocal().setScale(3, BigDecimal.ROUND_HALF_UP)).subtract(detailsView.getSecondValue()));
-                    bean.setRemarks(restrictionsView.getRemark());
                     if (detailsView.getAccountDebitId() != null) {
                         GlAccount glAccount = new GlAccount();
                         glAccount.setId(detailsView.getAccountDebitId());
                         bean.setGlAccount(glAccount);
                     }
+
+                    bean.setValueDebit((detailsView.getValue().setScale(3, BigDecimal.ROUND_HALF_UP)).subtract(detailsView.getSecondValue()));
+                    bean.setValueLocalDebit((detailsView.getValueLocal().setScale(3, BigDecimal.ROUND_HALF_UP)).subtract(detailsView.getSecondValue()));
+                    bean.setRemarks(restrictionsView.getRemark());
+
                     fillCostCenterAndAdminUnit(detailsView, bean);
                     postRestrictionDetailsBeanList.add(bean);
                     fillFinalSummary(bean);
@@ -549,10 +643,10 @@ public class ShiftingJournalMB_New extends GeneralJournalBean {
                         PostRestrictionDetailsBean lastBean = new PostRestrictionDetailsBean();
                         lastBean.setAccNumber(detailsView.getSecondAccNumberDebit());
                         lastBean.setAccName(detailsView.getSecondAccNameDebit());
-                        lastBean.setValueDebit(detailsView.getSecondValue().setScale(3, BigDecimal.ROUND_HALF_UP));
-                        lastBean.setValueLocalDebit(detailsView.getSecondValue().setScale(3, BigDecimal.ROUND_HALF_UP));
+                        lastBean.setValueDebit((detailsView.getSecondValue().add(detailsView.getTaxValue())).setScale(3, BigDecimal.ROUND_HALF_UP));
+                        lastBean.setValueLocalDebit((detailsView.getSecondValue().add(detailsView.getTaxValue())).setScale(3, BigDecimal.ROUND_HALF_UP));
                         lastBean.setRemarks(restrictionsView.getRemark());
-//                    fillCostCenterAndAdminUnit(detailsView, lastBean);
+                        fillCostCenterAndAdminUnit(detailsView, lastBean);
 
                         if (detailsView.getSecondAccountDebitId() != null) {
                             GlAccount glAccount = new GlAccount();
@@ -567,28 +661,27 @@ public class ShiftingJournalMB_New extends GeneralJournalBean {
                         }
                     }
 
-                    if (detailsView.getTaxValue().compareTo(BigDecimal.ZERO) == 1) {
-                        PostRestrictionDetailsBean lastBean = new PostRestrictionDetailsBean();
-                        lastBean.setAccNumber(detailsView.getThirdAccNumberDebit());
-                        lastBean.setAccName(detailsView.getThirdAccNameDebit());
-                        lastBean.setValueDebit(detailsView.getTaxValue().setScale(3, BigDecimal.ROUND_HALF_UP));
-                        lastBean.setValueLocalDebit(detailsView.getTaxValue().setScale(3, BigDecimal.ROUND_HALF_UP));
-                        lastBean.setRemarks(restrictionsView.getRemark());
-//                    fillCostCenterAndAdminUnit(detailsView, lastBean);
-
-                        if (detailsView.getSecondAccountDebitId() != null) {
-                            GlAccount glAccount = new GlAccount();
-                            glAccount.setId(detailsView.getThirdAccountDebitId());
-                            lastBean.setGlAccount(glAccount);
-                        }
-
-                        postRestrictionDetailsBeanList.add(lastBean);
-                        fillFinalSummary(lastBean);
-                        if (fillGeneralJournalDetailsFlow > 0) {
-                            prepareGeneralJounalDetialsList(lastBean);
-                        }
-                    }
-
+//                    if (detailsView.getTaxValue().compareTo(BigDecimal.ZERO) == 1) {
+//                        PostRestrictionDetailsBean lastBean = new PostRestrictionDetailsBean();
+//                        lastBean.setAccNumber(detailsView.getThirdAccNumberDebit());
+//                        lastBean.setAccName(detailsView.getThirdAccNameDebit());
+//                        lastBean.setValueDebit(detailsView.getTaxValue().setScale(3, BigDecimal.ROUND_HALF_UP));
+//                        lastBean.setValueLocalDebit(detailsView.getTaxValue().setScale(3, BigDecimal.ROUND_HALF_UP));
+//                        lastBean.setRemarks(restrictionsView.getRemark());
+////                    fillCostCenterAndAdminUnit(detailsView, lastBean);
+//
+//                        if (detailsView.getSecondAccountDebitId() != null) {
+//                            GlAccount glAccount = new GlAccount();
+//                            glAccount.setId(detailsView.getThirdAccountDebitId());
+//                            lastBean.setGlAccount(glAccount);
+//                        }
+//
+//                        postRestrictionDetailsBeanList.add(lastBean);
+//                        fillFinalSummary(lastBean);
+//                        if (fillGeneralJournalDetailsFlow > 0) {
+//                            prepareGeneralJounalDetialsList(lastBean);
+//                        }
+//                    }
                     if (postRestrictionsDetailsViewList.indexOf(detailsView) == postRestrictionsDetailsViewList.size() - 1) {
                         PostRestrictionDetailsBean lastBean = new PostRestrictionDetailsBean();
                         lastBean.setAccNumber(detailsView.getAccNumberCredit());
@@ -596,7 +689,7 @@ public class ShiftingJournalMB_New extends GeneralJournalBean {
                         lastBean.setValueCredit(postRestrictionsView.getValue().setScale(3, BigDecimal.ROUND_HALF_UP));
                         lastBean.setValueLocalCredit(postRestrictionsView.getValueLocal().setScale(3, BigDecimal.ROUND_HALF_UP));
                         lastBean.setRemarks(restrictionsView.getRemark());
-//                    fillCostCenterAndAdminUnit(detailsView, lastBean);
+                        fillCostCenterAndAdminUnit(detailsView, lastBean);
 
                         if (detailsView.getAccountCreditId() != null) {
                             GlAccount glAccount = new GlAccount();
@@ -612,19 +705,29 @@ public class ShiftingJournalMB_New extends GeneralJournalBean {
                     }
 
                     if (detailsView.getTaxValue().compareTo(BigDecimal.ZERO) == 1) {
+
                         PostRestrictionDetailsBean lastBean = new PostRestrictionDetailsBean();
-                        lastBean.setAccNumber(detailsView.getThirdAccNumberDebit());
-                        lastBean.setAccName(detailsView.getThirdAccNameDebit());
+//                        lastBean.setAccNumber(detailsView.getThirdAccNumberDebit());
+//                        lastBean.setAccName(detailsView.getThirdAccNameDebit());
+
+//                        if (detailsView.getSecondAccountDebitId() != null) {
+//                            GlAccount glAccount = new GlAccount();
+//                            glAccount.setId(detailsView.getThirdAccountDebitId());
+//                            lastBean.setGlAccount(glAccount);
+//                        }
+//                        bean = new PostRestrictionDetailsBean();
+                        lastBean.setAccNumber(detailsView.getAccNumberDebit());
+                        lastBean.setAccName(detailsView.getAccNameDebit());
+                        if (detailsView.getAccountDebitId() != null) {
+                            GlAccount glAccount = new GlAccount();
+                            glAccount.setId(detailsView.getAccountDebitId());
+                            lastBean.setGlAccount(glAccount);
+                        }
+
                         lastBean.setValueCredit(detailsView.getTaxValue().setScale(3, BigDecimal.ROUND_HALF_UP));
                         lastBean.setValueLocalCredit(detailsView.getTaxValue().setScale(3, BigDecimal.ROUND_HALF_UP));
                         lastBean.setRemarks(restrictionsView.getRemark());
-//                    fillCostCenterAndAdminUnit(detailsView, lastBean);
-
-                        if (detailsView.getSecondAccountDebitId() != null) {
-                            GlAccount glAccount = new GlAccount();
-                            glAccount.setId(detailsView.getThirdAccountDebitId());
-                            lastBean.setGlAccount(glAccount);
-                        }
+                        fillCostCenterAndAdminUnit(detailsView, lastBean);
 
                         postRestrictionDetailsBeanList.add(lastBean);
                         fillFinalSummary(lastBean);
@@ -1799,8 +1902,13 @@ public class ShiftingJournalMB_New extends GeneralJournalBean {
 
     public PostRestrictionDetailsBean fillCostCenterAndAdminUnit(PostRestrictionsDetailsView detailsView, PostRestrictionDetailsBean bean) {
 
-        bean.setCostCenter(costCenterService.findCostCenter(detailsView.getCostCenterId()) != null ? costCenterService.findCostCenter(detailsView.getCostCenterId()) : null);
-        bean.setAdminUnit(adminUnitService.findAdminUnit(detailsView.getAdminUnitId()) != null ? adminUnitService.findAdminUnit(detailsView.getAdminUnitId()) : null);
+        if (getCostCenterDTOSelected() != null) {
+            CostCenter costCenter = new CostCenter();
+            costCenter.setId(getCostCenterDTOSelected().getId());
+            bean.setCostCenter(costCenter);
+        }
+//        bean.setCostCenter(costCenterService.findCostCenter(detailsView.getCostCenterId()) != null ? costCenterService.findCostCenter(detailsView.getCostCenterId()) : null);
+//        bean.setAdminUnit(adminUnitService.findAdminUnit(detailsView.getAdminUnitId()) != null ? adminUnitService.findAdminUnit(detailsView.getAdminUnitId()) : null);
 
         return bean;
     }
@@ -2439,6 +2547,69 @@ public class ShiftingJournalMB_New extends GeneralJournalBean {
      */
     public void setSelectedInstallmentId(Integer selectedInstallmentId) {
         this.selectedInstallmentId = selectedInstallmentId;
+    }
+
+    /**
+     * @return the costCenterDTOList
+     */
+    public List<CostCenterDTO> getCostCenterDTOList() {
+        if (costCenterDTOList == null) {
+            costCenterDTOList = costCenterService.getAllCostCenterDTOList(getUserData().getUser());
+            setCostCenterDTOConverter(new CostCenterDTOConverter(costCenterDTOList));
+        }
+        return costCenterDTOList;
+    }
+
+    /**
+     * @param costCenterDTOList the costCenterDTOList to set
+     */
+    public void setCostCenterDTOList(List<CostCenterDTO> costCenterDTOList) {
+        this.costCenterDTOList = costCenterDTOList;
+    }
+
+    /**
+     * @return the costCenterDTOConverter
+     */
+    public CostCenterDTOConverter getCostCenterDTOConverter() {
+        return costCenterDTOConverter;
+    }
+
+    /**
+     * @param costCenterDTOConverter the costCenterDTOConverter to set
+     */
+    public void setCostCenterDTOConverter(CostCenterDTOConverter costCenterDTOConverter) {
+        this.costCenterDTOConverter = costCenterDTOConverter;
+    }
+
+    /**
+     * @return the costCenterDTOSelected
+     */
+    public CostCenterDTO getCostCenterDTOSelected() {
+        return costCenterDTOSelected;
+    }
+
+    /**
+     * @param costCenterDTOSelected the costCenterDTOSelected to set
+     */
+    public void setCostCenterDTOSelected(CostCenterDTO costCenterDTOSelected) {
+        this.costCenterDTOSelected = costCenterDTOSelected;
+    }
+
+    /**
+     * @return the bankCommition
+     */
+    public BigDecimal getBankCommition() {
+        if(bankCommition == null){
+            bankCommition = BigDecimal.ZERO;
+        }
+        return bankCommition;
+    }
+
+    /**
+     * @param bankCommition the bankCommition to set
+     */
+    public void setBankCommition(BigDecimal bankCommition) {
+        this.bankCommition = bankCommition;
     }
 
 }

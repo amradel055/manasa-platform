@@ -474,4 +474,17 @@ public class ItemsBarcodesDetailsView implements Serializable {
     public void setNumberMetersFreeMen(BigDecimal numberMetersFreeMen) {
         this.numberMetersFreeMen = numberMetersFreeMen;
     }
+    
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof ItemsBarcodesDetailsView)) {
+            return false;
+        }
+        ItemsBarcodesDetailsView other = (ItemsBarcodesDetailsView) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
 }

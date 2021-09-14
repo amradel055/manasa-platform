@@ -44,6 +44,7 @@ public class InvDetailDTO extends BaseEntityDTO implements  Comparable< InvDetai
     private BigDecimal originQuantity;
 
     private BigDecimal quantity;
+    private BigDecimal quantityInch;
     private String itemName;
     private String itemCode;
     private String unitName;
@@ -856,6 +857,23 @@ public class InvDetailDTO extends BaseEntityDTO implements  Comparable< InvDetai
      */
     public void setValueBeforeDiscount(BigDecimal valueBeforeDiscount) {
         this.valueBeforeDiscount = valueBeforeDiscount;
+    }
+
+    /**
+     * @return the quantityInch
+     */
+    public BigDecimal getQuantityInch() {
+        if(quantityInch == null){
+            quantityInch = BigDecimal.ZERO;
+        }
+        return quantityInch;
+    }
+
+    /**
+     * @param quantityInch the quantityInch to set
+     */
+    public void setQuantityInch(BigDecimal quantityInch) {
+        this.quantityInch = quantityInch;
     }
 
 }

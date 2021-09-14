@@ -39,6 +39,8 @@ public class InvGlobalServiceImpl implements InvGlobalService {
     private GenericDAO dao;
     @EJB
     private InvItemService itemService;
+    @EJB
+    private InvPurchaseInvoiceDetailsService invPurchaseInvoiceDetailsService;
     
     @Override
     public InvDetailDTO calculateDetailTotalsRow(InvDetailDTO detailEntity, InvInvoiceDTO invInvoiceDTO, Boolean isNeeadQuantity) {
@@ -639,6 +641,9 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                 
                 if (detailDTO.getItemsBarcodesDetail().getUnitName() != null
                         && !"".equals(detailDTO.getItemsBarcodesDetail().getUnitName())) {
+                     if(ScreenNameClassEnum.INVPURCHASEINVOICEFORM.equals(invInvoiceDTO.getScreenName()) ){
+                        detailDTO.setCost(invPurchaseInvoiceDetailsService.findLastCost(detailDTO.getItemsBarcodesDetail().getItemId()));
+                    }
                     SymbolDTO unit = new SymbolDTO();
                     unit.setId(detailDTO.getItemsBarcodesDetail().getUnitId());
                     unit.setName(detailDTO.getItemsBarcodesDetail().getUnitName());

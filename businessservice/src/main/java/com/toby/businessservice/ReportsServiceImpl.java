@@ -847,6 +847,8 @@ public class ReportsServiceImpl implements ReportsService {
     private void appendOfferCompany(StringBuilder offerCompanyId, StringBuilder sql) {
         if (offerCompanyId != null) {
             sql.append("  and ios.offer_company_id in ( ").append(offerCompanyId.toString()).append(" )");
+        }else{
+            sql.append("  and ios.offer_company_id IS NULL");
         }
     }
 

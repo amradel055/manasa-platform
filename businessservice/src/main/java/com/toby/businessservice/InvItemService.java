@@ -103,4 +103,6 @@ public interface InvItemService {
     public void updateInvItemCostAverageToZero(Integer branchId);
 
     public List<Integer> getInvItemListByBranchIdNotInInvPurchaseInvoice(Integer branchId);
+    
+    public InvItemDTO mapToDTO(InvItem invItem, TobyUser tobyUser);
 }

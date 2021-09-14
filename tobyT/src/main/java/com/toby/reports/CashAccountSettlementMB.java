@@ -146,6 +146,7 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
         }
 
         glBankConverter = new GlBankDTOConverter(glBankList);
+        getCashAccountSettlementSearchBean().setGlBankDTOListSelected(glBankList);
 
 //        tobyUserList = iSAGUserService.getAllUsersListByCompanyId(getUserData().getCompany().getId());
         if (getUserData().getCompany() != null && getUserData().getCompany().getId() != null) {

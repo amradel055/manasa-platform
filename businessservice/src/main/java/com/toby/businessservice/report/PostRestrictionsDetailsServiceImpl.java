@@ -131,40 +131,44 @@ public class PostRestrictionsDetailsServiceImpl implements PostRestrictionsDetai
             view.setRowNum(index);
             view.setGlBankTransactionId(entity.getId());
 
-            if (entity.getBankIdFrom() != null && entity.getBankIdFrom().getAccountId() != null) {
-                view.setAccountDebitId(entity.getBankIdFrom().getAccountId() != null ? entity.getBankIdFrom().getAccountId().getId() : null);
-                view.setAccNumberDebit(entity.getBankIdFrom().getAccountId() != null ? entity.getBankIdFrom().getAccountId().getAccNumber() : null);
-                view.setAccNameDebit(entity.getBankIdFrom().getAccountId() != null ? entity.getBankIdFrom().getAccountId().getName() : null);
-            } else {
-                error.append("\n المسلسل رقم ليس لديه حساب مدين").append(index);
-                view.setErrorMsg(error.toString());
-                return view;
-            }
-
-//            if (entity.getAccountDebitId() != null) {
-//                view.setAccountDebitId(entity.getAccountDebitId() != null ? entity.getAccountDebitId().getId() : null);
+//            if (entity.getBankIdFrom() != null && entity.getBankIdFrom().getAccountId() != null) {
+//                view.setAccountDebitId(entity.getBankIdFrom().getAccountId() != null ? entity.getBankIdFrom().getAccountId().getId() : null);
+//                view.setAccNumberDebit(entity.getBankIdFrom().getAccountId() != null ? entity.getBankIdFrom().getAccountId().getAccNumber() : null);
+//                view.setAccNameDebit(entity.getBankIdFrom().getAccountId() != null ? entity.getBankIdFrom().getAccountId().getName() : null);
 //            } else {
 //                error.append("\n المسلسل رقم ليس لديه حساب مدين").append(index);
 //                view.setErrorMsg(error.toString());
 //                return view;
 //            }
-            if (entity.getOrganizationSiteId() != null && entity.getOrganizationSiteId().getAccountId() != null) {
-                view.setAccountCreditId(entity.getOrganizationSiteId().getAccountId() != null ? entity.getOrganizationSiteId().getAccountId().getId() : null);
-                view.setAccNumberCredit(entity.getOrganizationSiteId().getAccountId() != null ? entity.getOrganizationSiteId().getAccountId().getAccNumber() : null);
-                view.setAccNameCredit(entity.getOrganizationSiteId().getAccountId() != null ? entity.getOrganizationSiteId().getAccountId().getName() : null);
-            } else {
-                error.append("\n المسلسل رقم ليس لديه حساب دائن").append(index);
-                view.setErrorMsg(error.toString());
-                return view;
-            }
-
-//            if (entity.getAccountCreditId() != null) {
-//                view.setAccountCreditId(entity.getAccountCreditId() != null ? entity.getAccountCreditId().getId() : null);
+//
+//
+//            if (entity.getOrganizationSiteId() != null && entity.getOrganizationSiteId().getAccountId() != null) {
+//                view.setAccountCreditId(entity.getOrganizationSiteId().getAccountId() != null ? entity.getOrganizationSiteId().getAccountId().getId() : null);
+//                view.setAccNumberCredit(entity.getOrganizationSiteId().getAccountId() != null ? entity.getOrganizationSiteId().getAccountId().getAccNumber() : null);
+//                view.setAccNameCredit(entity.getOrganizationSiteId().getAccountId() != null ? entity.getOrganizationSiteId().getAccountId().getName() : null);
 //            } else {
 //                error.append("\n المسلسل رقم ليس لديه حساب دائن").append(index);
 //                view.setErrorMsg(error.toString());
 //                return view;
 //            }
+            if (entity.getAccountDebitId() != null) {
+                view.setAccountDebitId(entity.getAccountDebitId() != null ? entity.getAccountDebitId().getId() : null);
+                view.setAccNumberDebit(entity.getAccountDebitId() != null ? entity.getAccountDebitId().getAccNumber() : null);
+                view.setAccNameDebit(entity.getAccountDebitId() != null ? entity.getAccountDebitId().getName() : null);
+            } else {
+                error.append("\n المسلسل رقم ليس لديه حساب مدين").append(index);
+                view.setErrorMsg(error.toString());
+                return view;
+            }
+            if (entity.getAccountCreditId() != null) {
+                view.setAccountCreditId(entity.getAccountCreditId() != null ? entity.getAccountCreditId().getId() : null);
+                view.setAccNumberCredit(entity.getAccountCreditId() != null ? entity.getAccountCreditId().getAccNumber() : null);
+                view.setAccNameCredit(entity.getAccountCreditId() != null ? entity.getAccountCreditId().getName() : null);
+            } else {
+                error.append("\n المسلسل رقم ليس لديه حساب دائن").append(index);
+                view.setErrorMsg(error.toString());
+                return view;
+            }
             view.setValue(entity.getValue());
             view.setValueLocal(entity.getValueLocal());
 
@@ -183,11 +187,25 @@ public class PostRestrictionsDetailsServiceImpl implements PostRestrictionsDetai
             view.setBranchId(entity.getGlBankTransactionId() != null ? entity.getGlBankTransactionId().getBranchId().getId() : null);
             view.setDate(entity.getGlBankTransactionId().getDate());
             view.setTransactionType(entity.getGlBankTransactionId() != null ? entity.getGlBankTransactionId().getTransactionType() : null);
+
+            Map<String, Object> params = new HashMap<>();
+            params.put("branchId", entity.getGlBankTransactionId().getBranchId().getId());
+
+            if (entity.getBankIdTo() != null && entity.getBankIdFrom() == null) {
+                Integer accountId_2 = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"BANK_COMMITION\" AND a.accountId IS NOT NULL", params);
+                GlAccount gla2 = dao.findEntityByQuery("SELECT g FROM GlAccount g where g.id = " + accountId_2);
+                if (gla2 != null) {
+                    view.setSecondAccountDebitId(gla2.getId());
+                    view.setSecondAccNumberDebit(gla2.getAccNumber());
+                    view.setSecondAccNameDebit(gla2.getName());
+                }else{
+                    view.setErrorMsg( ";يرجي ربط حساب العمولة;");
+                }
+            }
+
             if (entity.getBankIdFrom() != null && entity.getBankIdFrom().getCommition() != null
                     && entity.getBankIdFrom().getCommition().compareTo(BigDecimal.ZERO) == 1) {
 
-                Map<String, Object> params = new HashMap<>();
-                params.put("branchId", entity.getGlBankTransactionId().getBranchId().getId());
                 Integer accountId_3 = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"BANK_COMMITION\" AND a.accountId IS NOT NULL", params);
                 Integer accountId_2 = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where  a.branchId.id =  :branchId AND a.code = \"BANK_TAX\" AND a.accountId IS NOT NULL", params);
                 GlAccount gla2 = dao.findEntityByQuery("SELECT g FROM GlAccount g where g.id = " + accountId_2);
@@ -211,13 +229,12 @@ public class PostRestrictionsDetailsServiceImpl implements PostRestrictionsDetai
                         ErrorMsg += "يرجي ربط حساب العمولة ;";
                     }
                     if (gla2 == null) {
-                        ErrorMsg += "يرجي ربط حساب الضريبة;";
+                        ErrorMsg += ";يرجي ربط حساب الضريبة;";
                     }
                     view.setErrorMsg(ErrorMsg);
                 }
 
             }
-
         } else if (moduleCode == 2) {
             Object[] _Entity = (Object[]) Entity;
             InvPurchaseInvoiceDetail entity = (InvPurchaseInvoiceDetail) _Entity[0];

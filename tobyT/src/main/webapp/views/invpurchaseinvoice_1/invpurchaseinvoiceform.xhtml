@@ -379,7 +379,7 @@
                         <p:autoComplete id="invItemNameIn"  
                                             style="width:100%"
                                             rendered="#{not invPurchaseInvoiceDetailsTable.isEdit}"
-                                            converter="#{autoComplete.itemsBarcodesDetailsViewConverter}"
+                                            converter="#{invPurchaseInvoiceFormDTOMB.itemsBarcodesDetailsViewConverter}"
                                             value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}"
                                             maxResults="30"
 
@@ -387,7 +387,7 @@
                                             itemLabel="#{item}" 
                                             itemValue="#{item}" 
                                             forceSelection="true" 
-                                            completeMethod="#{autoComplete.completeItemsBarcodesDetailsView}" 
+                                            completeMethod="#{invPurchaseInvoiceFormDTOMB.completeItemsBarcodesDetailsView}" 
                                             >
                             <p:ajax update=" unitvalue length paintColor QuantityT WeightT costTt discountT netId totalQuantity totalWeight  totalNet  form:totalActualWeight form:totalNetAfterDiscount   form:totalWithTaxValue form:taxvalue"
                                     event="itemSelect" listener="#{invPurchaseInvoiceFormDTOMB.validateItems(invPurchaseInvoiceDetailsTable)}" />
@@ -433,6 +433,24 @@
                     </p:column>
 
 
+                    <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px"
+                              id="QuantityInch"
+                              headerText="#{userData.userDDs['NUMBER']} Inch"
+                              filterBy="#{invPurchaseInvoiceDetailsTable.quantityInch}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{invPurchaseInvoiceDetailsTable.quantityInch}"
+                              filterable="false">
+
+                        <p:inputText id="QuantityTInch"  
+                                     value="#{invPurchaseInvoiceDetailsTable.quantityInch}" 
+
+                                     style="width:95%">
+                            <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.validateQuantityInchColum(invPurchaseInvoiceDetailsTable)}" 
+                                    update="QuantityT netId totalQuantity totalWeight  totalNet form:totalNetAfterDiscount form:totalActualWeight form:totalWithTaxValue form:taxvalue  "/>
+                        </p:inputText>        
+
+                    </p:column>
+                    
                     <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px"
                               id="Quantity"
                               headerText="#{userData.userDDs['NUMBER']}"

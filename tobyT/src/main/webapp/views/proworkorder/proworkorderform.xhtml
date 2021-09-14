@@ -348,8 +348,8 @@
                                               ajax="false"
                                               onclick="form.target = '_blank'" 
                                               class="saveButtons"
-                                              title="مراحل الانتاج"
-                                              value="مراحل الانتاج" 
+                                              title="الحالة"
+                                              value="الحالة" 
                                               action="#{invPurchaseInvoiceFormDTOMB.goTInvoiceMovementReport()}"
                                               />
                             <p:commandButton  id="r4"  
@@ -830,15 +830,14 @@
                                     <p:autoComplete id="invItemNameIn"  
                                                     style="width:100%"
                                                     rendered="#{not invPurchaseInvoiceDetailsTable.isEdit}"
-                                                    converter="#{autoComplete.itemsBarcodesDetailsViewConverter}"
+                                                    converter="#{invPurchaseInvoiceFormDTOMB.itemsBarcodesDetailsViewConverter}"
                                                     value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}"
                                                     maxResults="30"
-
                                                     var="item"
                                                     itemLabel="#{item}" 
                                                     itemValue="#{item}" 
                                                     forceSelection="true" 
-                                                    completeMethod="#{autoComplete.completeItemsBarcodesDetailsView}" 
+                                                    completeMethod="#{invPurchaseInvoiceFormDTOMB.completeItemsBarcodesDetailsView}" 
                                                     >
                                         <p:ajax update=" proof2 proof QuantityT unitvalue QuantityTOU   costTt DISCOUNTValueT discountT netId totalQuantity   totalNet  form:totalActualWeight form:totalNetAfterDiscount   form:totalWithTaxValue form:remain  form:taxvalue"
                                                 event="itemSelect" listener="#{invPurchaseInvoiceFormDTOMB.validateItems(invPurchaseInvoiceDetailsTable)}" />

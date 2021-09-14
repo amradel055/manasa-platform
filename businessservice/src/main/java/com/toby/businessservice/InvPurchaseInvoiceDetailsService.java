@@ -55,4 +55,6 @@ public interface InvPurchaseInvoiceDetailsService {
     public String addInvPurchaseInvoiceDetailsDTO(List<InvDetailDTO> invPurchaseInvoiceDetailList, InvInvoiceDTO invPurchaseInvoiceDTO, TobyUser tobyUser);
 
     public <T> List<ItemsBarcodesDetailsView> findItemBarcodeDetails(List<T> list, Integer branchId);
+    
+    public BigDecimal findLastCost(Integer itemId);
 }
