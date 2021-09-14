@@ -5,7 +5,9 @@
  */
 package com.isag.businessservice;
 
+import com.isag.dto.InvInvoiceDTO;
 import com.isag.entity.GlBankTransactionDetail;
+import com.isag.entity.IsagUser;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -33,5 +35,7 @@ public interface GlBankTransactionDetailsService {
     public Integer finMaxSerial(Integer glBankTransactionId);
 
     public Boolean checkGlBankIsUsed(Integer glBankId, Integer branchId);
+    
+    public void addCashDetail(InvInvoiceDTO dTO, Integer glBankTransactionId, IsagUser tobyUser);
 
 }

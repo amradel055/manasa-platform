@@ -228,6 +228,7 @@ public class InventoryStripReportMB extends BaseReportBean {
                 invStripSearchServiceBean.setSuplierFrom(invStripSearchBean.getSuplierFrom());
                 invStripSearchServiceBean.setSuplierTo(invStripSearchBean.getSuplierTo());
                 invStripSearchServiceBean.setType(invStripSearchBean.getType());
+                invStripSearchServiceBean.setItemSupplier(invStripSearchBean.getItemSupplier());
 //            invStripSearchServiceBean.setGroupFrom(invStripSearchBean.getGroupFrom());
 //            invStripSearchServiceBean.setGroupTo(invStripSearchBean.getGroupTo());
 

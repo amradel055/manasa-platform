@@ -156,6 +156,26 @@
 
                             </div>
                         </div>
+                        
+                        <div class="ui-g-12 ui-xl-12">
+
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:autoComplete style="width:40%!important " 
+                                                dropdown="true"
+                                                converter="#{InventoryStripReportMB.suplierConverter}"
+                                                value="#{InventoryStripReportMB.invStripSearchBean.itemSupplier}"
+                                                var="suplier"
+                                                itemLabel="#{suplier}" 
+                                                itemValue="#{suplier}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{InventoryStripReportMB.completSupliers}" >
+                                </p:autoComplete>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 105px;" value="أصناف المورد"/>
+
+                            </div>
+                        </div>
                     </div>
 
 
@@ -329,7 +349,7 @@
 
                         </p:row>
                         <p:row>
-                            <p:column headerText="#{userData.userDDs['IMPORT']} ك" style="font-size: 1.4vh;text-align: center;border-radius: 0px;"
+                            <p:column headerText="#{userData.userDDs['IMPORT']} ك" style="font-size: 1.4vh;text-align: center;border-radius: 0px; color: blue"
 
                                       filterBy="#{invStripTable.qtyInCarton}" 
                                       filterMatchMode="contains" 
@@ -391,7 +411,7 @@
                     </p:column>
                     
                     <p:column  style="width:8vh;font-size: 1.4vh;text-align: center;border-radius: 0px;">
-                        <p:inputNumber readonly="true" value="#{invStripTable.balanceCarton}" style="font-size: 1.4vh;width: 95%;"/>
+                        <p:inputNumber readonly="true" value="#{invStripTable.balanceCarton}" style="font-size: 1.4vh;width: 95%;background-color: yellow"/>
                     </p:column>
                     <p:column  style="width:8vh;font-size: 1.4vh;text-align: center;border-radius: 0px;">
                         <p:inputNumber readonly="true" value="#{invStripTable.balance}" style="font-size: 1.4vh;width: 95%;"/>

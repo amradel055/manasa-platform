@@ -401,7 +401,12 @@ public class IReportServiceImpl implements IReportService {
             hashMap.put("valuefracture", "قيمة الكسر");
             hashMap.put("cartonsCapacity", "سعة الكرتون");
             hashMap.put("customerBalance", invPurchaseInvoiceDTO.getCustomerBalance());
-            hashMap.put("customerBalanceText", "اجمالى رصيد العميل");
+            hashMap.put("customerBalanceText", "الرصيد الحالى ");
+            BigDecimal oldCustomerBalance = invPurchaseInvoiceDTO.getCustomerBalance().subtract(invPurchaseInvoiceDTO.getTaxvalue().add(invPurchaseInvoiceDTO.getTotalNet()));
+            hashMap.put("oldCustomerBalance",oldCustomerBalance.add(invPurchaseInvoiceDTO.getPayed().add(invPurchaseInvoiceDTO.getTaxvalue().add(invPurchaseInvoiceDTO.getTotalNet()))) );
+            hashMap.put("oldCustomerBalanceText", "اجمالى الرصيد");
+            hashMap.put("oldBalance", oldCustomerBalance.add(invPurchaseInvoiceDTO.getPayed()));
+            hashMap.put("oldBalanceText", "رصيد قديم");
 
             return hashMap;
         } catch (Exception e) {

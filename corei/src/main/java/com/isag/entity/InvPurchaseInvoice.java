@@ -655,6 +655,9 @@ public class InvPurchaseInvoice extends BaseEntity {
      * @return the payCash
      */
     public BigDecimal getPayCash() {
+        if(payCash == null){
+            payCash = BigDecimal.ZERO;
+        }
         return payCash;
     }
 
@@ -669,6 +672,9 @@ public class InvPurchaseInvoice extends BaseEntity {
      * @return the payNet
      */
     public BigDecimal getPayNet() {
+        if(payNet == null){
+            payNet = BigDecimal.ZERO;
+        }
         return payNet;
     }
 

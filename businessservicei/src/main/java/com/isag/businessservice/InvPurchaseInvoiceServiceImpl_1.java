@@ -116,6 +116,8 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     private InvGlobalService invGlobalService;
     @EJB
     SupplierAccountService supplierAccountService;
+    @EJB
+    private GlBankTransactionService glBankTransactionService;
 
     InvPurchaseReturnSave invPurchaseReturnSave;
 
@@ -1181,7 +1183,8 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         invPurchaseInvoice.setTaxdiscflag(invInvoiceDTO.getTaxdiscflag());
         invPurchaseInvoice.setTaxdiscvalue(invInvoiceDTO.getTaxdiscvalue());
         invPurchaseInvoice.setTaxFlagFinal(invInvoiceDTO.getTaxFlagFinal());
-        invPurchaseInvoice.setPayCash(invInvoiceDTO.getFinalNet().subtract(invInvoiceDTO.getPayNet()));
+//        invPurchaseInvoice.setPayCash(invInvoiceDTO.getFinalNet().subtract(invInvoiceDTO.getPayNet()));
+        invPurchaseInvoice.setPayCash(invInvoiceDTO.getPayed());
         invPurchaseInvoice.setPayNet(invInvoiceDTO.getPayNet());
         invPurchaseInvoice.setTypeRest(invInvoiceDTO.getTypeRest());
         invPurchaseInvoice.setTableNumber(invInvoiceDTO.getTableNumber());
@@ -1297,6 +1300,9 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
 
                     invPurchaseInvoice = dao.updateEntity(invPurchaseInvoice);
                     invInvoiceDTO.setId(invPurchaseInvoice.getId());
+                    if (invInvoiceDTO.getPayed() != null && invInvoiceDTO.getPayed().compareTo(BigDecimal.ZERO) == 1) {
+                        glBankTransactionService.addCash(invInvoiceDTO, isagUser);
+                    }
                 }
 
                 invPurchaseInvoiceDetailsService.deleteInvPurchaseInvoiceDetailListDTO(invInvoiceDTO.getInvPurchaseInvoiceDetailsDeletedList());
@@ -1504,7 +1510,8 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         invInvoiceDTO.setCompanyId(entity.getCompanyId().getId() != null ? entity.getCompanyId().getId() : null);
         invInvoiceDTO.setCreatedByName(entity.getCreatedBy() != null ? entity.getCreatedBy().getName() : null);
         invInvoiceDTO.setPayNet(entity.getPayNet());
-        invInvoiceDTO.setPayCash(entity.getPayCash());
+        invInvoiceDTO.setPayNet(entity.getPayNet());
+        invInvoiceDTO.setPayed(entity.getPayCash().add(entity.getPayNet()));
 
         List<InvDetailDTO> invPurchaseInvoiceDetailsListDTO;
         if (isLoaded) {

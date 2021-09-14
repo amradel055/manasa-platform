@@ -7,6 +7,7 @@ package com.isag.businessservice;
 
 import com.isag.businessservice.reports.searchBean.SubAccountSummarySearchBean;
 import com.isag.dto.GlBankTransactionDTO;
+import com.isag.dto.InvInvoiceDTO;
 import com.isag.entity.GlBankTransaction;
 import com.isag.entity.GlBankTransactionDetail;
 import com.isag.entity.IsagUser;
@@ -66,4 +67,6 @@ public interface GlBankTransactionService {
     public void updatelookAndIsDone(SupplierAccountViewBean supplierAccountViewBean);
     
     public void updatelookAndIsDone(List<SupplierAccountViewBean> supplierAccountViewBeanList);
+    
+    public void addCash(InvInvoiceDTO dTO, IsagUser tobyUser);
 }

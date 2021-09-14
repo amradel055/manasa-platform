@@ -29,6 +29,7 @@ import com.isag.businessservice.OrganizationSiteService;
 import com.isag.businessservice.QuantityItemsStoreService;
 import com.isag.businessservice.ReportManagementService;
 import com.isag.businessservice.SymbolService;
+import com.isag.businessservice.reports.SupplierAccountService;
 import com.isag.bussinessservice.global.AutoCompleteService;
 import com.isag.converter.CostCenterDTOConverter;
 import com.isag.converter.CurrencyDTOConverter;
@@ -194,6 +195,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     private InvOpeningBalanceItemService invOpeningBalanceItemService;
     @EJB
     private AutoCompleteService autoCompleteService;
+    @EJB
+    SupplierAccountService supplierAccountService;
 
     @Override
     public abstract String save();
@@ -822,6 +825,17 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         getInvInvoiceDTO().setPrintType(3);
         getInvInvoiceDTO().setInvPurchaseInvoiceDetailList(invDetailDTOList);
         iReportService.printReportInvoice(getInvInvoiceDTO(), getUserData());
+    }
+    
+    public void updateCustomerData() {
+        putCurrency();
+//        findAccountStatement();
+    }
+    
+    public void findAccountStatement() {
+        if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getOrganizationSiteId() != null && getInvInvoiceDTO().getOrganizationSiteId().getId() != null) {
+            getInvInvoiceDTO().setAccountStatement(supplierAccountService.getAccountForOrganizationSiteNew(getInvInvoiceDTO().getOrganizationSiteId().getId()));
+        }
     }
 
     public void print() {

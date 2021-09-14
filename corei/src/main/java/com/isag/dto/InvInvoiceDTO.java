@@ -81,6 +81,7 @@ public class InvInvoiceDTO extends BaseEntityDTO {
     private BigDecimal payCash;
     private BigDecimal payNet;
     private BigDecimal totalBeforeDiscount;
+    private BigDecimal accountStatement;
 
     private InventorySetupDTO inventorySetupDTO;
 
@@ -540,6 +541,9 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      * @return the taxvalue
      */
     public BigDecimal getTaxvalue() {
+        if(taxvalue == null){
+            taxvalue = BigDecimal.ZERO;
+        }
         return taxvalue;
     }
 
@@ -1487,6 +1491,9 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      * @return the customerBalance
      */
     public BigDecimal getCustomerBalance() {
+        if(customerBalance == null){
+            customerBalance = BigDecimal.ZERO;
+        }
         return customerBalance;
     }
 
@@ -1523,6 +1530,20 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      */
     public void setPrintType(Integer printType) {
         this.printType = printType;
+    }
+
+    /**
+     * @return the accountStatement
+     */
+    public BigDecimal getAccountStatement() {
+        return accountStatement;
+    }
+
+    /**
+     * @param accountStatement the accountStatement to set
+     */
+    public void setAccountStatement(BigDecimal accountStatement) {
+        this.accountStatement = accountStatement;
     }
 
 }

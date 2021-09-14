@@ -6,7 +6,17 @@
 package com.isag.businessservice;
 
 import com.isag.core.GenericDAO;
+import com.isag.dto.InvInvoiceDTO;
+import com.isag.entity.CostCenter;
+import com.isag.entity.GlAccount;
+import com.isag.entity.GlAdminUnit;
+import com.isag.entity.GlBank;
+import com.isag.entity.GlBankTransaction;
 import com.isag.entity.GlBankTransactionDetail;
+import com.isag.entity.InvOrganizationSite;
+import com.isag.entity.IsagUser;
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,5 +98,68 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
         Integer max = dao.findEntityByQuery("SELECT COALESCE(MAX(g.serial),0) +1  FROM GlBankTransactionDetail g WHERE g.glBankTransactionId.id =:glBankTransactionId  ", params);
         return max;
     }
+    
+    @Override
+    public void addCashDetail(InvInvoiceDTO dTO, Integer glBankTransactionId, IsagUser isagUser) {
+
+        GlBankTransactionDetail bankTransactionDetail = mapToEntityDetailFromInvSales(dTO, glBankTransactionId, isagUser);
+
+        dao.updateEntity(bankTransactionDetail);
+    }
+    
+    public GlBankTransactionDetail mapToEntityDetailFromInvSales(InvInvoiceDTO dTO, Integer glBankTransactionId, IsagUser isagUser) {
+        GlBankTransactionDetail entity = new GlBankTransactionDetail();
+
+        if (dTO.getGlBankId() != null && dTO.getGlBankId().getAccountId() != null) {
+            GlAccount accountDebitId = new GlAccount();
+            accountDebitId.setId(dTO.getGlBankId().getAccountId().getId());
+            entity.setAccountDebitId(accountDebitId);
+        }
+
+        if (dTO.getOrganizationSiteId() != null) {
+            InvOrganizationSite invOrganizationSite = new InvOrganizationSite();
+            invOrganizationSite.setId(dTO.getOrganizationSiteId().getId());
+            entity.setOrganizationSiteId(invOrganizationSite);
+            GlAccount accountCreditId = new GlAccount();
+            if (dTO.getOrganizationSiteId().getAccountId() != null) {
+                accountCreditId.setId(dTO.getOrganizationSiteId().getAccountId().getId());
+                entity.setAccountCreditId(accountCreditId);
+            }
+        }
+
+        if (dTO.getAdminUnitId() != null && dTO.getAdminUnitId().getId() != null) {
+            GlAdminUnit glAdminUnit = new GlAdminUnit();
+            glAdminUnit.setId(dTO.getAdminUnitId().getId());
+            entity.setAdminUnitId(glAdminUnit);
+        }
+
+        if (dTO.getCostCenterId() != null) {
+            CostCenter costCenter = new CostCenter();
+            costCenter.setId(dTO.getCostCenterId().getId());
+            entity.setCostCenterId(costCenter);
+        }
+
+        if (dTO.getGlBankId() != null && dTO.getGlBankId().getId() != null) {
+            GlBank glBank = new GlBank();
+            glBank.setId(dTO.getGlBankId().getId());
+            entity.setBankIdFrom(glBank);
+        }
+
+        entity.setRemarks(dTO.getRemarks());
+        entity.setValue(dTO.getPayed() != null ? dTO.getPayed() : BigDecimal.ZERO);
+        entity.setValueLocal(dTO.getPayed() != null ? dTO.getPayed() : BigDecimal.ZERO);
+
+        entity.setSerial(finMaxSerial(glBankTransactionId));
+        GlBankTransaction bankTransaction = new GlBankTransaction();
+        bankTransaction.setId(glBankTransactionId);
+        entity.setGlBankTransactionId(bankTransaction);
+
+        entity.setCreatedBy(isagUser);
+        entity.setCreationDate(new Date());
+        entity.setCompanyId(isagUser.getCompanyId());
+
+        return entity;
+    }
+
 
 }

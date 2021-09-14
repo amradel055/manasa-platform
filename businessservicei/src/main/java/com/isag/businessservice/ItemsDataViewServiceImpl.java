@@ -262,6 +262,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         stringBuilder.append(appendInventoryinv(invStripSearchBean, params));
         stringBuilder.append(appendGroupinv(invStripSearchBean, params));
         stringBuilder.append(appendSuplierinv(invStripSearchBean, params));
+        stringBuilder.append(appendItemSupplier(invStripSearchBean, params));
 
         stringBuilder.append(" group by IDV.itemId, "
                 + " IDV.itemName, "
@@ -380,6 +381,17 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         if (invStripSearchBean.getSuplierTo() != null) {
             params.put("suplierCodeTo", invStripSearchBean.getSuplierTo().getId());
             appendQuery.append(" AND IDV.organizationSiteId <= :suplierCodeTo");
+        }
+
+        return appendQuery.toString();
+    }
+    
+    private String appendItemSupplier(InvItemSalesSearchBean invStripSearchBean, Map<String, Object> params) {
+        StringBuilder appendQuery = new StringBuilder();
+
+        if (invStripSearchBean.getItemSupplier() != null) {
+            params.put("itemSupplierId", invStripSearchBean.getItemSupplier().getId());
+            appendQuery.append(" AND IDV.itemId in (").append("select i.id from InvItem i where i.siteId.id = :itemSupplierId").append(")");
         }
 
         return appendQuery.toString();

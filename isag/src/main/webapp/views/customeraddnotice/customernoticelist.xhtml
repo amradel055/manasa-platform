@@ -49,16 +49,6 @@
                         <p:outputLabel value="#{invNotice.serial}" />
                     </p:column>
 
-                    <p:column filterStyle="display:none"
-                              filterBy="#{invNotice.accountId}" 
-                              filterMatchMode="contains" 
-                              headerText="#{userData.userDDs['ACCOUNT_NUMBER']}" 
-                              style="width: 12vh;text-align: right;font-size: 1.8vh;border-radius: 0px"
-                              sortBy="#{invNotice.accountId}"
-                              >
-                        <p:outputLabel value="#{invNotice.accountId}" />
-                    </p:column>
-
                     <p:column style="width: 14vh;text-align: right;font-size: 1.8vh;border-radius: 0px" filterStyle="display:none"
                               filterBy="#{invNotice.organizationSiteId}" 
                               filterMatchMode="contains" 
@@ -80,12 +70,12 @@
                     </p:column>
 
                     <p:column style="width: 10vh;text-align: right;font-size: 1.8vh;border-radius: 0px" filterStyle="display:none"
-                              filterBy="#{invNotice.amount}" 
+                              filterBy="#{invNotice.value}" 
                               filterMatchMode="contains" 
                               headerText="#{userData.userDDs['AMOUNT']}"
-                              sortBy="#{invNotice.amount}"
+                              sortBy="#{invNotice.value}"
                               >
-                        <p:outputLabel value="#{invNotice.amount}" />
+                        <p:outputLabel value="#{invNotice.value}" />
                     </p:column>
                     
                     <p:column style="width: 14vh;text-align: right;font-size: 1.8vh;border-radius: 0px" filterStyle="display:none"
@@ -98,12 +88,12 @@
                     </p:column>
 
                     <p:column style="width: 14vh;text-align: right;font-size: 1.8vh;border-radius: 0px" filterStyle="display:none"
-                              filterBy="#{invNotice.remarks}" 
+                              filterBy="#{invNotice.remark}" 
                               filterMatchMode="contains" 
                               headerText="#{userData.userDDs['NOTE']}"
-                              sortBy="#{invNotice.remarks}"
+                              sortBy="#{invNotice.remark}"
                               >
-                        <p:outputLabel value="#{invNotice.remarks}" />
+                        <p:outputLabel value="#{invNotice.remark}" />
                     </p:column>
 
 

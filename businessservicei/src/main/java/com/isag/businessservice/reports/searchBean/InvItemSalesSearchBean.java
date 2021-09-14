@@ -34,6 +34,7 @@ public class InvItemSalesSearchBean {
     private InvGroup groupTo;
     private InvOrganizationSite suplierFrom;
     private InvOrganizationSite suplierTo;
+    private InvOrganizationSite itemSupplier;
     private Boolean showReport;
     private Boolean shortReport = false;
     private StringBuilder stringBuilder;
@@ -200,5 +201,19 @@ public class InvItemSalesSearchBean {
      */
     public void setShortReport(Boolean shortReport) {
         this.shortReport = shortReport;
+    }
+
+    /**
+     * @return the itemSupplier
+     */
+    public InvOrganizationSite getItemSupplier() {
+        return itemSupplier;
+    }
+
+    /**
+     * @param itemSupplier the itemSupplier to set
+     */
+    public void setItemSupplier(InvOrganizationSite itemSupplier) {
+        this.itemSupplier = itemSupplier;
     }
 }

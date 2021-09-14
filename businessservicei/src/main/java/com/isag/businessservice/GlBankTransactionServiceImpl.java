@@ -9,9 +9,12 @@ import com.isag.businessservice.reports.searchBean.SubAccountSummarySearchBean;
 import com.isag.core.GenericDAO;
 import com.isag.dto.GlBankDTO;
 import com.isag.dto.GlBankTransactionDTO;
+import com.isag.dto.InvInvoiceDTO;
 import com.isag.entity.AccountsSystemSettings;
+import com.isag.entity.GlBank;
 import com.isag.entity.GlBankTransaction;
 import com.isag.entity.GlBankTransactionDetail;
+import com.isag.entity.InvPurchaseInvoice;
 import com.isag.entity.IsagUser;
 import com.isag.views.CashAccountSettlmentView;
 import com.isag.views.SupplierAccountViewBean;
@@ -668,6 +671,54 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
         }
     }
 
+     public GlBankTransaction mapToEntityFromInvSales(InvInvoiceDTO dTO, IsagUser isagUser) {
+        GlBankTransaction entity = new GlBankTransaction();
+
+        entity.setDate(dTO.getDate());
+
+        
+        if (dTO.getGlBankId() != null && dTO.getGlBankId().getId() != null) {
+            GlBank glBank = new GlBank();
+            glBank.setId(dTO.getGlBankId().getId());
+            entity.setGlBankId(glBank);
+        }
+        if (dTO.getId() != null) {
+            InvPurchaseInvoice invPurchaseInvoice = new InvPurchaseInvoice();
+            invPurchaseInvoice.setId(dTO.getId());
+            entity.setInvoiceId(invPurchaseInvoice);
+        }
+        entity.setOrganizationType(0);
+        entity.setPaymentType(0);
+        entity.setPostFlag(0);
+        entity.setRate(dTO.getRate());
+        entity.setRemark(dTO.getRemarks());
+        entity.setRemark2(dTO.getCreatedByName());
+        entity.setSerial(dTO.getSerial());
+        entity.setTransactionType(1);
+        entity.setValue(dTO.getPayed());
+        entity.setValueLocal(dTO.getPayed());
+        entity.setCreatedBy(isagUser);
+        entity.setCreationDate(new Date());
+
+        entity.setBranchId(isagUser.getBranchId());
+        entity.setCompanyId(isagUser.getCompanyId());
+
+        entity.setSerial(getMaxSerail(entity));
+
+        return entity;
+    }
+    
+     
+    @Override
+    public void addCash(InvInvoiceDTO dTO, IsagUser tobyUser) {
+
+        GlBankTransaction glBankTransaction = mapToEntityFromInvSales(dTO, tobyUser);
+
+        glBankTransaction = dao.updateEntity(glBankTransaction);
+
+        glBankTransactionDetailsService.addCashDetail(dTO, glBankTransaction.getId(), tobyUser);
+    }
+    
     /**
      * @return the value
      */
