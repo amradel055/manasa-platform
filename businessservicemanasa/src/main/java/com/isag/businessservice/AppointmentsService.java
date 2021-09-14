@@ -21,7 +21,9 @@ public interface AppointmentsService {
 
     public AppointmentsDTO save(AppointmentsDTO appointmentsDTO, IgmaUser isagUser);
 
-    public List<AppointmentsDTO> findAppointmentsByTeacherAndSchoolStage(Integer teacherId, Integer schoolStageId);
+    public List<AppointmentsDTO> findAppointmentsByTeacherAndSchoolStageAndMaterialId(Integer teacherId , Integer schoolStageId ,  Integer materialId);
+    
+    public List<AppointmentsDTO> findAppointmentsByStudentId(Integer studentId) ;
 
     public void deleteAppointments(Integer appointmentsDTO);
 }

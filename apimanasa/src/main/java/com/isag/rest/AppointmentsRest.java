@@ -64,9 +64,10 @@ public class AppointmentsRest {
     public Response AppointmentsByTeacherId(AppointmentsDTO appointmentsDTO) {
         if (appointmentsDTO != null) {
             try {
-                List<AppointmentsDTO> dTOs = appointmentsService.findAppointmentsByTeacherAndSchoolStage(
+                List<AppointmentsDTO> dTOs = appointmentsService.findAppointmentsByTeacherAndSchoolStageAndMaterialId(
                         appointmentsDTO.getTeacherId(),
-                        appointmentsDTO.getSchoolStageId()
+                        appointmentsDTO.getSchoolStageId(),
+                        appointmentsDTO.getMaterialsId()
                 );
                 GenericEntity<List<AppointmentsDTO>> list = new GenericEntity<List<AppointmentsDTO>>(dTOs) {
                 };
@@ -83,6 +84,34 @@ public class AppointmentsRest {
         }
     }
 
+    
+    @Transactional
+    @Path("/appointmentsByStudent")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response AppointmentsByStudentId(AppointmentsDTO appointmentsDTO) {
+        if (appointmentsDTO != null) {
+            try {
+                List<AppointmentsDTO> dTOs = appointmentsService.findAppointmentsByStudentId(
+                        appointmentsDTO.getStudentId()
+                );
+                GenericEntity<List<AppointmentsDTO>> list = new GenericEntity<List<AppointmentsDTO>>(dTOs) {
+                };
+                return Response.ok(list).build();
+
+            } catch (Exception e) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+
+        } else {
+            appointmentsDTO = new AppointmentsDTO();
+            appointmentsDTO.setMsg("No Id is Sent");
+            return Response.ok(appointmentsDTO).build();
+        }
+    }
+
+    
     @Transactional
     @Path("/saveAppointments")
     @POST

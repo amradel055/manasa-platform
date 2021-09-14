@@ -11,6 +11,7 @@ import com.isag.entity.Branch;
 import com.isag.entity.IgmaCompany;
 import com.isag.entity.IgmaUser;
 import com.isag.entity.Appointments;
+import com.isag.entity.Materials;
 import com.isag.entity.SchoolStagesGuide;
 import java.util.ArrayList;
 import java.util.Date;
@@ -41,15 +42,36 @@ public class AppointmentsServiceImpl implements AppointmentsService {
     }
 
     @Override
-    public List<AppointmentsDTO> findAppointmentsByTeacherAndSchoolStage(Integer teacherId , Integer schoolStageId) {
+    public List<AppointmentsDTO> findAppointmentsByTeacherAndSchoolStageAndMaterialId(Integer teacherId , Integer schoolStageId ,  Integer materialId) {
         Map<String, Object> params = new HashMap<>();
-        params.put("teacherId", teacherId);
-        params.put("schoolStageId", schoolStageId);
         StringBuilder builder = new StringBuilder();
-        builder.append("SELECT d FROM Appointments d WHERE d.teacherId.id = :teacherId AND d.schoolStageId.id = :schoolStageId ");
+        builder.append("SELECT d FROM Appointments d WHERE 1=1  ");
+        if(teacherId != null){
+            params.put("teacherId", teacherId);
+            builder.append(" AND d.teacherId.id = :teacherId ");
+        }
+        if(schoolStageId != null){
+            params.put("schoolStageId", schoolStageId);
+            builder.append(" AND d.schoolStageId.id = :schoolStageId ");
+        }
+        if(materialId != null){
+            params.put("materialId", materialId);
+            builder.append(" AND d.materialId.id = :materialId ");
+        }
         List<Appointments> list = dao.findListByQuery(builder.toString(), params);
         return returnListDTO(list);
     }
+    
+    @Override
+    public List<AppointmentsDTO> findAppointmentsByStudentId(Integer studentId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("studentId", studentId);
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT d FROM Appointments d WHERE d.teacherId.id in (select s.teacherId.id from StudentPeriods where s.studentId.id = :studentId) AND d.materialId.id in (select s.materialId.id from StudentPeriods where s.studentId.id = :studentId) ");
+        List<Appointments> list = dao.findListByQuery(builder.toString(), params);
+        return returnListDTO(list);
+    }
+    
 
     @Override
     public void deleteAppointments(Integer appointmentsDTO) {
@@ -118,6 +140,9 @@ public class AppointmentsServiceImpl implements AppointmentsService {
         if (entity.getSchoolStageId() != null) {
             dTO.setSchoolStageId(entity.getSchoolStageId().getId());
         }
+        if (entity.getMaterialId() != null) {
+            dTO.setMaterialsId(entity.getMaterialId().getId());
+        }
 
         dTO.setIndex(entity.getId());
         dTO.setCreatedDate(entity.getCreationDate());
@@ -145,6 +170,11 @@ public class AppointmentsServiceImpl implements AppointmentsService {
             SchoolStagesGuide guide = new SchoolStagesGuide();
             guide.setId(dTO.getSchoolStageId());
             entity.setSchoolStageId(guide);
+        }
+        if (dTO.getMaterialsId() != null) {
+            Materials materials = new Materials();
+            materials.setId(dTO.getTeacherId());
+            entity.setMaterialId(materials);
         }
 
         if (dTO.getId() == null) {

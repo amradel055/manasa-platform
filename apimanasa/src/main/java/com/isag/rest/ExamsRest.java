@@ -14,6 +14,7 @@ import com.isag.dto.AnswersDTO;
 import com.isag.dto.ExamsDTO;
 import com.isag.dto.MnsLoginExamDTO;
 import com.isag.dto.QuestionsDTO;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.transaction.Transactional;
@@ -76,7 +77,12 @@ public class ExamsRest {
     public Response findExamsForStudent(ExamsDTO examsDTO) {
         if (examsDTO != null) {
             try {
-                List<ExamsDTO> dTOs = examsService.findExamsListForStudent(examsDTO);
+                List<ExamsDTO> dTOs = new ArrayList<>();
+                if (examsDTO.getExamType() != null && examsDTO.getExamType() == 0) {
+                    dTOs = examsService.findAutoExamsListForStudent(examsDTO);
+                } else {
+                    dTOs = examsService.findExamsListForStudent(examsDTO);
+                }
                 GenericEntity<List<ExamsDTO>> list = new GenericEntity<List<ExamsDTO>>(dTOs) {
                 };
                 return Response.ok(list).build();

@@ -7,8 +7,6 @@ package com.isag.businessservice;
 
 import com.isag.core.GenericDAO;
 import com.isag.dto.ExamsDTO;
-import com.isag.dto.MaterialsDTO;
-import com.isag.dto.PeriodsDTO;
 import com.isag.dto.QuestionsDTO;
 import com.isag.entity.Branch;
 import com.isag.entity.IgmaCompany;
@@ -42,7 +40,7 @@ public class ExamsServiceImpl implements ExamsService {
     @Override
     public ExamsDTO findExams(Integer id) {
         Exams exams = dao.findEntityById(Exams.class, id);
-        return mapTODTO(exams, Boolean.TRUE);
+        return mapTODTO(exams, Boolean.TRUE,null,null);
     }
 
     @Override
@@ -125,12 +123,44 @@ public class ExamsServiceImpl implements ExamsService {
 //        return returnListDTO(list, false);
 //    }
     @Override
+    public List<ExamsDTO> findAutoExamsListForStudent(ExamsDTO examsDTO) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("teacherId", examsDTO.getTeacherId());
+//        params.put("examType", examsDTO.getExamType());
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT d FROM Exams d WHERE d.studentId is null AND d.active = 1 AND d.teacherId.id = :teacherId");
+        //
+        StringBuilder materialId = null;
+        //
+        for (Integer materialsDTO : examsDTO.getMaterialList()) {
+            if (materialId == null) {
+                materialId = new StringBuilder();
+                materialId.append(materialsDTO);
+            } else {
+                materialId.append(",").append(materialsDTO);
+            }
+        }
+        if (materialId != null) {
+            builder.append(" and d.materialId.id in(  ").append(materialId).append(" )");
+        }
+
+        List<Exams> list = dao.findListByQuery(builder.toString(), params);
+
+        examsDTO = mapTODTO(list.get(0), Boolean.TRUE,1,examsDTO.getPeriodList());
+        List<ExamsDTO> examsDTOList = new ArrayList<>();
+        examsDTOList.add(examsDTO);
+        return examsDTOList;
+
+    }
+
+    @Override
     public List<ExamsDTO> findExamsListForStudent(ExamsDTO examsDTO) {
         Map<String, Object> params = new HashMap<>();
         params.put("teacherId", examsDTO.getTeacherId());
         params.put("examType", examsDTO.getExamType());
+        params.put("studentId", examsDTO.getStudentId());
         StringBuilder builder = new StringBuilder();
-        builder.append("SELECT d FROM Exams d WHERE d.active = 1 AND d.teacherId.id = :teacherId");
+        builder.append("SELECT d FROM Exams d WHERE d.studentId is null and d.id not in (select e.parent.id from Exams e where e.studentId.id = :studentId ) AND d.active = 1 AND d.teacherId.id = :teacherId");
         //
         StringBuilder materialId = null, periodId = null;
         //
@@ -208,8 +238,7 @@ public class ExamsServiceImpl implements ExamsService {
                 && examsDTO.getPeriodId() != null
                 && examsDTO.getExamName() != null
                 && examsDTO.getTeacherId() != null
-                && examsDTO.getMaterialId() != null
-                && examsDTO.getLessonId() != null) {
+                && examsDTO.getMaterialId() != null) {
             if (isagUser == null) {
                 isagUser = new IgmaUser();
                 isagUser.setId(61);
@@ -270,18 +299,18 @@ public class ExamsServiceImpl implements ExamsService {
     private List<ExamsDTO> returnListDTO(List<Exams> list, Boolean detail) {
         List<ExamsDTO> dTOList = new ArrayList<>();
         for (Exams entity : list) {
-            dTOList.add(mapTODTO(entity, detail));
+            dTOList.add(mapTODTO(entity, detail,null,null));
         }
         return dTOList;
     }
 
-    private ExamsDTO mapTODTO(Exams entity, Boolean detail) {
-        ExamsDTO dTO = initMapToDTO(entity, detail);
+    private ExamsDTO mapTODTO(Exams entity, Boolean detail, Integer examtype,List<Integer> periodList) {
+        ExamsDTO dTO = initMapToDTO(entity, detail,examtype,periodList);
 
         return dTO;
     }
 
-    private ExamsDTO initMapToDTO(Exams entity, Boolean detail) {
+    private ExamsDTO initMapToDTO(Exams entity, Boolean detail, Integer examtype,List<Integer> periodList) {
 
         ExamsDTO dTO = new ExamsDTO();
         dTO.setId(entity.getId());
@@ -292,6 +321,7 @@ public class ExamsServiceImpl implements ExamsService {
         dTO.setActive(entity.getActive());
         dTO.setExamType(entity.getExamType());
         dTO.setTimer(entity.getTimer());
+        dTO.setPeriodList(periodList);
 
         if (entity.getTeacherId() != null) {
             dTO.setTeacherId(entity.getTeacherId().getId());
@@ -322,7 +352,11 @@ public class ExamsServiceImpl implements ExamsService {
         }
 
         if (detail) {
-            dTO.setQuestionsList(questionsService.findQuestionsByExamId(entity.getId()));
+            if (examtype != null) {
+                dTO.setQuestionsList(questionsService.findGeneralQuestions(dTO));
+            } else {
+                dTO.setQuestionsList(questionsService.findQuestionsByExamId(entity.getId()));
+            }
         }
 
         dTO.setIndex(entity.getId());

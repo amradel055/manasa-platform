@@ -7,6 +7,7 @@ package com.isag.businessservice;
 
 import com.isag.core.GenericDAO;
 import com.isag.dto.AnswersDTO;
+import com.isag.dto.ExamsDTO;
 import com.isag.dto.QuestionsDTO;
 import com.isag.entity.Branch;
 import com.isag.entity.Exams;
@@ -36,11 +37,38 @@ public class QuestionsServiceImpl implements QuestionsService {
     AnswersService answersService;
 
     @Override
+    public List<QuestionsDTO> findGeneralQuestions(ExamsDTO examsDTO) {
+        Map<String, Object> params = new HashMap<>();
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("SELECT d FROM Questions d WHERE d.examsId.examType = 0 ");
+
+        StringBuilder  periodId = null;
+        
+        for (Integer periodsDTO : examsDTO.getPeriodList()) {
+            if (periodId == null) {
+                periodId = new StringBuilder();
+                periodId.append(periodsDTO);
+            } else {
+                periodId.append(",").append(periodsDTO);
+            }
+        }
+        if (periodId != null) {
+            builder.append(" and d.examsId.periodId.id in(  ").append(periodId).append(" )");
+        }
+        
+        builder.append(" ");
+
+        List<Questions> list = dao.findListByQuery(builder.toString(), params);
+        return returnListDTO(list);
+    }
+
+    @Override
     public List<QuestionsDTO> findQuestionsByExamId(Integer examsId) {
         Map<String, Object> params = new HashMap<>();
         params.put("examsId", examsId);
         StringBuilder builder = new StringBuilder();
-        builder.append("SELECT d FROM Questions d WHERE d.examsId.id = :examsId order by d.id asc ");
+        builder.append("SELECT d FROM Questions d WHERE d.examsId.id = :examsId order by d.id ");
         List<Questions> list = dao.findListByQuery(builder.toString(), params);
         return returnListDTO(list);
     }

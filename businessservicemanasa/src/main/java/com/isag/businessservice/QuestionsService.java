@@ -5,6 +5,7 @@
  */
 package com.isag.businessservice;
 
+import com.isag.dto.ExamsDTO;
 import com.isag.dto.QuestionsDTO;
 import com.isag.entity.IgmaUser;
 import java.util.List;
@@ -17,6 +18,8 @@ import javax.ejb.Remote;
 @Remote
 public interface QuestionsService {
 
+    public List<QuestionsDTO> findGeneralQuestions(ExamsDTO examsDTO);
+    
     public List<QuestionsDTO> findQuestionsByExamId(Integer examsId);
 
     public QuestionsDTO save(QuestionsDTO questionsDTO, IgmaUser isagUser, Integer examsId);

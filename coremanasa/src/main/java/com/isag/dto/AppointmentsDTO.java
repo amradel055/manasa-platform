@@ -17,6 +17,9 @@ public class AppointmentsDTO extends BaseEntityDTO {
     private Date time;
     private Integer schoolStageId;
     private Integer teacherId;
+    private Integer studentId;
+    private MaterialsDTO materials;
+    private Integer materialsId;
 
     public AppointmentsDTO() {
     }
@@ -92,6 +95,48 @@ public class AppointmentsDTO extends BaseEntityDTO {
      */
     public void setTeacherId(Integer teacherId) {
         this.teacherId = teacherId;
+    }
+
+    /**
+     * @return the materials
+     */
+    public MaterialsDTO getMaterials() {
+        return materials;
+    }
+
+    /**
+     * @param materials the materials to set
+     */
+    public void setMaterials(MaterialsDTO materials) {
+        this.materials = materials;
+    }
+
+    /**
+     * @return the materialsId
+     */
+    public Integer getMaterialsId() {
+        return materialsId;
+    }
+
+    /**
+     * @param materialsId the materialsId to set
+     */
+    public void setMaterialsId(Integer materialsId) {
+        this.materialsId = materialsId;
+    }
+
+    /**
+     * @return the studentId
+     */
+    public Integer getStudentId() {
+        return studentId;
+    }
+
+    /**
+     * @param studentId the studentId to set
+     */
+    public void setStudentId(Integer studentId) {
+        this.studentId = studentId;
     }
 
 }
