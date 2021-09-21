@@ -79,6 +79,8 @@ public interface SymbolService {
     public List<Symbol> getAllNationalitiesByCompanyId(Integer companyId);
 
     public List<Symbol> getSpecialDocumentsTypes();
+    
+    public Symbol getSpecialDocumentsTypes(Integer serial);
 
     public Symbol findSymbol(Integer id);
 

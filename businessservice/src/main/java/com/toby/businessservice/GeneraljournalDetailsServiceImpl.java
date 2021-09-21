@@ -5,17 +5,11 @@
  */
 package com.toby.businessservice;
 
-
 import com.toby.businessservice.reports.searchBean.CommonSearchBean;
 import com.toby.businessservice.reports.searchBean.JournalDocumentsReportSearchBean;
 import com.toby.core.GenericDAO;
-import com.toby.dto.GeneralJournalDTO;
-import com.toby.entity.Branch;
-import com.toby.entity.GeneralJournal;
 import com.toby.entity.GeneralJournalDetails;
 import com.toby.entity.GlYear;
-import com.toby.entity.Symbol;
-import com.toby.entity.TobyCompany;
 import com.toby.entity.TobyUser;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -39,10 +33,7 @@ public class GeneraljournalDetailsServiceImpl implements GeneraljournalDetailsSe
     @EJB
     private GeneraljournalDetailsService detailsService;
     @EJB
-    private GenericDAO dao; 
-
-    @EJB
-    private GetOperationRateService operationRateService;
+    private GenericDAO dao;
 
     @Override
     public GeneralJournalDetails addGenDetalils(GeneralJournalDetails details) {
@@ -124,42 +115,33 @@ public class GeneraljournalDetailsServiceImpl implements GeneraljournalDetailsSe
     }
 
     @Override
-    public List<GeneralJournalDetails> addGenDetalils(List<GeneralJournalDetails> details, List<GeneralJournalDetails> generalListDeleted) {
+    public List<GeneralJournalDetails> addGenDetalilsGlobal(List<GeneralJournalDetails> details, TobyUser tobyUser) {
+        List<GeneralJournalDetails> list = new ArrayList<>();
+        GeneralJournalDetails gjd;
+        if (details != null && !details.isEmpty()) {
+            findTheMaximumSerial(details);
+            for (GeneralJournalDetails journalDetails : details) {
+                if (journalDetails.getCostCenterId() != null && journalDetails.getCostCenterId().getId() == -1) {
+                    journalDetails.setCostCenterId(null);
+                }
+                if (journalDetails.getAdminUnitId() != null && journalDetails.getAdminUnitId().getId() == -1) {
+                    journalDetails.setAdminUnitId(null);
+                }
+                fillSerial(journalDetails);
 
-//        BigDecimal summaryDebit = BigDecimal.ZERO;
-//        BigDecimal summaryCredit = BigDecimal.ZERO;
-//        BigDecimal rate = BigDecimal.ONE;
-//
-//        Map<Integer, GetOperationRateView> operationRateMap = new HashMap<>();
-//        List<GetOperationRateView> operationRateList = operationRateService.getAllOperationRate();
-//
-//        for (GetOperationRateView operationRateView : operationRateList) {
-//            if (!operationRateMap.containsKey(operationRateView.getCurrencyId())) {
-//                operationRateMap.put(operationRateView.getCurrencyId(), operationRateView);
-//            }
-//        }
-//
-//        for (GeneralJournalDetails journalDetails : details) {
-//            if (journalDetails.getGlACCOUNTId().getCurrencyId() != null && operationRateMap.containsKey(journalDetails.getGlACCOUNTId().getCurrencyId().getId())) {
-//                if (operationRateMap.get(journalDetails.getGlACCOUNTId().getCurrencyId().getId()).getRate() != null) {
-//                    rate = operationRateMap.get(journalDetails.getGlACCOUNTId().getCurrencyId().getId()).getRate();
-//                } else {
-//                    rate = BigDecimal.ONE;
-//                }
-//            } else if (journalDetails.getGlACCOUNTId().getCurrencyId() != null && !operationRateMap.containsKey(journalDetails.getGlACCOUNTId().getCurrencyId().getId())) {
-//                rate = BigDecimal.ONE;
-//            }
-//
-//            if (journalDetails.getDebitAmountLocal() != null) {
-//                summaryDebit = summaryDebit.add(journalDetails.getDebitAmountLocal().multiply(rate));
-//            }
-//
-//            if (journalDetails.getCreditamountLocal() != null) {
-//                summaryCredit = summaryCredit.add(journalDetails.getCreditamountLocal().multiply(rate));
-//            }
-//
-//        }
-//        if (summaryCredit.equals(summaryDebit)) {
+                journalDetails.setBranchId(tobyUser.getBranchId());
+                journalDetails.setCreationDate(new Date());
+                journalDetails.setCreatedBy(tobyUser);
+
+                gjd = dao.updateEntity(journalDetails);
+                list.add(gjd);
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public List<GeneralJournalDetails> addGenDetalils(List<GeneralJournalDetails> details, List<GeneralJournalDetails> generalListDeleted) {
         List<GeneralJournalDetails> list = new ArrayList<>();
         GeneralJournalDetails gjd;
         if (details != null && !details.isEmpty()) {
@@ -185,10 +167,6 @@ public class GeneraljournalDetailsServiceImpl implements GeneraljournalDetailsSe
             }
         }
         return list;
-
-//        } else {
-//            return null;
-//        }
     }
 
     public void fillSerial(GeneralJournalDetails generalJournalDetails) {
@@ -592,6 +570,5 @@ public class GeneraljournalDetailsServiceImpl implements GeneraljournalDetailsSe
         }
         return GeneralJournalDetailsBasedOnAccClassList;
     }
-    
 
-        }
+}

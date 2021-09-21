@@ -115,6 +115,14 @@ public class SymbolServiceImpl implements SymbolService {
     }
 
     @Override
+    public Symbol getSpecialDocumentsTypes(Integer serial) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("serial", serial);
+        List<Symbol> list = dao.findListByQuery("SELECT sym FROM Symbol sym WHERE  sym.generalSymbolId.serial=1 AND sym.serial >= 1000 AND sym.serial <= 2000  AND sym.serial = :serial");
+        return (list != null && !list.isEmpty()) ? list.get(0) : null;
+    }
+
+    @Override
     public Symbol getSymbol(Integer SymbolId) {
         return dao.findEntityById(Symbol.class, SymbolId);
     }
@@ -652,10 +660,10 @@ public class SymbolServiceImpl implements SymbolService {
         returnListDTO(list, dTOList);
         return dTOList;
     }
-    
-     @Override
+
+    @Override
     public List<SymbolDTO> getDeterminationPriceDTO(Integer companyId) {
-        return getSymbolListByCompanyId(companyId,56);
+        return getSymbolListByCompanyId(companyId, 56);
     }
 
     @Override
@@ -667,7 +675,7 @@ public class SymbolServiceImpl implements SymbolService {
         Symbol symbol = dao.findEntityByQuery("SELECT sym FROM Symbol sym WHERE sym.companyId.id = :companyId And sym.serial = :serial AND sym.generalSymbolId.id = :generalSymbolId", params);
         return mapTODTO(symbol, null);
     }
-    
+
     @Override
     public List<Symbol> getAllworkTypeIdByCompanyId(Integer companyId) {
 
@@ -675,7 +683,7 @@ public class SymbolServiceImpl implements SymbolService {
         params.put("companyId", companyId);
         return dao.findListByQuery("SELECT sym FROM Symbol sym WHERE  sym.generalSymbolId.serial=52 AND sym.companyId.id=:companyId", params);
     }
-    
+
     @Override
     public List<Symbol> getAllStoreRegionByCompanyId(Integer companyId) {
 

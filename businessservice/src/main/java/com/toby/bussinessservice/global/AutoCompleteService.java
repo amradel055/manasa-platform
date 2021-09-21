@@ -27,9 +27,9 @@ public interface AutoCompleteService {
     
     public List<InvInvoiceDTO> autoCompleteProWorkOrderByBranch(Integer branchId, String qeury);
     
-    public List<ItemsBarcodesDetailsView> autoCompleteItemsBarcodesDetailsViewBranchId(Integer branchId, String qeury,Integer gallaryId);
+    public List<ItemsBarcodesDetailsView> autoCompleteItemsBarcodesDetailsViewBranchId(Integer branchId, String qeury);
     
-    public List<ItemsBarcodesDetailsView> findAllItemsBarcodesDetailsViewBranchId(Integer branchId, String qeury,Integer gallaryId);
+    public List<ItemsBarcodesDetailsView> findAllItemsBarcodesDetailsViewBranchId(Integer branchId, String qeury);
     
     public Map<String, ItemsBarcodesDetailsView> findItemsBarcodesDetailsViewBranchIdMap(Integer branchId, String qeury);
 

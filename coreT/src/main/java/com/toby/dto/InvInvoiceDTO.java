@@ -8,6 +8,7 @@ package com.toby.dto;
 import com.toby.define.CompanyActivityClassEnum;
 import com.toby.define.ModuleClassEnum;
 import com.toby.define.ScreenNameClassEnum;
+import com.toby.entity.GlYear;
 import com.toby.entity.ReportManagement;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -21,6 +22,20 @@ import java.util.Map;
  * @author amr
  */
 public class InvInvoiceDTO extends BaseEntityDTO {
+
+    /**
+     * @return the glYearSelection
+     */
+    public GlYear getGlYearSelection() {
+        return glYearSelection;
+    }
+
+    /**
+     * @param glYearSelection the glYearSelection to set
+     */
+    public void setGlYearSelection(GlYear glYearSelection) {
+        this.glYearSelection = glYearSelection;
+    }
 
     private CompanyActivityClassEnum companyActivity;
     private ScreenNameClassEnum ScreenName;
@@ -131,6 +146,7 @@ public class InvInvoiceDTO extends BaseEntityDTO {
     private InvInventoryDTO gallaryId;
     private InvItemDTO invParentItem;
     private Integer year;
+    private GlYear glYearSelection;
     private Boolean proof;
     private String invoiceStatus;
     private Integer invnameType;

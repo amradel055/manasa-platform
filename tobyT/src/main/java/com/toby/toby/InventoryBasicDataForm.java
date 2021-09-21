@@ -517,6 +517,10 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                     && detailDTO.getItemId().getProGroupId().getId() != null) {
 
                 if (detailDTO.getItemId().getProGroupId().getId() == 6
+                        || detailDTO.getItemId().getProGroupId().getId() == 7
+                        || detailDTO.getItemId().getProGroupId().getId() == 8
+                        || detailDTO.getItemId().getProGroupId().getId() == 9
+                        || detailDTO.getItemId().getProGroupId().getId() == 10
                         || detailDTO.getItemId().getProGroupId().getId() == 11
                         || detailDTO.getItemId().getProGroupId().getId() == 12
                         || detailDTO.getItemId().getProGroupId().getId() == 16
@@ -524,9 +528,9 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                         || detailDTO.getItemId().getProGroupId().getId() == 22
                         || detailDTO.getItemId().getProGroupId().getId() == 24
                         || detailDTO.getItemId().getProGroupId().getId() == 25) {
-                    detailDTO.setDiscount(new BigDecimal(25));
+                    detailDTO.setDiscount(new BigDecimal(30));
                 } else if (detailDTO.getItemId().getProGroupId().getId() == 1) {
-                    if (detailDTO.getItemsBarcodesDetail().getTypeShow() == 1) {
+                    if (detailDTO.getItemsBarcodesDetail().getTypeShow() !=null && detailDTO.getItemsBarcodesDetail().getTypeShow() == 1) {
                         if (detailDTO.getItemsBarcodesDetail().getSellPrice().compareTo(BigDecimal.valueOf(16.67)) != 1) {
                             detailDTO.setCost(new BigDecimal(287.2463768115942));
                             detailDTO.setDiscount(BigDecimal.ZERO);
@@ -534,7 +538,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                         } else {
                             detailDTO.setDiscount(new BigDecimal(25));
                         }
-                    } else if (detailDTO.getItemsBarcodesDetail().getTypeShow() == 2) {
+                    } else if (detailDTO.getItemsBarcodesDetail().getTypeShow() != null && detailDTO.getItemsBarcodesDetail().getTypeShow() == 2) {
                         if (detailDTO.getItemsBarcodesDetail().getSellPrice().compareTo(BigDecimal.valueOf(20)) != 1) {
                             detailDTO.setCost(new BigDecimal(287.2463768115942));
                             detailDTO.setDiscount(BigDecimal.ZERO);
@@ -650,7 +654,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 //            Integer itemId = detailDTO.getItemsBarcodesDetail().getItemId();
 //            InvItem item = invItemService.findInvItem(itemId);
 
-            if (detailDTO.getItemsBarcodesDetail() == null && detailDTO.getItemsBarcodesDetailTrans() != null) {
+                if (detailDTO.getItemsBarcodesDetail() == null && detailDTO.getItemsBarcodesDetailTrans() != null) {
                 detailDTO.setItemsBarcodesDetail(detailDTO.getItemsBarcodesDetailTrans());
             }
 
@@ -1291,17 +1295,9 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         return AutoComplete.completeCostCenters(query, getCostCenterList(), getCostCenterConverter());
     }
 
-    public List<ItemsBarcodesDetailsView> findAllItemsBarcodesDetailsViewBranchId() {
-        setItemsBarcodesDetailsViewListForSearch(autoCompleteService.findAllItemsBarcodesDetailsViewBranchId(getUserData().getUserBranch().getId(), getItemName(), getInvInvoiceDTO().getGallaryId().getId()));
+    public void findAllItemsBarcodesDetailsViewBranchId() {
+        setItemsBarcodesDetailsViewListForSearch(autoCompleteService.findAllItemsBarcodesDetailsViewBranchId(getUserData().getUserBranch().getId(), getItemName()));
         setItemsBarcodesDetailsViewConverterForSearch(getItemsBarcodesDetailsViewConverterForSearch());
-        return getItemsBarcodesDetailsViewListForSearch();
-    }
-
-    public List<ItemsBarcodesDetailsView> completeItemsBarcodesDetailsView(String query) {
-        List<ItemsBarcodesDetailsView> autoCompleteInvItem;
-        autoCompleteInvItem = autoCompleteService.findAllItemsBarcodesDetailsViewBranchId(getUserData().getUserBranch().getId(), query, getInvInvoiceDTO().getGallaryId().getId());
-        setItemsBarcodesDetailsViewConverter(new ItemsBarcodesDetailsViewConverter(autoCompleteInvItem));
-        return autoCompleteInvItem;
     }
 
     public void putItemsBarcodesDetailsViewBranchId() {
@@ -1824,6 +1820,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         invInvoiceDTO.setBranchId(getUserData().getUserBranch().getId());
 
         invInvoiceDTO.setTaxflag(invInvoiceDTO.getInventorySetupDTO().getDefaultSalesTax());
+        getUserData().getGlYear();
 
         return invInvoiceDTO;
     }

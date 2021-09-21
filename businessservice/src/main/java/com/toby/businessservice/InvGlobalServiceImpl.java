@@ -100,7 +100,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
 //        if (invInventoryId == 70) {
         if (!ScreenNameClassEnum.INVTRANSFERINVENTORY.equals(invInvoiceDTO.getScreenName())) {
             if (invInvoiceDTO.getOfferType() == null) {
-                if ((detailEntity.getItemsBarcodesDetail().getProGroupId() == null
+                if ( detailEntity.getId() == null &&(detailEntity.getItemsBarcodesDetail().getProGroupId() == null
                         || (detailEntity.getItemsBarcodesDetail().getProGroupId() != null
                         && detailEntity.getItemsBarcodesDetail().getProGroupId() != 5
                         && detailEntity.getItemsBarcodesDetail().getProGroupId() != 13))) {

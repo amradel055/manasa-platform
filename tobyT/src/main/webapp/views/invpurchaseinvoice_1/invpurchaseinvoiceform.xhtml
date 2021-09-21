@@ -379,7 +379,7 @@
                         <p:autoComplete id="invItemNameIn"  
                                             style="width:100%"
                                             rendered="#{not invPurchaseInvoiceDetailsTable.isEdit}"
-                                            converter="#{invPurchaseInvoiceFormDTOMB.itemsBarcodesDetailsViewConverter}"
+                                            converter="#{autoComplete.itemsBarcodesDetailsViewConverter}"
                                             value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}"
                                             maxResults="30"
 
@@ -387,7 +387,7 @@
                                             itemLabel="#{item}" 
                                             itemValue="#{item}" 
                                             forceSelection="true" 
-                                            completeMethod="#{invPurchaseInvoiceFormDTOMB.completeItemsBarcodesDetailsView}" 
+                                            completeMethod="#{autoComplete.completeItemsBarcodesDetailsView}" 
                                             >
                             <p:ajax update=" unitvalue length paintColor QuantityT WeightT costTt discountT netId totalQuantity totalWeight  totalNet  form:totalActualWeight form:totalNetAfterDiscount   form:totalWithTaxValue form:taxvalue"
                                     event="itemSelect" listener="#{invPurchaseInvoiceFormDTOMB.validateItems(invPurchaseInvoiceDetailsTable)}" />
@@ -785,6 +785,92 @@
 
                 </h:panelGrid>
             </p:fieldset>
+
+            
+            <div class="ui-g-6 ui-xl-6" >
+
+                <p:dialog header="البحث عن صنف" widgetVar="dlg4" showEffect="explode" hideEffect="bounce" height="440" width="500" style="margin-top: 2%">
+
+                    <h:panelGroup>
+                        <p:outputLabel style="width: 10vh" value="الصنف"/>
+                    </h:panelGroup> 
+                    <h:panelGroup>
+                        <p:inputText value="#{invPurchaseInvoiceFormDTOMB.itemName}"/>  
+                    </h:panelGroup>
+
+                    <h:panelGroup style="margin-right: 6%">
+
+                        <p:commandButton     class="saveButton"  
+                                             title="#{userData.userDDs['SAVE']}"
+                                             value="بحث" 
+                                             icon="fa fa-fw fa-save" 
+                                             action="#{invPurchaseInvoiceFormDTOMB.findAllItemsBarcodesDetailsViewBranchId()}"
+                                             update="itemTable"
+                                             >
+                        </p:commandButton>
+
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <p:dataTable id="itemTable"
+                                     draggableColumns="true" 
+                                     var="itemTable" 
+                                     style="margin-top: 5%"
+                                     widgetVar="itemTable" 
+                                     rowIndexVar="index" 
+                                     dir="rtl" 
+                                     selection="#{invPurchaseInvoiceFormDTOMB.itemsBarcodesDetailsViewListForSearchSelected}"
+                                     value="#{invPurchaseInvoiceFormDTOMB.itemsBarcodesDetailsViewListForSearch}" 
+                                     selectionMode="single"
+                                     rowKey="#{itemTable.id}"  scrollable="true" scrollHeight="250"
+                                     emptyMessage="#{userData.userDDs['EMPTY_TABLE']}">
+
+                            <f:facet name="header" >
+                                <p:outputPanel  >
+                                    <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                                    <p:inputText id="globalFilter" onkeyup="PF('itemTable').filter()" style="width:150px" />
+                                </p:outputPanel>
+                            </f:facet>
+
+                            <p:column style="width:2vw;font-size:0.8vw;text-align: right;border-radius: 0px"
+                                      filterStyle="display:none"
+                                      filterBy="#{itemTable.barcode}"
+                                      filterMatchMode="contains"
+                                      headerText="الكود" 
+                                      sortBy="#{itemTable.barcode}" 
+                                      >
+                                <p:outputLabel value="#{itemTable.barcode}" />
+                            </p:column>  
+
+                            <p:column style="width:10vw;font-size:0.8vw;text-align: right;border-radius: 0px"
+                                      filterStyle="display:none" filterBy="#{itemTable.name}"
+                                      filterMatchMode="contains"
+                                      headerText="الصنف" 
+                                      sortBy="#{itemTable.name}" >
+                                <p:outputLabel value="#{itemTable.name}" />
+                            </p:column>  
+                        </p:dataTable> 
+
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <br/>
+                        <p:commandButton     class="saveButton"  
+                                             title="#{userData.userDDs['SAVE']}"
+                                             value="تحميل" 
+                                             icon="fa fa-fw fa-save" 
+                                             action="#{invPurchaseInvoiceFormDTOMB.putItemsBarcodesDetailsViewBranchId()}"
+                                             update="@form"
+                                             >
+                        </p:commandButton>
+                    </h:panelGroup>
+
+                </p:dialog>
+
+
+
+            </div>
+
 
 
 

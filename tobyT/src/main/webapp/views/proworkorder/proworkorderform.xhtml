@@ -229,7 +229,7 @@
                         <div style="text-align: center">
                             <p:commandButton     class="saveButton"  
                                                  title="العرض"
-                                                 value="عرض القطعتين و الثالثة هدية" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 1 and false}"
+                                                 value="عرض القطعتين و الثالثة هدية" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 1 }"
                                                  icon="fa fa-fw fa-save" 
                                                  action="#{invPurchaseInvoiceFormDTOMB.twoPieceAndThirdFreeOffer()}"
                                                  update="@form"
@@ -246,8 +246,16 @@
                             <p:commandButton     class="saveButton"  
                                                  title="العرض"
                                                  value="عرض الخصم 888" 
-                                                 icon="fa fa-fw fa-save"  rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 1 }"
+                                                 icon="fa fa-fw fa-save"  rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 1 and false }"
                                                  action="#{invPurchaseInvoiceFormDTOMB.offer999}"
+                                                 update="@form"
+                                                 >
+                            </p:commandButton>
+                               <p:commandButton  class="saveButton"  
+                                                 title="العرض"
+                                                 value="عرض الخصم 991" 
+                                                 icon="fa fa-fw fa-save"  rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 0  }"
+                                                 action="#{invPurchaseInvoiceFormDTOMB.offer991()}"
                                                  update="@form"
                                                  >
                             </p:commandButton>
@@ -830,14 +838,14 @@
                                     <p:autoComplete id="invItemNameIn"  
                                                     style="width:100%"
                                                     rendered="#{not invPurchaseInvoiceDetailsTable.isEdit}"
-                                                    converter="#{invPurchaseInvoiceFormDTOMB.itemsBarcodesDetailsViewConverter}"
+                                                    converter="#{autoComplete.itemsBarcodesDetailsViewConverter}"
                                                     value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}"
                                                     maxResults="30"
                                                     var="item"
                                                     itemLabel="#{item}" 
                                                     itemValue="#{item}" 
                                                     forceSelection="true" 
-                                                    completeMethod="#{invPurchaseInvoiceFormDTOMB.completeItemsBarcodesDetailsView}" 
+                                                    completeMethod="#{autoComplete.completeItemsBarcodesDetailsView}" 
                                                     >
                                         <p:ajax update=" proof2 proof QuantityT unitvalue QuantityTOU   costTt DISCOUNTValueT discountT netId totalQuantity   totalNet  form:totalActualWeight form:totalNetAfterDiscount   form:totalWithTaxValue form:remain  form:taxvalue"
                                                 event="itemSelect" listener="#{invPurchaseInvoiceFormDTOMB.validateItems(invPurchaseInvoiceDetailsTable)}" />

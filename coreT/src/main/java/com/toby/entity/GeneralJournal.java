@@ -68,6 +68,9 @@ public class GeneralJournal extends BaseEntity {
 
     @Transient
     private boolean userModifyAbility;
+    
+    @Transient
+    private GeneralJournalDetails generalJournalDetails ;
 
     public Integer getGeneralDecument() {
         return generalDecument;
@@ -266,6 +269,20 @@ public class GeneralJournal extends BaseEntity {
      */
     public void setDeleteDate(Date deleteDate) {
         this.deleteDate = deleteDate;
+    }
+
+    /**
+     * @return the generalJournalDetails
+     */
+    public GeneralJournalDetails getGeneralJournalDetails() {
+        return generalJournalDetails;
+    }
+
+    /**
+     * @param generalJournalDetails the generalJournalDetails to set
+     */
+    public void setGeneralJournalDetails(GeneralJournalDetails generalJournalDetails) {
+        this.generalJournalDetails = generalJournalDetails;
     }
 
 }
