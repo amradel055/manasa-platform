@@ -603,4 +603,21 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
         return (itemsStores != null && itemsStores.size() > 0) ? itemsStores.get(0) : null;
     }
 
+    @Override
+    public BigDecimal findLastCost(Integer itemId) {
+
+        List<BigDecimal> lastCost = dao.executeNativeQuery("select cost from inv_purchase_invoice_detail ipid left join inv_purchase_invoice ipi \n"
+                + "on ipi.id = ipid.inv_purchase_invoice_id where  ipi.type = 0 and  ipid.item_id =" + itemId + " order by ipid.id desc limit 1");
+        if (lastCost != null && !lastCost.isEmpty()) {
+            return lastCost.get(0);
+        } else {
+            lastCost = dao.executeNativeQuery("select last_cost from inv_item ii where id = " + itemId);
+            if (lastCost != null && !lastCost.isEmpty()) {
+                return lastCost.get(0);
+            } else {
+                return BigDecimal.ZERO;
+            }
+        }
+    }
+
 }

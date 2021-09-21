@@ -39,6 +39,8 @@ public class InvGlobalServiceImpl implements InvGlobalService {
     private GenericDAO dao;
     @EJB
     private InvItemService itemService;
+    @EJB
+    private InvPurchaseInvoiceDetailsService invPurchaseInvoiceDetailsService;
     
     @Override
     public InvDetailDTO calculateDetailTotalsRow(InvDetailDTO detailEntity, InvInvoiceDTO invInvoiceDTO, Boolean isNeeadQuantity) {
@@ -98,7 +100,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
 //        if (invInventoryId == 70) {
         if (!ScreenNameClassEnum.INVTRANSFERINVENTORY.equals(invInvoiceDTO.getScreenName())) {
             if (invInvoiceDTO.getOfferType() == null) {
-                if ((detailEntity.getItemsBarcodesDetail().getProGroupId() == null
+                if ( detailEntity.getId() == null &&(detailEntity.getItemsBarcodesDetail().getProGroupId() == null
                         || (detailEntity.getItemsBarcodesDetail().getProGroupId() != null
                         && detailEntity.getItemsBarcodesDetail().getProGroupId() != 5
                         && detailEntity.getItemsBarcodesDetail().getProGroupId() != 13))) {
@@ -639,6 +641,9 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                 
                 if (detailDTO.getItemsBarcodesDetail().getUnitName() != null
                         && !"".equals(detailDTO.getItemsBarcodesDetail().getUnitName())) {
+                     if(ScreenNameClassEnum.INVPURCHASEINVOICEFORM.equals(invInvoiceDTO.getScreenName()) ){
+                        detailDTO.setCost(invPurchaseInvoiceDetailsService.findLastCost(detailDTO.getItemsBarcodesDetail().getItemId()));
+                    }
                     SymbolDTO unit = new SymbolDTO();
                     unit.setId(detailDTO.getItemsBarcodesDetail().getUnitId());
                     unit.setName(detailDTO.getItemsBarcodesDetail().getUnitName());

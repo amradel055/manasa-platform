@@ -182,6 +182,7 @@ public class InvItemServiceImpl implements InvItemService {
         return invItem;
     }
 
+    @Override
     public InvItemDTO mapToDTO(InvItem invItem, TobyUser tobyUser) {
 
         InvItemDTO invItemDTO = new InvItemDTO();
@@ -311,9 +312,9 @@ public class InvItemServiceImpl implements InvItemService {
     public List<InvItemDTO> invItemsReport( InvItemDTO invItemDTO ,Integer branchId) {
         StringBuilder sql = new StringBuilder();
         List<InvItemDTO> list = new ArrayList<>();
-        sql.append("select i.id ,i.name,i.sell_price,i.max_price_men,i.max_price_young,i.min_price_men,i.min_price_young\n"
+        sql.append("select i.id ,i.name,i.last_cost,i.max_price_men,i.max_price_young,i.min_price_men,i.min_price_young\n"
                 + ",i.number_meters_free_men,i.number_meters_free_young,i.number_meters_men,i.number_meters_young \n"
-                + ",i.item_natural from inv_item i\n"
+                + ",i.item_natural,i.code from inv_item i\n"
                 + " where i.branch_id = ").append(branchId);
         appendProGroup(invItemDTO, sql);
         List<Object[]> res = dao.executeNativeQuery(sql.toString());
@@ -331,6 +332,7 @@ public class InvItemServiceImpl implements InvItemService {
             invItemDTO.setNumbermetersmen((BigDecimal) object[9]);
             invItemDTO.setNumbermetersyoung((BigDecimal) object[10]);
             invItemDTO.setItemNatural((Integer) object[11]);
+            invItemDTO.setCode((String) object[12]);
             list.add(invItemDTO);
         }
         return list;

@@ -97,7 +97,7 @@
                                          title="#{userData.userDDs['EDIT']}"
                                          action="#{organizationSiteListMB.goToEdit()}" 
                                          rendered="#{userData.userScreens['supplier'].edit or userData.isAdmin}">
-                            <f:setPropertyActionListener value="#{organizationSiteTable}"  target="#{organizationSiteListMB.invOrganizationSiteDTO}" />
+                            <f:setPropertyActionListener value="#{organizationSiteTable.id}"  target="#{organizationSiteListMB.invOrganizationSiteSelected}" />
                         </p:commandButton>
                         <p:commandButton  class="sdeleteButton" update="@form" icon="fa fa-remove" 
                                          title="#{userData.userDDs['DELETE']}" 

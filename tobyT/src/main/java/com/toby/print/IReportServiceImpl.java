@@ -104,6 +104,8 @@ public class IReportServiceImpl implements IReportService {
 
             } else if (ScreenNameClassEnum.INVPURCHASEORDERFORM.equals(invPurchaseInvoiceDTO.getScreenName())) {
                 fillReport(prepareReportInvPurchaseOrder(invPurchaseInvoiceDTO, userData), userData.getReportPath() + "PurchaseOrderReport.jasper", invPurchaseInvoiceDTO.getInvPurchaseInvoiceDetailList(), "pdf");
+            } else if (ScreenNameClassEnum.INVPURCHASEADDING.equals(invPurchaseInvoiceDTO.getScreenName())) {
+                fillReport(prepareReportInvPurchaseOrder(invPurchaseInvoiceDTO, userData), userData.getReportPath() + "PurchaseOrderReport.jasper", invPurchaseInvoiceDTO.getInvPurchaseInvoiceDetailList(), "pdf");
             } else if (ScreenNameClassEnum.INVSALESORDERFORM.equals(invPurchaseInvoiceDTO.getScreenName())) {
 
             } else if (ScreenNameClassEnum.INVADDINGORDERFORM.equals(invPurchaseInvoiceDTO.getScreenName())) {
@@ -661,6 +663,9 @@ public class IReportServiceImpl implements IReportService {
 
         hashMap.put("header2", " طلب شراء");
         hashMap.put("serialText", "رقم أمر الشراء");
+        if(invPurchaseInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.INVPURCHASEADDING)){
+            hashMap.put("header2", "امر استلام");
+        }
         hashMap.put("serialvalue", invPurchaseInvoiceDTO.getSerial());
         hashMap.put("supplierText", "اسم المورد");
         hashMap.put("supplierValue", invPurchaseInvoiceDTO.getOrganizationSiteId() == null ? null : invPurchaseInvoiceDTO.getOrganizationSiteId().getName());

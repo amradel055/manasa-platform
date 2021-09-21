@@ -27,6 +27,8 @@ import javax.ejb.Remote;
 @Remote
 public interface GeneraljournalService {
 
+    public GeneralJournal addGeneralJournalGlobal(GeneralJournal generalJournal);
+            
     public GeneralJournal addGeneralJournal(GeneralJournal generalJournal);
 
     public void addGeneralJournalForCorrectence(List<GeneralJournal> generalJournals);

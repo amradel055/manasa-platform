@@ -45,6 +45,28 @@
                     <div class="ui-g">
                         <div class="ui-g-12 ui-md-6">
                             <h:panelGroup>
+
+                                <div class="ui-g-12 ui-xl-12">
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:autoComplete style="width:75%" id="Cost_Center_From" 
+                                                        dropdown="true"
+                                                        converter="#{shiftingJournalMB_new.costCenterDTOConverter}"
+                                                        value="#{shiftingJournalMB_new.costCenterDTOSelected}"
+                                                        var="cost"
+                                                        itemLabel="#{cost}" 
+                                                        itemValue="#{cost}" 
+                                                        forceSelection="true" 
+                                                        completeMethod="#{shiftingJournalMB_new.completeCostCenter}" >
+                                        </p:autoComplete>
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 65px" value="#{userData.userDDs['FROM_COST_CENTER']}" for="Cost_Center_From"/>
+                                    </div>
+                                </div>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
                                 <h:panelGroup>
                                     <p:outputLabel style="width: 75px;margin-right: 6%;" value="المعرض" 
                                                    />
@@ -64,7 +86,7 @@
                                 </h:panelGroup>
                             </h:panelGroup>
                         </div>
-                        
+
                         <div class="ui-g-12 ui-md-6">
                             <h:panelGroup>
                                 <h:panelGroup>
@@ -85,7 +107,7 @@
                                 </h:panelGroup>
                             </h:panelGroup>
                         </div>
-                        
+
                         <div class="ui-g-12 ui-md-6">
 
                             <h:panelGroup>
@@ -98,9 +120,22 @@
                                     <p:selectOneMenu style="width:35%" value="#{shiftingJournalMB_new.symbolId}" id="GlAccount_ID_from" >
                                         <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"  itemValue="" />
                                         <f:selectItems value="#{shiftingJournalMB_new.options}" var="opt" itemLabel="#{opt.label}" itemValue="#{opt.value}"/>
-                                        <p:ajax update="@form" process="@form" listener="#{shiftingJournalMB_new.loadDataTableHead()}" />
+                                        <p:ajax update="@form" process="@form" listener="#{shiftingJournalMB_new.hishis()}" />
                                     </p:selectOneMenu>
                                 </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <div class="ui-g-12 ui-xl-12">
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:inputText style="width: 65px" value="#{shiftingJournalMB_new.bankCommition}" rendered="#{shiftingJournalMB_new.symbolId eq 175}" />
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 65px" value="عمولة البنك" rendered="#{shiftingJournalMB_new.symbolId eq 175}"/>
+                                    </div>
+                                </div>
                             </h:panelGroup>
                         </div>
                         <div class="ui-g-12 ui-md-6">
@@ -168,6 +203,13 @@
 
                 <h:panelGrid  class="centerButtons col-md-12" columns="1">
                     <h:panelGroup>
+                        <p:commandButton  class="midrateallButtonss" 
+                                          style="color: #fff!important;background-color: #009fff;margin-left: 5px"
+                                          value="بحث"  
+                                          id="searc"
+                                          action="#{shiftingJournalMB_new.loadDataTableHead()}" update="form" >
+                        </p:commandButton>
+                        
                         <p:commandButton  class="midrateallButtonss" 
                                           style="color: #fff!important;background-color: #009fff;margin-left: 5px"
                                           value="#{userData.userDDs['MIDRATE_ALL']}"  

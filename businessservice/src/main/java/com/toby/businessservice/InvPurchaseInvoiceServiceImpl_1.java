@@ -16,6 +16,7 @@ import com.toby.define.ScreenNameClassEnum;
 import com.toby.dto.CostCenterDTO;
 import com.toby.dto.CurrencyDTO;
 import com.toby.dto.CurrencyOperationDTO;
+import com.toby.dto.GeneralJournalDTO;
 import com.toby.dto.GlAdminUnitDTO;
 import com.toby.dto.GlBankDTO;
 import com.toby.dto.InvDetailDTO;
@@ -29,6 +30,8 @@ import com.toby.entity.Branch;
 import com.toby.entity.CostCenter;
 import com.toby.entity.Currency;
 import com.toby.entity.DiscountCodes;
+import com.toby.entity.GeneralJournal;
+import com.toby.entity.GeneralJournalDetails;
 import com.toby.entity.GlAccount;
 import com.toby.entity.GlAdminUnit;
 import com.toby.entity.GlBank;
@@ -50,6 +53,7 @@ import com.toby.entity.InvTransferDetail;
 import com.toby.entity.InventoryDelegator;
 import com.toby.entity.InventorySetup;
 import com.toby.entity.ProFactoryDelivery;
+import com.toby.entity.Symbol;
 import com.toby.views.ClientsNoMovment;
 import com.toby.views.FactoryInvoiceStatus;
 import com.toby.views.QuantityItemsStore;
@@ -111,7 +115,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     @EJB
     private CurrencyOperationService currencyOperationService;
     @EJB
-    private ProGroupService proGroupService;
+    private SymbolService symbolService;
     @EJB
     private CurrencyService currencyService;
     @EJB
@@ -128,6 +132,10 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     private InvPurchaseInvoiceService_1 invPurchaseInvoiceService;
     @EJB
     ProFactoryDeliveryService proFactoryDeliveryService;
+    @EJB
+    private GeneraljournalService generaljournalService;
+    @EJB
+    private GeneraljournalDetailsService detailsService;
 
     InvPurchaseReturnSave invPurchaseReturnSave;
 
@@ -1024,7 +1032,8 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             if (invInventoryDTOList == null || invInventoryDTOList.isEmpty()) {
                 error.append("\n يجب اعطاء صلاحية للتعامل مع المخازن");
             }
-            if (!ScreenNameClassEnum.INVTRANSFERINVENTORY.equals(screenNameClassEnum)) {
+            if (!ScreenNameClassEnum.INVTRANSFERINVENTORY.equals(screenNameClassEnum)
+                    && !ScreenNameClassEnum.PROWORKORDER.equals(screenNameClassEnum)) {
                 List<GlBankDTO> glBankList = userDataDTO.getGlBankDTOList();
                 if (glBankList == null || glBankList.isEmpty()) {
                     error.append("\n يجب اعطاء صلاحية للتعامل مع الخزائن");
@@ -2155,7 +2164,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             BigDecimal netAfterDiscountHead = (BigDecimal) line[6];
 //            if (netAfterDiscountHead != null && netAfterDiscountHead.compareTo(BigDecimal.ZERO) == 1) {
 //                BigDecimal x = netAfterDiscountHead.divide(new BigDecimal(100));
-                summitionItemsView.setAllCost(netAfterDiscountHead);
+            summitionItemsView.setAllCost(netAfterDiscountHead);
 //            }
             summitionItemsView.setAllAvarageCost((BigDecimal) line[2]);
 //            summitionItemsView.setAllAvarageCost((BigDecimal) line[4]);
@@ -2256,5 +2265,60 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             }
         }
         return summitionItemsViews;
+    }
+
+    public void tarhil(InvInvoiceDTO invInvoiceDTO,TobyUser tobyUser) {
+        if (invInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.INVPURCHASEINVOICEFORM)) {
+            GeneralJournal generalJournal = new GeneralJournal();
+            generalJournal.setGeneralStatement(invInvoiceDTO.getRemarks());
+            generalJournal.setGeneralData(invInvoiceDTO.getDate());
+            generalJournal.setGeneralDecument(invInvoiceDTO.getSerial());
+            Symbol symbol = symbolService.getSpecialDocumentsTypes(1010);
+            generalJournal.setGlYear(invInvoiceDTO.getGlYearSelection());
+            generalJournal.setGeneralType(symbol != null ? symbol : null);
+            
+            GeneralJournal journal = generaljournalService.addGeneralJournalGlobal(generalJournal);
+            
+            
+            GeneralJournalDetails generalJournalDetail = new GeneralJournalDetails();
+            
+            
+//            generalJournalDetail.setCreditamount(bean.getValueCredit());
+//            generalJournalDetail.setDebitAmount(bean.getValueDebit());
+//            generalJournalDetail.setCreditamountLocal(bean.getValueLocalCredit() != null ? bean.getValueLocalCredit() : BigDecimal.ZERO);
+//            generalJournalDetail.setDebitAmountLocal(bean.getValueLocalDebit() != null ? bean.getValueLocalDebit() : BigDecimal.ZERO);
+//            
+//            generalJournalDetail.setGlACCOUNTId(bean.getGlAccount());
+//            generalJournalDetail.setDiscribtion(bean.getRemarks());
+//            generalJournalDetail.setCompanyId(getUserData().getCompany());
+//            generalJournalDetail.setCostCenterId(bean.getCostCenter());
+//            generalJournalDetail.setAdminUnitId(bean.getAdminUnit());
+//            generalJournalDetail.setGeneralJournalId(generalJournalSelected);
+//            
+//            for (Map.Entry<Integer, List<GeneralJournalDetails>> entry : generalJournalDetailsMap.entrySet()) {
+//                if (validategeneralJournalDetails(entry.getValue())) {
+//                    for (GeneralJournalDetails details : entry.getValue()) {
+//                        details.setGeneralJournalId(generalJournalHeadMap.get(details.getGeneralJournalId().getGeneralDecument()));
+//
+//                        GlAccount account = new GlAccount();
+//                        if (details != null && details.getGlACCOUNTId() != null) {
+//                            account = accountService.findGlAccount(details.getGlACCOUNTId().getId());
+//                            details.setCurrencyId(account.getCurrencyId());
+//                            CurrencyOperation currencyOperations = new CurrencyOperation();
+//                            currencyOperations = currencyOperationService.getRatesByDates(details.getCurrencyId().getId(), details.getGeneralJournalId().getGeneralData(), companyId);
+//                            details.setRate(currencyOperations == null ? BigDecimal.ONE : currencyOperations.getRate());
+//                        }
+//                    }
+//                    detailsService.addGenDetalils(entry.getValue(), null);
+//
+//                }
+//            }
+            
+            
+
+            
+            
+        }
+
     }
 }

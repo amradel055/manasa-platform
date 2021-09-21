@@ -86,7 +86,7 @@ public class InvoiceMovementReportMB extends BaseListBean {
             if (getInvoiceNotComplete()) {
                 List<InvoiceMovementReport> list = new ArrayList<>();
                 for (InvoiceMovementReport report : getInvoiceMovementReportList()) {
-                    if (report.getNumberToFactory().compareTo(BigDecimal.ZERO) == 1 && 
+                    if (report.getNumberTobExitFactory().compareTo(BigDecimal.ZERO) == 1 && 
                             report.getNumberTobExitFactory().compareTo(report.getNumberToFactory()) != 0) {
                         list.add(report);
                     }

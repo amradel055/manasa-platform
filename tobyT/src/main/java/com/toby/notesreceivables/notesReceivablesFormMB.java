@@ -959,8 +959,8 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
                             message.append(getGlBankTransactionEntity().getSerial());
                             message.append(" المدفوع ");
                             message.append(getGlBankTransactionEntity().getValue());
-                            message.append(" المتبقي ");
-                            message.append(getGlBankTransactionEntity().getRemainInvoice());
+//                            message.append(" المتبقي ");
+//                            message.append(getGlBankTransactionEntity().getRemainInvoice());
                             if (getGlBankTransactionEntity().getGlBank().getGallaryId() != null && 
                                     getGlBankTransactionEntity().getGlBank().getGallaryId().getInvName() != null && 
                                     getGlBankTransactionEntity().getGlBank().getGallaryId().getInvName() == 0) {

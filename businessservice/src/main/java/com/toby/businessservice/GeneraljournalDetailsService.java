@@ -8,7 +8,6 @@ package com.toby.businessservice;
 
 import com.toby.businessservice.reports.searchBean.CommonSearchBean;
 import com.toby.businessservice.reports.searchBean.JournalDocumentsReportSearchBean;
-import com.toby.dto.GeneralJournalDTO;
 
 import com.toby.entity.GeneralJournalDetails;
 import com.toby.entity.GlYear;
@@ -26,6 +25,8 @@ import javax.ejb.Remote;
 public interface GeneraljournalDetailsService {
 
     public GeneralJournalDetails addGenDetalils(GeneralJournalDetails details);
+    
+    public List<GeneralJournalDetails> addGenDetalilsGlobal(List<GeneralJournalDetails> details, TobyUser tobyUser);
 
     public List<GeneralJournalDetails> addGenDetalils(List<GeneralJournalDetails> details, List<GeneralJournalDetails> generalListDeleted);
 

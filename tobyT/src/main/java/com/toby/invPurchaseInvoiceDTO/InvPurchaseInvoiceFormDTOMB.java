@@ -101,8 +101,8 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
                 message.append(getInvInvoiceDTO().getSerial());
                 message.append(" المدفوع ");
                 message.append(getInvInvoiceDTO().getPayed());
-                message.append(" المتبقي ");
-                message.append(getInvInvoiceDTO().getRemain());
+//                message.append(" المتبقي ");
+//                message.append(getInvInvoiceDTO().getRemain());
                 if (getInvInvoiceDTO().getInvnameType() != null && getInvInvoiceDTO().getInvnameType() == 0) {
                     sendSms(getInvInvoiceDTO().getCustomerMobile(), "التوبى العالمى", message.toString(), "20099319", "0564933202");
                 } else if (getInvInvoiceDTO().getInvnameType() != null && getInvInvoiceDTO().getInvnameType() == 1) {

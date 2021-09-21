@@ -13,9 +13,11 @@ import com.toby.entity.GlBankTransaction;
 import com.toby.entity.GlYear;
 import com.toby.entity.InvPurchaseInvoice;
 import com.toby.entity.InvReturnPurchase;
+import com.toby.entity.TobyUser;
 import com.toby.views.PostRestrictionsView;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +55,7 @@ public class ShiftingJournalServiceImpl implements ShiftingJournalService {
     private CurrencyOperationService currencyOperationService;
 
     @Override
-    public void saveHeadJournalAndDetails(List<GeneralJournal> generalJournalList, Map<Integer, List<GeneralJournalDetails>> generalJournalDetailsMap, Map<Integer, PostRestrictionsView> postRestricitonViewMap, GlYear glYearSelection, Integer fillGeneralJournalDetailsFlow, Integer companyId,Boolean cancelInstallment) {
+    public void saveHeadJournalAndDetails(List<GeneralJournal> generalJournalList, Map<Integer, List<GeneralJournalDetails>> generalJournalDetailsMap, Map<Integer, PostRestrictionsView> postRestricitonViewMap, GlYear glYearSelection, Integer fillGeneralJournalDetailsFlow, Integer companyId, Boolean cancelInstallment) {
 
         generalJournalHeadMap = new HashMap<>();
         if (validateGeneralJournal(generalJournalList, glYearSelection)) {
@@ -68,7 +70,7 @@ public class ShiftingJournalServiceImpl implements ShiftingJournalService {
                     updateInvPurchaseInvoiceData(prv, journal.getId(), fillGeneralJournalDetailsFlow);
                 } else if (prv.getScreenCode() >= 1015 && prv.getScreenCode() < 1021) {
                     updateInvPurchaseReturnInvoiceData(prv, journal.getId(), fillGeneralJournalDetailsFlow);
-                } 
+                }
             }
 
             for (Map.Entry<Integer, List<GeneralJournalDetails>> entry : generalJournalDetailsMap.entrySet()) {
@@ -183,5 +185,14 @@ public class ShiftingJournalServiceImpl implements ShiftingJournalService {
         } catch (Exception e) {
             e.getMessage();
         }
+    }
+
+    public void tarhil(GeneralJournal generalJournal, TobyUser tobyUser) {
+        generalJournal.setBranchId(tobyUser.getBranchId());
+        generalJournal.setCompanyId(tobyUser.getCompanyId());
+        generalJournal.setCreatedBy(tobyUser);
+        generalJournal.setCreationDate(new Date());
+        generalJournal.setPost_flag(true);
+
     }
 }

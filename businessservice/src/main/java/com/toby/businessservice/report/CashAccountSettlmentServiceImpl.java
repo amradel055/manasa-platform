@@ -576,7 +576,7 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
     }
 
     @Override
-    public BigDecimal findOpeningBalancesForSpecificCashAccount2(SubAccountSummarySearchBean cashAccountSettlementSearchBean, Integer bankId, Integer type ) {
+    public BigDecimal findOpeningBalancesForSpecificCashAccount2(SubAccountSummarySearchBean cashAccountSettlementSearchBean, Integer bankId, Integer type) {
         Map<String, Object> params = new HashMap();
         params.put("branchId", cashAccountSettlementSearchBean.getBranchId());
         params.put("bankId", bankId);
@@ -684,7 +684,6 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
         }
     }
 
-    
 //    private BigDecimal findSalesSum(SubAccountSummarySearchBean cashAccountSettlementSearchBean) {
 //        try {
 //            selesValue = BigDecimal.ZERO;
@@ -717,7 +716,6 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
 //            return BigDecimal.ZERO;
 //        }
 //    }
-
 //   private List<CashAccountSettlmentView> findReturnSales(SubAccountSummarySearchBean cashAccountSettlementSearchBean) {
 //        Map<String, Object> params = new HashMap();
 //        params.put("branchId", cashAccountSettlementSearchBean.getBranchId());
@@ -787,7 +785,7 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
     BigDecimal TransferfromSum = BigDecimal.ZERO;
 
     @Override
-    public BigDecimal findOpeningBalancesForSpecificCashAccount(SubAccountSummarySearchBean cashAccountSettlementSearchBean, Integer bankId, Integer type ) {
+    public BigDecimal findOpeningBalancesForSpecificCashAccount(SubAccountSummarySearchBean cashAccountSettlementSearchBean, Integer bankId, Integer type) {
         Openingvalue = BigDecimal.ZERO;
         cashAccountSettlementSearchBean.setBankId(bankId);
         cashAccountSettlementSearchBean.setType(type);
@@ -842,18 +840,18 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
             params.put("glBankTo", cashAccountSettlementSearchBean.getGlBankTo().getCode());
         }
     }
-    
+
     private void addGlBankSelected(StringBuilder sql, Map<String, Object> params, SubAccountSummarySearchBean cashAccountSettlementSearchBean) {
-        if(cashAccountSettlementSearchBean != null && cashAccountSettlementSearchBean.getGlBankDTOListSelected() != null && !cashAccountSettlementSearchBean.getGlBankDTOListSelected().isEmpty()){
+        if (cashAccountSettlementSearchBean != null && cashAccountSettlementSearchBean.getGlBankDTOListSelected() != null && !cashAccountSettlementSearchBean.getGlBankDTOListSelected().isEmpty()) {
             StringBuilder q = null;
-            for(GlBankDTO glBankDTO : cashAccountSettlementSearchBean.getGlBankDTOListSelected()){
-                if(q == null){
+            for (GlBankDTO glBankDTO : cashAccountSettlementSearchBean.getGlBankDTOListSelected()) {
+                if (q == null) {
                     q = new StringBuilder();
                     q.append(glBankDTO.getId());
-                }else{
+                } else {
                     q.append(" , ").append(glBankDTO.getId());
                 }
-                
+
             }
             sql.append(" and cas.bankId in ( ").append(q.toString()).append(" )");
         }
@@ -917,7 +915,7 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
         }
     }
 
-    public void addDateFromAndToForOpeningBalance(StringBuilder sql, SubAccountSummarySearchBean cashAccountSettlementSearchBean ) {
+    public void addDateFromAndToForOpeningBalance(StringBuilder sql, SubAccountSummarySearchBean cashAccountSettlementSearchBean) {
 //        if (glYear.getDateFrom() != null) {
 //            String d3 = new SimpleDateFormat("yyyy-MM-dd").format(glYear.getDateFrom());
 //            sql.append(" and cas.date >= '").append(d3).append("'");
@@ -1191,109 +1189,112 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
 
         return view;
     }
-    
+
     @Override
     public CashAccountSettlementBean search(SubAccountSummarySearchBean cashAccountSettlementSearchBean) {
-        CashAccountSettlementBean cashAccountSettlementBean = new CashAccountSettlementBean();
-        cashAccountSettlementBean.setGlBankCopyMap(new HashMap<>());
         if (cashAccountSettlementSearchBean.getGlBankDTOListSelected() != null && !cashAccountSettlementSearchBean.getGlBankDTOListSelected().isEmpty()) {
-            for (GlBankDTO gb : cashAccountSettlementSearchBean.getGlBankDTOListSelected()) {
-                cashAccountSettlementBean.getGlBankMap().put(gb.getId(), gb);
-                cashAccountSettlementBean.getTotalForDebitMap().put(gb.getId(), BigDecimal.ZERO);
-                cashAccountSettlementBean.getTotalForCreditMap().put(gb.getId(), BigDecimal.ZERO);
-                cashAccountSettlementBean.getTotalForBalanceMap().put(gb.getId(), BigDecimal.ZERO);
-                cashAccountSettlementBean.getOpeningBalanceMap().put(gb.getId(), BigDecimal.ZERO);
-                cashAccountSettlementBean.getGlBankCopyMap().put(gb.getId(), gb);
-                System.out.println("Key = " + gb.getId());
-            }
-        }
-
-        cashAccountSettlementBean.setCashAccountSettlementReports(new ArrayList<>());
-        cashAccountSettlementBean.setCashAccountSettlementOpeningBalanceList(new ArrayList<>());
-        cashAccountSettlementBean.setCashAccountSettlementList(findAllCashAccountSettlment2(cashAccountSettlementSearchBean)); // here
-        if (cashAccountSettlementSearchBean.getOrderBy() == 1) {
-            cashAccountSettlementBean.getCashAccountSettlementList().sort(new CashAccountSettlmentViewComparator());
-        }
-
-        cashAccountSettlementBean.setTotalDebit(BigDecimal.ZERO);
-        cashAccountSettlementBean.setTotalCredit(BigDecimal.ZERO);
-
-        BigDecimal debit = BigDecimal.ZERO;
-        BigDecimal credit = BigDecimal.ZERO;
-        BigDecimal balance = BigDecimal.ZERO;
-        SubAccountSummaryReport cashAccountSettlment;
-        cashAccountSettlementBean.setDistinctBankId(0);
-        for (CashAccountSettlmentView cashAccountSettlmentView : cashAccountSettlementBean.getCashAccountSettlementList()) {
-
-            cashAccountSettlment = new SubAccountSummaryReport();
-            cashAccountSettlment.setId(cashAccountSettlmentView.getBanktransactionId());
-            cashAccountSettlment.setBankId(cashAccountSettlmentView.getBankId());
-            cashAccountSettlment.setBankName(cashAccountSettlmentView.getName());
-            cashAccountSettlment.setDate(cashAccountSettlmentView.getDate() != null ? cashAccountSettlmentView.getDate() : null);
-            cashAccountSettlment.setRemark(cashAccountSettlmentView.getRemark() != null ? cashAccountSettlmentView.getRemark() : null);
-            cashAccountSettlment.setRemark2(cashAccountSettlmentView.getRemark2() != null ? cashAccountSettlmentView.getRemark2() : null);
-            cashAccountSettlment.setCode(cashAccountSettlmentView.getCode() != null ? cashAccountSettlmentView.getCode() : null);
-            cashAccountSettlment.setCurrencyName(cashAccountSettlmentView.getCurrencyName() != null ? cashAccountSettlmentView.getCurrencyName() : null);
-            cashAccountSettlment.setCurrencyCode(cashAccountSettlmentView.getCurrencyCode() != null ? cashAccountSettlmentView.getCurrencyCode() : null);
-            cashAccountSettlment.setSerial(cashAccountSettlmentView.getSerial() != null ? cashAccountSettlmentView.getSerial() + "" : null);
-            cashAccountSettlment.setTransactionTypeNumber(cashAccountSettlmentView.getTypeId());
-            cashAccountSettlment.setCreatedBy(cashAccountSettlmentView.getCreatedBy());
-            cashAccountSettlment.setCustomerName(cashAccountSettlmentView.getCustomerName());
-            cashAccountSettlment.setCustomerCode(cashAccountSettlmentView.getCustomerCode());
-            cashAccountSettlment.setInvoiceNumber(cashAccountSettlmentView.getInvoiceNumber());
-
-            if (cashAccountSettlmentView.getStatus() != null) {
-                if (cashAccountSettlementSearchBean.getCurrencyType() == 1) {
-
-                    if (cashAccountSettlmentView.getStatus() == 1) {
-                        cashAccountSettlment.setDebitAmount(cashAccountSettlmentView.getValue().setScale(2, RoundingMode.UP));
-                        cashAccountSettlment.setTransactionType(cashAccountSettlmentView.getTypeName());
-
-                    } else if (cashAccountSettlmentView.getStatus() == 0) {
-                        cashAccountSettlment.setCreditAmount(cashAccountSettlmentView.getValue().setScale(2, RoundingMode.UP));
-                        cashAccountSettlment.setTransactionType(cashAccountSettlmentView.getTypeName());
-
-                    }
-                } else {
-                    if (cashAccountSettlmentView.getStatus() == 1) {
-                        cashAccountSettlment.setDebitAmount(cashAccountSettlmentView.getValueLocal().setScale(2, RoundingMode.UP));
-                        cashAccountSettlment.setTransactionType(cashAccountSettlmentView.getTypeName());
-                    } else if (cashAccountSettlmentView.getStatus() == 0) {
-                        cashAccountSettlment.setCreditAmount(cashAccountSettlmentView.getValueLocal().setScale(2, RoundingMode.UP));
-                        cashAccountSettlment.setTransactionType(cashAccountSettlmentView.getTypeName());
-
-                    }
+            CashAccountSettlementBean cashAccountSettlementBean = new CashAccountSettlementBean();
+            cashAccountSettlementBean.setGlBankCopyMap(new HashMap<>());
+            if (cashAccountSettlementSearchBean.getGlBankDTOListSelected() != null && !cashAccountSettlementSearchBean.getGlBankDTOListSelected().isEmpty()) {
+                for (GlBankDTO gb : cashAccountSettlementSearchBean.getGlBankDTOListSelected()) {
+                    cashAccountSettlementBean.getGlBankMap().put(gb.getId(), gb);
+                    cashAccountSettlementBean.getTotalForDebitMap().put(gb.getId(), BigDecimal.ZERO);
+                    cashAccountSettlementBean.getTotalForCreditMap().put(gb.getId(), BigDecimal.ZERO);
+                    cashAccountSettlementBean.getTotalForBalanceMap().put(gb.getId(), BigDecimal.ZERO);
+                    cashAccountSettlementBean.getOpeningBalanceMap().put(gb.getId(), BigDecimal.ZERO);
+                    cashAccountSettlementBean.getGlBankCopyMap().put(gb.getId(), gb);
+                    System.out.println("Key = " + gb.getId());
                 }
             }
-            addOpeningBalance2(cashAccountSettlment, cashAccountSettlementBean, cashAccountSettlementSearchBean);
-            debit = cashAccountSettlment.getDebitAmount() != null ? cashAccountSettlment.getDebitAmount().setScale(2, RoundingMode.UP) : BigDecimal.ZERO;
-            credit = cashAccountSettlment.getCreditAmount() != null ? cashAccountSettlment.getCreditAmount().setScale(2, RoundingMode.UP) : BigDecimal.ZERO;
-            balance = cashAccountSettlementBean.getTotalForBalanceMap().get(cashAccountSettlment.getBankId());
-            if (balance == null) {
-                balance = BigDecimal.ZERO;
-            }
-            balance = balance.add(debit.subtract(credit));
-            cashAccountSettlementBean.getTotalForBalanceMap().put(cashAccountSettlment.getBankId(), balance.setScale(2, RoundingMode.UP));
-            cashAccountSettlment.setBalance(balance.setScale(2, RoundingMode.UP));
 
-            fillDebitAndCreditTotals(cashAccountSettlment, cashAccountSettlementBean, debit, credit);
-            cashAccountSettlementBean.getCashAccountSettlementReports().add(cashAccountSettlment);
-
-        }
-        calculateExceedDateOpeningBalance(cashAccountSettlementBean, cashAccountSettlementSearchBean);
-        if (cashAccountSettlementBean.getCashAccountSettlementReports() != null && !cashAccountSettlementBean.getCashAccountSettlementReports().isEmpty()) {
-            for (SubAccountSummaryReport cash : cashAccountSettlementBean.getCashAccountSettlementReports()) {
-                cash.setTotalCredit(cashAccountSettlementBean.getTotalForCreditMap() == null ? BigDecimal.ZERO : cashAccountSettlementBean.getTotalForCreditMap().get(cash.getBankId()).setScale(2, RoundingMode.UP));
-                cash.setTotalDebit(cashAccountSettlementBean.getTotalForDebitMap() == null ? BigDecimal.ZERO : cashAccountSettlementBean.getTotalForDebitMap().get(cash.getBankId()).setScale(2, RoundingMode.UP));
-                cash.setOpeningBalance(cashAccountSettlementBean.getOpeningBalanceMap() == null ? BigDecimal.ZERO : cashAccountSettlementBean.getOpeningBalanceMap().get(cash.getBankId()).setScale(2, RoundingMode.UP));
+            cashAccountSettlementBean.setCashAccountSettlementReports(new ArrayList<>());
+            cashAccountSettlementBean.setCashAccountSettlementOpeningBalanceList(new ArrayList<>());
+            cashAccountSettlementBean.setCashAccountSettlementList(findAllCashAccountSettlment2(cashAccountSettlementSearchBean)); // here
+            if (cashAccountSettlementSearchBean.getOrderBy() == 1) {
+                cashAccountSettlementBean.getCashAccountSettlementList().sort(new CashAccountSettlmentViewComparator());
             }
+
+            cashAccountSettlementBean.setTotalDebit(BigDecimal.ZERO);
+            cashAccountSettlementBean.setTotalCredit(BigDecimal.ZERO);
+
+            BigDecimal debit = BigDecimal.ZERO;
+            BigDecimal credit = BigDecimal.ZERO;
+            BigDecimal balance = BigDecimal.ZERO;
+            SubAccountSummaryReport cashAccountSettlment;
+            cashAccountSettlementBean.setDistinctBankId(0);
+            for (CashAccountSettlmentView cashAccountSettlmentView : cashAccountSettlementBean.getCashAccountSettlementList()) {
+
+                cashAccountSettlment = new SubAccountSummaryReport();
+                cashAccountSettlment.setId(cashAccountSettlmentView.getBanktransactionId());
+                cashAccountSettlment.setBankId(cashAccountSettlmentView.getBankId());
+                cashAccountSettlment.setBankName(cashAccountSettlmentView.getName());
+                cashAccountSettlment.setDate(cashAccountSettlmentView.getDate() != null ? cashAccountSettlmentView.getDate() : null);
+                cashAccountSettlment.setRemark(cashAccountSettlmentView.getRemark() != null ? cashAccountSettlmentView.getRemark() : null);
+                cashAccountSettlment.setRemark2(cashAccountSettlmentView.getRemark2() != null ? cashAccountSettlmentView.getRemark2() : null);
+                cashAccountSettlment.setCode(cashAccountSettlmentView.getCode() != null ? cashAccountSettlmentView.getCode() : null);
+                cashAccountSettlment.setCurrencyName(cashAccountSettlmentView.getCurrencyName() != null ? cashAccountSettlmentView.getCurrencyName() : null);
+                cashAccountSettlment.setCurrencyCode(cashAccountSettlmentView.getCurrencyCode() != null ? cashAccountSettlmentView.getCurrencyCode() : null);
+                cashAccountSettlment.setSerial(cashAccountSettlmentView.getSerial() != null ? cashAccountSettlmentView.getSerial() + "" : null);
+                cashAccountSettlment.setTransactionTypeNumber(cashAccountSettlmentView.getTypeId());
+                cashAccountSettlment.setCreatedBy(cashAccountSettlmentView.getCreatedBy());
+                cashAccountSettlment.setCustomerName(cashAccountSettlmentView.getCustomerName());
+                cashAccountSettlment.setCustomerCode(cashAccountSettlmentView.getCustomerCode());
+                cashAccountSettlment.setInvoiceNumber(cashAccountSettlmentView.getInvoiceNumber());
+
+                if (cashAccountSettlmentView.getStatus() != null) {
+                    if (cashAccountSettlementSearchBean.getCurrencyType() == 1) {
+
+                        if (cashAccountSettlmentView.getStatus() == 1) {
+                            cashAccountSettlment.setDebitAmount(cashAccountSettlmentView.getValue().setScale(2, RoundingMode.UP));
+                            cashAccountSettlment.setTransactionType(cashAccountSettlmentView.getTypeName());
+
+                        } else if (cashAccountSettlmentView.getStatus() == 0) {
+                            cashAccountSettlment.setCreditAmount(cashAccountSettlmentView.getValue().setScale(2, RoundingMode.UP));
+                            cashAccountSettlment.setTransactionType(cashAccountSettlmentView.getTypeName());
+
+                        }
+                    } else {
+                        if (cashAccountSettlmentView.getStatus() == 1) {
+                            cashAccountSettlment.setDebitAmount(cashAccountSettlmentView.getValueLocal().setScale(2, RoundingMode.UP));
+                            cashAccountSettlment.setTransactionType(cashAccountSettlmentView.getTypeName());
+                        } else if (cashAccountSettlmentView.getStatus() == 0) {
+                            cashAccountSettlment.setCreditAmount(cashAccountSettlmentView.getValueLocal().setScale(2, RoundingMode.UP));
+                            cashAccountSettlment.setTransactionType(cashAccountSettlmentView.getTypeName());
+
+                        }
+                    }
+                }
+                addOpeningBalance2(cashAccountSettlment, cashAccountSettlementBean, cashAccountSettlementSearchBean);
+                debit = cashAccountSettlment.getDebitAmount() != null ? cashAccountSettlment.getDebitAmount().setScale(2, RoundingMode.UP) : BigDecimal.ZERO;
+                credit = cashAccountSettlment.getCreditAmount() != null ? cashAccountSettlment.getCreditAmount().setScale(2, RoundingMode.UP) : BigDecimal.ZERO;
+                balance = cashAccountSettlementBean.getTotalForBalanceMap().get(cashAccountSettlment.getBankId());
+                if (balance == null) {
+                    balance = BigDecimal.ZERO;
+                }
+                balance = balance.add(debit.subtract(credit));
+                cashAccountSettlementBean.getTotalForBalanceMap().put(cashAccountSettlment.getBankId(), balance.setScale(2, RoundingMode.UP));
+                cashAccountSettlment.setBalance(balance.setScale(2, RoundingMode.UP));
+
+                fillDebitAndCreditTotals(cashAccountSettlment, cashAccountSettlementBean, debit, credit);
+                cashAccountSettlementBean.getCashAccountSettlementReports().add(cashAccountSettlment);
+
+            }
+            calculateExceedDateOpeningBalance(cashAccountSettlementBean, cashAccountSettlementSearchBean);
+            if (cashAccountSettlementBean.getCashAccountSettlementReports() != null && !cashAccountSettlementBean.getCashAccountSettlementReports().isEmpty()) {
+                for (SubAccountSummaryReport cash : cashAccountSettlementBean.getCashAccountSettlementReports()) {
+                    cash.setTotalCredit(cashAccountSettlementBean.getTotalForCreditMap() == null ? BigDecimal.ZERO : cashAccountSettlementBean.getTotalForCreditMap().get(cash.getBankId()).setScale(2, RoundingMode.UP));
+                    cash.setTotalDebit(cashAccountSettlementBean.getTotalForDebitMap() == null ? BigDecimal.ZERO : cashAccountSettlementBean.getTotalForDebitMap().get(cash.getBankId()).setScale(2, RoundingMode.UP));
+                    cash.setOpeningBalance(cashAccountSettlementBean.getOpeningBalanceMap() == null ? BigDecimal.ZERO : cashAccountSettlementBean.getOpeningBalanceMap().get(cash.getBankId()).setScale(2, RoundingMode.UP));
+                }
+            }
+            cashAccountSettlementBean.setCashAccountSettlementList(null);
+            cashAccountSettlementBean.setOpeningBalanceMap(null);
+            cashAccountSettlementBean.setTotalForBalanceMap(null);
+            cashAccountSettlementBean.setTotalForCreditMap(null);
+            cashAccountSettlementBean.setTotalForDebitMap(null);
+            return cashAccountSettlementBean;
         }
-        cashAccountSettlementBean.setCashAccountSettlementList(null);
-        cashAccountSettlementBean.setOpeningBalanceMap(null);
-        cashAccountSettlementBean.setTotalForBalanceMap(null);
-        cashAccountSettlementBean.setTotalForCreditMap(null);
-        cashAccountSettlementBean.setTotalForDebitMap(null);
-        return cashAccountSettlementBean;
+        return null;
     }
 
     public void addOpeningBalance2(SubAccountSummaryReport cashAccountSettlment, CashAccountSettlementBean cashAccountSettlementBean,
@@ -1301,7 +1302,7 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
         cashAccountSettlementBean.setOpeningBalance(BigDecimal.ZERO);
         if (cashAccountSettlment.getBankId() != null && cashAccountSettlementBean.getDistinctBankId().compareTo(cashAccountSettlment.getBankId()) != 0) {
             cashAccountSettlementBean.setDistinctBankId(cashAccountSettlment.getBankId());
-            BigDecimal debitOpenBalance = findOpeningBalancesForSpecificCashAccount2(cashAccountSettlementSearchBean, cashAccountSettlment.getBankId(), 1 );
+            BigDecimal debitOpenBalance = findOpeningBalancesForSpecificCashAccount2(cashAccountSettlementSearchBean, cashAccountSettlment.getBankId(), 1);
             BigDecimal creditOpenBalance = findOpeningBalancesForSpecificCashAccount2(cashAccountSettlementSearchBean, cashAccountSettlment.getBankId(), 0);
             cashAccountSettlementBean.setOpeningBalance((debitOpenBalance != null ? debitOpenBalance : BigDecimal.ZERO).subtract(creditOpenBalance != null ? creditOpenBalance : BigDecimal.ZERO));
             cashAccountSettlementBean.getOpeningBalanceMap().put(cashAccountSettlment.getBankId(), cashAccountSettlementBean.getOpeningBalance().setScale(2, RoundingMode.UP));
@@ -1367,9 +1368,5 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
             }
         }
     }
-    
-    
-    
-
 
 }

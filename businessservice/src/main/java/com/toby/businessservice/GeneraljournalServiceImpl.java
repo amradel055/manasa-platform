@@ -47,24 +47,42 @@ public class GeneraljournalServiceImpl implements GeneraljournalService {
     private InvReturnPurchaseService invReturnPurchaseService;
 
     @Override
+    public synchronized GeneralJournal addGeneralJournalGlobal(GeneralJournal generalJournal) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("glYear", generalJournal.getGlYear() == null ? null : generalJournal.getGlYear().getId());
+         Integer max = 0;
+        synchronized (max) {
+            try {
+                max = dao.findEntityByQuery("SELECT MAX(g.serial) FROM GeneralJournal g  WHERE g.branchId.id =182 AND g.companyId.id =125 and g.glYear.id =:glYear  ", params);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        if (max == null) {
+            max = 0;
+        }
+        
+        return dao.updateEntity(generalJournal);
+    }
+    @Override
     public synchronized GeneralJournal addGeneralJournal(GeneralJournal generalJournal) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", generalJournal.getBranchId().getId());
         params.put("companyId", generalJournal.getCompanyId().getId());
-        params.put("glYear", generalJournal.getGlYear().getId());
+        params.put("glYear", generalJournal.getGlYear() == null ? null : generalJournal.getGlYear().getId());
         Map<String, Object> params1 = new HashMap<>();
         params1.put("generalType", generalJournal.getGeneralType().getId());
-        params1.put("glYear", generalJournal.getGlYear().getId());
+        params1.put("glYear", generalJournal.getGlYear() == null ? null : generalJournal.getGlYear().getId());
         params1.put("branchId", generalJournal.getBranchId().getId());
 
-        Integer generaldocumet = dao.findEntityByQuery("SELECT MAX(g.generalDecument) FROM GeneralJournal g  WHERE g.glYear.id =:glYear AND g.generalType.id =:generalType and g.branchId.id =:branchId  ", params1);
-
-        if (generaldocumet == null) {
-            generaldocumet = 1;
-
-        } else {
-            generaldocumet = generaldocumet + 1;
-        }
+//        Integer generaldocumet = dao.findEntityByQuery("SELECT MAX(g.generalDecument) FROM GeneralJournal g  WHERE g.glYear.id =:glYear AND g.generalType.id =:generalType and g.branchId.id =:branchId  ", params1);
+//
+//        if (generaldocumet == null) {
+//            generaldocumet = 1;
+//
+//        } else {
+//            generaldocumet = generaldocumet + 1;
+//        }
         Integer max = 0;
         synchronized (max) {
             try {
@@ -79,9 +97,9 @@ public class GeneraljournalServiceImpl implements GeneraljournalService {
         // generalJournal.setSerial(25);
         if (generalJournal.getId() == null) {
             generalJournal.setSerial(max + 1);
-            if (generalJournal.getGeneralType() != null && (generalJournal.getGeneralType().getSerial() < 1000 || generalJournal.getGeneralType().getSerial() > 2000)) {
-                generalJournal.setGeneralDecument(generaldocumet);
-            }
+//            if (generalJournal.getGeneralType() != null && (generalJournal.getGeneralType().getSerial() < 1000 || generalJournal.getGeneralType().getSerial() > 2000)) {
+//                generalJournal.setGeneralDecument(generaldocumet);
+//            }
         }
         return dao.updateEntity(generalJournal);
     }

@@ -451,7 +451,7 @@
 
                                                    or userData.userScreens['invgroup'].view 
                                                    or userData.userScreens['itemsdata'].view 
-                                                   or userData.userScreens['itemsdata'].view 
+                                                   or userData.userScreens['invitemprice'].view 
 
                                                    or userData.userScreens['supplier'].view 
                                                    or userData.userScreens['purchasesrepresentative'].view 
@@ -522,6 +522,7 @@
                                 <p:submenu id="sr_sm31" label="#{userData.userDDs['MAIN_DATA']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['invgroup'].view 
                                                        or userData.userScreens['itemsdata'].view 
+                                                       or userData.userScreens['invitemprice'].view 
                                                        or userData.userScreens['changeprice'].view 
                                                        or userData.userScreens['invMonthTarget'].view 
                                                        or userData.isAdmin}"
@@ -531,6 +532,9 @@
                                                 />
                                     <p:menuitem id="sr_lnk312" value="#{userData.userDDs['ITEMS_DATA']}" icon="&#xE8D2;" url="/faces/views/itemsdata/itemsdatalist.xhtml" 
                                                 rendered="#{userData.userScreens['itemsdata'].view or userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="sr_lnk312001" value="اسعار الاصناف لكل فرع" icon="&#xE8D2;" url="/faces/views/invitemprice/itemspricelist.xhtml" 
+                                                rendered="#{userData.userScreens['invitemprice'].view or userData.isAdmin}"
                                                 />
                                     <p:menuitem id="sr_lnk313" value="#{userData.userDDs['CHANGE_PRICE']}" icon="&#xE8D2;" url="/faces/views/changeprice/.xhtml" 
                                                 rendered="#{userData.userScreens['changeprice'].view or userData.isAdmin}"
@@ -546,7 +550,7 @@
                                     <p:menuitem id="sr_lnk321" value="#{userData.userDDs['PURCHASES_DELEGATE']}" icon="&#xE8D2;" url="/faces/views/purchasesrepresentative/.xhtml" 
                                                 rendered="#{userData.userScreens['purchasesrepresentative'].view or userData.isAdmin}"
                                                 />
-                                    <p:menuitem id="sr_lnk322" value="#{userData.userDDs['SUPPLIERS_DATA']}" icon="&#xE8D2;" url="/faces/views/supplier/.xhtml" 
+                                    <p:menuitem id="sr_lnk322" value="#{userData.userDDs['SUPPLIERS_DATA']}" icon="&#xE8D2;" url="/faces/views/supplier/supplierList.xhtml" 
                                                 rendered="#{userData.userScreens['supplier'].view or userData.isAdmin}"
                                                 />
                                     <p:menuitem id="sr_lnk323" value="#{userData.userDDs['START_BALAN_SUPPLIER']}" icon="&#xE8D2;" url="/faces/views/supplierOpeningBalance/.xhtml" 
@@ -767,6 +771,10 @@
                                                 rendered="#{userData.userScreens['InvoiceMovementReport'].view or userData.isAdmin}"/>
                                      <p:menuitem id="sr_lnk33339" value=" بيان المبيعات لفترة" icon="&#xE8D2;" url="/faces/views/proproductionreport/SalesStatementForThePeriod.xhtml" 
                                                 rendered="#{userData.userScreens['SalesStatementForThePeriod'].view or userData.isAdmin}"/>
+                                     
+                                     <p:menuitem id="sr_lnk466" value="الأصناف حسب الفئات" icon="&#xE8D2;" url="/faces/views/inventoryreports/itemDataReport.xhtml" 
+                                                rendered="#{userData.userScreens['basicdataofitemsbysuppliersreport'].view or userData.isAdmin}"
+                                                />
                                    
                                 </p:submenu>
                                 <p:submenu id="sr_sm41" label="#{userData.userDDs['MAIN_DATA_REP']}" icon="&#xE8D2;"
@@ -1065,7 +1073,7 @@
                                     <p:menuitem id="sr_lnk33341" value=" عمال ليس لديهم حركة من تاريخ" icon="&#xE8D2;" url="/faces/views/proproductionreport/CustomersHaveNoMovementFromTheDate.xhtml" 
                                                 rendered="#{userData.userScreens['CustomersHaveNoMovementFromTheDate'].view or   userData.isAdmin}"
                                                 />
-                                    <p:menuitem id="sr_lnk33346" value=" العمال حسب المعرض" icon="&#xE8D2;" url="/faces/views/proproductionreport/ClientsByInvInventoryReport.xhtml" 
+                                    <p:menuitem id="sr_lnk33346" value=" العملاء حسب المعرض" icon="&#xE8D2;" url="/faces/views/proproductionreport/ClientsByInvInventoryReport.xhtml" 
                                                 rendered="#{userData.userScreens['ClientsByInvInventoryReport'].view or   userData.isAdmin}"
                                                 />
 
