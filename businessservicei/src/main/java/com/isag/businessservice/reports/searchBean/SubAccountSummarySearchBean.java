@@ -7,6 +7,7 @@ import com.isag.entity.GlYear;
 import com.isag.entity.IsagUser;
 import com.isag.entity.Symbol;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -41,10 +42,9 @@ public class SubAccountSummarySearchBean implements Serializable {
     private Integer fromDocumentSerial;
     private Integer toDocumentSerial;
     private GlBankDTO bankDTO;
-    
+
     private GlYearDTO glYearSelected;
     private List<GlBankDTO> glBankDTOListSelected;
-
 
     public Date getDateFrom() {
         return dateFrom;
@@ -390,6 +390,9 @@ public class SubAccountSummarySearchBean implements Serializable {
      * @return the glBankDTOListSelected
      */
     public List<GlBankDTO> getGlBankDTOListSelected() {
+        if (glBankDTOListSelected == null) {
+            glBankDTOListSelected = new ArrayList<>();
+        }
         return glBankDTOListSelected;
     }
 
