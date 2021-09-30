@@ -332,7 +332,6 @@
                 <p:dataTable id="invPurchaseInvoiceDetailsTable"
                              widgetVar="invPurchaseInvoiceDetailsTable"
                              style="margin-bottom:20px"
-
                              var="invPurchaseInvoiceDetailsTable"
                              rowIndexVar="index" 
                              dir="rtl" 
@@ -378,7 +377,7 @@
                         <p:autoComplete id="invItemNameIn"  
                                             style="width:100%"
                                             rendered="#{not invPurchaseInvoiceDetailsTable.isEdit}"
-                                            converter="#{invPurchaseInvoiceFormDTOMB.itemsBarcodesDetailsViewConverter}"
+                                            converter="#{autoComplete.itemsBarcodesDetailsViewConverter}"
                                             value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}"
                                             maxResults="30"
 
@@ -386,7 +385,7 @@
                                             itemLabel="#{item}" 
                                             itemValue="#{item}" 
                                             forceSelection="true" 
-                                            completeMethod="#{invPurchaseInvoiceFormDTOMB.completeItemsBarcodesDetailsView}" 
+                                            completeMethod="#{autoComplete.completeItemsBarcodesDetailsView}" 
                                             >
                             <p:ajax update=" unitvalue length paintColor QuantityT WeightT costTt discountT netId totalQuantity totalWeight  totalNet  form:totalActualWeight form:totalNetAfterDiscount   form:totalWithTaxValue form:taxvalue"
                                     event="itemSelect" listener="#{invPurchaseInvoiceFormDTOMB.validateItems(invPurchaseInvoiceDetailsTable)}" />

@@ -881,6 +881,7 @@
                                                        or userData.userScreens['SalesJournalForUser'].view 
                                                        or userData.userScreens['InvReturnSalesReport'].view 
                                                        or userData.userScreens['SalesOfItemsByCompany'].view 
+                                                       or userData.userScreens['invopeningbalanceitem'].view 
 
 
                                                        or userData.isAdmin}"
@@ -920,9 +921,14 @@
                                 </p:submenu>
                                 <p:submenu id="sr_sm46" label="#{userData.userDDs['STORE_REP']}" icon="&#xE8D2;"
                                            rendered="#{  userData.userScreens['invstripReport'].view  
+                                                         or userData.userScreens['invopeningbalanceitem'].view  
                                                          or userData.isAdmin}"
                                            >
 
+                                    <p:menuitem id="sr_lnk4624" value="#{userData.userDDs['STORE_INIT_BALAN']}" icon="&#xE8D2;" url="/faces/views/invopeningbalanceitem/invopeningbalanceitemlist.xhtml" 
+                                                rendered="#{userData.userScreens['invstripReport'].view or userData.isAdmin}"
+                                                />
+                                    
                                     <p:menuitem id="sr_lnk462" value="#{userData.userDDs['INV_STORES_REP']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/.xhtml" 
                                                 rendered="#{userData.userScreens['invstripReport'].view or userData.isAdmin}"
                                                 />

@@ -5,6 +5,9 @@
  */
 package com.toby.businessservice;
 
+import com.toby.define.ScreenNameClassEnum;
+import com.toby.dto.InvDetailDTO;
+import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.InvOpenningBalanceItemDetailDTO;
 import com.toby.entity.InvOpenningBalanceItemDetail;
 import com.toby.entity.TobyUser;
@@ -35,5 +38,10 @@ public interface InvOpeningBalanceItemDetailService {
     public List<InvOpenningBalanceItemDetailDTO> saveInvOpenningBalanceItemDetailDTO(List<InvOpenningBalanceItemDetailDTO> invOpenningBalanceItemDetailDTOList, Integer invOpenningBalanceItemDetailDTOId, TobyUser tobyUser);
 
     public List<Object[]> getInvOpeningBalanceItemDetailsByBranchId(Integer branchId, List<Integer> itemIdList);
+    
+     public void deleteInvOpenningBalanceItemDetailListDTO(List<InvDetailDTO> invDetailDTOList);
 
+    public String addInvOpenningBalanceItemDetailDTO(List<InvDetailDTO> invPurchaseInvoiceDetailList, InvInvoiceDTO invInvoiceDTO, ScreenNameClassEnum screenNameClassEnum, TobyUser tobyUser);
+
+    public List<InvDetailDTO> getAllInvOpenningBalanceItemDetailByInvPurchaseInvoiceIdDTO(InvInvoiceDTO invInvoiceDTO, Integer branchId);
 }

@@ -26,6 +26,8 @@ public class ProProductionTransactionListMB1 extends BaseListBean {
     private List<ProProductionItemsTransactionDTO> proProductionItemsTransactionDTOList;
 
     private LazyDataModel<ProProductionItemsTransactionDTO> dataModel;
+    
+    private Integer serialSelected;
 
     @EJB
     private ProProductionItemsTransactionService proProductionItemsTransactionService;
@@ -33,7 +35,8 @@ public class ProProductionTransactionListMB1 extends BaseListBean {
     @PostConstruct
     @Override
     public void init() {
-        load();
+        getProProductionItemsTransactionDTOList();
+//        load();
     }
 
     @Override
@@ -41,17 +44,17 @@ public class ProProductionTransactionListMB1 extends BaseListBean {
         try {
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
             setUserData((UserData) context.getSessionMap().get("userLogInData"));
-            this.setDataModel(new LazyDataModel<ProProductionItemsTransactionDTO>() {
-                private static final long serialVersionUID = 1L;
-
-                @Override
-                public List<ProProductionItemsTransactionDTO> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
-//                    proProductionItemsTransactionService.getProProductionItemsTransaction(getUserData().getUser());
-                    setRowCount(proProductionItemsTransactionService.getTotalRegistors(getUserData().getUserBranch().getId(), filters).intValue());
-                    setProProductionItemsTransactionDTOList(proProductionItemsTransactionService.getALLProProductionItemsTransactionDTO(first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), getUserData().getUserBranch().getId(), filters));
-                    return getProProductionItemsTransactionDTOList();
-                }
-            });
+//            this.setDataModel(new LazyDataModel<ProProductionItemsTransactionDTO>() {
+//                private static final long serialVersionUID = 1L;
+//
+//                @Override
+//                public List<ProProductionItemsTransactionDTO> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
+////                    proProductionItemsTransactionService.getProProductionItemsTransaction(getUserData().getUser());
+//                    setRowCount(proProductionItemsTransactionService.getTotalRegistors(getUserData().getUserBranch().getId(), filters).intValue());
+//                    setProProductionItemsTransactionDTOList(proProductionItemsTransactionService.getALLProProductionItemsTransactionDTO(first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), getUserData().getUserBranch().getId(), filters));
+//                    return getProProductionItemsTransactionDTOList();
+//                }
+//            });
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceListMB", "load");
         }
@@ -59,7 +62,7 @@ public class ProProductionTransactionListMB1 extends BaseListBean {
 
     public void search() {
         proProductionItemsTransactionDTOList = new ArrayList<>();
-        setProProductionItemsTransactionDTOList(proProductionItemsTransactionService.getALLProProductionItemsTransactionByInvoicesSerial(14862));
+        setProProductionItemsTransactionDTOList(proProductionItemsTransactionService.getALLProProductionItemsTransactionByInvoicesSerial(getSerialSelected()));
     }
 
     @Override
@@ -114,8 +117,9 @@ public class ProProductionTransactionListMB1 extends BaseListBean {
      * @return the proProductionItemsTransactionDTOList
      */
     public List<ProProductionItemsTransactionDTO> getProProductionItemsTransactionDTOList() {
-        if (proProductionItemsTransactionDTOList == null || proProductionItemsTransactionDTOList.isEmpty()) {
-            proProductionItemsTransactionDTOList = proProductionItemsTransactionService.getProProductionItemsTransaction(getUserData().getUser());
+        if (proProductionItemsTransactionDTOList == null ) {
+            proProductionItemsTransactionDTOList = new ArrayList<>();
+//            proProductionItemsTransactionDTOList = proProductionItemsTransactionService.getProProductionItemsTransaction(getUserData().getUser());
 
         }
         return proProductionItemsTransactionDTOList;
@@ -160,6 +164,20 @@ public class ProProductionTransactionListMB1 extends BaseListBean {
      */
     public void setDataModel(LazyDataModel<ProProductionItemsTransactionDTO> dataModel) {
         this.dataModel = dataModel;
+    }
+
+    /**
+     * @return the serialSelected
+     */
+    public Integer getSerialSelected() {
+        return serialSelected;
+    }
+
+    /**
+     * @param serialSelected the serialSelected to set
+     */
+    public void setSerialSelected(Integer serialSelected) {
+        this.serialSelected = serialSelected;
     }
 
     /**

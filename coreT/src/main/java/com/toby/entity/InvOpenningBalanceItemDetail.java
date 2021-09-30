@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -57,6 +58,9 @@ public class InvOpenningBalanceItemDetail extends BaseEntity {
     @JoinColumn(name = "inv_openning_balance_item_id", referencedColumnName = "id")
     @ManyToOne
     private InvOpenningBalanceItem balanceItemId;
+    @Size(max = 100)
+    @Column(name = "item_barcode")
+    private String itemBarcode;
 
     public InvOpenningBalanceItemDetail() {
     }
@@ -160,5 +164,19 @@ public class InvOpenningBalanceItemDetail extends BaseEntity {
 
     public void setBalanceItemId(InvOpenningBalanceItem balanceItemId) {
         this.balanceItemId = balanceItemId;
+    }
+
+    /**
+     * @return the itemBarcode
+     */
+    public String getItemBarcode() {
+        return itemBarcode;
+    }
+
+    /**
+     * @param itemBarcode the itemBarcode to set
+     */
+    public void setItemBarcode(String itemBarcode) {
+        this.itemBarcode = itemBarcode;
     }
 }

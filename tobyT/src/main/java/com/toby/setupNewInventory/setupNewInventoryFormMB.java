@@ -39,11 +39,13 @@ public class setupNewInventoryFormMB extends BaseFormBean implements Serializabl
 
     private InvInventoryDTO invInventoryDTO;
     private List<GlAccountDTO> glAccountDTOList;
+    private List<GlAccountDTO> glRunningAccountDTOList;
     private List<GlAdminUnitDTO> adminUnitDTOList;
     private List<CostCenterDTO> costCenterDTOList;
     private CostCenterDTOConverter costCenterDTOConverter;
     private GlAdminUnitDTOConverter adminUnitDTOConverter;
     private GlAccountDTOConverter accountDTOConverter;
+    private GlAccountDTOConverter runningAccountDTOConverter;
     private Boolean showGeneralMessage;
 
     @EJB
@@ -115,6 +117,10 @@ public class setupNewInventoryFormMB extends BaseFormBean implements Serializabl
         getGlAccountDTOList();
         return AutoComplete.completeGlAccount(query, glAccountDTOList, accountDTOConverter);
     }
+    public List<GlAccountDTO> completeRunningGlAccount(String query) {
+        getGlRunningAccountDTOList();
+        return AutoComplete.completeGlAccount(query, getGlRunningAccountDTOList(), runningAccountDTOConverter);
+    }
 
     public boolean validateCode() {
         if (invInventoryDTO != null&&invInventoryDTO.getCode()!=null&&invInventoryDTO.getMsg()==null) {
@@ -183,7 +189,7 @@ public class setupNewInventoryFormMB extends BaseFormBean implements Serializabl
 
     public void setEditedInventoryDelegatedValues(Integer id) {
         try {
-            invInventoryDTO = inventoryService.findInventory(id, getUserData().getUser());
+            invInventoryDTO = inventoryService.findInventory(id);
         } catch (Exception e) {
             saveError(e, "setupNewInventoryFormMB", "setEditedInventoryDelegatedValues");
         }
@@ -331,5 +337,37 @@ public class setupNewInventoryFormMB extends BaseFormBean implements Serializabl
      */
     public void setAccountDTOConverter(GlAccountDTOConverter accountDTOConverter) {
         this.accountDTOConverter = accountDTOConverter;
+    }
+
+    /**
+     * @return the runningAccountDTOConverter
+     */
+    public GlAccountDTOConverter getRunningAccountDTOConverter() {
+        return runningAccountDTOConverter;
+    }
+
+    /**
+     * @param runningAccountDTOConverter the runningAccountDTOConverter to set
+     */
+    public void setRunningAccountDTOConverter(GlAccountDTOConverter runningAccountDTOConverter) {
+        this.runningAccountDTOConverter = runningAccountDTOConverter;
+    }
+
+    /**
+     * @return the glRunningAccountDTOList
+     */
+    public List<GlAccountDTO> getGlRunningAccountDTOList() {
+        if (glRunningAccountDTOList == null || glRunningAccountDTOList.isEmpty()) {
+            glRunningAccountDTOList = accountService.getBranchGLAccountDTOListActive(getUserData().getUser());
+            runningAccountDTOConverter = new GlAccountDTOConverter(glRunningAccountDTOList);
+        }
+        return glRunningAccountDTOList;
+    }
+
+    /**
+     * @param glRunningAccountDTOList the glRunningAccountDTOList to set
+     */
+    public void setGlRunningAccountDTOList(List<GlAccountDTO> glRunningAccountDTOList) {
+        this.glRunningAccountDTOList = glRunningAccountDTOList;
     }
 }

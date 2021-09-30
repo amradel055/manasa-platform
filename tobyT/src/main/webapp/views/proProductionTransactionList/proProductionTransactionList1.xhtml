@@ -36,7 +36,7 @@
                             <div class="ui-g-12 ui-xl-12">
 
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:inputText style="width: 35%!important" id="ad1" value="#{proProductionTransactionListMB1.proProductionItemsTransactionDTOSelected.serialSelected}"/>
+                                    <p:inputText style="width: 35%!important" id="ad1" value="#{proProductionTransactionListMB1.serialSelected}"/>
 
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
@@ -63,13 +63,13 @@
                 
                 <div>
 
+                    
                     <p:dataTable id="details"
                                  var="details" 
                                  widgetVar="details" 
                                  rowIndexVar="index" 
                                  selection="#{proProductionTransactionListMB1.proProductionItemsTransactionDTOSelected}"
-                                 value="#{proProductionTransactionListMB1.dataModel}"
-                                 lazy="true" 
+                                 value="#{proProductionTransactionListMB1.proProductionItemsTransactionDTOList}"
                                  rows="10" 
                                  paginator="true"
                                  emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" 

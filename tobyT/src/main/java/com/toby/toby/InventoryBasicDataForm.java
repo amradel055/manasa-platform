@@ -328,6 +328,10 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
             }
         }
     }
+    
+    protected String validateloginDistributedScreens(ScreenNameClassEnum screenNameClassEnum) {
+        return invPurchaseInvoiceService.validateloginDistributedScreens(getUserDataDTO(), screenNameClassEnum);
+    }
 
     public void fillLists() {
         try {
@@ -1875,7 +1879,10 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                 getInvInvoiceDTO().setType(1);
             }
 
+        } else if (getUri().contains("invopeningbalanceitem")) {
+            getInvInvoiceDTO().setScreenName(ScreenNameClassEnum.INVOPENINGBALANCEITEMFORM);
         }
+        
     }
 
     public void fillInvInvoiceDTO() {

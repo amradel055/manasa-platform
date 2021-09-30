@@ -49,16 +49,13 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
     InvoiceMovementReportService movementReportService;
 
     @Override
-    public ProProductionItemsTransactionDTO deleteproProductionItemsTransactionDTO(ProProductionItemsTransactionDTO proProductionItemsTransactionDTO, TobyUser tobyUser) {
+    public void deleteproProductionItemsTransactionDTO(ProProductionItemsTransactionDTO proProductionItemsTransactionDTO, TobyUser tobyUser) {
 //        ProProductionItemsTransaction proProductionItemsTransaction = mapToEntity(proProductionItemsTransactionDTO, tobyUser);
 //        proProductionItemsTransaction.setIsDeleted(1);
 //        dao.updateEntity(proProductionItemsTransaction);
         ProProductionItemsTransaction proProductionItemsTransaction = new ProProductionItemsTransaction();
         proProductionItemsTransaction.setId(proProductionItemsTransactionDTO.getId());
         dao.deleteEntity(proProductionItemsTransaction);
-
-        return mapToDTO(proProductionItemsTransaction);
-
     }
 
     public ProProductionItemsTransaction mapToEntity(ProProductionItemsTransactionDTO proProductionItemsTransactionDTO, TobyUser tobyUser) {

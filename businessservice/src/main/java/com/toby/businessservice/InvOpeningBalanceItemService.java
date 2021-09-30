@@ -6,6 +6,7 @@
 package com.toby.businessservice;
 
 import com.toby.bussinessservice.global.InvPurchaseReturnSave;
+import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.InvOpenningBalanceItemDTO;
 import com.toby.dto.InvOpenningBalanceItemDetailDTO;
 import com.toby.entity.InvOpenningBalanceItem;
@@ -48,4 +49,8 @@ public interface InvOpeningBalanceItemService {
     public InvOpenningBalanceItemDTO validatePriceColumn(InvOpenningBalanceItemDetailDTO invOpenningBalanceItemDetailDTOSelected, InvOpenningBalanceItemDTO invOpenningBalanceItemDTO);
 
    public InvOpenningBalanceItemDTO saveInvOpenningBalanceItemDTO(InvOpenningBalanceItemDTO invOpenningBalanceItemDTO ,TobyUser tobyUser);
+
+   public InvInvoiceDTO save(InvInvoiceDTO invInvoiceDTO, TobyUser tobyUser) ;
+    
+    public InvInvoiceDTO findOpeningBalanceById(InvInvoiceDTO invInvoiceDTO);
 }

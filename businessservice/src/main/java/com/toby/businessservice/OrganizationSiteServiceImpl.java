@@ -76,10 +76,12 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
                 OfferCompany offerCompany = new OfferCompany();
                 offerCompany.setId(organizationSiteDTO.getOfferCompanyDTO().getId());
                 entity.setOfferCompanyId(offerCompany);
-                entity.setMobile(organizationSiteDTO.getMobile());
-                entity.setName(organizationSiteDTO.getName());
-                dao.updateEntity(entity);
+            } else {
+                entity.setOfferCompanyId(null);
             }
+            entity.setMobile(organizationSiteDTO.getMobile());
+            entity.setName(organizationSiteDTO.getName());
+            dao.updateEntity(entity);
         }
     }
 
@@ -1465,8 +1467,6 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         sql.append(" ORDER BY e.code");
     }
 
-    
-
     private void initMapToDTOSmall(InvOrganizationSiteDTO dTO, InvOrganizationSite entity) {
         dTO.setId(entity.getId());
         dTO.setCode(entity.getCode());
@@ -1616,7 +1616,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         initMapToDTOSmall(dTO, entity);
         return dTO;
     }
-    
+
     @Override
     public InvOrganizationSiteDTO mapToDTOSmall(InvOrganizationSite invOrganizationSite) {
         InvOrganizationSiteDTO invOrganizationSiteDTO = new InvOrganizationSiteDTO();
@@ -1652,7 +1652,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             offerCompanyDTO.setDiscount(invOrganizationSite.getOfferCompanyId().getDiscount());
             invOrganizationSiteDTO.setOfferCompanyDTO(offerCompanyDTO);
         }
-        
+
         if (invOrganizationSite.getGallaryId() != null) {
             InvInventoryDTO gallary = new InvInventoryDTO();
             gallary.setId(invOrganizationSite.getGallaryId().getId());
@@ -1676,8 +1676,8 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
     }
 
     @Override
-     public InvOrganizationSiteDTO mapToDTOSmall(Integer invOrganizationSiteId){
-         InvOrganizationSite ios = dao.findEntityById(InvOrganizationSite.class, invOrganizationSiteId);
-         return mapToDTOSmall(ios);
-     }
+    public InvOrganizationSiteDTO mapToDTOSmall(Integer invOrganizationSiteId) {
+        InvOrganizationSite ios = dao.findEntityById(InvOrganizationSite.class, invOrganizationSiteId);
+        return mapToDTOSmall(ios);
+    }
 }

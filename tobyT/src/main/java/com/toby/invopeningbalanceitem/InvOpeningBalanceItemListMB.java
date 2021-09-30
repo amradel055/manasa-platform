@@ -6,7 +6,7 @@
 package com.toby.invopeningbalanceitem;
 
 import com.toby.businessservice.InvOpeningBalanceItemService;
-import com.toby.dto.InvOpenningBalanceItemDTO;
+import com.toby.entity.InvOpenningBalanceItem;
 import com.toby.toby.BaseListBean;
 import com.toby.toby.UserData;
 import java.util.ArrayList;
@@ -28,10 +28,10 @@ import javax.inject.Named;
 public class InvOpeningBalanceItemListMB extends BaseListBean {
 
     private UserData userData;
-    private List<InvOpenningBalanceItemDTO> invOpenningBalanceItemList = new ArrayList<>();
-    private InvOpenningBalanceItemDTO invOpenningBalanceItem;
+    private List<InvOpenningBalanceItem> invOpenningBalanceItemList = new ArrayList<>();
+    private InvOpenningBalanceItem invOpenningBalanceItem;
     private Integer invOpenningBalanceItemSelected;
-   
+    private Integer index = 0;
 
     @EJB
     private InvOpeningBalanceItemService balanceItemService;
@@ -40,7 +40,7 @@ public class InvOpeningBalanceItemListMB extends BaseListBean {
     @PostConstruct
     public void init() {
         try {
-            invOpenningBalanceItem = new InvOpenningBalanceItemDTO();
+            invOpenningBalanceItem = new InvOpenningBalanceItem();
             load();
         } catch (Exception e) {
             saveError(e, "InvOpeningBalanceItemListMB", "init");
@@ -52,7 +52,7 @@ public class InvOpeningBalanceItemListMB extends BaseListBean {
         try {
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
             userData = (UserData) context.getSessionMap().get("userLogInData");
-            getInvOpenningBalanceItemList();
+            invOpenningBalanceItemList = balanceItemService.getInvOpeningBalanceItemByBranchId(getUserData().getUserBranch().getId());
         } catch (Exception e) {
             saveError(e, "InvOpeningBalanceItemListMB", "load");
         }
@@ -64,9 +64,8 @@ public class InvOpeningBalanceItemListMB extends BaseListBean {
             Map<String, String> userDDs = userData.getUserDDs();
             if (invOpenningBalanceItem != null) {
                 try {
+                    balanceItemService.deleteInvOpeningBalanceItem(invOpenningBalanceItem);
                     invOpenningBalanceItemList.remove(invOpenningBalanceItem);
-                    balanceItemService.deleteInvOpeningBalanceItemDTO(invOpenningBalanceItem,getUserData().getUser());
-                    
                     savedMeesage(userData, userDDs.get("DELETED"));
                 } catch (Exception e) {
                     errorMessage(getUserData(), userDDs.get("UNIQE_KEY_ERROR"));
@@ -89,7 +88,7 @@ public class InvOpeningBalanceItemListMB extends BaseListBean {
     public String goToAdd() {
         try {
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-            context.getSessionMap().put("ScreenMode", "Add");
+            context.getSessionMap().put("ScreenMode", "addINVOPENINGBALANCE");
             exit("../invopeningbalanceitem/invopeningbalanceitemform.xhtml");
             return "";
         } catch (Exception e) {
@@ -104,7 +103,7 @@ public class InvOpeningBalanceItemListMB extends BaseListBean {
             if (invOpenningBalanceItemSelected != null && invOpenningBalanceItemSelected > 0) {
                 ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
                 context.getSessionMap().put("invOpenningBalanceItemSelected", invOpenningBalanceItemSelected);
-                context.getSessionMap().put("ScreenMode", "Edit");
+                context.getSessionMap().put("ScreenMode", "editINVOPENINGBALANCE");
                 exit("../invopeningbalanceitem/invopeningbalanceitemform.xhtml");
                 return "";
             } else {
@@ -121,42 +120,62 @@ public class InvOpeningBalanceItemListMB extends BaseListBean {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     * @return the userData
+     */
     public UserData getUserData() {
         return userData;
     }
 
-   
+    /**
+     * @param userData the userData to set
+     */
     public void setUserData(UserData userData) {
         this.userData = userData;
     }
 
+    /**
+     * @return the invOpenningBalanceItemSelected
+     */
     public Integer getInvOpenningBalanceItemSelected() {
         return invOpenningBalanceItemSelected;
     }
 
-   
+    /**
+     * @param invOpenningBalanceItemSelected the invOpenningBalanceItemSelected
+     * to set
+     */
     public void setInvOpenningBalanceItemSelected(Integer invOpenningBalanceItemSelected) {
         this.invOpenningBalanceItemSelected = invOpenningBalanceItemSelected;
     }
 
+    /**
+     * @return the index
+     */
+    public Integer getIndex() {
+        return index;
+    }
 
-    public List<InvOpenningBalanceItemDTO> getInvOpenningBalanceItemList() {
-        if(invOpenningBalanceItemList == null || invOpenningBalanceItemList.isEmpty()){
-          invOpenningBalanceItemList=  balanceItemService.getInvOpeningBalanceItemByBranchIdDTO(getUserData().getUserBranch().getId(),getUserData().getUser());
-        
-        }
+    /**
+     * @param index the index to set
+     */
+    public void setIndex(Integer index) {
+        this.index = index;
+    }
+
+    public List<InvOpenningBalanceItem> getInvOpenningBalanceItemList() {
         return invOpenningBalanceItemList;
     }
 
-    public void setInvOpenningBalanceItemList(List<InvOpenningBalanceItemDTO> invOpenningBalanceItemList) {
+    public void setInvOpenningBalanceItemList(List<InvOpenningBalanceItem> invOpenningBalanceItemList) {
         this.invOpenningBalanceItemList = invOpenningBalanceItemList;
     }
 
-    public InvOpenningBalanceItemDTO getInvOpenningBalanceItem() {
+    public InvOpenningBalanceItem getInvOpenningBalanceItem() {
         return invOpenningBalanceItem;
     }
 
-    public void setInvOpenningBalanceItem(InvOpenningBalanceItemDTO invOpenningBalanceItem) {
+    public void setInvOpenningBalanceItem(InvOpenningBalanceItem invOpenningBalanceItem) {
         this.invOpenningBalanceItem = invOpenningBalanceItem;
     }
 }

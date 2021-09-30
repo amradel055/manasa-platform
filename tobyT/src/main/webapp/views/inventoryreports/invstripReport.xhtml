@@ -17,67 +17,34 @@
                 <p:messages autoUpdate="true"  showDetail="true" closable="true" rendered="true" />
             </div>
 
-
             <p:fieldset  style=" position: relative" legend="#{userData.userDDs['INV_STORES_REP']}"> 
 
                 <div class="ui-g firstset" id="firstSegment ">
 
-
-
                     <div class="ui-g-6 ui-xl-6">
+       	                <div class="ui-g-12 ui-xl-12">
 
-                        <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
-                                <p:calendar pattern="dd/MM/yyyy" 
-                                            id="dateTo"
-                                            value="#{InventoryStripReportMB.invStripSearchBean.dateTo}"
-                                            style="width: 50%">
-                                </p:calendar>
-                            </div>
-                            <div class="ui-g-6 ui-xl-6">
-                                <p:outputLabel  style="width: 100px; " value="#{userData.userDDs['UNTIL_DATE']}"/>
-
-                            </div>
-                        </div>
-                        <div class="ui-g-12 ui-xl-12">
-                            <div class="ui-g-6 ui-xl-6">
-                                <p:autoComplete style="width:34%!important " 
+                                <p:autoComplete style="width:40%!important " 
                                                 dropdown="true"
-                                                converter="#{InventoryStripReportMB.invInventoryConverter}"
-                                                value="#{InventoryStripReportMB.invStripSearchBean.inventoryFrom}"
-                                                var="inventory"
-                                                itemLabel="#{inventory}" 
-                                                itemValue="#{inventory}" 
+                                                converter="#{InventoryStripReportMB.groupConverter}"
+                                                value="#{InventoryStripReportMB.invStripSearchBean.groupTo}"
+                                                var="group"
+                                                itemLabel="#{group}" 
+                                                itemValue="#{group}" 
                                                 forceSelection="true" 
-                                                completeMethod="#{InventoryStripReportMB.completInventory}" >
+                                                completeMethod="#{InventoryStripReportMB.completInvGroups}" >
                                 </p:autoComplete>
                             </div>
                             <div class="ui-g-6 ui-xl-6">
-                                <p:outputLabel style="width: 105px;" value="#{userData.userDDs['FROM_REPOS']}"/>
+                                <p:outputLabel style="width: 105px" value="#{userData.userDDs['TO_GROUP']}"/>
 
                             </div>
                         </div>
                         <div class="ui-g-12 ui-xl-12">
-                            <div class="ui-g-6 ui-xl-6">
-                                <p:autoComplete style="width:34%!important " 
-                                                dropdown="true"
-                                                converter="#{InventoryStripReportMB.invInventoryConverter}"
-                                                value="#{InventoryStripReportMB.invStripSearchBean.inventoryTo}"
-                                                var="inventory"
-                                                itemLabel="#{inventory}" 
-                                                itemValue="#{inventory}" 
-                                                forceSelection="true" 
-                                                completeMethod="#{InventoryStripReportMB.completInventory}" >
-                                </p:autoComplete>
-                            </div>
-                            <div class="ui-g-6 ui-xl-6">
-                                <p:outputLabel style="width: 105px" value="#{userData.userDDs['TO_REPOS']}"/>
 
-                            </div>
-                        </div>
-                        <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
-                                <p:autoComplete style="width:34%!important " 
+                                <p:autoComplete style="width:40%!important " 
                                                 dropdown="true"
                                                 converter="#{InventoryStripReportMB.groupConverter}"
                                                 value="#{InventoryStripReportMB.invStripSearchBean.groupFrom}"
@@ -94,48 +61,96 @@
                             </div>
                         </div>
                         <div class="ui-g-12 ui-xl-12">
+
                             <div class="ui-g-6 ui-xl-6">
-                                <p:autoComplete style="width:34%!important " 
+                                <p:autoComplete style="width:40%!important " 
                                                 dropdown="true"
-                                                converter="#{InventoryStripReportMB.groupConverter}"
-                                                value="#{InventoryStripReportMB.invStripSearchBean.groupTo}"
-                                                var="group"
-                                                itemLabel="#{group}" 
-                                                itemValue="#{group}" 
+                                                converter="#{InventoryStripReportMB.invInventoryConverter}"
+                                                value="#{InventoryStripReportMB.invStripSearchBean.inventoryTo}"
+                                                var="inventory"
+                                                itemLabel="#{inventory}" 
+                                                itemValue="#{inventory}" 
                                                 forceSelection="true" 
-                                                completeMethod="#{InventoryStripReportMB.completInvGroups}" >
+                                                completeMethod="#{InventoryStripReportMB.completInventory}" >
                                 </p:autoComplete>
                             </div>
                             <div class="ui-g-6 ui-xl-6">
-                                <p:outputLabel style="width: 105px" value="#{userData.userDDs['TO_GROUP']}"/>
+                                <p:outputLabel style="width: 105px" value="#{userData.userDDs['TO_REPOS']}"/>
 
                             </div>
                         </div>
-                    </div>
+                        <div class="ui-g-12 ui-xl-12">
 
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:autoComplete style="width:40%!important " 
+                                                dropdown="true"
+                                                converter="#{InventoryStripReportMB.invInventoryConverter}"
+                                                value="#{InventoryStripReportMB.invStripSearchBean.inventoryFrom}"
+                                                var="inventory"
+                                                itemLabel="#{inventory}" 
+                                                itemValue="#{inventory}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{InventoryStripReportMB.completInventory}" >
+                                </p:autoComplete>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 105px;" value="#{userData.userDDs['FROM_REPOS']}"/>
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:calendar pattern="dd/MM/yyyy" 
+                                            id="dateTo"
+                                            value="#{InventoryStripReportMB.invStripSearchBean.dateTo}"
+                                            style="width: 50%">
+                                </p:calendar>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel  style="width: 100px;" value="#{userData.userDDs['UNTIL_DATE']}"/>
+
+                            </div>
+                        </div>
+
+                    </div>
                     <div class="ui-g-6 ui-xl-6">
 
                         <div class="ui-g-12 ui-xl-12">
+
+                            <p:selectBooleanCheckbox value="#{InventoryStripReportMB.isZeroo}" itemLabel="الارصده الصفرية"/>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+
                             <div class="ui-g-6 ui-xl-6">
-                                <p:autoComplete style="width:34%!important " 
-                                                dropdown="true"
-                                                converter="#{InventoryStripReportMB.suplierConverter}"
-                                                value="#{InventoryStripReportMB.invStripSearchBean.suplierFrom}"
-                                                var="suplier"
-                                                itemLabel="#{suplier}" 
-                                                itemValue="#{suplier}" 
-                                                forceSelection="true" 
-                                                completeMethod="#{InventoryStripReportMB.completSupliers}" >
-                                </p:autoComplete>
+                                <p:selectOneRadio id="evaluationStatus"
+                                                  value="#{InventoryStripReportMB.evaluationStatus}" 
+                                                  style="width:40%!important">                                                             
+                                    <f:selectItem itemLabel="بالتكلفه؟"  itemValue="0"  />
+                                    <f:selectItem itemLabel="بالسعر"  itemValue="1"  />
+                                </p:selectOneRadio>  
                             </div>
                             <div class="ui-g-6 ui-xl-6">
-                                <p:outputLabel style="width: 105px;" value="#{userData.userDDs['FROM_SUPPLIER']}"/>
+                                <p:outputLabel style="width: 105px" value="حالة التقييم"/>
 
                             </div>
                         </div>
                         <div class="ui-g-12 ui-xl-12">
+
                             <div class="ui-g-6 ui-xl-6">
-                                <p:autoComplete style="width:34%!important " 
+                                <p:inputNumber style="width:40%!important" id="weightPrice"
+                                               value="#{InventoryStripReportMB.weightPrice}">
+                                </p:inputNumber>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 105px;" value="سعر الكيلو"/>
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:autoComplete style="width:40%!important " 
                                                 dropdown="true"
                                                 converter="#{InventoryStripReportMB.suplierConverter}"
                                                 value="#{InventoryStripReportMB.invStripSearchBean.suplierTo}"
@@ -152,91 +167,84 @@
                             </div>
                         </div>
                         <div class="ui-g-12 ui-xl-12">
+
                             <div class="ui-g-6 ui-xl-6">
-                                <p:inputNumber style="width:34%!important" id="weightPrice"
-                                               value="#{InventoryStripReportMB.weightPrice}">
-                                </p:inputNumber>
+                                <p:autoComplete style="width:40%!important " 
+                                                dropdown="true"
+                                                converter="#{InventoryStripReportMB.suplierConverter}"
+                                                value="#{InventoryStripReportMB.invStripSearchBean.suplierFrom}"
+                                                var="suplier"
+                                                itemLabel="#{suplier}" 
+                                                itemValue="#{suplier}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{InventoryStripReportMB.completSupliers}" >
+                                </p:autoComplete>
                             </div>
                             <div class="ui-g-6 ui-xl-6">
-                                <p:outputLabel style="width: 100px;" value="سعر الكيلو"/>
+                                <p:outputLabel style="width: 105px;" value="#{userData.userDDs['FROM_SUPPLIER']}"/>
 
                             </div>
                         </div>
-                        <div class="ui-g-12 ui-xl-12">
-                            <div class="ui-g-6 ui-xl-6">
-                                <p:selectOneRadio id="evaluationStatus"
-                                                  value="#{InventoryStripReportMB.evaluationStatus}" 
-                                                  style="width:34%!important; display: inline;">                                                             
-                                    <f:selectItem itemLabel="بالتكلفة"  itemValue="0"  />
-                                    <f:selectItem itemLabel="بالسعر"  itemValue="1"  />
-                                </p:selectOneRadio>  
-                            </div>
-                            <div class="ui-g-6 ui-xl-6">
-                                <p:outputLabel style="width: 105px" value="حالة التقييم"/>
-
-                            </div>
-                        </div>
-
                     </div>
 
 
-                </div>
 
 
-
-                <div style="text-align: center">
-              
-
-
-                        <p:commandButton     class="searchButtons"
-
-                                             title="#{userData.userDDs['SEARCH']}"
-                                             action="#{InventoryStripReportMB.search()}"
-                                             id="search"
-                                             value="#{userData.userDDs['SEARCH']}"
-                                             update="invStripTable" 
-                                             />
-
-                        <p:commandButton    class="newButtons"
-                                            id="NewB"
-                                            title="#{userData.userDDs['NEW']}" 
-                                            immediate="true" 
-                                            action="#{InventoryStripReportMB.reset()}"
-                                            update="@form"
-                                            value="#{userData.userDDs['NEW']}"
-                                            />
-
-                        <p:commandButton     class="printButtons"
-                                             id="PrintB"
-                                             ajax="false"
-                                             onclick="form.target = '_blank'"  
-                                             value="#{userData.userDDs['PRINT']}" 
-                                             actionListener="#{InventoryStripReportMB.exportPDF}"
-                                             title="#{userData.userDDs['PRINT']}"
-                                             immediate="true" />
-
-                        <p:commandButton     class="closeButtons"
-                                             id="CloseB"
-                                             title="#{userData.userDDs['BACK']}"
-                                             action="exit"
-                                             value="#{userData.userDDs['BACK']}"/>
-                        <h:commandLink  class="sdcreenimg" style="margin-right: 4px;">  
-                            <p:graphicImage name="/img/excel.jpg" width="24"/>  
-                            <p:dataExporter type="xls"
-                                            target="invStripTable" 
-                                            fileName=" جرد المستودع"
-                                            postProcessor="#{InventoryStripReportMB.postProcessXLS}" />  
-                        </h:commandLink>
-
-                        <p:blockUI block="form" trigger="search NewB PrintB CloseB" animate="true" >
-
-                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
-
-                        </p:blockUI> 
 
 
                 </div>
 
+
+
+                <div id="buttunss" class="asmaa">
+
+                    <p:commandButton     class="searchButtons"
+
+                                         title="#{userData.userDDs['SEARCH']}"
+                                         action="#{InventoryStripReportMB.search()}"
+                                         id="search"
+                                         value="#{userData.userDDs['SEARCH']}"
+                                         update="invStripTable" 
+                                         />
+
+                    <p:commandButton    class="newButton"
+                                        id="NewB"
+                                        title="#{userData.userDDs['NEW']}" 
+                                        immediate="true" 
+                                        action="#{InventoryStripReportMB.reset()}"
+                                        update="@form"
+                                        value="#{userData.userDDs['NEW']}"
+                                        />
+
+                    <p:commandButton     class="printButtons"
+                                         id="PrintB"
+                                         ajax="false"
+                                         onclick="form.target = '_blank'"  
+                                         value="#{userData.userDDs['PRINT']}" 
+                                         actionListener="#{InventoryStripReportMB.exportPDF}"
+                                         title="#{userData.userDDs['PRINT']}"
+                                         immediate="true" />
+
+                    <p:commandButton     class="closeButton"
+                                         id="CloseB"
+                                         title="#{userData.userDDs['BACK']}"
+                                         action="exit"
+                                         value="#{userData.userDDs['BACK']}"/>
+                    <h:commandLink  class="sdcreenimg" style="margin-right: 4px;">  
+                        <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                        <p:dataExporter type="xls"
+                                        target="invStripTable" 
+                                        fileName=" جرد المستودع"
+                                        postProcessor="#{InventoryStripReportMB.postProcessXLS}" />  
+                    </h:commandLink>
+
+                    <p:blockUI block="form" trigger="search NewB PrintB CloseB" animate="true" >
+
+                        <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                    </p:blockUI> 
+
+                </div>
             </p:fieldset>
 
             <p:fieldset  style="margin-top: 2%">

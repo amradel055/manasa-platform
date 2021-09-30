@@ -172,6 +172,8 @@ public class InvInvoiceDTO extends BaseEntityDTO {
     private String customerName;
     private String customerMobile;
     private Integer invoiceType;
+    
+    private Integer generalJournalId;
 
     public InvInvoiceDTO() {
     }
@@ -1788,6 +1790,20 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      */
     public void setInvoiceType(Integer invoiceType) {
         this.invoiceType = invoiceType;
+    }
+
+    /**
+     * @return the generalJournalId
+     */
+    public Integer getGeneralJournalId() {
+        return generalJournalId;
+    }
+
+    /**
+     * @param generalJournalId the generalJournalId to set
+     */
+    public void setGeneralJournalId(Integer generalJournalId) {
+        this.generalJournalId = generalJournalId;
     }
 
 }

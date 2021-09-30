@@ -6,10 +6,10 @@
 package com.toby.reports;
 
 import com.toby.businessservice.TobyUserInventoryService;
-import com.toby.businessservice.report.InventoryStripReportService;
 import com.toby.businessservice.InvGroupService;
 import com.toby.businessservice.ItemsDataViewService;
 import com.toby.businessservice.OrganizationSiteService;
+import com.toby.businessservice.report.InventoryStripReportService;
 import com.toby.businessservice.reports.searchBean.InvItemSalesSearchBean;
 import com.toby.converter.InvGroupConverter;
 import com.toby.converter.InvInventoryConverter;
@@ -25,6 +25,7 @@ import com.toby.toby.UserData;
 import com.toby.views.ItemsDataView;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -47,7 +48,7 @@ import net.sf.jasperreports.engine.JRException;
  *
  * @author hhhh
  */
-@Named("inventoryStripReportMB")
+@Named("InventoryStripReportMB")
 @ViewScoped
 public class InventoryStripReportMB extends BaseReportBean {
 
@@ -93,6 +94,13 @@ public class InventoryStripReportMB extends BaseReportBean {
     private boolean negativeValues = false;
     private Integer evaluationStatus;
     private BigDecimal weightPrice = BigDecimal.ZERO;
+    private String balanceValueCarton;
+    private String debitValueCarton;
+    private String creditValueCarton;
+    private String firstValueCarton;
+    private String secondValueCarton;
+    private Boolean isZeroo;
+
     // EJBs
     @EJB
     private TobyUserInventoryService tobyUserInventoryService;
@@ -220,6 +228,7 @@ public class InventoryStripReportMB extends BaseReportBean {
                 invStripSearchServiceBean.setSuplierFrom(invStripSearchBean.getSuplierFrom());
                 invStripSearchServiceBean.setSuplierTo(invStripSearchBean.getSuplierTo());
                 invStripSearchServiceBean.setType(invStripSearchBean.getType());
+//                invStripSearchServiceBean.setItemSupplier(invStripSearchBean.getItemSupplier());
 //            invStripSearchServiceBean.setGroupFrom(invStripSearchBean.getGroupFrom());
 //            invStripSearchServiceBean.setGroupTo(invStripSearchBean.getGroupTo());
 
@@ -233,6 +242,15 @@ public class InventoryStripReportMB extends BaseReportBean {
                     prepareRootGroupValues();
                 }
                 mergeGroupsWithItems();
+            }
+            if (isZeroo) {
+                List<StripReportViewBean> stripReportViewBeanList2 = new ArrayList<>();
+                for (StripReportViewBean bean : stripReportViewBeanList) {
+                    if (bean.getBalance().compareTo(BigDecimal.ZERO) == 1) {
+                        stripReportViewBeanList2.add(bean);
+                    }
+                    stripReportViewBeanList = stripReportViewBeanList2;
+                }
             }
         } else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب اختيار حتى تاريخ"));
@@ -331,7 +349,7 @@ public class InventoryStripReportMB extends BaseReportBean {
                     srvb.setQtyIn((srvb.getQtyIn() != null ? srvb.getQtyIn() : BigDecimal.ZERO).add(idv.getQtyin() != null ? idv.getQtyin().setScale(2, BigDecimal.ROUND_UP) : BigDecimal.ZERO));
                     srvb.setQtyOut((srvb.getQtyOut() != null ? srvb.getQtyOut() : BigDecimal.ZERO).add(idv.getQtyout() != null ? idv.getQtyout().setScale(2, BigDecimal.ROUND_UP) : BigDecimal.ZERO));
                     srvb.setCostAverage((srvb.getCostAverage() != null ? srvb.getCostAverage() : BigDecimal.ZERO).add(idv.getCostAverage() != null ? idv.getCostAverage().setScale(2, BigDecimal.ROUND_UP) : BigDecimal.ZERO));
-//                    srvb.setBalanceValue((srvb.getBalanceValue() != null ? srvb.getBalanceValue() : BigDecimal.ZERO).add(idv.getBalanceValue() != null ? idv.getBalanceValue().setScale(2, BigDecimal.ROUND_UP) : BigDecimal.ZERO));
+                    //srvb.setBalanceValue((srvb.getBalanceValue() != null ? srvb.getBalanceValue() : BigDecimal.ZERO).add(idv.getBalanceValue() != null ? idv.getBalanceValue().setScale(2, BigDecimal.ROUND_UP) : BigDecimal.ZERO));
                     srvb.setBalanceValue((srvb.getBalanceValue() != null ? srvb.getBalanceValue() : BigDecimal.ZERO).add(calculateBalanceValueBasedWeightExistenceAndEvaluation(idv)));
 
                 }
@@ -342,6 +360,7 @@ public class InventoryStripReportMB extends BaseReportBean {
                 totalsOfReport.setCreditValue(totalsOfReport.getCreditValue().add(srvb.getQtyOut() != null ? srvb.getQtyOut() : BigDecimal.ZERO));
                 totalsOfReport.setFirstValue(totalsOfReport.getFirstValue().add(srvb.getCostAverage() != null ? srvb.getCostAverage() : BigDecimal.ZERO));
                 totalsOfReport.setSecondValue(totalsOfReport.getSecondValue().add(srvb.getBalanceValue() != null ? srvb.getBalanceValue() : BigDecimal.ZERO));
+
                 if (childGrp.getParent() != null) {
                     putValueOfParent(childGrp.getParent(), srvb);
                 }
@@ -433,6 +452,9 @@ public class InventoryStripReportMB extends BaseReportBean {
             stripReportViewBean.setCostAverage(totalsOfReport.getFirstValue().setScale(2, BigDecimal.ROUND_UP));
             stripReportViewBean.setBalanceValue(totalsOfReport.getSecondValue().setScale(2, BigDecimal.ROUND_UP));
 
+            //stripReportViewBean.setBalance(repositoryBalance.setScale(2, BigDecimal.ROUND_UP));
+            stripReportViewBean.setCostAverage(totalsOfReport.getFirstValue().setScale(2, BigDecimal.ROUND_UP));
+
             finalTotalsOfReport.setBalanceTotalValue(finalTotalsOfReport.getBalanceTotalValue().add(stripReportViewBean.getBalance()));
             finalTotalsOfReport.setDebitTotalValue(finalTotalsOfReport.getDebitTotalValue().add(stripReportViewBean.getQtyIn()));
             finalTotalsOfReport.setCreditTotalValue(finalTotalsOfReport.getCreditTotalValue().add(stripReportViewBean.getQtyOut()));
@@ -451,15 +473,21 @@ public class InventoryStripReportMB extends BaseReportBean {
                     for (ItemsDataView idv : stripReportItemsMap.get(viewBean.getGroupId())) {
                         StripReportViewBean reportViewBean = new StripReportViewBean();
                         reportViewBean.setBalance(idv.getBalance() != null ? idv.getBalance() : BigDecimal.ZERO);
-                        reportViewBean.setItemName(idv.getItemName());
+                        
+                        String itemNameWithBarcode = idv.getItemBarcode() != null ? idv.getItemName().concat(" ").concat(idv.getItemBarcode()) : idv.getItemName();
+                        reportViewBean.setItemName(itemNameWithBarcode);
                         reportViewBean.setUnitName(idv.getItemUnitName());
                         reportViewBean.setItemCode(idv.getItemCode());
                         reportViewBean.setSellPrice(idv.getSellPrice());
 //                        reportViewBean.setBalanceValue(idv.getBalanceValue() != null ? idv.getBalanceValue().setScale(2, BigDecimal.ROUND_UP) : BigDecimal.ZERO);
                         reportViewBean.setBalanceValue(calculateBalanceValueBasedWeightExistenceAndEvaluation(idv));
+
                         reportViewBean.setCostAverage(idv.getCostAverage() != null ? idv.getCostAverage().setScale(2, BigDecimal.ROUND_UP) : BigDecimal.ZERO);
+
                         reportViewBean.setQtyIn(idv.getQtyin() != null ? idv.getQtyin().setScale(2, BigDecimal.ROUND_UP) : BigDecimal.ZERO);
+                        
                         reportViewBean.setQtyOut(idv.getQtyout() != null ? idv.getQtyout().setScale(2, BigDecimal.ROUND_UP) : BigDecimal.ZERO);
+                        
                         stripReportViewBeanList.add(reportViewBean);
                     }
                 }
@@ -472,12 +500,17 @@ public class InventoryStripReportMB extends BaseReportBean {
         creditValue = df.format(finalTotalsOfReport.getCreditTotalValue());
         firstValue = df.format(finalTotalsOfReport.getFirstTotalValue());
         secondValue = df.format(finalTotalsOfReport.getSecondTotalValue());
+
     }
 
     @Override
     public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {
-        search();
-        fillReport(prepareReport(), getUserData().getReportPath() + "InvStripReport.jasper", stripReportViewBeanList, "pdf");
+//        search();
+        String reportName = "InvStripReport.jasper";
+        if (getUri().contains("invstripReportCeramic")) {
+            reportName = "InvStripReportCeramic.jasper";
+        }
+        fillReport(prepareReport(), getUserData().getReportPath() + reportName, stripReportViewBeanList, "pdf");
     }
 
     @Override
@@ -534,9 +567,12 @@ public class InventoryStripReportMB extends BaseReportBean {
 
         hashMap.put("totalInvText", userDDs.get("TOT_REPOS_TRANS"));
         hashMap.put("importedText", userDDs.get("IMPORT"));
+        hashMap.put("importedTextCarton", "وارد كرتونة");
         hashMap.put("exportedText", userDDs.get("EXPORT"));
+        hashMap.put("exportedTextCarton", "صادر كرتونة");
 
         hashMap.put("QuantitiyText", userDDs.get("QUANTITY"));
+        hashMap.put("QuantitiyTextCarton", "كمية كرتونة");
         hashMap.put("UnitPriceText", userDDs.get("COST"));
         hashMap.put("resetValueText", userDDs.get("BALA_VALUE"));
 
@@ -545,6 +581,22 @@ public class InventoryStripReportMB extends BaseReportBean {
         hashMap.put("creditValueText", creditValue);
         hashMap.put("firstValueText", firstValue);
         hashMap.put("secondValueText", secondValue);
+
+        hashMap.put("balanceValueCartonText", balanceValueCarton);
+        hashMap.put("debitValueCartonText", debitValueCarton);
+        hashMap.put("creditValueCartonText", creditValueCarton);
+        hashMap.put("firstValueCartonText", firstValueCarton);
+        hashMap.put("secondValueCartonText", secondValueCarton);
+
+        hashMap.put("sellPriceText", "سعر البيع");
+        hashMap.put("weightText", "الوزن");
+
+        hashMap.put("evaluationStatusText", "حالة التقييم");
+        if (evaluationStatus == 0) {
+            hashMap.put("evaluationStatusValue", "بالتكلفة");
+        } else {
+            hashMap.put("evaluationStatusValue", "سعر البيع");
+        }
 
         return hashMap;
     }
@@ -1051,5 +1103,92 @@ public class InventoryStripReportMB extends BaseReportBean {
      */
     public void setWeightPrice(BigDecimal weightPrice) {
         this.weightPrice = weightPrice;
+    }
+
+    /**
+     * @return the balanceValueCarton
+     */
+    public String getBalanceValueCarton() {
+        return balanceValueCarton;
+    }
+
+    /**
+     * @param balanceValueCarton the balanceValueCarton to set
+     */
+    public void setBalanceValueCarton(String balanceValueCarton) {
+        this.balanceValueCarton = balanceValueCarton;
+    }
+
+    /**
+     * @return the debitValueCarton
+     */
+    public String getDebitValueCarton() {
+        return debitValueCarton;
+    }
+
+    /**
+     * @param debitValueCarton the debitValueCarton to set
+     */
+    public void setDebitValueCarton(String debitValueCarton) {
+        this.debitValueCarton = debitValueCarton;
+    }
+
+    /**
+     * @return the creditValueCarton
+     */
+    public String getCreditValueCarton() {
+        return creditValueCarton;
+    }
+
+    /**
+     * @param creditValueCarton the creditValueCarton to set
+     */
+    public void setCreditValueCarton(String creditValueCarton) {
+        this.creditValueCarton = creditValueCarton;
+    }
+
+    /**
+     * @return the firstValueCarton
+     */
+    public String getFirstValueCarton() {
+        return firstValueCarton;
+    }
+
+    /**
+     * @param firstValueCarton the firstValueCarton to set
+     */
+    public void setFirstValueCarton(String firstValueCarton) {
+        this.firstValueCarton = firstValueCarton;
+    }
+
+    /**
+     * @return the secondValueCarton
+     */
+    public String getSecondValueCarton() {
+        return secondValueCarton;
+    }
+
+    /**
+     * @param secondValueCarton the secondValueCarton to set
+     */
+    public void setSecondValueCarton(String secondValueCarton) {
+        this.secondValueCarton = secondValueCarton;
+    }
+
+    /**
+     * @return the isZeroo
+     */
+    public Boolean getIsZeroo() {
+        if (isZeroo == null) {
+            isZeroo = Boolean.FALSE;
+        }
+        return isZeroo;
+    }
+
+    /**
+     * @param isZeroo the isZeroo to set
+     */
+    public void setIsZeroo(Boolean isZeroo) {
+        this.isZeroo = isZeroo;
     }
 }

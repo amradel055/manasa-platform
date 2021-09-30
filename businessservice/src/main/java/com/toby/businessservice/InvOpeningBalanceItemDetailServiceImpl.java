@@ -6,6 +6,10 @@
 package com.toby.businessservice;
 
 import com.toby.core.GenericDAO;
+import com.toby.define.CompanyActivityClassEnum;
+import com.toby.define.ScreenNameClassEnum;
+import com.toby.dto.InvDetailDTO;
+import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.InvItemDTO;
 import com.toby.dto.InvOpenningBalanceItemDTO;
 import com.toby.dto.InvOpenningBalanceItemDetailDTO;
@@ -17,6 +21,8 @@ import com.toby.entity.InvOpenningBalanceItemDetail;
 import com.toby.entity.Symbol;
 import com.toby.entity.TobyCompany;
 import com.toby.entity.TobyUser;
+import com.toby.views.ItemsBarcodesDetailsView;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -34,6 +40,12 @@ public class InvOpeningBalanceItemDetailServiceImpl implements InvOpeningBalance
 
     @EJB
     private GenericDAO dao;
+    @EJB
+    InvGlobalService invGlobalService;    
+    @EJB
+    GenericService genericService;    
+    @EJB
+    ItemsBarcodesDetailsViewService itemsBarcodesDetailsViewService;
 
     @Override
     public void addInvOpenningBalanceItemDetail(InvOpenningBalanceItemDetail details) {
@@ -208,5 +220,143 @@ public class InvOpeningBalanceItemDetailServiceImpl implements InvOpeningBalance
         List<Object[]> balanceItemDetailList = dao.findListByQuery("SELECT i.itemId.id , i.cost  FROM InvOpenningBalanceItemDetail i WHERE i.branchId.id = :branchId and i.itemId.id in :itemIdList", params);
         return balanceItemDetailList;
     }
+
+    @Override
+    public void deleteInvOpenningBalanceItemDetailListDTO(List<InvDetailDTO> invDetailDTOList) {
+        if (invDetailDTOList != null && !invDetailDTOList.isEmpty()) {
+            for (InvDetailDTO detailDTO : invDetailDTOList) {
+                if (detailDTO.getId() != null) {
+                    InvOpenningBalanceItemDetail detail = new InvOpenningBalanceItemDetail();
+                    detail.setId(detailDTO.getId());
+                    dao.deleteEntity(detail);
+                }
+            }
+        }
+
+    }
+    
+    
+    
+    @Override
+    public List<InvDetailDTO> getAllInvOpenningBalanceItemDetailByInvPurchaseInvoiceIdDTO(InvInvoiceDTO invInvoiceDTO, Integer branchId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("balanceItemId", invInvoiceDTO.getId());
+        List<InvOpenningBalanceItemDetail> details = dao.findListByQuery("SELECT e FROM InvOpenningBalanceItemDetail e WHERE e.balanceItemId.id = :balanceItemId", params);
+        return returnListDTO(details, branchId, invInvoiceDTO);
+    }
+
+    @Override
+    public String addInvOpenningBalanceItemDetailDTO(List<InvDetailDTO> invPurchaseInvoiceDetailList, InvInvoiceDTO invInvoiceDTO,ScreenNameClassEnum screenNameClassEnum,  TobyUser tobyUser) {
+        String error = null;
+        if (invPurchaseInvoiceDetailList != null && !invPurchaseInvoiceDetailList.isEmpty()) {
+            error = invGlobalService.validateSave(invPurchaseInvoiceDetailList, invInvoiceDTO.getInvInventoryId().getId(), screenNameClassEnum, 
+                    invInvoiceDTO.getInventorySetupDTO().getNegativeSell(),(invInvoiceDTO.getLoadedSerial() != null),invInvoiceDTO.getInventorySetupDTO().getSellBuy(),CompanyActivityClassEnum.RetailSaleForClothFactory);
+            if (error != null && !error.isEmpty()) {
+                return error;
+            }
+            InvOpenningBalanceItemDetail detail;
+            for (InvDetailDTO detailDTO : invPurchaseInvoiceDetailList) {
+
+                detail = mapToEntity(detailDTO, invInvoiceDTO.getId(), tobyUser);
+                dao.updateEntity(detail);
+            }
+        }
+
+        return error;
+    }
+    
+    private InvOpenningBalanceItemDetail mapToEntity(InvDetailDTO dTO, Integer balanceItemId, TobyUser tobyUser) {
+        InvOpenningBalanceItemDetail entity = new InvOpenningBalanceItemDetail();
+
+        entity.setSerial(dTO.getSerial());
+        entity.setCost(dTO.getCost());
+        entity.setQuantity(dTO.getQuantity());
+        entity.setNet(dTO.getNet());
+        entity.setScrewing(dTO.getScrewing());
+        
+        InvOpenningBalanceItem invOpenningBalanceItem = new InvOpenningBalanceItem();
+        invOpenningBalanceItem.setId(balanceItemId);
+        entity.setBalanceItemId(invOpenningBalanceItem);
+
+
+        if (dTO.getItemsBarcodesDetail() != null || dTO.getItemsBarcodesDetailTrans() != null) {
+            InvItem invItem = new InvItem();
+            invItem.setId(dTO.getItemsBarcodesDetail() != null ? dTO.getItemsBarcodesDetail().getItemId() : dTO.getItemsBarcodesDetailTrans().getItemId());
+            entity.setItemId(invItem);
+            entity.setItemBarcode(dTO.getItemsBarcodesDetail() != null ? dTO.getItemsBarcodesDetail().getBarcode() : dTO.getItemsBarcodesDetailTrans().getBarcode());
+        }
+
+        
+        if (dTO.getUnitId() != null) {
+            Symbol unitDTO = new Symbol();
+            unitDTO.setId(dTO.getUnitId().getId());
+            entity.setUnitId(unitDTO);
+        }
+        
+        
+        
+        
+        if (dTO.getId() == null) {
+            if (entity.getSerial() == null) {
+                Map<String, Object> params = new HashMap<>();
+                params.put("balanceItemId", balanceItemId);
+                Integer max = genericService.getMaxGenericSerialForDetail(InvOpenningBalanceItemDetail.class, "balanceItemId", balanceItemId);
+                entity.setSerial(max);
+            }
+            entity.setCreatedBy(tobyUser);
+            entity.setCreationDate(new Date());
+        } else {
+            TobyUser user = new TobyUser();
+            user.setId(dTO.getCreatedBy());
+            entity.setCreatedBy(user);
+            entity.setCreationDate(dTO.getCreatedDate());
+            entity.setId(dTO.getId());
+            entity.setModificationDate(new Date());
+            entity.setModifiedBy(tobyUser);
+        }
+
+        entity.setCompanyId(tobyUser.getCompanyId());
+        entity.setBranchId(tobyUser.getBranchId());
+        return entity;
+    }
+
+    
+    private List<InvDetailDTO> returnListDTO(List<InvOpenningBalanceItemDetail> list, Integer branchId, InvInvoiceDTO invPurchaseInvoiceDTO) {
+        List<InvDetailDTO> dTOList = new ArrayList<>();
+        List<ItemsBarcodesDetailsView> itemsBarcodesDetailsViewList = itemsBarcodesDetailsViewService.findItemsBarcodesDetailsViewBranchId(branchId);
+        Map<String, ItemsBarcodesDetailsView> itemsBarcodeMap = new HashMap<>();
+        for (ItemsBarcodesDetailsView itemsBarcodesDetailsView : itemsBarcodesDetailsViewList) {
+            itemsBarcodeMap.put(itemsBarcodesDetailsView.getBarcode(), itemsBarcodesDetailsView);
+        }
+        for (InvOpenningBalanceItemDetail entity : list) {
+            dTOList.add(mapTODTO(entity, itemsBarcodeMap, invPurchaseInvoiceDTO));
+        }
+        return dTOList;
+    }
+
+    private InvDetailDTO mapTODTO(InvOpenningBalanceItemDetail entity, Map<String, ItemsBarcodesDetailsView> itemsBarcodeMap, InvInvoiceDTO invPurchaseInvoiceDTO) {
+        InvDetailDTO dTO = initMapToDTO(entity, itemsBarcodeMap, invPurchaseInvoiceDTO);
+        return dTO;
+    }
+
+    private InvDetailDTO initMapToDTO(InvOpenningBalanceItemDetail entity, Map<String, ItemsBarcodesDetailsView> itemsBarcodeMap, InvInvoiceDTO invInvoiceDTO) {
+
+        InvDetailDTO dTO = new InvDetailDTO();
+        dTO = invGlobalService.fillItemDetail(dTO, itemsBarcodeMap,
+                        entity.getId(), entity.getSerial(), (entity.getBranchId() != null ? entity.getBranchId().getId() : null), entity.getCost(),
+                        null, entity.getQuantity(), null, (entity.getBalanceItemId() != null ? entity.getBalanceItemId().getId() : null),
+                        null, entity.getNet(), entity.getId(), entity.getCreationDate(), entity.getCreatedBy().getId(),
+                        null, null,
+                        null,
+                        null, null,
+                        entity.getItemBarcode(), entity.getScrewing(), entity.getItemId().getId(), null,
+                        entity.getUnitId().getId(), entity.getUnitId().getSerial(), entity.getUnitId().getName(),
+                        entity.getItemId().getIsInventoryItem(),
+                        null, null, null, entity.getItemId(),
+                        invInvoiceDTO.getCompanyActivity(), invInvoiceDTO.getScreenName(), null);        
+        dTO.setRealQuantity(dTO.getQuantity().multiply(dTO.getScrewing()));
+        return dTO;
+    }
+    
 
 }

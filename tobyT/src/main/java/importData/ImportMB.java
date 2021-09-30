@@ -519,7 +519,7 @@ public class ImportMB extends Basic implements Serializable {
                     if (listItem.containsKey(itemCode)) {
                         item = new InvOpenningBalanceItemDetail();
                         initInvOpenningBalanceData(sheet, i, item, invOpeningBalanceItemList.get(0));
-                        if (item.getItemId() != null && item.getItemId().getId() != null && item.getItemId().getIsInventoryItem() == 1) {
+                        if (item.getItemId() != null && item.getItemId().getId() != null) {
                             invOpeningBalanceItemDetailService.addInvOpenningBalanceItemDetail(item);
                         }
                     }
@@ -538,14 +538,15 @@ public class ImportMB extends Basic implements Serializable {
         InvItem itemId;
         Cell itemCode = sheet.getCell(1, i);
         Cell qty = sheet.getCell(0, i);
-//        Cell price = sheet.getCell(2, i);
+        Cell price = sheet.getCell(2, i);
         List<InvItem> itemList = invItemService.findItemByCode(itemCode.getContents(), getUserData().getUserBranch().getId());
         if (itemList != null && !itemList.isEmpty()
                 && qty.getContents() != null && !qty.getContents().isEmpty()) {
             itemId = itemList.get(0);
             item.setItemId(itemId);
             item.setQuantity(new BigDecimal(qty.getContents()));
-            item.setCost(itemId.getCostAverage() == null ? BigDecimal.ZERO : itemId.getCostAverage());
+//            item.setCost(itemId.getCostAverage() == null ? BigDecimal.ZERO : itemId.getCostAverage());
+            item.setCost(price == null ? BigDecimal.ZERO : new BigDecimal(price.getContents()));
             item.setNet(item.getCost().multiply(item.getQuantity()));
             item.setScrewing(BigDecimal.ONE);
             item.setSerial(i);

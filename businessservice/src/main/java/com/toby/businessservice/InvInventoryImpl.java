@@ -46,118 +46,129 @@ public class InvInventoryImpl implements InvInventoryService {
     }
 
     //mapToEntity
-    public InvInventory mapToEntity(InvInventoryDTO invInventoryDTO, TobyUser tobyUser) {
+    public InvInventory mapToEntity(InvInventoryDTO dto, TobyUser tobyUser) {
         try {
-            InvInventory invInventory = new InvInventory();
-            invInventory.setCode(invInventoryDTO.getCode());
-            invInventory.setInvType(invInventoryDTO.getInvType());
-            invInventory.setId(invInventoryDTO.getId());
-            invInventory.setCode(invInventoryDTO.getCode());
-            invInventory.setName(invInventoryDTO.getName());
-            invInventory.setTypeItem(invInventoryDTO.getTypeItem());
-            invInventory.setDaribaValue(invInventoryDTO.getDaribaValue());
-            invInventory.setSegilValue(invInventoryDTO.getSegilValue());
-            invInventory.setPhone(invInventoryDTO.getPhone());
-            invInventory.setInvName(invInventoryDTO.getInvName());
+            InvInventory entity = new InvInventory();
+            entity.setCode(dto.getCode());
+            entity.setInvType(dto.getInvType());
+            entity.setId(dto.getId());
+            entity.setCode(dto.getCode());
+            entity.setName(dto.getName());
+            entity.setTypeItem(dto.getTypeItem());
+            entity.setDaribaValue(dto.getDaribaValue());
+            entity.setSegilValue(dto.getSegilValue());
+            entity.setPhone(dto.getPhone());
+            entity.setInvName(dto.getInvName());
 
-            if (invInventoryDTO.getGlAdminUnitId() != null) {
+            if (dto.getGlAdminUnitId() != null) {
                 GlAdminUnit glAdminUnit = new GlAdminUnit();
-                glAdminUnit.setId(invInventoryDTO.getGlAdminUnitId().getId());
-                glAdminUnit.setName(invInventoryDTO.getGlAdminUnitId().getName());
-                glAdminUnit.setCode(invInventoryDTO.getGlAdminUnitId().getCode());
-                invInventory.setAdminUnitId(glAdminUnit);
+                glAdminUnit.setId(dto.getGlAdminUnitId().getId());
+                glAdminUnit.setName(dto.getGlAdminUnitId().getName());
+                glAdminUnit.setCode(dto.getGlAdminUnitId().getCode());
+                entity.setAdminUnitId(glAdminUnit);
             }
-            if (invInventoryDTO.getCostCenterId() != null) {
+            if (dto.getCostCenterId() != null) {
                 CostCenter costCenter = new CostCenter();
-                costCenter.setId(invInventoryDTO.getCostCenterId().getId());
-                costCenter.setName(invInventoryDTO.getCostCenterId().getName());
-                invInventory.setCostCenterId(costCenter);
+                costCenter.setId(dto.getCostCenterId().getId());
+                costCenter.setName(dto.getCostCenterId().getName());
+                entity.setCostCenterId(costCenter);
             }
-            if (invInventoryDTO.getAccountId() != null) {
+            if (dto.getAccountId() != null) {
                 GlAccount account = new GlAccount();
-                account.setId(invInventoryDTO.getAccountId().getId());
-                account.setName(invInventoryDTO.getAccountId().getName());
-                invInventory.setAccountId(account);
+                account.setId(dto.getAccountId().getId());
+                entity.setAccountId(account);
+            }
+            if (dto.getRunningAccount() != null) {
+                GlAccount account = new GlAccount();
+                account.setId(dto.getRunningAccount().getId());
+                entity.setRunningAccount(account);
             }
 
-            if (invInventoryDTO.getCreatedBy() != null) {
+            if (dto.getCreatedBy() != null) {
                 TobyUser user = new TobyUser();
-                user.setId(invInventoryDTO.getCreatedBy());
-                invInventory.setCreatedBy(user);
-                invInventory.setCreationDate(invInventoryDTO.getCreatedDate());
-                invInventory.setModifiedBy(tobyUser);
-                invInventory.setModificationDate(new Date());
-                if (invInventoryDTO.getCompanyId() != null) {
+                user.setId(dto.getCreatedBy());
+                entity.setCreatedBy(user);
+                entity.setCreationDate(dto.getCreatedDate());
+                entity.setModifiedBy(tobyUser);
+                entity.setModificationDate(new Date());
+                if (dto.getCompanyId() != null) {
                     TobyCompany company = new TobyCompany();
-                    company.setId(invInventoryDTO.getCompanyId());
-                    invInventory.setCompanyId(company);
+                    company.setId(dto.getCompanyId());
+                    entity.setCompanyId(company);
                 }
 
-                if (invInventoryDTO.getBranchId() != null) {
+                if (dto.getBranchId() != null) {
                     Branch branch = new Branch();
-                    branch.setId(invInventoryDTO.getBranchId());
-                    invInventory.setBranchId(branch);
+                    branch.setId(dto.getBranchId());
+                    entity.setBranchId(branch);
                 }
             } else {
-                invInventory.setCreatedBy(tobyUser);
-                invInventory.setCreationDate(new Date());
-                invInventory.setCompanyId(tobyUser.getCompanyId());
-                invInventory.setBranchId(tobyUser.getBranchId());
+                entity.setCreatedBy(tobyUser);
+                entity.setCreationDate(new Date());
+                entity.setCompanyId(tobyUser.getCompanyId());
+                entity.setBranchId(tobyUser.getBranchId());
             }
 
-            return invInventory;
+            return entity;
         } catch (Exception e) {
-            invInventoryDTO.setMsg(e.getMessage());
+            dto.setMsg(e.getMessage());
         }
         return null;
     }
 
-    public InvInventoryDTO mapToDTO(InvInventory invInventory, TobyUser tobyUser) {
+    @Override
+    public InvInventoryDTO mapToDTO(InvInventory entity) {
 
-        InvInventoryDTO invInventoryDTO = new InvInventoryDTO();
-        invInventoryDTO.setCreatedBy(invInventory.getCreatedBy() != null ? invInventory.getCreatedBy().getId() : null);
-        invInventoryDTO.setCreatedDate(invInventory.getCreationDate());
-        invInventoryDTO.setBranchId(invInventory.getBranchId() != null ? invInventory.getBranchId().getId() : null);
-        invInventoryDTO.setId(invInventory.getId());
-        invInventoryDTO.setCode(invInventory.getCode());
-        invInventoryDTO.setIndex(invInventory.getId());
-        invInventoryDTO.setInvType(invInventory.getInvType());
-        invInventoryDTO.setCompanyId(invInventory.getCompanyId() != null ? invInventory.getCompanyId().getId() : null);
-        invInventoryDTO.setDaribaValue(invInventory.getDaribaValue());
-        invInventoryDTO.setSegilValue(invInventory.getSegilValue());
-        invInventoryDTO.setPhone(invInventory.getPhone());
-        invInventoryDTO.setInvName(invInventory.getInvName());
+        InvInventoryDTO dto = new InvInventoryDTO();
+        dto.setCreatedBy(entity.getCreatedBy() != null ? entity.getCreatedBy().getId() : null);
+        dto.setCreatedDate(entity.getCreationDate());
+        dto.setBranchId(entity.getBranchId() != null ? entity.getBranchId().getId() : null);
+        dto.setId(entity.getId());
+        dto.setCode(entity.getCode());
+        dto.setIndex(entity.getId());
+        dto.setInvType(entity.getInvType());
+        dto.setCompanyId(entity.getCompanyId() != null ? entity.getCompanyId().getId() : null);
+        dto.setDaribaValue(entity.getDaribaValue());
+        dto.setSegilValue(entity.getSegilValue());
+        dto.setPhone(entity.getPhone());
+        dto.setInvName(entity.getInvName());
 
-        invInventoryDTO.setTypeItem(invInventory.getTypeItem());
-        invInventoryDTO.setName(invInventory.getName());
-        invInventoryDTO.setMsg(invInventory.getMsg());
-        if (invInventory.getAccountId() != null) {
+        dto.setTypeItem(entity.getTypeItem());
+        dto.setName(entity.getName());
+        dto.setMsg(entity.getMsg());
+        if (entity.getAccountId() != null) {
             GlAccountDTO accountDTO = new GlAccountDTO();
-            accountDTO.setId(invInventory.getAccountId().getId());
-            accountDTO.setName(invInventory.getAccountId().getName());
-            invInventoryDTO.setAccountId(accountDTO);
+            accountDTO.setId(entity.getAccountId().getId());
+            accountDTO.setName(entity.getAccountId().getName());
+            dto.setAccountId(accountDTO);
         }
-        if (invInventory.getAdminUnitId() != null) {
+        if (entity.getRunningAccount() != null) {
+            GlAccountDTO accountDTO = new GlAccountDTO();
+            accountDTO.setId(entity.getRunningAccount().getId());
+            accountDTO.setName(entity.getRunningAccount().getName());
+            dto.setRunningAccount(accountDTO);
+        }
+        if (entity.getAdminUnitId() != null) {
             GlAdminUnitDTO glAdminUnit = new GlAdminUnitDTO();
-            glAdminUnit.setId(invInventory.getAdminUnitId().getId());
-            glAdminUnit.setName(invInventory.getAdminUnitId().getName());
-            glAdminUnit.setCode(invInventory.getAdminUnitId().getCode());
-            invInventoryDTO.setGlAdminUnitId(glAdminUnit);
+            glAdminUnit.setId(entity.getAdminUnitId().getId());
+            glAdminUnit.setName(entity.getAdminUnitId().getName());
+            glAdminUnit.setCode(entity.getAdminUnitId().getCode());
+            dto.setGlAdminUnitId(glAdminUnit);
         }
-        if (invInventory.getCostCenterId() != null) {
+        if (entity.getCostCenterId() != null) {
             CostCenterDTO costCenter = new CostCenterDTO();
-            costCenter.setId(invInventory.getCostCenterId().getId());
-            costCenter.setName(invInventory.getCostCenterId().getName());
-            costCenter.setCode(invInventory.getCostCenterId().getCode());
-            invInventoryDTO.setCostCenterId(costCenter);
+            costCenter.setId(entity.getCostCenterId().getId());
+            costCenter.setName(entity.getCostCenterId().getName());
+            costCenter.setCode(entity.getCostCenterId().getCode());
+            dto.setCostCenterId(costCenter);
         }
-        return invInventoryDTO;
+        return dto;
     }
 
     public List<InvInventoryDTO> mapToDTOList(List<InvInventory> invInventoryList, TobyUser tobyUser) {
         List<InvInventoryDTO> invInventoryDTOList = new ArrayList<>();
         for (InvInventory inventoryDelegator : invInventoryList) {
-            invInventoryDTOList.add(mapToDTO(inventoryDelegator, tobyUser));
+            invInventoryDTOList.add(mapToDTO(inventoryDelegator));
         }
         return invInventoryDTOList;
     }
@@ -259,9 +270,9 @@ public class InvInventoryImpl implements InvInventoryService {
     }
 
     @Override
-    public InvInventoryDTO findInventory(Integer id, TobyUser tobyUser) {
+    public InvInventoryDTO findInventory(Integer id) {
         InvInventory invInventory = dao.findEntityById(InvInventory.class, id);
-        return mapToDTO(invInventory, tobyUser);
+        return mapToDTO(invInventory);
     }
 
     @Override
@@ -365,7 +376,7 @@ public class InvInventoryImpl implements InvInventoryService {
             if (error.isEmpty()) {
                 InvInventory invInventory = mapToEntity(invInventoryDTO, user);
                 invInventory = dao.updateEntity(invInventory);
-                invInventoryDTO = mapToDTO(invInventory, user);
+                invInventoryDTO = mapToDTO(invInventory);
             } else {
                 invInventoryDTO.setMsg(error);
             }

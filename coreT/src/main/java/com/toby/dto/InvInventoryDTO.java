@@ -19,6 +19,7 @@ public class InvInventoryDTO extends BaseEntityDTO implements Comparable<InvInve
     private String typeItem;
     private InventoryPricesGroupEnum sellPriceType;
     private GlAccountDTO accountId;
+    private GlAccountDTO runningAccount;
     private CostCenterDTO costCenterId;
     private GlAdminUnitDTO glAdminUnitId;
     private String daribaValue;
@@ -252,6 +253,20 @@ public class InvInventoryDTO extends BaseEntityDTO implements Comparable<InvInve
             return this.getCode().compareTo(o.getCode());
         }
         return 0;
+    }
+
+    /**
+     * @return the runningAccount
+     */
+    public GlAccountDTO getRunningAccount() {
+        return runningAccount;
+    }
+
+    /**
+     * @param runningAccount the runningAccount to set
+     */
+    public void setRunningAccount(GlAccountDTO runningAccount) {
+        this.runningAccount = runningAccount;
     }
 
 }

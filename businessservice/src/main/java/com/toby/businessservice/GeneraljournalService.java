@@ -7,13 +7,11 @@ package com.toby.businessservice;
 
 import com.toby.businessservice.reports.searchBean.CommonSearchBean;
 import com.toby.businessservice.reports.searchBean.JournalDocumentsReportSearchBean;
-import com.toby.dto.GeneralJournalDTO;
-import com.toby.dto.SymbolDTO;
 import com.toby.entity.GeneralJournal;
 import com.toby.entity.GeneralJournalDetails;
 import com.toby.entity.GlYear;
-
 import com.toby.entity.TobyUser;
+
 import com.toby.views.PostRestrictionsView;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -27,7 +25,7 @@ import javax.ejb.Remote;
 @Remote
 public interface GeneraljournalService {
 
-    public GeneralJournal addGeneralJournalGlobal(GeneralJournal generalJournal);
+    public GeneralJournal addGeneralJournalGlobal(GlYear yearSelection , Integer specialDocumentsTypes ,Integer serial,Date date ,String remark,TobyUser tobyUser);
             
     public GeneralJournal addGeneralJournal(GeneralJournal generalJournal);
 

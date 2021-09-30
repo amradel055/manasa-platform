@@ -40,7 +40,7 @@ public interface InvInventoryService {
 
     public InvInventory addNewInventory(InvInventory inventoryDelegator);
 
-    public InvInventoryDTO findInventory(Integer id, TobyUser tobyUser);
+    public InvInventoryDTO findInventory(Integer id);
 
     public List<InvInventory> findInventory(Integer branchId, Integer inventoryId, String code);
 
@@ -57,5 +57,7 @@ public interface InvInventoryService {
     public List<InvInventory> getALLInventoriesByType(Integer invType);
 
     public List<InvInventoryDTO> getALLInventorieDTOListByBranch(TobyUser tobyUser);
+    
+    public InvInventoryDTO mapToDTO(InvInventory entity) ;
 
 }
