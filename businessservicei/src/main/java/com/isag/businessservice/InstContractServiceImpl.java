@@ -15,6 +15,7 @@ import com.isag.dto.InvItemDTO;
 import com.isag.dto.InvOrganizationSiteDTO;
 import com.isag.entity.InstContract;
 import com.isag.entity.InstContractDetail;
+import com.isag.entity.IsagUser;
 import com.isag.views.InstInstallmentView;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -34,9 +35,11 @@ public class InstContractServiceImpl implements InstContractService {
     @EJB
     private GenericDAO dao;
     @EJB
-    InstContractDetailsService instContractDetailsService;
+    private InstContractDetailsService instContractDetailsService;
     @EJB
-    instcontractdetailwithbanktransactionviewService instcontractdetailwithbanktransactionviewService;
+    private instcontractdetailwithbanktransactionviewService instcontractdetailwithbanktransactionviewService;
+    @EJB
+    private InstContractProjectService instContractProjectService;
 
     @Override
     public InstContract addInstContractforTasaheel(InstContract instContract, List<InstContractDetail> instContractDetailList) {
@@ -106,11 +109,59 @@ public class InstContractServiceImpl implements InstContractService {
         return instContract;
     }
 
+    
+     @Override
+    public InstContract addInstContract(InstContract instContract, List<InstContractDetail> instContractDetailList, 
+            List<InstContractDetail> instContractDetailListDeleted,List<InstProjectGuideDTO> instProjectGuideDTOListSelected,IsagUser isagUser) {
+        InstContract instContractNew = null;
+        if (instContract.getId() != null) {
+            instContractNew = dao.updateEntity(instContract);
+        } else {
+
+            instContract.setSerial(getMaxSerail(instContract) != null ? getMaxSerail(instContract) + 1 : 1);
+            instContractNew = dao.updateEntity(instContract);
+        }
+
+        if (instContractDetailListDeleted != null && !instContractDetailListDeleted.isEmpty()) {
+            for (InstContractDetail deleted : instContractDetailListDeleted) {
+                instContractDetailsService.deleteInstContractDetails(deleted);
+            }
+        }
+
+        Integer maxSerial = 0;
+        if (instContract != null && instContract.getId() != null) {
+            maxSerial = instContractDetailsService.finMaxSerial(instContract.getId());
+        } else {
+            maxSerial++;
+        }
+        for (InstContractDetail instContractDetail : instContractDetailList) {
+            instContractDetail.setInstContractId(instContractNew);
+
+            if (instContractDetail.getId() != null) {
+                instContractDetailsService.updateInstContractDetails(instContractDetail);
+            } else {
+                instContractDetail.setSerial(maxSerial);
+                instContractDetailsService.addInstContractDetails(instContractDetail);
+                maxSerial++;
+            }
+        }
+        
+        instContractProjectService.save(instProjectGuideDTOListSelected, instContractNew.getId(),isagUser);
+
+        return instContract;
+    }
+
+    
     @Override
     public void deleteInstContract(InstContract instContract) {
         if (instContract.getId() != null && instContract.getId() > 0) {
             dao.executeDeleteQuery("delete from InstContractDetail e WHERE e.id > 0 AND e.instContractId.id = " + instContract.getId());
         }
+        
+        if (instContract.getId() != null && instContract.getId() > 0) {
+            dao.executeDeleteQuery("delete from InstContractProject e WHERE e.id > 0 AND e.instContract.id = " + instContract.getId());
+        }
+        
         dao.deleteEntity(instContract);
     }
 
@@ -449,5 +500,29 @@ public class InstContractServiceImpl implements InstContractService {
         List<String> detailses = dao.findListByQuery("SELECT max(e.code) FROM InstContract e WHERE e.branchId.id = :branchId AND (e.type = :type  AND e.active = 1) ORDER BY e.code", params);
         return detailses.get(0);
     }
+    
+//    @Override
+//    public InstContractDTO findInstContractDTOById(Integer instContractId) {
+//        InstContract entity = dao.findEntityById(InstContract.class, instContractId);
+//        
+//        InstContractDTO dto =  mapTODTO(entity,Boolean.TRUE);
+//        List<InstContractDetailDTO> instContractDetailsList = instContractDetailsService.getAllInstContractDetailsByInstContractIdNew(entity.getId());
+//        dto.setInstContractDetailDTOList(instContractDetailsList);
+//        return dto;
+//    }
+    
+    
+    
+//    public void findHeadAndDetailsOfInstContract(Integer instContractId) {
+//        instContract = instContractService.findInstContractById(instContractId);
+//        
+//        instContractDetailsEntityList = new ArrayList<>();
+//        List<InstcontractdetailwithbanktransactionView> instcontractdetail_banktransactionview = new ArrayList<>();
+//        instcontractdetail_banktransactionview = instcontractdetailwithbanktransactionviewService.findInstContractDetailByBankTransaction(instContractId);
+//        if (!instcontractdetail_banktransactionview.isEmpty()) {
+//            setDisabled(Boolean.TRUE);
+//        }
+//        mapInstContractToInstContractEntity();
+//    }
 
 }

@@ -9,7 +9,19 @@
     <ui:define name="content">
         <f:event listener="#{userData.authorize}" type="preRenderView" />
         <h:form  dir="#{userData.dir}" class='formmargin'>
-          
+            <div style=" position: absolute;left: 20px"> 
+
+                <p:commandButton  style="z-index: 2;
+                                      margin-top: 12%;
+                                      color: #035c70!important; 
+                                      background-color: #223238!important;
+                                      border: 1px solid #22323a!important;
+                                      background: #22323a 50% 50% repeat-x!important;"
+                                      icon="fa fa-fw fa-home"
+                                      title="#{userData.userDDs['HOME']}"
+                                      class="smhomeButton" 
+                                      action="exit" />
+        </div>
             <p:fieldset legend="#{userData.userDDs['INSTALL_SCREEN']}">
                 <div class="col-xs-12">
                     <p:messages id="curmsg" showDetail="true" rendered="true" closable="true"/>   
@@ -23,7 +35,7 @@
                                  widgetVar="bTable"  
                                  rowIndexVar="index" 
                                  value="#{instContactListMB.dataModel}"
-                                
+                                 lazy="true" 
                                  rows="10"
                                  paginator="true"
                                  paginatorTemplate="{CurrentPageReport} {FirstPageLink}
@@ -48,26 +60,6 @@
                                   sortBy="#{instContactTable.serial}" 
                                   >
                             <p:outputLabel value="#{instContactTable.serial}" />
-                        </p:column>
-                        
-                        <p:column style="width: 12vh;text-align: center;font-size: 1.8vh;border-radius: 0px;" 
-                                  filterStyle="display:none"
-                                  filterBy="#{instContactTable.itemName}" 
-                                  filterMatchMode="contains"
-                                  headerText="#{userData.userDDs['PRODUCT']}" 
-                                  sortBy="#{instContactTable.itemName}" 
-                                  >
-                            <p:outputLabel value="#{instContactTable.itemName}" />
-                        </p:column>
-
-                        <p:column style="width: 12vh;text-align: center;font-size: 1.8vh;border-radius: 0px;" 
-                                  filterStyle="display:none"
-                                  filterBy="#{instContactTable.projectName}" 
-                                  filterMatchMode="contains"
-                                  headerText="المشروع" 
-                                  sortBy="#{instContactTable.projectName}" 
-                                  >
-                            <p:outputLabel value="#{instContactTable.projectName}" />
                         </p:column>
 
                         <p:column style="width: 15vh;text-align: center;font-size: 1.8vh;border-radius: 0px;"
@@ -160,14 +152,13 @@
                             </p:commandButton>
                              
                                <p:commandButton 
-                            class="sprintButtons"
-                            update="@form" onclick="form.target = '_blank'"  ajax="false"
-                            icon="fa fa-fw fa-print" style="background-color: rgb(1, 76, 134)!important;border-radius: 3px;"
-                            title="print" 
-                             actionListener="#{instContractFormMBnew.exportPDFFromList(instContactTable.id)}" 
-                             rendered="#{userData.userScreens['instContract'].edit or userData.isAdmin}">
-                            
-                        </p:commandButton>
+                                    class="sprintButtons"
+                                    update="@form" onclick="form.target = '_blank'"  ajax="false"
+                                    icon="fa fa-fw fa-print" style="background-color: rgb(1, 76, 134)!important;border-radius: 3px;"
+                                    title="print" 
+                                    actionListener="#{instContractFormMBnew.exportPDFFromList(instContactTable.id)}" 
+                                    rendered="#{userData.userScreens['instContract'].edit or userData.isAdmin }">
+                                </p:commandButton>
                             <p:commandButton  class="sdeleteButtons" update="@form" icon="fa fa-remove" title="#{userData.userDDs['DELETE']}" style="background-color: red;border-radius: 3px;margin-bottom:3px"  action="#{instContactListMB.delete}" disabled="#{instContactTable.disabled}">
                                 <f:setPropertyActionListener value="#{instContactTable}" target="#{instContactListMB.instContractEntitySelected}" />
                                 <p:confirm header="Confirmation" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
@@ -175,7 +166,6 @@
                         </p:column>
 
                     </p:dataTable> 
-                    
                     <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
                         <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
                         <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />

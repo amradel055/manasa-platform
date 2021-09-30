@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -735,5 +736,34 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
     public void setValue(BigDecimal value) {
         this.value = value;
     }
+    
+    @Override
+    public Map<Integer, Vector<Object>> getAllinstallmentIdAndPayedValue(Integer branchId, List<Integer> installmentIdList) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("branchId", branchId);
+        param.put("installmentIdList", installmentIdList);
+        String query = "SELECT g.installmentId.id , g.value , g.date , g.glBankId.name FROM GlBankTransaction g WHERE g.branchId.id = :branchId AND g.installmentId.id in :installmentIdList ";
+        List<Object[]> result = dao.findListByQuery(query, param);
+        Map<Integer, Vector<Object>> map = new HashMap<>();
+        for (Object[] objects : result) {
+            Vector<Object> vector;
+            Integer installmentId = (Integer) objects[0];
+            BigDecimal value = (BigDecimal) objects[1];
+            Date date = (Date) objects[2];
+            String bankName = (String) objects[3];
+            if (map.containsKey(installmentId)) {
+                vector = map.get(installmentId);
+                vector.add(0, ((BigDecimal) vector.firstElement()).add(value != null ? value : BigDecimal.ZERO));
+            } else {
+                vector = new Vector<>();
+                vector.add(0, value);
+            }
+            vector.add(1, date);
+            vector.add(2, bankName);
+            map.put(installmentId, vector);
+        }
+        return map;
+    }
+
 
 }

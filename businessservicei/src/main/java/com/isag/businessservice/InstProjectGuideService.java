@@ -9,6 +9,7 @@ import com.isag.businessservice.reports.searchBean.ProjectGuideSearchBean;
 import com.isag.dto.InstProjectGuideDTO;
 import com.isag.entity.InstProjectGuide;
 import com.isag.entity.IsagUser;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -25,6 +26,8 @@ public interface InstProjectGuideService {
 
     public List<InstProjectGuide> getAllInstProjectGuides(Integer branchId);
 
+    public List<InstProjectGuideDTO> getAllInstProjectGuidesDTOByContractId(Integer instContractId);
+
     public List<InstProjectGuide> getCompanyInstProjectGuides(Integer companyId);
 
     public void deleteInstProjectGuide(InstProjectGuide selectedCS);
@@ -38,6 +41,8 @@ public interface InstProjectGuideService {
     public InstProjectGuide findInstProjectGuideByCode(String parentCode, Integer branchId);
 
     public List<InstProjectGuide> getBranchInstProjectGuidesActive(Integer id);
+
+    public List<InstProjectGuideDTO> getBranchInstProjectGuidesActiveDTO(ProjectGuideSearchBean projectGuideSearchBean,Boolean busy);
 
     public List<InstProjectGuide> getBranchInstProjectGuidesActiveNotAvailable(Integer id);
 
@@ -60,10 +65,21 @@ public interface InstProjectGuideService {
     public List<InstProjectGuide> getAllSubInstProjectGuideByBranchIdActiveAndLevel(Integer branchId, Integer level);
 
     public List<InstProjectGuideDTO> getBranchInstProjectGuidesActiveNotAvailableDTO(Integer id);
-    
+
     public List<InstProjectGuideDTO> findInstProjectGuidesByBranch(Integer id, Integer level);
 
     public List<InstProjectGuideDTO> getAllInstProjectGuidesDTO(Integer branchId);
 
     public List<InstProjectGuideDTO> getAllSubInstProjectGuideByBranchIdActiveAndLevelDTO(Integer branchId, Integer level, Integer level2);
+
+    public List<InstProjectGuide> getAllprojectGuideSellAndNotSell(ProjectGuideSearchBean projectGuideSearchBean);
+    
+    public List<InstProjectGuideDTO> getAllprojectGuideSellAndNotSellMulti(ProjectGuideSearchBean projectGuideSearchBean);
+
+    public void updateReserved(Boolean reserved, Integer id, Integer branchId);
+
+    public List<InstProjectGuideDTO> getAllInstProjectGuidesParentDTO(Integer branchId);
+
+    public List<InstProjectGuideDTO> getAllInstProjectGuidesChildForParent(List<InstProjectGuideDTO> instProjectGuideList, Integer branchId);
+
 }

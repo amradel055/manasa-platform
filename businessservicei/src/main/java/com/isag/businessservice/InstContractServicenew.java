@@ -18,9 +18,12 @@ import javax.ejb.Remote;
 @Remote
 public interface InstContractServicenew {
 
-    public InstContract addInstContract(InstContract instContract, List<InstContractDetail> instContractDetailList, List<InstContractDetail> instContractDetailListDeleted,Map<String, String> userDDs);
+    public InstContract addInstContract(InstContract instContract, List<InstContractDetail> instContractDetailList, 
+            List<InstContractDetail> instContractDetailListDeleted,Map<String, String> userDDs);
 
     public Integer getMaxSerail(InstContract instContract);
     
     public boolean checkContractSerial(InstContract instContract);
+
+    public boolean checkSerail(Integer branch, Integer serial, Integer id);
 }

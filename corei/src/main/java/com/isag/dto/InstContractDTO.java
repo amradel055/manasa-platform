@@ -7,6 +7,7 @@ package com.isag.dto;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -39,6 +40,8 @@ public class InstContractDTO extends BaseEntityDTO {
     private Integer serial;
     private InvItemDTO invItemId;
     private Boolean disabled;
+    private List<InstContractProjectDTO> instContractProjectDTOList;
+    private List<InstContractDetailDTO> instContractDetailDTOList;
 
     /**
      * @return the id
@@ -388,6 +391,34 @@ public class InstContractDTO extends BaseEntityDTO {
      */
     public void setDisabled(Boolean disabled) {
         this.disabled = disabled;
+    }
+
+    /**
+     * @return the instContractProjectDTOList
+     */
+    public List<InstContractProjectDTO> getInstContractProjectDTOList() {
+        return instContractProjectDTOList;
+    }
+
+    /**
+     * @param instContractProjectDTOList the instContractProjectDTOList to set
+     */
+    public void setInstContractProjectDTOList(List<InstContractProjectDTO> instContractProjectDTOList) {
+        this.instContractProjectDTOList = instContractProjectDTOList;
+    }
+
+    /**
+     * @return the instContractDetailDTOList
+     */
+    public List<InstContractDetailDTO> getInstContractDetailDTOList() {
+        return instContractDetailDTOList;
+    }
+
+    /**
+     * @param instContractDetailDTOList the instContractDetailDTOList to set
+     */
+    public void setInstContractDetailDTOList(List<InstContractDetailDTO> instContractDetailDTOList) {
+        this.instContractDetailDTOList = instContractDetailDTOList;
     }
     
     

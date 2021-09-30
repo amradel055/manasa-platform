@@ -6,16 +6,11 @@
 package com.isag.instContract;
 
 import com.isag.businessservice.InstContractService;
-import com.isag.dto.InstContractDTO;
 import com.isag.entity.InstContract;
-import com.isag.entiy.InstContractEntity;
 import com.isag.isag.BaseListBean;
 import com.isag.isag.UserData;
 import com.isag.views.InstInstallmentView;
-import com.isag.views.InstcontractdetailwithbanktransactionView;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
@@ -23,10 +18,8 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-import net.sf.jasperreports.engine.JRException;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 

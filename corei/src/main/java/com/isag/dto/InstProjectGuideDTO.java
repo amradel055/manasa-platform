@@ -5,6 +5,8 @@
  */
 package com.isag.dto;
 
+import java.math.BigDecimal;
+
 /**
  *
  * @author Mostafa
@@ -14,6 +16,13 @@ public class InstProjectGuideDTO extends BaseEntityDTO{
     private String code;
     private String name;
     private Integer level;
+    private BigDecimal price;
+    private InstProjectGuideDTO parent;
+    private Integer parentId;
+    private Boolean sell;
+    private Boolean reserved;
+    private SymbolDTO symbolSize;
+    private Boolean active;
 
     /**
      * @return the code
@@ -80,5 +89,103 @@ public class InstProjectGuideDTO extends BaseEntityDTO{
     @Override
     public String toString() {
         return  code +" "+ name;
+    }
+
+    /**
+     * @return the price
+     */
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    /**
+     * @param price the price to set
+     */
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    /**
+     * @return the parent
+     */
+    public InstProjectGuideDTO getParent() {
+        return parent;
+    }
+
+    /**
+     * @param parent the parent to set
+     */
+    public void setParent(InstProjectGuideDTO parent) {
+        this.parent = parent;
+    }
+
+    /**
+     * @return the parentId
+     */
+    public Integer getParentId() {
+        return parentId;
+    }
+
+    /**
+     * @param parentId the parentId to set
+     */
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
+    }
+
+    /**
+     * @return the sell
+     */
+    public Boolean getSell() {
+        return sell;
+    }
+
+    /**
+     * @param sell the sell to set
+     */
+    public void setSell(Boolean sell) {
+        this.sell = sell;
+    }
+
+    /**
+     * @return the reserved
+     */
+    public Boolean getReserved() {
+        return reserved;
+    }
+
+    /**
+     * @param reserved the reserved to set
+     */
+    public void setReserved(Boolean reserved) {
+        this.reserved = reserved;
+    }
+
+    /**
+     * @return the symbolSize
+     */
+    public SymbolDTO getSymbolSize() {
+        return symbolSize;
+    }
+
+    /**
+     * @param symbolSize the symbolSize to set
+     */
+    public void setSymbolSize(SymbolDTO symbolSize) {
+        this.symbolSize = symbolSize;
+    }
+
+    /**
+     * @return the active
+     */
+    public Boolean getActive() {
+        return active;
+    }
+
+    /**
+     * @param active the active to set
+     */
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 }

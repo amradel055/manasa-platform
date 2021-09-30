@@ -5,6 +5,7 @@
  */
 package com.isag.businessservice;
 
+import com.isag.dto.InstContractDetailDTO;
 import com.isag.entity.InstContractDetail;
 import java.util.List;
 import javax.ejb.Remote;
@@ -23,6 +24,8 @@ public interface InstContractDetailsService {
     public InstContractDetail updateInstContractDetails(InstContractDetail instContractDetail);
 
     public List<InstContractDetail> getAllInstContractDetailsByInstContractId(Integer instContractId);
+    
+     public List<InstContractDetailDTO> getAllInstContractDetailsByInstContractIdNew(Integer instContractId);
 
     public List<InstContractDetail> getAllUnPaidInstContractDetailsByInstContractId(Integer instContractId);
 

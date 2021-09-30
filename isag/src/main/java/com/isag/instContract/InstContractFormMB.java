@@ -10,10 +10,13 @@ import com.isag.businessservice.InstContractService;
 import com.isag.businessservice.InstProjectGuideService;
 import com.isag.businessservice.OrganizationSiteService;
 import com.isag.businessservice.instcontractdetailwithbanktransactionviewService;
+import com.isag.businessservice.reports.searchBean.ProjectGuideSearchBean;
 import com.isag.comparators.InstContractDetailsEntityComparator;
 import com.isag.converter.InstProjectGuideConverter;
+import com.isag.converter.InstProjectGuideDTOConverter;
 import com.isag.converter.InvOrganizationSiteConverter;
 import com.isag.converter.InvOrganizationSiteDTOConverter;
+import com.isag.dto.InstProjectGuideDTO;
 import com.isag.dto.InvOrganizationSiteDTO;
 import com.isag.entity.InstContract;
 import com.isag.entity.InstContractDetail;
@@ -65,6 +68,11 @@ public class InstContractFormMB extends BaseFormBean {
     private InvOrganizationSiteDTOConverter invOrgSiteConverter;
     private List<InstProjectGuide> instProjectGuideList;
     private InstProjectGuideConverter instProjectGuideConverter;
+
+    private List<InstProjectGuideDTO> instProjectGuideListSelected;
+    private List<InstProjectGuideDTO> instProjectGuideDTOList;
+    private InstProjectGuideDTOConverter instProjectGuideDTOConverter;
+
     private InstContractEntity instContractEntity;
     private InstContract instContract;
     private List<InstContractDetail> instContractDetailsList;
@@ -104,6 +112,8 @@ public class InstContractFormMB extends BaseFormBean {
                 Integer instContractId = (Integer) context.getSessionMap().get("instContractEntityIdSelected");
                 findHeadAndDetailsOfInstContract(instContractId);
                 getInstProjectGuideList().add(0, instContract.getProjectId());
+                getInstProjectGuideDTOList();
+//                getInstProjectGuideDTOList().addAll(instProjectGuideService.getAllInstProjectGuidesDTOByContractId(instContract.getId()));
             }
 
         } catch (Exception e) {
@@ -117,6 +127,8 @@ public class InstContractFormMB extends BaseFormBean {
         instContractDetailsEntityList = new ArrayList<>();
         List<InstcontractdetailwithbanktransactionView> instcontractdetail_banktransactionview = new ArrayList<>();
         instcontractdetail_banktransactionview = instcontractdetail_banktransactionviewService.findInstContractDetailByBankTransaction(instContractId);
+        setInstProjectGuideListSelected(instProjectGuideService.getAllInstProjectGuidesDTOByContractId(instContract.getId()));
+        setInstProjectGuideDTOConverter(new InstProjectGuideDTOConverter(getInstProjectGuideListSelected()));
         if (!instcontractdetail_banktransactionview.isEmpty()) {
 //            setDisabled(Boolean.TRUE);
         }
@@ -160,6 +172,8 @@ public class InstContractFormMB extends BaseFormBean {
             instContractEntity.setDisabled(Disabled);
             instContractEntity.setCancel(instContract.isCancel());
             instContractEntity.setPostFlag(instContract.getPostFlag());
+            instContractEntity.setStartDate(instContract.getStartDate());
+            instContractEntity.setEndDate(instContract.getEndDate());
 
             for (InstContractDetail instContractDetail : instContractDetailsList) {
                 ++index;
@@ -239,6 +253,8 @@ public class InstContractFormMB extends BaseFormBean {
             saveInstContract.setDaysNumber(instContractEntity.getDaysNumber());
             saveInstContract.setInstallmentValue(instContractEntity.getInstallmentValue());
             saveInstContract.setTotalValue(instContractEntity.getTotalValue());
+            saveInstContract.setStartDate(instContractEntity.getStartDate());
+            saveInstContract.setEndDate(instContractEntity.getEndDate());
             if (instContractEntity.getInvOrganizationSite() != null) {
                 InvOrganizationSite invOrganizationSite = new InvOrganizationSite();
                 invOrganizationSite.setId(instContractEntity.getInvOrganizationSite().getId());
@@ -291,7 +307,9 @@ public class InstContractFormMB extends BaseFormBean {
             }
 
             try {
-                instContract = instContractService.addInstContract(saveInstContract, saveInstContractDetailList, instContractDetailWillDeletedList);
+//                instContract = instContractService.addInstContract(saveInstContract, saveInstContractDetailList, instContractDetailWillDeletedList);
+                instContract = instContractService.addInstContract(saveInstContract, saveInstContractDetailList, instContractDetailWillDeletedList, getInstProjectGuideListSelected(), getUserlogin());
+
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, userDDs.get("INFO"), userDDs.get("SAVED")));
                 exit("../instContract/instContractList.xhtml");
                 //findHeadAndDetailsOfInstContract(instContract.getId());
@@ -308,10 +326,11 @@ public class InstContractFormMB extends BaseFormBean {
         try {
             Map<String, String> userDDs = getUserData().getUserDDs();
             if (validateCalculation()) {
-                if (instContractEntity.getInstProjectGuide() == null || (instContractEntity.getInstProjectGuide().getPrice() != null && instContractEntity.getInstProjectGuide().getPrice().compareTo(BigDecimal.ZERO) == 0)) {
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, userDDs.get("ERROR"), "يجب اختيار سلعة او منتج لها قيمة"));
-                    validateSave = false;
-                } else if (instContractEntity.getAmount() == null || instContractEntity.getAmount().compareTo(BigDecimal.ZERO) != 1) {
+//                if (instContractEntity.getInstProjectGuide() == null || (instContractEntity.getInstProjectGuide().getPrice() != null && instContractEntity.getInstProjectGuide().getPrice().compareTo(BigDecimal.ZERO) == 0)) {
+//                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, userDDs.get("ERROR"), "يجب اختيار سلعة او منتج لها قيمة"));
+//                    validateSave = false;
+//                } else 
+                if (instContractEntity.getAmount() == null || instContractEntity.getAmount().compareTo(BigDecimal.ZERO) != 1) {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, userDDs.get("ERROR"), "يجب وضع عدد أكبر من الصفر"));
                     validateSave = false;
                 } else if (instContractEntity.getInvOrganizationSite() == null) {
@@ -519,6 +538,19 @@ public class InstContractFormMB extends BaseFormBean {
                 instContractEntity.setTotalValue(totlValue);
                 calcInstallmentValue();
             }
+        } catch (Exception e) {
+            saveError(e, "InstContractFormMB", "updateTotalValue");
+        }
+    }
+
+    public void updateTotalValueMultiProject() {
+        try {
+            BigDecimal total = BigDecimal.ZERO;
+            for (InstProjectGuideDTO guideDTO : getInstProjectGuideListSelected()) {
+                total = total.add(guideDTO.getPrice());
+            }
+            instContractEntity.setTotalValue(total);
+            calcInstallmentValue();
         } catch (Exception e) {
             saveError(e, "InstContractFormMB", "updateTotalValue");
         }
@@ -872,6 +904,80 @@ public class InstContractFormMB extends BaseFormBean {
      */
     public void setDisabled(Boolean Disabled) {
         this.Disabled = Disabled;
+    }
+
+    /**
+     * @return the instProjectGuideListSelected
+     */
+    public List<InstProjectGuideDTO> getInstProjectGuideListSelected() {
+        return instProjectGuideListSelected;
+    }
+
+    /**
+     * @param instProjectGuideListSelected the instProjectGuideListSelected to
+     * set
+     */
+    public void setInstProjectGuideListSelected(List<InstProjectGuideDTO> instProjectGuideListSelected) {
+        this.instProjectGuideListSelected = instProjectGuideListSelected;
+    }
+
+    /**
+     * @return the instProjectGuideDTOList
+     */
+    public List<InstProjectGuideDTO> getInstProjectGuideDTOList() {
+        if (getInstContractEntity().getStartDate() != null && getInstContractEntity().getEndDate() != null) {
+            ProjectGuideSearchBean projectGuideSearchBean = new  ProjectGuideSearchBean();
+            projectGuideSearchBean.setBranchId(getUserData().getUserBranch().getId());
+            projectGuideSearchBean.setStartDate(instContractEntity.getStartDate());
+            projectGuideSearchBean.setEndDate(instContractEntity.getEndDate());
+            
+            instProjectGuideDTOList = instProjectGuideService.getBranchInstProjectGuidesActiveDTO(projectGuideSearchBean,Boolean.FALSE);
+            instProjectGuideDTOConverter = new InstProjectGuideDTOConverter(instProjectGuideDTOList);
+        }
+        if (instProjectGuideDTOList == null) {
+            instProjectGuideDTOList = new ArrayList<>();
+        } else {
+            if (getInstProjectGuideListSelected() != null) {
+                instProjectGuideDTOList.addAll(0, getInstProjectGuideListSelected());
+            }
+        }
+        return instProjectGuideDTOList;
+    }
+
+    public List<InstProjectGuideDTO> findInstProjectGuideDTOList() {
+        if (getInstContractEntity().getStartDate() != null && getInstContractEntity().getEndDate() != null) {
+            ProjectGuideSearchBean projectGuideSearchBean = new  ProjectGuideSearchBean();
+            projectGuideSearchBean.setBranchId(getUserData().getUserBranch().getId());
+            projectGuideSearchBean.setStartDate(instContractEntity.getStartDate());
+            projectGuideSearchBean.setEndDate(instContractEntity.getEndDate());
+            
+            instProjectGuideDTOList = instProjectGuideService.getBranchInstProjectGuidesActiveDTO(projectGuideSearchBean,Boolean.FALSE);
+            instProjectGuideDTOConverter = new InstProjectGuideDTOConverter(instProjectGuideDTOList);
+            setInstProjectGuideListSelected(null);
+        }
+        return instProjectGuideDTOList;
+    }
+
+    /**
+     * @param instProjectGuideDTOList the instProjectGuideDTOList to set
+     */
+    public void setInstProjectGuideDTOList(List<InstProjectGuideDTO> instProjectGuideDTOList) {
+        this.instProjectGuideDTOList = instProjectGuideDTOList;
+    }
+
+    /**
+     * @return the instProjectGuideDTOConverter
+     */
+    public InstProjectGuideDTOConverter getInstProjectGuideDTOConverter() {
+        return instProjectGuideDTOConverter;
+    }
+
+    /**
+     * @param instProjectGuideDTOConverter the instProjectGuideDTOConverter to
+     * set
+     */
+    public void setInstProjectGuideDTOConverter(InstProjectGuideDTOConverter instProjectGuideDTOConverter) {
+        this.instProjectGuideDTOConverter = instProjectGuideDTOConverter;
     }
 
 }

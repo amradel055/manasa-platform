@@ -10,17 +10,17 @@
         <f:event listener="#{userData.authorize}" type="preRenderView" />
         <h:form  class='formmargin' dir="#{userData.dir}"  id="form">
             <div style=" position: absolute;left: 20px"> 
-                    <p:commandButton  style="z-index: 2;
-                                      margin-top: 24%;
-                                      color: #035c70!important; 
-                                      background-color: #223238!important;
-                                      border: 1px solid #22323a!important;
-                                      background: #22323a 50% 50% repeat-x!important;"
-                                      icon="fa fa-fw fa-home"
-                                      title="#{userData.userDDs['HOME']}"
-                                      class="smhomeButton" 
-                                      action="exit" />                       
-                </div>
+                <p:commandButton  style="z-index: 2;
+                                  margin-top: 24%;
+                                  color: #035c70!important; 
+                                  background-color: #223238!important;
+                                  border: 1px solid #22323a!important;
+                                  background: #22323a 50% 50% repeat-x!important;"
+                                  icon="fa fa-fw fa-home"
+                                  title="#{userData.userDDs['HOME']}"
+                                  class="smhomeButton" 
+                                  action="exit" />                       
+            </div>
             <p:fieldset   legend="#{userData.userDDs['ADJUST_INV']}" >
 
 
@@ -38,7 +38,13 @@
                                          id="addA"
                                          title="#{userData.userDDs['ADD']}"
                                          action="#{invUpdateListMB.goToAdd()}" style="float:right"
-                                         rendered="#{(userData.userScreens['invupdate'].add and userData.userBranch.companyActivity ne 'CERAMIC')  or userData.isAdmin}"/>
+                                         rendered="#{(userData.userScreens['invupdate'].add)  or userData.isAdmin}"/>
+
+                        <p:blockUI block="form" trigger="addA" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI> 
                         <p:commandButton  icon="fa fa-plus" 
                                           class="saddButton"
                                           title="#{userData.userDDs['ADD']}"  value="سيراميك"
@@ -46,16 +52,11 @@
                                           style="float:right" 
                                           rendered="#{(userData.userScreens['invupdate'].add and userData.userBranch.companyActivity eq 'CERAMIC') or userData.isAdmin}"/>
 
-                         <p:blockUI block="form" trigger="addA" animate="true" >
-
-                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
-
-                        </p:blockUI> 
-
                         <p:outputPanel  >
                             <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
                             <p:inputText id="globalFilter" onkeyup="PF('bTable').filter()" style="width:150px" />
                         </p:outputPanel>
+
                     </f:facet>
 
                     <p:column style="width: 4vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px" filterStyle="display:none" filterBy="#{invUpdateTable.serial}"

@@ -9,13 +9,16 @@ import com.isag.businessservice.BranchService;
 import com.isag.businessservice.CompanyService;
 import com.isag.businessservice.GlAccountService;
 import com.isag.businessservice.InstProjectGuideService;
+import com.isag.businessservice.SymbolService;
 import com.isag.bussinessservice.global.Utility;
 import com.isag.comparatorsVars.ProjectGuideComparator;
 import com.isag.converter.GlaccountConverter;
+import com.isag.converter.SymbolConverter;
 import com.isag.entity.Branch;
 import com.isag.entity.GlAccount;
 import com.isag.entity.InstProjectGuide;
 import com.isag.entity.IsagCompany;
+import com.isag.entity.Symbol;
 import com.isag.isag.AutoComplete;
 import com.isag.isag.BaseTreeBean;
 import com.isag.isag.UserData;
@@ -61,6 +64,8 @@ public class ProjectGuideMB extends BaseTreeBean {
     private List<InstProjectGuide> allProjectGuide;
     private GlaccountConverter glaccountConverter;
     private List<GlAccount> glAccountList;    
+    private List<Symbol> symbolList;    
+    private SymbolConverter symbolConverter;
     
     @EJB
     private BranchService branchService;
@@ -70,6 +75,8 @@ public class ProjectGuideMB extends BaseTreeBean {
     private CompanyService companyService;
     @EJB
     private GlAccountService glAccountService;
+    @EJB
+    private SymbolService symbolService;
     
     @Override
     public String save() {
@@ -177,6 +184,7 @@ public class ProjectGuideMB extends BaseTreeBean {
             load();
             action = "";
             getGlAccountList();
+            getSymbolList();
         } catch (Exception e) {
             saveError(e, "ProjectGuideMB", "init");
         }
@@ -709,6 +717,38 @@ public class ProjectGuideMB extends BaseTreeBean {
      */
     public void setGlAccountList(List<GlAccount> glAccountList) {
         this.glAccountList = glAccountList;
+    }
+
+    /**
+     * @return the symbolList
+     */
+    public List<Symbol> getSymbolList() {
+        if(symbolList == null){
+            symbolList = symbolService.getSymbolByGeneralSymbol(getUserData().getCompany().getId(), 63);
+            symbolConverter = new SymbolConverter(symbolList);
+        }
+        return symbolList;
+    }
+
+    /**
+     * @param symbolList the symbolList to set
+     */
+    public void setSymbolList(List<Symbol> symbolList) {
+        this.symbolList = symbolList;
+    }
+
+    /**
+     * @return the symbolConverter
+     */
+    public SymbolConverter getSymbolConverter() {
+        return symbolConverter;
+    }
+
+    /**
+     * @param symbolConverter the symbolConverter to set
+     */
+    public void setSymbolConverter(SymbolConverter symbolConverter) {
+        this.symbolConverter = symbolConverter;
     }
     
 }

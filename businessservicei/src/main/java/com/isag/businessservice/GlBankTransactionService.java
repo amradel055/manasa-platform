@@ -15,6 +15,7 @@ import com.isag.views.CashAccountSettlmentView;
 import com.isag.views.SupplierAccountViewBean;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 import javax.ejb.Remote;
 
 /**
@@ -69,4 +70,6 @@ public interface GlBankTransactionService {
     public void updatelookAndIsDone(List<SupplierAccountViewBean> supplierAccountViewBeanList);
     
     public void addCash(InvInvoiceDTO dTO, IsagUser tobyUser);
+    
+    public Map<Integer, Vector<Object>> getAllinstallmentIdAndPayedValue(Integer branchId, List<Integer> installmentIdList);
 }

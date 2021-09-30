@@ -17,6 +17,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -67,7 +68,14 @@ public class InstProjectGuide extends BaseEntity {
     @JoinColumn(name = "account_sale_id", referencedColumnName = "id")
     @ManyToOne
     private GlAccount accountSaleId;
-    
+    @JoinColumn(name = "symbol_size", referencedColumnName = "id")
+    @ManyToOne
+    private Symbol symbolSize;
+    @Transient
+    private Boolean sell;
+    @Column(name = "reserved")
+    private Boolean reserved;
+      
     public InstProjectGuide() {
     }
 
@@ -219,6 +227,51 @@ public class InstProjectGuide extends BaseEntity {
      */
     public void setAccountSaleId(GlAccount accountSaleId) {
         this.accountSaleId = accountSaleId;
+    }
+
+    /**
+     * @return the sell
+     */
+    public Boolean getSell() {
+        if(sell == null){
+        sell = Boolean.FALSE;
+        }
+        return sell;
+    }
+
+    /**
+     * @param sell the sell to set
+     */
+    public void setSell(Boolean sell) {
+        this.sell = sell;
+    }
+
+    /**
+     * @return the reserved
+     */
+    public Boolean getReserved() {
+        return reserved;
+    }
+
+    /**
+     * @param reserved the reserved to set
+     */
+    public void setReserved(Boolean reserved) {
+        this.reserved = reserved;
+    }
+
+    /**
+     * @return the symbolSize
+     */
+    public Symbol getSymbolSize() {
+        return symbolSize;
+    }
+
+    /**
+     * @param symbolSize the symbolSize to set
+     */
+    public void setSymbolSize(Symbol symbolSize) {
+        this.symbolSize = symbolSize;
     }
 
 }

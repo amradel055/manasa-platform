@@ -97,6 +97,12 @@ public class InstContract extends BaseEntity {
     private InvItem invItemId;
     @Column(name = "cancel")
     private boolean cancel = Boolean.FALSE;
+    @Column(name = "start_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date startDate;
+    @Column(name = "end_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date endDate;
     
     public InstContract() {
     }
@@ -367,6 +373,34 @@ public class InstContract extends BaseEntity {
      */
     public void setCancel(boolean cancel) {
         this.cancel = cancel;
+    }
+
+    /**
+     * @return the startDate
+     */
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    /**
+     * @param startDate the startDate to set
+     */
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    /**
+     * @return the endDate
+     */
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    /**
+     * @param endDate the endDate to set
+     */
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 
 }

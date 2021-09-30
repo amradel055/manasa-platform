@@ -5,6 +5,11 @@
  */
 package com.isag.isag;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.isag.businessservice.IsagErrorService;
 import com.isag.businessservice.IsagTokensService;
 import com.isag.businessservice.IsagUserInventoryService;
@@ -19,6 +24,9 @@ import com.isag.entity.GlYear;
 import com.isag.entity.InvInventory;
 import com.isag.entity.IsagUser;
 import com.isag.entity.IsagUserLogin;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -35,6 +43,7 @@ import java.net.UnknownHostException;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -45,6 +54,7 @@ import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.imageio.ImageIO;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
@@ -102,6 +112,48 @@ public class Basic implements Serializable {
     private InvInventory invInventorySelection;
     private InvInventoryConverter invInventoryConverter;
     
+    
+    public void reportQRCode(HashMap hashMap, String qrCodeText) {
+        String filePath = "JD.png";
+        int size = 200;
+        String fileType = "png";
+        File qrFile = new File(filePath);
+        createQRImage(qrFile, qrCodeText, size, fileType);
+        hashMap.put("QRCode", "JD.png");
+
+    }
+    
+     private void createQRImage(File qrFile, String qrCodeText, int size, String fileType) {
+        try {
+            // Create the ByteMatrix for the QR-Code that encodes the given String
+            Hashtable hintMap = new Hashtable<>();
+            hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
+            hintMap.put(EncodeHintType.CHARACTER_SET, "UTF-8");
+            hintMap.put(EncodeHintType.MARGIN, 1);
+            QRCodeWriter qrCodeWriter = new QRCodeWriter();
+            BitMatrix byteMatrix = qrCodeWriter.encode(qrCodeText, BarcodeFormat.QR_CODE, size, size, hintMap);
+            // Make the BufferedImage that are to hold the QRCode
+            int matrixWidth = byteMatrix.getWidth();
+            BufferedImage image = new BufferedImage(matrixWidth, matrixWidth, BufferedImage.TYPE_INT_RGB);
+            image.createGraphics();
+            Graphics2D graphics = (Graphics2D) image.getGraphics();
+            graphics.setColor(Color.WHITE);
+            graphics.fillRect(0, 0, matrixWidth, matrixWidth);
+            // Paint and save the image using the ByteMatrix
+            graphics.setColor(Color.BLACK);
+            for (int i = 0; i < matrixWidth; i++) {
+                for (int j = 0; j < matrixWidth; j++) {
+                    if (byteMatrix.get(i, j)) {
+                        graphics.fillRect(i, j, 1, 1);
+                    }
+                }
+            }
+            ImageIO.write(image, fileType, qrFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public void saveError(Exception e, String className, String methodName) {
         getIsagErrorDTO().setClassName(className);

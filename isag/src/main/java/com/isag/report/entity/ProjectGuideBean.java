@@ -17,6 +17,8 @@ public class ProjectGuideBean {
     private Integer level; 
     private String active;
     private String parent;
+    private Boolean sellType;
+    private Boolean reserved;
 
   
 
@@ -77,6 +79,34 @@ public class ProjectGuideBean {
      */
     public void setActive(String active) {
         this.active = active;
+    }
+
+    /**
+     * @return the sellType
+     */
+    public Boolean getSellType() {
+        return sellType;
+    }
+
+    /**
+     * @param sellType the sellType to set
+     */
+    public void setSellType(Boolean sellType) {
+        this.sellType = sellType;
+    }
+
+    /**
+     * @return the reserved
+     */
+    public Boolean getReserved() {
+        return reserved;
+    }
+
+    /**
+     * @param reserved the reserved to set
+     */
+    public void setReserved(Boolean reserved) {
+        this.reserved = reserved;
     }
 
     /**

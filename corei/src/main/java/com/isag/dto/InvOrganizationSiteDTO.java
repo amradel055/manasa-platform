@@ -88,6 +88,7 @@ public class InvOrganizationSiteDTO extends BaseEntityDTO {
     private Integer numberOfLeadsAssigned;
     private Integer numberOfNewLeadsAssigned;
     private String globalFilter;
+    private String legalAffairsRemark;
 
     public InvOrganizationSiteDTO() {
     }
@@ -1134,6 +1135,19 @@ public class InvOrganizationSiteDTO extends BaseEntityDTO {
      */
     public void setTransferTo(EmployeeDTO transferTo) {
         this.transferTo = transferTo;
+    }
+    /**
+     * @return the legalAffairsRemark
+     */
+    public String getLegalAffairsRemark() {
+        return legalAffairsRemark;
+    }
+
+    /**
+     * @param legalAffairsRemark the legalAffairsRemark to set
+     */
+    public void setLegalAffairsRemark(String legalAffairsRemark) {
+        this.legalAffairsRemark = legalAffairsRemark;
     }
 
 }

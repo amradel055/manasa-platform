@@ -5,18 +5,21 @@
  */
 package com.isag.instContract;
 
+import com.isag.businessservice.GlBankTransactionService;
 import com.isag.businessservice.InstContractDetailsService;
 import com.isag.businessservice.InstContractService;
 import com.isag.businessservice.InstContractServicenew;
 import com.isag.businessservice.InstProfitRateService;
 import com.isag.businessservice.InstProjectGuideService;
 import com.isag.businessservice.InstPurchaseInvoiceContractDifrranceViewService;
+import com.isag.businessservice.InvNoticeService;
 import com.isag.businessservice.OrganizationSiteService;
 import com.isag.businessservice.instcontractdetailwithbanktransactionviewService;
 import com.isag.comparators.InstContractDetailsEntityComparator;
 import com.isag.converter.InstProjectGuideConverter;
 import com.isag.converter.InvOrganizationSiteDTOConverter;
 import com.isag.dto.InvOrganizationSiteDTO;
+import com.isag.dto.SymbolDTO;
 import com.isag.entity.InstContract;
 import com.isag.entity.InstContractDetail;
 import com.isag.entity.InstProjectGuide;
@@ -31,13 +34,16 @@ import com.isag.views.InstPurchaseInvoiceContractDifrranceView;
 import com.isag.views.InstcontractdetailwithbanktransactionView;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -46,14 +52,9 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
 import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JasperExportManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.primefaces.event.SelectEvent;
+import tafqeet.Tafqeet;
 
 /**
  *
@@ -80,6 +81,7 @@ public class InstContractFormMBnew extends InstContractDataForm {
     private String totalDetailValue;
     private BigDecimal totalValue;
     private Boolean Disabled = Boolean.FALSE;
+
     @EJB
     private OrganizationSiteService organizationSiteService;
     @EJB
@@ -96,6 +98,11 @@ public class InstContractFormMBnew extends InstContractDataForm {
     private InstProfitRateService instProfitRateService;
     @EJB
     private instcontractdetailwithbanktransactionviewService instcontractdetail_banktransactionviewService;
+
+    @EJB
+    private GlBankTransactionService bankTransactionService;
+    @EJB
+    private InvNoticeService invNoticeService;
 
     @Override
     @PostConstruct
@@ -147,6 +154,19 @@ public class InstContractFormMBnew extends InstContractDataForm {
                 siteDTO.setId(instContract.getOrganizationSiteId().getId());
                 siteDTO.setCode(instContract.getOrganizationSiteId().getCode());
                 siteDTO.setName(instContract.getOrganizationSiteId().getName());
+                siteDTO.setMobile(instContract.getOrganizationSiteId().getMobile());
+                siteDTO.setNationId(instContract.getOrganizationSiteId().getNationId());
+                siteDTO.setAddress(instContract.getOrganizationSiteId().getAddress());
+                siteDTO.setLegalAffairsRemark(instContract.getOrganizationSiteId().getLegalAffairsRemark());
+                if (instContract.getOrganizationSiteId().getWorkTypeId() != null) {
+                    SymbolDTO symbolDTO = new SymbolDTO();
+                    symbolDTO.setName(instContract.getOrganizationSiteId().getWorkTypeId().getName());
+                    siteDTO.setWorkTypeId(symbolDTO);
+                }
+                siteDTO.setSponsorName1(instContract.getOrganizationSiteId().getSponsorName1());
+                siteDTO.setSponsorName2(instContract.getOrganizationSiteId().getSponsorName2());
+                siteDTO.setSponsorPhone1(instContract.getOrganizationSiteId().getSponsorPhone1());
+                siteDTO.setSponsorPhone2(instContract.getOrganizationSiteId().getSponsorPhone2());
                 instContractEntity.setInvOrganizationSite(siteDTO);
             }
 
@@ -402,6 +422,8 @@ public class InstContractFormMBnew extends InstContractDataForm {
                 } else if (instContractDetailsEntityList == null || (instContractDetailsEntityList != null && instContractDetailsEntityList.isEmpty())) {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, userDDs.get("ERROR"), "لا توجد اقساط"));
                     validateSave = false;
+                } else if (instContractEntity != null && instContractEntity.getSerial() != null) {
+                    validateSave = checkSerial();
                 } else {
                     BigDecimal advancedPayment = instContractEntity.getAdvancePayment() != null ? instContractEntity.getAdvancePayment() : BigDecimal.ZERO;
                     BigDecimal installmentValue = instContractEntity.getInstallmentValue() != null ? instContractEntity.getInstallmentValue() : BigDecimal.ZERO;
@@ -639,11 +661,11 @@ public class InstContractFormMBnew extends InstContractDataForm {
             hashMap.put("branchName", getUserData().getUserBranch().getNameAr());
             hashMap.put("companyName", getUserData().getCompany().getName());
             hashMap.put("CreatedBy", getUserData().getUser().getName());
-            
-            
+
             hashMap.put("serial", getInstContractEntity().getSerial());
             hashMap.put("customerName", getInstContractEntity().getInvOrganizationSite().getName());
-            hashMap.put("projectName", getInstContractEntity().getInstProjectGuide().getName());
+            hashMap.put("projectName", getInstContractEntity().getInvItemId().getName());
+            //hashMap.put("projectName", getInstContractEntity().getInstProjectGuide().getName());
             hashMap.put("startInstallment", getInstContractEntity().getStartInstallment());
             hashMap.put("date", getInstContractEntity().getDate());
             hashMap.put("advancePayment", getInstContractEntity().getAdvancePayment());
@@ -657,7 +679,7 @@ public class InstContractFormMBnew extends InstContractDataForm {
             hashMap.put("remark", getInstContractEntity().getRemark());
             hashMap.put("orignelAmount", getInstContractEntity().getOrignelAmount());
             hashMap.put("totalAmount", getInstContractEntity().getTotalValue());
-            
+
             hashMap.put("serialText", "رقم العقد");
             hashMap.put("customerNameText", "اسم العميل");
             hashMap.put("projectNameText", "المشروع");
@@ -665,7 +687,7 @@ public class InstContractFormMBnew extends InstContractDataForm {
             hashMap.put("dateText", "تاريخ العقد");
             hashMap.put("advancePaymentText", "دفعة مقدمة");
             hashMap.put("deliveryPaymentText", "دفعة عند الاستلام");
-            hashMap.put("amountText", "العدد");
+            hashMap.put("amountText", "القيمه");
             hashMap.put("murabahaRateText", "نسبة الربح");
             hashMap.put("installmentValueText", "مبلغ التقسيط");
             hashMap.put("installmentNumberText", "عدد الاقساط");
@@ -674,8 +696,8 @@ public class InstContractFormMBnew extends InstContractDataForm {
             hashMap.put("remarkText", "ملاحظات");
             hashMap.put("orignelAmountText", "المبلغ الاصلي");
             hashMap.put("totalAmountText", "الإجمالى");
-            
-            
+            hashMap.put("totalText", "الإجمالي");
+
 //            fillReport(hashMap, getUserData().getReportPath() + "emptyinitialsalecontract.jasper", instContractDetailsEntityList, "pdf");
             fillReport(hashMap, getUserData().getReportPath() + "installment.jasper", instContractDetailsEntityList, "pdf");
         } catch (Exception e) {
@@ -683,10 +705,223 @@ public class InstContractFormMBnew extends InstContractDataForm {
         }
     }
 
+    public void exportPDFCustomerAccountStatment(ActionEvent actionEvent) throws JRException, IOException {
+        try {
+            List<InstContractDetailsEntity> contractDetailsEntitys = new ArrayList<>();
+            contractDetailsEntitys.addAll(instContractDetailsEntityList);
+            HashMap hashMap = new HashMap();
+            hashMap.put("CompanyName", getUserData().getCompany().getName());
+            hashMap.put("centerTxt", "مركز تساهيل");
+            hashMap.put("centerInfoText", "هذا المركز يخص التسديدات المالية حسب المسجل بالبنوك حتي تاريخه");
+            hashMap.put("customerInfo", "بيانات العميل");
+            hashMap.put("demandText", "المطالبة");
+            hashMap.put("fileNumberText", "رقم الملف");
+            hashMap.put("subsidyText", "مبلغ الدعم");
+            hashMap.put("installmentPeriodText", "فتره التقسيط");
+            hashMap.put("phoneText", "الجوال");
+            hashMap.put("branchText", "الفرع / الشركة");
+            hashMap.put("contractPriceText", "مبلغ العقد");
+            hashMap.put("loanDateText", "تاريخ الاقراض");
+            hashMap.put("installmentNumberText", "رقم العقد");
+            hashMap.put("customerNameText", "اسم العميل");
+            hashMap.put("installmentValueText", "قيمه القسط");
+            hashMap.put("dueDateText", "تاريخ الاستحقاق");
+            hashMap.put("nationalIdText", "رقم الهويه");
+            hashMap.put("guarantorCustomerText", "اسماء المعرفين");
+            hashMap.put("IBANText", "الايبان / الحساب");
+            hashMap.put("LegalPositionText", "الموقف القانوني");
+            hashMap.put("totalArrearsText", "إجمالي المتاخر");
+            hashMap.put("jobText", "نطاق العمل");
+            hashMap.put("amountAfterInstallmentDateText", "المبلغ الذي سدده خارج تواريخ العقد");
+            hashMap.put("financialCenterText", "المركز المالي");
+            hashMap.put("wronglyTransferredText", "مبالغ حولت بالخطاء");
+            hashMap.put("serialText", "مسلسل");
+            hashMap.put("installmentDateText", "تاريخ القسط");
+            hashMap.put("installmentText", "القسط");
+            hashMap.put("payedText", "المسدد");
+            hashMap.put("netText", "الصافي");
+            hashMap.put("paymentDateText", "تاريخ السداد");
+            hashMap.put("paymentAccountText", "حساب السداد");
+            hashMap.put("guarantorNameText", "الاسم");
+            hashMap.put("centerDateValue", null);
+            hashMap.put("reportInfoText", "سدادات العميل الموجوده بالبنوك و المدرجه بالمركز المالي حتى تاريخه هي (             ) ريال وعليه تم التوقيع");
+            hashMap.put("totalText", "الإجمالي");
+            hashMap.put("demandValue", BigDecimal.ZERO);
+            hashMap.put("fileNumberValue", getInstContractEntity().getInvOrganizationSite().getCode());
+            hashMap.put("installmentPeriodValue", getInstContractEntity().getInstallmentNumber());
+            hashMap.put("phoneValue", instContract.getOrganizationSiteId().getMobile());
+            hashMap.put("branchValue", getUserData().getUserBranch().getNameAr());
+            hashMap.put("contractPriceValue", getInstContractEntity().getTotalValue());
+            hashMap.put("loanDateValue", getInstContractEntity().getDate());
+            hashMap.put("installmentNumberValue", getInstContractEntity().getSerial());
+            hashMap.put("customerNameValue", getInstContractEntity().getInvOrganizationSite().getName());
+            hashMap.put("installmentValue", getInstContractEntity().getTotalValue().divide(new BigDecimal(getInstContractEntity().getInstallmentNumber()), 0, RoundingMode.HALF_UP));
+            hashMap.put("dueDateValue", getInstContractEntity().getStartInstallment());
+            hashMap.put("nationalIdValue", instContract.getOrganizationSiteId().getNationId());
+            hashMap.put("guarantorName1Value", instContract.getOrganizationSiteId().getSponsorName1());
+            hashMap.put("guarantorName1NationalId", instContract.getOrganizationSiteId().getSponsorPhone1());
+            hashMap.put("guarantorName2Value", instContract.getOrganizationSiteId().getSponsorName2());
+            hashMap.put("guarantorName2NationalId", instContract.getOrganizationSiteId().getSponsorPhone2());
+            hashMap.put("IBANValue", instContract.getOrganizationSiteId().getAccountBankNumber());
+            hashMap.put("LegalPositionValue", instContract.getOrganizationSiteId().getLegalAffairsRemark() != null && !instContract.getOrganizationSiteId().getLegalAffairsRemark().isEmpty() ? instContract.getOrganizationSiteId().getLegalAffairsRemark() : "لايوجد");
+            hashMap.put("totalArrearsValue", BigDecimal.ZERO);
+            hashMap.put("jobValue", instContract.getOrganizationSiteId().getWorkTypeId() != null ? instContract.getOrganizationSiteId().getWorkTypeId().getName() : null);
+            hashMap.put("amountAfterInstallmentDateValue", getInstContractEntity().getAdvancePayment());
+            hashMap.put("wronglyTransferredValue", BigDecimal.ZERO);
+            hashMap.put("PrintedBy", getUserData().getUser().getName());
+            HashMap hashMap2 = new HashMap();
+            hashMap2.put("column1", BigDecimal.ZERO);
+            hashMap2.put("column2", BigDecimal.ZERO);
+            hashMap2.put("column3", BigDecimal.ZERO);
+            hashMap2.put("column4", BigDecimal.ZERO);
+            hashMap2.put("column5", BigDecimal.ZERO);
+            hashMap2.put("column6", BigDecimal.ZERO);
+            hashMap2.put("column7", BigDecimal.ZERO);
+            hashMap2.put("column8", BigDecimal.ZERO);
+            hashMap.put("param", hashMap2);
+            List<Integer> installmentIdList = new ArrayList<>();
+            contractDetailsEntitys.forEach(obj -> installmentIdList.add(obj.getId()));
+            Map<Integer, Vector<Object>> map = bankTransactionService.getAllinstallmentIdAndPayedValue(getUserData().getSelectedBranch(), installmentIdList);
+            Map<Integer, Vector<Object>> noticeMap = invNoticeService.getAllinstallmentIdAndPayedValue(getUserData().getSelectedBranch(), instContract.getId());
+            BigDecimal balance = BigDecimal.ZERO;
+            for (InstContractDetailsEntity obj : contractDetailsEntitys) {
+                if (map.containsKey(obj.getId())) {
+                    obj.setPayedValue((BigDecimal) map.get(obj.getId()).firstElement());
+                    obj.setPayedDate((Date) map.get(obj.getId()).get(1));
+                    obj.setPayedAccountName((String) map.get(obj.getId()).get(2));
+                }
+                obj.setBalance((obj.getPayedValue().subtract(obj.getValue().setScale(0, RoundingMode.HALF_UP)).add(balance)));
+                balance = obj.getBalance();
+            }
+            for (Map.Entry<Integer, Vector<Object>> entry : noticeMap.entrySet()) {
+                Integer key = entry.getKey();
+                Vector<Object> value = entry.getValue();
+                InstContractDetailsEntity contractDetailsEntity = new InstContractDetailsEntity();
+                contractDetailsEntity.setSerial(contractDetailsEntitys != null ? contractDetailsEntitys.get(contractDetailsEntitys.size() - 1).getSerial() + 1 : 1);
+                contractDetailsEntity.setPayedValue((BigDecimal) value.firstElement());
+                contractDetailsEntity.setPayedDate((Date) value.get(1));
+                contractDetailsEntity.setPayedAccountName((String) value.get(2));
+                contractDetailsEntity.setBalance((contractDetailsEntity.getPayedValue().add(balance)));
+                balance = contractDetailsEntity.getBalance();
+                contractDetailsEntitys.add(contractDetailsEntity);
+            }
+            InstContractEntity obj2 = new InstContractEntity(instContractEntity);
+            obj2.setProfitStatus(Boolean.FALSE);
+            salesReport(obj2);
+            hashMap.put("subsidyValue", obj2.getPriceWithoutTaxValue());
+            fillReport(hashMap, getUserData().getReportPath() + "customerAccountStatement.jasper", contractDetailsEntitys, "pdf");
+            contractDetailsEntitys = null;
+        } catch (Exception e) {
+            saveError(e, "InstContractFormMB", "exportPDF");
+        }
+    }
+
+    public void exportPDF3(ActionEvent actionEvent) throws JRException, IOException {
+        try {
+            HashMap hashMap = new HashMap();
+
+            hashMap.put("titleText", "فاتوره ميبعات اجله");
+            hashMap.put("taxNumberText", "الرقم الضريبي");
+            hashMap.put("paymentMethodText", "طريقه الدفع");
+            hashMap.put("reciptDateText", "تاريخ الفاتورة");
+            hashMap.put("reciptNumberText", "رقم الفاتورة");
+            hashMap.put("InstallmentPeriodText", "فترة تقسيط");
+            hashMap.put("paymentDateText", "تاريخ الاستحقاق");
+            hashMap.put("InstallmentMonthText", "القسط الشهري");
+            hashMap.put("customerDataText", "بيانات العميل");
+            hashMap.put("nameText", "الاسم");
+            hashMap.put("phoneText", "الهاتف");
+            hashMap.put("addressText", "العنوان");
+            hashMap.put("nationalityText", "الهويه");
+            hashMap.put("priceText", "المبلغ");
+            hashMap.put("taxText", "الضريبه");
+            hashMap.put("pricePerPieceText", "السعر الفردي");
+            hashMap.put("cartonNumberText", "عدد الكرتون");
+            hashMap.put("detailsText", "البيان");
+            hashMap.put("numberText", "رقم");
+            hashMap.put("priceWithoutTaxText", "صافي المبلغ");
+            hashMap.put("discountText", "خصم");
+            hashMap.put("addedValueText", "القيمة المضافة");
+            hashMap.put("totalValueText", "المجموع الكلي");
+            hashMap.put("signatureText", "توقيع المستلم");
+            hashMap.put("priceWithTaxText", "المبلغ خالي الضريبه");
+
+            hashMap.put("taxNumberValue", getUserlogin().getBranchId().getTaxCode());
+            hashMap.put("paymentMethodValue", getInstContractEntity().getPaymentMethod());
+            hashMap.put("reciptDateValue", getInstContractEntity().getDate());
+            hashMap.put("reciptNumberValue", getInstContractEntity().getSerial());
+            hashMap.put("InstallmentPeriodValue", getInstContractEntity().getInstallmentNumber());
+            hashMap.put("paymentDateValue", getInstContractEntity().getStartInstallment());
+            hashMap.put("InstallmentMonthValue", getInstContractEntity().getTotalValue().divide(new BigDecimal(getInstContractEntity().getInstallmentNumber()), 2, RoundingMode.HALF_UP));
+            hashMap.put("nameValue", getInstContractEntity().getInvOrganizationSite().getName());
+            hashMap.put("phoneValue", instContract.getOrganizationSiteId().getMobile());
+            hashMap.put("addressValue", instContract.getOrganizationSiteId().getAddress());
+            hashMap.put("nationalityValue", instContract.getOrganizationSiteId().getNationId());
+            hashMap.put("priceValue", getInstContractEntity().getTotalValue());
+            hashMap.put("companyImage", getUserData().getImageReportPath());
+            hashMap.put("netValue", getInstContractEntity().getInstallmentValue());
+            List<InstContractEntity> instContractEntityList = new ArrayList<>();
+            InstContractEntity obj1 = new InstContractEntity(instContractEntity);
+            InstContractEntity obj2 = new InstContractEntity(instContractEntity);
+            obj1.setProfitStatus(Boolean.TRUE);
+            salesReport(obj1);
+            obj2.setProfitStatus(Boolean.FALSE);
+            salesReport(obj2);
+            instContractEntityList.add(obj1);
+            instContractEntityList.add(obj2);
+            hashMap.put("amountValueText", Tafqeet.numberToText(Double.parseDouble(getInstContractEntity().getTotalValue().toString()), instContract.getOrganizationSiteId().getCurrencyId().getName(), instContract.getOrganizationSiteId().getCurrencyId().getSubName()));
+            hashMap.put("totalValue2", obj1.getTotalValue2());
+            StringBuilder builder = new StringBuilder();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+            builder.append(getUserData().getUserBranch().getNameAr()).append("\n")
+                    .append("العميل: ").append(getInstContractEntity().getInvOrganizationSite().getName()).append("\n")
+                    .append("فاتوره رقم: ").append(getInstContractEntity().getSerial()).append("\n")
+                    .append("تاريخ الفاتوره: ").append(dateFormat.format(getInstContractEntity().getDate())).append("\n")
+                    .append("صافي المبلغ: ").append(obj1.getPriceWithTaxValue().add(obj2.getAmountValue())).append("\n")
+                    .append("الضريبه vat: ").append(obj1.getTaxValue()).append("\n")
+                    .append("قيمه الفاتورة: ").append(obj1.getPriceWithTaxValue().add(obj2.getAmountValue()).add(obj1.getTaxValue()));
+            reportQRCode(hashMap, builder.toString());
+            fillReport(hashMap, getUserData().getReportPath() + "salesInvoice.jasper", instContractEntityList, "pdf");
+        } catch (Exception e) {
+            saveError(e, "InstContractFormMB", "exportPDF");
+        }
+    }
+
+    private void salesReport(InstContractEntity contractEntity) {
+        BigDecimal amountValue2 = contractEntity.getInstallmentValue().subtract(instContractEntity.getInvItemId().getPrice().multiply(instContractEntity.getAmount()));
+        contractEntity.setCartonNumberValue(getInstContractEntity().getAmount().divide(new BigDecimal(250), 2, RoundingMode.HALF_UP));
+        if (contractEntity.getProfitStatus()) {
+            contractEntity.setAmountValue(amountValue2);
+            contractEntity.setPriceWithTaxValue(contractEntity.getAmountValue().divide(new BigDecimal(1.15), 2, RoundingMode.HALF_UP));
+            BigDecimal priceWithoutTaxValueCalc = (contractEntity.getPriceWithTaxValue().divide(getInstContractEntity().getAmount().divide(new BigDecimal(250), 2, RoundingMode.HALF_UP)));
+            BigDecimal taxValueCalc = (contractEntity.getAmountValue().subtract(contractEntity.getPriceWithTaxValue()));
+            contractEntity.setTaxValue(taxValueCalc);
+            contractEntity.setPriceWithoutTaxValue(priceWithoutTaxValueCalc);
+            contractEntity.setTotalValue2(contractEntity.getInstallmentValue().subtract(taxValueCalc));
+            contractEntity.setPricePerPieceValue(contractEntity.getPriceWithTaxValue().divide(contractEntity.getCartonNumberValue()));
+        } else {
+
+            BigDecimal ammountValueCalc = getTotalValue().divide(new BigDecimal(1.60), 2, RoundingMode.HALF_UP);
+            BigDecimal secondAmountValue = instContractEntity.getInvItemId().getPrice().multiply(instContractEntity.getAmount());
+            contractEntity.setPriceWithTaxValue(amountValue2.divide(new BigDecimal(1.15), 2, RoundingMode.HALF_UP));
+            BigDecimal priceWithoutTaxValueCalc = (contractEntity.getPriceWithTaxValue().divide(getInstContractEntity().getAmount().divide(new BigDecimal(250), 2, RoundingMode.HALF_UP)));
+            BigDecimal taxValueCalc = (getTotalValue().subtract(ammountValueCalc)).subtract(priceWithoutTaxValueCalc);
+            BigDecimal netvalueCalc = getTotalValue().subtract(taxValueCalc);
+            contractEntity.setPriceWithoutTaxValue(ammountValueCalc);
+            contractEntity.setAmountValue(secondAmountValue);
+            contractEntity.setTaxValue(BigDecimal.ZERO);
+            contractEntity.setNetValue(netvalueCalc);
+            contractEntity.setPriceWithTaxValue(BigDecimal.ZERO);
+            contractEntity.setPricePerPieceValue(secondAmountValue.divide(contractEntity.getCartonNumberValue()));
+        }
+    }
+
     public void exportPDFFromList(Integer instContractId) {
         try {
             findHeadAndDetailsOfInstContract(instContractId);
+
             exportPDF(null);
+
 //            HashMap hashMap = new HashMap();
 //            hashMap.put("PrintedBy", getUserData().getUser().getName());
 //            hashMap.put("branchName", getUserData().getUserBranch().getNameAr());
@@ -766,6 +1001,19 @@ public class InstContractFormMBnew extends InstContractDataForm {
             saveError(e, "InstContractFormMB", "exit");
             return null;
         }
+    }
+
+    public Boolean checkSerial() {
+        if (instContractEntity != null && instContractEntity.getSerial() != null) {
+            Boolean check = instContractServicenew.checkSerail(getUserData().getSelectedBranch(), instContractEntity.getSerial(), instContractEntity.getId());
+            if (check) {
+                errorMessage("رقم العقد موجود مسبقا");
+                return false;
+            } else {
+                return true;
+            }
+        }
+        return false;
     }
 
     public List<InstProjectGuide> completeInstProject(String query) {

@@ -1,6 +1,9 @@
 package com.isag.businessservice.reports.searchBean;
 
+import com.isag.dto.InstProjectGuideDTO;
 import com.isag.entity.InstProjectGuide;
+import java.util.Date;
+import java.util.List;
 
 public class ProjectGuideSearchBean {
 
@@ -8,6 +11,11 @@ public class ProjectGuideSearchBean {
     private InstProjectGuide projectGuideIdTo;
     private Integer branchId;
     private Boolean showReport;
+    private List<InstProjectGuideDTO> projectGuideListSelected;
+    private Date startDate;
+    private Date endDate;
+    
+    
     public Integer getBranchId() {
         return branchId;
     }
@@ -56,6 +64,48 @@ public class ProjectGuideSearchBean {
      */
     public void setShowReport(Boolean showReport) {
         this.showReport = showReport;
+    }
+
+    /**
+     * @return the projectGuideListSelected
+     */
+    public List<InstProjectGuideDTO> getProjectGuideListSelected() {
+        return projectGuideListSelected;
+    }
+
+    /**
+     * @param projectGuideListSelected the projectGuideListSelected to set
+     */
+    public void setProjectGuideListSelected(List<InstProjectGuideDTO> projectGuideListSelected) {
+        this.projectGuideListSelected = projectGuideListSelected;
+    }
+
+    /**
+     * @return the startDate
+     */
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    /**
+     * @param startDate the startDate to set
+     */
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    /**
+     * @return the endDate
+     */
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    /**
+     * @param endDate the endDate to set
+     */
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 
    

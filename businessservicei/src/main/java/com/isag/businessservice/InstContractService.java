@@ -8,8 +8,10 @@ package com.isag.businessservice;
 import com.isag.businessservice.reports.searchBean.InstallmentSearchBean;
 import com.isag.dto.InstContractDTO;
 import com.isag.dto.InstContractDetailDTO;
+import com.isag.dto.InstProjectGuideDTO;
 import com.isag.entity.InstContract;
 import com.isag.entity.InstContractDetail;
+import com.isag.entity.IsagUser;
 import com.isag.views.InstInstallmentView;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +25,8 @@ import javax.ejb.Remote;
 public interface InstContractService {
 
     public InstContract addInstContract(InstContract instContract, List<InstContractDetail> instContractDetailList, List<InstContractDetail> instContractDetailListDeleted);
+
+    public InstContract addInstContract(InstContract instContract, List<InstContractDetail> instContractDetailList, List<InstContractDetail> instContractDetailListDeleted, List<InstProjectGuideDTO> instProjectGuideDTOListSelected, IsagUser isagUser);
 
     public InstContract addInstContractforTasaheel(InstContract instContract, List<InstContractDetail> instContractDetailList);
 

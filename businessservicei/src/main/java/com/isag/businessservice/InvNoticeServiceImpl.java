@@ -13,11 +13,14 @@ import com.isag.dto.InvNoticeDTO;
 import com.isag.dto.InvOrganizationSiteDTO;
 import com.isag.dto.SymbolDTO;
 import com.isag.entity.InvNotice;
+import com.isag.entity.Symbol;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
@@ -270,4 +273,34 @@ public class InvNoticeServiceImpl implements InvNoticeService {
 
         return returnDTOList(invNoticeList);
     }
+    
+    
+        @Override
+    public Map<Integer, Vector<Object>> getAllinstallmentIdAndPayedValue(Integer branchId, Integer installmentParentId) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("branchId", branchId);
+        param.put("installmentParentId", installmentParentId);
+        String query = "SELECT i.installmentId.id , i.value , i.date , i.noticeNaming  FROM InvNotice i WHERE i.branchId.id = :branchId AND i.installmentId.instContractId.id = :installmentParentId ";
+        List<Object[]> result = dao.findListByQuery(query, param);
+        Map<Integer, Vector<Object>> map = new HashMap<>();
+        for (Object[] objects : result) {
+            Vector<Object> vector;
+            Integer installmentId = (Integer) objects[0];
+            BigDecimal value = (BigDecimal) objects[1];
+            Date date = (Date) objects[2];
+            String bankName = ((Symbol) objects[3]) != null ? ((Symbol) objects[3]).getName() : "" ;
+            if (map.containsKey(installmentId)) {
+                vector = map.get(installmentId);
+                vector.add(0, ((BigDecimal) vector.firstElement()).add(value != null ? value : BigDecimal.ZERO));
+            } else {
+                vector = new Vector<>();
+                vector.add(0, value);
+            }
+            vector.add(1, date);
+            vector.add(2, bankName);
+            map.put(installmentId, vector);
+        }
+        return map;
+    }
+
 }

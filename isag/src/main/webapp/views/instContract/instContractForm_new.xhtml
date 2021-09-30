@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                template="./../../template/newTemplate.xhtml"
+                template="./../../template/template.xhtml"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
@@ -43,7 +43,7 @@
 
                                 <h:panelGroup>
                                     <p:inputText style="width: 18.5%;" value="#{instContractFormMBnew.instContractEntity.serial}">
-                                        
+                                        <p:ajax listener="#{instContractFormMBnew.checkSerial()}" update="curmsg" event="blur"/>
                                     </p:inputText>
                                 </h:panelGroup>  
                             </h:panelGroup>
@@ -137,7 +137,7 @@
                             <h:panelGroup>
 
                                 <h:panelGroup>
-                                    <p:outputLabel style="width: 105px;margin-right: 5%;" value="د�?عة مقدمة"/>
+                                    <p:outputLabel style="width: 105px;margin-right: 5%;" value="دفعة مقدمة"/>
                                 </h:panelGroup>
 
                                 <h:panelGroup>
@@ -153,7 +153,7 @@
                             <h:panelGroup>
 
                                 <h:panelGroup>
-                                    <p:outputLabel style="width: 100px" value="د�?عة عند الاستلام"/>
+                                    <p:outputLabel style="width: 100px" value="دفعة عند الاستلام"/>
                                 </h:panelGroup>
 
                                 <h:panelGroup>
@@ -239,8 +239,7 @@
                                         <p:ajax listener="#{instContractFormMBnew.calcInstallmentValue}" update="installmentValue"/>
                                     </p:inputNumber>
                                 </h:panelGroup>
-
-
+                                
                             </h:panelGroup> 
                         </div>
                         <div class="ui-g-12 ui-md-6">
@@ -302,7 +301,7 @@
                                           value="#{userData.userDDs['SAVE']}" 
                                            style=""
                                           action="#{instContractFormMBnew.save()}"
-                                          update="form" disabled="#{instContractFormMBnew.instContractEntity.disabled}"/>
+                                          update="form" disabled="#{instContractFormMBnew.instContractEntity.postFlag == 1 or instContractFormMBnew.instContractEntity.disabled}"/>
 
                         <p:commandButton   class="newButton"
                                            id="newN"
@@ -318,9 +317,16 @@
                         <p:commandButton    class="printButtons"  
                                              
                                             ajax="false" onclick="form.target = '_blank'" 
-                                            actionListener="#{instContractFormMBnew.exportPDF}" 
+                                            actionListener="#{instContractFormMBnew.exportPDF3}" 
                                             style="width: 95px;color: #fff!important;background-color: rgb(1, 76, 134);margin-left: 5px;"
                                             value="طباعة العقد"
+                                            />
+                        <p:commandButton    class="printButtons"  
+                                             
+                                            ajax="false" onclick="form.target = '_blank'" 
+                                            actionListener="#{instContractFormMBnew.exportPDFCustomerAccountStatment}" 
+                                            style="width: 95px;color: #fff!important;background-color: rgb(1, 76, 134);margin-left: 5px;"
+                                            value="طباعة كشف حساب"
                                             />
 
                         <p:commandButton  class="sureButtons"  id="process" 
@@ -398,7 +404,10 @@
                             <p:ajax event="blur" update="form" listener="#{instContractFormMBnew.updateValueTotal}" />
                         </p:inputNumber>
                     </p:column>
-
+                    <p:column style="width: 17vh;font-size: 1.8vh;text-align: right;border-radius: 0px;" headerText="الملاحظات" >
+                        <h:inputText value="#{instContractDetailsTable.remark}"  />
+                    </p:column>
+ 
 
                     <p:columnGroup type="footer">
                         <p:row>

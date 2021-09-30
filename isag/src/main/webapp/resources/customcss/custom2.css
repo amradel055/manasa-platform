@@ -37,5 +37,8 @@
     padding: 8px;
 }
 
+.span.ui-treenode-label .ui-corner-all {
+    font-size: 15px;
+}
 
 /***************************/

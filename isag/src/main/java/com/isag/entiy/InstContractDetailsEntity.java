@@ -43,6 +43,10 @@ public class InstContractDetailsEntity {
     private Integer index;
     private Boolean markEdit;
     private String remark;
+    private BigDecimal payedValue;
+    private BigDecimal balance;
+    private Date payedDate;
+    private String payedAccountName;
 
     /**
      * @return the serial
@@ -238,5 +242,67 @@ public class InstContractDetailsEntity {
      */
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    /**
+     * @return the payedValue
+     */
+    public BigDecimal getPayedValue() {
+        if (payedValue == null) {
+            payedValue = BigDecimal.ZERO;
+        }
+        return payedValue;
+    }
+
+    /**
+     * @param payedValue the payedValue to set
+     */
+    public void setPayedValue(BigDecimal payedValue) {
+        this.payedValue = payedValue;
+    }
+
+    /**
+     * @return the balance
+     */
+    public BigDecimal getBalance() {
+        if (balance == null) {
+            balance = BigDecimal.ZERO;
+        }
+        return balance;
+    }
+
+    /**
+     * @param balance the balance to set
+     */
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
+    }
+
+    /**
+     * @return the payedDate
+     */
+    public Date getPayedDate() {
+        return payedDate;
+    }
+
+    /**
+     * @param payedDate the payedDate to set
+     */
+    public void setPayedDate(Date payedDate) {
+        this.payedDate = payedDate;
+    }
+
+    /**
+     * @return the payedAccountName
+     */
+    public String getPayedAccountName() {
+        return payedAccountName;
+    }
+
+    /**
+     * @param payedAccountName the payedAccountName to set
+     */
+    public void setPayedAccountName(String payedAccountName) {
+        this.payedAccountName = payedAccountName;
     }
 }

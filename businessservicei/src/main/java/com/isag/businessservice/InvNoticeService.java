@@ -9,6 +9,8 @@ import com.isag.dto.InvNoticeDTO;
 import com.isag.entity.InvNotice;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Vector;
 import javax.ejb.Remote;
 
 /**
@@ -40,5 +42,7 @@ public interface InvNoticeService {
     
     public List<InvNoticeDTO> getInvNoticeListDTO(Integer branchId, Integer type,Date dateFrom,
             Date dateTo,Integer noticeFrom,Integer noticeTo);
+    
+    public Map<Integer, Vector<Object>> getAllinstallmentIdAndPayedValue(Integer branchId, Integer installmentParentId);
 
 }

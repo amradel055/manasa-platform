@@ -256,10 +256,10 @@ public class LoginBean extends Basic implements Serializable {
                 userData.setCurrentYear(year);
             }
         }
-        userData.setGlYear(getUserYears().get(0));
-        List<IsagUserBank> isagUserBanks = isagUserBankService.findAll();
-
-        userData.setIsagUserBankList(isagUserBanks);
+//        userData.setGlYear(getUserYears().get(0));
+//        List<IsagUserBank> isagUserBanks = isagUserBankService.findAll();
+//
+//        userData.setIsagUserBankList(isagUserBanks);
 
     }
 
