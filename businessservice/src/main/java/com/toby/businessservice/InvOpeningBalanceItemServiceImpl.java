@@ -7,7 +7,9 @@ package com.toby.businessservice;
 
 import com.toby.bussinessservice.global.InvPurchaseReturnSave;
 import com.toby.core.GenericDAO;
+import com.toby.dto.InvDetailDTO;
 import com.toby.dto.InvInventoryDTO;
+import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.InvOpenningBalanceItemDTO;
 import com.toby.dto.InvOpenningBalanceItemDetailDTO;
 import com.toby.entity.Branch;
@@ -40,7 +42,12 @@ public class InvOpeningBalanceItemServiceImpl implements InvOpeningBalanceItemSe
     private GenericService genericService;
 
     @EJB
-    private InvOpeningBalanceItemDetailService balanceItemDetailService;
+    private InvOpeningBalanceItemDetailService balanceItemDetailService;    
+    @EJB
+    private InvOpeningBalanceItemDetailService invOpeningBalanceItemDetailService;
+    @EJB
+    private InvGlobalService invGlobalService;
+    
     InvPurchaseReturnSave invPurchaseReturnSave;
 
     @Override
@@ -178,6 +185,13 @@ public class InvOpeningBalanceItemServiceImpl implements InvOpeningBalanceItemSe
         }
         return invOpenningBalanceItem;
     }
+    private InvInvoiceDTO mapToDTO(InvOpenningBalanceItem entity, InvInvoiceDTO invInvoiceDTO) {
+
+        invInvoiceDTO = initData(invInvoiceDTO, entity);
+
+        return invInvoiceDTO;
+    }
+
 
     public InvOpenningBalanceItemDTO mapToDTO(InvOpenningBalanceItem invOpenningBalanceItem, TobyUser tobyUser) {
         InvOpenningBalanceItemDTO invOpenningBalanceItemDTO = new InvOpenningBalanceItemDTO();
@@ -297,5 +311,153 @@ public class InvOpeningBalanceItemServiceImpl implements InvOpeningBalanceItemSe
 
         return invOpenningBalanceItemDTO;
     }
+    
+    @Override
+    public InvInvoiceDTO save(InvInvoiceDTO invInvoiceDTO, TobyUser tobyUser) {
+        try {
+            invInvoiceDTO = validateSave(invInvoiceDTO);
+
+            InvOpenningBalanceItem invOpenningBalanceItem;
+            if (invInvoiceDTO != null && (invInvoiceDTO.getMsg() == null || invInvoiceDTO.getMsg().isEmpty())) {
+                invOpenningBalanceItem = mapToEntity(invInvoiceDTO, tobyUser);
+                if (invOpenningBalanceItem.getId() != null) {
+                    //بعمل حفظ فى حالة التعديل
+                    invOpenningBalanceItem = dao.updateEntity(invOpenningBalanceItem);
+                } else {
+                    // فى حالة ان الفاتورة جديدة بروح اجيب السيريال الاول 
+                    Integer serial = genericService.getMaxSerialForOpenningBalance(InvOpenningBalanceItem.class, invOpenningBalanceItem.getBranchId().getId(), invOpenningBalanceItem.getInvInventoryId().getId(), null);
+                    if (serial == null) {
+                        invInvoiceDTO.setMsg("من فضلك اعد حفظ الفاتورة");
+                        dao.rollbackQuery();
+                        return invInvoiceDTO;
+                    }
+                    invOpenningBalanceItem.setSerial(serial);
+                    
+                    invOpenningBalanceItem = dao.updateEntity(invOpenningBalanceItem);
+                    invInvoiceDTO.setId(invOpenningBalanceItem.getId());
+                }
+
+                invOpeningBalanceItemDetailService.deleteInvOpenningBalanceItemDetailListDTO(invInvoiceDTO.getInvPurchaseInvoiceDetailsDeletedList());
+
+                String error = invOpeningBalanceItemDetailService.addInvOpenningBalanceItemDetailDTO(invInvoiceDTO.getInvPurchaseInvoiceDetailList(), invInvoiceDTO,invInvoiceDTO.getScreenName(),tobyUser);
+
+                if (error != null && !error.isEmpty()) {
+                    invInvoiceDTO.setMsg(error);
+                    dao.rollbackQuery();
+                } else {
+                    invInvoiceDTO = mapToDTO(invOpenningBalanceItem, invInvoiceDTO);
+                    invInvoiceDTO = invGlobalService.updateSummition(invInvoiceDTO);
+                }
+
+            }
+        } catch (Exception e) {
+            invInvoiceDTO.setMsg(e.toString());
+            dao.rollbackQuery();
+        }
+
+        return invInvoiceDTO;
+    }
+    
+     public InvInvoiceDTO validateSave(InvInvoiceDTO invPurchaseInvoiceDTO) {
+        StringBuilder error = new StringBuilder();
+
+        if (invPurchaseInvoiceDTO.getInvInventoryId() == null) {
+            error.append("\n يجب اختيار مخزن");
+        }
+
+        if (!error.toString().isEmpty()) {
+            invPurchaseInvoiceDTO.setMsg(error.toString());
+        }
+        return invPurchaseInvoiceDTO;
+    }
+     
+     //mapToEntity
+    private InvOpenningBalanceItem mapToEntity(InvInvoiceDTO invInvoiceDTO, TobyUser tobyUser) {
+
+        InvOpenningBalanceItem invOpenningBalanceItem = new InvOpenningBalanceItem();
+
+        if (invInvoiceDTO.getInvInventoryId() != null) {
+            InvInventory invInventory = new InvInventory();
+            invInventory.setId(invInvoiceDTO.getInvInventoryId().getId());
+            invOpenningBalanceItem.setInvInventoryId(invInventory);
+        }
+
+        invOpenningBalanceItem.setId(invInvoiceDTO.getId());
+
+        invOpenningBalanceItem.setDate(invInvoiceDTO.getDate());
+        invOpenningBalanceItem.setRemark(invInvoiceDTO.getRemarks());
+        invOpenningBalanceItem.setDocumentStrip(invInvoiceDTO.getSupplierInvoiceNumber());
+
+        if (invInvoiceDTO.getCreatedBy() != null) {
+            invOpenningBalanceItem.setSerial(invInvoiceDTO.getSerial());
+            TobyUser user = new TobyUser();
+            user.setId(invInvoiceDTO.getCreatedBy());
+            invOpenningBalanceItem.setCreatedBy(user);
+            invOpenningBalanceItem.setCreationDate(invInvoiceDTO.getCreatedDate());
+            invOpenningBalanceItem.setModifiedBy(tobyUser);
+            invOpenningBalanceItem.setModificationDate(new Date());
+            if (invInvoiceDTO.getCompanyId() != null) {
+                TobyCompany company = new TobyCompany();
+                company.setId(invInvoiceDTO.getCompanyId());
+                invOpenningBalanceItem.setCompanyId(company);
+            }
+
+            if (invInvoiceDTO.getBranchId() != null) {
+                Branch branch = new Branch();
+                branch.setId(invInvoiceDTO.getBranchId());
+                invOpenningBalanceItem.setBranchId(branch);
+            }
+        } else {
+            invOpenningBalanceItem.setCreatedBy(tobyUser);
+            invOpenningBalanceItem.setCreationDate(new Date());
+            invOpenningBalanceItem.setCompanyId(tobyUser.getCompanyId());
+            invOpenningBalanceItem.setBranchId(tobyUser.getBranchId());
+        }
+
+        return invOpenningBalanceItem;
+    }
+
+    private InvInvoiceDTO initData(InvInvoiceDTO dto, InvOpenningBalanceItem entity) {
+        dto.setId(entity.getId());
+        dto.setSerial(entity.getSerial());
+        dto.setCompanyActivity(entity.getBranchId().getCompanyActivity());
+        dto.setBranchId(entity.getBranchId() != null ? entity.getBranchId().getId() : null);
+        dto.setDate(entity.getDate());
+        dto.setRemarks(entity.getRemark());
+        dto.setSupplierInvoiceNumber(entity.getDocumentStrip());
+
+        if (entity.getInvInventoryId() != null) {
+            InvInventoryDTO invInventoryDTO = new InvInventoryDTO();
+            invInventoryDTO.setId(entity.getInvInventoryId().getId());
+            invInventoryDTO.setName(entity.getInvInventoryId().getName());
+            invInventoryDTO.setCode(entity.getInvInventoryId().getCode());
+            dto.setInvInventoryId(invInventoryDTO);
+        }
+
+        dto.setCreatedBy(entity.getCreatedBy() != null ? entity.getCreatedBy().getId() : null);
+        dto.setCreatedDate(entity.getCreationDate());
+        dto.setIndex(entity.getId());
+        dto.setCompanyId(entity.getCompanyId().getId() != null ? entity.getCompanyId().getId() : null);
+        dto.setCreatedByName(entity.getCreatedBy() != null ? entity.getCreatedBy().getName() : null);
+
+        List<InvDetailDTO> invPurchaseInvoiceDetailsListDTO = invOpeningBalanceItemDetailService.getAllInvOpenningBalanceItemDetailByInvPurchaseInvoiceIdDTO(dto, entity.getBranchId().getId());
+
+        dto.setInvPurchaseInvoiceDetailList(invPurchaseInvoiceDetailsListDTO);
+        dto.setInvPurchaseInvoiceDetailsDeletedList(new ArrayList<InvDetailDTO>());
+
+        dto = invGlobalService.updateSummition(dto);
+        return dto;
+    }
+
+    @Override
+    public InvInvoiceDTO findOpeningBalanceById(InvInvoiceDTO invInvoiceDTO) {
+        InvOpenningBalanceItem invOpenningBalanceItem = dao.findEntityById(InvOpenningBalanceItem.class, invInvoiceDTO.getId());
+        InvInvoiceDTO invPurchaseInvoiceDTO = mapToDTO(invOpenningBalanceItem, invInvoiceDTO);
+        invPurchaseInvoiceDTO = invGlobalService.updateSummition(invPurchaseInvoiceDTO);
+        return invPurchaseInvoiceDTO;
+    }
+    
+     
+
 
 }

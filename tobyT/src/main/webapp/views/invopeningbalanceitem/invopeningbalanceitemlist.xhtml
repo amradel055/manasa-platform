@@ -1,26 +1,35 @@
-﻿<?xml version='1.0' encoding='UTF-8' ?>
+<?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                template="./../../template/newTemplate.xhtml"
+                template="./../../template/template.xhtml"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns="http://www.w3.org/1999/xhtml">
     <ui:define name="content">
         <f:event listener="#{userData.authorize}" type="preRenderView" />
-        <h:form style="margin-right: 20px" dir="#{userData.dir}"  id="form">
+        <h:form class='formmargin' dir="#{userData.dir}"  id="form">
+            <div style=" position: absolute;left: 20px"> 
 
+                    <p:commandButton  style="z-index: 2;
+                                      margin-top: 24%;
+                                      color: #035c70!important; 
+                                      background-color: #223238!important;
+                                      border: 1px solid #22323a!important;
+                                      background: #22323a 50% 50% repeat-x!important;"
+                                      icon="fa fa-fw fa-home"
+                                      title="#{userData.userDDs['HOME']}"
+                                      class="smhomeButton" 
+                                      action="exit" />
+                       
+                </div>
             <p:fieldset legend="#{userData.userDDs['STORE_INIT_BALAN']}">
 
                 <p:dataTable  draggableColumns="true" 
-                              var="invOpeningBalanceTable"
-                              widgetVar="bTable" 
-                              rowIndexVar="index" 
+                              var="invOpeningBalanceTable" widgetVar="bTable"  rowIndexVar="index" 
                               value="#{InvOpeningBalanceItemListMB.invOpenningBalanceItemList}"
                               rows="#{userData.rowListCount}" 
                               paginator="true" 
-                              selection="#{InvOpeningBalanceItemListMB.invOpenningBalanceItem}"
-                              rowKey="#{invOpeningBalanceTable.index}"
                               emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
                               id="invOpeningBalanceTable">
 
@@ -29,7 +38,7 @@
                                          id="addA"
                                          action="#{InvOpeningBalanceItemListMB.goToAdd()}" style="float:right"
                                          rendered="#{userData.userScreens['invopeningbalanceitem'].add or userData.isAdmin}"/>
-                        <p:commandButton class="scloseButton"  icon="fa fa-fw fa-backward"  style="float: left" action="exit" />
+                        
                         <p:blockUI block="form" trigger="addA" animate="true" >
 
                             <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
@@ -42,7 +51,7 @@
                         </p:outputPanel>
                     </f:facet>
 
-                    <p:column  style="width: 14vh;font-size: 1.8vh"  filterStyle="display:none" 
+                    <p:column  style="width: 10vh;font-size: 1.8vh;border-radius: 0px"  filterStyle="display:none" 
                                filterBy="#{invOpeningBalanceTable.serial}" 
                                filterMatchMode="contains" 
                                headerText="#{userData.userDDs['TRANSACTION_NO']}"
@@ -50,7 +59,7 @@
                         <p:outputLabel value="#{invOpeningBalanceTable.serial}" />
                     </p:column>
 
-                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh"
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh;border-radius: 0px"
                               filterStyle="display:none" filterBy="#{invOpeningBalanceTable.date}"
                               filterMatchMode="contains" headerText="#{userData.userDDs['DATEE']}" 
                               sortBy="#{invOpeningBalanceTable.date}">
@@ -59,7 +68,7 @@
                         </p:outputLabel>
                     </p:column>  
 
-                    <p:column style="width: 14vh;text-align: right;font-size: 1.8vh" filterStyle="display:none"
+                    <p:column style="width: 14vh;text-align: right;font-size: 1.8vh;border-radius: 0px" filterStyle="display:none"
                               filterBy="#{invOpeningBalanceTable.documentStrip}" 
                               filterMatchMode="contains"
                               headerText="#{userData.userDDs['INVEN_DOC']}" 
@@ -67,7 +76,7 @@
                         <p:outputLabel value="#{invOpeningBalanceTable.documentStrip}" />
                     </p:column>
 
-                    <p:column style="width: 14vh;text-align: right;font-size: 1.8vh" filterStyle="display:none"
+                    <p:column style="width: 14vh;text-align: right;font-size: 1.8vh;border-radius: 0px" filterStyle="display:none"
                               filterBy="#{invOpeningBalanceTable.invInventoryId.name}" 
                               filterMatchMode="contains"
                               headerText="#{userData.userDDs['INVENTORY']}" 
@@ -76,24 +85,24 @@
                         <p:outputLabel value="#{invOpeningBalanceTable.invInventoryId.name}" />
                     </p:column>
 
-                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh"
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh;border-radius: 0px"
                               filterStyle="display:none" filterBy="#{invOpeningBalanceTable.remark}" 
-                              filterMatchMode="contains" headerText="#{userData.userDDs['REMARK']}"
+                              filterMatchMode="contains" headerText="#{userData.userDDs['NOTE']}"
                               sortBy="#{invOpeningBalanceTable.remark}">
                         <p:outputLabel value="#{invOpeningBalanceTable.remark}" />
                     </p:column>
 
 
-                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh"  headerText="#{userData.userDDs['TRANSACTION']}">
-                        <p:commandButton class="seditButton" update="@form" icon="fa fa-fw fa-edit" title="#{userData.userDDs['EDIT']}"
-                                         action="#{InvOpeningBalanceItemListMB.goToEdit()}" 
+                    <p:column style="width: 7vh;text-align: center;font-size: 1.8vh;border-radius: 0px"  headerText="#{userData.userDDs['TRANSACTION']}">
+                        <p:commandButton class="seditButtons" update="@form" icon="fa fa-fw fa-edit" title="#{userData.userDDs['EDIT']}"
+                                         action="#{InvOpeningBalanceItemListMB.goToEdit()}" style="background-color: #6a6967;border-radius: 3px;"
                                          rendered="#{userData.userScreens['invopeningbalanceitem'].edit or userData.isAdmin}">
                             <f:setPropertyActionListener value="#{invOpeningBalanceTable.id}"  
                                                          target="#{InvOpeningBalanceItemListMB.invOpenningBalanceItemSelected}" />
                         </p:commandButton>
-                        <p:commandButton class="sdeleteButton" update="@form" icon="fa fa-remove" 
-                                         title="#{userData.userDDs['DELETE']}" 
-                                         action="#{InvOpeningBalanceItemListMB.delete()}"
+                        <p:commandButton class="sdeleteButtons" update="@form" icon="fa fa-remove" 
+                                         title="#{userData.userDDs['DELETE']}" style="background-color: red;border-radius: 3px;"
+                                         action="#{InvOpeningBalanceItemListMB.delete}"
                                          rendered="#{userData.userScreens['invopeningbalanceitem'].delete or userData.isAdmin}">
                             <f:setPropertyActionListener value="#{invOpeningBalanceTable}"
                                                          target="#{InvOpeningBalanceItemListMB.invOpenningBalanceItem}" />

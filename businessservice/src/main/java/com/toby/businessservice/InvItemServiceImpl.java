@@ -390,7 +390,8 @@ public class InvItemServiceImpl implements InvItemService {
         Map<String, Object> params = new HashMap<>();
         Map<String, String> list = new HashMap<>();
         params.put("branchId", branchId);
-        List<InvItem> invItemList = dao.findListByQuery("SELECT e FROM InvItem e WHERE e.branchId.id = :branchId AND e.isNew = 1", params);
+//        List<InvItem> invItemList = dao.findListByQuery("SELECT e FROM InvItem e WHERE e.branchId.id = :branchId AND e.isNew = 1", params);
+        List<InvItem> invItemList = dao.findListByQuery("SELECT e FROM InvItem e WHERE e.branchId.id = :branchId ", params);
         for (InvItem invItem : invItemList) {
             list.put(invItem.getCode(), invItem.getCode());
         }

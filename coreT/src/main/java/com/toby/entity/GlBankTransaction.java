@@ -112,6 +112,9 @@ public class GlBankTransaction extends BaseEntity {
     @JoinColumn(name = "parent", referencedColumnName = "id")
     @ManyToOne
     private GlBankTransaction parent;
+    @JoinColumn(name = "gallary_id", referencedColumnName = "id")
+    @ManyToOne
+    private InvInventory gallaryId;
     @Column(name = "document_serial")
     private Integer documentSerial;
     @Transient
@@ -398,6 +401,20 @@ public class GlBankTransaction extends BaseEntity {
      */
     public void setDateHegry(Date dateHegry) {
         this.dateHegry = dateHegry;
+    }
+
+    /**
+     * @return the gallaryId
+     */
+    public InvInventory getGallaryId() {
+        return gallaryId;
+    }
+
+    /**
+     * @param gallaryId the gallaryId to set
+     */
+    public void setGallaryId(InvInventory gallaryId) {
+        this.gallaryId = gallaryId;
     }
 
 }

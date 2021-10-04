@@ -8,7 +8,11 @@ package com.toby.businessservice;
 import com.toby.businessservice.reports.searchBean.CommonSearchBean;
 import com.toby.businessservice.reports.searchBean.JournalDocumentsReportSearchBean;
 import com.toby.core.GenericDAO;
+import com.toby.entity.CostCenter;
+import com.toby.entity.Currency;
+import com.toby.entity.GeneralJournal;
 import com.toby.entity.GeneralJournalDetails;
+import com.toby.entity.GlAccount;
 import com.toby.entity.GlYear;
 import com.toby.entity.TobyUser;
 import java.math.BigDecimal;
@@ -141,6 +145,53 @@ public class GeneraljournalDetailsServiceImpl implements GeneraljournalDetailsSe
     }
 
     @Override
+    public GeneralJournalDetails addGenDetalil(Boolean isDebit, BigDecimal value, Integer generalJournalId, Integer accountId, Integer costCenterId, String remark, TobyUser tobyUser) {
+
+        GeneralJournalDetails generalJournalDetail = new GeneralJournalDetails();
+
+        if (generalJournalId != null) {
+            GeneralJournal journal = new GeneralJournal();
+            journal.setId(generalJournalId);
+            generalJournalDetail.setGeneralJournalId(journal);
+        }
+        if (isDebit) {
+            generalJournalDetail.setDebitAmount(value);
+            generalJournalDetail.setDebitAmountLocal(value);
+        } else {
+            generalJournalDetail.setCreditamount(value);
+            generalJournalDetail.setCreditamountLocal(value);
+        }
+
+        if (accountId != null) {
+            GlAccount glAccount = new GlAccount();
+            glAccount.setId(accountId);
+            generalJournalDetail.setGlACCOUNTId(glAccount);
+        }
+        generalJournalDetail.setDiscribtion(remark);
+        generalJournalDetail.setRate(BigDecimal.ONE);
+        Currency currency = new Currency();
+        currency.setId(110);
+        generalJournalDetail.setCurrencyId(currency);
+
+        if (costCenterId != null) {
+            CostCenter costCenter = new CostCenter();
+            costCenter.setId(costCenterId);
+            generalJournalDetail.setCostCenterId(costCenter);
+        }
+        generalJournalDetail.setBranchId(tobyUser.getBranchId());
+        generalJournalDetail.setCompanyId(tobyUser.getCompanyId());
+        generalJournalDetail.setCreatedBy(tobyUser);
+        generalJournalDetail.setCreationDate(new Date());
+
+        findTheMaximumSerial(generalJournalDetail);
+
+        fillSerial(generalJournalDetail);
+        generalJournalDetail = dao.updateEntity(generalJournalDetail);
+
+        return generalJournalDetail;
+    }
+
+    @Override
     public List<GeneralJournalDetails> addGenDetalils(List<GeneralJournalDetails> details, List<GeneralJournalDetails> generalListDeleted) {
         List<GeneralJournalDetails> list = new ArrayList<>();
         GeneralJournalDetails gjd;
@@ -178,6 +229,16 @@ public class GeneraljournalDetailsServiceImpl implements GeneraljournalDetailsSe
 
     public void findTheMaximumSerial(List<GeneralJournalDetails> generalJournalDetails) {
         maxSerial = detailsService.getMaxSerialByGeneral(generalJournalDetails.get(0).getGeneralJournalId().getId());
+
+        if (maxSerial == null) {
+            maxSerial = 1;
+        } else {
+            maxSerial = maxSerial + 1;
+        }
+    }
+
+    public void findTheMaximumSerial(GeneralJournalDetails generalJournalDetails) {
+        maxSerial = detailsService.getMaxSerialByGeneral(generalJournalDetails.getGeneralJournalId().getId());
 
         if (maxSerial == null) {
             maxSerial = 1;

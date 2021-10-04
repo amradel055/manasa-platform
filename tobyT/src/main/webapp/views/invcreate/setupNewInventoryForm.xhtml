@@ -121,11 +121,30 @@
                                             itemLabel="#{p}" 
                                             itemValue="#{p}" 
                                             forceSelection="false" 
-                                            completeMethod="#{setupNewInventoryFormMB.completeGlAccount}" >
+                                            completeMethod="#{setupNewInventoryFormMB.completeRunningGlAccount}" >
                             </p:autoComplete>
                         </div>
                         <div class="ui-g-6 ui-xl-6">
                             <p:outputLabel style="width: 65px" value="#{userData.userDDs['ACCOUNT_NUMBER']}"/>
+
+                        </div>
+                    </div>
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:autoComplete style="width: 85%" id="running_GlAccount_ID" 
+
+                                            dropdown="true"
+                                            converter="#{setupNewInventoryFormMB.runningAccountDTOConverter}"
+                                            value="#{setupNewInventoryFormMB.invInventoryDTO.runningAccount}"
+                                            var="p"
+                                            itemLabel="#{p}" 
+                                            itemValue="#{p}" 
+                                            forceSelection="false" 
+                                            completeMethod="#{setupNewInventoryFormMB.completeRunningGlAccount}" >
+                            </p:autoComplete>
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel style="width: 65px" value="الحساب الجاري"/>
 
                         </div>
                     </div>

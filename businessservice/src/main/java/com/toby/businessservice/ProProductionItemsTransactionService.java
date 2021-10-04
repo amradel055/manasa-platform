@@ -29,7 +29,7 @@ public interface ProProductionItemsTransactionService {
 
     public List<ProProductionItemsTransactionDTO> getProProductionItemsTransaction(TobyUser tobyUser);
 
-    public ProProductionItemsTransactionDTO deleteproProductionItemsTransactionDTO(ProProductionItemsTransactionDTO proProductionItemsTransactionDTO, TobyUser tobyUser);
+    public void deleteproProductionItemsTransactionDTO(ProProductionItemsTransactionDTO proProductionItemsTransactionDTO, TobyUser tobyUser);
 
     public List<ProductionTransactionOfUser> getProProductionTransactionDTOForAllUsersList(PrintProductionDTO printProductionDTO, Integer branchId, Integer stageId, List<ProProductionStagesDTO> productionStagesDTOs);
 

@@ -14,6 +14,8 @@ import com.toby.entity.GlBankTransaction;
 import com.toby.entity.GlYear;
 import com.toby.entity.InvPurchaseInvoice;
 import com.toby.entity.InvReturnPurchase;
+import com.toby.entity.Symbol;
+import com.toby.entity.TobyUser;
 import com.toby.views.PostRestrictionsView;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -45,11 +47,24 @@ public class GeneraljournalServiceImpl implements GeneraljournalService {
 
     @EJB
     private InvReturnPurchaseService invReturnPurchaseService;
+    @EJB
+    private SymbolService symbolService;
 
     @Override
-    public synchronized GeneralJournal addGeneralJournalGlobal(GeneralJournal generalJournal) {
+    public synchronized GeneralJournal addGeneralJournalGlobal(GlYear yearSelection , Integer specialDocumentsTypes ,Integer serial,Date date ,String remark,TobyUser tobyUser) {
+        
+        GeneralJournal generalJournal = new GeneralJournal();
+        generalJournal.setGeneralStatement(remark);
+        generalJournal.setGeneralData(date);
+        generalJournal.setGeneralDecument(serial);
+        Symbol symbol = symbolService.getSpecialDocumentsTypes(specialDocumentsTypes);
+        generalJournal.setGlYear(yearSelection);
+        generalJournal.setGeneralType(symbol != null ? symbol : null);
+        generalJournal.setBranchId(tobyUser.getBranchId());
+        generalJournal.setCompanyId(tobyUser.getCompanyId());
+        generalJournal.setCreatedBy(tobyUser);  
         Map<String, Object> params = new HashMap<>();
-        params.put("glYear", generalJournal.getGlYear() == null ? null : generalJournal.getGlYear().getId());
+        params.put("glYear",yearSelection == null ? null : yearSelection.getId());
          Integer max = 0;
         synchronized (max) {
             try {
@@ -60,6 +75,10 @@ public class GeneraljournalServiceImpl implements GeneraljournalService {
         }
         if (max == null) {
             max = 0;
+        }
+        
+        if (generalJournal.getId() == null) {
+            generalJournal.setSerial(max + 1);
         }
         
         return dao.updateEntity(generalJournal);

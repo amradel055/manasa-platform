@@ -15,7 +15,9 @@ import javax.ejb.Remote;
 public interface GenericService {
 
     public <T> Integer getMaxSerialForInvoice(Class<T> entityClass, Integer branchId, Integer inventoryId, Integer type);
-
+    
+    public  <T> Integer getMaxSerialForOpenningBalance(Class<T> entityClass, Integer branchId, Integer invInventoryId, Integer type) ;
+ 
     public <T> Integer getMaxGenericSerialByType(Class<T> entityClass, Integer branchId, Integer type);
     
     public <T> Integer getMaxGenericSerialByInvTransferType(Class<T> entityClass, Integer branchId, Integer type);

@@ -132,7 +132,7 @@ public class TobyUserInventoryServiceImpl implements TobyUserInventoryService {
 
         InvInventoryImpl inventoryImpl = new InvInventoryImpl();
         for (TobyUserInventory tobyUserBank : tobyUserBankList) {
-            inventoryList.add(inventoryImpl.mapToDTO(tobyUserBank.getInvInventoryId(), tobyUser));
+            inventoryList.add(inventoryImpl.mapToDTO(tobyUserBank.getInvInventoryId()));
         }
 
         return inventoryList;
@@ -147,7 +147,7 @@ public class TobyUserInventoryServiceImpl implements TobyUserInventoryService {
 
         InvInventoryImpl inventoryImpl = new InvInventoryImpl();
         for (TobyUserInventory tobyUserBank : tobyUserBankList) {
-            inventoryList.add(inventoryImpl.mapToDTO(tobyUserBank.getInvInventoryId(), tobyUser));
+            inventoryList.add(inventoryImpl.mapToDTO(tobyUserBank.getInvInventoryId()));
         }
 
         return inventoryList;
@@ -171,7 +171,7 @@ public class TobyUserInventoryServiceImpl implements TobyUserInventoryService {
 
         InvInventoryImpl inventoryImpl = new InvInventoryImpl();
         for (TobyUserInventory tobyUserBank : tobyUserBankList) {
-            inventoryList.add(inventoryImpl.mapToDTO(tobyUserBank.getInvInventoryId(), tobyUser));
+            inventoryList.add(inventoryImpl.mapToDTO(tobyUserBank.getInvInventoryId()));
         }
         Collections.sort(inventoryList);
         return inventoryList;

@@ -1,14 +1,13 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                template="./../../template/newTemplate.xhtml"
+                template="./../../template/template.xhtml"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns="http://www.w3.org/1999/xhtml"
                 >
     <ui:define name="content">
-        <f:event listener="#{userData.authorize}" type="preRenderView" />
         <h:form  class='formmargin' id="form"  enctype="multipart/form-data"  dir="#{userData.dir}">
             <div style=" position: absolute;left: 20px"> 
 
@@ -34,201 +33,235 @@
                 <div  id="firstLine" class="ui-g-12 ui-g-nopad">
 
                     <div class="ui-g">
-
+                        
                         <div class="ui-g-12 ui-md-6">
 
-                            <h:panelGroup>
                                 <h:panelGroup>
-                                    <p:outputLabel style="width: 75px;margin-right: 6%;" value="#{userData.userDDs['TRANSACTION_NO']}"/>
-                                </h:panelGroup>
 
-                                <h:panelGroup>
-                                    <p:inputText id="DiscountOrder" readonly="true" style="width: 35%;"
-                                                   value="#{InvOpeningBalanceItemFormMB.invOpeningBalanceItemEntity.serial}" />
-                                </h:panelGroup>      
-                            </h:panelGroup>
-                        </div>
+                                    <p:outputLabel style="width: 95px;margin-right: 6%;" id="purchId" value="#{userData.userDDs['TRANSACTION_NO']}" />
+                                    <p:inputText style="width: 37%" 
+                                                 id="purchIdVal" readonly="true"
+                                                 value="#{InvOpeningBalanceItemFormMB.invInvoiceDTO.serial}" />
+
+                                </h:panelGroup>
+                            </div>
+                        
                         <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel style="width: 45px" value="#{userData.userDDs['DATEE']}"/>
-                                </h:panelGroup>
                                 <h:panelGroup>
 
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 95px; margin-right: 6%;" value="#{userData.userDDs['DATEE']}"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:calendar id="dateFrom" 
+                                                    value="#{InvOpeningBalanceItemFormMB.invInvoiceDTO.date}"
+                                                    pattern="dd/MM/yyyy"
+                                                    style="width:50%!important"/>
+                                    </h:panelGroup>
 
-                                    <p:calendar id="dateId"
-                                                style="width:  35%!important" 
-                                                value="#{InvOpeningBalanceItemFormMB.invOpeningBalanceItemEntity.date}" 
-                                                required="true"
-                                                requiredMessage="#{userData.userDDs['REQUIRED']}"
-                                                pattern="dd/MM/yyyy">
-                                        <p:ajax event="dateSelect" update="dateMsg"/>
-                                    </p:calendar>
-                                    <p:message id="dateMsg" for="dateId"/>
                                 </h:panelGroup>
-                            </h:panelGroup>
-                        </div>
+                            </div>
+                        
+                        
                         <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>
-                                <h:panelGroup>
-                                    <p:outputLabel style="width: 75px;margin-right: 6%;" value="#{userData.userDDs['INVEN_DOC']}"/>
-                                </h:panelGroup>
 
                                 <h:panelGroup>
-                                    <p:inputText style="width: 35%" 
-                                                 value="#{InvOpeningBalanceItemFormMB.invOpeningBalanceItemEntity.documentStrip}" />
-                                </h:panelGroup>
-                            </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel   style="width: 95px; margin-right: 6%;" value="#{userData.userDDs['INVEN_DOC']}"/>
+                                    </h:panelGroup>
 
-                        </div>
+                                    <h:panelGroup>
+                                        <p:inputText readonly="true" style="width:37%"  value="#{InvOpeningBalanceItemFormMB.invInvoiceDTO.loadedSerial}"
+                                                     />
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </div>
+                        
                         <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>
                                 <h:panelGroup>
-                                    <p:outputLabel style="width: 50px" value="#{userData.userDDs['INVENTORY']}"/>
-                                </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 100px;margin-right: 6%;" value="#{userData.userDDs['DEPOSITORY']}"/>
+                                    </h:panelGroup>
 
-                                <h:panelGroup>
-                                    <p:autoComplete style="width:34%" 
-                                                    dropdown="true"
-                                                    converter="#{InvOpeningBalanceItemFormMB.invInventoryConverter}"
-                                                    value="#{InvOpeningBalanceItemFormMB.invOpeningBalanceItemEntity.invInventoryId}"
-                                                    required="true"
-                                                    var="inventory"
-                                                    itemLabel="#{inventory}" 
-                                                    itemValue="#{inventory}" 
-                                                    forceSelection="true" 
-                                                    completeMethod="#{InvOpeningBalanceItemFormMB.completeInventory}" >
-                                        <p:ajax 
-                                            event="change"
-                                            listener="#{InvOpeningBalanceItemFormMB.fillItemList()}" />
-                                        <p:ajax 
-                                            event="itemSelect"
-                                            listener="#{InvOpeningBalanceItemFormMB.fillItemList()}" />
-                                    </p:autoComplete>
+                                    <h:panelGroup>
+                                        <p:autoComplete style="width:36%"  id="inventoryDTO" widgetVar="inventoryDTO"
+                                                        dropdown="true"
+                                                        converter="#{InvOpeningBalanceItemFormMB.invInventoryDTOConverter}"
+                                                        value="#{InvOpeningBalanceItemFormMB.invInvoiceDTO.invInventoryId}"
+                                                        var="inventoryDTO" 
+                                                        itemLabel="#{inventoryDTO}" 
+                                                        itemValue="#{inventoryDTO}" 
+                                                        forceSelection="true" 
+                                                        completeMethod="#{InvOpeningBalanceItemFormMB.completeInventory}" 
+                                                        >
+                                        </p:autoComplete>
+                                    </h:panelGroup>
                                 </h:panelGroup>
-                            </h:panelGroup>
-                        </div>
+                            </div>
+                        
                         <div class="ui-g-12 ui-md-12">
 
-                            <h:panelGroup>
                                 <h:panelGroup>
-                                    <p:outputLabel style="width: 75px;margin-right: 3%;" value="#{userData.userDDs['NOTE']}"/>
-                                </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 95px; margin-right: 3%;" value="#{userData.userDDs['NOTE']}"/>
+                                    </h:panelGroup>
 
-                                <h:panelGroup>
-                                    <p:inputText style="width: 62%" 
-                                                 value="#{InvOpeningBalanceItemFormMB.invOpeningBalanceItemEntity.remark}" />
+                                    <h:panelGroup>
+                                        <p:inputText style="width:69%"  value="#{InvOpeningBalanceItemFormMB.invInvoiceDTO.remarks}"
+                                                     disabled="#{InvOpeningBalanceItemFormMB.invInvoiceDTO.id != null and InvOpeningBalanceItemFormMB.invInvoiceDTO.checkData }"/>
+                                    </h:panelGroup>
                                 </h:panelGroup>
-                            </h:panelGroup>
-                        </div>
+                            </div>
                     </div>
                 </div>
 
             </p:fieldset>
-            <p:fieldset id="fieldSetId" legend="#{userData.userDDs['BALA_DATA']}"  style="margin-bottom:20px">
-                <p:dataTable id="invOpenningBalanceTable"
-                             var="invOpenningBalanceTable"
+            
+            <p:fieldset id="fieldSetId" legend="#{userData.userDDs['BALA_DATA']}"   style="margin:2% 0">
+                <div >
+                    <p:messages id="curmsg2" autoUpdate="true" showDetail="true" rendered="true" closable="true"/>   
+                </div>
+
+                <p:dataTable id="invPurchaseInvoiceDetailsTable" class="salesInvoiceTable"
+                             widgetVar="invPurchaseInvoiceDetailsTable"
+                             style="margin-bottom:20px"
+                             var="invPurchaseInvoiceDetailsTable"
                              rowIndexVar="index" 
                              dir="rtl" 
                              emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
                              editable="true"
                              editMode="cell"
-                             sortBy="#{1}"
                              selectionMode="single"
-                             selection="#{InvOpeningBalanceItemFormMB.invOpenningBalanceItemDetailEntitySelection}"
-                             widgetVar="invOpenningBalanceTable"
-                             rowKey="#{invOpenningBalanceTable}"
-                             value="#{InvOpeningBalanceItemFormMB.invOpenningBalanceItemDetailEntityList}">
+                             sortBy="#{1}"
+                             rowKey="#{invPurchaseInvoiceDetailsTable.index}"
+                             selection="#{InvOpeningBalanceItemFormMB.invInvoiceDTO.invPurchaseInvoiceDetailsSelected}"
+                             value="#{InvOpeningBalanceItemFormMB.invInvoiceDTO.invPurchaseInvoiceDetailList}" >
 
-                    <f:facet name="header" class="col-md-12">
-                        <p:commandButton  class="saddButton" id="addnew" icon="fa fa-plus"
-                                          style="float: right"
+                    <f:facet name="header" >
+                        <p:commandButton  id="addnew"
+                                          class="saddButton"
+                                          icon="fa fa-plus"
                                           title="#{userData.userDDs['ADD']}" 
-                                          actionListener="#{InvOpeningBalanceItemFormMB.adddetails}"
+                                          rendered="#{InvOpeningBalanceItemFormMB.invInvoiceDTO.loadedSerial eq null}"
+                                          actionListener="#{InvOpeningBalanceItemFormMB.addInvDetail()}" 
                                           update=":form:fieldSetId"  
-                                          oncomplete="PrimeFaces.focus('form:invOpenningBalanceTable:'+#{InvOpeningBalanceItemFormMB.invOpenningBalanceItemDetailEntityList.size()}+':invItemNameIn')"
-                                          ajax="true" 
-                                          />
+                                          oncomplete="PrimeFaces.focus('form:invPurchaseInvoiceDetailsTable:'+#{InvOpeningBalanceItemFormMB.invInvoiceDTO.invPurchaseInvoiceDetailList.size()}+':invItemNameIn')"
+                                          immediate="true"
+                                          ajax="true"
+                                          style="float:right"/>
+
                         <p:outputPanel>
                             <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
-                            <p:inputText id="globalFilter" onkeyup="PF('invOpenningBalanceTable').filter()" style="width:150px" />
+                            <p:inputText id="globalFilter" onkeyup="PF('invPurchaseInvoiceDetailsTable').filter()" style="width:150px" />
                         </p:outputPanel>
                     </f:facet>
 
-                    <p:column id="serail" style="width: 6vh;text-align: right;font-size: 1.8vh;border-radius: 0px" 
-                              headerText="#" filterStyle="display:none" filterBy="#{invOpenningBalanceTable.serial}"
-                              filterMatchMode="contains"  sortBy="#{invOpenningBalanceTable.serial}">
-                        <h:outputText value="#{invOpenningBalanceTable.serial}"  />
-                    </p:column>           
+                    <p:column headerText="#" style="width: 4vh;text-align:center;border-radius: 0px" >
+                        <h:outputText value="#{invPurchaseInvoiceDetailsTable.serial}"  />
+                    </p:column>
 
-
-                    <p:column style="width: 14vh;text-align: right;font-size: 1.8vh;border-radius: 0px" id="itemName" 
-                              filterStyle="display:none" filterBy="#{invOpenningBalanceTable.itemId}"
-                              filterMatchMode="contains" sortBy="#{invOpenningBalanceTable.itemId}"
-                              headerText="#{userData.userDDs['ITEM_NUMBER']}">
+                    <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="itemName" headerText="#{userData.userDDs['ITEM']}" 
+                              filterBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}"
+                              filterable="false">
+                        <p:outputLabel value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}" 
+                                       rendered="#{invPurchaseInvoiceDetailsTable.isEdit}" />
                         <p:autoComplete id="invItemNameIn"  
-
-                                        style="width:95%"
-                                        converter="#{InvOpeningBalanceItemFormMB.itemConverter}"
-                                        value="#{invOpenningBalanceTable.itemId}"
-
+                                        style="width:100%"
+                                        rendered="#{not invPurchaseInvoiceDetailsTable.isEdit}"
+                                        converter="#{InvOpeningBalanceItemFormMB.itemsBarcodesDetailsViewConverter}"
+                                        value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}"
+                                        maxResults="10"
                                         var="item"
                                         itemLabel="#{item}" 
                                         itemValue="#{item}" 
                                         forceSelection="true" 
-                                        completeMethod="#{InvOpeningBalanceItemFormMB.completeInvItemData}" >
-                            <p:ajax update="unitvalue QuantityT costTt  netId totalQuantity totalNet"
-                                    event="itemSelect" listener="#{InvOpeningBalanceItemFormMB.validateItems(invOpenningBalanceTable)}" />
-                            <p:ajax update="unitvalue QuantityT costTt  netId totalQuantity totalNet"
-                                    event="change" listener="#{InvOpeningBalanceItemFormMB.validateItems(invOpenningBalanceTable)}" />
-                        </p:autoComplete>    
+                                        completeMethod="#{InvOpeningBalanceItemFormMB.completeItemsDatas}" >
+                            <p:ajax update=" unitvalue length paintColor   costTt  netId "
+                                    event="itemSelect" listener="#{InvOpeningBalanceItemFormMB.validateItems(invPurchaseInvoiceDetailsTable)}" />
+                        </p:autoComplete>            
                     </p:column>
 
+                    <p:column  style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="Unit"
 
-                    <p:column  style="width: 12vh;text-align: -webkit-auto;border-radius: 0px" id="Unit" 
-                               filterStyle="display:none" filterBy="#{invOpenningBalanceTable.itemId.unitId.name}"
-                               filterMatchMode="contains"  sortBy="#{invTransferTable.invOpenningBalanceTable.itemId.unitId.name}"
+                               filterBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.unitName}" 
+                               filterMatchMode="contains" 
+                               sortBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.unitName}"
+                               filterable="false"
                                headerText="#{userData.userDDs['UNIT_NUMBER']}">
-                        <p:inputText id="unitvalue"
-                                     readonly="true" 
-                                     value="#{invOpenningBalanceTable.itemId.unitId.name}"
-                                     style="width: 95%" />                               
+                        <p:inputText id="unitvalue" readonly="true" 
+                                     disabled="true"
+                                     value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.unitName}" style="width: 95%" />  
+
                     </p:column>
 
-                    <p:column style="width: 14vh;text-align: right;font-size: 1.8vh;border-radius: 0px" 
-                              filterStyle="display:none" filterBy="#{invOpenningBalanceTable.quantity}"
-                              filterMatchMode="contains"  sortBy="#{invOpenningBalanceTable.quantity}"
+                    <p:column style="width: 12vh;text-align: -webkit-auto;border-radius: 0px" id="tall" headerText="الطول"
+                              rendered="#{InvOpeningBalanceItemFormMB.invInvoiceDTO.companyActivity eq 'Alumetal'}"
+                              filterBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.length}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.length}"
+                              filterable="false" >
+                        <p:inputText style="width:99%" 
+                                     disabled="true" 
+                                     id="length" readonly="true"  
+                                     value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.length}"/>
+                    </p:column>
+
+                    <p:column style="width: 12vh;text-align: -webkit-auto;border-radius: 0px" id="color" headerText="اللون"
+                              rendered="#{InvOpeningBalanceItemFormMB.invInvoiceDTO.companyActivity eq 'Alumetal'}"
+                              filterBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.paintColorName}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.paintColorName}"
+                              filterable="false" >
+                        <p:inputText style="width:99%" 
+                                     disabled="true" 
+                                     id="paintColor" readonly="true"  
+                                     value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.paintColorName}"/>
+                    </p:column>
+
+
+                    <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px"
                               id="Quantity"
-                              headerText="#{userData.userDDs['QUANTITY']}">
+                              headerText="#{userData.userDDs['NUMBER']}"
+                              filterBy="#{invPurchaseInvoiceDetailsTable.quantity}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{invPurchaseInvoiceDetailsTable.quantity}"
+                              filterable="false">
+
                         <p:inputText id="QuantityT"  
-                                     value="#{invOpenningBalanceTable.quantity}" 
-                                     disabled="#{invOpenningBalanceTable.itemId == null}"
+                                     value="#{invPurchaseInvoiceDetailsTable.quantity}" 
+
                                      style="width:95%">
-                            <p:ajax listener="#{InvOpeningBalanceItemFormMB.validateQuantityColum(invOpenningBalanceTable)}" 
-                                    update="invOpenningBalanceTable netId totalQuantity totalNet "/>
-                        </p:inputText>   
+                            <p:ajax listener="#{InvOpeningBalanceItemFormMB.validateQuantityColum(invPurchaseInvoiceDetailsTable)}" 
+                                    process="@this"
+                                    update="netId   invItemNameIn Quantity QuantityT"/>
+                        </p:inputText>        
+
                     </p:column>
 
-                    <p:column style="width: 8vh;text-align: right;font-size: 1.8vh;border-radius: 0px" id="Price" filterStyle="display:none" 
-                              filterBy="#{invOpenningBalanceTable.cost}"
-                              filterMatchMode="contains"  sortBy="#{invOpenningBalanceTable.cost}"
-                              headerText="#{userData.userDDs['PRICE']}">
+
+                    <p:column style="width: 12vh;text-align: -webkit-auto;border-radius: 0px" id="COST" headerText="#{userData.userDDs['PRICE']}"
+                              filterBy="#{invPurchaseInvoiceDetailsTable.cost}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{invPurchaseInvoiceDetailsTable.cost}"
+                              filterable="false">
                         <p:inputText id="costTt" 
-                                     value="#{invOpenningBalanceTable.cost}"
-                                     disabled="#{invOpenningBalanceTable.itemId == null}"
+                                     value="#{invPurchaseInvoiceDetailsTable.cost}"
+
                                      style="width:95%">
-                            <p:ajax listener="#{InvOpeningBalanceItemFormMB.validatePriceColumn(invOpenningBalanceTable)}" 
-                                    update="invOpenningBalanceTable "/>
-                        </p:inputText>  
+                            <p:ajax listener="#{InvOpeningBalanceItemFormMB.validatePriceColumn(invPurchaseInvoiceDetailsTable)}" 
+                                    update="netId  QuantityT"/>
+                        </p:inputText>       
                     </p:column>
 
 
-
-                    <p:column style="width: 12vh;text-align: right;font-size: 1.8vh;border-radius: 0px" id="Total"  
-                              filterStyle="display:none" filterBy="#{invOpenningBalanceTable.net}"
-                              filterMatchMode="contains"  sortBy="#{invOpenningBalanceTable.net}"
-                              headerText="#{userData.userDDs['TOTAL']}">
-                        <p:outputLabel id="netId" value="#{invOpenningBalanceTable.net}"   />
+                    <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="net" headerText="#{userData.userDDs['TOTAL']}" 
+                              filterBy="#{invPurchaseInvoiceDetailsTable.net}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{invPurchaseInvoiceDetailsTable.net}"
+                              filterable="false">
+                        <p:outputLabel id="netId" value="#{invPurchaseInvoiceDetailsTable.net}"   />
                     </p:column>
 
                     <p:summaryRow>
@@ -236,39 +269,42 @@
                             <h:outputText style="text-align:right" value="#{userData.userDDs['TOTAL']}  :" />
                         </p:column>
                         <p:column>
-                            <h:outputText id="totalQuantity" value="#{InvOpeningBalanceItemFormMB.totalQuatity}"/>
+                            <h:outputText id="totalQuantity" value="#{InvOpeningBalanceItemFormMB.invInvoiceDTO.totalQuatity}"/>
                         </p:column>
-
-                        <p:column />
-
+                        <p:column rendered="#{InvOpeningBalanceItemFormMB.invInvoiceDTO.companyActivity eq 'Alumetal'}" />
+                        <p:column rendered="#{InvOpeningBalanceItemFormMB.invInvoiceDTO.companyActivity eq 'Alumetal'}" />
+                        <p:column rendered="#{InvOpeningBalanceItemFormMB.invInvoiceDTO.companyActivity eq 'Alumetal'}" />
                         <p:column>
-                            <h:outputText id="totalNet" value="#{InvOpeningBalanceItemFormMB.totalNet}"/>
+                            <h:outputText id="totalNet" value="#{InvOpeningBalanceItemFormMB.invInvoiceDTO.totalNet}"/>
                         </p:column>
-                        <p:column/>
+                        <p:column />
                     </p:summaryRow>
 
+                    <p:column 
+                        rendered="#{InvOpeningBalanceItemFormMB.columnRender}"
+                        style="width: 13vh;text-align: center;border-radius: 0px" 
+                        headerText="#{userData.userDDs['TRANSACTION']}">
 
-                    <p:column style="width: 7vh;text-align: center;font-size: 1.8vh;border-radius: 0px" headerText="#{userData.userDDs['TRANSACTION']}">
-                        <p:commandButton  class="saddbuttonin" id="b7" icon="fa fa-plus" style="background-color: rgb(42, 163, 218);border-radius: 3px;"
+                        <p:commandButton  id="b7" icon="fa fa-plus" 
+                                          class="saddbuttonins" style="color: #fff!important;background-color: #00BCD4"
                                           title="#{userData.userDDs['ADD']}" 
-                                          actionListener="#{InvOpeningBalanceItemFormMB.adddetails}"
-                                          oncomplete="PrimeFaces.focus('form:invOpenningBalanceTable:'+#{InvOpeningBalanceItemFormMB.invOpenningBalanceItemDetailEntityList.size()}+':invItemNameIn')"
-                                          update=":form:fieldSetId" 
+                                          rendered="#{InvOpeningBalanceItemFormMB.invInvoiceDTO.loadedSerial eq null}"
+                                          actionListener="#{InvOpeningBalanceItemFormMB.addInvDetail()}" 
+                                          update=":form:fieldSetId"  
+                                          immediate="true"
+                                          oncomplete="PrimeFaces.focus('form:invPurchaseInvoiceDetailsTable:'+#{InvOpeningBalanceItemFormMB.invInvoiceDTO.invPurchaseInvoiceDetailList.size()}+':invItemNameIn')"
                                           ajax="true" />
 
-                        <p:commandButton class="sdeleteButton" update="invOpenningBalanceTable" title="#{userData.userDDs['DELETE']}" 
-                                         action="#{InvOpeningBalanceItemFormMB.deleteInvQuotationDetail}" style="background-color: red;border-radius: 3px;" icon="fa fa-remove" >
-                            <f:setPropertyActionListener value="#{invOpenningBalanceTable}" 
-                                                         target="#{InvOpeningBalanceItemFormMB.invOpenningBalanceItemDetailEntitySelection}"/>
-                            <p:confirm header="#{userData.userDDs['COFIGRATION']}"
-                                       message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                        <p:commandButton  update="invPurchaseInvoiceDetailsTable netId"
+                                          title="#{userData.userDDs['DELETE']}" 
+                                          class="sdeleteButtons" style="color: #fff!important;background-color: red"
+
+                                          action="#{InvOpeningBalanceItemFormMB.deleteInvDetail(invPurchaseInvoiceDetailsTable)}"
+                                          icon="fa fa-remove" >
+                            <p:confirm header="#{userData.userDDs['COFIGRATION']}" 
+                                       message="#{userData.userDDs['ARE_YOU_SURE']}"
+                                       icon="ui-icon-alert" />
                         </p:commandButton>
-
-                        <p:blockUI block="form" trigger="b7" animate="true" >
-
-                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
-
-                        </p:blockUI> 
 
                         <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
                             <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
@@ -278,35 +314,53 @@
 
                 </p:dataTable>
 
+                <h:panelGrid  class="col-md-12" columns="1"  style="margin-top:2%">
 
+                    <h:panelGroup  class="centerButtons">
 
-                <h:panelGrid  columns="1" class="col-md-12">
+                        <p:commandButton  id="saveB" 
+                                          class="saveButton"
+                                          title="#{userData.userDDs['SAVE']}"
+                                          value="#{userData.userDDs['SAVE']}" 
+                                          style="" 
+                                          action="#{InvOpeningBalanceItemFormMB.save()}"
+                                          update="@form"/>
 
-                    <h:panelGroup   class="centerButtons" style="margin-top: 2%">
-                        
-                        <p:commandButton   class="saveButtons" 
-                                           id="saveB" 
-                                           title="#{userData.userDDs['SAVE']}" 
-                                           value="#{userData.userDDs['SAVE']}" 
-                                           style="color: #fff!important;background-color: #2196F3;margin-left: 5px;"
-                                           action="#{InvOpeningBalanceItemFormMB.save()}" 
-                                           update="@form"/>
-                        
-                        <p:commandButton  class="newButtons"
-                                          id="newN"
+                        <p:commandButton 
+                            id="newN"
+                            ajax="false"
+                            style=""
+                            value="#{userData.userDDs['NEW']}" 
+                            class="newButton"
+                            onclick="form.target = ''" 
+                            actionListener="#{InvOpeningBalanceItemFormMB.reset()}"/>
+
+                        <p:commandButton  class="printButtons"
                                           ajax="false"
-                                         style="color: #fff!important;background-color: #9c27b0d1;margin-left: 5px;"
-                                          value="#{userData.userDDs['NEW']}" 
-                                          onclick="form.target = ''" 
-                                          actionListener="#{InvOpeningBalanceItemFormMB.reset()}"/>
-                        
-                        <p:commandButton class="closeButtons" 
-                                         id="cancel" 
-                                         title="#{userData.userDDs['BACK']}" 
-                                         value="#{userData.userDDs['BACK']}" 
-                                        style="color: #fff!important;background-color: #035C70;margin-left: 5px;"
-                                         action="#{InvOpeningBalanceItemFormMB.exit()}" 
-                                         update="@form"/>
+                                          onclick="form.target = '_blank'"  
+                                          style="color: #fff!important;background-color: grey !important; margin-left: 5px" 
+                                          rendered="#{InvOpeningBalanceItemFormMB.invInvoiceDTO.id != null}"
+                                          value="#{userData.userDDs['PRINT']}" 
+                                          title="#{userData.userDDs['PRINT']}" 
+                                          actionListener="#{InvOpeningBalanceItemFormMB.print}"/>
+
+                        <p:commandButton  class="closeButton" 
+                                          id="cancel" 
+                                          title="#{userData.userDDs['BACK']}" 
+                                          value="#{userData.userDDs['BACK']}" 
+                                          style=""  
+                                          immediate="true"
+                                          action="#{InvOpeningBalanceItemFormMB.exit()}" 
+                                          update="@form"/>
+
+                        <h:commandLink  style="float:left" class="sdcreenimg" rendered="#{InvOpeningBalanceItemFormMB.invInvoiceDTO.id ne null}">  
+                            <p:graphicImage name="/img/excel.jpg" width="24" style='margin-right:25%;'/>  
+                            <p:dataExporter type="xls"
+                                            target="invPurchaseInvoiceDetailsTable" 
+                                            fileName="الرصيد الافتتاحي"
+                                            preProcessor="#{InvOpeningBalanceItemFormMB.preProcessXLS()}"
+                                            postProcessor="#{InvOpeningBalanceItemFormMB.postProcessXLS}" />  
+                        </h:commandLink>
 
                         <p:blockUI block="form" trigger="saveB" animate="true" >
 
@@ -314,13 +368,12 @@
 
                         </p:blockUI> 
 
+
                     </h:panelGroup>
 
                 </h:panelGrid>
 
             </p:fieldset>
-
-
 
 
         </h:form>
