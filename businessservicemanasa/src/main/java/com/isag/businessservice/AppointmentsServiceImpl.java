@@ -165,6 +165,7 @@ public class AppointmentsServiceImpl implements AppointmentsService {
         }
         if (entity.getTeacherId() != null) {
             dTO.setTeacherId(entity.getTeacherId().getId());
+            dTO.setTeacherName(entity.getTeacherId().getName());
         }
         if (entity.getSchoolStageId() != null) {
             dTO.setSchoolStageId(entity.getSchoolStageId().getId());

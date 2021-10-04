@@ -23,6 +23,7 @@ public class AppointmentsDTO extends BaseEntityDTO {
     private Integer materialId;
     private String materialName;
     private String dayText;
+    private String teacherName;
 
     public AppointmentsDTO() {
     }
@@ -182,6 +183,20 @@ public class AppointmentsDTO extends BaseEntityDTO {
      */
     public void setDayText(String dayText) {
         this.dayText = dayText;
+    }
+
+    /**
+     * @return the teacherName
+     */
+    public String getTeacherName() {
+        return teacherName;
+    }
+
+    /**
+     * @param teacherName the teacherName to set
+     */
+    public void setTeacherName(String teacherName) {
+        this.teacherName = teacherName;
     }
 
 }
