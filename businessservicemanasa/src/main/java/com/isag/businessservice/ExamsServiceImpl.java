@@ -40,7 +40,7 @@ public class ExamsServiceImpl implements ExamsService {
     @Override
     public ExamsDTO findExams(Integer id) {
         Exams exams = dao.findEntityById(Exams.class, id);
-        return mapTODTO(exams, Boolean.TRUE,null,null);
+        return mapTODTO(exams, Boolean.TRUE, null, null);
     }
 
     @Override
@@ -146,8 +146,12 @@ public class ExamsServiceImpl implements ExamsService {
 
         List<Exams> list = dao.findListByQuery(builder.toString(), params);
 
-        examsDTO = mapTODTO(list.get(0), Boolean.TRUE,1,examsDTO.getPeriodList());
+        examsDTO = mapTODTO(list.get(0), Boolean.TRUE, 1, examsDTO.getPeriodList());
         List<ExamsDTO> examsDTOList = new ArrayList<>();
+        examsDTO.setLessonId(null);
+        examsDTO.setParent(null);
+        examsDTO.setPeriodId(null);
+        examsDTO.setExamType(0);
         examsDTOList.add(examsDTO);
         return examsDTOList;
 
@@ -156,37 +160,94 @@ public class ExamsServiceImpl implements ExamsService {
     @Override
     public List<ExamsDTO> findExamsListForStudent(ExamsDTO examsDTO) {
         Map<String, Object> params = new HashMap<>();
-        params.put("teacherId", examsDTO.getTeacherId());
-        params.put("examType", examsDTO.getExamType());
+
         params.put("studentId", examsDTO.getStudentId());
         StringBuilder builder = new StringBuilder();
-        builder.append("SELECT d FROM Exams d WHERE d.studentId is null and d.id not in (select e.parent.id from Exams e where e.studentId.id = :studentId ) AND d.active = 1 AND d.teacherId.id = :teacherId");
+        builder.append("SELECT d FROM Exams d WHERE d.studentId is null and d.id not in (select e.parent.id from Exams e where e.studentId.id = :studentId ) AND d.active = 1 ");
         //
+        if (examsDTO.getTeacherId() != null) {
+            params.put("teacherId", examsDTO.getTeacherId());
+            builder.append(" AND d.teacherId.id = :teacherId");
+        }
         StringBuilder materialId = null, periodId = null;
         //
-        for (Integer materialsDTO : examsDTO.getMaterialList()) {
-            if (materialId == null) {
-                materialId = new StringBuilder();
-                materialId.append(materialsDTO);
-            } else {
-                materialId.append(",").append(materialsDTO);
+        if (examsDTO.getMaterialList() != null && !examsDTO.getMaterialList().isEmpty()) {
+            for (Integer materialsDTO : examsDTO.getMaterialList()) {
+                if (materialId == null) {
+                    materialId = new StringBuilder();
+                    materialId.append(materialsDTO);
+                } else {
+                    materialId.append(",").append(materialsDTO);
+                }
+            }
+            if (materialId != null) {
+                builder.append(" and d.materialId.id in(  ").append(materialId).append(" )");
             }
         }
-        if (materialId != null) {
-            builder.append(" and d.materialId.id in(  ").append(materialId).append(" )");
-        }
-        for (Integer periodsDTO : examsDTO.getPeriodList()) {
-            if (periodId == null) {
-                periodId = new StringBuilder();
-                periodId.append(periodsDTO);
-            } else {
-                periodId.append(",").append(periodsDTO);
+        if (examsDTO.getPeriodList() != null && !examsDTO.getPeriodList().isEmpty()) {
+            for (Integer periodsDTO : examsDTO.getPeriodList()) {
+                if (periodId == null) {
+                    periodId = new StringBuilder();
+                    periodId.append(periodsDTO);
+                } else {
+                    periodId.append(",").append(periodsDTO);
+                }
             }
-        }
-        if (periodId != null) {
-            builder.append(" and d.periodId.id in(  ").append(periodId).append(" )");
+            if (periodId != null) {
+                builder.append(" and d.periodId.id in(  ").append(periodId).append(" )");
+            }
         }
         if (examsDTO.getExamType() != null) {
+            params.put("examType", examsDTO.getExamType());
+            builder.append(" and d.examType = :examType ");
+        }
+
+        List<Exams> list = dao.findListByQuery(builder.toString(), params);
+        return returnListDTO(list, true);
+    }
+
+    @Override
+    public List<ExamsDTO> findSolvedExamsListForStudent(ExamsDTO examsDTO) {
+        Map<String, Object> params = new HashMap<>();
+
+        params.put("studentId", examsDTO.getStudentId());
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT d FROM Exams d WHERE d.studentId is not null and d.studentId.id = :studentId ");
+        //
+        if (examsDTO.getTeacherId() != null) {
+            params.put("teacherId", examsDTO.getTeacherId());
+            builder.append(" AND d.teacherId.id = :teacherId");
+        }
+        StringBuilder materialId = null, periodId = null;
+        //
+        if (examsDTO.getMaterialList() != null && !examsDTO.getMaterialList().isEmpty()) {
+            for (Integer materialsDTO : examsDTO.getMaterialList()) {
+                if (materialId == null) {
+                    materialId = new StringBuilder();
+                    materialId.append(materialsDTO);
+                } else {
+                    materialId.append(",").append(materialsDTO);
+                }
+            }
+            if (materialId != null) {
+                builder.append(" and d.materialId.id in(  ").append(materialId).append(" )");
+            }
+        }
+        if (examsDTO.getPeriodList() != null && !examsDTO.getPeriodList().isEmpty()) {
+            for (Integer periodsDTO : examsDTO.getPeriodList()) {
+                if (periodId == null) {
+                    periodId = new StringBuilder();
+                    periodId.append(periodsDTO);
+                } else {
+                    periodId.append(",").append(periodsDTO);
+                }
+            }
+            if (periodId != null) {
+                builder.append(" and d.periodId.id in(  ").append(periodId).append(" )");
+            }
+        }
+        if (examsDTO.getExamType() != null) {
+            params.put("examType", examsDTO.getExamType());
             builder.append(" and d.examType = :examType ");
         }
 
@@ -235,7 +296,7 @@ public class ExamsServiceImpl implements ExamsService {
             exams = dao.findEntityById(Exams.class, examsDTO.getId());
         }
         if (examsDTO.getSchoolStagesId() != null
-                && examsDTO.getPeriodId() != null
+                //                && examsDTO.getPeriodId() != null
                 && examsDTO.getExamName() != null
                 && examsDTO.getTeacherId() != null
                 && examsDTO.getMaterialId() != null) {
@@ -253,7 +314,7 @@ public class ExamsServiceImpl implements ExamsService {
             exams = dao.updateEntity(exams);
 
             if (examsDTO.getStudentId() != null) {
-                QuestionsDTO x = questionsService.saveListForStudent(examsDTO.getQuestionsList(), isagUser, exams.getId(), examsDTO.getStudentId(), examsDTO.getParent());
+                QuestionsDTO x = questionsService.saveListForStudent(examsDTO.getQuestionsList(), isagUser, exams.getId(), examsDTO.getStudentId(), examsDTO.getParent(), examsDTO.getExamType());
                 exams.setScore(x.getTotalDegree());
                 dao.updateEntity(exams);
             } else {
@@ -299,18 +360,18 @@ public class ExamsServiceImpl implements ExamsService {
     private List<ExamsDTO> returnListDTO(List<Exams> list, Boolean detail) {
         List<ExamsDTO> dTOList = new ArrayList<>();
         for (Exams entity : list) {
-            dTOList.add(mapTODTO(entity, detail,null,null));
+            dTOList.add(mapTODTO(entity, detail, null, null));
         }
         return dTOList;
     }
 
-    private ExamsDTO mapTODTO(Exams entity, Boolean detail, Integer examtype,List<Integer> periodList) {
-        ExamsDTO dTO = initMapToDTO(entity, detail,examtype,periodList);
+    private ExamsDTO mapTODTO(Exams entity, Boolean detail, Integer examtype, List<Integer> periodList) {
+        ExamsDTO dTO = initMapToDTO(entity, detail, examtype, periodList);
 
         return dTO;
     }
 
-    private ExamsDTO initMapToDTO(Exams entity, Boolean detail, Integer examtype,List<Integer> periodList) {
+    private ExamsDTO initMapToDTO(Exams entity, Boolean detail, Integer examtype, List<Integer> periodList) {
 
         ExamsDTO dTO = new ExamsDTO();
         dTO.setId(entity.getId());
@@ -354,6 +415,9 @@ public class ExamsServiceImpl implements ExamsService {
         if (detail) {
             if (examtype != null) {
                 dTO.setQuestionsList(questionsService.findGeneralQuestions(dTO));
+                for (QuestionsDTO questionsDTO : dTO.getQuestionsList()) {
+                    dTO.setScore(dTO.getScore().add(questionsDTO.getQuestionDegree()));
+                }
             } else {
                 dTO.setQuestionsList(questionsService.findQuestionsByExamId(entity.getId()));
             }
@@ -374,7 +438,13 @@ public class ExamsServiceImpl implements ExamsService {
 
         entity.setId(dTO.getId());
         entity.setExamName(dTO.getExamName());
-        entity.setDegree(dTO.getDegree());
+        if (dTO.getExamType() != null && dTO.getExamType() == 0) {
+            for (QuestionsDTO questionsDTO : dTO.getQuestionsList()) {
+                dTO.setDegree(dTO.getDegree().add(questionsDTO.getQuestionDegree()));
+            }
+            entity.setDegree(dTO.getDegree());
+        }
+            entity.setDegree(dTO.getDegree());
         entity.setActive(dTO.getActive());
         entity.setScore(dTO.getScore());
         entity.setMonthId(dTO.getMonthId());

@@ -6,6 +6,7 @@
 package com.isag.businessservice;
 
 import com.isag.dto.StudentPeriodsDTO;
+import com.isag.dto.TeachersDTO;
 import com.isag.entity.IgmaUser;
 import com.isag.views.TeachersByStudentId;
 import java.util.List;
@@ -19,6 +20,8 @@ import javax.ejb.Remote;
 public interface StudentPeriodsService {
 
     public List<StudentPeriodsDTO> findStudentPeriods(StudentPeriodsDTO studentPeriodsDTO);
+    
+    public List<TeachersDTO> findteachersByStudentIdLogin(Integer studentId);
 
     public List<Integer> findPeriodsByStudentId(Integer studentId);
 

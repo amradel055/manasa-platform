@@ -32,7 +32,7 @@ public interface QuestionsService {
 
     public QuestionsDTO saveList(List<QuestionsDTO> questionsDTOsList, IgmaUser isagUser, Integer examsId);
 
-    public QuestionsDTO saveListForStudent(List<QuestionsDTO> questionsDTOsList, IgmaUser isagUser, Integer examsId, Integer studentId, Integer parentExamId);
+    public QuestionsDTO saveListForStudent(List<QuestionsDTO> questionsDTOsList, IgmaUser isagUser, Integer examsId, Integer studentId, Integer parentExamId, Integer examTpe);
 
     public void deleteList(List<Integer> questionsDTOsList);
     

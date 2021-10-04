@@ -585,7 +585,7 @@ public class StudentServiceImpl implements StudentService {
         if (entity.getStateId() != null) {
             dTO.setStateId(entity.getStateId().getId());
             dTO.setStateName(entity.getStateId().getName());
-            dTO.setGovernorateId(entity.getStateId().getGovernorateId().getId());
+//            dTO.setGovernorateId(entity.getStateId().getGovernorateId().getId());
 
         }
 

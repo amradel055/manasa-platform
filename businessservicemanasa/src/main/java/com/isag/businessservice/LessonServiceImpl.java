@@ -86,7 +86,7 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
-    public List<LessonDTO> findAllLessonsByTeacher(Integer branchId, Integer companyId, Integer teacherId, Integer materialId, Integer id) {
+    public List<LessonDTO> findAllLessonsByTeacher(Integer branchId, Integer companyId, Integer teacherId, Integer materialId,Integer schoolStageId , Integer id) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         params.put("companyId", companyId);
@@ -100,6 +100,10 @@ public class LessonServiceImpl implements LessonService {
         if (materialId != null) {
             params.put("materialId", materialId);
             builder.append(" AND d.materialId.id = :materialId");
+        }
+        if (materialId != null) {
+            params.put("schoolStageId", schoolStageId);
+            builder.append(" AND d.schoolStagesGuideId.id = :schoolStageId");
         }
         List<Lesson> list = dao.findListByQuery(builder.toString(), params);
         return returnListDTO(list);

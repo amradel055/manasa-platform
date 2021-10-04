@@ -67,7 +67,7 @@ public class AppointmentsRest {
                 List<AppointmentsDTO> dTOs = appointmentsService.findAppointmentsByTeacherAndSchoolStageAndMaterialId(
                         appointmentsDTO.getTeacherId(),
                         appointmentsDTO.getSchoolStageId(),
-                        appointmentsDTO.getMaterialsId()
+                        appointmentsDTO.getMaterialId()
                 );
                 GenericEntity<List<AppointmentsDTO>> list = new GenericEntity<List<AppointmentsDTO>>(dTOs) {
                 };

@@ -41,7 +41,7 @@ public class NewsRest {
         if (newsDTO != null) {
             try {
                 List<NewsDTO> dTOs = newsService.findNews(newsDTO.getId(), newsDTO.getTeacherId(),
-                        newsDTO.getType(), newsDTO.getSchoolStageId());
+                        newsDTO.getNewsType(), newsDTO.getSchoolStageId());
                 GenericEntity<List<NewsDTO>> list = new GenericEntity<List<NewsDTO>>(dTOs) {
                 };
                 return Response.ok(list).build();

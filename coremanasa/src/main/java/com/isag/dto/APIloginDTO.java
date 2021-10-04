@@ -5,6 +5,8 @@
  */
 package com.isag.dto;
 
+import java.util.List;
+
 /**
  *
  * @author ahmed
@@ -17,6 +19,7 @@ public class APIloginDTO {
     private APIDataDTO data;
     private APIStudentDataDTO studentData;
     private Integer teacherId;
+    private List<TeachersDTO> teacherList;
 
     /**
      * @return the success
@@ -100,6 +103,20 @@ public class APIloginDTO {
      */
     public void setTeacherId(Integer teacherId) {
         this.teacherId = teacherId;
+    }
+
+    /**
+     * @return the teacherList
+     */
+    public List<TeachersDTO> getTeacherList() {
+        return teacherList;
+    }
+
+    /**
+     * @param teacherList the teacherList to set
+     */
+    public void setTeacherList(List<TeachersDTO> teacherList) {
+        this.teacherList = teacherList;
     }
 
 }

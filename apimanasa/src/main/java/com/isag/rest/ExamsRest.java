@@ -99,6 +99,32 @@ public class ExamsRest {
     }
 
     @Transactional
+    @Path("/findSolvedExamsForStudent")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response findSolvedExamsForStudent(ExamsDTO examsDTO) {
+        if (examsDTO != null) {
+            try {
+                List<ExamsDTO> dTOs = new ArrayList<>();
+
+                dTOs = examsService.findSolvedExamsListForStudent(examsDTO);
+                GenericEntity<List<ExamsDTO>> list = new GenericEntity<List<ExamsDTO>>(dTOs) {
+                };
+                return Response.ok(list).build();
+
+            } catch (Exception e) {
+                return Response.status(Response.Status.FORBIDDEN).build();
+            }
+
+        } else {
+            examsDTO = new ExamsDTO();
+            examsDTO.setMsg("No Id is Sent");
+            return Response.ok(examsDTO).build();
+        }
+    }
+
+    @Transactional
     @Path("/findExams")
     @POST
     @Produces(MediaType.APPLICATION_JSON)

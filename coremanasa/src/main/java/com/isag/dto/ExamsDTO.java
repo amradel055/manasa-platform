@@ -87,6 +87,9 @@ public class ExamsDTO extends BaseEntityDTO {
      * @return the degree
      */
     public BigDecimal getDegree() {
+        if(degree == null){
+            degree = BigDecimal.ZERO;
+        }
         return degree;
     }
 
@@ -213,6 +216,9 @@ public class ExamsDTO extends BaseEntityDTO {
      * @return the score
      */
     public BigDecimal getScore() {
+        if(score == null){
+            score = BigDecimal.ZERO;
+        }
         return score;
     }
 

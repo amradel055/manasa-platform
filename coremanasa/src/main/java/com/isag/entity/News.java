@@ -26,11 +26,11 @@ public class News extends BaseEntity {
     @Column(name = "type")
     private Integer type;
     @Column(name = "adrress")
-    private Integer adrress;
+    private String adrress;
     @Column(name = "post")
     private String post;
     @Column(name = "img")
-    private Integer img;
+    private String img;
     @JoinColumn(name = "branch_id", referencedColumnName = "id")
     @ManyToOne
     private Branch branchId;
@@ -110,35 +110,7 @@ public class News extends BaseEntity {
     public void setActive(Integer active) {
         this.active = active;
     }
-
-    /**
-     * @return the adrress
-     */
-    public Integer getAdrress() {
-        return adrress;
-    }
-
-    /**
-     * @param adrress the adrress to set
-     */
-    public void setAdrress(Integer adrress) {
-        this.adrress = adrress;
-    }
-
-    /**
-     * @return the img
-     */
-    public Integer getImg() {
-        return img;
-    }
-
-    /**
-     * @param img the img to set
-     */
-    public void setImg(Integer img) {
-        this.img = img;
-    }
-
+    
     /**
      * @return the type
      */
@@ -165,6 +137,34 @@ public class News extends BaseEntity {
      */
     public void setPost(String post) {
         this.post = post;
+    }
+
+    /**
+     * @return the adrress
+     */
+    public String getAdrress() {
+        return adrress;
+    }
+
+    /**
+     * @param adrress the adrress to set
+     */
+    public void setAdrress(String adrress) {
+        this.adrress = adrress;
+    }
+
+    /**
+     * @return the img
+     */
+    public String getImg() {
+        return img;
+    }
+
+    /**
+     * @param img the img to set
+     */
+    public void setImg(String img) {
+        this.img = img;
     }
 
 }

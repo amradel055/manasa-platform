@@ -7,6 +7,7 @@ package com.isag.businessservice;
 
 import com.isag.core.GenericDAO;
 import com.isag.dto.AnswersDTO;
+import com.isag.dto.QuestionsDTO;
 import com.isag.entity.Branch;
 import com.isag.entity.IgmaCompany;
 import com.isag.entity.Answers;
@@ -49,6 +50,29 @@ public class AnswersServiceImpl implements AnswersService {
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT d FROM Answers d WHERE d.examId.id = :examId AND d.correct = 1");
         List<Answers> list = dao.findListByQuery(builder.toString(), params);
+        for (Answers answers : list) {
+            answerMap.put(answers.getQuestionId().getId(), answers.getAnswer());
+        }
+        return answerMap;
+    }
+
+    @Override
+    public Map<Integer, String> findAnswersByQuestion(List<QuestionsDTO> question) {
+        StringBuilder query = null;
+        for (QuestionsDTO questionsDTO : question) {
+            if (query == null) {
+                query = new StringBuilder();
+                query.append(questionsDTO.getParent());
+            } else {
+                query.append(" , ").append(questionsDTO.getParent());
+            }
+
+        }
+
+        Map<Integer, String> answerMap = new HashMap<>();
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT d FROM Answers d WHERE d.questionId.id in (").append(query).append(") AND d.correct = 1");
+        List<Answers> list = dao.findListByQuery(builder.toString());
         for (Answers answers : list) {
             answerMap.put(answers.getQuestionId().getId(), answers.getAnswer());
         }
