@@ -542,7 +542,7 @@
                         <p:commandButton  id="b7" icon="fa fa-plus" 
                                           class="saddbuttonins" style="color: #fff!important;background-color: #00BCD4"
                                           title="#{userData.userDDs['ADD']}" 
-                                          disabled="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id != null or invPurchaseInvoiceFormDTOMB.invInvoiceDTO.loadedSerial  ne null}"
+                                          disabled="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.loadedSerial  ne null}"
                                           actionListener="#{invPurchaseInvoiceFormDTOMB.addInvDetail()}" 
                                           update=":form:fieldSetId"  
                                           immediate="true"
@@ -552,7 +552,6 @@
                         <p:commandButton  update="invPurchaseInvoiceDetailsTable netId totalQuantity  totalWeight  totalNet form:totalActualWeight form:totalNetAfterDiscount  form:taxvalue form:totalWithTaxValue"
                                           title="#{userData.userDDs['DELETE']}" 
                                           class="sdeleteButtons" style="color: #fff!important;background-color: red"
-                                          disabled="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id != null}"
                                           action="#{invPurchaseInvoiceFormDTOMB.deleteInvDetail(invPurchaseInvoiceDetailsTable)}"
                                           icon="fa fa-remove" >
                             <p:confirm header="#{userData.userDDs['COFIGRATION']}" 
