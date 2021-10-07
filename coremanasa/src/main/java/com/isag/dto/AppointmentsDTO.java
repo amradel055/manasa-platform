@@ -6,6 +6,8 @@
 package com.isag.dto;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -24,6 +26,9 @@ public class AppointmentsDTO extends BaseEntityDTO {
     private String materialName;
     private String dayText;
     private String teacherName;
+    private LessonLocationDTO lessonLocation;
+    private String remarks;
+    private Map<String, List<AppointmentsDTO>> map ; 
 
     public AppointmentsDTO() {
     }
@@ -197,6 +202,48 @@ public class AppointmentsDTO extends BaseEntityDTO {
      */
     public void setTeacherName(String teacherName) {
         this.teacherName = teacherName;
+    }
+
+    /**
+     * @return the lessonLocation
+     */
+    public LessonLocationDTO getLessonLocation() {
+        return lessonLocation;
+    }
+
+    /**
+     * @param lessonLocation the lessonLocation to set
+     */
+    public void setLessonLocation(LessonLocationDTO lessonLocation) {
+        this.lessonLocation = lessonLocation;
+    }
+
+    /**
+     * @return the remarks
+     */
+    public String getRemarks() {
+        return remarks;
+    }
+
+    /**
+     * @param remarks the remarks to set
+     */
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
+    /**
+     * @return the map
+     */
+    public Map<String, List<AppointmentsDTO>> getMap() {
+        return map;
+    }
+
+    /**
+     * @param map the map to set
+     */
+    public void setMap(Map<String, List<AppointmentsDTO>> map) {
+        this.map = map;
     }
 
 }

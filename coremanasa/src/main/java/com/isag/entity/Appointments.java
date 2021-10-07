@@ -47,6 +47,11 @@ public class Appointments extends BaseEntity {
     @JoinColumn(name = "material_id", referencedColumnName = "id")
     @ManyToOne
     private Materials materialId;
+    @JoinColumn(name = "lesson_location", referencedColumnName = "id")
+    @ManyToOne
+    private LessonLocation lessonLocation;
+    @Column(name = "remarks")
+    private String remarks;
 
     public Appointments() {
     }
@@ -152,6 +157,34 @@ public class Appointments extends BaseEntity {
      */
     public void setTime(String time) {
         this.time = time;
+    }
+
+    /**
+     * @return the lessonLocation
+     */
+    public LessonLocation getLessonLocation() {
+        return lessonLocation;
+    }
+
+    /**
+     * @param lessonLocation the lessonLocation to set
+     */
+    public void setLessonLocation(LessonLocation lessonLocation) {
+        this.lessonLocation = lessonLocation;
+    }
+
+    /**
+     * @return the remarks
+     */
+    public String getRemarks() {
+        return remarks;
+    }
+
+    /**
+     * @param remarks the remarks to set
+     */
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
     }
 
 }

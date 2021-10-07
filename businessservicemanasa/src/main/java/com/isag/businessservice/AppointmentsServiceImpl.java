@@ -7,6 +7,7 @@ package com.isag.businessservice;
 
 import com.isag.core.GenericDAO;
 import com.isag.dto.AppointmentsDTO;
+import com.isag.dto.LessonLocationDTO;
 import com.isag.entity.Branch;
 import com.isag.entity.IgmaCompany;
 import com.isag.entity.IgmaUser;
@@ -39,6 +40,34 @@ public class AppointmentsServiceImpl implements AppointmentsService {
         builder.append("SELECT d FROM Appointments d WHERE d.branchId.id = :branchId  ");
         List<Appointments> list = dao.findListByQuery(builder.toString(), params);
         return returnListDTO(list);
+    }
+    
+    @Override
+    public List<AppointmentsDTO> findAppointmentsgroup(Integer branchId,Integer schoolStageId ) {
+        List<AppointmentsDTO> listNew = new ArrayList<>();
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        params.put("schoolStageId", schoolStageId);
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT d FROM Appointments d WHERE d.branchId.id = :branchId AND d.schoolStageId.id = :schoolStageId  ");
+        List<Appointments> list = dao.findListByQuery(builder.toString(), params);
+        List<AppointmentsDTO> listDTO = returnListDTO(list);
+        Map<String, List<AppointmentsDTO>> mapGroup = new HashMap<>();
+        for(AppointmentsDTO dTO : listDTO){
+            if(mapGroup.containsKey(dTO.getLessonLocation().getName())){
+                List<AppointmentsDTO> appointmentsDTOs = mapGroup.get(dTO.getLessonLocation().getName());
+                appointmentsDTOs.add(dTO);
+                mapGroup.put(dTO.getLessonLocation().getName(), appointmentsDTOs);
+            }else{
+                List<AppointmentsDTO> appointmentsDTOs = new ArrayList<>();
+                appointmentsDTOs.add(dTO);
+                mapGroup.put(dTO.getLessonLocation().getName(), appointmentsDTOs);
+            }
+        }
+        AppointmentsDTO dTO = new AppointmentsDTO();
+        dTO.setMap(mapGroup);
+        listNew.add(dTO);
+        return listNew;
     }
 
     @Override
@@ -136,6 +165,13 @@ public class AppointmentsServiceImpl implements AppointmentsService {
         dTO.setDay(entity.getDay());
         dTO.setTime(entity.getTime());
         dTO.setAppointmentsType(entity.getAppointmentsType());
+        dTO.setRemarks(entity.getRemarks());
+        
+        if(entity.getLessonLocation() != null){
+            LessonLocationDTO lessonLocationDTO = new LessonLocationDTO();
+            lessonLocationDTO.setName(entity.getLessonLocation().getName());
+            dTO.setLessonLocation(lessonLocationDTO);
+        }
         
 
         if(null != entity.getDay())switch (entity.getDay()) {

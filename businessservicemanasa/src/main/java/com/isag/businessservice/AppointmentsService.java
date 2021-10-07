@@ -8,6 +8,7 @@ package com.isag.businessservice;
 import com.isag.dto.AppointmentsDTO;
 import com.isag.entity.IgmaUser;
 import java.util.List;
+import java.util.Map;
 import javax.ejb.Remote;
 
 /**
@@ -18,6 +19,8 @@ import javax.ejb.Remote;
 public interface AppointmentsService {
 
     public List<AppointmentsDTO> findAppointments(Integer branchId);
+    
+    public List<AppointmentsDTO> findAppointmentsgroup(Integer branchId,Integer schoolStageId );
 
     public AppointmentsDTO save(AppointmentsDTO appointmentsDTO, IgmaUser isagUser);
 
