@@ -15,6 +15,7 @@ import com.toby.businessservice.InvDialogueService;
 import com.toby.businessservice.InvGlobalService;
 import com.toby.businessservice.InvInventoryService;
 import com.toby.businessservice.InvItemService;
+import com.toby.businessservice.InvOpeningBalanceItemService;
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
 import com.toby.businessservice.InvPurchaseOrderService;
 import com.toby.businessservice.InvQuotationService;
@@ -174,7 +175,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     private SymbolService symbolService;
     @EJB
     private InvTransferService invTransferService;
-
+    @EJB
+    private InvOpeningBalanceItemService invOpeningBalanceItemService;
     @EJB
     private CostCenterService costCenterService;
     @EJB
@@ -328,7 +330,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
             }
         }
     }
-    
+
     protected String validateloginDistributedScreens(ScreenNameClassEnum screenNameClassEnum) {
         return invPurchaseInvoiceService.validateloginDistributedScreens(getUserDataDTO(), screenNameClassEnum);
     }
@@ -534,7 +536,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                         || detailDTO.getItemId().getProGroupId().getId() == 25) {
                     detailDTO.setDiscount(new BigDecimal(30));
                 } else if (detailDTO.getItemId().getProGroupId().getId() == 1) {
-                    if (detailDTO.getItemsBarcodesDetail().getTypeShow() !=null && detailDTO.getItemsBarcodesDetail().getTypeShow() == 1) {
+                    if (detailDTO.getItemsBarcodesDetail().getTypeShow() != null && detailDTO.getItemsBarcodesDetail().getTypeShow() == 1) {
                         if (detailDTO.getItemsBarcodesDetail().getSellPrice().compareTo(BigDecimal.valueOf(16.67)) != 1) {
                             detailDTO.setCost(new BigDecimal(287.2463768115942));
                             detailDTO.setDiscount(BigDecimal.ZERO);
@@ -658,7 +660,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 //            Integer itemId = detailDTO.getItemsBarcodesDetail().getItemId();
 //            InvItem item = invItemService.findInvItem(itemId);
 
-                if (detailDTO.getItemsBarcodesDetail() == null && detailDTO.getItemsBarcodesDetailTrans() != null) {
+            if (detailDTO.getItemsBarcodesDetail() == null && detailDTO.getItemsBarcodesDetailTrans() != null) {
                 detailDTO.setItemsBarcodesDetail(detailDTO.getItemsBarcodesDetailTrans());
             }
 
@@ -1881,8 +1883,10 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
         } else if (getUri().contains("invopeningbalanceitem")) {
             getInvInvoiceDTO().setScreenName(ScreenNameClassEnum.INVOPENINGBALANCEITEMFORM);
+        } else if (getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVOPENINGBALANCEITEMFORM)) {
+            getInvInvoiceDTO().setInvInventoryId(getInvInventoryDTOList().get(0));
         }
-        
+
     }
 
     public void fillInvInvoiceDTO() {
@@ -1925,6 +1929,15 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         } else if (getUri().contains("invtransfer")) {
             getInvInvoiceDTO().setId((Integer) getContext().getSessionMap().get("invTransferSelected"));
             setInvInvoiceDTO(invTransferService.findInvTransferById(getInvInvoiceDTO()));
+        } else if (getUri().contains("invstrip")) {
+            getInvInvoiceDTO().setId((Integer) getContext().getSessionMap().get("invStripSelected"));
+//            setInvInvoiceDTO(invStripService.findInvStripById(getInvInvoiceDTO()));
+        } else if (getUri().contains("invupdate")) {
+            getInvInvoiceDTO().setId((Integer) getContext().getSessionMap().get("invUpdateSelected"));
+//            setInvInvoiceDTO(invUpdateService.findInvUpdateById(getInvInvoiceDTO()));
+        } else if (getUri().contains("invopeningbalanceitem")) {
+            getInvInvoiceDTO().setId((Integer) getContext().getSessionMap().get("invOpenningBalanceItemSelected"));
+            setInvInvoiceDTO(invOpeningBalanceItemService.findOpeningBalanceById(getInvInvoiceDTO()));
         }
     }
 

@@ -68,19 +68,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "InvPurchaseInvoice.findByRecieveDate", query = "SELECT i FROM InvPurchaseInvoice i WHERE i.recievedate = :recievedate")})
 public class InvPurchaseInvoice extends BaseEntity {
 
-    /**
-     * @return the paymentType
-     */
-    public Integer getPaymentType() {
-        return paymentType;
-    }
-
-    /**
-     * @param paymentType the paymentType to set
-     */
-    public void setPaymentType(Integer paymentType) {
-        this.paymentType = paymentType;
-    }
 
     @Basic(optional = false)
     @NotNull
@@ -235,6 +222,8 @@ public class InvPurchaseInvoice extends BaseEntity {
     private String raghiCode;
     @Column(name = "invoice_type")
     private Integer invoiceType;
+    @Column(name = "send_cloth")
+    private Integer sendCloth;
 
     public InvPurchaseInvoice() {
     }
@@ -888,4 +877,35 @@ public class InvPurchaseInvoice extends BaseEntity {
         this.invoiceType = invoiceType;
     }
 
+    
+    /**
+     * @return the paymentType
+     */
+    public Integer getPaymentType() {
+        return paymentType;
+    }
+
+    /**
+     * @param paymentType the paymentType to set
+     */
+    public void setPaymentType(Integer paymentType) {
+        this.paymentType = paymentType;
+    }
+
+    /**
+     * @return the sendCloth
+     */
+    public Integer getSendCloth() {
+        if(sendCloth == null){
+            sendCloth = 0 ;
+        }
+        return sendCloth;
+    }
+
+    /**
+     * @param sendCloth the sendCloth to set
+     */
+    public void setSendCloth(Integer sendCloth) {
+        this.sendCloth = sendCloth;
+    }
 }

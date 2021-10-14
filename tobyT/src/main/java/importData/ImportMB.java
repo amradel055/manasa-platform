@@ -555,6 +555,8 @@ public class ImportMB extends Basic implements Serializable {
             item.setCreatedBy(getUserData().getUser());
             item.setCreationDate(new Date());
             item.setCompanyId(getUserData().getCompany());
+            item.setItemBarcode(itemList.get(0).getCode());
+            item.setUnitId(itemList.get(0).getUnitId());
         }
     }
 

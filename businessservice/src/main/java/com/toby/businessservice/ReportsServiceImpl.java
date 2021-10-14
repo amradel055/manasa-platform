@@ -142,7 +142,7 @@ public class ReportsServiceImpl implements ReportsService {
                 + "        LEFT JOIN `inv_inventory` `inv` ON `inv`.`id` = `ip`.`galary_Id`\n"
                 + "        LEFT JOIN `inv_organization_site` `ios` ON `ios`.`id` = `ip`.`organization_site_id`\n"
                 + " ");
-        sql.append(" where ip.branch_id = ").append(branchId);
+        sql.append(" where ip.type = 4 AND  ip.branch_id = ").append(branchId);
         appendGallery1(salesReportByValueAdedDetails, sql);
         appendDate1(salesReportByValueAdedDetails, sql);
         sql.append(" GROUP BY `ip`.`id`");

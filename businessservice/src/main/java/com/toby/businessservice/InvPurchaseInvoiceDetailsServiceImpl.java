@@ -543,7 +543,7 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
                         BigDecimal quantityItemsStoreByDate = findQuantityItemByDate(invInvoiceDTO, detailDTO);
                         detail.setCostAvarage(updateCostAvarage(detailDTO, quantityItemsStoreByDate));
                     }
-                } else if (ScreenNameClassEnum.INVSALESINVOICEFORM.equals(invInvoiceDTO.getScreenName())) {
+                } else if (ScreenNameClassEnum.PROWORKORDER.equals(invInvoiceDTO.getScreenName())) {
                     detail.setCostAvarage(findCostAvarageForItemByDate(invInvoiceDTO.getInvInventoryId().getId(), invInvoiceDTO.getBranchId(), detail.getItemId().getId(), invInvoiceDTO.getDate()));
                 }
 

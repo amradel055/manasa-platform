@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -72,6 +73,9 @@ public class GlBankTransactionDetail extends BaseEntity {
     private BigDecimal rateBankFrom;
     @Column(name = "rate_bank_to")
     private BigDecimal rateBankTo;
+    
+    @Transient
+    private BigDecimal bankCommition;
     
     
     @JoinColumn(name = "symbol_id", referencedColumnName = "id")
@@ -251,6 +255,20 @@ public class GlBankTransactionDetail extends BaseEntity {
      */
     public void setInvoiceId(InvPurchaseInvoice invoiceId) {
         this.invoiceId = invoiceId;
+    }
+
+    /**
+     * @return the bankCommition
+     */
+    public BigDecimal getBankCommition() {
+        return bankCommition;
+    }
+
+    /**
+     * @param bankCommition the bankCommition to set
+     */
+    public void setBankCommition(BigDecimal bankCommition) {
+        this.bankCommition = bankCommition;
     }
     
 }

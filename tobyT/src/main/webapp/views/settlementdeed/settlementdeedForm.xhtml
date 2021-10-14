@@ -130,6 +130,18 @@
                             <p:outputLabel style="width:85px" value="#{userData.userDDs['HANDLING']}"/>
                         </div>
                     </div>
+                    
+                    <div class="ui-g-12 ui-xl-12">
+
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:inputText style="width: 38%!important" id="notes2"
+                                         value="#{SettlementDeedFormMB.glBankTransactionEntity.bankCommition}">
+                            </p:inputText>
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel style="width:85px" value="عمولة البنك"/>
+                        </div>
+                    </div>
                 </div>
                 <div class="ui-g-6 ui-xl-6">
                     <div class="ui-g-12 ui-xl-12">
@@ -157,20 +169,7 @@
                             </p:fieldset>
                         </h:panelGroup>
                     </div>
-                    <!--                    <div class="ui-g-12 ui-xl-12">
-                    
-                                            <div class="ui-g-6 ui-xl-6">
-                                                <p:inputNumber style="width: 55%" 
-                                                               id="value"
-                                                               value="#/{SettlementDeedFormMB.glBankTransactionEntity.value}">
-                    
-                                                    <p:ajax event="blur" listener="#/{SettlementDeedFormMB.updateTransactionRate()}" />
-                                                </p:inputNumber>
-                                            </div>
-                                            <div class="ui-g-6 ui-xl-6">
-                                                <p:outputLabel style="width: 64px;margin-right: 6%;" value="#/{userData.userDDs['AMOUNT']}"/>
-                                            </div>
-                                        </div>-->
+                  
                     <div class="ui-g-12 ui-xl-12">
                         <div class="ui-g-6 ui-xl-6">
                             <p:inputText style="width: 38%!important" id="notes"

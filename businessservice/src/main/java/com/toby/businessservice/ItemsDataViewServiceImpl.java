@@ -631,7 +631,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
                 + " IDV.itemCode,"
                 + " IDV.itemUnitName, "
                 + " IDV.itemBarcode, "
-                + " IDV.weight, "
+                + " null, "
                 + " IDV.sellPrice, "
                 + " IDV.groupId, "
                 + " IDV.groupName, "
