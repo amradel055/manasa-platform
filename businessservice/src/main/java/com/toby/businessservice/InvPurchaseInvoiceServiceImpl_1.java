@@ -2337,32 +2337,40 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                         (dto.getOrganizationSiteId() == null || dto.getOrganizationSiteId().getAccountId() == null || dto.getOrganizationSiteId().getAccountId().getId() == null) ? null : dto.getOrganizationSiteId().getAccountId().getId(),
                         (dto.getGallaryId() == null || dto.getGallaryId().getCostCenterId() == null || dto.getGallaryId().getCostCenterId().getId() == null) ? null : dto.getGallaryId().getCostCenterId().getId(),
                         dto.getRemarks(), tobyUser);
-                generaljournalDetailsService.addGenDetalil(false, dto.getTotalNetAfterDiscount(), journal.getId(), salesTaxAccount,
+//  حساب المبيعات
+                Integer salesAccountNumber = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"SALES_ACCOUNT_NUMBER\" AND a.accountId IS NOT NULL", params);
+                generaljournalDetailsService.addGenDetalil(false, dto.getTotalNetAfterDiscount(), journal.getId(),salesAccountNumber,
                         (dto.getGallaryId() == null || dto.getGallaryId().getCostCenterId() == null || dto.getGallaryId().getCostCenterId().getId() == null) ? null : dto.getGallaryId().getCostCenterId().getId(),
                         dto.getRemarks(), tobyUser);
-                generaljournalDetailsService.addGenDetalil(false, dto.getTaxValue(), journal.getId(),
-                        (dto.getGlBankId() == null || dto.getGlBankId().getAccountId() == null || dto.getGlBankId().getAccountId() == null) ? null : dto.getGlBankId().getAccountId(),
+                generaljournalDetailsService.addGenDetalil(false, dto.getTaxvalue(), journal.getId(), salesTaxAccount,
                         (dto.getGallaryId() == null || dto.getGallaryId().getCostCenterId() == null || dto.getGallaryId().getCostCenterId().getId() == null) ? null : dto.getGallaryId().getCostCenterId().getId(),
                         dto.getRemarks(), tobyUser);
+
+                Map<String, Object> params2 = new HashMap();
+                params2.put("invPurchaseInvoiceId", dto.getId());
+                StringBuilder sql = new StringBuilder();
+                sql.append("SELECT sum(ipid.costAvarage) FROM InvPurchaseInvoiceDetail ipid  WHERE ipid.invPurchaseInvoiceId.id = :invPurchaseInvoiceId ");
+
+                List<BigDecimal> itemsStores = dao.findListByQuery(sql.toString(), params2);
 
                 // الشيئ الثالث هو انشاء مراكز التكاليف واستدعا مركز تكلفة الإدارة
                 Integer managerCostAccount = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"MANAGER_CURRENT_ACCOUNT\" AND a.accountId IS NOT NULL", params);
                 Integer costOfSoldGoods = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"COST_OF_GOODS_SOLD_ACCOUNT_NUMBER\" AND a.accountId IS NOT NULL", params);
                 Integer storeAccountNumber = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"STORE_ACCOUNT_NUMBER\" AND a.accountId IS NOT NULL", params);
 
-                generaljournalDetailsService.addGenDetalil(true, dto.getFinalNet(), journal.getId(),
+                generaljournalDetailsService.addGenDetalil(true, itemsStores.get(0), journal.getId(),
                         (dto.getGallaryId() == null || dto.getGallaryId().getRunningAccount() == null || dto.getGallaryId().getRunningAccount().getId() == null) ? null : dto.getGallaryId().getRunningAccount().getId(),
-                        99, dto.getRemarks(), tobyUser);
+                        835, dto.getRemarks(), tobyUser);
 
-                generaljournalDetailsService.addGenDetalil(true, dto.getFinalNet(), journal.getId(),
+                generaljournalDetailsService.addGenDetalil(false, itemsStores.get(0), journal.getId(),
                         storeAccountNumber,
-                        99, dto.getRemarks(), tobyUser);
+                        835, dto.getRemarks(), tobyUser);
 
-                generaljournalDetailsService.addGenDetalil(true, dto.getFinalNet(), journal.getId(),
+                generaljournalDetailsService.addGenDetalil(true, itemsStores.get(0), journal.getId(),
                         costOfSoldGoods,
                         (dto.getGallaryId() == null || dto.getGallaryId().getCostCenterId() == null || dto.getGallaryId().getCostCenterId().getId() == null) ? null : dto.getGallaryId().getCostCenterId().getId(),
                         dto.getRemarks(), tobyUser);
-                generaljournalDetailsService.addGenDetalil(true, dto.getFinalNet(), journal.getId(),
+                generaljournalDetailsService.addGenDetalil(false, itemsStores.get(0), journal.getId(),
                         managerCostAccount,
                         (dto.getGallaryId() == null || dto.getGallaryId().getCostCenterId() == null || dto.getGallaryId().getCostCenterId().getId() == null) ? null : dto.getGallaryId().getCostCenterId().getId(),
                         dto.getRemarks(), tobyUser);
@@ -2382,7 +2390,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                     (dto.getOrganizationSiteId() == null || dto.getOrganizationSiteId().getAccountId() == null || dto.getOrganizationSiteId().getAccountId().getId() == null) ? null : dto.getOrganizationSiteId().getAccountId().getId(),
                     (dto.getGallaryId() == null || dto.getGallaryId().getCostCenterId() == null || dto.getGallaryId().getCostCenterId().getId() == null) ? null : dto.getGallaryId().getCostCenterId().getId(),
                     dto.getRemarks(), tobyUser);
-            generaljournalDetailsService.addGenDetalil(false, dto.getTotalNetAfterDiscount(), journal.getId(), purchseTaxAccount,
+            generaljournalDetailsService.addGenDetalil(false, dto.getTaxvalue(), journal.getId(), purchseTaxAccount,
                     (dto.getGallaryId() == null || dto.getGallaryId().getCostCenterId() == null || dto.getGallaryId().getCostCenterId().getId() == null) ? null : dto.getGallaryId().getCostCenterId().getId(),
                     dto.getRemarks(), tobyUser);
 

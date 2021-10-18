@@ -57,6 +57,7 @@ public class GeneraljournalServiceImpl implements GeneraljournalService {
         generalJournal.setGeneralStatement(remark);
         generalJournal.setGeneralData(date);
         generalJournal.setGeneralDecument(serial);
+        generalJournal.setPost_flag(true);
         Symbol symbol = symbolService.getSpecialDocumentsTypes(specialDocumentsTypes);
         generalJournal.setGlYear(yearSelection);
         generalJournal.setGeneralType(symbol != null ? symbol : null);

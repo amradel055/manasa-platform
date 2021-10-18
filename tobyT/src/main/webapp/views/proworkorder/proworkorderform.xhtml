@@ -227,6 +227,15 @@
                     <div class="ui-g-12 ui-xl-12" style="margin-top: -2%;" >
 
                         <div style="text-align: center">
+                            <p:commandButton     class="saveButton" id="test22"  
+                                                 title="العرض"
+                                                 value="عرض القطعة والتانية خصم 50%" 
+                                                 rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 0}"
+                                                 icon="fa fa-fw fa-save" 
+                                                 action="#{invPurchaseInvoiceFormDTOMB.onePieceAndDiscount50()}"
+                                                 update="@form"
+                                                 >
+                            </p:commandButton>
                             <p:commandButton     class="saveButton"  
                                                  title="العرض"
                                                  value="عرض القطعتين و الثالثة هدية" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 1 }"
@@ -254,7 +263,7 @@
                                <p:commandButton  class="saveButton"  
                                                  title="العرض"
                                                  value="عرض الخصم 991" 
-                                                 icon="fa fa-fw fa-save"  rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 0  }"
+                                                 icon="fa fa-fw fa-save"  rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 0  and false }"
                                                  action="#{invPurchaseInvoiceFormDTOMB.offer991()}"
                                                  update="@form"
                                                  >

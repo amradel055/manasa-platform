@@ -536,8 +536,8 @@ public class ImportMB extends Basic implements Serializable {
 
     public void initInvOpenningBalanceData(Sheet sheet, int i, InvOpenningBalanceItemDetail item, InvOpenningBalanceItem invOpeningBalanceItem) throws NumberFormatException, ParseException {
         InvItem itemId;
-        Cell itemCode = sheet.getCell(1, i);
         Cell qty = sheet.getCell(0, i);
+        Cell itemCode = sheet.getCell(1, i);
         Cell price = sheet.getCell(2, i);
         List<InvItem> itemList = invItemService.findItemByCode(itemCode.getContents(), getUserData().getUserBranch().getId());
         if (itemList != null && !itemList.isEmpty()
