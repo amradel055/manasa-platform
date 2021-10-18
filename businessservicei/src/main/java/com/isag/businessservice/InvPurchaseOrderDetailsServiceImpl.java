@@ -146,7 +146,7 @@ public class InvPurchaseOrderDetailsServiceImpl implements InvPurchaseOrderDetai
                     entity.getItemBarcode(), entity.getScrewing(), entity.getItemId().getId(), entity.getWeight(),
                     entity.getUnitId().getId(), entity.getUnitId().getSerial(), entity.getUnitId().getName(), 
                     entity.getItemId().getIsInventoryItem(),BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,
-                    BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO, BigDecimal.ZERO);
+                    BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
             dTO = invGlobalService.calculateDetailTotalsRow(dTO, invInvoiceDTO, true);
             dTO.setRealQuantity(dTO.getQuantity().multiply(dTO.getScrewing()));
         } else if (Entity.getClass().equals(TempInvPurchaseOrderNotLoadedYet.class)) {
@@ -157,7 +157,7 @@ public class InvPurchaseOrderDetailsServiceImpl implements InvPurchaseOrderDetai
                     BigDecimal.ZERO, BigDecimal.ZERO, entity.getItemId(), null, null,
                     entity.getItemBarcode(), entity.getScrewing(), entity.getItemId(), entity.getWeight(),
                     entity.getUnitId(), entity.getUnitSerial(), entity.getUnitName(), 1,BigDecimal.ZERO,BigDecimal.ZERO
-                    ,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO, BigDecimal.ZERO);
+                    ,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
             dTO = invGlobalService.calculateDetailTotalsRow(dTO, invInvoiceDTO, true);
             dTO.setRealQuantity(dTO.getQuantity().multiply(dTO.getScrewing()));
         }

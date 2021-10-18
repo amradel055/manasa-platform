@@ -16,6 +16,7 @@ public class InvUpdateEntity extends BaseEntity {
     private Integer postFlag;
     private Branch branchId;
     private InvInventory invInventory;
+    private Integer typeActivity;
     private List<InvUpdateDetail> invUpdateDetailEntityList = new ArrayList<>();
 
     public InvUpdateEntity() {
@@ -120,6 +121,20 @@ public class InvUpdateEntity extends BaseEntity {
      */
     public void setInvUpdateDetailEntityList(List<InvUpdateDetail> invUpdateDetailEntityList) {
         this.invUpdateDetailEntityList = invUpdateDetailEntityList;
+    }
+
+    /**
+     * @return the typeActivity
+     */
+    public Integer getTypeActivity() {
+        return typeActivity;
+    }
+
+    /**
+     * @param typeActivity the typeActivity to set
+     */
+    public void setTypeActivity(Integer typeActivity) {
+        this.typeActivity = typeActivity;
     }
 
   

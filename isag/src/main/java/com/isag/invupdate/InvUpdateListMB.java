@@ -1,6 +1,5 @@
 package com.isag.invupdate;
 
-import com.isag.invupdate.*;
 import com.isag.businessservice.InvUpdateService;
 import com.isag.entity.InvUpdate;
 import com.isag.entiy.InvUpdateEntity;
@@ -28,7 +27,7 @@ public class InvUpdateListMB extends BaseListBean {
     private UserData userData;
     private List<InvUpdate> invUpdateList = new ArrayList<>();
     private InvUpdate invUpdate;
-    private Integer invUpdateSelected;
+    private InvUpdateEntity invUpdateSelected;
     private InvUpdateEntity invUpdateEntity;
     private List<InvUpdateEntity> invUpdateEntityList = new ArrayList<>();
 
@@ -54,9 +53,9 @@ public class InvUpdateListMB extends BaseListBean {
         try {
 
             Map<String, String> userDDs = userData.getUserDDs();
-            if (invUpdateSelected != null) {
-                Integer invUpdateIdToPass = invUpdateSelected;
-                invUpdate.setId(invUpdateSelected);
+            if (getInvUpdateSelected() != null) {
+                Integer invUpdateIdToPass = getInvUpdateSelected().getId();
+                invUpdate.setId(getInvUpdateSelected().getId());
                 try {
                     invUpdateService.deleteInvUpdate(invUpdate, invUpdateIdToPass);
                     getInvUpdateEntityList().remove(invUpdateEntity);
@@ -99,13 +98,18 @@ public class InvUpdateListMB extends BaseListBean {
         }
     }
     
-    public String goToEditCeramic() {
+    @Override
+    public String goToEdit() {
         try {
-            if (invUpdateSelected != null && invUpdateSelected > 0) {
+            if (getInvUpdateSelected() != null && getInvUpdateSelected().getId() != null) {
                 ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-                context.getSessionMap().put("invUpdateSelected", invUpdateSelected);
+                context.getSessionMap().put("invUpdateSelected", getInvUpdateSelected().getId());
                 context.getSessionMap().put("ScreenMode", "EditInvUpdate");
-                exit("../invupdate/invUpdateFormCeramic.xhtml");
+                if (getInvUpdateSelected().getTypeActivity() != null && getInvUpdateSelected().getTypeActivity() == 1) {
+                     exit("../invupdate/invUpdateFormCeramic.xhtml");
+                } else {
+                    exit("../invupdate/invUpdateForm.xhtml");
+                }               
                 return "";
             } else {
                 return "";
@@ -116,23 +120,6 @@ public class InvUpdateListMB extends BaseListBean {
         }
     }
 
-    @Override
-    public String goToEdit() {
-        try {
-            if (invUpdateSelected != null && invUpdateSelected > 0) {
-                ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-                context.getSessionMap().put("invUpdateSelected", invUpdateSelected);
-                context.getSessionMap().put("ScreenMode", "EditInvUpdate");
-                exit("../invupdate/invUpdateForm.xhtml");
-                return "";
-            } else {
-                return "";
-            }
-        } catch (Exception e) {
-            saveError(e, "InvUpdateListMB", "goToEdit()");
-            return "";
-        }
-    }
 
     @Override
     public void load() {
@@ -150,6 +137,7 @@ public class InvUpdateListMB extends BaseListBean {
                 invUpdateEntity.setUpdateDocument(updateMapper.getDocument());
                 invUpdateEntity.setCreatedBy(updateMapper.getCreatedBy());
                 invUpdateEntity.setCreationDate(updateMapper.getCreationDate());
+                invUpdateEntity.setTypeActivity(updateMapper.getTypeActivity());
 
                 invUpdateEntityList.add(invUpdateEntity);
             }
@@ -187,14 +175,6 @@ public class InvUpdateListMB extends BaseListBean {
         this.invUpdate = invUpdate;
     }
 
-    public Integer getInvUpdateSelected() {
-        return invUpdateSelected;
-    }
-
-    public void setInvUpdateSelected(Integer invUpdateSelected) {
-        this.invUpdateSelected = invUpdateSelected;
-    }
-
     public InvUpdateEntity getInvUpdateEntity() {
         return invUpdateEntity;
     }
@@ -209,5 +189,19 @@ public class InvUpdateListMB extends BaseListBean {
 
     public void setInvUpdateEntityList(List<InvUpdateEntity> invUpdateEntityList) {
         this.invUpdateEntityList = invUpdateEntityList;
+    }
+
+    /**
+     * @return the invUpdateSelected
+     */
+    public InvUpdateEntity getInvUpdateSelected() {
+        return invUpdateSelected;
+    }
+
+    /**
+     * @param invUpdateSelected the invUpdateSelected to set
+     */
+    public void setInvUpdateSelected(InvUpdateEntity invUpdateSelected) {
+        this.invUpdateSelected = invUpdateSelected;
     }
 }

@@ -84,7 +84,9 @@ public class InvInventoryServiceImpl implements InvInventoryService {
             InvInventory inventory = new InvInventory();
             inventory.setId(invInventory.getId());
             inventory.setName(invInventory.getName());
-            inventory.setCode(invInventory.getCode());            
+            inventory.setCode(invInventory.getCode());  
+            inventory.setSegilValue(invInventory.getSegilValue());
+            inventory.setDaribaValue(invInventory.getDaribaValue());
             list.add(inventory);
         }
         return list;

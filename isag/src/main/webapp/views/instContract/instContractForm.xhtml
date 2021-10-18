@@ -8,7 +8,6 @@
                 xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <ui:define name="content">
-        <f:event listener="#{userData.authorize}" type="preRenderView" />
         <h:form class='formmargin' id="form" dir="#{userData.dir}">
             <div style=" position: absolute;left: 20px"> 
 
@@ -49,7 +48,7 @@
                                 </h:panelGroup> 
                             </h:panelGroup>
                         </div>
-                        
+
                         <div class="ui-g-12 ui-md-6">
                             <h:panelGroup>
 
@@ -68,7 +67,7 @@
 
                             </h:panelGroup>      
                         </div>
-                        
+
 
 
                         <div class="ui-g-12 ui-md-6">
@@ -112,7 +111,7 @@
 
                         </div>
 
-                        
+
                         <div class="ui-g-12 ui-md-6">
                             <h:panelGroup>
 
@@ -124,6 +123,8 @@
                                     <p:calendar  style="width:50%!important" required="true" requiredMessage="يجب ادخال تاريخ" id="endDate" 
                                                  value="#{instContractFormMB.instContractEntity.endDate}"
                                                  pattern="dd/MM/yyyy" >
+                                        <p:ajax event="dateSelect" update="@form" listener="#{instContractFormMB.findInstProjectGuideDTOList()}" />
+
                                     </p:calendar>
                                 </h:panelGroup>
 
@@ -256,8 +257,8 @@
 
                             </h:panelGroup> 
                         </div>
-                    
-                    
+
+
                     </div>
                 </div>
 

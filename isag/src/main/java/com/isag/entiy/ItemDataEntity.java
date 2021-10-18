@@ -5,6 +5,7 @@
  */
 package com.isag.entiy;
 
+import com.isag.dto.InvInventoryDTO;
 import com.isag.entity.Branch;
 import com.isag.entity.InvGroup;
 import com.isag.entity.InvOrganizationSite;
@@ -91,6 +92,7 @@ public class ItemDataEntity implements Serializable {
     
     private BigDecimal storeQuantity;
     private Integer printShow;
+    private InvInventoryDTO invInventoryId;
 
     public Integer getId() {
         return id;
@@ -681,5 +683,19 @@ public class ItemDataEntity implements Serializable {
      */
     public void setPrintShow(Integer printShow) {
         this.printShow = printShow;
+    }
+
+    /**
+     * @return the invInventoryId
+     */
+    public InvInventoryDTO getInvInventoryId() {
+        return invInventoryId;
+    }
+
+    /**
+     * @param invInventoryId the invInventoryId to set
+     */
+    public void setInvInventoryId(InvInventoryDTO invInventoryId) {
+        this.invInventoryId = invInventoryId;
     }
 }

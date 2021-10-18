@@ -191,7 +191,7 @@
                                headerText="الفعلى">
                         <p:inputText id="actualValue"
                                      value="#{invPurchaseInvoiceDetailsTable.actualQuantity}" style="width: 95%" >
-                            <p:ajax listener="#{invUpdateFormMB.validateActulQuantityColum(invPurchaseInvoiceDetailsTable)}" update="differanceQuantity" />
+                            <p:ajax listener="#{invUpdateFormMB.validateActulQuantityColum(invPurchaseInvoiceDetailsTable)}" update="differanceQuantity differanceQuantityValue" />
 
                         </p:inputText>
 

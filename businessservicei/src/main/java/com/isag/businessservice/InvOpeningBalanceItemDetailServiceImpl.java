@@ -116,7 +116,7 @@ public class InvOpeningBalanceItemDetailServiceImpl implements InvOpeningBalance
                     entity.getItemBarcode(), entity.getScrewing(), entity.getItemId().getId(), BigDecimal.ZERO, 
                     (entity.getUnitId() != null ? entity.getUnitId().getId() : null ), (entity.getUnitId() != null ? entity.getUnitId().getSerial() : null),(entity.getUnitId() != null ? entity.getUnitId().getName() : null),
                     (entity.getItemId() != null ? entity.getItemId().getIsInventoryItem() : null ),BigDecimal.ZERO,BigDecimal.ZERO
-                    ,entity.getAdd1(),entity.getAdd2(),entity.getAdd3(),entity.getDisc1(),entity.getDisc2(),entity.getDisc3(),BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,entity.getCartonsNumber(),entity.getCartonsCapacity(), BigDecimal.ZERO);
+                    ,entity.getAdd1(),entity.getAdd2(),entity.getAdd3(),entity.getDisc1(),entity.getDisc2(),entity.getDisc3(),BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,entity.getCartonsNumber(),entity.getCartonsCapacity(), BigDecimal.ZERO, BigDecimal.ZERO);
         dTO = invGlobalService.calculateDetailTotalsRow(dTO, invInvoiceDTO,true);        
         dTO.setRealQuantity(dTO.getQuantity().multiply(dTO.getScrewing()));
         return dTO;

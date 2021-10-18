@@ -9,7 +9,6 @@ import com.isag.businessservice.CostCenterService;
 import com.isag.businessservice.GlAccountService;
 import com.isag.businessservice.GlAdminUnitService;
 import com.isag.businessservice.InvInventoryService;
-import com.isag.bussinessservice.global.InvPurchaseReturnSave;
 import com.isag.converter.CostCenterConverter;
 import com.isag.converter.GlAdminUnitConverter;
 import com.isag.converter.GlaccountConverter;
@@ -300,7 +299,9 @@ public class setupNewInventoryFormMB extends BaseFormBean implements Serializabl
             invInventory.setName(invInventoryEntity.getName());
             invInventory.setTypeItem(invInventoryEntity.getType());
             invInventory.setBranchId(getUserData().getUserBranch());
-            invInventory.setSellPriceType(invInventoryEntity.getSellPriceType());
+            invInventory.setSellPriceType(invInventoryEntity.getSellPriceType());            
+            invInventory.setSegilValue(invInventoryEntity.getSegilValue());
+            invInventory.setDaribaValue(invInventoryEntity.getDaribaValue());
             invInventory = inventoryService.updateNewInventory(invInventory, getUserData().getUser(),
                     getUserData().getCompany(), getUserData().getUserBranch());
             if (invInventory != null && invInventory.getId() != null) {
@@ -352,6 +353,8 @@ public class setupNewInventoryFormMB extends BaseFormBean implements Serializabl
             invInventoryEntity.setName(invInventory.getName());
             invInventoryEntity.setType(invInventory.getTypeItem());
             invInventoryEntity.setSellPriceType(invInventory.getSellPriceType());
+            invInventoryEntity.setSegilValue(invInventory.getSegilValue());
+            invInventoryEntity.setDaribaValue(invInventory.getDaribaValue());
         } catch (Exception e) {
             saveError(e, "setupNewInventoryFormMB", "validateInputsForEdit");
         }

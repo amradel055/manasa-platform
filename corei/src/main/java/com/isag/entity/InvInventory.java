@@ -59,6 +59,10 @@ public class InvInventory extends BaseEntity {
     @JoinColumn(name = "admin_unit_id", referencedColumnName = "id")
     @ManyToOne
     private GlAdminUnit adminUnitId;
+    @Column(name = "daribaValue")
+    private String daribaValue;
+    @Column(name = "segilValue")
+    private String segilValue;
     
 
     public InvInventory() {
@@ -160,5 +164,33 @@ public class InvInventory extends BaseEntity {
     @Override
     public String toString() {
         return name + " " + code;
+    }
+
+    /**
+     * @return the daribaValue
+     */
+    public String getDaribaValue() {
+        return daribaValue;
+    }
+
+    /**
+     * @param daribaValue the daribaValue to set
+     */
+    public void setDaribaValue(String daribaValue) {
+        this.daribaValue = daribaValue;
+    }
+
+    /**
+     * @return the segilValue
+     */
+    public String getSegilValue() {
+        return segilValue;
+    }
+
+    /**
+     * @param segilValue the segilValue to set
+     */
+    public void setSegilValue(String segilValue) {
+        this.segilValue = segilValue;
     }
 }

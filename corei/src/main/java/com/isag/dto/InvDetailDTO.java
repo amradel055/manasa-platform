@@ -641,6 +641,9 @@ public class InvDetailDTO extends BaseEntityDTO {
      * @return the valueRowDiscount
      */
     public BigDecimal getValueRowDiscount() {
+        if(valueRowDiscount == null){
+            valueRowDiscount = BigDecimal.ZERO;
+        }
         return valueRowDiscount;
     }
 

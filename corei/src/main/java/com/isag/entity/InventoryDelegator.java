@@ -28,18 +28,18 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 public class InventoryDelegator extends BaseEntity {
 
-    @Size(max = 450)
+    @Size(max = 100)
     @Column(name = "code")
     private String code;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 45)
+    @Size(min = 1, max = 100)
     @Column(name = "name")
     private String name;
     @Size(max = 45)
     @Column(name = "mobile")
     private String mobile;
-    @Size(max = 45)
+    @Size(max = 100)
     @Column(name = "img")
     private String img;
     @Column(name = "type")

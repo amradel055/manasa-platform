@@ -134,7 +134,7 @@ public class InvAddingOrderDetailsServiceImpl implements InvAddingOrderDetailsSe
                     entity.getItemBarcode(), entity.getScrewing(), entity.getItemId().getId(), entity.getWeight(), 
                     entity.getUnitId().getId(), entity.getUnitId().getSerial(), 
                     entity.getUnitId().getName(),entity.getItemId().getIsInventoryItem(),BigDecimal.ZERO,BigDecimal.ZERO
-                    ,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO, BigDecimal.ZERO);
+                    ,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
 
         if(invInvoiceDTO.getLoadedSerial() != null){
             dTO.setIsEdit(Boolean.TRUE);

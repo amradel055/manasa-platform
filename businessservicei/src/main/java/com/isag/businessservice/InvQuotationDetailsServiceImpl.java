@@ -142,7 +142,7 @@ public class InvQuotationDetailsServiceImpl implements InvQuotationDetailsServic
                     entity.getItemBarcode(), entity.getScrewing(), entity.getItemId().getId(), entity.getWeight(), 
                     entity.getUnitId().getId(), entity.getUnitId().getSerial(), entity.getUnitId().getName(),
                     entity.getItemId().getIsInventoryItem(),BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,
-                    BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO, BigDecimal.ZERO);
+                    BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
             dTO = invGlobalService.calculateDetailTotalsRow(dTO, invInvoiceDTO, true);
             dTO.setRealQuantity(dTO.getQuantity().multiply(dTO.getScrewing()));
         } else if (Entity.getClass().equals(TempInvQotationNotLoadedYet.class)) {
@@ -154,7 +154,7 @@ public class InvQuotationDetailsServiceImpl implements InvQuotationDetailsServic
                     entity.getExtraCost(), entity.getNet(), entity.getItemId(), null, null,
                     entity.getItemBarcode(), entity.getScrewing(), entity.getItemId(), entity.getWeight(), 
                     entity.getUnitId(), entity.getUnitSerial(), entity.getUnitName(),1,BigDecimal.ZERO,BigDecimal.ZERO
-                    ,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO, BigDecimal.ZERO);
+                    ,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
              
             dTO = invGlobalService.calculateDetailTotalsRow(dTO, invInvoiceDTO, true);
             dTO.setRealQuantity(dTO.getQuantity().multiply(dTO.getScrewing()));

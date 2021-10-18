@@ -22,8 +22,10 @@ import com.isag.businessservice.SymbolService;
 import com.isag.converter.InvGroupConverter;
 import com.isag.converter.InvOrganizationSiteConverter;
 import com.isag.converter.SymbolConverter;
+import com.isag.dto.InvInventoryDTO;
 import com.isag.entity.InvBarcode;
 import com.isag.entity.InvGroup;
+import com.isag.entity.InvInventory;
 import com.isag.entity.InvItem;
 import com.isag.entity.InvOrganizationSite;
 import com.isag.entity.InventorySetup;
@@ -332,6 +334,15 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
                 itemDataEntitySelected.setDisc3(invItem.getDisc3());
                 itemDataEntitySelected.setPrintShow(invItem.getPrintShow());
 
+                if (invItem.getInvInventoryId() != null) {
+                    InvInventoryDTO invInventoryDTO = new InvInventoryDTO();
+                    invInventoryDTO.setId(invItem.getInvInventoryId().getId());
+                    invInventoryDTO.setName(invItem.getInvInventoryId().getName());
+                    invInventoryDTO.setCode(invItem.getInvInventoryId().getCode());
+                    itemDataEntitySelected.setInvInventoryId(invInventoryDTO);
+
+                }
+
                 // prepare to set barckodList in itemData object
                 for (InvBarcode invBarcode : invBarcodesList) {
                     invBarcodeEntitySelection = new InvBarcodeEntity();
@@ -529,6 +540,14 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
                     invItem.setDisc1(itemDataEntity.getDisc1());
                     invItem.setDisc2(itemDataEntity.getDisc2());
                     invItem.setDisc3(itemDataEntity.getDisc3());
+
+                    if (itemDataEntity.getInvInventoryId() != null) {
+                        InvInventory invInventory = new InvInventory();
+                        invInventory.setId(invItem.getInvInventoryId().getId());
+                        invInventory.setName(invItem.getInvInventoryId().getName());
+                        invInventory.setCode(invItem.getInvInventoryId().getCode());
+                        invItem.setInvInventoryId(invInventory);
+                    }
 
                     InvBarcode barcode, ib;
                     for (InvBarcodeEntity entity : itemDataEntity.getInvBarcodeEntity()) {

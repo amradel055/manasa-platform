@@ -23,6 +23,9 @@ public class InvInventoryEntity {
     private CostCenter costCenterId;
     private GlAdminUnit adminUnitId;
     private GlAccount accountId;
+    
+    private String daribaValue;
+    private String segilValue;
 
     public String getCode() {
         return code;
@@ -78,5 +81,33 @@ public class InvInventoryEntity {
 
     public void setAccountId(GlAccount accountId) {
         this.accountId = accountId;
+    }
+
+    /**
+     * @return the daribaValue
+     */
+    public String getDaribaValue() {
+        return daribaValue;
+    }
+
+    /**
+     * @param daribaValue the daribaValue to set
+     */
+    public void setDaribaValue(String daribaValue) {
+        this.daribaValue = daribaValue;
+    }
+
+    /**
+     * @return the segilValue
+     */
+    public String getSegilValue() {
+        return segilValue;
+    }
+
+    /**
+     * @param segilValue the segilValue to set
+     */
+    public void setSegilValue(String segilValue) {
+        this.segilValue = segilValue;
     }
 }

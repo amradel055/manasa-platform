@@ -97,7 +97,7 @@ public class InvStripDetailServiceImp implements InvStripDetailService{
                     BigDecimal.ZERO, BigDecimal.ZERO, entity.getId(), entity.getCreationDate(), entity.getCreatedBy().getId(),
                     entity.getItemBarcode(), BigDecimal.ZERO, entity.getInvItemId().getId(), BigDecimal.ZERO, 
                     null, null, null,entity.getInvItemId().getIsInventoryItem(),entity.getActualAmount(),BigDecimal.ZERO
-                    ,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO, BigDecimal.ZERO);
+                    ,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
         dTO = invGlobalService.calculateDetailTotalsRow(dTO, invInvoiceDTO,true);        
         dTO.setRealQuantity(dTO.getQuantity().multiply(dTO.getScrewing()));
         dTO.setCostAvarage(entity.getInvItemId().getCostAverage());

@@ -8,8 +8,6 @@ package com.isag.dto;
 import com.isag.entity.Branch;
 import com.isag.entity.InvGroup;
 import com.isag.entity.InvOrganizationSite;
-import com.isag.entity.IsagCompany;
-import com.isag.entity.IsagUser;
 import com.isag.entity.Symbol;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -60,6 +58,7 @@ public class InvItemDTO extends BaseEntityDTO {
     private BigDecimal length;
     private BigDecimal width;
     private Integer printShow;
+    private InvInventoryDTO invInventoryId;
 
 
     /**
@@ -631,5 +630,19 @@ public class InvItemDTO extends BaseEntityDTO {
      */
     public void setPrintShow(Integer printShow) {
         this.printShow = printShow;
+    }
+
+    /**
+     * @return the invInventoryId
+     */
+    public InvInventoryDTO getInvInventoryId() {
+        return invInventoryId;
+    }
+
+    /**
+     * @param invInventoryId the invInventoryId to set
+     */
+    public void setInvInventoryId(InvInventoryDTO invInventoryId) {
+        this.invInventoryId = invInventoryId;
     }
 }

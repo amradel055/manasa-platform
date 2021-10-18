@@ -60,6 +60,8 @@ public class InvUpdate extends BaseEntity {
     @JoinColumn(name = "inventory_id", referencedColumnName = "id")
     @ManyToOne
     private InvInventory inventoryId;
+    @Column(name = "typeActivity")
+    private Integer typeActivity;
 
     public InvUpdate() {
     }
@@ -143,6 +145,20 @@ public class InvUpdate extends BaseEntity {
     @Override
     public String toString() {
         return "com.en.entity.InvUpdate[ id=" + id + " ]";
+    }
+
+    /**
+     * @return the typeActivity
+     */
+    public Integer getTypeActivity() {
+        return typeActivity;
+    }
+
+    /**
+     * @param typeActivity the typeActivity to set
+     */
+    public void setTypeActivity(Integer typeActivity) {
+        this.typeActivity = typeActivity;
     }
     
 }

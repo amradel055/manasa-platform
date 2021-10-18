@@ -16,7 +16,6 @@ import com.isag.entity.Department;
 import com.isag.entity.Employee;
 import com.isag.entity.HrSponsor;
 import com.isag.entity.IsagUser;
-import com.isag.entity.RemCompany;
 import com.isag.entity.Symbol;
 import java.util.ArrayList;
 import java.util.Date;
@@ -406,13 +405,13 @@ public class EmployeeServiceImpl implements EmployeeService {
             dTO.setDepartmentId(departmentDTO);
         }
 
-        if (entity.getRemCompany() != null) {
-            RemCompanyDTO remCompanyDTO = new RemCompanyDTO();
-            remCompanyDTO.setId(entity.getRemCompany().getId());
-            remCompanyDTO.setName(entity.getRemCompany().getName());
-            remCompanyDTO.setCode(entity.getRemCompany().getCode());
-            dTO.setRemCompany(remCompanyDTO);
-        }
+//        if (entity.getRemCompany() != null) {
+//            RemCompanyDTO remCompanyDTO = new RemCompanyDTO();
+//            remCompanyDTO.setId(entity.getRemCompany().getId());
+//            remCompanyDTO.setName(entity.getRemCompany().getName());
+//            remCompanyDTO.setCode(entity.getRemCompany().getCode());
+//            dTO.setRemCompany(remCompanyDTO);
+//        }
         dTO.setRemType(entity.getRemType());
         dTO.setUserName(entity.getUserName());
         dTO.setPassword(entity.getPassword());
@@ -499,11 +498,6 @@ public class EmployeeServiceImpl implements EmployeeService {
             Department department = new Department();
             department.setId(dTO.getDepartmentId().getId());
             entity.setDepartmentId(department);
-        }
-        if (dTO.getRemCompany() != null && dTO.getRemCompany().getId() != null) {
-            RemCompany remCompany = new RemCompany();
-            remCompany.setId(dTO.getRemCompany().getId());
-            entity.setRemCompany(remCompany);
         }
 
         entity.setRemType(dTO.getRemType());

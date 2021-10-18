@@ -368,7 +368,7 @@
                                         itemValue="#{item}" 
                                         forceSelection="true" 
                                         completeMethod="#{autoComplete.completeItemsBarcodesDetailsView}" >
-                            <p:ajax update="availableQuantityRowValue discountTotalT unitvalue length paintColor  WeightT costTt  addTotalT netId totalQuantity totalWeight  totalNet  form:totalActualWeight form:totalNetAfterDiscount   form:totalWithTaxValue form:taxvalue "
+                            <p:ajax update="availableQuantityRowValue discountTotalT discountTotalTValue unitvalue length paintColor  WeightT costTt  addTotalT netId totalQuantity totalWeight  totalNet  form:totalActualWeight form:totalNetAfterDiscount   form:totalWithTaxValue form:taxvalue "
                                     event="itemSelect" listener="#{invPurchaseInvoiceFormDTOMB.validateItems(invPurchaseInvoiceDetailsTable)}" />
                         </p:autoComplete>            
                     </p:column>
@@ -474,6 +474,18 @@
                         <p:outputLabel id="costTt" value="#{invPurchaseInvoiceDetailsTable.cost}"   />
                     </p:column>
                     
+                    <p:column style="width: 8vh;text-align: -webkit-auto;border-radius: 0px" id="discountTotalc" headerText="خصم قيمه">
+                        <p:inputText id="discountTotalTValue" 
+                                     value="#{invPurchaseInvoiceDetailsTable.valueRowDiscount}" 
+                                     disabled="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail == null}"
+                                     style="width:70%!important;display: inline!important">
+                            <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.validateDiscountColumn(invPurchaseInvoiceDetailsTable)}"
+                                    event="blur"
+                                    update=" addTotalT netId totalQuantity totalWeight totalNet form:totalActualWeight form:totalNetAfterDiscount discountTotalT 
+                                    form:taxvalue form:totalWithTaxValue  :form:fieldSetId"/>
+                        </p:inputText>  
+                    </p:column>
+                    
                     <p:column style="width: 8vh;text-align: -webkit-auto;border-radius: 0px" id="discountTotal" headerText="الخصم">
                         <p:inputText id="discountTotalT" 
                                      value="#{invPurchaseInvoiceDetailsTable.discount}" 
@@ -481,7 +493,7 @@
                                      style="width:70%!important;display: inline!important">
                             <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.validateDiscountColumn(invPurchaseInvoiceDetailsTable)}"
                                     event="blur"
-                                    update=" addTotalT netId totalQuantity totalWeight totalNet form:totalActualWeight form:totalNetAfterDiscount  
+                                    update=" addTotalT netId totalQuantity totalWeight totalNet form:totalActualWeight form:totalNetAfterDiscount  discountTotalTValue
                                     form:taxvalue form:totalWithTaxValue  :form:fieldSetId"/>
                         </p:inputText>  
                     </p:column>

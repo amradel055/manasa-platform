@@ -171,6 +171,9 @@ public class InvItem extends BaseEntity {
     private BigDecimal disc3;
     @Column(name = "print_show")
     private Integer printShow;
+    @JoinColumn(name = "inv_inventory_id", referencedColumnName = "id")
+    @ManyToOne
+    private InvInventory invInventoryId;
     
     @Transient
     private BigDecimal storeQuantity;
@@ -696,6 +699,20 @@ public class InvItem extends BaseEntity {
      */
     public void setPrintShow(Integer printShow) {
         this.printShow = printShow;
+    }
+
+    /**
+     * @return the invInventoryId
+     */
+    public InvInventory getInvInventoryId() {
+        return invInventoryId;
+    }
+
+    /**
+     * @param invInventoryId the invInventoryId to set
+     */
+    public void setInvInventoryId(InvInventory invInventoryId) {
+        this.invInventoryId = invInventoryId;
     }
 
 }

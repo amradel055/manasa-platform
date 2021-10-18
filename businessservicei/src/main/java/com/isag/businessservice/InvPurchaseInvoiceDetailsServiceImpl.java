@@ -250,7 +250,7 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
                     entity.getItemBarcode(), entity.getScrewing(), entity.getItemId().getId(), entity.getWeight(),
                     entity.getUnitId().getId(), entity.getUnitId().getSerial(), entity.getUnitId().getName(),
                     entity.getItemId().getIsInventoryItem(), BigDecimal.ZERO, BigDecimal.ZERO, entity.getAdd1(),
-                    entity.getAdd2(), entity.getAdd3(), entity.getDisc1(), entity.getDisc2(), entity.getDisc3(), entity.getTotalBeforefracture(), entity.getFractureNumber(), entity.getValuefracture(), entity.getCartonsNumber(), entity.getCartonsCapacity(), entity.getAddTotal());
+                    entity.getAdd2(), entity.getAdd3(), entity.getDisc1(), entity.getDisc2(), entity.getDisc3(), entity.getTotalBeforefracture(), entity.getFractureNumber(), entity.getValuefracture(), entity.getCartonsNumber(), entity.getCartonsCapacity(), entity.getAddTotal(),entity.getDiscountValue());
             dTO = invGlobalService.calculateDetailTotalsRow(dTO, invInvoiceDTO, true);
             dTO.setRealQuantity(dTO.getQuantity().multiply(dTO.getScrewing()));
             dTO.setItemId(invItemService.mapToDTO(entity.getItemId()));
@@ -263,7 +263,7 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
                     entity.getExtraCost(), entity.getNet(), entity.getItemId(), null, null,
                     entity.getItemBarcode(), entity.getScrewing(), entity.getItemId(), entity.getWeight(),
                     entity.getUnitId(), entity.getUnitSerial(), entity.getUnitName(), entity.getIsInventoryItem(), BigDecimal.ZERO, BigDecimal.ZERO,
-                    BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
+                    BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
 
             dTO = invGlobalService.calculateDetailTotalsRow(dTO, invInvoiceDTO, true);
             dTO.setRealQuantity(dTO.getQuantity().multiply(dTO.getScrewing()));
@@ -279,6 +279,7 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
         entity.setCostAvarage(dTO.getCostAvarage());
         entity.setDiscount(dTO.getDiscount());
         entity.setDiscountType(dTO.getDiscountType());
+        entity.setDiscountValue(dTO.getValueRowDiscount());
         entity.setExtraCost(dTO.getExtraCost());
         entity.setFinalQuantity(dTO.getFinalQuantity());
         entity.setItemBarcode(dTO.getItemBarcode());

@@ -64,6 +64,6 @@ public interface InvGlobalService {
             String itemBarcode, BigDecimal screwing, Integer itemId, BigDecimal weight, Integer unitId,
             Integer unitSerial,String unitName,Integer inventoryItem,BigDecimal actualQuantity,BigDecimal oldQuantity, 
             BigDecimal add1, BigDecimal add2, BigDecimal add3, BigDecimal disc1, BigDecimal disc2, BigDecimal disc3
-            , BigDecimal totalBeforefracture , BigDecimal fractureNumber , BigDecimal valuefracture,BigDecimal cartonsNumber,BigDecimal cartonsCapacity,BigDecimal addTotal);
+            , BigDecimal totalBeforefracture , BigDecimal fractureNumber , BigDecimal valuefracture,BigDecimal cartonsNumber,BigDecimal cartonsCapacity,BigDecimal addTotal,BigDecimal discountValue);
 
 }

@@ -27,6 +27,26 @@
                         <p:tab title="بيانات عامه">
 
 
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:selectOneMenu id="inventory" value="#{itemDataFormMB.itemDataEntity.invInventoryId}"
+                                                     converter="#{itemDataFormMB.invInventoryConverter}" 
+                                                     style="float:right;width: 20%!important;color:#fff;height: 30px!important;margin-right: 0.5%;">
+
+                                        <f:selectItem itemLabel="#{userData.userDDs['ALL']}" itemValue="" />
+
+                                        <f:selectItems value="#{itemDataFormMB.inventoryList}" 
+                                                       var="inventory" itemLabel="#{inventory.name}"
+                                                       itemValue="#{inventory}"/> 
+                                    </p:selectOneMenu>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 75px;" value="المخزن"/>
+
+                                </div>
+                            </div>
+
 
 
                             <div class="ui-g-12 ui-xl-12">

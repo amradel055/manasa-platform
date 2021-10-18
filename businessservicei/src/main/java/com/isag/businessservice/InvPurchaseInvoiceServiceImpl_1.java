@@ -1445,7 +1445,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             invInvoiceDTO.setOrganizationSiteId(organizationSiteService.mapToDTOSmall(entity.getOrganizationSiteId()));// here
             if (CompanyActivityClassEnum.CERAMIC.equals(invInvoiceDTO.getCompanyActivity())
                     && ScreenNameClassEnum.INVSALESINVOICEFORM.equals(invInvoiceDTO.getScreenName())) {
-                invInvoiceDTO.setCustomerBalance(supplierAccountService.getAccountForOrganizationSite(entity.getOrganizationSiteId().getId()));
+                invInvoiceDTO.setCustomerBalance(supplierAccountService.getAccountForOrganizationSiteNew(entity.getOrganizationSiteId().getId()));
             }
         }
         invInvoiceDTO.setSupplierInvoiceNumber(entity.getSupplierInvoiceNumber());

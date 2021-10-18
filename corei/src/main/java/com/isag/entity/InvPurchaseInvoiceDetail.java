@@ -126,6 +126,8 @@ public class InvPurchaseInvoiceDetail extends BaseEntity {
     private BigDecimal cartonsCapacity;
     @Column(name = "addTotal")
     private BigDecimal addTotal;
+    @Column(name = "discount_value")
+    private BigDecimal discountValue;
 
     public InvPurchaseInvoiceDetail() {
     }
@@ -545,6 +547,20 @@ public class InvPurchaseInvoiceDetail extends BaseEntity {
      */
     public void setAddTotal(BigDecimal addTotal) {
         this.addTotal = addTotal;
+    }
+
+    /**
+     * @return the discountValue
+     */
+    public BigDecimal getDiscountValue() {
+        return discountValue;
+    }
+
+    /**
+     * @param discountValue the discountValue to set
+     */
+    public void setDiscountValue(BigDecimal discountValue) {
+        this.discountValue = discountValue;
     }
 
 }

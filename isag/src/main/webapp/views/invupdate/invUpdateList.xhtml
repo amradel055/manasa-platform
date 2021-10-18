@@ -90,15 +90,15 @@
                     <p:column style="width: 4vh;font-size: 1.8vh;text-align: center;border-radius: 0px" headerText="#{userData.userDDs['TRANSACTION']}" >
                         <p:commandButton class="seditButtons" update="@form" icon="fa fa-fw fa-edit" title="#{userData.userDDs['EDIT']}" action="#{invUpdateListMB.goToEdit()}"
                                          rendered="#{(userData.userScreens['invupdate'].edit and userData.userBranch.companyActivity ne 'CERAMIC')  or userData.isAdmin}">
-                            <f:setPropertyActionListener value="#{invUpdateTable.id}"  target="#{invUpdateListMB.invUpdateSelected}" />
+                            <f:setPropertyActionListener value="#{invUpdateTable}"  target="#{invUpdateListMB.invUpdateSelected}" />
                         </p:commandButton>
-                        <p:commandButton class="seditButtons" update="@form" icon="fa fa-fw fa-edit" title="#{userData.userDDs['EDIT']}" action="#{invUpdateListMB.goToEditCeramic()}"
+                        <p:commandButton class="seditButtons" update="@form" icon="fa fa-fw fa-edit" title="#{userData.userDDs['EDIT']}" action="#{invUpdateListMB.goToEdit()}"
                                          rendered="#{(userData.userScreens['invupdate'].edit and userData.userBranch.companyActivity eq 'CERAMIC')  or userData.isAdmin}">
-                            <f:setPropertyActionListener value="#{invUpdateTable.id}"  target="#{invUpdateListMB.invUpdateSelected}" />
+                            <f:setPropertyActionListener value="#{invUpdateTable}"  target="#{invUpdateListMB.invUpdateSelected}" />
                         </p:commandButton>
                         <p:commandButton class="sdeleteButtons" update="@form" icon="fa fa-remove" style="background-color: red;border-radius: 3px;" title="#{userData.userDDs['DELETE']}" 
                                          action="#{invUpdateListMB.delete}" rendered="#{userData.userScreens['invupdate'].delete or userData.isAdmin}">
-                            <f:setPropertyActionListener value="#{invUpdateTable.id}" target="#{invUpdateListMB.invUpdateSelected}" />
+                            <f:setPropertyActionListener value="#{invUpdateTable}" target="#{invUpdateListMB.invUpdateSelected}" />
                             <p:confirm header="Confirmation" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
                         </p:commandButton>
                     </p:column>

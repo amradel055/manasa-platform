@@ -13,6 +13,7 @@ import com.isag.dto.InvInvoiceDTO;
 import com.isag.dto.SymbolDTO;
 import com.isag.views.ItemsBarcodesDetailsView;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -27,7 +28,6 @@ public class InvGlobalServiceImpl implements InvGlobalService {
     private QuantityItemsStoreByDateService quantityItemsStoreAddExitService;
     @EJB
     private InvPurchaseInvoiceDetailsService invPurchaseInvoiceDetailsService;
-    
 
     @Override
     public InvDetailDTO calculateDetailTotalsRow(InvDetailDTO detailEntity, InvInvoiceDTO invInvoiceDTO, Boolean isNeeadQuantity) {
@@ -36,7 +36,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
         BigDecimal cost;
         BigDecimal total = BigDecimal.ZERO;
         BigDecimal discount = BigDecimal.ZERO;
-        BigDecimal valueAfterDiscount;
+        BigDecimal valueAfterDiscount = BigDecimal.ZERO;
         if (detailEntity.getItemsBarcodesDetail() == null && detailEntity.getItemsBarcodesDetailTrans() != null) {
             detailEntity.setItemsBarcodesDetail(detailEntity.getItemsBarcodesDetailTrans());
         }
@@ -60,13 +60,24 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                 || (invInvoiceDTO.getCompanyActivity().equals(CompanyActivityClassEnum.CERAMIC) && invInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.INVOPENINGBALANCEITEMFORM))) {
             valueAfterDiscount = calFinalPrice(detailEntity, invInvoiceDTO.getCompanyActivity());
         } else {
-            valueAfterDiscount = total.subtract((total.multiply(detailEntity.getDiscount()).divide(new BigDecimal(100)))).add(detailEntity.getAddTotal());
-            detailEntity.setValueRowDiscount(total.subtract(valueAfterDiscount));
+            if (detailEntity.getValueRowDiscount() != null && detailEntity.getValueRowDiscount().compareTo(BigDecimal.ZERO) == 1) {
+                BigDecimal totalNet = detailEntity.getCost().multiply(detailEntity.getQuantity());
+                if (totalNet.compareTo(BigDecimal.ZERO) == 1) {
+
+                    valueAfterDiscount = total.subtract(detailEntity.getValueRowDiscount()).add(detailEntity.getAddTotal());
+                    detailEntity.setDiscount(detailEntity.getValueRowDiscount().divide(totalNet,3,RoundingMode.HALF_DOWN).multiply(new BigDecimal(100)));
+                }
+            } else if (detailEntity.getDiscount() != null && detailEntity.getDiscount().compareTo(BigDecimal.ZERO) == 1) {
+                valueAfterDiscount = total.subtract((total.multiply(detailEntity.getDiscount()).divide(new BigDecimal(100)))).add(detailEntity.getAddTotal());
+                detailEntity.setValueRowDiscount(total.subtract(valueAfterDiscount));
+            }else{
+                valueAfterDiscount = total.add(detailEntity.getAddTotal());
+            }
             detailEntity.setValueAfterDiscount(valueAfterDiscount);
             detailEntity.setTotalBeforeDiscount(total.setScale(3, BigDecimal.ROUND_HALF_UP));
         }
 
-        detailEntity.setNet(valueAfterDiscount.setScale(3, BigDecimal.ROUND_HALF_UP));
+            detailEntity.setNet(valueAfterDiscount.setScale(3, BigDecimal.ROUND_HALF_UP));
         detailEntity.setTotalQuantityWithScrewing((detailEntity.getQuantity().multiply(detailEntity.getScrewing())).setScale(3, BigDecimal.ROUND_HALF_UP));
         detailEntity.setDifferanceQuantity(detailEntity.getDifferanceQuantity());
         if (isNeeadQuantity && invInvoiceDTO.getInventorySetupDTO() != null && !invInvoiceDTO.getInventorySetupDTO().getNegativeSell()) {
@@ -136,7 +147,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
         if ((invInvoiceDTO.getCompanyActivity().equals(CompanyActivityClassEnum.CERAMIC) && invInvoiceDTO.getTypeActivity() != null && 1 == invInvoiceDTO.getTypeActivity())
                 || (invInvoiceDTO.getCompanyActivity().equals(CompanyActivityClassEnum.CERAMIC) && invInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.INVOPENINGBALANCEITEMFORM))
                 || (invInvoiceDTO.getCompanyActivity().equals(CompanyActivityClassEnum.CERAMIC) && invInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.INVTRANSFERINVENTORY))
-                || (invInvoiceDTO.getCompanyActivity().equals(CompanyActivityClassEnum.CERAMIC) && invInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.INVUPDATE))) {
+                || (invInvoiceDTO.getCompanyActivity().equals(CompanyActivityClassEnum.CERAMIC) && (invInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.INVUPDATE)) && invInvoiceDTO.getTypeActivity() != null && invInvoiceDTO.getTypeActivity() == 1)) {
             detailEntity.setQuantity((detailEntity.getCartonsCapacity().multiply(detailEntity.getCartonsNumber())).setScale(3, BigDecimal.ROUND_HALF_UP));
             detailEntity.setActualQuantity((detailEntity.getCartonsCapacity().multiply(detailEntity.getCartonsNumber())).setScale(3, BigDecimal.ROUND_HALF_UP));
             quantity = (detailEntity.getCartonsCapacity().multiply(detailEntity.getCartonsNumber())).setScale(3, BigDecimal.ROUND_HALF_UP);
@@ -434,8 +445,8 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                 && detailDTO.getItemsBarcodesDetail() != null
                 && detailDTO.getNet() != null
                 && detailDTO.getNet().compareTo(BigDecimal.ZERO) >= 0;
-    } 
-    
+    }
+
     @Override
     public Boolean validatePrice(InvDetailDTO detailDTO) {
         return detailDTO != null
@@ -506,7 +517,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                         && !"".equals(detailDTO.getItemsBarcodesDetail().getUnitName())) {
                     if (companyActivityClassEnum.equals(CompanyActivityClassEnum.CERAMIC)) {
                         detailDTO.setCost(detailDTO.getItemsBarcodesDetail().getSellPrice());
-                    }else if(screenNameClassEnum.INVPURCHASEINVOICEFORM.equals(screenNameClassEnum)){
+                    } else if (screenNameClassEnum.INVPURCHASEINVOICEFORM.equals(screenNameClassEnum)) {
                         detailDTO.setCost(invPurchaseInvoiceDetailsService.findLastCost(detailDTO.getItemsBarcodesDetail().getItemId()));
                     }
                     SymbolDTO unit = new SymbolDTO();
@@ -638,7 +649,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
         }
         return detailDTO;
     }
-    
+
     @Override
     public InvDetailDTO validateNetColumn(InvDetailDTO detailDTO) {
         try {
@@ -770,7 +781,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
             BigDecimal extraCost, BigDecimal net, Integer index, Date createdDate, Integer createdBy,
             String itemBarcode, BigDecimal screwing, Integer itemId, BigDecimal weight, Integer unitId, Integer unitSerial, String unitName, Integer inventoryItem,
             BigDecimal actualQuantity, BigDecimal oldQuantity, BigDecimal add1, BigDecimal add2, BigDecimal add3, BigDecimal disc1, BigDecimal disc2, BigDecimal disc3,
-            BigDecimal totalBeforefracture, BigDecimal fractureNumber, BigDecimal valuefracture, BigDecimal cartonsNumber, BigDecimal cartonsCapacity, BigDecimal addTotal) {
+            BigDecimal totalBeforefracture, BigDecimal fractureNumber, BigDecimal valuefracture, BigDecimal cartonsNumber, BigDecimal cartonsCapacity, BigDecimal addTotal,BigDecimal discountValue) {
 
         dTO.setId(id);
         dTO.setSerial(serial);
@@ -793,6 +804,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
         dTO.setCartonsNumber(cartonsNumber);
         dTO.setCartonsCapacity(cartonsCapacity);
         dTO.setAddTotal(addTotal);
+        dTO.setValueRowDiscount(discountValue);
 
         if (itemBarcode != null && !itemBarcode.isEmpty()) {
             ItemsBarcodesDetailsView barcodesDetailsView = itemsBarcodeMap.get(itemBarcode);

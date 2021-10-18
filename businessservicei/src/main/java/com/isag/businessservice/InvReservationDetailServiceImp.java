@@ -326,7 +326,7 @@ public class InvReservationDetailServiceImp implements InvReservationDetailServi
                     entity.getItemBarcode(), entity.getScrewing(), entity.getItemId().getId(), entity.getWeight(), 
                     entity.getUnitId().getId(), entity.getUnitId().getSerial(), entity.getUnitId().getName(),
                     entity.getItemId().getIsInventoryItem(),BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,
-                    BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO, BigDecimal.ZERO);
+                    BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
         dTO = invGlobalService.calculateDetailTotalsRow(dTO, invInvoiceDTO,true);        
         dTO.setRealQuantity(dTO.getQuantity().multiply(dTO.getScrewing()));
         return dTO;

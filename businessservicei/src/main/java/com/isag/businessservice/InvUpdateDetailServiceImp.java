@@ -106,7 +106,7 @@ public class InvUpdateDetailServiceImp implements InvUpdateDetailService {
                 entity.getItemBarcode(), BigDecimal.ZERO, entity.getInvItemId().getId(), BigDecimal.ZERO,
                 null, null, null, entity.getInvItemId().getIsInventoryItem(), entity.getNewAmount(), entity.getOldAmount(),
                  BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
-                entity.getCartonNumber(), entity.getCartonsCapacity(), BigDecimal.ZERO);
+                entity.getCartonNumber(), entity.getCartonsCapacity(), BigDecimal.ZERO, BigDecimal.ZERO);
         dTO = invGlobalService.calculateDetailTotalsRow(dTO, invInvoiceDTO, true);
         dTO.setRealQuantity(dTO.getQuantity().multiply(dTO.getScrewing()));
         return dTO;
