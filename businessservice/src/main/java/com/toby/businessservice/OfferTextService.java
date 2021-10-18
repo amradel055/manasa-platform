@@ -28,6 +28,8 @@ public interface OfferTextService {
     public List<OfferTextDTO> getALLOfferTextByCompanyId(Integer companyId, TobyUser tobyUser);
 
     public List<OfferTextDTO> getALLOfferTextByBranchId(Integer branchId, TobyUser tobyUser);
+    
+    public List<OfferTextDTO> getALLOfferTextByGallaryId(Integer galaryId, TobyUser tobyUser);
 
     public String getNoticeByCustomerId(Integer id);
 }

@@ -1,0 +1,237 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+
+        <h:form id="form" dir="#{userData.dir}}" class='formmargin'>
+
+            <p:fieldset  legend="تقرير حركة الاتوبيسات "
+
+                         style=" position: relative; text-align: right; font-size: 2.4vh;">
+
+                <div class="ui-g">
+                    <div class="ui-g-6 ui-xl-6">
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:autoComplete 
+                                    dropdown="true" maxResults="10"
+                                    converter="#{autoComplete.remTrafficDTOConverter}"
+                                    value="#{remBusesFollowReportMB.remBusesFollowDTO.remTrafficDTO}"
+                                    var="remTrafficDTO"
+                                    itemLabel="#{remTrafficDTO}" 
+                                    itemValue="#{remTrafficDTO}"
+                                    forceSelection="true" 
+                                    completeMethod="#{autoComplete.completeRemTraffic2}"
+                                    >
+                                </p:autoComplete>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 111px;" value="خط السير"/>
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+
+
+                                <p:autoComplete
+                                    dropdown="true" maxResults="10"
+                                    converter="#{autoComplete.remBusesDTOConverter}"
+                                    value="#{remBusesFollowReportMB.remBusesFollowDTO.busId}"
+                                    var="busesTo"
+                                    itemLabel="#{busesTo}" 
+                                    itemValue="#{busesTo}"
+                                    forceSelection="true" 
+                                    completeMethod="#{autoComplete.completeRemBuses}"
+                                    >
+
+                                </p:autoComplete>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:outputLabel style="width: 75px;font-size: 2.4vh;" value="اتوبيس" />
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                    <div class="ui-g-6 ui-xl-6">
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:autoComplete
+                                    dropdown="true" maxResults="10"
+                                    converter="#{autoComplete.remCompanyDTOConverter}"
+                                    value="#{remBusesFollowReportMB.remBusesFollowDTO.remCompanyDTO}"
+                                    var="remCompany"
+                                    itemLabel="#{remCompany}" 
+                                    itemValue="#{remCompany}"
+                                    forceSelection="true" 
+                                    completeMethod="#{autoComplete.completeRemCompany}"
+                                    >
+                                </p:autoComplete>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 111px;" value="اسم المؤسسة"/>
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:calendar id="dateFrom"  
+                                            pattern="dd/MM/yyyy" value="#{remBusesFollowReportMB.remBusesFollowDTO.date}"
+                                            style=""/>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 75px;font-size: 2.4vh;" value="تاريخ "
+
+                                               />
+
+                            </div>
+                        </div>
+
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:selectOneMenu id="console" value="#{remBusesFollowReportMB.remBusesFollowDTO.type}" style="width:125px">
+                                    <f:selectItem itemLabel="اختر" itemValue="" />
+                                    <f:selectItem itemLabel="ذهاب" itemValue="0" />
+                                    <f:selectItem itemLabel="عوده" itemValue="1" />
+                                </p:selectOneMenu> 
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 75px;font-size: 2.4vh;" value="نوع المسار "/>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+                <div align="center">
+
+
+                    <p:commandButton  class="newButton" 
+                                      id="newN"
+                                      ajax="false"
+                                      style=""
+                                      value="#{userData.userDDs['NEW']}" 
+                                      title="#{userData.userDDs['NEW']}"
+                                      onclick="form.target = ''" 
+                                      actionListener="#{remBusesFollowReportMB.reset()}"/>
+
+
+                    <p:commandButton     class="searchButtons"
+                                         title="#{userData.userDDs['SEARCH']}"
+                                         action="#{remBusesFollowReportMB.search()}"
+                                         id="searchS"
+                                         value="#{userData.userDDs['SEARCH']}"
+                                         update="@form"
+                                         style="color: #fff!important;background-color: #F9A825;margin-left: 5px;"   />
+                    
+                    <p:commandButton  class="printButtons" 
+                                          ajax="false"
+                                          id="PrintB"
+                                          onclick="form.target = '_blank'"  
+                                          value="#{userData.userDDs['PRINT']}" 
+                                          actionListener="#{remBusesFollowReportMB.exportPDF}"
+                                          title="#{userData.userDDs['PRINT']}"
+                                          immediate="true" />
+
+                    <p:blockUI block="form" trigger="searchS" animate="true" >
+
+                        <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                    </p:blockUI> 
+
+                </div>
+
+            </p:fieldset>
+
+
+            <p:fieldset  legend="التفاصيل" style=" text-align: right">
+                <p:dataTable id="workOrderDetailsTable"
+                             reflow="true"
+                             var="workOrderDetailsTable"
+                             rowIndexVar="index" 
+                             dir="rtl" 
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                             sortBy="#{1}"
+                             selectionMode="single"
+                             widgetVar="workOrderDetailsTable"
+                             rowKey="#{workOrderDetailsTable.index}"
+                             value="#{remBusesFollowReportMB.remBusesDTOList}" >
+
+                    <p:column style="width:2rem">
+                        <p:rowToggler/>
+                    </p:column>
+
+                    <p:column style="width: 15vh;font-size: 1.8vh;text-align: right;border-radius: 1px;" headerText="النقطه" >
+                        <p:outputLabel style="width: 85px;" value="#{workOrderDetailsTable.pointId.name}"/>
+                    </p:column>
+                    <p:column style="width: 15vh;font-size: 1.8vh;text-align: right;border-radius: 1px;" headerText="تاريخ الوصول" >
+                        <p:outputLabel style="width: 85px;" value="#{workOrderDetailsTable.dateArrival}">
+                            <f:convertDateTime pattern="dd/MM/yyyy hh:mm:ss" />
+                        </p:outputLabel>
+                    </p:column >
+
+                    <p:column  style="width: 15vh;font-size: 1.8vh;text-align: right;border-radius: 0px;" headerText="تاريخ المغادره">
+                        <p:outputLabel style="width: 85px;" value="#{workOrderDetailsTable.dateMove}">
+                            <f:convertDateTime pattern="dd/MM/yyyy hh:mm:ss" />
+                        </p:outputLabel>
+                    </p:column>
+                    <p:column  style="width: 15vh;font-size: 1.8vh;text-align: right;border-radius: 0px;" headerText="مدة الانتظار">
+                        <p:outputLabel style="width: 85px;" value="#{workOrderDetailsTable.waitingTime}"/>
+                    </p:column>
+                    <p:column  style="width: 15vh;font-size: 1.8vh;text-align: right;border-radius: 0px;" headerText="عدد الركاب">
+                        <p:outputLabel style="width: 85px;" value="#{workOrderDetailsTable.employeeNumber}"/>
+                    </p:column>
+
+
+                    <p:rowExpansion>
+                        <p:dataTable id="detail"
+                                     reflow="true"
+                                     var="detail"
+                                     rowIndexVar="index" 
+                                     dir="rtl" 
+                                     emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                                     sortBy="#{1}"
+                                     widgetVar="detail"
+                                     value="#{workOrderDetailsTable.employeeDTOList}" 
+                                     selectionMode="single"
+                                     rowKey="#{detail.index}" >
+
+                            <p:column style="width: 15vh;font-size: 1.8vh;text-align: right;border-radius: 1px;" headerText="كود الموظف" >
+                                <p:outputLabel style="width: 85px;" value="#{detail.code}"/>
+                            </p:column>
+                            <p:column style="width: 15vh;font-size: 1.8vh;text-align: right;border-radius: 1px;" headerText="اسم الموظف" >
+                                <p:outputLabel style="width: 85px;" value="#{detail.name}"/>
+                            </p:column>
+                            <p:column style="width: 15vh;font-size: 1.8vh;text-align: right;border-radius: 1px;" headerText="الهاتف" >
+                                <p:outputLabel style="width: 85px;" value="#{detail.mobile}"/>
+                            </p:column >
+                            <p:column style="width: 15vh;font-size: 1.8vh;text-align: right;border-radius: 1px;" headerText="نقطة الركوب الاساسية" >
+                                <p:outputLabel style="width: 85px;" value="#{detail.pointId.name}"/>
+                            </p:column >
+
+                        </p:dataTable>
+                    </p:rowExpansion>
+
+
+                </p:dataTable>
+
+
+            </p:fieldset>
+
+
+
+
+
+        </h:form>
+    </ui:define>
+</ui:composition>

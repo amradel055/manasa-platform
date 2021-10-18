@@ -58,13 +58,17 @@
                         <p:column  filterStyle="display:none"  style="width: 15vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
                                    filterBy="#{companyTable.dateFrom}"  filterMatchMode="contains" 
                                    headerText="من تاريخ" sortBy="#{companyTable.dateFrom}">
-                            <p:outputLabel value="#{companyTable.dateFrom}"  style="font-size: 1.5vh"/>
+                            <p:outputLabel value="#{companyTable.dateFrom}"  style="font-size: 1.5vh">
+                                <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                            </p:outputLabel>
                         </p:column>
                         <p:column filterStyle="display:none" 
                                   style="width: 15vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" 
                                   filterBy="#{companyTable.dateTo}"  filterMatchMode="contains" 
                                   headerText="الى تاريخ" sortBy="#{companyTable.dateTo}" >
-                            <p:outputLabel value="#{companyTable.dateTo}"  style="font-size: 1.5vh" />
+                            <p:outputLabel value="#{companyTable.dateTo}"  style="font-size: 1.5vh" >
+                                <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                            </p:outputLabel>
                         </p:column>
                         <p:column filterStyle="display:none" 
                                   style="width: 15vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" 

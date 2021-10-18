@@ -1,0 +1,254 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="../../template/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <link rel="stylesheet" type="text/css"
+          href="../../resources/css/main.css" />
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:head>
+            <title>#{userData.userDDs['ACCOUNT_REPORT']}</title>
+        </h:head>
+
+        <h:body>
+              <h:form  class='formmargin' id="form">
+                <p:fieldset legend="#{userData.userDDs['MODIFIED_GENERAL_JOURNAL']}" 
+                        style=" position: relative; text-align: right">
+
+                <div class="ui-g-12 ui-g-nopad firstset">
+
+                   
+
+
+                            <div class="ui-g-6 ui-xl-6">
+                                <div class="ui-g-12 ui-xl-12">
+
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:autoComplete style="width: 37%" id="GlAccount_ID_from" 
+
+                                                        dropdown="true"
+                                                        converter="#{deletedAndUpdatedGeneralJournalMB.accountConverter}"
+                                                        value="#{deletedAndUpdatedGeneralJournalMB.glAccountSelectedFrom}"
+                                                        var="p"
+                                                        itemLabel="#{p}" 
+                                                        itemValue="#{p}" 
+                                                        forceSelection="false" 
+                                                        completeMethod="#{deletedAndUpdatedGeneralJournalMB.completeGlAccount}" >
+                                        </p:autoComplete>
+
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 80px;" value="#{userData.userDDs['FROM_ACCOUNT']}" for="GlAccount_ID_from" />
+
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-xl-12">
+
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:autoComplete style="width: 37%" id="GlAccount_ID_to" 
+
+                                                        dropdown="true"
+                                                        converter="#{deletedAndUpdatedGeneralJournalMB.accountConverter}"
+                                                        value="#{deletedAndUpdatedGeneralJournalMB.glAccountSelectedTo}"
+                                                        var="p"
+                                                        itemLabel="#{p}" 
+                                                        itemValue="#{p}" 
+                                                        forceSelection="false" 
+                                                        completeMethod="#{deletedAndUpdatedGeneralJournalMB.completeGlAccount}" >
+                                        </p:autoComplete>
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 80px;" value="#{userData.userDDs['TO_ACCOUNT']}" for="GlAccount_ID_to"/>
+
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-xl-12">
+
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:selectOneMenu style="width: 38%" id="year" filter="true" filterMatchMode="startsWith"   value="#{deletedAndUpdatedGeneralJournalMB.glYearSelection}" converter="#{deletedAndUpdatedGeneralJournalMB.glYearConverter}">
+                                            <p:ajax listener="#{deletedAndUpdatedGeneralJournalMB.pushGlYearSelection()}" update="dateFrom dateTo"/>
+                                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"  itemValue="" />
+                                            <f:selectItems value="#{deletedAndUpdatedGeneralJournalMB.glYearList}"  var="year" itemLabel="#{year.name}" itemValue="#{year}"/>
+                                        </p:selectOneMenu>
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 80px;" value="#{userData.userDDs['FINANCE_YEAR']}"/>
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="ui-g-6 ui-xl-6">
+                                <div class="ui-g-12 ui-xl-12">
+
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:inputText style="width: 38%!important"  a:autofocus="true"
+                                                     value="#{deletedAndUpdatedGeneralJournalMB.deletedAndUpdatedSearchBean.voucherIdFrom}" />
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 75px;" value="#{userData.userDDs['FROM_JOURNAL_NUMBER']}" />
+
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-xl-12">
+
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:inputText
+                                            value="#{deletedAndUpdatedGeneralJournalMB.deletedAndUpdatedSearchBean.voucherIdTo}" 
+                                            style="width: 38%!important" />
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 75px;"  value="#{userData.userDDs['TO_JOURNAL_NUMBER']}" />
+
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-xl-12">
+
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:calendar style="width: 50%"   id="dateFrom"
+                                                    value="#{deletedAndUpdatedGeneralJournalMB.deletedAndUpdatedSearchBean.dateFrom}"
+                                                    pattern="dd/MM/yyyy" showButtonPanel="true" >
+                                            <p:ajax listener="#{deletedAndUpdatedGeneralJournalMB.checkDate(true)}" event="dateSelect" update="dateFrom"/>
+                                        </p:calendar>
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 75px;"  value="#{userData.userDDs['YEAR_FROM']}" />
+
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-xl-12">
+
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:calendar style="width: 50%"  id="dateTo"
+                                                    value="#{deletedAndUpdatedGeneralJournalMB.deletedAndUpdatedSearchBean.dateTo}"
+                                                    pattern="MM/dd/yyyy"  showButtonPanel="true" >
+                                            <p:ajax listener="#{deletedAndUpdatedGeneralJournalMB.checkDate(false)}" event="dateSelect" update="dateTo"/>
+                                        </p:calendar>
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 75px;"  value="#{userData.userDDs['YEAR_TO']}" />
+
+                                    </div>
+                                </div>
+                            </div>
+
+                                                  
+
+                    </div>
+
+                    <h:panelGrid class="col-md-12 centerButtons"  columns="1">
+                        <h:panelGroup>
+
+
+
+                            <p:commandButton class="searchButtons"
+                                             value="#{userData.userDDs['SEARCH']}"
+                                             id="searchS"
+                                             action="#{deletedAndUpdatedGeneralJournalMB.search()}"
+                                             update="dataTable" />
+                            <p:commandButton class="newButtons"   
+                                             id="newN"
+                                             value="#{userData.userDDs['NEW']}"
+                                             action="#{deletedAndUpdatedGeneralJournalMB.reset}"  />
+
+                            <p:commandButton  class="printButtons" ajax="false" onclick="form.target = '_blank'"
+                                              value="#{userData.userDDs['PRINT']}"
+                                              actionListener="#{deletedAndUpdatedGeneralJournalMB.exportPDF}" />
+
+                            <h:commandLink class="sdcreenimg">  
+                                <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                                <p:dataExporter type="xls"
+                                                target="dataTable" 
+                                                fileName="القيود المعدلة والملغاة"
+                                                postProcessor="#{deletedAndUpdatedGeneralJournalMB.postProcessXLS}" />  
+                            </h:commandLink>
+
+                            <p:blockUI block="form" trigger="searchS  newN" animate="true" >
+
+                                <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                            </p:blockUI> 
+                        </h:panelGroup>
+
+                    </h:panelGrid>
+                </p:fieldset>
+
+                <p:fieldset>
+
+                    <p:dataTable id="dataTable"
+                                 draggableColumns="true" 
+                                 value="#{deletedAndUpdatedGeneralJournalMB.deletedAndUpdatedGeneralJournalBeanDataList}"
+                                 widgetVar="journal"
+                                 paginator="true"
+                                 rows="20"
+                                 var="journal">
+                        <f:facet name="header" class="col-md-12">
+
+                            <p:outputPanel>
+                                <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large;" />
+                                <p:inputText id="globalFilter" a:autofocus="true" onkeyup="PF('journal').filter()" style="width:30%!important;" />
+                            </p:outputPanel>
+                        </f:facet>
+                        <p:column headerText="#{userData.userDDs['OPERATION_STATUS']}"
+                                  filterBy="#{journal.operationStatus}"  filterMatchMode="contains" sortBy="#{journal.operationStatus}" filterable="false"
+                                  style="width: 9vh;font-size: 1.3vh;text-align: -webkit-auto;border-radius: 0px">
+                            <h:outputText value="#{journal.operationStatus}" style="font-size: 1.2vh"/>
+                        </p:column>
+
+                        <p:column headerText="#{userData.userDDs['MODIFIED_MAC']}" 
+                                  filterBy="#{journal.macIdNew}"  filterMatchMode="contains" sortBy="#{journal.macIdNew}" filterable="false"
+                                  style="width: 10vh;font-size: 1.3vh;text-align: -webkit-auto;border-radius: 0px">
+                            <h:outputText value="#{journal.macIdNew}" style="font-size: 1.2vh"/>
+                        </p:column>  
+
+                        <p:column headerText="#{userData.userDDs['USER']}" 
+                                  filterBy="#{journal.userName}"  filterMatchMode="contains" sortBy="#{journal.userName}" filterable="false"
+                                  style="width: 9vh;font-size: 1.3vh;text-align: -webkit-auto;border-radius: 0px">
+                            <h:outputText value="#{journal.userName}" style="font-size: 1.2vh"/>
+                        </p:column>
+
+                        <p:column headerText="#{userData.userDDs['MODIFIED_DAT']}"
+                                  filterBy="#{journal.modificationDateNew}"  filterMatchMode="contains" sortBy="#{journal.modificationDateNew}" filterable="false"
+                                  style="width: 10vh;font-size: 1.3vh;text-align: -webkit-auto;border-radius: 0px">
+                            <h:outputText value="#{journal.modificationDateNew}">
+                                <f:convertDateTime id="modificationDate" pattern="MM:hh:ss yyyy-MM-dd"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column style="width: 8vh;font-size: 1.3vh;text-align: -webkit-auto;border-radius: 0px" 
+                                  filterBy="#{journal.serial}"  filterMatchMode="contains" sortBy="#{journal.serial}" filterable="false"
+                                  headerText="#{userData.userDDs['GENERAL_NUMBER']}" >
+                            <h:outputText value="#{journal.serial}" style="font-size: 1.2vh"/>
+                        </p:column>
+                        <p:column style="width: 16vh;font-size: 1.3vh;text-align: -webkit-auto;border-radius: 0px" 
+                                  filterBy="#{journal.accountNumber}"  filterMatchMode="contains" sortBy="#{journal.accountNumber}" filterable="false"
+                                  headerText="#{userData.userDDs['ACCOUNT_NUMBER_BEFORE_CHANGE']}">
+                            <h:outputText value="#{journal.accountNumber}" style="font-size: 1.2vh"/>
+                        </p:column>
+                        <p:column style="width: 15vh;font-size: 1.3vh;text-align: -webkit-auto;border-radius: 0px"
+                                  filterBy="#{journal.accountNumberNew}"  filterMatchMode="contains" sortBy="#{journal.accountNumberNew}" filterable="false"
+                                  headerText="#{userData.userDDs['ACCOUNT_NUMBER_AFTER_CHANG']}" >
+                            <h:outputText value="#{journal.accountNumberNew}" style="font-size: 1.2vh"/>
+                        </p:column>
+                        <p:column style="width: 9vh;font-size: 1.3vh;text-align: -webkit-auto;border-radius: 0px" 
+                                  filterBy="#{journal.totalAmmountBefore}"  filterMatchMode="contains" sortBy="#{journal.totalAmmountBefore}" filterable="false"
+                                  headerText="#{userData.userDDs['BEFORE_CHANGE']}">
+                            <h:outputText  value="#{journal.totalAmmountBefore}" style="font-size: 1.2vh;width: 95%"/>
+                        </p:column>
+                        <p:column style="width: 7vh;font-size: 1.3vh;text-align: -webkit-auto;border-radius: 0px" 
+
+                                  headerText="#{userData.userDDs['AFTER_CHANGE']}">
+                            <h:outputText  value="#{journal.totalAmmountAfter}"  style="font-size: 1.2vh;width: 95%"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:fieldset>
+                </h:form>
+        </h:body>
+    </ui:define>
+</ui:composition>

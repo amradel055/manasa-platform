@@ -1,8 +1,13 @@
 package com.igma.OfferText;
 
 import com.toby.businessservice.OfferTextService;
+import com.toby.bussinessservice.global.AutoCompleteService;
+import com.toby.converter.InvInventoryDTOConverter;
+import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.OfferTextDTO;
 import com.toby.toby.BaseFormBean;
+import java.util.ArrayList;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Named;
@@ -19,9 +24,13 @@ import javax.faces.view.ViewScoped;
 public class OfferTextFormBean extends BaseFormBean {
 
     private OfferTextDTO offerTextDTO;
+    private List<InvInventoryDTO> invInventoryDTOList = new ArrayList<>();
+    private InvInventoryDTOConverter invInventoryDTOConverter;
 
     @EJB
     OfferTextService offerTextService;
+    @EJB
+    private AutoCompleteService autoCompleteService;
 
     public OfferTextFormBean() {
     }
@@ -61,6 +70,12 @@ public class OfferTextFormBean extends BaseFormBean {
 
     }
 
+    public List<InvInventoryDTO> completeGallaryDTO(String query) {
+        setInvInventoryDTOList(autoCompleteService.getGallaryByBranchId(getUserData().getUserBranch().getId(), query));
+        setInvInventoryDTOConverter(new InvInventoryDTOConverter(getInvInventoryDTOList()));
+        return getInvInventoryDTOList();
+    }
+
     @Override
     public String save() {
 
@@ -96,6 +111,34 @@ public class OfferTextFormBean extends BaseFormBean {
      */
     public void setOfferTextDTO(OfferTextDTO offerTextDTO) {
         this.offerTextDTO = offerTextDTO;
+    }
+
+    /**
+     * @return the invInventoryDTOList
+     */
+    public List<InvInventoryDTO> getInvInventoryDTOList() {
+        return invInventoryDTOList;
+    }
+
+    /**
+     * @param invInventoryDTOList the invInventoryDTOList to set
+     */
+    public void setInvInventoryDTOList(List<InvInventoryDTO> invInventoryDTOList) {
+        this.invInventoryDTOList = invInventoryDTOList;
+    }
+
+    /**
+     * @return the invInventoryDTOConverter
+     */
+    public InvInventoryDTOConverter getInvInventoryDTOConverter() {
+        return invInventoryDTOConverter;
+    }
+
+    /**
+     * @param invInventoryDTOConverter the invInventoryDTOConverter to set
+     */
+    public void setInvInventoryDTOConverter(InvInventoryDTOConverter invInventoryDTOConverter) {
+        this.invInventoryDTOConverter = invInventoryDTOConverter;
     }
 
 }
