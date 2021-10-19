@@ -1416,12 +1416,12 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 }
 
                 ///   الترحيل
-                GeneralJournal generalJournal = tarhil(invInvoiceDTO, tobyUser);
-                if (generalJournal != null) {
-                    invPurchaseInvoice.setPostFlag(1);
-                    invPurchaseInvoice.setGeneralJournalId(generalJournal);
-                    dao.updateEntity(invPurchaseInvoice);
-                }
+//                GeneralJournal generalJournal = tarhil(invInvoiceDTO, tobyUser);
+//                if (generalJournal != null) {
+//                    invPurchaseInvoice.setPostFlag(1);
+//                    invPurchaseInvoice.setGeneralJournalId(generalJournal);
+//                    dao.updateEntity(invPurchaseInvoice);
+//                }
             }
         } catch (Exception e) {
             invInvoiceDTO.setMsg(e.toString());
