@@ -37,6 +37,8 @@ public class LessonServiceImpl implements LessonService {
     private DocumentsService documentsService;
     @EJB
     private CommentsService commentsService;
+    @EJB
+    private LessonImgService lessonImgService;
 
     @Override
     public List<LessonDTO> findAllLessons() {
@@ -86,7 +88,7 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
-    public List<LessonDTO> findAllLessonsByTeacher(Integer branchId, Integer companyId, Integer teacherId, Integer materialId, Integer id) {
+    public List<LessonDTO> findAllLessonsByTeacher(Integer branchId, Integer companyId, Integer teacherId, Integer materialId,Integer schoolStageId , Integer id) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         params.put("companyId", companyId);
@@ -100,6 +102,10 @@ public class LessonServiceImpl implements LessonService {
         if (materialId != null) {
             params.put("materialId", materialId);
             builder.append(" AND d.materialId.id = :materialId");
+        }
+        if (materialId != null) {
+            params.put("schoolStageId", schoolStageId);
+            builder.append(" AND d.schoolStagesGuideId.id = :schoolStageId");
         }
         List<Lesson> list = dao.findListByQuery(builder.toString(), params);
         return returnListDTO(list);
@@ -144,6 +150,7 @@ public class LessonServiceImpl implements LessonService {
         entity.setId(lessonDTO);
         documentsService.deleteDocumentsByLesson(lessonDTO);
         commentsService.deleteCommentsByLesson(lessonDTO);
+        lessonImgService.deleteLesson(lessonDTO);
         dao.deleteEntity(entity);
     }
 
@@ -184,6 +191,8 @@ public class LessonServiceImpl implements LessonService {
                 msg.setMsg("تم الحفظ بنجاح");
                 msg.setMsgType("success");
             }
+            lessonImgService.save(lessonDTO.getLessonList(),isagUser,lesson.getId());
+           
             return msg;
         } else {
             msg.setMsg("لا يوجد بيانات  ");
@@ -223,6 +232,7 @@ public class LessonServiceImpl implements LessonService {
         dTO.setVoiceLink(entity.getVoiceLink());
 
         dTO.setDocuments(documentsService.findDocumentsByLessonIdLinks(entity.getId()));
+        dTO.setLessonList(lessonImgService.findAllLessons(entity.getId()));
 
         if (entity.getSchoolStagesGuideId() != null) {
             SchoolStagesGuideDTO schoolStagesGuideDTO = new SchoolStagesGuideDTO();
@@ -299,6 +309,7 @@ public class LessonServiceImpl implements LessonService {
             entity.setModificationDate(new Date());
             entity.setModifiedBy(isagUser);
             documentsService.deleteDocumentsByLesson(dTO.getId());
+            lessonImgService.deleteLesson(dTO.getId());
         }
 
         entity.setBranchId(isagUser.getBranchId());

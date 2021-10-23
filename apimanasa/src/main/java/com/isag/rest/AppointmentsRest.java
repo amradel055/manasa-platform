@@ -67,7 +67,7 @@ public class AppointmentsRest {
                 List<AppointmentsDTO> dTOs = appointmentsService.findAppointmentsByTeacherAndSchoolStageAndMaterialId(
                         appointmentsDTO.getTeacherId(),
                         appointmentsDTO.getSchoolStageId(),
-                        appointmentsDTO.getMaterialsId()
+                        appointmentsDTO.getMaterialId()
                 );
                 GenericEntity<List<AppointmentsDTO>> list = new GenericEntity<List<AppointmentsDTO>>(dTOs) {
                 };
@@ -93,8 +93,8 @@ public class AppointmentsRest {
     public Response AppointmentsByStudentId(AppointmentsDTO appointmentsDTO) {
         if (appointmentsDTO != null) {
             try {
-                List<AppointmentsDTO> dTOs = appointmentsService.findAppointmentsByStudentId(
-                        appointmentsDTO.getStudentId()
+                List<AppointmentsDTO> dTOs = appointmentsService.findAppointmentsgroup(
+                        appointmentsDTO.getStudentId(),appointmentsDTO.getSchoolStageId()
                 );
                 GenericEntity<List<AppointmentsDTO>> list = new GenericEntity<List<AppointmentsDTO>>(dTOs) {
                 };

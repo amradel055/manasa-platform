@@ -5,6 +5,8 @@
  */
 package com.isag.dto;
 
+import java.util.List;
+
 /**
  *
  * @author m lapan
@@ -15,6 +17,7 @@ public class TeachersDTO extends BaseEntityDTO {
     private Integer serial;
     private String description;
     private String image;
+    private List<MaterialsDTO> materialList;
 
     public TeachersDTO() {
     }
@@ -78,6 +81,20 @@ public class TeachersDTO extends BaseEntityDTO {
     @Override
     public String toString() {
         return "com.mycompany.mavenproject1.Teachers[ id=" + id + " ]";
+    }
+
+    /**
+     * @return the materialList
+     */
+    public List<MaterialsDTO> getMaterialList() {
+        return materialList;
+    }
+
+    /**
+     * @param materialList the materialList to set
+     */
+    public void setMaterialList(List<MaterialsDTO> materialList) {
+        this.materialList = materialList;
     }
 
 }

@@ -154,6 +154,9 @@ public class QuestionsDTO extends BaseEntityDTO {
      * @return the questionDegree
      */
     public BigDecimal getQuestionDegree() {
+        if (questionDegree == null) {
+            questionDegree = BigDecimal.ZERO;
+        }
         return questionDegree;
     }
 

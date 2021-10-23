@@ -7,6 +7,7 @@ package com.isag.businessservice;
 
 import com.isag.core.GenericDAO;
 import com.isag.dto.AppointmentsDTO;
+import com.isag.dto.LessonLocationDTO;
 import com.isag.entity.Branch;
 import com.isag.entity.IgmaCompany;
 import com.isag.entity.IgmaUser;
@@ -40,6 +41,34 @@ public class AppointmentsServiceImpl implements AppointmentsService {
         List<Appointments> list = dao.findListByQuery(builder.toString(), params);
         return returnListDTO(list);
     }
+    
+    @Override
+    public List<AppointmentsDTO> findAppointmentsgroup(Integer branchId,Integer schoolStageId ) {
+        List<AppointmentsDTO> listNew = new ArrayList<>();
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        params.put("schoolStageId", schoolStageId);
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT d FROM Appointments d WHERE d.branchId.id = :branchId AND d.schoolStageId.id = :schoolStageId  ");
+        List<Appointments> list = dao.findListByQuery(builder.toString(), params);
+        List<AppointmentsDTO> listDTO = returnListDTO(list);
+        Map<String, List<AppointmentsDTO>> mapGroup = new HashMap<>();
+        for(AppointmentsDTO dTO : listDTO){
+            if(mapGroup.containsKey(dTO.getLessonLocation().getName())){
+                List<AppointmentsDTO> appointmentsDTOs = mapGroup.get(dTO.getLessonLocation().getName());
+                appointmentsDTOs.add(dTO);
+                mapGroup.put(dTO.getLessonLocation().getName(), appointmentsDTOs);
+            }else{
+                List<AppointmentsDTO> appointmentsDTOs = new ArrayList<>();
+                appointmentsDTOs.add(dTO);
+                mapGroup.put(dTO.getLessonLocation().getName(), appointmentsDTOs);
+            }
+        }
+        AppointmentsDTO dTO = new AppointmentsDTO();
+        dTO.setMap(mapGroup);
+        listNew.add(dTO);
+        return listNew;
+    }
 
     @Override
     public List<AppointmentsDTO> findAppointmentsByTeacherAndSchoolStageAndMaterialId(Integer teacherId , Integer schoolStageId ,  Integer materialId) {
@@ -67,7 +96,9 @@ public class AppointmentsServiceImpl implements AppointmentsService {
         Map<String, Object> params = new HashMap<>();
         params.put("studentId", studentId);
         StringBuilder builder = new StringBuilder();
-        builder.append("SELECT d FROM Appointments d WHERE d.teacherId.id in (select s.teacherId.id from StudentPeriods where s.studentId.id = :studentId) AND d.materialId.id in (select s.materialId.id from StudentPeriods where s.studentId.id = :studentId) ");
+        builder.append("SELECT d FROM Appointments d WHERE d.teacherId.id in (select s.teacherId.id from StudentPeriods where s.studentId.id = :studentId) ");
+        builder.append(" AND d.materialId.id in (select s.materialId.id from StudentPeriods where s.studentId.id = :studentId) ");
+        builder.append(" order by d.schoolStageId.id , d.day , d.teacherId.id ");
         List<Appointments> list = dao.findListByQuery(builder.toString(), params);
         return returnListDTO(list);
     }
@@ -133,15 +164,51 @@ public class AppointmentsServiceImpl implements AppointmentsService {
         dTO.setId(entity.getId());
         dTO.setDay(entity.getDay());
         dTO.setTime(entity.getTime());
+        dTO.setAppointmentsType(entity.getAppointmentsType());
+        dTO.setRemarks(entity.getRemarks());
+        
+        if(entity.getLessonLocation() != null){
+            LessonLocationDTO lessonLocationDTO = new LessonLocationDTO();
+            lessonLocationDTO.setName(entity.getLessonLocation().getName());
+            dTO.setLessonLocation(lessonLocationDTO);
+        }
+        
 
+        if(null != entity.getDay())switch (entity.getDay()) {
+            case 6:
+                dTO.setDayText("السبت");
+                break;
+            case 7:
+                dTO.setDayText("الأحد");
+                break;
+            case 1:
+                dTO.setDayText("الإثنين");
+                break;
+            case 2:
+                dTO.setDayText("الثلاثاء");
+                break;
+            case 3:
+                dTO.setDayText("الأربعاء");
+                break;
+            case 4:
+                dTO.setDayText("الخميس");
+                break;
+            case 5:
+                dTO.setDayText("الجمعه");
+                break;
+            default:
+                break;
+        }
         if (entity.getTeacherId() != null) {
             dTO.setTeacherId(entity.getTeacherId().getId());
+            dTO.setTeacherName(entity.getTeacherId().getName());
         }
         if (entity.getSchoolStageId() != null) {
             dTO.setSchoolStageId(entity.getSchoolStageId().getId());
         }
         if (entity.getMaterialId() != null) {
-            dTO.setMaterialsId(entity.getMaterialId().getId());
+            dTO.setMaterialId(entity.getMaterialId().getId());
+            dTO.setMaterialName(entity.getMaterialId().getName());
         }
 
         dTO.setIndex(entity.getId());
@@ -160,6 +227,7 @@ public class AppointmentsServiceImpl implements AppointmentsService {
         entity.setId(dTO.getId());
         entity.setDay(dTO.getDay());
         entity.setTime(dTO.getTime());
+        entity.setAppointmentsType(dTO.getAppointmentsType());
 
         if (dTO.getTeacherId() != null) {
             IgmaUser teachers = new IgmaUser();
@@ -171,9 +239,9 @@ public class AppointmentsServiceImpl implements AppointmentsService {
             guide.setId(dTO.getSchoolStageId());
             entity.setSchoolStageId(guide);
         }
-        if (dTO.getMaterialsId() != null) {
+        if (dTO.getMaterialId() != null) {
             Materials materials = new Materials();
-            materials.setId(dTO.getTeacherId());
+            materials.setId(dTO.getMaterialId());
             entity.setMaterialId(materials);
         }
 

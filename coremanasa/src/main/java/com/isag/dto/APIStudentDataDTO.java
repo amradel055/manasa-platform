@@ -17,6 +17,7 @@ public class APIStudentDataDTO {
     private List<Integer> monthList;
     private List<Integer> periodList;
     private List<TeachersByStudentId> teacherList;
+    private List<TeachersDTO> teacherDtoList;
 
     private Integer id;
     private String fullName;

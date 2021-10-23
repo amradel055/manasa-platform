@@ -30,6 +30,7 @@ public class LessonDTO extends BaseEntityDTO {
     private Integer materialId;
     private Integer teacherId;
     private String voiceLink;
+    private List<LessonImgDTO> lessonList;
 
     public LessonDTO() {
     }
@@ -272,6 +273,20 @@ public class LessonDTO extends BaseEntityDTO {
      */
     public void setVoiceLink(String voiceLink) {
         this.voiceLink = voiceLink;
+    }
+
+    /**
+     * @return the lessonList
+     */
+    public List<LessonImgDTO> getLessonList() {
+        return lessonList;
+    }
+
+    /**
+     * @param lessonList the lessonList to set
+     */
+    public void setLessonList(List<LessonImgDTO> lessonList) {
+        this.lessonList = lessonList;
     }
 
 }

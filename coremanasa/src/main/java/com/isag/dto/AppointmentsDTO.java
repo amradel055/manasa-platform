@@ -6,6 +6,8 @@
 package com.isag.dto;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -13,13 +15,20 @@ import java.util.Date;
  */
 public class AppointmentsDTO extends BaseEntityDTO {
 
-    private String day;
-    private Date time;
+    private Integer appointmentsType;
+    private Integer day;
+    private String time;
     private Integer schoolStageId;
     private Integer teacherId;
     private Integer studentId;
     private MaterialsDTO materials;
-    private Integer materialsId;
+    private Integer materialId;
+    private String materialName;
+    private String dayText;
+    private String teacherName;
+    private LessonLocationDTO lessonLocation;
+    private String remarks;
+    private Map<String, List<AppointmentsDTO>> map ; 
 
     public AppointmentsDTO() {
     }
@@ -28,19 +37,19 @@ public class AppointmentsDTO extends BaseEntityDTO {
         this.id = id;
     }
 
-    public String getDay() {
+    public Integer getDay() {
         return day;
     }
 
-    public void setDay(String day) {
+    public void setDay(Integer day) {
         this.day = day;
     }
 
-    public Date getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(Date time) {
+    public void setTime(String time) {
         this.time = time;
     }
 
@@ -112,17 +121,17 @@ public class AppointmentsDTO extends BaseEntityDTO {
     }
 
     /**
-     * @return the materialsId
+     * @return the materialId
      */
-    public Integer getMaterialsId() {
-        return materialsId;
+    public Integer getMaterialId() {
+        return materialId;
     }
 
     /**
-     * @param materialsId the materialsId to set
+     * @param materialId the materialId to set
      */
-    public void setMaterialsId(Integer materialsId) {
-        this.materialsId = materialsId;
+    public void setMaterialId(Integer materialId) {
+        this.materialId = materialId;
     }
 
     /**
@@ -137,6 +146,104 @@ public class AppointmentsDTO extends BaseEntityDTO {
      */
     public void setStudentId(Integer studentId) {
         this.studentId = studentId;
+    }
+
+    /**
+     * @return the appointmentsType
+     */
+    public Integer getAppointmentsType() {
+        return appointmentsType;
+    }
+
+    /**
+     * @param appointmentsType the appointmentsType to set
+     */
+    public void setAppointmentsType(Integer appointmentsType) {
+        this.appointmentsType = appointmentsType;
+    }
+
+    /**
+     * @return the materialName
+     */
+    public String getMaterialName() {
+        return materialName;
+    }
+
+    /**
+     * @param materialName the materialName to set
+     */
+    public void setMaterialName(String materialName) {
+        this.materialName = materialName;
+    }
+
+    /**
+     * @return the dayText
+     */
+    public String getDayText() {
+        return dayText;
+    }
+
+    /**
+     * @param dayText the dayText to set
+     */
+    public void setDayText(String dayText) {
+        this.dayText = dayText;
+    }
+
+    /**
+     * @return the teacherName
+     */
+    public String getTeacherName() {
+        return teacherName;
+    }
+
+    /**
+     * @param teacherName the teacherName to set
+     */
+    public void setTeacherName(String teacherName) {
+        this.teacherName = teacherName;
+    }
+
+    /**
+     * @return the lessonLocation
+     */
+    public LessonLocationDTO getLessonLocation() {
+        return lessonLocation;
+    }
+
+    /**
+     * @param lessonLocation the lessonLocation to set
+     */
+    public void setLessonLocation(LessonLocationDTO lessonLocation) {
+        this.lessonLocation = lessonLocation;
+    }
+
+    /**
+     * @return the remarks
+     */
+    public String getRemarks() {
+        return remarks;
+    }
+
+    /**
+     * @param remarks the remarks to set
+     */
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
+    /**
+     * @return the map
+     */
+    public Map<String, List<AppointmentsDTO>> getMap() {
+        return map;
+    }
+
+    /**
+     * @param map the map to set
+     */
+    public void setMap(Map<String, List<AppointmentsDTO>> map) {
+        this.map = map;
     }
 
 }

@@ -18,6 +18,8 @@ import javax.ejb.Remote;
 public interface ExamsService {
 
     public List<ExamsDTO> findAutoExamsListForStudent(ExamsDTO examsDTO);
+    
+    public List<ExamsDTO> findSolvedExamsListForStudent(ExamsDTO examsDTO);
             
     public ExamsDTO findExams(Integer id);
 

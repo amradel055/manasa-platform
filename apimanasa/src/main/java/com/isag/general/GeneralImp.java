@@ -55,6 +55,8 @@ public class GeneralImp implements GeneralService {
     private IgmaUserService userService;
     @EJB
     private IgmaUserLoginService isagUserLoginService;
+    @EJB
+    private StudentPeriodsService studentPeriodsService;
 
 //    private Employee emp;
     private StudentDTO studentDTO;
@@ -176,6 +178,7 @@ public class GeneralImp implements GeneralService {
             List<TeachersByStudentId> teachersList = periodsService.findteachersByStudentId(studentDTO.getId());
             data.setPeriodList(periodList);
             data.setTeacherList(teachersList);
+            dTO.setTeacherList(studentPeriodsService.findteachersByStudentIdLogin(studentDTO.getId()));
             dTO.setStudentData(data);
         }
         return dTO;

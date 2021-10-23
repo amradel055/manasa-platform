@@ -43,8 +43,8 @@ public class QuestionsServiceImpl implements QuestionsService {
 
         builder.append("SELECT d FROM Questions d WHERE d.examsId.examType = 0 ");
 
-        StringBuilder  periodId = null;
-        
+        StringBuilder periodId = null;
+
         for (Integer periodsDTO : examsDTO.getPeriodList()) {
             if (periodId == null) {
                 periodId = new StringBuilder();
@@ -56,11 +56,20 @@ public class QuestionsServiceImpl implements QuestionsService {
         if (periodId != null) {
             builder.append(" and d.examsId.periodId.id in(  ").append(periodId).append(" )");
         }
-        
-        builder.append(" ");
 
+//        builder.append(" Limit 20 ");
         List<Questions> list = dao.findListByQuery(builder.toString(), params);
-        return returnListDTO(list);
+        List<Questions> list2 = new ArrayList<>();
+
+        int i = 0;
+        for (Questions x : list) {
+            if (i < 20) {
+                i++;
+                list2.add(x);
+            }
+        }
+
+        return returnListDTO(list2);
     }
 
     @Override
@@ -89,11 +98,18 @@ public class QuestionsServiceImpl implements QuestionsService {
     }
 
     @Override
-    public QuestionsDTO saveListForStudent(List<QuestionsDTO> questionsDTOsList, IgmaUser isagUser, Integer examsId, Integer studentId, Integer parentExamId) {
+    public QuestionsDTO saveListForStudent(List<QuestionsDTO> questionsDTOsList, IgmaUser isagUser, Integer examsId, Integer studentId, Integer parentExamId, Integer examTpe) {
 
         QuestionsDTO questionsDTO = null;
         BigDecimal total = BigDecimal.ZERO;
-        Map<Integer, String> mapAnswer = answersService.findAnswersByExamId(parentExamId);
+        Map<Integer, String> mapAnswer = new HashMap<>();
+        if (examTpe != null && examTpe == 0) {
+
+            mapAnswer = answersService.findAnswersByQuestion(questionsDTOsList);
+        } else if (examTpe != null) {
+
+            mapAnswer = answersService.findAnswersByExamId(parentExamId);
+        }
         for (QuestionsDTO questionsDTO1 : questionsDTOsList) {
             BigDecimal qestionDegree = BigDecimal.ZERO;
             for (AnswersDTO answersDTO : questionsDTO1.getAnswersdtoList()) {

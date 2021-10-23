@@ -73,8 +73,8 @@ public class NewsServiceImpl implements NewsService {
         if (newsDTO.getId() != null) {
             news = dao.findEntityById(News.class, newsDTO.getId());
         }
-        if (newsDTO != null && newsDTO.getType() != null
-                && newsDTO.getSchoolStage() != null && newsDTO.getActive() != null) {
+        if (newsDTO != null && newsDTO.getNewsType() != null && newsDTO.getTeacherId() != null
+                && newsDTO.getActive() != null) {
             if (isagUser == null) {
                 isagUser = new IgmaUser();
                 isagUser.setId(61);
@@ -130,21 +130,23 @@ public class NewsServiceImpl implements NewsService {
         NewsDTO dTO = new NewsDTO();
         dTO.setId(entity.getId());
         dTO.setActive(entity.getActive());
-        dTO.setAdrress(entity.getAdrress());
+        dTO.setAddress(entity.getAdrress());
         dTO.setImg(entity.getImg());
         dTO.setPost(entity.getPost());
-        dTO.setType(entity.getType());
+        dTO.setNewsType(entity.getType());
         if (entity.getTeacherId() != null) {
             IgmaUserDTO igmaUserDTO = new IgmaUserDTO();
             igmaUserDTO.setId(entity.getTeacherId().getId());
             igmaUserDTO.setName(entity.getTeacherId().getName());
             dTO.setTeacher(igmaUserDTO);
+            dTO.setTeacherId(entity.getTeacherId().getId());
         }
         if (entity.getSchoolStageId() != null) {
             SchoolStagesGuideDTO schoolStagesGuideDTO = new SchoolStagesGuideDTO();
             schoolStagesGuideDTO.setId(entity.getSchoolStageId().getId());
             schoolStagesGuideDTO.setName(entity.getSchoolStageId().getName());
             dTO.setSchoolStage(schoolStagesGuideDTO);
+            dTO.setSchoolStageId(entity.getSchoolStageId().getId());
         }
 
         dTO.setIndex(entity.getId());
@@ -162,21 +164,19 @@ public class NewsServiceImpl implements NewsService {
 
         entity.setId(dTO.getId());
         entity.setActive(dTO.getActive());
-        entity.setAdrress(dTO.getAdrress());
+        entity.setAdrress(dTO.getAddress());
         entity.setImg(dTO.getImg());
         entity.setPost(dTO.getPost());
-        entity.setType(dTO.getType());
-        if (entity.getTeacherId() != null) {
+        entity.setType(dTO.getNewsType());
+        if (dTO.getTeacherId() != null) {
             IgmaUser igmaUser = new IgmaUser();
-            igmaUser.setId(dTO.getTeacher().getId());
-            igmaUser.setName(dTO.getTeacher().getName());
+            igmaUser.setId(dTO.getTeacherId());
             entity.setTeacherId(igmaUser);
         }
 
-        if (entity.getSchoolStageId() != null) {
+        if (dTO.getSchoolStageId() != null) {
             SchoolStagesGuide schoolStagesGuide = new SchoolStagesGuide();
-            schoolStagesGuide.setId(dTO.getSchoolStage().getId());
-            schoolStagesGuide.setName(dTO.getSchoolStage().getName());
+            schoolStagesGuide.setId(dTO.getSchoolStageId());
             entity.setSchoolStageId(schoolStagesGuide);
         }
 

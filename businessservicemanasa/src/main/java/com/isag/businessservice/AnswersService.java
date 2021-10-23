@@ -6,6 +6,7 @@
 package com.isag.businessservice;
 
 import com.isag.dto.AnswersDTO;
+import com.isag.dto.QuestionsDTO;
 import com.isag.entity.IgmaUser;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,8 @@ public interface AnswersService {
     public List<AnswersDTO> findAnswersByQuestionId(Integer questionId);
     
     public Map<Integer, String> findAnswersByExamId(Integer examId);
+    
+    public Map<Integer, String> findAnswersByQuestion(List<QuestionsDTO> question);
 
     public AnswersDTO save(AnswersDTO answersDTO, IgmaUser isagUser, Integer questionId,Integer examId);
 

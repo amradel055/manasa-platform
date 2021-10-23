@@ -6,8 +6,10 @@
 package com.isag.businessservice;
 
 import com.isag.core.GenericDAO;
+import com.isag.dto.MaterialsDTO;
 import com.isag.dto.StudentDTO;
 import com.isag.dto.StudentPeriodsDTO;
+import com.isag.dto.TeachersDTO;
 import com.isag.entity.Branch;
 import com.isag.entity.IgmaCompany;
 import com.isag.entity.StudentPeriods;
@@ -75,6 +77,42 @@ public class StudentPeriodsServiceImpl implements StudentPeriodsService {
         }
         return list;
     }
+    
+        @Override
+    public List<TeachersDTO> findteachersByStudentIdLogin(Integer studentId) {
+        
+        List<TeachersDTO> list = new ArrayList<>();
+        StringBuilder sql = new StringBuilder();
+        sql.append("select distinct iu.id,iu.name from student_periods sp\n"
+                + "left join igma_user iu on iu.id = sp.teacher_id");
+        sql.append(" where sp.student_id = ").append(studentId);
+        
+        List<Object[]> res = dao.executeNativeQuery(sql.toString());
+        for (Object[] object : res) {
+            TeachersDTO teachersByStudentId = new TeachersDTO();
+            teachersByStudentId.setId((Integer) object[0]);
+            teachersByStudentId.setName((String) object[1]);
+            
+            
+            List<MaterialsDTO> listMaterial = new ArrayList<>();
+        StringBuilder sql2 = new StringBuilder();
+        sql2.append("select distinct m.id,m.name from student_periods sp\n"
+                + "left join materials m on m.id = sp.material_id");
+        sql2.append(" where sp.student_id = ").append(studentId).append(" AND sp.teacher_id = ").append((Integer) object[0]);
+        
+        List<Object[]> res2 = dao.executeNativeQuery(sql2.toString());
+        for (Object[] object2 : res2) {
+            MaterialsDTO materialsDTO = new MaterialsDTO();
+            materialsDTO.setId((Integer) object2[0]);
+            materialsDTO.setName((String) object2[1]);
+            listMaterial.add(materialsDTO);
+        }
+        teachersByStudentId.setMaterialList(listMaterial);
+        list.add(teachersByStudentId);
+        }
+        return list;
+    }
+    
     
     @Override
     public List<StudentPeriodsDTO> findStudentPeriods(StudentPeriodsDTO studentPeriodsDTO) {
@@ -211,9 +249,13 @@ public class StudentPeriodsServiceImpl implements StudentPeriodsService {
         dTO.setConfirm(entity.getConfirm());
         dTO.setValue(entity.getValue());
         dTO.setStudentName(entity.getStudentId().getFullName());
+        if(entity.getStudentId() != null && entity.getStudentId().getStateId() != null 
+                && entity.getStudentId().getStateId().getGovernorateId() != null ){
         dTO.setGovernorateName(entity.getStudentId().getStateId().getGovernorateId().getName());
         dTO.setStateName(entity.getStudentId().getStateId().getName());
+        }
         dTO.setSchoolStagesName(entity.getStudentId().getSchoolStagesId().getName());
+        
         dTO.setSchoolStagesId(entity.getStudentId().getSchoolStagesId().getId());
         dTO.setStudentMobile(entity.getStudentId().getMobile());
         

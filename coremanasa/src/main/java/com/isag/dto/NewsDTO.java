@@ -13,10 +13,10 @@ package com.isag.dto;
 public class NewsDTO extends BaseEntityDTO {
 
     private Integer active;
-    private Integer type;
-    private Integer adrress;
+    private Integer newsType;
+    private String address;
     private String post;
-    private Integer img;
+    private String img;
     private SchoolStagesGuideDTO schoolStage;
     private IgmaUserDTO teacher;
     private Integer schoolStageId;
@@ -67,34 +67,7 @@ public class NewsDTO extends BaseEntityDTO {
     public void setActive(Integer active) {
         this.active = active;
     }
-    
-    /**
-     * @return the adrress
-     */
-    public Integer getAdrress() {
-        return adrress;
-    }
 
-    /**
-     * @param adrress the adrress to set
-     */
-    public void setAdrress(Integer adrress) {
-        this.adrress = adrress;
-    }
-
-    /**
-     * @return the img
-     */
-    public Integer getImg() {
-        return img;
-    }
-
-    /**
-     * @param img the img to set
-     */
-    public void setImg(Integer img) {
-        this.img = img;
-    }
 
     /**
      * @return the schoolStage
@@ -125,17 +98,17 @@ public class NewsDTO extends BaseEntityDTO {
     }
 
     /**
-     * @return the type
+     * @return the newsType
      */
-    public Integer getType() {
-        return type;
+    public Integer getNewsType() {
+        return newsType;
     }
 
     /**
-     * @param type the type to set
+     * @param newsType the newsType to set
      */
-    public void setType(Integer type) {
-        this.type = type;
+    public void setNewsType(Integer newsType) {
+        this.newsType = newsType;
     }
 
     /**
@@ -178,6 +151,34 @@ public class NewsDTO extends BaseEntityDTO {
      */
     public void setTeacherId(Integer teacherId) {
         this.teacherId = teacherId;
+    }
+
+    /**
+     * @return the img
+     */
+    public String getImg() {
+        return img;
+    }
+
+    /**
+     * @param img the img to set
+     */
+    public void setImg(String img) {
+        this.img = img;
+    }
+
+    /**
+     * @return the address
+     */
+    public String getAddress() {
+        return address;
+    }
+
+    /**
+     * @param address the address to set
+     */
+    public void setAddress(String address) {
+        this.address = address;
     }
 
 }

@@ -14,7 +14,9 @@ import com.isag.rest.LockupRest;
 import com.isag.rest.LoginManasa;
 import com.isag.rest.LoginStudentRest;
 import com.isag.rest.MediaRest;
+import com.isag.rest.NewRest;
 import com.isag.rest.NewsRest;
+import com.isag.rest.OtherAppointmentsRest;
 import com.isag.rest.PeriodsRest;
 import com.isag.rest.StudentMonthsRest;
 import com.isag.rest.StudentPeriodsRest;
@@ -53,7 +55,9 @@ public class MyApplication extends Application {
         resources.add(StudentPeriodsRest.class);
         resources.add(StudentResetRest.class);
         resources.add(AppointmentsRest.class);
+        resources.add(NewRest.class);
         resources.add(NewsRest.class);
+        resources.add(OtherAppointmentsRest.class);
         return resources;
     }
 

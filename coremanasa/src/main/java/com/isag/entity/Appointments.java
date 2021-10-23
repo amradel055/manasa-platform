@@ -5,7 +5,6 @@
  */
 package com.isag.entity;
 
-import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -13,8 +12,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -28,16 +25,16 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Appointments.findAll", query = "SELECT a FROM Appointments a")
     , @NamedQuery(name = "Appointments.findById", query = "SELECT a FROM Appointments a WHERE a.id = :id")
     , @NamedQuery(name = "Appointments.findByDay", query = "SELECT a FROM Appointments a WHERE a.day = :day")
-    , @NamedQuery(name = "Appointments.findByTime", query = "SELECT a FROM Appointments a WHERE a.time = :time")
     , @NamedQuery(name = "Appointments.findByCreationDate", query = "SELECT a FROM Appointments a WHERE a.creationDate = :creationDate")
     , @NamedQuery(name = "Appointments.findByModificationDate", query = "SELECT a FROM Appointments a WHERE a.modificationDate = :modificationDate")})
 public class Appointments extends BaseEntity {
 
+    @Column(name = "appointments_type")
+    private Integer appointmentsType;
     @Column(name = "day")
-    private String day;
+    private Integer day;
     @Column(name = "time")
-    @Temporal(TemporalType.TIME)
-    private Date time;
+    private String time;
     @JoinColumn(name = "branch_id", referencedColumnName = "id")
     @ManyToOne
     private Branch branchId;
@@ -50,6 +47,11 @@ public class Appointments extends BaseEntity {
     @JoinColumn(name = "material_id", referencedColumnName = "id")
     @ManyToOne
     private Materials materialId;
+    @JoinColumn(name = "lesson_location", referencedColumnName = "id")
+    @ManyToOne
+    private LessonLocation lessonLocation;
+    @Column(name = "remarks")
+    private String remarks;
 
     public Appointments() {
     }
@@ -58,20 +60,12 @@ public class Appointments extends BaseEntity {
         this.id = id;
     }
 
-    public String getDay() {
+    public Integer getDay() {
         return day;
     }
 
-    public void setDay(String day) {
+    public void setDay(Integer day) {
         this.day = day;
-    }
-
-    public Date getTime() {
-        return time;
-    }
-
-    public void setTime(Date time) {
-        this.time = time;
     }
 
     public Branch getBranchId() {
@@ -135,6 +129,62 @@ public class Appointments extends BaseEntity {
      */
     public void setMaterialId(Materials materialId) {
         this.materialId = materialId;
+    }
+
+    /**
+     * @return the appointmentsType
+     */
+    public Integer getAppointmentsType() {
+        return appointmentsType;
+    }
+
+    /**
+     * @param appointmentsType the appointmentsType to set
+     */
+    public void setAppointmentsType(Integer appointmentsType) {
+        this.appointmentsType = appointmentsType;
+    }
+
+    /**
+     * @return the time
+     */
+    public String getTime() {
+        return time;
+    }
+
+    /**
+     * @param time the time to set
+     */
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    /**
+     * @return the lessonLocation
+     */
+    public LessonLocation getLessonLocation() {
+        return lessonLocation;
+    }
+
+    /**
+     * @param lessonLocation the lessonLocation to set
+     */
+    public void setLessonLocation(LessonLocation lessonLocation) {
+        this.lessonLocation = lessonLocation;
+    }
+
+    /**
+     * @return the remarks
+     */
+    public String getRemarks() {
+        return remarks;
+    }
+
+    /**
+     * @param remarks the remarks to set
+     */
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
     }
 
 }
