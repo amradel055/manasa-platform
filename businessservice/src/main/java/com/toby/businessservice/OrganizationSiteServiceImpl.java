@@ -32,6 +32,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import ma.glasnost.orika.MapperFacade;
@@ -1680,4 +1681,16 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         InvOrganizationSite ios = dao.findEntityById(InvOrganizationSite.class, invOrganizationSiteId);
         return mapToDTOSmall(ios);
     }
-}
+
+    @Override
+    public InvOrganizationSiteDTO getCustomerBySerial(String serial) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("serial", serial);
+        List<InvOrganizationSite> detailses = dao.findListByQuery("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = 182 AND e.mobile = :serial ", params);
+        if (detailses != null && !detailses.isEmpty()) {
+            return mapToDTOSmall(detailses.get(0));
+        }
+        return null;
+    }
+
+    }

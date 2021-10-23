@@ -146,5 +146,7 @@ public interface OrganizationSiteService {
     public InvOrganizationSiteDTO mapToDTOSmall(InvOrganizationSite invOrganizationSite);
     
     public InvOrganizationSiteDTO mapToDTOSmall(Integer invOrganizationSiteId);
+    
+    public InvOrganizationSiteDTO getCustomerBySerial(String serial);
 
 }

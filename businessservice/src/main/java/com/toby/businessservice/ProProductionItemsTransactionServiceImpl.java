@@ -284,6 +284,72 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
         return productionTransactionOfUsers;
     }
 
+     @Override
+    public List<ProductionTransactionOfUser> getProProductionItemOForAllUsersList(PrintProductionDTO printProductionDTO, Integer branchId, Integer stageId, List<ProProductionStagesDTO> productionStagesDTOs) {
+
+        List<ProductionTransactionOfUser> productionTransactionOfUsers = new ArrayList<>();
+        Map<String, Object> params = new HashMap<>();
+
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT  pps.serial as stageSerial , pps.name as stageName , \n"
+                + "tu.user_code as userCode , tu.name as userName , tu.residency_number as residencyNumber, \n"
+                + "sum(ppit.number) as amount  ,ii.code , ii.name , sum(ipid.quantity) as quantity  \n"
+                + "FROM toby.pro_production_items_transaction ppit\n"
+                + "left join toby_user tu on tu.id = ppit.created_by\n"
+                + "left join pro_production_stages pps on pps.id = ppit.pro_production_stages_id\n"
+                + "left join pro_factory_delivery_detail pfdd on pfdd.id = ppit.pro_factory_delivery_detail_id\n"
+                + "left join pro_factory_delivery pfd on pfd.id = pfdd.pro_factory_delivery_id\n "
+                + "left join inv_purchase_invoice_detail ipid on ipid.id = pfdd.inv_purchase_invoice_detail_id\n" 
+                + "left join inv_item ii on ii.id = pfdd.item_id"
+                + " ");
+
+        sql.append(" where ppit.branch_id = ").append(branchId);
+
+        appendProProductionStatus(printProductionDTO, sql);
+        appendProProductionDate(printProductionDTO, sql);
+        appendProProductionUser(printProductionDTO, sql);
+
+        if (productionStagesDTOs != null && !productionStagesDTOs.isEmpty()) {
+            StringBuilder stage = null;
+
+            for (ProProductionStagesDTO stagesDTO : productionStagesDTOs) {
+                if (stage == null) {
+                    stage = new StringBuilder();
+                    stage.append(stagesDTO.getSerial());
+                } else {
+                    stage.append(',').append(stagesDTO.getSerial());
+                }
+            }
+            sql.append(" and pps.serial in (").append(stage.toString()).append(" )");
+        } else {
+            if (stageId != null) {
+                params.put("stageId", stageId);
+                sql.append(" and pps.serial = :stageId ");
+            }
+        }
+
+        sql.append(" group by ppit.created_by  , pfdd.item_id order by pps.serial ");
+
+        List<Object[]> res = dao.executeNativeQuery(sql.toString());
+
+        for (Object[] object : res) {
+            ProductionTransactionOfUser productionTransactionOfUser = new ProductionTransactionOfUser();
+            productionTransactionOfUser.setProductionStagesId((Integer) object[0]);
+            productionTransactionOfUser.setStageName((String) object[1]);
+            productionTransactionOfUser.setUserCode((String) object[2]);
+            productionTransactionOfUser.setUserName((String) object[3]);
+            productionTransactionOfUser.setResidencyNumber((String) object[4]);
+            productionTransactionOfUser.setNumberExcute((BigDecimal) object[5]);
+            productionTransactionOfUser.setItemCode((String) object[6]);
+            productionTransactionOfUser.setItemName((String) object[7]);
+            productionTransactionOfUser.setQuantity((BigDecimal) object[8]);
+
+            productionTransactionOfUsers.add(productionTransactionOfUser);
+        }
+        return productionTransactionOfUsers;
+    }
+
+    
     private void appendProProductionStatus(PrintProductionDTO printProductionDTO, StringBuilder query) {
         if (printProductionDTO.getFromStatus() != null) {
             query.append(" and pps.serial >=  ").append(printProductionDTO.getFromStatus().getSerial());
