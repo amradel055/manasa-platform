@@ -160,6 +160,8 @@ public class InvInvoiceDTO extends BaseEntityDTO {
     private Integer invoiceType;
     private Boolean sendCloth;
     
+    private String offerCopoun;
+    
     private Integer generalJournalId;
 
     public InvInvoiceDTO() {
@@ -1822,6 +1824,20 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      */
     public void setSendCloth(Boolean sendCloth) {
         this.sendCloth = sendCloth;
+    }
+
+    /**
+     * @return the offerCopoun
+     */
+    public String getOfferCopoun() {
+        return offerCopoun;
+    }
+
+    /**
+     * @param offerCopoun the offerCopoun to set
+     */
+    public void setOfferCopoun(String offerCopoun) {
+        this.offerCopoun = offerCopoun;
     }
 
 }

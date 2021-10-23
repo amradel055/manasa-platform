@@ -79,5 +79,7 @@ public interface GenericDAO {
     public void StoredProcedure(String storedName, List<storedProcedureParameter> procedureParameters, Map<String, Object> parm);
     
     public void executeUpdateQuery(String jpqlQuery, Map<String, Object> params);
+    
+    public void sendSms(String mobile, String sender, String message, String username, String password);
 
 }
