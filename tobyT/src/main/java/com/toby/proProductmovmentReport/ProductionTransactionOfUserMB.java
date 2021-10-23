@@ -101,6 +101,15 @@ public class ProductionTransactionOfUserMB extends BaseFormBean {
         //  }
     }
 
+    public void searchItem() {
+        totalQuantity = BigDecimal.ZERO;
+        Total = BigDecimal.ZERO;
+        productionTransactionOfUserList = proProductionItemsTransactionService.getProProductionItemOForAllUsersList(printProductionDTO, getUserData().getUserBranch().getId(), getProductionStagesDTOSelected() == null ? null : getProductionStagesDTOSelected().getSerial(), getProductionStagesListSelected());
+        for (ProductionTransactionOfUser productionTransactionOfUser : productionTransactionOfUserList) {
+            setTotalQuantity(productionTransactionOfUser.getNumberExcute().add(getTotalQuantity()));
+        }
+    }
+
     public void convertDateFrom() {
         getPrintProductionDTO().setFromDate(findDateFromHijriFrom());
     }
@@ -128,6 +137,13 @@ public class ProductionTransactionOfUserMB extends BaseFormBean {
     public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {
         if (productionTransactionOfUserList != null && !productionTransactionOfUserList.isEmpty()) {
             fillReport(prepareReport(), getUserData().getReportPath() + "productionTransactionOfUser.jasper", productionTransactionOfUserList, "pdf");
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "لا توجد نتائج للطباعة"));
+        }
+    }
+    public void exportPDFItem(ActionEvent actionEvent) throws JRException, IOException {
+        if (productionTransactionOfUserList != null && !productionTransactionOfUserList.isEmpty()) {
+            fillReport(prepareReport(), getUserData().getReportPath() + "productionItemOfUser.jasper", productionTransactionOfUserList, "pdf");
         } else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "لا توجد نتائج للطباعة"));
         }

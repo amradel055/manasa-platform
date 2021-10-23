@@ -163,9 +163,27 @@
                                 <p:outputLabel style="width: 110px" value="#{userData.userDDs['REMA_AMOUNT']}"/>
                             </div>
                         </div>
+                        
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <h:inputText id="payedsd"  
+                                             style="width:100%;text-align:right" 
+                                             value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.offerCopoun}" >
+                                    <p:ajax  update="@form" />
+                                </h:inputText>
+
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 80px;" 
+                                               value="كوبون الخصم"/>
+
+                            </div>
+                        </div>
+                        
+                        
                         <div class="ui-g-12 ui-xl-12">
                             <p:selectOneMenu id="inventory" value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId}"
-                                              rendered="#{(userData.userScreens['proworkorder'].edit)}"
+                                             rendered="#{(userData.userScreens['proworkorder'].edit)}"
                                              converter="#{invPurchaseInvoiceFormDTOMB.gallaryDTOConverters}" 
                                              style="float:right;width: 100%!important;color:#fff;height: 30px!important;margin-right: 0.5%;">
 
@@ -214,7 +232,7 @@
 
 
 
-
+                        
 
 
 
@@ -227,6 +245,15 @@
                     <div class="ui-g-12 ui-xl-12" style="margin-top: -2%;" >
 
                         <div style="text-align: center">
+                            <p:commandButton     class="saveButton" id="test23"  
+                                                 title="العرض"
+                                                 value="خصم الكوبون" 
+                                                 rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 0 or true}"
+                                                 icon="fa fa-fw fa-save" 
+                                                 action="#{invPurchaseInvoiceFormDTOMB.offerCopoun()}"
+                                                 update="@form"
+                                                 >
+                            </p:commandButton>
                             <p:commandButton     class="saveButton" id="test22"  
                                                  title="العرض"
                                                  value="عرض القطعة والتانية خصم 50%" 
@@ -260,13 +287,13 @@
                                                  update="@form"
                                                  >
                             </p:commandButton>
-                               <p:commandButton  class="saveButton"  
-                                                 title="العرض"
-                                                 value="عرض الخصم 991" 
-                                                 icon="fa fa-fw fa-save"  rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 0  and false }"
-                                                 action="#{invPurchaseInvoiceFormDTOMB.offer991()}"
-                                                 update="@form"
-                                                 >
+                            <p:commandButton  class="saveButton"  
+                                              title="العرض"
+                                              value="عرض الخصم 991" 
+                                              icon="fa fa-fw fa-save"  rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 0  and false }"
+                                              action="#{invPurchaseInvoiceFormDTOMB.offer991()}"
+                                              update="@form"
+                                              >
                             </p:commandButton>
                         </div>
                     </div>
@@ -956,7 +983,7 @@
                                                 update="netId totalQuantity   totalNet form:totalActualWeight form:totalNetAfterDiscount form:totalWithTaxValue form:remain form:taxvalue QuantityT NUMBER QuantityOu "/>
                                     </p:inputText>      
                                 </p:column>
-                                
+
                                 <p:column style="width: 12vh;text-align: -webkit-auto;border-radius: 0px; font-size: 14px;" id="DISCOUNTValue" headerText="خ قيمة">
                                     <p:inputText id="DISCOUNTValueT" 
                                                  value="#{invPurchaseInvoiceDetailsTable.discountValue}" 

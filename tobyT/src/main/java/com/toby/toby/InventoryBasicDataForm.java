@@ -24,6 +24,7 @@ import com.toby.businessservice.InvTransferService;
 import com.toby.businessservice.InventorySetupService;
 import com.toby.businessservice.ItemsBarcodesDetailsViewService;
 import com.toby.businessservice.OfferCompanyService;
+import com.toby.businessservice.OfferCopounService;
 import com.toby.businessservice.OrganizationSiteService;
 import com.toby.businessservice.ProDetailTypeService;
 import com.toby.businessservice.QuantityItemsStoreService;
@@ -211,6 +212,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     OfferCompanyService companyService;
     @EJB
     SupplierAccountService supplierAccountService;
+    @EJB
+    OfferCopounService offerCopounService;
 
     @Override
     public abstract String save();
@@ -636,6 +639,17 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                 discount25ForAll(25);
             }
             updateSummition();
+        }
+    }
+
+    public void offerCopoun() {
+        if (getInvInvoiceDTO().getOrganizationSiteId() != null 
+                && getInvInvoiceDTO().getOrganizationSiteId().getId() != null
+                && getInvInvoiceDTO().getOfferCopoun() != null ) {
+            BigDecimal discount = offerCopounService.getOfferCopounByCustomerAndCode(getInvInvoiceDTO().getOrganizationSiteId().getId(), getInvInvoiceDTO().getOfferCopoun());
+            if (discount != null && discount.compareTo(BigDecimal.ZERO) == 1) {
+                discount25ForAll(discount.intValue());
+            }
         }
     }
 
@@ -2383,7 +2397,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                 }
             }
             updateSummition();
-        }else{
+        } else {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "العميل ليس لديه شركة"));
         }
