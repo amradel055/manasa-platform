@@ -1257,6 +1257,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         invPurchaseInvoice.setRemarks(invInvoiceDTO.getRemarks());
         invPurchaseInvoice.setPostFlag(0);
         invPurchaseInvoice.setPaymentType(invInvoiceDTO.getPaymentType() > 0 ? invInvoiceDTO.getPaymentType() : 0);
+        invPurchaseInvoice.setOfferCopoun(invInvoiceDTO.getOfferCopoun());
         if (invInvoiceDTO.getPaymentType() == 1) {
             invPurchaseInvoice.setGlBankId(null);
         }
@@ -1555,6 +1556,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         dto.setPricetype(entity.getPricetype());
         dto.setInvoiceType(entity.getInvoiceType());
         dto.setProof(entity.getProof() == 1);
+        dto.setOfferCopoun(entity.getOfferCopoun());
 
         if (entity.getOrganizationSiteId() != null) {
             dto.setOrganizationSiteId(organizationSiteService.mapToDTOSmall(entity.getOrganizationSiteId()));

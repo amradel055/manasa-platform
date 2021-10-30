@@ -5,11 +5,15 @@
  */
 package com.toby.businessservice;
 
+import com.toby.businessservice.reports.searchBean.CrmLeadsSearchBean;
 import com.toby.businessservice.reports.searchBean.SupplierAccountSearchBean;
 import com.toby.businessservice.reports.searchBean.invOrganizationSiteSearchBean;
+import com.toby.dto.ChartDTO;
 import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.entity.InvOrganizationSite;
 import com.toby.entity.TobyUser;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.Remote;
@@ -97,7 +101,7 @@ public interface OrganizationSiteService {
 
     public List<InvOrganizationSiteDTO> getCustomerDTOByBranchId(Integer branchId);
 
-    public List<InvOrganizationSiteDTO> AddDelegatorToCustomerDTO(List<InvOrganizationSiteDTO> invOrganizationSiteDTOList, TobyUser isagUser);
+    public List<InvOrganizationSiteDTO> AddDelegatorToCustomerDTO(List<InvOrganizationSiteDTO> invOrganizationSiteDTOList, TobyUser tobyUser);
 
     public List<InvOrganizationSiteDTO> getCustomerDTOFromAndTo(Integer branchId, invOrganizationSiteSearchBean organizationSiteSearchBean);
 
@@ -105,9 +109,9 @@ public interface OrganizationSiteService {
 
     public List<InvOrganizationSiteDTO> getALLCustomerDTOByBranchIdAndType(int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters, Integer type, Integer gallaryId);
 
-    public List<InvOrganizationSiteDTO> getALLCustomerDTOByBranchIdAndTypeAndCode(String code, Integer branchId, Integer type, Integer gallaryId) ;
-    
-    public void deleteOrganizationSiteDTO(InvOrganizationSiteDTO invOrganizationSiteDTO, TobyUser isagUser);
+    public List<InvOrganizationSiteDTO> getALLCustomerDTOByBranchIdAndTypeAndCode(String code, Integer branchId, Integer type, Integer gallaryId);
+
+    public void deleteOrganizationSiteDTO(InvOrganizationSiteDTO invOrganizationSiteDTO, TobyUser tobyUser);
 
     public List<InvOrganizationSiteDTO> getCustomerByBranchIdForReportDTO(Integer branchId);
 
@@ -144,9 +148,67 @@ public interface OrganizationSiteService {
     public String saveOpenningBalance(List<InvOrganizationSiteDTO> invOrganizationSiteDTOList);
 
     public InvOrganizationSiteDTO mapToDTOSmall(InvOrganizationSite invOrganizationSite);
-    
+
     public InvOrganizationSiteDTO mapToDTOSmall(Integer invOrganizationSiteId);
-    
+
     public InvOrganizationSiteDTO getCustomerBySerial(String serial);
+
+    public List<InvOrganizationSiteDTO> getLeads(Integer branchId, Integer type, Date creationDateFrom, Date creationDateTo, String codeFrom, String codeTo);
+
+    public List<InvOrganizationSiteDTO> getLeads(Integer branchId, Integer type, CrmLeadsSearchBean crmLeadsSearchBean);
+
+    public List<InvOrganizationSiteDTO> findALLCrmLeads(int first, int pageSize, String sortField, Boolean asc, Map<String, Object> filters, InvOrganizationSiteDTO invOrganizationSiteDTOSearch, Integer assignedTo, Integer type);
+
+    public List<InvOrganizationSiteDTO> findLeads(int first, int pageSize, String sortField, Boolean asc, Map<String, Object> filters, InvOrganizationSiteDTO invOrganizationSiteDTOSearch, Integer type, Integer branchId);
+
+    public List<InvOrganizationSiteDTO> findLeadsList(InvOrganizationSiteDTO invOrganizationSiteDTOSearch, Integer assignedTo, Integer type);
+
+    public ChartDTO getCountCustomerByLearnAboutCompanyfrom(Integer branchId, Date dateFrom, Date dateTo);
+
+    public ChartDTO getCountCustomerByleadStatus(Integer branchId, Date dateFrom, Date dateTo);
+
+    public ChartDTO getCountCustomerByProjectName(Integer branchId, Date dateFrom, Date dateTo);
+
+    public ChartDTO getCountCustomerByAssignedTo(Integer branchId, Date fromDate, Date toDate);
+
+    public ChartDTO getCountCustomerByAssignedToAndStatus(Integer branchId, Integer status, Date fromDate, Date toDate);
+
+    public Integer getNumberOfCustomerByBranchIdAndAssignedTo(Integer branchId, Integer assignedTo, Integer createdBy);
+
+    public Integer getNumberOfNewCustomerByBranchIdAndAssignedTo(Integer branchId, Integer assignedTo, Integer createdBy);
+
+    public Long getTotalRegistors(Integer branchId, Map<String, Object> filters, InvOrganizationSiteDTO invOrganizationSiteDTOSearch, Integer assignedTo, Integer type);
+
+    public Long getTotalRegistors(Map<String, Object> filters, InvOrganizationSiteDTO invOrganizationSiteDTOSearch, Integer type, Integer branchId);
+
+    public List<InvOrganizationSiteDTO> findAllLeadsList(InvOrganizationSiteDTO invOrganizationSiteDTOSearch);
+
+    public String saveTransferLead(List<InvOrganizationSiteDTO> invOrganizationSiteDTOList, TobyUser tobyUser);
+
+    public InvOrganizationSiteDTO getorganizationSiteByBranchIdAndCodeDTOSmall(Integer branchId, boolean active, Integer type, String code);
+
+    public InvOrganizationSite getorganizationSiteByBranchIdAndCodeSmall(Integer branchId, boolean active, Integer type, String code);
+
+    public Boolean checknationalId(Integer branchId, String nationId);
+
+    public ChartDTO getCountLeadByAssignedToChartBar(Integer branchId, Date fromDate, Date toDate);
+
+    public ChartDTO getCountLeadByAssignedToANDContractTypeChartBar(Integer branchId, Date fromDate, Date toDate);
+    
+    public String validateSaveLead(InvOrganizationSiteDTO invOrganizationSiteDTO, TobyUser tobyUser);
+    
+    public String vaildationContacts(InvOrganizationSiteDTO invOrganizationSiteDTO, TobyUser tobyUser);
+
+    public List<InvOrganizationSiteDTO> findOrganizationSiteDTOByContact(Integer branchId, String mobile, String email);
+    
+    public InvOrganizationSiteDTO saveLead(InvOrganizationSiteDTO invOrganizationSiteDTO, TobyUser tobyUser);
+    
+    public InvOrganizationSiteDTO findOrganizationSiteDTOById(Integer invOrganizationSiteId);
+    
+    public Integer getNumberOfCustomerByBranchId(Integer branchId, Integer assignedTo, Integer createdBy, Date dateFrom, Date dateTo);
+    
+    public Integer getNumberOfNewCustomerByBranchId(Integer branchId, Integer assignedTo, Integer createdBy, Date dateFrom, Date dateTo);
+    
+    public ChartDTO getCountCustomerPerMonth(Integer branchId, Integer type, Integer dateFilter);
 
 }

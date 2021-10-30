@@ -224,6 +224,8 @@ public class InvPurchaseInvoice extends BaseEntity {
     private Integer invoiceType;
     @Column(name = "send_cloth")
     private Integer sendCloth;
+    @Column(name = "offer_copoun")
+    private String offerCopoun;
 
     public InvPurchaseInvoice() {
     }
@@ -907,5 +909,19 @@ public class InvPurchaseInvoice extends BaseEntity {
      */
     public void setSendCloth(Integer sendCloth) {
         this.sendCloth = sendCloth;
+    }
+
+    /**
+     * @return the offerCopoun
+     */
+    public String getOfferCopoun() {
+        return offerCopoun;
+    }
+
+    /**
+     * @param offerCopoun the offerCopoun to set
+     */
+    public void setOfferCopoun(String offerCopoun) {
+        this.offerCopoun = offerCopoun;
     }
 }

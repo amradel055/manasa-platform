@@ -219,19 +219,24 @@ public class OfferCopounServiceImpl implements OfferCopounService {
 
     @Override
     public void addOfferCopoun(List<OfferCopounDTO> offerCopounDTOList, TobyUser tobyUser) {
+        List<InvOrganizationSiteDTO> list = new ArrayList();
         for (OfferCopounDTO dTO : offerCopounDTOList) {
             InvOrganizationSiteDTO organizationSiteDTO = organizationSiteService.getCustomerBySerial(dTO.getCustomerCode());
-            String code = generateRandomCode();
-            dTO.setCustomerId(organizationSiteDTO);
-            dTO.setCode(code);
-            sendSMS(organizationSiteDTO,code);
-            OfferCopoun offerText = mapToEntity(dTO, tobyUser);
-            dao.updateEntity(offerText);
-            mapToDTO(offerText, tobyUser);
-        }
+            if (organizationSiteDTO != null) {
+                list.add(organizationSiteDTO);
+                String code = generateRandomCode();
+                dTO.setCustomerId(organizationSiteDTO);
+                dTO.setCode(code);
+                System.out.println("\n send SMS To -> "+organizationSiteDTO.getMobile());
+                sendSMS(organizationSiteDTO, code);
+                OfferCopoun offerText = mapToEntity(dTO, tobyUser);
+                dao.updateEntity(offerText);
+                mapToDTO(offerText, tobyUser);
+            }
+        }  
     }
 
-    private void sendSMS(InvOrganizationSiteDTO organizationSiteDTO,String code) {
+    private void sendSMS(InvOrganizationSiteDTO organizationSiteDTO, String code) {
         StringBuilder message = new StringBuilder();
         message.append(" عميلنا المميز، عساك بخير\n"
                 + "لك خصم 25% بجميع فروع برنس \n"
@@ -240,6 +245,7 @@ public class OfferCopounServiceImpl implements OfferCopounService {
         message.append(code);
         message.append("\n").append("920027070");
         dao.sendSms(organizationSiteDTO.getMobile(), "التوبى العالمى", message.toString(), "20099109", "ux4uik");
+        System.out.println("\n send SMS To -> "+organizationSiteDTO.getMobile());
     }
 
     public String generateRandomCode() {
@@ -260,10 +266,9 @@ public class OfferCopounServiceImpl implements OfferCopounService {
     @Override
     public BigDecimal getOfferCopounByCustomerAndCode(Integer customerId, String code) {
         Map<String, Object> params = new HashMap<>();
-        params.put("customerId", customerId);
         params.put("code", code);
         params.put("dateNow", new Date());
-        List<OfferCopoun> offerTextList = dao.findListByQuery("SELECT e FROM OfferCopoun e WHERE e.customerId.id =:customerId AND e.code = :code AND (:dateNow between e.startDate and e.endDate)", params);
+        List<OfferCopoun> offerTextList = dao.findListByQuery("SELECT e FROM OfferCopoun e WHERE e.code = :code AND (:dateNow between e.startDate and e.endDate) AND e.code not in (select p.offerCopoun from InvPurchaseInvoice p where  p.offerCopoun is not null)", params);
         if (offerTextList != null && !offerTextList.isEmpty()) {
             return offerTextList.get(0).getDiscountValue();
         }

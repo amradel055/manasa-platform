@@ -1,0 +1,783 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml" >
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+
+        <h:head>
+            <title>#{userData.userDDs['SERVICES_DIRECT']}</title>
+        </h:head>
+        <style>
+
+            .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+                border: 1px solid #c5dbec;
+                background:none;
+            }
+
+        </style>
+        <h:form id="form" class='formmargin'>
+
+
+
+            <div style=" position: absolute;left: 20px">
+
+                <p:commandButton  style="z-index: 2;
+                                  margin-top: 3%;
+                                  color: #035c70!important; 
+                                  background-color: #223238!important;
+                                  border: 1px solid #22323a!important;
+                                  background: #22323a 50% 50% repeat-x!important;"
+                                  icon="fa fa-fw fa-home"
+                                  title="#{userData.userDDs['HOME']}"
+                                  class="smhomeButton" 
+                                  action="exit" />
+
+                <p:commandButton id="imageBtn" class="plusIcon" icon="fa fa-plus" type="button" />
+                <p:overlayPanel id="imagePanel" class="overlayCRM" for="imageBtn" hideEffect="fade">
+                    <p:commandButton value="#{userData.userDDs['Todo/Event']}" type="button" onclick="PF('dlg1').show();" />
+                    <p:commandButton value="#{userData.userDDs['Leads']}" type="button" onclick="PF('dlg12').show();" />
+
+
+                </p:overlayPanel>
+
+
+
+            </div>
+            <div>        
+            <p:fieldset styleClass="panelColumns" legend="ادارة علاقات العملاء">
+
+                <p:messages autoUpdate="true"  id="messages" showDetail="true" closable="true" /> 
+
+                <p:selectOneRadio id="console" class="buttonsTopCRM" value="#{crmEventFormDTOMB.leadsType}" rendered="#{crmEventFormDTOMB.employeeIsSupervisor}" >
+                    <f:selectItem itemLabel="بياناتي" itemValue="1" />
+                    <f:selectItem itemLabel="الكل" itemValue="0" />
+                    <p:ajax  update="@form" listener="#{crmEventFormDTOMB.numberOfLeads}" />
+                </p:selectOneRadio>
+
+                <div id="content2" class="content" dir="#{userData.dir}"  >  
+                    <ui:insert name="content2">
+                        <div class="ui-g-12 ui-g-nopad"  >
+                            <div class="ui-g maincrm">
+
+                                <div class="ui-g-12 ui-md-2">
+                                    <div class="stats" style="background-color: #028a38;">
+                                        <h:panelGroup>
+                                            <h:outputLabel class="labelNumber" for="name" value=" #{crmEventFormDTOMB.invOrganizationSiteDTO.numberOfNewLeadsAssigned}" />
+                                          <p:commandButton class="clickCRM2"
+                                                             id="t106"  
+                                                             value="العملاء الجدد " 
+                                                             onclick="form.target = '_blank'"
+                                                             ajax="flase"
+                                                             action="#{crmEventFormDTOMB.goToLeadsList(1)}" /> 
+                                        </h:panelGroup>
+                                    </div>
+                                </div>
+
+                                <div class="ui-g-12 ui-md-2">
+                                    <div class="stats" style="background-color: #1a95bb;">
+                                        <h:panelGroup>
+                                            <h:outputLabel class="labelNumber" for="name" value=" #{crmEventFormDTOMB.invOrganizationSiteDTO.numberOfLeadsAssigned}" />
+                                            <h:outputLabel for="name" value="اجمالي العملاء" />
+                                        </h:panelGroup>
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-md-2" >
+                                    <div class="stats" style="background-color: #1a95bb;">
+                                        <h:panelGroup>
+                                            <h:outputLabel class="labelNumber" for="name" value=" #{crmEventFormDTOMB.crmEventDTO.numberOfAllEvent}" />
+
+                                            <p:commandButton class="clickCRM1"
+                                                             id="t105"  
+                                                             value="اجمالي المهام" 
+                                                             onclick="form.target = '_blank'"
+                                                             ajax="flase"
+                                                             action="#{crmEventFormDTOMB.goToEventList(null)}" /> 
+                                        </h:panelGroup>
+                                    </div>
+                                </div>
+
+                                <div class="ui-g-12 ui-md-2">
+
+                                    <div class="stats">
+                                        <h:panelGroup>
+                                            <h:outputLabel class="labelNumber" for="name" value="#{crmEventFormDTOMB.crmEventDTO.numberOfNewEvent}" />
+
+                                            <p:commandButton class="clickCRM"
+                                                             id="t102"  
+                                                             value="مهام جديدة" 
+                                                             onclick="form.target = '_blank'"
+                                                             ajax="flase"
+                                                             action="#{crmEventFormDTOMB.goToEventList(0)}" /> 
+                                        </h:panelGroup>
+                                    </div>
+                                </div>
+
+                                <div class="ui-g-12 ui-md-2">
+
+                                    <div class="stats">
+                                        <h:panelGroup>
+                                            <h:outputLabel class="labelNumber" for="name" value=" #{crmEventFormDTOMB.crmEventDTO.numberOfLateEvent}" />
+
+                                            <p:commandButton class="clickCRM"
+                                                             id="t103"  
+                                                             value="مهام متأخره" 
+                                                             onclick="form.target = '_blank'"
+                                                             ajax="flase"
+                                                             action="#{crmEventFormDTOMB.goToEventList(2)}" /> 
+
+
+                                        </h:panelGroup>
+                                    </div>
+                                </div>
+
+                                <div class="ui-g-12 ui-md-2">
+
+                                    <div class="stats">
+                                        <h:panelGroup>
+                                            <h:outputLabel class="labelNumber" for="name" value=" #{crmEventFormDTOMB.crmEventDTO.numberOfNowEvent}" />
+
+                                            <p:commandButton class="clickCRM"
+                                                             id="t104"  
+                                                             value="مهام يومية" 
+                                                             onclick="form.target = '_blank'"
+                                                             ajax="flase"
+                                                             action="#{crmEventFormDTOMB.goToEventList(1)}" /> 
+
+                                        </h:panelGroup>
+                                    </div>
+                                </div>
+
+
+
+
+
+
+                                <div class="ui-g-12 ui-md-6" style="margin-top: -3%;">
+
+
+                                    <h:panelGroup>
+                                        <p:graphicImage library="img" name="clients.png" 
+                                                        class="clientsImage"
+                                                        >
+
+                                        </p:graphicImage>
+                                    </h:panelGroup>
+
+                                </div>  
+
+                                <div class="ui-g-12 ui-md-6 leftButtons" >
+                                    <p:commandButton id="add-todo"  style="z-index: 2;
+                                                     margin-top: 3%;
+                                                     color: #fff!important; 
+                                                     background-color: #{crmEventFormDTOMB.crmEventDTO.type eq 0 ? '#92262e!important' : '#223238'};
+                                                     border: 1px solid #22323a!important; box-shadow: 1px 3px 1px 1px; height: 75px;  width: 40%; margin-left: 5%;
+                                                     background: #{crmEventFormDTOMB.crmEventDTO.type eq 0 ? '#CCCCCC!important' : '#22323a'} 50% 50% repeat-x!important;"
+                                                     value="إضافة مهمة"
+                                                     title="إضافة مهمة"
+                                                     class="crmAddWidget" 
+                                                     onclick="PF('dlg1').show();"
+                                                     type="button"
+                                                     update="dlg1"
+
+                                                     />
+                                    <p:commandButton id="add-event"  style="z-index: 2;
+                                                     margin-top: 3%;
+                                                     color: #fff!important; 
+                                                     background-color: #{crmEventFormDTOMB.crmEventDTO.type eq 0 ? '#92262e!important' : '#223238'};
+                                                     border: 1px solid #22323a!important; box-shadow: 1px 3px 1px 1px; height: 75px; width: 40%; margin-left: 5%;
+                                                     background: #{crmEventFormDTOMB.crmEventDTO.type eq 0 ? '#CCCCCC!important' : '#22323a'} 50% 50% repeat-x!important;"
+                                                     value="إضافة حدث" 
+                                                     title="إضافة حدث"
+                                                     class="crmAddWidget" 
+                                                     onclick="PF('dlg1').show();"
+                                                     type="button"
+                                                     update="dlg1"
+                                                     />
+                                    <br/>
+                                    <p:commandButton id="add-leads"  style="z-index: 2;
+                                                     margin-top: 3%;
+                                                     color: #fff!important; 
+                                                     background-color: #{crmEventFormDTOMB.crmEventDTO.type eq 0 ? '#92262e!important' : '#223238'};
+                                                     border: 1px solid #22323a!important; box-shadow: 1px 3px 1px 1px; height: 75px;  width: 40%; margin-left: 5%;
+                                                     background: #{crmEventFormDTOMB.crmEventDTO.type eq 0 ? '#CCCCCC!important' : '#22323a'} 50% 50% repeat-x!important;"
+                                                     value=" عميل محتمل" 
+                                                     title=" عميل محتمل"
+                                                     class="crmAddWidget" 
+                                                     type="button" onclick="PF('dlg12').show()"/>
+                                    <p:commandButton id="entireForm"  style="z-index: 2;
+                                                     margin-top: 3%;
+                                                     color: #fff!important; 
+                                                     background-color: #{crmEventFormDTOMB.crmEventDTO.type eq 0 ? '#92262e!important' : '#223238'};
+                                                     border: 1px solid #22323a!important; box-shadow: 1px 3px 1px 1px; height: 75px;  width: 40%; margin-left: 5%;
+                                                     background: #{crmEventFormDTOMB.crmEventDTO.type eq 0 ? '#22323a!important' : '#22323a'} 50% 50% repeat-x!important;"
+                                                     value="استمارة كاملة" update="t1 t2"
+                                                     title="استمارة كاملة"
+                                                     class="crmAddWidget" 
+                                                     />
+                                </div> 
+                                
+                                <div>
+                            <p:dataTable 
+                id="eventListFormtable"
+                var="eventListForm" 
+                widgetVar="eventListForm"  
+                rowIndexVar="index" 
+                value="#{crmEventListDTOMB.listEveentMainScrren}"
+                rows="10" 
+                paginator="true"  
+                paginatorTemplate="{CurrentPageReport} {FirstPageLink}
+                {PreviousPageLink} {PageLinks} {NextPageLink}
+                {LastPageLink} {RowsPerPageDropdown}"
+                emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"  >
+
+                <f:facet name="header" class="col-md-12">
+                    <p:selectOneRadio class="buttonsTop" id="console" value="#{crmEventListDTOMB.dateType}" >
+                        <f:selectItem class="daily" itemLabel="يومي" itemValue="0" />
+                        <f:selectItem  class="weekly" itemLabel="اسبوعي" itemValue="1" />
+                        <p:ajax  update="eventListFormtable" />
+                    </p:selectOneRadio>
+                    <p:outputPanel style="margin-top: -3%; padding-bottom: 0.5%;"  >
+                        <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large; " />
+                        <p:inputText id="globalFilter" onkeyup="PF('eventListForm').filter()" style="width:25%;" />
+                    </p:outputPanel>
+                </f:facet>
+                <p:column headerText="#" style="width: 2vh;font-size: 1.8vh;text-align:right;border-radius: 0px;border-radius: 0px;">
+                    <h:outputText value="#{index + 1}"  style="font-size: 1.5vh" />
+                </p:column>
+
+                <p:column   headerText="اسم العميل"
+                            style="width: 5vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                            filterStyle="display:none" 
+                            filterBy="#{eventListForm.customerId.name}"
+                            filterMatchMode="contains"  
+                            sortBy="#{eventListForm.customerId.name}" >
+                    <p:outputLabel value="#{eventListForm.customerId.name}"  style="font-size: 1.5vh"/>
+                </p:column> 
+                <p:column   headerText="الهاتف"
+                            style="width: 5vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                            filterStyle="display:none" 
+                            filterBy="#{eventListForm.customerId.phone}"
+                            filterMatchMode="contains"  
+                            sortBy="#{eventListForm.customerId.phone}" >
+                    <p:outputLabel value="#{eventListForm.customerId.phone}"  style="font-size: 1.5vh"/>
+                </p:column>
+<!--                  <p:column   headerText="البريد الالكتروني"
+                            style="width: 5vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                            filterStyle="display:none" 
+                            filterBy="#/{eventListForm.customerId.email}"
+                            filterMatchMode="contains"  
+                            sortBy="#/{eventListForm.customerId.email}" >
+                    <p:outputLabel value="#/{eventListForm.customerId.email}"  style="font-size: 1.5vh"/>
+                </p:column>-->
+                <p:column   headerText="الموضوع"
+                            style="width: 5vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                            filterStyle="display:none" 
+                            filterBy="#{eventListForm.subject}"
+                            filterMatchMode="contains"  
+                            sortBy="#{eventListForm.subject}" >
+                    <p:outputLabel value="#{eventListForm.subject}"  style="font-size: 1.5vh"/>
+                </p:column>
+                <p:column   headerText="تاريخ وتوقيت البدايه"
+                            style="width: 5vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                            filterStyle="display:none" 
+                            filterBy="#{eventListForm.startDate}"
+                            filterMatchMode="contains"
+                            sortBy="#{eventListForm.startDate}" >
+                    <p:outputLabel value="#{eventListForm.startDate}"  style="font-size: 1.5vh">
+                        <f:convertDateTime type="date" pattern="dd-MM-yyyy hh:mm:ss"/>
+                    </p:outputLabel>
+                </p:column>
+                <p:column   headerText="الوصف"
+                            style="width: 20vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                            filterStyle="display:none" 
+                            filterBy="#{eventListForm.discription}"
+                            filterMatchMode="contains"  
+                            sortBy="#{eventListForm.discription}" >
+                    <p:outputLabel value="#{eventListForm.discription}"  style="font-size: 1.5vh"/>
+                </p:column>
+                <p:column   headerText="الحاله"
+                            style="width: 5vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                            filterStyle="display:none" 
+                            filterBy="#{eventListForm.status}"
+                            filterMatchMode="contains"  
+                            sortBy="#{eventListForm.status}" >
+                    <p:outputLabel value="#{eventListForm.status}"  style="font-size: 1.5vh"/>
+                </p:column>
+
+                <p:column   headerText="نوع المهمه"
+                            style="width: 5vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                            filterStyle="display:none" 
+                            filterBy="#{eventListForm.activityType}"
+                            filterMatchMode="contains"  
+                            sortBy="#{eventListForm.activityType}" >
+                    <p:outputLabel value="#{eventListForm.activityType}"  style="font-size: 1.5vh"/>
+                </p:column>
+                <p:column   headerText="المتابع"
+                            style="width: 5vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                            filterStyle="display:none" 
+                            filterBy="#{eventListForm.assignedTo.name}"
+                            filterMatchMode="contains"  
+                            sortBy="#{eventListForm.assignedTo.name}" >
+                    <p:outputLabel value="#{eventListForm.assignedTo.name}"  style="font-size: 1.5vh"/>
+                </p:column>
+
+
+            </p:dataTable>
+                        </div>
+
+                            </div>
+                        </div>
+                        
+                    </ui:insert>
+                    
+                    
+  
+                </div>
+     
+            </p:fieldset>
+            </div>
+            
+            
+            
+            
+            
+            <p:dialog class="dialogueCRM" id="dialogueCRM" header="إضافة مهمة جديدة" widgetVar="dlg1" minHeight="40">
+                <h:panelGrid id="panelDialogueCRM" > 
+                    <p:commandButton id="t1"  style="z-index: 2;
+                                     margin-top: 3%;
+                                     color: #035c70!important; 
+                                     background-color: #{crmEventFormDTOMB.crmEventDTO.type eq 0 ? '#CCCCCC!important' : '#223238'};
+                                     border: 1px solid #22323a!important;
+                                     background: #{crmEventFormDTOMB.crmEventDTO.type eq 0 ? '#CCCCCC!important' : '#22323a'} 50% 50% repeat-x!important;"
+                                     value="إضافة مهمة" update="t1 t2"
+                                     title="إضافة مهمة"
+                                     class="addnewwidget" 
+                                     action="#{crmEventFormDTOMB.updateTODOValue()}" />  
+
+                    <p:commandButton id="t2" style="z-index: 2;
+                                     margin-top: 3%;
+                                     color: #035c70!important; 
+                                     background-color: #{crmEventFormDTOMB.crmEventDTO.type eq 1 ? '#CCCCCC!important' : '#223238'};
+                                     border: 1px solid #22323a!important;
+                                     background: #{crmEventFormDTOMB.crmEventDTO.type eq 1 ? '#CCCCCC!important' : '#22323a'} 50% 50% repeat-x!important;"
+                                     value="إضافة حدث" update="t1 t2"
+                                     title="إضافة حدث"
+                                     class="addnewwidget" 
+                                     action="#{crmEventFormDTOMB.updateEventValue()}" />
+
+                    <div class="ui-g-12 ui-g-nopad"  >
+                        <div class="ui-g">
+
+                            <div class="ui-g-12 ui-md-6">
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 98px;margin-right: 4%;" value="الموضوع"/>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:inputText style="width: 52%!important" value="#{crmEventFormDTOMB.crmEventDTO.subject}"/>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+
+                            </div>
+
+
+
+
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup rendered="#{crmEventFormDTOMB.employeeIsSupervisor}">
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 103px;margin-right: 4%;" value="اسم المتابع"/>
+                                    </h:panelGroup>
+                                    <p:outputLabel id="assignedTo" style="width:50%!important "   value="#{crmEventFormDTOMB.crmEventDTO.assignedTo}" />
+                                </h:panelGroup>
+
+
+
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 103px;margin-right: 4%;" value="اسم العميل"/>
+                                    </h:panelGroup>
+                                    <p:autoComplete style="width:50%!important " 
+                                                    dropdown="true"
+                                                    converter="#{autoComplete.organizationSiteDTOConvertor}"
+                                                    value="#{crmEventFormDTOMB.crmEventDTO.customerId}"
+                                                    var="lead"
+                                                    itemLabel="#{lead}" 
+                                                    itemValue="#{lead}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{autoComplete.completeLeadsByLeaders}"
+                                                    id="customerName"  
+                                                    >
+                                        <p:ajax update="assignedTo"
+                                                event="itemSelect"
+                                                listener="#{crmEventFormDTOMB.updateAssignedTo}" />
+                                    </p:autoComplete>
+                                </h:panelGroup>
+                            </div>
+
+                            <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                                <h:panelGroup>
+                                    <p:outputLabel style="margin-right: 5%;" for="datetime1" value="تاريخ  وتوقيت  البداية" />
+                                    <p:calendar id="datetime1" value="#{crmEventFormDTOMB.crmEventDTO.startDate}" 
+                                                pattern="MM/dd/yyyy HH:mm:ss" />
+
+                                </h:panelGroup>
+                            </div>
+
+                            <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                                <h:panelGroup>
+                                    <p:outputLabel style="margin-right: 5%;" for="datetime" value="تاريخ  وتوقيت  النهاية" />
+                                    <p:calendar id="datetime" value="#{crmEventFormDTOMB.crmEventDTO.endDate}" 
+                                                pattern="MM/dd/yyyy HH:mm:ss" />
+                                </h:panelGroup>
+                            </div>
+
+                            <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width:105px;margin-right: 5%"  value="الحاله" />
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:autoComplete style="width:49%!important " 
+                                                        dropdown="true"
+                                                        converter="#{crmEventFormDTOMB.eventStatusDTOconverter}"
+                                                        value="#{crmEventFormDTOMB.crmEventDTO.status}"
+                                                        var="eventStatus"
+                                                        itemLabel="#{eventStatus}" 
+                                                        itemValue="#{eventStatus}" 
+                                                        forceSelection="true" 
+                                                        completeMethod="#{crmEventFormDTOMB.completeEventStatus}"
+                                                        >
+
+                                        </p:autoComplete>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </div>
+
+                            <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                                <h:panelGroup >
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width:105px;margin-right: 5%"  value="نوع المهمه / الحدث" />
+                                    </h:panelGroup>
+                                    <h:panelGroup >
+                                        <p:autoComplete style="width:49%!important " 
+
+                                                        dropdown="true"
+                                                        converter="#{crmEventFormDTOMB.activityTypeDTOconverter}"
+                                                        value="#{crmEventFormDTOMB.crmEventDTO.activityType}"
+                                                        var="activityType"
+                                                        itemLabel="#{activityType}" 
+                                                        itemValue="#{activityType}" 
+                                                        forceSelection="true" 
+                                                        completeMethod="#{crmEventFormDTOMB.completeActivityType}"
+                                                        >
+
+                                        </p:autoComplete>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </div>
+
+                            <div>
+                                <panelGrid class="centerButtons col-md-12">
+
+                                    <h:panelGroup>
+
+                                        <p:commandButton  class="saveButton" id="saveB" 
+                                                          title="#{userData.userDDs['SAVE']}" 
+                                                          value="#{userData.userDDs['SAVE']}" 
+                                                          style="color: #ecf0f1!important;;background-color: #9c27b0d1!important;margin-left: 5px" 
+                                                          action="#{crmEventFormDTOMB.saveEvent() }" 
+
+                                                          />
+                                        <p:commandButton  class="closeButton" id="cancelC" 
+                                                          title="#{userData.userDDs['CANCEL']}" 
+                                                          value="#{userData.userDDs['CANCEL']}" onclick="PF('dlg1').hide();" 
+                                                          style="color: #ecf0f1!important;background-color: #009688!important;margin-left: 5px" 
+                                                          update="@form"/>
+                                        <p:commandButton  class="closeButton" id="resetEvent" 
+                                                          title="جديد" 
+                                                          value="جديد"  
+                                                          style="color: #ecf0f1!important;background-color: #009688!important;margin-left: 5px" 
+                                                          action="#{crmEventFormDTOMB.resetEvent()}"
+                                                          update="panelDialogueCRM"
+
+                                                          > 
+                                        </p:commandButton>
+
+                                        <p:commandButton  class="fullButton" id="cancelC1" 
+                                                          title="استمارة كاملة" 
+                                                          value="استمارة كاملة" 
+
+                                                          actionListener="#{crmEventFormDTOMB.goToEvent()}"                                                      
+                                                          onclick="form.target = '_blank'"  ajax="false"
+                                                          style="color: #ecf0f1!important;background-color: #22323a!important;margin-left: 5px" 
+                                                          />
+
+
+                                        <p:blockUI block="form" trigger="saveB" animate="true" >
+
+                                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                                        </p:blockUI> 
+
+
+                                    </h:panelGroup>
+                                </panelGrid>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </h:panelGrid> 
+            </p:dialog>
+
+            <p:dialog class="dialogueCRM" header="إضافةعميل جديد"  id="dlg12" widgetVar="dlg12" minHeight="40">
+
+                <h:panelGrid id="pn1" > 
+                    <div class="ui-g-12 ui-g-nopad"  >
+                        <div class="ui-g">
+
+
+                            <div class="ui-g-12 ui-md-6">
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 84px;margin-right: 4%;" value="كود العميل"/>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 50%!important" value="#{crmEventFormDTOMB.invOrganizationSiteDTO.code}"/>
+                                    </h:panelGroup>
+
+                                </h:panelGroup>
+
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 84px;margin-right: 4%;" value="الاسم الاول"/>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:inputText style="width: 50%!important" value="#{crmEventFormDTOMB.invOrganizationSiteDTO.name}"/>
+                                    </h:panelGroup>
+
+                                </h:panelGroup>
+
+                            </div>
+
+                            <div class="ui-g-12 ui-md-6">
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 84px;margin-right: 4%;" value="الموبايل"/>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:inputText style="width: 50%!important" a:autofocus="true" value="#{crmEventFormDTOMB.invOrganizationSiteDTO.mobile}">
+                                            <p:ajax event="blur"   update=" messages"  listener="#{crmEventFormDTOMB.vaildationContacts}"/>
+                                        </p:inputText>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+
+                            </div>
+
+
+
+                            <div class="ui-g-12 ui-md-6">
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 84px;margin-right: 4%;" value="الايميل"/>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:inputText style="width: 50%!important" value="#{crmEventFormDTOMB.invOrganizationSiteDTO.email}" validatorMessage="الايميل غير صحيح">
+                                            <f:validateRegex pattern="([\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z])|" />
+                                            <p:ajax event="blur" update=" messages"  listener="#{crmEventFormDTOMB.vaildationContacts}"/>
+                                        </p:inputText>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+
+                            </div>
+
+
+
+                            <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 92px;margin-right: 5%"  value="حالة العميل" />
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:autoComplete style="width:47%!important " 
+                                                        dropdown="true"
+                                                        converter="#{crmEventFormDTOMB.leadStatusDTOconverter}"
+                                                        value="#{crmEventFormDTOMB.invOrganizationSiteDTO.leadStatus}"
+                                                        var="leadStatus"
+                                                        itemLabel="#{leadStatus}" 
+                                                        itemValue="#{leadStatus}" 
+                                                        forceSelection="true" 
+                                                        completeMethod="#{crmEventFormDTOMB.completeLeadStatus}"
+                                                        >
+
+                                        </p:autoComplete>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </div>
+
+                            <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                                <h:panelGroup rendered="#{crmEventFormDTOMB.employeeIsSupervisor}">
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width:92px;margin-right: 5%"  value="متابع العميل" />
+                                    </h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:autoComplete style="width:47%!important " 
+                                                        dropdown="true"
+                                                        converter="#{crmEventFormDTOMB.employeeDTOConverter}"
+                                                        value="#{crmEventFormDTOMB.invOrganizationSiteDTO.assignedTo}"
+                                                        var="employee"
+                                                        itemLabel="#{employee}" 
+                                                        itemValue="#{employee}" 
+                                                        forceSelection="true" 
+                                                        completeMethod="#{crmEventFormDTOMB.completeEmployeeDTO}"
+                                                        >
+
+                                        </p:autoComplete>
+
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </div>
+
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 89px;margin-right: 4%;" value="اسم الوحده"/>
+                                    </h:panelGroup>
+                                    <p:autoComplete style="width:49%!important " 
+                                                    dropdown="true"
+                                                    converter="#{autoComplete.instProjectGuideDTOConverter}"
+                                                    value="#{crmEventFormDTOMB.invOrganizationSiteDTO.instProjectGuideDTO}"
+                                                    var="project"
+                                                    itemLabel="#{project}" 
+                                                    itemValue="#{project}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{autoComplete.completeInstProjectDTOTo}"
+                                                    >
+                                    </p:autoComplete>
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:99px;margin-right: 5%"  value="اسم المشروع" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:34%!important " 
+                                                    dropdown="true"
+                                                    converter="#{crmLeadsFormDTOMB.projectNameConverter}"
+                                                    value="#{crmEventFormDTOMB.invOrganizationSiteDTO.projectName}"
+                                                    var="projectName"
+                                                    itemLabel="#{projectName}" 
+                                                    itemValue="#{projectName}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{crmLeadsFormDTOMB.completeProjectName}"
+                                                    >
+
+                                    </p:autoComplete>
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:104px;margin-right: 5%"  value="مصدر العميل" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:34%!important " 
+                                                    dropdown="true"
+                                                    converter="#{crmLeadsFormDTOMB.learnAboutCompanyfromconverter}"
+                                                    value="#{crmLeadsFormDTOMB.invOrganizationSiteDTO.learnAboutCompanyFrom}"
+                                                    var="learnAboutCompanyfrom"
+                                                    itemLabel="#{learnAboutCompanyfrom}" 
+                                                    itemValue="#{learnAboutCompanyfrom}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{crmLeadsFormDTOMB.completeLearnAboutCompanyfrom}"
+                                                    >
+
+                                    </p:autoComplete>
+                                </h:panelGroup>
+                            </div>
+                            <div>
+                                <panelGrid class="centerButtons col-md-12">
+
+                                    <h:panelGroup>
+
+                                        <p:commandButton  class="saveButton" id="saveBB" 
+                                                          title="#{userData.userDDs['SAVE']}" 
+                                                          value="#{userData.userDDs['SAVE']}" 
+                                                          style="color: #ecf0f1!important;;background-color: #9c27b0d1!important;margin-left: 5px" 
+                                                          action="#{crmEventFormDTOMB.saveLead()}" 
+
+                                                          />
+                                        <p:commandButton  class="closeButton" id="resetLeads" 
+                                                          title="جديد" 
+                                                          value="جديد"
+                                                          style="color: #ecf0f1!important;background-color: #009688!important;margin-left: 5px" 
+                                                          action="#{crmEventFormDTOMB.resetLeads()}"
+                                                          update="pn1"
+                                                          />
+                                        <p:commandButton  class="closeButton" id="cancelCC" 
+                                                          title="#{userData.userDDs['CANCEL']}" 
+                                                          value="#{userData.userDDs['CANCEL']}" 
+                                                          style="color: #ecf0f1!important;background-color: #009688!important;margin-left: 5px" 
+                                                          onclick="PF('dlg1').hide();" 
+                                                          update="@form"/>
+
+                                        <p:commandButton  class="fullButton" id="cancelC11" 
+                                                          title="استمارة كاملة" 
+                                                          value="استمارة كاملة" 
+                                                          action="#{crmEventFormDTOMB.goToLeads()}"                                                      
+                                                          onclick="form.target = '_blank'"  ajax="false"
+                                                          style="color: #ecf0f1!important;background-color: #22323a!important;margin-left: 5px" 
+                                                          />
+                                        <p:commandButton  class="saveButton" id="saveBQ" 
+                                                          title="اضافه مهمه" 
+                                                          value="اضافه مهمه" 
+                                                          style="color: #ecf0f1!important;;background-color: #9c27b0d1!important;margin-left: 5px" 
+                                                          action="#{crmEventFormDTOMB.saveLeadANDEvent()}" 
+                                                          update="customerName assignedTo"
+                                                          />
+                                        <p:blockUI block="form" trigger="saveB" animate="true" >
+
+                                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                                        </p:blockUI> 
+
+
+                                    </h:panelGroup>
+                                </panelGrid>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </h:panelGrid>
+            </p:dialog>
+
+
+        </h:form>
+    </ui:define>
+</ui:composition>

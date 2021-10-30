@@ -7,6 +7,7 @@ package com.toby.toby;
 
 import com.toby.converter.CostCenterDTOConverter;
 import com.toby.converter.CurrencyDTOConverter;
+import com.toby.converter.EmployeeDTOConverter;
 import com.toby.converter.GlAccountDTOConverter;
 import com.toby.converter.GlAdminUnitDTOConverter;
 import com.toby.converter.GlBankDTOConverter;
@@ -27,6 +28,7 @@ import com.toby.converter.TobyUserDTOConverter;
 import com.toby.converter.TobyUserProproductionDTOConverter;
 import com.toby.dto.CostCenterDTO;
 import com.toby.dto.CurrencyDTO;
+import com.toby.dto.EmployeeDTO;
 import com.toby.dto.GlAccountDTO;
 import com.toby.dto.GlAdminUnitDTO;
 import com.toby.dto.GlBankDTO;
@@ -55,6 +57,206 @@ import static jdk.nashorn.internal.objects.NativeError.printStackTrace;
  */
 public class AutoComplete {
 
+    ///////////////////  CRM //////////////////
+    
+     public static List<EmployeeDTO> completeEmployeeDTO(String query, List<EmployeeDTO> employeeDTOList, EmployeeDTOConverter employeeDTOConverter) {
+        List<EmployeeDTO> Employee = employeeDTOList;
+        if (query == null || query.trim().equals("")) {
+            employeeDTOConverter = new EmployeeDTOConverter(Employee);
+            return Employee;
+        }
+        List<EmployeeDTO> filteredEmployee = new ArrayList<>();
+
+        String nameAr;
+        Integer code;
+        EmployeeDTO employeeSymbol;
+        for (int i = 0; i < employeeDTOList.size(); i++) {
+            employeeSymbol = employeeDTOList.get(i);
+            nameAr = employeeSymbol.getName();
+            if (nameAr != null && nameAr.toLowerCase().contains(query.toLowerCase())) {
+                if (!filteredEmployee.contains(employeeSymbol)) {
+                    filteredEmployee.add(employeeSymbol);
+                }
+            }
+
+            code = employeeSymbol.getCode();
+            if (code != null && String.valueOf(code).contains(query)) {
+                if (!filteredEmployee.contains(employeeSymbol)) {
+                    filteredEmployee.add(employeeSymbol);
+                }
+            }
+        }
+
+        employeeDTOConverter = new EmployeeDTOConverter(filteredEmployee);
+        return filteredEmployee;
+    }
+    
+    
+    public static List<SymbolDTO> completeLeadStatus(String query, List<SymbolDTO> leadStatusList, SymbolDTOConverter leadStatusDTOConverter) {
+        List<SymbolDTO> leadStatus = leadStatusList;
+        if (query == null || query.trim().equals("")) {
+            leadStatusDTOConverter = new SymbolDTOConverter(leadStatus);
+            return leadStatus;
+        }
+        List<SymbolDTO> filteredRelation = new ArrayList<>();
+
+        String nameAr;
+        Integer code;
+        SymbolDTO relationListSymbol;
+        for (int i = 0; i < leadStatusList.size(); i++) {
+            relationListSymbol = leadStatusList.get(i);
+            nameAr = relationListSymbol.getName();
+            if (nameAr != null && nameAr.toLowerCase().contains(query.toLowerCase())) {
+                if (!filteredRelation.contains(relationListSymbol)) {
+                    filteredRelation.add(relationListSymbol);
+                }
+            }
+
+            code = relationListSymbol.getSerial();
+            if (code != null && String.valueOf(code).contains(query)) {
+                if (!filteredRelation.contains(relationListSymbol)) {
+                    filteredRelation.add(relationListSymbol);
+                }
+            }
+        }
+
+        leadStatusDTOConverter = new SymbolDTOConverter(filteredRelation);
+        return filteredRelation;
+    }
+    
+    public static List<SymbolDTO> completeEventStatus(String query, List<SymbolDTO> eventStatusList, SymbolDTOConverter eventStatusDTOConverter) {
+        List<SymbolDTO> leadStatus = eventStatusList;
+        if (query == null || query.trim().equals("")) {
+            eventStatusDTOConverter = new SymbolDTOConverter(leadStatus);
+            return leadStatus;
+        }
+        List<SymbolDTO> filteredRelation = new ArrayList<>();
+
+        String nameAr;
+        Integer code;
+        SymbolDTO relationListSymbol;
+        for (int i = 0; i < eventStatusList.size(); i++) {
+            relationListSymbol = eventStatusList.get(i);
+            nameAr = relationListSymbol.getName();
+            if (nameAr != null && nameAr.toLowerCase().contains(query.toLowerCase())) {
+                if (!filteredRelation.contains(relationListSymbol)) {
+                    filteredRelation.add(relationListSymbol);
+                }
+            }
+
+            code = relationListSymbol.getSerial();
+            if (code != null && String.valueOf(code).contains(query)) {
+                if (!filteredRelation.contains(relationListSymbol)) {
+                    filteredRelation.add(relationListSymbol);
+                }
+            }
+        }
+
+        eventStatusDTOConverter = new SymbolDTOConverter(filteredRelation);
+        return filteredRelation;
+    }
+
+    
+    
+    public static List<SymbolDTO> completeActivityType(String query, List<SymbolDTO> activityTypeList, SymbolDTOConverter activityTypeDTOConverter) {
+        List<SymbolDTO> activityType = activityTypeList;
+        if (query == null || query.trim().equals("")) {
+            activityTypeDTOConverter = new SymbolDTOConverter(activityType);
+            return activityType;
+        }
+        List<SymbolDTO> filteredRelation = new ArrayList<>();
+
+        String nameAr;
+        Integer code;
+        SymbolDTO relationListSymbol;
+        for (int i = 0; i < activityTypeList.size(); i++) {
+            relationListSymbol = activityTypeList.get(i);
+            nameAr = relationListSymbol.getName();
+            if (nameAr != null && nameAr.toLowerCase().contains(query.toLowerCase())) {
+                if (!filteredRelation.contains(relationListSymbol)) {
+                    filteredRelation.add(relationListSymbol);
+                }
+            }
+
+            code = relationListSymbol.getSerial();
+            if (code != null && String.valueOf(code).contains(query)) {
+                if (!filteredRelation.contains(relationListSymbol)) {
+                    filteredRelation.add(relationListSymbol);
+                }
+            }
+        }
+
+        activityTypeDTOConverter = new SymbolDTOConverter(filteredRelation);
+        return filteredRelation;
+    }
+   
+    
+    public static List<SymbolDTO> completepriority(String query, List<SymbolDTO> priorityList, SymbolDTOConverter priorityDTOConverter) {
+        List<SymbolDTO> activityType = priorityList;
+        if (query == null || query.trim().equals("")) {
+            priorityDTOConverter = new SymbolDTOConverter(activityType);
+            return activityType;
+        }
+        List<SymbolDTO> filteredRelation = new ArrayList<>();
+
+        String nameAr;
+        Integer code;
+        SymbolDTO relationListSymbol;
+        for (int i = 0; i < priorityList.size(); i++) {
+            relationListSymbol = priorityList.get(i);
+            nameAr = relationListSymbol.getName();
+            if (nameAr != null && nameAr.toLowerCase().contains(query.toLowerCase())) {
+                if (!filteredRelation.contains(relationListSymbol)) {
+                    filteredRelation.add(relationListSymbol);
+                }
+            }
+
+            code = relationListSymbol.getSerial();
+            if (code != null && String.valueOf(code).contains(query)) {
+                if (!filteredRelation.contains(relationListSymbol)) {
+                    filteredRelation.add(relationListSymbol);
+                }
+            }
+        }
+
+        priorityDTOConverter = new SymbolDTOConverter(filteredRelation);
+        return filteredRelation;
+    }
+
+    public static List<SymbolDTO> completeSymbol(String query, List<SymbolDTO> symbolList, SymbolDTOConverter symbolConverter) {
+        List<SymbolDTO> activityType = symbolList;
+        if (query == null || query.trim().equals("")) {
+            symbolConverter = new SymbolDTOConverter(activityType);
+            return activityType;
+        }
+        List<SymbolDTO> filteredRelation = new ArrayList<>();
+
+        String nameAr;
+        Integer code;
+        SymbolDTO relationListSymbol;
+        for (int i = 0; i < symbolList.size(); i++) {
+            relationListSymbol = symbolList.get(i);
+            nameAr = relationListSymbol.getName();
+            if (nameAr != null && nameAr.toLowerCase().contains(query.toLowerCase())) {
+                if (!filteredRelation.contains(relationListSymbol)) {
+                    filteredRelation.add(relationListSymbol);
+                }
+            }
+
+            code = relationListSymbol.getSerial();
+            if (code != null && String.valueOf(code).contains(query)) {
+                if (!filteredRelation.contains(relationListSymbol)) {
+                    filteredRelation.add(relationListSymbol);
+                }
+            }
+        }
+
+        symbolConverter = new SymbolDTOConverter(filteredRelation);
+        return filteredRelation;
+    }
+    
+    
+    //////////////////////////////////////////////
     public static List<InvOrganizationSite> completOrgSite(String query, List<InvOrganizationSite> invOrgSites, InvOrganizationSiteConverter invOrgSiteConverter) {
 
         List<InvOrganizationSite> invOrgSiteList = invOrgSites;

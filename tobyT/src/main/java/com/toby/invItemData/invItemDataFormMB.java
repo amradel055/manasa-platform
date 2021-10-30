@@ -340,12 +340,14 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
 
     public void reset() {
         try {
-            ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-            setScreenMode((String) context.getSessionMap().get("ScreenMode"));
-            context.getSessionMap().replace("ScreenMode", "Add");
-            setScreenMode("Add");
-
-            init();
+//            ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+//            setScreenMode((String) context.getSessionMap().get("ScreenMode"));
+//            context.getSessionMap().replace("ScreenMode", "Add");
+//            setScreenMode("Add");
+//
+//            init();
+            getItemDataEntity().setId(null);
+            getItemDataEntity().setCode(null);
         } catch (Exception e) {
             saveError(e, "invItemDataFormMB", "reset");
         }

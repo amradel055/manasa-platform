@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -144,6 +145,48 @@ public class InvOrganizationSite extends BaseEntity {
     private BigDecimal shoulder;
     @Column(name = "step")
     private BigDecimal step;
+    
+    
+    @JoinColumn(name = "assigned_to", referencedColumnName = "id")
+    @ManyToOne
+    private Employee assignedTo;
+    @JoinColumn(name = "lead_status", referencedColumnName = "id")
+    @ManyToOne
+    private Symbol leadStatus;
+    @Size(max = 100)
+    @Column(name = "url_site")
+    private String urlSite;
+    @Size(max = 100)
+    @Column(name = "url_facebook")
+    private String urlFacebook;
+    @Size(max = 100)
+    @Column(name = "url_instegram")
+    private String urlInstegram;
+    @Size(max = 100)
+    @Column(name = "url_snapchat")
+    private String urlSnapchat;
+    @Size(max = 100)
+    @Column(name = "url_linkedin")
+    private String urlLinkedin;
+    @Column(name = "category")
+    private Integer category;
+    @Column(name = "employee_number")
+    private Integer employeeNumber;
+    @Column(name = "call_first_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date callFirstDate;
+    @Size(max = 100)
+    @Column(name = "discription")
+    private String discription;
+    @JoinColumn(name = "project_name", referencedColumnName = "id")
+    @ManyToOne
+    private Symbol projectName;
+    @Column(name = "tax_Number")
+    private String taxNumber;    
+    @JoinColumn(name = "Learn_about_company_from", referencedColumnName = "id")
+    @ManyToOne
+    private Symbol LearnAboutCompanyfrom;
+
 
     public InvOrganizationSite() {
     }
@@ -489,6 +532,202 @@ public class InvOrganizationSite extends BaseEntity {
      */
     public void setStep(BigDecimal step) {
         this.step = step;
+    }
+
+    /**
+     * @return the assignedTo
+     */
+    public Employee getAssignedTo() {
+        return assignedTo;
+    }
+
+    /**
+     * @param assignedTo the assignedTo to set
+     */
+    public void setAssignedTo(Employee assignedTo) {
+        this.assignedTo = assignedTo;
+    }
+
+    /**
+     * @return the leadStatus
+     */
+    public Symbol getLeadStatus() {
+        return leadStatus;
+    }
+
+    /**
+     * @param leadStatus the leadStatus to set
+     */
+    public void setLeadStatus(Symbol leadStatus) {
+        this.leadStatus = leadStatus;
+    }
+
+    /**
+     * @return the urlSite
+     */
+    public String getUrlSite() {
+        return urlSite;
+    }
+
+    /**
+     * @param urlSite the urlSite to set
+     */
+    public void setUrlSite(String urlSite) {
+        this.urlSite = urlSite;
+    }
+
+    /**
+     * @return the urlFacebook
+     */
+    public String getUrlFacebook() {
+        return urlFacebook;
+    }
+
+    /**
+     * @param urlFacebook the urlFacebook to set
+     */
+    public void setUrlFacebook(String urlFacebook) {
+        this.urlFacebook = urlFacebook;
+    }
+
+    /**
+     * @return the urlInstegram
+     */
+    public String getUrlInstegram() {
+        return urlInstegram;
+    }
+
+    /**
+     * @param urlInstegram the urlInstegram to set
+     */
+    public void setUrlInstegram(String urlInstegram) {
+        this.urlInstegram = urlInstegram;
+    }
+
+    /**
+     * @return the urlSnapchat
+     */
+    public String getUrlSnapchat() {
+        return urlSnapchat;
+    }
+
+    /**
+     * @param urlSnapchat the urlSnapchat to set
+     */
+    public void setUrlSnapchat(String urlSnapchat) {
+        this.urlSnapchat = urlSnapchat;
+    }
+
+    /**
+     * @return the urlLinkedin
+     */
+    public String getUrlLinkedin() {
+        return urlLinkedin;
+    }
+
+    /**
+     * @param urlLinkedin the urlLinkedin to set
+     */
+    public void setUrlLinkedin(String urlLinkedin) {
+        this.urlLinkedin = urlLinkedin;
+    }
+
+    /**
+     * @return the category
+     */
+    public Integer getCategory() {
+        return category;
+    }
+
+    /**
+     * @param category the category to set
+     */
+    public void setCategory(Integer category) {
+        this.category = category;
+    }
+
+    /**
+     * @return the employeeNumber
+     */
+    public Integer getEmployeeNumber() {
+        return employeeNumber;
+    }
+
+    /**
+     * @param employeeNumber the employeeNumber to set
+     */
+    public void setEmployeeNumber(Integer employeeNumber) {
+        this.employeeNumber = employeeNumber;
+    }
+
+    /**
+     * @return the callFirstDate
+     */
+    public Date getCallFirstDate() {
+        return callFirstDate;
+    }
+
+    /**
+     * @param callFirstDate the callFirstDate to set
+     */
+    public void setCallFirstDate(Date callFirstDate) {
+        this.callFirstDate = callFirstDate;
+    }
+
+    /**
+     * @return the discription
+     */
+    public String getDiscription() {
+        return discription;
+    }
+
+    /**
+     * @param discription the discription to set
+     */
+    public void setDiscription(String discription) {
+        this.discription = discription;
+    }
+
+    /**
+     * @return the projectName
+     */
+    public Symbol getProjectName() {
+        return projectName;
+    }
+
+    /**
+     * @param projectName the projectName to set
+     */
+    public void setProjectName(Symbol projectName) {
+        this.projectName = projectName;
+    }
+
+    /**
+     * @return the taxNumber
+     */
+    public String getTaxNumber() {
+        return taxNumber;
+    }
+
+    /**
+     * @param taxNumber the taxNumber to set
+     */
+    public void setTaxNumber(String taxNumber) {
+        this.taxNumber = taxNumber;
+    }
+
+    /**
+     * @return the LearnAboutCompanyfrom
+     */
+    public Symbol getLearnAboutCompanyfrom() {
+        return LearnAboutCompanyfrom;
+    }
+
+    /**
+     * @param LearnAboutCompanyfrom the LearnAboutCompanyfrom to set
+     */
+    public void setLearnAboutCompanyfrom(Symbol LearnAboutCompanyfrom) {
+        this.LearnAboutCompanyfrom = LearnAboutCompanyfrom;
     }
 
 }

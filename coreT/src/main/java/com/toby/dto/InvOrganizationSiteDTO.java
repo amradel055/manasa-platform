@@ -5,8 +5,10 @@
  */
 package com.toby.dto;
 
+import com.toby.entity.Symbol;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author hq003
@@ -61,6 +63,37 @@ public class InvOrganizationSiteDTO extends BaseEntityDTO {
     private BigDecimal shoulder;
     private BigDecimal step;
 
+    
+    /////////////// CRM /////////////////////////
+     private SymbolDTO categoryIndustryId;
+    private SymbolDTO leadStatus;
+    private String urlSite;
+    private String urlFacebook;
+    private String urlInstegram;
+    private String urlSnapchat;
+    private String urlLinkedin;
+    private Integer category;
+    private Integer employeeNumber;
+    private Date callFirstDate;
+    private String discription;
+    private EmployeeDTO assignedTo;
+    private EmployeeDTO transferTo;
+    private SymbolDTO learnAboutCompanyFrom;
+    private List<CrmCustomerInterestedProductsDTO> crmCustomerInterestedProductsDTOList;
+    private List<CrmCustomerInterestedProductsDTO> CrmCustomerInterestedProductsDTODeleteList;
+    private InstProjectGuideDTO instProjectGuideDTO;
+    private Boolean employeeIsSupervisor = Boolean.FALSE;
+    private SymbolDTO projectName;
+    private List<CrmEventDTO> crmEventDTOList;
+    private List<CrmEventDTO> crmEventDTODeletedList;
+    private CrmEventDTO crmEventDTOSelected;
+    private Integer numberOfLeads;
+    private Integer numberOfNewLeads;
+    private Integer numberOfLeadsAssigned;
+    private Integer numberOfNewLeadsAssigned;
+    private String legalAffairsRemark;
+    
+    
     public InvOrganizationSiteDTO() {
     }
 
@@ -740,6 +773,384 @@ public class InvOrganizationSiteDTO extends BaseEntityDTO {
      */
     public void setStep(BigDecimal step) {
         this.step = step;
+    }
+
+    /**
+     * @return the categoryIndustryId
+     */
+    public SymbolDTO getCategoryIndustryId() {
+        return categoryIndustryId;
+    }
+
+    /**
+     * @param categoryIndustryId the categoryIndustryId to set
+     */
+    public void setCategoryIndustryId(SymbolDTO categoryIndustryId) {
+        this.categoryIndustryId = categoryIndustryId;
+    }
+
+    /**
+     * @return the leadStatus
+     */
+    public SymbolDTO getLeadStatus() {
+        return leadStatus;
+    }
+
+    /**
+     * @param leadStatus the leadStatus to set
+     */
+    public void setLeadStatus(SymbolDTO leadStatus) {
+        this.leadStatus = leadStatus;
+    }
+
+    /**
+     * @return the urlSite
+     */
+    public String getUrlSite() {
+        return urlSite;
+    }
+
+    /**
+     * @param urlSite the urlSite to set
+     */
+    public void setUrlSite(String urlSite) {
+        this.urlSite = urlSite;
+    }
+
+    /**
+     * @return the urlFacebook
+     */
+    public String getUrlFacebook() {
+        return urlFacebook;
+    }
+
+    /**
+     * @param urlFacebook the urlFacebook to set
+     */
+    public void setUrlFacebook(String urlFacebook) {
+        this.urlFacebook = urlFacebook;
+    }
+
+    /**
+     * @return the urlInstegram
+     */
+    public String getUrlInstegram() {
+        return urlInstegram;
+    }
+
+    /**
+     * @param urlInstegram the urlInstegram to set
+     */
+    public void setUrlInstegram(String urlInstegram) {
+        this.urlInstegram = urlInstegram;
+    }
+
+    /**
+     * @return the urlSnapchat
+     */
+    public String getUrlSnapchat() {
+        return urlSnapchat;
+    }
+
+    /**
+     * @param urlSnapchat the urlSnapchat to set
+     */
+    public void setUrlSnapchat(String urlSnapchat) {
+        this.urlSnapchat = urlSnapchat;
+    }
+
+    /**
+     * @return the urlLinkedin
+     */
+    public String getUrlLinkedin() {
+        return urlLinkedin;
+    }
+
+    /**
+     * @param urlLinkedin the urlLinkedin to set
+     */
+    public void setUrlLinkedin(String urlLinkedin) {
+        this.urlLinkedin = urlLinkedin;
+    }
+
+    /**
+     * @return the category
+     */
+    public Integer getCategory() {
+        return category;
+    }
+
+    /**
+     * @param category the category to set
+     */
+    public void setCategory(Integer category) {
+        this.category = category;
+    }
+
+    /**
+     * @return the employeeNumber
+     */
+    public Integer getEmployeeNumber() {
+        return employeeNumber;
+    }
+
+    /**
+     * @param employeeNumber the employeeNumber to set
+     */
+    public void setEmployeeNumber(Integer employeeNumber) {
+        this.employeeNumber = employeeNumber;
+    }
+
+    /**
+     * @return the callFirstDate
+     */
+    public Date getCallFirstDate() {
+        return callFirstDate;
+    }
+
+    /**
+     * @param callFirstDate the callFirstDate to set
+     */
+    public void setCallFirstDate(Date callFirstDate) {
+        this.callFirstDate = callFirstDate;
+    }
+
+    /**
+     * @return the discription
+     */
+    public String getDiscription() {
+        return discription;
+    }
+
+    /**
+     * @param discription the discription to set
+     */
+    public void setDiscription(String discription) {
+        this.discription = discription;
+    }
+
+    /**
+     * @return the assignedTo
+     */
+    public EmployeeDTO getAssignedTo() {
+        return assignedTo;
+    }
+
+    /**
+     * @param assignedTo the assignedTo to set
+     */
+    public void setAssignedTo(EmployeeDTO assignedTo) {
+        this.assignedTo = assignedTo;
+    }
+
+    /**
+     * @return the transferTo
+     */
+    public EmployeeDTO getTransferTo() {
+        return transferTo;
+    }
+
+    /**
+     * @param transferTo the transferTo to set
+     */
+    public void setTransferTo(EmployeeDTO transferTo) {
+        this.transferTo = transferTo;
+    }
+
+    /**
+     * @return the learnAboutCompanyFrom
+     */
+    public SymbolDTO getLearnAboutCompanyFrom() {
+        return learnAboutCompanyFrom;
+    }
+
+    /**
+     * @param learnAboutCompanyFrom the learnAboutCompanyFrom to set
+     */
+    public void setLearnAboutCompanyFrom(SymbolDTO learnAboutCompanyFrom) {
+        this.learnAboutCompanyFrom = learnAboutCompanyFrom;
+    }
+
+    /**
+     * @return the crmCustomerInterestedProductsDTOList
+     */
+    public List<CrmCustomerInterestedProductsDTO> getCrmCustomerInterestedProductsDTOList() {
+        return crmCustomerInterestedProductsDTOList;
+    }
+
+    /**
+     * @param crmCustomerInterestedProductsDTOList the crmCustomerInterestedProductsDTOList to set
+     */
+    public void setCrmCustomerInterestedProductsDTOList(List<CrmCustomerInterestedProductsDTO> crmCustomerInterestedProductsDTOList) {
+        this.crmCustomerInterestedProductsDTOList = crmCustomerInterestedProductsDTOList;
+    }
+
+    /**
+     * @return the CrmCustomerInterestedProductsDTODeleteList
+     */
+    public List<CrmCustomerInterestedProductsDTO> getCrmCustomerInterestedProductsDTODeleteList() {
+        return CrmCustomerInterestedProductsDTODeleteList;
+    }
+
+    /**
+     * @param CrmCustomerInterestedProductsDTODeleteList the CrmCustomerInterestedProductsDTODeleteList to set
+     */
+    public void setCrmCustomerInterestedProductsDTODeleteList(List<CrmCustomerInterestedProductsDTO> CrmCustomerInterestedProductsDTODeleteList) {
+        this.CrmCustomerInterestedProductsDTODeleteList = CrmCustomerInterestedProductsDTODeleteList;
+    }
+
+    /**
+     * @return the instProjectGuideDTO
+     */
+    public InstProjectGuideDTO getInstProjectGuideDTO() {
+        return instProjectGuideDTO;
+    }
+
+    /**
+     * @param instProjectGuideDTO the instProjectGuideDTO to set
+     */
+    public void setInstProjectGuideDTO(InstProjectGuideDTO instProjectGuideDTO) {
+        this.instProjectGuideDTO = instProjectGuideDTO;
+    }
+
+    /**
+     * @return the employeeIsSupervisor
+     */
+    public Boolean getEmployeeIsSupervisor() {
+        return employeeIsSupervisor;
+    }
+
+    /**
+     * @param employeeIsSupervisor the employeeIsSupervisor to set
+     */
+    public void setEmployeeIsSupervisor(Boolean employeeIsSupervisor) {
+        this.employeeIsSupervisor = employeeIsSupervisor;
+    }
+
+    /**
+     * @return the projectName
+     */
+    public SymbolDTO getProjectName() {
+        return projectName;
+    }
+
+    /**
+     * @param projectName the projectName to set
+     */
+    public void setProjectName(SymbolDTO projectName) {
+        this.projectName = projectName;
+    }
+
+    /**
+     * @return the crmEventDTOList
+     */
+    public List<CrmEventDTO> getCrmEventDTOList() {
+        return crmEventDTOList;
+    }
+
+    /**
+     * @param crmEventDTOList the crmEventDTOList to set
+     */
+    public void setCrmEventDTOList(List<CrmEventDTO> crmEventDTOList) {
+        this.crmEventDTOList = crmEventDTOList;
+    }
+
+    /**
+     * @return the crmEventDTODeletedList
+     */
+    public List<CrmEventDTO> getCrmEventDTODeletedList() {
+        return crmEventDTODeletedList;
+    }
+
+    /**
+     * @param crmEventDTODeletedList the crmEventDTODeletedList to set
+     */
+    public void setCrmEventDTODeletedList(List<CrmEventDTO> crmEventDTODeletedList) {
+        this.crmEventDTODeletedList = crmEventDTODeletedList;
+    }
+
+    /**
+     * @return the crmEventDTOSelected
+     */
+    public CrmEventDTO getCrmEventDTOSelected() {
+        return crmEventDTOSelected;
+    }
+
+    /**
+     * @param crmEventDTOSelected the crmEventDTOSelected to set
+     */
+    public void setCrmEventDTOSelected(CrmEventDTO crmEventDTOSelected) {
+        this.crmEventDTOSelected = crmEventDTOSelected;
+    }
+
+    /**
+     * @return the numberOfLeads
+     */
+    public Integer getNumberOfLeads() {
+        return numberOfLeads;
+    }
+
+    /**
+     * @param numberOfLeads the numberOfLeads to set
+     */
+    public void setNumberOfLeads(Integer numberOfLeads) {
+        this.numberOfLeads = numberOfLeads;
+    }
+
+    /**
+     * @return the numberOfNewLeads
+     */
+    public Integer getNumberOfNewLeads() {
+        return numberOfNewLeads;
+    }
+
+    /**
+     * @param numberOfNewLeads the numberOfNewLeads to set
+     */
+    public void setNumberOfNewLeads(Integer numberOfNewLeads) {
+        this.numberOfNewLeads = numberOfNewLeads;
+    }
+
+    /**
+     * @return the numberOfLeadsAssigned
+     */
+    public Integer getNumberOfLeadsAssigned() {
+        return numberOfLeadsAssigned;
+    }
+
+    /**
+     * @param numberOfLeadsAssigned the numberOfLeadsAssigned to set
+     */
+    public void setNumberOfLeadsAssigned(Integer numberOfLeadsAssigned) {
+        this.numberOfLeadsAssigned = numberOfLeadsAssigned;
+    }
+
+    /**
+     * @return the numberOfNewLeadsAssigned
+     */
+    public Integer getNumberOfNewLeadsAssigned() {
+        return numberOfNewLeadsAssigned;
+    }
+
+    /**
+     * @param numberOfNewLeadsAssigned the numberOfNewLeadsAssigned to set
+     */
+    public void setNumberOfNewLeadsAssigned(Integer numberOfNewLeadsAssigned) {
+        this.numberOfNewLeadsAssigned = numberOfNewLeadsAssigned;
+    }
+
+    /**
+     * @return the legalAffairsRemark
+     */
+    public String getLegalAffairsRemark() {
+        return legalAffairsRemark;
+    }
+
+    /**
+     * @param legalAffairsRemark the legalAffairsRemark to set
+     */
+    public void setLegalAffairsRemark(String legalAffairsRemark) {
+        this.legalAffairsRemark = legalAffairsRemark;
     }
 
 }

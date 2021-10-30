@@ -383,6 +383,12 @@ public class GenericDAOImpl implements GenericDAO {
     }
     
     @Override
+    public void executeUpdateQuery(String jpqlQuery) {
+        Query query = em.createQuery(jpqlQuery);
+        query.executeUpdate();
+    }
+    
+    @Override
     public void executeUpdateQuery(String jpqlQuery, Map<String, Object> params) {
         Query query = em.createQuery(jpqlQuery);
         if (params != null) {

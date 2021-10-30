@@ -1,0 +1,196 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+         <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form id="branchListForm" dir="#{userData.dir}" class='formmargin' >
+
+            <div style=" position: absolute;left: 20px">
+                <p:commandButton  icon="fa fa-fw fa-home"
+                                  title="#{userData.userDDs['HOME']}"
+                                  class="smhomeButton"  
+                                  style="z-index: 2;
+
+                                  color: #035c70!important; 
+                                  background-color: #223238!important;
+                                  border: 1px solid #22323a!important;
+
+                                  background: #22323a 50% 50% repeat-x!important;" 
+                                  action="exit" />
+
+            </div>
+            <p:fieldset legend="بنك المهام و الاحداث" style="margin-bottom:20px">
+                <div >
+                    <p:messages autoUpdate="true"  id="messages" showDetail="true" closable="true"/>   
+                </div>
+
+                <div >
+
+                    <p:dataTable 
+                        id="branchListForm"
+                        var="branchTable" 
+                        widgetVar="bTable"  
+                        rowIndexVar="index" 
+                        value="#{crmEventListDTOMB.dataModel}"
+                        rows="10" 
+                        lazy="true"
+                        paginator="true"  
+                        paginatorTemplate="{CurrentPageReport} {FirstPageLink}
+                        {PreviousPageLink} {PageLinks} {NextPageLink}
+                        {LastPageLink} {RowsPerPageDropdown}"
+                        emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"   
+                        >
+
+                        <f:facet name="header" class="col-md-12">
+                            <p:outputPanel style="margin-top: 0%;" >
+                                <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large; " />
+                                <p:inputText id="globalFilter" onkeyup="PF('bTable').filter()" style="width:25%" />
+                            </p:outputPanel>
+                        </f:facet>
+                        <p:column headerText="#" style="width: 1%;font-size: 1.8vh;text-align:right;border-radius: 0px;border-radius: 0px;">
+                            <h:outputText value="#{index + 1}"  style="font-size: 1.5vh" />
+                        </p:column>
+
+                        <p:column   headerText="اسم العميل"
+                                    style="width: 5vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                                    filterStyle="display:none" 
+                                    filterBy="#{branchTable.customerId.name}"
+                                    filterMatchMode="contains"  
+                                    sortBy="#{branchTable.customerId.name}" >
+                            <p:outputLabel value="#{branchTable.customerId.name}"  style="font-size: 1.5vh"/>
+                        </p:column>
+                        <p:column   headerText="الهاتف"
+                                    style="width: 7vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                                    filterStyle="display:none" 
+                                    filterBy="#{branchTable.customerId.mobile}"
+                                    filterMatchMode="contains"  
+                                    sortBy="#{branchTable.customerId.mobile}" >
+                            <p:outputLabel value="#{branchTable.customerId.mobile}"  style="font-size: 1.5vh"/>
+                        </p:column>
+<!--                        <p:column   headerText="البريد الالكتروني"
+                                    style="width: 5vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                                    filterStyle="display:none" 
+                                    filterBy="#/{branchTable.customerId.email}"
+                                    filterMatchMode="contains"  
+                                    sortBy="#/{branchTable.customerId.email}" >
+                            <p:outputLabel value="#/{branchTable.customerId.email}"  style="font-size: 1.5vh"/>
+                        </p:column>-->
+                        <p:column    
+                                    style="width: 8vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                                    filterStyle="display:none" 
+                                    filterBy="#{branchTable.activityType}"
+                                    filterMatchMode="contains"  
+                                    sortBy="#{branchTable.activityType}" >
+                            <f:facet name="filter">
+                                <p:selectOneMenu    id="activityType" style="width:100%"
+                                                  converter="#{crmEventListDTOMB.activityTypeDTOconverter}"
+                                                  value="#{crmEventListDTOMB.crmEventDTOSearch.activityType}"  > 
+                                    <f:selectItem itemLabel="نوع المهمه"  itemValue="" />
+                                    <f:selectItems  value="#{crmEventListDTOMB.activityTypeDTOList}" 
+                                                    var="activityType" itemLabel="#{activityType}" itemValue="#{activityType}" />
+
+                                    <p:ajax update="branchListForm"
+                                            event="change"
+                                            listener="#{crmEventListDTOMB.search()}" />
+                                </p:selectOneMenu>
+                            </f:facet>
+                            <p:outputLabel value="#{branchTable.activityType}"  style="font-size: 1.5vh"/>
+                        </p:column>
+                        <p:column   headerText="تاريخ وتوقيت البدايه"
+                                    style="width: 7vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                                    filterStyle="display:none" 
+                                    filterBy="#{branchTable.startDate}"
+                                    filterMatchMode="contains"
+                                    sortBy="#{branchTable.startDate}" >
+                            <p:outputLabel value="#{branchTable.startDate}"  style="font-size: 1.5vh; border: solid 2px #007d9b !important; 
+                                           text-align: center;
+                                           border-radius: 10%;
+                                           background-color: #8dcade;">
+                                <f:convertDateTime type="date" pattern="dd-MM-yyyy hh:mm:ss"/>
+                            </p:outputLabel>
+                        </p:column>
+                        <p:column   headerText="الوصف"
+                                    style="width: 23vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                                    filterStyle="display:none" 
+                                    filterBy="#{branchTable.discription}"
+                                    filterMatchMode="contains"  
+                                    sortBy="#{branchTable.discription}" >
+                            <p:outputLabel value="#{branchTable.discription}"  style="font-size: 1.5vh"/>
+                        </p:column>
+                        <p:column 
+                                    style="width: 8vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                                    filterStyle="display:none" 
+                                    filterBy="#{branchTable.status}"
+                                    filterMatchMode="contains"  
+                                    sortBy="#{branchTable.status}" >
+                            <f:facet name="filter">
+                                <p:selectOneMenu   id="status" style="width:100%"
+                                                  converter="#{crmEventListDTOMB.eventStatusDTOconverter}"
+                                                  value="#{crmEventListDTOMB.crmEventDTOSearch.status}"  > 
+                                    <f:selectItem itemLabel="الحاله"  itemValue="" />
+                                    <f:selectItems  value="#{crmEventListDTOMB.eventStatusDTOList}" 
+                                                    var="status" itemLabel="#{status}" itemValue="#{status}" />
+
+                                    <p:ajax update="branchListForm"
+                                            event="change"
+                                            listener="#{crmEventListDTOMB.search()}" />
+                                </p:selectOneMenu>
+                            </f:facet>
+                            <p:outputLabel value="#{branchTable.status}"  style="font-size: 1.5vh"/>
+                        </p:column>
+                        <p:column   headerText="حاله المهمه"
+                                    style="width: 5vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                                    filterStyle="display:none" 
+                                    filterBy="#{branchTable.closeEvent}"
+                                    filterMatchMode="contains"  
+                                    sortBy="#{branchTable.closeEvent}" >
+                           
+                            <p:outputLabel value="#{branchTable.closeEvent eq true ? 'مغلقه' :  'مفتوحه' }"  style="font-size: 1.5vh"/>
+                        </p:column>
+                        <p:column  
+                                    style="width: 8vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                                    filterStyle="display:none" 
+                                    filterBy="#{branchTable.assignedTo}"
+                                    filterMatchMode="contains"  
+                                    sortBy="#{branchTable.assignedTo}" >
+                            <f:facet name="filter">
+                                <p:selectOneMenu   id="employee" style="width:100%"
+                                                  converter="#{crmEventListDTOMB.employeeDTOConverter}"
+                                                  value="#{crmEventListDTOMB.crmEventDTOSearch.assignedTo}"  > 
+                                    <f:selectItem itemLabel="المتابع"  itemValue="" />
+                                    <f:selectItems  value="#{crmEventListDTOMB.allEmployeeDTOList}" 
+                                                    var="employee" itemLabel="#{employee}" itemValue="#{employee}" />
+
+                                    <p:ajax update="branchListForm"
+                                            event="change"
+                                            listener="#{crmEventListDTOMB.search()}" />
+                                </p:selectOneMenu>
+                            </f:facet>
+                            <p:outputLabel value="#{branchTable.assignedTo}"  style="font-size: 1.5vh"/>
+                        </p:column>
+
+
+                        <p:column headerText="#{userData.userDDs['TRANSACTION']}"  style="width: 7vh;font-size: 1.8vh;text-align: center;border-radius: 0px;">
+                            <p:commandButton class="seditButtons" update="@form" icon="fa fa-fw fa-edit" style="background-color: #6a6967;border-radius: 3px;" 
+                                             title="#{userData.userDDs['EDIT']}" action="#{crmEventListDTOMB.goToEdit()}" rendered="#{userData.userScreens['crmTodoEvent'].edit or userData.isAdmin}">
+                                <f:setPropertyActionListener value="#{branchTable}"  target="#{crmEventListDTOMB.crmEventSelected}" />
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable> 
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                        <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog>
+                </div>
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>
+
+

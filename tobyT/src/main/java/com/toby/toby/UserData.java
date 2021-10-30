@@ -10,7 +10,11 @@ import com.toby.businessservice.TobyUserRoleService;
 import com.toby.businessservice.TobyUserYearService;
 import com.toby.businessservice.PathService;
 import com.toby.businessservice.PrivilegeService;
+import com.toby.dto.CrmEventDTO;
+import com.toby.dto.CrmSettingDTO;
+import com.toby.dto.EmployeeDTO;
 import com.toby.dto.GlBankDTO;
+import com.toby.dto.IgmaNotificationSettingDTO;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.ProProductionStagesDTO;
 import com.toby.entity.Branch;
@@ -40,6 +44,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 import javax.inject.Named;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
@@ -119,6 +124,16 @@ public class UserData extends Basic implements Serializable {
 
     private GlBankDTO glBankDTODefault;
 
+    private IgmaNotificationSettingDTO igmaNotificationSettingDTO;
+    private List<CrmEventDTO> crmNotification;
+    private CrmSettingDTO crmSettingDTO;
+    
+    
+
+    private List<EmployeeDTO> employeeDTOList;
+
+    private EmployeeDTO employeeDTODefault;
+
     Path path;
 
     private GlYear glYear;
@@ -167,6 +182,11 @@ public class UserData extends Basic implements Serializable {
             this.setGlBankDTOList(userData.getGlBankDTOList());
             this.setGlBankDTODefault(userData.getGlBankDTODefault());
             this.setGallaryDTOList(userData.getGallaryDTOList());
+            this.setIgmaNotificationSettingDTO(userData.getIgmaNotificationSettingDTO());
+            this.setCrmNotification(userData.getCrmNotification());
+            this.setCrmSettingDTO(userData.getCrmSettingDTO());            
+            this.setEmployeeDTOList(userData.getEmployeeDTOList());
+            this.setEmployeeDTODefault(userData.getEmployeeDTODefault());
 
             InputStream stream;
             try {
@@ -381,6 +401,11 @@ public class UserData extends Basic implements Serializable {
             if (entity.equalsIgnoreCase("proproductionreport")) {
                 entity = uri.substring(uri.indexOf("proproductionreport"));
                 entity = entity.substring(20, entity.lastIndexOf("."));
+            }
+
+            if (entity.equalsIgnoreCase("crmReports")) {
+                entity = uri.substring(uri.indexOf("crmReports"));
+                entity = entity.substring(11, entity.lastIndexOf("."));
             }
 
             targetScreen = entity;
@@ -834,6 +859,79 @@ public class UserData extends Basic implements Serializable {
      */
     public void setTobyUserRole(TobyUserRole tobyUserRole) {
         this.tobyUserRole = tobyUserRole;
+    }
+
+    /**
+     * @return the igmaNotificationSettingDTO
+     */
+    public IgmaNotificationSettingDTO getIgmaNotificationSettingDTO() {
+        return igmaNotificationSettingDTO;
+    }
+
+    /**
+     * @param igmaNotificationSettingDTO the igmaNotificationSettingDTO to set
+     */
+    public void setIgmaNotificationSettingDTO(IgmaNotificationSettingDTO igmaNotificationSettingDTO) {
+        this.igmaNotificationSettingDTO = igmaNotificationSettingDTO;
+    }
+
+    /**
+     * @return the crmNotification
+     */
+    public List<CrmEventDTO> getCrmNotification() {
+        if (crmNotification == null || crmNotification.isEmpty()) {
+            crmNotification = new ArrayList<>();
+        }
+        return crmNotification;
+    }
+
+    /**
+     * @param crmNotification the crmNotification to set
+     */
+    public void setCrmNotification(List<CrmEventDTO> crmNotification) {
+        this.crmNotification = crmNotification;
+    }
+
+    /**
+     * @return the crmSettingDTO
+     */
+    public CrmSettingDTO getCrmSettingDTO() {
+        return crmSettingDTO;
+    }
+
+    /**
+     * @param crmSettingDTO the crmSettingDTO to set
+     */
+    public void setCrmSettingDTO(CrmSettingDTO crmSettingDTO) {
+        this.crmSettingDTO = crmSettingDTO;
+    }
+
+    /**
+     * @return the employeeDTOList
+     */
+    public List<EmployeeDTO> getEmployeeDTOList() {
+        return employeeDTOList;
+    }
+
+    /**
+     * @param employeeDTOList the employeeDTOList to set
+     */
+    public void setEmployeeDTOList(List<EmployeeDTO> employeeDTOList) {
+        this.employeeDTOList = employeeDTOList;
+    }
+
+    /**
+     * @return the employeeDTODefault
+     */
+    public EmployeeDTO getEmployeeDTODefault() {
+        return employeeDTODefault;
+    }
+
+    /**
+     * @param employeeDTODefault the employeeDTODefault to set
+     */
+    public void setEmployeeDTODefault(EmployeeDTO employeeDTODefault) {
+        this.employeeDTODefault = employeeDTODefault;
     }
 
 }

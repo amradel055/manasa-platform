@@ -1,0 +1,633 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <h:form id="ScreenAddEditForm" enctype="multipart/form-data" dir="#{userData.dir}" class='formmargin'>
+            <div style=" position: absolute;left: 20px"> 
+
+                <p:commandButton  style="z-index: 2;
+                                  margin-top: 12%;
+                                  color: #035c70!important; 
+                                  background-color: #223238!important;
+                                  border: 1px solid #22323a!important;
+                                  background: #22323a 50% 50% repeat-x!important;"
+                                  icon="fa fa-fw fa-home"
+                                  title="#{userData.userDDs['HOME']}"
+                                  class="smhomeButton" 
+                                  action="exit" />  
+            </div>
+
+            <p:fieldset legend="تفاصيل العملاء المحتملين" style="margin-bottom:20px">
+                <p:messages autoUpdate="true"  id="messages" showDetail="true" closable="true" /> 
+                <div   class="ui-g-12 ui-g-nopad" style="padding: 0px;">
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-12" style="padding: 0px;">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:99px;margin-right: 2.5%"  value="كود العميل" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 35%!important"  id="employeeCode" a:autofocus="true" value="#{crmLeadsFormDTOMB.invOrganizationSiteDTO.code}">
+                                    </p:outputLabel>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:99px;margin-right: 5%"  value="الاسم" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText  style="width: 35%!important"  id="employeeName" a:autofocus="true" value="#{crmLeadsFormDTOMB.invOrganizationSiteDTO.name}">
+                                    
+                                    </p:inputText>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <h:panelGroup>
+
+                                    <p:outputLabel style="width:98px; margin-right: 5%;"  value="الموبايل" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText  style="width: 35%!important"  id="mobile" validatorMessage="يجب ادخال هاتف صحيح"  value="#{crmLeadsFormDTOMB.invOrganizationSiteDTO.mobile}">
+                                      <p:ajax event="blur"   update="messages"  listener="#{crmLeadsFormDTOMB.vaildationContacts}"/>
+                                      <f:validateRegex pattern="((\+)?[0-9]*)([^a-zA-Z]*$)"/>
+                                      <f:validateLength minimum="8" />
+                                    </p:inputText>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <h:panelGroup>
+
+                                    <p:outputLabel style="width:98px; margin-right: 5%;"  value="الهاتف" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText  style="width: 35%!important"  id="phone" a:autofocus="true" value="#{crmLeadsFormDTOMB.invOrganizationSiteDTO.phone}">
+                                    </p:inputText>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <p:outputLabel style="width:99px;margin-right: 5%"  value="البريد الالكتروني" />
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:inputText  style="width: 35%!important"  id="employeeCode2" a:autofocus="true" value="#{crmLeadsFormDTOMB.invOrganizationSiteDTO.email}" validatorMessage="الايميل غير صحيح">
+                                    <f:validateRegex pattern="([\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z])|" />
+                                    <p:ajax event="blur"   update="messages"  listener="#{crmLeadsFormDTOMB.vaildationContacts}"/>
+                                </p:inputText>
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <h:panelGroup>
+
+                                    <p:outputLabel style="width:99px; margin-right: 5%;"  value="الشركة" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText  style="width: 35%!important"  id="companyName" a:autofocus="true" value="#{crmLeadsFormDTOMB.invOrganizationSiteDTO.companyName}">
+                                    </p:inputText>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+
+
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <p:outputLabel style="width:104px;margin-right: 5%"  value="مصدر العميل" />
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:autoComplete style="width:34%!important " 
+                                                dropdown="true"
+                                                converter="#{crmLeadsFormDTOMB.learnAboutCompanyfromconverter}"
+                                                value="#{crmLeadsFormDTOMB.invOrganizationSiteDTO.learnAboutCompanyFrom}"
+                                                var="learnAboutCompanyfrom"
+                                                itemLabel="#{learnAboutCompanyfrom}" 
+                                                itemValue="#{learnAboutCompanyfrom}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{crmLeadsFormDTOMB.completeLearnAboutCompanyfrom}"
+                                                >
+
+                                </p:autoComplete>
+                            </h:panelGroup>
+                        </div>
+                    </div>
+
+
+
+                    <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                        <h:panelGroup>
+                            <p:outputLabel style="width:99px;margin-right: 5%"  value="الفاكس" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:inputText  style="width: 35%!important"  id="fax" a:autofocus="true" value="#{crmLeadsFormDTOMB.invOrganizationSiteDTO.fax}">
+                            </p:inputText>
+                        </h:panelGroup>
+                    </div>
+
+
+                    <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                        <h:panelGroup>
+                            <p:outputLabel style="width:99px;margin-right: 5%"  value="الموقع الالكتروني" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:inputText  style="width: 35%!important"  id="employeeCode4" a:autofocus="true" value="#{crmLeadsFormDTOMB.invOrganizationSiteDTO.urlSite}">
+                            </p:inputText>
+                        </h:panelGroup>
+                    </div>
+                    <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                        <h:panelGroup>
+                            <p:outputLabel style="width:104px;margin-right: 5%"  value="اسم المشروع" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:autoComplete style="width:34%!important " 
+                                            dropdown="true"
+                                            converter="#{crmLeadsFormDTOMB.projectNameConverter}"
+                                            value="#{crmLeadsFormDTOMB.invOrganizationSiteDTO.projectName}"
+                                            var="projectName"
+                                            itemLabel="#{projectName}" 
+                                            itemValue="#{projectName}" 
+                                            forceSelection="true" 
+                                            completeMethod="#{crmLeadsFormDTOMB.completeProjectName}"
+                                            >
+
+                            </p:autoComplete>
+                        </h:panelGroup>
+                    </div>
+                    <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                        <h:panelGroup>
+                            <p:outputLabel style="width:104px;margin-right: 5%"  value="حالة العميل" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:autoComplete style="width:34%!important " 
+                                            dropdown="true"
+                                            converter="#{crmLeadsFormDTOMB.leadStatusDTOconverter}"
+                                            value="#{crmLeadsFormDTOMB.invOrganizationSiteDTO.leadStatus}"
+                                            var="leadStatus"
+                                            itemLabel="#{leadStatus}" 
+                                            itemValue="#{leadStatus}" 
+                                            forceSelection="true" 
+                                            completeMethod="#{crmLeadsFormDTOMB.completeLeadStatus}"
+                                            disabled="true" 
+                                            >
+
+                            </p:autoComplete>
+                        </h:panelGroup>
+                    </div>
+                    <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                        <h:panelGroup rendered="#{crmLeadsFormDTOMB.employeeIsSupervisor}">
+                            <h:panelGroup>
+                                <p:outputLabel style="width:104px;margin-right: 5%"  value="المتابع له" />
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:autoComplete style="width:34%!important " 
+                                                dropdown="true"
+                                                converter="#{crmLeadsFormDTOMB.employeeDTOConverter}"
+                                                value="#{crmLeadsFormDTOMB.invOrganizationSiteDTO.assignedTo}"
+                                                var="employee"
+                                                itemLabel="#{employee}" 
+                                                itemValue="#{employee}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{crmLeadsFormDTOMB.completeEmployeeDTO}"
+                                                >
+                                </p:autoComplete>
+                            </h:panelGroup>
+                        </h:panelGroup>
+                    </div>
+                    <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                        <h:panelGroup>
+                            <p:outputLabel style="width:99px;margin-right: 5%"  value="صندوق بريد" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:inputText  style="width: 35%!important"  id="employeeCode13" a:autofocus="true" value="#{crmLeadsFormDTOMB.invOrganizationSiteDTO.postBox}">
+                            </p:inputText>
+                        </h:panelGroup>
+                    </div>
+                    <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                        <h:panelGroup>
+                            <p:outputLabel style="width:104px;margin-right: 5%"  value="الدوله" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:autoComplete style="width:34%!important " 
+                                            dropdown="true"
+                                            converter="#{crmLeadsFormDTOMB.countryIdconverter}"
+                                            value="#{crmLeadsFormDTOMB.invOrganizationSiteDTO.countryId}"
+                                            var="country"
+                                            itemLabel="#{country}" 
+                                            itemValue="#{country}" 
+                                            forceSelection="true" 
+                                            completeMethod="#{crmLeadsFormDTOMB.countryCompanyfrom}"
+                                            >
+                            </p:autoComplete>
+
+                        </h:panelGroup>
+                    </div>
+                      <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                        <h:panelGroup>
+                            <p:outputLabel style="width:104px;margin-right: 5%"  value="الوظيفه" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:autoComplete style="width:34%!important " 
+                                            dropdown="true"
+                                            converter="#{crmLeadsFormDTOMB.jobConverter}"
+                                            value="#{crmLeadsFormDTOMB.invOrganizationSiteDTO.workTypeId}"
+                                            var="workTypeId"
+                                            itemLabel="#{workTypeId}" 
+                                            itemValue="#{workTypeId}" 
+                                            forceSelection="true" 
+                                            completeMethod="#{crmLeadsFormDTOMB.completeWorkType}"
+                                            >
+
+                            </p:autoComplete>
+                        </h:panelGroup>
+                    </div>
+                         <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                        <h:panelGroup>
+                            <p:outputLabel style="width:104px;margin-right: 5%"  value="ملاحظات" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:inputText style="width:34%!important " 
+                                         value="#{crmLeadsFormDTOMB.invOrganizationSiteDTO.remark}"
+                                            />
+
+                        </h:panelGroup>
+                    </div>
+                </div>
+            </p:fieldset>
+
+
+            <!--            <p:fieldset legend="تفاصيل الوحدات" style="margin-bottom:20px">
+            
+                            <p:dataTable id="crmCustomerInterested"
+                                         widgetVar="crmCustomerInterested"
+                                         style="margin-bottom:20px"
+                                         var="crmCustomerInterested"
+                                         rowIndexVar="index" 
+                                         dir="rtl" 
+                                         emptyMessage="#\{userData.userDDs['EMPTY_TABLE']}"
+                                         editable="true"
+                                         editMode="cell"
+                                         selectionMode="single"
+                                         sortBy="#\{1}"
+                                         rowKey="#\{crmCustomerInterested.index}"
+                                         selection="#\{crmLeadsFormDTOMB.crmCustomerInterestedProductsDTOSelected}"
+                                         value="#\{crmLeadsFormDTOMB.invOrganizationSiteDTO.crmCustomerInterestedProductsDTOList}" >
+            
+                                <f:facet name="header" >
+                                    <p:commandButton  id="addnew"
+                                                      class="saddButton"
+                                                      icon="fa fa-plus"
+                                                      title="#\{userData.userDDs['ADD']}"
+                                                      update="crmCustomerInterested"
+                                                      actionListener="#\{crmLeadsFormDTOMB.addCrmCustomerInterest()}" 
+                                                      oncomplete="PrimeFaces.focus('form:crmCustomerInterested:'+#{crmLeadsFormDTOMB.invOrganizationSiteDTO.crmCustomerInterestedProductsDTOList.size()}+':invItemNameIn')"
+                                                      immediate="true"
+                                                      ajax="true"
+                                                      style="float:right"/>
+            
+                                    <p:outputPanel>
+                                        <h:outputText value="#\{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                                        <p:inputText id="globalFilter" onkeyup="PF('crmCustomerInterested').filter()" style="width:150px" />
+                                    </p:outputPanel>
+                                </f:facet>
+            
+                                <p:column headerText="#" style="width: 4vh;text-align:center;border-radius: 0px" >
+                                    <h:outputText value="#\{index + 1}"  />
+                                </p:column>
+            
+                                <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="itemName" headerText="الوحده" 
+                                          filterBy="#\{crmCustomerInterested.projectId}" 
+                                          filterMatchMode="contains" 
+                                          sortBy="#\{crmCustomerInterested.projectId}"
+                                          filterable="false">
+                                    <p:autoComplete id="project"  
+                                                    style="width:100%"
+                                                    converter="#\{autoComplete.instProjectGuideDTOConverter}"
+                                                    value="#\{crmCustomerInterested.projectId}"
+                                                    maxResults="10"
+                                                    var="project"
+                                                    itemLabel="#\{project}" 
+                                                    itemValue="#\{project}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#\{autoComplete.completeInstProjectDTOAll}" >
+                                        <p:ajax event="itemSelect" listener="#\{crmLeadsFormDTOMB.checkValue()}" />
+            
+                                    </p:autoComplete>            
+                                </p:column>
+            
+            
+                                <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px"
+                                          id="Quantity"
+                                          headerText="درجة الاهتمام"
+                                          filterBy="#\{crmCustomerInterested.interestedDegree}" 
+                                          filterMatchMode="contains" 
+                                          sortBy="#\{crmCustomerInterested.interestedDegree}"
+                                          filterable="false">
+            
+                                    <p:inputText id="txt1" value="#\{crmCustomerInterested.interestedDegree}" />
+                                    <p:slider for="txt1" />       
+            
+                                </p:column>
+            
+                                <p:column style="width: 13vh;text-align: center;border-radius: 0px" headerText="#\{userData.userDDs['TRANSACTION']}">
+            
+                                    <p:commandButton  id="b7" icon="fa fa-plus" 
+                                                      class="saddbuttonins" style="color: #fff!important;background-color: #00BCD4"
+                                                      title="#\{userData.userDDs['ADD']}" 
+                                                      update="crmCustomerInterested"
+                                                      actionListener="#\{crmLeadsFormDTOMB.addCrmCustomerInterest()}" 
+                                                      oncomplete="PrimeFaces.focus('form:crmCustomerInterested:'+#\{crmLeadsFormDTOMB.invOrganizationSiteDTO.crmCustomerInterestedProductsDTOList.size()}+':invItemNameIn')"
+                                                      immediate="true"
+                                                      ajax="true" />
+            
+                                    <p:commandButton  update="crmCustomerInterested"
+                                                      title="#\{userData.userDDs['DELETE']}" 
+                                                      class="sdeleteButtons" style="color: #fff!important;background-color: red"
+                                                      action="#\{crmLeadsFormDTOMB.deleteCrmCustomerInterest()}"
+                                                      icon="fa fa-remove" >
+                                        <p:confirm header="#\{userData.userDDs['COFIGRATION']}" 
+                                                   message="#\{userData.userDDs['ARE_YOU_SURE']}"
+                                                   icon="ui-icon-alert" />
+                                    </p:commandButton>
+            
+                                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                        <p:commandButton title="#\{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                        <p:commandButton title="#\{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                                    </p:confirmDialog>
+                                </p:column >
+            
+                            </p:dataTable>
+            
+                        </p:fieldset>-->
+
+            <p:fieldset legend="تفاصيل المهمات" style="margin-bottom:20px">
+
+                <p:dataTable id="crmEventDTO"
+                             widgetVar="crmEventDTO"
+                             style="margin-bottom:20px"
+                             var="crmEventDTO"
+                             rowIndexVar="index" 
+                             dir="rtl" 
+                             editable="true"
+                             editMode="cell"
+                             selectionMode="single"
+                             sortBy="#{crmEventDTO.index}"
+                             rowKey="#{crmEventDTO.index}"
+                             selection="#{crmLeadsFormDTOMB.invOrganizationSiteDTO.crmEventDTOSelected}"
+                             value="#{crmLeadsFormDTOMB.invOrganizationSiteDTO.crmEventDTOList}" 
+                             rows="10" 
+                             paginator="true"  
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink}
+                             {PreviousPageLink} {PageLinks} {NextPageLink}
+                             {LastPageLink} {RowsPerPageDropdown}"
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}">
+
+                    <f:facet name="header" >
+                        <p:commandButton  id="addnew"
+                                          class="saddButton"
+                                          icon="fa fa-plus"
+                                          title="#{userData.userDDs['ADD']}"
+                                          update="crmEventDTO"
+                                          actionListener="#{crmLeadsFormDTOMB.addActivity()}" 
+
+                                          ajax="true"
+                                          style="float:right"/>
+
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('crmEventDTO').filter()" style="width:150px" />
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:column headerText="#" style="width: 2vh;text-align:center;border-radius: 0px" >
+                        <h:outputText value="#{index + 1}"  />
+                    </p:column>
+
+                    <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px"
+                              id="eventActivity"
+                              headerText="نوع النشاط"
+                              filterBy="#{crmEventDTO.activityType}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{crmEventDTO.activityType}"
+                              filterable="false">
+<!--                        <p:autoComplete style="width:100%!important " 
+
+                                        dropdown="true"
+                                        converter="#/{crmLeadsFormDTOMB.activityTypeDTOconverter}"
+                                        value="#/{crmEventDTO.activityType}"
+                                        var="activityType"
+                                        itemLabel="#/{activityType}" 
+                                        itemValue="#/{activityType}" 
+                                        forceSelection="true" 
+                                        completeMethod="#/{crmLeadsFormDTOMB.completeActivityType}"
+                                        >
+
+                        </p:autoComplete>-->
+                           <p:selectOneMenu   style="width:100%!important " id="com"  value="#{crmEventDTO.activityType}"   disabled="#{crmEventDTO.closeEvent eq true or crmEventDTO.leadStatusActive}"  converter="#{crmLeadsFormDTOMB.activityTypeDTOconverter}">
+                               
+                             <f:selectItems value="#{crmLeadsFormDTOMB.activityTypeDTOList}" var="activity" itemLabel="#{activity}" itemValue="#{activity}"/> 
+                           </p:selectOneMenu>
+
+                    </p:column> 
+
+                    <!--                    <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="itemName" headerText="تاريخ الان" 
+                                                  filterBy="#/{crmEventDTO.nowDate}" 
+                                                  filterMatchMode="contains" 
+                                                  sortBy="#/{crmEventDTO.nowDate}"
+                                                  filterable="false">
+                                            <p:selectBooleanCheckbox value="#/{crmEventDTO.nowDate}"> 
+                                                <p:ajax event="eventSelect" listener="#/{crmLeadsFormDTOMB.onEventSelect}"/>
+                                                 <p:ajax update="datetime1"   listener="#/{crmLeadsFormDTOMB.dateNowSelected}" />
+                    
+                                            </p:selectBooleanCheckbox>
+                    
+                                        </p:column>-->
+                    <p:column style="width: 10vh;text-align: -webkit-auto;border-radius: 0px"
+                              id="eventStart_date"
+                              headerText="تاريخ البدايه"
+                              filterBy="#{crmEventDTO.startDate}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{crmEventDTO.startDate}"
+                              filterable="false">
+                        <p:calendar id="datetime1" class="date111"  disabled="#{crmEventDTO.id ne null}"
+
+                                    value="#{crmEventDTO.startDate}" pattern="dd/MM/yyyy HH:mm:ss"
+                                    mindate="#{crmLeadsFormDTOMB.dateNow}"  />
+
+                    </p:column>
+
+
+                    <p:column style="width: 10vh;text-align: -webkit-auto;border-radius: 0px"
+                              id="eventStatus"
+                              headerText="الحاله"
+                              filterBy="#{crmEventDTO.status}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{crmEventDTO.status}"
+                              filterable="false">
+<!--                        <p:autoComplete style="width:100%!important " 
+                                        dropdown="true"
+                                        converter="#/{crmLeadsFormDTOMB.eventStatusDTOconverter}"
+                                        value="#/{crmEventDTO.status}"
+                                        var="eventStatus"
+                                        itemLabel="#/{eventStatus}" 
+                                        itemValue="#/{eventStatus}" 
+                                        forceSelection="true" 
+                                        completeMethod="#/{crmLeadsFormDTOMB.completeEventStatus}"
+                                        >
+                        </p:autoComplete>-->
+                        
+                       <p:selectOneMenu   style="width:100%!important " id="eventstatus"    disabled="#{crmEventDTO.closeEvent eq true or  crmEventDTO.status.serial eq 0}" value="#{crmEventDTO.status}"    converter="#{crmLeadsFormDTOMB.eventStatusDTOconverter}">
+                          <f:selectItems value="#{crmLeadsFormDTOMB.eventStatusDTOList}" var="status" itemLabel="#{status}" itemValue="#{status}"/> 
+                          </p:selectOneMenu>
+
+                    </p:column>
+                    <p:column style="width: 35vh;text-align: -webkit-auto;border-radius: 0px"
+                              id="eventDiscription"
+                              headerText="الوصف"
+                              filterBy="#{crmEventDTO.discription}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{crmEventDTO.discription}"
+                              filterable="false">
+                        <p:inputTextarea  style="width: 99%!important; min-height: 50px;" maxlength="400"  id="discription" disabled="#{crmEventDTO.closeEvent eq true or  crmEventDTO.status.serial eq 0 }"  value="#{crmEventDTO.discription}" >
+                        </p:inputTextarea>
+                    </p:column>
+                    <p:column style="width: 15vh;text-align: -webkit-auto;border-radius: 0px"
+                              id="leadStatus"
+                              headerText="حاله العميل"
+                              filterBy="#{crmEventDTO.leadStatus}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{crmEventDTO.leadStatus}"
+                              filterable="false">
+<!--                            <p:autoComplete style="width:100%!important " 
+                                            dropdown="true"
+                                            converter="#/{crmLeadsFormDTOMB.leadStatusDTOconverter}"
+                                            value="#/{crmEventDTO.leadStatus}"
+                                            var="leadStatus"
+                                            itemLabel="#/{leadStatus}" 
+                                            itemValue="#/{leadStatus}" 
+                                            forceSelection="true" 
+                                            completeMethod="#/{crmLeadsFormDTOMB.completeLeadStatus}"
+                                            disabled="#/{crmEventDTO.leadStatusActive}"
+                                            >
+
+                            </p:autoComplete>-->
+                        
+                        <p:selectOneMenu   style="width:100%!important " id="leadstatus"  value="#{crmEventDTO.leadStatus}"   disabled="#{crmEventDTO.closeEvent eq true or  crmEventDTO.status.serial eq 0}"  converter="#{crmLeadsFormDTOMB.leadStatusDTOconverter}">
+                          <f:selectItem itemLabel="اختر" itemValue="" />
+                          <f:selectItems value="#{crmLeadsFormDTOMB.leadStatusDTOList}" var="leadstatus" itemLabel="#{leadstatus}" itemValue="#{leadstatus}"/> 
+                          </p:selectOneMenu>
+                    </p:column>
+                      <p:column style="width: 5vh;text-align: -webkit-auto;border-radius: 0px"
+                              id="notification"
+                              headerText="ارسال اشعار"
+                              filterBy="#{crmEventDTO.sendNotification}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{crmEventDTO.sendNotification}"
+                              filterable="false">
+                          <p:selectBooleanCheckbox value="#{crmEventDTO.sendNotification}" disabled="#{crmEventDTO.closeEvent eq true or crmEventDTO.leadStatusActive}"/>
+                     </p:column>
+                     <p:column style="width: 5vh;text-align: -webkit-auto;border-radius: 0px"
+                              id="closeEvent"
+                              headerText="غلق المهمه"
+                              filterBy="#{crmEventDTO.closeEvent}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{crmEventDTO.closeEvent}"
+                              filterable="false">
+                          <p:selectBooleanCheckbox value="#{crmEventDTO.closeEvent}" disabled="#{crmEventDTO.closeEvent eq true}"/>
+                     </p:column>
+                    <p:column style="width: 7vh;text-align: center;border-radius: 0px" headerText="#{userData.userDDs['TRANSACTION']}">
+
+                        <p:commandButton  id="b7" icon="fa fa-plus" 
+                                          class="saddbuttonins" style="color: #fff!important;background-color: #00BCD4"
+                                          title="#{userData.userDDs['ADD']}" 
+                                          update="crmEventDTO"
+                                          actionListener="#{crmLeadsFormDTOMB.addActivity()}" 
+                                          ajax="true" />
+
+
+                        <p:commandButton  update="crmEventDTO"
+                                          title="#{userData.userDDs['DELETE']}" 
+                                          class="sdeleteButtons" style="color: #fff!important;background-color: red"
+                                          action="#{crmLeadsFormDTOMB.deleteActivity()}"
+                                          icon="fa fa-remove" 
+                                          rendered="#{userData.userScreens['crmTodoEvent'].delete or userData.isAdmin}">
+                            <f:setPropertyActionListener value="#{crmEventDTO}"
+                                                         target="#{crmLeadsFormDTOMB.invOrganizationSiteDTO.crmEventDTOSelected}"/>
+                            <p:confirm header="#{userData.userDDs['COFIGRATION']}" 
+                                       message="#{userData.userDDs['ARE_YOU_SURE']}"
+                                       icon="ui-icon-alert" />
+                        </p:commandButton>
+
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column >
+
+                </p:dataTable>
+
+            </p:fieldset>
+
+            <h:panelGrid id="pn1"   class="centerButtons col-md-12" columns="1"  style="margin-top: 2%">
+
+
+                <h:panelGroup>
+
+
+                    <p:commandButton   class="saveButton"  
+                                       id="saveB" 
+                                       title="#{userData.userDDs['SAVE']}"
+                                       value="#{userData.userDDs['SAVE']}" 
+                                       style="color: #fff;"
+                                       action="#{crmLeadsFormDTOMB.saveLead()}" 
+                                       update="@form" />
+                    <p:commandButton  class="newButton" 
+                                      id="newN"
+                                      ajax="false"
+                                      style="color: #fff;width: 17% !important;"
+                                      value="#{userData.userDDs['NEW']}" 
+                                      title="#{userData.userDDs['NEW']}"
+                                      onclick="form.target = ''" 
+                                      actionListener="#{crmLeadsFormDTOMB.resetInvOrganizationSiteDTO()}"/>
+                    <p:commandButton  class="newButton" 
+                                      id="newNn"
+                                      onclick="form.target = '_blank'"  ajax="false"
+                                      style="color: #ecf0f1!important;border-radius: 5px;
+                                      height: 30px;background-color: #035c70 !important;margin-left: 5px; width: 37%;"
+                                      value="نشاطات العميل" 
+                                      title="نشاطات العميل"
+                                      actionListener="#{crmLeadsFormDTOMB.goToLeadsEvent()}"/>
+                    <p:commandButton class="closeButton"
+                                        id="cancel" 
+                                        title="#{userData.userDDs['BACK']}" 
+                                        value="#{userData.userDDs['BACK']}"
+                                        style=""
+                                        action="#{crmLeadsFormDTOMB.exit()}" 
+                                        update="@form"/>
+                </h:panelGroup>
+            </h:panelGrid>
+
+
+            <p:blockUI block="ScreenAddEditForm" trigger="saveB " animate="true" >
+                <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+            </p:blockUI>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

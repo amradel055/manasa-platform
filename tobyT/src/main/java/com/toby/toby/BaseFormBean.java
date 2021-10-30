@@ -77,6 +77,13 @@ public abstract class BaseFormBean extends Basic implements BaseManagedBean {
             savedMeesage(getUserData().getUserDDs().get("SAVED"));
         }
     }
+
+    public boolean deletedMeesage() {
+
+        FacesContext.getCurrentInstance().addMessage(null,
+                new FacesMessage(FacesMessage.SEVERITY_INFO, getUserData().getUserDDs().get("INFO"), "تم الحذف بنجاح"));
+        return false;
+    }
     
      public void changeFocus(String focusId) {
         RequestContext context = RequestContext.getCurrentInstance();

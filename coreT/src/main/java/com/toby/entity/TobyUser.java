@@ -52,7 +52,11 @@ public class TobyUser extends BaseEntity {
 
     @JoinColumn(name = "branch_id", referencedColumnName = "id")
     @ManyToOne
-    private Branch branchId;
+    private Branch branchId;    
+    
+    @JoinColumn(name = "employee_id", referencedColumnName = "id")
+    @ManyToOne
+    private Employee employeeId;
 
     @OneToMany(mappedBy = "createdBy")
     private Collection<TobyUserYear> tobyUserYearCollection;
@@ -209,6 +213,20 @@ public class TobyUser extends BaseEntity {
      */
     public void setResidencyNumber(String residencyNumber) {
         this.residencyNumber = residencyNumber;
+    }
+
+    /**
+     * @return the employeeId
+     */
+    public Employee getEmployeeId() {
+        return employeeId;
+    }
+
+    /**
+     * @param employeeId the employeeId to set
+     */
+    public void setEmployeeId(Employee employeeId) {
+        this.employeeId = employeeId;
     }
 
    

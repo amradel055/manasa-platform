@@ -522,7 +522,7 @@ public class ReportsServiceImpl implements ReportsService {
         List<SalesStatementForThePeriod> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         sql.append("select ipi.serial , ipi.date , ios.code , ios.name,\n"
-                + "IFNULL(SUM(`ipid`.`net`), 0) as total_net,\n"
+                + "IFNULL(SUM(`ipid`.`net_after_discount_head`), 0) as total_net,\n"
                 + "IFNULL(NET(IFNULL(SUM(`ipid`.`net`), 0),   IFNULL(`ipi`.`discount_type`, 0.0), IFNULL(`ipi`.`discount`, 0.0), IFNULL(`ipi`.`tax_flag`, 0.0),  15, IFNULL(`ipi`.`disc_halala`, 0.0)), 0.0) AS `net` ,ipi.id\n"
                 + "from inv_purchase_invoice ipi\n"
                 + "left join  inv_purchase_invoice_detail ipid on ipi.id = ipid.inv_purchase_invoice_id\n"
