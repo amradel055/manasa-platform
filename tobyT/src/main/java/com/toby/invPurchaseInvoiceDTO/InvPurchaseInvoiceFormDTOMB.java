@@ -53,7 +53,6 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
     @Override
     public void load() {
         try {
-
             if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("addInvoice")) {
                 String error = validateloginDistributedScreens(getInvInvoiceDTO().getScreenName(), getInvInvoiceDTO().getGallaryId() == null ? null : getInvInvoiceDTO().getGallaryId().getId());
                 if (error.isEmpty()) {

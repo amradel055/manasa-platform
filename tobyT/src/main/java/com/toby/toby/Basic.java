@@ -129,6 +129,12 @@ public class Basic implements Serializable {
     private List<GlBankDTO> glBankDTOListSelected;
     private GlBankDTO glBankDTOSelect;
     private String glBankDTOIdList;
+    
+    private InvInventoryDTOConverter inventoryDTOConverters;
+    private List<InvInventoryDTO> inventoryLists;
+    private List<InvInventoryDTO> inventoryListSelected;
+    private InvInventoryDTO inventoryDTOSelect;
+    private String inventoryIdList;
 
     public Date findDateFromHijriFrom() {
         if (getYearHijriFrom() != null && getMonthHijriFrom() != null && getDayHijriFrom() != null) {
@@ -931,6 +937,102 @@ public class Basic implements Serializable {
      */
     public void setGlBankDTOIdList(String glBankDTOIdList) {
         this.glBankDTOIdList = glBankDTOIdList;
+    }
+
+    /**
+     * @return the inventoryDTOConverters
+     */
+    public InvInventoryDTOConverter getInventoryDTOConverters() {
+        return inventoryDTOConverters;
+    }
+
+    /**
+     * @param inventoryDTOConverters the inventoryDTOConverters to set
+     */
+    public void setInventoryDTOConverters(InvInventoryDTOConverter inventoryDTOConverters) {
+        this.inventoryDTOConverters = inventoryDTOConverters;
+    }
+
+    /**
+     * @return the inventoryLists
+     */
+    public List<InvInventoryDTO> getInventoryLists() {
+        if (inventoryLists == null || inventoryLists.isEmpty()) {
+            inventoryLists = tobyUserInventoryService.getAllInventroyDTOByUserAndBranch(getUserData().getUser());
+            setInventoryDTOConverters(new InvInventoryDTOConverter(inventoryLists));
+        }
+        return inventoryLists;
+    }
+
+    /**
+     * @param inventoryLists the inventoryLists to set
+     */
+    public void setInventoryLists(List<InvInventoryDTO> inventoryLists) {
+        this.inventoryLists = inventoryLists;
+    }
+
+    /**
+     * @return the inventoryListSelected
+     */
+    public List<InvInventoryDTO> getInventoryListSelected() {
+         if (inventoryListSelected == null) {
+            inventoryListSelected = getInventoryLists();
+        }
+        return inventoryListSelected;
+    }
+
+    /**
+     * @param inventoryListSelected the inventoryListSelected to set
+     */
+    public void setInventoryListSelected(List<InvInventoryDTO> inventoryListSelected) {
+        this.inventoryListSelected = inventoryListSelected;
+    }
+
+    /**
+     * @return the inventoryDTOSelect
+     */
+    public InvInventoryDTO getInventoryDTOSelect() {
+       if (inventoryDTOSelect == null) {
+            if (getUserData().getInventoryDTOList() == null || getUserData().getInventoryDTOList().isEmpty()) {
+                inventoryDTOSelect = null;
+            } else {
+                inventoryDTOSelect = getUserData().getInventoryDTOList().get(0);
+            }
+        }
+        return inventoryDTOSelect;
+    }
+
+    /**
+     * @param inventoryDTOSelect the inventoryDTOSelect to set
+     */
+    public void setInventoryDTOSelect(InvInventoryDTO inventoryDTOSelect) {
+        this.inventoryDTOSelect = inventoryDTOSelect;
+    }
+
+    /**
+     * @return the inventoryIdList
+     */
+    public String getInventoryIdList() {
+        if (getInventoryListSelected() != null && !getInventoryListSelected().isEmpty()) {
+            StringBuilder list = null;
+            for (InvInventoryDTO iidto : getInventoryListSelected()) {
+                if (list == null) {
+                    list = new StringBuilder();
+                    list.append(iidto.getId());
+                } else {
+                    list.append(" , ").append(iidto.getId());
+                }
+            }
+            return list.toString();
+        }
+        return inventoryIdList;
+    }
+
+    /**
+     * @param inventoryIdList the inventoryIdList to set
+     */
+    public void setInventoryIdList(String inventoryIdList) {
+        this.inventoryIdList = inventoryIdList;
     }
 
 }

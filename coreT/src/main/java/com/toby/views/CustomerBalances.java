@@ -89,7 +89,7 @@ public class CustomerBalances {
     public BigDecimal getBalance() {
         if (Balance == null) {
 //            Balance = getDebit().subtract(getCreditor());
-            Balance = getCreditor().subtract(getDebit());
+            Balance = getDebit().subtract(getCreditor());
         }
         return Balance;
     }

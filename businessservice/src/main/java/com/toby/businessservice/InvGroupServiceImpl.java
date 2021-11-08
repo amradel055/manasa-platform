@@ -202,7 +202,7 @@ public class InvGroupServiceImpl implements InvGroupService {
     public List<InvGroup> getInvGroupsRootsByBranchId(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
-        List<InvGroup> invGroupList = dao.findListByQuery("SELECT e FROM InvGroup e WHERE e.branchId.id = :branchId AND e.id not in (select g.parent.id  FROM InvGroup g WHERE g.branchId.id = :branchId AND g.parent is not null) AND e.parent is not null ORDER BY e.code", params);
+        List<InvGroup> invGroupList = dao.findListByQuery("SELECT e FROM InvGroup e WHERE e.branchId.id = :branchId AND e.id not in (select g.parent.id  FROM InvGroup g WHERE g.branchId.id = :branchId AND g.parent is not null) ORDER BY e.code", params);
         List<InvGroup> list = improvePerformane(invGroupList);
         return list;
     }

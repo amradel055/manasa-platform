@@ -36,11 +36,15 @@ public class ProductionTransactionOfUser implements Serializable {
     private String userName;
     private BigDecimal price;
     private String userCode;
+    private BigDecimal quantity;
 
     public ProductionTransactionOfUser() {
     }
 
     public BigDecimal getTotalNumber() {
+        if(totalNumber== null){
+            totalNumber = BigDecimal.ZERO;
+        }
         return totalNumber;
     }
 
@@ -230,6 +234,20 @@ public class ProductionTransactionOfUser implements Serializable {
      */
     public void setResidencyNumber(String residencyNumber) {
         this.residencyNumber = residencyNumber;
+    }
+
+    /**
+     * @return the quantity
+     */
+    public BigDecimal getQuantity() {
+        return quantity;
+    }
+
+    /**
+     * @param quantity the quantity to set
+     */
+    public void setQuantity(BigDecimal quantity) {
+        this.quantity = quantity;
     }
 
    

@@ -23,20 +23,6 @@ import java.util.Map;
  */
 public class InvInvoiceDTO extends BaseEntityDTO {
 
-    /**
-     * @return the glYearSelection
-     */
-    public GlYear getGlYearSelection() {
-        return glYearSelection;
-    }
-
-    /**
-     * @param glYearSelection the glYearSelection to set
-     */
-    public void setGlYearSelection(GlYear glYearSelection) {
-        this.glYearSelection = glYearSelection;
-    }
-
     private CompanyActivityClassEnum companyActivity;
     private ScreenNameClassEnum ScreenName;
     private ModuleClassEnum moduleClassEnum;
@@ -172,6 +158,9 @@ public class InvInvoiceDTO extends BaseEntityDTO {
     private String customerName;
     private String customerMobile;
     private Integer invoiceType;
+    private Boolean sendCloth;
+    
+    private String offerCopoun;
     
     private Integer generalJournalId;
 
@@ -1804,6 +1793,51 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      */
     public void setGeneralJournalId(Integer generalJournalId) {
         this.generalJournalId = generalJournalId;
+    }
+
+    /**
+     * @return the glYearSelection
+     */
+    public GlYear getGlYearSelection() {
+        return glYearSelection;
+    }
+
+    /**
+     * @param glYearSelection the glYearSelection to set
+     */
+    public void setGlYearSelection(GlYear glYearSelection) {
+        this.glYearSelection = glYearSelection;
+    }
+
+    /**
+     * @return the sendCloth
+     */
+    public Boolean getSendCloth() {
+        if(sendCloth == null){
+            sendCloth = Boolean.FALSE;
+        }
+        return sendCloth;
+    }
+
+    /**
+     * @param sendCloth the sendCloth to set
+     */
+    public void setSendCloth(Boolean sendCloth) {
+        this.sendCloth = sendCloth;
+    }
+
+    /**
+     * @return the offerCopoun
+     */
+    public String getOfferCopoun() {
+        return offerCopoun;
+    }
+
+    /**
+     * @param offerCopoun the offerCopoun to set
+     */
+    public void setOfferCopoun(String offerCopoun) {
+        this.offerCopoun = offerCopoun;
     }
 
 }

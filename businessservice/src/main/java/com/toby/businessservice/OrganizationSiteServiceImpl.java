@@ -5,9 +5,14 @@
  */
 package com.toby.businessservice;
 
+import com.toby.businessservice.reports.searchBean.CrmLeadsSearchBean;
 import com.toby.businessservice.reports.searchBean.SupplierAccountSearchBean;
 import com.toby.businessservice.reports.searchBean.invOrganizationSiteSearchBean;
 import com.toby.core.GenericDAO;
+import com.toby.dto.ChartDTO;
+import com.toby.dto.ChartDataDTO;
+import com.toby.dto.CrmCustomerInterestedProductsDTO;
+import com.toby.dto.CrmEventDTO;
 import com.toby.dto.CurrencyDTO;
 import com.toby.dto.GlAccountDTO;
 import com.toby.dto.InvInventoryDTO;
@@ -17,6 +22,7 @@ import com.toby.dto.OfferCompanyDTO;
 import com.toby.dto.SymbolDTO;
 import com.toby.entity.Branch;
 import com.toby.entity.Currency;
+import com.toby.entity.Employee;
 import com.toby.entity.GlAccount;
 import com.toby.entity.InvInventory;
 import com.toby.entity.InvOrganizationSite;
@@ -28,10 +34,13 @@ import com.toby.entity.TobyUser;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import ma.glasnost.orika.MapperFacade;
@@ -52,9 +61,11 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
     @EJB
     private CurrencyServiceDTO currencyServiceDTO;
     @EJB
-    private GlAccountServiceDTO glAccountServiceDTO;
+    CRMCustomerInterestedProductsServiceDTO cRMCustomerInterestedProductsServiceDTO;
     @EJB
-    private InvDelegatorService invDelegatorService;
+    private CRMEventServiceDTO cRMEventServiceDTO;
+    @EJB
+    private EmployeeService employeeService;
 
     @Override
     public void updateOrganizationSiteMobile(InvOrganizationSiteDTO organizationSiteDTO) {
@@ -750,8 +761,8 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
     }
 
     @Override
-    public void deleteOrganizationSiteDTO(InvOrganizationSiteDTO invOrganizationSiteDTO, TobyUser isagUser) {
-        InvOrganizationSite invOrganizationSite = mapFromDTO(invOrganizationSiteDTO, isagUser);
+    public void deleteOrganizationSiteDTO(InvOrganizationSiteDTO invOrganizationSiteDTO, TobyUser tobyUser) {
+        InvOrganizationSite invOrganizationSite = mapFromDTO(invOrganizationSiteDTO, tobyUser);
         dao.deleteEntity(invOrganizationSite);
     }
 
@@ -771,7 +782,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         List<InvOrganizationSite> detailses = dao.findListByQuery("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND e.type <> 1 AND e.active = 1 ORDER BY e.code", params);
         List<InvOrganizationSiteDTO> dTOList = new ArrayList<>();
 
-        returnListDTO(detailses, dTOList);
+        returnListDTO(detailses, dTOList,Boolean.FALSE);
         return dTOList;
     }
 
@@ -790,7 +801,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         sql.append(" ORDER BY e.code");
         List<InvOrganizationSite> detailses = dao.findListByQuery(sql.toString(), params);
 
-        returnListDTO(detailses, list);
+        returnListDTO(detailses, list,Boolean.FALSE);
         return list;
     }
 
@@ -839,7 +850,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         builder.append(" ORDER BY i.id DESC");
         List<InvOrganizationSite> details = dao.findListByQuery(builder.toString(), filters, first, pageSize);
         List<InvOrganizationSiteDTO> dTOList = new ArrayList<>();
-        returnListDTO(details, dTOList);
+        returnListDTO(details, dTOList,Boolean.FALSE);
         return dTOList;
     }
 
@@ -857,19 +868,13 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             builder.append(" ORDER BY i.id DESC");
             List<InvOrganizationSite> details = dao.findListByQuery(builder.toString(), params);
             List<InvOrganizationSiteDTO> dTOList = new ArrayList<>();
-            returnListDTO(details, dTOList);
+            returnListDTO(details, dTOList,Boolean.FALSE);
             return dTOList;
         }
         return null;
     }
 
-    public InvOrganizationSiteDTO mapTODTO(InvOrganizationSite entity) {
-        InvOrganizationSiteDTO dTO = new InvOrganizationSiteDTO();
-        initMapToDTO(dTO, entity);
-        return dTO;
-    }
-
-    private void initMapToDTO(InvOrganizationSiteDTO dTO, InvOrganizationSite entity) {
+    private void initMapToDTO(InvOrganizationSiteDTO dTO, InvOrganizationSite entity, Boolean getCRMInformation) {
         dTO.setId(entity.getId());
         dTO.setCode(entity.getCode());
         dTO.setName(entity.getName());
@@ -965,6 +970,24 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             parent.setName(entity.getDelegatorId().getName());
             dTO.setDelegatorId(parent);
         }
+        
+        if (entity.getLearnAboutCompanyfrom() != null) {
+            SymbolDTO symbolDTO = new SymbolDTO();
+            symbolDTO.setId(entity.getLearnAboutCompanyfrom().getId());
+            symbolDTO.setName(entity.getLearnAboutCompanyfrom().getName());
+            symbolDTO.setSerial(entity.getLearnAboutCompanyfrom().getSerial());
+            symbolDTO.setIndex(entity.getLearnAboutCompanyfrom().getId());
+            dTO.setLearnAboutCompanyFrom(symbolDTO);
+        }
+        if (getCRMInformation) {
+            List<CrmEventDTO> crmEventDTOList = cRMEventServiceDTO.findALLCrmEventByCustomerId(entity.getId());
+            dTO.setCrmEventDTOList(crmEventDTOList);
+
+            List<CrmCustomerInterestedProductsDTO> interestedProductsDTOList = cRMCustomerInterestedProductsServiceDTO.getCrmCustomerInterestedProductsByOrganizationSiteId(entity.getId());
+            dTO.setCrmCustomerInterestedProductsDTOList(interestedProductsDTOList);
+        }
+        
+        
         dTO.setIndex(entity.getId());
         dTO.setCreatedDate(entity.getCreationDate());
         dTO.setCreatedBy(entity.getCreatedBy().getId());
@@ -972,7 +995,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         dTO.setCompanyId(entity.getCompanyId().getId());
     }
 
-    public InvOrganizationSite mapFromDTO(InvOrganizationSiteDTO dTO, TobyUser isagUser) {
+    public InvOrganizationSite mapFromDTO(InvOrganizationSiteDTO dTO, TobyUser tobyUser) {
         InvOrganizationSite entity = new InvOrganizationSite();
 
         entity.setId(dTO.getId());
@@ -1044,39 +1067,32 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             entity.setRegionId(parent);
         }
         if (dTO.getId() == null) {
-            entity.setCreatedBy(isagUser);
+            entity.setCreatedBy(tobyUser);
             entity.setCreationDate(new Date());
         } else {
-            TobyUser isagUser1 = new TobyUser();
-            isagUser1.setId(dTO.getCreatedBy());
-            entity.setCreatedBy(isagUser1);
+            TobyUser tobyUser1 = new TobyUser();
+            tobyUser1.setId(dTO.getCreatedBy());
+            entity.setCreatedBy(tobyUser1);
             entity.setCreationDate(dTO.getCreatedDate());
             entity.setModificationDate(new Date());
-            entity.setModifiedBy(isagUser);
+            entity.setModifiedBy(tobyUser);
 
         }
-        entity.setBranchId(isagUser.getBranchId());
-        entity.setCompanyId(isagUser.getCompanyId());
+        entity.setBranchId(tobyUser.getBranchId());
+        entity.setCompanyId(tobyUser.getCompanyId());
         return entity;
-    }
-
-    private void returnListDTO(List<InvOrganizationSite> list, List<InvOrganizationSiteDTO> dTOList) {
-        for (InvOrganizationSite guide : list) {
-            dTOList.add(mapTODTO(guide));
-        }
-
     }
 
     private List<InvOrganizationSiteDTO> returnListDTO(List<InvOrganizationSite> list) {
         List<InvOrganizationSiteDTO> DTOlist = new ArrayList();
-        returnListDTO(list, DTOlist);
+        returnListDTO(list, DTOlist,Boolean.FALSE);
         return DTOlist;
     }
 
-    private List<InvOrganizationSite> returnListEntity(List<InvOrganizationSiteDTO> list, TobyUser isagUser) {
+    private List<InvOrganizationSite> returnListEntity(List<InvOrganizationSiteDTO> list, TobyUser tobyUser) {
         List<InvOrganizationSite> Entitylist = new ArrayList();
         for (InvOrganizationSiteDTO organizationSiteDTO : list) {
-            Entitylist.add(mapFromDTO(organizationSiteDTO, isagUser));
+            Entitylist.add(mapFromDTO(organizationSiteDTO, tobyUser));
         }
         return Entitylist;
     }
@@ -1129,11 +1145,11 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
     }
 
     @Override
-    public List<InvOrganizationSiteDTO> AddDelegatorToCustomerDTO(List<InvOrganizationSiteDTO> invOrganizationSiteDTOList, TobyUser isagUser) {
+    public List<InvOrganizationSiteDTO> AddDelegatorToCustomerDTO(List<InvOrganizationSiteDTO> invOrganizationSiteDTOList, TobyUser tobyUser) {
         List<InvOrganizationSiteDTO> dTO = new ArrayList();
-        List<InvOrganizationSite> invOrganizationSiteList = returnListEntity(invOrganizationSiteDTOList, isagUser);
+        List<InvOrganizationSite> invOrganizationSiteList = returnListEntity(invOrganizationSiteDTOList, tobyUser);
         for (InvOrganizationSite organizationSite : invOrganizationSiteList) {
-            dTO.add(mapTODTO(updateOrganizationSite(organizationSite)));
+            dTO.add(mapTODTO(null,updateOrganizationSite(organizationSite),Boolean.FALSE));
         }
         return dTO;
     }
@@ -1150,7 +1166,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
     @Override
     public InvOrganizationSiteDTO findOrganizationSiteByIdDTO(Integer invOrganizationSiteId) {
         InvOrganizationSite invOrganizationSite = dao.findEntityById(InvOrganizationSite.class, invOrganizationSiteId);
-        return mapTODTO(invOrganizationSite);
+        return mapTODTO(null,invOrganizationSite,Boolean.FALSE);
     }
 
     @Override
@@ -1680,4 +1696,975 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         InvOrganizationSite ios = dao.findEntityById(InvOrganizationSite.class, invOrganizationSiteId);
         return mapToDTOSmall(ios);
     }
+
+    @Override
+    public InvOrganizationSiteDTO getCustomerBySerial(String serial) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("serial", serial);
+        List<InvOrganizationSite> detailses = dao.findListByQuery("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = 182 AND e.mobile = :serial ", params);
+        if (detailses != null && !detailses.isEmpty()) {
+            return mapToDTOSmall(detailses.get(0));
+        }
+        return null;
+    }
+    
+    
+    
+    
+    /////////////////// CRM //////////////////////////
+    
+    
+
+    private void appendFilter2(Map<String, Object> filters, StringBuilder builder, InvOrganizationSiteDTO invOrganizationSiteDTOSearch, Integer type, Integer branchId) {
+
+        filters.put("branchId", branchId);
+        filters.put("type", type);
+        // CrmLeadsSearchBean crmLeadsSearchBean
+//        if (crmLeadsSearchBean != null) {
+//            appendCodeFrom(crmLeadsSearchBean, filters, builder);
+//            appendCodeTo(crmLeadsSearchBean, filters, builder);
+//            appendDateFrom(crmLeadsSearchBean, filters, builder);
+//            appendDateTo(crmLeadsSearchBean, filters, builder);
+//            appendEmpFrom(crmLeadsSearchBean, filters, builder);
+//            appendEmpTo(crmLeadsSearchBean, filters, builder);
+//            appendSourceFrom(crmLeadsSearchBean, filters, builder);
+//            appendSourceTo(crmLeadsSearchBean, filters, builder);
+//        }
+
+        if (invOrganizationSiteDTOSearch != null && invOrganizationSiteDTOSearch.getAssignedTo() != null) {
+            filters.put("AssignedTo", invOrganizationSiteDTOSearch.getAssignedTo().getId());
+            builder.append(" AND i.assignedTo.id = :AssignedTo");
+        }
+
+        if (invOrganizationSiteDTOSearch != null && invOrganizationSiteDTOSearch.getLearnAboutCompanyFrom() != null) {
+            filters.put("LearnAboutCompanyfrom", invOrganizationSiteDTOSearch.getLearnAboutCompanyFrom().getId());
+            builder.append(" AND l.id = :LearnAboutCompanyfrom");
+        }
+
+        if (invOrganizationSiteDTOSearch != null && invOrganizationSiteDTOSearch.getProjectName() != null) {
+            filters.put("projectName", invOrganizationSiteDTOSearch.getProjectName().getId());
+            builder.append(" AND i.projectName.id = :projectName");
+        }
+
+        if (invOrganizationSiteDTOSearch != null && invOrganizationSiteDTOSearch.getLeadStatus() != null) {
+            filters.put("leadStatus", invOrganizationSiteDTOSearch.getLeadStatus().getId());
+            builder.append(" AND i.leadStatus.id = :leadStatus");
+        }
+
+        if (filters.get("globalFilter") != null && !filters.get("globalFilter").toString().isEmpty()) {
+            String filter = " and (i.code like CONCAT('%',:globalFilter ,'%')  OR i.mobile  like CONCAT('%',:globalFilter ,'%') OR i.name like CONCAT('%',:globalFilter ,'%') OR  i.assignedTo.name like CONCAT('%',:globalFilter ,'%') OR  i.leadStatus.name like CONCAT('%',:globalFilter ,'%') OR   FUNCTION('DATE_FORMAT',i.creationDate, '%d-%m-%Y') like CONCAT('%',:globalFilter ,'%')) ";
+            String filter2 = "OR l.name like CONCAT('%',:globalFilter ,'%') ";
+            builder.append(filter);
+            builder.append(filter2);
+        } else {
+            filters.remove("globalFilter");
+        }
+    }
+
+    private void appendSourceTo(CrmLeadsSearchBean crmLeadsSearchBean, Map<String, Object> params, StringBuilder query) {
+        if (crmLeadsSearchBean.getSourceListTo() != null) {
+            params.put("sourceListTo", crmLeadsSearchBean.getSourceListTo().getSerial());
+            query.append(" and i.LearnAboutCompanyfrom.serial <= :sourceListTo ");
+
+        }
+    }
+
+    private void appendSourceFrom(CrmLeadsSearchBean crmLeadsSearchBean, Map<String, Object> params, StringBuilder query) {
+        if (crmLeadsSearchBean.getSourceListFrom() != null) {
+            params.put("sourceListFrom", crmLeadsSearchBean.getSourceListFrom().getSerial());
+            query.append(" and i.LearnAboutCompanyfrom.serial >= :sourceListFrom ");
+
+        }
+    }
+
+    private void appendEmpTo(CrmLeadsSearchBean crmLeadsSearchBean, Map<String, Object> params, StringBuilder query) {
+        if (crmLeadsSearchBean.getEmpTo() != null) {
+            params.put("empTo", crmLeadsSearchBean.getEmpTo().getCode());
+            query.append(" and i.assignedTo.code <= :empTo ");
+
+        }
+    }
+
+    private void appendEmpFrom(CrmLeadsSearchBean crmLeadsSearchBean, Map<String, Object> params, StringBuilder query) {
+        if (crmLeadsSearchBean.getEmpFrom() != null) {
+            params.put("empFrom", crmLeadsSearchBean.getEmpFrom().getCode());
+            query.append(" and i.assignedTo.code >= :empFrom ");
+
+        }
+    }
+
+    private void appendDateTo(CrmLeadsSearchBean crmLeadsSearchBean, Map<String, Object> params, StringBuilder query) {
+        if (crmLeadsSearchBean.getDateTo() != null) {
+            params.put("creationDateTo", crmLeadsSearchBean.getDateTo());
+
+            query.append(" and i.creationDate <= :creationDateTo");
+        }
+    }
+
+    private void appendDateFrom(CrmLeadsSearchBean crmLeadsSearchBean, Map<String, Object> params, StringBuilder query) {
+        if (crmLeadsSearchBean.getDateFrom() != null) {
+            params.put("creationDateFrom", crmLeadsSearchBean.getDateFrom());
+
+            query.append(" and i.creationDate >= :creationDateFrom");
+        }
+    }
+
+    private void appendCodeTo(CrmLeadsSearchBean crmLeadsSearchBean, Map<String, Object> params, StringBuilder query) {
+        if (crmLeadsSearchBean.getCodeTo() != null) {
+            params.put("codeTo", crmLeadsSearchBean.getCodeTo().getCode());
+            query.append(" and i.code <= :codeTo");
+        }
+    }
+
+    private void appendCodeFrom(CrmLeadsSearchBean crmLeadsSearchBean, Map<String, Object> params, StringBuilder query) {
+        if (crmLeadsSearchBean.getCodeFrom() != null) {
+            params.put("codeFrom", crmLeadsSearchBean.getCodeFrom().getCode());
+            query.append(" and i.code >= :codeFrom ");
+        }
+    }
+
+    private void appendFilter(Map<String, Object> filters, StringBuilder builder, InvOrganizationSiteDTO invOrganizationSiteDTOSearch, Integer assignedTo, Integer type) {
+        StringBuilder empIds = new StringBuilder();
+        if (type == 1) {
+            if (invOrganizationSiteDTOSearch != null && invOrganizationSiteDTOSearch.getAssignedTo() != null) {
+                empIds = employeeService.returnEmployeeList(invOrganizationSiteDTOSearch.getAssignedTo().getId(), empIds);
+            } else {
+                empIds = employeeService.returnEmployeeList(assignedTo, empIds);
+            }
+        } else {
+            empIds.append(assignedTo);
+        }
+        filters.put("branchId", invOrganizationSiteDTOSearch.getBranchId());
+        builder.append(" AND  i.assignedTo.id  IN ( ").append(empIds.toString()).append(" )  ");
+
+        if (invOrganizationSiteDTOSearch != null && invOrganizationSiteDTOSearch.getLearnAboutCompanyFrom() != null) {
+            filters.put("LearnAboutCompanyfrom", invOrganizationSiteDTOSearch.getLearnAboutCompanyFrom().getId());
+            builder.append(" AND l.id = :LearnAboutCompanyfrom");
+        }
+
+        if (invOrganizationSiteDTOSearch != null && invOrganizationSiteDTOSearch.getProjectName() != null) {
+            filters.put("projectName", invOrganizationSiteDTOSearch.getProjectName().getId());
+            builder.append(" AND i.projectName.id = :projectName");
+        }
+
+        if (invOrganizationSiteDTOSearch != null && invOrganizationSiteDTOSearch.getLeadStatus() != null) {
+            filters.put("leadStatus", invOrganizationSiteDTOSearch.getLeadStatus().getId());
+            builder.append(" AND i.leadStatus.id = :leadStatus");
+        } else {
+            builder.append("  AND i.leadStatus.serial != 0 ");
+        }
+
+        if (filters.get("globalFilter") != null && !filters.get("globalFilter").toString().isEmpty()) {
+            String filter = " and (i.code like CONCAT('%',:globalFilter ,'%')  OR i.mobile  like CONCAT('%',:globalFilter ,'%') OR i.name like CONCAT('%',:globalFilter ,'%') OR i.assignedTo.name like CONCAT('%',:globalFilter ,'%')  OR i.leadStatus.name like CONCAT('%',:globalFilter ,'%') OR  FUNCTION('DATE_FORMAT',i.creationDate, '%d-%m-%Y') like CONCAT('%',:globalFilter ,'%')) ";
+            String filter2 = "OR (l.name like CONCAT('%',:globalFilter ,'%') AND i.assignedTo.id  IN (" + empIds.toString() + ") )";
+
+            builder.append(filter);
+            builder.append(filter2);
+        } else {
+            filters.remove("globalFilter");
+        }
+    }
+
+    
+    private void returnListDTO(List<InvOrganizationSite> list, List<InvOrganizationSiteDTO> dTOList, Boolean getCRMInformation) {
+        for (InvOrganizationSite guide : list) {
+            dTOList.add(mapTODTO(null, guide, getCRMInformation));
+        }
+
+    }
+    
+    
+    
+    public InvOrganizationSiteDTO mapTODTO(InvOrganizationSiteDTO dTO, InvOrganizationSite entity, Boolean getCRMInformation) {
+        if (dTO == null) {
+            dTO = new InvOrganizationSiteDTO();
+        }
+        initMapToDTO(dTO, entity, getCRMInformation);
+        return dTO;
+    }
+    
+    
+    
+    private List<InvOrganizationSiteDTO> returnListDTO(List<InvOrganizationSite> list, Boolean cRMInformation) {
+        List<InvOrganizationSiteDTO> DTOlist = new ArrayList();
+        returnListDTO(list, DTOlist, cRMInformation);
+        return DTOlist;
+    }
+    
+    @Override
+    public List<InvOrganizationSiteDTO> getLeads(Integer branchId, Integer type, Date creationDateFrom, Date creationDateTo, String codeFrom, String codeTo) {
+
+        Map<String, Object> params = new HashMap<>();
+
+        params.put("branchId", branchId);
+        params.put("type", type);
+        params.put("codeFrom", codeFrom);
+        params.put("codeTo", codeTo);
+        params.put("creationDateFrom", creationDateFrom);
+        params.put("creationDateTo", creationDateTo);
+        List<InvOrganizationSite> details = dao.findListByQuery("select i from InvOrganizationSite i where i.type = :type and i.creationDate >= :creationDateFrom and i.creationDate <= :creationDateTo and i.branchId.id = :branchId and i.code >= :codeFrom and i.code <= :codeTo", params);
+
+        return returnListDTO(details, true);
+    }
+
+
+    @Override
+    public List<InvOrganizationSiteDTO> getLeads(Integer branchId, Integer type, CrmLeadsSearchBean crmLeadsSearchBean) {
+
+        Map<String, Object> params = new HashMap<>();
+
+        params.put("branchId", branchId);
+        params.put("type", type);
+
+        StringBuilder query = new StringBuilder();
+        query.append("select i from InvOrganizationSite i where i.type = :type and i.branchId.id = :branchId ");
+        if (crmLeadsSearchBean != null) {
+            appendCodeFrom(crmLeadsSearchBean, params, query);
+            appendCodeTo(crmLeadsSearchBean, params, query);
+            appendDateFrom(crmLeadsSearchBean, params, query);
+            appendDateTo(crmLeadsSearchBean, params, query);
+            appendEmpFrom(crmLeadsSearchBean, params, query);
+            appendEmpTo(crmLeadsSearchBean, params, query);
+            appendSourceFrom(crmLeadsSearchBean, params, query);
+            appendSourceTo(crmLeadsSearchBean, params, query);
+        }
+
+        List<InvOrganizationSite> details = dao.findListByQuery(query.toString(), params);
+
+        return returnListDTO(details, true);
+    }
+    
+    
+
+    @Override
+    public List<InvOrganizationSiteDTO> findALLCrmLeads(int first, int pageSize, String sortField, Boolean asc, Map<String, Object> filters, InvOrganizationSiteDTO invOrganizationSiteDTOSearch, Integer assignedTo, Integer type) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT i FROM InvOrganizationSite i LEFT JOIN  i.LearnAboutCompanyfrom l where i.branchId.id=:branchId AND i.type = 5  ");
+        appendFilter(filters, builder, invOrganizationSiteDTOSearch, assignedTo, type);
+        builder.append("  ORDER BY CAST(i.code SIGNED)   DESC ");
+        List<InvOrganizationSite> leadsList = dao.findListByQuery(builder.toString(), filters, first, pageSize);
+        return returnListDTO(leadsList, true);
+    }
+
+    @Override
+    public Long getTotalRegistors(Integer branchId, Map<String, Object> filters, InvOrganizationSiteDTO invOrganizationSiteDTOSearch, Integer assignedTo, Integer type) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT count(i) FROM InvOrganizationSite i LEFT JOIN  i.LearnAboutCompanyfrom l WHERE i.branchId.id = :branchId AND i.type = 5");
+        appendFilter(filters, builder, invOrganizationSiteDTOSearch, assignedTo, type);
+        Long details = dao.findEntityByQuery(builder.toString(), filters);
+        return details;
+    }
+
+    
+    @Override
+    public List<InvOrganizationSiteDTO> findLeadsList(InvOrganizationSiteDTO invOrganizationSiteDTOSearch, Integer assignedTo, Integer type) {
+        Map<String, Object> params = new HashMap<>();
+        StringBuilder query = new StringBuilder();
+        StringBuilder empIds = new StringBuilder();
+
+        query.append("SELECT i FROM InvOrganizationSite i where i.branchId.id=:branchId AND i.type = 5  ");
+        params.put("branchId", invOrganizationSiteDTOSearch.getBranchId());
+
+        if (type == 1) {
+            if (invOrganizationSiteDTOSearch != null && invOrganizationSiteDTOSearch.getAssignedTo() != null) {
+                empIds = employeeService.returnEmployeeList(invOrganizationSiteDTOSearch.getAssignedTo().getId(), empIds);
+            } else {
+                empIds = employeeService.returnEmployeeList(assignedTo, empIds);
+            }
+        } else {
+            empIds.append(assignedTo);
+        }
+
+        query.append(" AND  i.assignedTo.id  IN ( ").append(empIds.toString()).append(" )  ");
+
+        if (invOrganizationSiteDTOSearch != null && invOrganizationSiteDTOSearch.getLearnAboutCompanyFrom() != null) {
+            params.put("LearnAboutCompanyfrom", invOrganizationSiteDTOSearch.getLearnAboutCompanyFrom().getId());
+            query.append(" AND i.LearnAboutCompanyfrom.id = :LearnAboutCompanyfrom");
+        }
+
+        if (invOrganizationSiteDTOSearch != null && invOrganizationSiteDTOSearch.getProjectName() != null) {
+            params.put("projectName", invOrganizationSiteDTOSearch.getProjectName().getId());
+            query.append(" AND i.projectName.id = :projectName");
+        }
+
+        if (invOrganizationSiteDTOSearch != null && invOrganizationSiteDTOSearch.getLeadStatus() != null) {
+            params.put("leadStatus", invOrganizationSiteDTOSearch.getLeadStatus().getId());
+            query.append(" AND i.leadStatus.id = :leadStatus");
+        } else {
+            query.append("  AND i.leadStatus.serial != 0 ");
+        }
+        query.append("  ORDER BY CAST(i.code SIGNED)   DESC ");
+        List<InvOrganizationSite> leadsList = dao.findListByQuery(query.toString(), params);
+
+        return returnListDTO(leadsList, true);
+
+    }
+
+    @Override
+    public List<InvOrganizationSiteDTO> findAllLeadsList(InvOrganizationSiteDTO invOrganizationSiteDTOSearch) {
+        Map<String, Object> params = new HashMap<>();
+        StringBuilder query = new StringBuilder();
+
+        query.append("SELECT i FROM InvOrganizationSite i where i.branchId.id=:branchId AND i.type = 5  ");
+        params.put("branchId", invOrganizationSiteDTOSearch.getBranchId());
+
+        if (invOrganizationSiteDTOSearch != null && invOrganizationSiteDTOSearch.getLearnAboutCompanyFrom() != null) {
+            params.put("LearnAboutCompanyfrom", invOrganizationSiteDTOSearch.getLearnAboutCompanyFrom().getId());
+            query.append(" AND i.LearnAboutCompanyfrom.id = :LearnAboutCompanyfrom");
+        }
+
+        if (invOrganizationSiteDTOSearch != null && invOrganizationSiteDTOSearch.getProjectName() != null) {
+            params.put("projectName", invOrganizationSiteDTOSearch.getProjectName().getId());
+            query.append(" AND i.projectName.id = :projectName");
+        }
+
+        if (invOrganizationSiteDTOSearch != null && invOrganizationSiteDTOSearch.getLeadStatus() != null) {
+            params.put("leadStatus", invOrganizationSiteDTOSearch.getLeadStatus().getId());
+            query.append(" AND i.leadStatus.id = :leadStatus");
+        }
+
+        query.append("  ORDER BY CAST(i.code SIGNED)   DESC ");
+        List<InvOrganizationSite> leadsList = dao.findListByQuery(query.toString(), params);
+
+        return returnListDTO(leadsList, true);
+    }
+
+    @Override
+    public List<InvOrganizationSiteDTO> findLeads(int first, int pageSize, String sortField, Boolean asc, Map<String, Object> filters, InvOrganizationSiteDTO invOrganizationSiteDTOSearch, Integer type, Integer branchId) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT i FROM InvOrganizationSite i LEFT JOIN  i.LearnAboutCompanyfrom l  where i.branchId.id=:branchId AND i.type = :type  ");
+        appendFilter2(filters, builder, invOrganizationSiteDTOSearch, type, branchId);
+        List<InvOrganizationSite> leadsList = dao.findListByQuery(builder.toString(), filters, first, pageSize);
+        return returnListDTO(leadsList, true);
+    }
+    
+    @Override
+    public ChartDTO getCountCustomerByLearnAboutCompanyfrom(Integer branchId, Date dateFrom, Date dateTo) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        StringBuilder builder = new StringBuilder();
+        builder.append(" SELECT count(e.id) , e.LearnAboutCompanyfrom.name FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND e.type = 5 ");
+        if (dateFrom != null) {
+            Calendar calFrom = Calendar.getInstance();
+            calFrom.setTime(dateFrom);
+            calFrom.set(Calendar.HOUR_OF_DAY, 0);
+            calFrom.set(Calendar.MINUTE, 0);
+            calFrom.set(Calendar.SECOND, 0);
+            calFrom.set(Calendar.MILLISECOND, 0);
+            params.put("dateFrom", calFrom.getTime());
+            builder.append(" AND ((e.modificationDate IS NULL OR e.creationDate >= :dateFrom ) AND (e.modificationDate IS NOT NULL OR e.modificationDate >= :dateFrom))  ");
+        }
+        if (dateTo != null) {
+            Calendar calTo = Calendar.getInstance();
+            calTo.setTime(dateTo);
+            calTo.set(Calendar.HOUR_OF_DAY, 0);
+            calTo.set(Calendar.MINUTE, 0);
+            calTo.set(Calendar.SECOND, 0);
+            calTo.set(Calendar.MILLISECOND, 0);
+            params.put("dateTo", calTo.getTime());
+            builder.append(" AND  ((e.modificationDate IS NULL OR e.creationDate <= :dateTo ) AND (e.modificationDate IS NOT NULL OR e.modificationDate <= :dateTo)) ");
+        }
+        builder.append(" group by e.LearnAboutCompanyfrom.id ");
+        List<Object[]> detailses = dao.findListByQuery(builder.toString(), params);
+        String title = "نسبه العملاء حسب المصدر ";
+        return preperChartPie(detailses, title);
+    }
+
+    @Override
+    public ChartDTO getCountCustomerByleadStatus(Integer branchId, Date dateFrom, Date dateTo) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT count(e.id) , e.leadStatus.name FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND e.type = 5 ");
+        if (dateFrom != null) {
+            Calendar calFrom = Calendar.getInstance();
+            calFrom.setTime(dateFrom);
+            calFrom.set(Calendar.HOUR_OF_DAY, 0);
+            calFrom.set(Calendar.MINUTE, 0);
+            calFrom.set(Calendar.SECOND, 0);
+            calFrom.set(Calendar.MILLISECOND, 0);
+            params.put("dateFrom", calFrom.getTime());
+            builder.append(" AND ((e.modificationDate IS NULL OR e.creationDate >= :dateFrom ) AND (e.modificationDate IS NOT NULL OR e.modificationDate >= :dateFrom))  ");
+        }
+        if (dateTo != null) {
+            Calendar calTo = Calendar.getInstance();
+            calTo.setTime(dateTo);
+            calTo.set(Calendar.HOUR_OF_DAY, 0);
+            calTo.set(Calendar.MINUTE, 0);
+            calTo.set(Calendar.SECOND, 0);
+            calTo.set(Calendar.MILLISECOND, 0);
+            params.put("dateTo", calTo.getTime());
+            builder.append(" AND  ((e.modificationDate IS NULL OR e.creationDate <= :dateTo ) AND (e.modificationDate IS NOT NULL OR e.modificationDate <= :dateTo)) ");
+        }
+        builder.append(" group by e.leadStatus.id ");
+        List<Object[]> detailses = dao.findListByQuery(builder.toString(), params);
+        String title = "نسبه العملاء حسب الحاله ";
+        return preperChartPie(detailses, title);
+    }
+
+    @Override
+    public ChartDTO getCountCustomerByAssignedTo(Integer branchId, Date fromDate, Date toDate) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT count(e.id) , e.assignedTo.name FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND e.type = 5 ");
+        filterChartDate(params, builder, fromDate, toDate);
+        builder.append(" group by e.assignedTo.id  ");
+        List<Object[]> detailses = dao.findListByQuery(builder.toString(), params);
+        String title = "نسبه العملاء حسب الموظف ";
+        return preperChartPie(detailses, title);
+    }
+
+    @Override
+    public ChartDTO getCountCustomerByAssignedToAndStatus(Integer branchId, Integer status, Date fromDate, Date toDate) {
+        StringBuilder builder = new StringBuilder();
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        params.put("status", status);
+        builder.append("SELECT count(e.id) , e.assignedTo.name FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND e.type = 5 AND e.leadStatus.id = :status ");
+        filterChartDate(params, builder, fromDate, toDate);
+        builder.append(" group by e.assignedTo.id  ");
+        List<Object[]> detailses = dao.findListByQuery(builder.toString(), params);
+        String title = "نسبه العملاء حسب الحاله للموظف ";
+        return preperChartPie(detailses, title);
+    }
+
+    @Override
+    public ChartDTO getCountCustomerByProjectName(Integer branchId, Date dateFrom, Date dateTo) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT count(e.id) , e.projectName.name FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND e.type = 5 ");
+        if (dateFrom != null) {
+            Calendar calFrom = Calendar.getInstance();
+            calFrom.setTime(dateFrom);
+            calFrom.set(Calendar.HOUR_OF_DAY, 0);
+            calFrom.set(Calendar.MINUTE, 0);
+            calFrom.set(Calendar.SECOND, 0);
+            calFrom.set(Calendar.MILLISECOND, 0);
+            params.put("dateFrom", calFrom.getTime());
+            builder.append(" AND ((e.modificationDate IS NULL OR e.creationDate >= :dateFrom ) AND (e.modificationDate IS NOT NULL OR e.modificationDate >= :dateFrom))  ");
+        }
+        if (dateTo != null) {
+            Calendar calTo = Calendar.getInstance();
+            calTo.setTime(dateTo);
+            calTo.set(Calendar.HOUR_OF_DAY, 0);
+            calTo.set(Calendar.MINUTE, 0);
+            calTo.set(Calendar.SECOND, 0);
+            calTo.set(Calendar.MILLISECOND, 0);
+            params.put("dateTo", calTo.getTime());
+            builder.append(" AND  ((e.modificationDate IS NULL OR e.creationDate <= :dateTo ) AND (e.modificationDate IS NOT NULL OR e.modificationDate <= :dateTo)) ");
+        }
+        builder.append(" group by e.projectName.id  ");
+        List<Object[]> detailses = dao.findListByQuery(builder.toString(), params);
+        String title = "نسبه العملاء حسب المشروع ";
+        return preperChartPie(detailses, title);
+    }
+
+    private ChartDTO preperChartPie(List<Object[]> details, String title) {
+        ChartDTO chartDTO = new ChartDTO();
+        int i = 0;
+        for (Object[] detail : details) {
+            chartDTO.getPieValues().add(((Number) detail[0]).intValue());
+            chartDTO.getPieLabels().add(detail[1].toString());
+            chartDTO.getPieColers().add(getColors().get(i));
+            if (i < getColors().size() - 1) {
+                i++;
+            } else {
+                i = 0;
+            }
+        }
+        chartDTO.setTitle(title);
+        return chartDTO;
+    }
+
+    private List<String> getColors() {
+        List<String> colors = new ArrayList<>();
+        colors.add("rgb(255, 99, 132)");//Red");
+        colors.add("rgb(75, 192, 192)");//Green
+        colors.add("rgb(255, 205, 86)");//Yellow
+        colors.add("rgb(201, 203, 207)");//Grey
+        colors.add("rgb(54, 162, 235)");//Blue
+        return colors;
+    } 
+    
+    private StringBuilder filterChartDate(Map<String, Object> filters, StringBuilder builder, Date fromDate, Date toDate) {
+        Date maxDate = null;
+        if ((fromDate != null || toDate != null) && (fromDate == null || toDate == null)) {
+            maxDate = getmaxCreationDate((Integer) filters.get("branchId"), 5);
+            filters.put("maxDate", maxDate);
+        }
+        if (fromDate != null && toDate == null && maxDate != null) {
+            builder.append(" AND e.creationDate BETWEEN :fromDate AND :maxDate ");
+            filters.put("fromDate", fromDate);
+        }
+
+        if (toDate != null && fromDate == null && maxDate != null) {
+            builder.append(" AND e.creationDate BETWEEN :maxDate AND :toDate ");
+            filters.put("toDate", toDate);
+        }
+
+        if (fromDate != null && toDate != null) {
+            builder.append(" AND e.creationDate BETWEEN :fromDate AND :toDate ");
+            filters.put("fromDate", fromDate);
+            filters.put("toDate", toDate);
+        }
+        return builder;
+    }
+
+    private Date getmaxCreationDate(Integer branchId, Integer type) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        params.put("type", type);
+        return dao.findEntityByQuery("SELECT e.creationDate FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND e.type = :type ", params);
+    }
+
+    @Override
+    public Integer getNumberOfCustomerByBranchIdAndAssignedTo(Integer branchId, Integer assignedTo, Integer createdBy) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        if (assignedTo != null) {
+            params.put("assignedTo", assignedTo);
+            Long invOrganizationSiteCount = dao.findEntityByQuery("SELECT count(e.id) FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND e.type = 5 AND (e.assignedTo.id = :assignedTo ) AND e.leadStatus.serial != 0", params);
+            return invOrganizationSiteCount.intValue();
+        }
+        return 0;
+    }
+
+    @Override
+    public Integer getNumberOfNewCustomerByBranchIdAndAssignedTo(Integer branchId, Integer assignedTo, Integer createdBy) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        if (assignedTo != null) {
+            params.put("assignedTo", assignedTo);
+
+            Long invOrganizationSiteCount = dao.findEntityByQuery("SELECT count(e) FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND e.type = 5 AND e.assignedTo.id  = :assignedTo AND  e.leadStatus.serial = 1", params);
+            //AND e.id NOT IN (SELECT c.customerId.id FROM CrmEvent c WHERE c.branchId.id = :branchId)
+            return invOrganizationSiteCount.intValue();
+        }
+        return 0;
+    }
+
+    @Override
+    public Long getTotalRegistors(Map<String, Object> filters, InvOrganizationSiteDTO invOrganizationSiteDTOSearch, Integer type, Integer branchId) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT count(i) FROM InvOrganizationSite i LEFT JOIN  i.LearnAboutCompanyfrom l  WHERE i.branchId.id = :branchId AND i.type = :type");
+        appendFilter2(filters, builder, invOrganizationSiteDTOSearch, type, branchId);
+        Long details = dao.findEntityByQuery(builder.toString(), filters);
+        return details;
+    }
+
+    @Override
+    public synchronized String saveTransferLead(List<InvOrganizationSiteDTO> invOrganizationSiteDTOList, TobyUser tobyUser) {
+        StringBuilder error = new StringBuilder();
+        try {
+            if (invOrganizationSiteDTOList != null && !invOrganizationSiteDTOList.isEmpty()) {
+                for (InvOrganizationSiteDTO invOrganizationSiteDTO : invOrganizationSiteDTOList) {
+                    Boolean validate = Boolean.FALSE;
+                    if (invOrganizationSiteDTO == null || (invOrganizationSiteDTO != null && invOrganizationSiteDTO.getId() == null)
+                            || (invOrganizationSiteDTO != null && invOrganizationSiteDTO.getTransferTo() == null)
+                            || (invOrganizationSiteDTO != null && invOrganizationSiteDTO.getTransferTo() != null && invOrganizationSiteDTO.getTransferTo().getId() == null)) {
+                        error.append("يجب اختيار الموظف المتابع للعميل رقم " + invOrganizationSiteDTO.getCode() + " </br>");
+                        validate = Boolean.TRUE;
+                    }
+                    if (!validate) {
+                        if (invOrganizationSiteDTO != null && (invOrganizationSiteDTO.getMsg() == null || invOrganizationSiteDTO.getMsg().isEmpty())) {
+                            Employee emp = new Employee();
+                            emp.setId(invOrganizationSiteDTO.getTransferTo().getId());
+                            Map<String, Object> params = new HashMap<>();
+                            params.put("id", invOrganizationSiteDTO.getId());
+                            params.put("assignedTo", emp);
+                            params.put("modifiedBy", tobyUser);
+                            params.put("modificationDate", new Date());
+                            String query = "UPDATE InvOrganizationSite i SET i.assignedTo = :assignedTo  , i.modificationDate = :modificationDate , i.modifiedBy = :modifiedBy  WHERE i.id = :id ";
+                            dao.executeUpdateQuery(query, params);
+                        }
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            error = new StringBuilder();
+            error.append("حدث خطاء");
+            dao.rollbackQuery();
+        }
+
+        return error.toString();
+    }
+
+    @Override
+    public InvOrganizationSiteDTO getorganizationSiteByBranchIdAndCodeDTOSmall(Integer branchId, boolean active, Integer type, String code) {
+
+        Map<String, Object> params = new HashMap<>();
+        StringBuilder sql = new StringBuilder();
+        params.put("branchId", branchId);
+        appendOrganizationTypeAndActiveAndCode(params, type, sql, active, code);
+        InvOrganizationSite detailses = dao.findEntityByQuery(sql.toString(), params);
+        return mapTODTOSmall(detailses);
+    }
+
+    private void appendOrganizationTypeAndActiveAndCode(Map<String, Object> params, Integer type, StringBuilder sql, boolean active, String code) {
+        params.put("type", type);
+        params.put("code", code);
+        sql.append("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId ");
+
+        if (type == 0 || type == 1) {
+            sql.append(" AND (e.type = :type OR e.type = 2) ");
+        } else {
+            sql.append(" AND e.type = :type  ");
+        }
+
+        if (active) {
+            sql.append(" AND e.active = 1 ");
+        }
+
+        sql.append(" AND e.code = :code");
+    }
+
+    @Override
+    public InvOrganizationSite getorganizationSiteByBranchIdAndCodeSmall(Integer branchId, boolean active, Integer type, String code) {
+
+        Map<String, Object> params = new HashMap<>();
+        StringBuilder sql = new StringBuilder();
+        params.put("branchId", branchId);
+        appendOrganizationTypeAndActiveAndCode(params, type, sql, active, code);
+        InvOrganizationSite detailses = dao.findEntityByQuery(sql.toString(), params);
+        InvOrganizationSite invOrganizationSite = new InvOrganizationSite();
+        invOrganizationSite.setId(detailses.getId());
+        invOrganizationSite.setCode(detailses.getCode());
+        invOrganizationSite.setName(detailses.getName());
+        detailses = null;
+        return invOrganizationSite;
+    }
+
+    @Override
+    public Boolean checknationalId(Integer branchId, String nationId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        params.put("nationId", nationId);
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND  e.nationId = :nationId  ");
+        InvOrganizationSite detailses = dao.findEntityByQuery(query.toString(), params);
+        if (detailses == null) {
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
+
+    @Override
+    public ChartDTO getCountLeadByAssignedToChartBar(Integer branchId, Date fromDate, Date toDate) {
+        StringBuilder builder = new StringBuilder();
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        builder.append("SELECT i.assignedTo.name , count(i.id) , i.leadStatus.name FROM InvOrganizationSite i WHERE i.branchId.id = :branchId AND i.type = 5 ");
+        filterChartDate(params, builder, fromDate, toDate);
+        builder.append("  group by  i.assignedTo.id , i.leadStatus.id order by  i.assignedTo.id");
+        List<Object[]> detailses = dao.findListByQuery(builder.toString(), params);
+        String title = "نسبه المهمات حسب الموظف ";
+        return preperChart(detailses, "المهمه", "العدد", title);
+    }
+
+ private ChartDTO preperChart(List<Object[]> details, String xLabel, String yLabel, String title) {
+        Map<Object, Number> map = new HashMap<>();
+        Set<String> setEmp = new HashSet<String>();
+        List<ChartDataDTO> chartDataDTOList = new ArrayList<>();
+        ChartDataDTO chartDataDTO = new ChartDataDTO();
+        int max = 0;
+
+        for (Object[] detail : details) {
+            setEmp.add(detail[0].toString());
+            if (max < (((Number) detail[1]).intValue())) {
+                max = ((Number) detail[1]).intValue();
+            }
+            if (chartDataDTO.getLabel() != null && !chartDataDTO.getLabel().equals(detail[2].toString())) {
+                chartDataDTO.setMap(map);
+                chartDataDTOList.add(chartDataDTO);
+                map = new HashMap<>();
+                chartDataDTO = new ChartDataDTO();
+            }
+            map.put(detail[0].toString(), (Number) detail[1]);
+            chartDataDTO.setLabel(detail[2].toString());
+        }
+        if (chartDataDTOList.isEmpty() && !map.isEmpty()) {
+            chartDataDTO.setMap(map);
+            chartDataDTOList.add(chartDataDTO);
+        }
+        chartDataDTOList.forEach(obj -> {
+            setEmp.forEach(emp -> {
+                if (!obj.getMap().containsKey(emp)) {
+                    obj.getMap().put(emp, 0);
+                }
+            });
+        });
+
+        ChartDTO chartDTO = new ChartDTO();
+        chartDTO.setMax(max);
+        chartDTO.setMin(0);
+        chartDTO.setxLabel(xLabel);
+        chartDTO.setyLabel(yLabel);
+        chartDTO.setTitle(title);
+        chartDTO.setLegendPosition("ne");
+        chartDTO.setChartDataDTOList(chartDataDTOList);
+        return chartDTO;
+    }
+
+    @Override
+    public ChartDTO getCountLeadByAssignedToANDContractTypeChartBar(Integer branchId, Date fromDate, Date toDate) {
+        StringBuilder builder = new StringBuilder();
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        builder.append("SELECT e.assignedTo.name , count(e.id) , e.leadStatus.name FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND e.type = 5 AND e.leadStatus.serial = 10 ");
+        filterChartDate(params, builder, fromDate, toDate);
+        builder.append("  group by  e.assignedTo.id  order by  e.assignedTo.id");
+        List<Object[]> detailses = dao.findListByQuery(builder.toString(), params);
+        String title = "عدد التعاقد لكل موظف ";
+        return preperChart(detailses, "الموظف", "العدد", title);
+    }
+    @Override
+    public String validateSaveLead(InvOrganizationSiteDTO invOrganizationSiteDTO, TobyUser tobyUser) {
+        StringBuilder error = new StringBuilder();
+
+        if (invOrganizationSiteDTO.getType() == 5 && invOrganizationSiteDTO.getEmployeeIsSupervisor()) {
+            if (invOrganizationSiteDTO.getAssignedTo() == null && tobyUser.getEmployeeId() == null) {
+                error.append("\n اعطاء المستخدم لموظف معين");
+            }
+        }
+        if (invOrganizationSiteDTO != null) {
+            if (invOrganizationSiteDTO.getName() == null || invOrganizationSiteDTO.getName().isEmpty()) {
+                error.append("\n يجب تسجيل اسم العميل");
+            }
+            if ((invOrganizationSiteDTO.getMobile() == null || invOrganizationSiteDTO.getMobile().isEmpty()) && (invOrganizationSiteDTO.getEmail() == null || invOrganizationSiteDTO.getEmail().isEmpty())) {
+                error.append("\nيجب تسجيل بيان للاتصال ");
+            }
+            String vaildationContacts = vaildationContacts(invOrganizationSiteDTO, tobyUser);
+            if (vaildationContacts != null && !vaildationContacts.isEmpty()) {
+                error.append(vaildationContacts);
+            }
+            if (invOrganizationSiteDTO.getAssignedTo() == null) {
+                error.append("\nيجب اختيار الموظف المتابع للعميل ");
+            }
+            if (invOrganizationSiteDTO.getCrmEventDTOList() != null && !invOrganizationSiteDTO.getCrmEventDTOList().isEmpty()) {
+                invOrganizationSiteDTO.getCrmEventDTOList().forEach(event -> {
+                    if (event.getLeadStatus() == null) {
+                        error.append("اختار حاله العميل");
+                    }
+                });
+            }
+        } else {
+            error.append("لا يوجد تفاصيل");
+        }
+
+        return (error == null || error.toString().isEmpty()) ? null : error.toString();
+    }
+
+    @Override
+    public String vaildationContacts(InvOrganizationSiteDTO invOrganizationSiteDTO, TobyUser tobyUser) {
+        StringBuilder error = new StringBuilder();
+        if (invOrganizationSiteDTO != null) {
+            List<InvOrganizationSiteDTO> list = findOrganizationSiteDTOByContact(tobyUser.getBranchId().getId(), invOrganizationSiteDTO.getMobile(), invOrganizationSiteDTO.getEmail());
+            if (!list.isEmpty() && (list.size() > 1 || !list.get(0).getCode().equalsIgnoreCase(invOrganizationSiteDTO.getCode()))) {
+                error.append("\nالعميل موجود من قبل ");
+            }
+        }
+        return (error == null || error.toString().isEmpty()) ? null : error.toString();
+    }    
+
+    @Override
+    public List<InvOrganizationSiteDTO> findOrganizationSiteDTOByContact(Integer branchId, String mobile, String email) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND e.type = 5 ");
+        if (mobile != null && email != null && !mobile.isEmpty() && !email.isEmpty()) {
+            params.put("mobile", mobile);
+            params.put("email", email);
+            builder.append(" AND (e.mobile = :mobile OR e.email = :email)");
+        } else {
+            if (mobile != null && !mobile.isEmpty()) {
+                params.put("mobile", mobile);
+                builder.append(" AND function('RIGHT',e.mobile,8) = function('RIGHT',:mobile,8)");
+            }
+            if (email != null && !email.isEmpty()) {
+                params.put("email", email);
+                builder.append(" AND e.email = :email");
+            }
+        }
+        List<InvOrganizationSite> detailses = dao.findListByQuery(builder.toString(), params);
+        return returnListDTO(detailses, true);
+    }
+
+
+    @Override
+    public synchronized InvOrganizationSiteDTO saveLead(InvOrganizationSiteDTO invOrganizationSiteDTO, TobyUser tobyUser) {
+        try {
+            String error = validateSaveLead(invOrganizationSiteDTO, tobyUser);
+            if (error == null) {
+                InvOrganizationSite invOrganizationSite;
+                if (invOrganizationSiteDTO != null && (invOrganizationSiteDTO.getMsg() == null || invOrganizationSiteDTO.getMsg().isEmpty())) {
+                    invOrganizationSite = mapToEntity(invOrganizationSiteDTO, tobyUser);
+                    invOrganizationSite.setType(5);
+                    if (invOrganizationSite.getId() == null) {
+                        Integer code = getMaxGenericSerialForDetail(tobyUser.getBranchId().getId(), 5);
+                        invOrganizationSite.setCode(code.toString());
+                    }
+
+                    invOrganizationSite = dao.updateEntity(invOrganizationSite);
+
+                    // cRMCustomerInterestedProductsServiceDTO.deleteCrmCustomerInterestedProductDTOList(invOrganizationSiteDTO.getCrmCustomerInterestedProductsDTODeleteList(), tobyUser);
+                    // cRMCustomerInterestedProductsServiceDTO.saveList(invOrganizationSiteDTO.getCrmCustomerInterestedProductsDTOList(), invOrganizationSite.getId(), tobyUser);
+                    cRMEventServiceDTO.deleteCrmEventDTOList(invOrganizationSiteDTO.getCrmEventDTODeletedList(), tobyUser);
+                    cRMEventServiceDTO.saveList(invOrganizationSiteDTO.getCrmEventDTOList(), invOrganizationSite.getId(), invOrganizationSite.getName(), invOrganizationSite.getAssignedTo().getId(), tobyUser);
+
+                    invOrganizationSiteDTO = mapTODTO(invOrganizationSiteDTO, invOrganizationSite, true);
+                }
+            } else {
+                invOrganizationSiteDTO.setMsg(error);
+            }
+        } catch (Exception e) {
+            invOrganizationSiteDTO.setMsg(e.toString());
+            dao.rollbackQuery();
+        }
+
+        return invOrganizationSiteDTO;
+    }
+
+    @Override
+    public InvOrganizationSiteDTO findOrganizationSiteDTOById(Integer invOrganizationSiteId) {
+        InvOrganizationSiteDTO invOrganizationSiteDTO = new InvOrganizationSiteDTO();
+        InvOrganizationSite invOrganizationSite = dao.findEntityById(InvOrganizationSite.class, invOrganizationSiteId);
+        return mapTODTO(invOrganizationSiteDTO, invOrganizationSite, true);
+    }
+
+    @Override
+    public Integer getNumberOfCustomerByBranchId(Integer branchId, Integer assignedTo, Integer createdBy, Date dateFrom, Date dateTo) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        Long invOrganizationSiteCount = 0l;
+        if (assignedTo != null) {
+            StringBuilder empIds = new StringBuilder();
+            empIds = employeeService.returnEmployeeList(assignedTo, empIds);
+            invOrganizationSiteCount = dao.findEntityByQuery("SELECT count(e.id) FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND e.type = 5 AND (e.assignedTo.id in ( " + empIds + " ) ) AND e.leadStatus.serial != 0", params);
+            return invOrganizationSiteCount.intValue();
+        } else {
+            StringBuilder builder = new StringBuilder();
+            builder.append("SELECT count(e.id) FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND e.type = 5 ");
+            if (dateFrom != null) {
+                Calendar calFrom = Calendar.getInstance();
+                calFrom.setTime(dateFrom);
+                calFrom.set(Calendar.HOUR_OF_DAY, 0);
+                calFrom.set(Calendar.MINUTE, 0);
+                calFrom.set(Calendar.SECOND, 0);
+                calFrom.set(Calendar.MILLISECOND, 0);
+                params.put("dateFrom", calFrom.getTime());
+                builder.append(" AND  e.creationDate >= :dateFrom  ");
+
+            }
+            if (dateTo != null) {
+                Calendar calTo = Calendar.getInstance();
+                calTo.setTime(dateTo);
+                calTo.set(Calendar.HOUR_OF_DAY, 0);
+                calTo.set(Calendar.MINUTE, 0);
+                calTo.set(Calendar.SECOND, 0);
+                calTo.set(Calendar.MILLISECOND, 0);
+                params.put("dateTo", calTo.getTime());
+                builder.append(" AND  e.creationDate <= :dateTo  ");
+            }
+            invOrganizationSiteCount = dao.findEntityByQuery(builder.toString(), params);
+            return invOrganizationSiteCount.intValue();
+        }
+    }
+
+    @Override
+    public Integer getNumberOfNewCustomerByBranchId(Integer branchId, Integer assignedTo, Integer createdBy, Date dateFrom, Date dateTo) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        Long invOrganizationSiteCount = 0L;
+        if (assignedTo != null) {
+            StringBuilder empIds = new StringBuilder();
+            empIds = employeeService.returnEmployeeList(assignedTo, empIds);
+            invOrganizationSiteCount = dao.findEntityByQuery("SELECT count(e.id) FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND e.type = 5 AND (e.assignedTo.id in ( " + empIds + " )) AND e.id NOT IN (SELECT c.customerId.id FROM CrmEvent c WHERE c.branchId.id = :branchId) AND e.leadStatus.serial != 0", params);
+            return invOrganizationSiteCount.intValue();
+        } else {
+            StringBuilder builder = new StringBuilder();
+            builder.append("SELECT count(e.id) FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND e.type = 5 AND e.id NOT IN (SELECT c.customerId.id FROM CrmEvent c WHERE c.branchId.id = :branchId) ");
+            if (dateFrom != null) {
+                Calendar calFrom = Calendar.getInstance();
+                calFrom.setTime(dateFrom);
+                calFrom.set(Calendar.HOUR_OF_DAY, 0);
+                calFrom.set(Calendar.MINUTE, 0);
+                calFrom.set(Calendar.SECOND, 0);
+                calFrom.set(Calendar.MILLISECOND, 0);
+                params.put("dateFrom", calFrom.getTime());
+                builder.append(" AND  e.creationDate >= :dateFrom  ");
+
+            }
+            if (dateTo != null) {
+                Calendar calTo = Calendar.getInstance();
+                calTo.setTime(dateTo);
+                calTo.set(Calendar.HOUR_OF_DAY, 0);
+                calTo.set(Calendar.MINUTE, 0);
+                calTo.set(Calendar.SECOND, 0);
+                calTo.set(Calendar.MILLISECOND, 0);
+                params.put("dateTo", calTo.getTime());
+                builder.append(" AND  e.creationDate <= :dateTo  ");
+            }
+            invOrganizationSiteCount = dao.findEntityByQuery(builder.toString(), params);
+            return invOrganizationSiteCount.intValue();
+        }
+    }
+
+    @Override
+    public ChartDTO getCountCustomerPerMonth(Integer branchId, Integer type, Integer dateFilter) {
+
+        StringBuilder builder = new StringBuilder();
+        builder.append("select DATE_FORMAT(i.creation_date, ");
+        String date_Filter = "";
+        if (dateFilter == 0) {
+            date_Filter = "'%d'";
+        } else if (dateFilter == 1) {
+            date_Filter = "'%m'";
+        } else if (dateFilter == 2) {
+            date_Filter = "'%y'";
+        } else {
+            date_Filter = "'%m'";
+        }
+        builder.append(date_Filter + " ) , count(*) ");
+        builder.append("from inv_organization_site i where i.branch_Id = " + branchId);
+        builder.append(" and i.type = " + type);
+        builder.append(" group by DATE_FORMAT(i.creation_date, " + date_Filter + " )");
+        List<Object[]> details = dao.executeNativeQuery(builder.toString());
+        return preperChart(details);
+    }
+
+
+
+    private ChartDTO preperChart(List<Object[]> details) {
+        Map<Object, Number> map = new HashMap<>();
+        List<ChartDataDTO> chartDataDTOList = new ArrayList<>();
+        ChartDataDTO chartDataDTO = new ChartDataDTO();
+        Integer max = 0;
+        for (Object[] detail : details) {
+            map.put(detail[0].toString(), (Number) detail[1]);
+            max = (max < ((Number) detail[1]).intValue() ? ((Number) detail[1]).intValue() : max);
+        }
+        chartDataDTO.setLabel("العملاء");
+        chartDataDTO.setMap(map);
+        chartDataDTOList.add(chartDataDTO);
+        ChartDTO chartDTO = new ChartDTO();
+        chartDTO.setMax(max);
+        chartDTO.setMin(0);
+        chartDTO.setxLabel("الشهر");
+        chartDTO.setyLabel("عدد العملاء");
+        chartDTO.setTitle("عدد العملاء لكل شهر");
+        chartDTO.setLegendPosition("ne");
+        chartDTO.setChartDataDTOList(chartDataDTOList);
+        return chartDTO;
+    }
+
+
+
+
+
+
 }

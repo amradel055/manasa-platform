@@ -33,6 +33,8 @@ public interface ProProductionItemsTransactionService {
 
     public List<ProductionTransactionOfUser> getProProductionTransactionDTOForAllUsersList(PrintProductionDTO printProductionDTO, Integer branchId, Integer stageId, List<ProProductionStagesDTO> productionStagesDTOs);
 
+    public List<ProductionTransactionOfUser> getProProductionItemOForAllUsersList(PrintProductionDTO printProductionDTO, Integer branchId, Integer stageId, List<ProProductionStagesDTO> productionStagesDTOs);
+
     public List<ProProductionItemsTransactionDTO> getALLProProductionItemsTransactionDTO(int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters);
 
     public List<ProProductionItemsTransactionDTO> getALLProProductionItemsTransactionByInvoicesSerial(Integer serial);

@@ -32,7 +32,7 @@ public class InvoiceMovementReportServiceImpl implements InvoiceMovementReportSe
     @Override
     public List<InvoiceMovementReport> searchReport(PrintProductionDTO printProductionDTO, Integer branchId, Integer invoiceType) {
         StringBuilder query = new StringBuilder();
-        query.append("select ipi.serial as serial , ios.name as customerName , inv.name as inventoryName , pfd.date , pfd.type , ipi.id as id , pfd.id as idFactory , pfd.parent as parent  from pro_factory_delivery pfd \n").
+        query.append("select ipi.serial as serial , ios.name as customerName , inv2.name as inventoryName , pfd.date , pfd.type , ipi.id as id , pfd.id as idFactory , pfd.parent as parent  from pro_factory_delivery pfd \n").
                 append(" left join inv_purchase_invoice ipi on ipi.id = pfd.inv_purchase_invoice_id\n").
                 append(" left join inv_organization_site ios on ios.id = ipi.organization_site_id\n").
                 append(" left join inv_inventory inv on inv.id = ipi.inv_inventory_id ").
@@ -45,7 +45,7 @@ public class InvoiceMovementReportServiceImpl implements InvoiceMovementReportSe
         query.append(appendProProductionInvoice(printProductionDTO)).
                 append(appendGallary(printProductionDTO)).
                 append(appendDateProFactoryDelivery(printProductionDTO)).
-                append(" union all select ipi.serial as serial , ios.name as customerName , inv.name as inventoryName , ipi.date , 3 , ipi.id as id , null  as idFactory, null as parent  from inv_purchase_invoice ipi \n").
+                append(" union all select ipi.serial as serial , ios.name as customerName , inv2.name as inventoryName , ipi.date , 3 , ipi.id as id , null  as idFactory, null as parent  from inv_purchase_invoice ipi \n").
                 append(" left join inv_organization_site ios on ios.id = ipi.organization_site_id\n").
                 append(" left join inv_inventory inv on inv.id = ipi.inv_inventory_id ").
                 append(" left join inv_inventory inv2 on inv2.id = ipi.galary_Id  ").

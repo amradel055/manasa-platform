@@ -929,7 +929,7 @@
                                                 rendered="#{userData.userScreens['invstripReport'].view or userData.isAdmin}"
                                                 />
                                     
-                                    <p:menuitem id="sr_lnk462" value="#{userData.userDDs['INV_STORES_REP']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/.xhtml" 
+                                    <p:menuitem id="sr_lnk462" value="#{userData.userDDs['INV_STORES_REP']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/invstripReport.xhtml" 
                                                 rendered="#{userData.userScreens['invstripReport'].view or userData.isAdmin}"
                                                 />
                                 </p:submenu>
@@ -1024,6 +1024,10 @@
                                     <p:menuitem id="sr_lnk33320" value="تسليم الفاتورة للعميل" icon="&#xE8D2;" url="/faces/views/proSales/proSalesList.xhtml" 
                                                 rendered="#{userData.userScreens['proRecieveGallary'].view or userData.isAdmin}"
                                                 />
+                                    
+                                    <p:menuitem id="sr_lnk333201" value="ارسال القماش للمعرض" icon="&#xE8D2;" url="/faces/views/prosendcloth/prosendclothform.xhtml" 
+                                                rendered="#{userData.userScreens['proSendToGallary'].view or userData.isAdmin}"
+                                                />
 
                                 </p:submenu>
                                 <p:submenu id="sr_sm332" label="تقارير الانتاج" icon="&#xE8D2;"
@@ -1053,6 +1057,9 @@
                                                 rendered="#{userData.userScreens['invoiceProductionStageReport'].view or userData.isAdmin}"
                                                 />
                                     <p:menuitem id="sr_lnk33323" value="بيان انتاج العمال لفترة" icon="&#xE8D2;" url="/faces/views/proproductionreport/productionTransactionOfUser.xhtml" 
+                                                rendered="#{userData.userScreens['productionTransactionOfUser'].view or userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="sr_lnk333231" value="بيان انتاج العمال  حسب الصنف" icon="&#xE8D2;" url="/faces/views/proproductionreport/productionItemOfUser.xhtml" 
                                                 rendered="#{userData.userScreens['productionTransactionOfUser'].view or userData.isAdmin}"
                                                 />
 

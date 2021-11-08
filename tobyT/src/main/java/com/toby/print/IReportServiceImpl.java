@@ -5,20 +5,32 @@
  */
 package com.toby.print;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.toby.define.ScreenNameClassEnum;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.entity.ReportManagement;
 import com.toby.entiy.InvPurchaseOrderEntity;
 import com.toby.toby.UserData;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static java.util.stream.Stream.builder;
 import javax.faces.context.FacesContext;
+import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import net.sf.jasperreports.engine.JRException;
@@ -97,6 +109,7 @@ public class IReportServiceImpl implements IReportService {
                     fillReport(prepareInvSalesReport(invPurchaseInvoiceDTO, userData), userData.getReportPath() + "InvReceiptCash.jasper", invPurchaseInvoiceDTO.getInvPurchaseInvoiceDetailList(), "pdf");
                 }
             } else if (ScreenNameClassEnum.PROWORKORDER.equals(invPurchaseInvoiceDTO.getScreenName())) {
+
                 fillReport(prepareProWorkOrderReport(invPurchaseInvoiceDTO, userData), userData.getReportPath() + "salesReceiptCash1.jasper", invPurchaseInvoiceDTO.getInvPurchaseInvoiceDetailList(), "pdf");
             } else if (ScreenNameClassEnum.INVRETURNPURCHASEFORM.equals(invPurchaseInvoiceDTO.getScreenName())) {
                 fillReport(prepareReturnPurchaseReport(invPurchaseInvoiceDTO, userData), userData.getReportPath() + "ReturnPurchaseReport.jasper", invPurchaseInvoiceDTO.getInvPurchaseInvoiceDetailList(), "pdf");
@@ -405,10 +418,10 @@ public class IReportServiceImpl implements IReportService {
             hashMap.put("cashier", invPurchaseInvoiceDTO.getCreatedByName());
 
 //            if (invPurchaseInvoiceDTO.getTaxFlagFinal()) {
-                hashMap.put("taxCodeText", userData.getUserBranch().getTaxCode());
-                hashMap.put("salesReceiptText", "فاتورة مبيعات ");
+            hashMap.put("taxCodeText", userData.getUserBranch().getTaxCode());
+            hashMap.put("salesReceiptText", "فاتورة مبيعات ");
 
-                hashMap.put("receiptNumberText", "رقم الفاتورة");
+            hashMap.put("receiptNumberText", "رقم الفاتورة");
 //            } else {
 //                hashMap.put("salesReceiptText", userData.getUserDDs().get("TITLE_INVOICE_SALES_NOT_TAX"));
 //                hashMap.put("receiptNumberText", userData.getUserDDs().get("NUMBER_INVOICE_SALES_NOT_TAX"));
@@ -459,10 +472,10 @@ public class IReportServiceImpl implements IReportService {
             hashMap.put("receiptNumberValue", invPurchaseInvoiceDTO.getSerialTax());
             hashMap.put("workOrderNumberValue", invPurchaseInvoiceDTO.getSerial());
             hashMap.put("workOrderNumberValueText", "امر الشغل  ");
-            if(invPurchaseInvoiceDTO.getGallaryId() != null){
-            hashMap.put("invName", invPurchaseInvoiceDTO.getGallaryId().getName());
-            hashMap.put("daribaValue", invPurchaseInvoiceDTO.getGallaryId().getDaribaValue());
-            hashMap.put("segilValue", invPurchaseInvoiceDTO.getGallaryId().getSegilValue());
+            if (invPurchaseInvoiceDTO.getGallaryId() != null) {
+                hashMap.put("invName", invPurchaseInvoiceDTO.getGallaryId().getName());
+                hashMap.put("daribaValue", invPurchaseInvoiceDTO.getGallaryId().getDaribaValue());
+                hashMap.put("segilValue", invPurchaseInvoiceDTO.getGallaryId().getSegilValue());
             }
             hashMap.put("customerName", invPurchaseInvoiceDTO.getOrganizationSiteId() == null ? "" : invPurchaseInvoiceDTO.getOrganizationSiteId().getName());
             hashMap.put("customerPhone", invPurchaseInvoiceDTO.getOrganizationSiteId() == null ? "" : invPurchaseInvoiceDTO.getOrganizationSiteId().getMobile());
@@ -475,11 +488,28 @@ public class IReportServiceImpl implements IReportService {
             hashMap.put("discountValue", invPurchaseInvoiceDTO.getDiscountValue());
             hashMap.put("netValue", invPurchaseInvoiceDTO.getFinalNet());
 
+            printQRCode(invPurchaseInvoiceDTO, hashMap);
+
             return hashMap;
         } catch (Exception e) {
 //            saveError(e, "SalesInvoiceFormMB", "prepareReport");
             return null;
         }
+    }
+
+    private void printQRCode(InvInvoiceDTO invPurchaseInvoiceDTO, HashMap hashMap) {
+        StringBuilder builder = new StringBuilder();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        builder.append(invPurchaseInvoiceDTO.getGallaryId() == null ? "" : invPurchaseInvoiceDTO.getGallaryId().getName()).append("\n")
+                .append("العميل: ").append(invPurchaseInvoiceDTO.getOrganizationSiteId().getName()).append("\n")
+                .append("فاتوره رقم: ").append(invPurchaseInvoiceDTO.getSerial()).append("\n")
+                .append("الرقم الضريبي: ").append(invPurchaseInvoiceDTO.getGallaryId().getDaribaValue()).append("\n")
+                .append("رقم السجل: ").append(invPurchaseInvoiceDTO.getGallaryId().getSegilValue()).append("\n")
+                .append("تاريخ الفاتوره: ").append(dateFormat.format(invPurchaseInvoiceDTO.getDate())).append("\n")
+                .append("قيمه الفاتورة: ").append(invPurchaseInvoiceDTO.getTotalNetAfterDiscount())
+                .append("الضريبه vat: ").append(invPurchaseInvoiceDTO.getTaxvalue()).append("\n")
+                .append("صافي المبلغ: ").append(invPurchaseInvoiceDTO.getFinalNet()).append("\n");
+        reportQRCode(hashMap, builder.toString(),invPurchaseInvoiceDTO.getGallaryId() == null ? 0 : invPurchaseInvoiceDTO.getGallaryId().getId());
     }
 
     public HashMap prepareInvPurchaseReport(InvInvoiceDTO invPurchaseInvoiceDTO, UserData userData) {
@@ -663,7 +693,7 @@ public class IReportServiceImpl implements IReportService {
 
         hashMap.put("header2", " طلب شراء");
         hashMap.put("serialText", "رقم أمر الشراء");
-        if(invPurchaseInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.INVPURCHASEADDING)){
+        if (invPurchaseInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.INVPURCHASEADDING)) {
             hashMap.put("header2", "امر استلام");
         }
         hashMap.put("serialvalue", invPurchaseInvoiceDTO.getSerial());
@@ -748,6 +778,47 @@ public class IReportServiceImpl implements IReportService {
         hashMap.put("reportDate", new Date());
 
         return hashMap;
+    }
+
+    public void reportQRCode(HashMap hashMap, String qrCodeText,Integer GallaryId) {
+        String filePath = "JD"+GallaryId+".png";
+        int size = 200;
+        String fileType = "png";
+        File qrFile = new File(filePath);
+        createQRImage(qrFile, qrCodeText, size, fileType);
+        hashMap.put("QRCode", "JD"+GallaryId+".png");
+
+    }
+
+    private void createQRImage(File qrFile, String qrCodeText, int size, String fileType) {
+        try {
+            // Create the ByteMatrix for the QR-Code that encodes the given String
+            Hashtable hintMap = new Hashtable<>();
+            hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
+            hintMap.put(EncodeHintType.CHARACTER_SET, "UTF-8");
+            hintMap.put(EncodeHintType.MARGIN, 1);
+            QRCodeWriter qrCodeWriter = new QRCodeWriter();
+            BitMatrix byteMatrix = qrCodeWriter.encode(qrCodeText, BarcodeFormat.QR_CODE, size, size, hintMap);
+            // Make the BufferedImage that are to hold the QRCode
+            int matrixWidth = byteMatrix.getWidth();
+            BufferedImage image = new BufferedImage(matrixWidth, matrixWidth, BufferedImage.TYPE_INT_RGB);
+            image.createGraphics();
+            Graphics2D graphics = (Graphics2D) image.getGraphics();
+            graphics.setColor(Color.WHITE);
+            graphics.fillRect(0, 0, matrixWidth, matrixWidth);
+            // Paint and save the image using the ByteMatrix
+            graphics.setColor(Color.BLACK);
+            for (int i = 0; i < matrixWidth; i++) {
+                for (int j = 0; j < matrixWidth; j++) {
+                    if (byteMatrix.get(i, j)) {
+                        graphics.fillRect(i, j, 1, 1);
+                    }
+                }
+            }
+            ImageIO.write(image, fileType, qrFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

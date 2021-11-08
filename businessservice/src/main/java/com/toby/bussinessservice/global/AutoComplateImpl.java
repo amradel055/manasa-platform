@@ -5,6 +5,7 @@
  */
 package com.toby.bussinessservice.global;
 
+import com.toby.businessservice.EmployeeService;
 import com.toby.businessservice.OrganizationSiteService;
 import com.toby.core.GenericDAO;
 import com.toby.dto.CostCenterDTO;
@@ -45,6 +46,8 @@ public class AutoComplateImpl implements AutoCompleteService {
     private GenericDAO dao;
     @EJB
     private OrganizationSiteService organizationSiteService;
+    @EJB
+    private EmployeeService employeeService;
 
     @Override
     public List<InvInvoiceDTO> autoCompleteProWorkOrderByBranch(Integer branchId, String qeury) {
@@ -380,4 +383,53 @@ public class AutoComplateImpl implements AutoCompleteService {
         dTO.setName(entity.getName());
         return (T) dTO;
     }
+    
+
+    @Override
+    public List<InvOrganizationSiteDTO> autoCompleteOrganizationSiteWitAssignedList(Integer branchId, boolean active, Integer type, String qeury, Integer assignedTo) {
+        List<InvOrganizationSiteDTO> list = new ArrayList<>();
+        Map<String, Object> params = new HashMap<>();
+        StringBuilder sql = new StringBuilder();
+        params.put("branchId", branchId);
+        Boolean employeesIsSuperVisor = employeeService.getAllEmployeesIsSuperVisor(assignedTo);
+        appendOrganizationTypeAndActive(params, type, sql, active, qeury, assignedTo, employeesIsSuperVisor);
+        List<InvOrganizationSite> detailses = dao.findListByQuery(sql.toString(), params, 0, 10);
+        list = returnListDTO(detailses);
+        return list;
+    }
+
+    private void appendOrganizationTypeAndActive(Map<String, Object> params, Integer type, StringBuilder sql, boolean active, String qeury, Integer assignedTo, Boolean assignedIsLeader) {
+        params.put("type", type);
+        sql.append("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId");
+        if (qeury != null && !qeury.isEmpty()) {
+            sql.append(" AND ((:qeury is null OR e.name  like CONCAT('%',:qeury ,'%')) OR (:qeury is null OR e.code  like CONCAT('%',:qeury ,'%') ) OR (:qeury is null OR e.phone  like CONCAT('%',:qeury ,'%') ) OR (:qeury is null OR e.mobile  like CONCAT('%',:qeury ,'%') ) OR (:qeury is null OR e.email  like CONCAT('%',:qeury ,'%') ) )");
+            params.put("qeury", qeury);
+        }
+        if (type == 0 || type == 1) {
+            sql.append(" AND (e.type = :type OR e.type = 2) ");
+        } else if (type == 5) {
+            sql.append(" AND e.type = :type ");
+            if (assignedIsLeader && assignedTo != null) {
+//                List<Integer> assignedList = employeeService.getAllEmployeesListByParentAndchield((Integer) params.get("branchId"), assignedTo);
+//                assignedList.add(assignedTo);
+                StringBuilder empIds = new StringBuilder();
+                empIds = employeeService.returnEmployeeList(assignedTo, empIds);
+                sql.append(" AND e.assignedTo.id IN ( ").append(empIds).append(" )");
+            } else if (assignedTo != null) {
+                params.put("assignedTo", assignedTo);
+                sql.append(" AND e.assignedTo.id = :assignedTo");
+            }
+
+        } else if (type == 4) {
+            sql.append(" AND (e.type = :type  OR e.type = 1) ");
+        } else {
+            sql.append(" AND e.type = :type  ");
+        }
+        if (active) {
+            sql.append(" AND e.active = 1 ");
+        }
+        sql.append(" ORDER BY e.code");
+    }
+
+
 }

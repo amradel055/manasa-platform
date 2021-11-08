@@ -583,66 +583,6 @@
 
 
                     </p:tab>
-                    <p:tab title="#{userData.userDDs['ITEM_ON_REPOS']}">
-                        <p:dataTable widgetVar="inventoryItem" 
-                                     id="inventoryItem"    
-                                     style="margin-bottom:20px" 
-                                     rows="#{userData.rowListMasterDetails}" 
-                                     var="inventoryItem" 
-                                     dir="rtl" 
-                                     rowKey="#{inventoryItem}" 
-                                     value="#{itemDataFormMB.quantityItemsStoreList}" 
-                                     reflow="true"  
-                                     paginator="true" >
-                            <f:facet name="header" class="col-md-12">
-
-                                <p:outputPanel>
-                                    <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large;" />
-                                    <p:inputText   id="globalFilter"   onkeyup="PF('inventoryItem').filter()" style='width: 30%!important;' />
-                                </p:outputPanel>
-
-                            </f:facet>
-
-                            <p:column style="width: 15vh;text-align: -webkit-auto;font-size: 1.5vh;;border-radius: 0px "  headerText="#{userData.userDDs['NUMB']}"
-                                      filterBy="#{inventoryItem.inventoryId}"  filterMatchMode="contains" sortBy="#{inventoryItem.inventoryId}" filterable="false">
-                                <h:outputText value="#{inventoryItem.inventoryId}" />
-                            </p:column>
-
-                            <p:column style="text-align: -webkit-auto;font-size: 1.5vh;border-radius: 0px" headerText="#{userData.userDDs['REPOSITORY_NAME']}"
-                                      filterBy="#{inventoryItem.inventoryName}"  filterMatchMode="contains" sortBy="#{inventoryItem.inventoryName}" 
-                                      filterable="false">
-                                <h:outputText value="#{inventoryItem.inventoryName}" />
-                            </p:column>
-
-                            <p:column style="width: 15vh;text-align: -webkit-auto;font-size: 1.5vh;border-radius: 0px" headerText="#{userData.userDDs['QUANTITY']}" 
-                                      filterBy="#{inventoryItem.qty}"  filterMatchMode="contains" sortBy="#{inventoryItem.qty}" 
-                                      filterable="false">
-                                <h:outputText value="#{inventoryItem.qty}"  style="font-size: 1.5vh"/>
-                            </p:column>
-
-                            <p:columnGroup type="footer">
-                                <p:row>
-                                    <p:column colspan="2" style="text-align:right;border-radius: 0px" footerText="#{userData.userDDs['TOTAL']}" />
-                                    <p:column  style="border-radius: 0px" footerText="#{itemDataFormMB.qtySummition}" />
-                                </p:row>
-                            </p:columnGroup>
-
-
-                            <p:summaryRow>
-                                <p:column colspan="3" style="text-align:right">
-                                    <h:outputText value="Total:" />
-                                </p:column>
-                                <p:column>
-                                    <h:outputText>
-                                        <f:convertNumber type="currency" currencySymbol="$" />
-                                    </h:outputText>
-                                </p:column>
-                            </p:summaryRow>
-
-
-                        </p:dataTable>
-                    </p:tab>
-
                 </p:tabView>
 
                 <h:panelGrid  class="centerButtons col-md-12" columns="1" style="margin-top: 1%">

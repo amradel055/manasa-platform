@@ -163,9 +163,11 @@
                                 <p:outputLabel style="width: 110px" value="#{userData.userDDs['REMA_AMOUNT']}"/>
                             </div>
                         </div>
+                        
+                        
                         <div class="ui-g-12 ui-xl-12">
                             <p:selectOneMenu id="inventory" value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId}"
-                                              rendered="#{(userData.userScreens['proworkorder'].edit)}"
+                                             rendered="#{(userData.userScreens['proworkorder'].edit)}"
                                              converter="#{invPurchaseInvoiceFormDTOMB.gallaryDTOConverters}" 
                                              style="float:right;width: 100%!important;color:#fff;height: 30px!important;margin-right: 0.5%;">
 
@@ -214,7 +216,7 @@
 
 
 
-
+                        
 
 
 
@@ -227,9 +229,25 @@
                     <div class="ui-g-12 ui-xl-12" style="margin-top: -2%;" >
 
                         <div style="text-align: center">
+                            <p:commandButton 
+                                id="removeHalala"
+                                value="حذف الهلله" 
+                                class="newButtons" rendered="#{(userData.userScreens['proworkorder'].add) or  userData.isAdmin}"
+                                update="form:totalActualWeight form:totalNetAfterDiscount form:taxvalue form:totalWithTaxValue form:remain " 
+                                actionListener="#{invPurchaseInvoiceFormDTOMB.removeHalala()}"/>
+
+                            <p:commandButton     class="saveButton" id="test22"  
+                                                 title="العرض"
+                                                 value="عرض القطعة والتانية خصم 50%" 
+                                                 rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 0 and false}"
+                                                 icon="fa fa-fw fa-save" 
+                                                 action="#{invPurchaseInvoiceFormDTOMB.onePieceAndDiscount50()}"
+                                                 update="@form"
+                                                 >
+                            </p:commandButton>
                             <p:commandButton     class="saveButton"  
                                                  title="العرض"
-                                                 value="عرض القطعتين و الثالثة هدية" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 1 }"
+                                                 value="عرض القطعتين و الثالثة هدية" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 1 and false }"
                                                  icon="fa fa-fw fa-save" 
                                                  action="#{invPurchaseInvoiceFormDTOMB.twoPieceAndThirdFreeOffer()}"
                                                  update="@form"
@@ -251,13 +269,13 @@
                                                  update="@form"
                                                  >
                             </p:commandButton>
-                               <p:commandButton  class="saveButton"  
-                                                 title="العرض"
-                                                 value="عرض الخصم 991" 
-                                                 icon="fa fa-fw fa-save"  rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 0  }"
-                                                 action="#{invPurchaseInvoiceFormDTOMB.offer991()}"
-                                                 update="@form"
-                                                 >
+                            <p:commandButton  class="saveButton"  
+                                              title="العرض"
+                                              value="عرض الخصم 991" 
+                                              icon="fa fa-fw fa-save"  rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 0  and false }"
+                                              action="#{invPurchaseInvoiceFormDTOMB.offer991()}"
+                                              update="@form"
+                                              >
                             </p:commandButton>
                         </div>
                     </div>
@@ -947,7 +965,7 @@
                                                 update="netId totalQuantity   totalNet form:totalActualWeight form:totalNetAfterDiscount form:totalWithTaxValue form:remain form:taxvalue QuantityT NUMBER QuantityOu "/>
                                     </p:inputText>      
                                 </p:column>
-                                
+
                                 <p:column style="width: 12vh;text-align: -webkit-auto;border-radius: 0px; font-size: 14px;" id="DISCOUNTValue" headerText="خ قيمة">
                                     <p:inputText id="DISCOUNTValueT" 
                                                  value="#{invPurchaseInvoiceDetailsTable.discountValue}" 
@@ -1029,8 +1047,8 @@
 
                                     <p:commandButton  update="invPurchaseInvoiceDetailsTable netId totalQuantity    totalNet form:totalActualWeight form:totalNetAfterDiscount  form:taxvalue form:totalWithTaxValue form:remain"
                                                       title="#{userData.userDDs['DELETE']}" 
-                                                      class="sdeleteButtons" style="color: #fff!important;background-color: red; width: 10px; height: 20px; border-radius: 3px; margin-right: 2px;"
-
+                                                      class="sdeleteButtons" 
+                                                      style="color: #fff!important;background-color: red; width: 10px; height: 20px; border-radius: 3px; margin-right: 2px;"
                                                       action="#{invPurchaseInvoiceFormDTOMB.deleteInvDetail(invPurchaseInvoiceDetailsTable)}"
                                                       icon="fa fa-remove" >
                                         <p:confirm header="#{userData.userDDs['COFIGRATION']}" 
@@ -1045,15 +1063,12 @@
                                 </p:column >
 
                             </p:dataTable>
-
-
                         </p:fieldset>
 
                     </div>
 
                 </p:fieldset>
             </div>
-            x
 
 
             <h:panelGrid columns="1" cellpadding="5">

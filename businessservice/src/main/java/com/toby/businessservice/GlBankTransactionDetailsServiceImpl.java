@@ -158,90 +158,65 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
             journal = generaljournalService.addGeneralJournalGlobal(null, 1001, dto.getSerial(), dto.getGlBankTransactionId().getDate(),
                     dto.getGlBankTransactionId().getRemark(), tobyUser);
 
+            // يتبقى ادخالى العموله يدويا
             if (dto.getOrganizationSiteId() != null
                     && dto.getBankIdTo().getGallaryId() != null
                     && dto.getBankIdTo().getGallaryId().getCostCenterId() != null
                     && dto.getBankIdTo().getGallaryId().getCostCenterId().getId() != null) {
-                generaljournalDetailsService.addGenDetalil(true, dto.getValue(), journal.getId(), dto.getAccountDebitId().getId(),
+                BigDecimal finalValue = dto.getValue();
+                if (dto.getBankCommition().compareTo(BigDecimal.ZERO) == 1) {
+                    // كيفية ادخال عمولة البنك
+                    Integer accountId_3 = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"BANK_COMMITION\" AND a.accountId IS NOT NULL", params);
+                    BigDecimal commitionValue = dto.getValue().multiply(dto.getBankCommition().divide(new BigDecimal(100)));
+                    finalValue = finalValue.subtract(commitionValue);
+                    generaljournalDetailsService.addGenDetalil(true, commitionValue, journal.getId(), accountId_3,
+                            dto.getBankIdTo().getGallaryId().getCostCenterId().getId(),
+                            dto.getRemarks(), tobyUser);
+                }
+                generaljournalDetailsService.addGenDetalil(true, finalValue, journal.getId(), dto.getAccountDebitId().getId(),
                         dto.getBankIdTo().getGallaryId().getCostCenterId().getId(),
                         dto.getRemarks(), tobyUser);
                 generaljournalDetailsService.addGenDetalil(false, dto.getValue(), journal.getId(), dto.getAccountCreditId().getId(),
                         dto.getBankIdTo().getGallaryId().getCostCenterId().getId(),
                         dto.getRemarks(), tobyUser);
-                if (dto.getBankIdTo().getCommition().compareTo(BigDecimal.ZERO) == 1) {
-                   //  القيمة تدخل يدويا من الشاشة
-                    
-                    Integer accountId_3 = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"BANK_COMMITION\" AND a.accountId IS NOT NULL", params);
-                    BigDecimal value = dto.getValue().multiply(dto.getBankIdTo().getCommition().divide(new BigDecimal(100)));
-                    generaljournalDetailsService.addGenDetalil(true, value, journal.getId(), accountId_3,
-                            dto.getBankIdTo().getGallaryId().getCostCenterId().getId(),
-                            dto.getRemarks(), tobyUser);
-                    generaljournalDetailsService.addGenDetalil(false, dto.getValue(), journal.getId(), dto.getAccountCreditId().getId(),
-                        dto.getBankIdTo().getGallaryId().getCostCenterId().getId(),
-                        dto.getRemarks(), tobyUser);
-                }
+
             }
 
         } else if (dto.getGlBankTransactionId().getTransactionType() == 1) {
             journal = generaljournalService.addGeneralJournalGlobal(null, 1004, dto.getSerial(), dto.getGlBankTransactionId().getDate(),
                     dto.getGlBankTransactionId().getRemark(), tobyUser);
 
-            
+            BigDecimal valueCommition = dto.getValue().multiply(dto.getBankIdFrom().getCommition().divide(new BigDecimal(100)));
+            BigDecimal valueCommitionTax = (dto.getValue().multiply(dto.getBankIdFrom().getCommition().divide(new BigDecimal(100)))).multiply(new BigDecimal(0.15));
+            BigDecimal valueAfterCommition = dto.getValue().subtract(valueCommitionTax).subtract(valueCommition);
+
             //  القيمة مطروح منها عمولة البنك
             if (dto.getOrganizationSiteId() != null
                     && dto.getBankIdFrom().getGallaryId() != null
                     && dto.getBankIdFrom().getGallaryId().getCostCenterId() != null
                     && dto.getBankIdFrom().getGallaryId().getCostCenterId().getId() != null) {
-                generaljournalDetailsService.addGenDetalil(true, dto.getValue(), journal.getId(), dto.getAccountDebitId().getId(),
+                generaljournalDetailsService.addGenDetalil(true, valueAfterCommition, journal.getId(), dto.getAccountDebitId().getId(),
                         dto.getBankIdFrom().getGallaryId().getCostCenterId().getId(),
                         dto.getRemarks(), tobyUser);
                 generaljournalDetailsService.addGenDetalil(false, dto.getValue(), journal.getId(), dto.getAccountCreditId().getId(),
                         dto.getBankIdFrom().getGallaryId().getCostCenterId().getId(),
                         dto.getRemarks(), tobyUser);
-                
-                
+
                 if (dto.getBankIdFrom().getCommition().compareTo(BigDecimal.ZERO) == 1) {
-                    
-                    Integer accountId_3 = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"BANK_COMMITION\" AND a.accountId IS NOT NULL", params);
-                    BigDecimal value = dto.getValue().multiply(dto.getBankIdFrom().getCommition().divide(new BigDecimal(100)));
-                    generaljournalDetailsService.addGenDetalil(true, value, journal.getId(), accountId_3,
+
+                    Integer bankCommition = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"BANK_COMMITION\" AND a.accountId IS NOT NULL", params);
+                    generaljournalDetailsService.addGenDetalil(true, valueCommition, journal.getId(), bankCommition,
                             dto.getBankIdFrom().getGallaryId().getCostCenterId().getId(),
                             dto.getRemarks(), tobyUser);
                 }
                 if (dto.getBankIdFrom() != null && dto.getBankIdFrom().getCommition() != null
                         && dto.getBankIdFrom().getCommition().compareTo(BigDecimal.ZERO) == 1) {
 
-                    Integer accountId_3 = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"BANK_COMMITION\" AND a.accountId IS NOT NULL", params);
-                    Integer accountId_2 = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where  a.branchId.id =  :branchId AND a.code = \"BANK_TAX\" AND a.accountId IS NOT NULL", params);
-                    
-                    if (accountId_3 != null && accountId_2 != null) {
+                    Integer bankTax = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"BANK_TAX\" AND a.accountId IS NOT NULL", params);
 
-                        generaljournalDetailsService.addGenDetalil(false, dto.getValue(), journal.getId(), dto.getAccountCreditId().getId(),
-                        dto.getBankIdFrom().getGallaryId().getCostCenterId().getId(),
-                        dto.getRemarks(), tobyUser);
-                        
-                        
-//                        view.setSecondValue(entity.getValue().multiply(entity.getBankIdFrom().getCommition().divide(new BigDecimal(100))));
-//                        view.setTaxValue(view.getSecondValue().multiply(new BigDecimal(0.15)));
-//                        view.setTaxValueLocal(view.getTaxValue());
-//
-//                        view.setSecondAccountDebitId(gla2.getId());
-//                        view.setSecondAccNumberDebit(gla2.getAccNumber());
-//                        view.setSecondAccNameDebit(gla2.getName());
-//
-//                        view.setThirdAccountDebitId(gla3.getId());
-//                        view.setThirdAccNumberDebit(gla3.getAccNumber());
-//                        view.setThirdAccNameDebit(gla3.getName());
-                    } else {
-//                        String ErrorMsg = "";
-//                        if (gla3 == null) {
-//                            ErrorMsg += "يرجي ربط حساب العمولة ;";
-//                        }
-//                        if (gla2 == null) {
-//                            ErrorMsg += ";يرجي ربط حساب الضريبة;";
-//                        }
-//                        view.setErrorMsg(ErrorMsg);
-                    }
+                    generaljournalDetailsService.addGenDetalil(true, valueCommitionTax, journal.getId(), bankTax,
+                            dto.getBankIdFrom().getGallaryId().getCostCenterId().getId(),
+                            dto.getRemarks(), tobyUser);
 
                 }
             }

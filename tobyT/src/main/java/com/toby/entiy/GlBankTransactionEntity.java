@@ -35,6 +35,7 @@ public class GlBankTransactionEntity extends BaseEntity {
     private BigDecimal rate;
     private BigDecimal rateBankFrom;
     private BigDecimal rateBankTo;
+    private BigDecimal bankCommition;
 
     private Integer chequeNumber;
     private Date chequeDate;
@@ -364,6 +365,20 @@ public class GlBankTransactionEntity extends BaseEntity {
      */
     public void setRemainInvoice(BigDecimal remainInvoice) {
         this.remainInvoice = remainInvoice;
+    }
+
+    /**
+     * @return the bankCommition
+     */
+    public BigDecimal getBankCommition() {
+        return bankCommition;
+    }
+
+    /**
+     * @param bankCommition the bankCommition to set
+     */
+    public void setBankCommition(BigDecimal bankCommition) {
+        this.bankCommition = bankCommition;
     }
 
 }

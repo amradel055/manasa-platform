@@ -55,12 +55,15 @@ public class InvPurchaseInvoiceListDTOMB extends InventoryBasicDataForm {
                 @Override
                 public List<InvInvoiceDTO> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
                     Integer type = 0;
+                    Boolean isGallary = true;
                     if (getUri().contains("invpurchaseinvoicelist")) {
                         type = 0;
+                        isGallary = false;
                     } else if (getUri().contains("invsalesinvoicelist")) {
                         type = 1;
                     } else if (getUri().contains("invreturnpurchaselist")) {
                         type = 2;
+                        isGallary = false;
                     } else if (getUri().contains("invreturnsaleslist")) {
                         type = 3;
                     } else if (getUri().contains("proworkorderlist")) {
@@ -68,10 +71,15 @@ public class InvPurchaseInvoiceListDTOMB extends InventoryBasicDataForm {
                     } else if (getUri().contains("invpurchaseaddinglist")) {
                         type = 5;
                     }
-                    Integer invInventorySelectionId = getInvInventorySelection() != null ? getInvInventorySelection().getId() : null;
+                    Integer invInventorySelectionId = getInventoryDTOSelect() != null ? getInventoryDTOSelect().getId() : null;
                     Integer invGallarySelectionId = getGallaryDTOSelect() != null ? getGallaryDTOSelect().getId() : null;
-                    setRowCount(invPurchaseInvoiceService.getTotalRegistorsForGallary(type, invGallarySelectionId, getUserData().getUserBranch().getId(), filters).intValue());
-                    return invPurchaseInvoiceService.getALLInvPurchaseInvoiceDTOByTypeAndBranchIdFroGallary(type, invGallarySelectionId, first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), getUserData().getUserBranch().getId(), filters);
+                    if (isGallary) {
+                        setRowCount(invPurchaseInvoiceService.getTotalRegistorsForGallary(type, invGallarySelectionId, getUserData().getUserBranch().getId(), filters, isGallary).intValue());
+                        return invPurchaseInvoiceService.getALLInvPurchaseInvoiceDTOByTypeAndBranchIdFroGallary(type, invGallarySelectionId, first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), getUserData().getUserBranch().getId(), filters, isGallary);
+                    } else {
+                        setRowCount(invPurchaseInvoiceService.getTotalRegistorsForGallary(type, invInventorySelectionId, getUserData().getUserBranch().getId(), filters, isGallary).intValue());
+                        return invPurchaseInvoiceService.getALLInvPurchaseInvoiceDTOByTypeAndBranchIdFroGallary(type, invInventorySelectionId, first, pageSize, sortField, sortOrder.ASCENDING.equals(sortOrder), getUserData().getUserBranch().getId(), filters, isGallary);
+                    }
                 }
             });
         } catch (Exception e) {
@@ -93,7 +101,7 @@ public class InvPurchaseInvoiceListDTOMB extends InventoryBasicDataForm {
             type = 3;
         } else if (getUri().contains("proworkorderlist")) {
             type = 4;
-        }else if (getUri().contains("invpurchaseaddinglist")) {
+        } else if (getUri().contains("invpurchaseaddinglist")) {
             type = 5;
         }
         setInvInvoiceList(invPurchaseInvoiceService.getALLInvPurchaseInvoiceDTOByTypeAndBranchIdFroGallary2(type, invGallarySelectionId, getInvInvoiceDTO().getOrganizationSiteId() == null ? null : getInvInvoiceDTO().getOrganizationSiteId().getId()));

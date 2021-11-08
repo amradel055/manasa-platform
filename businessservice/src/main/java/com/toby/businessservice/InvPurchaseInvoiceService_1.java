@@ -33,6 +33,10 @@ import javax.ejb.Remote;
 public interface InvPurchaseInvoiceService_1 {
 
     public Integer getInvoiceBySerial(Integer serial);
+    
+    public InvInvoiceDTO findInvoiceBySerial(Integer serial);
+    
+    public void updateInvoiceForsendCloth(Integer id,Integer sendCloth);
 
     public BigDecimal getInvoiceByRaghiCode(String raghiCode,Integer invoiceId);
 
@@ -92,7 +96,7 @@ public interface InvPurchaseInvoiceService_1 {
 
     public Long getTotalRegistors(Integer type, Integer inventoryId, Integer branchId, Map<String, Object> filters);
 
-    public Long getTotalRegistorsForGallary(Integer type, Integer galaryId, Integer branchId, Map<String, Object> filters);
+    public Long getTotalRegistorsForGallary(Integer type, Integer galaryId, Integer branchId, Map<String, Object> filters,Boolean isGallary);
 
     public List<InvInvoiceDTO> getALLInvPurchaseInvoiceDTOByTypeAndBranchId(Integer type, Integer inventoryId, int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters);
 
@@ -100,7 +104,7 @@ public interface InvPurchaseInvoiceService_1 {
 
     public InvInvoiceDTO getInvPurchaseInvoiceDTOBySerial(Integer serial, Integer branchId);
 
-    public List<InvInvoiceDTO> getALLInvPurchaseInvoiceDTOByTypeAndBranchIdFroGallary(Integer type, Integer galaryId, int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters);
+    public List<InvInvoiceDTO> getALLInvPurchaseInvoiceDTOByTypeAndBranchIdFroGallary(Integer type, Integer galaryId, int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters,Boolean isGallary);
 
     public String deleteInvPurchaseInvoiceDTO(InvInvoiceDTO invPurchaseInvoice, Integer isPurchaseOrSales);
 

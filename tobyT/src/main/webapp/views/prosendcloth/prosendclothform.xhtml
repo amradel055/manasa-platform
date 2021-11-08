@@ -1,0 +1,199 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+
+        <h:form id="form"  dir="#{userData.dir}" class='formmargin'>
+
+
+
+
+            <div>
+                <p:fieldset legend="أمر شغل" > 
+
+                    <div >
+                        <p:messages id="curmsg" 
+                                    autoUpdate="true"
+                                    showDetail="true" 
+                                    rendered="true" closable="true"/>   
+                    </div>
+
+
+                    <div  id="firstLine" class="ui-g-12 ui-g-nopad">
+                        <div class="ui-g">
+                            <div class="ui-g-6 ui-xl-6">
+                                <div class="ui-g-12 ui-xl-12">
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:inputText style="width: 35%!important" id="ad1" value="#{proSendClothFormDTOMB.serialSelected}"/>
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 85px;" value=" رقم الفاتورة"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="asmaa" style="text-align: center">
+                        <p:commandButton     class="saveButton" id="search2" 
+                                             value="بحث" 
+                                             icon="fa fa-fw fa-save"
+                                             action="#{proSendClothFormDTOMB.search()}"
+                                             update="@form"
+                                             >
+                        </p:commandButton>
+                    </div>
+
+                    <div class="ui-g-4 ui-xl-4" style="margin-top: -2%;" >
+
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6" style="overflow: hidden;">
+                                <p:outputLabel style="width: 100px;" value="#{proSendClothFormDTOMB.invInvoiceDTO.organizationSiteId}"
+                                               />
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 100px;" value="#{userData.userDDs['CUSTOMER']}"/>
+                            </div>
+                        </div>
+
+
+
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel id="notice"  style="width:48%" value="#{proSendClothFormDTOMB.invInvoiceDTO.customerNotice}" />
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 65px" value=" ملاحظة"/>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="ui-g-4 ui-xl-4" style="margin-top: -2%;" >
+
+
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6" style="overflow: hidden;">
+                                <p:outputLabel style="width: 100px;" value="#{proSendClothFormDTOMB.invInvoiceDTO.gallaryId}"
+                                               />
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 100px;" value="المعرض"/>
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6" style="overflow: hidden;">
+                                <p:outputLabel style="width: 100px;" value="#{proSendClothFormDTOMB.invInvoiceDTO.invInventoryId}"
+                                               />
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 100px;" value="#{userData.userDDs['DEPOSITORY']}"/>
+                            </div>
+                        </div>
+
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:inputText readonly="true" style="width:100%"  value="#{proSendClothFormDTOMB.invInvoiceDTO.invoiceStatus}"
+                                             />
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel   style="width: 95px; " value="حالة الفاتورة"/>
+                            </div>
+                        </div>
+
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+
+
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:selectBooleanCheckbox value="#{proSendClothFormDTOMB.invInvoiceDTO.sendCloth}" itemLabel="تم الإرسال"/>
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:inputText style="width:69%"  value="#{proSendClothFormDTOMB.invInvoiceDTO.remarks}"
+                                             />
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+
+                                <p:outputLabel style="width: 95px; " value="#{userData.userDDs['NOTE']}"/>
+
+
+                            </div>
+                        </div>
+
+
+
+
+
+                        <h:panelGroup id="test">
+
+
+
+
+
+                        </h:panelGroup>
+
+
+
+
+
+
+                    </div>
+
+                    <div class="ui-g-4 ui-xl-4" style="margin-top: -2%;" >
+                        <div class="ui-g-12 ui-xl-12" >
+                            <div class="ui-g-6 ui-xl-6" style="overflow: hidden;">
+                                <p:calendar id="dateFrom"  locale="es"
+                                            value="#{proSendClothFormDTOMB.invInvoiceDTO.date}"
+                                            pattern="dd/MM/yyyy"
+                                            style="width:50%!important"/>
+
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:outputLabel style="width: 95px; " value="#{userData.userDDs['DATEE']}*"/>
+
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6" style="overflow: hidden;">
+
+                                <p:calendar id="dueDate" class="dueDate-prowork" value="#{proSendClothFormDTOMB.invInvoiceDTO.dueDate}"
+                                            disabled="true"
+                                            pattern="dd/MM/yyyy"
+                                            style="width:50%">
+                                </p:calendar>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:outputLabel for="dueDate" style="width: 95px;" value="#{userData.userDDs['DUE_DATE']}"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="asmaa" style="text-align: center">
+                        <p:commandButton     class="saveButton2" id="search" 
+                                             value="تعديل" 
+                                             icon="fa fa-fw fa-save"
+                                             action="#{proSendClothFormDTOMB.save()}"
+                                             update="@form"
+                                             >
+                        </p:commandButton>
+                    </div>
+                </p:fieldset>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+
+

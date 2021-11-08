@@ -142,7 +142,7 @@ public class ReportsServiceImpl implements ReportsService {
                 + "        LEFT JOIN `inv_inventory` `inv` ON `inv`.`id` = `ip`.`galary_Id`\n"
                 + "        LEFT JOIN `inv_organization_site` `ios` ON `ios`.`id` = `ip`.`organization_site_id`\n"
                 + " ");
-        sql.append(" where ip.branch_id = ").append(branchId);
+        sql.append(" where ip.type = 4 AND  ip.branch_id = ").append(branchId);
         appendGallery1(salesReportByValueAdedDetails, sql);
         appendDate1(salesReportByValueAdedDetails, sql);
         sql.append(" GROUP BY `ip`.`id`");
@@ -522,7 +522,7 @@ public class ReportsServiceImpl implements ReportsService {
         List<SalesStatementForThePeriod> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         sql.append("select ipi.serial , ipi.date , ios.code , ios.name,\n"
-                + "IFNULL(SUM(`ipid`.`net`), 0) as total_net,\n"
+                + "IFNULL(SUM(`ipid`.`net_after_discount_head`), 0) as total_net,\n"
                 + "IFNULL(NET(IFNULL(SUM(`ipid`.`net`), 0),   IFNULL(`ipi`.`discount_type`, 0.0), IFNULL(`ipi`.`discount`, 0.0), IFNULL(`ipi`.`tax_flag`, 0.0),  15, IFNULL(`ipi`.`disc_halala`, 0.0)), 0.0) AS `net` ,ipi.id\n"
                 + "from inv_purchase_invoice ipi\n"
                 + "left join  inv_purchase_invoice_detail ipid on ipi.id = ipid.inv_purchase_invoice_id\n"
