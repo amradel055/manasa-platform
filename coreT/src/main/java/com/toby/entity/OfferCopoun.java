@@ -57,6 +57,8 @@ public class OfferCopoun extends BaseEntity{
     @JoinColumn(name = "branch_id", referencedColumnName = "id")
     @ManyToOne
     private Branch branchId;
+    @Column(name = "gallary_type")
+    private Integer gallaryType;
 
     public OfferCopoun() {
     }
@@ -231,6 +233,20 @@ public class OfferCopoun extends BaseEntity{
      */
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    /**
+     * @return the gallaryType
+     */
+    public Integer getGallaryType() {
+        return gallaryType;
+    }
+
+    /**
+     * @param gallaryType the gallaryType to set
+     */
+    public void setGallaryType(Integer gallaryType) {
+        this.gallaryType = gallaryType;
     }
 
 }

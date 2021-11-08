@@ -24,8 +24,54 @@
                 </div>
 
 
+
+
+
+
+
             </p:fieldset>
 
+            <p:fieldset  legend="انشاء كوبونات الراجحي" id="raghiCopoun"  style="margin-bottom:20px">
+                <div class="ui-g-12 ui-xl-12">
+                    <div class="ui-g-6 ui-xl-6">
+                        <p:inputText id="number"  style="width:100%" value="#{offerCopounMB.offerCopounDTOSearch.number}" />
+                    </div>
+                    <div class="ui-g-6 ui-xl-6">
+                        <p:outputLabel for="searchBySerial" style="width: 95px;"  value="عدد الكوبونات الراجحي" />
+                    </div>
+                </div>
+                
+                <div class="ui-g-12 ui-xl-12">
+                    <div class="ui-g-6 ui-xl-6">
+                        <p:inputText id="discounttype"  style="width:100%" value="#{offerCopounMB.offerCopounDTOSearch.discountType}" />
+                    </div>
+                    <div class="ui-g-6 ui-xl-6">
+                        <p:outputLabel for="searchBySerial" style="width: 95px;"  value="نوع الخصم" />
+                    </div>
+                </div>
+                
+                <div class="ui-g-12 ui-xl-12">
+                    <div class="ui-g-6 ui-xl-6">
+                        <p:inputText id="discountValue"  style="width:100%" value="#{offerCopounMB.offerCopounDTOSearch.discountValue}" />
+                    </div>
+                    <div class="ui-g-6 ui-xl-6">
+                        <p:outputLabel for="searchBySerial" style="width: 95px;"  value="قيمة الخصم" />
+                    </div>
+                </div>
+                
+                <div class="ui-g-12 ui-xl-12">
+                    <div class="ui-g-6 ui-xl-6">
+                        <p:inputText id="searchBySerial"  style="width:100%" value="#{offerCopounMB.offerCopounDTOSearch.gallaryType}" />
+                    </div>
+                    <div class="ui-g-6 ui-xl-6">
+                        <p:outputLabel for="searchBySerial" style="width: 95px;"  value="نوع المعرض" />
+                    </div>
+                </div>
+                
+                <div class="form-group col-md-12">
+                    <p:commandButton id="raghiCode"  actionListener="#{offerCopounMB.raghiGenerateCode()}" ajax="false" value="انشاء أكواد"/>
+                </div>
+            </p:fieldset>
             <p:blockUI block="form" trigger=" " animate="true" >
 
                 <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>

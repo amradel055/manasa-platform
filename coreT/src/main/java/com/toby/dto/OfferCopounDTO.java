@@ -5,9 +5,6 @@
  */
 package com.toby.dto;
 
-import com.toby.entity.GlBank;
-import com.toby.entity.InvInventory;
-import com.toby.entity.InvOrganizationSite;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -29,6 +26,10 @@ public class OfferCopounDTO extends BaseEntityDTO{
     private InvInventoryDTO gallaryId;
     private GlBankDTO bankId;
     private String customerCode;
+    private Integer gallaryType;
+    
+    
+    private Integer number;
 
     public OfferCopounDTO() {
     }
@@ -203,6 +204,34 @@ public class OfferCopounDTO extends BaseEntityDTO{
      */
     public void setCustomerCode(String customerCode) {
         this.customerCode = customerCode;
+    }
+
+    /**
+     * @return the gallaryType
+     */
+    public Integer getGallaryType() {
+        return gallaryType;
+    }
+
+    /**
+     * @param gallaryType the gallaryType to set
+     */
+    public void setGallaryType(Integer gallaryType) {
+        this.gallaryType = gallaryType;
+    }
+
+    /**
+     * @return the number
+     */
+    public Integer getNumber() {
+        return number;
+    }
+
+    /**
+     * @param number the number to set
+     */
+    public void setNumber(Integer number) {
+        this.number = number;
     }
 
 }

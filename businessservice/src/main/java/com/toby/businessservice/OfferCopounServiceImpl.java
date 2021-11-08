@@ -19,6 +19,7 @@ import com.toby.entity.TobyCompany;
 import com.toby.entity.TobyUser;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -49,47 +50,65 @@ public class OfferCopounServiceImpl implements OfferCopounService {
     }
 
     @Override
-    public List<OfferCopounDTO> getAllOfferCopoun(TobyUser tobyUser) {
+    public List<OfferCopounDTO> getAllOfferCopoun() {
         List<OfferCopoun> offerTextList = dao.findAll(OfferCopoun.class);
-        return mapToDTOList(offerTextList, tobyUser);
+        return mapToDTOList(offerTextList);
     }
 
     @Override
     public OfferCopounDTO addOfferCopoun(OfferCopounDTO offerCopounDTO, TobyUser tobyUser) {
         OfferCopoun offerText = mapToEntity(offerCopounDTO, tobyUser);
         dao.updateEntity(offerText);
-        offerCopounDTO = mapToDTO(offerText, tobyUser);
+        offerCopounDTO = mapToDTO(offerText);
         return offerCopounDTO;
     }
 
     @Override
-    public OfferCopounDTO findOfferCopoun(Integer offerTextId, TobyUser tobyUser) {
+    public OfferCopounDTO findOfferCopoun(Integer offerTextId) {
         OfferCopoun offerText = dao.findEntityById(OfferCopoun.class, offerTextId);
-        return mapToDTO(offerText, tobyUser);
+        return mapToDTO(offerText);
     }
 
     @Override
-    public List<OfferCopounDTO> getALLOfferCopounByCompanyId(Integer companyId, TobyUser tobyUser) {
+    public List<OfferCopounDTO> getALLOfferCopounByCompanyId(Integer companyId) {
         Map<String, Object> params = new HashMap<>();
         params.put("companyId", companyId);
         List<OfferCopoun> offerTextList = dao.findListByQuery("SELECT e FROM OfferCopoun e WHERE e.companyId.id =:companyId", params);
-        return mapToDTOList(offerTextList, tobyUser);
+        return mapToDTOList(offerTextList);
     }
 
     @Override
-    public List<OfferCopounDTO> getALLOfferCopounByBranchId(Integer branchId, TobyUser tobyUser) {
+    public List<OfferCopounDTO> getALLOfferCopounByBranchId(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         List<OfferCopoun> offerTextList = dao.findListByQuery("SELECT e FROM OfferCopoun e WHERE e.branchId.id =:branchId", params);
-        return mapToDTOList(offerTextList, tobyUser);
+        return mapToDTOList(offerTextList);
     }
 
     @Override
-    public List<OfferCopounDTO> getALLOfferCopounByGallaryId(Integer galaryId, TobyUser tobyUser) {
+    public List<OfferCopounDTO> getALLOfferCopounByGallaryId(Integer galaryId) {
         Map<String, Object> params = new HashMap<>();
         params.put("galaryId", galaryId);
         List<OfferCopoun> offerTextList = dao.findListByQuery("SELECT e FROM OfferCopoun e WHERE e.galaryId.id =:galaryId", params);
-        return mapToDTOList(offerTextList, tobyUser);
+        return mapToDTOList(offerTextList);
+    }
+
+    @Override
+    public List<OfferCopounDTO> getALLOfferCopounByOfferSearch(OfferCopounDTO offerCopounDTO) {
+        Map<String, Object> params = new HashMap<>();
+        StringBuilder query = new StringBuilder();
+        params.put("branchId", 182);
+        query.append("SELECT e FROM OfferCopoun e WHERE e.branchId.id =:branchId ");
+        if (offerCopounDTO.getGallaryType() != null) {
+            params.put("gallaryType", offerCopounDTO.getGallaryType());
+            query.append(" AND e.gallaryType = :gallaryType ");
+        }
+        if (offerCopounDTO.getBankType() != null) {
+            params.put("bankType", offerCopounDTO.getBankType());
+            query.append(" AND e.bankType = :bankType ");
+        }
+        List<OfferCopoun> offerTextList = dao.findListByQuery(query.toString(), params);
+        return mapToDTOList(offerTextList);
     }
 
     @Override
@@ -120,6 +139,7 @@ public class OfferCopounServiceImpl implements OfferCopounService {
         entity.setDiscountType(dto.getDiscountType());
         entity.setDiscountValue(dto.getDiscountValue());
         entity.setExpire(dto.getExpire());
+        entity.setGallaryType(dto.getGallaryType());
 
         if (dto.getGallaryId() != null) {
             InvInventory invInventory = new InvInventory();
@@ -167,7 +187,7 @@ public class OfferCopounServiceImpl implements OfferCopounService {
 
     }
 
-    public OfferCopounDTO mapToDTO(OfferCopoun entity, TobyUser tobyUser) {
+    public OfferCopounDTO mapToDTO(OfferCopoun entity) {
 
         OfferCopounDTO dto = new OfferCopounDTO();
 
@@ -180,6 +200,7 @@ public class OfferCopounServiceImpl implements OfferCopounService {
         dto.setDiscountType(entity.getDiscountType());
         dto.setDiscountValue(entity.getDiscountValue());
         dto.setExpire(entity.getExpire());
+        dto.setGallaryType(entity.getGallaryType());
 
         if (entity.getGallaryId() != null) {
             InvInventoryDTO inventoryDTO = new InvInventoryDTO();
@@ -209,10 +230,10 @@ public class OfferCopounServiceImpl implements OfferCopounService {
         return dto;
     }
 
-    public List<OfferCopounDTO> mapToDTOList(List<OfferCopoun> offerTextList, TobyUser tobyUser) {
+    public List<OfferCopounDTO> mapToDTOList(List<OfferCopoun> offerTextList) {
         List<OfferCopounDTO> offerCopounDTOList = new ArrayList<>();
         for (OfferCopoun offerText : offerTextList) {
-            offerCopounDTOList.add(mapToDTO(offerText, tobyUser));
+            offerCopounDTOList.add(mapToDTO(offerText));
         }
         return offerCopounDTOList;
     }
@@ -227,13 +248,34 @@ public class OfferCopounServiceImpl implements OfferCopounService {
                 String code = generateRandomCode();
                 dTO.setCustomerId(organizationSiteDTO);
                 dTO.setCode(code);
-                System.out.println("\n send SMS To -> "+organizationSiteDTO.getMobile());
+                System.out.println("\n send SMS To -> " + organizationSiteDTO.getMobile());
                 sendSMS(organizationSiteDTO, code);
                 OfferCopoun offerText = mapToEntity(dTO, tobyUser);
                 dao.updateEntity(offerText);
-                mapToDTO(offerText, tobyUser);
+                mapToDTO(offerText);
             }
-        }  
+        }
+    }
+
+    @Override
+    public void addOfferCopoun(Integer number, Integer discountType, BigDecimal discountValue, Integer gallaryType, TobyUser tobyUser) {
+        for (int i = 0; i < number; i++) {
+            OfferCopounDTO dTO = new OfferCopounDTO();
+            String code = generateRandomCode();
+            dTO.setCode(code);
+            dTO.setGallaryType(gallaryType);
+            dTO.setStartDate(new Date());
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.YEAR, 2022);
+            cal.set(Calendar.MONTH, 12);
+            cal.set(Calendar.DAY_OF_MONTH, 30);
+            dTO.setEndDate(cal.getTime());
+            dTO.setBankType(1);
+            dTO.setDiscountValue(discountValue);
+            dTO.setDiscountType(discountType);
+            OfferCopoun offerText = mapToEntity(dTO, tobyUser);
+            dao.updateEntity(offerText);
+        }
     }
 
     private void sendSMS(InvOrganizationSiteDTO organizationSiteDTO, String code) {
@@ -245,7 +287,7 @@ public class OfferCopounServiceImpl implements OfferCopounService {
         message.append(code);
         message.append("\n").append("920027070");
         dao.sendSms(organizationSiteDTO.getMobile(), "التوبى العالمى", message.toString(), "20099109", "ux4uik");
-        System.out.println("\n send SMS To -> "+organizationSiteDTO.getMobile());
+        System.out.println("\n send SMS To -> " + organizationSiteDTO.getMobile());
     }
 
     public String generateRandomCode() {

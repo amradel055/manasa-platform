@@ -178,14 +178,14 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
                 try {
                     itemDataId = ((Integer) context.getSessionMap().get("itemDataEntitySelected"));
 
-                    if (itemDataId != null) {
-                        quantityItemsStoreList = quantityItemsStoreService.findItemsForBranchList(itemDataId, branchId);
-
-                        qtySummition = BigDecimal.ZERO;
-                        for (QuantityItemsStore itemsStore : quantityItemsStoreList) {
-                            qtySummition = (qtySummition.add(itemsStore.getQty() != null ? itemsStore.getQty().setScale(2) : BigDecimal.ZERO)).setScale(2);
-                        }
-                    }
+//                    if (itemDataId != null) {
+//                        quantityItemsStoreList = quantityItemsStoreService.findItemsForBranchList(itemDataId, branchId);
+//
+//                        qtySummition = BigDecimal.ZERO;
+//                        for (QuantityItemsStore itemsStore : quantityItemsStoreList) {
+//                            qtySummition = (qtySummition.add(itemsStore.getQty() != null ? itemsStore.getQty().setScale(2) : BigDecimal.ZERO)).setScale(2);
+//                        }
+//                    }
                     itemDataEntity = itemsDataViewService.findInvItem(itemDataId, getUserlogin());
                 } catch (Exception e) {
                     e.printStackTrace();

@@ -231,8 +231,14 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
     public void reset() {
         try {
+            InvInventoryDTO inventory = null;
+            if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getInvInventoryId() != null) {
+                inventory = getInvInvoiceDTO().getInvInventoryId();
+            } else {
+                inventory = getUserData().getInventoryDTODefault();
+            }
             setInvInvoiceDTO(null);
-            getInvInvoiceDTO().setInvInventoryId(getUserData().getInventoryDTODefault());
+            getInvInvoiceDTO().setInvInventoryId(inventory);
             getInvInvoiceDTO().setGlBankId(getUserData().getGlBankDTODefault());
             if (getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVPURCHASEINVOICEFORM)
                     || getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.INVPURCHASEADDING)
@@ -643,20 +649,28 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     }
 
     public void offerCopoun() {
-        if (getInvInvoiceDTO().getOrganizationSiteId() != null
-                && getInvInvoiceDTO().getOrganizationSiteId().getId() != null
-                && getInvInvoiceDTO().getOfferCopoun() != null) {
-            BigDecimal discount = offerCopounService.getOfferCopounByCustomerAndCode(getInvInvoiceDTO().getOrganizationSiteId().getId(), getInvInvoiceDTO().getOfferCopoun());
-            if (discount != null && discount.compareTo(BigDecimal.ZERO) == 1) {
-                discount25ForAll(discount.intValue());
-            } else {
-                for (InvDetailDTO detailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
-                    if (detailDTO.getItemsBarcodesDetail() == null && detailDTO.getItemsBarcodesDetailTrans() != null) {
-                        detailDTO.setItemsBarcodesDetail(detailDTO.getItemsBarcodesDetailTrans());
+        if (getInvInvoiceDTO().getOfferCopoun() != null
+                && getInvInvoiceDTO().getOfferCopoun().equals("SS25")
+                && getInvInvoiceDTO().getGallaryId() != null
+                && getInvInvoiceDTO().getGallaryId().getInvName() != null
+                && getInvInvoiceDTO().getGallaryId().getInvName() == 0) {
+            discount25ForAll(25);
+        } else {
+            if (getInvInvoiceDTO().getOrganizationSiteId() != null
+                    && getInvInvoiceDTO().getOrganizationSiteId().getId() != null
+                    && getInvInvoiceDTO().getOfferCopoun() != null) {
+                BigDecimal discount = offerCopounService.getOfferCopounByCustomerAndCode(getInvInvoiceDTO().getOrganizationSiteId().getId(), getInvInvoiceDTO().getOfferCopoun());
+                if (discount != null && discount.compareTo(BigDecimal.ZERO) == 1) {
+                    discount25ForAll(discount.intValue());
+                } else {
+                    for (InvDetailDTO detailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
+                        if (detailDTO.getItemsBarcodesDetail() == null && detailDTO.getItemsBarcodesDetailTrans() != null) {
+                            detailDTO.setItemsBarcodesDetail(detailDTO.getItemsBarcodesDetailTrans());
+                        }
                     }
+                    FacesContext.getCurrentInstance().addMessage(null,
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "هذا العميل ليس لديه خصم"));
                 }
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "هذا العميل ليس لديه خصم"));
             }
         }
     }

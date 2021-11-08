@@ -1147,7 +1147,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             invPurchaseInvoice.setGeneralJournalId(generalJournal);
         }
 
-        if (invInvoiceDTO.getGallaryId() != null) {
+        if ((invInvoiceDTO.getType() != 0 ||invInvoiceDTO.getType() != 2 ||invInvoiceDTO.getType() != 5)  &&  invInvoiceDTO.getGallaryId() != null) {
             InvInventory inventory = new InvInventory();
             inventory.setId(invInvoiceDTO.getGallaryId().getId());
             invPurchaseInvoice.setGalaryId(inventory);
@@ -1388,8 +1388,12 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                     invPurchaseInvoice.setSerial(serial);
                     // بجيب السيريال الخاص بالفواتير الضريبية
                     if (invPurchaseInvoice.getTaxflag()) {
-                        Integer serialTax = getMaxSerialTaxForInvoice(invPurchaseInvoice.getBranchId().getId(), invPurchaseInvoice.getGalaryId().getId(), invPurchaseInvoice.getType(), invPurchaseInvoice.getTaxFlagFinal() == null ? Boolean.FALSE : invPurchaseInvoice.getTaxFlagFinal());
-                        invPurchaseInvoice.setSerialTax(serialTax);
+                        if (invPurchaseInvoice.getType() != null && (invPurchaseInvoice.getType() == 0 || invPurchaseInvoice.getType() == 2 || invPurchaseInvoice.getType() == 5)) {
+                            Integer serialTax = getMaxSerialTaxForInvoice(invPurchaseInvoice.getBranchId().getId(), null, invPurchaseInvoice.getType(), false);
+                        } else {
+                            Integer serialTax = getMaxSerialTaxForInvoice(invPurchaseInvoice.getBranchId().getId(), invPurchaseInvoice.getGalaryId().getId(), invPurchaseInvoice.getType(), invPurchaseInvoice.getTaxFlagFinal() == null ? Boolean.FALSE : invPurchaseInvoice.getTaxFlagFinal());
+                            invPurchaseInvoice.setSerialTax(serialTax);
+                        }
                     }
 
                     invPurchaseInvoice = dao.updateEntity(invPurchaseInvoice);
@@ -2341,7 +2345,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                         dto.getRemarks(), tobyUser);
 //  حساب المبيعات
                 Integer salesAccountNumber = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"SALES_ACCOUNT_NUMBER\" AND a.accountId IS NOT NULL", params);
-                generaljournalDetailsService.addGenDetalil(false, dto.getTotalNetAfterDiscount(), journal.getId(),salesAccountNumber,
+                generaljournalDetailsService.addGenDetalil(false, dto.getTotalNetAfterDiscount(), journal.getId(), salesAccountNumber,
                         (dto.getGallaryId() == null || dto.getGallaryId().getCostCenterId() == null || dto.getGallaryId().getCostCenterId().getId() == null) ? null : dto.getGallaryId().getCostCenterId().getId(),
                         dto.getRemarks(), tobyUser);
                 generaljournalDetailsService.addGenDetalil(false, dto.getTaxvalue(), journal.getId(), salesTaxAccount,

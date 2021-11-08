@@ -20,21 +20,25 @@ public interface OfferCopounService {
 
     public void deleteOfferCopoun(OfferCopounDTO offerCopounDTO);
 
-    public List<OfferCopounDTO> getAllOfferCopoun(TobyUser tobyUser);
+    public List<OfferCopounDTO> getAllOfferCopoun();
 
     public OfferCopounDTO addOfferCopoun(OfferCopounDTO offerCopounDTO, TobyUser tobyUser);
 
-    public OfferCopounDTO findOfferCopoun(Integer offerTextId, TobyUser tobyUser);
+    public OfferCopounDTO findOfferCopoun(Integer offerTextId);
 
-    public List<OfferCopounDTO> getALLOfferCopounByCompanyId(Integer companyId, TobyUser tobyUser);
+    public List<OfferCopounDTO> getALLOfferCopounByCompanyId(Integer companyId);
 
-    public List<OfferCopounDTO> getALLOfferCopounByBranchId(Integer branchId, TobyUser tobyUser);
+    public List<OfferCopounDTO> getALLOfferCopounByBranchId(Integer branchId );
     
-    public List<OfferCopounDTO> getALLOfferCopounByGallaryId(Integer galaryId, TobyUser tobyUser);
+    public List<OfferCopounDTO> getALLOfferCopounByGallaryId(Integer galaryId );
+    
+    public List<OfferCopounDTO> getALLOfferCopounByOfferSearch(OfferCopounDTO offerCopounDTO );
 
     public String getNoticeByCustomerId(Integer id);
     
     public void addOfferCopoun(List<OfferCopounDTO> offerCopounDTOList, TobyUser tobyUser);
+    
+    public void addOfferCopoun(Integer number, Integer discountType, BigDecimal discountValue, Integer gallaryType, TobyUser tobyUser);
     
     public BigDecimal getOfferCopounByCustomerAndCode(Integer customerId, String code);
 }

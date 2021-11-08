@@ -5,9 +5,7 @@
  */
 package com.igma.offerCopoun;
 
-import com.toby.businessservice.OfferCompanyService;
 import com.toby.businessservice.OfferCopounService;
-import com.toby.dto.OfferCompanyDTO;
 import com.toby.dto.OfferCopounDTO;
 import com.toby.toby.Basic;
 import java.io.IOException;
@@ -37,6 +35,10 @@ public class OfferCopounMB extends Basic implements Serializable {
     private UploadedFile OfferCompanyFile;
 
     private InputStream inputStreamUploadOfferCompany;
+    
+    private OfferCopounDTO offerCopounDTOSearch;
+    
+    private List<OfferCopounDTO> offerCopounDTOList;
 
     public OfferCopounMB() {
     }
@@ -47,6 +49,11 @@ public class OfferCopounMB extends Basic implements Serializable {
     @PostConstruct
     public void init() {
 
+    }
+    
+    public void raghiGenerateCode (){
+        offerCopounService.addOfferCopoun(offerCopounDTOSearch.getNumber(), offerCopounDTOSearch.getDiscountType(), offerCopounDTOSearch.getDiscountValue(), offerCopounDTOSearch.getGallaryType(), getUserData().getUser());
+        offerCopounService.getALLOfferCopounByOfferSearch(offerCopounDTOSearch);
     }
 
     public void OpenDlg(String dlgvar) {
@@ -112,6 +119,37 @@ public class OfferCopounMB extends Basic implements Serializable {
      */
     public void setOfferCompanyFile(UploadedFile OfferCompanyFile) {
         this.OfferCompanyFile = OfferCompanyFile;
+    }
+
+    /**
+     * @return the offerCopounDTOSearch
+     */
+    public OfferCopounDTO getOfferCopounDTOSearch() {
+        if(offerCopounDTOSearch == null){
+            offerCopounDTOSearch = new OfferCopounDTO();
+        }
+        return offerCopounDTOSearch;
+    }
+
+    /**
+     * @param offerCopounDTOSearch the offerCopounDTOSearch to set
+     */
+    public void setOfferCopounDTOSearch(OfferCopounDTO offerCopounDTOSearch) {
+        this.offerCopounDTOSearch = offerCopounDTOSearch;
+    }
+
+    /**
+     * @return the offerCopounDTOList
+     */
+    public List<OfferCopounDTO> getOfferCopounDTOList() {
+        return offerCopounDTOList;
+    }
+
+    /**
+     * @param offerCopounDTOList the offerCopounDTOList to set
+     */
+    public void setOfferCopounDTOList(List<OfferCopounDTO> offerCopounDTOList) {
+        this.offerCopounDTOList = offerCopounDTOList;
     }
 
 }
