@@ -103,6 +103,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                 if (detailEntity.getId() == null && (detailEntity.getItemsBarcodesDetail().getProGroupId() == null
                         || (detailEntity.getItemsBarcodesDetail().getProGroupId() != null
                         && detailEntity.getItemsBarcodesDetail().getProGroupId() != 5
+                        && detailEntity.getItemsBarcodesDetail().getSupplierId() != 203401
                         && (!detailEntity.getItemsBarcodesDetail().getBarcode().equals("000003")
                         || (!detailEntity.getItemsBarcodesDetail().getBarcode().equals("000017"))
                         || (!detailEntity.getItemsBarcodesDetail().getBarcode().equals("000206"))

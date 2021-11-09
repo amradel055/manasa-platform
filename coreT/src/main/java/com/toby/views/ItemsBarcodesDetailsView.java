@@ -99,6 +99,8 @@ public class ItemsBarcodesDetailsView implements Serializable {
     private BigDecimal numberMetersFreeYoung;
     @Column(name = "number_meters_free_men")
     private BigDecimal numberMetersFreeMen;
+    @Column(name = "supplier_id")
+    private Integer supplierId;
 
     @Override
     public String toString() {
@@ -486,5 +488,19 @@ public class ItemsBarcodesDetailsView implements Serializable {
             return false;
         }
         return true;
+    }
+
+    /**
+     * @return the supplierId
+     */
+    public Integer getSupplierId() {
+        return supplierId;
+    }
+
+    /**
+     * @param supplierId the supplierId to set
+     */
+    public void setSupplierId(Integer supplierId) {
+        this.supplierId = supplierId;
     }
 }
