@@ -61,42 +61,29 @@
 
 
             <h:form id="form" class='formmargin' dir="#{userData.dir}">
-                
+
                 <p:fieldset legend="#{userData.userDDs['PROJ_GUID_REP']}">
 
 
                     <div class="ui-g-12 ui-g-nopad firstset" id="firstSegment">
-                        <div class="ui-g-12 ui-xl-12">
-                            <div class="ui-g-6 ui-xl-6">
-                                <p:calendar id="dateTo" 
-                                            value="#{projectGuideSellTypeReportMB.projectGuideSearchBean.endDate}"
-                                            pattern="dd/MM/yyyy" 
-                                            style="width:50%" showButtonPanel="true"
-                                            >
-                                </p:calendar>        
-                            </div>
-                            <div class="ui-g-6 ui-xl-6">
-                                <p:outputLabel  style="width:75px;" value="إلى تاريخ"/>
 
-                            </div>
-                        </div>
-                        <div class="ui-g-12 ui-xl-12">
-                            <div class="ui-g-6 ui-xl-6">
-                                <p:calendar id="dateFrom" 
-                                            value="#{projectGuideSellTypeReportMB.projectGuideSearchBean.startDate}" 
-                                            pattern="dd/MM/yyyy" 
-                                            style="width:50%" showButtonPanel="true"
-                                            >
-                                </p:calendar>        
-                            </div>
-                            <div class="ui-g-6 ui-xl-6">
-                                <p:outputLabel  style="width:75px;" value="من تاريخ"/>
+                        <div class="ui-g-12 ui-md-12">
 
+
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>
+                                    <h:panelGroup> 
+                                        <p:outputLabel style="width: 105px;margin-right: 6%;" value="البند الفرعي" />
+                                    </h:panelGroup>
+                                    <p:selectCheckboxMenu id="sub" value="#{projectGuideSellTypeReportMB.projectGuideSearchBean.projectGuideListSelected}"
+                                                          converter="#{projectGuideSellTypeReportMB.projectGuideCildDTOConverter}"
+                                                          label="البند الفرعي" style="width: 15rem"
+                                                          filter="true" filterMatchMode="contains" panelStyle="width: 15rem" scrollHeight="250">
+                                        <f:selectItems value="#{projectGuideSellTypeReportMB.projectGuideDTOChildList}"/>
+                                    </p:selectCheckboxMenu>
+                                </h:panelGroup>
                             </div>
-                        </div>
-                      
-                        
-                        <div class="ui-g">
+
 
                             <div class="ui-g-12 ui-md-6">
                                 <h:panelGroup>
@@ -113,22 +100,40 @@
                                 </h:panelGroup>
                             </div>
 
-                            <div class="ui-g-12 ui-md-6">
-                                <h:panelGroup>
-                                    <h:panelGroup> 
-                                        <p:outputLabel style="width: 105px;margin-right: 6%;" value="البند الفرعي" />
-                                    </h:panelGroup>
-                                    <p:selectCheckboxMenu id="sub" value="#{projectGuideSellTypeReportMB.projectGuideSearchBean.projectGuideListSelected}"
-                                                          converter="#{projectGuideSellTypeReportMB.projectGuideCildDTOConverter}"
-                                                          label="البند الفرعي" style="width: 15rem"
-                                                          filter="true" filterMatchMode="contains" panelStyle="width: 15rem" scrollHeight="250">
-                                        <f:selectItems value="#{projectGuideSellTypeReportMB.projectGuideDTOChildList}"/>
-                                    </p:selectCheckboxMenu>
-                                </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:calendar id="dateFrom" 
+                                                value="#{projectGuideSellTypeReportMB.projectGuideSearchBean.startDate}" 
+                                                pattern="dd/MM/yyyy" 
+                                                style="width:50%" showButtonPanel="true"
+                                                >
+                                    </p:calendar>        
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel  style="width:75px;" value="من تاريخ"/>
+
+                                </div>
+                            </div>
+
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:calendar id="dateTo" 
+                                                value="#{projectGuideSellTypeReportMB.projectGuideSearchBean.endDate}"
+                                                pattern="dd/MM/yyyy" 
+                                                style="width:50%" showButtonPanel="true"
+                                                >
+                                    </p:calendar>        
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel  style="width:75px;" value="إلى تاريخ"/>
+
+                                </div>
                             </div>
 
                         </div>
-
                     </div>
 
                     <h:panelGrid class="col-md-12" columns="1">
@@ -188,7 +193,7 @@
                         rows="15" 
                         paginator="true"
                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" 
-                        rowsPerPageTemplate="5, 10, 15"
+                        rowsPerPageTemplate="10, 20 ,30 , 40 , 50 "
                         rowStyleClass="#{projectGuideDTB.sellType ? 'sell' : projectGuideDTB.reserved ? 'reserved' : null}">>
 
                         <f:facet name="header" class="col-md-12">
@@ -229,27 +234,18 @@
                             <h:outputText style="font-size: 1.5vh;"  value="#{projectGuideDTB.parent}"/>
                         </p:column>
 
-                        <p:column style="width: 8vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" headerText="#{userData.userDDs['LEVEL']}"
+                        <p:column style="width: 8vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" headerText="اسم العميل"
 
-                                  sortBy="#{projectGuideDTB.level}"
-                                  filterBy="#{projectGuideDTB.level}" 
+                                  sortBy="#{projectGuideDTB.customerName}"
+                                  filterBy="#{projectGuideDTB.customerName}" 
                                   filterMatchMode="contains"
                                   filterable="false">
 
-                            <h:outputText style="font-size: 1.5vh;" value="#{projectGuideDTB.level}"/>
-                        </p:column>
-
-                        <p:column style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" headerText="#{userData.userDDs['ACCOUNT_STATUS']}"
-
-                                  sortBy="#{projectGuideDTB.active}"
-                                  filterBy="#{projectGuideDTB.active}" 
-                                  filterMatchMode="contains"
-                                  filterable="false">
-                            <h:outputText style="font-size: 1.5vh;"  value="#{projectGuideDTB.active}"/>
+                            <h:outputText style="font-size: 1.5vh;" value="#{projectGuideDTB.customerName}"/>
                         </p:column>
                     </p:dataTable>
                 </p:fieldset>
-            
+
             </h:form>
         </h:body>
     </ui:define>

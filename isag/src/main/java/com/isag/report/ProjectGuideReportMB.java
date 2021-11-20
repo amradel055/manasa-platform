@@ -39,6 +39,7 @@ public class ProjectGuideReportMB extends BaseReportBean {
     private String active;
     private String screenMode;
     private List<InstProjectGuide> projectGuideList;
+    private List<InstProjectGuide> projectGuideListParent;
     private List<ProjectGuideBean> projectGuideBeanList;
     private InstProjectGuideConverter projectGuideConverter;
     private JasperPrint jasperPrint;
@@ -77,7 +78,7 @@ public class ProjectGuideReportMB extends BaseReportBean {
 
     }
 
-   @Override
+    @Override
     public void reset() {
         setProjectGuideList(new ArrayList<>());
         setProjectGuideBeanList(new ArrayList<>());
@@ -156,6 +157,38 @@ public class ProjectGuideReportMB extends BaseReportBean {
         } else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "لا يوجد نتائج للطباعة"));
         }
+    }
+
+    public List<InstProjectGuide> completeProjectGuideParent(String query) {
+        List<InstProjectGuide> projectGuideList = getProjectGuideListParent();
+        if (query == null || query.trim().equals("")) {
+            setProjectGuideConverter(new InstProjectGuideConverter(projectGuideListParent));
+            return projectGuideList;
+        }
+        List<InstProjectGuide> filteredProjectGuide = new ArrayList<>();
+
+        String nameAr;
+        String code;
+        InstProjectGuide projectGuide;
+        for (int i = 0; i < getProjectGuideListParent().size(); i++) {
+            projectGuide = projectGuideList.get(i);
+            nameAr = projectGuide.getName();
+            if (nameAr != null && nameAr.toLowerCase().contains(query.toLowerCase())) {
+                if (!filteredProjectGuide.contains(projectGuide)) {
+                    filteredProjectGuide.add(projectGuide);
+                }
+            }
+
+            code = projectGuide.getCode();
+            if (code != null && String.valueOf(code).contains(query)) {
+                if (!filteredProjectGuide.contains(projectGuide)) {
+                    filteredProjectGuide.add(projectGuide);
+                }
+            }
+        }
+
+        setProjectGuideConverter(new InstProjectGuideConverter(filteredProjectGuide));
+        return filteredProjectGuide;
     }
 
     public List<InstProjectGuide> completeProjectGuide(String query) {
@@ -323,6 +356,24 @@ public class ProjectGuideReportMB extends BaseReportBean {
      */
     public void setActive(String active) {
         this.active = active;
+    }
+
+    /**
+     * @return the projectGuideListParent
+     */
+    public List<InstProjectGuide> getProjectGuideListParent() {
+        if (projectGuideListParent == null) {
+            setProjectGuideListParent(getProjectGuideService().getCompanyInstProjectGuideRoots(getUserData().getUser().getCompanyId().getId()));
+            setProjectGuideConverter(new InstProjectGuideConverter(getProjectGuideListParent()));
+        }
+        return projectGuideListParent;
+    }
+
+    /**
+     * @param projectGuideListParent the projectGuideListParent to set
+     */
+    public void setProjectGuideListParent(List<InstProjectGuide> projectGuideListParent) {
+        this.projectGuideListParent = projectGuideListParent;
     }
 
     /**

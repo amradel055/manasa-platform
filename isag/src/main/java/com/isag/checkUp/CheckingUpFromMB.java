@@ -10,9 +10,12 @@ import com.isag.businessservice.CheckUpService;
 import com.isag.businessservice.HosDoctorService;
 import com.isag.businessservice.IsagUserBankService;
 import com.isag.businessservice.PatientRegistrationService;
+import com.isag.businessservice.RscWorkUnitsGuideService;
 import com.isag.converter.GlBankConverter;
 import com.isag.converter.HosDoctorConverter;
 import com.isag.converter.HosPatientRegistrationConvertor;
+import com.isag.converter.RscWorkUnitsGuideDTOConverter;
+import com.isag.dto.RscWorkUnitsGuideDTO;
 import com.isag.entity.GlBank;
 import com.isag.entity.HosCheckUp;
 import com.isag.entity.HosCheckUpDetail;
@@ -20,7 +23,7 @@ import com.isag.entity.HosDoctor;
 import com.isag.entity.HosPatientRegistration;
 import com.isag.entiy.HosCheckingUpDetailEntity;
 import com.isag.entiy.HosCheckingUpEntity;
-import com.isag.invPurchaseInvoice.InvPurchaseInvoiceFormMB;
+import com.isag.isag.AutoComplete;
 import com.isag.isag.BaseFormBean;
 import com.isag.isag.UserData;
 import java.io.IOException;
@@ -31,8 +34,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -41,7 +42,6 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.view.ViewScoped;
-import javax.inject.Named;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import net.sf.jasperreports.engine.JRException;
@@ -61,6 +61,13 @@ import org.primefaces.event.SelectEvent;
 @ManagedBean(name = "checkingUpFormMB")
 @ViewScoped
 public class CheckingUpFromMB extends BaseFormBean {
+
+    /**
+     * @param rscWorkUnitsGuideDTOList the rscWorkUnitsGuideDTOList to set
+     */
+    public void setRscWorkUnitsGuideDTOList(List<RscWorkUnitsGuideDTO> rscWorkUnitsGuideDTOList) {
+        this.rscWorkUnitsGuideDTOList = rscWorkUnitsGuideDTOList;
+    }
 
     private GlBankConverter glBankConverter;
     private List<GlBank> glBankList;
@@ -86,6 +93,10 @@ public class CheckingUpFromMB extends BaseFormBean {
     private String totalCach;
     private boolean validateSave;
     private boolean showPatientDetails;
+    
+    private List<RscWorkUnitsGuideDTO> rscWorkUnitsGuideDTOList;
+    private RscWorkUnitsGuideDTOConverter rscWorkUnitsGuideDTOConverter;
+    
     @EJB
     private HosDoctorService hosDoctorService;
     @EJB
@@ -96,6 +107,8 @@ public class CheckingUpFromMB extends BaseFormBean {
     private CheckUpDetailsService hosCheckUpDetailsService;
     @EJB
     private PatientRegistrationService hosPatientRegistrationService;
+    @EJB
+    private RscWorkUnitsGuideService rscWorkUnitsGuideService;
 
     ;
 
@@ -115,6 +128,31 @@ public class CheckingUpFromMB extends BaseFormBean {
             hosCheckingUpDetailDeletedEntityList = new ArrayList<>();
         } catch (Exception e) {
             saveError(e, "CheckingUpFromMB", "init");
+        }
+    }
+    
+    public List<RscWorkUnitsGuideDTO> completeWorkUnitsGuideDTO(String query) {
+        return AutoComplete.completeWorkUnitsGuideDTO(query, getRscWorkUnitsGuideDTOList(), getRscWorkUnitsGuideDTOConverter());
+    }
+    
+    public List<RscWorkUnitsGuideDTO> getRscWorkUnitsGuideDTOList() {
+        if (rscWorkUnitsGuideDTOList == null || rscWorkUnitsGuideDTOList.isEmpty()) {
+            setRscWorkUnitsGuideDTOList(rscWorkUnitsGuideService.getBranchUnitAndType(getUserData().getUserBranch().getId()));
+            setRscWorkUnitsGuideDTOConverter(new RscWorkUnitsGuideDTOConverter(rscWorkUnitsGuideDTOList));
+        }
+        return rscWorkUnitsGuideDTOList;
+    }
+    
+
+    public void validateUnitGuide() {
+        try {
+            if (hosCheckingUpDetailEntitySelected != null) {
+                if (hosCheckingUpDetailEntitySelected.getInstProjectGuideId() != null) {
+                    hosCheckingUpDetailEntitySelected.setInstProjectGuideIdBak(hosCheckingUpDetailEntitySelected.getInstProjectGuideId());
+                }
+            }
+        } catch (Exception e) {
+            saveError(e, "RscTenderFormMB", "validateUnitGuide");
         }
     }
 
@@ -170,22 +208,23 @@ public class CheckingUpFromMB extends BaseFormBean {
                 }
             }
             loadDoctorServices();
-            for (HosCheckUpDetail hosCheckUpDetail : hosCheckUpDetailsList) {
-                HosCheckingUpDetailEntity checkingUpDetailEntity = new HosCheckingUpDetailEntity();
-                checkingUpDetailEntity.setValue(hosCheckUpDetail.getValue());
-                checkingUpDetailEntity.setDiscountRatio(hosCheckUpDetail.getDiscountRatio());
-                checkingUpDetailEntity.setBearReatio(hosCheckUpDetail.getBearRatio());
-                checkingUpDetailEntity.setTotal(hosCheckUpDetail.getTotal());
-                checkingUpDetailEntity.setId(hosCheckUpDetail.getId());
-                checkingUpDetailEntity.setBranchId(hosCheckUpDetail.getBranchId() != null ? hosCheckUpDetail.getBranchId().getId() : null);
-                checkingUpDetailEntity.setCompanyId(hosCheckUpDetail.getCompanyId() != null ? hosCheckUpDetail.getCompanyId().getId() : null);
-                checkingUpDetailEntity.setCreatedBy(hosCheckUpDetail.getCreatedBy() != null ? hosCheckUpDetail.getCreatedBy().getId() : null);
-                checkingUpDetailEntity.setModifiedBy(hosCheckUpDetail.getModifiedBy() != null ? hosCheckUpDetail.getModifiedBy().getId() : null);
-                checkingUpDetailEntity.setCreationDate(hosCheckUpDetail.getCreationDate() != null ? hosCheckUpDetail.getCreationDate() : null);
-                checkingUpDetailEntity.setModificationDate(hosCheckUpDetail.getModificationDate() != null ? hosCheckUpDetail.getModificationDate() : null);
-                checkingUpDetailEntity.setHosDoctor(hosCheckUpDetail.getHosDoctorServiceId());
-                checkingUpDetailEntity.setMarkEdit(Boolean.FALSE);
-                hosCheckingUpDetailEntityList.add(checkingUpDetailEntity);
+            for (HosCheckUpDetail entity : hosCheckUpDetailsList) {
+                HosCheckingUpDetailEntity dto = new HosCheckingUpDetailEntity();
+                dto.setValue(entity.getValue());
+                dto.setDiscountRatio(entity.getDiscountRatio());
+                dto.setBearReatio(entity.getBearRatio());
+                dto.setTotal(entity.getTotal());
+                dto.setId(entity.getId());
+                dto.setBranchId(entity.getBranchId() != null ? entity.getBranchId().getId() : null);
+                dto.setCompanyId(entity.getCompanyId() != null ? entity.getCompanyId().getId() : null);
+                dto.setCreatedBy(entity.getCreatedBy() != null ? entity.getCreatedBy().getId() : null);
+                dto.setModifiedBy(entity.getModifiedBy() != null ? entity.getModifiedBy().getId() : null);
+                dto.setCreationDate(entity.getCreationDate() != null ? entity.getCreationDate() : null);
+                dto.setModificationDate(entity.getModificationDate() != null ? entity.getModificationDate() : null);
+                dto.setHosDoctor(entity.getHosDoctorServiceId());
+                dto.setInstProjectGuideId(entity.getInstProjectGuideId());
+                dto.setMarkEdit(Boolean.FALSE);
+                hosCheckingUpDetailEntityList.add(dto);
             }
             calculateTotalCash();
         } catch (Exception e) {
@@ -198,10 +237,10 @@ public class CheckingUpFromMB extends BaseFormBean {
         try {
             Map<String, String> userDDs = getUserData().getUserDDs();
             validateSave = true;
-            validateSave();
-            if (!validateSave) {
-                return "";
-            }
+//            validateSave();
+//            if (!validateSave) {
+//                return "";
+//            }
             HosCheckUp saveHosCheckUp = new HosCheckUp();
             saveHosCheckUp.setId(hosCheckingUpEntity.getId());
             saveHosCheckUp.setBranchId(getUserData().getUserBranch());
@@ -230,24 +269,25 @@ public class CheckingUpFromMB extends BaseFormBean {
             List<HosCheckUpDetail> saveCheckUpDetailList = new ArrayList<>();
 
             if (hosCheckingUpDetailEntityList != null && !hosCheckingUpDetailEntityList.isEmpty()) {
-                for (HosCheckingUpDetailEntity detailEntity : hosCheckingUpDetailEntityList) {
-                    HosCheckUpDetail hosCheckUpDetail = new HosCheckUpDetail();
-                    hosCheckUpDetail.setId(detailEntity.getId());
-                    hosCheckUpDetail.setBranchId(getUserData().getUser().getBranchId());
-                    hosCheckUpDetail.setCompanyId(getUserData().getUser().getCompanyId());
-                    if (detailEntity.getId() == null) {
-                        hosCheckUpDetail.setCreationDate(new Date());
-                        hosCheckUpDetail.setCreatedBy(getUserData().getUser().getCreatedBy());
+                for (HosCheckingUpDetailEntity dto : hosCheckingUpDetailEntityList) {
+                    HosCheckUpDetail entity = new HosCheckUpDetail();
+                    entity.setId(dto.getId());
+                    entity.setBranchId(getUserData().getUser().getBranchId());
+                    entity.setCompanyId(getUserData().getUser().getCompanyId());
+                    if (dto.getId() == null) {
+                        entity.setCreationDate(new Date());
+                        entity.setCreatedBy(getUserData().getUser().getCreatedBy());
                     } else {
-                        hosCheckUpDetail.setModificationDate(new Date());
-                        hosCheckUpDetail.setModifiedBy(getUserData().getUser().getModifiedBy());
+                        entity.setModificationDate(new Date());
+                        entity.setModifiedBy(getUserData().getUser().getModifiedBy());
                     }
-                    hosCheckUpDetail.setBearRatio(detailEntity.getBearReatio());
-                    hosCheckUpDetail.setDiscountRatio(detailEntity.getDiscountRatio());
-                    hosCheckUpDetail.setValue(detailEntity.getValue());
-                    hosCheckUpDetail.setTotal(detailEntity.getTotal());
-                    hosCheckUpDetail.setHosDoctorServiceId(detailEntity.getHosDoctor());
-                    saveCheckUpDetailList.add(hosCheckUpDetail);
+                    entity.setBearRatio(dto.getBearReatio());
+                    entity.setDiscountRatio(dto.getDiscountRatio());
+                    entity.setValue(dto.getValue());
+                    entity.setTotal(dto.getTotal());
+                    entity.setHosDoctorServiceId(dto.getHosDoctor());
+                    entity.setInstProjectGuideId(dto.getInstProjectGuideId());
+                    saveCheckUpDetailList.add(entity);
                 }
             }
 
@@ -348,9 +388,10 @@ public class CheckingUpFromMB extends BaseFormBean {
     public void loadDoctors() {
         try {
             if (hosCheckingUpEntity.getHosClinic() != null) {
-                hosDoctorsList = hosDoctorService.getAllSubHosDoctorByBranchIdActiveAndLevelAndClinicId(getUserData().getUserBranch().getId(), 2, hosCheckingUpEntity.getHosClinic().getId());
-                hosDoctorConverter = new HosDoctorConverter(hosDoctorsList);
+//                hosDoctorsList = hosDoctorService.getAllSubHosDoctorByBranchIdActiveAndLevelAndClinicId(getUserData().getUserBranch().getId(), 2, hosCheckingUpEntity.getHosClinic().getId());
+//                hosDoctorConverter = new HosDoctorConverter(hosDoctorsList);
                 // hosCheckingUpEntity = new HosCheckingUpEntity();
+                getHosDoctorsList();
             }
             hosClinicUpdated = new HosDoctor();
             hosClinicUpdated = hosCheckingUpEntity.getHosClinic();
@@ -398,7 +439,7 @@ public class CheckingUpFromMB extends BaseFormBean {
 
     public void addClosingAccounts() {
         try {
-            if (hosCheckingUpEntity.getHosDoctor() != null && hosCheckingUpEntity.getHosPatientRegistration() != null) {
+//            if ( hosCheckingUpEntity.getHosPatientRegistration() != null) {
 
                 if (hosCheckingUpDetailEntityList != null && !hosCheckingUpDetailEntityList.isEmpty()) {
                     hosCheckingUpDetailEntityMemory = new HosCheckingUpDetailEntity();
@@ -417,14 +458,13 @@ public class CheckingUpFromMB extends BaseFormBean {
                 } else {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "يجب استكمال البيانات"));
                 }
-            } else {
-                if (hosCheckingUpEntity.getHosDoctor() == null) {
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "يجب اختيار الطبيب المعالج اولا"));
-                }
-                if (hosCheckingUpEntity.getHosPatientRegistration() == null) {
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "يجب اختيار المريض"));
-                }
-            }
+//            } 
+//            else {
+//                
+//                if (hosCheckingUpEntity.getHosPatientRegistration() == null) {
+//                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "يجب اختيار المريض"));
+//                }
+//            }
         } catch (Exception e) {
             saveError(e, "CheckingUpFromMB", "addClosingAccounts");
         }
@@ -510,8 +550,6 @@ public class CheckingUpFromMB extends BaseFormBean {
 
         return "";
     }
-
-    
 
     public void showOrHideDialogForClinics() {
         try {
@@ -656,12 +694,11 @@ public class CheckingUpFromMB extends BaseFormBean {
     public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {
 //        search();
         if (hosCheckingUpDetailEntityList != null && !hosCheckingUpDetailEntityList.isEmpty()) {
-           
-                fillReport(prepareReport(), getUserData().getReportPath() + "checkUpReport.jasper", getHosCheckingUpDetailEntityList(), "pdf");
-            
+
+            fillReport(prepareReport(), getUserData().getReportPath() + "checkUpReport.jasper", getHosCheckingUpDetailEntityList(), "pdf");
+
         }
     }
-
 
     public <T> void fillReport(HashMap hashMap, String reportPath, List<T> listBean, String exportType) throws JRException, IOException {
         try {
@@ -727,7 +764,6 @@ public class CheckingUpFromMB extends BaseFormBean {
                 hosCheckingUpEntity.setPaymentTypeText("بطاقة");
                 hashMap.put("paymentTypeValue", hosCheckingUpEntity.getPaymentTypeText());
             }
-            
 
             hashMap.put("doctorDetailNameText", "اسم الخدمة");
             hashMap.put("valueText", "القيمة");
@@ -1063,6 +1099,10 @@ public class CheckingUpFromMB extends BaseFormBean {
      * @return the hosDoctorsList
      */
     public List<HosDoctor> getHosDoctorsList() {
+        if (hosCheckingUpEntity.getHosClinic() != null) {
+            hosDoctorsList = hosDoctorService.getAllSubHosDoctorByBranchIdActiveAndLevelAndClinicId(getUserData().getUserBranch().getId(), 2, hosCheckingUpEntity.getHosClinic().getId());
+            hosDoctorConverter = new HosDoctorConverter(hosDoctorsList);
+        }   
         return hosDoctorsList;
     }
 
@@ -1286,6 +1326,20 @@ public class CheckingUpFromMB extends BaseFormBean {
      */
     public void setHosCheckingUpDetailEntityReport(List<HosCheckingUpDetailEntity> hosCheckingUpDetailEntityReport) {
         this.hosCheckingUpDetailEntityReport = hosCheckingUpDetailEntityReport;
+    }
+
+    /**
+     * @return the rscWorkUnitsGuideDTOConverter
+     */
+    public RscWorkUnitsGuideDTOConverter getRscWorkUnitsGuideDTOConverter() {
+        return rscWorkUnitsGuideDTOConverter;
+    }
+
+    /**
+     * @param rscWorkUnitsGuideDTOConverter the rscWorkUnitsGuideDTOConverter to set
+     */
+    public void setRscWorkUnitsGuideDTOConverter(RscWorkUnitsGuideDTOConverter rscWorkUnitsGuideDTOConverter) {
+        this.rscWorkUnitsGuideDTOConverter = rscWorkUnitsGuideDTOConverter;
     }
 
 }

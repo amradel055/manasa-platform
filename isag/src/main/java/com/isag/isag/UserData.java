@@ -29,6 +29,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
@@ -78,7 +79,7 @@ public class UserData extends Basic implements Serializable {
     UserData userData;
     private Map<String, String> userDDs;
     private Boolean isAdmin = Boolean.FALSE;
-    
+
     private CompanyActivityClassEnum companyActivityClassEnum;
 
     private String targetScreen;
@@ -215,6 +216,34 @@ public class UserData extends Basic implements Serializable {
         saveUserData(userData, true);
 
         return "home";
+    }
+
+    public void exportMySql() {
+        Runtime rt = Runtime.getRuntime();
+        File test = new File("D:/salah/testSQLDump.sql");
+        PrintStream ps;
+
+        String host = "127.0.0.1";
+        String user = "root";
+        String pw = "root";
+        try {
+            Process child = rt.exec("C:/Program Files/MySQL/MySQL Server 5.6/bin/mysqldump -h" + host + " -u" + user + " -p" + pw + " ");
+            ps = new PrintStream(test);
+            InputStream in = child.getInputStream();
+            int ch;
+            while ((ch = in.read()) != -1) {
+                ps.write(ch);
+                System.out.write(ch); //to view it by console
+            }
+
+            InputStream err = child.getErrorStream();
+            while ((ch = err.read()) != -1) {
+                System.out.write(ch);
+            }
+        } catch (Exception exc) {
+            exc.printStackTrace();
+        }
+
     }
 
 //    public String logout() {

@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                template="./../../template/newTemplate.xhtml"
+                template="./../../template/template.xhtml"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
@@ -13,17 +13,17 @@
             <div style=" position: absolute;left: 20px"> 
 
                 <p:commandButton  style="z-index: 2;
-                                      margin-top: 22%;
-                                      color: #035c70!important; 
-                                      background-color: #223238!important;
-                                      border: 1px solid #22323a!important;
-                                      background: #22323a 50% 50% repeat-x!important;"
-                                      icon="fa fa-fw fa-home"
-                                      title="#{userData.userDDs['HOME']}"
-                                      class="smhomeButton" 
-                                      action="exit" />
-                  
-        </div>
+                                  margin-top: 22%;
+                                  color: #035c70!important; 
+                                  background-color: #223238!important;
+                                  border: 1px solid #22323a!important;
+                                  background: #22323a 50% 50% repeat-x!important;"
+                                  icon="fa fa-fw fa-home"
+                                  title="#{userData.userDDs['HOME']}"
+                                  class="smhomeButton" 
+                                  action="exit" />
+
+            </div>
             <p:fieldset legend="شاشة الحجز" id="whole" style="margin-bottom:20px">
 
                 <div class="col-xs-12">
@@ -105,82 +105,19 @@
                                                     forceSelection="true" 
                                                     completeMethod="#{checkingUpFormMB.completeClinicHosDoctor}" >
 
-                                        <p:ajax update=":form:Doc"
-                                                event="change"
-                                                listener="#{checkingUpFormMB.showOrHideDialogForClinics()}" />
-                                        <p:ajax update=":form:Doc"
-                                                listener="#{checkingUpFormMB.showOrHideDialogForClinics()}"
-                                                event="itemSelect"/>
-
-                                    </p:autoComplete>
-                                </h:panelGroup>
-
-                            </h:panelGroup>  
-                        </div>
-                        <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>
-
-                                <h:panelGroup > 
-                                    <p:outputLabel style="width: 90px;margin-right: 6%;" value=" الطبيب المعالج"  />
-                                </h:panelGroup>
-                                <h:panelGroup  >
-                                    <p:autoComplete style="width: 40%" id="Doc" 
-                                                    dropdown="true"
-                                                    converter="#{checkingUpFormMB.hosDoctorConverter}"
-                                                    value="#{checkingUpFormMB.hosCheckingUpEntity.hosDoctor}"
-
-                                                    var="doctor"
-                                                    itemLabel="#{doctor}" 
-                                                    itemValue="#{doctor}" 
-                                                    forceSelection="true" 
-                                                    completeMethod="#{checkingUpFormMB.completeDoctorHosDoctor}" >
-
                                         <p:ajax 
                                             event="change"
-                                            listener="#{checkingUpFormMB.showOrHideDialog()}" />
+                                            listener="#{checkingUpFormMB.showOrHideDialogForClinics()}" />
                                         <p:ajax 
-                                            listener="#{checkingUpFormMB.showOrHideDialog()}"
+                                            listener="#{checkingUpFormMB.showOrHideDialogForClinics()}"
                                             event="itemSelect"/>
 
                                     </p:autoComplete>
                                 </h:panelGroup>
 
                             </h:panelGroup>  
-
                         </div>
-                        <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>
-                                <h:panelGroup > 
-                                    <p:outputLabel style="width: 60px" value="المريض"  />
-                                </h:panelGroup>
-
-                                <h:panelGroup>
-                                    <p:autoComplete style="width: 40%" id="MACUCode" 
-                                                    dropdown="true"
-                                                    converter="#{checkingUpFormMB.hosPatientRegistrationConvertor}"
-                                                    value="#{checkingUpFormMB.hosCheckingUpEntity.hosPatientRegistration}"
-
-                                                    var="bank"
-                                                    itemLabel="#{bank}" 
-                                                    itemValue="#{bank}" 
-                                                    forceSelection="true" 
-                                                    completeMethod="#{checkingUpFormMB.completeHosPatientRegistration}" >
-
-                                        <p:ajax 
-                                            event="change"
-                                    
-                                            listener="#{checkingUpFormMB.calculateTotalAfterDiscountsPerServiceForEach()}" />
-                                        <!--                                            update="footerDetails"-->
-
-                                        <p:ajax 
-                                            listener="#{checkingUpFormMB.calculateTotalAfterDiscountsPerServiceForEach()}"
-
-                                            event="itemSelect"/>
-<!--                                            update="footerDetails"-->
-                                    </p:autoComplete>                      
-                                </h:panelGroup>
-                            </h:panelGroup>
-                        </div>
+                        
                         <div class="ui-g-12 ui-md-6">
                             <h:panelGroup>
                                 <h:panelGroup>
@@ -212,22 +149,6 @@
                     </div>
                 </div>
 
-                <p:panelGrid id="footerDetails" columns="4" style="margin-bottom: 2%" >
-                    <h:outputLabel  value="السن" style="width: 6vh"  />
-                    <h:outputLabel value="#{checkingUpFormMB.hosCheckingUpEntity.hosPatientRegistration.age}" style="width: 10vh"  /> 
-                    <h:outputLabel  value="الوزن"  style="width: 6vh"/>
-                    <h:outputLabel value="#{checkingUpFormMB.hosCheckingUpEntity.hosPatientRegistration.weight}"  style="width: 10vh" /> 
-                    <h:outputLabel value="الطول"  style="width: 6vh" />
-                    <h:outputLabel value="#{checkingUpFormMB.hosCheckingUpEntity.hosPatientRegistration.height}" style="width: 10vh"  />
-                    <h:outputLabel value="النوع"   style="width: 6vh"/>
-                    <h:outputLabel value="#{checkingUpFormMB.hosCheckingUpEntity.literalGender}" style="width: 10vh"  /> 
-                    <h:outputLabel value="التليفون"  style="width: 6vh"/>
-                    <h:outputLabel value="#{checkingUpFormMB.hosCheckingUpEntity.hosPatientRegistration.phone}" style="width: 10vh"  /> 
-                    <h:outputLabel value="الرقم القومي" style="width: 6vh" />
-                    <h:outputLabel value="#{checkingUpFormMB.hosCheckingUpEntity.hosPatientRegistration.nationalId}"  style="width: 10vh" /> 
-                    <h:outputLabel value="الجنسية" style="width: 6vh" />
-                    <h:outputLabel value="#{checkingUpFormMB.hosCheckingUpEntity.hosPatientRegistration.nationalityId.name}"  style="width: 10vh" /> 
-                </p:panelGrid>
                 <p:remoteCommand name="onCellEdit"  update="hosCheckDetail" />
                 <div> 
                     <p:dataTable 
@@ -258,10 +179,9 @@
                                               action="#{checkingUpFormMB.addClosingAccounts()}"
                                               update="form"
                                               ajax="true"
-
                                               style="float:right"/> 
-                            
-  
+
+
                             <p:outputPanel>
                                 <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
                                 <p:inputText id="globalFilter" onkeyup="PF('hosCheckDetail').filter()" style="width:150px" />
@@ -274,36 +194,33 @@
                         <p:column style="width: 5vh;font-size: 1.5vh;border-radius: 0px;"  id="serail" headerText="#">
                             <h:outputText value="#{index + 1}"  />
                         </p:column> 
-                        <p:column style="width: 20vh;font-size: 1.5vh;border-radius: 0px;" headerText="اسم الخدمة"
-
-                                  filterBy="#{PurchasesDuringPeriodViewTable.serial}" 
-                                  filterMatchMode="contains" 
-                                  sortBy="#{PurchasesDuringPeriodViewTable.serial}"
-                                  filterable="false">
+                        <p:column style="width: 20vh;font-size: 1.5vh;border-radius: 0px;" headerText="اسم الخدمة">
 
                             <p:cellEditor>
                                 <f:facet name="output">
-                                    <p:outputLabel value="#{hosCheckDetail.hosDoctor.name}"/>
+                                    <p:outputLabel value="#{hosCheckDetail.instProjectGuideId.name}"/>
                                 </f:facet>
                                 <f:facet name="input">
                                     <p:autoComplete style="width: 95%" id="serviceId" 
                                                     dropdown="true"
-                                                    converter="#{checkingUpFormMB.hosDoctorServiceConverter}"
-                                                    value="#{hosCheckDetail.hosDoctor}"
+                                                    converter="#{checkingUpFormMB.rscWorkUnitsGuideDTOConverter}"
+                                                    value="#{hosCheckDetail.instProjectGuideId}"
                                                     var="p"
                                                     itemLabel="#{p}" 
                                                     itemValue="#{p}" 
                                                     forceSelection="false" 
-                                                    completeMethod="#{checkingUpFormMB.completeHosDoctorService}">
+                                                    completeMethod="#{checkingUpFormMB.completeWorkUnitsGuideDTO}">
                                         <f:attribute name="varValue" value="#{hosCheckDetail}" />
 
                                         <p:ajax update="form"
                                                 event="change"
-                                                listener="#{checkingUpFormMB.updateServicePrice}" />
+                                                listener="#{checkingUpFormMB.validateUnitGuide}" />
                                         <p:ajax update="form"
-                                                listener="#{checkingUpFormMB.updateServicePrice}"
+                                                listener="#{checkingUpFormMB.validateUnitGuide}"
                                                 event="itemSelect"/>
                                     </p:autoComplete>
+
+
                                 </f:facet>
                             </p:cellEditor>
                         </p:column>
@@ -395,7 +312,7 @@
 
                     <p:commandButton  class="addnewpatient"
                                       style="color: #ecf0f1!important;border-radius: 5px;
-height: 30px;background-color:#035c70 !important;margin-left: 5px;"
+                                      height: 30px;background-color:#035c70 !important;margin-left: 5px;"
                                       title="اضافة بيانات مريض جديد"
                                       immediate="true" 
                                       value="اضافة بيانات مريض جديد" 
@@ -406,31 +323,31 @@ height: 30px;background-color:#035c70 !important;margin-left: 5px;"
                     <p:commandButton  class="saveButton"  id="saveB" 
                                       title="#{userData.userDDs['SAVE']}" 
                                       value="#{userData.userDDs['SAVE']}" 
-                                       style="color: #ecf0f1!important;border-radius: 5px;
-height: 30px;background-color: #3F51B5!important;margin-left: 5px;"
+                                      style="color: #ecf0f1!important;border-radius: 5px;
+                                      height: 30px;background-color: #3F51B5!important;margin-left: 5px;"
                                       action="#{checkingUpFormMB.save()}"
                                       update="@form"/>
 
                     <p:commandButton  class="printButton"
-                                          id="PrintB"
+                                      id="PrintB"
                                       ajax="false"
                                       onclick="form.target = '_blank'"  
-                                     style="color: #ecf0f1!important;border-radius: 5px;
-height: 30px;background-color: #2b07aae0 !important;margin-left: 5px;"
+                                      style="color: #ecf0f1!important;border-radius: 5px;
+                                      height: 30px;background-color: #2b07aae0 !important;margin-left: 5px;"
                                       update="@form"
                                       value="#{userData.userDDs['PRINT']}" 
-                                          actionListener="#{checkingUpFormMB.exportPDF}"
+                                      actionListener="#{checkingUpFormMB.exportPDF}"
 
                                       title="#{userData.userDDs['PRINT']}"
-                                          immediate="true" />
+                                      immediate="true" />
 
-                    
+
 
                     <p:commandButton  class="newButton" title="#{userData.userDDs['RESET']}" 
                                       immediate="true"
                                       id="newA"
                                       style="color: #ecf0f1!important;border-radius: 5px;
-height: 30px;background-color: #175C52!important;margin-left: 5px;"
+                                      height: 30px;background-color: #175C52!important;margin-left: 5px;"
                                       value="#{userData.userDDs['NEW']}" 
                                       update="@form"
                                       actionListener="#{checkingUpFormMB.reset()}"
@@ -438,7 +355,7 @@ height: 30px;background-color: #175C52!important;margin-left: 5px;"
 
                     <p:commandButton  class="deleteButton" id="cancel" title="#{userData.userDDs['CANCEL']}"
                                       value="#{userData.userDDs['CANCEL']}"    style="color: #ecf0f1!important;border-radius: 5px;
-height: 30px;background-color: #9c27b0d1!important;"
+                                      height: 30px;background-color: #9c27b0d1!important;"
                                       action="#{checkingUpFormMB.exit()}"
                                       update="form"/>
 

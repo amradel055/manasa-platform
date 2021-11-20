@@ -7,6 +7,7 @@ package com.isag.entiy;
 
 import com.isag.entity.CostCenter;
 import com.isag.entity.HosDoctor;
+import com.isag.entity.InstProjectGuide;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -17,6 +18,8 @@ import java.util.Date;
 public class HosCheckingUpDetailEntity {
     private Integer id;
     private HosDoctor hosDoctor;
+    private InstProjectGuide instProjectGuideId;
+    private InstProjectGuide instProjectGuideIdBak;
     private String hosDoctorName;
     private BigDecimal value;
     private BigDecimal discountRatio;
@@ -223,5 +226,33 @@ public class HosCheckingUpDetailEntity {
      */
     public void setHosDoctorName(String hosDoctorName) {
         this.hosDoctorName = hosDoctorName;
+    }
+
+    /**
+     * @return the instProjectGuideId
+     */
+    public InstProjectGuide getInstProjectGuideId() {
+        return instProjectGuideId;
+    }
+
+    /**
+     * @param instProjectGuideId the instProjectGuideId to set
+     */
+    public void setInstProjectGuideId(InstProjectGuide instProjectGuideId) {
+        this.instProjectGuideId = instProjectGuideId;
+    }
+
+    /**
+     * @return the instProjectGuideIdBak
+     */
+    public InstProjectGuide getInstProjectGuideIdBak() {
+        return instProjectGuideIdBak;
+    }
+
+    /**
+     * @param instProjectGuideIdBak the instProjectGuideIdBak to set
+     */
+    public void setInstProjectGuideIdBak(InstProjectGuide instProjectGuideIdBak) {
+        this.instProjectGuideIdBak = instProjectGuideIdBak;
     }
 }

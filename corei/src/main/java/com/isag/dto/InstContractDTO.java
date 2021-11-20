@@ -42,6 +42,7 @@ public class InstContractDTO extends BaseEntityDTO {
     private Boolean disabled;
     private List<InstContractProjectDTO> instContractProjectDTOList;
     private List<InstContractDetailDTO> instContractDetailDTOList;
+    private List<InstProjectGuideDTO> instProjectGuideDTOList;
 
     /**
      * @return the id
@@ -419,6 +420,20 @@ public class InstContractDTO extends BaseEntityDTO {
      */
     public void setInstContractDetailDTOList(List<InstContractDetailDTO> instContractDetailDTOList) {
         this.instContractDetailDTOList = instContractDetailDTOList;
+    }
+
+    /**
+     * @return the instProjectGuideDTOList
+     */
+    public List<InstProjectGuideDTO> getInstProjectGuideDTOList() {
+        return instProjectGuideDTOList;
+    }
+
+    /**
+     * @param instProjectGuideDTOList the instProjectGuideDTOList to set
+     */
+    public void setInstProjectGuideDTOList(List<InstProjectGuideDTO> instProjectGuideDTOList) {
+        this.instProjectGuideDTOList = instProjectGuideDTOList;
     }
     
     

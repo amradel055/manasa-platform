@@ -81,11 +81,31 @@
                                                           converter="#{instContractFormMB.instProjectGuideDTOConverter}"
                                                           filter="true" filterMatchMode="contains" panelStyle="width: 15rem" scrollHeight="250">
                                         <f:selectItems value="#{instContractFormMB.instProjectGuideDTOList}" var="project" itemLabel="#{project}" itemValue="#{project}"/>
-                                        <p:ajax event="change" listener="#{instContractFormMB.updateTotalValueMultiProject()}" update="@form" />
                                     </p:selectCheckboxMenu>
                                 </h:panelGroup> 
                             </h:panelGroup>
                         </div>
+
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 100px;margin-right: 6%;" value="تاريخ نهاية الاستخدام"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:calendar  style="width:50%!important" required="true" requiredMessage="يجب ادخال تاريخ" id="endDate" 
+                                                 value="#{instContractFormMB.instContractEntity.endDate}"
+                                                 pattern="dd/MM/yyyy" >
+                                        <p:ajax event="dateSelect" update="@form" listener="#{instContractFormMB.findInstProjectGuideDTOList()}" />
+
+                                    </p:calendar>
+                                </h:panelGroup>
+
+
+                            </h:panelGroup>      
+                        </div>
+                        
                         <div class="ui-g-12 ui-md-6">
 
                             <h:panelGroup>
@@ -111,26 +131,6 @@
 
                         </div>
 
-
-                        <div class="ui-g-12 ui-md-6">
-                            <h:panelGroup>
-
-                                <h:panelGroup>
-                                    <p:outputLabel style="width: 100px;margin-right: 6%;" value="تاريخ نهاية الاستخدام"/>
-                                </h:panelGroup>
-
-                                <h:panelGroup>
-                                    <p:calendar  style="width:50%!important" required="true" requiredMessage="يجب ادخال تاريخ" id="endDate" 
-                                                 value="#{instContractFormMB.instContractEntity.endDate}"
-                                                 pattern="dd/MM/yyyy" >
-                                        <p:ajax event="dateSelect" update="@form" listener="#{instContractFormMB.findInstProjectGuideDTOList()}" />
-
-                                    </p:calendar>
-                                </h:panelGroup>
-
-
-                            </h:panelGroup>      
-                        </div>
                         <div class="ui-g-12 ui-md-6">
                             <h:panelGroup>
 

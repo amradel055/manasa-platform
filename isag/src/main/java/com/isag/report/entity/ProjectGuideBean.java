@@ -13,7 +13,7 @@ public class ProjectGuideBean {
 
     private String code;
     private String name;
-   
+   private String customerName;
     private Integer level; 
     private String active;
     private String parent;
@@ -107,6 +107,20 @@ public class ProjectGuideBean {
      */
     public void setReserved(Boolean reserved) {
         this.reserved = reserved;
+    }
+
+    /**
+     * @return the customerName
+     */
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    /**
+     * @param customerName the customerName to set
+     */
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 
     /**

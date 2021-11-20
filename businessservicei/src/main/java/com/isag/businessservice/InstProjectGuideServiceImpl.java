@@ -12,10 +12,13 @@ import com.isag.dto.InstPurchaseInvoiceDTO;
 import com.isag.dto.InstPurchaseInvoiceDetailDTO;
 import com.isag.entity.InstProjectGuide;
 import com.isag.entity.IsagUser;
+import com.isag.views.InstView;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -201,7 +204,13 @@ public class InstProjectGuideServiceImpl implements InstProjectGuideService {
         Map<String, Object> params = new HashMap();
         StringBuilder query = new StringBuilder();
         params.put("branchId", projectGuideSearchBean.getBranchId());
-        query.append("SELECT i FROM InstProjectGuide i WHERE i.branchId.id=:branchId AND i.active=1 ");
+        query.append("SELECT i FROM InstProjectGuide i WHERE i.branchId.id=:branchId AND i.active=1 AND i.parent IS NOT Null ");
+
+        if (projectGuideSearchBean != null && projectGuideSearchBean.getProjectGuideIdParent() != null) {
+            params.put("parent", projectGuideSearchBean.getProjectGuideIdParent().getId());
+            query.append(" AND i.parent.id = :parent ");
+        }
+
         if (projectGuideSearchBean != null && projectGuideSearchBean.getProjectGuideListSelected() != null && !projectGuideSearchBean.getProjectGuideListSelected().isEmpty()) {
             appendMultiInstProject(projectGuideSearchBean, query);
         }
@@ -317,7 +326,11 @@ public class InstProjectGuideServiceImpl implements InstProjectGuideService {
         StringBuilder queryBuilder = new StringBuilder();
         //String query = "SELECT e FROM CostCenter e WHERE e.parent IS NOT NULL AND e.branchId.id = :branchId " + queryBuilder.toString();
         queryBuilder.append("SELECT i FROM InstProjectGuide i WHERE i.branchId.id = :branchId ");
-        appendProjectGuidForQueryBuilder(queryBuilder, params, projectGuideSearchBean);
+//        appendProjectGuidForQueryBuilder(queryBuilder, params, projectGuideSearchBean);
+        if (projectGuideSearchBean.getProjectGuideIdFrom() != null && projectGuideSearchBean.getProjectGuideIdFrom().getId() != null) {
+            params.put("projectGuideIdFrom", projectGuideSearchBean.getProjectGuideIdFrom().getId());
+            queryBuilder.append(" and i.parent.id = :projectGuideIdFrom");
+        }
         queryBuilder.append(" ORDER BY i.code");
         List<InstProjectGuide> projectGuide = dao.findListByQuery(queryBuilder.toString(), params);
         return projectGuide;
@@ -351,26 +364,56 @@ public class InstProjectGuideServiceImpl implements InstProjectGuideService {
     @Override
     public List<InstProjectGuideDTO> getAllprojectGuideSellAndNotSellMulti(ProjectGuideSearchBean projectGuideSearchBean) {
 
+        StringBuilder instProjectList = null;
+        Map<Integer, String> map = new HashMap<>();
+        if (projectGuideSearchBean.getProjectGuideListSelected() != null) {
+            for (InstProjectGuideDTO instProjectGuideDTO : projectGuideSearchBean.getProjectGuideListSelected()) {
+                if (instProjectList == null) {
+                    instProjectList = new StringBuilder();
+                    instProjectList.append(instProjectGuideDTO.getId());
+                } else {
+                    instProjectList.append(",");
+                    instProjectList.append(instProjectGuideDTO.getId());
+                }
+            }
+
+            Map<String, Object> params = new HashMap();
+
+            List<Object[]> res = dao.findListByQuery("SELECT  cs.instProjectGuide.id  , cs.instContract.organizationSiteId.name FROM InstContractProject cs WHERE cs.instProjectGuide.id in (" + instProjectList + ") ", params);
+
+            Iterator it = res.iterator();
+            while (it.hasNext()) {
+                Object[] line = (Object[]) it.next();
+                map.put((Integer) line[0], (String) line[1]);
+            }
+        }
+
         Map<Integer, InstProjectGuideDTO> paramsProjectGuide = new HashMap<>();
-//        List<InstProjectGuideDTO> notSellProjectGuide = getBranchInstProjectGuidesActiveDTO(projectGuideSearchBean, true);
-        List<InstProjectGuideDTO> notSellProjectGuide = new ArrayList<>();
-        List<InstProjectGuideDTO> sellProjectGuide = getBranchInstProjectGuidesActiveDTO(projectGuideSearchBean, false);
+        List<InstProjectGuideDTO> notSellProjectGuide = getBranchInstProjectGuidesActiveDTO(projectGuideSearchBean, true);
+//        List<InstProjectGuideDTO> notSellProjectGuide = new ArrayList<>();
+        List<InstProjectGuideDTO> sellProjectGuide = new ArrayList<>();;
+//        List<InstProjectGuideDTO> sellProjectGuide    = getBranchInstProjectGuidesActiveDTO(projectGuideSearchBean, false);
 
         ArrayList<InstProjectGuideDTO> finalProjectGuide = new ArrayList<InstProjectGuideDTO>();
-//        sellProjectGuide.forEach(instProjectGuide -> {
-//            instProjectGuide.setSell(Boolean.TRUE);
-//            paramsProjectGuide.put(instProjectGuide.getId(), instProjectGuide);
-//        });
+        notSellProjectGuide.forEach(instProjectGuide -> {
+            instProjectGuide.setSell(Boolean.TRUE);
+            paramsProjectGuide.put(instProjectGuide.getId(), instProjectGuide);
+        });
         finalProjectGuide.addAll(sellProjectGuide);
         for (InstProjectGuideDTO instProjectGuideDTO : projectGuideSearchBean.getProjectGuideListSelected()) {
             if (!paramsProjectGuide.containsKey(instProjectGuideDTO.getId())) {
-                instProjectGuideDTO.setSell(Boolean.TRUE);
+                instProjectGuideDTO.setSell(Boolean.FALSE);
                 notSellProjectGuide.add(instProjectGuideDTO);
             }
         }
         finalProjectGuide.addAll(notSellProjectGuide);
         finalProjectGuide.stream().sorted(Comparator.comparing(InstProjectGuideDTO::getCode))
                 .collect(Collectors.toList());
+        for(InstProjectGuideDTO guideDTO : finalProjectGuide){
+            if(map.containsKey(guideDTO.getId())){
+                guideDTO.setCustomerName(map.get(guideDTO.getId()));
+            }
+        }
         return finalProjectGuide;
     }
 
@@ -488,13 +531,13 @@ public class InstProjectGuideServiceImpl implements InstProjectGuideService {
         dTO.setReserved(entity.getReserved());
         dTO.setSell(entity.getSell());
         dTO.setActive(entity.getActive());
-        if (dTO.getParent() != null) {
+        if (entity.getParent() != null) {
             InstProjectGuideDTO instProjectGuideDTO = new InstProjectGuideDTO();
-            instProjectGuideDTO.setCode(dTO.getParent().getCode());
-            instProjectGuideDTO.setName(dTO.getParent().getName());
-            instProjectGuideDTO.setId(dTO.getParent().getId());
+            instProjectGuideDTO.setCode(entity.getParent().getCode());
+            instProjectGuideDTO.setName(entity.getParent().getName());
+            instProjectGuideDTO.setId(entity.getParent().getId());
             dTO.setParent(instProjectGuideDTO);
-            dTO.setParentId(dTO.getParent().getId());
+            dTO.setParentId(entity.getParent().getId());
         }
         dTO.setCreatedDate(entity.getCreationDate() != null ? entity.getCreationDate() : new Date());
         dTO.setCreatedBy(entity.getCreatedBy().getId());

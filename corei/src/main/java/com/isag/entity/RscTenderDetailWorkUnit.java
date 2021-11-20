@@ -63,6 +63,8 @@ public class RscTenderDetailWorkUnit extends BaseEntity {
     private BigDecimal total;
     @Column(name = "price")
     private BigDecimal price;
+    @Column(name = "price_to")
+    private BigDecimal priceTo;
 
     public RscTenderDetailWorkUnit() {
     }
@@ -200,6 +202,20 @@ public class RscTenderDetailWorkUnit extends BaseEntity {
      */
     public void setTotal(BigDecimal total) {
         this.total = total;
+    }
+
+    /**
+     * @return the priceTo
+     */
+    public BigDecimal getPriceTo() {
+        return priceTo;
+    }
+
+    /**
+     * @param priceTo the priceTo to set
+     */
+    public void setPriceTo(BigDecimal priceTo) {
+        this.priceTo = priceTo;
     }
 
 }

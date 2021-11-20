@@ -196,17 +196,17 @@ public class RscTenderServiceImpl implements RscTenderService {
             error.append("يجب ادخال تاريخ");
         }
 
-        if (tender.getCustomerId() == null) {
-            error.append("يجب ادخال مالك");
-        }
+//        if (tender.getCustomerId() == null) {
+//            error.append("يجب ادخال مالك");
+//        }
 
-        if (tender.getType() == null) {
-            error.append("يجب ادخال نوع المناقصه");
-        }
-
-        if (tender.getDocNumber() == null || tender.getDocNumber().isEmpty()) {
-            error.append("يجب ادخال الرقم الدفتري");
-        }
+//        if (tender.getType() == null) {
+//            error.append("يجب ادخال نوع المناقصه");
+//        }
+//
+//        if (tender.getDocNumber() == null || tender.getDocNumber().isEmpty()) {
+//            error.append("يجب ادخال الرقم الدفتري");
+//        }
 
         return error;
     }

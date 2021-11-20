@@ -56,6 +56,9 @@ public class RscTenderDTO extends BaseEntityDTO {
     }
 
     public Date getDate() {
+        if(date == null){
+            date = new  Date();
+        }
         return date;
     }
 

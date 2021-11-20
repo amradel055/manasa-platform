@@ -16,69 +16,70 @@
         <h:head>
             <title>#{userData.userDDs['PROJ_GUID_REP']}</title>
         </h:head>
-       
+        <style>
+            .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+                border: 1px solid #c5dbec;
+                background:#fff;
+            }
+        </style>
         <h:body>
             <f:event listener="#{userData.authorize}" type="preRenderView" />
+           
+             <div style=" position: absolute;left: 20px"> 
 
-            
-
-
+                <p:commandButton  style="z-index: 2;
+                                      margin-top: 12%;
+                                      color: #035c70!important; 
+                                      background-color: #223238!important;
+                                      border: 1px solid #22323a!important;
+                                      background: #22323a 50% 50% repeat-x!important;"
+                                      icon="fa fa-fw fa-home"
+                                      title="#{userData.userDDs['HOME']}"
+                                      class="smhomeButton" 
+                                      action="exit" />
+                <p:commandButton  style="z-index: 2;
+                                      margin-top: 9%!important;
+                                      color: #035c70!important; 
+                                      background-color: #223238!important;
+                                      border: 1px solid #22323a!important;
+                                      background: #22323a 50% 50% repeat-x!important;" 
+                                      class="viewButton sminimize"
+                                      icon="fa fa-window-minimize"
+                                      title="إظهار/إخفاء"/>  
+            </div>
+			
+			
             <h:form id="form" class='formmargin' dir="#{userData.dir}">
                 <p:fieldset legend="#{userData.userDDs['PROJ_GUID_REP']}">
 
 
                     <div class="ui-g-12 ui-g-nopad firstset" id="firstSegment">
                         <div class="ui-g">
-                            <div class="ui-g-6 ui-xl-6">
-                                <div class="ui-g-12 ui-xl-12">
 
-                                    <div class="ui-g-6 ui-xl-6">
-                                        <p:autoComplete  style="width: 40%!important" id="projectGuideTO" 
-                                                         dropdown="true"
-                                                         converter="#{projectGuideReportMB.projectGuideConverter}"
-                                                         value="#{projectGuideReportMB.projectGuideSearchBean.projectGuideIdTo}"
+                            <div class="ui-g-12 ui-md-6">
 
-                                                         var="project"
-                                                         itemLabel="#{project}" 
-                                                         itemValue="#{project}" 
-                                                         forceSelection="true" 
-                                                         completeMethod="#{projectGuideReportMB.completeProjectGuide}" >
-                                        </p:autoComplete>
-                                    </div>
-                                    <div class="ui-g-6 ui-xl-6">
-                                        <p:outputLabel style="width: 105px" value="#{userData.userDDs['TO_PROJ_GUIDE']}"/>
+                                <h:panelGroup>
+                                    <h:panelGroup> 
+                                        <p:outputLabel style="width: 105px;margin-right: 6%;" value="#{userData.userDDs['FROM_PROJ_GUIDE']}" />
+                                    </h:panelGroup>
 
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="ui-g-6 ui-xl-6">
-                                <div class="ui-g-12 ui-xl-12">
-
-                                    <div class="ui-g-6 ui-xl-6">
+                                    <h:panelGroup>
                                         <p:autoComplete  id="projectGuideFrom" 
                                                          dropdown="true"
                                                          converter="#{projectGuideReportMB.projectGuideConverter}"
                                                          value="#{projectGuideReportMB.projectGuideSearchBean.projectGuideIdFrom}"
-                                                         style="width: 40%!important"
+                                                         style="width: 35%!important"
                                                          var="guide"
                                                          itemLabel="#{guide}" 
                                                          itemValue="#{guide}" 
                                                          forceSelection="true" 
-                                                         completeMethod="#{projectGuideReportMB.completeProjectGuide}" >
+                                                         completeMethod="#{projectGuideReportMB.completeProjectGuideParent}" >
                                         </p:autoComplete>
-                                    </div>
-                                    <div class="ui-g-6 ui-xl-6">
-                                        <p:outputLabel style="width: 105px;" value="#{userData.userDDs['FROM_PROJ_GUIDE']}" />
+                                    </h:panelGroup>
+                                </h:panelGroup>
 
-                                    </div>
-                                </div>
+
                             </div>
-
-
-
-
-
                         </div>
 
                     </div>
@@ -88,13 +89,15 @@
                         <h:panelGroup class="centerButtons" style="margin-top: 2%">
 
                             <p:commandButton  class="searchButtons"
+                                               style="color: #fff!important;background-color: #2196F3;margin-left: 5px;" 
                                               value="#{userData.userDDs['SEARCH']}"  id="searchA"
                                               action="#{projectGuideReportMB.search()}" update="projectGuideDataTable"  />              
 
-                            <p:commandButton   class="newButtons"    id="newB" 
+                            <p:commandButton   class="newButton"    style="color: #fff!important;background-color: #9c27b0d1;margin-left: 5px;" id="newB" 
                                                value="#{userData.userDDs['NEW']}" action="#{projectGuideReportMB.reset()}" update="@form" />
 
                             <p:commandButton  class="printButtons"
+                                               style="color: #fff!important;background-color: rgb(1, 76, 134);margin-left: 5px;"
                                               ajax="false" onclick="form.target = '_blank'"  value="#{userData.userDDs['PRINT']}"
                                               actionListener="#{projectGuideReportMB.exportPDF}"  id="printC"/>
                             <p:commandButton    class="closeButton"
@@ -128,7 +131,76 @@
 
                 </p:fieldset>
 
-             
+                <p:fieldset>
+
+                    <p:dataTable 
+                        draggableColumns="true" 
+                        id="projectGuideDataTable"  
+                        value="#{projectGuideReportMB.projectGuideBeanList}" 
+                        var="projectGuideDTB" 
+                        rows="15" 
+                        paginator="true"
+                        paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" 
+                        rowsPerPageTemplate="5, 10, 15">
+
+                        <f:facet name="header" class="col-md-12">
+
+                            <p:outputPanel>
+                                <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                                <p:inputText id="globalFilter" 
+                                             onkeyup="PF('bTable').filter()" 
+                                             style="width:150px" />
+
+                            </p:outputPanel>
+                        </f:facet>
+
+                        <p:column style="width: 7vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" headerText="#{userData.userDDs['CS_COD']}" 
+
+                                  sortBy="#{projectGuideDTB.code}"
+                                  filterBy="#{projectGuideDTB.code}" 
+                                  filterMatchMode="contains"
+                                  filterable="false" >
+                            <h:outputText style="font-size: 1.5vh;" value="#{projectGuideDTB.code}"/>
+                        </p:column>
+
+                        <p:column style="width: 20vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" headerText="#{userData.userDDs['NAME']}"
+
+                                  sortBy="#{projectGuideDTB.name}"
+                                  filterBy="#{projectGuideDTB.name}" 
+                                  filterMatchMode="contains"
+                                  filterable="false">
+                            <h:outputText style="font-size: 1.5vh;"  value="#{projectGuideDTB.name}"/>
+                        </p:column>
+
+                        <p:column style="width: 25vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"  headerText="#{userData.userDDs['MAIN_PROJ_GUIDE']}"
+
+                                  sortBy="#{projectGuideDTB.parent}"
+                                  filterBy="#{projectGuideDTB.parent}" 
+                                  filterMatchMode="contains"
+                                  filterable="false">
+                            <h:outputText style="font-size: 1.5vh;"  value="#{projectGuideDTB.parent}"/>
+                        </p:column>
+
+                        <p:column style="width: 8vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" headerText="#{userData.userDDs['LEVEL']}"
+
+                                  sortBy="#{projectGuideDTB.level}"
+                                  filterBy="#{projectGuideDTB.level}" 
+                                  filterMatchMode="contains"
+                                  filterable="false">
+
+                            <h:outputText style="font-size: 1.5vh;" value="#{projectGuideDTB.level}"/>
+                        </p:column>
+
+                        <p:column style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" headerText="#{userData.userDDs['ACCOUNT_STATUS']}"
+
+                                  sortBy="#{projectGuideDTB.active}"
+                                  filterBy="#{projectGuideDTB.active}" 
+                                  filterMatchMode="contains"
+                                  filterable="false">
+                            <h:outputText style="font-size: 1.5vh;"  value="#{projectGuideDTB.active}"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:fieldset>
             </h:form>
         </h:body>
     </ui:define>

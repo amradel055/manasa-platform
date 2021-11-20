@@ -41,16 +41,51 @@
                                 <p:calendar style="width: 50%"  id="dateTo"
                                             value="#{profitOfItemsSoldReport.profitOfItemsSold.dateTo}"
                                             pattern="dd/MM/yyyy   HH:mm:ss"  showButtonPanel="true" >
-
                                 </p:calendar>
-
                             </div>
                             <div class="ui-g-6 ui-xl-6">
-
                                 <p:outputLabel style="width: 50px"  value="الى تاريخ" />
-
-
-
+                            </div>
+                        </div>
+                        
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 50px"  value="#{profitOfItemsSoldReport.sumdiscountValue}" />
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 50px"  value="إجمالى الخصومات" />
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 50px"  value="#{profitOfItemsSoldReport.sumtotalAddTotal}" />
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 50px"  value="إجمالي الإضافات" />
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 50px"  value="#{profitOfItemsSoldReport.sumnetAfterDiscountHead}" />
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 50px"  value="إجمالى صافي المبيعات" />
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 50px"  value="#{profitOfItemsSoldReport.sumtotalCost}" />
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 50px"  value="إجمالى التكلفة" />
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 50px"  value="#{profitOfItemsSoldReport.sumtotalprofit}" />
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 50px"  value="إجمالي صافي الارباح" />
                             </div>
                         </div>
 
@@ -100,7 +135,7 @@
                                          value="بحث" 
                                          icon="fa fa-fw fa-save"
                                          action="#{profitOfItemsSoldReport.search()}"
-                                         update="table messages"
+                                         update="@form"
                                          >
 
                     </p:commandButton>
@@ -138,7 +173,7 @@
                             <h:outputText value="#{data.totallSell}" />
                         </p:column>
                         <p:column headerText="الخصم الكلى" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
-                            <h:outputText value="#{data.totallDiscount}" />
+                            <h:outputText value="#{data.discountValue}" />
                         </p:column>
                         <p:column headerText="الاضافي" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
                             <h:outputText value="#{data.totalAddTotal}" />
@@ -147,7 +182,7 @@
                             <h:outputText value="#{data.totalCost}" />
                         </p:column>
                         <p:column headerText="الاجمالى" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
-                            <h:outputText value="#{data.totallNet}" />
+                            <h:outputText value="#{data.netAfterDiscountHead}" />
                         </p:column>
                         <p:column headerText="الربحية" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
                             <h:outputText value="#{data.profit}" />

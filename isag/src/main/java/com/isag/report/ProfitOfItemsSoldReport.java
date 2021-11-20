@@ -7,6 +7,7 @@ import com.isag.dto.InvInventoryDTO;
 import com.isag.isag.Basic;
 import com.isag.views.ProfitOfItemsSold;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +35,12 @@ public class ProfitOfItemsSoldReport extends Basic {
     private InvInventoryDTOConverter gallaryDTOConverter;
     private List<InvInventoryDTO> gallaryList;
 
+    private BigDecimal sumtotalprofit;
+    private BigDecimal sumnetAfterDiscountHead;
+    private BigDecimal sumdiscountValue;
+    private BigDecimal sumtotalCost;
+    private BigDecimal sumtotalAddTotal;
+
     @EJB
     private ReportsService reportsService;
     @EJB
@@ -50,11 +57,15 @@ public class ProfitOfItemsSoldReport extends Basic {
             for (InvInventoryDTO invInventoryDTO : getProfitOfItemsSold().getGallarySelected()) {
                 getProfitOfItemsSold().setGallaryFrom(invInventoryDTO);
                 getProfitOfItemsSoldList().addAll(reportsService.getProfitOfItemsSold(getProfitOfItemsSold(), getUserData().getUserBranch().getId(), type));
-
+                ProfitOfItemsSold profitOfItemsSold1 = getProfitOfItemsSoldList().get(getProfitOfItemsSoldList().size()-1);
+                setSumtotalprofit(profitOfItemsSold1.getSumtotalprofit());
+                setSumnetAfterDiscountHead(profitOfItemsSold1.getSumnetAfterDiscountHead());
+                setSumdiscountValue(profitOfItemsSold1.getSumdiscountValue());
+                setSumtotalCost(profitOfItemsSold1.getSumtotalCost());
+                setSumtotalAddTotal(profitOfItemsSold1.getSumtotalAddTotal());
             }
         }
     }
-
 
     public void postProcessXLS(Object document) {
         HSSFWorkbook wb = (HSSFWorkbook) document;
@@ -76,7 +87,7 @@ public class ProfitOfItemsSoldReport extends Basic {
         String reportName = "ProfitOfItemsSoldReport.jasper";
         fillReport(prepareReport(), getUserData().getReportPath() + reportName, getProfitOfItemsSoldList(), "pdf");
     }
-    
+
     public void exportProfitReceipt(ActionEvent actionEvent) throws JRException, IOException {
         String reportName = "InvReceipProfit.jasper";
         fillReport(prepareReport(), getUserData().getReportPath() + reportName, getProfitOfItemsSoldList(), "pdf");
@@ -180,6 +191,76 @@ public class ProfitOfItemsSoldReport extends Basic {
      */
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    /**
+     * @return the sumtotalprofit
+     */
+    public BigDecimal getSumtotalprofit() {
+        return sumtotalprofit;
+    }
+
+    /**
+     * @param sumtotalprofit the sumtotalprofit to set
+     */
+    public void setSumtotalprofit(BigDecimal sumtotalprofit) {
+        this.sumtotalprofit = sumtotalprofit;
+    }
+
+    /**
+     * @return the sumnetAfterDiscountHead
+     */
+    public BigDecimal getSumnetAfterDiscountHead() {
+        return sumnetAfterDiscountHead;
+    }
+
+    /**
+     * @param sumnetAfterDiscountHead the sumnetAfterDiscountHead to set
+     */
+    public void setSumnetAfterDiscountHead(BigDecimal sumnetAfterDiscountHead) {
+        this.sumnetAfterDiscountHead = sumnetAfterDiscountHead;
+    }
+
+    /**
+     * @return the sumdiscountValue
+     */
+    public BigDecimal getSumdiscountValue() {
+        return sumdiscountValue;
+    }
+
+    /**
+     * @param sumdiscountValue the sumdiscountValue to set
+     */
+    public void setSumdiscountValue(BigDecimal sumdiscountValue) {
+        this.sumdiscountValue = sumdiscountValue;
+    }
+
+    /**
+     * @return the sumtotalCost
+     */
+    public BigDecimal getSumtotalCost() {
+        return sumtotalCost;
+    }
+
+    /**
+     * @param sumtotalCost the sumtotalCost to set
+     */
+    public void setSumtotalCost(BigDecimal sumtotalCost) {
+        this.sumtotalCost = sumtotalCost;
+    }
+
+    /**
+     * @return the sumtotalAddTotal
+     */
+    public BigDecimal getSumtotalAddTotal() {
+        return sumtotalAddTotal;
+    }
+
+    /**
+     * @param sumtotalAddTotal the sumtotalAddTotal to set
+     */
+    public void setSumtotalAddTotal(BigDecimal sumtotalAddTotal) {
+        this.sumtotalAddTotal = sumtotalAddTotal;
     }
 
     /**

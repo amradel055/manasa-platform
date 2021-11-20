@@ -43,6 +43,8 @@ public interface InstContractService {
     public List<InstContract> getALLInstContractTransferByBranchId(Integer branchId);
 
     public InstContract findInstContractById(Integer instContractId);
+    
+    public InstContractDTO findInstContractDTOById(Integer instContractId);
 
     public InstContract addOneInstContract(InstContract instContract, InstContractDetail instContractDetail);
 
@@ -69,5 +71,7 @@ public interface InstContractService {
     public InstContract findInstContractByBranchIdAndSerial(Integer branchId, Integer Serial);
 
     public List<InstContractDTO> findInstContractByProject(InstallmentSearchBean installmentSearchBean);
+    
+    public List<InstContractDTO> getALLInstContractByBranchIdAndCustomerIdDTO(Integer branchId, Integer customerId);
 
 }

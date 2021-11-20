@@ -42,3 +42,31 @@
 }
 
 /***************************/
+
+
+
+.blocks-h2 h2 {
+    text-align: center;
+}
+
+.new-dashboard {
+    direction: rtl;
+    margin-right: 3%;
+    width: 100%;
+}
+
+.blockDash {
+    display: inline-block;
+    padding: 15px;
+    border: solid 1px #384c61;
+    margin-left: 1%;
+    border-radius: 5%;
+    margin-bottom: 1%;
+}
+.dashboard-block a {
+    color: #111420;
+    background-color: #607d8b7a;
+    font-size: 17px;
+    font-weight: 600;
+    text-align: center;
+}

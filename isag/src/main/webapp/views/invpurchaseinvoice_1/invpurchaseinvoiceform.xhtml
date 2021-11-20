@@ -698,7 +698,8 @@
                                         <p:selectBooleanCheckbox disabled="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id ne null}"
                                                                  value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.taxflag}"
                                                                  >
-                                            <p:ajax update="form:totalActualWeight form:totalNetAfterDiscount form:taxvalue form:totalWithTaxValue " listener="#{invPurchaseInvoiceFormDTOMB.recalcHeadValues()}" />
+                                            <p:ajax update="form:totalActualWeight form:totalNetAfterDiscount form:taxvalue form:totalWithTaxValue " 
+                                                    listener="#{invPurchaseInvoiceFormDTOMB.recalcHeadValues()}" />
                                         </p:selectBooleanCheckbox>
                                     </div>
                                     <div class="ui-g-6 ui-xl-6">

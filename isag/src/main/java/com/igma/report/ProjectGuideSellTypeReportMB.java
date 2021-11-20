@@ -73,9 +73,8 @@ public class ProjectGuideSellTypeReportMB extends BaseReportBean {
         getProjectGuideSearchBean().setBranchId(branchId);
         getProjectGuideSearchBean().setShowReport(false);
         setProjectGuideBeanList(new ArrayList<>());
-        
-        setProjectGuideDTOParentListSelected(getProjectGuideDTOParentList());
 
+//        setProjectGuideDTOParentListSelected(getProjectGuideDTOParentList());
     }
 
     private void fillLists() {
@@ -118,6 +117,7 @@ public class ProjectGuideSellTypeReportMB extends BaseReportBean {
             getProjectGuideBeanList().add(projectGuideBean);
         }
     }
+
     public void searchNew() {
         setProjectGuideBeanList(new ArrayList<>(0));
         getProjectGuideSearchBean().setBranchId(getUserData().getUserBranch().getId());
@@ -136,6 +136,7 @@ public class ProjectGuideSellTypeReportMB extends BaseReportBean {
 
             projectGuideBean.setName(projectGuide.getName());
             projectGuideBean.setCode(projectGuide.getCode());
+            projectGuideBean.setCustomerName(projectGuide.getCustomerName());
 
             projectGuideBean.setLevel(projectGuide.getLevel());
             projectGuideBean.setParent(projectGuide.getParent() != null ? (projectGuide.getParent().getName() != null ? projectGuide.getParent().getName() : null) : null);
@@ -386,7 +387,8 @@ public class ProjectGuideSellTypeReportMB extends BaseReportBean {
     }
 
     /**
-     * @param projectGuideDTOParentListSelected the projectGuideDTOParentListSelected to set
+     * @param projectGuideDTOParentListSelected the
+     * projectGuideDTOParentListSelected to set
      */
     public void setProjectGuideDTOParentListSelected(List<InstProjectGuideDTO> projectGuideDTOParentListSelected) {
         this.projectGuideDTOParentListSelected = projectGuideDTOParentListSelected;
@@ -396,16 +398,18 @@ public class ProjectGuideSellTypeReportMB extends BaseReportBean {
      * @return the projectGuideDTOChildList
      */
     public List<InstProjectGuideDTO> getProjectGuideDTOChildList() {
-            if (projectGuideDTOParentListSelected != null) {
-            projectGuideDTOChildList = projectGuideService.getAllInstProjectGuidesChildForParent(getProjectGuideDTOParentListSelected() , getUserData().getUserBranch().getId());
+        if (projectGuideDTOParentListSelected != null) {
+            projectGuideDTOChildList = projectGuideService.getAllInstProjectGuidesChildForParent(getProjectGuideDTOParentListSelected(), getUserData().getUserBranch().getId());
             setProjectGuideCildDTOConverter(new InstProjectGuideDTOConverter(projectGuideDTOChildList));
         }
         return projectGuideDTOChildList;
     }
+
     public List<InstProjectGuideDTO> findProjectGuideDTOChildList() {
         if (projectGuideDTOParentListSelected != null) {
-            projectGuideDTOChildList = projectGuideService.getAllInstProjectGuidesChildForParent(getProjectGuideDTOParentListSelected() , getUserData().getUserBranch().getId());
+            projectGuideDTOChildList = projectGuideService.getAllInstProjectGuidesChildForParent(getProjectGuideDTOParentListSelected(), getUserData().getUserBranch().getId());
             setProjectGuideCildDTOConverter(new InstProjectGuideDTOConverter(projectGuideDTOChildList));
+            getProjectGuideSearchBean().setProjectGuideListSelected(projectGuideDTOChildList);
         }
         return projectGuideDTOChildList;
     }
@@ -425,7 +429,8 @@ public class ProjectGuideSellTypeReportMB extends BaseReportBean {
     }
 
     /**
-     * @param projectGuideCildDTOConverter the projectGuideCildDTOConverter to set
+     * @param projectGuideCildDTOConverter the projectGuideCildDTOConverter to
+     * set
      */
     public void setProjectGuideCildDTOConverter(InstProjectGuideDTOConverter projectGuideCildDTOConverter) {
         this.projectGuideCildDTOConverter = projectGuideCildDTOConverter;

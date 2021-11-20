@@ -134,13 +134,13 @@ public class InstViewServiceImpl implements InstViewService {
 
         params.put("branchId", collectionAndPaymentReportSearchBean.getBranchId());
         StringBuilder stringBuilder = new StringBuilder();
-        String query = "SELECT e.instContractId.projectId.id , e.instContractId.organizationSiteId.id , sum(COALESCE(e.value,0)) FROM InstContractDetail e WHERE e.instContractId.branchId.id = :branchId ";
+        String query = "SELECT e.instContractId.serial , e.instContractId.organizationSiteId.id , sum(COALESCE(e.value,0)) FROM InstContractDetail e WHERE e.instContractId.branchId.id = :branchId ";
         stringBuilder.append(query);
         appendDateForQueryBuilder(stringBuilder, params, collectionAndPaymentReportSearchBean);
         appendCustomerForQueryByLevel(stringBuilder, params, collectionAndPaymentReportSearchBean);
-        appendStatusForQueryByLevel(stringBuilder);
+//        appendStatusForQueryByLevel(stringBuilder);
         appendProjectForQueryByLevel(stringBuilder, params, collectionAndPaymentReportSearchBean);
-        stringBuilder.append(" GROUP BY e.instContractId.organizationSiteId.id,e.instContractId.projectId.id ");
+        stringBuilder.append(" GROUP BY e.instContractId.organizationSiteId.id,e.instContractId.serial ");
         List<Object[]> res = dao.findListByQuery(stringBuilder.toString(), params);
         // List<InstView> details = dao.findListByQuery(stringBuilder.toString(), params);
         instViewTotalList = getTheTotals(res);

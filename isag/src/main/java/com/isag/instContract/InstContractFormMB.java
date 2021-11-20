@@ -14,7 +14,6 @@ import com.isag.businessservice.reports.searchBean.ProjectGuideSearchBean;
 import com.isag.comparators.InstContractDetailsEntityComparator;
 import com.isag.converter.InstProjectGuideConverter;
 import com.isag.converter.InstProjectGuideDTOConverter;
-import com.isag.converter.InvOrganizationSiteConverter;
 import com.isag.converter.InvOrganizationSiteDTOConverter;
 import com.isag.dto.InstProjectGuideDTO;
 import com.isag.dto.InvOrganizationSiteDTO;
@@ -70,6 +69,7 @@ public class InstContractFormMB extends BaseFormBean {
     private InstProjectGuideConverter instProjectGuideConverter;
 
     private List<InstProjectGuideDTO> instProjectGuideListSelected;
+    private InstProjectGuideDTO instProjectGuideSelected;
     private List<InstProjectGuideDTO> instProjectGuideDTOList;
     private InstProjectGuideDTOConverter instProjectGuideDTOConverter;
 
@@ -77,6 +77,7 @@ public class InstContractFormMB extends BaseFormBean {
     private InstContract instContract;
     private List<InstContractDetail> instContractDetailsList;
     private List<InstContractDetailsEntity> instContractDetailsEntityList;
+    private List<InstProjectGuideDTO> instProjectGuideDTOListDeleted;
     private InstContractDetailsEntity instContractDetailsEntitySelected;
     private InstContractDetailsEntity instContractDetailsEntityUnSelected;
     private boolean validateSave;
@@ -105,15 +106,19 @@ public class InstContractFormMB extends BaseFormBean {
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
             setUserData((UserData) context.getSessionMap().get("userLogInData"));
             setScreenMode((String) context.getSessionMap().get("ScreenMode"));
-
+//            addNewDetailProjectGuide();
             load();
             reset();
             if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("edit")) {
                 Integer instContractId = (Integer) context.getSessionMap().get("instContractEntityIdSelected");
                 findHeadAndDetailsOfInstContract(instContractId);
-                getInstProjectGuideList().add(0, instContract.getProjectId());
-                getInstProjectGuideDTOList();
-//                getInstProjectGuideDTOList().addAll(instProjectGuideService.getAllInstProjectGuidesDTOByContractId(instContract.getId()));
+//                getInstProjectGuideList().add(0, instContract.getProjectId());
+//                getInstProjectGuideDTOList();
+                findInstProjectGuideDTOList();
+                getInstProjectGuideListSelected().addAll(instProjectGuideService.getAllInstProjectGuidesDTOByContractId(instContract.getId()));
+                getInstProjectGuideDTOList().addAll(0, getInstProjectGuideListSelected());
+//                List<InstProjectGuideDTO> newList = Stream.concat(getInstProjectGuideDTOList().stream(), listTwo.stream())
+//                             .collect(Collectors.toList());
             }
 
         } catch (Exception e) {
@@ -441,6 +446,21 @@ public class InstContractFormMB extends BaseFormBean {
         instContractEntity.setInstallmentValue(instValue);
         return instValue;
     }
+    
+    public void addNewDetailProjectGuide() {
+        try {
+
+            InstProjectGuideDTO detailsEntity = new InstProjectGuideDTO();
+            detailsEntity.setMarkEdit(Boolean.TRUE);
+            detailsEntity.setIndex(++index);
+            instProjectGuideSelected = detailsEntity;
+            getInstProjectGuideListSelected().add(detailsEntity);
+        } catch (Exception e) {
+            saveError(e, "InstContractFormMB", "addNewDetail");
+        }
+
+    }
+
 
     public void addNewDetail() {
         try {
@@ -480,6 +500,18 @@ public class InstContractFormMB extends BaseFormBean {
 
     }
 
+    public void deleteDetailProjectGuide() {
+        try {
+
+            if (instProjectGuideSelected.getId() != null) {
+                getInstProjectGuideDTOListDeleted().add(instProjectGuideSelected);
+            }
+            instProjectGuideListSelected.remove(instProjectGuideSelected);
+        } catch (Exception e) {
+            saveError(e, "InstContractFormMB", "deleteDetail");
+        }
+    }
+    
     public void deleteDetail() {
         try {
 
@@ -910,6 +942,9 @@ public class InstContractFormMB extends BaseFormBean {
      * @return the instProjectGuideListSelected
      */
     public List<InstProjectGuideDTO> getInstProjectGuideListSelected() {
+        if(instProjectGuideListSelected == null){
+            instProjectGuideListSelected = new ArrayList<>();
+        }
         return instProjectGuideListSelected;
     }
 
@@ -925,22 +960,23 @@ public class InstContractFormMB extends BaseFormBean {
      * @return the instProjectGuideDTOList
      */
     public List<InstProjectGuideDTO> getInstProjectGuideDTOList() {
-        if (getInstContractEntity().getStartDate() != null && getInstContractEntity().getEndDate() != null) {
-            ProjectGuideSearchBean projectGuideSearchBean = new  ProjectGuideSearchBean();
-            projectGuideSearchBean.setBranchId(getUserData().getUserBranch().getId());
-            projectGuideSearchBean.setStartDate(instContractEntity.getStartDate());
-            projectGuideSearchBean.setEndDate(instContractEntity.getEndDate());
-            
-            instProjectGuideDTOList = instProjectGuideService.getBranchInstProjectGuidesActiveDTO(projectGuideSearchBean,Boolean.FALSE);
-            instProjectGuideDTOConverter = new InstProjectGuideDTOConverter(instProjectGuideDTOList);
-        }
+//        if (getInstContractEntity().getStartDate() != null && getInstContractEntity().getEndDate() != null) {
+//            ProjectGuideSearchBean projectGuideSearchBean = new  ProjectGuideSearchBean();
+//            projectGuideSearchBean.setBranchId(getUserData().getUserBranch().getId());
+//            projectGuideSearchBean.setStartDate(instContractEntity.getStartDate());
+//            projectGuideSearchBean.setEndDate(instContractEntity.getEndDate());
+//            
+//            instProjectGuideDTOList = instProjectGuideService.getBranchInstProjectGuidesActiveDTO(projectGuideSearchBean,Boolean.FALSE);
+//            instProjectGuideDTOConverter = new InstProjectGuideDTOConverter(instProjectGuideDTOList);
+//        }
         if (instProjectGuideDTOList == null) {
             instProjectGuideDTOList = new ArrayList<>();
-        } else {
-            if (getInstProjectGuideListSelected() != null) {
-                instProjectGuideDTOList.addAll(0, getInstProjectGuideListSelected());
-            }
         }
+//        else {
+//            if (getInstProjectGuideListSelected() != null) {
+//                instProjectGuideDTOList.addAll(0, getInstProjectGuideListSelected());
+//            }
+//        }
         return instProjectGuideDTOList;
     }
 
@@ -978,6 +1014,37 @@ public class InstContractFormMB extends BaseFormBean {
      */
     public void setInstProjectGuideDTOConverter(InstProjectGuideDTOConverter instProjectGuideDTOConverter) {
         this.instProjectGuideDTOConverter = instProjectGuideDTOConverter;
+    }
+
+    /**
+     * @return the instProjectGuideSelected
+     */
+    public InstProjectGuideDTO getInstProjectGuideSelected() {
+        return instProjectGuideSelected;
+    }
+
+    /**
+     * @param instProjectGuideSelected the instProjectGuideSelected to set
+     */
+    public void setInstProjectGuideSelected(InstProjectGuideDTO instProjectGuideSelected) {
+        this.instProjectGuideSelected = instProjectGuideSelected;
+    }
+
+    /**
+     * @return the instProjectGuideDTOListDeleted
+     */
+    public List<InstProjectGuideDTO> getInstProjectGuideDTOListDeleted() {
+        if(instProjectGuideDTOListDeleted == null){
+            instProjectGuideDTOListDeleted = new ArrayList<>();
+        }
+        return instProjectGuideDTOListDeleted;
+    }
+
+    /**
+     * @param instProjectGuideDTOListDeleted the instProjectGuideDTOListDeleted to set
+     */
+    public void setInstProjectGuideDTOListDeleted(List<InstProjectGuideDTO> instProjectGuideDTOListDeleted) {
+        this.instProjectGuideDTOListDeleted = instProjectGuideDTOListDeleted;
     }
 
 }

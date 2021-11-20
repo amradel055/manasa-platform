@@ -26,6 +26,16 @@ public class ProfitOfItemsSold {
     private BigDecimal totalCost;
     private BigDecimal totalAddTotal;
     private BigDecimal profit;
+    private BigDecimal netAfterDiscountHead;
+    private BigDecimal discountValue;
+    
+    
+    
+    private BigDecimal sumtotalprofit;
+    private BigDecimal sumnetAfterDiscountHead;
+    private BigDecimal sumdiscountValue;
+    private BigDecimal sumtotalCost;
+    private BigDecimal sumtotalAddTotal;
     private Date dateFrom;
     private Date dateTo;
     private List<InvInventoryDTO> gallarySelected;
@@ -193,6 +203,9 @@ public class ProfitOfItemsSold {
      * @return the totalCost
      */
     public BigDecimal getTotalCost() {
+        if(totalCost== null){
+            totalCost = BigDecimal.ZERO;
+        }
         return totalCost;
     }
 
@@ -207,6 +220,9 @@ public class ProfitOfItemsSold {
      * @return the totalAddTotal
      */
     public BigDecimal getTotalAddTotal() {
+        if(totalAddTotal == null){
+            totalAddTotal = BigDecimal.ZERO;
+        }
         return totalAddTotal;
     }
 
@@ -221,6 +237,9 @@ public class ProfitOfItemsSold {
      * @return the profit
      */
     public BigDecimal getProfit() {
+        if(profit == null){
+            profit = BigDecimal.ZERO;
+        }
         return profit;
     }
 
@@ -229,6 +248,125 @@ public class ProfitOfItemsSold {
      */
     public void setProfit(BigDecimal profit) {
         this.profit = profit;
+    }
+
+    /**
+     * @return the netAfterDiscountHead
+     */
+    public BigDecimal getNetAfterDiscountHead() {
+        if(netAfterDiscountHead == null){
+            netAfterDiscountHead = BigDecimal.ZERO;
+        }
+        return netAfterDiscountHead;
+    }
+
+    /**
+     * @param netAfterDiscountHead the netAfterDiscountHead to set
+     */
+    public void setNetAfterDiscountHead(BigDecimal netAfterDiscountHead) {
+        this.netAfterDiscountHead = netAfterDiscountHead;
+    }
+
+    /**
+     * @return the discountValue
+     */
+    public BigDecimal getDiscountValue() {
+        if(discountValue == null){
+            discountValue = BigDecimal.ZERO;
+        }
+        return discountValue;
+    }
+
+    /**
+     * @param discountValue the discountValue to set
+     */
+    public void setDiscountValue(BigDecimal discountValue) {
+        this.discountValue = discountValue;
+    }
+
+    /**
+     * @return the sumtotalprofit
+     */
+    public BigDecimal getSumtotalprofit() {
+        if(sumtotalprofit == null){
+            sumtotalprofit = BigDecimal.ZERO;
+        }
+        return sumtotalprofit;
+    }
+
+    /**
+     * @param sumtotalprofit the sumtotalprofit to set
+     */
+    public void setSumtotalprofit(BigDecimal sumtotalprofit) {
+        this.sumtotalprofit = sumtotalprofit;
+    }
+
+    /**
+     * @return the sumnetAfterDiscountHead
+     */
+    public BigDecimal getSumnetAfterDiscountHead() {
+        if(sumnetAfterDiscountHead == null){
+            sumnetAfterDiscountHead = BigDecimal.ZERO;
+        }
+        return sumnetAfterDiscountHead;
+    }
+
+    /**
+     * @param sumnetAfterDiscountHead the sumnetAfterDiscountHead to set
+     */
+    public void setSumnetAfterDiscountHead(BigDecimal sumnetAfterDiscountHead) {
+        this.sumnetAfterDiscountHead = sumnetAfterDiscountHead;
+    }
+
+    /**
+     * @return the sumdiscountValue
+     */
+    public BigDecimal getSumdiscountValue() {
+        if(sumdiscountValue == null){
+            sumdiscountValue = BigDecimal.ZERO;
+        }
+        return sumdiscountValue;
+    }
+
+    /**
+     * @param sumdiscountValue the sumdiscountValue to set
+     */
+    public void setSumdiscountValue(BigDecimal sumdiscountValue) {
+        this.sumdiscountValue = sumdiscountValue;
+    }
+
+    /**
+     * @return the sumtotalCost
+     */
+    public BigDecimal getSumtotalCost() {
+        if(sumtotalCost == null){
+            sumtotalCost = BigDecimal.ZERO;
+        }
+        return sumtotalCost;
+    }
+
+    /**
+     * @param sumtotalCost the sumtotalCost to set
+     */
+    public void setSumtotalCost(BigDecimal sumtotalCost) {
+        this.sumtotalCost = sumtotalCost;
+    }
+
+    /**
+     * @return the sumtotalAddTotal
+     */
+    public BigDecimal getSumtotalAddTotal() {
+        if(sumtotalAddTotal == null){
+            sumtotalAddTotal = BigDecimal.ZERO;
+        }
+        return sumtotalAddTotal;
+    }
+
+    /**
+     * @param sumtotalAddTotal the sumtotalAddTotal to set
+     */
+    public void setSumtotalAddTotal(BigDecimal sumtotalAddTotal) {
+        this.sumtotalAddTotal = sumtotalAddTotal;
     }
 
 }

@@ -13,6 +13,7 @@ public class InstContractProjectDTO extends BaseEntityDTO {
 
     private Integer instProjectGuide;
     private Integer instContract;
+    private Integer instProjectGuideParent;
     
       
     public InstContractProjectDTO() {
@@ -68,6 +69,20 @@ public class InstContractProjectDTO extends BaseEntityDTO {
      */
     public void setInstContract(Integer instContract) {
         this.instContract = instContract;
+    }
+
+    /**
+     * @return the instProjectGuideParent
+     */
+    public Integer getInstProjectGuideParent() {
+        return instProjectGuideParent;
+    }
+
+    /**
+     * @param instProjectGuideParent the instProjectGuideParent to set
+     */
+    public void setInstProjectGuideParent(Integer instProjectGuideParent) {
+        this.instProjectGuideParent = instProjectGuideParent;
     }
 
 }

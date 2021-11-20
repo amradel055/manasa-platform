@@ -23,52 +23,7 @@
                 </div>
 
                 <div class="ui-g-12 ui-g-nopad firstset" id="firstSegment" >
-                    <div class="ui-g">
-                        <div class="ui-g-6 ui-xl-6">
-                            <div class="ui-g-12 ui-xl-12">
-
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:autoComplete style="width:40%!important"
-                                                    dropdown="true"
-                                                    converter="#{instMaturityMB.instProjectGuideConverter}"
-                                                    value="#{instMaturityMB.collectionAndPaymentReportSearchBean.projectGuideTo}"
-                                                    var="organization"
-                                                    itemLabel="#{organization}" 
-                                                    itemValue="#{organization}"
-                                                    forceSelection="true" 
-                                                    completeMethod="#{instMaturityMB.completeInstProject}"
-                                                    >
-
-                                    </p:autoComplete>
-                                </div>
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 75px" value="#{userData.userDDs['TO_PROJECT']}"/>
-
-                                </div>
-                            </div>
-                            <div class="ui-g-12 ui-xl-12">
-
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:autoComplete style="width:40%!important"
-                                                    dropdown="true"
-                                                    converter="#{instMaturityMB.instProjectGuideConverter}"
-                                                    value="#{instMaturityMB.collectionAndPaymentReportSearchBean.projectGuideFrom}"
-                                                    var="organization"
-                                                    itemLabel="#{organization}" 
-                                                    itemValue="#{organization}"
-                                                    forceSelection="true" 
-                                                    completeMethod="#{instMaturityMB.completeInstProject}"
-                                                    >
-
-                                    </p:autoComplete>
-                                </div>
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 75px;" value="#{userData.userDDs['FROM_PROJECT']}"/>
-
-                                </div>
-                            </div>
-
-                        </div>     
+                    <div class="ui-g">    
                         <div class="ui-g-6 ui-xl-6">
                             <div class="ui-g-12 ui-xl-12">
 
@@ -118,7 +73,10 @@
 
                     </div>
                 </div>
-                <div id="buttunss" class="asmaa">
+                
+
+            </p:fieldset>
+<div id="buttunss" class="asmaa">
 
                         <p:commandButton  class="searchButtons"
                                           value="#{userData.userDDs['SEARCH']}" action="#{instMaturityMB.search}"
@@ -139,9 +97,6 @@
                         </p:blockUI> 
                         </div>
                     
-
-            </p:fieldset>
-
             <p:fieldset>
 
                 <p:dataTable id="accc"
@@ -150,7 +105,7 @@
                              draggableColumns="true" 
                              value="#{instMaturityMB.instMaturityBeanList}" 
                              var="instMaturity"
-                             sortBy="#{instMaturity.projectId}" expandableRowGroups="true">
+                             sortBy="#{instMaturity.serial}" expandableRowGroups="true">
 
                     <f:facet name="header" >
 
@@ -163,24 +118,11 @@
 
                     <p:headerRow>
                         <p:column colspan="1" style="width: 15vh;font-size: 2vh;border-radius: 0px;" >
-                            <h:outputText value="#{instMaturity.projectId}" />
+                            <h:outputText value="#{instMaturity.serial}" />
                         </p:column>
-                        <p:column colspan="2" style="width: 15vh;font-size: 2vh;border-radius: 0px;" >
-                            <h:outputText value="#{instMaturity.projectName}" />
-                        </p:column>
-                        <p:column colspan="2"/>
+                        <p:column colspan="3"/>
                     </p:headerRow>
-
-                    <p:column style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" headerText="#{userData.userDDs['SERIAL']}"
-
-
-                              sortBy="#{instMaturity.serial}"
-                              filterBy="#{instMaturity.serial}" 
-                              filterMatchMode="contains"
-                              filterable="false" >
-
-                        <h:outputText value="#{instMaturity.serial}" style="font-size: 1.5vh"/>
-                    </p:column>
+                    
                     <p:column style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" headerText="#{userData.userDDs['CUSTOMER']}"
 
                               sortBy="#{instMaturity.customer}"
@@ -225,7 +167,6 @@
 
                     <p:columnGroup type="footer">
                         <p:row>
-                            <p:column  style="border-radius: 0px;" footerText=""  />
                             <p:column   style="border-radius: 0px;" footerText="" /> 
                             <p:column   style="border-radius: 0px;" footerText="" /> 
                             <p:column   style="border-radius: 0px;" footerText="#{userData.userDDs['TOTAL']} " />

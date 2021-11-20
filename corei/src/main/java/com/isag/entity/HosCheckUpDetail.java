@@ -61,6 +61,9 @@ public class HosCheckUpDetail extends BaseEntity {
     @JoinColumn(name = "hos_doctor_service_id", referencedColumnName = "id")
     @ManyToOne
     private HosDoctor hosDoctorServiceId;
+    @JoinColumn(name = "inst_project_guide_id", referencedColumnName = "id")
+    @ManyToOne
+    private InstProjectGuide instProjectGuideId;
 
     public HosCheckUpDetail() {
     }
@@ -185,6 +188,20 @@ public class HosCheckUpDetail extends BaseEntity {
      */
     public void setHosCheckUpId(HosCheckUp hosCheckUpId) {
         this.hosCheckUpId = hosCheckUpId;
+    }
+
+    /**
+     * @return the instProjectGuideId
+     */
+    public InstProjectGuide getInstProjectGuideId() {
+        return instProjectGuideId;
+    }
+
+    /**
+     * @param instProjectGuideId the instProjectGuideId to set
+     */
+    public void setInstProjectGuideId(InstProjectGuide instProjectGuideId) {
+        this.instProjectGuideId = instProjectGuideId;
     }
 
 }

@@ -10,7 +10,7 @@
     <ui:define name="content">
         <f:event listener="#{userData.authorize}" type="preRenderView" />
 
-        
+
 
 
         <h:form  id="form" dir="#{userData.dir}"  class='formmargin'>
@@ -156,58 +156,55 @@
 
 
                 </div>
-                
-
-                            <div id="buttunss" class="asmaa">
-
-                        <p:commandButton     class="searchButtons"
-                                             title="#{userData.userDDs['SEARCH']}"
-                                             action="#{collectionAndPaymentReportMB.search()}"
-                                             id="saveB"
-                                             value="#{userData.userDDs['SEARCH']}"
-                                             update="@form" 
-/>
-
-                        <p:commandButton    class="newButtons"
-                                            title="#{userData.userDDs['NEW']}" 
-                                            immediate="true" 
-                                            action="#{collectionAndPaymentReportMB.reset()}"
-                                            update="form"
-                                            value="#{userData.userDDs['NEW']}"
-                                            resetValues="true"
-                                            id="NewB"/>
-
-                        <p:commandButton    class="printButtons"
-                                            ajax="false"
-                                            onclick="form.target = '_blank'"  
-                                            value="#{userData.userDDs['PRINT']}" 
-                                            actionListener="#{collectionAndPaymentReportMB.exportPDF}"
-                                            title="#{userData.userDDs['PRINT']}"
-                                            immediate="true" 
-                                            id="PrintB"/>
-
-                        <p:commandButton    class="closeButtons"
-                                            title="#{userData.userDDs['CANCEL']}"
-                                            action="exit"
-                                            value="#{userData.userDDs['BACK']}"
-                                            id="CloseB"/>
-                        <h:commandLink  class="sdcreenimg" style="margin-right: 4px;">   
-                            <p:graphicImage name="/img/excel.jpg" width="24;"/>  
-                            <p:dataExporter type="xls"
-                                            target="CollectionAndPaymentEntity" 
-                                            fileName="تقرير التحصيلات والسداد"
-                                            postProcessor="#{collectionAndPaymentReportMB.postProcessXLS}" />  
-                        </h:commandLink>
-
-                        <p:blockUI block="form" trigger="saveB NewB PrintB CloseB" animate="true" >
-
-                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
-
-                        </p:blockUI> 
-
-                        </div>
             </p:fieldset>
+            <div id="buttunss" class="asmaa">
 
+                <p:commandButton     class="searchButtons"
+                                     title="#{userData.userDDs['SEARCH']}"
+                                     action="#{collectionAndPaymentReportMB.search()}"
+                                     id="saveB"
+                                     value="#{userData.userDDs['SEARCH']}"
+                                     update="@form" 
+                                     />
+
+                <p:commandButton    class="newButtons"
+                                    title="#{userData.userDDs['NEW']}" 
+                                    immediate="true" 
+                                    action="#{collectionAndPaymentReportMB.reset()}"
+                                    update="form"
+                                    value="#{userData.userDDs['NEW']}"
+                                    resetValues="true"
+                                    id="NewB"/>
+
+                <p:commandButton    class="printButtons"
+                                    ajax="false"
+                                    onclick="form.target = '_blank'"  
+                                    value="#{userData.userDDs['PRINT']}" 
+                                    actionListener="#{collectionAndPaymentReportMB.exportPDF}"
+                                    title="#{userData.userDDs['PRINT']}"
+                                    immediate="true" 
+                                    id="PrintB"/>
+
+                <p:commandButton    class="closeButtons"
+                                    title="#{userData.userDDs['CANCEL']}"
+                                    action="exit"
+                                    value="#{userData.userDDs['BACK']}"
+                                    id="CloseB"/>
+                <h:commandLink  class="sdcreenimg" style="margin-right: 4px;">   
+                    <p:graphicImage name="/img/excel.jpg" width="24;"/>  
+                    <p:dataExporter type="xls"
+                                    target="CollectionAndPaymentEntity" 
+                                    fileName="تقرير التحصيلات والسداد"
+                                    postProcessor="#{collectionAndPaymentReportMB.postProcessXLS}" />  
+                </h:commandLink>
+
+                <p:blockUI block="form" trigger="saveB NewB PrintB CloseB" animate="true" >
+
+                    <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                </p:blockUI> 
+
+            </div>
             <p:fieldset id="reportDB" style="margin-top: 2%">
 
 

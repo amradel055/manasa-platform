@@ -8,7 +8,7 @@
 
     <div class="layout-sidebar #{guestPreferences.darkMenu ? 'layout-sidebar-dark' : ''}">
         <div class="sidebar-logo">
-            <a href="dashboard.xhtml">
+            <a >
                 <p:graphicImage name="images/logo-slim.png" library="serenity-layout" />
                 <!--  <span class="app-name">SERENITY</span> -->
             </a>
@@ -20,7 +20,7 @@
                 <div class="layout-menu-container">
                     <h:form id="menuform">
                         <pm:menu widgetVar="serenityMenuWidget">
-                            <p:menuitem id="sr_dashboard" value="Dashboard" icon="&#xE871;" outcome="/dashboard"/>
+                            <p:menuitem id="sr_dashboard" value="الرئيسية" icon="&#xE871;" outcome="/dashboard"/>
 
                             <p:submenu id="sr_sm1" label="#{userData.userDDs['GENERAL_SYSTEM_SETTINGS']}" icon="&#xE8D2;"
                                        rendered="#{userData.userScreens['branch'].view 
@@ -936,18 +936,6 @@
                                     <p:menuitem id="sr_sm6712" value="#{userData.userDDs['COLL_PAY_REP']}" 
                                                 icon="&#xE8D2;" url="/faces/views/instReport/CollectionAndPaymentReport.xhtml" 
                                                 rendered="#{userData.userScreens['CollectionAndPaymentReport'].view or userData.isAdmin}"
-                                                />
-                                    <p:menuitem id="sr_sm6713" value="#{userData.userDDs['COLL_PAY_REP']}" 
-                                                icon="&#xE8D2;" url="/faces/views/instReport/CollectionAndPaymentReport_1.xhtml" 
-                                                rendered="#{userData.userScreens['CollectionAndPaymentReport_1'].view or userData.isAdmin}"
-                                                />
-                                    <p:menuitem id="sr_sm6714" value="الوحدات المباعة" 
-                                                icon="&#xE8D2;" url="/faces/views/instReport/soldUnits.xhtml" 
-                                                rendered="#{userData.userScreens['soldUnits'].view or userData.isAdmin}"
-                                                />
-                                    <p:menuitem id="sr_sm6715" value="تقرير حالة الوحدة" 
-                                                icon="&#xE8D2;" url="/faces/views/instReport/projectGuideReport_1.xhtml" 
-                                                rendered="#{userData.userScreens['projectGuideReport_1'].view or userData.isAdmin}"
                                                 />
                                     <p:menuitem id="sr_sm67152" value="تقرير حالة الوحدة" 
                                                 icon="&#xE8D2;" url="/faces/views/instReport/projectGuideReportNew.xhtml" 

@@ -14,6 +14,7 @@ public class ProjectGuideSearchBean {
     private List<InstProjectGuideDTO> projectGuideListSelected;
     private Date startDate;
     private Date endDate;
+    private InstProjectGuide projectGuideIdParent;
     
     
     public Integer getBranchId() {
@@ -106,6 +107,20 @@ public class ProjectGuideSearchBean {
      */
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    /**
+     * @return the projectGuideIdParent
+     */
+    public InstProjectGuide getProjectGuideIdParent() {
+        return projectGuideIdParent;
+    }
+
+    /**
+     * @param projectGuideIdParent the projectGuideIdParent to set
+     */
+    public void setProjectGuideIdParent(InstProjectGuide projectGuideIdParent) {
+        this.projectGuideIdParent = projectGuideIdParent;
     }
 
    

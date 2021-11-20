@@ -15,6 +15,7 @@ public class InstProjectGuideDTO extends BaseEntityDTO{
     
     private String code;
     private String name;
+    private String customerName;
     private Integer level;
     private BigDecimal price;
     private InstProjectGuideDTO parent;
@@ -24,6 +25,7 @@ public class InstProjectGuideDTO extends BaseEntityDTO{
     private SymbolDTO symbolSize;
     private Boolean active;
 
+    private Boolean isEdit;
     /**
      * @return the code
      */
@@ -88,7 +90,7 @@ public class InstProjectGuideDTO extends BaseEntityDTO{
 
     @Override
     public String toString() {
-        return  code +" "+ name;
+        return  code +" "+ name + (parent == null ? "" : parent.getName()) + (symbolSize == null ? "" : symbolSize.getName());
     }
 
     /**
@@ -187,5 +189,36 @@ public class InstProjectGuideDTO extends BaseEntityDTO{
      */
     public void setActive(Boolean active) {
         this.active = active;
+    }
+
+    /**
+     * @return the isEdit
+     */
+    public Boolean getIsEdit() {
+        if(isEdit == null){
+            isEdit = Boolean.FALSE;
+        }
+        return isEdit;
+    }
+
+    /**
+     * @param isEdit the isEdit to set
+     */
+    public void setIsEdit(Boolean isEdit) {
+        this.isEdit = isEdit;
+    }
+
+    /**
+     * @return the customerName
+     */
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    /**
+     * @param customerName the customerName to set
+     */
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 }

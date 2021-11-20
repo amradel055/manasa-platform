@@ -40,6 +40,8 @@ public class InstContractServiceImpl implements InstContractService {
     private instcontractdetailwithbanktransactionviewService instcontractdetailwithbanktransactionviewService;
     @EJB
     private InstContractProjectService instContractProjectService;
+    @EJB
+    private InstProjectGuideService instProjectGuideService;
 
     @Override
     public InstContract addInstContractforTasaheel(InstContract instContract, List<InstContractDetail> instContractDetailList) {
@@ -189,6 +191,13 @@ public class InstContractServiceImpl implements InstContractService {
     public InstContract findInstContractById(Integer instContractId) {
         return dao.findEntityById(InstContract.class, instContractId);
     }
+    
+    @Override
+    public InstContractDTO findInstContractDTOById(Integer instContractId) {
+        InstContract instContract =  dao.findEntityById(InstContract.class, instContractId);
+        return mapTODTO(instContract, Boolean.TRUE);
+    }
+    
 
     @Override
     public InstContract addOneInstContract(InstContract instContract, InstContractDetail instContractDetail) {
@@ -291,6 +300,17 @@ public class InstContractServiceImpl implements InstContractService {
         } else {
             return null;
         }
+    }
+    
+    
+
+    @Override
+    public List<InstContractDTO> getALLInstContractByBranchIdAndCustomerIdDTO(Integer branchId, Integer customerId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        params.put("customerId", customerId);
+        List<InstContract> list = dao.findListByQuery("SELECT e FROM InstContract e WHERE e.branchId.id = :branchId AND e.organizationSiteId.id = :customerId ", params);
+        return returnListDTO(list, Boolean.FALSE); 
     }
 
     @Override
@@ -398,6 +418,7 @@ public class InstContractServiceImpl implements InstContractService {
         InstContractDTO dTO;
         if (needDetail) {
             dTO = initMapToDTO(entity, getInstContractId(entity.getBranchId().getId()));
+            dTO.setInstProjectGuideDTOList(instProjectGuideService.getAllInstProjectGuidesDTOByContractId(entity.getId()));
         } else {
             dTO = initMapToDTO(entity, null);
         }

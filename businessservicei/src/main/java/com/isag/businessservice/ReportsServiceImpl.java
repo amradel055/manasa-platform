@@ -22,10 +22,10 @@ import javax.ejb.Stateless;
  */
 @Stateless
 public class ReportsServiceImpl implements ReportsService {
-    
+
     @EJB
     private GenericDAO dao;
-    
+
 //    @Override
 //    public List<SalesReportByValueAded> getSalesReportByValueAded(SalesReportByValueAded salesReportByValueAded, Integer branchId) {
 //        
@@ -415,11 +415,18 @@ public class ReportsServiceImpl implements ReportsService {
 //    
     @Override
     public List<ProfitOfItemsSold> getProfitOfItemsSold(ProfitOfItemsSold profitOfItemsSold, Integer branchId, Integer type) {
-        
+
+        dao.executeNativeQuery("select isag.update_net(" + branchId + ")");
+
         List<ProfitOfItemsSold> profitOfItemsSoldList = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         sql.append("select ii.id , ii.code , ii.name , IFNULL(ii.cost_average,0) as cost_average , sum(IFNULL(ipid.quantity,0)) as totalSell , \n"
-                + "sum(IFNULL(ipid.discount,0)) as totalDiscount  , sum(IFNULL(ipid.net,0)) as totalNet , sum(IFNULL(ipid.addTotal,0)) as totalAddTotal , sum(IFNULL(ipid.cost_avarage,0) * IFNULL(ipid.quantity,0)) as totalCost \n"
+                + "sum(IFNULL(ipid.discount,0)) as totalDiscount  , "
+                + "sum(IFNULL(ipid.net,0)) as totalNet , "
+                + "sum(IFNULL(ipid.addTotal,0)) as totalAddTotal , "
+                + "sum(IFNULL(ipid.cost_avarage,0) * IFNULL(ipid.quantity,0)) as totalCost , \n"
+                + "sum(IFNULL(net_after_discount_head,0)) as netAfterDiscountHead , \n"
+                + "sum(IFNULL(ipid.net,0) - IFNULL(ipid.net_after_discount_head,0)) as discountValue \n"
                 + "from inv_purchase_invoice_detail ipid \n"
                 + "left join inv_purchase_invoice ipi on ipi.id = ipid.inv_purchase_invoice_id left join inv_item ii on ii.id = ipid.item_id");
         sql.append(" where ipid.branch_id = ").append(branchId);
@@ -428,6 +435,11 @@ public class ReportsServiceImpl implements ReportsService {
         appendGallery7(profitOfItemsSold, sql);
         sql.append(" group by ii.id");
         List<Object[]> res = dao.executeNativeQuery(sql.toString());
+        BigDecimal sumtotalprofit = BigDecimal.ZERO;
+        BigDecimal sumnetAfterDiscountHead = BigDecimal.ZERO;
+        BigDecimal sumdiscountValue = BigDecimal.ZERO;
+        BigDecimal sumtotalCost = BigDecimal.ZERO;
+        BigDecimal sumtotalAddTotal = BigDecimal.ZERO;
         for (Object[] object : res) {
             profitOfItemsSold = new ProfitOfItemsSold();
             profitOfItemsSold.setCode((String) object[1]);
@@ -438,7 +450,22 @@ public class ReportsServiceImpl implements ReportsService {
             profitOfItemsSold.setTotallNet((BigDecimal) object[6]);
             profitOfItemsSold.setTotalAddTotal((BigDecimal) object[7]);
             profitOfItemsSold.setTotalCost((BigDecimal) object[8]);
-            profitOfItemsSold.setProfit(profitOfItemsSold.getTotallSell().subtract(profitOfItemsSold.getTotalCost()).setScale(2, RoundingMode.HALF_UP));
+            profitOfItemsSold.setNetAfterDiscountHead((BigDecimal) object[9]);
+            profitOfItemsSold.setDiscountValue((BigDecimal) object[10]);
+            profitOfItemsSold.setProfit(profitOfItemsSold.getNetAfterDiscountHead().subtract(profitOfItemsSold.getTotalCost()).setScale(2, RoundingMode.HALF_UP));
+
+            ////// summitions /////////////
+            sumtotalprofit = sumtotalprofit.add(profitOfItemsSold.getProfit());
+            sumnetAfterDiscountHead = sumnetAfterDiscountHead.add(profitOfItemsSold.getNetAfterDiscountHead());
+            sumdiscountValue = sumdiscountValue.add(profitOfItemsSold.getDiscountValue());
+            sumtotalCost = sumtotalCost.add(profitOfItemsSold.getTotalCost());
+            sumtotalAddTotal = sumtotalAddTotal.add(profitOfItemsSold.getTotalAddTotal());
+            profitOfItemsSold.setSumdiscountValue(sumdiscountValue);
+            profitOfItemsSold.setSumnetAfterDiscountHead(sumnetAfterDiscountHead);
+            profitOfItemsSold.setSumtotalAddTotal(sumtotalAddTotal);
+            profitOfItemsSold.setSumtotalCost(sumtotalCost);
+            profitOfItemsSold.setSumtotalprofit(sumtotalprofit);
+
             profitOfItemsSoldList.add(profitOfItemsSold);
         }
         return profitOfItemsSoldList;
@@ -555,5 +582,5 @@ public class ReportsServiceImpl implements ReportsService {
             sql.append(" and ipi.inv_inventory_id =  ").append(profitOfItemsSold.getGallaryFrom().getId());
         }
     }
-    
+
 }

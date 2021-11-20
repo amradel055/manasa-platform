@@ -28,6 +28,7 @@ public class RscTenderDetailWorkUnitDTO extends BaseEntityDTO {
     private Integer index ;
     private BigDecimal total;
     private BigDecimal price;
+    private BigDecimal priceTo;
     private String remarks;
     
     
@@ -40,6 +41,9 @@ public class RscTenderDetailWorkUnitDTO extends BaseEntityDTO {
     }
 
     public BigDecimal getQuantity() {
+        if(quantity == null){
+            quantity = BigDecimal.ONE;
+        }
         return quantity;
     }
 
@@ -209,6 +213,9 @@ public class RscTenderDetailWorkUnitDTO extends BaseEntityDTO {
      * @return the total
      */
     public BigDecimal getTotal() {
+        if(total == null){
+            total = BigDecimal.ZERO;
+        }
         return total;
     }
 
@@ -223,6 +230,9 @@ public class RscTenderDetailWorkUnitDTO extends BaseEntityDTO {
      * @return the price
      */
     public BigDecimal getPrice() {
+        if(price == null){
+            price = BigDecimal.ZERO;
+        }
         return price;
     }
 
@@ -245,6 +255,23 @@ public class RscTenderDetailWorkUnitDTO extends BaseEntityDTO {
      */
     public void setRemarks(String remarks) {
         this.remarks = remarks;
+    }
+
+    /**
+     * @return the priceTo
+     */
+    public BigDecimal getPriceTo() {
+        if(priceTo == null){
+            priceTo = BigDecimal.ZERO;
+        }
+        return priceTo;
+    }
+
+    /**
+     * @param priceTo the priceTo to set
+     */
+    public void setPriceTo(BigDecimal priceTo) {
+        this.priceTo = priceTo;
     }
     
 }

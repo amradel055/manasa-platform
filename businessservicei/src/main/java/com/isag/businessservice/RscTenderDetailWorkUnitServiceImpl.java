@@ -165,6 +165,7 @@ public class RscTenderDetailWorkUnitServiceImpl implements RscTenderDetailWorkUn
         dTO.setStatus(guide.getStatus());
         dTO.setTotal(guide.getTotal());
         dTO.setPrice(guide.getPrice());
+        dTO.setPriceTo(guide.getPriceTo());
         dTO.setRemarks(guide.getRemarks());
         dTO.setTenderId(guide.getTenderId() == null ? null : guide.getTenderId().getId());
         if (guide.getWorkUnitId() != null) {
@@ -201,6 +202,11 @@ public class RscTenderDetailWorkUnitServiceImpl implements RscTenderDetailWorkUn
         } else {
             tenderDetail.setMsg("\n يجب ادخال سعر");
         }
+//        if (dTO.getPriceTo()!= null && dTO.getPriceTo().compareTo(BigDecimal.ZERO) > 0) {
+//            tenderDetail.setPriceTo(dTO.getPriceTo());
+//        } else {
+//            tenderDetail.setMsg("\n يجب ادخال سعر");
+//        }
         tenderDetail.setTotal(dTO.getTotal());
 
         if (dTO.getGuideDTO() != null && dTO.getGuideDTO().getId() != null) {

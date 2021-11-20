@@ -158,9 +158,11 @@ public class InstMaturityMB extends BaseReportBean {
             for (InstView instView : instViewList) {
 
                 if (orderedProjectAndCustomerMap != null) {
-                    if (orderedProjectAndCustomerMap.containsKey(instView.getProjectId())) {
+//                    if (orderedProjectAndCustomerMap.containsKey(instView.getProjectId())) {
+                    if (orderedProjectAndCustomerMap.containsKey(instView.getSerial())) {
 
-                        Map<Integer, List<InstMaturityBean>> mapOfCustomers = orderedProjectAndCustomerMap.get(instView.getProjectId());
+//                        Map<Integer, List<InstMaturityBean>> mapOfCustomers = orderedProjectAndCustomerMap.get(instView.getProjectId());
+                        Map<Integer, List<InstMaturityBean>> mapOfCustomers = orderedProjectAndCustomerMap.get(instView.getSerial());
                         List<InstMaturityBean> maturityBeanList = new ArrayList<>();
                         Map<Integer, List<InstMaturityBean>> map = new HashMap<>();
                         if (!mapOfCustomers.containsKey(instView.getCustomerId())) {
@@ -169,9 +171,11 @@ public class InstMaturityMB extends BaseReportBean {
 
                             InstMaturityBean imb = new InstMaturityBean();
                             imb.setCustomer(instView.getCustomerName());
-                            imb.setProjectId(instView.getProjectId());
-                            imb.setProjectName(instView.getProjectName());
-                            Map<Integer, BigDecimal> totalMap = totalsMap.get(instView.getProjectId());
+//                            imb.setProjectId(instView.getProjectId());
+//                            imb.setProjectName(instView.getProjectName());
+                            imb.setSerial(instView.getProjectId());
+//                            Map<Integer, BigDecimal> totalMap = totalsMap.get(instView.getProjectId());
+                            Map<Integer, BigDecimal> totalMap = totalsMap.get(instView.getSerial());
                             imb.setInstallmentValue(totalMap.get(instView.getCustomerId()));
                             maturityBeanList.add(imb);
                         } else {
@@ -180,15 +184,16 @@ public class InstMaturityMB extends BaseReportBean {
 
                         InstMaturityBean instMaturityBean = new InstMaturityBean();
                         instMaturityBean.setSerial(instView.getInstSerial());
-                        instMaturityBean.setProjectId(instView.getProjectId());
-                        instMaturityBean.setProjectName(instView.getProjectName());
+//                        instMaturityBean.setProjectId(instView.getProjectId());
+//                        instMaturityBean.setProjectName(instView.getProjectName());
                         instMaturityBean.setDate(instView.getDueDate());
                         //  instMaturityBean.setCustomer(instView.getCustomerName());
                         instMaturityBean.setTotalValue(instView.getTotalValue());
                         instMaturityBean.setInstallmentValue(instView.getValue());
                         maturityBeanList.add(instMaturityBean);
                         mapOfCustomers.put(instView.getCustomerId(), maturityBeanList);
-                        orderedProjectAndCustomerMap.put(instView.getProjectId(), mapOfCustomers);
+//                        orderedProjectAndCustomerMap.put(instView.getProjectId(), mapOfCustomers);
+                        orderedProjectAndCustomerMap.put(instView.getSerial(), mapOfCustomers);
                     } else {
                         List<InstMaturityBean> maturityBeanList = new ArrayList<>();
                         Map<Integer, List<InstMaturityBean>> map = new HashMap<>();
@@ -197,23 +202,27 @@ public class InstMaturityMB extends BaseReportBean {
 
                         InstMaturityBean imb = new InstMaturityBean();
                         imb.setCustomer(instView.getCustomerName());
-                        imb.setProjectId(instView.getProjectId());
-                        imb.setProjectName(instView.getProjectName());
-                        Map<Integer, BigDecimal> totalMap = totalsMap.get(instView.getProjectId());
+//                        imb.setProjectId(instView.getProjectId());
+//                        imb.setProjectName(instView.getProjectName());
+                        imb.setSerial(instView.getSerial());
+//                        Map<Integer, BigDecimal> totalMap = totalsMap.get(instView.getProjectId());
+                        Map<Integer, BigDecimal> totalMap = totalsMap.get(instView.getSerial());
                         imb.setInstallmentValue(totalMap.get(instView.getCustomerId()));
                         maturityBeanList.add(imb);
 
                         InstMaturityBean instMaturityBean = new InstMaturityBean();
                         instMaturityBean.setSerial(instView.getInstSerial());
-                        instMaturityBean.setProjectId(instView.getProjectId());
-                        instMaturityBean.setProjectName(instView.getProjectName());
+//                        instMaturityBean.setProjectId(instView.getProjectId());
+//                        instMaturityBean.setProjectName(instView.getProjectName());
+                        instMaturityBean.setSerial(instView.getSerial());
                         instMaturityBean.setDate(instView.getDueDate());
                         //     instMaturityBean.setCustomer(instView.getCustomerName());
                         instMaturityBean.setTotalValue(instView.getTotalValue());
                         instMaturityBean.setInstallmentValue(instView.getValue());
                         maturityBeanList.add(instMaturityBean);
                         map.put(instView.getCustomerId(), maturityBeanList);
-                        orderedProjectAndCustomerMap.put(instView.getProjectId(), map);
+//                        orderedProjectAndCustomerMap.put(instView.getProjectId(), map);
+                        orderedProjectAndCustomerMap.put(instView.getSerial(), map);
                     }
                 }
                 total = total.add(instView.getValue());
