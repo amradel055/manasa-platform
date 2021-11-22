@@ -13,6 +13,7 @@ import com.isag.rest.LessonRest;
 import com.isag.rest.LockupRest;
 import com.isag.rest.LoginManasa;
 import com.isag.rest.LoginStudentRest;
+import com.isag.rest.ManasaReportRest;
 import com.isag.rest.MediaRest;
 import com.isag.rest.NewRest;
 import com.isag.rest.NewsRest;
@@ -58,6 +59,7 @@ public class MyApplication extends Application {
         resources.add(NewRest.class);
         resources.add(NewsRest.class);
         resources.add(OtherAppointmentsRest.class);
+        resources.add(ManasaReportRest.class);
         return resources;
     }
 
