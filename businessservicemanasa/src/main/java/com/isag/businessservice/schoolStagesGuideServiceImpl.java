@@ -9,7 +9,6 @@ import com.isag.core.GenericDAO;
 import com.isag.dto.SchoolStagesGuideDTO;
 import com.isag.entity.SchoolStagesGuide;
 import com.isag.entity.IgmaUser;
-import com.isag.entity.Teachers;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
