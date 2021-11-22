@@ -357,7 +357,7 @@ public class ExamsServiceImpl implements ExamsService {
         dao.deleteEntity(entity);
     }
 
-    private List<ExamsDTO> returnListDTO(List<Exams> list, Boolean detail) {
+    public List<ExamsDTO> returnListDTO(List<Exams> list, Boolean detail) {
         List<ExamsDTO> dTOList = new ArrayList<>();
         for (Exams entity : list) {
             dTOList.add(mapTODTO(entity, detail, null, null));
@@ -407,6 +407,7 @@ public class ExamsServiceImpl implements ExamsService {
 
         if (entity.getStudentId() != null) {
             dTO.setStudentId(entity.getStudentId().getId());
+            dTO.setStudentName(entity.getStudentId().getFullName());
         }
         if (entity.getMaterialId() != null) {
             dTO.setMaterialId(entity.getMaterialId().getId());
