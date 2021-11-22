@@ -17,9 +17,11 @@ import javax.ejb.Remote;
 @Remote
 public interface LessonImgService {
 
-    public List<LessonImgDTO> findAllLessons(Integer lessonId);
+    public List<String> findAllLessons(Integer lessonId);
 
     public void deleteLesson(Integer lessonId);
     
     public List<LessonImgDTO>  save(List<LessonImgDTO> lessonImgDTOList, IgmaUser isagUser, Integer lessonId);
+    
+    public LessonImgDTO saveList(List<String> LessonImgDTOist, Integer lessonId, Integer branchId, Integer companyId);
 }

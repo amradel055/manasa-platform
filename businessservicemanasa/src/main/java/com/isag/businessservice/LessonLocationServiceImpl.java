@@ -28,8 +28,8 @@ public class LessonLocationServiceImpl implements LessonLocationService {
     private GenericDAO dao;
 
     @Override
-    public List<LessonLocationDTO> findAllLessonLocation(Integer lessonId) {
-        List<LessonLocation> list = dao.findListByQuery("SELECT d FROM LessonLocationDTO d  ");
+    public List<LessonLocationDTO> findAllLessonLocation() {
+        List<LessonLocation> list = dao.findListByQuery("SELECT d FROM LessonLocation d  ");
         return returnListDTO(list);
     }
 
