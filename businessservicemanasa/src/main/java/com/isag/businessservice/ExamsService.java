@@ -6,6 +6,7 @@
 package com.isag.businessservice;
 
 import com.isag.dto.ExamsDTO;
+import com.isag.entity.Exams;
 import com.isag.entity.IgmaUser;
 import java.util.List;
 import javax.ejb.Remote;
@@ -37,4 +38,6 @@ public interface ExamsService {
     public void deleteExams(ExamsDTO examsDTO);
 
     public void deleteExams(Integer examId);
+    
+    public List<ExamsDTO> returnListDTO(List<Exams> list, Boolean detail);
 }

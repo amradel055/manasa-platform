@@ -64,5 +64,4 @@ public class MyApplication extends Application {
         resources.add(LessonLocationRest.class);
         return resources;
     }
-
 }

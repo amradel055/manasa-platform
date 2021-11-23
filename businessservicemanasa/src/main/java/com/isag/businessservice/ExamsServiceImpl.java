@@ -383,7 +383,7 @@ public class ExamsServiceImpl implements ExamsService {
         dTO.setExamType(entity.getExamType());
         dTO.setTimer(entity.getTimer());
         dTO.setPeriodList(periodList);
-
+        dTO.setSolutionTime(entity.getSolutionTime());
         if (entity.getTeacherId() != null) {
             dTO.setTeacherId(entity.getTeacherId().getId());
         }
@@ -451,7 +451,7 @@ public class ExamsServiceImpl implements ExamsService {
         entity.setMonthId(dTO.getMonthId());
         entity.setExamType(dTO.getExamType());
         entity.setTimer(dTO.getTimer());
-
+        entity.setSolutionTime(dTO.getSolutionTime());
         if (dTO.getTeacherId() != null) {
             IgmaUser igmaUser = new IgmaUser();
             igmaUser.setId(dTO.getTeacherId());
