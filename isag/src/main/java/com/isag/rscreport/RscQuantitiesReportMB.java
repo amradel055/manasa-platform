@@ -6,7 +6,6 @@
 package com.isag.rscreport;
 
 import com.isag.businessservice.RscRestrictionQuantitiesService;
-import com.isag.businessservice.reports.RscExtractReportService;
 import com.isag.businessservice.reports.entityBean.RscExtractReport;
 import com.isag.businessservice.reports.searchBean.RscExtractReportSearchBean;
 import java.io.IOException;

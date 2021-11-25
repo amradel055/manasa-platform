@@ -5,9 +5,8 @@
  */
 package com.isag.businessservice;
 
+import com.isag.businessservice.reports.searchBean.RscExtractReportSearchBean;
 import com.isag.dto.RscTenderDTO;
-import com.isag.dto.RscTenderDetailWorkUnitDTO;
-import com.isag.dto.RscTenderRscAccrualDeductionDTO;
 import com.isag.entity.IsagUser;
 import java.util.List;
 import javax.ejb.Remote;
@@ -40,7 +39,9 @@ public interface RscTenderService {
     public RscTenderDTO updateDeductionAccural(RscTenderDTO rscTenderDTO);
 
     public RscTenderDTO updateAccuralSummary(RscTenderDTO rscTenderDTO);
-    
+
     public List<RscTenderDTO> getRscTenderActiveByBranch(Integer branchId, IsagUser isagUser);
+
+    public List<RscTenderDTO> getAllRscExtractReport(RscExtractReportSearchBean rscExtractReportSearchBean, Integer branchId);
 
 }

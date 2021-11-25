@@ -22,6 +22,8 @@ public class InvInventoryDTO extends BaseEntityDTO{
     private CostCenterDTO costCenterId;
     private GlAdminUnitDTO adminUnitId;
     private Integer invName;
+    private String daribaValue;
+    private String segilValue;
     
     /**
      * @return the code
@@ -172,6 +174,34 @@ public class InvInventoryDTO extends BaseEntityDTO{
      */
     public void setInvName(Integer invName) {
         this.invName = invName;
+    }
+
+    /**
+     * @return the daribaValue
+     */
+    public String getDaribaValue() {
+        return daribaValue;
+    }
+
+    /**
+     * @param daribaValue the daribaValue to set
+     */
+    public void setDaribaValue(String daribaValue) {
+        this.daribaValue = daribaValue;
+    }
+
+    /**
+     * @return the segilValue
+     */
+    public String getSegilValue() {
+        return segilValue;
+    }
+
+    /**
+     * @param segilValue the segilValue to set
+     */
+    public void setSegilValue(String segilValue) {
+        this.segilValue = segilValue;
     }
     
 }

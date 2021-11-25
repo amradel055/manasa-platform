@@ -1454,6 +1454,8 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             invInventoryDTO.setId(entity.getInvInventoryId().getId());
             invInventoryDTO.setName(entity.getInvInventoryId().getName());
             invInventoryDTO.setCode(entity.getInvInventoryId().getCode());
+            invInventoryDTO.setDaribaValue(entity.getInvInventoryId().getDaribaValue());
+            invInventoryDTO.setSegilValue(entity.getInvInventoryId().getSegilValue());
             invInvoiceDTO.setInvInventoryId(invInventoryDTO);
         }
 

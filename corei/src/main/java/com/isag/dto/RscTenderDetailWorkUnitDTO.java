@@ -28,8 +28,10 @@ public class RscTenderDetailWorkUnitDTO extends BaseEntityDTO {
     private Integer index ;
     private BigDecimal total;
     private BigDecimal price;
+    private BigDecimal priceFrom;
     private BigDecimal priceTo;
     private String remarks;
+    private String feedback;
     
     
 
@@ -272,6 +274,34 @@ public class RscTenderDetailWorkUnitDTO extends BaseEntityDTO {
      */
     public void setPriceTo(BigDecimal priceTo) {
         this.priceTo = priceTo;
+    }
+
+    /**
+     * @return the feedback
+     */
+    public String getFeedback() {
+        return feedback;
+    }
+
+    /**
+     * @param feedback the feedback to set
+     */
+    public void setFeedback(String feedback) {
+        this.feedback = feedback;
+    }
+
+    /**
+     * @return the priceFrom
+     */
+    public BigDecimal getPriceFrom() {
+        return priceFrom;
+    }
+
+    /**
+     * @param priceFrom the priceFrom to set
+     */
+    public void setPriceFrom(BigDecimal priceFrom) {
+        this.priceFrom = priceFrom;
     }
     
 }

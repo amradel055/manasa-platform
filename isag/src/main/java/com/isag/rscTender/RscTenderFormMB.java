@@ -5,7 +5,6 @@
  */
 package com.isag.rscTender;
 
-import com.isag.businessservice.OrganizationSiteService;
 import com.isag.businessservice.RscTenderService;
 import com.isag.dto.InvOrganizationSiteDTO;
 import com.isag.dto.IsagDocumentDTO;
@@ -39,8 +38,7 @@ public class RscTenderFormMB extends RSCFormBasicData {
     private RscTenderDetailWorkUnitDTO rscTenderDetailWorkUnitDTOSelected;
     private RscTenderRscAccrualDeductionDTO rscTenderRscAccrualDeductionDTOSelected;
     private RscTenderRscAccrualDeductionDTO rscTenderRscAccrualDeductionDTODeductionSelected;
-    
-    
+
     private List<IsagDocumentDTO> isagDocumentDTOList;
     private List<IsagDocumentDTO> isagDocumentDTODeletedList;
     private IsagDocumentDTO isagDocumentDTOSelected;
@@ -104,7 +102,12 @@ public class RscTenderFormMB extends RSCFormBasicData {
     public String save() {
         try {
             if (tenderDTO != null && tenderDTO.getRscTenderDetailWorkUnitDTOList() != null && !tenderDTO.getRscTenderDetailWorkUnitDTOList().isEmpty()) {
-                tenderDTO = rscTenderService.addRscTender(tenderDTO , getUserData().getUser());
+                if (getUri().contains("newrscTenderform_1_1")) {
+                    tenderDTO.setType(1);
+                } else {
+                    tenderDTO.setType(0);
+                }
+                tenderDTO = rscTenderService.addRscTender(tenderDTO, getUserData().getUser());
                 if (tenderDTO.getMsg() != null && !tenderDTO.getMsg().isEmpty()) {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), tenderDTO.getMsg()));
                 } else {

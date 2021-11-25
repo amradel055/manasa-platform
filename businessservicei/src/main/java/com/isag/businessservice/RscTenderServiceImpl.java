@@ -5,6 +5,7 @@
  */
 package com.isag.businessservice;
 
+import com.isag.businessservice.reports.searchBean.RscExtractReportSearchBean;
 import com.isag.core.GenericDAO;
 import com.isag.dto.InvOrganizationSiteDTO;
 import com.isag.dto.RscTenderDTO;
@@ -199,7 +200,6 @@ public class RscTenderServiceImpl implements RscTenderService {
 //        if (tender.getCustomerId() == null) {
 //            error.append("يجب ادخال مالك");
 //        }
-
 //        if (tender.getType() == null) {
 //            error.append("يجب ادخال نوع المناقصه");
 //        }
@@ -207,7 +207,6 @@ public class RscTenderServiceImpl implements RscTenderService {
 //        if (tender.getDocNumber() == null || tender.getDocNumber().isEmpty()) {
 //            error.append("يجب ادخال الرقم الدفتري");
 //        }
-
         return error;
     }
 
@@ -375,14 +374,15 @@ public class RscTenderServiceImpl implements RscTenderService {
         return rscTender;
     }
 
-    private void returnListDTO(List<RscTender> list, List<RscTenderDTO> dTOList, IsagUser isagUser) {
+    private List<RscTenderDTO> returnListDTO(List<RscTender> list, List<RscTenderDTO> dTOList, IsagUser isagUser) {
         if (!list.isEmpty() && list.get(0) != null && list.get(0).getBranchId() != null) {
             tenderSet = priceTenderService.getAllTenderByBranchId(list.get(0).getBranchId().getId());
             tenderSet.addAll(rscQotationPriceTenderService.getrscTenderSetByBranch(list.get(0).getBranchId().getId()));
         }
         for (RscTender tender : list) {
-            dTOList.add(mapTODTO(tender, false, isagUser));
+            dTOList.add(mapTODTO(tender, true, isagUser));
         }
+        return dTOList;
     }
 
     @Override
@@ -395,4 +395,68 @@ public class RscTenderServiceImpl implements RscTenderService {
         returnListDTO(list, dTOList, isagUser);
         return dTOList;
     }
+
+    @Override
+    public List<RscTenderDTO> getAllRscExtractReport(RscExtractReportSearchBean rscExtractReportSearchBean, Integer branchId) {
+        List<RscTenderDTO> list = new ArrayList<>();
+        Map<String, Object> params = new HashMap();
+
+        Map<Integer, RscTenderDetailWorkUnitDTO> tenderMaster = new HashMap();
+
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT r FROM RscTender r WHERE r.type = 0 ");
+        if (rscExtractReportSearchBean.getInvOrganizationSiteDTOFromCustomer() != null) {
+            query.append(" AND r.customerId.id = :customerId");
+            params.put("customerId", rscExtractReportSearchBean.getInvOrganizationSiteDTOFromCustomer().getId());
+            List<RscTender> RscTenderlist = dao.findListByQuery(query.toString(), params);
+            List<RscTenderDTO> dTOList = new ArrayList<>();
+            dTOList = returnListDTO(RscTenderlist, dTOList, null);
+            if (dTOList != null && !dTOList.isEmpty()) {
+                RscTenderDTO rscTenderDTOMaster = dTOList.get(0);
+
+                if (rscTenderDTOMaster.getRscTenderDetailWorkUnitDTOList() != null && !rscTenderDTOMaster.getRscTenderDetailWorkUnitDTOList().isEmpty()) {
+                    for (RscTenderDetailWorkUnitDTO detailWorkUnitDTO : rscTenderDTOMaster.getRscTenderDetailWorkUnitDTOList()) {
+                        if (detailWorkUnitDTO.getGuideDTO() != null) {
+                            tenderMaster.put(detailWorkUnitDTO.getGuideDTO().getId(), detailWorkUnitDTO);
+                        }
+                    }
+                }
+                query = new StringBuilder();
+                query.append("SELECT r FROM RscTender r WHERE r.type = 1 ");
+                query.append(" AND r.customerId.id = :customerId");
+                params.put("customerId", rscExtractReportSearchBean.getInvOrganizationSiteDTOFromCustomer().getId());
+                RscTenderlist = dao.findListByQuery(query.toString(), params);
+                list = returnListDTO(RscTenderlist, list, null);
+
+                if (list != null && !list.isEmpty()) {
+                    for (RscTenderDTO rscTenderDTO : list) {
+                        if (rscTenderDTO.getRscTenderDetailWorkUnitDTOList() != null && !rscTenderDTO.getRscTenderDetailWorkUnitDTOList().isEmpty()) {
+                            for (RscTenderDetailWorkUnitDTO detailWorkUnitDTO : rscTenderDTO.getRscTenderDetailWorkUnitDTOList()) {
+
+                                if (detailWorkUnitDTO.getGuideDTO() != null) {
+                                    if (tenderMaster.containsKey(detailWorkUnitDTO.getGuideDTO().getId())) {
+                                        RscTenderDetailWorkUnitDTO workUnitDTO = tenderMaster.get(detailWorkUnitDTO.getGuideDTO().getId());
+                                        detailWorkUnitDTO.setPriceFrom(workUnitDTO.getPrice());
+                                        detailWorkUnitDTO.setPriceTo(workUnitDTO.getPriceTo());
+                                        if (detailWorkUnitDTO.getPrice().compareTo(workUnitDTO.getPrice()) == -1) {
+                                            detailWorkUnitDTO.setFeedback("أقل من المتفق عليه");
+                                        } else if (detailWorkUnitDTO.getPrice().compareTo(workUnitDTO.getPriceTo()) == 1) {
+                                            detailWorkUnitDTO.setFeedback("أعلى من المتفق عليه");
+                                        } else {
+                                            detailWorkUnitDTO.setFeedback(" فى حدود المتفق عليه");
+                                        }
+                                    } else {
+                                        detailWorkUnitDTO.setFeedback("غير متفق عليه");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+        return list;
+    }
+
 }
