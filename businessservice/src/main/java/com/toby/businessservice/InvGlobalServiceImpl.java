@@ -65,6 +65,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                 total = AlumetalActivity(weight, total, quantity, cost);
             } else if (invInvoiceDTO.getCompanyActivity().equals(CompanyActivityClassEnum.RetailSaleForClothFactory)
                     && (ScreenNameClassEnum.INVSALESINVOICEFORM.equals(invInvoiceDTO.getScreenName())
+                    || ScreenNameClassEnum.INVRETURNSALESFORM.equals(invInvoiceDTO.getScreenName())
                     || ScreenNameClassEnum.PROWORKORDER.equals(invInvoiceDTO.getScreenName()))) {
                 if (detailEntity.getItemsBarcodesDetail().getProGroupId() != null && detailEntity.getItemsBarcodesDetail().getProGroupId() == 22) {
                     number = number.multiply(detailEntity.getQuantityOfOneUnit());

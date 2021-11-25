@@ -45,7 +45,7 @@
                                     <f:selectItem itemLabel="#{userData.userDDs['RATIO']}"  itemValue="1"  />
 
                                     <p:ajax 
-                                        update="form:totalActualWeight form:totalNetAfterDiscount form:taxvalue form:totalWithTaxValue form:remain  "
+                                        update="form:totalActualWeight form:totalNetAfterDiscount  form:discounthala form:taxvalue form:totalWithTaxValue form:remain  "
                                         listener="#{invPurchaseInvoiceFormDTOMB.recalcHeadValues()}" />
                                 </p:selectOneMenu>      
 
@@ -63,13 +63,28 @@
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
 
+                                <p:outputLabel id="discounthala" style="width: 50%;display: inline!important" 
+                                               value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.discHalala}"
+                                               rendered="#{userData.userScreens['proworkorder'].edit or userData.isAdmin}"/>
+
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 100px" value="خصم الهلالات"
+                                               rendered="#{userData.userScreens['proworkorder'].edit or userData.isAdmin}"/>
+
+                            </div>
+                        </div>
+
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+
                                 <p:inputText id="discount" value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.discount}"  
                                              style="width: 50%;display: inline!important" 
                                              rendered="#{userData.userScreens['proworkorder'].edit or userData.isAdmin}">
                                     <p:ajax event="blur"
 
                                             listener="#{invPurchaseInvoiceFormDTOMB.recalcHeadValues()}"
-                                            update="form:totalActualWeight form:totalNetAfterDiscount form:taxvalue form:totalWithTaxValue form:remain"  />
+                                            update="form:totalActualWeight form:totalNetAfterDiscount  form:discounthala form:taxvalue form:totalWithTaxValue form:remain"  />
                                 </p:inputText>
                                 <p:outputLabel id="per" style="display: inline!important" value="%"
                                                rendered="#{userData.userScreens['proworkorder'].edit or userData.isAdmin}"/>
@@ -179,8 +194,8 @@
 
                             </div>
                         </div>
-                        
-                        
+
+
                         <div class="ui-g-12 ui-xl-12">
                             <p:selectOneMenu id="inventory" value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId}"
                                              rendered="#{(userData.userScreens['proworkorder'].edit)}"
@@ -194,11 +209,29 @@
 
                             </p:selectOneMenu>
 
+                        </div>     
+
+                        <div class="ui-g-12 ui-xl-12 section-edit1">
+                            <div class="ui-g-8 ui-xl-8">
+                                <p:autoComplete style="width:37%!important " 
+                                                dropdown="true"
+                                                disabled="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.loadedSerial ne null}"
+                                                converter="#{invPurchaseInvoiceFormDTOMB.invDelegatorDTOConvertor}"
+                                                value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.invDelegatorId}"
+                                                var="purchasePerson"
+                                                itemLabel="#{purchasePerson}" 
+                                                itemValue="#{purchasePerson}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{invPurchaseInvoiceFormDTOMB.completeDelegatorSales}"
+                                                >
+
+                                </p:autoComplete>
+
+                            </div>
+                            <div class="ui-g-4 ui-xl-4">
+                                <p:outputLabel style="width: 100px;" value="#{userData.userDDs['SALESPERSON']}"/>
+                            </div>
                         </div>
-
-
-
-
 
 
 
@@ -249,7 +282,7 @@
                                 id="removeHalala"
                                 value="حذف الهلله" 
                                 class="newButtons" rendered="#{(userData.userScreens['proworkorder'].add) or  userData.isAdmin}"
-                                update="form:totalActualWeight form:totalNetAfterDiscount form:taxvalue form:totalWithTaxValue form:remain " 
+                                update="form:totalActualWeight form:totalNetAfterDiscount  form:discounthala form:taxvalue form:totalWithTaxValue form:remain " 
                                 actionListener="#{invPurchaseInvoiceFormDTOMB.removeHalala()}"/>
 
                             <p:commandButton     class="saveButton" id="test23"  
@@ -886,7 +919,7 @@
                                                     forceSelection="true" 
                                                     completeMethod="#{autoComplete.completeItemsBarcodesDetailsView}" 
                                                     >
-                                        <p:ajax update=" proof2 proof QuantityT unitvalue QuantityTOU   costTt DISCOUNTValueT discountT netId totalQuantity   totalNet  form:totalActualWeight form:totalNetAfterDiscount   form:totalWithTaxValue form:remain  form:taxvalue"
+                                        <p:ajax update=" proof2 proof QuantityT unitvalue QuantityTOU   costTt DISCOUNTValueT discountT netId totalQuantity   totalNet  form:totalActualWeight form:totalNetAfterDiscount  form:discounthala   form:totalWithTaxValue form:remain  form:taxvalue"
                                                 event="itemSelect" listener="#{invPurchaseInvoiceFormDTOMB.validateItems(invPurchaseInvoiceDetailsTable)}" />
                                     </p:autoComplete>            
                                 </p:column>
@@ -919,7 +952,7 @@
                                                  style="width:95%; text-align: left;">
                                         <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.validateQuantityOfUnitColum(invPurchaseInvoiceDetailsTable)}" 
                                                 process="@this"
-                                                update="netId totalQuantity costTt   totalNet form:totalNetAfterDiscount form:totalActualWeight form:totalWithTaxValue form:remain form:taxvalue  invItemNameIn Quantity QuantityT NUMBER QuantityOu "/>
+                                                update="netId totalQuantity costTt   totalNet form:totalNetAfterDiscount  form:discounthala form:totalActualWeight form:totalWithTaxValue form:remain form:taxvalue  invItemNameIn Quantity QuantityT NUMBER QuantityOu "/>
                                     </p:inputText>  
 
                                 </p:column>
@@ -938,7 +971,7 @@
                                                  style="width:95%; text-align: left;">
                                         <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.validateQuantityColum(invPurchaseInvoiceDetailsTable)}" 
                                                 process="@this"
-                                                update="netId totalQuantity   totalNet form:totalNetAfterDiscount form:totalActualWeight form:totalWithTaxValue form:remain form:taxvalue  invItemNameIn Quantity QuantityT NUMBER QuantityOu "/>
+                                                update="netId totalQuantity   totalNet form:totalNetAfterDiscount  form:discounthala form:totalActualWeight form:totalWithTaxValue form:remain form:taxvalue  invItemNameIn Quantity QuantityT NUMBER QuantityOu "/>
                                     </p:inputText>        
 
                                 </p:column>
@@ -980,10 +1013,10 @@
                                           filterable="false">
                                     <p:inputText id="costTt" 
                                                  value="#{invPurchaseInvoiceDetailsTable.cost}"
-                                                 disabled="#{invPurchaseInvoiceDetailsTable.showPrice}"
+                                                 disabled="#{not userData.userScreens['proworkorder'].edit or invPurchaseInvoiceDetailsTable.showPrice}"
                                                  style="width:95%; text-align: right;">
                                         <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.validatePriceColumn(invPurchaseInvoiceDetailsTable)}" 
-                                                update="netId totalQuantity   totalNet form:totalActualWeight form:totalNetAfterDiscount form:totalWithTaxValue form:remain form:taxvalue QuantityT NUMBER QuantityOu "/>
+                                                update="netId totalQuantity   totalNet form:totalActualWeight form:totalNetAfterDiscount  form:discounthala form:totalWithTaxValue form:remain form:taxvalue QuantityT NUMBER QuantityOu "/>
                                     </p:inputText>      
                                 </p:column>
 
@@ -993,7 +1026,7 @@
                                                  disabled="#{not userData.userScreens['proworkorder'].edit or invPurchaseInvoiceDetailsTable.showPrice}"
                                                  style="width:70%!important;display: inline!important; text-align: left;">
                                         <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.calcDiscountPersentageDetail(invPurchaseInvoiceDetailsTable)}"
-                                                update="DISCOUNTValueT discountT netId totalQuantity  totalNet form:totalActualWeight form:totalNetAfterDiscount  form:taxvalue form:totalWithTaxValue form:remain  "/>
+                                                update="DISCOUNTValueT discountT netId totalQuantity  totalNet form:totalActualWeight form:totalNetAfterDiscount  form:discounthala  form:taxvalue form:totalWithTaxValue form:remain  "/>
                                     </p:inputText>  
 
                                 </p:column>
@@ -1004,7 +1037,7 @@
                                                  disabled="#{not userData.userScreens['proworkorder'].edit or invPurchaseInvoiceDetailsTable.showPrice}"
                                                  style="width:70%!important;display: inline!important; text-align: left;">
                                         <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.calcDiscountValueDetail(invPurchaseInvoiceDetailsTable)}"
-                                                update="DISCOUNTValueT discountT netId totalQuantity  totalNet form:totalActualWeight form:totalNetAfterDiscount  form:taxvalue form:totalWithTaxValue form:remain  "/>
+                                                update="DISCOUNTValueT discountT netId totalQuantity  totalNet form:totalActualWeight form:totalNetAfterDiscount  form:discounthala  form:taxvalue form:totalWithTaxValue form:remain  "/>
                                     </p:inputText>  
 
                                     <p:outputLabel value="%"  style="display: inline!important"  />
@@ -1065,7 +1098,7 @@
                                                        icon="fa fa-fw fa-search-plus" >
                                     </p:commandButton>
 
-                                    <p:commandButton  update="invPurchaseInvoiceDetailsTable netId totalQuantity    totalNet form:totalActualWeight form:totalNetAfterDiscount  form:taxvalue form:totalWithTaxValue form:remain"
+                                    <p:commandButton  update="invPurchaseInvoiceDetailsTable netId totalQuantity    totalNet form:totalActualWeight form:totalNetAfterDiscount  form:discounthala  form:taxvalue form:totalWithTaxValue form:remain"
                                                       title="#{userData.userDDs['DELETE']}" 
                                                       class="sdeleteButtons" 
                                                       style="color: #fff!important;background-color: red; width: 10px; height: 20px; border-radius: 3px; margin-right: 2px;"
