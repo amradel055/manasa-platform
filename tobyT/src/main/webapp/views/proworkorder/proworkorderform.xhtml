@@ -163,6 +163,22 @@
                                 <p:outputLabel style="width: 110px" value="#{userData.userDDs['REMA_AMOUNT']}"/>
                             </div>
                         </div>
+
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <h:inputText id="payedsd"  
+                                             style="width:100%;text-align:right" 
+                                             value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.offerCopoun}" >
+                                    <p:ajax  update="@form" />
+                                </h:inputText>
+
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 80px;" 
+                                               value="كوبون الخصم"/>
+
+                            </div>
+                        </div>
                         
                         
                         <div class="ui-g-12 ui-xl-12">
@@ -216,7 +232,7 @@
 
 
 
-                        
+
 
 
 
@@ -236,6 +252,15 @@
                                 update="form:totalActualWeight form:totalNetAfterDiscount form:taxvalue form:totalWithTaxValue form:remain " 
                                 actionListener="#{invPurchaseInvoiceFormDTOMB.removeHalala()}"/>
 
+                            <p:commandButton     class="saveButton" id="test23"  
+                                                 title="العرض"
+                                                 value="خصم الكوبون" 
+                                                 rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 0 or true}"
+                                                 icon="fa fa-fw fa-save" 
+                                                 action="#{invPurchaseInvoiceFormDTOMB.offerCopoun()}"
+                                                 update="@form"
+                                                 >
+                            </p:commandButton>
                             <p:commandButton     class="saveButton" id="test22"  
                                                  title="العرض"
                                                  value="عرض القطعة والتانية خصم 50%" 
@@ -255,9 +280,9 @@
                             </p:commandButton>
                             <p:commandButton     class="saveButton"  
                                                  title="العرض"
-                                                 value="عرض الخصم 20 %" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 0 and false}"
+                                                 value="عرض الخصم 20 %" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 1}"
                                                  icon="fa fa-fw fa-save" 
-                                                 action="#{invPurchaseInvoiceFormDTOMB.discount25ForAll(20)}"
+                                                 action="#{invPurchaseInvoiceFormDTOMB.discount25ForAll(30)}"
                                                  update="@form"
                                                  >
                             </p:commandButton>
@@ -506,11 +531,7 @@
                                 <p:outputLabel id="notice"  style="width:48%" value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.customerNotice}" />
                             </div>
                             <div class="ui-g-6 ui-xl-6">
-
-
                                 <p:outputLabel style="width: 65px" value=" ملاحظة"/>
-
-
                             </div>
                         </div>
                         <div class="ui-g-12 ui-xl-12">
@@ -827,7 +848,7 @@
                                                       class="saddButton"
                                                       icon="fa fa-plus"
                                                       title="#{userData.userDDs['ADD']}" 
-                                                      rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.loadedSerial eq null  }"
+                                                      rendered="#{(userData.userScreens['proworkorder'].edit) or invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id eq null or userData.isAdmin}"
                                                       actionListener="#{invPurchaseInvoiceFormDTOMB.addInvDetail()}" 
                                                       update=":form:fieldSetId"  
                                                       oncomplete="PrimeFaces.focus('form:invPurchaseInvoiceDetailsTable:'+#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.invPurchaseInvoiceDetailList.size()}+':invItemNameIn')"
@@ -1031,8 +1052,7 @@
                                     <p:commandButton  id="b7" icon="fa fa-plus" 
                                                       class="saddbuttonins" style="color: #fff!important;background-color: #00BCD4; width: 10px; height: 20px;border-radius: 3px "
                                                       title="#{userData.userDDs['ADD']}" 
-                                                      rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.loadedSerial eq null}"
-                                                      actionListener="#{invPurchaseInvoiceFormDTOMB.addInvDetail()}" 
+                                                      rendered="#{(userData.userScreens['proworkorder'].edit) or invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id eq null or userData.isAdmin}"                                                      actionListener="#{invPurchaseInvoiceFormDTOMB.addInvDetail()}" 
                                                       update=":form:fieldSetId"  
                                                       immediate="true"
                                                       oncomplete="PrimeFaces.focus('form:invPurchaseInvoiceDetailsTable:'+#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.invPurchaseInvoiceDetailList.size()}+':invItemNameIn')"

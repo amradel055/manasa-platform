@@ -25,5 +25,7 @@ public interface SupplierAccountService {
     public List<OrganizationSiteStatementView> getAllOpeningBalanceBeforeBalanceBySearchBean(SupplierAccountSearchBean supplierAccountSearchBean);
     
     public BigDecimal getAccountForOrganizationSite(Integer organizationSiteId);
+    
+    public List<OrganizationSiteStatementView> getStatementForOrganizationSite(Integer organizationSiteId);
 
 }

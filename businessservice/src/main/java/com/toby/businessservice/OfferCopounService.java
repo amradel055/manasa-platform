@@ -6,6 +6,7 @@
 package com.toby.businessservice;
 
 import com.toby.dto.OfferCopounDTO;
+import com.toby.entity.OfferCopoun;
 import com.toby.entity.TobyUser;
 import java.math.BigDecimal;
 import java.util.List;
@@ -41,4 +42,6 @@ public interface OfferCopounService {
     public void addOfferCopoun(Integer number, Integer discountType, BigDecimal discountValue, Integer gallaryType, TobyUser tobyUser);
     
     public BigDecimal getOfferCopounByCustomerAndCode(Integer customerId, String code);
+    
+    public OfferCopoun getOfferCopounByCode(String code,Integer type);
 }

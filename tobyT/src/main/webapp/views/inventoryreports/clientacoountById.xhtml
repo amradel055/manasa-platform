@@ -21,15 +21,7 @@
                         <div class="ui-g-6 ui-xl-6">
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:selectOneMenu id="group" value="#{supplierAccountReportMB.gallaryDTOSelect}"
-                                                     converter="#{supplierAccountReportMB.gallaryDTOConverters}">
-                                        <f:selectItem itemLabel="اختر معرض" itemValue=""/>
-                                        <f:selectItems value="#{supplierAccountReportMB.gallaryLists}" 
-                                                       var="gallary"
-                                                       itemLabel="#{gallary}"
-                                                       itemValue="#{gallary}" />
-                                        <p:ajax listener="#{supplierAccountReportMB.hishis()}" />
-                                    </p:selectOneMenu>
+                                    <p:outputLabel style="width: 50px;margin-right: 1%" value="#{supplierAccountReportMB.gallaryDTOSelect}"/>
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:outputLabel style="width: 50px;margin-right: 1%" value="المعرض"/>
@@ -37,18 +29,8 @@
                             </div>
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:autoComplete style="width:40%!important"
-                                                    dropdown="true"
-                                                    converter="#{supplierAccountReportMB.invOrgSiteConverter}"
-                                                    value="#{supplierAccountReportMB.supplierAccountSearchBean.fromorganizationNameDTO}"
-                                                    var="organization"
-                                                    itemLabel="#{organization}" 
-                                                    itemValue="#{organization}"
-                                                    forceSelection="true" 
-                                                    completeMethod="#{supplierAccountReportMB.completOrgSiteFrom}"
-                                                    maxResults="10"
-                                                    > 
-                                    </p:autoComplete>
+                                    <p:outputLabel style="width: 75px;" value="#{supplierAccountReportMB.supplierAccountSearchBean.fromorganizationNameDTO}"/>
+
 
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
@@ -60,81 +42,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="ui-g-6 ui-xl-6">
-                            <div class="ui-g-12 ui-xl-12">
-                                <div class="ui-g-6 ui-xl-6">
-
-                                    <p:calendar pattern="dd/MM/yyyy" 
-                                                value="#{supplierAccountReportMB.supplierAccountSearchBean.dateFrom}"
-                                                style="width: 50%"
-                                                id="dateFrom">
-
-                                    </p:calendar>
-                                </div>
-                                <div class="ui-g-6 ui-xl-6">
-
-
-                                    <p:outputLabel  style="width: 70px;" value="#{userData.userDDs['FROM_DATE']}"/>
-
-
-                                </div>
-                            </div>
-
-                            <div class="ui-g-12 ui-xl-12">
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:inputText value="#{supplierAccountReportMB.dayHijriFrom}" /> يوم
-                                    <p:inputText value="#{supplierAccountReportMB.monthHijriFrom}" />  شهر
-                                    <p:inputText value="#{supplierAccountReportMB.yearHijriFrom}" />  سنة
-                                    <p:commandButton     class="saveButton" id="excuteFrom" 
-                                                         value="تنفيذ" 
-                                                         icon="fa fa-fw fa-save"
-                                                         action="#{supplierAccountReportMB.convertDateFrom()}"
-                                                         update="dateFrom"
-                                                         />
-                                </div>
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 50px"  value="من تاريخ هجري" />
-                                </div>
-                            </div>
-
-                            <div class="ui-g-12 ui-xl-12">
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:calendar pattern="dd/MM/yyyy" 
-                                                value="#{supplierAccountReportMB.supplierAccountSearchBean.dateTo}"
-                                                style="width: 50%"
-                                                id="dateTo">
-
-                                    </p:calendar>
-
-                                </div>
-                                <div class="ui-g-6 ui-xl-6">
-
-                                    <p:outputLabel  style="width: 70px" value="#{userData.userDDs['TO_DATE']}"/>
-
-
-
-                                </div>
-                            </div>
-
-                            <div class="ui-g-12 ui-xl-12">
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:inputText value="#{supplierAccountReportMB.dayHijriTo}" /> يوم
-                                    <p:inputText value="#{supplierAccountReportMB.monthHijriTo}" />  شهر
-                                    <p:inputText value="#{supplierAccountReportMB.yearHijriTo}" />  سنة
-                                    <p:commandButton     class="saveButton" id="excuteTo" 
-                                                         value="تنفيذ" 
-                                                         icon="fa fa-fw fa-save"
-                                                         action="#{supplierAccountReportMB.convertDateTo()}"
-                                                         update="dateTo"
-                                                         />
-                                </div>
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 50px"  value="إلى تاريخ هجري" />
-                                </div>
-                            </div>
-                        </div>
-
-
 
                     </div>
                 </div>
@@ -167,7 +74,7 @@
                                           ajax="false"
                                           onclick="form.target = '_blank'"  
                                           value="#{userData.userDDs['PRINT']}" 
-                                          actionListener="#{supplierAccountReportMB.exportPDF}"
+                                          actionListener="#{supplierAccountReportMB.exportPDFById}"
                                           title="#{userData.userDDs['PRINT']}"
                                           immediate="true" />
 

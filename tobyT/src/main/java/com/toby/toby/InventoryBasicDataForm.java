@@ -63,6 +63,7 @@ import com.toby.dto.SymbolDTO;
 import com.toby.entity.InvInventory;
 import com.toby.entity.InvItem;
 import com.toby.entity.InvOrganizationSite;
+import com.toby.entity.OfferCopoun;
 import com.toby.print.IReportService;
 import com.toby.print.IReportServiceImpl;
 import com.toby.views.ItemsBarcodesDetailsView;
@@ -659,9 +660,15 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
             if (getInvInvoiceDTO().getOrganizationSiteId() != null
                     && getInvInvoiceDTO().getOrganizationSiteId().getId() != null
                     && getInvInvoiceDTO().getOfferCopoun() != null) {
-                BigDecimal discount = offerCopounService.getOfferCopounByCustomerAndCode(getInvInvoiceDTO().getOrganizationSiteId().getId(), getInvInvoiceDTO().getOfferCopoun());
-                if (discount != null && discount.compareTo(BigDecimal.ZERO) == 1) {
-                    discount25ForAll(discount.intValue());
+                OfferCopoun copoun = offerCopounService.getOfferCopounByCode(getInvInvoiceDTO().getOfferCopoun(),1);
+                if (copoun != null && copoun.getDiscountValue() != null && copoun.getDiscountValue().compareTo(BigDecimal.ZERO) == 1 && getInvInvoiceDTO().getTotalNet().compareTo(new BigDecimal(700)) != -1) {
+                    if (copoun.getDiscountType() != null && copoun.getDiscountType() == 1) {
+                        getInvInvoiceDTO().setDiscountType(0);
+                        getInvInvoiceDTO().setDiscount(copoun.getDiscountValue());
+                        recalcHeadValues();
+                    } else {
+                        discount25ForAll(copoun.getDiscountValue().intValue());
+                    }
                 } else {
                     for (InvDetailDTO detailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
                         if (detailDTO.getItemsBarcodesDetail() == null && detailDTO.getItemsBarcodesDetailTrans() != null) {
@@ -1979,7 +1986,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
     private void initData() {
         if (getInvInvoiceDTO() != null) {
-            if (getInvInvoiceDTO().getOrganizationSiteId() != null
+            if (getInvInvoiceDTO().getOrganizationSiteId() != null && invOrganizationSiteDTOList != null
                     && !invOrganizationSiteDTOList.contains(getInvInvoiceDTO().getOrganizationSiteId())) {
                 invOrganizationSiteDTOList.add(0, getInvInvoiceDTO().getOrganizationSiteId());
             }

@@ -78,14 +78,18 @@ public class OfferCompanyServiceImpl implements OfferCompanyService {
     public String getNoticeByCustomerId(Integer id) {
         String offerCompanyNotice = "";
         StringBuilder builder = new StringBuilder();
-        builder.append("SELECT oc.notice FROM offer_company oc\n"
-                + "join toby.inv_organization_site os\n"
-                + "on os.offer_company_id = oc.id\n").
-                append("where os.id =  \n ").
-                append(id).append(" ");
-        List<String> details = dao.executeNativeQuery(builder.toString());
-        for (String customerNotice : details) {
-            offerCompanyNotice = customerNotice;
+//        builder.append("SELECT oc.notice FROM offer_company oc\n"
+//                + "join toby.inv_organization_site os\n"
+//                + "on os.offer_company_id = oc.id\n").
+//                append("where os.id =  \n ").
+//                append(id).append(" ");
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", id);
+        builder.append("Select i.offerCompanyId from InvOrganizationSite i where i.id =:id AND i.offerCompanyId is not null");
+        List<OfferCompany> offerCompanyList = dao.findListByQuery(builder.toString(), params);
+//        List<String> details = dao.executeNativeQuery(builder.toString());
+        for (OfferCompany customerNotice : offerCompanyList) {
+            offerCompanyNotice = customerNotice.getNotice() + " " + " نسبة العمولة " + customerNotice.getDiscount();
         }
         return offerCompanyNotice;
     }

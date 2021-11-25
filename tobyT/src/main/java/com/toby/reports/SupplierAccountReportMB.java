@@ -102,9 +102,9 @@ public class SupplierAccountReportMB extends BaseReportBean {
             InvOrganizationSiteDTO invOrganizationSiteDTO = organizationSiteService.findOrganizationSiteByIdDTO(invOrganizationSiteDTOId);
             supplierAccountSearchBean.setFromorganizationNameDTO(invOrganizationSiteDTO);
             supplierAccountSearchBean.setToorganizationNameDTO(invOrganizationSiteDTO);
-            completOrgSiteFrom(null).add(0, invOrganizationSiteDTO);
-            completOrgSiteTo(null).add(0, invOrganizationSiteDTO);
-            search();
+//            completOrgSiteFrom(null).add(0, invOrganizationSiteDTO);
+//            completOrgSiteTo(null).add(0, invOrganizationSiteDTO);
+            searchById();
         }
 
     }
@@ -216,46 +216,47 @@ public class SupplierAccountReportMB extends BaseReportBean {
     }
 
     public void searchById() {
+        if (getSupplierAccountSearchBean() != null && getSupplierAccountSearchBean().getFromorganizationNameDTO() != null) {
+            setOrganizationSiteRootList(new ArrayList<>());
+            if (uri != null && uri.contains("clientacoount")) {
+                setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId, getGallaryDTOSelect() != null ? getGallaryDTOSelect().getId() : null, 0, getSupplierAccountSearchBean()));
+            } else if (uri != null && uri.contains("contractoraccount")) {
+                setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId, getGallaryDTOSelect() != null ? getGallaryDTOSelect().getId() : null, 4, getSupplierAccountSearchBean()));
+            } else {
+                setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId, getGallaryDTOSelect() != null ? getGallaryDTOSelect().getId() : null, 1, getSupplierAccountSearchBean()));
+            }
 
-        setOrganizationSiteRootList(new ArrayList<>());
-        if (uri != null && uri.contains("clientacoount")) {
-            setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId,  getGallaryDTOSelect() != null ? getGallaryDTOSelect().getId() : null, 0, getSupplierAccountSearchBean()));
-        } else if (uri != null && uri.contains("contractoraccount")) {
-            setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId,  getGallaryDTOSelect() != null ? getGallaryDTOSelect().getId() : null, 4, getSupplierAccountSearchBean()));
-        } else {
-            setOrganizationSiteRootList(organizationSiteService.getSupplierByBranchIdForSupplierAccountReportMB(branchId,  getGallaryDTOSelect() != null ? getGallaryDTOSelect().getId() : null, 1, getSupplierAccountSearchBean()));
-        }
+            organizationSiteStatementmap = new HashMap<>();
+            organizationSiteStatementBeanMap = new HashMap<>();
+            openingBalanceBeforeFromDateMap = new HashMap<>();
+            organizationSiteStatementViewBeforeList = new ArrayList<>();
+            balance = BigDecimal.ZERO;
+            setSupplierAccountViewBeanList(new ArrayList<>());
+            getSupplierAccountSearchBean().setBranchId(getUserData().getUserBranch().getId());
 
-        organizationSiteStatementmap = new HashMap<>();
-        organizationSiteStatementBeanMap = new HashMap<>();
-        openingBalanceBeforeFromDateMap = new HashMap<>();
-        organizationSiteStatementViewBeforeList = new ArrayList<>();
-        balance = BigDecimal.ZERO;
-        setSupplierAccountViewBeanList(new ArrayList<>());
-        getSupplierAccountSearchBean().setBranchId(getUserData().getUserBranch().getId());
+            setOrganizationSiteStatementViewList(new ArrayList<>());
+            if (uri != null && uri.contains("clientacoount")) {
+                type = 0;
+                supplierAccountSearchBean.setOrganizationType(type);
+            } else if (uri != null && uri.contains("contractoraccount")) {
+                type = 4;
+                supplierAccountSearchBean.setOrganizationType(type);
+            } else {
+                type = 1;
+                supplierAccountSearchBean.setOrganizationType(type);
+            }
+            organizationSiteStatementViewList = supplierAccountService.getStatementForOrganizationSite(getSupplierAccountSearchBean().getFromorganizationNameDTO().getId());
+            if (supplierAccountSearchBean.getDateFrom() != null) {
+                organizationSiteStatementViewBeforeList = supplierAccountService.getAllOpeningBalanceBeforeBalanceBySearchBean(supplierAccountSearchBean);
+            }
+            fillOpeningBalanceMap();
+            if (organizationSiteStatementViewList != null && !organizationSiteStatementViewList.isEmpty()) {
+                fillGroupMapWithCorrespondingItem();
+            }
+            prepareRootGroupValues();
+            mergeGroupsWithItems();
 
-        setOrganizationSiteStatementViewList(new ArrayList<>());
-        if (uri != null && uri.contains("clientacoount")) {
-            type = 0;
-            supplierAccountSearchBean.setOrganizationType(type);
-        } else if (uri != null && uri.contains("contractoraccount")) {
-            type = 4;
-            supplierAccountSearchBean.setOrganizationType(type);
-        } else {
-            type = 1;
-            supplierAccountSearchBean.setOrganizationType(type);
         }
-        organizationSiteStatementViewList = supplierAccountService.getAllOrganizationSiteStatementSearchBeanById(getSupplierAccountSearchBean());
-        if (supplierAccountSearchBean.getDateFrom() != null) {
-            organizationSiteStatementViewBeforeList = supplierAccountService.getAllOpeningBalanceBeforeBalanceBySearchBean(supplierAccountSearchBean);
-        }
-        fillOpeningBalanceMap();
-        if (organizationSiteStatementViewList != null && !organizationSiteStatementViewList.isEmpty()) {
-            fillGroupMapWithCorrespondingItem();
-        }
-        prepareRootGroupValues();
-        mergeGroupsWithItems();
-
     }
 
     public void fillOpeningBalanceMap() {
@@ -477,6 +478,15 @@ public class SupplierAccountReportMB extends BaseReportBean {
         } else {
             totalBalance = totalBalance.add(accountViewBean.getOpenningBalance() != null ? accountViewBean.getOpenningBalance() : BigDecimal.ZERO);
         }
+    }
+    
+    public void exportPDFById(ActionEvent actionEvent) throws JRException, IOException {
+        searchById();
+        String reportName = "supplierAccountReport.jasper";
+        if (uri != null && uri.contains("contractoraccount")) {
+            reportName = "contractorAccountReport.jasper";
+        }
+        fillReport(prepareReport(), getUserData().getReportPath() + reportName, getSupplierAccountViewBeanList(), "pdf");
     }
 
     @Override

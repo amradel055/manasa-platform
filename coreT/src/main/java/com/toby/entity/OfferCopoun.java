@@ -59,6 +59,8 @@ public class OfferCopoun extends BaseEntity{
     private Branch branchId;
     @Column(name = "gallary_type")
     private Integer gallaryType;
+    @Column(name = "type")
+    private Integer type;
 
     public OfferCopoun() {
     }
@@ -247,6 +249,20 @@ public class OfferCopoun extends BaseEntity{
      */
     public void setGallaryType(Integer gallaryType) {
         this.gallaryType = gallaryType;
+    }
+
+    /**
+     * @return the type
+     */
+    public Integer getType() {
+        return type;
+    }
+
+    /**
+     * @param type the type to set
+     */
+    public void setType(Integer type) {
+        this.type = type;
     }
 
 }

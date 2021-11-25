@@ -186,7 +186,7 @@ public class InvDialogueServiceImpl implements InvDialogueService {
         if (type == 2) {
             filters.put("Invtype", 0);
         } else if (type == 3) {
-            filters.put("Invtype", 1);
+            filters.put("Invtype", 4);
         } else if (type == 1) {
             filters.put("Invtype", 4);
         } else {
@@ -563,7 +563,7 @@ public class InvDialogueServiceImpl implements InvDialogueService {
         } else if (screenNameClassEnum.equals(ScreenNameClassEnum.INVRETURNPURCHASEFORM)) {
             dTO = loadInvPurchaseInvoice(dTO, 0);
         } else if (screenNameClassEnum.equals(ScreenNameClassEnum.INVRETURNSALESFORM)) {
-            dTO = loadInvPurchaseInvoice(dTO, 1);
+            dTO = loadInvPurchaseInvoice(dTO, 4);
         } else if (screenNameClassEnum.equals(ScreenNameClassEnum.INVADDINGORDERFORM)) {
             dTO = loadInvPurchaseOrder(dTO);
         } else if (screenNameClassEnum.equals(ScreenNameClassEnum.INVPERMISSIONORDERFORM)) {

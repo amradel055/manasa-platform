@@ -26,6 +26,17 @@
                         <div class="ui-g-6 ui-xl-6">
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText id="searchBySerial"  style="width:100%" value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.searchBySerial}" >
+                                        <p:ajax event="blur" update="@form"  listener="#{invPurchaseInvoiceFormDTOMB.searchReturnInvoiceBySerial()}"  />
+                                    </p:inputText>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel for="searchBySerial" style="width: 95px;"  value="بحث برقم الفاتورة" />
+                                </div>
+                            </div>
+
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
                                     <p:inputText style="width: 37%" 
                                                  id="purchIdVal" readonly="true"
                                                  value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.serial}" />
@@ -292,7 +303,7 @@
 
                 <p:dataTable id="invPurchaseInvoiceDetailsTable"
                              widgetVar="invPurchaseInvoiceDetailsTable"
-                             style="margin-bottom:20px"
+                             style="margin-bottom:20px; width: auto"
                              var="invPurchaseInvoiceDetailsTable"
                              rowIndexVar="index" 
                              dir="rtl" 
@@ -310,147 +321,171 @@
                                           class="saddButton"
                                           icon="fa fa-plus"
                                           title="#{userData.userDDs['ADD']}" 
-                                          rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.loadedSerial  eq null}"
+                                          rendered="#{(userData.userScreens['proworkorder'].edit) or invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id eq null or userData.isAdmin}"
                                           actionListener="#{invPurchaseInvoiceFormDTOMB.addInvDetail()}" 
                                           update=":form:fieldSetId"  
                                           oncomplete="PrimeFaces.focus('form:invPurchaseInvoiceDetailsTable:'+#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.invPurchaseInvoiceDetailList.size()}+':invItemNameIn')"
                                           immediate="true"
                                           ajax="true"
                                           style="float:right"/>
+                        <p:commandButton   title="بحث" 
+                                           class="sreloadButtons" style="background-color:rgb(162, 46, 247);border-radius: 3px;margin-bottom:3px"
 
-                        <p:outputPanel>
-                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
-                            <p:inputText id="globalFilter" onkeyup="PF('invPurchaseInvoiceDetailsTable').filter()" style="width:150px" />
-                        </p:outputPanel>
+                                           onclick="PF('dlg4').show();"
+                                           icon="fa fa-fw fa-search-plus" >
+                        </p:commandButton>
                     </f:facet>
 
-                    <p:column headerText="#" style="width: 4vh;text-align:center;border-radius: 0px" >
+                    <p:column headerText="#" style="width: 4vh;text-align:center;border-radius: 0px; font-size: 14px;" >
                         <h:outputText value="#{invPurchaseInvoiceDetailsTable.serial}"  />
                     </p:column>
 
-                    <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="itemName" headerText="#{userData.userDDs['ITEM']}" 
+                    <p:column style="width: 21vh;text-align: -webkit-auto;border-radius: 0px" id="itemName" headerText="#{userData.userDDs['ITEM']}" 
                               filterBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}" 
                               filterMatchMode="contains" 
                               sortBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}"
                               filterable="false">
                         <p:outputLabel value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}" 
-                                       rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.loadedSerial  ne null}" />
-                        <p:autoComplete id="invItemNameIn" 
-                                        rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.loadedSerial  eq null}"
+                                       rendered="#{invPurchaseInvoiceDetailsTable.isEdit}" />
+                        <p:autoComplete id="invItemNameIn"  
                                         style="width:100%"
-                                        converter="#{invPurchaseInvoiceFormDTOMB.itemsBarcodesDetailsViewConverter}"
+                                        rendered="#{not invPurchaseInvoiceDetailsTable.isEdit}"
+                                        converter="#{autoComplete.itemsBarcodesDetailsViewConverter}"
                                         value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}"
-                                        maxResults="10"
+                                        maxResults="30"
                                         var="item"
                                         itemLabel="#{item}" 
                                         itemValue="#{item}" 
                                         forceSelection="true" 
-                                        completeMethod="#{invPurchaseInvoiceFormDTOMB.completeItemsDatas}" >
-                            <p:ajax update=" unitvalue length paintColor QuantityT WeightT costTt discountT netId totalQuantity totalWeight  totalNet  form:totalActualWeight form:totalNetAfterDiscount   form:totalWithTaxValue form:taxvalue"
+                                        completeMethod="#{autoComplete.completeItemsBarcodesDetailsView}" 
+                                        >
+                            <p:ajax update=" proof2 proof QuantityT unitvalue QuantityTOU   costTt DISCOUNTValueT discountT netId totalQuantity   totalNet  form:totalActualWeight form:totalNetAfterDiscount   form:totalWithTaxValue   form:taxvalue"
                                     event="itemSelect" listener="#{invPurchaseInvoiceFormDTOMB.validateItems(invPurchaseInvoiceDetailsTable)}" />
                         </p:autoComplete>            
                     </p:column>
 
-                    <p:column  style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="Unit"
+                    <p:column  style="width: 14vh;text-align: -webkit-auto;border-radius: 0px; font-size: 14px;" id="Unit"
 
                                filterBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.unitName}" 
                                filterMatchMode="contains" 
                                sortBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.unitName}"
                                filterable="false"
-                               headerText="#{userData.userDDs['UNIT_NUMBER']}">
-                        <p:inputText id="unitvalue" readonly="true" 
-                                     disabled="true"
-                                     value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.unitName}" style="width: 95%" />  
+                               headerText="الوحدة">
+                        <p:outputLabel id="unitvalue"
+                                       value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.unitName}" style="width: 95%" />  
 
                     </p:column>
 
-                    <p:column style="width: 12vh;text-align: -webkit-auto;border-radius: 0px" id="tall" headerText="الطول"
-                              rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.companyActivity eq 'Alumetal'}"
-                              filterBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.length}" 
+
+
+
+
+                    <p:column style="width: 10vh;text-align: -webkit-auto;border-radius: 0px; font-size: 14px;"
+                              id="QuantityOu" 
+                              headerText="الكمية"
+                              filterBy="#{invPurchaseInvoiceDetailsTable.quantityOfOneUnit}" 
                               filterMatchMode="contains" 
-                              sortBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.length}"
-                              filterable="false" >
-                        <p:inputText style="width:99%" 
-                                     disabled="true" 
-                                     id="length" readonly="true"  
-                                     value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.length}"/>
+                              sortBy="#{invPurchaseInvoiceDetailsTable.quantityOfOneUnit}"
+                              filterable="false">
+                        <p:inputText id="QuantityTOU"  
+                                     value="#{invPurchaseInvoiceDetailsTable.quantityOfOneUnit}" 
+                                     style="width:95%; text-align: left;">
+                            <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.validateQuantityOfUnitColum(invPurchaseInvoiceDetailsTable)}" 
+                                    process="@this"
+                                    update="netId totalQuantity costTt   totalNet form:totalNetAfterDiscount form:totalActualWeight form:totalWithTaxValue  form:taxvalue  invItemNameIn Quantity QuantityT NUMBER QuantityOu "/>
+                        </p:inputText>  
+
                     </p:column>
 
-                    <p:column style="width: 12vh;text-align: -webkit-auto;border-radius: 0px" id="color" headerText="اللون"
-                              rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.companyActivity eq 'Alumetal'}"
-                              filterBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.paintColorName}" 
-                              filterMatchMode="contains" 
-                              sortBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.paintColorName}"
-                              filterable="false" >
-                        <p:inputText style="width:99%" 
-                                     disabled="true" 
-                                     id="paintColor" readonly="true"  
-                                     value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.paintColorName}"/>
-                    </p:column>
-
-
-                    <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px"
-                              id="Quantity"
+                    <p:column style="width: 9vh;text-align: -webkit-auto;border-radius: 0px; font-size: 14px;"
+                              id="NUMBERe"
                               headerText="#{userData.userDDs['NUMBER']}"
+                              filterBy="#{invPurchaseInvoiceDetailsTable.number}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{invPurchaseInvoiceDetailsTable.number}"
+                              filterable="false">
+
+                        <p:inputText id="NUMBER"  
+                                     value="#{invPurchaseInvoiceDetailsTable.number}" 
+
+                                     style="width:95%; text-align: left;">
+                            <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.validateQuantityColum(invPurchaseInvoiceDetailsTable)}" 
+                                    process="@this"
+                                    update="netId totalQuantity   totalNet form:totalNetAfterDiscount form:totalActualWeight form:totalWithTaxValue form:taxvalue  invItemNameIn Quantity QuantityT NUMBER QuantityOu "/>
+                        </p:inputText>        
+
+                    </p:column>
+
+
+                    <p:column style="width: 9vh;text-align: left;border-radius: 0px; font-size: 14px;"
+                              id="Quantity"
+                              headerText="ك ك"
                               filterBy="#{invPurchaseInvoiceDetailsTable.quantity}" 
                               filterMatchMode="contains" 
                               sortBy="#{invPurchaseInvoiceDetailsTable.quantity}"
                               filterable="false">
 
-                        <p:inputText id="QuantityT"  
-                                     value="#{invPurchaseInvoiceDetailsTable.quantity}" 
-
-                                     style="width:95%">
-                            <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.validateQuantityColum(invPurchaseInvoiceDetailsTable)}" 
-                                    update="netId totalQuantity totalWeight  totalNet form:totalNetAfterDiscount form:totalActualWeight form:totalWithTaxValue form:taxvalue  "/>
-                        </p:inputText>        
+                        <p:outputLabel id="QuantityT"  
+                                       value="#{invPurchaseInvoiceDetailsTable.quantity}" 
+                                       style="width:95%; text-align: left;"/>
 
                     </p:column>
 
-                    <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.companyActivity eq 'Alumetal'}"
-                              id="Weight"
-                              headerText="#{userData.userDDs['WEIGHT']}"
-                              filterBy="#{invPurchaseInvoiceDetailsTable.weight}" 
+
+                    <p:column style="width: 11vh;text-align: left;border-radius: 0px; font-size: 14px;"
+                              id="InvinventoryId" 
+                              headerText="المخزن"
+                              filterBy="#{invPurchaseInvoiceDetailsTable.inventoryDTO}" 
                               filterMatchMode="contains" 
-                              sortBy="#{invPurchaseInvoiceDetailsTable.weight}"
+                              sortBy="#{invPurchaseInvoiceDetailsTable.inventoryDTO}"
                               filterable="false">
 
-                        <p:inputNumber id="WeightT" decimalPlaces="3"
-                                       value="#{invPurchaseInvoiceDetailsTable.weight}"  
-                                       style="width:100%">
-                            <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.updateSummition()}" update="netId totalQuantity  totalWeight totalNet form:totalActualWeight form:totalNetAfterDiscount form:taxvalue form:totalWithTaxValue"/>
-                        </p:inputNumber>
+                        <p:outputLabel id="InvinventoryIdt" 
+                                       value="#{invPurchaseInvoiceDetailsTable.inventoryDTO.code}" 
+                                       style="width:95%; text-align: left;"/>     
+
                     </p:column>
 
-                    <p:column style="width: 12vh;text-align: -webkit-auto;border-radius: 0px" id="COST" headerText="#{userData.userDDs['PRICE']}"
+                    <p:column style="width: 15vh;text-align: -webkit-auto;border-radius: 0px" id="COST" headerText="#{userData.userDDs['PRICE']}"
                               filterBy="#{invPurchaseInvoiceDetailsTable.cost}" 
                               filterMatchMode="contains" 
                               sortBy="#{invPurchaseInvoiceDetailsTable.cost}"
                               filterable="false">
-                        <p:outputLabel value="#{invPurchaseInvoiceDetailsTable.cost}" 
-                                       rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.loadedSerial  ne null}" />
                         <p:inputText id="costTt" 
                                      value="#{invPurchaseInvoiceDetailsTable.cost}"
-                                     rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.loadedSerial  eq null}"
-                                     style="width:95%">
+                                     disabled="#{invPurchaseInvoiceDetailsTable.showPrice}"
+                                     style="width:95%; text-align: right;">
                             <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.validatePriceColumn(invPurchaseInvoiceDetailsTable)}" 
-                                    update="netId totalQuantity  totalWeight totalNet form:totalActualWeight form:totalNetAfterDiscount form:totalWithTaxValue form:taxvalue"/>
-                        </p:inputText>       
+                                    update="netId totalQuantity   totalNet form:totalActualWeight form:totalNetAfterDiscount form:totalWithTaxValue  form:taxvalue QuantityT NUMBER QuantityOu "/>
+                        </p:inputText>      
                     </p:column>
 
-                    <p:column style="width: 14vh;text-align: -webkit-auto;border-radius: 0px" id="DISCOUNT" headerText="#{userData.userDDs['DISCOUNT']}">
+                    <p:column style="width: 12vh;text-align: -webkit-auto;border-radius: 0px; font-size: 14px;" id="DISCOUNTValue" headerText="خ قيمة">
+                        <p:inputText id="DISCOUNTValueT" 
+                                     value="#{invPurchaseInvoiceDetailsTable.discountValue}" 
+                                     disabled="#{not userData.userScreens['proworkorder'].edit or invPurchaseInvoiceDetailsTable.showPrice}"
+                                     style="width:70%!important;display: inline!important; text-align: left;">
+                            <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.calcDiscountPersentageDetail(invPurchaseInvoiceDetailsTable)}"
+                                    update="DISCOUNTValueT discountT netId totalQuantity  totalNet form:totalActualWeight form:totalNetAfterDiscount  form:taxvalue form:totalWithTaxValue   "/>
+                        </p:inputText>  
+
+                    </p:column>
+
+                    <p:column style="width: 12vh;text-align: -webkit-auto;border-radius: 0px; font-size: 14px;" id="DISCOUNT" headerText="#{userData.userDDs['DISCOUNT']}">
                         <p:inputText id="discountT" 
                                      value="#{invPurchaseInvoiceDetailsTable.discount}" 
-                                     disabled="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail == null}"
-                                     style="width:70%!important;display: inline!important">
-                            <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.validateDiscountColumn(invPurchaseInvoiceDetailsTable)}"
-                                    update="discountT netId totalQuantity totalWeight totalNet form:totalActualWeight form:totalNetAfterDiscount  form:taxvalue form:totalWithTaxValue  "/>
+                                     disabled="#{not userData.userScreens['proworkorder'].edit or invPurchaseInvoiceDetailsTable.showPrice}"
+                                     style="width:70%!important;display: inline!important; text-align: left;">
+                            <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.calcDiscountValueDetail(invPurchaseInvoiceDetailsTable)}"
+                                    update="DISCOUNTValueT discountT netId totalQuantity  totalNet form:totalActualWeight form:totalNetAfterDiscount  form:taxvalue form:totalWithTaxValue   "/>
                         </p:inputText>  
+
                         <p:outputLabel value="%"  style="display: inline!important"  />
                     </p:column>
 
 
-                    <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="net" headerText="#{userData.userDDs['TOTAL']}" 
+                    <p:column style="width: 11vh;text-align: left;border-radius: 0px;font-size: 14px;" 
+                              id="net" headerText="#{userData.userDDs['TOTAL']}" 
                               filterBy="#{invPurchaseInvoiceDetailsTable.net}" 
                               filterMatchMode="contains" 
                               sortBy="#{invPurchaseInvoiceDetailsTable.net}"
@@ -458,41 +493,55 @@
                         <p:outputLabel id="netId" value="#{invPurchaseInvoiceDetailsTable.net}"   />
                     </p:column>
 
+
+                    <p:column style="width: 11vh;text-align: -webkit-auto;border-radius: 0px; font-size: 14px;" id="proof" headerText="بروفه" >
+                        <p:selectBooleanCheckbox id="proof2" value="#{invPurchaseInvoiceDetailsTable.proof}">
+                            <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.hishis()}" />
+                        </p:selectBooleanCheckbox>
+                    </p:column>
+
+
+
                     <p:summaryRow>
                         <p:column colspan="3" style="text-align:right">
                             <h:outputText style="text-align:right" value="#{userData.userDDs['TOTAL']}  :" />
                         </p:column>
+                        <p:column colspan="2" />
                         <p:column>
                             <h:outputText id="totalQuantity" value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.totalQuatity}"/>
                         </p:column>
-                        <p:column>
-                            <h:outputText id="totalWeight" value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.totalWeight}"/>
-                        </p:column>
-                        <p:column rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.companyActivity eq 'Alumetal'}" />
-                        <p:column rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.companyActivity eq 'Alumetal'}" />
-                        <p:column rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.companyActivity eq 'Alumetal'}" />
+                        <p:column colspan="5" />
                         <p:column>
                             <h:outputText id="totalNet" value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.totalNet}"/>
                         </p:column>
-                        <p:column />
+                        <p:column colspan="3" />
                     </p:summaryRow>
 
-                    <p:column style="width: 13vh;text-align: center;border-radius: 0px" headerText="#{userData.userDDs['TRANSACTION']}">
+                    <p:column 
+                        rendered="#{invPurchaseInvoiceFormDTOMB.columnRender  }"
+                        style="width: 18vh;text-align: center;border-radius: 0px" 
+                        headerText="#{userData.userDDs['TRANSACTION']}">
 
                         <p:commandButton  id="b7" icon="fa fa-plus" 
-                                          class="saddbuttonins" style="color: #fff!important;background-color: #00BCD4"
+                                          class="saddbuttonins" style="color: #fff!important;background-color: #00BCD4; width: 10px; height: 20px;border-radius: 3px "
                                           title="#{userData.userDDs['ADD']}" 
-                                          rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.loadedSerial  eq null}"
-                                          actionListener="#{invPurchaseInvoiceFormDTOMB.addInvDetail()}" 
+                                          rendered="#{(userData.userScreens['proworkorder'].edit) or invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id eq null or userData.isAdmin}"                                                      actionListener="#{invPurchaseInvoiceFormDTOMB.addInvDetail()}" 
                                           update=":form:fieldSetId"  
                                           immediate="true"
                                           oncomplete="PrimeFaces.focus('form:invPurchaseInvoiceDetailsTable:'+#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.invPurchaseInvoiceDetailList.size()}+':invItemNameIn')"
                                           ajax="true" />
 
-                        <p:commandButton  update="invPurchaseInvoiceDetailsTable netId totalQuantity  totalWeight  totalNet form:totalActualWeight form:totalNetAfterDiscount  form:taxvalue form:totalWithTaxValue"
-                                          title="#{userData.userDDs['DELETE']}" 
-                                          class="sdeleteButtons" style="color: #fff!important;background-color: red"
+                        <p:commandButton   title="بحث" 
+                                           class="sreloadButtons" style="background-color:rgb(162, 46, 247);border-radius: 3px;margin-bottom:3px; width: 10px; height: 20px;margin-right: 2px;"
 
+                                           onclick="PF('dlg4').show();"
+                                           icon="fa fa-fw fa-search-plus" >
+                        </p:commandButton>
+
+                        <p:commandButton  update="invPurchaseInvoiceDetailsTable netId totalQuantity    totalNet form:totalActualWeight form:totalNetAfterDiscount  form:taxvalue form:totalWithTaxValue "
+                                          title="#{userData.userDDs['DELETE']}" 
+                                          class="sdeleteButtons" 
+                                          style="color: #fff!important;background-color: red; width: 10px; height: 20px; border-radius: 3px; margin-right: 2px;"
                                           action="#{invPurchaseInvoiceFormDTOMB.deleteInvDetail(invPurchaseInvoiceDetailsTable)}"
                                           icon="fa fa-remove" >
                             <p:confirm header="#{userData.userDDs['COFIGRATION']}" 
@@ -574,10 +623,10 @@
                                 </div>
                                 <div class="ui-g-12 ui-xl-12">
                                     <div class="ui-g-6 ui-xl-6">
-  <h:outputText id="totalNetAfterDiscount" 
+                                        <h:outputText id="totalNetAfterDiscount" 
                                                       style="text-align:right" 
                                                       value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.totalNetAfterDiscount}" />
-                          
+
                                     </div>
                                     <div class="ui-g-6 ui-xl-6">
                                         <p:outputLabel style="width: 155px;" value="#{userData.userDDs['TOT_AF_TOT_DIS']}"/>
@@ -586,7 +635,7 @@
                                 </div>
                                 <div class="ui-g-12 ui-xl-12">
                                     <div class="ui-g-6 ui-xl-6">
-  <p:selectBooleanCheckbox value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.taxflag}"
+                                        <p:selectBooleanCheckbox value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.taxflag}"
                                                                  >
                                             <p:ajax update="form:totalActualWeight form:totalNetAfterDiscount form:taxvalue form:totalWithTaxValue " listener="#{invPurchaseInvoiceFormDTOMB.recalcHeadValues()}" />
                                         </p:selectBooleanCheckbox>
@@ -601,10 +650,10 @@
                             <div class="ui-g-4 ui-xl-4">
                                 <div class="ui-g-12 ui-xl-12">
                                     <div class="ui-g-6 ui-xl-6">
-     <h:outputText id="taxvalue" 
+                                        <h:outputText id="taxvalue" 
                                                       style="text-align:right" 
                                                       value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.taxvalue}" />
-                        
+
                                     </div>
                                     <div class="ui-g-6 ui-xl-6">
                                         <p:outputLabel style="width: 105px" value="#{userData.userDDs['TAX_VALUE']}"/>
@@ -613,7 +662,7 @@
                                 </div>
                                 <div class="ui-g-12 ui-xl-12">
                                     <div class="ui-g-6 ui-xl-6">
-  <p:selectBooleanCheckbox 
+                                        <p:selectBooleanCheckbox 
                                             value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.taxdiscflag}"
                                             >
                                             <p:ajax update=" form:taxdiscvalue form:totalWithTaxValue" listener="#{invPurchaseInvoiceFormDTOMB.recalcHeadValues()}" />
@@ -626,22 +675,22 @@
                                 </div>
                                 <div class="ui-g-12 ui-xl-12">
                                     <div class="ui-g-6 ui-xl-6">
-   <h:outputText id="taxdiscvalue" 
+                                        <h:outputText id="taxdiscvalue" 
                                                       style="text-align:right" 
                                                       value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.taxdiscvalue}" />
-                     
+
                                     </div>
                                     <div class="ui-g-6 ui-xl-6">
                                         <p:outputLabel style="width: 195px;" value="قيمة ضريبة الخصم"/>
 
                                     </div>
                                 </div>
-                                 <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-12 ui-xl-12">
                                     <div class="ui-g-6 ui-xl-6">
-   <h:outputText id="totalWithTaxValue" 
+                                        <h:outputText id="totalWithTaxValue" 
                                                       style="text-align:right" 
                                                       value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.finalNet}" />
-                           
+
                                     </div>
                                     <div class="ui-g-6 ui-xl-6">
                                         <p:outputLabel style="width: 105px" value="#{userData.userDDs['NET_TAX']}"/>
@@ -650,7 +699,7 @@
                                 </div>
                             </div>
 
-                        
+
                         </div>
                     </h:panelGroup>
                 </div>

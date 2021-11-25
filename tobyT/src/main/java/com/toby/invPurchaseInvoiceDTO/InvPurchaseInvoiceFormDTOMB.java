@@ -78,6 +78,19 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
                 getInvOrganizationSiteDTOList(Boolean.TRUE, 0).add(0, getInvInvoiceDTO().getOrganizationSiteId());
                 setOrganizationSiteId(getInvInvoiceDTO().getOrganizationSiteId());
                 checkFactoryId();
+            } else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("editInvoiceReturn")) {
+                getInvInvoiceDTO().setIsEdit(Boolean.TRUE);
+                fillInvInvoiceDTO();
+                getInvInvoiceDTO().setInvoiceStatus(invPurchaseInvoiceService.findInvoiceStatus(getInvInvoiceDTO().getId()));
+                getInvInvoiceDTO().setIsEdit(Boolean.FALSE);
+                getInvInvoiceDTO().setShowCustomerDate(Boolean.FALSE);
+                findAccountStatement();
+                getInvOrganizationSiteDTOList(Boolean.TRUE, 0).add(0, getInvInvoiceDTO().getOrganizationSiteId());
+                setOrganizationSiteId(getInvInvoiceDTO().getOrganizationSiteId());
+                checkFactoryId();
+                getInvInvoiceDTO().setId(null);
+                getInvInvoiceDTO().setSerial(null);
+                getInvInvoiceDTO().setSerialTax(null);
             } else {
                 exit("../base/error.xhtml");
             }
@@ -102,10 +115,16 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
                 message.append(getInvInvoiceDTO().getPayed());
 //                message.append(" المتبقي ");
 //                message.append(getInvInvoiceDTO().getRemain());
-                if (getInvInvoiceDTO().getInvnameType() != null && getInvInvoiceDTO().getInvnameType() == 0) {
-                    sendSms(getInvInvoiceDTO().getCustomerMobile(), "التوبى العالمى", message.toString(), "20099319", "0564933202");
-                } else if (getInvInvoiceDTO().getInvnameType() != null && getInvInvoiceDTO().getInvnameType() == 1) {
-                    sendSms(getInvInvoiceDTO().getCustomerMobile(), "التوبى العالمى", message.toString(), "20099320", "Royal@e12z");
+                if (getInvInvoiceDTO().getGallaryId().getInvName() != null && getInvInvoiceDTO().getGallaryId().getInvName() == 0) {
+                    message.append("\n");
+                    message.append("نسعد بتلقي تقييمكم عن الخدمة المقدمة لكم من برنس  \n");
+                    message.append(" https://forms.gle/jARVyTyhGMT9MQRi7 ");
+                    sendSms(getInvInvoiceDTO().getOrganizationSiteId().getMobile(), "التوبى العالمى", message.toString(), "20099319", "0564933202");
+                } else if (getInvInvoiceDTO().getGallaryId().getInvName() != null && getInvInvoiceDTO().getGallaryId().getInvName() == 1) {
+                    message.append("\n");
+                    message.append("نسعد بتلقي تقييمكم عن الخدمة المقدمة لكم من لي رويال  \n");
+                    message.append(" https://forms.gle/qS56hBNPw6T1rUkm6 ");
+                    sendSms(getInvInvoiceDTO().getOrganizationSiteId().getMobile(), "التوبى العالمى", message.toString(), "20099320", "Royal@e12z");
                 }
             }
         } else {
@@ -154,6 +173,7 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
             return null;
         }
     }
+
     public String goTClientacoount() {
         try {
             if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getOrganizationSiteId().getId() > 0) {
@@ -240,6 +260,20 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
                 context.getSessionMap().put("ScreenMode", "editInvoice");
                 init();
 
+            }
+        } catch (Exception e) {
+            saveError(e, "invPurchaseInvoiceFormDTOMB", "searchInvoiceBySerial");
+        }
+    }
+
+    public void searchReturnInvoiceBySerial() {
+        try {
+            if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getSearchBySerial() > 0) {
+                Integer invoiceId = invPurchaseInvoiceService_1.getInvoiceBySerial(getInvInvoiceDTO().getSearchBySerial());
+                ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+                context.getSessionMap().put("invPurchaseInvoiceIdSeclected", invoiceId);
+                context.getSessionMap().put("ScreenMode", "editInvoiceReturn");
+                init();
             }
         } catch (Exception e) {
             saveError(e, "invPurchaseInvoiceFormDTOMB", "searchInvoiceBySerial");

@@ -103,13 +103,14 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                 if (detailEntity.getId() == null && (detailEntity.getItemsBarcodesDetail().getProGroupId() == null
                         || (detailEntity.getItemsBarcodesDetail().getProGroupId() != null
                         && detailEntity.getItemsBarcodesDetail().getProGroupId() != 5
-                        && detailEntity.getItemsBarcodesDetail().getSupplierId() != 203401
+                        && (detailEntity.getItemsBarcodesDetail().getSupplierId() != null && detailEntity.getItemsBarcodesDetail().getSupplierId() != 203401)
                         && (!detailEntity.getItemsBarcodesDetail().getBarcode().equals("000003")
-                        || (!detailEntity.getItemsBarcodesDetail().getBarcode().equals("000017"))
-                        || (!detailEntity.getItemsBarcodesDetail().getBarcode().equals("000206"))
-                        || (!detailEntity.getItemsBarcodesDetail().getBarcode().equals("000210"))
-                        || (!detailEntity.getItemsBarcodesDetail().getBarcode().equals("040587"))
-                        || (!detailEntity.getItemsBarcodesDetail().getBarcode().equals("055005")))))) {
+                        && (!detailEntity.getItemsBarcodesDetail().getBarcode().equals("000017"))
+                        && (!detailEntity.getItemsBarcodesDetail().getBarcode().equals("000206"))
+                        && (!detailEntity.getItemsBarcodesDetail().getBarcode().equals("030003"))
+                        && (!detailEntity.getItemsBarcodesDetail().getBarcode().equals("000210"))
+                        && (!detailEntity.getItemsBarcodesDetail().getBarcode().equals("040587"))
+                        && (!detailEntity.getItemsBarcodesDetail().getBarcode().equals("055005")))))) {
                     if (detailEntity.getDiscount().compareTo(BigDecimal.ZERO) != 1) {
                         BigDecimal discountCustomer = BigDecimal.ZERO;
                         BigDecimal discountCompany = BigDecimal.ZERO;
@@ -973,6 +974,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
         if (companyActivityClassEnum.equals(CompanyActivityClassEnum.RetailSaleForClothFactory)
                 && (ScreenNameClassEnum.INVSALESINVOICEFORM.equals(screenNameClassEnum)
                 || ScreenNameClassEnum.PROWORKORDER.equals(screenNameClassEnum)
+                || ScreenNameClassEnum.INVRETURNSALESFORM.equals(screenNameClassEnum)
                 || ScreenNameClassEnum.PROFACTORYDELIVERY.equals(screenNameClassEnum))) {
             dTO.setNumber(number);
             dTO.setQuantityOfOneUnit(quantityOfOneUnit);

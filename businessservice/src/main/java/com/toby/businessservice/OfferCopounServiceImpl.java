@@ -316,5 +316,18 @@ public class OfferCopounServiceImpl implements OfferCopounService {
         }
         return BigDecimal.ZERO;
     }
+    
+    @Override
+    public OfferCopoun getOfferCopounByCode(String code,Integer type) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("code", code);
+        params.put("type", type);
+        params.put("dateNow", new Date());
+        List<OfferCopoun> offerTextList = dao.findListByQuery("SELECT e FROM OfferCopoun e WHERE e.type = :type AND e.code = :code AND (:dateNow between e.startDate and e.endDate) AND e.code not in (select p.offerCopoun from InvPurchaseInvoice p where  p.offerCopoun is not null)", params);
+        if (offerTextList != null && !offerTextList.isEmpty()) {
+            return offerTextList.get(0);
+        }
+        return null;
+    }
 
 }
