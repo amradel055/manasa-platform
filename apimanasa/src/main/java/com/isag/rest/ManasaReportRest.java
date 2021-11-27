@@ -7,12 +7,16 @@ package com.isag.rest;
 
 import com.isag.businessservice.ManasaReportService;
 import com.isag.dto.ExamsDTO;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import javax.ejb.EJB;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -36,7 +40,11 @@ public class ManasaReportRest {
         if (examsDTO != null) {
             try {
                 Integer dTO = manasaReportService.findExamStudentNumber(examsDTO.getId());
-                return Response.ok(dTO).build();
+                 List<Integer> number = new ArrayList<>();
+                 number.add(dTO) ;
+                 GenericEntity<List<Integer>> list = new GenericEntity<List<Integer>>(number) {
+                };
+                return Response.ok(list).build();
 
             } catch (Exception e) {
                 return Response.status(Response.Status.FORBIDDEN).build();

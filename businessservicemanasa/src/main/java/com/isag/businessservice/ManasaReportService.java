@@ -5,6 +5,7 @@
  */
 package com.isag.businessservice;
 
+import java.util.Map;
 import javax.ejb.Remote;
 
 /**
@@ -14,6 +15,6 @@ import javax.ejb.Remote;
 @Remote
 public interface ManasaReportService {
  
-    public Integer findExamStudentNumber(Integer examId);
+    public  Integer findExamStudentNumber(Integer examId);
   
 }
