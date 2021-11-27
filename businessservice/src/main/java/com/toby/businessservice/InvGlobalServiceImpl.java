@@ -104,7 +104,8 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                 if (detailEntity.getId() == null && (detailEntity.getItemsBarcodesDetail().getProGroupId() == null
                         || (detailEntity.getItemsBarcodesDetail().getProGroupId() != null
                         && detailEntity.getItemsBarcodesDetail().getProGroupId() != 5
-                        && (detailEntity.getItemsBarcodesDetail().getSupplierId() != null && detailEntity.getItemsBarcodesDetail().getSupplierId() != 203401)
+                        && (detailEntity.getItemsBarcodesDetail().getSupplierId() != null
+                        && detailEntity.getItemsBarcodesDetail().getSupplierId() != 203401)
                         && (!detailEntity.getItemsBarcodesDetail().getBarcode().equals("000003")
                         && (!detailEntity.getItemsBarcodesDetail().getBarcode().equals("000017"))
                         && (!detailEntity.getItemsBarcodesDetail().getBarcode().equals("000206"))
@@ -137,8 +138,10 @@ public class InvGlobalServiceImpl implements InvGlobalService {
 
             } else {
                 if ((invInvoiceDTO != null) && (detailEntity.getItemsBarcodesDetail().getProGroupId() == null
-                        || (detailEntity.getItemsBarcodesDetail().getProGroupId() != null && detailEntity.getItemsBarcodesDetail().getProGroupId() != 1
-                        && detailEntity.getItemsBarcodesDetail().getProGroupId() != 5 && detailEntity.getItemsBarcodesDetail().getProGroupId() != 13))) {
+                        || (detailEntity.getItemsBarcodesDetail().getProGroupId() != null
+                        && detailEntity.getItemsBarcodesDetail().getProGroupId() != 1
+                        && detailEntity.getItemsBarcodesDetail().getProGroupId() != 5
+                        && detailEntity.getItemsBarcodesDetail().getProGroupId() != 13))) {
                     detailEntity.setDiscount(new BigDecimal(25));
                     return new BigDecimal(25);
                 }
@@ -162,38 +165,8 @@ public class InvGlobalServiceImpl implements InvGlobalService {
         if (invInvoiceDTO.getCompanyActivity().equals(CompanyActivityClassEnum.RetailSaleForClothFactory)
                 && (ScreenNameClassEnum.PROWORKORDER.equals(invInvoiceDTO.getScreenName()))
                 && detailEntity.getCost().compareTo(BigDecimal.ZERO) != 1) {
-            if (detailEntity.getItemsBarcodesDetail().getProGroupId() != null && detailEntity.getItemsBarcodesDetail().getProGroupId() == 22) { // زرار وهاروت
-                BigDecimal price;
-                if (invInvoiceDTO.getPricetype() == 1) {
-                    price = detailEntity.getItemsBarcodesDetail().getMaxPriceMen();
-                } else {
-                    price = detailEntity.getItemsBarcodesDetail().getMaxPriceYoung();
-                }
-
-                BigDecimal oneBean = BigDecimal.ZERO;
-                if (detailEntity.getItemsBarcodesDetail().getNumberMetersMen().compareTo(new BigDecimal(3)) == 0
-                        && detailEntity.getItemsBarcodesDetail().getMaxPriceMen().compareTo(new BigDecimal(150)) == 0) {
-                    if (detailEntity.getQuantityOfOneUnit().compareTo(new BigDecimal(3)) == 1) {
-                        cost = price.divide(detailEntity.getQuantityOfOneUnit(), 3, RoundingMode.HALF_UP);
-                    } else if (detailEntity.getQuantityOfOneUnit().compareTo(new BigDecimal(3)) == 0) {
-                        cost = (new BigDecimal(100)).divide(new BigDecimal(3), 3, RoundingMode.HALF_UP);
-                    } else if (detailEntity.getQuantityOfOneUnit().compareTo(new BigDecimal(3)) == -1) {
-                        oneBean = new BigDecimal(50);
-                        cost = price.add(oneBean.multiply(detailEntity.getQuantityOfOneUnit().subtract(detailEntity.getItemsBarcodesDetail().getNumberMetersMen())));
-                        cost = cost.divide(detailEntity.getQuantityOfOneUnit(), 3, RoundingMode.HALF_UP);
-                    }
-                } else {
-                    if (detailEntity.getQuantityOfOneUnit().compareTo(new BigDecimal(4)) != 1) {
-                        oneBean = calaOneBean(detailEntity, oneBean, price);
-                        cost = oneBean;
-                    } else if (detailEntity.getQuantityOfOneUnit().compareTo(new BigDecimal(8)) != 1 && detailEntity.getQuantityOfOneUnit().compareTo(new BigDecimal(4)) == 1) {
-                        cost = price.divide(detailEntity.getQuantityOfOneUnit(), 3, RoundingMode.HALF_UP);
-                    } else if (detailEntity.getQuantityOfOneUnit().compareTo(new BigDecimal(8)) == 1) {
-                        oneBean = calaOneBean(detailEntity, oneBean, price);
-                        cost = price.add(oneBean.multiply(detailEntity.getQuantityOfOneUnit().subtract(detailEntity.getItemsBarcodesDetail().getNumberMetersMen())));
-                        cost = cost.divide(detailEntity.getQuantityOfOneUnit(), 3, RoundingMode.HALF_UP);
-                    }
-                }
+            if (detailEntity.getItemsBarcodesDetail().getProGroupId() != null && detailEntity.getItemsBarcodesDetail().getProGroupId() == 22) {
+                cost = zorarAndHarot(invInvoiceDTO, detailEntity, cost);
             } else {
                 if (invInvoiceDTO.getOfferType() != null && invInvoiceDTO.getOfferType() == 1) {
                     if (invInvoiceDTO.getPricetype() == 1) {
@@ -262,7 +235,46 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                 }
             }
         } else {
-            cost = detailEntity.getCost();
+            if (detailEntity.getItemsBarcodesDetail().getProGroupId() != null && detailEntity.getItemsBarcodesDetail().getProGroupId() == 22) {
+                cost = zorarAndHarot(invInvoiceDTO, detailEntity, cost);
+            } else {
+                cost = detailEntity.getCost();
+            }
+        }
+        return cost;
+    }
+
+    private BigDecimal zorarAndHarot(InvInvoiceDTO invInvoiceDTO, InvDetailDTO detailEntity, BigDecimal cost) {
+        // زرار وهاروت
+        BigDecimal price;
+        if (invInvoiceDTO.getPricetype() == 1) {
+            price = detailEntity.getItemsBarcodesDetail().getMaxPriceMen();
+        } else {
+            price = detailEntity.getItemsBarcodesDetail().getMaxPriceYoung();
+        }
+        BigDecimal oneBean = BigDecimal.ZERO;
+        if (detailEntity.getItemsBarcodesDetail().getNumberMetersMen().compareTo(new BigDecimal(3)) == 0
+                && detailEntity.getItemsBarcodesDetail().getMaxPriceMen().compareTo(new BigDecimal(150)) == 0) {
+            if (detailEntity.getQuantityOfOneUnit().compareTo(new BigDecimal(3)) == 1) {
+                cost = price.divide(detailEntity.getQuantityOfOneUnit(), 3, RoundingMode.HALF_UP);
+            } else if (detailEntity.getQuantityOfOneUnit().compareTo(new BigDecimal(3)) == 0) {
+                cost = (new BigDecimal(100)).divide(new BigDecimal(3), 3, RoundingMode.HALF_UP);
+            } else if (detailEntity.getQuantityOfOneUnit().compareTo(new BigDecimal(3)) == -1) {
+                oneBean = new BigDecimal(50);
+                cost = price.add(oneBean.multiply(detailEntity.getQuantityOfOneUnit().subtract(detailEntity.getItemsBarcodesDetail().getNumberMetersMen())));
+                cost = cost.divide(detailEntity.getQuantityOfOneUnit(), 3, RoundingMode.HALF_UP);
+            }
+        } else {
+            if (detailEntity.getQuantityOfOneUnit().compareTo(new BigDecimal(4)) != 1) {
+                oneBean = calaOneBean(detailEntity, oneBean, price);
+                cost = oneBean;
+            } else if (detailEntity.getQuantityOfOneUnit().compareTo(new BigDecimal(8)) != 1 && detailEntity.getQuantityOfOneUnit().compareTo(new BigDecimal(4)) == 1) {
+                cost = price.divide(detailEntity.getQuantityOfOneUnit(), 3, RoundingMode.HALF_UP);
+            } else if (detailEntity.getQuantityOfOneUnit().compareTo(new BigDecimal(8)) == 1) {
+                oneBean = calaOneBean(detailEntity, oneBean, price);
+                cost = price.add(oneBean.multiply(detailEntity.getQuantityOfOneUnit().subtract(detailEntity.getItemsBarcodesDetail().getNumberMetersMen())));
+                cost = cost.divide(detailEntity.getQuantityOfOneUnit(), 3, RoundingMode.HALF_UP);
+            }
         }
         return cost;
     }

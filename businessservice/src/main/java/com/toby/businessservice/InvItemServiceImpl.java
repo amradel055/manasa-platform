@@ -290,6 +290,7 @@ public class InvItemServiceImpl implements InvItemService {
     private InvItemDTO mapToDTOSmall(InvItemDTO invItemDTO, InvItem invItem) {
         invItemDTO.setId(invItem.getId());
         invItemDTO.setCode(invItem.getCode());
+        invItemDTO.setType(invItem.getType());
         if (invItem.getProGroupId() != null) {
             ProGroupDTO invGroupDTO = new ProGroupDTO();
             invGroupDTO.setId(invItem.getProGroupId().getId());
@@ -365,6 +366,7 @@ public class InvItemServiceImpl implements InvItemService {
         return list;
     }
 
+    @Override
     public void findInvItemMap(Integer branchId, List<InvItemDTO> invItemDTOList) {
         Map<String, Object> params = new HashMap<>();
         Map<String, InvItem> mapItems = new HashMap<>();
@@ -380,6 +382,25 @@ public class InvItemServiceImpl implements InvItemService {
                 ProGroup proGroupId = new ProGroup();
                 proGroupId.setId(Integer.parseInt(invItemDTO.getName()));
                 invItem.setProGroupId(proGroupId);
+                addInvItem(invItem, null, null);
+            }
+        }
+    }
+    
+    @Override
+    public void updateInvItemType(Integer branchId, List<InvItemDTO> invItemDTOList,Integer type) {
+        Map<String, Object> params = new HashMap<>();
+        Map<String, InvItem> mapItems = new HashMap<>();
+        params.put("branchId", branchId);
+        List<InvItem> invItemList = dao.findListByQuery("SELECT e FROM InvItem e WHERE e.branchId.id = :branchId ", params);
+        for (InvItem invItem : invItemList) {
+            mapItems.put(invItem.getCode(), invItem);
+        }
+
+        for (InvItemDTO invItemDTO : invItemDTOList) {
+            if (mapItems.containsKey(invItemDTO.getCode())) {
+                InvItem invItem = mapItems.get(invItemDTO.getCode());
+                invItem.setType(type);
                 addInvItem(invItem, null, null);
             }
         }

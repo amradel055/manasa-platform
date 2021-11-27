@@ -76,6 +76,7 @@ public class InvItemDTO extends BaseEntityDTO {
     private Integer isinventoryitem;
     private BigDecimal quantity;
     private ProGroupDTO proGroupId;
+    private Integer type;
 
     //barcode    
     private List<InvBarcodeDTO> invBarcodeEntity;
@@ -1008,6 +1009,20 @@ public class InvItemDTO extends BaseEntityDTO {
      */
     public void setProGroupId(ProGroupDTO proGroupId) {
         this.proGroupId = proGroupId;
+    }
+
+    /**
+     * @return the type
+     */
+    public Integer getType() {
+        return type;
+    }
+
+    /**
+     * @param type the type to set
+     */
+    public void setType(Integer type) {
+        this.type = type;
     }
 
    

@@ -89,8 +89,10 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
                 setOrganizationSiteId(getInvInvoiceDTO().getOrganizationSiteId());
                 checkFactoryId();
                 getInvInvoiceDTO().setId(null);
+                getInvInvoiceDTO().setLoadedSerial(getInvInvoiceDTO().getSerial());
                 getInvInvoiceDTO().setSerial(null);
                 getInvInvoiceDTO().setSerialTax(null);
+                
             } else {
                 exit("../base/error.xhtml");
             }

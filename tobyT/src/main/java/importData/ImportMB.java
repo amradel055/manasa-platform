@@ -331,7 +331,8 @@ public class ImportMB extends Basic implements Serializable {
             e.printStackTrace();
         }
         Sheet sheet = workbook.getSheet(0);
-        importInvItemCode(sheet);
+//        importInvItemCode(sheet);
+        updateInvItemType(sheet);
         workbook.close();
     }
 
@@ -349,6 +350,34 @@ public class ImportMB extends Basic implements Serializable {
             }
         }
         invItemService.findInvItemMap(getUserData().getUserBranch().getId(), invItemDTOList);
+        System.out.println("تم الحفظ بنجاح");
+    }
+
+    public void updateInvItemType(Sheet sheet) throws NumberFormatException {
+        InvItemDTO invItem;
+        List<InvItemDTO> invItemDTOList1 = new ArrayList<>();;
+        List<InvItemDTO> invItemDTOList2 = new ArrayList<>();
+        for (int i = 1; i < sheet.getRows(); i++) {
+            if (!sheet.getCell(0, i).getContents().isEmpty()) {
+                String code = sheet.getCell(0, i).getContents();
+                String type1 = sheet.getCell(2, i).getContents();
+                String type2 = sheet.getCell(3, i).getContents();
+                if (type1 != null && !type1.isEmpty()) {
+                    invItem = new InvItemDTO();
+                    invItem.setCode(code);
+                    invItem.setType(Integer.parseInt(type1));
+                    invItemDTOList1.add(invItem);
+                } else if (type2 != null && !type2.isEmpty()) {
+                    invItem = new InvItemDTO();
+                    invItem.setCode(code);
+                    invItem.setType(Integer.parseInt(type2));
+                    invItemDTOList2.add(invItem);
+                }
+
+            }
+        }
+        invItemService.updateInvItemType(getUserData().getUserBranch().getId(), invItemDTOList1, 1);
+        invItemService.updateInvItemType(getUserData().getUserBranch().getId(), invItemDTOList2, 2);
         System.out.println("تم الحفظ بنجاح");
     }
 
@@ -480,7 +509,7 @@ public class ImportMB extends Basic implements Serializable {
                 String code = sheet.getCell(0, i).getContents();
                 String name = sheet.getCell(1, i).getContents();
                 String dis = sheet.getCell(2, i).getContents();
-                OfferCompanyDTO offerCompanyDTO = new  OfferCompanyDTO();
+                OfferCompanyDTO offerCompanyDTO = new OfferCompanyDTO();
                 offerCompanyDTO.setCode(Integer.parseInt(code));
                 offerCompanyDTO.setName(name);
                 offerCompanyDTO.setDiscount(new BigDecimal(dis));
@@ -491,7 +520,7 @@ public class ImportMB extends Basic implements Serializable {
         OpenDlg("sucesses");
         System.out.println("تم الحفظ بنجاح");
     }
-    
+
     // inventory oppening balance Code
     public void readInvOpeiningBalance() throws BiffException, IOException, Exception {
         setInputStreamUploadinvOpeningBalance(getInvOpeningBalanceFile().getInputstream());

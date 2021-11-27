@@ -204,6 +204,8 @@ public class InvItem extends BaseEntity {
     private Integer isInventoryItem;
     @Column(name = "quantity")
     private BigDecimal quantity;
+    @Column(name = "type")
+    private Integer type;
 
     public InvItem() {
     }
@@ -838,6 +840,20 @@ public class InvItem extends BaseEntity {
      */
     public void setIsNew(Integer isNew) {
         this.isNew = isNew;
+    }
+
+    /**
+     * @return the type
+     */
+    public Integer getType() {
+        return type;
+    }
+
+    /**
+     * @param type the type to set
+     */
+    public void setType(Integer type) {
+        this.type = type;
     }
 
 }

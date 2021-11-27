@@ -211,29 +211,6 @@
 
                         </div>     
 
-                        <div class="ui-g-12 ui-xl-12 section-edit1">
-                            <div class="ui-g-8 ui-xl-8">
-                                <p:autoComplete style="width:37%!important " 
-                                                dropdown="true"
-                                                disabled="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.loadedSerial ne null}"
-                                                converter="#{invPurchaseInvoiceFormDTOMB.invDelegatorDTOConvertor}"
-                                                value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.invDelegatorId}"
-                                                var="purchasePerson"
-                                                itemLabel="#{purchasePerson}" 
-                                                itemValue="#{purchasePerson}" 
-                                                forceSelection="true" 
-                                                completeMethod="#{invPurchaseInvoiceFormDTOMB.completeDelegatorSales}"
-                                                >
-
-                                </p:autoComplete>
-
-                            </div>
-                            <div class="ui-g-4 ui-xl-4">
-                                <p:outputLabel style="width: 100px;" value="#{userData.userDDs['SALESPERSON']}"/>
-                            </div>
-                        </div>
-
-
 
 
                         <div class="ui-g-12 ui-xl-12 section-edit1">
@@ -313,7 +290,7 @@
                             </p:commandButton>
                             <p:commandButton     class="saveButton"  
                                                  title="العرض"
-                                                 value="عرض الخصم 20 %" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 1}"
+                                                 value="عرض الخصم 30 %" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 1}"
                                                  icon="fa fa-fw fa-save" 
                                                  action="#{invPurchaseInvoiceFormDTOMB.discount25ForAll(30)}"
                                                  update="@form"
@@ -971,7 +948,7 @@
                                                  style="width:95%; text-align: left;">
                                         <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.validateQuantityColum(invPurchaseInvoiceDetailsTable)}" 
                                                 process="@this"
-                                                update="netId totalQuantity   totalNet form:totalNetAfterDiscount  form:discounthala form:totalActualWeight form:totalWithTaxValue form:remain form:taxvalue  invItemNameIn Quantity QuantityT NUMBER QuantityOu "/>
+                                                update="netId totalQuantity   totalNet form:totalNetAfterDiscount  form:discounthala form:totalActualWeight form:totalWithTaxValue form:remain form:taxvalue  invItemNameIn Quantity QuantityT NUMBER QuantityOu costTt "/>
                                     </p:inputText>        
 
                                 </p:column>
@@ -1013,7 +990,10 @@
                                           filterable="false">
                                     <p:inputText id="costTt" 
                                                  value="#{invPurchaseInvoiceDetailsTable.cost}"
-                                                 disabled="#{not userData.userScreens['proworkorder'].edit or invPurchaseInvoiceDetailsTable.showPrice}"
+                                                 disabled="#{(not userData.userScreens['proworkorder'].edit or invPurchaseInvoiceDetailsTable.showPrice) or 
+                                                             (invPurchaseInvoiceDetailsTable.itemId.proGroupId.id ne 11) or 
+                                                             (invPurchaseInvoiceDetailsTable.itemId.proGroupId.id ne 22)or 
+                                                             (invPurchaseInvoiceDetailsTable.itemId.proGroupId.id ne 24)}"
                                                  style="width:95%; text-align: right;">
                                         <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.validatePriceColumn(invPurchaseInvoiceDetailsTable)}" 
                                                 update="netId totalQuantity   totalNet form:totalActualWeight form:totalNetAfterDiscount  form:discounthala form:totalWithTaxValue form:remain form:taxvalue QuantityT NUMBER QuantityOu "/>
