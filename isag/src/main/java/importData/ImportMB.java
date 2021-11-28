@@ -908,39 +908,40 @@ public class ImportMB extends Basic implements Serializable {
 
     public void importInvItem(Sheet sheet) throws NumberFormatException {
         InvItem invItem;
-        Map<String, Symbol> symbolMap = new ArrayMap<>();
-        Map<String, InvOrganizationSite> invOrganizationSiteMap = new ArrayMap<>();
-        Currency currency = new Currency();
-        List<Currency> currencyList = currencyService.getAllCurrencyByCompanyId(getUserData().getCompany().getId());
-        if (currencyList != null && !currencyList.isEmpty()) {
-            currency = currencyList.get(0);
-        } else {
-            System.out.print("not found currency");
-            return;
-        }
+//        Map<String, Symbol> symbolMap = new ArrayMap<>();
+//        Map<String, InvOrganizationSite> invOrganizationSiteMap = new ArrayMap<>();
+//        Currency currency = new Currency();
+//        List<Currency> currencyList = currencyService.getAllCurrencyByCompanyId(getUserData().getCompany().getId());
+//        if (currencyList != null && !currencyList.isEmpty()) {
+//            currency = currencyList.get(0);
+//        } else {
+//            System.out.print("not found currency");
+//            return;
+//        }
 
-        InventoryDelegator inventoryDelegator = new InventoryDelegator();
-        List<InventoryDelegator> delegatorList = invDelegatorService.getPurchaseByBranch(getUserData().getUserBranch().getId());
-        if (delegatorList != null && !delegatorList.isEmpty()) {
-            inventoryDelegator = delegatorList.get(0);
-        } else {
-            System.out.print("not found delegator");
-            return;
-        }
+//        InventoryDelegator inventoryDelegator = new InventoryDelegator();
+//        List<InventoryDelegator> delegatorList = invDelegatorService.getPurchaseByBranch(getUserData().getUserBranch().getId());
+//        if (delegatorList != null && !delegatorList.isEmpty()) {
+//            inventoryDelegator = delegatorList.get(0);
+//        } else {
+//            System.out.print("not found delegator");
+//            return;
+//        }
 
-        Symbol unitSymbol = new Symbol();
-        List<Symbol> unitList = symbolService.getUnitsByCompanyId(getUserData().getCompany().getId());
-        if (unitList != null && !unitList.isEmpty()) {
-            unitSymbol = unitList.get(0);
-        } else {
-            System.out.print("not found unit");
-            return;
-        }
+//        Symbol unitSymbol = new Symbol();
+//        List<Symbol> unitList = symbolService.getUnitsByCompanyId(getUserData().getCompany().getId());
+//        if (unitList != null && !unitList.isEmpty()) {
+//            unitSymbol = unitList.get(0);
+//        } else {
+//            System.out.print("not found unit");
+//            return;
+//        }
 
         for (int i = 1; i < sheet.getRows(); i++) {
             if (!sheet.getCell(0, i).getContents().isEmpty()) {
                 invItem = new InvItem();
-                initInvItemData(sheet, i, invItem, symbolMap, invOrganizationSiteMap, currency, inventoryDelegator, unitSymbol);
+//                initInvItemData(sheet, i, invItem, symbolMap, invOrganizationSiteMap, currency, inventoryDelegator, unitSymbol);
+                initInvItemData(sheet, i, invItem, null, null, null, null, null);
                 invItemService.addInvItem(invItem, null, null);
             }
         }
@@ -957,12 +958,14 @@ public class ImportMB extends Basic implements Serializable {
         Cell costAvarage = sheet.getCell(4, i);
         Cell organizationSite = sheet.getCell(5, i);
         Cell unitCode = sheet.getCell(6, i);
+        Cell name2 = sheet.getCell(7, i);
+        Cell name3 = sheet.getCell(8, i);
 
-        String groupCodeString = groupCode.getContents();
-        if (groupCodeString != null && !groupCodeString.isEmpty()) {
-            InvGroup group = invGroupService.getInvGroupBySerial(getUserData().getUserBranch().getId(), Integer.parseInt(groupCodeString));
-            invItem.setGroupId(group);
-        }
+//        String groupCodeString = groupCode.getContents();
+//        if (groupCodeString != null && !groupCodeString.isEmpty()) {
+//            InvGroup group = invGroupService.getInvGroupBySerial(getUserData().getUserBranch().getId(), Integer.parseInt(groupCodeString));
+//            invItem.setGroupId(group);
+//        }
 
 //        String authorName = author.getContents();
 //        Symbol Authorsymbol = new Symbol();
@@ -985,8 +988,8 @@ public class ImportMB extends Basic implements Serializable {
 //            Authorsymbol = null;
 //        }
 //        invItem.setAuthor(Authorsymbol);
-        String organizationSiteName = organizationSite.getContents();
-        InvOrganizationSite invOrganizationSite = organizationSiteService.getInvOrganizationSiteBySerial(getUserData().getUserBranch().getId(), organizationSiteName);
+//        String organizationSiteName = organizationSite.getContents();
+//        InvOrganizationSite invOrganizationSite = organizationSiteService.getInvOrganizationSiteBySerial(getUserData().getUserBranch().getId(), organizationSiteName);
 
 //        InvOrganizationSite invOrganizationSite = new InvOrganizationSite();
 //
@@ -1011,22 +1014,22 @@ public class ImportMB extends Basic implements Serializable {
 //            invOrganizationSite = null;
 //        }
 //        invItem.setAuthor(Authorsymbol);
-        String unitCodeString = unitCode.getContents();
-        if (unitCodeString != null && !unitCodeString.isEmpty()) {
-            SymbolDTO unitDto = symbolService.getSymbolByCompanyIdANDgeneralSymbolIdWithSerial(getUserData().getCompany().getId(), 3, Integer.parseInt(unitCodeString));
-            Symbol symbol = new Symbol();
-            symbol.setId(unitDto.getId());
-            invItem.setUnitId(symbol);
-        } else {
-            invItem.setUnitId(unitSymbol);
-        }
+//        String unitCodeString = unitCode.getContents();
+//        if (unitCodeString != null && !unitCodeString.isEmpty()) {
+//            SymbolDTO unitDto = symbolService.getSymbolByCompanyIdANDgeneralSymbolIdWithSerial(getUserData().getCompany().getId(), 3, Integer.parseInt(unitCodeString));
+//            Symbol symbol = new Symbol();
+//            symbol.setId(unitDto.getId());
+//            invItem.setUnitId(symbol);
+//        } else {
+//            invItem.setUnitId(unitSymbol);
+//        }
 
-        invItem.setSiteId(invOrganizationSite);
+//        invItem.setSiteId(invOrganizationSite);
 
         invItem.setSellPrice(new BigDecimal(sellPrice.getContents()));
         invItem.setCostAverage(new BigDecimal(costAvarage.getContents()));
         invItem.setCode(code.getContents());
-        invItem.setName(name.getContents());
+        invItem.setName(name.getContents() + " " + name2.getContents() + " "+name3.getContents());
         invItem.setBranchId(getUserData().getUserBranch());
         invItem.setIsInventoryItem(1);
         invItem.setCreatedBy(getUserData().getUser());

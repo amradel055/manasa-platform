@@ -426,6 +426,7 @@ public class SymbolServiceImpl implements SymbolService {
         return dTOList;
     }
 
+    @Override
     public SymbolDTO mapTODTO(Symbol entity, SymbolDTO dTO) {
         if (dTO == null) {
             dTO = new SymbolDTO();
