@@ -39,6 +39,9 @@ public class GlItemsListMB extends BaseListBean {
         } else if (getUri().contains("glExpenses")) {
             setSymbolDTOList(symbolService.findExpensesByCompanyId(getUserData().getCompany().getId()));
         }
+         else if (getUri().contains("itemSymbol")) {
+            setSymbolDTOList(symbolService.findItemSymbolByCompanyId(getUserData().getCompany().getId()));
+        }
     }
 
     @Override
@@ -66,6 +69,9 @@ public class GlItemsListMB extends BaseListBean {
             } else if (getUri().contains("glExpenses")) {
                 exit("../glExpenses/glExpensesForm.xhtml");
             }
+             else if (getUri().contains("itemSymbol")) {
+                exit("../itemSymbol/itemSymbolForm.xhtml");
+            }
 
             return "";
         } catch (Exception e) {
@@ -85,6 +91,8 @@ public class GlItemsListMB extends BaseListBean {
                     exit("../glFixedAsset/glFixedAssetForm.xhtml");
                 } else if (getUri().contains("glExpenses")) {
                     exit("../glExpenses/glExpensesForm.xhtml");
+                }else if (getUri().contains("itemSymbol")) {
+                    exit("../itemSymbol/itemSymbolForm.xhtml");
                 }
                 return "";
             } else {
