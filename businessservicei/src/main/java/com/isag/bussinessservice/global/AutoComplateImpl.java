@@ -626,11 +626,12 @@ public class AutoComplateImpl implements AutoCompleteService {
     }
     
     private <E, T> T mapToSymbolDTO(E Entity) {
-        GlBankDTO dTO = new GlBankDTO();
-        GlBank entity = (GlBank) Entity;
+        SymbolDTO dTO = new SymbolDTO();
+        Symbol entity = (Symbol) Entity;
         dTO.setId(entity.getId());
         dTO.setIndex(entity.getId());
-        dTO.setCode(entity.getCode());
+        dTO.setSerial(entity.getSerial());
+        dTO.setCost(entity.getCost());
         dTO.setName(entity.getName());
         return (T) dTO;
     }
