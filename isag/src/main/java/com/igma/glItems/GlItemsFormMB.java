@@ -44,6 +44,14 @@ public class GlItemsFormMB extends BaseFormBean {
         savedMeesage(getUserData().getUserDDs().get("SAVED"));
         return "";
     }
+    
+
+    public String saveItemSymbol() {
+        getSymbolDTO().setGeneralSymbolId(58);
+        setSymbolDTO(symbolService.updateSymbolDTO(getSymbolDTO(), getUserData().getUser()));
+        savedMeesage(getUserData().getUserDDs().get("SAVED"));
+        return "";
+    }
 
     @Override
     @PostConstruct

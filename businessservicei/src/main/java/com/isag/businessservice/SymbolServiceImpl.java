@@ -441,6 +441,7 @@ public class SymbolServiceImpl implements SymbolService {
         dTO.setIndex(entity.getId());
         dTO.setCreatedDate(entity.getCreationDate());
         dTO.setCreatedBy(entity.getCreatedBy() != null ? entity.getCreatedBy().getId() : null);
+         dTO.setCost(entity.getCost());
         if (entity.getAccountId() != null) {
             dTO.setAccountId(entity.getAccountId().getId());
         }
@@ -456,6 +457,7 @@ public class SymbolServiceImpl implements SymbolService {
         entity.setName(dTO.getName());
         entity.setSerial(dTO.getSerial());
         entity.setArrange(dTO.getArrange());
+        entity.setCost(dTO.getCost());
         if (dTO.getAccountId() != null) {
             GlAccount glAccount = new GlAccount();
             glAccount.setId(dTO.getAccountId());
@@ -620,6 +622,16 @@ public class SymbolServiceImpl implements SymbolService {
         List<SymbolDTO> dTOList = new ArrayList<>();
         params.put("companyId", companyId);
         List<Symbol> list = dao.findListByQuery("SELECT sym FROM Symbol sym WHERE sym.accountId.accNumber = 3101001 AND  sym.generalSymbolId.serial=41 AND sym.companyId.id=:companyId", params);
+        returnListDTO(list, dTOList);
+        return dTOList;
+    }
+    
+    @Override
+    public List<SymbolDTO> findItemSymbolByCompanyId(Integer companyId) {
+        Map<String, Object> params = new HashMap<>();
+        List<SymbolDTO> dTOList = new ArrayList<>();
+        params.put("companyId", companyId);
+        List<Symbol> list = dao.findListByQuery("SELECT sym FROM Symbol sym WHERE sym.generalSymbolId.serial= 58 AND sym.companyId.id=:companyId", params);
         returnListDTO(list, dTOList);
         return dTOList;
     }

@@ -140,6 +140,8 @@ public interface SymbolService {
 
     public List<SymbolDTO> findExpensesByCompanyId(Integer companyId);
     
+    public List<SymbolDTO> findItemSymbolByCompanyId(Integer companyId);
+    
     public SymbolDTO updateSymbolDTO(SymbolDTO symbolDTO, IsagUser isagUser) ;
     
     public SymbolDTO mapTODTO(Symbol entity, SymbolDTO dTO) ;
