@@ -238,7 +238,7 @@ public class AutoComplateImpl implements AutoCompleteService {
         List<SymbolDTO> list = new ArrayList<>();
         Map<String, Object> params = new HashMap<>();
         params.put("companyId", companyId);
-        List<Symbol> detailses = dao.findListByQuery("SELECT sym FROM Symbol sym WHERE  sym.generalSymbolId.serial=42 AND sym.companyId.id=:companyId", params);
+        List<Symbol> detailses = dao.findListByQuery("SELECT sym FROM Symbol sym WHERE  sym.generalSymbolId.serial=58 AND sym.companyId.id=:companyId", params);
        list = returnListDTO(detailses);
         return list;
     }

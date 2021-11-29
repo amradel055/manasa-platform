@@ -39,7 +39,7 @@ public class GlItemsListMB extends BaseListBean {
         } else if (getUri().contains("glExpenses")) {
             setSymbolDTOList(symbolService.findExpensesByCompanyId(getUserData().getCompany().getId()));
         }
-         else if (getUri().contains("itemSymbol")) {
+         else if (getUri().contains("gmitemsymbol")) {
             setSymbolDTOList(symbolService.findItemSymbolByCompanyId(getUserData().getCompany().getId()));
         }
     }

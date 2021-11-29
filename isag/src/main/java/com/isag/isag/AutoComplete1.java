@@ -992,7 +992,7 @@ public class AutoComplete1 implements Serializable {
             IsagUser isagUser = (IsagUser) externalContext.getSessionMap().get("userlogin");
             companyId = isagUser.getCompanyId().getId();
         }
-        return branchId;
+        return companyId;
     }
 
     /**
