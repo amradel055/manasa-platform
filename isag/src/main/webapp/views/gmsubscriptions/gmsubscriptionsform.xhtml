@@ -92,6 +92,32 @@
 
                             </div>
                         </div>
+                         <div class="ui-g-12 ui-xl-12">
+
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:calendar id="dateFrom1" 
+                                            value="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.startDate}"
+                                            pattern="dd/MM/yyyy"
+                                            style="width:50%!important"/>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 95px; ;" value="#{userData.userDDs['DATEE']} من*"/>
+
+                            </div>
+                        </div>
+                         <div class="ui-g-12 ui-xl-12">
+
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:calendar id="dateFrom2" 
+                                            value="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.endDate}"
+                                            pattern="dd/MM/yyyy"
+                                            style="width:50%!important"/>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 95px; ;" value="#{userData.userDDs['DATEE']} الي*"/>
+
+                            </div>
+                        </div>
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
                                 <p:outputLabel style="width: 100px;" value="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.organizationSiteId}"

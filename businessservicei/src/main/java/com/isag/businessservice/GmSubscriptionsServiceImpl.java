@@ -186,7 +186,7 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
                     gmSubscriptionsDTO = dao.updateEntity(gmSubscriptionsDTO);
                 } else {
                     // فى حالة ان الفاتورة جديدة بروح اجيب السيريال الاول 
-                    Integer serial = genericService.getMaxGenericSerialByType(GmSubscriptionsDTO.class, gmSubscriptionsDTO.getBranchId(), gmSubscriptionsDTO.getType());
+                    Integer serial = genericService.getMaxGenericSerialByType(GmSubscriptions.class, gmSubscriptionsDTO.getBranchId(), gmSubscriptionsDTO.getType());
                     if (serial == null) {
                         gmSubscriptionsDTO.setMsg("من فضلك اعد حفظ الفاتورة");
                         dao.rollbackQuery();

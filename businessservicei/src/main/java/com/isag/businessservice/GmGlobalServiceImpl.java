@@ -32,6 +32,8 @@ public class GmGlobalServiceImpl implements GmGlobalService {
 
     private GmSubscriptionsDTO calculateDetailValues(GmSubscriptionsDTO gmSubscriptionsDTO) {
         if (gmSubscriptionsDTO != null) {
+            gmSubscriptionsDTO.setTotalNet(BigDecimal.ZERO);
+            gmSubscriptionsDTO.setTotalBeforeDiscount(BigDecimal.ZERO);
             if (gmSubscriptionsDTO.getGmSubscriptionsDetailList() != null && !gmSubscriptionsDTO.getGmSubscriptionsDetailList().isEmpty()) {
                 List<GmSubscriptionsDetailDTO> gmSubscriptionsDetailDTOList = new ArrayList<>();
 
