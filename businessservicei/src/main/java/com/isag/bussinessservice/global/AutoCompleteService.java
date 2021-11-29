@@ -15,6 +15,7 @@ import com.isag.dto.InvItemDTO;
 import com.isag.dto.InvOrganizationSiteDTO;
 import com.isag.dto.InventoryDelegatorDTO;
 import com.isag.dto.RscWorkUnitsGuideDTO;
+import com.isag.dto.SymbolDTO;
 import com.isag.entity.InstProjectGuide;
 import com.isag.views.ItemsBarcodesDetailsView;
 import java.util.List;
@@ -58,6 +59,8 @@ public interface AutoCompleteService {
     public List<InvItemDTO> autoCompleteInvItem(Integer branchId, String qeury);
 
     public List<EmployeeDTO> autoCompleteEmployee(Integer branchId, String qeury);
+    
+    public List<SymbolDTO> autoCompleteSymbolByCompanyId(Integer companyId, String qeury) ;
 
     public List<InvOrganizationSiteDTO> autoCompleteOrganizationSiteWitAssignedList(Integer branchId, boolean active, Integer type, String qeury, Integer assignedTo);
 

@@ -11,7 +11,7 @@ import javax.ejb.Remote;
 @Remote
 public interface GmGlobalService {
 
-    public GmSubscriptionsDTO updateSummition(GmSubscriptionsDTO invPurchaseInvoiceDTO);
+    public GmSubscriptionsDTO updateSummition(GmSubscriptionsDTO gmSubscriptionsDTO);
     
     public GmSubscriptionsDTO recalcHeadValues(GmSubscriptionsDTO dto);
     

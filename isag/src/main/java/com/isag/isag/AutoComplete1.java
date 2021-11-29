@@ -74,6 +74,7 @@ public class AutoComplete1 implements Serializable {
     @EJB
     private AutoCompleteService autoCompleteService;
     private Integer branchId;
+    private Integer companyId;
     private Integer remCompanyId;
     private Integer employeeId;
     private Integer userId;
@@ -86,6 +87,7 @@ public class AutoComplete1 implements Serializable {
     private InvDelegatorDTOConvertor purshaseConvertorFrom;
     private InvInventoryDTOConverter invInventoryDTOConverter;
     private ItemsBarcodesDetailsViewConverter itemsBarcodesDetailsViewConverter;
+    private SymbolDTOConverter symbolDTOConverter;
     private CostCenterDTOConverter costCenterDTOConverter;
     private GlAdminUnitDTOConverter glAdminUnitDTOConverter;
     private ItemDTOConverter itemDTOConverter;
@@ -171,6 +173,13 @@ public class AutoComplete1 implements Serializable {
             setItemsBarcodesDetailsViewConverter(new ItemsBarcodesDetailsViewConverter(autoCompleteInvItem));
         }
         return autoCompleteInvItem;
+    }
+
+    public List<SymbolDTO> completeItemSymbolView(String query) {
+        List<SymbolDTO> autoCompleteSymbol = null;
+        autoCompleteSymbol = autoCompleteService.autoCompleteSymbolByCompanyId(getCompanyId(), query);
+        setSymbolDTOConverter(new SymbolDTOConverter(autoCompleteSymbol));
+        return autoCompleteSymbol;
     }
 
     public List<InvOrganizationSiteDTO> completeSupplierAndContractorTo(String query) {
@@ -975,6 +984,36 @@ public class AutoComplete1 implements Serializable {
      */
     public void setItemsBarcodesDetailsViewConverter(ItemsBarcodesDetailsViewConverter itemsBarcodesDetailsViewConverter) {
         this.itemsBarcodesDetailsViewConverter = itemsBarcodesDetailsViewConverter;
+    }
+
+    private Integer getCompanyId() {
+        if (companyId == null) {
+            ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+            IsagUser isagUser = (IsagUser) externalContext.getSessionMap().get("userlogin");
+            companyId = isagUser.getCompanyId().getId();
+        }
+        return branchId;
+    }
+
+    /**
+     * @param companyId the companyId to set
+     */
+    public void setCompanyId(Integer companyId) {
+        this.companyId = companyId;
+    }
+
+    /**
+     * @return the symbolDTOConverter
+     */
+    public SymbolDTOConverter getSymbolDTOConverter() {
+        return symbolDTOConverter;
+    }
+
+    /**
+     * @param symbolDTOConverter the symbolDTOConverter to set
+     */
+    public void setSymbolDTOConverter(SymbolDTOConverter symbolDTOConverter) {
+        this.symbolDTOConverter = symbolDTOConverter;
     }
 
 }

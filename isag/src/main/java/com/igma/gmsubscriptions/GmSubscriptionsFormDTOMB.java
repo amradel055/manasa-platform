@@ -7,13 +7,13 @@ package com.igma.gmsubscriptions;
 
 import com.isag.businessservice.GmGlobalService;
 import com.isag.businessservice.GmSubscriptionsService;
-import com.isag.businessservice.InvGlobalService;
 import com.isag.businessservice.OrganizationSiteService;
 import com.isag.bussinessservice.global.AutoCompleteService;
 import com.isag.converter.GlBankDTOConverter;
 import com.isag.converter.InvOrganizationSiteDTOConverter;
 import com.isag.dto.GlBankDTO;
 import com.isag.dto.GmSubscriptionsDTO;
+import com.isag.dto.GmSubscriptionsDetailDTO;
 import com.isag.dto.InvOrganizationSiteDTO;
 import com.isag.isag.AutoComplete;
 import com.isag.isag.BaseFormBean;
@@ -53,7 +53,7 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
     @EJB
     private AutoCompleteService autoCompleteService;
     @EJB
-    private GmGlobalService invGlobalService;
+    private GmGlobalService gmGlobalService;
 
     private BigDecimal remain;
 
@@ -81,7 +81,7 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
                 fillDefaultList();
                 getGmSubscriptionsDTO().setIsEdit(Boolean.FALSE);
             } else {
-                exit("../invpurchaseinvoice_1/invpurchaseinvoicelist.xhtml");
+                exit("../gmsubscriptions/gmsubscriptionslist.xhtml");
             }
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceFormMB", "load");
@@ -138,14 +138,94 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
         getGmSubscriptionsDTO().setOrganizationSiteId(organizationSiteService.addNewCustomer(getOrganizationSiteId(), getInvOrganizationSiteDTOList(), getUserData().getUser()));
         getGmSubscriptionsDTO().setShowCustomerDate(Boolean.FALSE);
     }
-    
+
     public void addInvDetail() {
         try {
             getGmSubscriptionsDTO().setMsg(null);
-            setGmSubscriptionsDTO(invGlobalService.addGmSubscriptionsDTODetail(getGmSubscriptionsDTO(), getIndex()));
+            setGmSubscriptionsDTO(gmGlobalService.addGmSubscriptionsDTODetail(getGmSubscriptionsDTO(), getIndex()));
             errorMsg(getGmSubscriptionsDTO().getMsg());
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceFormMB", "addInvPurchaseInvoiceDetail");
+        }
+    }
+
+    public Boolean validateItems(GmSubscriptionsDetailDTO gmSubscriptionsDetailDTO) {
+        try {
+            gmSubscriptionsDetailDTO.setMsg(null);
+            gmSubscriptionsDetailDTO.setCost(gmSubscriptionsDetailDTO.getItemSymbolId().getCost());
+            afterValidation(gmSubscriptionsDetailDTO);
+            changeFocus("form:invPurchaseInvoiceDetailsTable:" + (getGmSubscriptionsDTO().getGmSubscriptionsDetailList().size() - 1) + ":QuantityT");
+
+        } catch (Exception e) {
+            saveError(e, "InvPurchaseInvoiceFormMB", "validateItems");
+            return null;
+        }
+        return true;
+    }
+
+    private void afterValidation(GmSubscriptionsDetailDTO gmSubscriptionsDetailDTO) {
+        replacedetail(gmSubscriptionsDetailDTO);
+        updateSummition();
+        errorMsg(gmSubscriptionsDetailDTO.getMsg());
+    }
+
+    public void updateSummition() {
+        setGmSubscriptionsDTO(gmGlobalService.updateSummition(getGmSubscriptionsDTO()));
+    }
+
+    private void replacedetail(GmSubscriptionsDetailDTO gmSubscriptionsDetailDTO) {
+        for (GmSubscriptionsDetailDTO detailDTO : getGmSubscriptionsDTO().getGmSubscriptionsDetailList()) {
+            if (detailDTO.getIndex().equals(gmSubscriptionsDetailDTO.getIndex())) {
+                int itemIndex = getGmSubscriptionsDTO().getGmSubscriptionsDetailList().indexOf(detailDTO);
+                if (itemIndex != -1) {
+                    getGmSubscriptionsDTO().getGmSubscriptionsDetailList().set(itemIndex, gmSubscriptionsDetailDTO);
+                }
+            }
+        }
+    }
+
+    public void deleteDetail(GmSubscriptionsDetailDTO gmSubscriptionsDetailDTO) {
+        try {
+            if (gmSubscriptionsDetailDTO.getId() != null) {
+                getGmSubscriptionsDTO().getGmSubscriptionsDetailDeletedList().add(gmSubscriptionsDetailDTO);
+            }
+            for (GmSubscriptionsDetailDTO detailEntity : getGmSubscriptionsDTO().getGmSubscriptionsDetailDeletedList()) {
+                if (detailEntity.getItemSymbolId() == null && detailEntity.getItemSymbolIdTrans() != null) {
+                    detailEntity.setItemSymbolId(detailEntity.getItemSymbolIdTrans());
+                }
+            }
+            getGmSubscriptionsDTO().getGmSubscriptionsDetailList().remove(gmSubscriptionsDetailDTO);
+            updateSummition();
+        } catch (Exception e) {
+            saveError(e, "InvPurchaseInvoiceFormMB", "deleteInvPurchaseInvoiceDetail");
+        }
+    }
+
+    public void recalcHeadValues() {
+        try {
+            setGmSubscriptionsDTO(gmGlobalService.recalcHeadValues(getGmSubscriptionsDTO()));
+            calculateRemainValue();
+        } catch (Exception e) {
+            saveError(e, "InvPurchaseInvoiceFormMB", "recalcHeadValues");
+        }
+    }
+
+    public void calculateRemainValue() {
+        try {
+            getGmSubscriptionsDTO().setRemain(getGmSubscriptionsDTO().getPayed().add(getGmSubscriptionsDTO().getPayNet()).add(getGmSubscriptionsDTO().getDiscount()).subtract(getGmSubscriptionsDTO().getTotalNet()));
+        } catch (Exception e) {
+            saveError(e, "SalesInvoiceFormMB", "calculateRemainValue");
+        }
+    }
+
+    public void reset() {
+        try {
+            setGmSubscriptionsDTO(null);
+            setOrganizationSiteId(null);
+            addInvDetail();
+            changeFocus("form:invPurchaseInvoiceDetailsTable:0:invItemNameIn");
+        } catch (Exception e) {
+            saveError(e, "InvPurchaseInvoiceFormMB", "resetInvPurchaseInvoiceForm");
         }
     }
 
@@ -235,6 +315,9 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
      * @return the gmSubscriptionsDTO
      */
     public GmSubscriptionsDTO getGmSubscriptionsDTO() {
+        if(gmSubscriptionsDTO == null){
+            gmSubscriptionsDTO = new GmSubscriptionsDTO();
+        }
         return gmSubscriptionsDTO;
     }
 
@@ -249,6 +332,9 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
      * @return the organizationSiteId
      */
     public InvOrganizationSiteDTO getOrganizationSiteId() {
+        if(organizationSiteId == null){
+            organizationSiteId = new InvOrganizationSiteDTO();
+        }
         return organizationSiteId;
     }
 

@@ -5,6 +5,7 @@
  */
 package com.isag.entity;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -48,6 +49,8 @@ public class Symbol extends BaseEntity {
     private Integer serial;    
     @Column(name = "arrange")
     private Integer arrange;
+    @Column(name = "cost")
+    private BigDecimal cost;
     @JoinColumn(name = "general_symbol_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private GeneralSymbol generalSymbolId;
@@ -307,6 +310,20 @@ public class Symbol extends BaseEntity {
      */
     public void setArrange(Integer arrange) {
         this.arrange = arrange;
+    }
+
+    /**
+     * @return the cost
+     */
+    public BigDecimal getCost() {
+        return cost;
+    }
+
+    /**
+     * @param cost the cost to set
+     */
+    public void setCost(BigDecimal cost) {
+        this.cost = cost;
     }
 
 }

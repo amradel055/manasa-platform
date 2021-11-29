@@ -6,6 +6,7 @@
 package com.isag.dto;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -304,6 +305,9 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
      * @return the gmSubscriptionsDetailList
      */
     public List<GmSubscriptionsDetailDTO> getGmSubscriptionsDetailList() {
+        if(gmSubscriptionsDetailList == null){
+            gmSubscriptionsDetailList = new ArrayList<>();
+        }
         return gmSubscriptionsDetailList;
     }
 
@@ -318,6 +322,9 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
      * @return the gmSubscriptionsDetailDeletedList
      */
     public List<GmSubscriptionsDetailDTO> getGmSubscriptionsDetailDeletedList() {
+        if(gmSubscriptionsDetailDeletedList == null ){
+            gmSubscriptionsDetailDeletedList = new ArrayList<>();
+        }
         return gmSubscriptionsDetailDeletedList;
     }
 
@@ -486,6 +493,9 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
      * @param gmSubscriptionsDetailDTOSelected the gmSubscriptionsDetailDTOSelected to set
      */
     public void setGmSubscriptionsDetailDTOSelected(GmSubscriptionsDetailDTO gmSubscriptionsDetailDTOSelected) {
+        if(gmSubscriptionsDetailDTOSelected == null){
+            gmSubscriptionsDetailDTOSelected = new GmSubscriptionsDetailDTO();
+        }
         this.gmSubscriptionsDetailDTOSelected = gmSubscriptionsDetailDTOSelected;
     }
 

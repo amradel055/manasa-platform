@@ -18,6 +18,7 @@ import com.isag.dto.InvItemDTO;
 import com.isag.dto.InvOrganizationSiteDTO;
 import com.isag.dto.InventoryDelegatorDTO;
 import com.isag.dto.RscWorkUnitsGuideDTO;
+import com.isag.dto.SymbolDTO;
 import com.isag.entity.CostCenter;
 import com.isag.entity.Employee;
 import com.isag.entity.GlAdminUnit;
@@ -28,6 +29,7 @@ import com.isag.entity.InvItem;
 import com.isag.entity.InvOrganizationSite;
 import com.isag.entity.InventoryDelegator;
 import com.isag.entity.RscWorkUnitsGuide;
+import com.isag.entity.Symbol;
 import com.isag.views.ItemsBarcodesDetailsView;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -231,19 +233,13 @@ public class AutoComplateImpl implements AutoCompleteService {
         return list;
     }
 
-    public List<ItemsBarcodesDetailsView> autoCompleteItemsBarcodesDetailsViewBranchId(Integer branchId, String qeury) {
+    @Override
+    public List<SymbolDTO> autoCompleteSymbolByCompanyId(Integer companyId, String qeury) {
+        List<SymbolDTO> list = new ArrayList<>();
         Map<String, Object> params = new HashMap<>();
-        params.put("branchId", branchId);
-
-        StringBuilder sql = new StringBuilder();
-
-        sql.append(" SELECT e FROM ItemsBarcodesDetailsView e WHERE e.branchId = :branchId  ");
-        if (qeury != null && !qeury.isEmpty()) {
-            sql.append(" AND ((:qeury is null OR e.name  like CONCAT('%',:qeury ,'%')) OR (:qeury is null OR e.barcode  like CONCAT('%',:qeury ,'%') ) )");
-            params.put("qeury", qeury);
-        }
-
-        List<ItemsBarcodesDetailsView> list = dao.findListByQuery(sql.toString(), params, 0, 10);
+        params.put("companyId", companyId);
+        List<Symbol> detailses = dao.findListByQuery("SELECT sym FROM Symbol sym WHERE  sym.generalSymbolId.serial=42 AND sym.companyId.id=:companyId", params);
+       list = returnListDTO(detailses);
         return list;
     }
 
@@ -514,6 +510,8 @@ public class AutoComplateImpl implements AutoCompleteService {
             return mapToHrSalaryEffectDTO(Entity);
         } else if (Entity.getClass().equals(GlBank.class)) {
             return mapToGlBankDTO(Entity);
+        }else if (Entity.getClass().equals(Symbol.class)) {
+            return mapToSymbolDTO(Entity);
         }
         return null;
     }
@@ -626,4 +624,32 @@ public class AutoComplateImpl implements AutoCompleteService {
         dTO.setName(entity.getName());
         return (T) dTO;
     }
+    
+    private <E, T> T mapToSymbolDTO(E Entity) {
+        GlBankDTO dTO = new GlBankDTO();
+        GlBank entity = (GlBank) Entity;
+        dTO.setId(entity.getId());
+        dTO.setIndex(entity.getId());
+        dTO.setCode(entity.getCode());
+        dTO.setName(entity.getName());
+        return (T) dTO;
+    }
+
+    @Override
+    public List<ItemsBarcodesDetailsView> autoCompleteItemsBarcodesDetailsViewBranchId(Integer branchId, String qeury) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+
+        StringBuilder sql = new StringBuilder();
+
+        sql.append(" SELECT e FROM ItemsBarcodesDetailsView e WHERE e.branchId = :branchId  ");
+        if (qeury != null && !qeury.isEmpty()) {
+            sql.append(" AND ((:qeury is null OR e.name  like CONCAT('%',:qeury ,'%')) OR (:qeury is null OR e.barcode  like CONCAT('%',:qeury ,'%') ) )");
+            params.put("qeury", qeury);
+        }
+
+        List<ItemsBarcodesDetailsView> list = dao.findListByQuery(sql.toString(), params, 0, 10);
+        return list;
+    }
+
 }

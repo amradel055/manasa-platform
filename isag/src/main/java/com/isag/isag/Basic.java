@@ -161,7 +161,7 @@ public class Basic implements Serializable {
         getIsagErrorDTO().setMethod(methodName);
         e.printStackTrace();
         isagErrorService.save(getIsagErrorDTO(), getUserlogin());
-        getSendEmailSMTP().sendEmail(getUserlogin(), "Class Name -> " + className + "\n" + "Method Name -> " + methodName + "\n" + "ISAG ERROR \n" + System.err,"errorerp@isag-it.com", "123456");
+//        getSendEmailSMTP().sendEmail(getUserlogin(), "Class Name -> " + className + "\n" + "Method Name -> " + methodName + "\n" + "ISAG ERROR \n" + System.err,"errorerp@isag-it.com", "123456");
 //        getSendEmailSMTP().sendEmail(getUserlogin(), "Class Name -> " + className + "\n" + "Method Name -> " + methodName + "\n" + "ISAG ERROR \n" + System.err, "devError@isag-it.com", "isag@2020");
     }
 

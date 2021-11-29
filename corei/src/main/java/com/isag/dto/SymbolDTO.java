@@ -5,6 +5,8 @@
  */
 package com.isag.dto;
 
+import java.math.BigDecimal;
+
 /**
  *
  * @author Ahmed Shaaban
@@ -16,6 +18,7 @@ public class SymbolDTO extends BaseEntityDTO {
     private Integer arrange;
     private Integer generalSymbolId;
     private Integer accountId;
+    private BigDecimal cost;
 
     public SymbolDTO() {
     }
@@ -117,6 +120,20 @@ public class SymbolDTO extends BaseEntityDTO {
      */
     public void setAccountId(Integer accountId) {
         this.accountId = accountId;
+    }
+
+    /**
+     * @return the cost
+     */
+    public BigDecimal getCost() {
+        return cost;
+    }
+
+    /**
+     * @param cost the cost to set
+     */
+    public void setCost(BigDecimal cost) {
+        this.cost = cost;
     }
 
 }

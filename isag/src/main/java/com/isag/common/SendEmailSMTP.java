@@ -18,7 +18,7 @@ import javax.mail.internet.*;
 public class SendEmailSMTP {
     // for example, smtp.mailgun.org
 
-    private static final String SMTP_SERVER = "mail.isag-it.com";
+    private static final String SMTP_SERVER = "mail.igma-it.com";
 //    private static final String USERNAME = "errorerp@isag-it.com";
 //    private static final String PASSWORD = "123456";
 
