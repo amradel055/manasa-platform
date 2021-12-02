@@ -7,6 +7,7 @@ package com.igma.gmsubscriptions;
 
 import com.isag.businessservice.GmSubscriptionsService;
 import com.isag.dto.GmSubscriptionsDTO;
+import com.isag.dto.InvOrganizationSiteDTO;
 import com.isag.isag.BaseListBean;
 import com.isag.isag.UserData;
 import java.util.List;
@@ -31,7 +32,8 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
 
     private LazyDataModel<GmSubscriptionsDTO> dataModel;
     private GmSubscriptionsDTO gmSubscriptionsDTOSelected;
-
+    private List<GmSubscriptionsDTO> subscribtionList ;
+    private InvOrganizationSiteDTO invOrganizationSiteDTO ;
     @EJB
     private GmSubscriptionsService gmSubscriptionsService;
 
@@ -43,6 +45,20 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceListMB", "init");
         }
+    } 
+    
+     public List<GmSubscriptionsDTO> search(){
+      
+        try {
+            
+            setSubscribtionList(gmSubscriptionsService.getALLGmSubscriptionsDTODTOByCustomerId(invOrganizationSiteDTO.getId()));
+         
+        }
+        catch (Exception e){
+        saveError(e, "InvPurchaseInvoiceFormMB", "load");
+        }
+        
+        return getSubscribtionList() ;
     }
 
     @Override
@@ -162,5 +178,33 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
      */
     public void setGmSubscriptionsDTOSelected(GmSubscriptionsDTO gmSubscriptionsDTOSelected) {
         this.gmSubscriptionsDTOSelected = gmSubscriptionsDTOSelected;
+    }
+
+    /**
+     * @return the invOrganizationSiteDTO
+     */
+    public InvOrganizationSiteDTO getInvOrganizationSiteDTO() {
+        return invOrganizationSiteDTO;
+    }
+
+    /**
+     * @param invOrganizationSiteDTO the invOrganizationSiteDTO to set
+     */
+    public void setInvOrganizationSiteDTO(InvOrganizationSiteDTO invOrganizationSiteDTO) {
+        this.invOrganizationSiteDTO = invOrganizationSiteDTO;
+    }
+
+    /**
+     * @return the subscribtionList
+     */
+    public List<GmSubscriptionsDTO> getSubscribtionList() {
+        return subscribtionList;
+    }
+
+    /**
+     * @param subscribtionList the subscribtionList to set
+     */
+    public void setSubscribtionList(List<GmSubscriptionsDTO> subscribtionList) {
+        this.subscribtionList = subscribtionList;
     }
 }

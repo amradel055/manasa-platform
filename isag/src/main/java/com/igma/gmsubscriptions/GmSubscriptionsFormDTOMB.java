@@ -41,7 +41,7 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
 
     private List<InvOrganizationSiteDTO> invOrganizationSiteDTOList;
     private InvOrganizationSiteDTOConverter organizationSiteDTOConvertor;
-
+    private List<GmSubscriptionsDTO> list ;
     private List<GlBankDTO> glBankList;
     private GlBankDTOConverter glBankConverter;
 
@@ -66,6 +66,9 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
             saveError(e, "InvPurchaseInvoiceFormMB", "init");
         }
     }
+    
+    
+   
 
     @Override
     public void load() {

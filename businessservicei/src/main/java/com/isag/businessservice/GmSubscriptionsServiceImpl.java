@@ -325,6 +325,18 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
         List<GmSubscriptions> details = dao.findListByQuery(builder.toString(), filters, first, pageSize);
         return returnListDTOForList(details);
     }
+    
+     @Override
+    public List<GmSubscriptionsDTO> getALLGmSubscriptionsDTODTOByCustomerId(Integer customerId) {
+         Map<String, Object> filters = new HashMap<>();
+        filters.put("customerId", customerId);
+       
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT s FROM GmSubscriptions s WHERE  s.organizationSiteId.id =:customerId  ");
+  
+        List<GmSubscriptions> details = dao.findListByQuery(builder.toString(), filters);
+        return returnListDTOForList(details);
+    }
 
     private List<GmSubscriptionsDTO> returnListDTOForList(List<GmSubscriptions> gmSubscriptionsList) {
         List<GmSubscriptionsDTO> gmSubscriptionsDTOList = new ArrayList<>();
