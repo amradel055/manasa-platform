@@ -151,6 +151,9 @@ public class GmSubscriptionsDetailServiceImpl implements GmSubscriptionsDetailSe
         entity.setQuantity(dTO.getQuantity());
         entity.setStatus(dTO.getStatus());
         entity.setTaxValue(dTO.getTaxValue());
+        InvItem invItem = new InvItem();
+        invItem.setId(41);
+        entity.setItemId(invItem);
 
         entity.setAddTotal(dTO.getAddTotal());
 
@@ -162,7 +165,7 @@ public class GmSubscriptionsDetailServiceImpl implements GmSubscriptionsDetailSe
 
         if (dTO.getItemSymbolId() != null && dTO.getItemSymbolId().getId() != null) {
             Symbol item = new Symbol();
-            item.setId(dTO.getItemId().getId());
+            item.setId(dTO.getItemSymbolId().getId());
             entity.setItemSymbolId(item);
         }
 
@@ -170,7 +173,7 @@ public class GmSubscriptionsDetailServiceImpl implements GmSubscriptionsDetailSe
             if (entity.getSerial() == null) {
                 Map<String, Object> params = new HashMap<>();
                 params.put("gmSubscriptionsDTOId", gmSubscriptionsDTOId);
-                Integer max = genericService.getMaxGenericSerialForDetail(GmSubscriptionsDetailDTO.class, "gmSubscriptionsId", gmSubscriptionsDTOId);
+                Integer max = genericService.getMaxGenericSerialForDetail(GmSubscriptionsDetail.class, "gmSubscriptionsId", gmSubscriptionsDTOId);
                 entity.setSerial(max);
             }
             entity.setCreatedBy(isagUser);

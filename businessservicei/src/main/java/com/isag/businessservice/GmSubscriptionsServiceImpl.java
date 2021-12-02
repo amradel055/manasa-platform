@@ -126,6 +126,7 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
         entity.setDiscountType(dto.getDiscountType());
         entity.setRemarks(dto.getRemarks());
         entity.setPostFlag(0);
+        entity.setType(dto.getType());
         entity.setExtraCost(dto.getExtraCost() != null ? dto.getExtraCost() : BigDecimal.ZERO);
         
         entity.setTaxFlagFinal(dto.getTaxFlagFinal());

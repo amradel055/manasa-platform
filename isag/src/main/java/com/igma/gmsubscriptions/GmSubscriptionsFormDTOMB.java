@@ -97,6 +97,7 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
     public String save() {
         if (getGmSubscriptionsDTO() != null && getGmSubscriptionsDTO().getGmSubscriptionsDetailList() != null && !getGmSubscriptionsDTO().getGmSubscriptionsDetailList().isEmpty()) {
             getGmSubscriptionsDTO().setMsg(null);
+            getGmSubscriptionsDTO().setType(0);
             setGmSubscriptionsDTO(gmSubscriptionsService.save(getGmSubscriptionsDTO(), getUserData().getUser()));
             msgSave(getGmSubscriptionsDTO().getMsg());
 //            reset();

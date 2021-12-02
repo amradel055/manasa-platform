@@ -232,6 +232,9 @@ public class GmSubscriptions extends BaseEntity {
     }
 
     public BigDecimal getPayCash() {
+        if(payCash == null){
+        payCash = BigDecimal.ZERO ;
+        }
         return payCash;
     }
 
@@ -240,6 +243,9 @@ public class GmSubscriptions extends BaseEntity {
     }
 
     public BigDecimal getPayNet() {
+         if(payNet == null){
+        payNet = BigDecimal.ZERO ;
+        }
         return payNet;
     }
 

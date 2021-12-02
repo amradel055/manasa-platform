@@ -103,15 +103,7 @@
                               >
                         <p:outputLabel value="#{invInvoicePurchaseTable.endDate}" />
                     </p:column>
-                    <p:column style="width: 8vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
-                              filterBy="#{invInvoicePurchaseTable.organizationSiteName}"
-                              filterMatchMode="contains" 
-                              headerText="العميل"
-                              sortBy="#{invInvoicePurchaseTable.organizationSiteName}" 
-                              >
-                        <p:outputLabel value="#{invInvoicePurchaseTable.organizationSiteName}" />
-                    </p:column>
-
+                
                     <p:column style="width: 10vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
                               filterBy="#{invInvoicePurchaseTable.remarks}"
                               filterMatchMode="contains" 
@@ -138,7 +130,7 @@
                                          style="background-color: red;border-radius: 3px;"
                                          title="#{userData.userDDs['DELETE']}" 
                                          action="#{gmSubscriptionsListDTOMB.delete()}" 
-                                         rendered="#{(userData.userScreens['invsalesinvoice_1'].delete or userData.isAdmin) and ( invInvoicePurchaseTable.look eq null or invInvoicePurchaseTable.look eq 0)}">
+                                         rendered="#{(userData.userScreens['invsalesinvoice_1'].delete or userData.isAdmin)}">
                             <f:setPropertyActionListener value="#{invInvoicePurchaseTable}" target="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected}" />
                             <p:confirm header="Confirmation" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
 
