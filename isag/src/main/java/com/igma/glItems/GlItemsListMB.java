@@ -72,7 +72,6 @@ public class GlItemsListMB extends BaseListBean {
              else if (getUri().contains("gmitemsymbol")) {
                 exit("../gmitemsymbol/gmitemsymbolForm.xhtml");
             }
-
             return "";
         } catch (Exception e) {
             saveError(e, "notesReceivablesListMB", "load");
