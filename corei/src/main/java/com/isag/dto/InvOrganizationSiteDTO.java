@@ -14,7 +14,6 @@ import java.util.List;
  * @author hq003
  */
 public class InvOrganizationSiteDTO extends BaseEntityDTO {
-
     private Integer index;
 
     private String code;
@@ -1149,5 +1148,6 @@ public class InvOrganizationSiteDTO extends BaseEntityDTO {
     public void setLegalAffairsRemark(String legalAffairsRemark) {
         this.legalAffairsRemark = legalAffairsRemark;
     }
+ 
 
 }

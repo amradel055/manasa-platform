@@ -587,7 +587,6 @@
                                           action="#{gmSubscriptionsFormDTOMB.save()}"
                                           rendered="#{not gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.revision}"
                                           update="@form"/>
-
                         <p:commandButton 
                             id="newN"
                             ajax="false"
@@ -603,7 +602,15 @@
                                           immediate="true"
                                           action="#{gmSubscriptionsFormDTOMB.exit()}" 
                                           update="@form"/>
-
+                        
+                           <p:commandButton  class="printButtons"                                              
+                                          ajax="false"
+                                          onclick="form.target = '_blank'"  
+                                          value="#{userData.userDDs['PRINT']}" 
+                                          title="#{userData.userDDs['PRINT']}" 
+                                          actionListener="#{gmSubscriptionsFormDTOMB.print()}"                                
+                                          update="@form"/>
+                            
                         <h:commandLink  style="float:left" class="sdcreenimg" rendered="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.id ne null}">  
                             <p:graphicImage name="/img/excel.jpg" width="24" style='margin-right:25%;'/>  
                             <p:dataExporter type="xls"

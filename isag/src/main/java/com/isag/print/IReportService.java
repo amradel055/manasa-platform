@@ -8,6 +8,7 @@ package com.isag.print;
 import com.isag.businessservice.reports.entityBean.completionRateReportEntity;
 import com.isag.businessservice.reports.entityBean.rscExtractJournalReportPrintEntity;
 import com.isag.businessservice.reports.searchBean.RscContractExtractionWorkunitSearchBean;
+import com.isag.dto.GmSubscriptionsDTO;
 import com.isag.dto.InvInvoiceDTO;
 import com.isag.dto.RscContractRegisterDTO;
 import com.isag.dto.RscExtractRegisterDTO;
@@ -29,6 +30,8 @@ import java.util.List;
  * @author hq004
  */
 public interface IReportService {
+    
+    public void printReportGmInvoice(GmSubscriptionsDTO gmSubscriptionsDTO, UserData userData);
 
     public void printReportInvoice(InvInvoiceDTO invPurchaseInvoiceDTO, UserData userData);
 

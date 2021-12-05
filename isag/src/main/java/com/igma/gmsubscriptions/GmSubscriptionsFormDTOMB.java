@@ -15,8 +15,11 @@ import com.isag.dto.GlBankDTO;
 import com.isag.dto.GmSubscriptionsDTO;
 import com.isag.dto.GmSubscriptionsDetailDTO;
 import com.isag.dto.InvOrganizationSiteDTO;
+import com.isag.dto.InventoryDelegatorDTO;
 import com.isag.isag.AutoComplete;
 import com.isag.isag.BaseFormBean;
+import com.isag.print.IReportService;
+import com.isag.print.IReportServiceImpl;
 import java.math.BigDecimal;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -44,6 +47,9 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
     private List<GmSubscriptionsDTO> list ;
     private List<GlBankDTO> glBankList;
     private GlBankDTOConverter glBankConverter;
+    IReportService iReportService = new IReportServiceImpl();
+
+
 
     // EJBs
     @EJB
@@ -142,6 +148,9 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
         getGmSubscriptionsDTO().setOrganizationSiteId(organizationSiteService.addNewCustomer(getOrganizationSiteId(), getInvOrganizationSiteDTOList(), getUserData().getUser()));
         getGmSubscriptionsDTO().setShowCustomerDate(Boolean.FALSE);
     }
+       public void print() {
+        iReportService.printReportGmInvoice(getGmSubscriptionsDTO() , getUserData());
+    }
 
     public void addInvDetail() {
         try {
@@ -228,7 +237,7 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
     public void reset() {
         try {
             setGmSubscriptionsDTO(null);
-            setOrganizationSiteId(null);
+            setGmSubscriptionsDTO(null);
             addInvDetail();
             changeFocus("form:invPurchaseInvoiceDetailsTable:0:invItemNameIn");
         } catch (Exception e) {
@@ -348,8 +357,5 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
     /**
      * @param organizationSiteId the organizationSiteId to set
      */
-    public void setOrganizationSiteId(InvOrganizationSiteDTO organizationSiteId) {
-        this.organizationSiteId = organizationSiteId;
-    }
 
 }
