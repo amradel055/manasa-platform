@@ -10,6 +10,7 @@ import com.isag.core.GenericDAO;
 import com.isag.dto.InstProjectGuideDTO;
 import com.isag.dto.InstPurchaseInvoiceDTO;
 import com.isag.dto.InstPurchaseInvoiceDetailDTO;
+import com.isag.dto.SymbolDTO;
 import com.isag.entity.InstProjectGuide;
 import com.isag.entity.IsagUser;
 import com.isag.views.InstView;
@@ -538,6 +539,13 @@ public class InstProjectGuideServiceImpl implements InstProjectGuideService {
             instProjectGuideDTO.setId(entity.getParent().getId());
             dTO.setParent(instProjectGuideDTO);
             dTO.setParentId(entity.getParent().getId());
+        }
+        if (entity.getSymbolSize() != null) {
+            SymbolDTO symbolDTO = new SymbolDTO();
+            symbolDTO.setSerial(entity.getSymbolSize().getSerial());
+            symbolDTO.setName(entity.getSymbolSize().getName());
+            symbolDTO.setId(entity.getSymbolSize().getId());
+            dTO.setSymbolSize(symbolDTO);
         }
         dTO.setCreatedDate(entity.getCreationDate() != null ? entity.getCreationDate() : new Date());
         dTO.setCreatedBy(entity.getCreatedBy().getId());
