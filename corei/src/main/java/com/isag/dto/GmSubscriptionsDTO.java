@@ -50,7 +50,7 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
     private BigDecimal finalNet;
     private BigDecimal totalWithTaxValue;
     private BigDecimal discountValue;
-    
+
     private Boolean showCustomerDate = Boolean.TRUE;
 
     private List<GmSubscriptionsDetailDTO> gmSubscriptionsDetailList;
@@ -77,6 +77,9 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
     }
 
     public BigDecimal getDiscount() {
+        if (discount == null) {
+            discount = BigDecimal.ZERO;
+        }
         return discount;
     }
 
@@ -125,6 +128,9 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
     }
 
     public BigDecimal getExtraCost() {
+          if(extraCost==null){
+        extraCost= BigDecimal.ZERO;
+        }
         return extraCost;
     }
 
@@ -189,6 +195,9 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
     }
 
     public BigDecimal getTaxDiscValue() {
+           if(taxDiscValue==null){
+        taxDiscValue= BigDecimal.ZERO;
+        }
         return taxDiscValue;
     }
 
@@ -197,6 +206,9 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
     }
 
     public BigDecimal getPayCash() {
+            if(payCash==null){
+        payCash= BigDecimal.ZERO;
+        }
         return payCash;
     }
 
@@ -205,6 +217,9 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
     }
 
     public BigDecimal getPayNet() {
+              if(payNet==null){
+        payNet= BigDecimal.ZERO;
+        }
         return payNet;
     }
 
@@ -277,6 +292,9 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
      * @return the payed
      */
     public BigDecimal getPayed() {
+        if(payed==null){
+        payed= BigDecimal.ZERO;
+        }
         return payed;
     }
 
@@ -291,6 +309,9 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
      * @return the remain
      */
     public BigDecimal getRemain() {
+           if(remain==null){
+        remain= BigDecimal.ZERO;
+        }
         return remain;
     }
 
@@ -305,7 +326,7 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
      * @return the gmSubscriptionsDetailList
      */
     public List<GmSubscriptionsDetailDTO> getGmSubscriptionsDetailList() {
-        if(gmSubscriptionsDetailList == null){
+        if (gmSubscriptionsDetailList == null) {
             gmSubscriptionsDetailList = new ArrayList<>();
         }
         return gmSubscriptionsDetailList;
@@ -322,7 +343,7 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
      * @return the gmSubscriptionsDetailDeletedList
      */
     public List<GmSubscriptionsDetailDTO> getGmSubscriptionsDetailDeletedList() {
-        if(gmSubscriptionsDetailDeletedList == null ){
+        if (gmSubscriptionsDetailDeletedList == null) {
             gmSubscriptionsDetailDeletedList = new ArrayList<>();
         }
         return gmSubscriptionsDetailDeletedList;
@@ -374,6 +395,9 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
      * @return the totalNetAfterDiscount
      */
     public BigDecimal getTotalNetAfterDiscount() {
+         if (totalNetAfterDiscount == null) {
+            totalNetAfterDiscount = BigDecimal.ZERO;
+             }
         return totalNetAfterDiscount;
     }
 
@@ -388,6 +412,9 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
      * @return the taxvalue
      */
     public BigDecimal getTaxvalue() {
+        if (taxvalue == null) {
+            taxvalue = BigDecimal.ZERO;
+        }
         return taxvalue;
     }
 
@@ -402,6 +429,9 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
      * @return the finalNet
      */
     public BigDecimal getFinalNet() {
+        if (finalNet == null) {
+            finalNet = BigDecimal.ZERO;
+        }
         return finalNet;
     }
 
@@ -416,6 +446,9 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
      * @return the totalWithTaxValue
      */
     public BigDecimal getTotalWithTaxValue() {
+        if (totalWithTaxValue == null) {
+            totalWithTaxValue = BigDecimal.ZERO;
+        }
         return totalWithTaxValue;
     }
 
@@ -430,6 +463,9 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
      * @return the discountValue
      */
     public BigDecimal getDiscountValue() {
+          if (discountValue == null) {
+            discountValue = BigDecimal.ZERO;
+        }
         return discountValue;
     }
 
@@ -490,10 +526,11 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
     }
 
     /**
-     * @param gmSubscriptionsDetailDTOSelected the gmSubscriptionsDetailDTOSelected to set
+     * @param gmSubscriptionsDetailDTOSelected the
+     * gmSubscriptionsDetailDTOSelected to set
      */
     public void setGmSubscriptionsDetailDTOSelected(GmSubscriptionsDetailDTO gmSubscriptionsDetailDTOSelected) {
-        if(gmSubscriptionsDetailDTOSelected == null){
+        if (gmSubscriptionsDetailDTOSelected == null) {
             gmSubscriptionsDetailDTOSelected = new GmSubscriptionsDetailDTO();
         }
         this.gmSubscriptionsDetailDTOSelected = gmSubscriptionsDetailDTOSelected;
