@@ -387,10 +387,10 @@
                                                 rendered="#{userData.userScreens['glBank'].view or userData.isAdmin}"
                                                 />
                                     <p:menuitem id="sr_lnk612" value="انشاء مصروف" icon="&#xE8D2;" url="/faces/views/glExpenses/glExpensesList.xhtml" 
-                                                
+
                                                 />
                                     <p:menuitem id="sr_lnk613" value="انشاء اصل ثابت" icon="&#xE8D2;" url="/faces/views/glFixedAsset/glFixedAssetList.xhtml" 
-                                                
+
                                                 />
                                 </p:submenu>
                                 <p:submenu id="sr_sm62" label="#{userData.userDDs['Safes_and_Bank_Transaction']}" icon="&#xE8D2;"
@@ -901,32 +901,32 @@
                                                 />
                                 </p:submenu>
                             </p:submenu>
-                            
-                            
-                            
+
+
+
                             <p:submenu id="sr_sm67" label="#{userData.userDDs['INSTALL_REP']}" icon="&#xE8D2;"
                                        rendered="#{userData.userScreens['projectGuideReport'].view 
                                                    or userData.userScreens['CollectionAndPaymentReport'].view 
-                                                     or userData.userScreens['CollectionAndPaymentReport_1'].view 
-                                                     or userData.userScreens['instDelayed'].view
-                                                     or userData.userScreens['instMaturity'].view
-                                                     or userData.userScreens['instMonthlyPayments'].view
-                                                     or userData.userScreens['soldUnits'].view
-                                                     or userData.userScreens['projectGuideReport_1'].view
-                                                     or userData.userScreens['projectGuideReportNew'].view
+                                                   or userData.userScreens['CollectionAndPaymentReport_1'].view 
+                                                   or userData.userScreens['instDelayed'].view
+                                                   or userData.userScreens['instMaturity'].view
+                                                   or userData.userScreens['instMonthlyPayments'].view
+                                                   or userData.userScreens['soldUnits'].view
+                                                   or userData.userScreens['projectGuideReport_1'].view
+                                                   or userData.userScreens['projectGuideReportNew'].view
 
                                                    or userData.isAdmin}"
                                        >
                                 <p:submenu id="sr_sm671" label="#{userData.userDDs['INSTALL_REP']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['projectGuideReport'].view 
-                                                   or userData.userScreens['CollectionAndPaymentReport'].view 
-                                                     or userData.userScreens['CollectionAndPaymentReport_1'].view 
-                                                     or userData.userScreens['instDelayed'].view
-                                                     or userData.userScreens['instMaturity'].view
-                                                     or userData.userScreens['instMonthlyPayments'].view
-                                                     or userData.userScreens['soldUnits'].view
-                                                     or userData.userScreens['projectGuideReport_1'].view
-                                                     or userData.userScreens['projectGuideReportNew'].view
+                                                       or userData.userScreens['CollectionAndPaymentReport'].view 
+                                                       or userData.userScreens['CollectionAndPaymentReport_1'].view 
+                                                       or userData.userScreens['instDelayed'].view
+                                                       or userData.userScreens['instMaturity'].view
+                                                       or userData.userScreens['instMonthlyPayments'].view
+                                                       or userData.userScreens['soldUnits'].view
+                                                       or userData.userScreens['projectGuideReport_1'].view
+                                                       or userData.userScreens['projectGuideReportNew'].view
                                                        or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_sm6711" value="#{userData.userDDs['PROJ_GUID_REP']}" 
@@ -955,9 +955,9 @@
                                                 />
                                 </p:submenu>
                             </p:submenu>
-                            
-                            
-                            
+
+
+
                             <p:submenu id="sr_sm9" label="#{userData.userDDs['PROJECTS_MANAG']}" icon="&#xE8D2;"
                                        rendered="#{userData.userScreens['rscworkunit'].view 
                                                    or userData.userScreens['contractor'].view 
@@ -1078,7 +1078,30 @@
                                                 />
                                 </p:submenu>
                             </p:submenu>
-                            
+
+                            <p:submenu id="gm_sm55" label="الصالات الرياضية" icon="&#xE8D2;"
+                                       rendered="#{userData.userScreens['gmitemsymbol'].view 
+                                                   or userData.userScreens['gmsubscriptions'].view 
+                                                   or userData.userScreens['gmsubscriptionstatue'].view 
+                                                   or userData.isAdmin}"
+                                       >
+                                <p:submenu id="gm_sm56" label="الإدارة" icon="&#xE8D2;"
+                                           rendered="#{userData.userScreens['gmitemsymbol'].view 
+                                                       or userData.userScreens['gmsubscriptions'].view 
+                                                       or userData.userScreens['gmsubscriptionstatue'].view
+                                                       or userData.isAdmin}"
+                                           >
+                                    <p:menuitem id="gm_lnk550" value="إنشاء البنود" icon="&#xE8D2;" url="/faces/views/gmitemsymbol/itemsymbollist.xhtml" 
+                                                rendered="#{userData.userScreens['gmitemsymbol'].view or userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="gm_lnk551" value="استعلام" icon="&#xE8D2;" url="/faces/views/gmsubscriptionstatue/gmsubscriptionslist.xhtml" 
+                                                rendered="#{userData.userScreens['gmsubscriptionstatue'].view or userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="gm_lnk552" value="الإشتراكات" icon="&#xE8D2;" url="/faces/views/gmsubscriptions/gmsubscriptionslist.xhtml" 
+                                                rendered="#{userData.userScreens['gmsubscriptions'].view or userData.isAdmin}"
+                                                />
+                                </p:submenu>
+                            </p:submenu>
                             <p:submenu id="sr_sm55" label="الترحيلات" icon="&#xE8D2;"
                                        rendered="#{userData.userScreens['shiftingJournals'].view 
                                                    or userData.userScreens['shiftingJournalsettings'].view 
