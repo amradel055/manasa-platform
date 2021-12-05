@@ -221,6 +221,9 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
             saveError(e, "SalesInvoiceFormMB", "calculateRemainValue");
         }
     }
+    
+    
+    
 
     public void reset() {
         try {
