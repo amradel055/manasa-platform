@@ -168,6 +168,11 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
             saveError(e, "InvPurchaseInvoiceFormMB", "addInvPurchaseInvoiceDetail");
         }
     }
+    
+    
+    
+    
+    
 
     public Boolean validateItems(GmSubscriptionsDetailDTO gmSubscriptionsDetailDTO) {
         try {
