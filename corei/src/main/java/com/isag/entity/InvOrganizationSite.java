@@ -178,6 +178,8 @@ public class InvOrganizationSite extends BaseEntity {
     @JoinColumn(name = "project_name", referencedColumnName = "id")
     @ManyToOne
     private Symbol projectName;
+    @Column(name = "client_image")
+    private String clientImage;
 
     public InvOrganizationSite() {
     }
@@ -809,6 +811,20 @@ public class InvOrganizationSite extends BaseEntity {
      */
     public void setProjectName(Symbol projectName) {
         this.projectName = projectName;
+    }
+
+    /**
+     * @return the clientImage
+     */
+    public String getClientImage() {
+        return clientImage;
+    }
+
+    /**
+     * @param clientImage the clientImage to set
+     */
+    public void setClientImage(String clientImage) {
+        this.clientImage = clientImage;
     }
 
 }

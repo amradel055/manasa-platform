@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package com.igma.gmsubscriptions;
-
+import org.apache.commons.codec.binary.Base64;
 import com.isag.businessservice.GmGlobalService;
 import com.isag.businessservice.GmSubscriptionsService;
 import com.isag.businessservice.OrganizationSiteService;
@@ -29,6 +29,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import static org.glassfish.jersey.internal.Errors.reset;
+import com.isag.uploadfile.FileUploadController;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -60,8 +62,12 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
     private AutoCompleteService autoCompleteService;
     @EJB
     private GmGlobalService gmGlobalService;
-
     private BigDecimal remain;
+    private String filename;
+    private String file;
+    private String host;
+    private FileUploadController fileUploadController;
+    
 
     @Override
     @PostConstruct
@@ -147,6 +153,7 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
     public void addNewCustomer2() {
         getGmSubscriptionsDTO().setOrganizationSiteId(organizationSiteService.addNewCustomer(getOrganizationSiteId(), getInvOrganizationSiteDTOList(), getUserData().getUser()));
         getGmSubscriptionsDTO().setShowCustomerDate(Boolean.FALSE);
+        saveImage();
     }
        public void print() {
         iReportService.printReportGmInvoice(getGmSubscriptionsDTO() , getUserData());
@@ -231,7 +238,28 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
         }
     }
     
+    public String updateImage() {
+
+        if (getOrganizationSiteId().getClientImage() != null && !getOrganizationSiteId().getClientImage().isEmpty()) {
+            organizationSiteService.updateImage(getGmSubscriptionsDTO().getOrganizationSiteId().getId(), getOrganizationSiteId().getClientImage());
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "تم التسجيل بنجاح", "تم التسجيل بنجاح"));
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "خطأ", getOrganizationSiteId().getMsg()));
+        }
+        return "";
+    }
     
+    public String saveImage() {
+        if (getFile() != null && !getFile().isEmpty()) {
+            byte[] byteFile = Base64.decodeBase64(getFile().substring(getFile().indexOf("base64,") + 6));
+            String imageName = getFileUploadController().upload(byteFile);
+            getOrganizationSiteId().setClientImage(imageName);
+            updateImage();
+        } else {
+            errorMessage("file not found");
+        }
+        return "";
+    }
     
 
     public void reset() {
@@ -352,6 +380,67 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
             organizationSiteId = new InvOrganizationSiteDTO();
         }
         return organizationSiteId;
+    }
+
+    /**
+     * @return the filename
+     */
+    public String getFilename() {
+        return filename;
+    }
+
+    /**
+     * @param filename the filename to set
+     */
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
+
+    /**
+     * @return the file
+     */
+    public String getFile() {
+        return file;
+    }
+
+    /**
+     * @param file the file to set
+     */
+    public void setFile(String file) {
+        this.file = file;
+    }
+
+    /**
+     * @return the host
+     */
+    public String getHost() {
+    HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
+     setHost(request.getRequestURL().substring(0, request.getRequestURL().indexOf("faces/")).concat("images/"));
+        return host;
+    }
+
+    /**
+     * @param host the host to set
+     */
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    /**
+     * @return the fileUploadController
+     */
+    public FileUploadController getFileUploadController() {
+        if (fileUploadController == null) {
+            fileUploadController = new FileUploadController();
+        }
+        return fileUploadController;
+    }
+
+    /**
+     * @param fileUploadController the fileUploadController to set
+     */
+    public void setFileUploadController(FileUploadController fileUploadController) {
+        this.fileUploadController = fileUploadController;
     }
 
     /**
