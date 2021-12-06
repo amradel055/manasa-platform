@@ -24,6 +24,7 @@ import javax.ejb.Remote;
  */
 @Remote
 public interface OrganizationSiteService {
+    public void updateImage(Integer clientProfileId, String img);
 
     public InvOrganizationSite addOrganizationSite(InvOrganizationSite invOrganizationSite);
 

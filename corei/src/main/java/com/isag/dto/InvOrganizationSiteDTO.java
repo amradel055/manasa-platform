@@ -14,9 +14,8 @@ import java.util.List;
  * @author hq003
  */
 public class InvOrganizationSiteDTO extends BaseEntityDTO {
-
     private Integer index;
-
+    private String clientImage ;
     private String code;
     private String name;
     private String address;
@@ -89,7 +88,7 @@ public class InvOrganizationSiteDTO extends BaseEntityDTO {
     private Integer numberOfNewLeadsAssigned;
     private String globalFilter;
     private String legalAffairsRemark;
-
+    private Boolean isEdited = Boolean.FALSE;
     public InvOrganizationSiteDTO() {
     }
 
@@ -1149,5 +1148,34 @@ public class InvOrganizationSiteDTO extends BaseEntityDTO {
     public void setLegalAffairsRemark(String legalAffairsRemark) {
         this.legalAffairsRemark = legalAffairsRemark;
     }
+
+    /**
+     * @return the clientImage
+     */
+    public String getClientImage() {
+        return clientImage;
+    }
+
+    /**
+     * @param clientImage the clientImage to set
+     */
+    public void setClientImage(String clientImage) {
+        this.clientImage = clientImage;
+    }
+
+    /**
+     * @return the isEdited
+     */
+    public Boolean getIsEdited() {
+        return isEdited;
+    }
+
+    /**
+     * @param isEdited the isEdited to set
+     */
+    public void setIsEdited(Boolean isEdited) {
+        this.isEdited = isEdited;
+    }
+ 
 
 }

@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package com.igma.gmsubscriptions;
-
+import org.apache.commons.codec.binary.Base64;
 import com.isag.businessservice.GmGlobalService;
 import com.isag.businessservice.GmSubscriptionsService;
 import com.isag.businessservice.OrganizationSiteService;
@@ -15,8 +15,11 @@ import com.isag.dto.GlBankDTO;
 import com.isag.dto.GmSubscriptionsDTO;
 import com.isag.dto.GmSubscriptionsDetailDTO;
 import com.isag.dto.InvOrganizationSiteDTO;
+import com.isag.dto.InventoryDelegatorDTO;
 import com.isag.isag.AutoComplete;
 import com.isag.isag.BaseFormBean;
+import com.isag.print.IReportService;
+import com.isag.print.IReportServiceImpl;
 import java.math.BigDecimal;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -26,6 +29,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import static org.glassfish.jersey.internal.Errors.reset;
+import com.isag.uploadfile.FileUploadController;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -44,6 +49,9 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
     private List<GmSubscriptionsDTO> list ;
     private List<GlBankDTO> glBankList;
     private GlBankDTOConverter glBankConverter;
+    IReportService iReportService = new IReportServiceImpl();
+
+
 
     // EJBs
     @EJB
@@ -54,8 +62,12 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
     private AutoCompleteService autoCompleteService;
     @EJB
     private GmGlobalService gmGlobalService;
-
     private BigDecimal remain;
+    private String filename;
+    private String file;
+    private String host;
+    private FileUploadController fileUploadController;
+    
 
     @Override
     @PostConstruct
@@ -73,7 +85,7 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
     @Override
     public void load() {
         try {
-
+              
             if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("addGmSubscriptions")) {
                 reset();
                 fillDefaultList();
@@ -83,7 +95,11 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
                 fillInvInvoiceDTO();
                 fillDefaultList();
                 getGmSubscriptionsDTO().setIsEdit(Boolean.FALSE);
-            } else {
+            } else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("editorganization")) {
+              
+               getOrganizationSiteId().setIsEdited(Boolean.TRUE);
+               fillClientDTO();
+            }else {
                 exit("../gmsubscriptions/gmsubscriptionslist.xhtml");
             }
         } catch (Exception e) {
@@ -116,6 +132,11 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
         getGmSubscriptionsDTO().setId((Integer) getContext().getSessionMap().get("gmSubscriptionsIdSelected"));
         setGmSubscriptionsDTO(gmSubscriptionsService.findGmSubscriptionsDTOById(getGmSubscriptionsDTO()));
     }
+    
+      public void fillClientDTO() {
+        getOrganizationSiteId().setId((Integer) getContext().getSessionMap().get("invOrganizationSiteDTOSelected"));
+        setOrganizationSiteId(organizationSiteService.findOrganizationSiteDTOById(getOrganizationSiteId().getId()));
+    }
 
     @Override
     public String getScreenName() {
@@ -141,6 +162,20 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
     public void addNewCustomer2() {
         getGmSubscriptionsDTO().setOrganizationSiteId(organizationSiteService.addNewCustomer(getOrganizationSiteId(), getInvOrganizationSiteDTOList(), getUserData().getUser()));
         getGmSubscriptionsDTO().setShowCustomerDate(Boolean.FALSE);
+        saveImage();
+        leaveScreen();
+        
+    }
+    
+    
+    public void leaveScreen() {
+        exit("../gmregistration/gmclientlist.xhtml");
+    }
+    
+    
+    
+       public void print() {
+        iReportService.printReportGmInvoice(getGmSubscriptionsDTO() , getUserData());
     }
 
     public void addInvDetail() {
@@ -152,6 +187,11 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
             saveError(e, "InvPurchaseInvoiceFormMB", "addInvPurchaseInvoiceDetail");
         }
     }
+    
+    
+    
+    
+    
 
     public Boolean validateItems(GmSubscriptionsDetailDTO gmSubscriptionsDetailDTO) {
         try {
@@ -222,13 +262,32 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
         }
     }
     
+    public String updateImage() {
+
+        if (getOrganizationSiteId().getClientImage() != null && !getOrganizationSiteId().getClientImage().isEmpty()) {
+            organizationSiteService.updateImage(getGmSubscriptionsDTO().getOrganizationSiteId().getId(), getOrganizationSiteId().getClientImage());
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "تم التسجيل بنجاح", "تم التسجيل بنجاح"));
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "خطأ", getOrganizationSiteId().getMsg()));
+        }
+        return "";
+    }
     
+    public String saveImage() {
+        if (getFile() != null && !getFile().isEmpty()) {
+            byte[] byteFile = Base64.decodeBase64(getFile().substring(getFile().indexOf("base64,") + 6));
+            String imageName = getFileUploadController().upload(byteFile);
+            getOrganizationSiteId().setClientImage(imageName);
+            updateImage();
+        } 
+        return "";
+    }
     
 
     public void reset() {
         try {
             setGmSubscriptionsDTO(null);
-            setOrganizationSiteId(null);
+            setGmSubscriptionsDTO(null);
             addInvDetail();
             changeFocus("form:invPurchaseInvoiceDetailsTable:0:invItemNameIn");
         } catch (Exception e) {
@@ -340,9 +399,70 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
      */
     public InvOrganizationSiteDTO getOrganizationSiteId() {
         if(organizationSiteId == null){
-            organizationSiteId = new InvOrganizationSiteDTO();
+            setOrganizationSiteId(new InvOrganizationSiteDTO());
         }
         return organizationSiteId;
+    }
+
+    /**
+     * @return the filename
+     */
+    public String getFilename() {
+        return filename;
+    }
+
+    /**
+     * @param filename the filename to set
+     */
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
+
+    /**
+     * @return the file
+     */
+    public String getFile() {
+        return file;
+    }
+
+    /**
+     * @param file the file to set
+     */
+    public void setFile(String file) {
+        this.file = file;
+    }
+
+    /**
+     * @return the host
+     */
+    public String getHost() {
+    HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
+     setHost(request.getRequestURL().substring(0, request.getRequestURL().indexOf("faces/")).concat("images/"));
+        return host;
+    }
+
+    /**
+     * @param host the host to set
+     */
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    /**
+     * @return the fileUploadController
+     */
+    public FileUploadController getFileUploadController() {
+        if (fileUploadController == null) {
+            fileUploadController = new FileUploadController();
+        }
+        return fileUploadController;
+    }
+
+    /**
+     * @param fileUploadController the fileUploadController to set
+     */
+    public void setFileUploadController(FileUploadController fileUploadController) {
+        this.fileUploadController = fileUploadController;
     }
 
     /**
@@ -352,4 +472,5 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
         this.organizationSiteId = organizationSiteId;
     }
 
+  
 }

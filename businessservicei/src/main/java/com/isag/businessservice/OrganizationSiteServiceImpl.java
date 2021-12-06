@@ -276,6 +276,12 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         List<InvOrganizationSite> detailsesReturn = retiveOrganizationSiteDate(detailses);
         return detailsesReturn;
     }
+    @Override
+    public void updateImage(Integer clientProfileId, String img) {
+        InvOrganizationSite entity = dao.findEntityById(InvOrganizationSite.class, clientProfileId);
+        entity.setClientImage(img);
+        dao.updateEntity(entity);
+    }
 
     @Override
     public synchronized InvOrganizationSite addOrganizationSite(InvOrganizationSite invOrganizationSite) {
@@ -956,7 +962,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         dTO.setSponsorName2(entity.getSponsorName2());
         dTO.setSponsorPhone2(entity.getSponsorPhone2());
         dTO.setBirthdate(entity.getBirthdate());
-
+        dTO.setClientImage(entity.getClientImage());
         dTO.setUrlSite(entity.getUrlSite());
         dTO.setUrlFacebook(entity.getUrlFacebook());
         dTO.setUrlInstegram(entity.getUrlInstegram());
@@ -1113,7 +1119,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         entity.setSponsorName2(dTO.getSponsorName2());
         entity.setSponsorPhone2(dTO.getSponsorPhone2());
         entity.setBirthdate(dTO.getBirthdate());
-
+        entity.setClientImage(dTO.getClientImage());
         entity.setUrlSite(dTO.getUrlSite());
         entity.setUrlFacebook(dTO.getUrlFacebook());
         entity.setUrlInstegram(dTO.getUrlInstegram());

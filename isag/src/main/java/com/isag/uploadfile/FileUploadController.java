@@ -10,6 +10,7 @@ import com.isag.entity.InvItem;
 import com.isag.entity.IsagCompany;
 import com.isag.isag.OperatingSystem;
 import com.isag.isag.UserData;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -45,7 +46,7 @@ public class FileUploadController {
 
     public FileUploadController() {
         this.destination = getUserData().getImagePath();
-        this.notificationDestination = getUserData().getImagePath().concat("notification/");
+        this.notificationDestination = getUserData().getImagePath();
     }
 
     public String upload(FileUploadEvent event) {
@@ -65,6 +66,22 @@ public class FileUploadController {
         }
         
         return null ;
+    }
+    public String upload(byte[] fileArray) {
+        try {
+            imageId = (int) (new Date().getTime() / 1000) + "_";
+            imageName = "GYM_" + imageId + ".jpeg";
+            setImageName(imageName);
+            InputStream inputStream = new ByteArrayInputStream(fileArray);
+            copyFile(getImageName(), inputStream, getDestination());
+            FacesMessage msg = new FacesMessage("Success! ", getImageName() + " is uploaded.");
+            System.out.println("Success! " + getImageName() + " is uploaded.");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+            return getImageName();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
       public String uploadNotification(FileUploadEvent event) {

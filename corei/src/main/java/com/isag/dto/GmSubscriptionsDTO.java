@@ -5,6 +5,7 @@
  */
 package com.isag.dto;
 
+import com.isag.entity.ReportManagement;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,9 +16,16 @@ import java.util.List;
  * @author IT Shop
  */
 public class GmSubscriptionsDTO extends BaseEntityDTO {
+        private Boolean barcodeSelect;
 
+
+        
     private InvOrganizationSiteDTO organizationSiteId;
+    private BigDecimal customerBalance;
+    private InvInventoryDTO invInventoryId;
+    private Integer paymentType;
     private Date date;
+    private ReportManagement reportManagement;
     private Date endDate;
     private Date startDate;
     private BigDecimal discount;
@@ -52,10 +60,14 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
     private BigDecimal discountValue;
 
     private Boolean showCustomerDate = Boolean.TRUE;
+    private InventoryDelegatorDTO invDelegatorId;
+
 
     private List<GmSubscriptionsDetailDTO> gmSubscriptionsDetailList;
     private List<GmSubscriptionsDetailDTO> gmSubscriptionsDetailDeletedList;
     private GmSubscriptionsDetailDTO gmSubscriptionsDetailDTOSelected;
+
+
 
     public GmSubscriptionsDTO() {
     }
@@ -535,5 +547,86 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
         }
         this.gmSubscriptionsDetailDTOSelected = gmSubscriptionsDetailDTOSelected;
     }
+         /**
+     * @return the barcodeSelect
+     */
+    public Boolean getBarcodeSelect() {
+        return barcodeSelect;
+    }
 
+    /**
+     * @param barcodeSelect the barcodeSelect to set
+     */
+    public void setBarcodeSelect(Boolean barcodeSelect) {
+        this.barcodeSelect = barcodeSelect;
+    }
+
+    /**
+     * @return the reportManagement
+     */
+    public ReportManagement getReportManagement() {
+        return reportManagement;
+    }
+
+    /**
+     * @param reportManagement the reportManagement to set
+     */
+    public void setReportManagement(ReportManagement reportManagement) {
+        this.reportManagement = reportManagement;
+    }
+
+    /**
+     * @return the invDelegatorId
+     */
+    public InventoryDelegatorDTO getInvDelegatorId() {
+        return invDelegatorId;
+    }
+
+    /**
+     * @param invDelegatorId the invDelegatorId to set
+     */
+    public void setInvDelegatorId(InventoryDelegatorDTO invDelegatorId) {
+        this.invDelegatorId = invDelegatorId;
+    }
+    
+    /**
+     * @return the customerBalance
+     */
+    public BigDecimal getCustomerBalance() {
+        if(customerBalance == null){
+            customerBalance = BigDecimal.ZERO;
+        }
+        return customerBalance;
+    }
+
+    /**
+     * @param customerBalance the customerBalance to set
+     */
+    public void setCustomerBalance(BigDecimal customerBalance) {
+        this.customerBalance = customerBalance;
+    }
+     public InvInventoryDTO getInvInventoryId() {
+        return invInventoryId;
+    }
+
+    public void setInvInventoryId(InvInventoryDTO invInventoryId) {
+        this.invInventoryId = invInventoryId;
+    }
+    
+    /**
+     * @return the paymentType
+     */
+    public Integer getPaymentType() {
+        if (paymentType == null) {
+            paymentType = 0;
+        }
+        return paymentType;
+    }
+
+    /**
+     * @param paymentType the paymentType to set
+     */
+    public void setPaymentType(Integer paymentType) {
+        this.paymentType = paymentType;
+    }
 }

@@ -6,6 +6,7 @@
 package com.igma.gmsubscriptions;
 
 import com.isag.businessservice.GmSubscriptionsService;
+import com.isag.businessservice.OrganizationSiteService;
 import com.isag.dto.GmSubscriptionsDTO;
 import com.isag.dto.InvOrganizationSiteDTO;
 import com.isag.isag.BaseListBean;
@@ -34,9 +35,16 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
     private GmSubscriptionsDTO gmSubscriptionsDTOSelected;
     private List<GmSubscriptionsDTO> subscribtionList ;
     private InvOrganizationSiteDTO invOrganizationSiteDTO ;
+    private List<InvOrganizationSiteDTO> invOrganizationSiteDTOList ;
+    private InvOrganizationSiteDTO invOrganizationSiteDTOSelected ;
+    
     @EJB
     private GmSubscriptionsService gmSubscriptionsService;
-
+    
+    @EJB 
+    private OrganizationSiteService organizationSiteService ;
+    
+    
     @Override
     @PostConstruct
     public void init() {
@@ -46,6 +54,12 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
             saveError(e, "InvPurchaseInvoiceListMB", "init");
         }
     } 
+    
+    
+    
+ 
+    
+    
     
      public List<GmSubscriptionsDTO> search(){
       
@@ -124,15 +138,49 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
             return null;
         }
     }
+    
+    public String goToEditClient() {
+        try {
+            if (getInvOrganizationSiteDTOSelected() != null && getInvOrganizationSiteDTOSelected().getId() > 0) {
+                ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+                context.getSessionMap().put("invOrganizationSiteDTOSelected", getInvOrganizationSiteDTOSelected().getId());
+                context.getSessionMap().put("ScreenMode", "editorganization");
+                goToClientEditScreen();
+                return "";
+            } else {
+                return "";
+            }
+        } catch (Exception e) {
+            saveError(e, "InvPurchaseInvoiceListMB", "goToEdit");
+            return null;
+        }
+    }
 
     public void goToScreen() {
         exit("../gmsubscriptions/gmsubscriptionsform.xhtml");
+    }
+    
+     public void goToClientEditScreen() {
+        exit("../gmregistration/gmregistrationForm.xhtml");
     }
 
     public void delete() {
         try {
             if (getGmSubscriptionsDTOSelected() != null && getGmSubscriptionsDTOSelected().getId() != null) {
                 gmSubscriptionsService.deleteGmSubscriptionsDTODTO(getGmSubscriptionsDTOSelected().getId());
+                load();
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "تم الجذذف بنجاح", "تم الجذذف بنجاح"));
+            }
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "خطأ", "خطأ فى الحف"));
+            saveError(e, "InvPurchaseInvoiceListMB", "delete");
+        }
+    }
+    
+    public void deleteClient() {
+        try {
+            if (getInvOrganizationSiteDTOSelected()!= null && getInvOrganizationSiteDTOSelected().getId() != null) {
+                organizationSiteService.deleteOrganizationSiteDTO(getInvOrganizationSiteDTOSelected() , getUserlogin());
                 load();
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "تم الجذذف بنجاح", "تم الجذذف بنجاح"));
             }
@@ -206,5 +254,34 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
      */
     public void setSubscribtionList(List<GmSubscriptionsDTO> subscribtionList) {
         this.subscribtionList = subscribtionList;
+    }
+
+    /**
+     * @return the invOrganizationSiteDTOList
+     */
+    public List<InvOrganizationSiteDTO> getInvOrganizationSiteDTOList() {
+        invOrganizationSiteDTOList = organizationSiteService.getCustomerDTOByBranchId(getUserData().getUserBranch().getId()) ;
+        return invOrganizationSiteDTOList;
+    }
+
+    /**
+     * @param invOrganizationSiteDTOList the invOrganizationSiteDTOList to set
+     */
+    public void setInvOrganizationSiteDTOList(List<InvOrganizationSiteDTO> invOrganizationSiteDTOList) {
+        this.invOrganizationSiteDTOList = invOrganizationSiteDTOList;
+    }
+
+    /**
+     * @return the invOrganizationSiteDTOSelected
+     */
+    public InvOrganizationSiteDTO getInvOrganizationSiteDTOSelected() {
+        return invOrganizationSiteDTOSelected;
+    }
+
+    /**
+     * @param invOrganizationSiteDTOSelected the invOrganizationSiteDTOSelected to set
+     */
+    public void setInvOrganizationSiteDTOSelected(InvOrganizationSiteDTO invOrganizationSiteDTOSelected) {
+        this.invOrganizationSiteDTOSelected = invOrganizationSiteDTOSelected;
     }
 }

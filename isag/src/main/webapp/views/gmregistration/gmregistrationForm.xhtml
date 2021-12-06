@@ -11,7 +11,72 @@
     <ui:define name="content">
 
         <h:form class='formmargin' id="form"  enctype="multipart/form-data"  dir="#{userData.dir}">
+            <p:fieldset id="whole1" legend="التقاط الصورة" style="margin-bottom:20px">
 
+                <div  id="firstLine" class="ui-g-12 ui-g-nopad">
+                    <div class="ui-g">
+
+                        <p:outputPanel id="photo">
+                            <button  id="start-camera" type="button">Start Camera</button>
+                            <video id="video"  width="320" height="240" autoplay="true"></video>
+                            <button  id="click-photo" type="button">Click Photo</button>
+                            <canvas id="canvas" width="320" height="240" ></canvas>
+
+                        </p:outputPanel>
+                        <script>
+                            let camera_button = document.querySelector("#start-camera");
+                            let video = document.querySelector("#video");
+                            let click_button = document.querySelector("#click-photo");
+                            let canvas = document.querySelector("#canvas");
+
+                            camera_button.addEventListener('click', async function () {
+                                let stream = await navigator.mediaDevices.getUserMedia({video: true, audio: false});
+                                video.srcObject = stream;
+                            });
+
+                            click_button.addEventListener('click', function () {
+                                canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+                                let image_data_url = canvas.toDataURL('image/jpeg');
+
+                                // data url of the image
+                                document.getElementById("form:img").value = image_data_url;
+
+                                console.log(image_data_url);
+                            });
+                        </script>
+                        <p:inputText type="hidden" style="display: none"  id="img" value="#{gmSubscriptionsFormDTOMB.file}">
+                            <p:ajax process="@this" />
+                        </p:inputText>
+
+                    </div>
+
+
+
+                    <div class="ui-g-12 ui-xl-12">
+
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:graphicImage url="#{gmSubscriptionsFormDTOMB.host.concat(gmSubscriptionsFormDTOMB.organizationSiteId.clientImage)}" library="demo"  style="max-width:80%;max-height:80%;object-fit: cover !important;"/>
+                        </div>
+                       
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel style="width: 65px" value="صورة العميل"/>
+
+                        </div>  
+                    </div>
+                </div>
+
+
+                <panelGrid class="centerButtons col-md-12" style='display: block; text-align: center;'>
+
+                    <h:panelGroup>
+                        <p:blockUI block="form" trigger="saveB" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+                        </p:blockUI> 
+                    </h:panelGroup>
+                </panelGrid>
+
+            </p:fieldset>
             <p:fieldset legend="انشاء مصروفات"  style="margin-bottom:20px">
 
 
@@ -33,7 +98,7 @@
 
                                 </div>
                             </div>
-                            
+
                             <div class="ui-g-12 ui-xl-12">
 
                                 <div class="ui-g-6 ui-xl-6">
@@ -41,11 +106,11 @@
 
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 85px;" value="التليفون "/>
+                                    <p:outputLabel style="width: 85px;" value="الجوال"/>
 
                                 </div>
                             </div>
-                             <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-12 ui-xl-12">
 
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:inputText style="width: 35%!important" id="ad3"  value="#{gmSubscriptionsFormDTOMB.organizationSiteId.address}"/>
@@ -56,39 +121,50 @@
 
                                 </div>
                             </div>
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 35%!important" id="ad4"  value="#{gmSubscriptionsFormDTOMB.organizationSiteId.nationId}"/>
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 85px;" value="رقم الهوية "/>
+
+                                </div>
+                            </div>
                         </div>                        
                     </div>
                 </div>
 
             </p:fieldset>
-            
-          <div class="asmaa">
-                        <p:commandButton  class="saveButton"  
-                                          id="saveB" 
-                                          title="#{userData.userDDs['SAVE']}"
-                                          value="#{userData.userDDs['SAVE']}" 
-                                          style=""
-                                          action="#{gmSubscriptionsFormDTOMB.addNewCustomer2()}" 
-                                          update="@form"/>
 
-                        <p:commandButton  class="newButton" 
-                                          id="newN"
-                                          ajax="false"
-                                          style=""
-                                          value="#{userData.userDDs['NEW']}" 
-                                          title="#{userData.userDDs['NEW']}"
-                                          onclick="form.target = ''" 
-                                          actionListener="#{gmSubscriptionsFormDTOMB.reset()}"/>
+            <div class="asmaa">
+                <p:commandButton  class="saveButton"  
+                                  id="saveB" 
+                                  title="#{userData.userDDs['SAVE']}"
+                                  value="#{userData.userDDs['SAVE']}" 
+                                  style=""
+                                  action="#{gmSubscriptionsFormDTOMB.addNewCustomer2()}" 
+                                  update="@form"/>
 
-              
+                <p:commandButton  class="newButton" 
+                                  id="newN"
+                                  ajax="false"
+                                  style=""
+                                  value="#{userData.userDDs['NEW']}" 
+                                  title="#{userData.userDDs['NEW']}"
+                                  onclick="form.target = ''" 
+                                  actionListener="#{gmSubscriptionsFormDTOMB.reset()}"/>
 
-                    <p:blockUI block="form" trigger="saveB" animate="true" >
 
-                        <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
 
-                    </p:blockUI> 
+                <p:blockUI block="form" trigger="saveB" animate="true" >
 
-          </div>
+                    <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                </p:blockUI> 
+
+            </div>
         </h:form>
     </ui:define>
 </ui:composition>
