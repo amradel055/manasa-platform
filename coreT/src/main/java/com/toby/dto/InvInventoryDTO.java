@@ -28,7 +28,7 @@ public class InvInventoryDTO extends BaseEntityDTO implements Comparable<InvInve
 
     private Integer invType;
     private Integer invName;
-
+    private String sellerName;
     /**
      * @return the code
      */
@@ -267,6 +267,20 @@ public class InvInventoryDTO extends BaseEntityDTO implements Comparable<InvInve
      */
     public void setRunningAccount(GlAccountDTO runningAccount) {
         this.runningAccount = runningAccount;
+    }
+
+    /**
+     * @return the sellerName
+     */
+    public String getSellerName() {
+        return sellerName;
+    }
+
+    /**
+     * @param sellerName the sellerName to set
+     */
+    public void setSellerName(String sellerName) {
+        this.sellerName = sellerName;
     }
 
 }

@@ -59,7 +59,7 @@ public class InvInventoryImpl implements InvInventoryService {
             entity.setSegilValue(dto.getSegilValue());
             entity.setPhone(dto.getPhone());
             entity.setInvName(dto.getInvName());
-
+            entity.setSellerName(dto.getSellerName());
             if (dto.getGlAdminUnitId() != null) {
                 GlAdminUnit glAdminUnit = new GlAdminUnit();
                 glAdminUnit.setId(dto.getGlAdminUnitId().getId());
@@ -133,6 +133,7 @@ public class InvInventoryImpl implements InvInventoryService {
         dto.setTypeItem(entity.getTypeItem());
         
         dto.setMsg(entity.getMsg());
+        dto.setSellerName(entity.getSellerName());
         if (entity.getAccountId() != null) {
             GlAccountDTO accountDTO = new GlAccountDTO();
             accountDTO.setId(entity.getAccountId().getId());

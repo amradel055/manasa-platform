@@ -72,6 +72,8 @@ public class InvInventory extends BaseEntity {
     private Integer invName;
     @Column(name = "phone")
     private String phone;
+    @Column(name = "seller_name")
+    private String sellerName;
 
     public InvInventory() {
     }
@@ -256,5 +258,19 @@ public class InvInventory extends BaseEntity {
      */
     public void setRunningAccount(GlAccount runningAccount) {
         this.runningAccount = runningAccount;
+    }
+
+    /**
+     * @return the sellerName
+     */
+    public String getSellerName() {
+        return sellerName;
+    }
+
+    /**
+     * @param sellerName the sellerName to set
+     */
+    public void setSellerName(String sellerName) {
+        this.sellerName = sellerName;
     }
 }
