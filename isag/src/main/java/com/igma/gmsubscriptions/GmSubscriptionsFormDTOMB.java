@@ -163,7 +163,17 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
         getGmSubscriptionsDTO().setOrganizationSiteId(organizationSiteService.addNewCustomer(getOrganizationSiteId(), getInvOrganizationSiteDTOList(), getUserData().getUser()));
         getGmSubscriptionsDTO().setShowCustomerDate(Boolean.FALSE);
         saveImage();
+        leaveScreen();
+        
     }
+    
+    
+    public void leaveScreen() {
+        exit("../gmregistration/gmclientlist.xhtml");
+    }
+    
+    
+    
        public void print() {
         iReportService.printReportGmInvoice(getGmSubscriptionsDTO() , getUserData());
     }
@@ -269,9 +279,7 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
             String imageName = getFileUploadController().upload(byteFile);
             getOrganizationSiteId().setClientImage(imageName);
             updateImage();
-        } else {
-            errorMessage("file not found");
-        }
+        } 
         return "";
     }
     

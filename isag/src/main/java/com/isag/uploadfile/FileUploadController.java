@@ -46,7 +46,7 @@ public class FileUploadController {
 
     public FileUploadController() {
         this.destination = getUserData().getImagePath();
-        this.notificationDestination = getUserData().getImagePath().concat("notification/");
+        this.notificationDestination = getUserData().getImagePath();
     }
 
     public String upload(FileUploadEvent event) {

@@ -31,9 +31,11 @@ public class images extends HttpServlet {
         String OS = System.getProperty("os.name").toLowerCase();
         String path = "";
         if ((OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0)) {
-            path = pathService.findPathbyTypeId(1, 1).concat("notification/");
+//            path = pathService.findPathbyTypeId(1, 1).concat("notification/");
+            path = pathService.findPathbyTypeId(1, 1);
         } else if ((OS.indexOf("win") >= 0)) {
-            path = pathService.findPathbyTypeId(0, 1).concat("notification/");
+//            path = pathService.findPathbyTypeId(0, 1).concat("notification/");
+            path = pathService.findPathbyTypeId(0, 1);
         }
         File file = new File(path, filename);
         response.setHeader("Content-Type", getServletContext().getMimeType(filename));
