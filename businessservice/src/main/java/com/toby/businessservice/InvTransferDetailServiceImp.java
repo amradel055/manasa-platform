@@ -287,7 +287,7 @@ public class InvTransferDetailServiceImp implements InvTransferDetailService {
                 entity.getInvItemId().getIsInventoryItem(),
                 null, null, null, null,
                 invInvoiceDTO.getCompanyActivity(), invInvoiceDTO.getScreenName(), null);
-        dTO = invGlobalService.calculateDetailTotalsRow(dTO, invInvoiceDTO, true);
+        dTO = invGlobalService.calculateDetailTotalsRow(dTO, invInvoiceDTO, true,false);
         dTO.setRealQuantity(dTO.getQuantity().multiply(dTO.getScrewing()));
         return dTO;
     }

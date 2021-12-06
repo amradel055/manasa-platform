@@ -21,9 +21,11 @@ import javax.ejb.Remote;
 @Remote
 public interface InvGlobalService {
 
-    public InvDetailDTO calculateDetailTotalsRow(InvDetailDTO detailEntity, InvInvoiceDTO invPurchaseInvoiceDTO, Boolean isNeeadQuantity);
+    public InvDetailDTO calculateDetailTotalsRow(InvDetailDTO detailEntity, InvInvoiceDTO invPurchaseInvoiceDTO, Boolean isNeeadQuantity,Boolean findCost);
 
-    public InvInvoiceDTO updateSummition(InvInvoiceDTO invPurchaseInvoiceDTO);
+    public InvInvoiceDTO updateSummition(InvInvoiceDTO invPurchaseInvoiceDTO,Boolean findCost);
+    
+    public InvInvoiceDTO updateSummitionSmall(InvInvoiceDTO invPurchaseInvoiceDTO) ;
 
     public InvInvoiceDTO recalcHeadValues(InvInvoiceDTO invPurchaseInvoiceDTO);
 
@@ -34,9 +36,9 @@ public interface InvGlobalService {
 
     public Boolean validatePrice(InvDetailDTO detailDTO);
 
-    public List<InvDetailDTO> updatePriceAndQuantityForDetail(InvInvoiceDTO invInvoiceDTO);
+    public List<InvDetailDTO> updatePriceAndQuantityForDetail(InvInvoiceDTO invInvoiceDTO,Boolean findCost);
 
-    public InvDetailDTO validateItems(InvDetailDTO detailDTO, InvInvoiceDTO invInvoiceDTO);
+    public InvDetailDTO validateItems(InvDetailDTO detailDTO, InvInvoiceDTO invInvoiceDTO,Boolean findCost);
 
     public Boolean validateQuantity(InvDetailDTO detailDTO, CompanyActivityClassEnum companyActivityClassEnum, ScreenNameClassEnum screenNameClassEnum);
 
@@ -44,7 +46,7 @@ public interface InvGlobalService {
 
     public InvDetailDTO validatePriceColumn(InvDetailDTO detailDTO);
 
-    public InvDetailDTO validateQuantityOfUnitColum(InvDetailDTO detailDTO, InvInvoiceDTO invInvoiceDTO);
+    public InvDetailDTO validateQuantityOfUnitColum(InvDetailDTO detailDTO, InvInvoiceDTO invInvoiceDTO,Boolean findCost);
 
     public InvDetailDTO validateQuantityColum(InvDetailDTO detailDTO, Boolean isload, ScreenNameClassEnum screenNameClassEnum, Boolean negativeSell, CompanyActivityClassEnum companyActivityClassEnum);
 

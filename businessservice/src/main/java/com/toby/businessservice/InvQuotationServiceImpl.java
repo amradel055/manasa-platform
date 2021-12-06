@@ -9,10 +9,8 @@ import com.toby.entity.TobyCompany;
 import com.toby.entity.TobyUser;
 import com.toby.bussinessservice.global.InvPurchaseReturnSave;
 import com.toby.core.GenericDAO;
-import com.toby.dto.CurrencyDTO;
 import com.toby.dto.InvDetailDTO;
 import com.toby.dto.InvInvoiceDTO;
-import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.dto.InventoryDelegatorDTO;
 import com.toby.entity.Branch;
 import com.toby.entity.InvOrganizationSite;
@@ -213,7 +211,7 @@ public class InvQuotationServiceImpl implements InvQuotationService {
                     dao.rollbackQuery();
                 } else {
                     invPurchaseInvoiceDTO = mapToDTO(invQotation, invPurchaseInvoiceDTO);
-                    invPurchaseInvoiceDTO = invGlobalService.updateSummition(invPurchaseInvoiceDTO);
+                    invPurchaseInvoiceDTO = invGlobalService.updateSummition(invPurchaseInvoiceDTO,false);
                 }
 
             }
@@ -229,7 +227,7 @@ public class InvQuotationServiceImpl implements InvQuotationService {
     public InvInvoiceDTO findInvPurchaseOrderById(InvInvoiceDTO invPurchaseInvoiceDto, TobyUser tobyUser) {
         InvQotation invQotation = dao.findEntityById(InvQotation.class, invPurchaseInvoiceDto.getId());
         InvInvoiceDTO invPurchaseInvoiceDTO = mapToDTO(invQotation, invPurchaseInvoiceDto);
-        invPurchaseInvoiceDTO = invGlobalService.updateSummition(invPurchaseInvoiceDTO);
+        invPurchaseInvoiceDTO = invGlobalService.updateSummition(invPurchaseInvoiceDTO,false);
         return invPurchaseInvoiceDTO;
     }
 
@@ -271,7 +269,7 @@ public class InvQuotationServiceImpl implements InvQuotationService {
         List<InvDetailDTO> invPurchaseInvoiceDetailsListDTO = invQuotationDetailsService.getAllInvQutationDetailByInvPurchaseInvoiceIdDTO(invInvoiceDTO);
         invInvoiceDTO.setInvPurchaseInvoiceDetailList(invPurchaseInvoiceDetailsListDTO);
         invInvoiceDTO.setInvPurchaseInvoiceDetailsDeletedList(new ArrayList<InvDetailDTO>());
-        invInvoiceDTO = invGlobalService.updateSummition(invInvoiceDTO);
+        invInvoiceDTO = invGlobalService.updateSummition(invInvoiceDTO,false);
         return invInvoiceDTO;
     }
 

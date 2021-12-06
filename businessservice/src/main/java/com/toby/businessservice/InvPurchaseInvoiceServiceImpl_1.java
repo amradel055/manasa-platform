@@ -16,7 +16,6 @@ import com.toby.define.ScreenNameClassEnum;
 import com.toby.dto.CostCenterDTO;
 import com.toby.dto.CurrencyDTO;
 import com.toby.dto.CurrencyOperationDTO;
-import com.toby.dto.GeneralJournalDTO;
 import com.toby.dto.GlAdminUnitDTO;
 import com.toby.dto.GlBankDTO;
 import com.toby.dto.InvDetailDTO;
@@ -31,7 +30,6 @@ import com.toby.entity.CostCenter;
 import com.toby.entity.Currency;
 import com.toby.entity.DiscountCodes;
 import com.toby.entity.GeneralJournal;
-import com.toby.entity.GeneralJournalDetails;
 import com.toby.entity.GlAccount;
 import com.toby.entity.GlAdminUnit;
 import com.toby.entity.GlBank;
@@ -53,7 +51,6 @@ import com.toby.entity.InvTransferDetail;
 import com.toby.entity.InventoryDelegator;
 import com.toby.entity.InventorySetup;
 import com.toby.entity.ProFactoryDelivery;
-import com.toby.entity.Symbol;
 import com.toby.views.ClientsNoMovment;
 import com.toby.views.FactoryInvoiceStatus;
 import com.toby.views.QuantityItemsStore;
@@ -610,14 +607,24 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     }
 
     @Override
-    public InvInvoiceDTO findInvPurchaseInvoiceById(InvInvoiceDTO invPurchaseInvoiceDto) {
-        InvPurchaseInvoice invPurchaseInvoice = dao.findEntityById(InvPurchaseInvoice.class, invPurchaseInvoiceDto.getId());
-        InvInvoiceDTO invPurchaseInvoiceDTO = mapToDTO(invPurchaseInvoice, invPurchaseInvoiceDto, false);
-        invPurchaseInvoiceDTO = invGlobalService.updateSummition(invPurchaseInvoiceDTO);
-        BigDecimal remain = remainForInvPurchaseInvoice(invPurchaseInvoiceDTO.getId());
-        invPurchaseInvoiceDTO.setRemain(remain.setScale(0, BigDecimal.ROUND_UP));
-        invPurchaseInvoiceDTO.setPayed(findPayed(invPurchaseInvoiceDTO.getId()).setScale(0, BigDecimal.ROUND_DOWN));
+    public InvInvoiceDTO findInvPurchaseInvoiceById(Integer invoiceId) {
+        InvPurchaseInvoice invPurchaseInvoice = dao.findEntityById(InvPurchaseInvoice.class, invoiceId);
+        InvInvoiceDTO invPurchaseInvoiceDTO = mapToDTO(invPurchaseInvoice, null, false);
+//        invPurchaseInvoiceDTO = invGlobalService.updateSummition(invPurchaseInvoiceDTO,false);
+//        BigDecimal remain = remainForInvPurchaseInvoice(invPurchaseInvoiceDTO.getId());
+//        invPurchaseInvoiceDTO = invGlobalService.updateSummitionSmall(invPurchaseInvoiceDTO);
+        BigDecimal payed = findPayed(invPurchaseInvoiceDTO.getId());
+        BigDecimal remain = (invPurchaseInvoiceDTO.getFinalNet().subtract(payed)).setScale(2, RoundingMode.HALF_UP);
+        invPurchaseInvoiceDTO.setRemain(remain);
+        invPurchaseInvoiceDTO.setPayed(payed);
         return invPurchaseInvoiceDTO;
+    }
+
+    @Override
+    public BigDecimal returnRemain(InvInvoiceDTO invPurchaseInvoiceDTO) {
+        BigDecimal payed = findPayed(invPurchaseInvoiceDTO.getId());
+        BigDecimal remain = (invPurchaseInvoiceDTO.getFinalNet().subtract(payed)).setScale(2, RoundingMode.HALF_UP);
+        return remain;
     }
 
     @Override
@@ -1106,7 +1113,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 invPurchaseInvoiceDTO.getInvPurchaseInvoiceDetailsDeletedList().add(invPurchaseInvoiceDTO.getInvPurchaseInvoiceDetailsSelected());
             }
             invPurchaseInvoiceDTO.getInvPurchaseInvoiceDetailList().remove(invPurchaseInvoiceDTO.getInvPurchaseInvoiceDetailsSelected());
-            invPurchaseInvoiceDTO = invGlobalService.updateSummition(invPurchaseInvoiceDTO);
+            invPurchaseInvoiceDTO = invGlobalService.updateSummition(invPurchaseInvoiceDTO, false);
         } catch (Exception e) {
 //            saveError(e, "InvPurchaseInvoiceFormMB", "deleteInvPurchaseInvoiceDetail");
         }
@@ -1120,7 +1127,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 invPurchaseInvoiceDTO.setCurrencyId(invPurchaseInvoiceDTO.getOrganizationSiteId().getCurrencyId());
                 invPurchaseInvoiceDTO = updateRate(invPurchaseInvoiceDTO);
 
-                invPurchaseInvoiceDTO = invGlobalService.updateSummition(invPurchaseInvoiceDTO);
+//                invPurchaseInvoiceDTO = invGlobalService.updateSummition(invPurchaseInvoiceDTO, false);
             } else {
                 invPurchaseInvoiceDTO.setMsg("هذا المورد أو العميل ليس له عمله");
             }
@@ -1147,7 +1154,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             invPurchaseInvoice.setGeneralJournalId(generalJournal);
         }
 
-        if ((invInvoiceDTO.getType() != 0 ||invInvoiceDTO.getType() != 2 ||invInvoiceDTO.getType() != 5)  &&  invInvoiceDTO.getGallaryId() != null) {
+        if ((invInvoiceDTO.getType() != 0 || invInvoiceDTO.getType() != 2 || invInvoiceDTO.getType() != 5) && invInvoiceDTO.getGallaryId() != null) {
             InvInventory inventory = new InvInventory();
             inventory.setId(invInvoiceDTO.getGallaryId().getId());
             invPurchaseInvoice.setGalaryId(inventory);
@@ -1416,8 +1423,10 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                     invInvoiceDTO.setMsg(error);
                     dao.rollbackQuery();
                 } else {
-                    invInvoiceDTO = mapToDTO(invPurchaseInvoice, invInvoiceDTO, false);
-                    invInvoiceDTO = invGlobalService.updateSummition(invInvoiceDTO);
+                    invInvoiceDTO.setId(invPurchaseInvoice.getId());
+                    invInvoiceDTO.setSerial(invPurchaseInvoice.getSerial());
+//                    invInvoiceDTO = mapToDTO(invPurchaseInvoice, invInvoiceDTO, false); 
+//                    invInvoiceDTO = invGlobalService.updateSummition(invInvoiceDTO,false);
                 }
 
                 ///   الترحيل
@@ -1505,6 +1514,9 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     }
 
     private InvInvoiceDTO initData(InvInvoiceDTO dto, InvPurchaseInvoice entity, Boolean isLoaded) {
+        if(dto == null){
+            dto = new InvInvoiceDTO();
+        }
         dto.setId(entity.getId());
         dto.setSerial(entity.getSerial());
         dto.setSerialTax(entity.getSerialTax());
@@ -1647,7 +1659,8 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         dto.setInvPurchaseInvoiceDetailsDeletedList(new ArrayList<InvDetailDTO>());
         dto.setInvPurchaseInvoiceDetailList(invPurchaseInvoiceDetailsListDTO);
 
-        dto = invGlobalService.updateSummition(dto);
+//        dto = invGlobalService.updateSummition(dto,false);
+        dto = invGlobalService.updateSummitionSmall(dto);
         return dto;
     }
 
@@ -1878,66 +1891,77 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         return null;
     }
 
-    @Override
-    public InvInvoiceDTO returnInvInvoiceSummarySumation(InvPurchaseInvoice entity, BigDecimal sumDetailNet) {
-        InvInvoiceDTO invInvoiceDTO = new InvInvoiceDTO();
-        BigDecimal valueAfterDiscount = BigDecimal.ZERO;
-        if (entity != null) {
-            if (entity.getDiscountType() == 0) {
-                valueAfterDiscount = sumDetailNet.subtract(entity.getDiscount().add(entity.getDiscHalala()));
-            } else if (entity.getDiscountType() == 1) {
-                valueAfterDiscount = sumDetailNet.subtract(entity.getDiscHalala()).subtract((entity.getDiscount().multiply(sumDetailNet)).divide(new BigDecimal(100)));
-            }
-            invInvoiceDTO.setValue(valueAfterDiscount);
-            invInvoiceDTO.setValueLocal(invInvoiceDTO.getValue().multiply(entity.getRate()));
-            invInvoiceDTO.setDiscHalala(entity.getDiscHalala());
-
-            if (entity.getTaxflag()) {
-//                invPurchaseInvoiceDTO.getTotalNetAfterDiscount().multiply(BigDecimal.valueOf(0.15))
-                invInvoiceDTO.setTaxValue(invInvoiceDTO.getValue().multiply(BigDecimal.valueOf(0.15)).setScale(3, BigDecimal.ROUND_DOWN));
-
-            } else if (!entity.getTaxflag()) {
-                invInvoiceDTO.setTaxValue(BigDecimal.ZERO);
-            }
-            invInvoiceDTO.setTaxValueLocal(invInvoiceDTO.getTaxValue().multiply(entity.getRate()));
-
-            if (entity.getTaxdiscflag() != null && entity.getTaxdiscflag()) {
-                invInvoiceDTO.setTaxDiscValue(invInvoiceDTO.getValue().multiply(new BigDecimal(0.01)).setScale(3, BigDecimal.ROUND_DOWN));
-
-            } else if (entity.getTaxdiscflag() == null || !entity.getTaxdiscflag()) {
-                invInvoiceDTO.setTaxDiscValue(BigDecimal.ZERO);
-            }
-            invInvoiceDTO.setTaxDiscValueLocal((invInvoiceDTO.getTaxDiscValue().multiply(entity.getRate())));
-            invInvoiceDTO.setRate(entity.getRate());
-            invInvoiceDTO.setFinalNet(invInvoiceDTO.getValue().add(invInvoiceDTO.getTaxValue()).subtract(invInvoiceDTO.getTaxDiscValue()));
-        }
-        return invInvoiceDTO;
-
+//    @Override
+//    public InvInvoiceDTO returnInvInvoiceSummarySumation(InvPurchaseInvoice entity, BigDecimal sumDetailNet) {
+//        InvInvoiceDTO invInvoiceDTO = new InvInvoiceDTO();
+//        BigDecimal valueAfterDiscount = BigDecimal.ZERO;
+//        if (entity != null) {
+//            if (entity.getDiscountType() == 0) {
+//                valueAfterDiscount = sumDetailNet.subtract(entity.getDiscount().add(entity.getDiscHalala()));
+//            } else if (entity.getDiscountType() == 1) {
+//                valueAfterDiscount = sumDetailNet.subtract(entity.getDiscHalala()).subtract((entity.getDiscount().multiply(sumDetailNet)).divide(new BigDecimal(100)));
+//            }
+//            invInvoiceDTO.setValue(valueAfterDiscount);
+//            invInvoiceDTO.setValueLocal(invInvoiceDTO.getValue().multiply(entity.getRate()));
+//            invInvoiceDTO.setDiscHalala(entity.getDiscHalala());
+//
+//            if (entity.getTaxflag()) {
+////                invPurchaseInvoiceDTO.getTotalNetAfterDiscount().multiply(BigDecimal.valueOf(0.15))
+//                invInvoiceDTO.setTaxValue(invInvoiceDTO.getValue().multiply(BigDecimal.valueOf(0.15)).setScale(3, BigDecimal.ROUND_DOWN));
+//
+//            } else if (!entity.getTaxflag()) {
+//                invInvoiceDTO.setTaxValue(BigDecimal.ZERO);
+//            }
+//            invInvoiceDTO.setTaxValueLocal(invInvoiceDTO.getTaxValue().multiply(entity.getRate()));
+//
+//            if (entity.getTaxdiscflag() != null && entity.getTaxdiscflag()) {
+//                invInvoiceDTO.setTaxDiscValue(invInvoiceDTO.getValue().multiply(new BigDecimal(0.01)).setScale(3, BigDecimal.ROUND_DOWN));
+//
+//            } else if (entity.getTaxdiscflag() == null || !entity.getTaxdiscflag()) {
+//                invInvoiceDTO.setTaxDiscValue(BigDecimal.ZERO);
+//            }
+//            invInvoiceDTO.setTaxDiscValueLocal((invInvoiceDTO.getTaxDiscValue().multiply(entity.getRate())));
+//            invInvoiceDTO.setRate(entity.getRate());
+//            invInvoiceDTO.setFinalNet(invInvoiceDTO.getValue().add(invInvoiceDTO.getTaxValue()).subtract(invInvoiceDTO.getTaxDiscValue()));
+//        }
+//        return invInvoiceDTO;
+//
+//    }
+//    public BigDecimal finalNetForInvPurchaseInvoice(Integer invPurchaseInvoiceId) {
+//        if (invPurchaseInvoiceId != null && invPurchaseInvoiceId > 0) {
+//            Map<String, Object> params = new HashMap<>();
+//            params.put("invPurchaseInvoiceId", invPurchaseInvoiceId);
+//            List<BigDecimal> entitySum = dao.findListByQuery("SELECT sum(i.net) FROM InvPurchaseInvoiceDetail i WHERE i.invPurchaseInvoiceId.id = :invPurchaseInvoiceId Group by i.invPurchaseInvoiceId.id", params);
+//            InvPurchaseInvoice entity = dao.findEntityById(InvPurchaseInvoice.class, invPurchaseInvoiceId);
+//            invGlobalService.updateSummitionSmall(invPurchaseInvoiceDTO)
+//            InvInvoiceDTO invInvoiceDTO = returnInvInvoiceSummarySumation(entity, (entitySum == null || entitySum.isEmpty()) ? BigDecimal.ZERO : entitySum.get(0));
+//            invInvoiceDTO = invGlobalService.recalcHeadValues(invInvoiceDTO);
+//            return invInvoiceDTO.getFinalNet().setScale(2, RoundingMode.HALF_UP);
+//        }
+//        return BigDecimal.ZERO;
+//    }
+    public BigDecimal finalNetForInvPurchaseInvoice(InvInvoiceDTO invInvoiceDTO) {
+        invInvoiceDTO = invGlobalService.updateSummitionSmall(invInvoiceDTO);
+        return invInvoiceDTO.getFinalNet().setScale(2, RoundingMode.HALF_UP);
     }
 
-    public BigDecimal finalNetForInvPurchaseInvoice(Integer invPurchaseInvoiceId) {
-        if (invPurchaseInvoiceId != null && invPurchaseInvoiceId > 0) {
-            Map<String, Object> params = new HashMap<>();
-            params.put("invPurchaseInvoiceId", invPurchaseInvoiceId);
-            List<BigDecimal> entitySum = dao.findListByQuery("SELECT sum(i.net) FROM InvPurchaseInvoiceDetail i WHERE i.invPurchaseInvoiceId.id = :invPurchaseInvoiceId Group by i.invPurchaseInvoiceId.id", params);
-            InvPurchaseInvoice entity = dao.findEntityById(InvPurchaseInvoice.class, invPurchaseInvoiceId);
-            InvInvoiceDTO invInvoiceDTO = returnInvInvoiceSummarySumation(entity, (entitySum == null || entitySum.isEmpty()) ? BigDecimal.ZERO : entitySum.get(0));
-            return invInvoiceDTO.getFinalNet();
-        }
-        return BigDecimal.ZERO;
-    }
-
-    @Override
-    public BigDecimal remainForInvPurchaseInvoice(Integer invPurchaseInvoiceId) {
-        if (invPurchaseInvoiceId != null && invPurchaseInvoiceId > 0) {
-            BigDecimal payment = findPayed(invPurchaseInvoiceId);
-            BigDecimal total = finalNetForInvPurchaseInvoice(invPurchaseInvoiceId);
-            BigDecimal remain = (total.subtract(payment)).setScale(2, RoundingMode.HALF_UP);
-            return remain;
-        }
-        return BigDecimal.ZERO;
-    }
-
+//    @Override
+//    public BigDecimal remainForInvPurchaseInvoice(Integer invPurchaseInvoiceId) {
+//        if (invPurchaseInvoiceId != null && invPurchaseInvoiceId > 0) {
+//            BigDecimal payment = findPayed(invPurchaseInvoiceId);
+//            BigDecimal total = finalNetForInvPurchaseInvoice(invPurchaseInvoiceId);
+//            BigDecimal remain = (total.subtract(payment)).setScale(2, RoundingMode.HALF_UP);
+//            return remain;
+//        }
+//        return BigDecimal.ZERO;
+//    }
+//    @Override
+//    public BigDecimal remainForInvPurchaseInvoice(InvInvoiceDTO invInvoiceDTO) {
+//            BigDecimal payment = findPayed(invPurchaseInvoiceId);
+//            BigDecimal total = finalNetForInvPurchaseInvoice(invPurchaseInvoiceId);
+//            BigDecimal remain = (total.subtract(payment)).setScale(2, RoundingMode.HALF_UP);
+//            return remain;
+//    }
     private BigDecimal findPayed(Integer invPurchaseInvoiceId) {
         Map<String, Object> params = new HashMap<>();
         params.put("invPurchaseInvoiceId", invPurchaseInvoiceId);

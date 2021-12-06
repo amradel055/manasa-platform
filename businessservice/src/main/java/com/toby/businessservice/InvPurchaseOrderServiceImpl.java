@@ -251,7 +251,7 @@ public class InvPurchaseOrderServiceImpl implements InvPurchaseOrderService {
         List<InvDetailDTO> invPurchaseInvoiceDetailsListDTO = invPurchaseOrderDetailsService.getAllInvPurchaseInvoiceDetailsByInvPurchaseInvoiceIdDTO(invInvoiceDTO);
         invInvoiceDTO.setInvPurchaseInvoiceDetailList(invPurchaseInvoiceDetailsListDTO);
         invInvoiceDTO.setInvPurchaseInvoiceDetailsDeletedList(new ArrayList<InvDetailDTO>());
-        invInvoiceDTO = invGlobalService.updateSummition(invInvoiceDTO);
+        invInvoiceDTO = invGlobalService.updateSummition(invInvoiceDTO,false);
         return invInvoiceDTO;
     }
 
@@ -280,7 +280,7 @@ public class InvPurchaseOrderServiceImpl implements InvPurchaseOrderService {
     public InvInvoiceDTO findInvPurchaseOrderById(InvInvoiceDTO invPurchaseInvoiceDto, TobyUser tobyUser) {
         InvPurchaseOrder invPurchaseOrder = dao.findEntityById(InvPurchaseOrder.class, invPurchaseInvoiceDto.getId());
         InvInvoiceDTO invPurchaseInvoiceDTO = mapToDTO(invPurchaseOrder, invPurchaseInvoiceDto);
-        invPurchaseInvoiceDTO = invGlobalService.updateSummition(invPurchaseInvoiceDTO);
+        invPurchaseInvoiceDTO = invGlobalService.updateSummition(invPurchaseInvoiceDTO,false);
         return invPurchaseInvoiceDTO;
     }
 
@@ -344,7 +344,7 @@ public class InvPurchaseOrderServiceImpl implements InvPurchaseOrderService {
                     dao.rollbackQuery();
                 } else {
                     invPurchaseInvoiceDTO = mapToDTO(invPurchaseOrder, invPurchaseInvoiceDTO);
-                    invPurchaseInvoiceDTO = invGlobalService.updateSummition(invPurchaseInvoiceDTO);
+                    invPurchaseInvoiceDTO = invGlobalService.updateSummition(invPurchaseInvoiceDTO,false);
                 }
 
             }

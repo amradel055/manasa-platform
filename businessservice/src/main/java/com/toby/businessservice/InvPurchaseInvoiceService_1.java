@@ -63,7 +63,7 @@ public interface InvPurchaseInvoiceService_1 {
 
     public List<InvPurchaseInvoice> getALLInvPurchaseInvoicePostFlagedByBranchIdPer(Integer branchId, Boolean type);
 
-    public InvInvoiceDTO findInvPurchaseInvoiceById(InvInvoiceDTO invPurchaseInvoiceDto);
+    public InvInvoiceDTO findInvPurchaseInvoiceById(Integer invoiceId);
 
     public InvPurchaseInvoice updateInvPurchaseInvoice(InvPurchaseInvoice invPurchaseInvoice);
 
@@ -108,9 +108,11 @@ public interface InvPurchaseInvoiceService_1 {
 
     public String deleteInvPurchaseInvoiceDTO(InvInvoiceDTO invPurchaseInvoice, Integer isPurchaseOrSales);
 
-    public InvInvoiceDTO returnInvInvoiceSummarySumation(InvPurchaseInvoice entity, BigDecimal sumDetailNet);
+//    public InvInvoiceDTO returnInvInvoiceSummarySumation(InvPurchaseInvoice entity, BigDecimal sumDetailNet);
 
-    public BigDecimal remainForInvPurchaseInvoice(Integer invPurchaseInvoiceId);
+//    public BigDecimal remainForInvPurchaseInvoice(Integer invPurchaseInvoiceId);
+    
+    public BigDecimal returnRemain(InvInvoiceDTO invPurchaseInvoiceDTO);
 
     public String findInvoiceStatus(Integer invPurchaseInvoiceId);
 

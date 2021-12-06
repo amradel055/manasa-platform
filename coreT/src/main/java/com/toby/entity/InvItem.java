@@ -206,6 +206,8 @@ public class InvItem extends BaseEntity {
     private BigDecimal quantity;
     @Column(name = "type")
     private Integer type;
+    @Column(name = "price_type")
+    private Integer priceType;
 
     public InvItem() {
     }
@@ -854,6 +856,20 @@ public class InvItem extends BaseEntity {
      */
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    /**
+     * @return the priceType
+     */
+    public Integer getPriceType() {
+        return priceType;
+    }
+
+    /**
+     * @param priceType the priceType to set
+     */
+    public void setPriceType(Integer priceType) {
+        this.priceType = priceType;
     }
 
 }

@@ -396,7 +396,7 @@ public class InvReservationServiceImp implements InvReservationService {
     public InvInvoiceDTO findInvPurchaseInvoiceById(InvInvoiceDTO invPurchaseInvoiceDto, TobyUser tobyUser) {
         InvReservation invReservation = dao.findEntityById(InvReservation.class, invPurchaseInvoiceDto.getId());
         InvInvoiceDTO invPurchaseInvoiceDTO = mapToDTO(invReservation, invPurchaseInvoiceDto);
-        invPurchaseInvoiceDTO = invGlobalService.updateSummition(invPurchaseInvoiceDTO);
+        invPurchaseInvoiceDTO = invGlobalService.updateSummition(invPurchaseInvoiceDTO,false);
         return invPurchaseInvoiceDTO;
     }
 
@@ -452,7 +452,7 @@ public class InvReservationServiceImp implements InvReservationService {
         invoiceDTO.setInvPurchaseInvoiceDetailList(invPurchaseInvoiceDetailsListDTO);
         invoiceDTO.setInvPurchaseInvoiceDetailsDeletedList(new ArrayList<InvDetailDTO>());
 
-        invoiceDTO = invGlobalService.updateSummition(invoiceDTO);
+        invoiceDTO = invGlobalService.updateSummition(invoiceDTO,false);
         return invoiceDTO;
     }
 
@@ -513,7 +513,7 @@ public class InvReservationServiceImp implements InvReservationService {
                     dao.rollbackQuery();
                 } else {
                     invPurchaseInvoiceDTO = mapToDTO(invReservation, invPurchaseInvoiceDTO);
-                    invPurchaseInvoiceDTO = invGlobalService.updateSummition(invPurchaseInvoiceDTO);
+                    invPurchaseInvoiceDTO = invGlobalService.updateSummition(invPurchaseInvoiceDTO,false);
                 }
 
             }

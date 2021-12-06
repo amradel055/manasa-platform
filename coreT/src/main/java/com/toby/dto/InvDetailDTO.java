@@ -74,6 +74,7 @@ public class InvDetailDTO extends BaseEntityDTO implements  Comparable< InvDetai
     
     private BigDecimal costBefor;
     private BigDecimal costAfter;
+    private Integer indexSerial;
     
     private List<ProDetailTypeDTO> proDetailTypeDTOList ;
     
@@ -874,6 +875,20 @@ public class InvDetailDTO extends BaseEntityDTO implements  Comparable< InvDetai
      */
     public void setQuantityInch(BigDecimal quantityInch) {
         this.quantityInch = quantityInch;
+    }
+
+    /**
+     * @return the indexSerial
+     */
+    public Integer getIndexSerial() {
+        return indexSerial;
+    }
+
+    /**
+     * @param indexSerial the indexSerial to set
+     */
+    public void setIndexSerial(Integer indexSerial) {
+        this.indexSerial = indexSerial;
     }
 
 }

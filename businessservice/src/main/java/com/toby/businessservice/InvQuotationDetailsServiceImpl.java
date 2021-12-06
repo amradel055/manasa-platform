@@ -147,7 +147,7 @@ public class InvQuotationDetailsServiceImpl implements InvQuotationDetailsServic
                     entity.getItemId().getIsInventoryItem(),
                     null,null,null,null,
                     invInvoiceDTO.getCompanyActivity(),invInvoiceDTO.getScreenName(),null);
-            dTO = invGlobalService.calculateDetailTotalsRow(dTO, invInvoiceDTO, true);
+            dTO = invGlobalService.calculateDetailTotalsRow(dTO, invInvoiceDTO, true,false);
             dTO.setRealQuantity(dTO.getQuantity().multiply(dTO.getScrewing()));
         } else if (Entity.getClass().equals(TempInvQotationNotLoadedYet.class)) {
             TempInvQotationNotLoadedYet entity = (TempInvQotationNotLoadedYet) Entity;
@@ -164,7 +164,7 @@ public class InvQuotationDetailsServiceImpl implements InvQuotationDetailsServic
                     null,null,null,null,
                     invInvoiceDTO.getCompanyActivity(),invInvoiceDTO.getScreenName(),null);
              
-            dTO = invGlobalService.calculateDetailTotalsRow(dTO, invInvoiceDTO, true);
+            dTO = invGlobalService.calculateDetailTotalsRow(dTO, invInvoiceDTO, true,false);
             dTO.setRealQuantity(dTO.getQuantity().multiply(dTO.getScrewing()));
         }
         return dTO;
@@ -210,7 +210,7 @@ public class InvQuotationDetailsServiceImpl implements InvQuotationDetailsServic
         dTO.setIndex(entity.getId());
         dTO.setCreatedDate(entity.getCreationDate());
         dTO.setCreatedBy(entity.getCreatedBy().getId());
-        dTO = invGlobalService.calculateDetailTotalsRow(dTO, invInvoiceDTO, true);
+        dTO = invGlobalService.calculateDetailTotalsRow(dTO, invInvoiceDTO, true,false);
         dTO.setRealQuantity(dTO.getQuantity().multiply(dTO.getScrewing()));
         return dTO;
     }

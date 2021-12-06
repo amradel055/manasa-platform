@@ -283,7 +283,7 @@ public class PostRestrictionsDetailsServiceImpl implements PostRestrictionsDetai
                     return view;
                 }
             }
-            InvInvoiceDTO invInvoiceDTO = invPurchaseInvoiceService_1.returnInvInvoiceSummarySumation(entity.getInvPurchaseInvoiceId(), entity.getSumDetailNet());
+            InvInvoiceDTO invInvoiceDTO = invPurchaseInvoiceService_1.findInvPurchaseInvoiceById(entity.getInvPurchaseInvoiceId().getId());
             view.setValue(invInvoiceDTO.getValue());
             view.setValueLocal(invInvoiceDTO.getValueLocal());
             view.setTaxValue(invInvoiceDTO.getTaxValue());

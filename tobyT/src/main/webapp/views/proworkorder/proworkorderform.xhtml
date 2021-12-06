@@ -926,6 +926,7 @@
                                           filterable="false">
                                     <p:inputText id="QuantityTOU"  
                                                  value="#{invPurchaseInvoiceDetailsTable.quantityOfOneUnit}" 
+                                                 disabled="#{not userData.userScreens['proworkorder'].edit and invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id ne null}"
                                                  style="width:95%; text-align: left;">
                                         <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.validateQuantityOfUnitColum(invPurchaseInvoiceDetailsTable)}" 
                                                 process="@this"
@@ -944,7 +945,7 @@
 
                                     <p:inputText id="NUMBER"  
                                                  value="#{invPurchaseInvoiceDetailsTable.number}" 
-
+                                                 disabled="#{not userData.userScreens['proworkorder'].edit and invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id ne null}"
                                                  style="width:95%; text-align: left;">
                                         <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.validateQuantityColum(invPurchaseInvoiceDetailsTable)}" 
                                                 process="@this"
@@ -987,16 +988,14 @@
                                           filterBy="#{invPurchaseInvoiceDetailsTable.cost}" 
                                           filterMatchMode="contains" 
                                           sortBy="#{invPurchaseInvoiceDetailsTable.cost}"
+                                          
                                           filterable="false">
                                     <p:inputText id="costTt" 
                                                  value="#{invPurchaseInvoiceDetailsTable.cost}"
-                                                 disabled="#{(not userData.userScreens['proworkorder'].edit or invPurchaseInvoiceDetailsTable.showPrice) or 
-                                                             (invPurchaseInvoiceDetailsTable.itemId.proGroupId.id ne 11) or 
-                                                             (invPurchaseInvoiceDetailsTable.itemId.proGroupId.id ne 22)or 
-                                                             (invPurchaseInvoiceDetailsTable.itemId.proGroupId.id ne 24)}"
+                                                 disabled="#{not userData.userScreens['proworkorder'].edit and invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id ne null}"
                                                  style="width:95%; text-align: right;">
                                         <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.validatePriceColumn(invPurchaseInvoiceDetailsTable)}" 
-                                                update="netId totalQuantity   totalNet form:totalActualWeight form:totalNetAfterDiscount  form:discounthala form:totalWithTaxValue form:remain form:taxvalue QuantityT NUMBER QuantityOu "/>
+                                                update="netId totalQuantity   totalNet form:totalActualWeight form:totalNetAfterDiscount  form:discounthala form:totalWithTaxValue form:remain form:taxvalue QuantityT NUMBER QuantityOu costTt"/>
                                     </p:inputText>      
                                 </p:column>
 

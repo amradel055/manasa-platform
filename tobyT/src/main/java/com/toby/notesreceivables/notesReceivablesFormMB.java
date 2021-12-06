@@ -310,9 +310,12 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
 
     public void calculateRemain() {
         if (getGlBankTransactionEntity() != null && getGlBankTransactionEntity().getInvoiceId() != null) {
-            BigDecimal remain = invPurchaseInvoiceService_1.remainForInvPurchaseInvoice(glBankTransactionEntity.getInvoiceId());
-            getGlBankTransactionEntity().setRemainInvoice(remain);
-            glBankTransactionEntity.setValue(remain);
+//            InvInvoiceDTO invoiceDTO = new InvInvoiceDTO();
+//            invoiceDTO.setId(glBankTransactionEntity.getInvoiceId());
+//            BigDecimal remain = invPurchaseInvoiceService_1.returnRemain(invoiceDTO);
+            InvInvoiceDTO dTO = invPurchaseInvoiceService_1.findInvPurchaseInvoiceById(glBankTransactionEntity.getInvoiceId());
+            getGlBankTransactionEntity().setRemainInvoice(dTO.getRemain());
+            glBankTransactionEntity.setValue(dTO.getRemain());
             updateTransactionRate();
         }
     }

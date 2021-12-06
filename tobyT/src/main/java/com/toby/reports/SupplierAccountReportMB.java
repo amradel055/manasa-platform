@@ -102,6 +102,7 @@ public class SupplierAccountReportMB extends BaseReportBean {
             InvOrganizationSiteDTO invOrganizationSiteDTO = organizationSiteService.findOrganizationSiteByIdDTO(invOrganizationSiteDTOId);
             supplierAccountSearchBean.setFromorganizationNameDTO(invOrganizationSiteDTO);
             supplierAccountSearchBean.setToorganizationNameDTO(invOrganizationSiteDTO);
+            setGallaryDTOSelect(invOrganizationSiteDTO.getGallaryIdDTO());
 //            completOrgSiteFrom(null).add(0, invOrganizationSiteDTO);
 //            completOrgSiteTo(null).add(0, invOrganizationSiteDTO);
             searchById();

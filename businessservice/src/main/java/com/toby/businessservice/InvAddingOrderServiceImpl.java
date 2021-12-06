@@ -631,7 +631,7 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
         List<InvDetailDTO> invPurchaseInvoiceDetailsListDTO = invAddingOrderDetailsService.getAllInvAddingOrderDetailsByInvPurchaseInvoiceIdDTO(invInvoiceDTO);
         invInvoiceDTO.setInvPurchaseInvoiceDetailList(invPurchaseInvoiceDetailsListDTO);
         invInvoiceDTO.setInvPurchaseInvoiceDetailsDeletedList(new ArrayList<InvDetailDTO>());
-        invInvoiceDTO = invGlobalService.updateSummition(invInvoiceDTO);
+        invInvoiceDTO = invGlobalService.updateSummition(invInvoiceDTO,false);
         return invInvoiceDTO;
     }
     
@@ -717,7 +717,7 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
                 } else {
                     if (!ScreenNameClassEnum.PROWORKORDER.equals(invInvoiceDTO.getScreenName())) {
                         invInvoiceDTO = mapToDTO(invAddingOrder, invInvoiceDTO);
-                        invInvoiceDTO = invGlobalService.updateSummition(invInvoiceDTO);
+                        invInvoiceDTO = invGlobalService.updateSummition(invInvoiceDTO,false);
                     }
                 }
                 

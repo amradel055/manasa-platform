@@ -543,7 +543,7 @@ public class ReportsServiceImpl implements ReportsService {
                 statementForThePeriod.setNet((BigDecimal) object[5]);
                 statementForThePeriod.setInvoiceId((Integer) object[6]);
                 statementForThePeriod.setInvoiceStatus(invPurchaseInvoiceService.findInvoiceStatus(statementForThePeriod.getInvoiceId()));
-                statementForThePeriod.setRemain(invPurchaseInvoiceService.remainForInvPurchaseInvoice(statementForThePeriod.getInvoiceId()));
+//                statementForThePeriod.setRemain(invPurchaseInvoiceService.remainForInvPurchaseInvoice(statementForThePeriod.getInvoiceId()));
                 list.add(statementForThePeriod);
             }
         }

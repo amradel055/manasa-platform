@@ -66,6 +66,8 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
     private CRMEventServiceDTO cRMEventServiceDTO;
     @EJB
     private EmployeeService employeeService;
+    @EJB
+    private InvInventoryService invInventoryService;
 
     @Override
     public void updateOrganizationSiteMobile(InvOrganizationSiteDTO organizationSiteDTO) {
@@ -782,7 +784,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         List<InvOrganizationSite> detailses = dao.findListByQuery("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND e.type <> 1 AND e.active = 1 ORDER BY e.code", params);
         List<InvOrganizationSiteDTO> dTOList = new ArrayList<>();
 
-        returnListDTO(detailses, dTOList,Boolean.FALSE);
+        returnListDTO(detailses, dTOList, Boolean.FALSE);
         return dTOList;
     }
 
@@ -801,7 +803,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         sql.append(" ORDER BY e.code");
         List<InvOrganizationSite> detailses = dao.findListByQuery(sql.toString(), params);
 
-        returnListDTO(detailses, list,Boolean.FALSE);
+        returnListDTO(detailses, list, Boolean.FALSE);
         return list;
     }
 
@@ -850,7 +852,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         builder.append(" ORDER BY i.id DESC");
         List<InvOrganizationSite> details = dao.findListByQuery(builder.toString(), filters, first, pageSize);
         List<InvOrganizationSiteDTO> dTOList = new ArrayList<>();
-        returnListDTO(details, dTOList,Boolean.FALSE);
+        returnListDTO(details, dTOList, Boolean.FALSE);
         return dTOList;
     }
 
@@ -868,7 +870,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             builder.append(" ORDER BY i.id DESC");
             List<InvOrganizationSite> details = dao.findListByQuery(builder.toString(), params);
             List<InvOrganizationSiteDTO> dTOList = new ArrayList<>();
-            returnListDTO(details, dTOList,Boolean.FALSE);
+            returnListDTO(details, dTOList, Boolean.FALSE);
             return dTOList;
         }
         return null;
@@ -904,9 +906,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             dTO.setAccountId(glAccountDTO);
         }
         if (entity.getGallaryId() != null) {
-            InvInventoryDTO invInventoryDTO = new InvInventoryDTO();
-            invInventoryDTO.setId(entity.getGallaryId().getId());
-            dTO.setGallaryIdDTO(invInventoryDTO);
+            dTO.setGallaryIdDTO(invInventoryService.maptoDTOSmall(null, entity.getGallaryId()));
         }
 
         if (entity.getOfferCompanyId() != null) {
@@ -970,7 +970,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             parent.setName(entity.getDelegatorId().getName());
             dTO.setDelegatorId(parent);
         }
-        
+
         if (entity.getLearnAboutCompanyfrom() != null) {
             SymbolDTO symbolDTO = new SymbolDTO();
             symbolDTO.setId(entity.getLearnAboutCompanyfrom().getId());
@@ -986,8 +986,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             List<CrmCustomerInterestedProductsDTO> interestedProductsDTOList = cRMCustomerInterestedProductsServiceDTO.getCrmCustomerInterestedProductsByOrganizationSiteId(entity.getId());
             dTO.setCrmCustomerInterestedProductsDTOList(interestedProductsDTOList);
         }
-        
-        
+
         dTO.setIndex(entity.getId());
         dTO.setCreatedDate(entity.getCreationDate());
         dTO.setCreatedBy(entity.getCreatedBy().getId());
@@ -1085,7 +1084,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
 
     private List<InvOrganizationSiteDTO> returnListDTO(List<InvOrganizationSite> list) {
         List<InvOrganizationSiteDTO> DTOlist = new ArrayList();
-        returnListDTO(list, DTOlist,Boolean.FALSE);
+        returnListDTO(list, DTOlist, Boolean.FALSE);
         return DTOlist;
     }
 
@@ -1149,7 +1148,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         List<InvOrganizationSiteDTO> dTO = new ArrayList();
         List<InvOrganizationSite> invOrganizationSiteList = returnListEntity(invOrganizationSiteDTOList, tobyUser);
         for (InvOrganizationSite organizationSite : invOrganizationSiteList) {
-            dTO.add(mapTODTO(null,updateOrganizationSite(organizationSite),Boolean.FALSE));
+            dTO.add(mapTODTO(null, updateOrganizationSite(organizationSite), Boolean.FALSE));
         }
         return dTO;
     }
@@ -1166,7 +1165,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
     @Override
     public InvOrganizationSiteDTO findOrganizationSiteByIdDTO(Integer invOrganizationSiteId) {
         InvOrganizationSite invOrganizationSite = dao.findEntityById(InvOrganizationSite.class, invOrganizationSiteId);
-        return mapTODTO(null,invOrganizationSite,Boolean.FALSE);
+        return mapTODTO(null, invOrganizationSite, Boolean.FALSE);
     }
 
     @Override
@@ -1707,14 +1706,8 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         }
         return null;
     }
-    
-    
-    
-    
-    /////////////////// CRM //////////////////////////
-    
-    
 
+    /////////////////// CRM //////////////////////////
     private void appendFilter2(Map<String, Object> filters, StringBuilder builder, InvOrganizationSiteDTO invOrganizationSiteDTOSearch, Integer type, Integer branchId) {
 
         filters.put("branchId", branchId);
@@ -1865,16 +1858,13 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         }
     }
 
-    
     private void returnListDTO(List<InvOrganizationSite> list, List<InvOrganizationSiteDTO> dTOList, Boolean getCRMInformation) {
         for (InvOrganizationSite guide : list) {
             dTOList.add(mapTODTO(null, guide, getCRMInformation));
         }
 
     }
-    
-    
-    
+
     public InvOrganizationSiteDTO mapTODTO(InvOrganizationSiteDTO dTO, InvOrganizationSite entity, Boolean getCRMInformation) {
         if (dTO == null) {
             dTO = new InvOrganizationSiteDTO();
@@ -1882,15 +1872,13 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         initMapToDTO(dTO, entity, getCRMInformation);
         return dTO;
     }
-    
-    
-    
+
     private List<InvOrganizationSiteDTO> returnListDTO(List<InvOrganizationSite> list, Boolean cRMInformation) {
         List<InvOrganizationSiteDTO> DTOlist = new ArrayList();
         returnListDTO(list, DTOlist, cRMInformation);
         return DTOlist;
     }
-    
+
     @Override
     public List<InvOrganizationSiteDTO> getLeads(Integer branchId, Integer type, Date creationDateFrom, Date creationDateTo, String codeFrom, String codeTo) {
 
@@ -1906,7 +1894,6 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
 
         return returnListDTO(details, true);
     }
-
 
     @Override
     public List<InvOrganizationSiteDTO> getLeads(Integer branchId, Integer type, CrmLeadsSearchBean crmLeadsSearchBean) {
@@ -1933,8 +1920,6 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
 
         return returnListDTO(details, true);
     }
-    
-    
 
     @Override
     public List<InvOrganizationSiteDTO> findALLCrmLeads(int first, int pageSize, String sortField, Boolean asc, Map<String, Object> filters, InvOrganizationSiteDTO invOrganizationSiteDTOSearch, Integer assignedTo, Integer type) {
@@ -1955,7 +1940,6 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         return details;
     }
 
-    
     @Override
     public List<InvOrganizationSiteDTO> findLeadsList(InvOrganizationSiteDTO invOrganizationSiteDTOSearch, Integer assignedTo, Integer type) {
         Map<String, Object> params = new HashMap<>();
@@ -2037,7 +2021,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         List<InvOrganizationSite> leadsList = dao.findListByQuery(builder.toString(), filters, first, pageSize);
         return returnListDTO(leadsList, true);
     }
-    
+
     @Override
     public ChartDTO getCountCustomerByLearnAboutCompanyfrom(Integer branchId, Date dateFrom, Date dateTo) {
         Map<String, Object> params = new HashMap<>();
@@ -2186,8 +2170,8 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         colors.add("rgb(201, 203, 207)");//Grey
         colors.add("rgb(54, 162, 235)");//Blue
         return colors;
-    } 
-    
+    }
+
     private StringBuilder filterChartDate(Map<String, Object> filters, StringBuilder builder, Date fromDate, Date toDate) {
         Date maxDate = null;
         if ((fromDate != null || toDate != null) && (fromDate == null || toDate == null)) {
@@ -2364,7 +2348,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         return preperChart(detailses, "المهمه", "العدد", title);
     }
 
- private ChartDTO preperChart(List<Object[]> details, String xLabel, String yLabel, String title) {
+    private ChartDTO preperChart(List<Object[]> details, String xLabel, String yLabel, String title) {
         Map<Object, Number> map = new HashMap<>();
         Set<String> setEmp = new HashSet<String>();
         List<ChartDataDTO> chartDataDTOList = new ArrayList<>();
@@ -2420,6 +2404,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         String title = "عدد التعاقد لكل موظف ";
         return preperChart(detailses, "الموظف", "العدد", title);
     }
+
     @Override
     public String validateSaveLead(InvOrganizationSiteDTO invOrganizationSiteDTO, TobyUser tobyUser) {
         StringBuilder error = new StringBuilder();
@@ -2467,7 +2452,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             }
         }
         return (error == null || error.toString().isEmpty()) ? null : error.toString();
-    }    
+    }
 
     @Override
     public List<InvOrganizationSiteDTO> findOrganizationSiteDTOByContact(Integer branchId, String mobile, String email) {
@@ -2493,7 +2478,6 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         List<InvOrganizationSite> detailses = dao.findListByQuery(builder.toString(), params);
         return returnListDTO(detailses, true);
     }
-
 
     @Override
     public synchronized InvOrganizationSiteDTO saveLead(InvOrganizationSiteDTO invOrganizationSiteDTO, TobyUser tobyUser) {
@@ -2637,8 +2621,6 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         return preperChart(details);
     }
 
-
-
     private ChartDTO preperChart(List<Object[]> details) {
         Map<Object, Number> map = new HashMap<>();
         List<ChartDataDTO> chartDataDTOList = new ArrayList<>();
@@ -2661,10 +2643,5 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         chartDTO.setChartDataDTOList(chartDataDTOList);
         return chartDTO;
     }
-
-
-
-
-
 
 }

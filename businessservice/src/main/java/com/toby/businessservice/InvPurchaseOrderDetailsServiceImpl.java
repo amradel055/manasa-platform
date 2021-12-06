@@ -151,7 +151,7 @@ public class InvPurchaseOrderDetailsServiceImpl implements InvPurchaseOrderDetai
                     entity.getItemId().getIsInventoryItem(),
                     null,null,null,null,
                     invInvoiceDTO.getCompanyActivity(),invInvoiceDTO.getScreenName(),null);
-            dTO = invGlobalService.calculateDetailTotalsRow(dTO, invInvoiceDTO, true);
+            dTO = invGlobalService.calculateDetailTotalsRow(dTO, invInvoiceDTO, true,false);
             dTO.setRealQuantity(dTO.getQuantity().multiply(dTO.getScrewing()));
         } else if (Entity.getClass().equals(TempInvPurchaseOrderNotLoadedYet.class)) {
             TempInvPurchaseOrderNotLoadedYet entity = (TempInvPurchaseOrderNotLoadedYet) Entity;
@@ -166,7 +166,7 @@ public class InvPurchaseOrderDetailsServiceImpl implements InvPurchaseOrderDetai
                     entity.getUnitId(), entity.getUnitSerial(), entity.getUnitName(),entity.getIsInventoryItem(),
                     null,null,null,null,
                     invInvoiceDTO.getCompanyActivity(),invInvoiceDTO.getScreenName(),null);
-            dTO = invGlobalService.calculateDetailTotalsRow(dTO, invInvoiceDTO, true);
+            dTO = invGlobalService.calculateDetailTotalsRow(dTO, invInvoiceDTO, true,false);
             dTO.setRealQuantity(dTO.getQuantity().multiply(dTO.getScrewing()));
         }
         return dTO;

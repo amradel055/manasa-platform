@@ -29,6 +29,7 @@ public class GlBankTransactionEntity extends BaseEntity {
     private Collection<GlBankTransactionDetailEntity> glBankTransactionDetailCollection;
     private GlBank glBank;
     private Integer invoiceId;
+    private Integer invoiceSerial;
     private BigDecimal accountStatement;
     private BigDecimal remainInvoice;
     private Integer glYear;
@@ -379,6 +380,20 @@ public class GlBankTransactionEntity extends BaseEntity {
      */
     public void setBankCommition(BigDecimal bankCommition) {
         this.bankCommition = bankCommition;
+    }
+
+    /**
+     * @return the invoiceSerial
+     */
+    public Integer getInvoiceSerial() {
+        return invoiceSerial;
+    }
+
+    /**
+     * @param invoiceSerial the invoiceSerial to set
+     */
+    public void setInvoiceSerial(Integer invoiceSerial) {
+        this.invoiceSerial = invoiceSerial;
     }
 
 }

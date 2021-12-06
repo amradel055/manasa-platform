@@ -59,9 +59,9 @@ public class InvTransferListMB extends InventoryBasicDataForm {
     public void delete() {
         try {
 
-            if (invTransfer != null) {
-                Integer invTransferIdToPass = invTransferEntity.getId();
-                invTransfer.setId(invTransferEntity.getId());
+            if (invTransferSelected != null) {
+                Integer invTransferIdToPass = invTransferSelected;
+                invTransfer.setId(invTransferIdToPass);
                 try {
                     invTransferService.deleteInvTransfer(invTransfer, invTransferIdToPass);
                     getInvTransferEntityList().remove(invTransferEntity);

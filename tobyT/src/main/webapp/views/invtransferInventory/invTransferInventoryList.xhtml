@@ -87,7 +87,7 @@
                         </p:commandButton>
                         <p:commandButton class="sdeleteButton" update="@form" icon="fa fa-remove" style="background-color: red;border-radius: 3px;" 
                                          title="#{userData.userDDs['DELETE']}"  action="#{invTransferListMB.delete}">
-                            <f:setPropertyActionListener value="#{invTransferTable}" target="#{invTransferListMB.invTransferEntity}" />
+                            <f:setPropertyActionListener value="#{invTransferTable.id}" target="#{invTransferListMB.invTransferSelected}" />
                             <p:confirm header="Confirmation" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
                         </p:commandButton>
                         <p:commandButton 

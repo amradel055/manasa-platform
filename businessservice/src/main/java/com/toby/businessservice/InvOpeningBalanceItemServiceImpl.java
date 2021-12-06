@@ -346,7 +346,7 @@ public class InvOpeningBalanceItemServiceImpl implements InvOpeningBalanceItemSe
                     dao.rollbackQuery();
                 } else {
                     invInvoiceDTO = mapToDTO(invOpenningBalanceItem, invInvoiceDTO);
-                    invInvoiceDTO = invGlobalService.updateSummition(invInvoiceDTO);
+                    invInvoiceDTO = invGlobalService.updateSummition(invInvoiceDTO,false);
                 }
 
             }
@@ -445,7 +445,7 @@ public class InvOpeningBalanceItemServiceImpl implements InvOpeningBalanceItemSe
         dto.setInvPurchaseInvoiceDetailList(invPurchaseInvoiceDetailsListDTO);
         dto.setInvPurchaseInvoiceDetailsDeletedList(new ArrayList<InvDetailDTO>());
 
-        dto = invGlobalService.updateSummition(dto);
+        dto = invGlobalService.updateSummition(dto,false);
         return dto;
     }
 
@@ -453,7 +453,7 @@ public class InvOpeningBalanceItemServiceImpl implements InvOpeningBalanceItemSe
     public InvInvoiceDTO findOpeningBalanceById(InvInvoiceDTO invInvoiceDTO) {
         InvOpenningBalanceItem invOpenningBalanceItem = dao.findEntityById(InvOpenningBalanceItem.class, invInvoiceDTO.getId());
         InvInvoiceDTO invPurchaseInvoiceDTO = mapToDTO(invOpenningBalanceItem, invInvoiceDTO);
-        invPurchaseInvoiceDTO = invGlobalService.updateSummition(invPurchaseInvoiceDTO);
+        invPurchaseInvoiceDTO = invGlobalService.updateSummition(invPurchaseInvoiceDTO,false);
         return invPurchaseInvoiceDTO;
     }
     

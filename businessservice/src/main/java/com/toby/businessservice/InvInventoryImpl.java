@@ -123,18 +123,15 @@ public class InvInventoryImpl implements InvInventoryService {
         dto.setCreatedBy(entity.getCreatedBy() != null ? entity.getCreatedBy().getId() : null);
         dto.setCreatedDate(entity.getCreationDate());
         dto.setBranchId(entity.getBranchId() != null ? entity.getBranchId().getId() : null);
-        dto.setId(entity.getId());
-        dto.setCode(entity.getCode());
-        dto.setIndex(entity.getId());
-        dto.setInvType(entity.getInvType());
-        dto.setCompanyId(entity.getCompanyId() != null ? entity.getCompanyId().getId() : null);
-        dto.setDaribaValue(entity.getDaribaValue());
-        dto.setSegilValue(entity.getSegilValue());
+        
+        maptoDTOSmall(dto, entity);
+        
+        dto.setCompanyId(entity.getCompanyId() != null ? entity.getCompanyId().getId() : null);        
         dto.setPhone(entity.getPhone());
-        dto.setInvName(entity.getInvName());
+        
 
         dto.setTypeItem(entity.getTypeItem());
-        dto.setName(entity.getName());
+        
         dto.setMsg(entity.getMsg());
         if (entity.getAccountId() != null) {
             GlAccountDTO accountDTO = new GlAccountDTO();
@@ -162,6 +159,22 @@ public class InvInventoryImpl implements InvInventoryService {
             costCenter.setCode(entity.getCostCenterId().getCode());
             dto.setCostCenterId(costCenter);
         }
+        return dto;
+    }
+
+    @Override
+    public InvInventoryDTO maptoDTOSmall(InvInventoryDTO dto, InvInventory entity) {
+        if(dto == null){
+            dto = new InvInventoryDTO();
+        }
+        dto.setId(entity.getId());
+        dto.setCode(entity.getCode());
+        dto.setIndex(entity.getId());
+        dto.setInvType(entity.getInvType());
+        dto.setDaribaValue(entity.getDaribaValue());
+        dto.setSegilValue(entity.getSegilValue());
+        dto.setInvName(entity.getInvName());
+        dto.setName(entity.getName());
         return dto;
     }
 

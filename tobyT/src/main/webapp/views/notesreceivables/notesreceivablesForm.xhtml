@@ -23,8 +23,8 @@
                     <div class="ui-g">
 
                         <div class="ui-g-4 ui-xl-4">
-                            
-                            
+
+
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
 
@@ -111,17 +111,11 @@
                                             process="@form"
                                             event="itemSelect"
                                             listener="#{notesReceivablesFormMB.check()}" update="@form"/>
-
                                     </p:autoComplete>
 
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
-
                                     <p:outputLabel style="width: 65px;font-size: 14px!important;" value="رقم العميل ورقم المورد"  />
-
-
-
-
                                 </div>
                             </div>
                             <div class="ui-g-12 ui-xl-12">
@@ -221,7 +215,7 @@
 
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel value="#{notesReceivablesFormMB.glBankTransactionEntity.invoiceId}" 
+                                    <p:outputLabel value="#{notesReceivablesFormMB.glBankTransactionEntity.serial}" 
                                                    rendered="#{notesReceivablesFormMB.isEdit}" />
 
                                     <p:selectOneMenu  id="invoice" style="width:100%"  rendered="#{not notesReceivablesFormMB.isEdit}"
@@ -295,7 +289,7 @@
                                           action="#{notesReceivablesFormMB.save()}"
                                           disabled="#{notesReceivablesFormMB.glBankTransactionEntity.postFlag == 1}"
                                           update="@form"/>
-                        
+
                         <p:commandButton 
                             class="printButtons"
                             id="b71" value="كشف حساب" 

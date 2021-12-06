@@ -18,17 +18,20 @@ import com.toby.toby.UserData;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static java.util.stream.Stream.builder;
 import javax.faces.context.FacesContext;
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
@@ -38,6 +41,8 @@ import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.Hex;
 import tafqeet.Tafqeet;
 
 /**
@@ -496,20 +501,128 @@ public class IReportServiceImpl implements IReportService {
             return null;
         }
     }
+    
+    private static final TimeZone utc = TimeZone.getTimeZone("UTC");
+    private static final SimpleDateFormat isoFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
-    private void printQRCode(InvInvoiceDTO invPurchaseInvoiceDTO, HashMap hashMap) {
-        StringBuilder builder = new StringBuilder();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-        builder.append(invPurchaseInvoiceDTO.getGallaryId() == null ? "" : invPurchaseInvoiceDTO.getGallaryId().getName()).append("\n")
-                .append("العميل: ").append(invPurchaseInvoiceDTO.getOrganizationSiteId().getName()).append("\n")
-                .append("فاتوره رقم: ").append(invPurchaseInvoiceDTO.getSerial()).append("\n")
-                .append("الرقم الضريبي: ").append(invPurchaseInvoiceDTO.getGallaryId().getDaribaValue()).append("\n")
-                .append("رقم السجل: ").append(invPurchaseInvoiceDTO.getGallaryId().getSegilValue()).append("\n")
-                .append("تاريخ الفاتوره: ").append(dateFormat.format(invPurchaseInvoiceDTO.getDate())).append("\n")
-                .append("قيمه الفاتورة: ").append(invPurchaseInvoiceDTO.getTotalNetAfterDiscount())
-                .append("الضريبه vat: ").append(invPurchaseInvoiceDTO.getTaxvalue()).append("\n")
-                .append("صافي المبلغ: ").append(invPurchaseInvoiceDTO.getFinalNet()).append("\n");
-        reportQRCode(hashMap, builder.toString(),invPurchaseInvoiceDTO.getGallaryId() == null ? 0 : invPurchaseInvoiceDTO.getGallaryId().getId());
+    private void printQRCode(InvInvoiceDTO invPurchaseInvoiceDTO, HashMap hashMap) throws UnsupportedEncodingException, IOException {
+        isoFormatter.setTimeZone(utc);
+        String date = isoFormatter.format(invPurchaseInvoiceDTO.getDate());
+        
+//        String sellerName = "Bobs Records";
+//        String sallerTRN = "310122393500003";
+//        String invoiceDateTime = "2022-04-25T15:30:00Z";
+//        String totalWithVAT = "1000.00";
+//        String VATTotal = "150.00";
+        
+        
+        String sellerName = "شركة الثوب العالمي للتجارة المحدودة ";
+        String sallerTRN = invPurchaseInvoiceDTO.getGallaryId().getDaribaValue();
+        String invoiceDateTime = date;
+        String totalWithVAT = invPurchaseInvoiceDTO.getFinalNet().toString();
+        String VATTotal = invPurchaseInvoiceDTO.getTaxvalue().toString();
+
+        byte[] tag1Hex = sellerName.getBytes("UTF-8");
+        sellerName =  new String(tag1Hex, StandardCharsets.UTF_8);
+        String L1 = Integer.toHexString(sellerName.length());
+        String L2 = Integer.toHexString(sallerTRN.length());
+        String L3 = Integer.toHexString(invoiceDateTime.length());
+        String L4 = Integer.toHexString(totalWithVAT.length());
+        String L5 = Integer.toHexString(VATTotal.length());
+
+        String hex = "01" + ((L1.length() == 1) ? ("0" + L1) : L1) + hex(sellerName)
+                + "02" + ((L2.length() == 1) ? ("0" + L2) : L2) + hex(sallerTRN)
+                + "03" + ((L3.length() == 1) ? ("0" + L3) : L3) + hex(invoiceDateTime)
+                + "04" + ((L4.length() == 1) ? ("0" + L4) : L4) + hex(totalWithVAT)
+                + "05" + ((L5.length() == 1) ? ("0" + L5) : L5) + hex(VATTotal);
+        reportQRCode(hashMap, hex, invPurchaseInvoiceDTO.getGallaryId() == null ? 0 : invPurchaseInvoiceDTO.getGallaryId().getId());
+    }
+
+    public String hex(String string) {
+        char[] ch = string.toCharArray();
+        StringBuilder result = new StringBuilder();
+        for (char c : ch) {
+            result.append(Integer.toHexString(c));
+        }
+        return result.toString();
+    }
+
+     public void reportQRCode(HashMap hashMap, String qrCodeText, Integer GallaryId) {
+        String filePath = "JD" + GallaryId + ".png";
+        int size = 200;
+        String fileType = "png";
+        File qrFile = new File(filePath);
+        createQRImage(qrFile, qrCodeText, size, fileType);
+        hashMap.put("QRCode", "JD" + GallaryId + ".png");
+
+    }
+
+    public static String convertHexTo64(String hex) {
+        //convert each letter in the hex string to a 4-digit binary string to create a binary representation of the hex string
+        StringBuilder binary = new StringBuilder();
+        for (int i = 0; i < hex.length(); i++) {
+            int dec = Integer.parseInt(hex.charAt(i) + "", 16);
+            StringBuilder bin = new StringBuilder(Integer.toBinaryString(dec));
+            while (bin.length() < 4) {
+                bin.insert(0, '0');
+            }
+            binary.append(bin);
+        }
+        //now take 6 bits at a time and convert to a single b64 digit to create the final b64 representation
+        StringBuilder b64 = new StringBuilder();
+        for (int i = 0; i < binary.length(); i++) {
+            String temp = binary.substring(i, i + 5);
+            int dec = Integer.parseInt(temp, 10);
+            //convert dec to b64 with the lookup table here then append to b64
+//            byte[] decodedHex = Hex.decodeHex(hex);
+//            byte[] encodedHexB64 = Base64.codeBase64(decodedHex);
+        }
+
+        return b64.toString();
+    }
+
+    private void createQRImage(File qrFile, String qrCodeText, int size, String fileType) {
+        try {
+            // Create the ByteMatrix for the QR-Code that encodes the given String
+            Hashtable hintMap = new Hashtable<>();
+            hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
+            hintMap.put(EncodeHintType.CHARACTER_SET, "UTF-8");
+            hintMap.put(EncodeHintType.MARGIN, 1);
+            QRCodeWriter qrCodeWriter = new QRCodeWriter();
+            byte[] decodedHex = Hex.decodeHex(qrCodeText.toCharArray());
+            String imaged = Base64.encodeBase64String(decodedHex);
+//            String imaged = Base64.getEncode.encodeToString(qrCodeText.getBytes());
+            BitMatrix byteMatrix = qrCodeWriter.encode(imaged, BarcodeFormat.QR_CODE, size, size, hintMap);
+            // Make the BufferedImage that are to hold the QRCode
+            int matrixWidth = byteMatrix.getWidth();
+            BufferedImage image = new BufferedImage(matrixWidth, matrixWidth, BufferedImage.TYPE_INT_RGB);
+            image.createGraphics();
+            Graphics2D graphics = (Graphics2D) image.getGraphics();
+            graphics.setColor(Color.WHITE);
+            graphics.fillRect(0, 0, matrixWidth, matrixWidth);
+            // Paint and save the image using the ByteMatrix
+            graphics.setColor(Color.BLACK);
+            for (int i = 0; i < matrixWidth; i++) {
+                for (int j = 0; j < matrixWidth; j++) {
+                    if (byteMatrix.get(i, j)) {
+                        graphics.fillRect(i, j, 1, 1);
+                    }
+                }
+            }
+            ImageIO.write(image, fileType, qrFile);
+
+//            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//        MatrixToImageWriter.writeToStream(byteMatrix, "png", bos);
+//        String images = Base64.getEncoder().encodeToString(bos.toByteArray()); // base64 encode
+//
+//        // return QrInfo
+//        QrInfo qrInfo = new QrInfo();
+//        qrInfo.setUrl(url);
+//        qrInfo.setImage(image);
+//        return qrInfo;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public HashMap prepareInvPurchaseReport(InvInvoiceDTO invPurchaseInvoiceDTO, UserData userData) {
@@ -779,46 +892,58 @@ public class IReportServiceImpl implements IReportService {
 
         return hashMap;
     }
+//    public void reportQRCode(HashMap hashMap, String qrCodeText, Integer GallaryId, byte[] b) {
+//        String filePath = "JD" + GallaryId + ".png";
+//        int size = 200;
+//        String fileType = "png";
+//        File qrFile = new File(filePath);
+//        createQRImage(qrFile, qrCodeText, size, fileType, b);
+//        hashMap.put("QRCode", "JD" + GallaryId + ".png");
+//
+//    }
 
-    public void reportQRCode(HashMap hashMap, String qrCodeText,Integer GallaryId) {
-        String filePath = "JD"+GallaryId+".png";
-        int size = 200;
-        String fileType = "png";
-        File qrFile = new File(filePath);
-        createQRImage(qrFile, qrCodeText, size, fileType);
-        hashMap.put("QRCode", "JD"+GallaryId+".png");
-
-    }
-
-    private void createQRImage(File qrFile, String qrCodeText, int size, String fileType) {
-        try {
-            // Create the ByteMatrix for the QR-Code that encodes the given String
-            Hashtable hintMap = new Hashtable<>();
-            hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
-            hintMap.put(EncodeHintType.CHARACTER_SET, "UTF-8");
-            hintMap.put(EncodeHintType.MARGIN, 1);
-            QRCodeWriter qrCodeWriter = new QRCodeWriter();
-            BitMatrix byteMatrix = qrCodeWriter.encode(qrCodeText, BarcodeFormat.QR_CODE, size, size, hintMap);
-            // Make the BufferedImage that are to hold the QRCode
-            int matrixWidth = byteMatrix.getWidth();
-            BufferedImage image = new BufferedImage(matrixWidth, matrixWidth, BufferedImage.TYPE_INT_RGB);
-            image.createGraphics();
-            Graphics2D graphics = (Graphics2D) image.getGraphics();
-            graphics.setColor(Color.WHITE);
-            graphics.fillRect(0, 0, matrixWidth, matrixWidth);
-            // Paint and save the image using the ByteMatrix
-            graphics.setColor(Color.BLACK);
-            for (int i = 0; i < matrixWidth; i++) {
-                for (int j = 0; j < matrixWidth; j++) {
-                    if (byteMatrix.get(i, j)) {
-                        graphics.fillRect(i, j, 1, 1);
-                    }
-                }
-            }
-            ImageIO.write(image, fileType, qrFile);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+   
+//    private void createQRImage(File qrFile, String qrCodeText, int size, String fileType, byte[] b) {
+//        try {
+//            // Create the ByteMatrix for the QR-Code that encodes the given String
+//            Hashtable hintMap = new Hashtable<>();
+//            hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
+//            hintMap.put(EncodeHintType.CHARACTER_SET, "UTF-8");
+//            hintMap.put(EncodeHintType.MARGIN, 1);
+//            QRCodeWriter qrCodeWriter = new QRCodeWriter();
+////            String imaged = Base64.getEncoder().encodeToString(b);
+//            imaged = "AQxCb2JzIFJlY29yZHMCDzMxMDEyMjM5MzUwMDAwMwMUMjAyMi0wNC0yNVQxNTozMDowMFoEBzEwMDAuMDAFBjE1MC4wMA==";
+//            BitMatrix byteMatrix = qrCodeWriter.encode(imaged, BarcodeFormat.QR_CODE, size, size, hintMap);
+//            // Make the BufferedImage that are to hold the QRCode
+//            int matrixWidth = byteMatrix.getWidth();
+//            BufferedImage image = new BufferedImage(matrixWidth, matrixWidth, BufferedImage.TYPE_INT_RGB);
+//            image.createGraphics();
+//            Graphics2D graphics = (Graphics2D) image.getGraphics();
+//            graphics.setColor(Color.WHITE);
+//            graphics.fillRect(0, 0, matrixWidth, matrixWidth);
+//            // Paint and save the image using the ByteMatrix
+//            graphics.setColor(Color.BLACK);
+//            for (int i = 0; i < matrixWidth; i++) {
+//                for (int j = 0; j < matrixWidth; j++) {
+//                    if (byteMatrix.get(i, j)) {
+//                        graphics.fillRect(i, j, 1, 1);
+//                    }
+//                }
+//            }
+//            ImageIO.write(image, fileType, qrFile);
+//
+////            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+////        MatrixToImageWriter.writeToStream(byteMatrix, "png", bos);
+////        String images = Base64.getEncoder().encodeToString(bos.toByteArray()); // base64 encode
+////
+////        // return QrInfo
+////        QrInfo qrInfo = new QrInfo();
+////        qrInfo.setUrl(url);
+////        qrInfo.setImage(image);
+////        return qrInfo;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 }

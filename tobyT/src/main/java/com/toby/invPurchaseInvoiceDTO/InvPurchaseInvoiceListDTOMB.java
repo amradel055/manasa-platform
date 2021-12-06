@@ -29,7 +29,7 @@ import org.primefaces.model.SortOrder;
 @ViewScoped
 public class InvPurchaseInvoiceListDTOMB extends InventoryBasicDataForm {
 
-    private List<InvInvoiceDTO> invInvoiceList;
+    
 
     @EJB
     private InvPurchaseInvoiceService_1 invPurchaseInvoiceService;
@@ -230,20 +230,6 @@ public class InvPurchaseInvoiceListDTOMB extends InventoryBasicDataForm {
     @Override
     public String exit() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    /**
-     * @return the invInvoiceList
-     */
-    public List<InvInvoiceDTO> getInvInvoiceList() {
-        return invInvoiceList;
-    }
-
-    /**
-     * @param invInvoiceList the invInvoiceList to set
-     */
-    public void setInvInvoiceList(List<InvInvoiceDTO> invInvoiceList) {
-        this.invInvoiceList = invInvoiceList;
     }
 
 }

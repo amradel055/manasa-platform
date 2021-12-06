@@ -724,7 +724,7 @@ public class InvTransferServiceImp implements InvTransferService {
     public InvInvoiceDTO findInvTransferById(InvInvoiceDTO invInvoiceDTO) {
         InvTransfer invTransfer = dao.findEntityById(InvTransfer.class, invInvoiceDTO.getId());
         InvInvoiceDTO invPurchaseInvoiceDTO = mapToDTO(invTransfer, invInvoiceDTO);
-        invPurchaseInvoiceDTO = invGlobalService.updateSummition(invPurchaseInvoiceDTO);
+        invPurchaseInvoiceDTO = invGlobalService.updateSummition(invPurchaseInvoiceDTO,false);
         return invPurchaseInvoiceDTO;
     }
 
@@ -768,7 +768,7 @@ public class InvTransferServiceImp implements InvTransferService {
         invInvoiceDTO.setInvPurchaseInvoiceDetailList(invPurchaseInvoiceDetailsListDTO);
         invInvoiceDTO.setInvPurchaseInvoiceDetailsDeletedList(new ArrayList<InvDetailDTO>());
 
-        invInvoiceDTO = invGlobalService.updateSummition(invInvoiceDTO);
+        invInvoiceDTO = invGlobalService.updateSummition(invInvoiceDTO,false);
         return invInvoiceDTO;
     }
     
@@ -834,7 +834,7 @@ public class InvTransferServiceImp implements InvTransferService {
                     dao.rollbackQuery();
                 } else {
                     invInvoiceDTO = mapToDTO(invTransfer,invInvoiceDTO);
-                    invInvoiceDTO = invGlobalService.updateSummition(invInvoiceDTO);
+                    invInvoiceDTO = invGlobalService.updateSummition(invInvoiceDTO,false);
                 }
 
             }

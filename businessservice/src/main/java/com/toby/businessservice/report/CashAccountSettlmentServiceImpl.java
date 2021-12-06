@@ -1133,7 +1133,7 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
             Object[] _Entity = (Object[]) Entity;
             InvPurchaseInvoiceDetail entity = (InvPurchaseInvoiceDetail) _Entity[0];
             entity.setSumDetailNet((BigDecimal) _Entity[_Entity.length - 1]);
-            InvInvoiceDTO invInvoiceDTO = invPurchaseInvoiceService_1.returnInvInvoiceSummarySumation(entity.getInvPurchaseInvoiceId(), entity.getSumDetailNet());
+            InvInvoiceDTO invInvoiceDTO = invPurchaseInvoiceService_1.findInvPurchaseInvoiceById(entity.getInvPurchaseInvoiceId().getId());
             view.setRowNum(index);
             if (entity.getCreatedBy() != null) {
                 view.setCreatedBy(entity.getCreatedBy().getName());

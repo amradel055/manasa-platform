@@ -103,6 +103,8 @@ public class ItemsBarcodesDetailsView implements Serializable {
     private Integer supplierId;
     @Column(name = "type")
     private Integer type;
+    @Column(name = "price_type")
+    private Integer price_type;
 
     @Override
     public String toString() {
@@ -518,5 +520,19 @@ public class ItemsBarcodesDetailsView implements Serializable {
      */
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    /**
+     * @return the price_type
+     */
+    public Integer getPrice_type() {
+        return price_type;
+    }
+
+    /**
+     * @param price_type the price_type to set
+     */
+    public void setPrice_type(Integer price_type) {
+        this.price_type = price_type;
     }
 }

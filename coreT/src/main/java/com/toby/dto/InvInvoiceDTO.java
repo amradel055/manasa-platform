@@ -523,6 +523,9 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      * @return the totalQuatity
      */
     public BigDecimal getTotalQuatity() {
+        if(totalQuatity == null){
+            totalQuatity = BigDecimal.ZERO;
+        }
         return totalQuatity;
     }
 
@@ -551,6 +554,9 @@ public class InvInvoiceDTO extends BaseEntityDTO {
      * @return the totalNet
      */
     public BigDecimal getTotalNet() {
+        if(totalNet == null){
+            totalNet = BigDecimal.ZERO;
+        }
         return totalNet;
     }
 

@@ -153,7 +153,7 @@ public class InvAddingOrderDetailsServiceImpl implements InvAddingOrderDetailsSe
         if(invInvoiceDTO.getLoadedSerial() != null){
             dTO.setIsEdit(Boolean.TRUE);
         }
-        dTO = invGlobalService.calculateDetailTotalsRow(dTO, invInvoiceDTO, true);        
+        dTO = invGlobalService.calculateDetailTotalsRow(dTO, invInvoiceDTO, true,false);        
         dTO.setRealQuantity(dTO.getQuantity().multiply(dTO.getScrewing()));
         return dTO;
     }

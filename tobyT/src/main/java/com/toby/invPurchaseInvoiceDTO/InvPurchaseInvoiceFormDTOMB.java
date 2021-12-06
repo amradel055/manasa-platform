@@ -106,6 +106,7 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
         if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getInvPurchaseInvoiceDetailList() != null && !getInvInvoiceDTO().getInvPurchaseInvoiceDetailList().isEmpty()) {
             getInvInvoiceDTO().setMsg(null);
             setInvInvoiceDTO(invPurchaseInvoiceService.save(getInvInvoiceDTO(), getUserData().getUser()));
+            checkDetailData();
             setOrganizationSiteId(getInvInvoiceDTO().getOrganizationSiteId());
             msgSave(getInvInvoiceDTO().getMsg());
             findAccountStatement();
@@ -115,8 +116,6 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
                 message.append(getInvInvoiceDTO().getSerial());
                 message.append(" المدفوع ");
                 message.append(getInvInvoiceDTO().getPayed());
-//                message.append(" المتبقي ");
-//                message.append(getInvInvoiceDTO().getRemain());
                 if (getInvInvoiceDTO().getGallaryId().getInvName() != null && getInvInvoiceDTO().getGallaryId().getInvName() == 0) {
                     message.append("\n");
                     message.append("نسعد بتلقي تقييمكم عن الخدمة المقدمة لكم من برنس  \n");

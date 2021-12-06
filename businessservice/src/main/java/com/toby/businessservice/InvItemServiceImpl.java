@@ -109,6 +109,7 @@ public class InvItemServiceImpl implements InvItemService {
         invItem.setPrice_edit(invItemDTO.getPrice_edit());
         invItem.setIsInventoryItem(invItemDTO.getIsinventoryitem());
         invItem.setTypeshow(invItemDTO.getTypeshow());
+        invItem.setPriceType(invItemDTO.getPriceType());
 //        invItem.setItemNatural(invItemDTO.getItem_natural());
         if (invItemDTO.getOriginCountry() != null) {
             Symbol symbol = new Symbol();
@@ -236,6 +237,7 @@ public class InvItemServiceImpl implements InvItemService {
         invItemDTO.setIsinventoryitem(invItem.getIsInventoryItem());
         invItemDTO.setTypeshow(invItem.getTypeshow());
         invItemDTO.setCostAverage(invItem.getCostAverage());
+        invItemDTO.setPriceType(invItem.getPriceType());
 
 //        invItemDTO.setItem_natural(invItem.getItemNatural());
         if (invItem.getOriginCountry() != null) {

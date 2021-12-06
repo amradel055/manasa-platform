@@ -586,25 +586,25 @@ public class InvDialogueServiceImpl implements InvDialogueService {
 
     public InvInvoiceDTO loadInvQotation(InvInvoiceDTO dTO, Integer type) {
         dTO = invQuotationService.convertQotationToPurchaseInvoice(dTO, type);
-        dTO = invGlobalService.updateSummition(dTO);
+        dTO = invGlobalService.updateSummition(dTO,false);
         return dTO;
     }
 
     public InvInvoiceDTO loadInvPurchaseOrder(InvInvoiceDTO dTO) {
         dTO = invPurchaseOrderService.convertPurchaseOrderToPurchaseInvoice(dTO);
-        dTO = invGlobalService.updateSummition(dTO);
+        dTO = invGlobalService.updateSummition(dTO,false);
         return dTO;
     }
 
     public InvInvoiceDTO loadInvAddingOrder(InvInvoiceDTO dTO) {
         dTO = invAddingOrderService.convertAddingOrderToPurchaseInvoice(dTO);
-        dTO = invGlobalService.updateSummition(dTO);
+        dTO = invGlobalService.updateSummition(dTO,false);
         return dTO;
     }
 
     public InvInvoiceDTO loadInvPurchaseInvoice(InvInvoiceDTO dTO, Integer type) {
         dTO = invPurchaseInvoiceService.convertInvPurchaseInvoiceToPurchaseInvoice(dTO, type);
-        dTO = invGlobalService.updateSummition(dTO);
+        dTO = invGlobalService.updateSummition(dTO,false);
         return dTO;
     }
 
