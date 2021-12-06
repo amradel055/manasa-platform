@@ -85,7 +85,7 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
     @Override
     public void load() {
         try {
-
+              
             if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("addGmSubscriptions")) {
                 reset();
                 fillDefaultList();
@@ -95,7 +95,11 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
                 fillInvInvoiceDTO();
                 fillDefaultList();
                 getGmSubscriptionsDTO().setIsEdit(Boolean.FALSE);
-            } else {
+            } else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("editorganization")) {
+              
+               getOrganizationSiteId().setIsEdited(Boolean.TRUE);
+               fillClientDTO();
+            }else {
                 exit("../gmsubscriptions/gmsubscriptionslist.xhtml");
             }
         } catch (Exception e) {
@@ -127,6 +131,11 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
     public void fillInvInvoiceDTO() {
         getGmSubscriptionsDTO().setId((Integer) getContext().getSessionMap().get("gmSubscriptionsIdSelected"));
         setGmSubscriptionsDTO(gmSubscriptionsService.findGmSubscriptionsDTOById(getGmSubscriptionsDTO()));
+    }
+    
+      public void fillClientDTO() {
+        getOrganizationSiteId().setId((Integer) getContext().getSessionMap().get("invOrganizationSiteDTOSelected"));
+        setOrganizationSiteId(organizationSiteService.findOrganizationSiteDTOById(getOrganizationSiteId().getId()));
     }
 
     @Override
@@ -382,7 +391,7 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
      */
     public InvOrganizationSiteDTO getOrganizationSiteId() {
         if(organizationSiteId == null){
-            organizationSiteId = new InvOrganizationSiteDTO();
+            setOrganizationSiteId(new InvOrganizationSiteDTO());
         }
         return organizationSiteId;
     }
@@ -451,5 +460,9 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
     /**
      * @param organizationSiteId the organizationSiteId to set
      */
+    public void setOrganizationSiteId(InvOrganizationSiteDTO organizationSiteId) {
+        this.organizationSiteId = organizationSiteId;
+    }
 
+  
 }

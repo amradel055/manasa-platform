@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class InvOrganizationSiteDTO extends BaseEntityDTO {
     private Integer index;
-private String clientImage ;
+    private String clientImage ;
     private String code;
     private String name;
     private String address;
@@ -88,7 +88,7 @@ private String clientImage ;
     private Integer numberOfNewLeadsAssigned;
     private String globalFilter;
     private String legalAffairsRemark;
-
+    private Boolean isEdited = Boolean.FALSE;
     public InvOrganizationSiteDTO() {
     }
 
@@ -1161,6 +1161,20 @@ private String clientImage ;
      */
     public void setClientImage(String clientImage) {
         this.clientImage = clientImage;
+    }
+
+    /**
+     * @return the isEdited
+     */
+    public Boolean getIsEdited() {
+        return isEdited;
+    }
+
+    /**
+     * @param isEdited the isEdited to set
+     */
+    public void setIsEdited(Boolean isEdited) {
+        this.isEdited = isEdited;
     }
  
 
