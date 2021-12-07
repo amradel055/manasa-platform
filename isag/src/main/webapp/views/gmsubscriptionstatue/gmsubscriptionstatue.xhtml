@@ -88,7 +88,9 @@
                           headerText="بداية الاشتراك"
                           sortBy="#{invInvoicePurchaseTable.startDate}" 
                           >
-                    <p:outputLabel value="#{invInvoicePurchaseTable.startDate}" />
+                    <p:outputLabel value="#{invInvoicePurchaseTable.startDate}" >
+                     <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                    </p:outputLabel>   
                 </p:column>
                 <p:column style="width: 8vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
                           filterBy="#{invInvoicePurchaseTable.endDate}"
@@ -96,7 +98,17 @@
                           headerText="نهاية الاشتراك"
                           sortBy="#{invInvoicePurchaseTable.endDate}" 
                           >
-                    <p:outputLabel value="#{invInvoicePurchaseTable.endDate}" />
+                    <p:outputLabel value="#{invInvoicePurchaseTable.endDate}" >
+                         <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                    </p:outputLabel>   
+                </p:column>
+                 <p:column style="width: 8vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
+                          filterBy="#{invInvoicePurchaseTable.statusName}"
+                          filterMatchMode="contains" 
+                          headerText="حالة الاشتراك "
+                          sortBy="#{invInvoicePurchaseTable.statusName}" 
+                          >
+                     <p:outputLabel value="#{invInvoicePurchaseTable.statusName}" /> 
                 </p:column>
 
                 <p:column style="width: 10vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"

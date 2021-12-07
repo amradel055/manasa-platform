@@ -43,6 +43,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
         quantity = (calculateQuantity(detailEntity, invInvoiceDTO)).setScale(3, BigDecimal.ROUND_HALF_UP);
         weight = detailEntity.getWeight() == null ? BigDecimal.ZERO : detailEntity.getWeight();
         cost = detailEntity.getCost() != null ? detailEntity.getCost().multiply(invInvoiceDTO.getRate()) : BigDecimal.ZERO;
+        
         if (invInvoiceDTO.getCompanyActivity() != null) {
             if (!invInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.INVOPENINGBALANCEITEMFORM)
                     && invInvoiceDTO.getCompanyActivity().equals(CompanyActivityClassEnum.Alumetal)) {
@@ -87,7 +88,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
     }
 
     private BigDecimal calDiscountAndAddonsRow(BigDecimal total, InvDetailDTO detailEntity, CompanyActivityClassEnum companyActivityClassEnum) {
-        BigDecimal discount = BigDecimal.ZERO;
+        BigDecimal discount = null;
         BigDecimal valueAfterDiscount = total;
 
         if (detailEntity.getCadoo()) {
@@ -160,7 +161,6 @@ public class InvGlobalServiceImpl implements InvGlobalService {
         }
         return quantity;
     }
-
     private BigDecimal AlumetalActivity(BigDecimal weight, BigDecimal total, BigDecimal quantity, BigDecimal cost) {
         if (weight == null || weight.compareTo(BigDecimal.ZERO) == 0) {
             total = quantity.multiply(cost);
@@ -169,7 +169,6 @@ public class InvGlobalServiceImpl implements InvGlobalService {
         }
         return total;
     }
-
     private BigDecimal RetailActivity(BigDecimal total, BigDecimal quantity, BigDecimal cost) {
         total = quantity.multiply(cost);
         return total;
@@ -194,6 +193,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
             invPurchaseInvoiceDTO.setTotalQuatity(BigDecimal.ZERO);
             invPurchaseInvoiceDTO.setTotalQuatityCost(BigDecimal.ZERO);
             invPurchaseInvoiceDTO.setTotalWeight(BigDecimal.ZERO);
+               invPurchaseInvoiceDTO.setDiscountValue(BigDecimal.ZERO);
             if (invPurchaseInvoiceDTO.getInvPurchaseInvoiceDetailList() != null && !invPurchaseInvoiceDTO.getInvPurchaseInvoiceDetailList().isEmpty()) {
                 List<InvDetailDTO> invPurchaseInvoiceDetailDTOList = new ArrayList<>();
 
@@ -214,6 +214,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
     public InvInvoiceDTO recalcHeadValues(InvInvoiceDTO invPurchaseInvoiceDTO) {
         resetHeadTotals(invPurchaseInvoiceDTO);
         invPurchaseInvoiceDTO = calculateDiscountValue(invPurchaseInvoiceDTO);
+
         invPurchaseInvoiceDTO.setTotalNetAfterDiscount((invPurchaseInvoiceDTO.getTotalNet().subtract(invPurchaseInvoiceDTO.getDiscountValue() != null ? invPurchaseInvoiceDTO.getDiscountValue() : BigDecimal.ZERO)).setScale(3, BigDecimal.ROUND_HALF_UP));
         invPurchaseInvoiceDTO = calculateTaxDiscValue(invPurchaseInvoiceDTO);
         invPurchaseInvoiceDTO = calculateTaxValue(invPurchaseInvoiceDTO);
@@ -225,8 +226,6 @@ public class InvGlobalServiceImpl implements InvGlobalService {
         invPurchaseInvoiceDTO.setTotalWithTaxValue(BigDecimal.ZERO);
         invPurchaseInvoiceDTO.setTaxdiscvalue(BigDecimal.ZERO);
         invPurchaseInvoiceDTO.setTaxvalue(BigDecimal.ZERO);
-        invPurchaseInvoiceDTO.setDiscountValue(BigDecimal.ZERO);
-
         invPurchaseInvoiceDTO.setTotalNetAfterDiscount(BigDecimal.ZERO);
         invPurchaseInvoiceDTO.setFinalNet(BigDecimal.ZERO);
     }
@@ -754,7 +753,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
     public InvDetailDTO validateDiscountColumn(InvDetailDTO detailDTO) {
         try {
             if (!validateDiscount(detailDTO)) {
-                detailDTO.setDiscount(BigDecimal.ZERO);
+                detailDTO.setDiscount(null);
                 detailDTO.setMsg("يجب ألا يزيد الخصم عن 100");
             }
         } catch (Exception e) {
