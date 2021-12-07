@@ -77,7 +77,7 @@
                 </panelGrid>
 
             </p:fieldset>
-            <p:fieldset legend="انشاء مصروفات"  style="margin-bottom:20px">
+            <p:fieldset legend="انشاءعميل جديد"  style="margin-bottom:20px">
 
 
                 <div class="col-xs-12">
@@ -87,7 +87,16 @@
                     <div class="ui-g">
 
                         <div class="ui-g-6 ui-xl-6">
+                             <div class="ui-g-12 ui-xl-12">
 
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 35%!important" id="ad0" a:autofocus="true" value="#{gmSubscriptionsFormDTOMB.organizationSiteId.code}"/>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 85px;margin-right: 3%;" value="رقم العميل"/>
+
+                                </div>
+                            </div>
                             <div class="ui-g-12 ui-xl-12">
 
                                 <div class="ui-g-6 ui-xl-6">
@@ -132,6 +141,31 @@
 
                                 </div>
                             </div>
+                               <div class="ui-g-12 ui-xl-12">
+                                          <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 35%!important" id="ad5" value="#{gmSubscriptionsFormDTOMB.organizationSiteId.nationIdSerial}"/>
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 85px;" value="طبعة الهوية"/>
+
+                                </div>
+                            </div>
+
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:calendar id="dateFrom" 
+                                            value="#{gmSubscriptionsFormDTOMB.organizationSiteId.birthdate}"
+                                            pattern="dd/MM/yyyy"
+                                            style="width:50%!important"/>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 95px; ;" value="تاريخ الميلاد"/>
+
+                            </div>
+                        </div>
+                       
                         </div>                        
                     </div>
                 </div>

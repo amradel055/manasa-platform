@@ -1234,7 +1234,6 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     public InvInventoryConverter getInvInventoryConverter() {
         return invInventoryConverter;
     }
-
     /**
      * @param invInventoryConverter the invInventoryConverter to set
      */

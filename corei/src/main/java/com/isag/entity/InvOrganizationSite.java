@@ -180,6 +180,8 @@ public class InvOrganizationSite extends BaseEntity {
     private Symbol projectName;
     @Column(name = "client_image")
     private String clientImage;
+    @Column(name = "nation_id_serial")
+    private Integer nationIdSerial;
 
     public InvOrganizationSite() {
     }
@@ -825,6 +827,20 @@ public class InvOrganizationSite extends BaseEntity {
      */
     public void setClientImage(String clientImage) {
         this.clientImage = clientImage;
+    }
+
+    /**
+     * @return the nationIdSerial
+     */
+    public Integer getNationIdSerial() {
+        return nationIdSerial;
+    }
+
+    /**
+     * @param nationIdSerial the nationIdSerial to set
+     */
+    public void setNationIdSerial(Integer nationIdSerial) {
+        this.nationIdSerial = nationIdSerial;
     }
 
 }

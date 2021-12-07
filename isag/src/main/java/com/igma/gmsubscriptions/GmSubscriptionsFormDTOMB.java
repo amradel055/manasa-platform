@@ -30,6 +30,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import static org.glassfish.jersey.internal.Errors.reset;
 import com.isag.uploadfile.FileUploadController;
+import com.sun.jndi.toolkit.url.Uri;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -169,7 +170,8 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
     
     
     public void leaveScreen() {
-        exit("../gmregistration/gmclientlist.xhtml");
+        if(getUri().contains("gmregistration")){
+        exit("../gmregistration/gmclientlist.xhtml");}
     }
     
     

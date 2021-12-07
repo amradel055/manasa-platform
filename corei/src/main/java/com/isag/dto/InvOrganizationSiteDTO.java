@@ -89,6 +89,7 @@ public class InvOrganizationSiteDTO extends BaseEntityDTO {
     private String globalFilter;
     private String legalAffairsRemark;
     private Boolean isEdited = Boolean.FALSE;
+    private Integer nationIdSerial;
     public InvOrganizationSiteDTO() {
     }
 
@@ -1175,6 +1176,20 @@ public class InvOrganizationSiteDTO extends BaseEntityDTO {
      */
     public void setIsEdited(Boolean isEdited) {
         this.isEdited = isEdited;
+    }
+
+    /**
+     * @return the nationIdSerial
+     */
+    public Integer getNationIdSerial() {
+        return nationIdSerial;
+    }
+
+    /**
+     * @param nationIdSerial the nationIdSerial to set
+     */
+    public void setNationIdSerial(Integer nationIdSerial) {
+        this.nationIdSerial = nationIdSerial;
     }
  
 
