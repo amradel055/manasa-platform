@@ -477,9 +477,9 @@
                     <p:column style="width: 8vh;text-align: -webkit-auto;border-radius: 0px" id="discountTotalc" headerText="خصم قيمه">
                         <p:inputText id="discountTotalTValue" 
                                      value="#{invPurchaseInvoiceDetailsTable.valueRowDiscount}" 
-                                     disabled="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail == null}"
+                                     disabled="#{invPurchaseInvoiceFormDTOMB.checkDiscountValue}"
                                      style="width:70%!important;display: inline!important">
-                            <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.validateDiscountColumn(invPurchaseInvoiceDetailsTable)}"
+                            <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.checkdiscountvalue(invPurchaseInvoiceDetailsTable)}"
                                     event="blur"
                                     update=" addTotalT netId totalQuantity totalWeight totalNet form:totalActualWeight form:totalNetAfterDiscount discountTotalT discountTotalTValue
                                     form:taxvalue form:totalWithTaxValue  :form:fieldSetId"/>
@@ -489,9 +489,9 @@
                     <p:column style="width: 8vh;text-align: -webkit-auto;border-radius: 0px" id="discountTotal" headerText="الخصم">
                         <p:inputText id="discountTotalT" 
                                      value="#{invPurchaseInvoiceDetailsTable.discount}" 
-                                     disabled="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail == null}"
+                                     disabled="#{invPurchaseInvoiceFormDTOMB.checkDiscountRate}"
                                      style="width:70%!important;display: inline!important">
-                            <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.validateDiscountColumn(invPurchaseInvoiceDetailsTable)}"
+                            <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.checkdiscountrate(invPurchaseInvoiceDetailsTable)}"
                                     event="blur"
                                     update=" addTotalT netId totalQuantity totalWeight totalNet form:totalActualWeight form:totalNetAfterDiscount  discountTotalT discountTotalTValue
                                     form:taxvalue form:totalWithTaxValue  :form:fieldSetId"/>
