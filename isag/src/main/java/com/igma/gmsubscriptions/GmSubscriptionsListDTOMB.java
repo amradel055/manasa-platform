@@ -121,6 +121,10 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
             return null;
         }
     }
+    
+    public void goTOAddForm(){
+        exit("../gmregistration/gmregistrationForm.xhtml");
+    }
 
     public String goToEdit() {
         try {
