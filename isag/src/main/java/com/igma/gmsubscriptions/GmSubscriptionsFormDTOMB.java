@@ -91,7 +91,7 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
                 reset();
                 fillDefaultList();
             } else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("editGmSubscriptions")) {
-                reset();
+                
                 getGmSubscriptionsDTO().setIsEdit(Boolean.TRUE);
                 fillInvInvoiceDTO();
                 fillDefaultList();

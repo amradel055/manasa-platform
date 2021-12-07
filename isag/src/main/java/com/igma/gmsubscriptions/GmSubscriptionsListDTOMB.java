@@ -130,7 +130,7 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
         try {
             if (getGmSubscriptionsDTOSelected() != null && getGmSubscriptionsDTOSelected().getId() > 0) {
                 ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-                context.getSessionMap().put("invPurchaseInvoiceIdSeclected", getGmSubscriptionsDTOSelected().getId());
+                context.getSessionMap().put("gmSubscriptionsIdSelected", getGmSubscriptionsDTOSelected().getId());
                 context.getSessionMap().put("ScreenMode", "editGmSubscriptions");
                 goToScreen();
                 return "";

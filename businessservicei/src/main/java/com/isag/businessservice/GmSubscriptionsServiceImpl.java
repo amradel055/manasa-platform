@@ -24,6 +24,7 @@ import com.isag.entity.IsagUser;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -209,6 +210,11 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
                         invInvoiceDTO.setGlBankId(gmSubscriptionsDTO.getGlBankId());
                         invInvoiceDTO.setRate(BigDecimal.ONE);
                         invInvoiceDTO.setRemarks(gmSubscriptionsDTO.getRemarks());
+                        invInvoiceDTO.setTotalNet(gmSubscriptionsDTO.getTotalNet());
+                        invInvoiceDTO.setTotalNetAfterDiscount(gmSubscriptionsDTO.getTotalNetAfterDiscount());
+                        invInvoiceDTO.setPayed(gmSubscriptionsDTO.getPayed());
+                        invInvoiceDTO.setRemain(gmSubscriptionsDTO.getRemain());
+                        invInvoiceDTO.setSerial(gmSubscriptionsDTO.getSerial());
                         invInvoiceDTO.setOrganizationSiteId(gmSubscriptionsDTO.getOrganizationSiteId());
                         glBankTransactionService.addCash(invInvoiceDTO, isagUser);
                     }
@@ -287,6 +293,13 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
         gmSubscriptionsDTO.setPayNet(entity.getPayNet());
         gmSubscriptionsDTO.setPayNet(entity.getPayNet());
         gmSubscriptionsDTO.setPayed(entity.getPayCash().add(entity.getPayNet()));
+        Date today = Date.from(Instant.now());
+        if(today.after(entity.getStartDate()) && today.before(entity.getEndDate())){
+        gmSubscriptionsDTO.setStatusName("مفعل");
+        
+        }else {
+        gmSubscriptionsDTO.setStatusName("معلق");
+        }
 
         List<GmSubscriptionsDetailDTO> gmSubscriptionsDTODetailsListDTO = gmSubscriptionsDTODetailsService.getAllGmSubscriptionsDetailDTOsByGmSubscriptionsDTOIdDTO(gmSubscriptionsDTO);
         gmSubscriptionsDTO.setGmSubscriptionsDetailList(gmSubscriptionsDTODetailsListDTO);
@@ -342,7 +355,7 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
         List<GmSubscriptionsDTO> gmSubscriptionsDTOList = new ArrayList<>();
         for (GmSubscriptions gmSubscriptions : gmSubscriptionsList) {
             GmSubscriptionsDTO gmSubscriptionsDTO = new GmSubscriptionsDTO();
-            gmSubscriptionsDTO = initDataForList(gmSubscriptions, gmSubscriptionsDTO);
+            gmSubscriptionsDTO = mapToDTO(gmSubscriptions, gmSubscriptionsDTO);
             gmSubscriptionsDTOList.add(gmSubscriptionsDTO);
         }
         return gmSubscriptionsDTOList;

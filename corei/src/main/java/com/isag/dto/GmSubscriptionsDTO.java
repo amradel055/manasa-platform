@@ -66,8 +66,8 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
     private List<GmSubscriptionsDetailDTO> gmSubscriptionsDetailList;
     private List<GmSubscriptionsDetailDTO> gmSubscriptionsDetailDeletedList;
     private GmSubscriptionsDetailDTO gmSubscriptionsDetailDTOSelected;
-
-
+    
+    private String statusName;
 
     public GmSubscriptionsDTO() {
     }
@@ -191,6 +191,9 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
     }
 
     public Integer getStatus() {
+        if(status == null){
+          status = 0 ;
+        }
         return status;
     }
 
@@ -628,5 +631,19 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
      */
     public void setPaymentType(Integer paymentType) {
         this.paymentType = paymentType;
+    }
+
+    /**
+     * @return the statusName
+     */
+    public String getStatusName() {
+        return statusName;
+    }
+
+    /**
+     * @param statusName the statusName to set
+     */
+    public void setStatusName(String statusName) {
+        this.statusName = statusName;
     }
 }
