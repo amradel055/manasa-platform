@@ -15,7 +15,6 @@ import com.isag.dto.GlBankDTO;
 import com.isag.dto.GmSubscriptionsDTO;
 import com.isag.dto.GmSubscriptionsDetailDTO;
 import com.isag.dto.InvOrganizationSiteDTO;
-import com.isag.dto.InventoryDelegatorDTO;
 import com.isag.isag.AutoComplete;
 import com.isag.isag.BaseFormBean;
 import com.isag.print.IReportService;
@@ -28,9 +27,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-import static org.glassfish.jersey.internal.Errors.reset;
 import com.isag.uploadfile.FileUploadController;
-import com.sun.jndi.toolkit.url.Uri;
 import javax.servlet.http.HttpServletRequest;
 
 /**

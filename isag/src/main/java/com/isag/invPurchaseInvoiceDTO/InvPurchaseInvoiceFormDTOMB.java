@@ -37,10 +37,10 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
             String error = validateloginDistributedScreens(getInvInvoiceDTO().getScreenName());
             if (error.isEmpty()) {
                 load();
-                posSetting();
-                if (getUri().contains("invposinvoiceform")) {
-                    changeFocus("form:invPurchaseInvoiceDetailsTable:0:invItemNameIn");
-                }
+//                posSetting();
+//                if (getUri().contains("invposinvoiceform")) {
+//                    changeFocus("form:invPurchaseInvoiceDetailsTable:0:invItemNameIn");
+//                }
             } else {
                 setErrorGlobal(error);
                 exit("../base/error.xhtml");

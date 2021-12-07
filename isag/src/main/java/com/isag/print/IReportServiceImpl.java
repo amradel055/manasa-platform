@@ -10,12 +10,14 @@ import com.google.zxing.EncodeHintType;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import com.isag.businessservice.InvInventoryService;
 import com.isag.businessservice.reports.entityBean.completionRateReportEntity;
 import com.isag.businessservice.reports.entityBean.rscExtractJournalReportPrintEntity;
 import com.isag.businessservice.reports.searchBean.RscContractExtractionWorkunitSearchBean;
 import com.isag.define.ScreenNameClassEnum;
 import com.isag.dto.GmSubscriptionsDTO;
 import com.isag.dto.InvDetailDTO;
+import com.isag.dto.InvInventoryDTO;
 import com.isag.dto.InvInvoiceDTO;
 import com.isag.dto.RscContractRegisterDTO;
 import com.isag.dto.RscExtractRegisterDTO;
@@ -55,6 +57,7 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ejb.EJB;
 import javax.faces.context.FacesContext;
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
@@ -75,6 +78,8 @@ import tafqeet.Tafqeet;
  */
 public class IReportServiceImpl implements IReportService {
 
+    @EJB
+    InvInventoryService invInventoryService;
     /*  public <T> void fillReport(HashMap hashMap, String reportPath, List<T> listBean, String exportType) throws JRException, IOException {
         JRBeanCollectionDataSource beanCollectionDataSource = new JRBeanCollectionDataSource(listBean);
         JasperPrint jasperPrint = JasperFillManager.fillReport(reportPath, hashMap, beanCollectionDataSource);
@@ -401,7 +406,6 @@ public class IReportServiceImpl implements IReportService {
             hashMap.put("discountValue", invPurchasegmSubscriptionsDTO.getDiscountValue());
             hashMap.put("netValue", invPurchasegmSubscriptionsDTO.getFinalNet());
 
-
             printQRCode(invPurchasegmSubscriptionsDTO, hashMap);
 
             return hashMap;
@@ -537,7 +541,18 @@ public class IReportServiceImpl implements IReportService {
             hashMap.put("oldBalance", oldCustomerBalance.add(invPurchaseInvoiceDTO.getPayed()));
             hashMap.put("oldBalanceText", "رصيد قديم");
 
-            printQRCodeNew(invPurchaseInvoiceDTO, hashMap);
+//            String sellerName = invPurchaseInvoiceDTO.getInvInventoryId().getName();
+//        String sallerTRN = invPurchaseInvoiceDTO.getInvInventoryId().getDaribaValue();
+//        String invoiceDateTime = date;
+//        String totalWithVAT = invPurchaseInvoiceDTO.getFinalNet().toString();
+//        String VATTotal = invPurchaseInvoiceDTO.getTaxvalue().toString();
+            if (invPurchaseInvoiceDTO.getInvInventoryId() != null 
+                    && invPurchaseInvoiceDTO.getDate() != null
+                    && invPurchaseInvoiceDTO.getFinalNet() != null
+                    && invPurchaseInvoiceDTO.getTaxvalue() != null) {
+                InvInventoryDTO inventoryDTO = invInventoryService.findInventoryDTO(invPurchaseInvoiceDTO.getInvInventoryId().getId());
+                printQRCodeNew(invPurchaseInvoiceDTO, hashMap, inventoryDTO );
+            }
 
             return hashMap;
         } catch (Exception e) {
@@ -1354,23 +1369,22 @@ public class IReportServiceImpl implements IReportService {
             e.printStackTrace();
         }
     }
-    
+
     private static final TimeZone utc = TimeZone.getTimeZone("UTC");
     private static final SimpleDateFormat isoFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
-    private void printQRCodeNew(InvInvoiceDTO invPurchaseInvoiceDTO, HashMap hashMap) throws UnsupportedEncodingException, IOException {
+    private void printQRCodeNew(InvInvoiceDTO invPurchaseInvoiceDTO, HashMap hashMap,InvInventoryDTO inventoryDTO ) throws UnsupportedEncodingException, IOException {
         isoFormatter.setTimeZone(utc);
         String date = isoFormatter.format(invPurchaseInvoiceDTO.getDate());
-        
-        
-        String sellerName = invPurchaseInvoiceDTO.getInvInventoryId().getName();
-        String sallerTRN = invPurchaseInvoiceDTO.getInvInventoryId().getDaribaValue();
+
+        String sellerName = inventoryDTO.getName();
+        String sallerTRN = inventoryDTO.getDaribaValue();
         String invoiceDateTime = date;
         String totalWithVAT = invPurchaseInvoiceDTO.getFinalNet().toString();
         String VATTotal = invPurchaseInvoiceDTO.getTaxvalue().toString();
 
         byte[] tag1Hex = sellerName.getBytes("UTF-8");
-        sellerName =  new String(tag1Hex, StandardCharsets.UTF_8);
+        sellerName = new String(tag1Hex, StandardCharsets.UTF_8);
         String L1 = Integer.toHexString(sellerName.length());
         String L2 = Integer.toHexString(sallerTRN.length());
         String L3 = Integer.toHexString(invoiceDateTime.length());
@@ -1394,7 +1408,7 @@ public class IReportServiceImpl implements IReportService {
         return result.toString();
     }
 
-     public void reportQRCodeNew(HashMap hashMap, String qrCodeText, Integer GallaryId) {
+    public void reportQRCodeNew(HashMap hashMap, String qrCodeText, Integer GallaryId) {
         String filePath = "JD" + GallaryId + ".png";
         int size = 200;
         String fileType = "png";
@@ -1461,7 +1475,5 @@ public class IReportServiceImpl implements IReportService {
             e.printStackTrace();
         }
     }
-
-    
 
 }
