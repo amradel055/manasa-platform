@@ -972,7 +972,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         dTO.setEmployeeNumber(entity.getEmployeeNumber());
         dTO.setCallFirstDate(entity.getCallFirstDate());
         dTO.setDiscription(entity.getDiscription());
-
+        dTO.setNationIdSerial(entity.getNationIdSerial());
         if (entity.getAssignedTo() != null) {
             EmployeeDTO employeeDTO = new EmployeeDTO();
             employeeDTO.setId(entity.getAssignedTo().getId());
@@ -1090,6 +1090,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         entity.setId(dTO.getId());
         entity.setName(dTO.getName());
         entity.setCode(dTO.getCode());
+        entity.setNationIdSerial(dTO.getNationIdSerial());
         if (dTO.getCode() == null) {
             String maxCode = findMaxCodeForOrganizationSiteByBranchId(isagUser.getBranchId().getId(), 0);
             entity.setCode(maxCode);
