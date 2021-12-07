@@ -7,6 +7,7 @@ package com.isag.invPurchaseInvoiceDTO;
 
 import com.isag.businessservice.InvPurchaseInvoiceService_1;
 import com.isag.define.ScreenNameClassEnum;
+import com.isag.dto.InvDetailDTO;
 import com.isag.isag.InventoryBasicDataForm;
 import java.math.BigDecimal;
 import javax.annotation.PostConstruct;
@@ -23,7 +24,9 @@ import javax.inject.Named;
 @Named(value = "invPurchaseInvoiceFormDTOMB")
 @ViewScoped
 public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
-
+    
+    private Boolean checkDiscountValue = false ;
+    private Boolean checkDiscountRate = false ;
     // EJBs
     @EJB
     private InvPurchaseInvoiceService_1 invPurchaseInvoiceService;
@@ -79,6 +82,8 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
             saveError(e, "InvPurchaseInvoiceFormMB", "load");
         }
     }
+    
+   
 
     @Override
     public String save() {
@@ -158,6 +163,35 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
      */
     public void setRemain(BigDecimal remain) {
         this.remain = remain;
+    }
+    
+    
+    /**
+     * @return the checkDiscountValue
+     */
+    public Boolean getCheckDiscountValue() {
+        return checkDiscountValue;
+    }
+
+    /**
+     * @param checkDiscountValue the checkDiscountValue to set
+     */
+    public void setCheckDiscountValue(Boolean checkDiscountValue) {
+        this.checkDiscountValue = checkDiscountValue;
+    }
+
+    /**
+     * @return the checkDiscountRate
+     */
+    public Boolean getCheckDiscountRate() {
+        return checkDiscountRate;
+    }
+
+    /**
+     * @param checkDiscountRate the checkDiscountRate to set
+     */
+    public void setCheckDiscountRate(Boolean checkDiscountRate) {
+        this.checkDiscountRate = checkDiscountRate;
     }
 
 }
