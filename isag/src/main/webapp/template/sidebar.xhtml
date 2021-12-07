@@ -1094,12 +1094,16 @@
                                     <p:menuitem id="gm_lnk550" value="إنشاء البنود" icon="&#xE8D2;" url="/faces/views/gmitemsymbol/itemsymbollist.xhtml" 
                                                 rendered="#{userData.userScreens['gmitemsymbol'].view or userData.isAdmin}"
                                                 />
+                                    <p:menuitem id="gm_lnk552" value="تسجيل عميل جديد" icon="&#xE8D2;" url="/faces/views/gmregistration/gmclientlist.xhtml" 
+                                                rendered="#{userData.userScreens['gmregistration'].view or userData.isAdmin}"
+                                                />
                                     <p:menuitem id="gm_lnk551" value="استعلام" icon="&#xE8D2;" url="/faces/views/gmsubscriptionstatue/gmsubscriptionslist.xhtml" 
                                                 rendered="#{userData.userScreens['gmsubscriptionstatue'].view or userData.isAdmin}"
                                                 />
                                     <p:menuitem id="gm_lnk552" value="الإشتراكات" icon="&#xE8D2;" url="/faces/views/gmsubscriptions/gmsubscriptionslist.xhtml" 
                                                 rendered="#{userData.userScreens['gmsubscriptions'].view or userData.isAdmin}"
                                                 />
+                                    
                                 </p:submenu>
                             </p:submenu>
                             <p:submenu id="sr_sm55" label="الترحيلات" icon="&#xE8D2;"
