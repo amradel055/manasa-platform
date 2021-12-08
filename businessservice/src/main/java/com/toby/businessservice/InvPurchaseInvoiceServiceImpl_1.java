@@ -1412,19 +1412,20 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
 
                 invPurchaseInvoiceDetailsService.deleteInvPurchaseInvoiceDetailListDTO(invInvoiceDTO.getInvPurchaseInvoiceDetailsDeletedList());
 
-                String error = invPurchaseInvoiceDetailsService.addInvPurchaseInvoiceDetailsDTO(invInvoiceDTO.getInvPurchaseInvoiceDetailList(), invInvoiceDTO, tobyUser);
+                List<InvDetailDTO> listDetail = invPurchaseInvoiceDetailsService.addInvPurchaseInvoiceDetailsDTO(invInvoiceDTO.getInvPurchaseInvoiceDetailList(), invInvoiceDTO, tobyUser);
 
                 invInvoiceDTO.setInvPurchaseInvoiceId(invPurchaseInvoice.getId());
                 if (invPurchaseInvoice.getId() == null) {
                     invAddingOrderService.save(invInvoiceDTO, tobyUser);
                 }
 
-                if (error != null && !error.isEmpty()) {
-                    invInvoiceDTO.setMsg(error);
+                if (listDetail.get(0).getMsg() != null && !listDetail.get(0).getMsg().isEmpty()) {
+                    invInvoiceDTO.setMsg(listDetail.get(0).getMsg());
                     dao.rollbackQuery();
                 } else {
                     invInvoiceDTO.setId(invPurchaseInvoice.getId());
                     invInvoiceDTO.setSerial(invPurchaseInvoice.getSerial());
+                    invInvoiceDTO.setInvPurchaseInvoiceDetailList(listDetail);
 //                    invInvoiceDTO = mapToDTO(invPurchaseInvoice, invInvoiceDTO, false); 
 //                    invInvoiceDTO = invGlobalService.updateSummition(invInvoiceDTO,false);
                 }
@@ -1439,7 +1440,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             }
         } catch (Exception e) {
             invInvoiceDTO.setMsg(e.toString());
-            dao.rollbackQuery();
+                dao.rollbackQuery();
         }
 
         return invInvoiceDTO;

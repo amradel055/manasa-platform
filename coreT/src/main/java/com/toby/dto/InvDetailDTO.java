@@ -671,7 +671,10 @@ public class InvDetailDTO extends BaseEntityDTO implements  Comparable< InvDetai
      * @return the quantityOfOneUnit
      */
     public BigDecimal getQuantityOfOneUnit() {
-        return quantityOfOneUnit;
+        if(quantityOfOneUnit==null){
+       quantityOfOneUnit=BigDecimal.ZERO;      
+        }
+        return quantityOfOneUnit;     
     }
 
     /**

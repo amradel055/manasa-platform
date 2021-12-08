@@ -80,6 +80,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.LazyDataModel;
@@ -381,6 +382,24 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
             saveError(e, "InvPurchaseInvoiceFormMB", "addInvPurchaseInvoiceDetail");
         }
     }
+        public String goToAdd() {
+        try {
+            ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+            context.getSessionMap().put("ScreenMode", "addGmSubscriptions");
+            context.getSessionMap().put("typeActivity", 0);
+            goToScreen();
+
+            return "";
+        } catch (Exception e) {
+            saveError(e, "InvPurchaseInvoiceListMB", "goToAdd");
+            return null;
+        }
+    }
+        public void goToScreen() {
+        exit("../proworkorder/proworkorderform.xhtml");
+    }
+    
+    
 
     public void validatedetail() {
         String error = invGlobalService.validateSave(getInvInvoiceDTO().getInvPurchaseInvoiceDetailList(),

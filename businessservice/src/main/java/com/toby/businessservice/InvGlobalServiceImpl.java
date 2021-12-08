@@ -1056,11 +1056,11 @@ public class InvGlobalServiceImpl implements InvGlobalService {
             BigDecimal quantityOfOneUnit, InvInventory invInventory, InvItem invItem,
             CompanyActivityClassEnum companyActivityClassEnum, ScreenNameClassEnum screenNameClassEnum, Integer detailId) {
 
-        if (companyActivityClassEnum.equals(CompanyActivityClassEnum.RetailSaleForClothFactory)
-                && (ScreenNameClassEnum.INVSALESINVOICEFORM.equals(screenNameClassEnum)
-                || ScreenNameClassEnum.PROWORKORDER.equals(screenNameClassEnum)
-                || ScreenNameClassEnum.INVRETURNSALESFORM.equals(screenNameClassEnum)
-                || ScreenNameClassEnum.PROFACTORYDELIVERY.equals(screenNameClassEnum))) {
+//        if (companyActivityClassEnum.equals(CompanyActivityClassEnum.RetailSaleForClothFactory)
+//                && (ScreenNameClassEnum.INVSALESINVOICEFORM.equals(screenNameClassEnum)
+//                || ScreenNameClassEnum.PROWORKORDER.equals(screenNameClassEnum)
+//                || ScreenNameClassEnum.INVRETURNSALESFORM.equals(screenNameClassEnum)
+//                || ScreenNameClassEnum.PROFACTORYDELIVERY.equals(screenNameClassEnum))) {
             dTO.setNumber(number);
             dTO.setQuantityOfOneUnit(quantityOfOneUnit);
             dTO.setClothNumber(clothNumber);
@@ -1086,7 +1086,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
             if (ScreenNameClassEnum.PROFACTORYDELIVERY.equals(screenNameClassEnum) && detailId != null) {
                 dTO.setInvPurchaseInvoiceDetailId(detailId);
             }
-        }
+//        }
         dTO.setId(id);
         dTO.setSerial(serial);
 

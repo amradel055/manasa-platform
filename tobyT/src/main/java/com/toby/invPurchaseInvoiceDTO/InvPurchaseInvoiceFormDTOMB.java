@@ -27,6 +27,9 @@ import javax.inject.Named;
 public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
 
     private Boolean checkFactory;
+    
+     private Boolean checkDiscountValue = false ;
+    private Boolean checkDiscountRate = false ;
 
 // EJBs
     @EJB
@@ -100,6 +103,7 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
             saveError(e, "InvPurchaseInvoiceFormMB", "load");
         }
     }
+    
 
     @Override
     public String save() {
@@ -300,6 +304,34 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
      */
     public void setCheckFactory(Boolean checkFactory) {
         this.checkFactory = checkFactory;
+    }
+
+    /**
+     * @return the checkDiscountValue
+     */
+    public Boolean getCheckDiscountValue() {
+        return checkDiscountValue;
+    }
+
+    /**
+     * @param checkDiscountValue the checkDiscountValue to set
+     */
+    public void setCheckDiscountValue(Boolean checkDiscountValue) {
+        this.checkDiscountValue = checkDiscountValue;
+    }
+
+    /**
+     * @return the checkDiscountRate
+     */
+    public Boolean getCheckDiscountRate() {
+        return checkDiscountRate;
+    }
+
+    /**
+     * @param checkDiscountRate the checkDiscountRate to set
+     */
+    public void setCheckDiscountRate(Boolean checkDiscountRate) {
+        this.checkDiscountRate = checkDiscountRate;
     }
 
 }

@@ -525,14 +525,18 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
     }
 
     @Override
-    public String addInvPurchaseInvoiceDetailsDTO(List<InvDetailDTO> invPurchaseInvoiceDetailList, InvInvoiceDTO invInvoiceDTO, TobyUser tobyUser) {
+    public List<InvDetailDTO> addInvPurchaseInvoiceDetailsDTO(List<InvDetailDTO> invPurchaseInvoiceDetailList, InvInvoiceDTO invInvoiceDTO, TobyUser tobyUser) {
         String error = null;
+        List<InvDetailDTO> list = new  ArrayList<>();
         if (invPurchaseInvoiceDetailList != null && !invPurchaseInvoiceDetailList.isEmpty()) {
             error = invGlobalService.validateSave(invPurchaseInvoiceDetailList, invInvoiceDTO.getInvInventoryId().getId(),
                     invInvoiceDTO.getScreenName(), invInvoiceDTO.getInventorySetupDTO().getNegativeSell(),
                     (invInvoiceDTO.getLoadedSerial() != null), invInvoiceDTO.getInventorySetupDTO().getSellBuy(), invInvoiceDTO.getCompanyActivity());
             if (error != null && !error.isEmpty()) {
-                return error;
+                InvDetailDTO dTO = new InvDetailDTO();
+                dTO.setMsg(error);
+                list.add(dTO);
+                return list;
             }
             InvPurchaseInvoiceDetail detail;
             for (InvDetailDTO detailDTO : invPurchaseInvoiceDetailList) {
@@ -549,13 +553,16 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
 
                 detail = dao.updateEntity(detail);
                 detailDTO.setId(detail.getId());
+                detailDTO.setIndex(detail.getId());
+                detailDTO.setSerial(detail.getSerial());
+                list.add(detailDTO);
                 if (detailDTO.getProDetailTypeDTOList() != null && !detailDTO.getProDetailTypeDTOList().isEmpty()) {
                     invPurchaseInvoiceDetailDetailService.save(detailDTO, tobyUser);
                 }
             }
         }
 
-        return error;
+        return list;
     }
 
     public BigDecimal updateCostAvarage(InvDetailDTO invDetailDTO, BigDecimal quantityItemsStoreByDate) {
