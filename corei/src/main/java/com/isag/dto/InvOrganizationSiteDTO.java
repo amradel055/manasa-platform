@@ -210,7 +210,7 @@ public class InvOrganizationSiteDTO extends BaseEntityDTO {
 
     @Override
     public String toString() {
-        return name + " " + code;
+        return name + " " + code + " " + phone + " " + nationIdSerial ;
     }
 
     /**

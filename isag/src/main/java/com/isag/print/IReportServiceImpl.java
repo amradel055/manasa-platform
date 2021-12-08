@@ -550,8 +550,8 @@ public class IReportServiceImpl implements IReportService {
                     && invPurchaseInvoiceDTO.getDate() != null
                     && invPurchaseInvoiceDTO.getFinalNet() != null
                     && invPurchaseInvoiceDTO.getTaxvalue() != null) {
-                InvInventoryDTO inventoryDTO = invInventoryService.findInventoryDTO(invPurchaseInvoiceDTO.getInvInventoryId().getId());
-                printQRCodeNew(invPurchaseInvoiceDTO, hashMap, inventoryDTO );
+               
+                printQRCodeNew(invPurchaseInvoiceDTO, hashMap );
             }
 
             return hashMap;
@@ -1373,12 +1373,12 @@ public class IReportServiceImpl implements IReportService {
     private static final TimeZone utc = TimeZone.getTimeZone("UTC");
     private static final SimpleDateFormat isoFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
-    private void printQRCodeNew(InvInvoiceDTO invPurchaseInvoiceDTO, HashMap hashMap,InvInventoryDTO inventoryDTO ) throws UnsupportedEncodingException, IOException {
+    private void printQRCodeNew(InvInvoiceDTO invPurchaseInvoiceDTO, HashMap hashMap ) throws UnsupportedEncodingException, IOException {
         isoFormatter.setTimeZone(utc);
         String date = isoFormatter.format(invPurchaseInvoiceDTO.getDate());
 
-        String sellerName = inventoryDTO.getName();
-        String sallerTRN = inventoryDTO.getDaribaValue();
+        String sellerName = invPurchaseInvoiceDTO.getInvInventoryId().getName();
+        String sallerTRN = invPurchaseInvoiceDTO.getInvInventoryId().getDaribaValue();
         String invoiceDateTime = date;
         String totalWithVAT = invPurchaseInvoiceDTO.getFinalNet().toString();
         String VATTotal = invPurchaseInvoiceDTO.getTaxvalue().toString();

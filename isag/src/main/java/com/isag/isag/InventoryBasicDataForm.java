@@ -13,6 +13,7 @@ import com.isag.businessservice.InvAddingOrderService;
 import com.isag.businessservice.InvDelegatorService;
 import com.isag.businessservice.InvDialogueService;
 import com.isag.businessservice.InvGlobalService;
+import com.isag.businessservice.InvInventoryService;
 import com.isag.businessservice.InvItemService;
 import com.isag.businessservice.InvOpeningBalanceItemService;
 import com.isag.businessservice.InvPurchaseInvoiceService_1;
@@ -199,6 +200,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     private AutoCompleteService autoCompleteService;
     @EJB
     SupplierAccountService supplierAccountService;
+    @EJB
+    InvInventoryService invInventoryService;
 
     @Override
     public abstract String save();
@@ -842,6 +845,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
     public void print() {
         getInvInvoiceDTO().setBarcodeSelect(Boolean.FALSE);
+        InvInventoryDTO inventoryDTO = invInventoryService.findInventoryDTO(getInvInvoiceDTO().getInvInventoryId().getId());
+        getInvInvoiceDTO().setInvInventoryId(inventoryDTO);
         iReportService.printReportInvoice(getInvInvoiceDTO(), getUserData());
     }
 
@@ -1010,7 +1015,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
             setCheckDiscountRate(true);
             invDetailDTO.setDiscount((invDetailDTO.getValueRowDiscount().divide(invDetailDTO.getNet(), 3, RoundingMode.HALF_UP)).multiply(new BigDecimal(100)));
             invDetailDTO.getNet().subtract(invDetailDTO.getValueRowDiscount());
-            
+
         } else {
             setCheckDiscountRate(false);
             invDetailDTO.setDiscount(null);
@@ -1026,7 +1031,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
             BigDecimal discount = invDetailDTO.getNet().multiply(invDetailDTO.getDiscount().divide(new BigDecimal(100)));
             invDetailDTO.setValueRowDiscount(discount);
             invDetailDTO.setNet(invDetailDTO.getNet().subtract(discount));
-            
+
         } else {
             setCheckDiscountValue(false);
             invDetailDTO.setValueRowDiscount(null);

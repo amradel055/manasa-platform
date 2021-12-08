@@ -295,10 +295,10 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
         gmSubscriptionsDTO.setPayed(entity.getPayCash().add(entity.getPayNet()));
         Date today = Date.from(Instant.now());
         if(today.after(entity.getStartDate()) && today.before(entity.getEndDate())){
-        gmSubscriptionsDTO.setStatusName("مفعل");
+        gmSubscriptionsDTO.setStatusName("ساري");
         
         }else {
-        gmSubscriptionsDTO.setStatusName("معلق");
+        gmSubscriptionsDTO.setStatusName("منتهي");
         }
 
         List<GmSubscriptionsDetailDTO> gmSubscriptionsDTODetailsListDTO = gmSubscriptionsDTODetailsService.getAllGmSubscriptionsDetailDTOsByGmSubscriptionsDTOIdDTO(gmSubscriptionsDTO);

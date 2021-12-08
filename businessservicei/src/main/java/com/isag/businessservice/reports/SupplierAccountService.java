@@ -9,6 +9,7 @@ import com.isag.businessservice.reports.searchBean.SupplierAccountSearchBean;
 
 import com.isag.views.OrganizationSiteStatementView;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -28,6 +29,8 @@ public interface SupplierAccountService {
     public BigDecimal getAccountForOrganizationSite(Integer organizationSiteId);
     
     public BigDecimal getAccountForOrganizationSiteNew(Integer organizationSiteId);
+    
+    public List<OrganizationSiteStatementView> getAllOrganizationSiteStatementSearchBeanNew(Integer organizationSiteId, Date dateFrom, Date dateTo);
 
 
 }

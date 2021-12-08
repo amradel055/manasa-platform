@@ -10,9 +10,12 @@ import com.isag.core.GenericDAO;
 
 import com.isag.views.OrganizationSiteStatementView;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.EJB;
@@ -173,9 +176,8 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
         List<OrganizationSiteStatementView> details = dao.findListByQuery(stringBuilder.toString(), params);
         return details;
     }
-    
-    
-     @Override
+
+    @Override
     public BigDecimal getAccountForOrganizationSiteNew(Integer organizationSiteId) {
         Map<String, Object> params = new HashMap<>();
 
@@ -261,5 +263,618 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
         return (details != null && !details.isEmpty()) ? (details.get(0) == null ? BigDecimal.ZERO : details.get(0).setScale(3, BigDecimal.ROUND_UP)) : BigDecimal.ZERO;
     }
 
+    @Override
+    public List<OrganizationSiteStatementView> getAllOrganizationSiteStatementSearchBeanNew(Integer organizationSiteId, Date dateFrom, Date dateTo) {
+
+        String dateStrFrom = null;
+        String dateStrTo = null;
+            if (dateFrom != null) {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                dateStrFrom = dateFormat.format(dateFrom);
+
+            }
+            if (dateTo != null) {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                dateStrTo = dateFormat.format(dateTo);
+
+            }
+        
+
+        StringBuilder query = new StringBuilder();
+
+        query.append("select * from (SELECT   0 AS `serial`,\n"
+                + "        `ios`.`open_balance_date` AS `date`,\n"
+                + "        'رصيد افتتاحي لجهة التعامل' AS `ScreenName`,\n"
+                + "        '' AS `gl_bank_name`,\n"
+                + "         `ios`.`id` AS `id`,\n"
+                + "        `ios`.`code` AS `code`,\n"
+                + "        `ios`.`name` AS `name`,\n"
+                + "        `ios`.`type` AS `type`,\n"
+                + "        NULL AS `inst_contract_serial`,\n"
+                + "         `ios`.`remark` AS `remarks`,\n"
+                + "        NULL AS `supplier_invoice_number`,\n"
+                + "        NULL AS `total_before_fracture`,\n"
+                + "        NULL AS `fracture_number`,\n"
+                + "        NULL AS `value_fracture`,\n"
+                + "        NULL AS `look`,\n"
+                + "        NULL AS `is_done`,\n"
+                + "        IFNULL(`ios`.`open_balance_debit`, 0) AS `exitt`, IFNULL(`ios`.`open_balance_credit`, 0) AS `adding`\n"
+                + "                    FROM  `inv_organization_site` `ios` WHERE  \n"
+                + "                    `ios`.id =   \n"+ organizationSiteId + "\n");
+                if (dateStrFrom != null) {
+                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `ios`.open_balance_date >= '" ).append(dateStrFrom).append(  "' ,true)");
+                }
+                if (dateStrTo != null) {
+                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL , `ios`.open_balance_date <= '" ).append(dateStrTo).append(  "' ,true)");
+                }
+                query.append( "            UNION ALL     SELECT `ic`.`serial` AS `serial`,\n"
+                + "        `ic`.`date` AS `date`,\n"
+                + "        'عقد تقسيط' AS `ScreenName`,\n"
+                + "        `gb`.`name` AS `gl_bank_name`,\n"
+                + "        `ios`.`id` AS `id`,\n"
+                + "        `ios`.`code` AS `code`,\n"
+                + "        `ios`.`name` AS `name`,\n"
+                + "        `ios`.`type` AS `type`,\n"
+                + "        `ic`.`serial` AS `inst_contract_serial`, \n"
+                + "        `ic`.`remark` AS `remarks`,\n"
+                + "        NULL AS `supplier_invoice_number`,\n"
+                + "        NULL AS `total_before_fracture`,\n"
+                + "        NULL AS `fracture_number`,\n"
+                + "        NULL AS `value_fracture`,\n"
+                + "        NULL AS `look`,\n"
+                + "        NULL AS `is_done`,\n"
+                + "        IFNULL(`ic`.`total_value`, 0) AS `exitt`,\n"
+                + "        0 AS `adding`\n"
+                + "       FROM ((`inst_contract` `ic`\n"
+                + "        LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `ic`.`organization_site_id`)))\n"
+                + "        LEFT JOIN `gl_bank` `gb` ON ((`gb`.`id` = `ic`.`bank_id`)))\n"
+                + "         WHERE  `ic`.`organization_site_id` =   \n"+ organizationSiteId + "\n");
+                if (dateStrFrom != null) {
+                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `ic`.`date` >= '" ).append(dateStrFrom).append(  "' ,true)");
+                }
+                if (dateStrTo != null) {
+                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL , `ic`.`date` <= '" ).append(dateStrTo).append(  "' ,true)");
+                }
+                query.append( "                UNION ALL\n"
+                + "SELECT  `ic`.`serial` AS `serial`,\n"
+                + "        `ic`.`date` AS `date`,\n"
+                + "        'عقد تقسيط' AS `ScreenName`,\n"
+                + "        `gb`.`name` AS `gl_bank_name`,\n"
+                + "        `ios`.`id` AS `id`,\n"
+                + "        `ios`.`code` AS `code`,\n"
+                + "        `ios`.`name` AS `name`,\n"
+                + "        `ios`.`type` AS `type`,\n"
+                + "        `ic`.`serial` AS `inst_contract_serial`, \n"
+                + "        `ic`.`remark` AS `remarks`,\n"
+                + "        NULL AS `supplier_invoice_number`,\n"
+                + "        NULL AS `total_before_fracture`,\n"
+                + "        NULL AS `fracture_number`,\n"
+                + "        NULL AS `value_fracture`,\n"
+                + "        NULL AS `look`,\n"
+                + "        NULL AS `is_done`,\n"
+                + "        0 AS `exitt`,\n"
+                + "        IFNULL(`ic`.`advance_payment`, 0) AS `adding`\n"
+                + "       FROM ((`inst_contract` `ic`\n"
+                + "        LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `ic`.`organization_site_id`)))\n"
+                + "        LEFT JOIN `gl_bank` `gb` ON ((`gb`.`id` = `ic`.`bank_id`)))\n"
+                + "         WHERE  `ic`.`organization_site_id` =   \n"+ organizationSiteId + "\n");
+                if (dateStrFrom != null) {
+                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `ic`.`date` >= '" ).append(dateStrFrom).append(  "' ,true)");
+                }
+                if (dateStrTo != null) {
+                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL , `ic`.`date` <= '" ).append(dateStrTo).append(  "' ,true)");
+                }
+                query.append(  "                UNION ALL\n"
+                + "SELECT `rer`.`serial` AS `serial`,\n"
+                + "		`rer`.`date` AS `date`,\n"
+                + "        'مستخلص' AS `ScreenName`,\n"
+                + "        '' AS `gl_bank_name`,\n"
+                + "        `ios`.`id` AS `organization_site_id`,\n"
+                + "        `ios`.`code` AS `organization_code`,\n"
+                + "        `ios`.`name` AS `organization_name`,\n"
+                + "        `ios`.`type` AS `organization_type`,\n"
+                + "        NULL AS `inst_contract_serial`, \n"
+                + "        `rer`.`remarks` AS `remarks`,\n"
+                + "        NULL AS `supplier_invoice_number`,\n"
+                + "        NULL AS `total_before_fracture`,\n"
+                + "        NULL AS `fracture_number`,\n"
+                + "        NULL AS `value_fracture`,\n"
+                + "        NULL AS `look`,\n"
+                + "        NULL AS `is_done`,\n"
+                + "        0 AS `exitt`, \n"
+                + "        IFNULL(`rer`.`total_value`, 0) AS `adding`\n"
+                + "                	FROM (`rsc_extract_register` `rer`\n"
+                + "        LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `rer`.`site_id`))) WHERE\n"
+                + "        ((`rer`.`serial` IS NOT NULL)\n"
+                + "            AND (`rer`.`site_id` IS NOT NULL)) AND `rer`.`site_id` =   \n"+ organizationSiteId + "\n");
+                if (dateStrFrom != null) {
+                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `rer`.`date` >= '" ).append(dateStrFrom).append(  "' ,true)");
+                }
+                if (dateStrTo != null) {
+                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL , `rer`.`date` <= '" ).append(dateStrTo).append(  "' ,true)");
+                }
+                query.append(  "                UNION ALL\n"
+                + "SELECT `rer`.`serial` AS `serial`,\n"
+                + "		`rer`.`date` AS `date`,\n"
+                + "        'مستخلص' AS `ScreenName`,\n"
+                + "        '' AS `gl_bank_name`,\n"
+                + "        `ios`.`id` AS `organization_site_id`,\n"
+                + "        `ios`.`code` AS `organization_code`,\n"
+                + "        `ios`.`name` AS `organization_name`,\n"
+                + "        `ios`.`type` AS `organization_type`,\n"
+                + "        NULL AS `inst_contract_serial`, \n"
+                + "        `rer`.`remarks` AS `remarks`,\n"
+                + "        NULL AS `supplier_invoice_number`,\n"
+                + "        NULL AS `total_before_fracture`,\n"
+                + "        NULL AS `fracture_number`,\n"
+                + "        NULL AS `value_fracture`,\n"
+                + "        NULL AS `look`,\n"
+                + "        NULL AS `is_done`,\n"
+                + "        IFNULL(`rer`.`total_value`, 0) AS `exitt`,\n"
+                + "        0 AS `adding`\n"
+                + "                	FROM (`rsc_extract_register` `rer`\n"
+                + "        LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `rer`.`customer_id`)))\n"
+                + "         WHERE\n"
+                + "        ((`rer`.`serial` IS NOT NULL)\n"
+                + "            AND (`rer`.`customer_id` IS NOT NULL)) AND `rer`.`customer_id` =   \n"+ organizationSiteId + "\n");
+                if (dateStrFrom != null) {
+                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `rer`.`date` >= '" ).append(dateStrFrom).append(  "' ,true)");
+                }
+                if (dateStrTo != null) {
+                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL , `rer`.`date` <= '" ).append(dateStrTo).append(  "' ,true)");
+                }
+                query.append(  "                UNION ALL\n"
+                + "SELECT `ipi`.`serial` AS `serial`,\n"
+                + "        `ipi`.`date` AS `date`,\n"
+                + "        'فاتورة مشتريات' AS `ScreenName`,\n"
+                + "        '' AS `gl_bank_name`,\n"
+                + "        `ios`.`id` AS `organization_site_id`,\n"
+                + "        `ios`.`code` AS `organization_code`,\n"
+                + "        `ios`.`name` AS `organization_name`,\n"
+                + "        `ios`.`type` AS `organization_type`,\n"
+                + "        NULL AS `inst_contract_serial`, \n"
+                + "        `ipi`.`remarks` AS `remarks`,\n"
+                + "        ipi.supplier_invoice_number AS `supplier_invoice_number`,\n"
+                + "        SUM(IFNULL(`ipid`.`total_before_fracture`, 0))  AS `total_before_fracture`,\n"
+                + "        SUM(IFNULL(`ipid`.`fracture_number`, 0)) AS `fracture_number`,\n"
+                + "        SUM(IFNULL(`ipid`.`value_fracture`, 0))  AS `value_fracture`,\n"
+                + "        `ipi`.`look` AS `look`,\n"
+                + "        `ipi`.`is_done` AS `is_done`,\n"
+                + "        0 AS `exitt`, IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`, 14,0,0,0),0) AS `adding`\n"
+                + "                	FROM `inv_purchase_invoice` `ipi` LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
+                + "                    LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `ipi`.`organization_site_id`))\n"
+                + "                	WHERE ((`ipi`.`type` = 0) AND (`ipi`.`date` IS NOT NULL)) \n"
+                + "                     AND ipi.organization_site_id =   \n"+ organizationSiteId + "\n");
+                if (dateStrFrom != null) {
+                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `ipi`.`date` >= '" ).append(dateStrFrom).append(  "' ,true)");
+                }
+                if (dateStrTo != null) {
+                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL , `ipi`.`date` <= '" ).append(dateStrTo).append(  "' ,true)");
+                }
+                query.append(  "                    group by ipi.id\n"
+                + "                    \n"
+                + "                UNION ALL SELECT `ipi`.`serial` AS `serial`,\n"
+                + "        `ipi`.`date` AS `date`,\n"
+                + "        'فاتورة مبيعات' AS `ScreenName`,\n"
+                + "        '' AS `gl_bank_name`,\n"
+                + "        `ios`.`id` AS `organization_site_id`,\n"
+                + "        `ios`.`code` AS `organization_code`,\n"
+                + "        `ios`.`name` AS `organization_name`,\n"
+                + "        `ios`.`type` AS `organization_type`,\n"
+                + "        NULL AS `inst_contract_serial`, \n"
+                + "        `ipi`.`remarks` AS `remarks`,\n"
+                + "        ipi.supplier_invoice_number AS `supplier_invoice_number`,\n"
+                + "        SUM(IFNULL(`ipid`.`total_before_fracture`, 0))  AS `total_before_fracture`,\n"
+                + "        SUM(IFNULL(`ipid`.`fracture_number`, 0)) AS `fracture_number`,\n"
+                + "        SUM(IFNULL(`ipid`.`value_fracture`, 0))  AS `value_fracture`,\n"
+                + "        `ipi`.`look` AS `look`,\n"
+                + "        `ipi`.`is_done` AS `is_done`,\n"
+                + "        IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`,  14,0,0,0),0)  AS `exitt`, 0 AS `adding`\n"
+                + "                    FROM `inv_purchase_invoice` `ipi` LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
+                + "                    LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `ipi`.`organization_site_id`))\n"
+                + "                    WHERE ((`ipi`.`type` = 1)  AND (`ipi`.`date` IS NOT NULL)) \n"
+                + "                     AND ipi.organization_site_id =   \n"+ organizationSiteId + "\n");
+                if (dateStrFrom != null) {
+                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `ipi`.`date` >= '" ).append(dateStrFrom).append(  "' ,true)");
+                }
+                if (dateStrTo != null) {
+                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL , `ipi`.`date` <= '" ).append(dateStrTo).append(  "' ,true)");
+                }
+                query.append(  "                    group by ipi.id\n"
+                + "                UNION ALL SELECT `ipi`.`serial` AS `serial`,\n"
+                + "        `ipi`.`date` AS `date`,\n"
+                + "        'مردود مشتريات' AS `ScreenName`,\n"
+                + "        '' AS `gl_bank_name`,\n"
+                + "        `ios`.`id` AS `organization_site_id`,\n"
+                + "        `ios`.`code` AS `organization_code`,\n"
+                + "        `ios`.`name` AS `organization_name`,\n"
+                + "        `ios`.`type` AS `organization_type`,\n"
+                + "        NULL AS `inst_contract_serial`, \n"
+                + "        `ipi`.`remarks` AS `remarks`,\n"
+                + "        ipi.supplier_invoice_number AS `supplier_invoice_number`,\n"
+                + "        SUM(IFNULL(`ipid`.`total_before_fracture`, 0))  AS `total_before_fracture`,\n"
+                + "        SUM(IFNULL(`ipid`.`fracture_number`, 0)) AS `fracture_number`,\n"
+                + "        SUM(IFNULL(`ipid`.`value_fracture`, 0))  AS `value_fracture`,\n"
+                + "        `ipi`.`look` AS `look`,\n"
+                + "        `ipi`.`is_done` AS `is_done`,\n"
+                + "        IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`,  14,0,0,0),0)  AS `exitt`, 0 AS `adding`\n"
+                + "                    FROM  `inv_purchase_invoice` `ipi` LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
+                + "                    LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `ipi`.`organization_site_id`))\n"
+                + "                    WHERE ((`ipi`.`type` = 2)  AND (`ipi`.`date` IS NOT NULL)) \n"
+                + "                     AND ipi.organization_site_id =   \n"+ organizationSiteId + "\n");
+                if (dateStrFrom != null) {
+                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `ipi`.`date` >= '" ).append(dateStrFrom).append(  "' ,true)");
+                }
+                if (dateStrTo != null) {
+                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL , `ipi`.`date` <= '" ).append(dateStrTo).append(  "' ,true)");
+                }
+                query.append(  "                    group by ipi.id\n"
+                + "                UNION ALL SELECT `ipi`.`serial` AS `serial`,\n"
+                + "        `ipi`.`date` AS `date`,\n"
+                + "        'مردود مبيعات' AS `ScreenName`,\n"
+                + "        '' AS `gl_bank_name`,\n"
+                + "        `ios`.`id` AS `organization_site_id`,\n"
+                + "        `ios`.`code` AS `organization_code`,\n"
+                + "        `ios`.`name` AS `organization_name`,\n"
+                + "        `ios`.`type` AS `organization_type`,\n"
+                + "        NULL AS `inst_contract_serial`, \n"
+                + "        `ipi`.`remarks` AS `remarks`,\n"
+                + "        ipi.supplier_invoice_number AS `supplier_invoice_number`,\n"
+                + "        SUM(IFNULL(`ipid`.`total_before_fracture`, 0))  AS `total_before_fracture`,\n"
+                + "        SUM(IFNULL(`ipid`.`fracture_number`, 0)) AS `fracture_number`,\n"
+                + "        SUM(IFNULL(`ipid`.`value_fracture`, 0))  AS `value_fracture`,\n"
+                + "        `ipi`.`look` AS `look`,\n"
+                + "        `ipi`.`is_done` AS `is_done`,\n"
+                + "         0 AS `exitt`, IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`,  14,0,0,0),0) AS `adding`\n"
+                + "                    FROM `inv_purchase_invoice` `ipi` LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
+                + "                    LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `ipi`.`organization_site_id`))\n"
+                + "                    WHERE ((`ipi`.`type` = 3) AND (`ipi`.`date` IS NOT NULL)) \n"
+                + "                     AND ipi.organization_site_id =   \n"+ organizationSiteId + "\n");
+                if (dateStrFrom != null) {
+                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `ipi`.`date` >= '" ).append(dateStrFrom).append(  "' ,true)");
+                }
+                if (dateStrTo != null) {
+                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL , `ipi`.`date` <= '" ).append(dateStrTo).append(  "' ,true)");
+                }
+                query.append(  "                    group by ipi.id\n"
+                + "                UNION ALL SELECT \n"
+                + "               `gbt`.`serial` AS `serial`,\n"
+                + "        `gbt`.`date` AS `date`,\n"
+                + "        'قبض نقدي' AS `ScreenName`,\n"
+                + "        `gb`.`name` AS `gl_bank_name`,\n"
+                + "        `ios`.`id` AS `id`,\n"
+                + "        `ios`.`code` AS `code`,\n"
+                + "        `ios`.`name` AS `name`,\n"
+                + "        `ios`.`type` AS `type`,\n"
+                + "        `ic`.`serial` AS `inst_contract_serial`, \n"
+                + "         `gbt`.`remark` AS `remarks`,\n"
+                + "        NULL AS `supplier_invoice_number`,\n"
+                + "        NULL AS `total_before_fracture`,\n"
+                + "        NULL AS `fracture_number`,\n"
+                + "        NULL AS `value_fracture`,\n"
+                + "        `gbt`.`look` AS `look`,\n"
+                + "        `gbt`.`is_done` AS `is_done`,\n"
+                + "        0 AS `exitt`, IFNULL(`gbtd`.`value_local`, 0) AS `adding`\n"
+                + "                    FROM  (((((`gl_bank_transaction` `gbt`\n"
+                + "        LEFT JOIN `gl_bank_transaction_detail` `gbtd` ON ((`gbt`.`id` = `gbtd`.`gl_bank_transaction_id`)))\n"
+                + "        LEFT JOIN `gl_bank` `gb` ON ((`gb`.`id` = `gbt`.`gl_bank_id`)))\n"
+                + "        LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `gbtd`.`organization_site_id`)))\n"
+                + "        LEFT JOIN `inst_contract_detail` `icd` ON ((`icd`.`id` = `gbt`.`installment_id`)))\n"
+                + "        LEFT JOIN `inst_contract` `ic` ON ((`ic`.`id` = `icd`.`inst_contract_id`)))\n"
+                + "                    WHERE ((`gbt`.`payment_type` = 0) \n"
+                + "                     AND gbtd.organization_site_id =   \n"+ organizationSiteId + "\n");
+                if (dateStrFrom != null) {
+                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `gbt`.`date` >= '" ).append(dateStrFrom).append(  "' ,true)");
+                }
+                if (dateStrTo != null) {
+                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL , `gbt`.`date` <= '" ).append(dateStrTo).append(  "' ,true)");
+                }
+                query.append(  "                AND (`gbt`.`transaction_type` = 1)) \n"
+                + "                    GROUP BY  `gbt`.`id`\n"
+                + "                UNION ALL SELECT  `gbt`.`serial` AS `serial`,\n"
+                + "        `gbt`.`date` AS `date`,\n"
+                + "        'قبض شيك' AS `ScreenName`,\n"
+                + "        `gb`.`name` AS `gl_bank_name`,\n"
+                + "        `ios`.`id` AS `id`,\n"
+                + "        `ios`.`code` AS `code`,\n"
+                + "        `ios`.`name` AS `name`,\n"
+                + "        `ios`.`type` AS `type`,\n"
+                + "        `ic`.`serial` AS `inst_contract_serial`, \n"
+                + "         `gbt`.`remark` AS `remarks`,\n"
+                + "        NULL AS `supplier_invoice_number`,\n"
+                + "        NULL AS `total_before_fracture`,\n"
+                + "        NULL AS `fracture_number`,\n"
+                + "        NULL AS `value_fracture`,\n"
+                + "        `gbt`.`look` AS `look`,\n"
+                + "        `gbt`.`is_done` AS `is_done`,\n"
+                + "        0 AS `exitt`, IFNULL(`gbtd`.`value_local`, 0) AS `adding`\n"
+                + "                	FROM (((((`gl_bank_transaction` `gbt`\n"
+                + "        LEFT JOIN `gl_bank_transaction_detail` `gbtd` ON ((`gbt`.`id` = `gbtd`.`gl_bank_transaction_id`)))\n"
+                + "        LEFT JOIN `gl_bank` `gb` ON ((`gb`.`id` = `gbt`.`gl_bank_id`)))\n"
+                + "        LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `gbtd`.`organization_site_id`)))\n"
+                + "        LEFT JOIN `inst_contract_detail` `icd` ON ((`icd`.`id` = `gbt`.`installment_id`)))\n"
+                + "        LEFT JOIN `inst_contract` `ic` ON ((`ic`.`id` = `icd`.`inst_contract_id`)))\n"
+                + "                    WHERE (`gbt`.`payment_type` = 1) \n"
+                + "                     AND gbtd.organization_site_id =     \n"+ organizationSiteId + "\n");
+                if (dateStrFrom != null) {
+                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `gbt`.`date` >= '" ).append(dateStrFrom).append(  "' ,true)");
+                }
+                if (dateStrTo != null) {
+                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL , `gbt`.`date` <= '" ).append(dateStrTo).append(  "' ,true)");
+                }
+                query.append(  "                AND (`gbt`.`transaction_type` = 1)\n"
+                + "                    GROUP BY  `gbt`.`id`\n"
+                + "                UNION ALL SELECT `gbt`.`serial` AS `serial`,\n"
+                + "        `gbt`.`date` AS `date`,\n"
+                + "        'قبض شيك خطي' AS `ScreenName`,\n"
+                + "        `gb`.`name` AS `gl_bank_name`,\n"
+                + "        `ios`.`id` AS `id`,\n"
+                + "        `ios`.`code` AS `code`,\n"
+                + "        `ios`.`name` AS `name`,\n"
+                + "        `ios`.`type` AS `type`,\n"
+                + "        `ic`.`serial` AS `inst_contract_serial`, \n"
+                + "         `gbt`.`remark` AS `remarks`,\n"
+                + "        NULL AS `supplier_invoice_number`,\n"
+                + "        NULL AS `total_before_fracture`,\n"
+                + "        NULL AS `fracture_number`,\n"
+                + "        NULL AS `value_fracture`,\n"
+                + "        `gbt`.`look` AS `look`,\n"
+                + "        `gbt`.`is_done` AS `is_done`, 0 AS `exitt`, IFNULL(`gbtd`.`value_local`, 0) AS `adding`\n"
+                + "                    FROM (((((`gl_bank_transaction` `gbt`\n"
+                + "        LEFT JOIN `gl_bank_transaction_detail` `gbtd` ON ((`gbt`.`id` = `gbtd`.`gl_bank_transaction_id`)))\n"
+                + "        LEFT JOIN `gl_bank` `gb` ON ((`gb`.`id` = `gbt`.`gl_bank_id`)))\n"
+                + "        LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `gbtd`.`organization_site_id`)))\n"
+                + "        LEFT JOIN `inst_contract_detail` `icd` ON ((`icd`.`id` = `gbt`.`installment_id`)))\n"
+                + "        LEFT JOIN `inst_contract` `ic` ON ((`ic`.`id` = `icd`.`inst_contract_id`)))\n"
+                + "                    WHERE (`gbt`.`payment_type` = 2)  \n"
+                + "                     AND gbtd.organization_site_id =     \n"+ organizationSiteId + "\n");
+                if (dateStrFrom != null) {
+                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `gbt`.`date` >= '" ).append(dateStrFrom).append(  "' ,true)");
+                }
+                if (dateStrTo != null) {
+                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL , `gbt`.`date` <= '" ).append(dateStrTo).append(  "' ,true)");
+                }
+                query.append(  "                AND (`gbt`.`transaction_type` = 1)\n"
+                + "                    GROUP BY  `gbt`.`id`\n"
+                + "                UNION ALL SELECT   `gbt`.`serial` AS `serial`,\n"
+                + "        `gbt`.`date` AS `date`,\n"
+                + "        'صرف نقدي' AS `ScreenName`,\n"
+                + "        `gb`.`name` AS `gl_bank_name`,\n"
+                + "        `ios`.`id` AS `id`,\n"
+                + "        `ios`.`code` AS `code`,\n"
+                + "        `ios`.`name` AS `name`,\n"
+                + "        `ios`.`type` AS `type`,\n"
+                + "        `ic`.`serial` AS `inst_contract_serial`, \n"
+                + "         `gbt`.`remark` AS `remarks`,\n"
+                + "        NULL AS `supplier_invoice_number`,\n"
+                + "        NULL AS `total_before_fracture`,\n"
+                + "        NULL AS `fracture_number`,\n"
+                + "        NULL AS `value_fracture`,\n"
+                + "        `gbt`.`look` AS `look`,\n"
+                + "        `gbt`.`is_done` AS `is_done`,\n"
+                + "        SUM(IFNULL(`gbtd`.`value_local`, 0)) AS `exitt`, 0 AS `adding`\n"
+                + "                    FROM (((((`gl_bank_transaction` `gbt`\n"
+                + "        LEFT JOIN `gl_bank_transaction_detail` `gbtd` ON ((`gbt`.`id` = `gbtd`.`gl_bank_transaction_id`)))\n"
+                + "        LEFT JOIN `gl_bank` `gb` ON ((`gb`.`id` = `gbt`.`gl_bank_id`)))\n"
+                + "        LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `gbtd`.`organization_site_id`)))\n"
+                + "        LEFT JOIN `inst_contract_detail` `icd` ON ((`icd`.`id` = `gbt`.`installment_id`)))\n"
+                + "        LEFT JOIN `inst_contract` `ic` ON ((`ic`.`id` = `icd`.`inst_contract_id`)))\n"
+                + "                    WHERE (`gbt`.`payment_type` = 0)  \n"
+                + "                     AND gbtd.organization_site_id =     \n"+ organizationSiteId + "\n");
+                if (dateStrFrom != null) {
+                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `gbt`.`date` >= '" ).append(dateStrFrom).append(  "' ,true)");
+                }
+                if (dateStrTo != null) {
+                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL , `gbt`.`date` <= '" ).append(dateStrTo).append(  "' ,true)");
+                }
+                query.append( "                AND (`gbt`.`transaction_type` = 0)\n"
+                + "                    GROUP BY  `gbt`.`id`\n"
+                + "                UNION ALL SELECT     `gbt`.`serial` AS `serial`,\n"
+                + "        `gbt`.`date` AS `date`,\n"
+                + "        'صرف شيك' AS `ScreenName`,\n"
+                + "        `gb`.`name` AS `gl_bank_name`,\n"
+                + "        `ios`.`id` AS `id`,\n"
+                + "        `ios`.`code` AS `code`,\n"
+                + "        `ios`.`name` AS `name`,\n"
+                + "        `ios`.`type` AS `type`,\n"
+                + "        `ic`.`serial` AS `inst_contract_serial`, \n"
+                + "         `gbt`.`remark` AS `remarks`,\n"
+                + "        NULL AS `supplier_invoice_number`,\n"
+                + "        NULL AS `total_before_fracture`,\n"
+                + "        NULL AS `fracture_number`,\n"
+                + "        NULL AS `value_fracture`,\n"
+                + "        `gbt`.`look` AS `look`,\n"
+                + "        `gbt`.`is_done` AS `is_done`,\n"
+                + "        SUM(IFNULL(`gbtd`.`value_local`, 0)) AS `exitt`, 0 AS `adding`\n"
+                + "                    FROM (((((`gl_bank_transaction` `gbt`\n"
+                + "        LEFT JOIN `gl_bank_transaction_detail` `gbtd` ON ((`gbt`.`id` = `gbtd`.`gl_bank_transaction_id`)))\n"
+                + "        LEFT JOIN `gl_bank` `gb` ON ((`gb`.`id` = `gbt`.`gl_bank_id`)))\n"
+                + "        LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `gbtd`.`organization_site_id`)))\n"
+                + "        LEFT JOIN `inst_contract_detail` `icd` ON ((`icd`.`id` = `gbt`.`installment_id`)))\n"
+                + "        LEFT JOIN `inst_contract` `ic` ON ((`ic`.`id` = `icd`.`inst_contract_id`)))\n"
+                + "                    WHERE (`gbt`.`payment_type` = 1) \n"
+                + "                     AND gbtd.organization_site_id =     \n"+ organizationSiteId + "\n");
+                if (dateStrFrom != null) {
+                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `gbt`.`date` >= '" ).append(dateStrFrom).append(  "' ,true)");
+                }
+                if (dateStrTo != null) {
+                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL , `gbt`.`date` <= '" ).append(dateStrTo).append(  "' ,true)");
+                }
+                query.append(  "                AND (`gbt`.`transaction_type` = 0)\n"
+                + "                    GROUP BY  `gbt`.`id` \n"
+                + "                UNION ALL SELECT  `gbt`.`serial` AS `serial`,\n"
+                + "        `gbt`.`date` AS `date`,\n"
+                + "        'صرف شيك خطي' AS `ScreenName`,\n"
+                + "        `gb`.`name` AS `gl_bank_name`,\n"
+                + "        `ios`.`id` AS `id`,\n"
+                + "        `ios`.`code` AS `code`,\n"
+                + "        `ios`.`name` AS `name`,\n"
+                + "        `ios`.`type` AS `type`,\n"
+                + "        `ic`.`serial` AS `inst_contract_serial`, \n"
+                + "         `gbt`.`remark` AS `remarks`,\n"
+                + "        NULL AS `supplier_invoice_number`,\n"
+                + "        NULL AS `total_before_fracture`,\n"
+                + "        NULL AS `fracture_number`,\n"
+                + "        NULL AS `value_fracture`,\n"
+                + "        `gbt`.`look` AS `look`,\n"
+                + "        `gbt`.`is_done` AS `is_done`,\n"
+                + "        SUM(IFNULL(`gbtd`.`value_local`, 0)) AS `exitt`,  0 AS `adding` \n"
+                + "                    FROM (((((`gl_bank_transaction` `gbt`\n"
+                + "        LEFT JOIN `gl_bank_transaction_detail` `gbtd` ON ((`gbt`.`id` = `gbtd`.`gl_bank_transaction_id`)))\n"
+                + "        LEFT JOIN `gl_bank` `gb` ON ((`gb`.`id` = `gbt`.`gl_bank_id`)))\n"
+                + "        LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `gbtd`.`organization_site_id`)))\n"
+                + "        LEFT JOIN `inst_contract_detail` `icd` ON ((`icd`.`id` = `gbt`.`installment_id`)))\n"
+                + "        LEFT JOIN `inst_contract` `ic` ON ((`ic`.`id` = `icd`.`inst_contract_id`)))\n"
+                + "                    WHERE  (`gbt`.`payment_type` = 2) \n"
+                + "                     AND gbtd.organization_site_id =     \n"+ organizationSiteId + "\n");
+                if (dateStrFrom != null) {
+                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `gbt`.`date` >= '" ).append(dateStrFrom).append(  "' ,true)");
+                }
+                if (dateStrTo != null) {
+                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL , `gbt`.`date` <= '" ).append(dateStrTo).append(  "' ,true)");
+                }
+                query.append(  "                AND (`gbt`.`transaction_type` = 0)\n"
+                + "                    GROUP BY `gbt`.`id`\n"
+                + "                UNION ALL  SELECT `in`.`serial` AS `serial`,\n"
+                + "        `in`.`date` AS `date`,\n"
+                + "        'اشعار اضافة للعميل' AS `ScreenName`,\n"
+                + "        '' AS `gl_bank_name`,\n"
+                + "        `ios`.`id` AS `id`,\n"
+                + "        `ios`.`code` AS `code`,\n"
+                + "        `ios`.`name` AS `name`,\n"
+                + "        `ios`.`type` AS `type`,\n"
+                + "        NULL AS `inst_contract_serial`,\n"
+                + "         `in`.`remark` AS `remarks`,\n"
+                + "        NULL AS `supplier_invoice_number`,\n"
+                + "        NULL AS `total_before_fracture`,\n"
+                + "        NULL AS `fracture_number`,\n"
+                + "        NULL AS `value_fracture`,\n"
+                + "        NULL AS `look`,\n"
+                + "        NULL AS `is_done`,\n"
+                + "         IFNULL(`in`.`value`, 0) AS `exitt`,  0 AS `adding`\n"
+                + "                    FROM (`inv_notice` `in`\n"
+                + "        LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `in`.`organization_site_id`)))   WHERE (`in`.`type` = 0)  \n"
+                + "                and `in`.organization_site_id =      \n"+ organizationSiteId + "\n");
+                if (dateStrFrom != null) {
+                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `in`.`date` AS `date` >= '" ).append(dateStrFrom).append(  "' ,true)");
+                }
+                if (dateStrTo != null) {
+                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL , `in`.`date` AS `date` <= '" ).append(dateStrTo).append(  "' ,true)");
+                }
+                query.append(  "                UNION ALL SELECT  `in`.`serial` AS `serial`,\n"
+                + "        `in`.`date` AS `date`,\n"
+                + "         'اشعار خصم عملاء' AS `ScreenName`,\n"
+                + "        '' AS `gl_bank_name`,\n"
+                + "        `ios`.`id` AS `id`,\n"
+                + "        `ios`.`code` AS `code`,\n"
+                + "        `ios`.`name` AS `name`,\n"
+                + "        `ios`.`type` AS `type`,\n"
+                + "        NULL AS `inst_contract_serial`,\n"
+                + "         `in`.`remark` AS `remarks`,\n"
+                + "        NULL AS `supplier_invoice_number`,\n"
+                + "        NULL AS `total_before_fracture`,\n"
+                + "        NULL AS `fracture_number`,\n"
+                + "        NULL AS `value_fracture`,\n"
+                + "        NULL AS `look`,\n"
+                + "        NULL AS `is_done`,\n"
+                + "        0 AS `exitt`, IFNULL(`in`.`value`, 0) AS `adding`\n"
+                + "                    FROM (`inv_notice` `in`\n"
+                + "        LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `in`.`organization_site_id`))) WHERE  (`in`.`type` = 1 or `in`.`type` = 4 )  \n"
+                + "                and `in`.organization_site_id =      \n"+ organizationSiteId + "\n");
+                if (dateStrFrom != null) {
+                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `in`.`date` AS `date` >= '" ).append(dateStrFrom).append(  "' ,true)");
+                }
+                if (dateStrTo != null) {
+                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL , `in`.`date` AS `date` <= '" ).append(dateStrTo).append(  "' ,true)");
+                }
+                query.append(  "                UNION ALL SELECT  `in`.`serial` AS `serial`,\n"
+                + "        `in`.`date` AS `date`,\n"
+                + "       'اشعار اضافة موردين' AS `ScreenName`,\n"
+                + "        '' AS `gl_bank_name`,\n"
+                + "        `ios`.`id` AS `id`,\n"
+                + "        `ios`.`code` AS `code`,\n"
+                + "        `ios`.`name` AS `name`,\n"
+                + "        `ios`.`type` AS `type`,\n"
+                + "        NULL AS `inst_contract_serial`,\n"
+                + "         `in`.`remark` AS `remarks`,\n"
+                + "        NULL AS `supplier_invoice_number`,\n"
+                + "        NULL AS `total_before_fracture`,\n"
+                + "        NULL AS `fracture_number`,\n"
+                + "        NULL AS `value_fracture`,\n"
+                + "        NULL AS `look`,\n"
+                + "        NULL AS `is_done`,\n"
+                + "        0 AS `exitt`,IFNULL(`in`.`value`, 0) AS `adding`\n"
+                + "                    FROM (`inv_notice` `in`\n"
+                + "        LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `in`.`organization_site_id`))) WHERE  (`in`.`type` = 2) \n"
+                + "                and `in`.organization_site_id =   \n"+ organizationSiteId + "\n");
+                if (dateStrFrom != null) {
+                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `in`.`date` AS `date` >= '" ).append(dateStrFrom).append(  "' ,true)");
+                }
+                if (dateStrTo != null) {
+                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL , `in`.`date` AS `date` <= '" ).append(dateStrTo).append(  "' ,true)");
+                }
+                query.append(  "                UNION ALL SELECT  `in`.`serial` AS `serial`,\n"
+                + "        `in`.`date` AS `date`,\n"
+                + "        'اشعار خصم موردين' AS `ScreenName`,\n"
+                + "        '' AS `gl_bank_name`,\n"
+                + "        `ios`.`id` AS `id`,\n"
+                + "        `ios`.`code` AS `code`,\n"
+                + "        `ios`.`name` AS `name`,\n"
+                + "        `ios`.`type` AS `type`,\n"
+                + "        NULL AS `inst_contract_serial`,\n"
+                + "         `in`.`remark` AS `remarks`,\n"
+                + "        NULL AS `supplier_invoice_number`,\n"
+                + "        NULL AS `total_before_fracture`,\n"
+                + "        NULL AS `fracture_number`,\n"
+                + "        NULL AS `value_fracture`,\n"
+                + "        NULL AS `look`,\n"
+                + "        NULL AS `is_done`,\n"
+                + "        IFNULL(`in`.`value`, 0) AS `exitt`,  0 AS `adding`\n"
+                + "                    FROM  (`inv_notice` `in`\n"
+                + "        LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `in`.`organization_site_id`)))   WHERE   (`in`.`type` = 3) \n"
+                + "                and `in`.organization_site_id =      \n"+ organizationSiteId + "\n");
+                if (dateStrFrom != null) {
+                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `in`.`date` AS `date` >= '" ).append(dateStrFrom).append(  "' ,true)");
+                }
+                if (dateStrTo != null) {
+                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL , `in`.`date` AS `date` <= '" ).append(dateStrTo).append(  "' ,true)");
+                }
+                query.append( ")  as s order by date");
+
+        List<Object[]> res = dao.executeNativeQuery(query.toString());
+        return findAllOrganizationSiteStatementSearchBeanNew(res);
+    }
+    
+    public  List<OrganizationSiteStatementView> findAllOrganizationSiteStatementSearchBeanNew(List<Object[]> res) {
+
+        List<OrganizationSiteStatementView> organizationSiteStatementViewList = new ArrayList<>();
+
+        Iterator it = res.iterator();
+        while (it.hasNext()) {
+            Object[] line = (Object[]) it.next();
+            OrganizationSiteStatementView view = new OrganizationSiteStatementView();
+            view.setSerial(((Long) line[0]).intValue());
+            view.setDate((Date) line[1]);
+            view.setScreenName((String) line[2]);
+            view.setGlBankName((String) line[3]);
+            view.setOrganizationSiteId((Integer) line[4]);
+            view.setOrganizationCode((String) line[5]);
+            view.setOrganizationName((String) line[6]);
+            view.setOrganizationType((Integer) line[7]);
+            view.setInstContractSerial((Integer) line[8]);
+            view.setRemarks((String) line[9]);
+            view.setSupplierInvoiceNumber((String) line[10]);
+            view.setTotalBeforeFracture((BigDecimal) line[11]);
+            view.setFractureNumber((BigDecimal) line[12]);
+            view.setValueFracture((BigDecimal) line[13]);
+            view.setLook((Integer) line[14]);
+            view.setIsDone((Integer) line[15]);
+            view.setExitt((BigDecimal) line[16]);
+            view.setAdding((BigDecimal) line[17]);
+                    
+            organizationSiteStatementViewList.add(view);
+        }
+        return organizationSiteStatementViewList;
+    }
 
 }

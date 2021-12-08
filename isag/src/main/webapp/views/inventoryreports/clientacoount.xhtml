@@ -54,26 +54,6 @@
                     <div class="ui-g-12 ui-xl-12">
 
                         <div class="ui-g-6 ui-xl-6">
-                            <p:autoComplete style="width:40%!important" 
-                                            dropdown="true"
-                                            converter="#{supplierAccountReportMB.invOrgSiteConverter}"
-                                            value="#{supplierAccountReportMB.supplierAccountSearchBean.toorganizationNameDTO}"
-                                            var="organization"
-                                            itemLabel="#{organization}" 
-                                            itemValue="#{organization}"
-                                            forceSelection="true"
-                                            completeMethod="#{supplierAccountReportMB.completOrgSiteTo}" 
-                                            maxResults="10">
-                            </p:autoComplete>
-                        </div>
-                        <div class="ui-g-6 ui-xl-6">
-                            <p:outputLabel style="width: 75px" value="#{userData.userDDs['TO_CUSTOM']}"/>
-
-                        </div>
-                    </div>
-                    <div class="ui-g-12 ui-xl-12">
-
-                        <div class="ui-g-6 ui-xl-6">
                             <p:autoComplete style="width:40%!important"
                                             dropdown="true"
                                             converter="#{supplierAccountReportMB.invOrgSiteConverter}"
