@@ -516,7 +516,7 @@ public class IReportServiceImpl implements IReportService {
 //        String VATTotal = "150.00";
         
         
-        String sellerName = "شركة الثوب العالمي للتجارة المحدودة ";
+        String sellerName = invPurchaseInvoiceDTO.getGallaryId().getSellerName();
         String sallerTRN = invPurchaseInvoiceDTO.getGallaryId().getDaribaValue();
         String invoiceDateTime = date;
         String totalWithVAT = invPurchaseInvoiceDTO.getFinalNet().toString();
