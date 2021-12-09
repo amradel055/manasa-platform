@@ -159,4 +159,6 @@ public interface OrganizationSiteService {
      public List<InvOrganizationSiteDTO> getcontractorORSupplierByBranchIdDTO(Integer branchId, boolean active);
      
      public InvOrganizationSiteDTO mapToDTOSmall(InvOrganizationSite invOrganizationSite);
+     
+     public List<InvOrganizationSite> getInvOrganizationSiteByCustomerId(Integer customerId);
 }
