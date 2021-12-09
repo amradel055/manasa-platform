@@ -40,7 +40,7 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
     private Integer serialTax;
     private Boolean taxFlagFinal;
     private Integer generalJournalId;
-    private Integer status;
+    private Boolean status;
     private Boolean taxDiscFlag;
     private BigDecimal taxDiscValue;
     private BigDecimal payCash;
@@ -190,14 +190,14 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
         this.generalJournalId = generalJournalId;
     }
 
-    public Integer getStatus() {
+    public Boolean getStatus() {
         if(status == null){
-          status = 0 ;
+          status = false ;
         }
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(Boolean status) {
         this.status = status;
     }
 

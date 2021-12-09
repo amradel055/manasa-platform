@@ -71,9 +71,9 @@
                                filterBy="#{invInvoicePurchaseTable.status}" 
                                filterMatchMode="contains" 
                                headerText="حالة الاشتراك"
-                               sortBy="#{invInvoicePurchaseTable.status eq 0 ? '' : 'معلق'}"
+                               sortBy="#{invInvoicePurchaseTable.status}"
                                >
-                        <p:outputLabel value="#{invInvoicePurchaseTable.status}" />
+                        <p:outputLabel value="#{invInvoicePurchaseTable.status eq false ? 'سارى' : 'معلق'}" />
                     </p:column>
 
                     <p:column style="width: 9vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" filterStyle="display:none" 
