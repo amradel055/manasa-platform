@@ -267,6 +267,14 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         List<InvOrganizationSite> detailses = dao.findListByQuery("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId ORDER BY e.code", params);
         return detailses;
     }
+    
+    @Override
+    public List<InvOrganizationSite> getInvOrganizationSiteByCustomerId(Integer customerId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("customerId", customerId);
+        List<InvOrganizationSite> detailses = dao.findListByQuery("SELECT e FROM InvOrganizationSite e WHERE e.id = :customerId ORDER BY e.code", params);
+        return detailses;
+    }
 
     @Override
     public List<InvOrganizationSite> getInvOrganizationSiteByBranchIdPer(Integer branchId) {
@@ -276,6 +284,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         List<InvOrganizationSite> detailsesReturn = retiveOrganizationSiteDate(detailses);
         return detailsesReturn;
     }
+    
     @Override
     public void updateImage(Integer clientProfileId, String img) {
         InvOrganizationSite entity = dao.findEntityById(InvOrganizationSite.class, clientProfileId);

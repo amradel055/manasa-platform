@@ -525,6 +525,7 @@ public class AutoComplateImpl implements AutoCompleteService {
         dTO.setName(entity.getName());
         dTO.setMobile(entity.getMobile());
         dTO.setAddress(entity.getAddress());
+        dTO.setClientImage(entity.getClientImage());
         if (entity.getCurrencyId() != null) {
             CurrencyDTO currencyDTO = new CurrencyDTO();
             currencyDTO.setId(entity.getCurrencyId().getId());

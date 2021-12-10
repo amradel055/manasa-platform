@@ -158,6 +158,12 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
             entity.setCompanyId(isagUser.getCompanyId());
             entity.setBranchId(isagUser.getBranchId());
         }
+        
+        if(dto.getStatus() != null && dto.getStatus() == false){
+         entity.setStatus(0);
+        } else if (dto.getStatus() != null ){
+        entity.setStatus(1);
+        }
         return entity;
     }
 
@@ -185,7 +191,7 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
                 gmSubscriptions = mapToEntity(gmSubscriptionsDTO, isagUser);
                 if (gmSubscriptionsDTO.getId() != null) {
                     //بعمل حفظ فى حالة التعديل
-                    gmSubscriptionsDTO = dao.updateEntity(gmSubscriptionsDTO);
+                    gmSubscriptions = dao.updateEntity(gmSubscriptions);
                 } else {
                     // فى حالة ان الفاتورة جديدة بروح اجيب السيريال الاول 
                     Integer serial = genericService.getMaxGenericSerialByType(GmSubscriptions.class, gmSubscriptionsDTO.getBranchId(), gmSubscriptionsDTO.getType());
@@ -299,6 +305,12 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
         
         }else {
         gmSubscriptionsDTO.setStatusName("منتهي");
+        }
+        
+        if(entity.getStatus() != null && entity.getStatus()== 0){
+         gmSubscriptionsDTO.setStatus(false);
+        }else if(entity.getStatus() != null ) {
+        gmSubscriptionsDTO.setStatus(true);
         }
 
         List<GmSubscriptionsDetailDTO> gmSubscriptionsDTODetailsListDTO = gmSubscriptionsDTODetailsService.getAllGmSubscriptionsDetailDTOsByGmSubscriptionsDTOIdDTO(gmSubscriptionsDTO);
