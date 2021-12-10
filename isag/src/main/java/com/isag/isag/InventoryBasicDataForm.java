@@ -811,6 +811,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     public void printBarcode() {
         barcodeCounter();
         getInvInvoiceDTO().setBarcodeSelect(Boolean.TRUE);
+        InvInventoryDTO inventoryDTO = invInventoryService.findInventoryDTO(getInvInvoiceDTO().getInvInventoryId().getId());
+        getInvInvoiceDTO().setInvInventoryId(inventoryDTO);
         iReportService.printReportInvoice(getInvInvoiceDTO(), getUserData());
     }
 
@@ -829,6 +831,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         }
         getInvInvoiceDTO().setPrintType(3);
         getInvInvoiceDTO().setInvPurchaseInvoiceDetailList(invDetailDTOList);
+        InvInventoryDTO inventoryDTO = invInventoryService.findInventoryDTO(getInvInvoiceDTO().getInvInventoryId().getId());
+        getInvInvoiceDTO().setInvInventoryId(inventoryDTO);
         iReportService.printReportInvoice(getInvInvoiceDTO(), getUserData());
     }
 
@@ -852,6 +856,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
     public void printStrip() {
         getInvInvoiceDTO().setBarcodeSelect(Boolean.TRUE);
+        InvInventoryDTO inventoryDTO = invInventoryService.findInventoryDTO(getInvInvoiceDTO().getInvInventoryId().getId());
+        getInvInvoiceDTO().setInvInventoryId(inventoryDTO);
         iReportService.printReportInvoice(getInvInvoiceDTO(), getUserData());
     }
 

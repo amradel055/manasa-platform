@@ -80,6 +80,7 @@ public class IReportServiceImpl implements IReportService {
 
     @EJB
     InvInventoryService invInventoryService;
+
     /*  public <T> void fillReport(HashMap hashMap, String reportPath, List<T> listBean, String exportType) throws JRException, IOException {
         JRBeanCollectionDataSource beanCollectionDataSource = new JRBeanCollectionDataSource(listBean);
         JasperPrint jasperPrint = JasperFillManager.fillReport(reportPath, hashMap, beanCollectionDataSource);
@@ -541,17 +542,18 @@ public class IReportServiceImpl implements IReportService {
             hashMap.put("oldBalance", oldCustomerBalance.add(invPurchaseInvoiceDTO.getPayed()));
             hashMap.put("oldBalanceText", "رصيد قديم");
 
-//            String sellerName = invPurchaseInvoiceDTO.getInvInventoryId().getName();
-//        String sallerTRN = invPurchaseInvoiceDTO.getInvInventoryId().getDaribaValue();
-//        String invoiceDateTime = date;
-//        String totalWithVAT = invPurchaseInvoiceDTO.getFinalNet().toString();
-//        String VATTotal = invPurchaseInvoiceDTO.getTaxvalue().toString();
-            if (invPurchaseInvoiceDTO.getInvInventoryId() != null 
+            if (invPurchaseInvoiceDTO.getInvInventoryId() != null
                     && invPurchaseInvoiceDTO.getDate() != null
                     && invPurchaseInvoiceDTO.getFinalNet() != null
-                    && invPurchaseInvoiceDTO.getTaxvalue() != null) {
-               
-                printQRCodeNew(invPurchaseInvoiceDTO, hashMap );
+                    && invPurchaseInvoiceDTO.getTaxvalue() != null
+                    && invPurchaseInvoiceDTO.getInvInventoryId().getName() != null
+                    && invPurchaseInvoiceDTO.getInvInventoryId().getDaribaValue() != null
+                    && !invPurchaseInvoiceDTO.getInvInventoryId().getDaribaValue().isEmpty()) {
+                hashMap.put("daribaNumber", "الرقم الضريبى");
+                hashMap.put("daribaValue", invPurchaseInvoiceDTO.getInvInventoryId().getDaribaValue());
+                hashMap.put("segilText", "رقم السجل");
+                hashMap.put("segilValue", invPurchaseInvoiceDTO.getInvInventoryId().getSegilValue());
+                printQRCodeNew(invPurchaseInvoiceDTO, hashMap);
             }
 
             return hashMap;
@@ -1373,7 +1375,7 @@ public class IReportServiceImpl implements IReportService {
     private static final TimeZone utc = TimeZone.getTimeZone("UTC");
     private static final SimpleDateFormat isoFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
-    private void printQRCodeNew(InvInvoiceDTO invPurchaseInvoiceDTO, HashMap hashMap ) throws UnsupportedEncodingException, IOException {
+    private void printQRCodeNew(InvInvoiceDTO invPurchaseInvoiceDTO, HashMap hashMap) throws UnsupportedEncodingException, IOException {
         isoFormatter.setTimeZone(utc);
         String date = isoFormatter.format(invPurchaseInvoiceDTO.getDate());
 
