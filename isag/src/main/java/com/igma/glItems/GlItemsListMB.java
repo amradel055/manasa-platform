@@ -90,8 +90,8 @@ public class GlItemsListMB extends BaseListBean {
                     exit("../glFixedAsset/glFixedAssetForm.xhtml");
                 } else if (getUri().contains("glExpenses")) {
                     exit("../glExpenses/glExpensesForm.xhtml");
-                }else if (getUri().contains("itemSymbol")) {
-                    exit("../itemSymbol/itemSymbolForm.xhtml");
+                }else if (getUri().contains("gmitemsymbol")) {
+                    exit("../gmitemsymbol/gmitemsymbolForm.xhtml");
                 }
                 return "";
             } else {

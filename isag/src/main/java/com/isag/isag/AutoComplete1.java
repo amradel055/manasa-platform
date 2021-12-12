@@ -177,7 +177,21 @@ public class AutoComplete1 implements Serializable {
 
     public List<SymbolDTO> completeItemSymbolView(String query) {
         List<SymbolDTO> autoCompleteSymbol = null;
-        autoCompleteSymbol = autoCompleteService.autoCompleteSymbolByCompanyId(getCompanyId(), query);
+        autoCompleteSymbol = autoCompleteService.autoCompleteSymbolByCompanyId(getCompanyId(),null, query);
+        setSymbolDTOConverter(new SymbolDTOConverter(autoCompleteSymbol));
+        return autoCompleteSymbol;
+    }
+    
+    public List<SymbolDTO> completeItemSymbolViewWithType1(String query) {
+        List<SymbolDTO> autoCompleteSymbol = null;
+        autoCompleteSymbol = autoCompleteService.autoCompleteSymbolByCompanyId(getCompanyId(),1, query);
+        setSymbolDTOConverter(new SymbolDTOConverter(autoCompleteSymbol));
+        return autoCompleteSymbol;
+    }
+    
+    public List<SymbolDTO> completeItemSymbolViewWithType0(String query) {
+        List<SymbolDTO> autoCompleteSymbol = null;
+        autoCompleteSymbol = autoCompleteService.autoCompleteSymbolByCompanyId(getCompanyId(),0, query);
         setSymbolDTOConverter(new SymbolDTOConverter(autoCompleteSymbol));
         return autoCompleteSymbol;
     }

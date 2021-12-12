@@ -379,8 +379,15 @@ public class InstProjectGuideServiceImpl implements InstProjectGuideService {
             }
 
             Map<String, Object> params = new HashMap();
+            StringBuilder query = new StringBuilder();
+            query.append("SELECT  cs.instProjectGuide.id  , cs.instContract.organizationSiteId.name FROM InstContractProject cs WHERE cs.instProjectGuide.id in (").append(instProjectList).append(") ");
+            if (projectGuideSearchBean.getStartDate() != null && projectGuideSearchBean.getEndDate() != null) {
+                params.put("startDate", projectGuideSearchBean.getStartDate());
+                params.put("endDate", projectGuideSearchBean.getEndDate());
+                query.append(" AND  ( (cs.endDate BETWEEN :startDate AND :endDate) OR (cs.startDate BETWEEN :startDate AND :endDate)  OR (:startDate BETWEEN cs.startDate AND cs.endDate) OR (:endDate BETWEEN cs.startDate AND cs.endDate) )");
+            }
 
-            List<Object[]> res = dao.findListByQuery("SELECT  cs.instProjectGuide.id  , cs.instContract.organizationSiteId.name FROM InstContractProject cs WHERE cs.instProjectGuide.id in (" + instProjectList + ") ", params);
+            List<Object[]> res = dao.findListByQuery(query.toString(), params);
 
             Iterator it = res.iterator();
             while (it.hasNext()) {
@@ -410,8 +417,8 @@ public class InstProjectGuideServiceImpl implements InstProjectGuideService {
         finalProjectGuide.addAll(notSellProjectGuide);
         finalProjectGuide.stream().sorted(Comparator.comparing(InstProjectGuideDTO::getCode))
                 .collect(Collectors.toList());
-        for(InstProjectGuideDTO guideDTO : finalProjectGuide){
-            if(map.containsKey(guideDTO.getId())){
+        for (InstProjectGuideDTO guideDTO : finalProjectGuide) {
+            if (map.containsKey(guideDTO.getId())) {
                 guideDTO.setCustomerName(map.get(guideDTO.getId()));
             }
         }

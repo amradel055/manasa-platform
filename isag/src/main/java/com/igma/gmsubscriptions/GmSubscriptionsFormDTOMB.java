@@ -4,10 +4,12 @@
  * and open the template in the editor.
  */
 package com.igma.gmsubscriptions;
+
 import org.apache.commons.codec.binary.Base64;
 import com.isag.businessservice.GmGlobalService;
 import com.isag.businessservice.GmSubscriptionsService;
 import com.isag.businessservice.OrganizationSiteService;
+import com.isag.businessservice.ReportManagementService;
 import com.isag.bussinessservice.global.AutoCompleteService;
 import com.isag.converter.GlBankDTOConverter;
 import com.isag.converter.InvOrganizationSiteDTOConverter;
@@ -44,12 +46,10 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
 
     private List<InvOrganizationSiteDTO> invOrganizationSiteDTOList;
     private InvOrganizationSiteDTOConverter organizationSiteDTOConvertor;
-    private List<GmSubscriptionsDTO> list ;
+    private List<GmSubscriptionsDTO> list;
     private List<GlBankDTO> glBankList;
     private GlBankDTOConverter glBankConverter;
     IReportService iReportService = new IReportServiceImpl();
-
-
 
     // EJBs
     @EJB
@@ -60,12 +60,13 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
     private AutoCompleteService autoCompleteService;
     @EJB
     private GmGlobalService gmGlobalService;
+    @EJB
+    private ReportManagementService reportManagementService;
     private BigDecimal remain;
     private String filename;
     private String file;
     private String host;
     private FileUploadController fileUploadController;
-    
 
     @Override
     @PostConstruct
@@ -76,28 +77,25 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
             saveError(e, "InvPurchaseInvoiceFormMB", "init");
         }
     }
-    
-    
-   
 
     @Override
     public void load() {
         try {
-              
+
             if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("addGmSubscriptions")) {
                 reset();
                 fillDefaultList();
             } else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("editGmSubscriptions")) {
-                
+
                 getGmSubscriptionsDTO().setIsEdit(Boolean.TRUE);
                 fillInvInvoiceDTO();
                 fillDefaultList();
                 getGmSubscriptionsDTO().setIsEdit(Boolean.FALSE);
             } else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("editorganization")) {
-              
-               getOrganizationSiteId().setIsEdited(Boolean.TRUE);
-               fillClientDTO();
-            }else {
+
+                getOrganizationSiteId().setIsEdited(Boolean.TRUE);
+                fillClientDTO();
+            } else {
                 exit("../gmsubscriptions/gmsubscriptionslist.xhtml");
             }
         } catch (Exception e) {
@@ -130,8 +128,8 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
         getGmSubscriptionsDTO().setId((Integer) getContext().getSessionMap().get("gmSubscriptionsIdSelected"));
         setGmSubscriptionsDTO(gmSubscriptionsService.findGmSubscriptionsDTOById(getGmSubscriptionsDTO()));
     }
-    
-      public void fillClientDTO() {
+
+    public void fillClientDTO() {
         getOrganizationSiteId().setId((Integer) getContext().getSessionMap().get("invOrganizationSiteDTOSelected"));
         setOrganizationSiteId(organizationSiteService.findOrganizationSiteDTOById(getOrganizationSiteId().getId()));
     }
@@ -162,19 +160,18 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
         getGmSubscriptionsDTO().setShowCustomerDate(Boolean.FALSE);
         saveImage();
         leaveScreen();
-        
+
     }
-    
-    
+
     public void leaveScreen() {
-        if(getUri().contains("gmregistration")){
-        exit("../gmregistration/gmclientlist.xhtml");}
+        if (getUri().contains("gmregistration")) {
+            exit("../gmregistration/gmclientlist.xhtml");
+        }
     }
-    
-    
-    
-       public void print() {
-        iReportService.printReportGmInvoice(getGmSubscriptionsDTO() , getUserData());
+
+    public void print() {
+        getGmSubscriptionsDTO().setReportManagement(reportManagementService.reportManagementByBranch(getUserData().getUserBranch().getId()));
+        iReportService.printReportGmInvoice(getGmSubscriptionsDTO(), getUserData());
     }
 
     public void addInvDetail() {
@@ -186,11 +183,6 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
             saveError(e, "InvPurchaseInvoiceFormMB", "addInvPurchaseInvoiceDetail");
         }
     }
-    
-    
-    
-    
-    
 
     public Boolean validateItems(GmSubscriptionsDetailDTO gmSubscriptionsDetailDTO) {
         try {
@@ -260,7 +252,7 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
             saveError(e, "SalesInvoiceFormMB", "calculateRemainValue");
         }
     }
-    
+
     public String updateImage() {
 
         if (getOrganizationSiteId().getClientImage() != null && !getOrganizationSiteId().getClientImage().isEmpty()) {
@@ -271,17 +263,16 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
         }
         return "";
     }
-    
+
     public String saveImage() {
         if (getFile() != null && !getFile().isEmpty()) {
             byte[] byteFile = Base64.decodeBase64(getFile().substring(getFile().indexOf("base64,") + 6));
             String imageName = getFileUploadController().upload(byteFile);
             getOrganizationSiteId().setClientImage(imageName);
             updateImage();
-        } 
+        }
         return "";
     }
-    
 
     public void reset() {
         try {
@@ -380,7 +371,7 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
      * @return the gmSubscriptionsDTO
      */
     public GmSubscriptionsDTO getGmSubscriptionsDTO() {
-        if(gmSubscriptionsDTO == null){
+        if (gmSubscriptionsDTO == null) {
             gmSubscriptionsDTO = new GmSubscriptionsDTO();
         }
         return gmSubscriptionsDTO;
@@ -397,7 +388,7 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
      * @return the organizationSiteId
      */
     public InvOrganizationSiteDTO getOrganizationSiteId() {
-        if(organizationSiteId == null){
+        if (organizationSiteId == null) {
             setOrganizationSiteId(new InvOrganizationSiteDTO());
         }
         return organizationSiteId;
@@ -435,8 +426,8 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
      * @return the host
      */
     public String getHost() {
-    HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
-     setHost(request.getRequestURL().substring(0, request.getRequestURL().indexOf("faces/")).concat("images/"));
+        HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
+        setHost(request.getRequestURL().substring(0, request.getRequestURL().indexOf("faces/")).concat("images/"));
         return host;
     }
 
@@ -471,5 +462,4 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
         this.organizationSiteId = organizationSiteId;
     }
 
-  
 }

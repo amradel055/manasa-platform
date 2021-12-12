@@ -196,17 +196,21 @@ public class notesReceivablesListMB extends BaseGlBankListBean {
 
     private void redirectPage() {
         String noteSreceivablesType = accountsSystemSettings.getNoteSreceivablesType();
-        if (noteSreceivablesType.equals("ALLOW_DETAIL")) {
-            if (getUri().contains("notesreceivablesListpre")) {
-                exit("../notesreceivablespre/notesreceivablesdatailFormPre.xhtml");
-            } else {
-                exit("../notesreceivables/notesreceivablesdatailForm.xhtml");
-            }
+        if (getUri().contains("notesreceivablesdis")) {
+            exit("../notesreceivablesdis/notesreceivablesForm.xhtml");
         } else {
-            if (getUri().contains("notesreceivablesListpre")) {
-                exit("../notesreceivablespre/notesreceivablesFormpre.xhtml");
+            if (noteSreceivablesType.equals("ALLOW_DETAIL")) {
+                if (getUri().contains("notesreceivablesListpre")) {
+                    exit("../notesreceivablespre/notesreceivablesdatailFormPre.xhtml");
+                } else {
+                    exit("../notesreceivables/notesreceivablesdatailForm.xhtml");
+                }
             } else {
-                exit("../notesreceivables/notesreceivablesForm.xhtml");
+                if (getUri().contains("notesreceivablesListpre")) {
+                    exit("../notesreceivablespre/notesreceivablesFormpre.xhtml");
+                } else {
+                    exit("../notesreceivables/notesreceivablesForm.xhtml");
+                }
             }
         }
     }

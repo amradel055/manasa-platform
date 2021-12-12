@@ -16,4 +16,6 @@ public interface GmGlobalService {
     public GmSubscriptionsDTO recalcHeadValues(GmSubscriptionsDTO dto);
     
     public GmSubscriptionsDTO addGmSubscriptionsDTODetail(GmSubscriptionsDTO gmSubscriptionsDTO, Integer index);
+    
+    public GmSubscriptionsDTO updateSummitionSmall(GmSubscriptionsDTO gmSubscriptionsDTO);
 }

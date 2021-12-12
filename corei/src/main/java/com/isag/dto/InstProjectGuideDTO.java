@@ -90,7 +90,7 @@ public class InstProjectGuideDTO extends BaseEntityDTO{
 
     @Override
     public String toString() {
-        return  code +" "+ name + (parent == null ? "" : parent.getName()) + (symbolSize == null ? "" : symbolSize.getName());
+        return   (symbolSize == null ? "" : symbolSize.getName()) + " " + name + " " + (parent == null ? "" : parent.getName()) ;
     }
 
     /**

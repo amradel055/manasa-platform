@@ -349,7 +349,7 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
             adminUnitList = glAdminUnitService.getAllSubAdminUnitByBranchIdActive(branchId);
             glAdminUnitConverter = new GlAdminUnitConverter(adminUnitList);
 
-            glItemsList = symbolService.getGLItemsByCompanyId(companyId);
+            glItemsList = symbolService.getGLItemsByCompanyId(companyId,null);
             glItemConverter = new SymbolConverter(glItemsList);
 
             fillAccounts();

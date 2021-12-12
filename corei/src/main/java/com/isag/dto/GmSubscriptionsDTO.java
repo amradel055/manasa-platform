@@ -68,6 +68,8 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
     private GmSubscriptionsDetailDTO gmSubscriptionsDetailDTOSelected;
     
     private String statusName;
+    private Integer remainPeriod;
+    private Date dateAfterTagmeed;
 
     public GmSubscriptionsDTO() {
     }
@@ -645,5 +647,33 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
      */
     public void setStatusName(String statusName) {
         this.statusName = statusName;
+    }
+
+    /**
+     * @return the remainPeriod
+     */
+    public Integer getRemainPeriod() {
+        return remainPeriod;
+    }
+
+    /**
+     * @param remainPeriod the remainPeriod to set
+     */
+    public void setRemainPeriod(Integer remainPeriod) {
+        this.remainPeriod = remainPeriod;
+    }
+
+    /**
+     * @return the dateAfterTagmeed
+     */
+    public Date getDateAfterTagmeed() {
+        return dateAfterTagmeed;
+    }
+
+    /**
+     * @param dateAfterTagmeed the dateAfterTagmeed to set
+     */
+    public void setDateAfterTagmeed(Date dateAfterTagmeed) {
+        this.dateAfterTagmeed = dateAfterTagmeed;
     }
 }

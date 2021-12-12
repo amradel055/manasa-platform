@@ -7,6 +7,7 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns="http://www.w3.org/1999/xhtml">
     <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
         <h:form id="form"  dir="#{userData.dir}" class='formmargin'>
             <div style=" position: absolute;left: 20px"> 
 
@@ -48,7 +49,7 @@
                                           title="#{userData.userDDs['ADD']}" 
                                           action="#{gmSubscriptionsListDTOMB.goTOAddForm()}" 
                                           style="float:right" 
-                                          rendered="#{(userData.userScreens['invsalesinvoice_1'].add)  or userData.isAdmin}"/>
+                                          rendered="#{(userData.userScreens['gmregistration'].add)  or userData.isAdmin}"/>
                       
                         <p:outputPanel  >
                             <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
@@ -96,7 +97,7 @@
                                            icon="fa fa-fw fa-search-plus"  style="background-color: rgba(63, 81, 181, 0.88);border-radius: 3px;"
                                            title="#{userData.userDDs['VIEW']}" 
                                            action="#{gmSubscriptionsListDTOMB.goToEditClient()}" 
-                                           rendered="#{userData.userScreens['invsalesinvoice_1'].edit or userData.isAdmin}" >
+                                           rendered="#{userData.userScreens['gmregistration'].edit or userData.isAdmin}" >
 
                             <f:setPropertyActionListener value="#{invInvoicePurchaseTable}" 
                                                          target="#{gmSubscriptionsListDTOMB.invOrganizationSiteDTOSelected}" />
@@ -108,7 +109,7 @@
                                          style="background-color: red;border-radius: 3px;"
                                          title="#{userData.userDDs['DELETE']}" 
                                          action="#{gmSubscriptionsListDTOMB.deleteClient()}" 
-                                         rendered="#{(userData.userScreens['invsalesinvoice_1'].delete or userData.isAdmin)}">
+                                         rendered="#{(userData.userScreens['gmregistration'].delete or userData.isAdmin)}">
                             <f:setPropertyActionListener value="#{invInvoicePurchaseTable}" target="#{gmSubscriptionsListDTOMB.invOrganizationSiteDTOSelected}" />
                             <p:confirm header="Confirmation" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
 

@@ -9,7 +9,7 @@
                 xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <ui:define name="content">
-
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
         <h:form class='formmargin' id="form"  enctype="multipart/form-data"  dir="#{userData.dir}">
             <p:fieldset id="whole1" legend="التقاط الصورة" style="margin-bottom:20px">
 

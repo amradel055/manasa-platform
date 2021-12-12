@@ -155,7 +155,7 @@ public class IReportServiceImpl implements IReportService {
     public void printReportGmInvoice(GmSubscriptionsDTO gmSubscriptionsDTO, UserData userData) {
 
         try {
-            fillReport(prepareGmSalesReport(gmSubscriptionsDTO, userData), userData.getReportPath() + "salesReceiptCash.jasper", gmSubscriptionsDTO.getGmSubscriptionsDetailList(), "pdf");
+            fillReport(prepareGmSalesReport(gmSubscriptionsDTO, userData), userData.getReportPath() + "salesReceiptCashGM.jasper", gmSubscriptionsDTO.getGmSubscriptionsDetailList(), "pdf");
 
         } catch (Exception ex) {
             Logger.getLogger(InvPurchaseOrderEntity.class.getName()).log(Level.SEVERE, null, ex);
@@ -407,7 +407,7 @@ public class IReportServiceImpl implements IReportService {
             hashMap.put("discountValue", invPurchasegmSubscriptionsDTO.getDiscountValue());
             hashMap.put("netValue", invPurchasegmSubscriptionsDTO.getFinalNet());
 
-            printQRCode(invPurchasegmSubscriptionsDTO, hashMap);
+            printQRCode(invPurchasegmSubscriptionsDTO, hashMap, reportManagement);
 
             return hashMap;
         } catch (Exception e) {
@@ -1312,23 +1312,32 @@ public class IReportServiceImpl implements IReportService {
         reportQRCode(hashMap, builder.toString(), invPurchaseInvoiceDTO.getInvInventoryId() == null ? 0 : invPurchaseInvoiceDTO.getInvInventoryId().getId());
     }
 
-    private void printQRCode(GmSubscriptionsDTO invPurchasegmSubscriptionsDTO, HashMap hashMap) {
-        StringBuilder builder = new StringBuilder();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-        builder.append(invPurchasegmSubscriptionsDTO.getInvInventoryId() == null ? "" : invPurchasegmSubscriptionsDTO.getInvInventoryId().getName()).append("\n")
-                .append("العميل: ").append(invPurchasegmSubscriptionsDTO.getOrganizationSiteId().getName()).append("\n")
-                .append("فاتوره رقم: ").append(invPurchasegmSubscriptionsDTO.getSerial()).append("\n");
-        if (invPurchasegmSubscriptionsDTO.getInvInventoryId() != null && invPurchasegmSubscriptionsDTO.getInvInventoryId().getDaribaValue() != null) {
-            builder.append("الرقم الضريبي: ").append(invPurchasegmSubscriptionsDTO.getInvInventoryId().getDaribaValue()).append("\n");
-        }
-        if (invPurchasegmSubscriptionsDTO.getInvInventoryId() != null && invPurchasegmSubscriptionsDTO.getInvInventoryId().getSegilValue() != null) {
-            builder.append("رقم السجل: ").append(invPurchasegmSubscriptionsDTO.getInvInventoryId().getSegilValue()).append("\n");
-        }
-        builder.append("تاريخ الفاتوره: ").append(dateFormat.format(invPurchasegmSubscriptionsDTO.getDate())).append("\n")
-                .append("قيمه الفاتورة: ").append(invPurchasegmSubscriptionsDTO.getTotalNetAfterDiscount())
-                .append("الضريبه vat: ").append(invPurchasegmSubscriptionsDTO.getTaxvalue()).append("\n")
-                .append("صافي المبلغ: ").append(invPurchasegmSubscriptionsDTO.getFinalNet()).append("\n");
-        reportQRCode(hashMap, builder.toString(), invPurchasegmSubscriptionsDTO.getInvInventoryId() == null ? 0 : invPurchasegmSubscriptionsDTO.getInvInventoryId().getId());
+    private void printQRCode(GmSubscriptionsDTO invPurchasegmSubscriptionsDTO, HashMap hashMap, ReportManagement reportManagement) throws UnsupportedEncodingException {
+        isoFormatter.setTimeZone(utc);
+        String date = isoFormatter.format(invPurchasegmSubscriptionsDTO.getDate());
+
+        String sellerName = reportManagement.getRightUp4();
+        String sallerTRN = reportManagement.getLeftUp4();
+        String invoiceDateTime = date;
+        String totalWithVAT = invPurchasegmSubscriptionsDTO.getFinalNet().toString();
+        String VATTotal = invPurchasegmSubscriptionsDTO.getTaxvalue().toString();
+
+//        byte[] tag1Hex = sellerName.getBytes("UTF-8");
+//        sellerName = new String(tag1Hex, StandardCharsets.UTF_8);
+        byte[] tag1Hex = sellerName.getBytes(StandardCharsets.UTF_8);
+        sellerName = new String(tag1Hex, StandardCharsets.ISO_8859_1);
+        String L1 = Integer.toHexString(sellerName.length());
+        String L2 = Integer.toHexString(sallerTRN.length());
+        String L3 = Integer.toHexString(invoiceDateTime.length());
+        String L4 = Integer.toHexString(totalWithVAT.length());
+        String L5 = Integer.toHexString(VATTotal.length());
+
+        String hex = "01" + ((L1.length() == 1) ? ("0" + L1) : L1) + hex(sellerName)
+                + "02" + ((L2.length() == 1) ? ("0" + L2) : L2) + hex(sallerTRN)
+                + "03" + ((L3.length() == 1) ? ("0" + L3) : L3) + hex(invoiceDateTime)
+                + "04" + ((L4.length() == 1) ? ("0" + L4) : L4) + hex(totalWithVAT)
+                + "05" + ((L5.length() == 1) ? ("0" + L5) : L5) + hex(VATTotal);
+        reportQRCodeNew(hashMap, hex, invPurchasegmSubscriptionsDTO.getGlBankId() == null ? 0 : invPurchasegmSubscriptionsDTO.getGlBankId().getId());
     }
 
     public void reportQRCode(HashMap hashMap, String qrCodeText, Integer GallaryId) {
@@ -1385,8 +1394,10 @@ public class IReportServiceImpl implements IReportService {
         String totalWithVAT = invPurchaseInvoiceDTO.getFinalNet().toString();
         String VATTotal = invPurchaseInvoiceDTO.getTaxvalue().toString();
 
-        byte[] tag1Hex = sellerName.getBytes("UTF-8");
-        sellerName = new String(tag1Hex, StandardCharsets.UTF_8);
+//        byte[] tag1Hex = sellerName.getBytes("UTF-8");
+//        sellerName = new String(tag1Hex, StandardCharsets.UTF_8);
+        byte[] tag1Hex = sellerName.getBytes(StandardCharsets.UTF_8);
+        sellerName = new String(tag1Hex, StandardCharsets.ISO_8859_1);
         String L1 = Integer.toHexString(sellerName.length());
         String L2 = Integer.toHexString(sallerTRN.length());
         String L3 = Integer.toHexString(invoiceDateTime.length());

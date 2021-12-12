@@ -63,6 +63,8 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
     private EmployeeService employeeService;
     @EJB
     private CurrencyServiceDTO currencyServiceDTO;
+    @EJB
+    private GlAccountServiceDTO glAccountServiceDTO;
 
     @Override
     public List<InvOrganizationSite> getInvOrganizationSiteByCompanyId(Integer companyId) {
@@ -267,7 +269,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         List<InvOrganizationSite> detailses = dao.findListByQuery("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId ORDER BY e.code", params);
         return detailses;
     }
-    
+
     @Override
     public List<InvOrganizationSite> getInvOrganizationSiteByCustomerId(Integer customerId) {
         Map<String, Object> params = new HashMap<>();
@@ -284,7 +286,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         List<InvOrganizationSite> detailsesReturn = retiveOrganizationSiteDate(detailses);
         return detailsesReturn;
     }
-    
+
     @Override
     public void updateImage(Integer clientProfileId, String img) {
         InvOrganizationSite entity = dao.findEntityById(InvOrganizationSite.class, clientProfileId);
@@ -1891,12 +1893,11 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
 
         CurrencyDTO currencyDefault = currencyServiceDTO.getDefaultCurrenciesByCompanyId(isagUser.getCompanyId().getId());
 
-        if (invOrganizationSiteDTO != null && invOrganizationSiteDTO.getName() != null && currencyDefault != null ) {
+        if (invOrganizationSiteDTO != null && invOrganizationSiteDTO.getName() != null && currencyDefault != null) {
             invOrganizationSiteDTO.setType(0);
             invOrganizationSiteDTO.setCurrencyId(currencyDefault);
             invOrganizationSiteDTO.setActive(1);
-            
-            
+
             Integer code = getMaxGenericSerialForDetail(isagUser.getBranchId().getId(), 0);
 //            GlAccountDTO glAccountDTO = new GlAccountDTO();
 //            glAccountDTO.setId(12892);
@@ -1905,8 +1906,12 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
 //            inventoryDelegatorDTO.setId(77);
 //            invOrganizationSiteDTO.setDelegatorId(inventoryDelegatorDTO);
             invOrganizationSiteDTO.setCode(code.toString());
-            
-            
+
+            GlAccountDTO glAccountDTO = glAccountServiceDTO.getGlAccountForBank(isagUser.getBranchId().getId(), 1);
+            if (glAccountDTO != null) {
+                invOrganizationSiteDTO.setAccountId(glAccountDTO);
+            }
+
             invOrganizationSiteDTO = addOrganizationSiteDTO(invOrganizationSiteDTO, isagUser);
             invOrganizationSiteDTOList.add(0, invOrganizationSiteDTO);
 
@@ -2035,8 +2040,8 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         }
 
     }
-    
-     @Override
+
+    @Override
     public InvOrganizationSiteDTO mapToDTOSmall(InvOrganizationSite invOrganizationSite) {
         InvOrganizationSiteDTO invOrganizationSiteDTO = new InvOrganizationSiteDTO();
         invOrganizationSiteDTO.setId(invOrganizationSite.getId());
@@ -2082,6 +2087,5 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
 
         return invOrganizationSiteDTO;
     }
-
 
 }

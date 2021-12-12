@@ -71,7 +71,7 @@ public class GmGlobalServiceImpl implements GmGlobalService {
         // تحسب ضريبة القيمة المضافة بعد حساب الاجمالى بعد الخصم
         try {
             if (gmSubscriptionsDTO.getTaxFlag() != null && gmSubscriptionsDTO.getTaxFlag()) {
-                gmSubscriptionsDTO.setTaxvalue(gmSubscriptionsDTO.getTotalNetAfterDiscount().multiply(new BigDecimal(0.15)));
+                gmSubscriptionsDTO.setTaxvalue((gmSubscriptionsDTO.getTotalNetAfterDiscount().multiply(new BigDecimal(0.15))).setScale(2, RoundingMode.HALF_UP));
             } else {
                 gmSubscriptionsDTO.setTaxvalue(BigDecimal.ZERO);
             }
@@ -149,5 +149,28 @@ public class GmGlobalServiceImpl implements GmGlobalService {
         return gmSubscriptionsDTO;
     }
 
+    
+    public GmSubscriptionsDTO recalcHeadValuesSmall(GmSubscriptionsDTO gmSubscriptionsDTO){
+        if(gmSubscriptionsDTO.getGmSubscriptionsDetailList() != null && !gmSubscriptionsDTO.getGmSubscriptionsDetailList().isEmpty()){
+            for(GmSubscriptionsDetailDTO dTO : gmSubscriptionsDTO.getGmSubscriptionsDetailList()){
+                claculateHeadTotalFromDetail(dTO, gmSubscriptionsDTO);
+            }
+        }
+        
+        return gmSubscriptionsDTO;
+    }
+    
+    @Override
+    public GmSubscriptionsDTO updateSummitionSmall(GmSubscriptionsDTO gmSubscriptionsDTO) {
+        try {
+
+            gmSubscriptionsDTO = recalcHeadValuesSmall(gmSubscriptionsDTO);
+            gmSubscriptionsDTO = recalcHeadValues(gmSubscriptionsDTO);
+        } catch (Exception e) {
+//            saveError(e, "InvPurchaseInvoiceFormMB", "updateSummition");
+        }
+
+        return gmSubscriptionsDTO;
+    }
 
 }

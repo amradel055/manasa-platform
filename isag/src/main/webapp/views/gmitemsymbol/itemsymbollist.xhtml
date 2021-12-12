@@ -9,7 +9,7 @@
                 xmlns="http://www.w3.org/1999/xhtml">
     <ui:define name="content">
         <h:form id="busesListForm" dir="#{userData.dir}" class='formmargin' >
-
+            <f:event listener="#{userData.authorize}" type="preRenderView" />
             <div style=" position: absolute;left: 20px">
                 <p:commandButton  icon="fa fa-fw fa-home"
                                   title="#{userData.userDDs['HOME']}"

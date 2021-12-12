@@ -8,7 +8,9 @@
                 xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:c="http:addInvDetail//xmlns.jcp.org/jsp/jstl/core">
     <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
         <style>
+            
             body .ui-datatable tbody tr.ui-state-highlight .ui-inputfield {
                 width: 100%;
             }
@@ -92,7 +94,7 @@
 
                             </div>
                         </div>
-                         <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-12 ui-xl-12">
 
                             <div class="ui-g-6 ui-xl-6">
                                 <p:calendar id="dateFrom1" 
@@ -105,7 +107,7 @@
 
                             </div>
                         </div>
-                         <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-12 ui-xl-12">
 
                             <div class="ui-g-6 ui-xl-6">
                                 <p:calendar id="dateFrom2" 
@@ -152,163 +154,163 @@
 
                                 <p:dialog header="إضافة عميل جديد" widgetVar="dlg3" showEffect="explode" hideEffect="bounce" height="90%" width="90%">
 
-                       
-            <p:fieldset legend="انشاءعميل جديد"  style="margin-bottom:5px">
-                 
-                   <div  id="firstLine" class="ui-g-12 ui-g-nopad">
-                    <div class="ui-g">
 
-                        <p:outputPanel id="photo">
-                            <button  id="start-camera" type="button">Start Camera</button>
-                            <video id="video"  width="220" height="150" autoplay="true"></video>
-                            <button  id="click-photo" type="button">Click Photo</button>
-                            <canvas id="canvas" width="220" height="150" ></canvas>
+                                    <p:fieldset legend="انشاءعميل جديد"  style="margin-bottom:5px">
 
-                        </p:outputPanel>
-                        <script>
-                            let camera_button = document.querySelector("#start-camera");
-                            let video = document.querySelector("#video");
-                            let click_button = document.querySelector("#click-photo");
-                            let canvas = document.querySelector("#canvas");
+                                        <div  id="firstLine" class="ui-g-12 ui-g-nopad">
+                                            <div class="ui-g">
 
-                            camera_button.addEventListener('click', async function () {
-                                let stream = await navigator.mediaDevices.getUserMedia({video: true, audio: false});
-                                video.srcObject = stream;
-                            });
+                                                <p:outputPanel id="photo">
+                                                    <button  id="start-camera" type="button">Start Camera</button>
+                                                    <video id="video"  width="220" height="150" autoplay="true"></video>
+                                                    <button  id="click-photo" type="button">Click Photo</button>
+                                                    <canvas id="canvas" width="220" height="150" ></canvas>
 
-                            click_button.addEventListener('click', function () {
-                                canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-                                let image_data_url = canvas.toDataURL('image/jpeg');
+                                                </p:outputPanel>
+                                                <script>
+                                                    let camera_button = document.querySelector("#start-camera");
+                                                    let video = document.querySelector("#video");
+                                                    let click_button = document.querySelector("#click-photo");
+                                                    let canvas = document.querySelector("#canvas");
 
-                                // data url of the image
-                                document.getElementById("form:img").value = image_data_url;
+                                                    camera_button.addEventListener('click', async function () {
+                                                        let stream = await navigator.mediaDevices.getUserMedia({video: true, audio: false});
+                                                        video.srcObject = stream;
+                                                    });
 
-                                console.log(image_data_url);
-                            });
-                        </script>
-                        <p:inputText type="hidden" style="display: none"  id="img" value="#{gmSubscriptionsFormDTOMB.file}">
-                            <p:ajax process="@this" />
-                        </p:inputText>
+                                                    click_button.addEventListener('click', function () {
+                                                        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+                                                        let image_data_url = canvas.toDataURL('image/jpeg');
 
-                    </div>
+                                                        // data url of the image
+                                                        document.getElementById("form:img").value = image_data_url;
 
+                                                        console.log(image_data_url);
+                                                    });
+                                                </script>
+                                                <p:inputText type="hidden" style="display: none"  id="img" value="#{gmSubscriptionsFormDTOMB.file}">
+                                                    <p:ajax process="@this" />
+                                                </p:inputText>
 
-
-                    <div class="ui-g-12 ui-xl-12">
-
-                        <div class="ui-g-6 ui-xl-6">
-                            <p:graphicImage url="#{gmSubscriptionsFormDTOMB.host.concat(gmSubscriptionsFormDTOMB.organizationSiteId.clientImage)}" library="demo"  style="max-width:80%;max-height:80%;object-fit: cover !important;"/>
-                        </div>
-                       
-                        <div class="ui-g-6 ui-xl-6">
-                            <p:outputLabel style="width: 65px" value="صورة العميل"/>
-
-                        </div>  
-                    </div>
-                </div>
+                                            </div>
 
 
-                <panelGrid class="centerButtons col-md-12" style='display: block; text-align: center;'>
 
-                    <h:panelGroup>
-                        <p:blockUI block="form" trigger="saveB" animate="true" >
+                                            <div class="ui-g-12 ui-xl-12">
 
-                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
-                        </p:blockUI> 
-                    </h:panelGroup>
-                </panelGrid>
+                                                <div class="ui-g-6 ui-xl-6">
+                                                    <p:graphicImage url="#{gmSubscriptionsFormDTOMB.host.concat(gmSubscriptionsFormDTOMB.organizationSiteId.clientImage)}" library="demo"  style="max-width:80%;max-height:80%;object-fit: cover !important;"/>
+                                                </div>
 
-                <div class="col-xs-12">
-                    <p:messages autoUpdate="true"  id="msgopp1" showDetail="true" closable="true" />
-                </div>
-                <div  id="firstLine" class="ui-g-12 ui-g-nopad">
-                    <div class="ui-g">
+                                                <div class="ui-g-6 ui-xl-6">
+                                                    <p:outputLabel style="width: 65px" value="صورة العميل"/>
 
-                        <div class="ui-g-6 ui-xl-6">
-                             <div class="ui-g-12 ui-xl-12">
+                                                </div>  
+                                            </div>
+                                        </div>
 
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:inputText style="width: 35%!important" id="ad012"  value="#{gmSubscriptionsFormDTOMB.organizationSiteId.code}"/>
-                                </div>
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 85px;margin-right: 3%;" value="رقم العميل"/>
 
-                                </div>
-                            </div>
-                            <div class="ui-g-12 ui-xl-12">
+                                        <panelGrid class="centerButtons col-md-12" style='display: block; text-align: center;'>
 
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:inputText style="width: 35%!important" id="ad112" value="#{gmSubscriptionsFormDTOMB.organizationSiteId.name}"/>
-                                </div>
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 85px;margin-right: 3%;" value="الاسم"/>
+                                            <h:panelGroup>
+                                                <p:blockUI block="form" trigger="saveB" animate="true" >
 
-                                </div>
-                            </div>
+                                                    <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+                                                </p:blockUI> 
+                                            </h:panelGroup>
+                                        </panelGrid>
 
-                            <div class="ui-g-12 ui-xl-12">
+                                        <div class="col-xs-12">
+                                            <p:messages autoUpdate="true"  id="msgopp1" showDetail="true" closable="true" />
+                                        </div>
+                                        <div  id="firstLine" class="ui-g-12 ui-g-nopad">
+                                            <div class="ui-g">
 
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:inputText style="width: 35%!important" id="ad212" value="#{gmSubscriptionsFormDTOMB.organizationSiteId.mobile}"/>
+                                                <div class="ui-g-6 ui-xl-6">
+                                                    <div class="ui-g-12 ui-xl-12">
 
-                                </div>
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 85px;" value="الجوال"/>
+                                                        <div class="ui-g-6 ui-xl-6">
+                                                            <p:inputText style="width: 35%!important" id="ad012"  value="#{gmSubscriptionsFormDTOMB.organizationSiteId.code}"/>
+                                                        </div>
+                                                        <div class="ui-g-6 ui-xl-6">
+                                                            <p:outputLabel style="width: 85px;margin-right: 3%;" value="رقم العميل"/>
 
-                                </div>
-                            </div>
-                            <div class="ui-g-12 ui-xl-12">
+                                                        </div>
+                                                    </div>
+                                                    <div class="ui-g-12 ui-xl-12">
 
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:inputText style="width: 35%!important" id="ad312"  value="#{gmSubscriptionsFormDTOMB.organizationSiteId.address}"/>
+                                                        <div class="ui-g-6 ui-xl-6">
+                                                            <p:inputText style="width: 35%!important" id="ad112" value="#{gmSubscriptionsFormDTOMB.organizationSiteId.name}"/>
+                                                        </div>
+                                                        <div class="ui-g-6 ui-xl-6">
+                                                            <p:outputLabel style="width: 85px;margin-right: 3%;" value="الاسم"/>
 
-                                </div>
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 85px;" value="العنوان "/>
+                                                        </div>
+                                                    </div>
 
-                                </div>
-                            </div>
-                            <div class="ui-g-12 ui-xl-12">
+                                                    <div class="ui-g-12 ui-xl-12">
 
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:inputText style="width: 35%!important" id="ad412"  value="#{gmSubscriptionsFormDTOMB.organizationSiteId.nationId}"/>
+                                                        <div class="ui-g-6 ui-xl-6">
+                                                            <p:inputText style="width: 35%!important" id="ad212" value="#{gmSubscriptionsFormDTOMB.organizationSiteId.mobile}"/>
 
-                                </div>
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 85px;" value="رقم الهوية "/>
+                                                        </div>
+                                                        <div class="ui-g-6 ui-xl-6">
+                                                            <p:outputLabel style="width: 85px;" value="الجوال"/>
 
-                                </div>
-                            </div>
-                               <div class="ui-g-12 ui-xl-12">
-                                          <div class="ui-g-12 ui-xl-12">
+                                                        </div>
+                                                    </div>
+                                                    <div class="ui-g-12 ui-xl-12">
 
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:inputText style="width: 35%!important" id="ad512" value="#{gmSubscriptionsFormDTOMB.organizationSiteId.nationIdSerial}"/>
+                                                        <div class="ui-g-6 ui-xl-6">
+                                                            <p:inputText style="width: 35%!important" id="ad312"  value="#{gmSubscriptionsFormDTOMB.organizationSiteId.address}"/>
 
-                                </div>
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 85px;" value="طبعة الهوية"/>
+                                                        </div>
+                                                        <div class="ui-g-6 ui-xl-6">
+                                                            <p:outputLabel style="width: 85px;" value="العنوان "/>
 
-                                </div>
-                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="ui-g-12 ui-xl-12">
 
-                            <div class="ui-g-6 ui-xl-6">
-                                <p:calendar id="dateFrom12" 
-                                            value="#{gmSubscriptionsFormDTOMB.organizationSiteId.birthdate}"
-                                            pattern="dd/MM/yyyy"
-                                            style="width:50%!important"/>
-                            </div>
-                            <div class="ui-g-6 ui-xl-6">
-                                <p:outputLabel style="width: 95px; ;" value="تاريخ الميلاد"/>
+                                                        <div class="ui-g-6 ui-xl-6">
+                                                            <p:inputText style="width: 35%!important" id="ad412"  value="#{gmSubscriptionsFormDTOMB.organizationSiteId.nationId}"/>
 
-                            </div>
-                        </div>
-                       
-                        </div>                        
-                    </div>
-                </div>
+                                                        </div>
+                                                        <div class="ui-g-6 ui-xl-6">
+                                                            <p:outputLabel style="width: 85px;" value="رقم الهوية "/>
 
-            </p:fieldset>
+                                                        </div>
+                                                    </div>
+                                                    <div class="ui-g-12 ui-xl-12">
+                                                        <div class="ui-g-12 ui-xl-12">
+
+                                                            <div class="ui-g-6 ui-xl-6">
+                                                                <p:inputText style="width: 35%!important" id="ad512" value="#{gmSubscriptionsFormDTOMB.organizationSiteId.nationIdSerial}"/>
+
+                                                            </div>
+                                                            <div class="ui-g-6 ui-xl-6">
+                                                                <p:outputLabel style="width: 85px;" value="طبعة الهوية"/>
+
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="ui-g-6 ui-xl-6">
+                                                            <p:calendar id="dateFrom12" 
+                                                                        value="#{gmSubscriptionsFormDTOMB.organizationSiteId.birthdate}"
+                                                                        pattern="dd/MM/yyyy"
+                                                                        style="width:50%!important"/>
+                                                        </div>
+                                                        <div class="ui-g-6 ui-xl-6">
+                                                            <p:outputLabel style="width: 95px; ;" value="تاريخ الميلاد"/>
+
+                                                        </div>
+                                                    </div>
+
+                                                </div>                        
+                                            </div>
+                                        </div>
+
+                                    </p:fieldset>
 
                                     <h:panelGroup>
                                         <p:commandButton     class="saveButton"  
@@ -386,7 +388,7 @@
                                         itemLabel="#{item}" 
                                         itemValue="#{item}" 
                                         forceSelection="true" 
-                                        completeMethod="#{autoComplete.completeItemSymbolView}" >
+                                        completeMethod="#{autoComplete.completeItemSymbolViewWithType0}" >
                             <p:ajax update=" discountTotalT discountTotalTValue      costTt  addTotalT netId    totalNet   form:totalNetAfterDiscount   form:totalWithTaxValue form:taxvalue "
                                     event="itemSelect" listener="#{gmSubscriptionsFormDTOMB.validateItems(invPurchaseInvoiceDetailsTable)}" />
                         </p:autoComplete>            
@@ -595,12 +597,12 @@
 
                                     </div>
                                 </div>
-                                 <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-12 ui-xl-12">
 
                                     <div class="ui-g-6 ui-xl-6">
                                         <p:selectBooleanCheckbox 
                                             value="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.status}"
-                                           
+
                                             >
                                         </p:selectBooleanCheckbox>
                                     </div>
@@ -613,9 +615,8 @@
 
                                     <div class="ui-g-6 ui-xl-6">
                                         <p:selectBooleanCheckbox 
-                                            value="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.taxFlag}"
-                                            >
-                                                                                        <p:ajax update=" form:totalNetAfterDiscount form:taxvalue form:totalWithTaxValue " listener="#{gmSubscriptionsFormDTOMB.recalcHeadValues()}" />
+                                            value="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.taxFlag}">
+                                            <p:ajax update=" form:totalNetAfterDiscount form:taxvalue form:totalWithTaxValue " listener="#{gmSubscriptionsFormDTOMB.recalcHeadValues()}" />
                                         </p:selectBooleanCheckbox>
                                     </div>
                                     <div class="ui-g-6 ui-xl-6">
@@ -761,15 +762,15 @@
                                           immediate="true"
                                           action="#{gmSubscriptionsFormDTOMB.exit()}" 
                                           update="@form"/>
-                        
-                           <p:commandButton  class="printButtons"                                              
+
+                        <p:commandButton  class="printButtons"                                              
                                           ajax="false"
                                           onclick="form.target = '_blank'"  
                                           value="#{userData.userDDs['PRINT']}" 
                                           title="#{userData.userDDs['PRINT']}" 
                                           actionListener="#{gmSubscriptionsFormDTOMB.print()}"                                
                                           update="@form"/>
-                            
+
                         <h:commandLink  style="float:left" class="sdcreenimg" rendered="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.id ne null}">  
                             <p:graphicImage name="/img/excel.jpg" width="24" style='margin-right:25%;'/>  
                             <p:dataExporter type="xls"

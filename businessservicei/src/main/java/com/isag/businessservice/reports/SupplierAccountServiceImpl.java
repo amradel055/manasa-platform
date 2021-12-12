@@ -186,22 +186,22 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
 
         StringBuilder stringBuilder = new StringBuilder();
 //        stringBuilder.append("SELECT sum(RIV.exitt) - sum(RIV.adding) FROM OrganizationSiteStatementView RIV WHERE RIV.organizationSiteId = :organizationSiteId  ");
-        stringBuilder.append("SELECT (sum(s.exitt) - sum(s.adding)) as balance from (SELECT 0 AS `exitt`, IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`, 14,0,0,0),0) AS `adding`\n"
+        stringBuilder.append("SELECT (sum(s.exitt) - sum(s.adding)) as balance from (SELECT 0 AS `exitt`, IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`, 15,0,0,0),0) AS `adding`\n"
                 + "	FROM `inv_purchase_invoice` `ipi` LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
                 + "	WHERE ((`ipi`.`type` = 0) AND (`ipi`.`date` IS NOT NULL)) "
                 + "     AND ipi.organization_site_id = " + organizationSiteId + "\n"
                 + "    group by ipi.id\n"
-                + "UNION ALL SELECT IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`,  14,0,0,0),0)  AS `exitt`, 0 AS `adding`\n"
+                + "UNION ALL SELECT IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`,  15,0,0,0),0)  AS `exitt`, 0 AS `adding`\n"
                 + "    FROM `inv_purchase_invoice` `ipi` LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
                 + "    WHERE ((`ipi`.`type` = 1)  AND (`ipi`.`date` IS NOT NULL)) "
                 + "     AND ipi.organization_site_id = " + organizationSiteId + "\n"
                 + "    group by ipi.id\n"
-                + "UNION ALL SELECT IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`,  14,0,0,0),0)  AS `exitt`, 0 AS `adding`\n"
+                + "UNION ALL SELECT IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`,  15,0,0,0),0)  AS `exitt`, 0 AS `adding`\n"
                 + "    FROM  `inv_purchase_invoice` `ipi` LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
                 + "    WHERE ((`ipi`.`type` = 2)  AND (`ipi`.`date` IS NOT NULL)) "
                 + "     AND ipi.organization_site_id = " + organizationSiteId + "\n"
                 + "    group by ipi.id\n"
-                + "UNION ALL SELECT 0 AS `exitt`, IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`,  14,0,0,0),0) AS `adding`\n"
+                + "UNION ALL SELECT 0 AS `exitt`, IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`,  15,0,0,0),0) AS `adding`\n"
                 + "    FROM `inv_purchase_invoice` `ipi` LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
                 + "    WHERE ((`ipi`.`type` = 3) AND (`ipi`.`date` IS NOT NULL)) "
                 + "     AND ipi.organization_site_id = " + organizationSiteId + "\n"
@@ -338,7 +338,7 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 query.append( "                UNION ALL\n"
                 + "SELECT  `ic`.`serial` AS `serial`,\n"
                 + "        `ic`.`date` AS `date`,\n"
-                + "        'عقد تقسيط' AS `ScreenName`,\n"
+                + "        'دفعة مقدمة من عقد تقسيط' AS `ScreenName`,\n"
                 + "        `gb`.`name` AS `gl_bank_name`,\n"
                 + "        `ios`.`id` AS `id`,\n"
                 + "        `ios`.`code` AS `code`,\n"
@@ -367,7 +367,7 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 query.append(  "                UNION ALL\n"
                 + "SELECT `rer`.`serial` AS `serial`,\n"
                 + "		`rer`.`date` AS `date`,\n"
-                + "        'مستخلص' AS `ScreenName`,\n"
+                + "        'مستخلص مورد' AS `ScreenName`,\n"
                 + "        '' AS `gl_bank_name`,\n"
                 + "        `ios`.`id` AS `organization_site_id`,\n"
                 + "        `ios`.`code` AS `organization_code`,\n"
@@ -396,7 +396,7 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 query.append(  "                UNION ALL\n"
                 + "SELECT `rer`.`serial` AS `serial`,\n"
                 + "		`rer`.`date` AS `date`,\n"
-                + "        'مستخلص' AS `ScreenName`,\n"
+                + "        'مستخلص عميل' AS `ScreenName`,\n"
                 + "        '' AS `gl_bank_name`,\n"
                 + "        `ios`.`id` AS `organization_site_id`,\n"
                 + "        `ios`.`code` AS `organization_code`,\n"
@@ -426,6 +426,36 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 query.append(  "                UNION ALL\n"
                 + "SELECT `ipi`.`serial` AS `serial`,\n"
                 + "        `ipi`.`date` AS `date`,\n"
+                + "        'فاتورة اشتراك' AS `ScreenName`,\n"
+                + "        '' AS `gl_bank_name`,\n"
+                + "        `ios`.`id` AS `organization_site_id`,\n"
+                + "        `ios`.`code` AS `organization_code`,\n"
+                + "        `ios`.`name` AS `organization_name`,\n"
+                + "        `ios`.`type` AS `organization_type`,\n"
+                + "        NULL AS `inst_contract_serial`, \n"
+                + "        `ipi`.`remarks` AS `remarks`,\n"
+                + "        null AS `supplier_invoice_number`,\n"
+                + "        null AS `total_before_fracture`,\n"
+                + "        null AS `fracture_number`,\n"
+                + "        null AS `value_fracture`,\n"
+                + "        null AS `look`,\n"
+                + "        null AS `is_done`,\n"
+                + "        0 AS `exitt`, IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`, 15,0,0,0),0) AS `adding`\n"
+                + "                	FROM `gm_subscriptions` `ipi` LEFT JOIN `gm_subscriptions_detail` `ipid` ON `ipi`.`id` = `ipid`.`gm_subscriptions_id`\n"
+                + "                    LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `ipi`.`organization_site_id`))\n"
+                + "                	WHERE ((`ipi`.`type` = 0) AND (`ipi`.`date` IS NOT NULL)) \n"
+                + "                     AND ipi.organization_site_id =   \n"+ organizationSiteId + "\n");
+                if (dateStrFrom != null) {
+                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `ipi`.`date` >= '" ).append(dateStrFrom).append(  "' ,true)");
+                }
+                if (dateStrTo != null) {
+                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL , `ipi`.`date` <= '" ).append(dateStrTo).append(  "' ,true)");
+                }
+                query.append(  "                    group by ipi.id\n"
+                + "                    \n");
+                query.append(  "                UNION ALL\n"
+                + "SELECT `ipi`.`serial` AS `serial`,\n"
+                + "        `ipi`.`date` AS `date`,\n"
                 + "        'فاتورة مشتريات' AS `ScreenName`,\n"
                 + "        '' AS `gl_bank_name`,\n"
                 + "        `ios`.`id` AS `organization_site_id`,\n"
@@ -440,7 +470,7 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "        SUM(IFNULL(`ipid`.`value_fracture`, 0))  AS `value_fracture`,\n"
                 + "        `ipi`.`look` AS `look`,\n"
                 + "        `ipi`.`is_done` AS `is_done`,\n"
-                + "        0 AS `exitt`, IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`, 14,0,0,0),0) AS `adding`\n"
+                + "        0 AS `exitt`, IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`, 15,0,0,0),0) AS `adding`\n"
                 + "                	FROM `inv_purchase_invoice` `ipi` LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
                 + "                    LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `ipi`.`organization_site_id`))\n"
                 + "                	WHERE ((`ipi`.`type` = 0) AND (`ipi`.`date` IS NOT NULL)) \n"
@@ -469,7 +499,7 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "        SUM(IFNULL(`ipid`.`value_fracture`, 0))  AS `value_fracture`,\n"
                 + "        `ipi`.`look` AS `look`,\n"
                 + "        `ipi`.`is_done` AS `is_done`,\n"
-                + "        IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`,  14,0,0,0),0)  AS `exitt`, 0 AS `adding`\n"
+                + "        IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`,  15,0,0,0),0)  AS `exitt`, 0 AS `adding`\n"
                 + "                    FROM `inv_purchase_invoice` `ipi` LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
                 + "                    LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `ipi`.`organization_site_id`))\n"
                 + "                    WHERE ((`ipi`.`type` = 1)  AND (`ipi`.`date` IS NOT NULL)) \n"
@@ -497,7 +527,7 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "        SUM(IFNULL(`ipid`.`value_fracture`, 0))  AS `value_fracture`,\n"
                 + "        `ipi`.`look` AS `look`,\n"
                 + "        `ipi`.`is_done` AS `is_done`,\n"
-                + "        IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`,  14,0,0,0),0)  AS `exitt`, 0 AS `adding`\n"
+                + "        IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`,  15,0,0,0),0)  AS `exitt`, 0 AS `adding`\n"
                 + "                    FROM  `inv_purchase_invoice` `ipi` LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
                 + "                    LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `ipi`.`organization_site_id`))\n"
                 + "                    WHERE ((`ipi`.`type` = 2)  AND (`ipi`.`date` IS NOT NULL)) \n"
@@ -525,7 +555,7 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "        SUM(IFNULL(`ipid`.`value_fracture`, 0))  AS `value_fracture`,\n"
                 + "        `ipi`.`look` AS `look`,\n"
                 + "        `ipi`.`is_done` AS `is_done`,\n"
-                + "         0 AS `exitt`, IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`,  14,0,0,0),0) AS `adding`\n"
+                + "         0 AS `exitt`, IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`,  15,0,0,0),0) AS `adding`\n"
                 + "                    FROM `inv_purchase_invoice` `ipi` LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
                 + "                    LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `ipi`.`organization_site_id`))\n"
                 + "                    WHERE ((`ipi`.`type` = 3) AND (`ipi`.`date` IS NOT NULL)) \n"
@@ -756,10 +786,10 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "        LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `in`.`organization_site_id`)))   WHERE (`in`.`type` = 0)  \n"
                 + "                and `in`.organization_site_id =      \n"+ organizationSiteId + "\n");
                 if (dateStrFrom != null) {
-                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `in`.`date` AS `date` >= '" ).append(dateStrFrom).append(  "' ,true)");
+                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL ,  `date` >= '" ).append(dateStrFrom).append(  "' ,true)");
                 }
                 if (dateStrTo != null) {
-                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL , `in`.`date` AS `date` <= '" ).append(dateStrTo).append(  "' ,true)");
+                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL ,  `date` <= '" ).append(dateStrTo).append(  "' ,true)");
                 }
                 query.append(  "                UNION ALL SELECT  `in`.`serial` AS `serial`,\n"
                 + "        `in`.`date` AS `date`,\n"
@@ -782,10 +812,10 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "        LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `in`.`organization_site_id`))) WHERE  (`in`.`type` = 1 or `in`.`type` = 4 )  \n"
                 + "                and `in`.organization_site_id =      \n"+ organizationSiteId + "\n");
                 if (dateStrFrom != null) {
-                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `in`.`date` AS `date` >= '" ).append(dateStrFrom).append(  "' ,true)");
+                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL ,  `date` >= '" ).append(dateStrFrom).append(  "' ,true)");
                 }
                 if (dateStrTo != null) {
-                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL , `in`.`date` AS `date` <= '" ).append(dateStrTo).append(  "' ,true)");
+                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL ,  `date` <= '" ).append(dateStrTo).append(  "' ,true)");
                 }
                 query.append(  "                UNION ALL SELECT  `in`.`serial` AS `serial`,\n"
                 + "        `in`.`date` AS `date`,\n"
@@ -808,10 +838,10 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "        LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `in`.`organization_site_id`))) WHERE  (`in`.`type` = 2) \n"
                 + "                and `in`.organization_site_id =   \n"+ organizationSiteId + "\n");
                 if (dateStrFrom != null) {
-                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `in`.`date` AS `date` >= '" ).append(dateStrFrom).append(  "' ,true)");
+                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL ,  `date` >= '" ).append(dateStrFrom).append(  "' ,true)");
                 }
                 if (dateStrTo != null) {
-                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL , `in`.`date` AS `date` <= '" ).append(dateStrTo).append(  "' ,true)");
+                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL ,  `date` <= '" ).append(dateStrTo).append(  "' ,true)");
                 }
                 query.append(  "                UNION ALL SELECT  `in`.`serial` AS `serial`,\n"
                 + "        `in`.`date` AS `date`,\n"
@@ -834,10 +864,10 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "        LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `in`.`organization_site_id`)))   WHERE   (`in`.`type` = 3) \n"
                 + "                and `in`.organization_site_id =      \n"+ organizationSiteId + "\n");
                 if (dateStrFrom != null) {
-                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `in`.`date` AS `date` >= '" ).append(dateStrFrom).append(  "' ,true)");
+                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `date` >= '" ).append(dateStrFrom).append(  "' ,true)");
                 }
                 if (dateStrTo != null) {
-                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL , `in`.`date` AS `date` <= '" ).append(dateStrTo).append(  "' ,true)");
+                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL ,  `date` <= '" ).append(dateStrTo).append(  "' ,true)");
                 }
                 query.append( ")  as s order by date");
 
