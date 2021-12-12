@@ -32,6 +32,8 @@ public interface GeneraljournalService {
     public void addGeneralJournalForCorrectence(List<GeneralJournal> generalJournals);
 
     public void deleteGeneralJournal(GeneralJournal generalJournal);
+    
+    public void deleteGeneralJournal(Integer id);
 
     public List<GeneralJournal> getALLGeneralJournal();
 

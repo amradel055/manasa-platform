@@ -124,12 +124,12 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
                     message.append("\n");
                     message.append("نسعد بتلقي تقييمكم عن الخدمة المقدمة لكم من برنس  \n");
                     message.append(" https://forms.gle/jARVyTyhGMT9MQRi7 ");
-                    sendSms(getInvInvoiceDTO().getOrganizationSiteId().getMobile(), "التوبى العالمى", message.toString(), "20099319", "0564933202");
+//                    sendSms(getInvInvoiceDTO().getOrganizationSiteId().getMobile(), "التوبى العالمى", message.toString(), "20099319", "0564933202");
                 } else if (getInvInvoiceDTO().getGallaryId().getInvName() != null && getInvInvoiceDTO().getGallaryId().getInvName() == 1) {
                     message.append("\n");
                     message.append("نسعد بتلقي تقييمكم عن الخدمة المقدمة لكم من لي رويال  \n");
                     message.append(" https://forms.gle/qS56hBNPw6T1rUkm6 ");
-                    sendSms(getInvInvoiceDTO().getOrganizationSiteId().getMobile(), "التوبى العالمى", message.toString(), "20099320", "Royal@e12z");
+//                    sendSms(getInvInvoiceDTO().getOrganizationSiteId().getMobile(), "التوبى العالمى", message.toString(), "20099320", "Royal@e12z");
                 }
             }
         } else {

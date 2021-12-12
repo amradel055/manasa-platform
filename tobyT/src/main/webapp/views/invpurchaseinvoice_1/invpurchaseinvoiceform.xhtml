@@ -203,9 +203,9 @@
                                         <p:selectOneMenu style="width: 37.5%; margin-top: 5px;" 
                                                          id="console"
                                                          disabled="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id != null and invPurchaseInvoiceFormDTOMB.invInvoiceDTO.checkData }"
-                                                         value ="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.paymentType}"  >                                                             
-                                            <f:selectItem itemLabel="#{userData.userDDs['CASH']}"  itemValue="0"  />                            
-                                            <f:selectItem itemLabel="#{userData.userDDs['POSTPONE']}" itemValue="1" />
+                                                         value ="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.paymentType}"  >                             
+                                            <f:selectItem itemLabel="#{userData.userDDs['POSTPONE']}" itemValue="1" />                                                            
+                                            <f:selectItem itemLabel="#{userData.userDDs['CASH']}"  itemValue="0"  />
                                             <f:selectItem itemLabel="#{userData.userDDs['DECOM_CREDIT']}" itemValue="2" />
                                             <p:ajax update="test2 testb" process="@form" listener="#{invPurchaseInvoiceFormDTOMB.chagePaymentType()}" />
                                         </p:selectOneMenu>           

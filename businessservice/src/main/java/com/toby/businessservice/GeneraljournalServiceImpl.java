@@ -49,7 +49,7 @@ public class GeneraljournalServiceImpl implements GeneraljournalService {
     private InvReturnPurchaseService invReturnPurchaseService;
     @EJB
     private SymbolService symbolService;
-
+    
     @Override
     public synchronized GeneralJournal addGeneralJournalGlobal(GlYear yearSelection , Integer specialDocumentsTypes ,Integer serial,Date date ,String remark,TobyUser tobyUser) {
         
@@ -140,6 +140,14 @@ public class GeneraljournalServiceImpl implements GeneraljournalService {
 
     @Override
     public void deleteGeneralJournal(GeneralJournal generalJournal) {
+        dao.deleteEntity(generalJournal);
+    }
+    
+    @Override
+    public void deleteGeneralJournal(Integer id) {
+        detailsService.deleteGenDetalilsByGeneralJournal(id);
+        GeneralJournal generalJournal = new GeneralJournal();
+        generalJournal.setId(id);
         dao.deleteEntity(generalJournal);
     }
 

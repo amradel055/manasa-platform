@@ -1380,10 +1380,13 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 invPurchaseInvoice = mapToEntity(invInvoiceDTO, tobyUser);
                 if (invPurchaseInvoice.getId() != null) {
                     //بعمل حفظ فى حالة التعديل
-                    invPurchaseInvoice = dao.updateEntity(invPurchaseInvoice);
+
                     if (invPurchaseInvoice.getGeneralJournalId() != null && invPurchaseInvoice.getGeneralJournalId().getId() != null) {
-                        generaljournalService.deleteGeneralJournal(invPurchaseInvoice.getGeneralJournalId());
+                        generaljournalService.deleteGeneralJournal(invPurchaseInvoice.getGeneralJournalId().getId());
                     }
+                    invPurchaseInvoice.setPostFlag(0);
+                    invPurchaseInvoice.setGeneralJournalId(null);
+                    invPurchaseInvoice = dao.updateEntity(invPurchaseInvoice);
                 } else {
                     // فى حالة ان الفاتورة جديدة بروح اجيب السيريال الاول 
                     Integer serial = genericService.getMaxSerialForInvoice(InvPurchaseInvoice.class, invPurchaseInvoice.getBranchId().getId(), null, invPurchaseInvoice.getType());
@@ -1431,16 +1434,16 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 }
 
                 ///   الترحيل
-//                GeneralJournal generalJournal = tarhil(invInvoiceDTO, tobyUser);
-//                if (generalJournal != null) {
-//                    invPurchaseInvoice.setPostFlag(1);
-//                    invPurchaseInvoice.setGeneralJournalId(generalJournal);
-//                    dao.updateEntity(invPurchaseInvoice);
-//                }
+                GeneralJournal generalJournal = tarhil(invInvoiceDTO, tobyUser);
+                if (generalJournal != null) {
+                    invPurchaseInvoice.setPostFlag(1);
+                    invPurchaseInvoice.setGeneralJournalId(generalJournal);
+                    dao.updateEntity(invPurchaseInvoice);
+                }
             }
         } catch (Exception e) {
             invInvoiceDTO.setMsg(e.toString());
-                dao.rollbackQuery();
+            dao.rollbackQuery();
         }
 
         return invInvoiceDTO;
@@ -1515,7 +1518,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     }
 
     private InvInvoiceDTO initData(InvInvoiceDTO dto, InvPurchaseInvoice entity, Boolean isLoaded) {
-        if(dto == null){
+        if (dto == null) {
             dto = new InvInvoiceDTO();
         }
         dto.setId(entity.getId());
@@ -1881,6 +1884,10 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 glBankTransactionService.deleteGlBankTransactionByInvoiceId(invPurchaseInvoice.getId());
                 List<InvPurchaseInvoiceDetail> detailList = invPurchaseInvoiceDetailsService.getAllInvPurchaseInvoiceDetailsByInvPurchaseInvoiceId(invPurchaseInvoice.getId());
                 deleteDetails(detailList, isPurchaseOrSales);
+                InvPurchaseInvoice entity = dao.findEntityById(InvPurchaseInvoice.class, invPurchaseInvoice.getId());
+                if (entity.getGeneralJournalId() != null && entity.getGeneralJournalId().getId() != null) {
+                    generaljournalService.deleteGeneralJournal(entity.getGeneralJournalId().getId());
+                }
                 InvPurchaseInvoice invPurchaseInvoice1 = new InvPurchaseInvoice();
                 invPurchaseInvoice1.setId(invPurchaseInvoice != null ? invPurchaseInvoice.getId() : null);
                 dao.deleteEntity(invPurchaseInvoice1);
@@ -2415,13 +2422,13 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             Integer purchseTaxAccount = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"PURCHASE_TAX_ACCOUNT\" AND a.accountId IS NOT NULL", params);
 
             generaljournalDetailsService.addGenDetalil(true, dto.getTotalNetAfterDiscount(), journal.getId(), storeAccountNumber,
-                    (dto.getGallaryId() == null || dto.getGallaryId().getCostCenterId() == null || dto.getGallaryId().getCostCenterId().getId() == null) ? null : dto.getGallaryId().getCostCenterId().getId(),
+                    835,
                     dto.getRemarks(), tobyUser);
             generaljournalDetailsService.addGenDetalil(false, dto.getFinalNet(), journal.getId(),
                     (dto.getOrganizationSiteId() == null || dto.getOrganizationSiteId().getAccountId() == null || dto.getOrganizationSiteId().getAccountId().getId() == null) ? null : dto.getOrganizationSiteId().getAccountId().getId(),
                     (dto.getGallaryId() == null || dto.getGallaryId().getCostCenterId() == null || dto.getGallaryId().getCostCenterId().getId() == null) ? null : dto.getGallaryId().getCostCenterId().getId(),
                     dto.getRemarks(), tobyUser);
-            generaljournalDetailsService.addGenDetalil(false, dto.getTaxvalue(), journal.getId(), purchseTaxAccount,
+            generaljournalDetailsService.addGenDetalil(true, dto.getTaxvalue(), journal.getId(), purchseTaxAccount,
                     (dto.getGallaryId() == null || dto.getGallaryId().getCostCenterId() == null || dto.getGallaryId().getCostCenterId().getId() == null) ? null : dto.getGallaryId().getCostCenterId().getId(),
                     dto.getRemarks(), tobyUser);
 

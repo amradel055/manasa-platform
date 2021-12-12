@@ -283,10 +283,12 @@ public class InvGlobalServiceImpl implements InvGlobalService {
     private BigDecimal zorarAndHarot2(InvInvoiceDTO invInvoiceDTO, InvDetailDTO detailEntity, BigDecimal cost) {
         // زرار وهاروت
         BigDecimal price;
-        if (invInvoiceDTO.getPricetype() == 1) {
+        if (invInvoiceDTO.getPricetype() != null && invInvoiceDTO.getPricetype() == 1) {
             price = detailEntity.getItemsBarcodesDetail().getMaxPriceMen();
-        } else {
+        } else if (invInvoiceDTO.getPricetype() != null && invInvoiceDTO.getPricetype() == 0) {
             price = detailEntity.getItemsBarcodesDetail().getMaxPriceYoung();
+        } else {
+            price = detailEntity.getItemsBarcodesDetail().getMaxPriceMen();
         }
 
         if (price != null
@@ -364,15 +366,6 @@ public class InvGlobalServiceImpl implements InvGlobalService {
         return price;
     }
 
-    private BigDecimal AlumetalActivity(BigDecimal weight, BigDecimal total, BigDecimal quantity, BigDecimal cost) {
-        if (weight == null || weight.compareTo(BigDecimal.ZERO) == 0) {
-            total = quantity.multiply(cost);
-        } else {
-            total = weight.multiply(cost);
-        }
-        return total;
-    }
-
     private BigDecimal RetailActivity(BigDecimal total, BigDecimal quantity, BigDecimal cost) {
         total = quantity.multiply(cost);
         return total;
@@ -416,7 +409,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
         }
         return invPurchaseInvoiceDTO;
     }
-    
+
     @Override
     public InvInvoiceDTO updateSummitionSmall(InvInvoiceDTO invPurchaseInvoiceDTO) {
         try {
@@ -429,14 +422,14 @@ public class InvGlobalServiceImpl implements InvGlobalService {
 
         return invPurchaseInvoiceDTO;
     }
-    
-    public InvInvoiceDTO recalcHeadValuesSmall(InvInvoiceDTO invPurchaseInvoiceDTO){
-        if(invPurchaseInvoiceDTO.getInvPurchaseInvoiceDetailList() != null && !invPurchaseInvoiceDTO.getInvPurchaseInvoiceDetailList().isEmpty()){
-            for(InvDetailDTO dTO : invPurchaseInvoiceDTO.getInvPurchaseInvoiceDetailList()){
+
+    public InvInvoiceDTO recalcHeadValuesSmall(InvInvoiceDTO invPurchaseInvoiceDTO) {
+        if (invPurchaseInvoiceDTO.getInvPurchaseInvoiceDetailList() != null && !invPurchaseInvoiceDTO.getInvPurchaseInvoiceDetailList().isEmpty()) {
+            for (InvDetailDTO dTO : invPurchaseInvoiceDTO.getInvPurchaseInvoiceDetailList()) {
                 claculateHeadTotalFromDetail(dTO, invPurchaseInvoiceDTO);
             }
         }
-        
+
         return invPurchaseInvoiceDTO;
     }
 
@@ -1061,31 +1054,31 @@ public class InvGlobalServiceImpl implements InvGlobalService {
 //                || ScreenNameClassEnum.PROWORKORDER.equals(screenNameClassEnum)
 //                || ScreenNameClassEnum.INVRETURNSALESFORM.equals(screenNameClassEnum)
 //                || ScreenNameClassEnum.PROFACTORYDELIVERY.equals(screenNameClassEnum))) {
-            dTO.setNumber(number);
-            dTO.setQuantityOfOneUnit(quantityOfOneUnit);
-            dTO.setClothNumber(clothNumber);
-            dTO.setProof(proof != null && proof == 1);
-            if (invInventory != null && invInventory.getId() != null) {
-                InvInventoryDTO invInventoryDTO = new InvInventoryDTO();
-                invInventoryDTO.setId(invInventory.getId());
-                invInventoryDTO.setCode(invInventory.getCode());
-                invInventoryDTO.setName(invInventory.getName());
-                dTO.setInventoryDTO(invInventoryDTO);
-            }
-            if (idParent != null) {
-                InvItemDTO invItemDTO = new InvItemDTO();
-                invItemDTO.setId(idParent);
-                invItemDTO.setCode(itemBarcodeParent);
-                invItemDTO.setName(itemNameParent);
-                dTO.setInvItemParentId(invItemDTO);
-            }
+        dTO.setNumber(number);
+        dTO.setQuantityOfOneUnit(quantityOfOneUnit);
+        dTO.setClothNumber(clothNumber);
+        dTO.setProof(proof != null && proof == 1);
+        if (invInventory != null && invInventory.getId() != null) {
+            InvInventoryDTO invInventoryDTO = new InvInventoryDTO();
+            invInventoryDTO.setId(invInventory.getId());
+            invInventoryDTO.setCode(invInventory.getCode());
+            invInventoryDTO.setName(invInventory.getName());
+            dTO.setInventoryDTO(invInventoryDTO);
+        }
+        if (idParent != null) {
+            InvItemDTO invItemDTO = new InvItemDTO();
+            invItemDTO.setId(idParent);
+            invItemDTO.setCode(itemBarcodeParent);
+            invItemDTO.setName(itemNameParent);
+            dTO.setInvItemParentId(invItemDTO);
+        }
 
-            if (discount != null && discount.compareTo(BigDecimal.ZERO) == 1) {
-                dTO.setShowPrice(Boolean.TRUE);
-            }
-            if (ScreenNameClassEnum.PROFACTORYDELIVERY.equals(screenNameClassEnum) && detailId != null) {
-                dTO.setInvPurchaseInvoiceDetailId(detailId);
-            }
+        if (discount != null && discount.compareTo(BigDecimal.ZERO) == 1) {
+            dTO.setShowPrice(Boolean.TRUE);
+        }
+        if (ScreenNameClassEnum.PROFACTORYDELIVERY.equals(screenNameClassEnum) && detailId != null) {
+            dTO.setInvPurchaseInvoiceDetailId(detailId);
+        }
 //        }
         dTO.setId(id);
         dTO.setSerial(serial);
