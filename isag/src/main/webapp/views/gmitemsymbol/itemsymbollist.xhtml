@@ -65,7 +65,13 @@
                                   headerText="السعر" sortBy="#{busesTable.cost}" >
                              <p:outputLabel value="#{busesTable.cost}"  style="font-size: 1.5vh" />
                         </p:column>
+                             <p:column filterStyle="display:none" 
+                                  style="width: 25vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" filterBy="#{busesTable.name}"  filterMatchMode="contains" 
+                                  headerText="المده بالايام " sortBy="#{busesTable.period}" >
+                                 <p:outputLabel value="#{busesTable.period}"  style="font-size: 1.5vh" />
+                        </p:column>
                         <p:column headerText="#{userData.userDDs['TRANSACTION']}"  style="width: 10vh;font-size: 1.8vh;text-align: center;border-radius: 0px;">
+                            
 
                             <p:commandButton class="seditButtons"
                                              update="@form"

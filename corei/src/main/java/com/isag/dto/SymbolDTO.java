@@ -20,6 +20,7 @@ public class SymbolDTO extends BaseEntityDTO {
     private Integer accountId;
     private BigDecimal cost;
     private Boolean symbolType;
+    private Integer period;
     
     
     public SymbolDTO() {
@@ -153,6 +154,20 @@ public class SymbolDTO extends BaseEntityDTO {
      */
     public void setSymbolType(Boolean symbolType) {
         this.symbolType = symbolType;
+    }
+
+    /**
+     * @return the period
+     */
+    public Integer getPeriod() {
+        return period;
+    }
+
+    /**
+     * @param period the period to set
+     */
+    public void setPeriod(Integer period) {
+        this.period = period;
     }
 
 }

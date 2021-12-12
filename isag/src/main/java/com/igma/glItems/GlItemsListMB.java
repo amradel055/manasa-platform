@@ -14,6 +14,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import com.isag.businessservice.SymbolService;
+import com.isag.bussinessservice.global.AutoCompleteService;
 import com.isag.dto.SymbolDTO;
 import com.isag.entity.Symbol;
 
@@ -30,7 +31,8 @@ public class GlItemsListMB extends BaseListBean {
 
     @EJB
     SymbolService symbolService;
-
+    @EJB
+     AutoCompleteService autoCompleteService ;
     @Override
     @PostConstruct
     public void init() {
@@ -41,6 +43,9 @@ public class GlItemsListMB extends BaseListBean {
         }
          else if (getUri().contains("gmitemsymbol")) {
             setSymbolDTOList(symbolService.findItemSymbolByCompanyId(getUserData().getCompany().getId()));
+        }
+           else if (getUri().contains("gmsubscriptions")) {
+          setSymbolDTOList(autoCompleteService.autoCompleteSymbolByCompanyId(getUserData().getCompany().getId(),0,null));
         }
     }
 

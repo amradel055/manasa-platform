@@ -17,6 +17,7 @@ import com.isag.dto.GlBankDTO;
 import com.isag.dto.GmSubscriptionsDTO;
 import com.isag.dto.GmSubscriptionsDetailDTO;
 import com.isag.dto.InvOrganizationSiteDTO;
+import com.isag.dto.SymbolDTO;
 import com.isag.isag.AutoComplete;
 import com.isag.isag.BaseFormBean;
 import com.isag.print.IReportService;
@@ -41,6 +42,7 @@ import javax.servlet.http.HttpServletRequest;
 public class GmSubscriptionsFormDTOMB extends BaseFormBean {
 
     private GmSubscriptionsDTO gmSubscriptionsDTO;
+    private SymbolDTO symbolDTO;
 
     private InvOrganizationSiteDTO organizationSiteId;
 
@@ -165,7 +167,8 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
 
     public void leaveScreen() {
         if (getUri().contains("gmregistration")) {
-            exit("../gmregistration/gmclientlist.xhtml");
+         exit("../gmregistration/gmclientlist.xhtml");
+         
         }
     }
 
@@ -460,6 +463,20 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
      */
     public void setOrganizationSiteId(InvOrganizationSiteDTO organizationSiteId) {
         this.organizationSiteId = organizationSiteId;
+    }
+
+    /**
+     * @return the symbolDTO
+     */
+    public SymbolDTO getSymbolDTO() {
+        return symbolDTO;
+    }
+
+    /**
+     * @param symbolDTO the symbolDTO to set
+     */
+    public void setSymbolDTO(SymbolDTO symbolDTO) {
+        this.symbolDTO = symbolDTO;
     }
 
 }

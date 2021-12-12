@@ -43,6 +43,8 @@ public class Symbol extends BaseEntity {
     @Size(min = 1, max = 255)
     @Column(name = "name")
     private String name;
+    @Column(name = "period")
+    private Integer period;
     @Column(name = "cost")
     private BigDecimal cost;
     @Basic(optional = false)
@@ -91,6 +93,7 @@ public class Symbol extends BaseEntity {
     private Collection<InvPurchaseOrderDetail> invPurchaseOrderDetailCollection;
     @OneToMany(mappedBy = "lang")
     private Collection<IsagUser> isagUserCollection;
+   
 
     public Symbol() {
     }
@@ -341,5 +344,21 @@ public class Symbol extends BaseEntity {
     public void setSymbolType(Integer symbolType) {
         this.symbolType = symbolType;
     }
+
+    /**
+     * @return the period
+     */
+    public Integer getPeriod() {
+        return period;
+    }
+
+    /**
+     * @param period the period to set
+     */
+    public void setPeriod(Integer period) {
+        this.period = period;
+    }
+
+  
 
 }
