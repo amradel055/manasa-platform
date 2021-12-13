@@ -58,6 +58,7 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
     private BigDecimal finalNet;
     private BigDecimal totalWithTaxValue;
     private BigDecimal discountValue;
+     private BigDecimal value;
 
     private Boolean showCustomerDate = Boolean.TRUE;
     private InventoryDelegatorDTO invDelegatorId;
@@ -675,5 +676,20 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
      */
     public void setDateAfterTagmeed(Date dateAfterTagmeed) {
         this.dateAfterTagmeed = dateAfterTagmeed;
+    }
+
+    /**
+     * @return the value
+     */
+    public BigDecimal getValue() {
+    
+        return value ;
+    }
+
+    /**
+     * @param value the value to set
+     */
+    public void setValue(BigDecimal value) {
+        this.value = value;
     }
 }

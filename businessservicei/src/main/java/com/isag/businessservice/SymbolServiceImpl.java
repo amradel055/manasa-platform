@@ -456,6 +456,7 @@ public class SymbolServiceImpl implements SymbolService {
         dTO.setArrange(entity.getArrange());
         dTO.setName(entity.getName());
         dTO.setId(entity.getId());
+        dTO.setPeriod(entity.getPeriod());
 
     }
 
@@ -464,6 +465,7 @@ public class SymbolServiceImpl implements SymbolService {
         entity.setName(dTO.getName());
         entity.setSerial(dTO.getSerial());
         entity.setArrange(dTO.getArrange());
+        entity.setPeriod(dTO.getPeriod());
         entity.setCost(dTO.getCost());
         entity.setSymbolType(dTO.getSymbolType() ? 1 : 0);
         if (dTO.getAccountId() != null) {

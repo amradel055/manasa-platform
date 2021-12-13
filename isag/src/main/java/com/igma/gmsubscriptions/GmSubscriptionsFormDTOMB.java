@@ -17,6 +17,8 @@ import com.isag.dto.GlBankDTO;
 import com.isag.dto.GmSubscriptionsDTO;
 import com.isag.dto.GmSubscriptionsDetailDTO;
 import com.isag.dto.InvOrganizationSiteDTO;
+import com.isag.dto.SymbolDTO;
+import com.isag.entity.GmSubscriptions;
 import com.isag.isag.AutoComplete;
 import com.isag.isag.BaseFormBean;
 import com.isag.print.IReportService;
@@ -30,7 +32,10 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import com.isag.uploadfile.FileUploadController;
+import java.util.Calendar;
+import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.client.Entity;
 
 /**
  *
@@ -41,6 +46,7 @@ import javax.servlet.http.HttpServletRequest;
 public class GmSubscriptionsFormDTOMB extends BaseFormBean {
 
     private GmSubscriptionsDTO gmSubscriptionsDTO;
+    private SymbolDTO symbolDTO;
 
     private InvOrganizationSiteDTO organizationSiteId;
 
@@ -50,6 +56,8 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
     private List<GlBankDTO> glBankList;
     private GlBankDTOConverter glBankConverter;
     IReportService iReportService = new IReportServiceImpl();
+
+    private List<SymbolDTO> symbolDTOList;
 
     // EJBs
     @EJB
@@ -67,6 +75,7 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
     private String file;
     private String host;
     private FileUploadController fileUploadController;
+    private SymbolDTO symbolDTOSelected;
 
     @Override
     @PostConstruct
@@ -101,6 +110,19 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceFormMB", "load");
         }
+    }
+
+    public void updatedata() {
+
+        gmSubscriptionsDTO.setValue(getSymbolDTOSelected().getCost());
+        gmSubscriptionsDTO.setDate(new Date());
+        gmSubscriptionsDTO.setStartDate(new Date());
+        Calendar c = Calendar.getInstance();
+        c.setTime(gmSubscriptionsDTO.getStartDate());
+        c.add(Calendar.DAY_OF_MONTH,getSymbolDTOSelected().getPeriod());
+        gmSubscriptionsDTO.setEndDate(c.getTime());
+   
+        
     }
 
     public void fillDefaultList() {
@@ -166,6 +188,7 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
     public void leaveScreen() {
         if (getUri().contains("gmregistration")) {
             exit("../gmregistration/gmclientlist.xhtml");
+
         }
     }
 
@@ -460,6 +483,51 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
      */
     public void setOrganizationSiteId(InvOrganizationSiteDTO organizationSiteId) {
         this.organizationSiteId = organizationSiteId;
+    }
+
+    /**
+     * @return the symbolDTO
+     */
+    public SymbolDTO getSymbolDTO() {
+        return symbolDTO;
+    }
+
+    /**
+     * @param symbolDTO the symbolDTO to set
+     */
+    public void setSymbolDTO(SymbolDTO symbolDTO) {
+        this.symbolDTO = symbolDTO;
+    }
+
+    /**
+     * @return the symbolDTOList
+     */
+    public List<SymbolDTO> getSymbolDTOList() {
+        if (symbolDTOList == null) {
+            setSymbolDTOList(autoCompleteService.autoCompleteSymbolByCompanyId(getUserData().getCompany().getId(), 0, null));
+        }
+        return symbolDTOList;
+    }
+
+    /**
+     * @param symbolDTOList the symbolDTOList to set
+     */
+    public void setSymbolDTOList(List<SymbolDTO> symbolDTOList) {
+        this.symbolDTOList = symbolDTOList;
+    }
+
+    /**
+     * @return the symbolDTOSelected
+     */
+    public SymbolDTO getSymbolDTOSelected() {
+        return symbolDTOSelected;
+    }
+
+    /**
+     * @param symbolDTOSelected the symbolDTOSelected to set
+     */
+    public void setSymbolDTOSelected(SymbolDTO symbolDTOSelected) {
+        this.symbolDTOSelected = symbolDTOSelected;
     }
 
 }
