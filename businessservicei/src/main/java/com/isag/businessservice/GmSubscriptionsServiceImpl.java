@@ -138,6 +138,7 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
         entity.setPayCash(dto.getPayed());
         entity.setPayNet(dto.getPayNet());
         entity.setTaxFlag(dto.getTaxFlag());
+        entity.setValue(dto.getValue());
 
         if (entity.getCreatedBy() != null) {
             IsagUser user = new IsagUser();
@@ -270,6 +271,7 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
 
     private GmSubscriptionsDTO initData(GmSubscriptionsDTO dto, GmSubscriptions entity) {
         dto.setId(entity.getId());
+        dto.setValue(entity.getValue());
         dto.setSerial(entity.getSerial());
         dto.setSerialTax(entity.getSerialTax());
         dto.setIsEdit(Boolean.TRUE);

@@ -32,6 +32,8 @@ public class GmSubscriptions extends BaseEntity {
     @Column(name = "date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
+    @Column(name = "value")
+    private BigDecimal value;
     @Basic(optional = false)
     @NotNull
     @Column(name = "end_date")
@@ -328,6 +330,20 @@ public class GmSubscriptions extends BaseEntity {
      */
     public void setStartDate(Date startDate) {
         this.startDate = startDate;
+    }
+
+    /**
+     * @return the value
+     */
+    public BigDecimal getValue() {
+        return value;
+    }
+
+    /**
+     * @param value the value to set
+     */
+    public void setValue(BigDecimal value) {
+        this.value = value;
     }
 
 }

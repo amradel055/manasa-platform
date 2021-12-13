@@ -81,6 +81,17 @@
 
                             </div>
                         </div>
+                               <div class="ui-g-12 ui-xl-12">
+
+                                                        <div class="ui-g-6 ui-xl-6">
+                                                            <p:inputText style="width: 35%!important" id="ad412"  value="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.value}"/>
+
+                                                        </div>
+                                                        <div class="ui-g-6 ui-xl-6">
+                                                            <p:outputLabel style="width: 85px;" value="القيمه "/>
+
+                                                        </div>
+                                                    </div>
                         <div class="ui-g-12 ui-xl-12">
 
                             <div class="ui-g-6 ui-xl-6">
@@ -259,21 +270,22 @@
 
                                                         </div>
                                                     </div>
-                                                    <div class="ui-g-12 ui-xl-12">
+                                                          <div class="ui-g-12 ui-xl-12">
 
                                                         <div class="ui-g-6 ui-xl-6">
-                                                            <p:inputText style="width: 35%!important" id="ad312"  value="#{gmSubscriptionsFormDTOMB.organizationSiteId.address}"/>
+                                                            <p:inputText style="width: 35%!important" id="ad312" value="#{gmSubscriptionsFormDTOMB.organizationSiteId.mobile}"/>
 
                                                         </div>
                                                         <div class="ui-g-6 ui-xl-6">
-                                                            <p:outputLabel style="width: 85px;" value="العنوان "/>
+                                                            <p:outputLabel style="width: 85px;" value="الجوال"/>
 
                                                         </div>
                                                     </div>
+                                             
                                                     <div class="ui-g-12 ui-xl-12">
 
                                                         <div class="ui-g-6 ui-xl-6">
-                                                            <p:inputText style="width: 35%!important" id="ad412"  value="#{gmSubscriptionsFormDTOMB.organizationSiteId.nationId}"/>
+                                                            <p:inputText style="width: 35%!important" id="ad812"  value="#{gmSubscriptionsFormDTOMB.organizationSiteId.nationId}"/>
 
                                                         </div>
                                                         <div class="ui-g-6 ui-xl-6">
@@ -351,16 +363,16 @@
                              selectionMode="single"
                              sortBy="#{1}"
                              rowKey="#{invPurchaseInvoiceDetailsTable.index}"
-                             selection="#{glItemsListMB.symbolDTOSelected}"
-                             value="#{glItemsListMB.symbolDTOList}" >
+                             selection="#{gmSubscriptionsFormDTOMB.symbolDTOSelected}"
+                             value="#{gmSubscriptionsFormDTOMB.symbolDTOList}" >
+                    
+                    <p:ajax event="rowSelect" listener="#{gmSubscriptionsFormDTOMB.updatedata()}" update="@form"  process="invPurchaseInvoiceDetailsTable" />
+
 
                     <p:column style="width: 8vh;text-align: -webkit-auto;border-radius: 0px" id="discountTotal" headerText="الاشتراك">
                         <p:inputText id="discountTotalT" 
                                      value="#{invPurchaseInvoiceDetailsTable.name}" 
                                      style="width:70%!important;display: inline!important">
-                            <p:ajax 
-                                    
-                                 />
                         </p:inputText>  
                     </p:column>
 

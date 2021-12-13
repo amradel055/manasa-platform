@@ -21,6 +21,7 @@ public class SymbolDTO extends BaseEntityDTO {
     private BigDecimal cost;
     private Boolean symbolType;
     private Integer period;
+    public Object date;
     
     
     public SymbolDTO() {

@@ -44,9 +44,7 @@ public class GlItemsListMB extends BaseListBean {
          else if (getUri().contains("gmitemsymbol")) {
             setSymbolDTOList(symbolService.findItemSymbolByCompanyId(getUserData().getCompany().getId()));
         }
-           else if (getUri().contains("gmsubscriptions")) {
-          setSymbolDTOList(autoCompleteService.autoCompleteSymbolByCompanyId(getUserData().getCompany().getId(),0,null));
-        }
+           
     }
 
     @Override
