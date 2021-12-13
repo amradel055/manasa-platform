@@ -18,6 +18,19 @@
             body .ui-widget, body .ui-widget .ui-widget {
 
             }
+            body .ui-datatable thead th:last-child {
+                border-right: 1px solid #d8d8d8;
+                display: inline-block;
+            }
+            body .ui-datatable tbody tr.ui-widget-content {
+                border: 1px solid #d8d8d8;
+                display: inline-block;
+                width: 10%;
+                padding: 5px;
+                height: 60px;
+                margin-top: 1%;
+                margin-right: 1%    
+            }
         </style>
 
         <h:form id="form" dir="#{userData.dir}" class='formmargin'>
@@ -25,13 +38,57 @@
             <div >
                 <p:messages id="curmsg" autoUpdate="true" showDetail="true" rendered="true" closable="true"/>   
             </div>
+            
+        <p:fieldset id="fieldSetId11" legend="#{userData.userDDs['DET_SALE_INVO']}"   style="margin:3% 0 0 0">
 
-            <p:fieldset id="test5" legend="#{userData.userDDs['SALES_INVOICES']}"> 
+            <p:dataTable id="invPurchaseInvoiceDetailsTable" class="salesInvoiceTable"
+                             widgetVar="invPurchaseInvoiceDetailsTable"
+                             style="margin-bottom:20px"
+                             var="invPurchaseInvoiceDetailsTable"
+                             rowIndexVar="index" 
+                             dir="rtl" 
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                             editable="true"
+                             editMode="cell"
+                             selectionMode="single"
+                             sortBy="#{1}"
+                             rowKey="#{invPurchaseInvoiceDetailsTable.index}"
+                             selection="#{gmSubscriptionsFormDTOMB.symbolDTOSelected}"
+                             value="#{gmSubscriptionsFormDTOMB.symbolDTOList}" >
+
+                    <p:ajax event="rowSelect" listener="#{gmSubscriptionsFormDTOMB.updatedata()}" update="@form"  process="invPurchaseInvoiceDetailsTable" />
+
+
+                    <p:column style="" id="discountTotal" headerText="الاشتراك">
+                        <p:outputLabel id="discountTotalT" 
+                                     value="#{invPurchaseInvoiceDetailsTable.name}" 
+                                     style="width:70%!important;display: inline!important">
+                        </p:outputLabel>  
+                    </p:column>
+
+                </p:dataTable>
+
+            </p:fieldset>
+            
+            <p:fieldset id="test5" legend="#{userData.userDDs['SALES_INVOICES']}" style="margin: 0;"> 
 
                 <div  id="firstSegment" class="ui-g-12 ui-g-nopad salesInvoiceFirst">
 
                     <div class="ui-g">
-                        <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-4 ui-xl-4">
+
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 37%" 
+                                             id="purchIdVal" 
+                                             value="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.serial}" />
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 95px;;" id="purchId" value="#{userData.userDDs['INVOICE_NO']}" />
+
+                            </div>
+                        </div>
+                        <div class="ui-g-4 ui-xl-4">
+                            
                             <div class="ui-g-6 ui-xl-6">
                                 <p:autoComplete style="width:37%" 
                                                 dropdown="true"
@@ -47,90 +104,21 @@
 
                                 </p:autoComplete>
                             </div>
+                            
                             <div class="ui-g-6 ui-xl-6">
                                 <p:outputLabel style="width: 100px;" 
-                                               id="glbank1name"
-                                               value="#{userData.userDDs['TREASURY']}"/>
+                                                   id="glbank1name"
+                                                   value="#{userData.userDDs['TREASURY']}"/>
                             </div>
+                            
                         </div>
-                        <div class="ui-g-12 ui-xl-12">
-
-                            <div class="ui-g-6 ui-xl-6">
-                                <p:inputText style="width:69%"  value="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.remarks}"
-                                             />
-                            </div>
-                            <div class="ui-g-6 ui-xl-6">
-                                <p:outputLabel style="width: 95px; " value="#{userData.userDDs['NOTE']}"/>
-
-                            </div>
-                        </div>
-
-                    </div>
-
-
-                    <div class="ui-g-6 ui-xl-6">
-                        <div class="ui-g-12 ui-xl-12">
-
-                            <div class="ui-g-6 ui-xl-6">
-                                <p:inputText style="width: 37%" 
-                                             id="purchIdVal" readonly="true"
-                                             value="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.serial}" />
-                            </div>
-                            <div class="ui-g-6 ui-xl-6">
-                                <p:outputLabel style="width: 95px;;" id="purchId" value="#{userData.userDDs['INVOICE_NO']}" />
-
-                            </div>
-                        </div>
-                               <div class="ui-g-12 ui-xl-12">
-
-                                                        <div class="ui-g-6 ui-xl-6">
-                                                            <p:inputText style="width: 35%!important" id="ad412"  value="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.value}"/>
-
-                                                        </div>
-                                                        <div class="ui-g-6 ui-xl-6">
-                                                            <p:outputLabel style="width: 85px;" value="القيمه "/>
-
-                                                        </div>
-                                                    </div>
-                        <div class="ui-g-12 ui-xl-12">
-
-                            <div class="ui-g-6 ui-xl-6">
-                                <p:calendar id="dateFrom" 
-                                            value="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.date}"
-                                            pattern="dd/MM/yyyy"
-                                            style="width:50%!important"/>
-                            </div>
-                            <div class="ui-g-6 ui-xl-6">
-                                <p:outputLabel style="width: 95px; ;" value="#{userData.userDDs['DATEE']}*"/>
-
-                            </div>
-                        </div>
-                        <div class="ui-g-12 ui-xl-12">
-
-                            <div class="ui-g-6 ui-xl-6">
-                                <p:calendar id="dateFrom1" 
-                                            value="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.startDate}"
-                                            pattern="dd/MM/yyyy"
-                                            style="width:50%!important"/>
-                            </div>
-                            <div class="ui-g-6 ui-xl-6">
-                                <p:outputLabel style="width: 95px; ;" value="#{userData.userDDs['DATEE']} من*"/>
-
-                            </div>
-                        </div>
-                        <div class="ui-g-12 ui-xl-12">
-
-                            <div class="ui-g-6 ui-xl-6">
-                                <p:calendar id="dateFrom2" 
-                                            value="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.endDate}"
-                                            pattern="dd/MM/yyyy"
-                                            style="width:50%!important"/>
-                            </div>
-                            <div class="ui-g-6 ui-xl-6">
-                                <p:outputLabel style="width: 95px; ;" value="#{userData.userDDs['DATEE']} الي*"/>
-
-                            </div>
-                        </div>
+                        
+                        <div class="ui-g-4 ui-xl-4">
+                        
+                               
+                        
+                        
+                        
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
                                 <p:outputLabel style="width: 100px;" value="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.organizationSiteId}"
@@ -339,157 +327,93 @@
                             </div>
                         </div>
                     </div>
+                        
+                        
+                        <div class="ui-g-4 ui-xl-4">
+
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel id="dateFrom1" 
+                                            value="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.startDate}"
+                                            style="width:50%!important"/>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 95px; ;" value="#{userData.userDDs['DATEE']} من*"/>
+
+                            </div>
+                        </div>
+                        <div class="ui-g-4 ui-xl-4">
+
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel id="dateFrom2" 
+                                            value="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.endDate}"
+                                            style="width:50%!important"/>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 95px; ;" value="#{userData.userDDs['DATEE']} الي*"/>
+
+                            </div>
+                        </div>
+                            <div class="ui-g-4 ui-xl-4">
+
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:inputText style="width:69%"  value="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.remarks}"
+                                             />
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 95px; " value="#{userData.userDDs['NOTE']}"/>
+
+                            </div>
+                        </div>
+                        
+
+                    </div>
+
+
+                    
 
 
 
                 </div>
 
             </p:fieldset>
-
-            <p:fieldset id="fieldSetId" legend="#{userData.userDDs['DET_SALE_INVO']}"   style="margin:2% 0">
+            
+            <p:fieldset id="fieldSetId" legend="#{userData.userDDs['DET_SALE_INVO']}"   style="margin:0;">
                 <div >
                     <p:messages id="curmsg2" autoUpdate="true" showDetail="true" rendered="true" closable="true"/>   
                 </div>
 
-                <p:dataTable id="invPurchaseInvoiceDetailsTable" class="salesInvoiceTable"
-                             widgetVar="invPurchaseInvoiceDetailsTable"
-                             style="margin-bottom:20px"
-                             var="invPurchaseInvoiceDetailsTable"
-                             rowIndexVar="index" 
-                             dir="rtl" 
-                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
-                             editable="true"
-                             editMode="cell"
-                             selectionMode="single"
-                             sortBy="#{1}"
-                             rowKey="#{invPurchaseInvoiceDetailsTable.index}"
-                             selection="#{gmSubscriptionsFormDTOMB.symbolDTOSelected}"
-                             value="#{gmSubscriptionsFormDTOMB.symbolDTOList}" >
-                    
-                    <p:ajax event="rowSelect" listener="#{gmSubscriptionsFormDTOMB.updatedata()}" update="@form"  process="invPurchaseInvoiceDetailsTable" />
-
-
-                    <p:column style="width: 8vh;text-align: -webkit-auto;border-radius: 0px" id="discountTotal" headerText="الاشتراك">
-                        <p:inputText id="discountTotalT" 
-                                     value="#{invPurchaseInvoiceDetailsTable.name}" 
-                                     style="width:70%!important;display: inline!important">
-                        </p:inputText>  
-                    </p:column>
-
-                </p:dataTable>
-
                 <div  id="firstSegment" class="ui-g-12 ui-g-nopad">
                     <h:panelGroup id="test2">
                         <div class="ui-g">
+                            
+                            <div class="ui-g-3 ui-xl-3">
 
-                            <div class="ui-g-4 ui-xl-4">
-                                <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:selectBooleanCheckbox 
+                                        value="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.status}"
 
-                                    <div class="ui-g-6 ui-xl-6">
-                                        <p:selectBooleanCheckbox 
-                                            value="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.taxDiscFlag}"
-                                            >
-                                            <p:ajax update=" form:taxdiscvalue form:totalWithTaxValue" listener="#{gmSubscriptionsFormDTOMB.recalcHeadValues()}" />
-                                        </p:selectBooleanCheckbox>
-                                    </div>
-                                    <div class="ui-g-6 ui-xl-6">
-                                        <p:outputLabel style="width: 148px;" value="ضريبة الخصم"/>
-
-                                    </div>
+                                        >
+                                    </p:selectBooleanCheckbox>
                                 </div>
-                                <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 148px;" value="معلق"/>
 
-                                    <div class="ui-g-6 ui-xl-6">
-                                        <h:outputText id="taxdiscvalue" 
-                                                      style="text-align:right" 
-                                                      value="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.taxDiscValue}" />
-                                    </div>
-                                    <div class="ui-g-6 ui-xl-6">
-                                        <p:outputLabel style="width: 195px;" value="قيمة ضريبة الخصم"/>
-
-                                    </div>
-                                </div> 
-
-                                <div class="ui-g-12 ui-xl-12">
-
-                                    <div class="ui-g-6 ui-xl-6">
-                                        <h:inputText id="payed" 
-                                                     style="width:50%;text-align:right" 
-                                                     value="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.payed}" >
-                                            <p:ajax  listener="#{gmSubscriptionsFormDTOMB.calculateRemainValue()}" update="remain" />
-                                        </h:inputText>
-                                    </div>
-                                    <div class="ui-g-6 ui-xl-6">
-                                        <p:outputLabel style="width: 80px;" value="#{userData.userDDs['AMOUNT_PAID']}"/>
-
-                                    </div>
-                                </div> 
-                                <div class="ui-g-12 ui-xl-12">
-
-                                    <div class="ui-g-6 ui-xl-6">
-                                        <h:outputText id="remain" 
-                                                      style="text-align:right" 
-                                                      value="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.remain}" />
-                                    </div>
-                                    <div class="ui-g-6 ui-xl-6">
-                                        <p:outputLabel style="width: 110px" value="#{userData.userDDs['REMA_AMOUNT']}"/>
-
-                                    </div>
                                 </div>
                             </div>
+                            
+                            <div class="ui-g-3 ui-xl-3">
 
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 35%!important" id="ad412"  value="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.value}"/>
 
-
-
-
-
-
-
-
-
-
-                            <div class="ui-g-4 ui-xl-4">
-                                <div class="ui-g-12 ui-xl-12">
-
-                                    <div class="ui-g-6 ui-xl-6">
-                                        <p:selectBooleanCheckbox 
-                                            value="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.taxFlagFinal}"
-                                            >
-                                        </p:selectBooleanCheckbox>
-                                    </div>
-                                    <div class="ui-g-6 ui-xl-6">
-                                        <p:outputLabel style="width: 148px;" value="فاتوره ضريبيه "/>
-
-                                    </div>
                                 </div>
-                                <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 85px;" value="القيمه "/>
 
-                                    <div class="ui-g-6 ui-xl-6">
-                                        <p:selectBooleanCheckbox 
-                                            value="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.status}"
-
-                                            >
-                                        </p:selectBooleanCheckbox>
-                                    </div>
-                                    <div class="ui-g-6 ui-xl-6">
-                                        <p:outputLabel style="width: 148px;" value="معلق"/>
-
-                                    </div>
                                 </div>
-                                <div class="ui-g-12 ui-xl-12">
-
-                                    <div class="ui-g-6 ui-xl-6">
-                                        <p:selectBooleanCheckbox 
-                                            value="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.taxFlag}">
-                                            <p:ajax update=" form:totalNetAfterDiscount form:taxvalue form:totalWithTaxValue " listener="#{gmSubscriptionsFormDTOMB.recalcHeadValues()}" />
-                                        </p:selectBooleanCheckbox>
-                                    </div>
-                                    <div class="ui-g-6 ui-xl-6">
-                                        <p:outputLabel style="width: 190px;" value="#{userData.userDDs['ADD_SAL_TAX']}"/>
-
-                                    </div>
-                                </div>
-                                <div class="ui-g-12 ui-xl-12">
+                            </div>
+                            
+                            <div class="ui-g-3 ui-xl-3">
 
                                     <div class="ui-g-6 ui-xl-6">
                                         <h:outputText id="taxvalue" 
@@ -501,71 +425,8 @@
 
                                     </div>
                                 </div>
-                                <div class="ui-g-12 ui-xl-12">
-
-                                    <div class="ui-g-6 ui-xl-6">
-                                        <h:outputText id="totalWithTaxValue" 
-                                                      style="text-align:right" 
-                                                      value="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.finalNet}" />
-                                    </div>
-                                    <div class="ui-g-6 ui-xl-6">
-                                        <p:outputLabel style="width: 105px" value="#{userData.userDDs['NET_TAX']}"/>
-
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="ui-g-4 ui-xl-4">
-                                <div class="ui-g-12 ui-xl-12">
-
-                                    <div class="ui-g-6 ui-xl-6">
-                                        <h:outputText id="totalActual" 
-                                                      style="text-align:right" 
-                                                      value="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.totalNet}" />
-                                    </div>
-                                    <div class="ui-g-6 ui-xl-6">
-                                        <p:outputLabel style="width: 155px; " value="#{userData.userDDs['TOTAL']} "/>
-
-                                    </div>
-                                </div>
-                                <div class="ui-g-12 ui-xl-12">
-
-                                    <div class="ui-g-6 ui-xl-6">
-                                        <p:selectOneMenu style="width: 50%" id="PURCHASE_NUMBER" 
-
-                                                         value="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.discountType}"  >                                                             
-                                            <f:selectItem itemLabel="#{userData.userDDs['VALUE']}"  itemValue="0"  />
-                                            <f:selectItem itemLabel="#{userData.userDDs['RATIO']}"  itemValue="1"  />
-
-                                            <p:ajax 
-                                                update=" form:totalNetAfterDiscount form:taxvalue form:totalWithTaxValue  form:taxdiscvalue"
-                                                listener="#{gmSubscriptionsFormDTOMB.recalcHeadValues()}" />
-                                        </p:selectOneMenu>           
-                                    </div>
-                                    <div class="ui-g-6 ui-xl-6">
-                                        <p:outputLabel style="width: 70px;" value="#{userData.userDDs['DISCOUNT_TYPE']}"/>
-
-                                    </div>
-                                </div>
-                                <div class="ui-g-12 ui-xl-12">
-
-                                    <div class="ui-g-6 ui-xl-6">
-                                        <p:inputText id="discount" value="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.discount}"  
-                                                     style="width: 50%;display: inline!important" >
-                                            <p:ajax event="blur"
-
-                                                    listener="#{gmSubscriptionsFormDTOMB.recalcHeadValues()}"
-                                                    update=" form:totalNetAfterDiscount form:taxvalue form:totalWithTaxValue form:taxdiscvalue"  />
-                                        </p:inputText>
-                                        <p:outputLabel id="per" style="display: inline!important" value="%"/>
-
-                                    </div>
-                                    <div class="ui-g-6 ui-xl-6">
-                                        <p:outputLabel style="width: 100px" value="#{userData.userDDs['DISC_ON_INVOICE']}"/>
-
-                                    </div>
-                                </div> 
-                                <div class="ui-g-12 ui-xl-12">
+                            
+                            <div class="ui-g-3 ui-xl-3">
 
                                     <div class="ui-g-6 ui-xl-6">
                                         <h:outputText id="totalNetAfterDiscount" 
@@ -574,34 +435,18 @@
 
                                     </div>
                                     <div class="ui-g-6 ui-xl-6">
-                                        <p:outputLabel style="width: 155px;" value="#{userData.userDDs['TOT_AF_TOT_DIS']}"/>
+                                        <p:outputLabel style="width: 155px;" value="#{userData.userDDs['TOTAL']}"/>
 
                                     </div>
                                 </div> 
-                            </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                         </div>
                     </h:panelGroup>
                 </div>
+                
+                <div>
 
-                <h:panelGrid  class="col-md-12" columns="1"  style="margin-top:2%">
+                <h:panelGrid  class="col-md-12" columns="1"  style="margin-right: 45%;; display: inline-block;">
 
                     <h:panelGroup  class="centerButtons">
 
@@ -655,8 +500,12 @@
                     </h:panelGroup>
 
                 </h:panelGrid>
+                    
+                    </div>
 
             </p:fieldset>
+            
+            
         </h:form>
 
 
