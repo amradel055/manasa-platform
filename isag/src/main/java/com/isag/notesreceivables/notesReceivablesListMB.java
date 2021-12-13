@@ -318,7 +318,7 @@ public class notesReceivablesListMB extends BaseGlBankListBean {
             if (accountsSystemSettings.getWorkWithAccounts().equals("ALLOW_ACCOUNT")) {
                 bean.setAccountName(bankTransactionDetailEntity.getGlAccount().getName());
                 bean.setAccountNumber(bankTransactionDetailEntity.getGlAccount().getAccNumber());
-            } else if (accountsSystemSettings.getWorkWithAccounts().equals("NOT_ALLOW_ACCOUNT")) {
+            } else if (accountsSystemSettings.getWorkWithAccounts().equals("NOT_ALLOW_ACCOUNT") && bankTransactionDetailEntity.getGlItems() != null) {
                 bean.setAccountName(bankTransactionDetailEntity.getGlItems().getName());
                 bean.setAccountNumber(bankTransactionDetailEntity.getGlItems().getSerial());
             }
@@ -329,10 +329,10 @@ public class notesReceivablesListMB extends BaseGlBankListBean {
 
         for (GlBankTransactionDetailEntity bankTransactionDetailEntity : getGlBankTransactionDetailEntityList()) {
             GlBankTransactionDetailEntity bean = (GlBankTransactionDetailEntity) bankTransactionDetailEntity.clone();
-            if (accountsSystemSettings.getWorkWithAccounts().equals("ALLOW_ACCOUNT")) {
+            if (accountsSystemSettings.getWorkWithAccounts().equals("ALLOW_ACCOUNT") && bankTransactionDetailEntity.getGlAccount() != null) {
                 bean.setAccountName(bankTransactionDetailEntity.getGlAccount().getName());
                 bean.setAccountNumber(bankTransactionDetailEntity.getGlAccount().getAccNumber());
-            } else if (accountsSystemSettings.getWorkWithAccounts().equals("NOT_ALLOW_ACCOUNT")) {
+            } else if (accountsSystemSettings.getWorkWithAccounts().equals("NOT_ALLOW_ACCOUNT") && bankTransactionDetailEntity.getGlItems() != null) {
                 bean.setAccountName(bankTransactionDetailEntity.getGlItems().getName());
                 bean.setAccountNumber(bankTransactionDetailEntity.getGlItems().getSerial());
             }
