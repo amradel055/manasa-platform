@@ -648,6 +648,7 @@ public class AutoComplateImpl implements AutoCompleteService {
         dTO.setSerial(entity.getSerial());
         dTO.setCost(entity.getCost());
         dTO.setName(entity.getName());
+        dTO.setPeriod(entity.getPeriod());
         return (T) dTO;
     }
 
