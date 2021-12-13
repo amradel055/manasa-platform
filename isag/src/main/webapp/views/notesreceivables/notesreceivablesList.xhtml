@@ -28,7 +28,6 @@
                     <p:messages id="curmsg" showDetail="true" rendered="true" closable="true"/>   
                 </div>
                 <div >
-                                      <p:progressBar style="margin-bottom: 1%;height: 20px;display: none" id="pbAjax" widgetVar="pbAjax" ajax="true" value="#{notesReceivablesFormMB.progress}" labelTemplate="{value}%" styleClass="animated"   global="false"/>
 
                     <p:dataTable id="glBankTransactionTable"
                                  draggableColumns="true" 
@@ -53,12 +52,6 @@
                                 <p:inputText id="globalFilter" a:autofocus="true" onkeyup="PF('bTable').filter()" style="width:150px" />
                             </p:outputPanel>
                             
-                            <p:fileUpload style="margin-right: 80%; margin-top: -2%;" value="#{notesReceivablesFormMB.contractFile}" mode="simple" onstart="disableChoosing()" 
-                                          oncomplete="enableChoosing()" />
-
-                            <p:commandButton class="notesUpload" id="btncustomer" widgetVar="btn" ajax="false" onclick="PF('pbAjax').start();PF('pbAjax').getJQ().css('display', 'block');" action="#{notesReceivablesFormMB.readCashTasahel()}"  value="تحميل">
-                              <p:ajax  delay="100"  onstart="PF('btn').disable();" />                          
-                            </p:commandButton>
                             
                         </f:facet>
 

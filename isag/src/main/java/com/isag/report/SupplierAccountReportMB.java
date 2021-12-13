@@ -328,7 +328,8 @@ public class SupplierAccountReportMB extends BaseReportBean {
 
     public String goToEdit() {
         try {
-            if (getSupplierAccountViewBeanSelected() != null && getSupplierAccountViewBeanSelected().getIdNumber() > 0) {
+            if (getSupplierAccountViewBeanSelected() != null && getSupplierAccountViewBeanSelected().getIdNumber() != null
+                    && getSupplierAccountViewBeanSelected().getIdNumber() > 0) {
                 ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
                 if (getSupplierAccountViewBeanSelected().getScreenName().contains("فاتورة مشتريات")
                         || getSupplierAccountViewBeanSelected().getScreenName().contains("فاتورة مبيعات")

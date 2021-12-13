@@ -323,7 +323,7 @@ public class SymbolServiceImpl implements SymbolService {
             params.put("symbolType", symbolType);
             query.append("AND sym.symbolType = :symbolType ");
         }
-        return dao.findListByQuery("", params);
+        return dao.findListByQuery(query.toString(), params);
 
     }
 

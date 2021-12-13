@@ -32,6 +32,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import com.isag.uploadfile.FileUploadController;
+import java.math.RoundingMode;
 import java.util.Calendar;
 import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
@@ -115,14 +116,18 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
     public void updatedata() {
 
         gmSubscriptionsDTO.setValue(getSymbolDTOSelected().getCost());
+        if(getSymbolDTOSelected().getPeriod() != null ){
         gmSubscriptionsDTO.setDate(new Date());
         gmSubscriptionsDTO.setStartDate(new Date());
         Calendar c = Calendar.getInstance();
         c.setTime(gmSubscriptionsDTO.getStartDate());
         c.add(Calendar.DAY_OF_MONTH,getSymbolDTOSelected().getPeriod());
         gmSubscriptionsDTO.setEndDate(c.getTime());
-   
-        
+        } 
+            gmSubscriptionsDTO.setTaxFlag(Boolean.TRUE);
+            gmSubscriptionsDTO.setTaxvalue(gmSubscriptionsDTO.getValue().multiply(new BigDecimal(0.15)).setScale(2, RoundingMode.HALF_UP));
+            gmSubscriptionsDTO.setFinalNet(gmSubscriptionsDTO.getValue().add(gmSubscriptionsDTO.getTaxvalue()).setScale(2, RoundingMode.HALF_UP));
+         
     }
 
     public void fillDefaultList() {
