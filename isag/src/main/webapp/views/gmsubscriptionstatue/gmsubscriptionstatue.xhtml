@@ -68,7 +68,7 @@
                            headerText="حالة الاشتراك"
                            sortBy="#{invInvoicePurchaseTable.status}"
                            >
-                    <p:outputLabel value="#{invInvoicePurchaseTable.status}" />
+                    <p:outputLabel value="#{invInvoicePurchaseTable.status eq 0 ? 'ساري' : 'مفعل'}" />
                 </p:column>
 
                 <p:column style="width: 9vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" filterStyle="display:none" 
@@ -181,6 +181,17 @@
 
                 </div>
             </div>
+            <div class="ui-g-12 ui-xl-12">
+
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:graphicImage url="#{gmSubscriptionsListDTOMB.host.concat(gmSubscriptionsListDTOMB.invOrganizationSiteDTO.clientImage)}" library="demo"  style="max-width:80%;max-height:80%;object-fit: cover !important;"/>
+                        </div>
+                       
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel style="width: 65px" value="صورة العميل"/>
+
+                        </div>  
+                    </div>
         </h:form>
     </ui:define>
 </ui:composition>

@@ -37,6 +37,8 @@ public class GlItemsFormMB extends BaseFormBean {
             glAccountDTO = glAccountServiceDTO.getGlAccountForBank(getUserData().getUserBranch().getId(), 5);
         } else if (getUri().contains("glExpenses")) {
             glAccountDTO = glAccountServiceDTO.getGlAccountForBank(getUserData().getUserBranch().getId(), 6);            
+        }else  {
+            glAccountDTO = glAccountServiceDTO.getGlAccountForBank(getUserData().getUserBranch().getId(), 6);            
         }
         getSymbolDTO().setAccountId(glAccountDTO == null ? null : glAccountDTO.getId());
         getSymbolDTO().setGeneralSymbolId(41);
@@ -47,7 +49,7 @@ public class GlItemsFormMB extends BaseFormBean {
     
 
     public String saveItemSymbol() {
-        getSymbolDTO().setGeneralSymbolId(58);
+        getSymbolDTO().setGeneralSymbolId(41);
         setSymbolDTO(symbolService.updateSymbolDTO(getSymbolDTO(), getUserData().getUser()));
         savedMeesage(getUserData().getUserDDs().get("SAVED"));
         return "";

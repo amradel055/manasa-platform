@@ -314,10 +314,16 @@ public class SymbolServiceImpl implements SymbolService {
     }
 
     @Override
-    public List<Symbol> getGLItemsByCompanyId(Integer companyId) {
+    public List<Symbol> getGLItemsByCompanyId(Integer companyId , Integer symbolType) {
         Map<String, Object> params = new HashMap<>();
         params.put("companyId", companyId);
-        return dao.findListByQuery("SELECT sym FROM Symbol sym WHERE  sym.generalSymbolId.id = 41 AND sym.companyId.id=:companyId", params);
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT sym FROM Symbol sym WHERE  sym.generalSymbolId.id = 41 AND sym.companyId.id=:companyId ");
+        if(symbolType != null){
+            params.put("symbolType", symbolType);
+            query.append("AND sym.symbolType = :symbolType ");
+        }
+        return dao.findListByQuery(query.toString(), params);
 
     }
 
@@ -441,7 +447,8 @@ public class SymbolServiceImpl implements SymbolService {
         dTO.setIndex(entity.getId());
         dTO.setCreatedDate(entity.getCreationDate());
         dTO.setCreatedBy(entity.getCreatedBy() != null ? entity.getCreatedBy().getId() : null);
-         dTO.setCost(entity.getCost());
+        dTO.setCost(entity.getCost());
+        dTO.setSymbolType(entity.getSymbolType() != null && entity.getSymbolType() == 1);
         if (entity.getAccountId() != null) {
             dTO.setAccountId(entity.getAccountId().getId());
         }
@@ -449,6 +456,7 @@ public class SymbolServiceImpl implements SymbolService {
         dTO.setArrange(entity.getArrange());
         dTO.setName(entity.getName());
         dTO.setId(entity.getId());
+        dTO.setPeriod(entity.getPeriod());
 
     }
 
@@ -457,7 +465,9 @@ public class SymbolServiceImpl implements SymbolService {
         entity.setName(dTO.getName());
         entity.setSerial(dTO.getSerial());
         entity.setArrange(dTO.getArrange());
+        entity.setPeriod(dTO.getPeriod());
         entity.setCost(dTO.getCost());
+        entity.setSymbolType(dTO.getSymbolType() ? 1 : 0);
         if (dTO.getAccountId() != null) {
             GlAccount glAccount = new GlAccount();
             glAccount.setId(dTO.getAccountId());
@@ -625,13 +635,13 @@ public class SymbolServiceImpl implements SymbolService {
         returnListDTO(list, dTOList);
         return dTOList;
     }
-    
+
     @Override
     public List<SymbolDTO> findItemSymbolByCompanyId(Integer companyId) {
         Map<String, Object> params = new HashMap<>();
         List<SymbolDTO> dTOList = new ArrayList<>();
         params.put("companyId", companyId);
-        List<Symbol> list = dao.findListByQuery("SELECT sym FROM Symbol sym WHERE sym.generalSymbolId.serial= 58 AND sym.companyId.id=:companyId", params);
+        List<Symbol> list = dao.findListByQuery("SELECT sym FROM Symbol sym WHERE sym.generalSymbolId.serial= 41 AND sym.companyId.id=:companyId", params);
         returnListDTO(list, dTOList);
         return dTOList;
     }

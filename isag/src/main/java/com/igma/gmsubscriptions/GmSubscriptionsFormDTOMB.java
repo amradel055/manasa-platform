@@ -4,10 +4,12 @@
  * and open the template in the editor.
  */
 package com.igma.gmsubscriptions;
+
 import org.apache.commons.codec.binary.Base64;
 import com.isag.businessservice.GmGlobalService;
 import com.isag.businessservice.GmSubscriptionsService;
 import com.isag.businessservice.OrganizationSiteService;
+import com.isag.businessservice.ReportManagementService;
 import com.isag.bussinessservice.global.AutoCompleteService;
 import com.isag.converter.GlBankDTOConverter;
 import com.isag.converter.InvOrganizationSiteDTOConverter;
@@ -15,7 +17,8 @@ import com.isag.dto.GlBankDTO;
 import com.isag.dto.GmSubscriptionsDTO;
 import com.isag.dto.GmSubscriptionsDetailDTO;
 import com.isag.dto.InvOrganizationSiteDTO;
-import com.isag.dto.InventoryDelegatorDTO;
+import com.isag.dto.SymbolDTO;
+import com.isag.entity.GmSubscriptions;
 import com.isag.isag.AutoComplete;
 import com.isag.isag.BaseFormBean;
 import com.isag.print.IReportService;
@@ -28,10 +31,12 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-import static org.glassfish.jersey.internal.Errors.reset;
 import com.isag.uploadfile.FileUploadController;
-import com.sun.jndi.toolkit.url.Uri;
+import java.math.RoundingMode;
+import java.util.Calendar;
+import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.client.Entity;
 
 /**
  *
@@ -42,17 +47,18 @@ import javax.servlet.http.HttpServletRequest;
 public class GmSubscriptionsFormDTOMB extends BaseFormBean {
 
     private GmSubscriptionsDTO gmSubscriptionsDTO;
+    private SymbolDTO symbolDTO;
 
     private InvOrganizationSiteDTO organizationSiteId;
 
     private List<InvOrganizationSiteDTO> invOrganizationSiteDTOList;
     private InvOrganizationSiteDTOConverter organizationSiteDTOConvertor;
-    private List<GmSubscriptionsDTO> list ;
+    private List<GmSubscriptionsDTO> list;
     private List<GlBankDTO> glBankList;
     private GlBankDTOConverter glBankConverter;
     IReportService iReportService = new IReportServiceImpl();
 
-
+    private List<SymbolDTO> symbolDTOList;
 
     // EJBs
     @EJB
@@ -63,12 +69,14 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
     private AutoCompleteService autoCompleteService;
     @EJB
     private GmGlobalService gmGlobalService;
+    @EJB
+    private ReportManagementService reportManagementService;
     private BigDecimal remain;
     private String filename;
     private String file;
     private String host;
     private FileUploadController fileUploadController;
-    
+    private SymbolDTO symbolDTOSelected;
 
     @Override
     @PostConstruct
@@ -79,33 +87,47 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
             saveError(e, "InvPurchaseInvoiceFormMB", "init");
         }
     }
-    
-    
-   
 
     @Override
     public void load() {
         try {
-              
+
             if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("addGmSubscriptions")) {
                 reset();
                 fillDefaultList();
             } else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("editGmSubscriptions")) {
-                
+
                 getGmSubscriptionsDTO().setIsEdit(Boolean.TRUE);
                 fillInvInvoiceDTO();
                 fillDefaultList();
                 getGmSubscriptionsDTO().setIsEdit(Boolean.FALSE);
             } else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("editorganization")) {
-              
-               getOrganizationSiteId().setIsEdited(Boolean.TRUE);
-               fillClientDTO();
-            }else {
+
+                getOrganizationSiteId().setIsEdited(Boolean.TRUE);
+                fillClientDTO();
+            } else {
                 exit("../gmsubscriptions/gmsubscriptionslist.xhtml");
             }
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceFormMB", "load");
         }
+    }
+
+    public void updatedata() {
+
+        gmSubscriptionsDTO.setValue(getSymbolDTOSelected().getCost());
+        if(getSymbolDTOSelected().getPeriod() != null ){
+        gmSubscriptionsDTO.setDate(new Date());
+        gmSubscriptionsDTO.setStartDate(new Date());
+        Calendar c = Calendar.getInstance();
+        c.setTime(gmSubscriptionsDTO.getStartDate());
+        c.add(Calendar.DAY_OF_MONTH,getSymbolDTOSelected().getPeriod());
+        gmSubscriptionsDTO.setEndDate(c.getTime());
+        } 
+            gmSubscriptionsDTO.setTaxFlag(Boolean.TRUE);
+            gmSubscriptionsDTO.setTaxvalue(gmSubscriptionsDTO.getValue().multiply(new BigDecimal(0.15)).setScale(2, RoundingMode.HALF_UP));
+            gmSubscriptionsDTO.setFinalNet(gmSubscriptionsDTO.getValue().add(gmSubscriptionsDTO.getTaxvalue()).setScale(2, RoundingMode.HALF_UP));
+         
     }
 
     public void fillDefaultList() {
@@ -133,8 +155,8 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
         getGmSubscriptionsDTO().setId((Integer) getContext().getSessionMap().get("gmSubscriptionsIdSelected"));
         setGmSubscriptionsDTO(gmSubscriptionsService.findGmSubscriptionsDTOById(getGmSubscriptionsDTO()));
     }
-    
-      public void fillClientDTO() {
+
+    public void fillClientDTO() {
         getOrganizationSiteId().setId((Integer) getContext().getSessionMap().get("invOrganizationSiteDTOSelected"));
         setOrganizationSiteId(organizationSiteService.findOrganizationSiteDTOById(getOrganizationSiteId().getId()));
     }
@@ -165,19 +187,19 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
         getGmSubscriptionsDTO().setShowCustomerDate(Boolean.FALSE);
         saveImage();
         leaveScreen();
-        
+
     }
-    
-    
+
     public void leaveScreen() {
-        if(getUri().contains("gmregistration")){
-        exit("../gmregistration/gmclientlist.xhtml");}
+        if (getUri().contains("gmregistration")) {
+            exit("../gmregistration/gmclientlist.xhtml");
+
+        }
     }
-    
-    
-    
-       public void print() {
-        iReportService.printReportGmInvoice(getGmSubscriptionsDTO() , getUserData());
+
+    public void print() {
+        getGmSubscriptionsDTO().setReportManagement(reportManagementService.reportManagementByBranch(getUserData().getUserBranch().getId()));
+        iReportService.printReportGmInvoice(getGmSubscriptionsDTO(), getUserData());
     }
 
     public void addInvDetail() {
@@ -189,11 +211,6 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
             saveError(e, "InvPurchaseInvoiceFormMB", "addInvPurchaseInvoiceDetail");
         }
     }
-    
-    
-    
-    
-    
 
     public Boolean validateItems(GmSubscriptionsDetailDTO gmSubscriptionsDetailDTO) {
         try {
@@ -263,7 +280,7 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
             saveError(e, "SalesInvoiceFormMB", "calculateRemainValue");
         }
     }
-    
+
     public String updateImage() {
 
         if (getOrganizationSiteId().getClientImage() != null && !getOrganizationSiteId().getClientImage().isEmpty()) {
@@ -274,17 +291,16 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
         }
         return "";
     }
-    
+
     public String saveImage() {
         if (getFile() != null && !getFile().isEmpty()) {
             byte[] byteFile = Base64.decodeBase64(getFile().substring(getFile().indexOf("base64,") + 6));
             String imageName = getFileUploadController().upload(byteFile);
             getOrganizationSiteId().setClientImage(imageName);
             updateImage();
-        } 
+        }
         return "";
     }
-    
 
     public void reset() {
         try {
@@ -383,7 +399,7 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
      * @return the gmSubscriptionsDTO
      */
     public GmSubscriptionsDTO getGmSubscriptionsDTO() {
-        if(gmSubscriptionsDTO == null){
+        if (gmSubscriptionsDTO == null) {
             gmSubscriptionsDTO = new GmSubscriptionsDTO();
         }
         return gmSubscriptionsDTO;
@@ -400,7 +416,7 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
      * @return the organizationSiteId
      */
     public InvOrganizationSiteDTO getOrganizationSiteId() {
-        if(organizationSiteId == null){
+        if (organizationSiteId == null) {
             setOrganizationSiteId(new InvOrganizationSiteDTO());
         }
         return organizationSiteId;
@@ -438,8 +454,8 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
      * @return the host
      */
     public String getHost() {
-    HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
-     setHost(request.getRequestURL().substring(0, request.getRequestURL().indexOf("faces/")).concat("images/"));
+        HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
+        setHost(request.getRequestURL().substring(0, request.getRequestURL().indexOf("faces/")).concat("images/"));
         return host;
     }
 
@@ -474,5 +490,49 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
         this.organizationSiteId = organizationSiteId;
     }
 
-  
+    /**
+     * @return the symbolDTO
+     */
+    public SymbolDTO getSymbolDTO() {
+        return symbolDTO;
+    }
+
+    /**
+     * @param symbolDTO the symbolDTO to set
+     */
+    public void setSymbolDTO(SymbolDTO symbolDTO) {
+        this.symbolDTO = symbolDTO;
+    }
+
+    /**
+     * @return the symbolDTOList
+     */
+    public List<SymbolDTO> getSymbolDTOList() {
+        if (symbolDTOList == null) {
+            setSymbolDTOList(autoCompleteService.autoCompleteSymbolByCompanyId(getUserData().getCompany().getId(), 0, null));
+        }
+        return symbolDTOList;
+    }
+
+    /**
+     * @param symbolDTOList the symbolDTOList to set
+     */
+    public void setSymbolDTOList(List<SymbolDTO> symbolDTOList) {
+        this.symbolDTOList = symbolDTOList;
+    }
+
+    /**
+     * @return the symbolDTOSelected
+     */
+    public SymbolDTO getSymbolDTOSelected() {
+        return symbolDTOSelected;
+    }
+
+    /**
+     * @param symbolDTOSelected the symbolDTOSelected to set
+     */
+    public void setSymbolDTOSelected(SymbolDTO symbolDTOSelected) {
+        this.symbolDTOSelected = symbolDTOSelected;
+    }
+
 }

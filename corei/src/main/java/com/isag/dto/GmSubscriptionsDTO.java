@@ -40,7 +40,7 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
     private Integer serialTax;
     private Boolean taxFlagFinal;
     private Integer generalJournalId;
-    private Integer status;
+    private Boolean status;
     private Boolean taxDiscFlag;
     private BigDecimal taxDiscValue;
     private BigDecimal payCash;
@@ -58,6 +58,7 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
     private BigDecimal finalNet;
     private BigDecimal totalWithTaxValue;
     private BigDecimal discountValue;
+     private BigDecimal value;
 
     private Boolean showCustomerDate = Boolean.TRUE;
     private InventoryDelegatorDTO invDelegatorId;
@@ -68,6 +69,8 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
     private GmSubscriptionsDetailDTO gmSubscriptionsDetailDTOSelected;
     
     private String statusName;
+    private Integer remainPeriod;
+    private Date dateAfterTagmeed;
 
     public GmSubscriptionsDTO() {
     }
@@ -190,14 +193,14 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
         this.generalJournalId = generalJournalId;
     }
 
-    public Integer getStatus() {
+    public Boolean getStatus() {
         if(status == null){
-          status = 0 ;
+          status = false ;
         }
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(Boolean status) {
         this.status = status;
     }
 
@@ -645,5 +648,48 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
      */
     public void setStatusName(String statusName) {
         this.statusName = statusName;
+    }
+
+    /**
+     * @return the remainPeriod
+     */
+    public Integer getRemainPeriod() {
+        return remainPeriod;
+    }
+
+    /**
+     * @param remainPeriod the remainPeriod to set
+     */
+    public void setRemainPeriod(Integer remainPeriod) {
+        this.remainPeriod = remainPeriod;
+    }
+
+    /**
+     * @return the dateAfterTagmeed
+     */
+    public Date getDateAfterTagmeed() {
+        return dateAfterTagmeed;
+    }
+
+    /**
+     * @param dateAfterTagmeed the dateAfterTagmeed to set
+     */
+    public void setDateAfterTagmeed(Date dateAfterTagmeed) {
+        this.dateAfterTagmeed = dateAfterTagmeed;
+    }
+
+    /**
+     * @return the value
+     */
+    public BigDecimal getValue() {
+    
+        return value ;
+    }
+
+    /**
+     * @param value the value to set
+     */
+    public void setValue(BigDecimal value) {
+        this.value = value;
     }
 }

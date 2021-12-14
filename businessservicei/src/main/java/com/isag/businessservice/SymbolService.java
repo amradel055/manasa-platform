@@ -90,7 +90,7 @@ public interface SymbolService {
 
     public List<Symbol> getgeneralConsultantByCompanyId(Integer companyId);
 
-    public List<Symbol> getGLItemsByCompanyId(Integer companyId);
+    public List<Symbol> getGLItemsByCompanyId(Integer companyId, Integer symbolType);
 
     public List<SymbolDTO> getJobGradeByCompanyId(Integer companyId);
 

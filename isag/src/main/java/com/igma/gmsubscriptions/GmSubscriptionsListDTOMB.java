@@ -7,6 +7,7 @@ package com.igma.gmsubscriptions;
 
 import com.isag.businessservice.GmSubscriptionsService;
 import com.isag.businessservice.OrganizationSiteService;
+import com.isag.converter.InvOrganizationSiteDTOConverter;
 import com.isag.dto.GmSubscriptionsDTO;
 import com.isag.dto.InvOrganizationSiteDTO;
 import com.isag.isag.BaseListBean;
@@ -20,6 +21,7 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 
@@ -37,7 +39,8 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
     private InvOrganizationSiteDTO invOrganizationSiteDTO ;
     private List<InvOrganizationSiteDTO> invOrganizationSiteDTOList ;
     private InvOrganizationSiteDTO invOrganizationSiteDTOSelected ;
-    
+    private String host;
+    private InvOrganizationSiteDTOConverter organizationSiteDTOConvertor;
     @EJB
     private GmSubscriptionsService gmSubscriptionsService;
     
@@ -66,7 +69,7 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
         try {
             
             setSubscribtionList(gmSubscriptionsService.getALLGmSubscriptionsDTODTOByCustomerId(invOrganizationSiteDTO.getId()));
-         
+           
         }
         catch (Exception e){
         saveError(e, "InvPurchaseInvoiceFormMB", "load");
@@ -287,5 +290,35 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
      */
     public void setInvOrganizationSiteDTOSelected(InvOrganizationSiteDTO invOrganizationSiteDTOSelected) {
         this.invOrganizationSiteDTOSelected = invOrganizationSiteDTOSelected;
+    }
+
+    /**
+     * @return the host
+     */
+    public String getHost() {
+     HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
+     setHost(request.getRequestURL().substring(0, request.getRequestURL().indexOf("faces/")).concat("images/"));
+        return host;
+    }
+
+    /**
+     * @param host the host to set
+     */
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    /**
+     * @return the organizationSiteDTOConvertor
+     */
+    public InvOrganizationSiteDTOConverter getOrganizationSiteDTOConvertor() {
+        return organizationSiteDTOConvertor;
+    }
+
+    /**
+     * @param organizationSiteDTOConvertor the organizationSiteDTOConvertor to set
+     */
+    public void setOrganizationSiteDTOConvertor(InvOrganizationSiteDTOConverter organizationSiteDTOConvertor) {
+        this.organizationSiteDTOConvertor = organizationSiteDTOConvertor;
     }
 }

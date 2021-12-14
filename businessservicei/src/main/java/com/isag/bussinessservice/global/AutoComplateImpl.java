@@ -115,7 +115,7 @@ public class AutoComplateImpl implements AutoCompleteService {
 
     private void appendOrganizationTypeAndActive(Map<String, Object> params, Integer type, StringBuilder sql, boolean active) {
         params.put("type", type);
-        sql.append("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND ((:qeury is null OR e.name  like CONCAT('%',:qeury ,'%')) OR (:qeury is null OR e.code  like CONCAT('%',:qeury ,'%') ) OR (:qeury is null OR e.phone  like CONCAT('%',:qeury ,'%') ) OR (:qeury is null OR e.mobile  like CONCAT('%',:qeury ,'%') ) OR (:qeury is null OR e.email  like CONCAT('%',:qeury ,'%') ) )");
+        sql.append("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND ((:qeury is null OR e.nationIdSerial  like CONCAT('%',:qeury ,'%')) OR (:qeury is null OR e.name  like CONCAT('%',:qeury ,'%')) OR (:qeury is null OR e.code  like CONCAT('%',:qeury ,'%') ) OR (:qeury is null OR e.phone  like CONCAT('%',:qeury ,'%') ) OR (:qeury is null OR e.mobile  like CONCAT('%',:qeury ,'%') ) OR (:qeury is null OR e.email  like CONCAT('%',:qeury ,'%') ) )");
         if (type == 0 || type == 1) {
             sql.append(" AND (e.type = :type OR e.type = 2) ");
         } else {
@@ -234,13 +234,27 @@ public class AutoComplateImpl implements AutoCompleteService {
     }
 
     @Override
-    public List<SymbolDTO> autoCompleteSymbolByCompanyId(Integer companyId, String qeury) {
+    public List<SymbolDTO> autoCompleteSymbolByCompanyId(Integer companyId,Integer symbolType , String qeury) {
         List<SymbolDTO> list = new ArrayList<>();
+        StringBuilder query = new StringBuilder();
         Map<String, Object> params = new HashMap<>();
         params.put("companyId", companyId);
-        List<Symbol> detailses = dao.findListByQuery("SELECT sym FROM Symbol sym WHERE  sym.generalSymbolId.serial=58 AND sym.companyId.id=:companyId", params);
+        query.append("SELECT sym FROM Symbol sym WHERE  sym.generalSymbolId.serial=41 AND sym.companyId.id=:companyId");
+        if(symbolType != null){
+            params.put("symbolType", symbolType);
+            query.append(" AND sym.symbolType = :symbolType");
+        }
+        appendQuery(qeury, query, params);
+        List<Symbol> detailses = dao.findListByQuery(query.toString(), params);
        list = returnListDTO(detailses);
         return list;
+    }
+
+    private void appendQuery(String qeury, StringBuilder query, Map<String, Object> params) {
+        if (qeury != null && !qeury.isEmpty()) {
+            query.append(" AND ((:qeury is null OR sym.name  like CONCAT('%',:qeury ,'%')) OR (:qeury is null OR sym.serial  like CONCAT('%',:qeury ,'%') ) )");
+            params.put("qeury", qeury);
+        }
     }
 
     @Override
@@ -525,6 +539,7 @@ public class AutoComplateImpl implements AutoCompleteService {
         dTO.setName(entity.getName());
         dTO.setMobile(entity.getMobile());
         dTO.setAddress(entity.getAddress());
+        dTO.setClientImage(entity.getClientImage());
         if (entity.getCurrencyId() != null) {
             CurrencyDTO currencyDTO = new CurrencyDTO();
             currencyDTO.setId(entity.getCurrencyId().getId());
@@ -633,6 +648,7 @@ public class AutoComplateImpl implements AutoCompleteService {
         dTO.setSerial(entity.getSerial());
         dTO.setCost(entity.getCost());
         dTO.setName(entity.getName());
+        dTO.setPeriod(entity.getPeriod());
         return (T) dTO;
     }
 

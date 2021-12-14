@@ -32,7 +32,7 @@ public class IsagUser extends BaseEntity {
     private String password;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 45)
+    @Size(min = 1, max = 100)
     @Column(name = "name")
     private String name;
 

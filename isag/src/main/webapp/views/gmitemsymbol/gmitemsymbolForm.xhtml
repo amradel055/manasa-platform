@@ -33,7 +33,7 @@
 
                                 </div>
                             </div>
-                            
+
                             <div class="ui-g-12 ui-xl-12">
 
                                 <div class="ui-g-6 ui-xl-6">
@@ -45,7 +45,7 @@
 
                                 </div>
                             </div>
-                             <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-12 ui-xl-12">
 
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:inputText style="width: 35%!important" id="ad3"  value="#{glItemsFormMB.symbolDTO.cost}"/>
@@ -56,39 +56,65 @@
 
                                 </div>
                             </div>
+                                 <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 35%!important" id="ad30"  value="#{glItemsFormMB.symbolDTO.period}"/>
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 85px;" value="المدة بالايام  "/>
+
+                                </div>
+                            </div>
+                            
+                          
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:selectBooleanCheckbox 
+                                        value="#{glItemsFormMB.symbolDTO.symbolType}"
+
+                                        >
+                                    </p:selectBooleanCheckbox>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 85px;" value="خدمة "/>
+
+                                </div>
+                            </div>
                         </div>                        
                     </div>
                 </div>
 
             </p:fieldset>
-            
-          <div class="asmaa">
-                        <p:commandButton  class="saveButton"  
-                                          id="saveB" 
-                                          title="#{userData.userDDs['SAVE']}"
-                                          value="#{userData.userDDs['SAVE']}" 
-                                          style=""
-                                          action="#{glItemsFormMB.saveItemSymbol()}" 
-                                          update="@form"/>
 
-                        <p:commandButton  class="newButton" 
-                                          id="newN"
-                                          ajax="false"
-                                          style=""
-                                          value="#{userData.userDDs['NEW']}" 
-                                          title="#{userData.userDDs['NEW']}"
-                                          onclick="form.target = ''" 
-                                          actionListener="#{glItemsFormMB.reset()}"/>
+            <div class="asmaa">
+                <p:commandButton  class="saveButton"  
+                                  id="saveB" 
+                                  title="#{userData.userDDs['SAVE']}"
+                                  value="#{userData.userDDs['SAVE']}" 
+                                  style=""
+                                  action="#{glItemsFormMB.saveItemSymbol()}" 
+                                  update="@form"/>
 
-              
+                <p:commandButton  class="newButton" 
+                                  id="newN"
+                                  ajax="false"
+                                  style=""
+                                  value="#{userData.userDDs['NEW']}" 
+                                  title="#{userData.userDDs['NEW']}"
+                                  onclick="form.target = ''" 
+                                  actionListener="#{glItemsFormMB.reset()}"/>
 
-                    <p:blockUI block="form" trigger="saveB" animate="true" >
 
-                        <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
 
-                    </p:blockUI> 
+                <p:blockUI block="form" trigger="saveB" animate="true" >
 
-          </div>
+                    <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                </p:blockUI> 
+
+            </div>
         </h:form>
     </ui:define>
 </ui:composition>

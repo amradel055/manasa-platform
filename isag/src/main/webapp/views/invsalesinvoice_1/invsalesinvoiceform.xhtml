@@ -14,7 +14,7 @@
             }
 
             body .ui-widget, body .ui-widget .ui-widget {
-               
+
             }
         </style>
 
@@ -385,9 +385,9 @@
                                      value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.unitName}" style="width: 95%" />  
 
                     </p:column>
-                    
-                    
-                    
+
+
+
                     <p:column  style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="availableQuantityRow"
 
                                filterBy="#{invPurchaseInvoiceDetailsTable.availableQuantityRow}" 
@@ -473,7 +473,7 @@
                         </p:inputText>     
                         <p:outputLabel id="costTt" value="#{invPurchaseInvoiceDetailsTable.cost}"   />
                     </p:column>
-                    
+
                     <p:column style="width: 8vh;text-align: -webkit-auto;border-radius: 0px" id="discountTotalc" headerText="خصم قيمه">
                         <p:inputText id="discountTotalTValue" 
                                      value="#{invPurchaseInvoiceDetailsTable.valueRowDiscount}" 
@@ -485,7 +485,7 @@
                                     form:taxvalue form:totalWithTaxValue  :form:fieldSetId"/>
                         </p:inputText>  
                     </p:column>
-                    
+
                     <p:column style="width: 8vh;text-align: -webkit-auto;border-radius: 0px" id="discountTotal" headerText="الخصم">
                         <p:inputText id="discountTotalT" 
                                      value="#{invPurchaseInvoiceDetailsTable.discount}" 
@@ -716,9 +716,9 @@
                                             <f:selectItem itemLabel="#{userData.userDDs['VALUE']}"  itemValue="0"  />
                                             <f:selectItem itemLabel="#{userData.userDDs['RATIO']}"  itemValue="1"  />
 
-                                                                                   <p:ajax 
-                                                                                            update=" form:totalNetAfterDiscount form:taxvalue form:totalWithTaxValue  form:taxdiscvalue"
-                                                                                            listener="#{invPurchaseInvoiceFormDTOMB.recalcHeadValues()}" />
+                                            <p:ajax 
+                                                update=" form:totalNetAfterDiscount form:taxvalue form:totalWithTaxValue  form:taxdiscvalue"
+                                                listener="#{invPurchaseInvoiceFormDTOMB.recalcHeadValues()}" />
                                         </p:selectOneMenu>           
                                     </div>
                                     <div class="ui-g-6 ui-xl-6">
@@ -731,10 +731,10 @@
                                     <div class="ui-g-6 ui-xl-6">
                                         <p:inputText id="discount" value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.discount}"  
                                                      style="width: 50%;display: inline!important" >
-                                                                                        <p:ajax event="blur"
-                                            
-                                                                                                listener="#{invPurchaseInvoiceFormDTOMB.recalcHeadValues()}"
-                                                                                                update=" form:totalNetAfterDiscount form:taxvalue form:totalWithTaxValue form:taxdiscvalue"  />
+                                            <p:ajax event="blur"
+
+                                                    listener="#{invPurchaseInvoiceFormDTOMB.recalcHeadValues()}"
+                                                    update=" form:totalNetAfterDiscount form:taxvalue form:totalWithTaxValue form:taxdiscvalue"  />
                                         </p:inputText>
                                         <p:outputLabel id="per" style="display: inline!important" value="%"/>
 
@@ -766,8 +766,8 @@
                                             <p:inputText id="totalNolon" value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.totalNolon}"  
                                                          style="width: 25%;display: inline!important" >
                                             </p:inputText>
-                                            
-                                            
+
+
                                         </h:panelGroup>
                                     </h:panelGroup>
                                 </div>
@@ -836,7 +836,7 @@
                                           value="طباعه ريسيت" 
                                           title="طباعه ريسيت" 
                                           actionListener="#{invPurchaseInvoiceFormDTOMB.printBarcode}"/>
-                         <p:commandButton  class="printButtons"
+                        <p:commandButton  class="printButtons"
                                           ajax="false"
                                           onclick="form.target = '_blank'"  
                                           rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id != null}"

@@ -756,7 +756,7 @@ public class CashAccountItemsMB extends BaseGlAccountReportBean {
      */
     public List<Symbol> getItemsFrom() {
         if (itemsFrom == null || itemsFrom.isEmpty()) {
-            itemsFrom = symbolService.getGLItemsByCompanyId(getUserData().getCompany().getId());
+            itemsFrom = symbolService.getGLItemsByCompanyId(getUserData().getCompany().getId(),null);
             setSymbolConverterFrom(new SymbolConverter(itemsFrom));
         }
         return itemsFrom;
@@ -774,7 +774,7 @@ public class CashAccountItemsMB extends BaseGlAccountReportBean {
      */
     public List<Symbol> getItemsTo() {
         if (itemsTo == null || itemsTo.isEmpty()) {
-            itemsTo = symbolService.getGLItemsByCompanyId(getUserData().getCompany().getId());
+            itemsTo = symbolService.getGLItemsByCompanyId(getUserData().getCompany().getId(),null);
             setSymbolConverterTo(new SymbolConverter(itemsTo));
         }
         return itemsTo;

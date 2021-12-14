@@ -43,6 +43,8 @@ public class Symbol extends BaseEntity {
     @Size(min = 1, max = 255)
     @Column(name = "name")
     private String name;
+    @Column(name = "period")
+    private Integer period;
     @Column(name = "cost")
     private BigDecimal cost;
     @Basic(optional = false)
@@ -51,6 +53,8 @@ public class Symbol extends BaseEntity {
     private Integer serial;    
     @Column(name = "arrange")
     private Integer arrange;
+    @Column(name = "symbol_type")
+    private Integer symbolType;
     @JoinColumn(name = "general_symbol_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private GeneralSymbol generalSymbolId;
@@ -89,6 +93,7 @@ public class Symbol extends BaseEntity {
     private Collection<InvPurchaseOrderDetail> invPurchaseOrderDetailCollection;
     @OneToMany(mappedBy = "lang")
     private Collection<IsagUser> isagUserCollection;
+   
 
     public Symbol() {
     }
@@ -295,7 +300,7 @@ public class Symbol extends BaseEntity {
 
     @Override
     public String toString() {
-        return name + " " + serial;
+        return name + " " ;
     }
 
     /**
@@ -325,5 +330,35 @@ public class Symbol extends BaseEntity {
     public void setCost(BigDecimal cost) {
         this.cost = cost;
     }
+
+    /**
+     * @return the symbolType
+     */
+    public Integer getSymbolType() {
+        return symbolType;
+    }
+
+    /**
+     * @param symbolType the symbolType to set
+     */
+    public void setSymbolType(Integer symbolType) {
+        this.symbolType = symbolType;
+    }
+
+    /**
+     * @return the period
+     */
+    public Integer getPeriod() {
+        return period;
+    }
+
+    /**
+     * @param period the period to set
+     */
+    public void setPeriod(Integer period) {
+        this.period = period;
+    }
+
+  
 
 }

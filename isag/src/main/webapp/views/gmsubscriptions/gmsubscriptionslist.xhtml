@@ -7,6 +7,7 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns="http://www.w3.org/1999/xhtml">
     <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
         <h:form id="form"  dir="#{userData.dir}" class='formmargin'>
             <div style=" position: absolute;left: 20px"> 
 
@@ -48,7 +49,7 @@
                                           title="#{userData.userDDs['ADD']}" 
                                           action="#{gmSubscriptionsListDTOMB.goToAdd()}" 
                                           style="float:right" 
-                                          rendered="#{(userData.userScreens['invsalesinvoice_1'].add)  or userData.isAdmin}"/>
+                                          rendered="#{(userData.userScreens['gmsubscriptions'].add)  or userData.isAdmin}"/>
 
                         <p:outputPanel  >
                             <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
@@ -71,9 +72,9 @@
                                filterBy="#{invInvoicePurchaseTable.status}" 
                                filterMatchMode="contains" 
                                headerText="حالة الاشتراك"
-                               sortBy="#{invInvoicePurchaseTable.status eq 0 ? '' : 'معلق'}"
+                               sortBy="#{invInvoicePurchaseTable.status}"
                                >
-                        <p:outputLabel value="#{invInvoicePurchaseTable.status}" />
+                        <p:outputLabel value="#{invInvoicePurchaseTable.status eq false ? 'سارى' : 'معلق'}" />
                     </p:column>
 
                     <p:column style="width: 9vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" filterStyle="display:none" 
@@ -94,7 +95,7 @@
                               sortBy="#{invInvoicePurchaseTable.startDate}" 
                               >
                         <p:outputLabel value="#{invInvoicePurchaseTable.startDate}" >
-                         <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                            <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
                         </p:outputLabel> 
                     </p:column>
                     <p:column style="width: 8vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
@@ -104,10 +105,30 @@
                               sortBy="#{invInvoicePurchaseTable.endDate}" 
                               >
                         <p:outputLabel value="#{invInvoicePurchaseTable.endDate}" >
-                         <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                            <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
                         </p:outputLabel> 
                     </p:column>
-                
+
+                    <p:column style="width: 8vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
+                              filterBy="#{invInvoicePurchaseTable.dateAfterTagmeed}"
+                              filterMatchMode="contains" 
+                              headerText="نهاية الاشتراك بعد التمديد"
+                              sortBy="#{invInvoicePurchaseTable.dateAfterTagmeed}" 
+                              >
+                        <p:outputLabel value="#{invInvoicePurchaseTable.dateAfterTagmeed}" >
+                            <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                        </p:outputLabel> 
+                    </p:column>
+
+                    <p:column style="width: 8vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
+                              filterBy="#{invInvoicePurchaseTable.remainPeriod}"
+                              filterMatchMode="contains" 
+                              headerText="المدة المتبقية"
+                              sortBy="#{invInvoicePurchaseTable.remainPeriod}" 
+                              >
+                        <p:outputLabel value="#{invInvoicePurchaseTable.remainPeriod}"/>
+                    </p:column>
+
                     <p:column style="width: 10vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
                               filterBy="#{invInvoicePurchaseTable.remarks}"
                               filterMatchMode="contains" 
@@ -122,7 +143,7 @@
                                            icon="fa fa-fw fa-search-plus"  style="background-color: rgba(63, 81, 181, 0.88);border-radius: 3px;"
                                            title="#{userData.userDDs['VIEW']}" 
                                            action="#{gmSubscriptionsListDTOMB.goToEdit()}" 
-                                           rendered="#{userData.userScreens['invsalesinvoice_1'].edit or userData.isAdmin}" >
+                                           rendered="#{userData.userScreens['gmsubscriptions'].edit or userData.isAdmin}" >
 
                             <f:setPropertyActionListener value="#{invInvoicePurchaseTable}" 
                                                          target="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected}" />
@@ -134,7 +155,7 @@
                                          style="background-color: red;border-radius: 3px;"
                                          title="#{userData.userDDs['DELETE']}" 
                                          action="#{gmSubscriptionsListDTOMB.delete()}" 
-                                         rendered="#{(userData.userScreens['invsalesinvoice_1'].delete or userData.isAdmin)}">
+                                         rendered="#{(userData.userScreens['gmsubscriptions'].delete or userData.isAdmin)}">
                             <f:setPropertyActionListener value="#{invInvoicePurchaseTable}" target="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected}" />
                             <p:confirm header="Confirmation" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
 

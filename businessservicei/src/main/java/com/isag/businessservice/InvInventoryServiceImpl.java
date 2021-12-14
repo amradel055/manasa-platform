@@ -6,6 +6,7 @@
 package com.isag.businessservice;
 
 import com.isag.core.GenericDAO;
+import com.isag.dto.InvInventoryDTO;
 import com.isag.entity.Branch;
 import com.isag.entity.InvInventory;
 import com.isag.entity.IsagCompany;
@@ -27,7 +28,6 @@ public class InvInventoryServiceImpl implements InvInventoryService {
 
     @EJB
     private GenericDAO dao;
-  
 
     @Override
     public void deleteNewInventory(InvInventory invInventory) {
@@ -35,7 +35,7 @@ public class InvInventoryServiceImpl implements InvInventoryService {
     }
 
     @Override
-    public InvInventory updateNewInventory(InvInventory invInventory, IsagUser user , IsagCompany company , Branch branch) {
+    public InvInventory updateNewInventory(InvInventory invInventory, IsagUser user, IsagCompany company, Branch branch) {
         if (invInventory.getId() == null) {
             invInventory.setCreatedBy(user);
             invInventory.setCreationDate(new Date());
@@ -64,7 +64,6 @@ public class InvInventoryServiceImpl implements InvInventoryService {
     public InvInventory addNewInventory(InvInventory invInventory) {
         return dao.updateEntity(invInventory);
     }
-   
 
     @Override
     public List<InvInventory> getALLInventoriesByBranch(Integer id) {
@@ -73,18 +72,18 @@ public class InvInventoryServiceImpl implements InvInventoryService {
         List<InvInventory> InvInventories = dao.findListByQuery("SELECT i FROM InvInventory i where i.branchId.id = :branchId  ORDER BY i.code", params);
         return InvInventories;
     }
-    
+
     @Override
     public List<InvInventory> getALLInventoriesByBranchPer(Integer id) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", id);
         List<InvInventory> invInventories = dao.findListByQuery("SELECT i FROM InvInventory i where i.branchId.id = :branchId  ORDER BY i.code", params);
         List<InvInventory> list = new ArrayList<>();
-        for(InvInventory invInventory : invInventories){
+        for (InvInventory invInventory : invInventories) {
             InvInventory inventory = new InvInventory();
             inventory.setId(invInventory.getId());
             inventory.setName(invInventory.getName());
-            inventory.setCode(invInventory.getCode());  
+            inventory.setCode(invInventory.getCode());
             inventory.setSegilValue(invInventory.getSegilValue());
             inventory.setDaribaValue(invInventory.getDaribaValue());
             list.add(inventory);
@@ -119,5 +118,25 @@ public class InvInventoryServiceImpl implements InvInventoryService {
     @Override
     public List<InvInventory> getAllInventories() {
         return dao.findAll(InvInventory.class);
+    }
+
+    @Override
+    public InvInventoryDTO findInventoryDTO(Integer id) {
+        InvInventory entity = dao.findEntityById(InvInventory.class, id);
+        return mapToDTO(entity);
+    }
+
+    @Override
+    public InvInventoryDTO mapToDTO(InvInventory invInventory) {
+        if (invInventory != null) {
+            InvInventoryDTO invInventoryDTO = new InvInventoryDTO();
+            invInventoryDTO.setId(invInventory.getId());
+            invInventoryDTO.setName(invInventory.getName());
+            invInventoryDTO.setCode(invInventory.getCode());
+            invInventoryDTO.setSegilValue(invInventory.getSegilValue());
+            invInventoryDTO.setDaribaValue(invInventory.getDaribaValue());
+            return invInventoryDTO;
+        }
+        return null;
     }
 }

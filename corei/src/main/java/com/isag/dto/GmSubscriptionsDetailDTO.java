@@ -34,13 +34,15 @@ public class GmSubscriptionsDetailDTO extends BaseEntityDTO {
     private BigDecimal valueRowDiscount;
     private BigDecimal valueAfterDiscount;
     private BigDecimal totalBeforeDiscount;
+    private String itemName;
+    private String itemCode;
 
     public GmSubscriptionsDetailDTO() {
     }
 
     public BigDecimal getQuantity() {
-        if (quantity == null){
-         quantity = BigDecimal.ONE ;
+        if (quantity == null) {
+            quantity = BigDecimal.ONE;
         }
         return quantity;
     }
@@ -50,8 +52,8 @@ public class GmSubscriptionsDetailDTO extends BaseEntityDTO {
     }
 
     public BigDecimal getCost() {
-          if (cost == null){
-         cost = BigDecimal.ZERO ;
+        if (cost == null) {
+            cost = BigDecimal.ZERO;
         }
         return cost;
     }
@@ -61,8 +63,8 @@ public class GmSubscriptionsDetailDTO extends BaseEntityDTO {
     }
 
     public BigDecimal getDiscount() {
-           if (discount == null){
-         discount = BigDecimal.ZERO ;
+        if (discount == null) {
+            discount = BigDecimal.ZERO;
         }
         return discount;
     }
@@ -72,11 +74,11 @@ public class GmSubscriptionsDetailDTO extends BaseEntityDTO {
     }
 
     public BigDecimal getNet() {
-      
-         net = (getQuantity().multiply(getCost())).add(getExtraCost()).subtract(getValueRowDiscount())  ;
-        
+
+        net = (getQuantity().multiply(getCost())).add(getExtraCost()).subtract(getValueRowDiscount());
+
         return net;
-       
+
     }
 
     public void setNet(BigDecimal net) {
@@ -92,8 +94,8 @@ public class GmSubscriptionsDetailDTO extends BaseEntityDTO {
     }
 
     public BigDecimal getExtraCost() {
-       if (extraCost == null){
-         extraCost = BigDecimal.ZERO ;
+        if (extraCost == null) {
+            extraCost = BigDecimal.ZERO;
         }
         return extraCost;
     }
@@ -111,8 +113,8 @@ public class GmSubscriptionsDetailDTO extends BaseEntityDTO {
     }
 
     public BigDecimal getTaxValue() {
-         if (taxValue == null){
-         taxValue = BigDecimal.ZERO ;
+        if (taxValue == null) {
+            taxValue = BigDecimal.ZERO;
         }
         return taxValue;
     }
@@ -130,8 +132,8 @@ public class GmSubscriptionsDetailDTO extends BaseEntityDTO {
     }
 
     public BigDecimal getFinalQuantity() {
-         if (finalQuantity == null){
-         finalQuantity = BigDecimal.ZERO ;
+        if (finalQuantity == null) {
+            finalQuantity = BigDecimal.ZERO;
         }
         return finalQuantity;
     }
@@ -141,8 +143,8 @@ public class GmSubscriptionsDetailDTO extends BaseEntityDTO {
     }
 
     public BigDecimal getAddTotal() {
-        if (addTotal == null){
-         addTotal = BigDecimal.ZERO ;
+        if (addTotal == null) {
+            addTotal = BigDecimal.ZERO;
         }
         return addTotal;
     }
@@ -152,8 +154,8 @@ public class GmSubscriptionsDetailDTO extends BaseEntityDTO {
     }
 
     public BigDecimal getDiscountValue() {
-        if (discountValue == null){
-         discountValue = BigDecimal.ZERO ;
+        if (discountValue == null) {
+            discountValue = BigDecimal.ZERO;
         }
         return discountValue;
     }
@@ -163,8 +165,8 @@ public class GmSubscriptionsDetailDTO extends BaseEntityDTO {
     }
 
     public BigDecimal getNetAfterDiscountHead() {
-        if (netAfterDiscountHead == null){
-         netAfterDiscountHead = BigDecimal.ZERO ;
+        if (netAfterDiscountHead == null) {
+            netAfterDiscountHead = BigDecimal.ZERO;
         }
         return netAfterDiscountHead;
     }
@@ -258,8 +260,8 @@ public class GmSubscriptionsDetailDTO extends BaseEntityDTO {
      * @return the valueRowDiscount
      */
     public BigDecimal getValueRowDiscount() {
-         if (valueRowDiscount == null){
-         valueRowDiscount = BigDecimal.ZERO ;
+        if (valueRowDiscount == null) {
+            valueRowDiscount = BigDecimal.ZERO;
         }
         return valueRowDiscount;
     }
@@ -284,12 +286,13 @@ public class GmSubscriptionsDetailDTO extends BaseEntityDTO {
     public void setItemSymbolIdTrans(SymbolDTO itemSymbolIdTrans) {
         this.itemSymbolIdTrans = itemSymbolIdTrans;
     }
+
     /**
      * @return the valueAfterDiscount
      */
     public BigDecimal getValueAfterDiscount() {
-         if (valueAfterDiscount == null){
-         valueAfterDiscount = BigDecimal.ZERO ;
+        if (valueAfterDiscount == null) {
+            valueAfterDiscount = BigDecimal.ZERO;
         }
         return valueAfterDiscount;
     }
@@ -305,8 +308,8 @@ public class GmSubscriptionsDetailDTO extends BaseEntityDTO {
      * @return the totalBeforeDiscount
      */
     public BigDecimal getTotalBeforeDiscount() {
-        if (totalBeforeDiscount == null){
-         totalBeforeDiscount = BigDecimal.ZERO ;
+        if (totalBeforeDiscount == null) {
+            totalBeforeDiscount = BigDecimal.ZERO;
         }
         return totalBeforeDiscount;
     }
@@ -316,6 +319,39 @@ public class GmSubscriptionsDetailDTO extends BaseEntityDTO {
      */
     public void setTotalBeforeDiscount(BigDecimal totalBeforeDiscount) {
         this.totalBeforeDiscount = totalBeforeDiscount;
+    }
+
+    /**
+     * @return the itemName
+     */
+    public String getItemName() {
+        if (itemSymbolId != null) {
+            itemName = itemSymbolId.getName();
+        } else if (itemSymbolIdTrans != null) {
+            itemName = itemSymbolIdTrans.getName();
+        }
+        return itemName;
+    }
+
+    /**
+     * @param itemName the itemName to set
+     */
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
+    }
+
+    /**
+     * @return the itemCode
+     */
+    public String getItemCode() {
+        return itemCode;
+    }
+
+    /**
+     * @param itemCode the itemCode to set
+     */
+    public void setItemCode(String itemCode) {
+        this.itemCode = itemCode;
     }
 
 }

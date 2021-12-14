@@ -93,7 +93,7 @@ public class ItemsBalanceReportMB extends BaseGlAccountReportBean {
     @Override
     public void reset() {
         bankTransactionViewLocalList = glBankService.getAllGlBankByBranchId(getUserData().getUserBranch().getId());
-        setGlItemsList(symbolService.getGLItemsByCompanyId(getUserData().getCompany().getId()));
+        setGlItemsList(symbolService.getGLItemsByCompanyId(getUserData().getCompany().getId(),null));
 
         glBankConverter = new GlBankConverter(bankTransactionViewLocalList);
         commonSearchBean = new CommonSearchBean();
@@ -578,7 +578,7 @@ public class ItemsBalanceReportMB extends BaseGlAccountReportBean {
      */
     public List<Symbol> getItemsFrom() {
         if (itemsFrom == null || itemsFrom.isEmpty()) {
-            itemsFrom = symbolService.getGLItemsByCompanyId(getUserData().getCompany().getId());
+            itemsFrom = symbolService.getGLItemsByCompanyId(getUserData().getCompany().getId(),null);
             setItemConverterFrom(new SymbolConverter(itemsFrom));
         }
         return itemsFrom;
@@ -596,7 +596,7 @@ public class ItemsBalanceReportMB extends BaseGlAccountReportBean {
      */
     public List<Symbol> getItemsTo() {
         if (itemsTo == null || itemsTo.isEmpty()) {
-            itemsTo = symbolService.getGLItemsByCompanyId(getUserData().getCompany().getId());
+            itemsTo = symbolService.getGLItemsByCompanyId(getUserData().getCompany().getId(),null);
             setItemConverterTo(new SymbolConverter(itemsTo));
         }
         return itemsTo;

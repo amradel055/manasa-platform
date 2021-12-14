@@ -25,7 +25,11 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -74,9 +78,10 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
     public GmSubscriptionsDTO findGmSubscriptionsDTOById(GmSubscriptionsDTO gmSubscriptionsDTODto) {
         GmSubscriptions gmSubscriptions = dao.findEntityById(GmSubscriptions.class, gmSubscriptionsDTODto.getId());
         GmSubscriptionsDTO gmSubscriptionsDTODTO = mapToDTO(gmSubscriptions, gmSubscriptionsDTODto);
+        gmSubscriptionsDTODTO = gmGlobalService.updateSummitionSmall(gmSubscriptionsDTODTO);
         return gmSubscriptionsDTODTO;
     }
-    
+
     @Override
     public GmSubscriptionsDTO findGmSubscriptionsDTOBySerial(GmSubscriptionsDTO gmSubscriptionsDTO, Integer branchId) {
         Map<String, Object> params = new HashMap<>();
@@ -90,7 +95,7 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
         }
         return null;
     }
-    
+
     private GmSubscriptionsDTO mapToDTO(GmSubscriptions entity) {
 
         GmSubscriptionsDTO gmSubscriptionsDTODTO = new GmSubscriptionsDTO();
@@ -104,7 +109,6 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
     private GmSubscriptions mapToEntity(GmSubscriptionsDTO dto, IsagUser isagUser) {
 
         GmSubscriptions entity = new GmSubscriptions();
-
 
         if (dto.getOrganizationSiteId() != null) {
             InvOrganizationSite invOrganizationSite = new InvOrganizationSite();
@@ -129,10 +133,12 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
         entity.setPostFlag(0);
         entity.setType(dto.getType());
         entity.setExtraCost(dto.getExtraCost() != null ? dto.getExtraCost() : BigDecimal.ZERO);
-        
+
         entity.setTaxFlagFinal(dto.getTaxFlagFinal());
         entity.setPayCash(dto.getPayed());
         entity.setPayNet(dto.getPayNet());
+        entity.setTaxFlag(dto.getTaxFlag());
+        entity.setValue(dto.getValue());
 
         if (entity.getCreatedBy() != null) {
             IsagUser user = new IsagUser();
@@ -158,12 +164,17 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
             entity.setCompanyId(isagUser.getCompanyId());
             entity.setBranchId(isagUser.getBranchId());
         }
+
+        if (dto.getStatus() != null && dto.getStatus() == false) {
+            entity.setStatus(0);
+        } else if (dto.getStatus() != null) {
+            entity.setStatus(1);
+        }
         return entity;
     }
 
     public GmSubscriptionsDTO validateSave(GmSubscriptionsDTO gmSubscriptionsDTO) {
         StringBuilder error = new StringBuilder();
-       
 
         if (gmSubscriptionsDTO.getOrganizationSiteId() == null) {
             error.append("\n يجب أختيار عميل ");
@@ -175,6 +186,7 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
 
         return gmSubscriptionsDTO;
     }
+
     @Override
     public GmSubscriptionsDTO save(GmSubscriptionsDTO gmSubscriptionsDTO, IsagUser isagUser) {
         try {
@@ -185,7 +197,7 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
                 gmSubscriptions = mapToEntity(gmSubscriptionsDTO, isagUser);
                 if (gmSubscriptionsDTO.getId() != null) {
                     //بعمل حفظ فى حالة التعديل
-                    gmSubscriptionsDTO = dao.updateEntity(gmSubscriptionsDTO);
+                    gmSubscriptions = dao.updateEntity(gmSubscriptions);
                 } else {
                     // فى حالة ان الفاتورة جديدة بروح اجيب السيريال الاول 
                     Integer serial = genericService.getMaxGenericSerialByType(GmSubscriptions.class, gmSubscriptionsDTO.getBranchId(), gmSubscriptionsDTO.getType());
@@ -240,7 +252,7 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
 
         return gmSubscriptionsDTO;
     }
-    
+
     private GmSubscriptionsDTO findGmSubscriptionsDTOByGmSubscriptionsDTOId(Integer serial, Integer type, Integer branchId) {
         Map<String, Object> params = new HashMap<>();
         params.put("serial", serial);
@@ -249,6 +261,7 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
         List<GmSubscriptionsDTO> details = dao.findListByQuery("SELECT e FROM GmSubscriptionsDTO e WHERE e.serial = :serial AND e.branchId.id = :branchId AND e.type = :type", params);
         return (details == null || details.isEmpty()) ? null : details.get(0);
     }
+
     private GmSubscriptionsDTO mapToDTO(GmSubscriptions entity, GmSubscriptionsDTO dto) {
 
         dto = initData(dto, entity);
@@ -256,55 +269,85 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
         return dto;
     }
 
-    private GmSubscriptionsDTO initData(GmSubscriptionsDTO gmSubscriptionsDTO, GmSubscriptions entity) {
-        gmSubscriptionsDTO.setId(entity.getId());
-        gmSubscriptionsDTO.setSerial(entity.getSerial());
-        gmSubscriptionsDTO.setSerialTax(entity.getSerialTax());
-        gmSubscriptionsDTO.setIsEdit(Boolean.TRUE);
-        gmSubscriptionsDTO.setBranchId(entity.getBranchId() != null ? entity.getBranchId().getId() : null);
-        gmSubscriptionsDTO.setDate(entity.getDate());
-        gmSubscriptionsDTO.setStartDate(entity.getStartDate());
-        gmSubscriptionsDTO.setEndDate(entity.getEndDate());
-        gmSubscriptionsDTO.setTaxFlagFinal(entity.getTaxFlagFinal());
-        gmSubscriptionsDTO.setRemarks(entity.getRemarks());
-        gmSubscriptionsDTO.setDiscount(entity.getDiscount());
-        gmSubscriptionsDTO.setDiscountType(entity.getDiscountType());
-        gmSubscriptionsDTO.setPostFlag(entity.getPostFlag());
+    private GmSubscriptionsDTO initData(GmSubscriptionsDTO dto, GmSubscriptions entity) {
+        dto.setId(entity.getId());
+        dto.setValue(entity.getValue());
+        dto.setSerial(entity.getSerial());
+        dto.setSerialTax(entity.getSerialTax());
+        dto.setIsEdit(Boolean.TRUE);
+        dto.setBranchId(entity.getBranchId() != null ? entity.getBranchId().getId() : null);
+        dto.setDate(entity.getDate());
+        dto.setStartDate(entity.getStartDate());
+        dto.setEndDate(entity.getEndDate());
+        dto.setTaxFlagFinal(entity.getTaxFlagFinal());
+        dto.setRemarks(entity.getRemarks());
+        dto.setDiscount(entity.getDiscount());
+        dto.setDiscountType(entity.getDiscountType());
+        dto.setPostFlag(entity.getPostFlag());
+        dto.setTaxFlag(entity.getTaxFlag());
+        if (entity.getEndDate() != null) {
+            
+            if (entity.getStatus() != null && entity.getStatus() == 1) {
+                LocalDate startDate = entity.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                LocalDate endDate = entity.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                Long monthBetween = ChronoUnit.MONTHS.between(startDate,endDate);
+                Calendar c = Calendar.getInstance();
+                c.setTime(entity.getEndDate());
+                c.add(Calendar.DAY_OF_MONTH, 5 * monthBetween.intValue());
+                dto.setDateAfterTagmeed(c.getTime());
+            }else{
+                dto.setDateAfterTagmeed(entity.getEndDate());
+            }
+            
+            long difference_In_Time
+                    = dto.getDateAfterTagmeed().getTime() - new Date().getTime();
+            Long difference_In_Days
+                    = (difference_In_Time
+                    / (1000 * 60 * 60 * 24))
+                    % 365;
+            dto.setRemainPeriod(difference_In_Days.intValue());
+        }
         if (entity.getOrganizationSiteId() != null) {
-            gmSubscriptionsDTO.setOrganizationSiteId(organizationSiteService.mapToDTOSmall(entity.getOrganizationSiteId()));// here
+            dto.setOrganizationSiteId(organizationSiteService.mapToDTOSmall(entity.getOrganizationSiteId()));// here
         }
 
-        gmSubscriptionsDTO.setExtraCost(entity.getExtraCost());
+        dto.setExtraCost(entity.getExtraCost());
 
         if (entity.getGlBankId() != null) {
             GlBankDTO glBankDTO = new GlBankDTO();
             glBankDTO.setId(entity.getGlBankId().getId());
             glBankDTO.setName(entity.getGlBankId().getName());
             glBankDTO.setCode(entity.getGlBankId().getCode());
-            gmSubscriptionsDTO.setGlBankId(glBankDTO);
+            dto.setGlBankId(glBankDTO);
         }
 
-        gmSubscriptionsDTO.setCreatedBy(entity.getCreatedBy() != null ? entity.getCreatedBy().getId() : null);
-        gmSubscriptionsDTO.setCreatedDate(entity.getCreationDate());
-        gmSubscriptionsDTO.setIndex(entity.getSerial());
-        gmSubscriptionsDTO.setType(entity.getType());
-        gmSubscriptionsDTO.setCompanyId(entity.getCompanyId().getId() != null ? entity.getCompanyId().getId() : null);
-        gmSubscriptionsDTO.setCreatedByName(entity.getCreatedBy() != null ? entity.getCreatedBy().getName() : null);
-        gmSubscriptionsDTO.setPayNet(entity.getPayNet());
-        gmSubscriptionsDTO.setPayNet(entity.getPayNet());
-        gmSubscriptionsDTO.setPayed(entity.getPayCash().add(entity.getPayNet()));
+        dto.setCreatedBy(entity.getCreatedBy() != null ? entity.getCreatedBy().getId() : null);
+        dto.setCreatedDate(entity.getCreationDate());
+        dto.setIndex(entity.getSerial());
+        dto.setType(entity.getType());
+        dto.setCompanyId(entity.getCompanyId().getId() != null ? entity.getCompanyId().getId() : null);
+        dto.setCreatedByName(entity.getCreatedBy() != null ? entity.getCreatedBy().getName() : null);
+        dto.setPayNet(entity.getPayNet());
+        dto.setPayNet(entity.getPayNet());
+        dto.setPayed(entity.getPayCash().add(entity.getPayNet()));
         Date today = Date.from(Instant.now());
-        if(today.after(entity.getStartDate()) && today.before(entity.getEndDate())){
-        gmSubscriptionsDTO.setStatusName("مفعل");
-        
-        }else {
-        gmSubscriptionsDTO.setStatusName("معلق");
+        if (today.after(entity.getStartDate()) && today.before(entity.getEndDate())) {
+            dto.setStatusName("ساري");
+
+        } else {
+            dto.setStatusName("منتهي");
         }
 
-        List<GmSubscriptionsDetailDTO> gmSubscriptionsDTODetailsListDTO = gmSubscriptionsDTODetailsService.getAllGmSubscriptionsDetailDTOsByGmSubscriptionsDTOIdDTO(gmSubscriptionsDTO);
-        gmSubscriptionsDTO.setGmSubscriptionsDetailList(gmSubscriptionsDTODetailsListDTO);
-        gmSubscriptionsDTO.setGmSubscriptionsDetailDeletedList(new ArrayList<GmSubscriptionsDetailDTO>());
-        return gmSubscriptionsDTO;
+        if (entity.getStatus() != null && entity.getStatus() == 0) {
+            dto.setStatus(false);
+        } else if (entity.getStatus() != null) {
+            dto.setStatus(true);
+        }
+
+        List<GmSubscriptionsDetailDTO> gmSubscriptionsDTODetailsListDTO = gmSubscriptionsDTODetailsService.getAllGmSubscriptionsDetailDTOsByGmSubscriptionsDTOIdDTO(dto);
+        dto.setGmSubscriptionsDetailList(gmSubscriptionsDTODetailsListDTO);
+        dto.setGmSubscriptionsDetailDeletedList(new ArrayList<GmSubscriptionsDetailDTO>());
+        return dto;
     }
 
     @Override
@@ -328,7 +371,7 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
     }
 
     @Override
-    public List<GmSubscriptionsDTO> getALLGmSubscriptionsDTODTOByTypeAndBranchId(Integer type,  int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters) {
+    public List<GmSubscriptionsDTO> getALLGmSubscriptionsDTODTOByTypeAndBranchId(Integer type, int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters) {
         filters.put("type", type);
         filters.put("branchId", branchId);
         StringBuilder builder = new StringBuilder();
@@ -338,15 +381,15 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
         List<GmSubscriptions> details = dao.findListByQuery(builder.toString(), filters, first, pageSize);
         return returnListDTOForList(details);
     }
-    
-     @Override
+
+    @Override
     public List<GmSubscriptionsDTO> getALLGmSubscriptionsDTODTOByCustomerId(Integer customerId) {
-         Map<String, Object> filters = new HashMap<>();
+        Map<String, Object> filters = new HashMap<>();
         filters.put("customerId", customerId);
-       
+
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT s FROM GmSubscriptions s WHERE  s.organizationSiteId.id =:customerId  ");
-  
+
         List<GmSubscriptions> details = dao.findListByQuery(builder.toString(), filters);
         return returnListDTOForList(details);
     }
@@ -395,7 +438,7 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
             GmSubscriptions gmSubscriptions = new GmSubscriptions();
             gmSubscriptions.setId(invoiceId);
             dao.deleteEntity(gmSubscriptions);
-            
+
         }
     }
 
@@ -449,7 +492,6 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
         return dao.findEntityByQuery("select sum(i.payCash) from GmSubscriptionsDTO i where i.branchId.id = :branchId AND i.type = :type And i.date BETWEEN :dateFrom AND :dateTo", params);
 
     }
-
 
     private Integer findInvoiceCount(DistributionApiSearch distributionApiSearch, Integer type) {
         Map<String, Object> params = new HashMap();
@@ -554,6 +596,5 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
         }
         return result;
     }
-
 
 }

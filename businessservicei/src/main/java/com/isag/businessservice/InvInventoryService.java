@@ -5,6 +5,7 @@
  */
 package com.isag.businessservice;
 
+import com.isag.dto.InvInventoryDTO;
 import com.isag.entity.Branch;
 import com.isag.entity.InvInventory;
 import com.isag.entity.IsagCompany;
@@ -36,4 +37,8 @@ public interface InvInventoryService {
     public List<InvInventory> findInventory(Integer branchId, String code);
 
     public List<InvInventory> getAllInventories();
+    
+    public InvInventoryDTO findInventoryDTO(Integer id) ;
+    
+    public InvInventoryDTO mapToDTO(InvInventory invInventory) ;
 }

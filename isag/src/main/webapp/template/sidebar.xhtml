@@ -374,6 +374,7 @@
                                        rendered="#{userData.userScreens['glBank'].view 
                                                    or userData.userScreens['notesreceivablespre'].view 
                                                    or userData.userScreens['notesreceivables'].view 
+                                                   or userData.userScreens['notesreceivablesdis'].view 
                                                    or userData.userScreens['settlementdeed'].view 
                                                    or userData.userScreens['glBankTransaction'].view 
 
@@ -396,12 +397,16 @@
                                 <p:submenu id="sr_sm62" label="#{userData.userDDs['Safes_and_Bank_Transaction']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['notesreceivablespre'].view 
                                                        or userData.userScreens['notesreceivables'].view 
+                                                       or userData.userScreens['notesreceivablesdis'].view 
                                                        or userData.userScreens['settlementdeed'].view
                                                        or userData.userScreens['glBankTransaction'].view
                                                        or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk621" value="#{userData.userDDs['RECEIPTS']}" icon="&#xE8D2;" url="/faces/views/notesreceivables/notesreceivablesList.xhtml" 
                                                 rendered="#{userData.userScreens['notesreceivables'].view or userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="sr_lnk62144" value="#{userData.userDDs['RECEIPTS']}" icon="&#xE8D2;" url="/faces/views/notesreceivablesdis/notesreceivablesList.xhtml" 
+                                                rendered="#{userData.userScreens['notesreceivablesdis'].view or userData.isAdmin}"
                                                 />
                                     <p:menuitem id="sr_lnk622" value="#{userData.userDDs['PAYMENTS']}" icon="&#xE8D2;" url="/faces/views/settlementdeed/settlementdeedList.xhtml"
                                                 rendered="#{userData.userScreens['settlementdeed'].view or userData.isAdmin}"
@@ -1094,12 +1099,16 @@
                                     <p:menuitem id="gm_lnk550" value="إنشاء البنود" icon="&#xE8D2;" url="/faces/views/gmitemsymbol/itemsymbollist.xhtml" 
                                                 rendered="#{userData.userScreens['gmitemsymbol'].view or userData.isAdmin}"
                                                 />
-                                    <p:menuitem id="gm_lnk551" value="استعلام" icon="&#xE8D2;" url="/faces/views/gmsubscriptionstatue/gmsubscriptionslist.xhtml" 
+                                    <p:menuitem id="gm_lnk552" value="تسجيل عميل جديد" icon="&#xE8D2;" url="/faces/views/gmregistration/gmclientlist.xhtml" 
+                                                rendered="#{userData.userScreens['gmregistration'].view or userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="gm_lnk551" value="استعلام" icon="&#xE8D2;" url="/faces/views/gmsubscriptionstatue/gmsubscriptionstatue.xhtml" 
                                                 rendered="#{userData.userScreens['gmsubscriptionstatue'].view or userData.isAdmin}"
                                                 />
-                                    <p:menuitem id="gm_lnk552" value="الإشتراكات" icon="&#xE8D2;" url="/faces/views/gmsubscriptions/gmsubscriptionslist.xhtml" 
+                                    <p:menuitem id="gm_lnk553" value="الإشتراكات" icon="&#xE8D2;" url="/faces/views/gmsubscriptions/gmsubscriptionslist.xhtml" 
                                                 rendered="#{userData.userScreens['gmsubscriptions'].view or userData.isAdmin}"
                                                 />
+                                    
                                 </p:submenu>
                             </p:submenu>
                             <p:submenu id="sr_sm55" label="الترحيلات" icon="&#xE8D2;"
