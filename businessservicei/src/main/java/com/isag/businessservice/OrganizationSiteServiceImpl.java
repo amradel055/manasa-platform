@@ -31,6 +31,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import static java.util.Collections.list;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -268,6 +269,18 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         params.put("branchId", branchId);
         List<InvOrganizationSite> detailses = dao.findListByQuery("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId ORDER BY e.code", params);
         return detailses;
+    }
+
+    @Override
+    public InvOrganizationSiteDTO getInvOrganizationSiteByQuery(String query, IsagUser isagUser) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("query", query);
+        List<InvOrganizationSite> detailses = dao.findListByQuery("SELECT e FROM InvOrganizationSite e WHERE AND ((e.name  =:qeury )) OR (OR e.code =:qeury ) OR (e.phone=:qeury) OR (e.mobile =:qeury )  ", params);
+        List<InvOrganizationSiteDTO> list = mapToDTOList(detailses, isagUser);
+        if(list != null && !list.isEmpty()){
+            return list.get(0);
+        }
+        return null;
     }
 
     @Override

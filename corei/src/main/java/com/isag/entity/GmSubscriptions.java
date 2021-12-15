@@ -34,6 +34,10 @@ public class GmSubscriptions extends BaseEntity {
     private Date date;
     @Column(name = "value")
     private BigDecimal value;
+    @Column(name = "taxvalue")
+    private BigDecimal taxvalue;
+    @Column(name = "finalNet")
+    private BigDecimal finalNet;
     @Basic(optional = false)
     @NotNull
     @Column(name = "end_date")
@@ -93,7 +97,9 @@ public class GmSubscriptions extends BaseEntity {
     @JoinColumn(name = "organization_site_id", referencedColumnName = "id")
     @ManyToOne
     private InvOrganizationSite organizationSiteId;
-
+    @JoinColumn(name = "gm_item_id", referencedColumnName = "id")
+    @ManyToOne
+    private GmItem gmItemId;
     public GmSubscriptions() {
     }
 
@@ -344,6 +350,48 @@ public class GmSubscriptions extends BaseEntity {
      */
     public void setValue(BigDecimal value) {
         this.value = value;
+    }
+
+    /**
+     * @return the taxvalue
+     */
+    public BigDecimal getTaxvalue() {
+        return taxvalue;
+    }
+
+    /**
+     * @param taxvalue the taxvalue to set
+     */
+    public void setTaxvalue(BigDecimal taxvalue) {
+        this.taxvalue = taxvalue;
+    }
+
+    /**
+     * @return the finalNet
+     */
+    public BigDecimal getFinalNet() {
+        return finalNet;
+    }
+
+    /**
+     * @param finalNet the finalNet to set
+     */
+    public void setFinalNet(BigDecimal finalNet) {
+        this.finalNet = finalNet;
+    }
+
+    /**
+     * @return the gmItemId
+     */
+    public GmItem getGmItemId() {
+        return gmItemId;
+    }
+
+    /**
+     * @param gmItemId the gmItemId to set
+     */
+    public void setGmItemId(GmItem gmItemId) {
+        this.gmItemId = gmItemId;
     }
 
 }

@@ -34,7 +34,7 @@
                         var="busesTable" 
                         widgetVar="bTable"  
                         rowIndexVar="index" 
-                        value="#{glItemsListMB.symbolDTOList}" rows="15" 
+                        value="#{gmItemsListMB.gmItemDTOList}" rows="15" 
                         paginator="true" emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
                         id="busesListForm">
                         <f:facet name="header" class="col-md-12">
@@ -77,15 +77,15 @@
                                              update="@form"
                                              icon="fa fa-fw fa-edit" 
                                              title="#{userData.userDDs['EDIT']}" style="background-color: #6a6967;border-radius: 3px;margin-bottom:3px"
-                                             action="#{glItemsListMB.goToEdit()}">
-                                <f:setPropertyActionListener value="#{busesTable}"  target="#{glItemsListMB.symbolDTOSelected}" />
+                                             action="#{gmItemsListMB.goToEdit()}">
+                                <f:setPropertyActionListener value="#{busesTable}"  target="#{gmItemsListMB.gmItemDTOSeleceted}" />
                             </p:commandButton>
 
                             <p:commandButton  id="delete" update="@form" 
                                               class="scloseButtons" style="background-color: red;border-radius: 3px;margin-bottom:3px"
                                               icon="fa fa-remove" title="#{userData.userDDs['DELETE']}"
-                                              action="#{glItemsListMB.delete}">
-                                <f:setPropertyActionListener value="#{busesTable}" target="#{glItemsListMB.symbolDTOSelected}" />
+                                              action="#{gmItemsListMB.delete}">
+                                <f:setPropertyActionListener value="#{busesTable}" target="#{gmItemsListMB.gmItemDTOSeleceted}" />
                                 <p:confirm header="Confirmation" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
                             </p:commandButton>
 

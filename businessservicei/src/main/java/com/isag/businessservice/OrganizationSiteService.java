@@ -49,7 +49,7 @@ public interface OrganizationSiteService {
     public List<InvOrganizationSite> getInvOrganizationSiteByCompanyId(Integer companyId);
 
     public List<InvOrganizationSite> getInvOrganizationSiteByBranchId(Integer BranchId);
-
+    
     public List<InvOrganizationSite> getSupplierByBranchId(Integer BranchId);
 
     public List<InvOrganizationSite> getSupplierByBranchIdForSupplierAccountReportMB(Integer branchId, Integer type);
@@ -161,4 +161,6 @@ public interface OrganizationSiteService {
      public InvOrganizationSiteDTO mapToDTOSmall(InvOrganizationSite invOrganizationSite);
      
      public List<InvOrganizationSite> getInvOrganizationSiteByCustomerId(Integer customerId);
+     
+     public InvOrganizationSiteDTO getInvOrganizationSiteByQuery(String query,IsagUser isagUser);
 }

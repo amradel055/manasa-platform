@@ -26,7 +26,7 @@
                             <div class="ui-g-12 ui-xl-12">
 
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:inputText style="width: 35%!important" id="ad1" a:autofocus="true" value="#{glItemsFormMB.symbolDTO.serial}"/>
+                                    <p:inputText style="width: 35%!important" id="ad1" a:autofocus="true" value="#{gmItemsFormMB.gmItemDTO.serial}"/>
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:outputLabel style="width: 85px;margin-right: 3%;" value="#{userData.userDDs['CODE']}"/>
@@ -37,7 +37,7 @@
                             <div class="ui-g-12 ui-xl-12">
 
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:inputText style="width: 35%!important" id="ad2" value="#{glItemsFormMB.symbolDTO.name}"/>
+                                    <p:inputText style="width: 35%!important" id="ad2" value="#{gmItemsFormMB.gmItemDTO.name}"/>
 
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
@@ -48,7 +48,7 @@
                             <div class="ui-g-12 ui-xl-12">
 
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:inputText style="width: 35%!important" id="ad3"  value="#{glItemsFormMB.symbolDTO.cost}"/>
+                                    <p:inputText style="width: 35%!important" id="ad3"  value="#{gmItemsFormMB.gmItemDTO.cost}"/>
 
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
@@ -59,7 +59,7 @@
                                  <div class="ui-g-12 ui-xl-12">
 
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:inputText style="width: 35%!important" id="ad30"  value="#{glItemsFormMB.symbolDTO.period}"/>
+                                    <p:inputText style="width: 35%!important" id="ad30"  value="#{gmItemsFormMB.gmItemDTO.period}"/>
 
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
@@ -72,7 +72,7 @@
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:selectBooleanCheckbox 
-                                        value="#{glItemsFormMB.symbolDTO.symbolType}"
+                                        value="#{gmItemsFormMB.gmItemDTO.symbolType}"
 
                                         >
                                     </p:selectBooleanCheckbox>
@@ -94,7 +94,7 @@
                                   title="#{userData.userDDs['SAVE']}"
                                   value="#{userData.userDDs['SAVE']}" 
                                   style=""
-                                  action="#{glItemsFormMB.saveItemSymbol()}" 
+                                  action="#{gmItemsFormMB.save()}" 
                                   update="@form"/>
 
                 <p:commandButton  class="newButton" 
@@ -104,7 +104,7 @@
                                   value="#{userData.userDDs['NEW']}" 
                                   title="#{userData.userDDs['NEW']}"
                                   onclick="form.target = ''" 
-                                  actionListener="#{glItemsFormMB.reset()}"/>
+                                  actionListener="#{gmItemsFormMB.reset()}"/>
 
 
 

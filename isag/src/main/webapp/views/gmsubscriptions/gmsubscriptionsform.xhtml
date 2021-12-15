@@ -31,6 +31,10 @@
                 margin-top: 1%;
                 margin-right: 1%    
             }
+            body .ui-datatable tbody tr td {
+    border: 0 none;
+    padding: 1.1em 3.857em;
+}
         </style>
 
         <h:form id="form" dir="#{userData.dir}" class='formmargin'>
@@ -53,8 +57,8 @@
                              selectionMode="single"
                              sortBy="#{1}"
                              rowKey="#{invPurchaseInvoiceDetailsTable.index}"
-                             selection="#{gmSubscriptionsFormDTOMB.symbolDTOSelected}"
-                             value="#{gmSubscriptionsFormDTOMB.symbolDTOList}" >
+                             selection="#{gmSubscriptionsFormDTOMB.gmItemDTOSelected}"
+                             value="#{gmSubscriptionsFormDTOMB.gmItemDTOList}" >
 
                     <p:ajax event="rowSelect" listener="#{gmSubscriptionsFormDTOMB.updatedata()}" update="@form"  process="invPurchaseInvoiceDetailsTable" />
 
@@ -429,9 +433,9 @@
                             <div class="ui-g-3 ui-xl-3">
 
                                     <div class="ui-g-6 ui-xl-6">
-                                        <h:outputText id="totalNetAfterDiscount" 
+                                        <h:outputText id="finalNet" 
                                                       style="text-align:right" 
-                                                      value="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.totalNetAfterDiscount}" />
+                                                      value="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.finalNet}" />
 
                                     </div>
                                     <div class="ui-g-6 ui-xl-6">
