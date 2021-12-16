@@ -22,12 +22,14 @@ import javax.inject.Named;
 @ViewScoped
 public class gmFreezeMB extends BaseFormBean {
 
+   private InvOrganizationSiteDTO siteDTO;
     private GmFreezeDto gmfreezeDto;
     private String query;
     @EJB
     GmFreezeService gmFreezeService;
     @EJB
     OrganizationSiteService organizationSiteService;
+    private String customerName;
 
     public void reset() {
         try {
@@ -46,15 +48,17 @@ public class gmFreezeMB extends BaseFormBean {
         return "";
     }
 
-    public void searchCustomer() {
-
-        if (getGmfreezeDto().getCustomerId().getMobile() != null || !getGmfreezeDto().getCustomerId().getMobile().isEmpty()) {
-            InvOrganizationSiteDTO siteDTO = organizationSiteService.getInvOrganizationSiteByQuery(query, getUserData().getUser());
+    public InvOrganizationSiteDTO searchCustomer() {
+        if (getQuery() != null || !getQuery().isEmpty()) {
+             siteDTO = organizationSiteService.getInvOrganizationSiteByQuery(query, getUserData().getUser());
+            setCustomerName(siteDTO.getName());
+            
             if (siteDTO != null) {
                 gmfreezeDto.setCustomerId(siteDTO);
             }
+             
         }
-
+                return siteDTO ;      
     }
 
     /**
@@ -102,6 +106,34 @@ public class gmFreezeMB extends BaseFormBean {
      */
     public void setQuery(String query) {
         this.query = query;
+    }
+
+    /**
+     * @return the customerName
+     */
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    /**
+     * @param customerName the customerName to set
+     */
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    /**
+     * @return the siteDTO
+     */
+    public InvOrganizationSiteDTO getSiteDTO() {
+        return siteDTO;
+    }
+
+    /**
+     * @param siteDTO the siteDTO to set
+     */
+    public void setSiteDTO(InvOrganizationSiteDTO siteDTO) {
+        this.siteDTO = siteDTO;
     }
 
 }
