@@ -59,6 +59,7 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
     private BigDecimal totalWithTaxValue;
     private BigDecimal discountValue;
      private BigDecimal value;
+     private GmItemDTO gmItemDTO ;
 
     private Boolean showCustomerDate = Boolean.TRUE;
     private InventoryDelegatorDTO invDelegatorId;
@@ -691,5 +692,19 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
      */
     public void setValue(BigDecimal value) {
         this.value = value;
+    }
+
+    /**
+     * @return the gmItemDTO
+     */
+    public GmItemDTO getGmItemDTO() {
+        return gmItemDTO;
+    }
+
+    /**
+     * @param gmItemDTO the gmItemDTO to set
+     */
+    public void setGmItemDTO(GmItemDTO gmItemDTO) {
+        this.gmItemDTO = gmItemDTO;
     }
 }
