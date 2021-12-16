@@ -20,6 +20,8 @@ public class GmItemDTO extends BaseEntityDTO {
     private Boolean symbolType;
     private Integer period;
     public Object date;
+    private Boolean useability;
+    
     
     
     public GmItemDTO() {
@@ -134,7 +136,9 @@ public class GmItemDTO extends BaseEntityDTO {
     /**
      * @return the period
      */
-    public Integer getPeriod() {
+    public Integer getPeriod()
+    {
+        
         return period;
     }
 
@@ -144,5 +148,25 @@ public class GmItemDTO extends BaseEntityDTO {
     public void setPeriod(Integer period) {
         this.period = period;
     }
+
+    /**
+     * @return the useability
+     */
+    public Boolean getUseability() {
+          if(useability == null){
+            useability = Boolean.FALSE;
+        }
+        return useability;
+    }
+
+    /**
+     * @param useability the useability to set
+     */
+    public void setUseability(Boolean useability) {
+        this.useability = useability;
+    }
+
+
+   
 
 }

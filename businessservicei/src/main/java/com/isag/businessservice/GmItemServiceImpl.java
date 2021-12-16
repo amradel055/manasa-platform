@@ -48,7 +48,6 @@ public class GmItemServiceImpl implements GmItemService {
         dTO.setCreatedBy(entity.getCreatedBy() != null ? entity.getCreatedBy().getId() : null);
         dTO.setCost(entity.getCost());
         dTO.setSymbolType(entity.getSymbolType() != null && entity.getSymbolType() == 1);
-
         dTO.setSerial(entity.getSerial());
         dTO.setArrange(entity.getArrange());
         dTO.setName(entity.getName());
@@ -58,6 +57,7 @@ public class GmItemServiceImpl implements GmItemService {
         dTO.setCreatedBy(entity.getCreatedBy() != null ? entity.getCreatedBy().getId() : null);
         dTO.setCreatedDate(entity.getCreationDate());
         dTO.setCompanyId(entity.getCompanyId().getId() != null ? entity.getCompanyId().getId() : null);
+        dTO.setUseability(entity.getUseability() != null && entity.getUseability() == 1);
 
     }
 
@@ -69,6 +69,7 @@ public class GmItemServiceImpl implements GmItemService {
         entity.setPeriod(dTO.getPeriod());
         entity.setCost(dTO.getCost());
         entity.setSymbolType(dTO.getSymbolType() ? 1 : 0);
+        entity.setUseability(dTO.getUseability() ? 1 : 0);
 
         if (dTO.getId() == null) {
             entity.setCreatedBy(isagUser);
