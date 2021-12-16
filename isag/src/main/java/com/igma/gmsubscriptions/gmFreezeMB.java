@@ -64,17 +64,7 @@ public class gmFreezeMB extends BaseFormBean {
         return siteDTO;
     }
     
-    public void getCustomer() {
-        
-            InvOrganizationSite entity = organizationSiteService.findOrganizationSiteById(getGmSubscriptionsDTOSelected().getOrganizationSiteId().getId());
-            siteDTO = organizationSiteService.mapToDTOSmall(entity);
-            setCustomerName(siteDTO.getName());
-
-            if (siteDTO != null) {
-                gmfreezeDto.setCustomerId(siteDTO);
-            }
-        OpenDlg("dlg3");
-    }
+ 
 
     /**
      * @return the gmfreezeDto

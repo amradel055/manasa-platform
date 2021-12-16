@@ -163,4 +163,6 @@ public interface OrganizationSiteService {
      public List<InvOrganizationSite> getInvOrganizationSiteByCustomerId(Integer customerId);
      
      public InvOrganizationSiteDTO getInvOrganizationSiteByQuery(String query,IsagUser isagUser);
+     
+     public InvOrganizationSiteDTO findOrganizationSiteDTOByIdSmall(Integer invOrganizationSiteId);
 }

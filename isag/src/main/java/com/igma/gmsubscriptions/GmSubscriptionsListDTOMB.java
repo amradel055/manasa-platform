@@ -5,13 +5,20 @@
  */
 package com.igma.gmsubscriptions;
 
+import com.isag.businessservice.GmFreezeService;
 import com.isag.businessservice.GmSubscriptionsService;
 import com.isag.businessservice.OrganizationSiteService;
 import com.isag.converter.InvOrganizationSiteDTOConverter;
+import com.isag.dto.GmFreezeDto;
 import com.isag.dto.GmSubscriptionsDTO;
 import com.isag.dto.InvOrganizationSiteDTO;
 import com.isag.isag.BaseListBean;
 import com.isag.isag.UserData;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
@@ -22,6 +29,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
+import static javax.ws.rs.client.Entity.entity;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 
@@ -33,21 +41,26 @@ import org.primefaces.model.SortOrder;
 @ViewScoped
 public class GmSubscriptionsListDTOMB extends BaseListBean {
 
+    private String nameClient;
     private LazyDataModel<GmSubscriptionsDTO> dataModel;
     private GmSubscriptionsDTO gmSubscriptionsDTOSelected;
-    private List<GmSubscriptionsDTO> subscribtionList ;
-    private InvOrganizationSiteDTO invOrganizationSiteDTO ;
-    private List<InvOrganizationSiteDTO> invOrganizationSiteDTOList ;
-    private InvOrganizationSiteDTO invOrganizationSiteDTOSelected ;
+    private List<GmSubscriptionsDTO> subscribtionList;
+    private InvOrganizationSiteDTO invOrganizationSiteDTO;
+    private List<InvOrganizationSiteDTO> invOrganizationSiteDTOList;
+    private InvOrganizationSiteDTO invOrganizationSiteDTOSelected;
     private String host;
+    private InvOrganizationSiteDTO siteDTO;
     private InvOrganizationSiteDTOConverter organizationSiteDTOConvertor;
+    private GmFreezeDto gmFreezeDto;
     @EJB
     private GmSubscriptionsService gmSubscriptionsService;
-    
-    @EJB 
-    private OrganizationSiteService organizationSiteService ;
-    
-    
+
+    @EJB
+    private OrganizationSiteService organizationSiteService;
+
+    @EJB
+    private GmFreezeService gmFreezeService;
+
     @Override
     @PostConstruct
     public void init() {
@@ -56,26 +69,54 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceListMB", "init");
         }
-    } 
-    
-    
-    
- 
-    
-    
-    
-     public List<GmSubscriptionsDTO> search(){
-      
+    }
+
+    public void findCustomerData() {
+        setSiteDTO(organizationSiteService.findOrganizationSiteDTOByIdSmall(getGmSubscriptionsDTOSelected().getOrganizationSiteId().getId()));
+        getGmFreezeDto().setCustomerId(getSiteDTO());
+        getGmFreezeDto().setSubscriptionId(getGmSubscriptionsDTOSelected());
+        getGmFreezeDto().setDatefrom(new Date());
+        calcDays();
+        OpenDlg("dlg3");
+    }
+
+    public void calcDate() {
+        if (getGmFreezeDto().getNumber() != null) {
+            Calendar c = Calendar.getInstance();
+            c.setTime(getGmFreezeDto().getDatefrom());
+            c.add(Calendar.DAY_OF_MONTH, getGmFreezeDto().getNumber());
+            getGmFreezeDto().setDateto(c.getTime());
+        }
+    }
+
+    public void calcDays() {
+        LocalDate startDate = getGmSubscriptionsDTOSelected().getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate endDate = getGmSubscriptionsDTOSelected().getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        Long monthBetween = ChronoUnit.MONTHS.between(startDate, endDate);
+        Calendar c = Calendar.getInstance();
+        getGmFreezeDto().setMustDays(5 * monthBetween.intValue());
+        getGmFreezeDto().setTakeDays(gmFreezeService.calcTakenDaysByCustomerIdAndSubscribtionId(getGmSubscriptionsDTOSelected().getOrganizationSiteId().getId() , getGmSubscriptionsDTOSelected().getId()));
+        getGmFreezeDto().setRemainDays(getGmFreezeDto().getMustDays() - getGmFreezeDto().getTakeDays());
+    }
+
+    public String saveFreeze() {
+
+        gmFreezeService.save(getGmFreezeDto(), getUserData().getUser());
+
+        return "";
+    }
+
+    public List<GmSubscriptionsDTO> search() {
+
         try {
-            
+
             setSubscribtionList(gmSubscriptionsService.getALLGmSubscriptionsDTODTOByCustomerId(invOrganizationSiteDTO.getId()));
-           
+
+        } catch (Exception e) {
+            saveError(e, "InvPurchaseInvoiceFormMB", "load");
         }
-        catch (Exception e){
-        saveError(e, "InvPurchaseInvoiceFormMB", "load");
-        }
-        
-        return getSubscribtionList() ;
+
+        return getSubscribtionList();
     }
 
     @Override
@@ -124,8 +165,8 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
             return null;
         }
     }
-    
-    public void goTOAddForm(){
+
+    public void goTOAddForm() {
         exit("../gmregistration/gmregistrationForm.xhtml");
     }
 
@@ -145,7 +186,7 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
             return null;
         }
     }
-    
+
     public String goToEditClient() {
         try {
             if (getInvOrganizationSiteDTOSelected() != null && getInvOrganizationSiteDTOSelected().getId() > 0) {
@@ -166,8 +207,8 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
     public void goToScreen() {
         exit("../gmsubscriptions/gmsubscriptionsform.xhtml");
     }
-    
-     public void goToClientEditScreen() {
+
+    public void goToClientEditScreen() {
         exit("../gmregistration/gmregistrationForm.xhtml");
     }
 
@@ -183,11 +224,11 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
             saveError(e, "InvPurchaseInvoiceListMB", "delete");
         }
     }
-    
+
     public void deleteClient() {
         try {
-            if (getInvOrganizationSiteDTOSelected()!= null && getInvOrganizationSiteDTOSelected().getId() != null) {
-                organizationSiteService.deleteOrganizationSiteDTO(getInvOrganizationSiteDTOSelected() , getUserlogin());
+            if (getInvOrganizationSiteDTOSelected() != null && getInvOrganizationSiteDTOSelected().getId() != null) {
+                organizationSiteService.deleteOrganizationSiteDTO(getInvOrganizationSiteDTOSelected(), getUserlogin());
                 load();
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "تم الجذذف بنجاح", "تم الجذذف بنجاح"));
             }
@@ -267,7 +308,7 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
      * @return the invOrganizationSiteDTOList
      */
     public List<InvOrganizationSiteDTO> getInvOrganizationSiteDTOList() {
-        invOrganizationSiteDTOList = organizationSiteService.getCustomerDTOByBranchId(getUserData().getUserBranch().getId()) ;
+        invOrganizationSiteDTOList = organizationSiteService.getCustomerDTOByBranchId(getUserData().getUserBranch().getId());
         return invOrganizationSiteDTOList;
     }
 
@@ -286,7 +327,8 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
     }
 
     /**
-     * @param invOrganizationSiteDTOSelected the invOrganizationSiteDTOSelected to set
+     * @param invOrganizationSiteDTOSelected the invOrganizationSiteDTOSelected
+     * to set
      */
     public void setInvOrganizationSiteDTOSelected(InvOrganizationSiteDTO invOrganizationSiteDTOSelected) {
         this.invOrganizationSiteDTOSelected = invOrganizationSiteDTOSelected;
@@ -296,8 +338,8 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
      * @return the host
      */
     public String getHost() {
-     HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
-     setHost(request.getRequestURL().substring(0, request.getRequestURL().indexOf("faces/")).concat("images/"));
+        HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
+        setHost(request.getRequestURL().substring(0, request.getRequestURL().indexOf("faces/")).concat("images/"));
         return host;
     }
 
@@ -316,9 +358,58 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
     }
 
     /**
-     * @param organizationSiteDTOConvertor the organizationSiteDTOConvertor to set
+     * @param organizationSiteDTOConvertor the organizationSiteDTOConvertor to
+     * set
      */
     public void setOrganizationSiteDTOConvertor(InvOrganizationSiteDTOConverter organizationSiteDTOConvertor) {
         this.organizationSiteDTOConvertor = organizationSiteDTOConvertor;
+    }
+
+    /**
+     * @return the siteDTO
+     */
+    public InvOrganizationSiteDTO getSiteDTO() {
+        if (siteDTO == null) {
+            siteDTO = new InvOrganizationSiteDTO();
+        }
+        return siteDTO;
+    }
+
+    /**
+     * @param siteDTO the siteDTO to set
+     */
+    public void setSiteDTO(InvOrganizationSiteDTO siteDTO) {
+        this.siteDTO = siteDTO;
+    }
+
+    /**
+     * @return the gmFreezeDto
+     */
+    public GmFreezeDto getGmFreezeDto() {
+        if (gmFreezeDto == null) {
+            gmFreezeDto = new GmFreezeDto();
+        }
+        return gmFreezeDto;
+    }
+
+    /**
+     * @param gmFreezeDto the gmFreezeDto to set
+     */
+    public void setGmFreezeDto(GmFreezeDto gmFreezeDto) {
+        this.gmFreezeDto = gmFreezeDto;
+    }
+
+    /**
+     * @return the nameClient
+     */
+    public String getNameClient() {
+        return nameClient;
+    }
+
+    /**
+     * @param nameClient the nameClient to set
+     */
+    public void setNameClient(String nameClient) {
+        this.nameClient = nameClient;
     }
 }

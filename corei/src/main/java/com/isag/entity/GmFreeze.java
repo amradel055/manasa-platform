@@ -40,6 +40,9 @@ public class GmFreeze  extends BaseEntity{
     private Date datefrom;
     @Column(name = "number")
     private Integer number;
+    @JoinColumn(name = "subscirbtion_id", referencedColumnName = "id")
+    @ManyToOne
+    private GmSubscriptions subscirbtionId;
 
     /**
      * @return the branchId
@@ -109,6 +112,20 @@ public class GmFreeze  extends BaseEntity{
      */
     public void setNumber(Integer number) {
         this.number = number;
+    }
+
+    /**
+     * @return the subscirbtionId
+     */
+    public GmSubscriptions getSubscirbtionId() {
+        return subscirbtionId;
+    }
+
+    /**
+     * @param subscirbtionId the subscirbtionId to set
+     */
+    public void setSubscirbtionId(GmSubscriptions subscirbtionId) {
+        this.subscirbtionId = subscirbtionId;
     }
     
     

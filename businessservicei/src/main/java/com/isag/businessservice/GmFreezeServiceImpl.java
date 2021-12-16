@@ -7,8 +7,10 @@ package com.isag.businessservice;
 
 import com.isag.core.GenericDAO;
 import com.isag.dto.GmFreezeDto;
+import com.isag.dto.GmSubscriptionsDTO;
 import com.isag.entity.IsagUser;
 import com.isag.entity.GmFreeze;
+import com.isag.entity.GmSubscriptions;
 import com.isag.entity.InvOrganizationSite;
 import java.util.ArrayList;
 import java.util.Date;
@@ -42,7 +44,7 @@ public class GmFreezeServiceImpl implements GmFreezeService {
     public List<GmFreezeDto> getALLgm_freezeDtoByBranchId(Integer branchId, IsagUser isagUser) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
-        List<GmFreeze> gmFreezList = dao.findListByQuery("SELECT e FROM gm_freeze e WHERE e.branchId.id = :branchId ", params);
+        List<GmFreeze> gmFreezList = dao.findListByQuery("SELECT e FROM GmFreeze e WHERE e.branchId.id = :branchId ", params);
         List<GmFreezeDto> dtoList = new ArrayList<>();
 
         dtoList = returnListDTOForList(gmFreezList, isagUser);
@@ -89,7 +91,11 @@ public class GmFreezeServiceImpl implements GmFreezeService {
         }
         entity.setBranchId(isagUser.getBranchId());
         entity.setCompanyId(isagUser.getCompanyId());
-
+        if (dto.getSubscriptionId() != null) {
+            GmSubscriptions gmSubscriptions = new GmSubscriptions();
+            gmSubscriptions.setId(dto.getSubscriptionId().getId());
+            entity.setSubscirbtionId(gmSubscriptions);
+        }
         return entity;
     }
 
@@ -101,6 +107,13 @@ public class GmFreezeServiceImpl implements GmFreezeService {
             dto.setCustomerId(organizationSiteService.mapToDTOSmall(entity.getCustomerId()));
         }
 
+        if (entity.getSubscirbtionId() != null) {
+            GmSubscriptionsDTO gmSubscriptionsDTO = new GmSubscriptionsDTO();
+            gmSubscriptionsDTO.setId(entity.getSubscirbtionId().getId());
+            gmSubscriptionsDTO.setSerial(entity.getSubscirbtionId().getSerial());
+
+            dto.setSubscriptionId(gmSubscriptionsDTO);
+        }
         dto.setDatefrom(entity.getDatefrom());
         dto.setDateto(entity.getDateto());
         dto.setNumber(entity.getNumber());
@@ -150,6 +163,21 @@ public class GmFreezeServiceImpl implements GmFreezeService {
             dtosList.add(gmFreezDto);
         }
         return dtosList;
+    }
+    
+     @Override
+    public Integer calcTakenDaysByCustomerIdAndSubscribtionId(Integer customerId , Integer subscribtionId){
+      
+        Map<String, Object> params = new HashMap<>();
+        params.put("customerId", customerId);
+        params.put("subscribtionId", subscribtionId);
+        List<Long> list = dao.findListByQuery("SELECT sum(e.number) FROM  GmFreeze e where e.customerId.id = :customerId AND e.subscirbtionId.id = :subscribtionId", params);
+        if(list != null && !list.isEmpty() && list.get(0) != null ){
+         Integer i = list.get(0).intValue() ;
+         return i ;
+        }
+        
+      return 0 ;
     }
 
 }

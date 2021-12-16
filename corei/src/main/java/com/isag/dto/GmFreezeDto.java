@@ -16,6 +16,11 @@ public class GmFreezeDto  extends BaseEntityDTO {
        private Date dateto;
        private Date datefrom;
        private Integer number;
+       
+       private Integer mustDays;
+       private Integer takeDays;
+       private Integer remainDays;
+       private GmSubscriptionsDTO subscriptionId ;
 
 
     /**
@@ -75,5 +80,61 @@ public class GmFreezeDto  extends BaseEntityDTO {
      */
     public void setNumber(Integer number) {
         this.number = number;
+    }
+
+    /**
+     * @return the mustDays
+     */
+    public Integer getMustDays() {
+        return mustDays;
+    }
+
+    /**
+     * @param mustDays the mustDays to set
+     */
+    public void setMustDays(Integer mustDays) {
+        this.mustDays = mustDays;
+    }
+
+    /**
+     * @return the takeDays
+     */
+    public Integer getTakeDays() {
+        return takeDays;
+    }
+
+    /**
+     * @param takeDays the takeDays to set
+     */
+    public void setTakeDays(Integer takeDays) {
+        this.takeDays = takeDays;
+    }
+
+    /**
+     * @return the remainDays
+     */
+    public Integer getRemainDays() {
+        return remainDays;
+    }
+
+    /**
+     * @param remainDays the remainDays to set
+     */
+    public void setRemainDays(Integer remainDays) {
+        this.remainDays = remainDays;
+    }
+
+    /**
+     * @return the subscriptionId
+     */
+    public GmSubscriptionsDTO getSubscriptionId() {
+        return subscriptionId;
+    }
+
+    /**
+     * @param subscriptionId the subscriptionId to set
+     */
+    public void setSubscriptionId(GmSubscriptionsDTO subscriptionId) {
+        this.subscriptionId = subscriptionId;
     }
 }

@@ -160,144 +160,159 @@
                             <p:confirm header="Confirmation" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
 
                         </p:commandButton>
-                        <p:commandButton style="margin-right: 40%"  value="تعليق" type="button" actionListener="#{gmfreezeMB.getCustomer()}"> 
-                         <f:setPropertyActionListener value="#{invInvoicePurchaseTable}" target="#{gmfreezeMB.gmSubscriptionsDTOSelected}" />
-                         </p:commandButton>
-   
+
+                        <p:commandButton style="margin-right: 40%" update="@form"  value="تعليق"  action ="#{gmSubscriptionsListDTOMB.findCustomerData()}"> 
+                            <f:setPropertyActionListener value="#{invInvoicePurchaseTable}" target="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected}" />
+                        </p:commandButton>
+
                     </p:column>
                 </p:dataTable>
-                                        <div class="ui-g-12 ui-xl-12">
-                            <div class="ui-g-6 ui-xl-6"/>
-                            <div class="ui-g-6 ui-xl-6">
-
-                                <p:dialog header="إضافة عميل جديد" widgetVar="dlg3" showEffect="explode" hideEffect="bounce" height="90%" width="90%">
+               
 
 
-                                    <p:fieldset legend="انشاءعميل جديد"  style="margin-bottom:5px">
-
-                                         <div class="col-xs-12">
-                    <p:messages autoUpdate="true"  id="msgopp" showDetail="true" closable="true" />
-                </div>
-                <div  id="firstLine" class="ui-g-12 ui-g-nopad">
-                    <div class="ui-g">
-                        <div class="ui-g-12 ui-xl-12">
-
-                            <div class="ui-g-6 ui-xl-6">
-                                <p:inputText style="width: 35%!important" id="ad15"  value="#{gmfreezeMB.query}"/>
-                            </div>
-                            <div class="ui-g-6 ui-xl-6">
-                                <p:outputLabel style="width: 85px;margin-right: 3%;" value="رقم العميل"/>
-
-                            </div>
-                        </div>
-                        <p:commandButton  class="searchButtons"
-                                          value="#{userData.userDDs['SEARCH']}"                                      
-                                          actionListener="#{gmfreezeMB.searchCustomer()}" 
-                                          update="@form"/>
-
-
-                        <div class="ui-g-6 ui-xl-6">
-                            <div class="ui-g-12 ui-xl-12">
-
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:inputText style="width: 35%!important" id="ad0"  value="#{gmfreezeMB.customerName}"/>
-                                </div>
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 85px;margin-right: 3%;" value="اسم العميل"/>
-
-                                </div>
-                            </div>
-                            <div class="ui-g-12 ui-xl-12">
-
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:inputText style="width: 35%!important" id="ad1"  value="#{gmfreezeMB.gmfreezeDto.number}"/>
-                                </div>
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 85px;margin-right: 3%;" value="الرقم"/>
-
-                                </div>
-                            </div>
-                            <div class="ui-g-12 ui-xl-12">
-
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:calendar style="width: 35%"  id="dateFrom"
-                                                value="#{gmfreezeMB.gmfreezeDto.datefrom}"
-                                                pattern="dd/MM/yyyy  HH:mm:ss"  showButtonPanel="true" >
-
-                                    </p:calendar>
-                                </div>
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 75px;margin-right: 6%"  value="#{userData.userDDs['YEAR_FROM']}" />
-
-                                </div>
-                            </div>
-                            <div class="ui-g-12 ui-xl-12">
-
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:calendar style="width: 35%"  id="dateTo"
-                                                value="#{gmfreezeMB.gmfreezeDto.dateto}"
-                                                pattern="dd/MM/yyyy  HH:mm:ss"  showButtonPanel="true" >
-
-                                    </p:calendar>
-                                </div>
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 75px;margin-right: 6%"  value="#{userData.userDDs['TO_DATE']}" />
-
-                                </div>
-                            </div>
-
-
-                        </div>                        
-                    </div>
-                </div>
-
-
-                                     
-
-                                
-                                     
-                                    </p:fieldset>
-
-                                    <h:panelGroup>
-                                        <div class="asmaa">
-                <p:commandButton  class="saveButton"  
-                                  id="saveB" 
-                                  title="#{userData.userDDs['SAVE']}"
-                                  value="#{userData.userDDs['SAVE']}" 
-                                  style=""
-                                  action="#{gmfreezeMB.save()}" 
-                                  update="@form"/>
-
-                <p:commandButton  class="newButton" 
-                                  id="newN"
-                                  ajax="false"
-                                  style=""
-                                  value="#{userData.userDDs['NEW']}" 
-                                  title="#{userData.userDDs['NEW']}"
-                                  onclick="form.target = ''" 
-                                  actionListener="#{gmfreezeMB.reset()}"/>
-
-                <p:blockUI block="form" trigger="saveB" animate="true" >
-
-                    <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
-
-                </p:blockUI> 
-
-            </div>
-                          
-                                    </h:panelGroup>
-
-                                </p:dialog>
-                            </div>
-                        </div>
-
-                
                 <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
                     <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
                     <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
                 </p:confirmDialog>
 
             </p:fieldset>
+            
+             <div class="ui-g-12 ui-xl-12">
+                    <div class="ui-g-6 ui-xl-6"/>
+                    <div class="ui-g-6 ui-xl-6">
+
+                        <p:dialog header="إضافة عميل جديد" widgetVar="dlg3" showEffect="explode" hideEffect="bounce" height="90%" width="90%">
+
+
+                            <p:fieldset legend="انشاءعميل جديد"  style="margin-bottom:5px">
+
+                                <div class="col-xs-12">
+                                    <p:messages autoUpdate="true"  id="msgopp" showDetail="true" closable="true" />
+                                </div>
+                                <div  id="firstLine" class="ui-g-12 ui-g-nopad">
+                                    <div class="ui-g">
+                                       
+                              
+                                        <div class="ui-g-6 ui-xl-6">
+                                            <div class="ui-g-12 ui-xl-12">
+
+                                                <div class="ui-g-6 ui-xl-6">
+                                                    <p:inputText style="width: 35%!important" id="ad0"  value="#{gmSubscriptionsListDTOMB.siteDTO.name}"/>
+                                                </div>
+                                                <div class="ui-g-6 ui-xl-6">
+                                                    <p:outputLabel style="width: 85px;margin-right: 3%;" value="اسم العميل"/>
+
+                                                </div>
+                                            </div>
+                                            <div class="ui-g-12 ui-xl-12">
+
+                                                <div class="ui-g-6 ui-xl-6">
+                                                    <p:inputText style="width: 35%!important" id="ad1"  value="#{gmSubscriptionsListDTOMB.gmFreezeDto.number}">
+                                                        <p:ajax event="blur" listener="#{gmSubscriptionsListDTOMB.calcDate()}" update="dateto" />
+                                                    </p:inputText>
+                                                </div>
+                                                <div class="ui-g-6 ui-xl-6">
+                                                    <p:outputLabel style="width: 85px;margin-right: 3%;" value="الرقم"/>
+
+                                                </div>
+                                            </div>
+                                            <div class="ui-g-12 ui-xl-12">
+
+                                                <div class="ui-g-6 ui-xl-6">
+                                                    <p:outputLabel style="width: 85px;margin-right: 3%;" value="#{gmSubscriptionsListDTOMB.gmFreezeDto.datefrom}">
+                                                       <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                                                    </p:outputLabel>
+                                                    
+                                                </div>
+                                                <div class="ui-g-6 ui-xl-6">
+                                                    <p:outputLabel style="width: 75px;margin-right: 6%"  value="#{userData.userDDs['YEAR_FROM']}" />
+
+                                                </div>
+                                            </div>
+                                            <div class="ui-g-12 ui-xl-12">
+
+                                                <div class="ui-g-6 ui-xl-6">
+                                                    <p:outputLabel id="dateto" style="width: 85px;margin-right: 3%;" value="#{gmSubscriptionsListDTOMB.gmFreezeDto.dateto}">
+                                                       <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                                                    </p:outputLabel>
+                                                </div>
+                                                <div class="ui-g-6 ui-xl-6">
+                                                    <p:outputLabel style="width: 75px;margin-right: 6%"  value="#{userData.userDDs['TO_DATE']}" />
+
+                                                </div>
+                                            </div>
+                                            <div class="ui-g-12 ui-xl-12">
+
+                                                <div class="ui-g-6 ui-xl-6">
+                                                    <p:outputLabel style="width: 85px;margin-right: 3%;" value="#{gmSubscriptionsListDTOMB.gmFreezeDto.mustDays}">
+                                                   
+                                                    </p:outputLabel>
+                                                    
+                                                </div>
+                                                <div class="ui-g-6 ui-xl-6">
+                                                    <p:outputLabel style="width: 75px;margin-right: 6%"  value="الايام المستحقة" />
+
+                                                </div>
+                                            </div>
+                                            <div class="ui-g-12 ui-xl-12">
+
+                                                <div class="ui-g-6 ui-xl-6">
+                                                    <p:outputLabel style="width: 85px;margin-right: 3%;" value="#{gmSubscriptionsListDTOMB.gmFreezeDto.takeDays}">
+                                                   
+                                                    </p:outputLabel>
+                                                    
+                                                </div>
+                                                <div class="ui-g-6 ui-xl-6">
+                                                    <p:outputLabel style="width: 75px;margin-right: 6%"  value="الايام تم تجميدها" />
+
+                                                </div>
+                                            </div>
+                                              <div class="ui-g-12 ui-xl-12">
+
+                                                <div class="ui-g-6 ui-xl-6">
+                                                    <p:outputLabel style="width: 85px;margin-right: 3%;" value="#{gmSubscriptionsListDTOMB.gmFreezeDto.remainDays}">
+                                                   
+                                                    </p:outputLabel>
+                                                    
+                                                </div>
+                                                <div class="ui-g-6 ui-xl-6">
+                                                    <p:outputLabel style="width: 75px;margin-right: 6%"  value="الايام المتبقية" />
+
+                                                </div>
+                                            </div>
+
+                                        </div>                        
+                                    </div>
+                                </div>
+
+
+
+
+
+
+                            </p:fieldset>
+
+                            <h:panelGroup>
+                                <div class="asmaa">
+                                    <p:commandButton  class="saveButton"  
+                                                      id="saveB" 
+                                                      title="#{userData.userDDs['SAVE']}"
+                                                      value="#{userData.userDDs['SAVE']}" 
+                                                      style=""
+                                                      action="#{gmSubscriptionsListDTOMB.saveFreeze()}" 
+                                                      update="@form"/>
+
+                                    
+
+                                  
+
+                                </div>
+
+                            </h:panelGroup>
+
+                        </p:dialog>
+                    </div>
+                </div>
         </h:form>
     </ui:define>
 </ui:composition>

@@ -13,8 +13,6 @@ import com.isag.bussinessservice.global.Utility;
 import com.isag.core.GenericDAO;
 import com.isag.dto.GlBankDTO;
 import com.isag.dto.GmSubscriptionsDTO;
-import com.isag.dto.GmSubscriptionsDetailDTO;
-import com.isag.dto.InvInvoiceDTO;
 import com.isag.entity.Branch;
 import com.isag.entity.GlBank;
 import com.isag.entity.GmItem;

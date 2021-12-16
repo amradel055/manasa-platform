@@ -345,6 +345,12 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         InvOrganizationSite invOrganizationSite = dao.findEntityById(InvOrganizationSite.class, invOrganizationSiteId);
         return mapTODTO(invOrganizationSiteDTO, invOrganizationSite);
     }
+    
+    @Override
+    public InvOrganizationSiteDTO findOrganizationSiteDTOByIdSmall(Integer invOrganizationSiteId) {
+        InvOrganizationSite invOrganizationSite = dao.findEntityById(InvOrganizationSite.class, invOrganizationSiteId);
+        return mapToDTOSmall(invOrganizationSite);
+    }
 
     @Override
     public List<InvOrganizationSiteDTO> findLeads(Integer branchId, Integer userId, Integer type) {
@@ -1365,12 +1371,6 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         return dTO;
     }
 
-    public InvOrganizationSiteDTO mapTODTOSmall(InvOrganizationSite entity) {
-        InvOrganizationSiteDTO dTO = new InvOrganizationSiteDTO();
-        initMapToDTOSmall(dTO, entity);
-        return dTO;
-    }
-
     private void initMapToDTOSmall(InvOrganizationSiteDTO dTO, InvOrganizationSite entity) {
         dTO.setId(entity.getId());
         dTO.setCode(entity.getCode());
@@ -2052,6 +2052,13 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             return false;
         }
 
+    }
+    
+
+    public InvOrganizationSiteDTO mapTODTOSmall(InvOrganizationSite entity) {
+        InvOrganizationSiteDTO dTO = new InvOrganizationSiteDTO();
+        initMapToDTOSmall(dTO, entity);
+        return dTO;
     }
 
     @Override

@@ -167,9 +167,6 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
         return "";
     }
     
-    public List<GlBankDTO> completeGlBank(String query) {
-        return AutoComplete.completeGlBank(query, getGlBankList(), getGlBankConverter());
-    }
     
     public List<InvOrganizationSiteDTO> completeCustomerFrom(String query) {
         invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getUserData().getUserBranch().getId(), Boolean.TRUE, 0, query);

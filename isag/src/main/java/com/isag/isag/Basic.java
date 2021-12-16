@@ -70,6 +70,7 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.apache.http.HttpHeaders;
+import org.primefaces.context.RequestContext;
 
 /**
  *
@@ -112,6 +113,15 @@ public class Basic implements Serializable {
     private InvInventory invInventorySelection;
     private InvInventoryConverter invInventoryConverter;
     
+     public void OpenDlg(String dlgvar) {
+        RequestContext context = RequestContext.getCurrentInstance();
+        context.execute("PF('" + dlgvar + "').show();");
+    }
+
+    public void CloseDlg(String dlgvar) {
+        RequestContext context = RequestContext.getCurrentInstance();
+        context.execute("PF('" + dlgvar + "').hide();");
+    }
     
     public void reportQRCode(HashMap hashMap, String qrCodeText) {
         String filePath = "JD.png";
