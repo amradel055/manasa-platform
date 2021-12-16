@@ -338,7 +338,10 @@
                             <div class="ui-g-6 ui-xl-6">
                                 <p:outputLabel id="dateFrom1" 
                                             value="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.startDate}"
-                                            style="width:50%!important"/>
+                                            style="width:50%!important" >
+                                  
+                            <f:convertDateTime type="date" pattern="dd-MM-yyyy hh:mm:ss"/>
+                        </p:outputLabel> 
                             </div>
                             <div class="ui-g-6 ui-xl-6">
                                 <p:outputLabel style="width: 95px; ;" value="#{userData.userDDs['DATEE']} من*"/>
@@ -349,8 +352,11 @@
 
                             <div class="ui-g-6 ui-xl-6">
                                 <p:outputLabel id="dateFrom2" 
-                                            value="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.endDate}"
-                                            style="width:50%!important"/>
+                                               value="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.endDate}"
+                                            style="width:50%!important" >
+                                  
+                            <f:convertDateTime type="date" pattern="dd-MM-yyyy hh:mm:ss"/>
+                        </p:outputLabel> 
                             </div>
                             <div class="ui-g-6 ui-xl-6">
                                 <p:outputLabel style="width: 95px; ;" value="#{userData.userDDs['DATEE']} الي*"/>
