@@ -160,7 +160,8 @@
                             <p:confirm header="Confirmation" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
 
                         </p:commandButton>
-                         <p:commandButton style="margin-right: 40%"  value="تعليق" type="button" onclick="PF('dlg3').show();"> 
+                        <p:commandButton style="margin-right: 40%"  value="تعليق" type="button" actionListener="#{gmfreezeMB.getCustomer()}"> 
+                         <f:setPropertyActionListener value="#{invInvoicePurchaseTable}" target="#{gmfreezeMB.gmSubscriptionsDTOSelected}" />
                          </p:commandButton>
    
                     </p:column>

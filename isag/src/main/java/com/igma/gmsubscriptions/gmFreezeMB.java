@@ -10,6 +10,7 @@ import com.isag.businessservice.OrganizationSiteService;
 import com.isag.dto.InvOrganizationSiteDTO;
 import com.isag.dto.GmFreezeDto;
 import com.isag.dto.GmSubscriptionsDTO;
+import com.isag.entity.InvOrganizationSite;
 import com.isag.isag.BaseFormBean;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
@@ -26,7 +27,7 @@ public class gmFreezeMB extends BaseFormBean {
     private InvOrganizationSiteDTO siteDTO;
     private GmFreezeDto gmfreezeDto;
     private String query;
-   
+    private GmSubscriptionsDTO gmSubscriptionsDTOSelected ;
     @EJB
     GmFreezeService gmFreezeService;
     @EJB
@@ -61,6 +62,18 @@ public class gmFreezeMB extends BaseFormBean {
 
         }
         return siteDTO;
+    }
+    
+    public void getCustomer() {
+        
+            InvOrganizationSite entity = organizationSiteService.findOrganizationSiteById(getGmSubscriptionsDTOSelected().getOrganizationSiteId().getId());
+            siteDTO = organizationSiteService.mapToDTOSmall(entity);
+            setCustomerName(siteDTO.getName());
+
+            if (siteDTO != null) {
+                gmfreezeDto.setCustomerId(siteDTO);
+            }
+        OpenDlg("dlg3");
     }
 
     /**
@@ -136,6 +149,20 @@ public class gmFreezeMB extends BaseFormBean {
      */
     public void setSiteDTO(InvOrganizationSiteDTO siteDTO) {
         this.siteDTO = siteDTO;
+    }
+
+    /**
+     * @return the gmSubscriptionsDTOSelected
+     */
+    public GmSubscriptionsDTO getGmSubscriptionsDTOSelected() {
+        return gmSubscriptionsDTOSelected;
+    }
+
+    /**
+     * @param gmSubscriptionsDTOSelected the gmSubscriptionsDTOSelected to set
+     */
+    public void setGmSubscriptionsDTOSelected(GmSubscriptionsDTO gmSubscriptionsDTOSelected) {
+        this.gmSubscriptionsDTOSelected = gmSubscriptionsDTOSelected;
     }
 
 }

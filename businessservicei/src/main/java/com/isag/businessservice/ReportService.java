@@ -5,10 +5,8 @@
  */
 package com.isag.businessservice;
 
-import com.isag.dto.GmSubscriptionsDTO;
 import com.isag.dto.resualtDTO;
 import com.isag.dto.searchDTO;
-import com.isag.entity.search;
 import java.util.List;
 
 /**
