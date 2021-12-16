@@ -275,7 +275,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
     public InvOrganizationSiteDTO getInvOrganizationSiteByQuery(String query, IsagUser isagUser) {
         Map<String, Object> params = new HashMap<>();
         params.put("query", query);
-        List<InvOrganizationSite> detailses = dao.findListByQuery("SELECT e FROM InvOrganizationSite e WHERE AND ((e.name  =:qeury )) OR (OR e.code =:qeury ) OR (e.phone=:qeury) OR (e.mobile =:qeury )  ", params);
+        List<InvOrganizationSite> detailses = dao.findListByQuery("SELECT e FROM InvOrganizationSite e WHERE  ((e.name  =:query )) OR (e.code =:query ) OR (e.phone =:query) OR (e.mobile =:query )  ", params);
         List<InvOrganizationSiteDTO> list = mapToDTOList(detailses, isagUser);
         if(list != null && !list.isEmpty()){
             return list.get(0);

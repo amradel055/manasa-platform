@@ -9,6 +9,7 @@ import com.isag.businessservice.GmFreezeService;
 import com.isag.businessservice.OrganizationSiteService;
 import com.isag.dto.InvOrganizationSiteDTO;
 import com.isag.dto.GmFreezeDto;
+import com.isag.dto.GmSubscriptionsDTO;
 import com.isag.isag.BaseFormBean;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
@@ -22,9 +23,10 @@ import javax.inject.Named;
 @ViewScoped
 public class gmFreezeMB extends BaseFormBean {
 
-   private InvOrganizationSiteDTO siteDTO;
+    private InvOrganizationSiteDTO siteDTO;
     private GmFreezeDto gmfreezeDto;
     private String query;
+   
     @EJB
     GmFreezeService gmFreezeService;
     @EJB
@@ -50,15 +52,15 @@ public class gmFreezeMB extends BaseFormBean {
 
     public InvOrganizationSiteDTO searchCustomer() {
         if (getQuery() != null || !getQuery().isEmpty()) {
-             siteDTO = organizationSiteService.getInvOrganizationSiteByQuery(query, getUserData().getUser());
+            siteDTO = organizationSiteService.getInvOrganizationSiteByQuery(query, getUserData().getUser());
             setCustomerName(siteDTO.getName());
-            
+
             if (siteDTO != null) {
                 gmfreezeDto.setCustomerId(siteDTO);
             }
-             
+
         }
-                return siteDTO ;      
+        return siteDTO;
     }
 
     /**

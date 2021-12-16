@@ -72,7 +72,8 @@ public class GmFreezeServiceImpl implements GmFreezeService {
         }
 
         entity.setDatefrom(dto.getDatefrom());
-        entity.setDateto(dto.getDatefrom());
+        entity.setDateto(dto.getDateto());
+        entity.setNumber(dto.getNumber());
 
         if (dto.getId() == null) {
             entity.setCreatedBy(isagUser);
