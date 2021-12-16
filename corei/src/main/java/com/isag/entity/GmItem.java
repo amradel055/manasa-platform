@@ -31,6 +31,8 @@ public class GmItem extends BaseEntity {
     private String name;
     @Column(name = "period")
     private Integer period;
+    @Column(name = "useability")
+    private Integer useability;
     @Column(name = "cost")
     private BigDecimal cost;
     @Basic(optional = false)
@@ -164,6 +166,20 @@ public class GmItem extends BaseEntity {
      */
     public void setBranchId(Branch branchId) {
         this.branchId = branchId;
+    }
+
+    /**
+     * @return the useability
+     */
+    public Integer getUseability() {
+        return useability;
+    }
+
+    /**
+     * @param useability the useability to set
+     */
+    public void setUseability(Integer useability) {
+        this.useability = useability;
     }
 
   
