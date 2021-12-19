@@ -15,6 +15,8 @@ public class searchDTO {
      private Date dateFrom ;
     private Date dateTo ; 
     private Integer status ; 
+    private Integer branchId;
+    private Integer freez ;
 
     /**
      * @return the dateFrom
@@ -56,6 +58,34 @@ public class searchDTO {
      */
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    /**
+     * @return the branchId
+     */
+    public Integer getBranchId() {
+        return branchId;
+    }
+
+    /**
+     * @param branchId the branchId to set
+     */
+    public void setBranchId(Integer branchId) {
+        this.branchId = branchId;
+    }
+
+    /**
+     * @return the freez
+     */
+    public Integer getFreez() {
+        return freez;
+    }
+
+    /**
+     * @param freez the freez to set
+     */
+    public void setFreez(Integer freez) {
+        this.freez = freez;
     }
     
     

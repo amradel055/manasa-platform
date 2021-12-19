@@ -7,6 +7,8 @@ package com.isag.businessservice;
 
 import com.isag.dto.resualtDTO;
 import com.isag.dto.searchDTO;
+import com.isag.entity.IsagUser;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -17,6 +19,10 @@ public interface ReportService {
     
  public  List<resualtDTO> getReporySearch(searchDTO search);
  
+  public List<resualtDTO> getAllValidSubsByDate(searchDTO search);
   
+  public BigDecimal getAllValidSubsFinalNet(searchDTO search);
+ 
+public List<resualtDTO> getAllFreezeByDate(searchDTO search) ;
     
 }

@@ -10,6 +10,7 @@ import com.isag.dto.resualtDTO;
 import com.isag.dto.searchDTO;
 import com.isag.entity.search;
 import com.isag.isag.BaseFormBean;
+import java.math.MathContext;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -22,24 +23,31 @@ import javax.inject.Named;
  */
 @Named(value = "reportMB")
 @ViewScoped
-public class ReportMB extends BaseFormBean{
-    @EJB
-    ReportService reportservice; 
-   private search search;
-   private resualtDTO resualtDTO ;
-   private searchDTO searchdto;
-   private List<resualtDTO> resultList ;
-   
-   
-   public void search (){
-    resultList = reportservice.getReporySearch(searchdto);
-   }
-   
-   
+public class ReportMB extends BaseFormBean {
 
-    
-    
-   
+    @EJB
+    ReportService reportservice;
+    private search search;
+    private resualtDTO resualtDTO;
+    private searchDTO searchdto;
+    private List<resualtDTO> resultList;
+
+    public void search() {
+        searchdto.setBranchId(getUserData().getUserBranch().getId());
+        resultList = reportservice.getAllValidSubsByDate(searchdto);
+        resualtDTO.setSumValue(reportservice.getAllValidSubsFinalNet(searchdto));
+    }
+
+    public void searchFreeze() {
+        searchdto.setBranchId(getUserData().getUserBranch().getId());
+        resultList = reportservice.getAllFreezeByDate(searchdto);
+        for (resualtDTO dTO : resultList) {
+            if (dTO.getSumValue() != null) {
+                resualtDTO.setSumValue(resualtDTO.getSumValue().add(dTO.getValue(), MathContext.UNLIMITED));
+            }
+
+        }
+    }
 
     /**
      * @return the search
@@ -59,6 +67,9 @@ public class ReportMB extends BaseFormBean{
      * @return the resualtDTO
      */
     public resualtDTO getResualtDTO() {
+        if (resualtDTO == null) {
+            resualtDTO = new resualtDTO();
+        }
         return resualtDTO;
     }
 
@@ -73,8 +84,8 @@ public class ReportMB extends BaseFormBean{
      * @return the searchdto
      */
     public searchDTO getSearchdto() {
-        if(searchdto==null){
-            setSearchdto(new searchDTO());
+        if (searchdto == null) {
+            searchdto = new searchDTO();
         }
         return searchdto;
     }
@@ -119,7 +130,5 @@ public class ReportMB extends BaseFormBean{
     public String getScreenName() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
-    
-    
+
 }
