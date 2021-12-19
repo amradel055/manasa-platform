@@ -474,7 +474,7 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "        0 AS `exitt`, IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`, 15,0,0,0),0) AS `adding`  , ipi.id AS idNumber \n"
                 + "                	FROM `inv_purchase_invoice` `ipi` LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
                 + "                    LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `ipi`.`organization_site_id`))\n"
-                + "                	WHERE ((`ipi`.`type` = 0) AND (`ipi`.`date` IS NOT NULL)) \n"
+                + "                	WHERE ((`ipi`.`type` = 0) AND (`ipi`.`payment_type` = 1) AND (`ipi`.`date` IS NOT NULL)) \n"
                 + "                     AND ipi.organization_site_id =   \n"+ organizationSiteId + "\n");
                 if (dateStrFrom != null) {
                     query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `ipi`.`date` >= '" ).append(dateStrFrom).append(  "' ,true)");
@@ -503,7 +503,7 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "        IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`,  15,0,0,0),0)  AS `exitt`, 0 AS `adding`  , ipi.id AS idNumber \n"
                 + "                    FROM `inv_purchase_invoice` `ipi` LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
                 + "                    LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `ipi`.`organization_site_id`))\n"
-                + "                    WHERE ((`ipi`.`type` = 1)  AND (`ipi`.`date` IS NOT NULL)) \n"
+                + "                    WHERE ((`ipi`.`type` = 1) AND (`ipi`.`payment_type` = 1)  AND (`ipi`.`date` IS NOT NULL)) \n"
                 + "                     AND ipi.organization_site_id =   \n"+ organizationSiteId + "\n");
                 if (dateStrFrom != null) {
                     query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `ipi`.`date` >= '" ).append(dateStrFrom).append(  "' ,true)");
@@ -531,7 +531,7 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "        IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`,  15,0,0,0),0)  AS `exitt`, 0 AS `adding`  , ipi.id AS idNumber \n"
                 + "                    FROM  `inv_purchase_invoice` `ipi` LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
                 + "                    LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `ipi`.`organization_site_id`))\n"
-                + "                    WHERE ((`ipi`.`type` = 2)  AND (`ipi`.`date` IS NOT NULL)) \n"
+                + "                    WHERE ((`ipi`.`type` = 2)  AND (`ipi`.`payment_type` = 1)  AND (`ipi`.`date` IS NOT NULL)) \n"
                 + "                     AND ipi.organization_site_id =   \n"+ organizationSiteId + "\n");
                 if (dateStrFrom != null) {
                     query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `ipi`.`date` >= '" ).append(dateStrFrom).append(  "' ,true)");
@@ -559,7 +559,7 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "         0 AS `exitt`, IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`,  15,0,0,0),0) AS `adding`  , ipi.id AS idNumber \n"
                 + "                    FROM `inv_purchase_invoice` `ipi` LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
                 + "                    LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `ipi`.`organization_site_id`))\n"
-                + "                    WHERE ((`ipi`.`type` = 3) AND (`ipi`.`date` IS NOT NULL)) \n"
+                + "                    WHERE ((`ipi`.`type` = 3) AND (`ipi`.`payment_type` = 1) AND (`ipi`.`date` IS NOT NULL)) \n"
                 + "                     AND ipi.organization_site_id =   \n"+ organizationSiteId + "\n");
                 if (dateStrFrom != null) {
                     query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `ipi`.`date` >= '" ).append(dateStrFrom).append(  "' ,true)");

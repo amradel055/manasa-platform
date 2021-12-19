@@ -131,7 +131,7 @@ public class GmItemServiceImpl implements GmItemService {
         StringBuilder query = new StringBuilder();
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
-        query.append("SELECT sym FROM GmItem sym WHERE  sym.branchId.id= :branchId");
+        query.append("SELECT sym FROM GmItem sym WHERE  sym.branchId.id= :branchId AND sym.useability = 1 ");
 
         List<GmItem> detailses = dao.findListByQuery(query.toString(), params);
         list = returnListDTO(detailses);

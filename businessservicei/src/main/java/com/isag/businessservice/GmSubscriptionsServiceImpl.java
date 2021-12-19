@@ -215,36 +215,12 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
                         return gmSubscriptionsDTO;
                     }
                     gmSubscriptionsDTO.setSerial(serial);
+                    gmSubscriptions.setSerial(serial);
 
                     gmSubscriptions = dao.updateEntity(gmSubscriptions);
                     gmSubscriptionsDTO.setId(gmSubscriptions.getId());
-//                    if (gmSubscriptionsDTO.getPayed() != null && gmSubscriptionsDTO.getPayed().compareTo(BigDecimal.ZERO) == 1) {
-//                        InvInvoiceDTO invInvoiceDTO = new InvInvoiceDTO();
-//                        invInvoiceDTO.setPayed(gmSubscriptionsDTO.getPayed());
-//                        invInvoiceDTO.setDate(gmSubscriptionsDTO.getDate());
-//                        invInvoiceDTO.setGlBankId(gmSubscriptionsDTO.getGlBankId());
-//                        invInvoiceDTO.setRate(BigDecimal.ONE);
-//                        invInvoiceDTO.setRemarks(gmSubscriptionsDTO.getRemarks());
-//                        invInvoiceDTO.setTotalNet(gmSubscriptionsDTO.getTotalNet());
-//                        invInvoiceDTO.setTotalNetAfterDiscount(gmSubscriptionsDTO.getTotalNetAfterDiscount());
-//                        invInvoiceDTO.setPayed(gmSubscriptionsDTO.getPayed());
-//                        invInvoiceDTO.setRemain(gmSubscriptionsDTO.getRemain());
-//                        invInvoiceDTO.setSerial(gmSubscriptionsDTO.getSerial());
-//                        invInvoiceDTO.setOrganizationSiteId(gmSubscriptionsDTO.getOrganizationSiteId());
-//                        glBankTransactionService.addCash(invInvoiceDTO, isagUser);
-//                    }
                 }
-
-//                gmSubscriptionsDTODetailsService.deleteGmSubscriptionsDetailDTOListDTO(gmSubscriptionsDTO.getGmSubscriptionsDetailDeletedList());
-//                String error = gmSubscriptionsDTODetailsService.addGmSubscriptionsDetailDTOsDTO(gmSubscriptionsDTO.getGmSubscriptionsDetailList(), gmSubscriptionsDTO, isagUser);
-//                if (error != null && !error.isEmpty()) {
-//                    gmSubscriptionsDTO.setMsg(error);
-//                    dao.rollbackQuery();
-//                } else {
                 gmSubscriptionsDTO = mapToDTO(gmSubscriptions, gmSubscriptionsDTO);
-//                    gmSubscriptionsDTO = gmGlobalService.updateSummition(gmSubscriptionsDTO);
-//                }
-
             }
         } catch (Exception e) {
             gmSubscriptionsDTO.setMsg(e.toString());
