@@ -56,22 +56,22 @@
                             <p:inputText id="globalFilter" onkeyup="PF('bTable').filter()" style="width:150px" />
                         </p:outputPanel>
                     </f:facet>
-                       <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px;"  filterStyle="display:none" 
+                    <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px;"  filterStyle="display:none" 
                                filterBy="#{invInvoicePurchaseTable.organizationSiteId.name}" 
                                filterMatchMode="contains" 
                                headerText="اسم العميل"
                                sortBy="#{invInvoicePurchaseTable.organizationSiteId.name}"
                                >
-                           <p:outputLabel value="#{invInvoicePurchaseTable.organizationSiteId.name}" />
-                           
+                        <p:outputLabel value="#{invInvoicePurchaseTable.organizationSiteId.name}" />
+
                     </p:column>
-                       <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px;"  filterStyle="display:none" 
+                    <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px;"  filterStyle="display:none" 
                                filterBy="#{invInvoicePurchaseTable.organizationSiteId.phone}" 
                                filterMatchMode="contains" 
                                headerText="رقم الهاتف"
                                sortBy="#{invInvoicePurchaseTable.organizationSiteId.phone}"
                                >
-                           <p:outputLabel value="#{invInvoicePurchaseTable.organizationSiteId.phone}" />
+                        <p:outputLabel value="#{invInvoicePurchaseTable.organizationSiteId.phone}" />
                     </p:column>
 
                     <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px;"  filterStyle="display:none" 
@@ -153,6 +153,10 @@
                               sortBy="#{invInvoicePurchaseTable.remarks}" >
                         <p:outputLabel value="#{invInvoicePurchaseTable.remarks}" />
                     </p:column>
+                    <p:column style="width: 10vh;font-size: 1.8vh;border-radius: 0px;"
+                              headerText="صورةالعميل" >
+                        <p:graphicImage url="#{gmSubscriptionsListDTOMB.host.concat(invInvoicePurchaseTable.organizationSiteId.clientImage)}" library="demo"  style="max-width:80%;max-height:80%;object-fit: cover !important;"/>
+                    </p:column>
                     <p:column  style="width: 12vh;font-size: 1.8vh;text-align:center;border-radius: 0px;" headerText="#{userData.userDDs['TRANSACTION']}" >
                         <p:commandButton   onclick="form.target = '_blank'"  ajax="false"
                                            update="@form" 
@@ -223,7 +227,7 @@
 
                                             </div>
                                         </div>
-                                           <div class="ui-g-12 ui-xl-12">
+                                        <div class="ui-g-12 ui-xl-12">
 
                                             <div class="ui-g-6 ui-xl-6">
                                                 <h:outputText style="width: 35%!important" id="ad333"  value="#{gmSubscriptionsListDTOMB.siteDTO.phone}"/>
@@ -269,7 +273,7 @@
                                             </div>
                                             <div class="ui-g-6 ui-xl-6">
                                                 <p:outputLabel style="width: 85px;margin-right: 3%;" value="تاريخ نهايه الاشتراك ">
-                                                    
+
                                                 </p:outputLabel>
                                             </div>
                                         </div>
@@ -284,7 +288,7 @@
 
                                             </div>
                                         </div>
-                                        
+
                                         <div class="ui-g-12 ui-xl-12">
 
                                             <div class="ui-g-6 ui-xl-6">
