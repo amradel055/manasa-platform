@@ -70,5 +70,13 @@ public class Utility {
          return (number * monthBetween.intValue());
        
     }
+    
+    public static Date sumDateAndNumer(Date date , Integer number) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.add(Calendar.DAY_OF_MONTH, number);
+        date = c.getTime() ;
+         return date ;
+    }
 
 }

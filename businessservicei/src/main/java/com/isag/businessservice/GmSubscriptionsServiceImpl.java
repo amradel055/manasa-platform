@@ -267,7 +267,7 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
         dto.setDiscountType(entity.getDiscountType());
         dto.setPostFlag(entity.getPostFlag());
         dto.setTaxFlag(entity.getTaxFlag());
-        
+    
         if(entity.getGmItemId() != null){
             dto.setGmItemDTO(gmItemService.mapTODTO(entity.getGmItemId() , null));
         }
@@ -276,7 +276,10 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
         dto.setMustDays(Utility.calcDays(entity.getStartDate(), entity.getEndDate(), 5)) ;
         dto.setTakenDays(gmFreezeService.calcTakenDaysByCustomerIdAndSubscribtionId(entity.getId()));
         dto.setRemainDays(dto.getMustDays() - dto.getTakenDays());
-        }
+        dto.setDateAfterTagmeed(Utility.sumDateAndNumer(entity.getEndDate(), dto.getTakenDays()));
+        } 
+        
+       
         
 //        if (entity.getEndDate() != null) {
 //
@@ -358,7 +361,7 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
 
     private void appendFilter(Map<String, Object> filters, StringBuilder builder) {
         if (filters.get("globalFilter") != null && !filters.get("globalFilter").toString().isEmpty()) {
-            String filter = " and ( FUNCTION('DATE_FORMAT',s.date, '%d-%m-%Y')  like CONCAT('%',:globalFilter ,'%') OR  s.serial like CONCAT('%',:globalFilter ,'%') OR s.organizationSiteId.name like CONCAT('%',:globalFilter ,'%') OR s.createdBy.name like CONCAT('%',:globalFilter ,'%') OR s.remarks like CONCAT('%',:globalFilter ,'%'))";
+            String filter = " and (  s.organizationSiteId.name like CONCAT('%',:globalFilter ,'%') OR s.organizationSiteId.phone like CONCAT('%',:globalFilter ,'%') OR s.organizationSiteId.nationId like CONCAT('%',:globalFilter ,'%')  OR s.remarks like CONCAT('%',:globalFilter ,'%'))";
             builder.append(filter);
         } else {
             filters.remove("globalFilter");
