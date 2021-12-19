@@ -18,7 +18,7 @@ public class resualtDTO {
     private String phone ;
     private Date creationDate ;
     private BigDecimal value;
-
+    private BigDecimal sumValue ;
     /**
      * @return the serial
      */
@@ -87,5 +87,23 @@ public class resualtDTO {
      */
     public void setValue(BigDecimal value) {
         this.value = value;
+    }
+
+    /**
+     * @return the sumValue
+     */
+    public BigDecimal getSumValue() {
+        if(sumValue == null){
+         sumValue = BigDecimal.ZERO;
+        }
+        return sumValue;
+    }
+
+    /**
+     * @param sumValue the sumValue to set
+     */
+    public void setSumValue(BigDecimal sumValue) {
+        
+        this.sumValue = sumValue;
     }
 }

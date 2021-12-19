@@ -42,7 +42,7 @@ public class GmItemServiceImpl implements GmItemService {
     }
 
     private void initMapToDTO(GmItemDTO dTO, GmItem entity) {
-
+        dTO.setName(entity.getName());
         dTO.setIndex(entity.getId());
         dTO.setCreatedDate(entity.getCreationDate());
         dTO.setCreatedBy(entity.getCreatedBy() != null ? entity.getCreatedBy().getId() : null);

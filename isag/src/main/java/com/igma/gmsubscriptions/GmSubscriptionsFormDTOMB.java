@@ -78,7 +78,7 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
     private String file;
     private String host;
     private FileUploadController fileUploadController;
-    
+   
     @Override
     @PostConstruct
     public void init() {
@@ -102,11 +102,19 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
                 fillInvInvoiceDTO();
                 fillDefaultList();
                 getGmSubscriptionsDTO().setIsEdit(Boolean.FALSE);
-            } else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("editorganization")) {
+            }
+            
+            else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("editorganization")) {
                 
                 getOrganizationSiteId().setIsEdited(Boolean.TRUE);
                 fillClientDTO();
-            } else {
+            } 
+              else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("resumeinvOrganizationSite")) {
+               gmSubscriptionsDTO.setShowCustomerDate(false);
+                getOrganizationSiteId().setIsEdited(Boolean.TRUE);
+                fillResumeClientDTO();
+            }
+            else {
                 exit("../gmsubscriptions/gmsubscriptionslist.xhtml");
             }
         } catch (Exception e) {
@@ -155,6 +163,10 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
     public void fillClientDTO() {
         getOrganizationSiteId().setId((Integer) getContext().getSessionMap().get("invOrganizationSiteDTOSelected"));
         setOrganizationSiteId(organizationSiteService.findOrganizationSiteDTOById(getOrganizationSiteId().getId()));
+    }
+      public void fillResumeClientDTO() {
+        getOrganizationSiteId().setId((Integer) getContext().getSessionMap().get("invOrganizationSiteDTOSelected"));
+        getGmSubscriptionsDTO().setOrganizationSiteId(organizationSiteService.findOrganizationSiteDTOById(getOrganizationSiteId().getId()));
     }
     
     @Override
@@ -513,5 +525,7 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
     public void setGmItemDTOSelected(GmItemDTO gmItemDTOSelected) {
         this.gmItemDTOSelected = gmItemDTOSelected;
     }
+
+
     
 }

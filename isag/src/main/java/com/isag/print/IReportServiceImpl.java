@@ -82,22 +82,22 @@ public class IReportServiceImpl implements IReportService {
     InvInventoryService invInventoryService;
 
     /*  public <T> void fillReport(HashMap hashMap, String reportPath, List<T> listBean, String exportType) throws JRException, IOException {
-        JRBeanCollectionDataSource beanCollectionDataSource = new JRBeanCollectionDataSource(listBean);
-        JasperPrint jasperPrint = JasperFillManager.fillReport(reportPath, hashMap, beanCollectionDataSource);
-        HttpServletResponse httpServletResponse = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
-        ServletOutputStream servletOutputStream = httpServletResponse.getOutputStream();
-        if ("pdf".equals(exportType)) {
-            JasperExportManager.exportReportToPdfStream(jasperPrint, servletOutputStream);
-            servletOutputStream.flush();
-            servletOutputStream.close();
-            httpServletResponse.getOutputStream().flush();
-            httpServletResponse.getOutputStream().close();
-        } else if ("excel".equals(exportType)) {
+     JRBeanCollectionDataSource beanCollectionDataSource = new JRBeanCollectionDataSource(listBean);
+     JasperPrint jasperPrint = JasperFillManager.fillReport(reportPath, hashMap, beanCollectionDataSource);
+     HttpServletResponse httpServletResponse = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+     ServletOutputStream servletOutputStream = httpServletResponse.getOutputStream();
+     if ("pdf".equals(exportType)) {
+     JasperExportManager.exportReportToPdfStream(jasperPrint, servletOutputStream);
+     servletOutputStream.flush();
+     servletOutputStream.close();
+     httpServletResponse.getOutputStream().flush();
+     httpServletResponse.getOutputStream().close();
+     } else if ("excel".equals(exportType)) {
 
-        } else if ("html".equals(exportType)) {
+     } else if ("html".equals(exportType)) {
 
-        }
-    }*/
+     }
+     }*/
     public <T> void fillReport(HashMap hashMap, String reportPath, List<T> listBean, String exportType) throws JRException, IOException {
         try {
             JRBeanCollectionDataSource beanCollectionDataSource = new JRBeanCollectionDataSource(listBean);
@@ -406,6 +406,11 @@ public class IReportServiceImpl implements IReportService {
 //        hashMap.put("companyImage", getUserData().getImageReportPath());
             hashMap.put("discountValue", invPurchasegmSubscriptionsDTO.getDiscountValue());
             hashMap.put("netValue", invPurchasegmSubscriptionsDTO.getFinalNet());
+
+            hashMap.put("subscribtionName", invPurchasegmSubscriptionsDTO.getGmItemDTO().getName());
+            hashMap.put("endDate", invPurchasegmSubscriptionsDTO.getEndDate());
+            hashMap.put("nationId", invPurchasegmSubscriptionsDTO.getOrganizationSiteId().getNationId());
+            hashMap.put("email", invPurchasegmSubscriptionsDTO.getOrganizationSiteId().getEmail());
 
             printQRCode(invPurchasegmSubscriptionsDTO, hashMap, reportManagement);
 

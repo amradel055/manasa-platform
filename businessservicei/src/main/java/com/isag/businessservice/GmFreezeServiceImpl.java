@@ -12,7 +12,11 @@ import com.isag.entity.IsagUser;
 import com.isag.entity.GmFreeze;
 import com.isag.entity.GmSubscriptions;
 import com.isag.entity.InvOrganizationSite;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -57,7 +61,9 @@ public class GmFreezeServiceImpl implements GmFreezeService {
         GmFreezeDto gm_freezeDtoDto = new GmFreezeDto();
         gm_freezeDtoDto = mapToDTO(gm_freezes, gm_freezeDtoDto, isagUser);
         return gm_freezeDtoDto;
-    }
+    } 
+     
+      
 
     private GmFreezeDto mapToDTO(GmFreeze entity, GmFreezeDto dto, IsagUser isagUser) {
         dto = initData(dto, entity, isagUser);
@@ -166,12 +172,11 @@ public class GmFreezeServiceImpl implements GmFreezeService {
     }
     
      @Override
-    public Integer calcTakenDaysByCustomerIdAndSubscribtionId(Integer customerId , Integer subscribtionId){
+    public Integer calcTakenDaysByCustomerIdAndSubscribtionId(Integer subscribtionId){
       
         Map<String, Object> params = new HashMap<>();
-        params.put("customerId", customerId);
         params.put("subscribtionId", subscribtionId);
-        List<Long> list = dao.findListByQuery("SELECT sum(e.number) FROM  GmFreeze e where e.customerId.id = :customerId AND e.subscirbtionId.id = :subscribtionId", params);
+        List<Long> list = dao.findListByQuery("SELECT sum(e.number) FROM  GmFreeze e where e.subscirbtionId.id = :subscribtionId", params);
         if(list != null && !list.isEmpty() && list.get(0) != null ){
          Integer i = list.get(0).intValue() ;
          return i ;
