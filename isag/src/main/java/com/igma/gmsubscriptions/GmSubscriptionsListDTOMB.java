@@ -10,6 +10,7 @@ import com.isag.businessservice.GmSubscriptionsService;
 import com.isag.businessservice.OrganizationSiteService;
 import com.isag.converter.InvOrganizationSiteDTOConverter;
 import com.isag.dto.GmFreezeDto;
+import com.isag.dto.GmItemDTO;
 import com.isag.dto.GmSubscriptionsDTO;
 import com.isag.dto.InvOrganizationSiteDTO;
 import com.isag.isag.BaseListBean;
@@ -48,10 +49,12 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
     private InvOrganizationSiteDTO invOrganizationSiteDTO;
     private List<InvOrganizationSiteDTO> invOrganizationSiteDTOList;
     private InvOrganizationSiteDTO invOrganizationSiteDTOSelected;
-    private String host;
     private InvOrganizationSiteDTO siteDTO;
     private InvOrganizationSiteDTOConverter organizationSiteDTOConvertor;
     private GmFreezeDto gmFreezeDto;
+    private String filename;
+    private String file;
+    private String host;
     @EJB
     private GmSubscriptionsService gmSubscriptionsService;
 
@@ -71,22 +74,35 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
         }
     }
 
+    public void reset() {
+
+        gmFreezeDto.setNumber(null);
+    }
+
     public void findCustomerData() {
         setSiteDTO(organizationSiteService.findOrganizationSiteDTOByIdSmall(getGmSubscriptionsDTOSelected().getOrganizationSiteId().getId()));
         getGmFreezeDto().setCustomerId(getSiteDTO());
         getGmFreezeDto().setSubscriptionId(getGmSubscriptionsDTOSelected());
         getGmFreezeDto().setDatefrom(new Date());
+
         calcDays();
         OpenDlg("dlg3");
     }
 
     public void calcDate() {
-        if (getGmFreezeDto().getNumber() != null) {
-            Calendar c = Calendar.getInstance();
-            c.setTime(getGmFreezeDto().getDatefrom());
-            c.add(Calendar.DAY_OF_MONTH, getGmFreezeDto().getNumber());
-            getGmFreezeDto().setDateto(c.getTime());
+        if (getGmFreezeDto().getNumber() != null && getGmFreezeDto().getNumber().compareTo(getGmFreezeDto().getRemainDays()) != 1) {
+            increaseDate();
+        } else {
+            getGmFreezeDto().setNumber(getGmFreezeDto().getRemainDays());
+            increaseDate();
         }
+    }
+
+    private void increaseDate() {
+        Calendar c = Calendar.getInstance();
+        c.setTime(getGmFreezeDto().getDatefrom());
+        c.add(Calendar.DAY_OF_MONTH, getGmFreezeDto().getNumber());
+        getGmFreezeDto().setDateto(c.getTime());
     }
 
     public void calcDays() {
@@ -95,13 +111,17 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
         Long monthBetween = ChronoUnit.MONTHS.between(startDate, endDate);
         Calendar c = Calendar.getInstance();
         getGmFreezeDto().setMustDays(5 * monthBetween.intValue());
-        getGmFreezeDto().setTakeDays(gmFreezeService.calcTakenDaysByCustomerIdAndSubscribtionId(getGmSubscriptionsDTOSelected().getOrganizationSiteId().getId() , getGmSubscriptionsDTOSelected().getId()));
+        getGmFreezeDto().setTakeDays(gmFreezeService.calcTakenDaysByCustomerIdAndSubscribtionId(getGmSubscriptionsDTOSelected().getOrganizationSiteId().getId(), getGmSubscriptionsDTOSelected().getId()));
         getGmFreezeDto().setRemainDays(getGmFreezeDto().getMustDays() - getGmFreezeDto().getTakeDays());
     }
 
     public String saveFreeze() {
-
-        gmFreezeService.save(getGmFreezeDto(), getUserData().getUser());
+        if (gmFreezeDto.getNumber().compareTo(gmFreezeDto.getRemainDays()) != 1) {
+            gmFreezeService.save(getGmFreezeDto(), getUserData().getUser());
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "خطأ", "يجب ان يكون عدد ايام التجميد اقل من او يساوي عدد الايام المتاحه"));
+        }
+        gmFreezeDto.setNumber(null);
 
         return "";
     }
@@ -186,6 +206,22 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
             return null;
         }
     }
+      public String goToresume() {
+        try {
+            if (getGmSubscriptionsDTOSelected().getOrganizationSiteId()!= null && getGmSubscriptionsDTOSelected().getOrganizationSiteId().getId() > 0) {
+                ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+                context.getSessionMap().put("invOrganizationSiteDTOSelected", getGmSubscriptionsDTOSelected().getOrganizationSiteId().getId());
+                context.getSessionMap().put("ScreenMode", "resumeinvOrganizationSite");
+                goToScreen();
+                return "";
+            } else {
+                return "";
+            }
+        } catch (Exception e) {
+            saveError(e, "InvPurchaseInvoiceListMB", "goToresume");
+            return null;
+        }
+    }
 
     public String goToEditClient() {
         try {
@@ -193,7 +229,7 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
                 ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
                 context.getSessionMap().put("invOrganizationSiteDTOSelected", getInvOrganizationSiteDTOSelected().getId());
                 context.getSessionMap().put("ScreenMode", "editorganization");
-                goToClientEditScreen();
+                goToScreen();
                 return "";
             } else {
                 return "";
@@ -207,7 +243,7 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
     public void goToScreen() {
         exit("../gmsubscriptions/gmsubscriptionsform.xhtml");
     }
-
+  
     public void goToClientEditScreen() {
         exit("../gmregistration/gmregistrationForm.xhtml");
     }
@@ -335,22 +371,6 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
     }
 
     /**
-     * @return the host
-     */
-    public String getHost() {
-        HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
-        setHost(request.getRequestURL().substring(0, request.getRequestURL().indexOf("faces/")).concat("images/"));
-        return host;
-    }
-
-    /**
-     * @param host the host to set
-     */
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    /**
      * @return the organizationSiteDTOConvertor
      */
     public InvOrganizationSiteDTOConverter getOrganizationSiteDTOConvertor() {
@@ -412,4 +432,49 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
     public void setNameClient(String nameClient) {
         this.nameClient = nameClient;
     }
+
+    /**
+     * @return the filename
+     */
+    public String getFilename() {
+        return filename;
+    }
+
+    /**
+     * @param filename the filename to set
+     */
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
+
+    /**
+     * @return the file
+     */
+    public String getFile() {
+        return file;
+    }
+
+    /**
+     * @param file the file to set
+     */
+    public void setFile(String file) {
+        this.file = file;
+    }
+
+    /**
+     * @return the host
+     */
+    public String getHost() {
+        HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
+        setHost(request.getRequestURL().substring(0, request.getRequestURL().indexOf("faces/")).concat("images/"));
+        return host;
+    }
+
+    /**
+     * @param host the host to set
+     */
+    public void setHost(String host) {
+        this.host = host;
+    }
+
 }
