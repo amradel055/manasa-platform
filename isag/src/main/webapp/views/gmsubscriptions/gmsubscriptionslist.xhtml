@@ -73,6 +73,14 @@
                                >
                         <p:outputLabel value="#{invInvoicePurchaseTable.organizationSiteId.phone}" />
                     </p:column>
+                      <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px;"  filterStyle="display:none" 
+                                 filterBy="#{invInvoicePurchaseTable.organizationSiteId.nationId}" 
+                               filterMatchMode="contains" 
+                               headerText="رقم الهوية"
+                               sortBy="#{invInvoicePurchaseTable.organizationSiteId.nationId}"
+                               >
+                        <p:outputLabel value="#{invInvoicePurchaseTable.organizationSiteId.nationId}" />
+                    </p:column>
 
                     <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px;"  filterStyle="display:none" 
                                filterBy="#{invInvoicePurchaseTable.serial}" 
@@ -144,6 +152,33 @@
                               sortBy="#{invInvoicePurchaseTable.remainPeriod}" 
                               >
                         <p:outputLabel value="#{invInvoicePurchaseTable.remainPeriod}"/>
+                    </p:column>
+                    
+                    <p:column style="width: 8vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
+                              filterBy="#{invInvoicePurchaseTable.takenDays}"
+                              filterMatchMode="contains" 
+                              headerText="الايام التي تم تجميدها"
+                              sortBy="#{invInvoicePurchaseTable.takenDays}" 
+                              >
+                        <p:outputLabel value="#{invInvoicePurchaseTable.takenDays}"/>
+                    </p:column>
+                    
+                    <p:column style="width: 8vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
+                              filterBy="#{invInvoicePurchaseTable.mustDays}"
+                              filterMatchMode="contains" 
+                              headerText="الايام المستحقة للتجميد"
+                              sortBy="#{invInvoicePurchaseTable.mustDays}" 
+                              >
+                        <p:outputLabel value="#{invInvoicePurchaseTable.mustDays}"/>
+                    </p:column>
+                    
+                    <p:column style="width: 8vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
+                              filterBy="#{invInvoicePurchaseTable.remainDays}"
+                              filterMatchMode="contains" 
+                              headerText="الايام المتبقية للتجميد"
+                              sortBy="#{invInvoicePurchaseTable.remainDays}" 
+                              >
+                        <p:outputLabel value="#{invInvoicePurchaseTable.remainDays}"/>
                     </p:column>
 
                     <p:column style="width: 10vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"

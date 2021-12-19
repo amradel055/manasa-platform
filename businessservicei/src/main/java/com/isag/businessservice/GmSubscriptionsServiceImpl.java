@@ -59,7 +59,10 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
     @EJB
     private GlBankTransactionService glBankTransactionService;
     @EJB
-            private GmItemService gmItemService;
+    private GmItemService gmItemService;
+    
+    @EJB
+    private GmFreezeService gmFreezeService ;
 
     InvPurchaseReturnSave invPurchaseReturnSave;
 
@@ -268,28 +271,35 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
         if(entity.getGmItemId() != null){
             dto.setGmItemDTO(gmItemService.mapTODTO(entity.getGmItemId() , null));
         }
-        if (entity.getEndDate() != null) {
-
-            if (entity.getStatus() != null && entity.getStatus() == 1) {
-                LocalDate startDate = entity.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                LocalDate endDate = entity.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                Long monthBetween = ChronoUnit.MONTHS.between(startDate, endDate);
-                Calendar c = Calendar.getInstance();
-                c.setTime(entity.getEndDate());
-                c.add(Calendar.DAY_OF_MONTH, 5 * monthBetween.intValue());
-                dto.setDateAfterTagmeed(c.getTime());
-            } else {
-                dto.setDateAfterTagmeed(entity.getEndDate());
-            }
-
-            long difference_In_Time
-                    = dto.getDateAfterTagmeed().getTime() - new Date().getTime();
-            Long difference_In_Days
-                    = (difference_In_Time
-                    / (1000 * 60 * 60 * 24))
-                    % 365;
-            dto.setRemainPeriod(difference_In_Days.intValue());
+        
+        if(entity.getStartDate() != null && entity.getEndDate() != null){
+        dto.setMustDays(Utility.calcDays(entity.getStartDate(), entity.getEndDate(), 5)) ;
+        dto.setTakenDays(gmFreezeService.calcTakenDaysByCustomerIdAndSubscribtionId(entity.getId()));
+        dto.setRemainDays(dto.getMustDays() - dto.getTakenDays());
         }
+        
+//        if (entity.getEndDate() != null) {
+//
+//            if (entity.getStatus() != null && entity.getStatus() == 1) {
+//                LocalDate startDate = entity.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+//                LocalDate endDate = entity.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+//                Long monthBetween = ChronoUnit.MONTHS.between(startDate, endDate);
+//                Calendar c = Calendar.getInstance();
+//                c.setTime(entity.getEndDate());
+//                c.add(Calendar.DAY_OF_MONTH, 5 * monthBetween.intValue());
+//                dto.setDateAfterTagmeed(c.getTime());
+//            } else {
+//                dto.setDateAfterTagmeed(entity.getEndDate());
+//            }
+//
+//            long difference_In_Time
+//                    = dto.getDateAfterTagmeed().getTime() - new Date().getTime();
+//            Long difference_In_Days
+//                    = (difference_In_Time
+//                    / (1000 * 60 * 60 * 24))
+//                    % 365;
+//            dto.setRemainPeriod(difference_In_Days.intValue());
+//        }
         if (entity.getOrganizationSiteId() != null) {
             dto.setOrganizationSiteId(organizationSiteService.mapToDTOSmall(entity.getOrganizationSiteId()));// here
         }
@@ -580,6 +590,20 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
             }
         }
         return result;
+    }
+
+    /**
+     * @return the gmFreezeService
+     */
+    public GmFreezeService getGmFreezeService() {
+        return gmFreezeService;
+    }
+
+    /**
+     * @param gmFreezeService the gmFreezeService to set
+     */
+    public void setGmFreezeService(GmFreezeService gmFreezeService) {
+        this.gmFreezeService = gmFreezeService;
     }
 
 }

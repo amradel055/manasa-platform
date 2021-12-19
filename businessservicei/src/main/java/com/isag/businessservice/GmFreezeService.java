@@ -23,6 +23,6 @@ public interface GmFreezeService {
     public List<GmFreezeDto> getALLgm_freezeDtoByBranchId(Integer branchId , IsagUser isagUser);
     public GmFreezeDto findgm_freezeDtoById(GmFreezeDto gm_freezeDto ,IsagUser isagUser);
     public GmFreezeDto save(GmFreezeDto freezeDto, IsagUser isagUser);
-    public Integer calcTakenDaysByCustomerIdAndSubscribtionId(Integer customerId , Integer subscribtionId);
+    public Integer calcTakenDaysByCustomerIdAndSubscribtionId( Integer subscribtionId);
     
 }
