@@ -5,6 +5,9 @@
  */
 package com.isag.bussinessservice.global;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Matcher;
@@ -57,6 +60,23 @@ public class Utility {
             return calendar1.getTime();
         }
         return null;
+    }
+    
+    public static Integer calcDays(Date startDate , Date endDate , Integer number) {
+        LocalDate startDateNew = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate endDateNew = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        Long monthBetween = ChronoUnit.MONTHS.between(startDateNew, endDateNew);
+        Calendar c = Calendar.getInstance();
+         return (number * monthBetween.intValue());
+       
+    }
+    
+    public static Date sumDateAndNumer(Date date , Integer number) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.add(Calendar.DAY_OF_MONTH, number);
+        date = c.getTime() ;
+         return date ;
     }
 
 }

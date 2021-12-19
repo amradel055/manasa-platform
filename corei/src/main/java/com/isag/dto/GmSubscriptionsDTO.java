@@ -61,7 +61,9 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
      private BigDecimal value;
      private GmItemDTO gmItemDTO ;
      private String gmItemName;
-
+    private Integer takenDays ;
+    private Integer remainDays ;
+    private Integer mustDays ;
     private Boolean showCustomerDate = Boolean.TRUE;
     private InventoryDelegatorDTO invDelegatorId;
 
@@ -721,5 +723,47 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
      */
     public void setGmItemName(String gmItemName) {
         this.gmItemName = gmItemName;
+    }
+
+    /**
+     * @return the takenDays
+     */
+    public Integer getTakenDays() {
+        return takenDays;
+    }
+
+    /**
+     * @param takenDays the takenDays to set
+     */
+    public void setTakenDays(Integer takenDays) {
+        this.takenDays = takenDays;
+    }
+
+    /**
+     * @return the remainDays
+     */
+    public Integer getRemainDays() {
+        return remainDays;
+    }
+
+    /**
+     * @param remainDays the remainDays to set
+     */
+    public void setRemainDays(Integer remainDays) {
+        this.remainDays = remainDays;
+    }
+
+    /**
+     * @return the mustDays
+     */
+    public Integer getMustDays() {
+        return mustDays;
+    }
+
+    /**
+     * @param mustDays the mustDays to set
+     */
+    public void setMustDays(Integer mustDays) {
+        this.mustDays = mustDays;
     }
 }

@@ -111,7 +111,7 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
         Long monthBetween = ChronoUnit.MONTHS.between(startDate, endDate);
         Calendar c = Calendar.getInstance();
         getGmFreezeDto().setMustDays(5 * monthBetween.intValue());
-        getGmFreezeDto().setTakeDays(gmFreezeService.calcTakenDaysByCustomerIdAndSubscribtionId(getGmSubscriptionsDTOSelected().getOrganizationSiteId().getId(), getGmSubscriptionsDTOSelected().getId()));
+        getGmFreezeDto().setTakeDays(gmFreezeService.calcTakenDaysByCustomerIdAndSubscribtionId(getGmSubscriptionsDTOSelected().getId()));
         getGmFreezeDto().setRemainDays(getGmFreezeDto().getMustDays() - getGmFreezeDto().getTakeDays());
     }
 
@@ -189,6 +189,8 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
     public void goTOAddForm() {
         exit("../gmregistration/gmregistrationForm.xhtml");
     }
+    
+
 
     public String goToEdit() {
         try {
