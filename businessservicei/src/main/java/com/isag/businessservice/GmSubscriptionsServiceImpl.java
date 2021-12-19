@@ -264,6 +264,7 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
         dto.setDiscountType(entity.getDiscountType());
         dto.setPostFlag(entity.getPostFlag());
         dto.setTaxFlag(entity.getTaxFlag());
+        
         if(entity.getGmItemId() != null){
             dto.setGmItemDTO(gmItemService.mapTODTO(entity.getGmItemId() , null));
         }

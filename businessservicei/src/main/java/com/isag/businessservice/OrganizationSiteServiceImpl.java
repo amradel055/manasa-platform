@@ -2070,6 +2070,8 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         invOrganizationSiteDTO.setMobile(invOrganizationSite.getMobile());
         invOrganizationSiteDTO.setDiscount(invOrganizationSite.getDiscount());
         invOrganizationSiteDTO.setAddress(invOrganizationSite.getAddress());
+        invOrganizationSiteDTO.setBirthdate(invOrganizationSite.getBirthdate());
+        invOrganizationSiteDTO.setClientImage(invOrganizationSite.getClientImage());
         if (invOrganizationSite.getCurrencyId() != null) {
             CurrencyDTO currencyDTO = new CurrencyDTO();
             currencyDTO.setId(invOrganizationSite.getCurrencyId().getId());
