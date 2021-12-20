@@ -50,7 +50,7 @@
                                           action="#{invPurchaseInvoiceListDTOMB.goToAdd()}" 
                                           style="float:right" 
                                           rendered="#{(userData.userScreens['invsalesinvoice_1'].add)  or userData.isAdmin}"/>
-                       
+
 
                         <p:selectOneMenu id="inventory" value="#{invPurchaseInvoiceListDTOMB.invInventorySelection}"
                                          converter="#{invPurchaseInvoiceListDTOMB.invInventoryConverter}" 
@@ -74,7 +74,7 @@
                                          action="#{invPurchaseInvoiceListDTOMB.MonthTargetDlg()}"
                                          update="form:loadMonthTargetdlg"
                                          value="المستهدف"/>
-                         <p:commandButton  icon="fa fa-plus"
+                        <p:commandButton  icon="fa fa-plus"
                                           class="saddButton"
                                           title="#{userData.userDDs['ADD']}"  value="سيراميك"
                                           action="#{invPurchaseInvoiceListDTOMB.goToAddCeramic()}" 
@@ -92,8 +92,8 @@
                         <p:outputLabel value="#{invInvoicePurchaseTable.serial}" />
                     </p:column>
 
-                    
-                    
+
+
                     <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px;"  filterStyle="display:none" 
                                filterBy="#{invInvoicePurchaseTable.supplierInvoiceNumber}" 
                                filterMatchMode="contains" 
@@ -169,18 +169,30 @@
                         <p:outputLabel value="#{invInvoicePurchaseTable.look eq null ? '' : 'تمت المراجعه'}" />
                     </p:column>
                     <p:column  style="width: 12vh;font-size: 1.8vh;text-align:center;border-radius: 0px;" headerText="#{userData.userDDs['TRANSACTION']}" >
-                            <p:commandButton   onclick="form.target = '_blank'"  ajax="false"
-                            update="@form" 
-                            class="smsearchButtons"
-                            icon="fa fa-fw fa-search-plus"  style="background-color: rgba(63, 81, 181, 0.88);border-radius: 3px;"
-                            title="#{userData.userDDs['VIEW']}" 
-                            action="#{invPurchaseInvoiceListDTOMB.goToEdit()}" 
-                            rendered="#{userData.userScreens['invsalesinvoice_1'].edit or userData.isAdmin}" >
+                        <p:commandButton   onclick="form.target = '_blank'"  ajax="false"
+                                           update="@form" 
+                                           class="smsearchButtons"
+                                           icon="fa fa-fw fa-search-plus"  style="background-color: rgba(63, 81, 181, 0.88);border-radius: 3px;"
+                                           title="#{userData.userDDs['VIEW']}" 
+                                           action="#{invPurchaseInvoiceListDTOMB.goToEdit()}" 
+                                           rendered="#{userData.userScreens['invsalesinvoice_1'].edit or userData.isAdmin}" >
 
                             <f:setPropertyActionListener value="#{invInvoicePurchaseTable}" 
                                                          target="#{invPurchaseInvoiceListDTOMB.invInvoiceDTOSelected}" />
                         </p:commandButton>
 
+
+                        <p:commandButton update="@form" 
+                                         class="sdeleteButtons"
+                                         icon="fa fa-remove" 
+                                         style="background-color: red;border-radius: 3px;"
+                                         title="#{userData.userDDs['DELETE']}" 
+                                         action="#{invPurchaseInvoiceListDTOMB.delete()}" 
+                                         rendered="#{(userData.userScreens['invsalesinvoice_1'].delete or userData.isAdmin) and ( invInvoicePurchaseTable.look eq null or invInvoicePurchaseTable.look eq 0)}">
+                            <f:setPropertyActionListener value="#{invInvoicePurchaseTable}" target="#{invPurchaseInvoiceListDTOMB.invInvoiceDTOSelected}" />
+                            <p:confirm header="Confirmation" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+
+                        </p:commandButton>
 
 
                         <p:commandButton 
@@ -188,21 +200,7 @@
                             update="@form" onclick="form.target = '_blank'"  ajax="false"
                             icon="fa fa-fw fa-print" style="background-color: rgb(0, 74, 128);border-radius: 3px;"
                             title="print" 
-                            action="#{invPurchaseInvoiceListDTOMB.printList()}" 
-                            rendered="#{userData.userScreens['invsalesinvoice_1'].edit or userData.isAdmin}" >
-
-                            <p:commandButton update="@form" 
-                                             class="sdeleteButtons"
-                                             icon="fa fa-remove" 
-                                             style="background-color: red;border-radius: 3px;"
-                                             title="#{userData.userDDs['DELETE']}" 
-                                             action="#{invPurchaseInvoiceListDTOMB.delete()}" 
-                                             rendered="#{(userData.userScreens['invsalesinvoice_1'].delete or userData.isAdmin) and ( invInvoicePurchaseTable.look eq null or invInvoicePurchaseTable.look eq 0)}">
-                                <f:setPropertyActionListener value="#{invInvoicePurchaseTable}" target="#{invPurchaseInvoiceListDTOMB.invInvoiceDTOSelected}" />
-                                <p:confirm header="Confirmation" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
-
-                            </p:commandButton>
-
+                            action="#{invPurchaseInvoiceListDTOMB.printList()}" >
                             <f:setPropertyActionListener value="#{invInvoicePurchaseTable}" 
                                                          target="#{invPurchaseInvoiceListDTOMB.invInvoiceDTOSelected}" />
                         </p:commandButton>
@@ -222,15 +220,15 @@
                         <p:dialog class="dialogueTarget" id="loadMonthTargetdlg" header="#{userData.userDDs['WARNING']}" widgetVar="loadMonthTargetdlg" modal="true" height="auto" style="height: fit-content">
                             <p:progressBar value="#{invPurchaseInvoiceListDTOMB.invInvoiceDTO.invMonthTargetDTO.daysLeftPercentage}"  labelTemplate="{value}%" displayOnly="true"/>
                             <div class="dt1">
-                            <p:outputLabel class="dtLabel" rendered="#{invPurchaseInvoiceListDTOMB.invInvoiceDTO.invMonthTargetDTO.target ne null}" value="الايام المتبقيه" />
-                            <p:outputLabel class="dtLabel2" rendered="#{invPurchaseInvoiceListDTOMB.invInvoiceDTO.invMonthTargetDTO.target ne null}" value="#{invPurchaseInvoiceListDTOMB.invInvoiceDTO.invMonthTargetDTO.daysLeft}"/>
+                                <p:outputLabel class="dtLabel" rendered="#{invPurchaseInvoiceListDTOMB.invInvoiceDTO.invMonthTargetDTO.target ne null}" value="الايام المتبقيه" />
+                                <p:outputLabel class="dtLabel2" rendered="#{invPurchaseInvoiceListDTOMB.invInvoiceDTO.invMonthTargetDTO.target ne null}" value="#{invPurchaseInvoiceListDTOMB.invInvoiceDTO.invMonthTargetDTO.daysLeft}"/>
                             </div>
-                            
+
                             <div class="dt2">
-                            <p:outputLabel class="dtLabel" rendered="#{invPurchaseInvoiceListDTOMB.invInvoiceDTO.invMonthTargetDTO.target ne null}" value="الايام المنقضية" />
-                            <p:outputLabel class="dtLabel2" rendered="#{invPurchaseInvoiceListDTOMB.invInvoiceDTO.invMonthTargetDTO.target ne null}" value="#{invPurchaseInvoiceListDTOMB.invInvoiceDTO.invMonthTargetDTO.daysPassed}"/>
+                                <p:outputLabel class="dtLabel" rendered="#{invPurchaseInvoiceListDTOMB.invInvoiceDTO.invMonthTargetDTO.target ne null}" value="الايام المنقضية" />
+                                <p:outputLabel class="dtLabel2" rendered="#{invPurchaseInvoiceListDTOMB.invInvoiceDTO.invMonthTargetDTO.target ne null}" value="#{invPurchaseInvoiceListDTOMB.invInvoiceDTO.invMonthTargetDTO.daysPassed}"/>
                             </div>
-                            
+
                             <p:outputLabel class="dtLabel" rendered="#{invPurchaseInvoiceListDTOMB.invInvoiceDTO.invMonthTargetDTO.target ne null}" value="المستهدف" />
                             <p:outputLabel class="dtLabel2" rendered="#{invPurchaseInvoiceListDTOMB.invInvoiceDTO.invMonthTargetDTO.target ne null}" value="#{invPurchaseInvoiceListDTOMB.invInvoiceDTO.invMonthTargetDTO.target}"/>
                             <br></br>
