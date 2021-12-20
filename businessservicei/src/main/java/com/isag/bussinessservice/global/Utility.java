@@ -66,8 +66,17 @@ public class Utility {
         LocalDate startDateNew = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate endDateNew = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         Long monthBetween = ChronoUnit.MONTHS.between(startDateNew, endDateNew);
-        Calendar c = Calendar.getInstance();
+       
          return (number * monthBetween.intValue());
+       
+    }
+    
+     public static Integer calcDaysBetween(Date startDate , Date endDate) {
+        LocalDate startDateNew = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate endDateNew = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        Long daysBetween = ChronoUnit.DAYS.between(endDateNew , startDateNew);
+        
+         return  daysBetween.intValue();
        
     }
     

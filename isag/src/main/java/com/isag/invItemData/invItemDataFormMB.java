@@ -335,12 +335,11 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
                 itemDataEntitySelected.setPrintShow(invItem.getPrintShow());
 
                 if (invItem.getInvInventoryId() != null) {
-                    InvInventoryDTO invInventoryDTO = new InvInventoryDTO();
-                    invInventoryDTO.setId(invItem.getInvInventoryId().getId());
-                    invInventoryDTO.setName(invItem.getInvInventoryId().getName());
-                    invInventoryDTO.setCode(invItem.getInvInventoryId().getCode());
-                    itemDataEntitySelected.setInvInventoryId(invInventoryDTO);
-
+                    InvInventory invInventory = new InvInventory();
+                    invInventory.setId(invItem.getInvInventoryId().getId());
+                    invInventory.setName(invItem.getInvInventoryId().getName());
+                    invInventory.setCode(invItem.getInvInventoryId().getCode());
+                    itemDataEntitySelected.setInvInventoryId(invInventory);
                 }
 
                 // prepare to set barckodList in itemData object
@@ -543,9 +542,7 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
 
                     if (itemDataEntity.getInvInventoryId() != null) {
                         InvInventory invInventory = new InvInventory();
-                        invInventory.setId(invItem.getInvInventoryId().getId());
-                        invInventory.setName(invItem.getInvInventoryId().getName());
-                        invInventory.setCode(invItem.getInvInventoryId().getCode());
+                        invInventory.setId(itemDataEntity.getInvInventoryId().getId());
                         invItem.setInvInventoryId(invInventory);
                     }
 

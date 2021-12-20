@@ -1111,6 +1111,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         dTO.setCreatedDate(entity.getCreationDate());
         dTO.setCreatedBy(entity.getCreatedBy().getId());
         dTO.setBranchId(entity.getBranchId().getId());
+        dTO.setTaxNumber(entity.getTaxNumber());
 
     }
 
@@ -1256,6 +1257,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         }
         entity.setBranchId(isagUser.getBranchId());
         entity.setCompanyId(isagUser.getCompanyId());
+        entity.setTaxNumber(dTO.getTaxNumber());
         return entity;
     }
 
@@ -2073,6 +2075,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         invOrganizationSiteDTO.setBirthdate(invOrganizationSite.getBirthdate());
         invOrganizationSiteDTO.setClientImage(invOrganizationSite.getClientImage());
          invOrganizationSiteDTO.setNationId(invOrganizationSite.getNationId());
+         invOrganizationSiteDTO.setTaxNumber(invOrganizationSite.getTaxNumber());
         if (invOrganizationSite.getCurrencyId() != null) {
             CurrencyDTO currencyDTO = new CurrencyDTO();
             currencyDTO.setId(invOrganizationSite.getCurrencyId().getId());

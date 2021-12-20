@@ -628,6 +628,7 @@ public class OrganizationSiteFormMB extends BaseFormBean implements Serializable
             invOrganizationSiteEntity.setCompanyName(invOrganizationSite.getCompanyName());
             invOrganizationSiteEntity.setOpenBalanceDate(invOrganizationSite.getOpenBalanceDate());
             invOrganizationSiteEntity.setDiscount(invOrganizationSite.getDiscount());
+            invOrganizationSiteEntity.setTaxNumber(invOrganizationSite.getTaxNumber());
 
             if (invOrganizationSite.getDelegatorId() != null) {
                 invOrganizationSiteEntity.setDelegateId(invOrganizationSite.getDelegatorId().getId());
@@ -789,6 +790,7 @@ public class OrganizationSiteFormMB extends BaseFormBean implements Serializable
             invOrganizationSite.setLegalAffairsRemark(invOrganizationSiteEntity.getLegalAffairsRemark());
             invOrganizationSite.setOpenBalanceDate(invOrganizationSiteEntity.getOpenBalanceDate());
             invOrganizationSite.setDiscount(invOrganizationSiteEntity.getDiscount());
+            invOrganizationSite.setTaxNumber(invOrganizationSiteEntity.getTaxNumber());
         } catch (Exception e) {
             saveError(e, "OrganizationSiteFormMB", "validateInputsForSave");
         }
