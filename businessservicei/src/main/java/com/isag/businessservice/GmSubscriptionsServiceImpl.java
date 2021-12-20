@@ -277,6 +277,7 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
         dto.setTakenDays(gmFreezeService.calcTakenDaysByCustomerIdAndSubscribtionId(entity.getId()));
         dto.setRemainDays(dto.getMustDays() - dto.getTakenDays());
         dto.setDateAfterTagmeed(Utility.sumDateAndNumer(entity.getEndDate(), dto.getTakenDays()));
+        dto.setRemainPeriod(Utility.calcDaysBetween(dto.getDateAfterTagmeed(), new Date()));
         } 
         
        
