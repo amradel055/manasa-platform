@@ -182,7 +182,8 @@ public class InvOrganizationSite extends BaseEntity {
     private String clientImage;
     @Column(name = "nation_id_serial")
     private Integer nationIdSerial;
-
+    @Column(name = "tax_number")
+    private String taxNumber;
     public InvOrganizationSite() {
     }
 
@@ -841,6 +842,20 @@ public class InvOrganizationSite extends BaseEntity {
      */
     public void setNationIdSerial(Integer nationIdSerial) {
         this.nationIdSerial = nationIdSerial;
+    }
+
+    /**
+     * @return the taxNumber
+     */
+    public String getTaxNumber() {
+        return taxNumber;
+    }
+
+    /**
+     * @param taxNumber the taxNumber to set
+     */
+    public void setTaxNumber(String taxNumber) {
+        this.taxNumber = taxNumber;
     }
 
 }

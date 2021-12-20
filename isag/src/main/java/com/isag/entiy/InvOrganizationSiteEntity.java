@@ -58,7 +58,7 @@ public class InvOrganizationSiteEntity extends BaseEntity {
 
     private InventoryDelegator salesPerson;
     private Date openBalanceDate;
-    
+    private String taxNumber ;
     /**
      * @return the name
      */
@@ -583,6 +583,20 @@ public class InvOrganizationSiteEntity extends BaseEntity {
      */
     public void setDiscount(BigDecimal discount) {
         this.discount = discount;
+    }
+
+    /**
+     * @return the taxNumber
+     */
+    public String getTaxNumber() {
+        return taxNumber;
+    }
+
+    /**
+     * @param taxNumber the taxNumber to set
+     */
+    public void setTaxNumber(String taxNumber) {
+        this.taxNumber = taxNumber;
     }
 
 }

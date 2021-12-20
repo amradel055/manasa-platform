@@ -14,6 +14,20 @@ import java.util.List;
  * @author hq003
  */
 public class InvOrganizationSiteDTO extends BaseEntityDTO {
+
+    /**
+     * @return the taxNumber
+     */
+    public String getTaxNumber() {
+        return taxNumber;
+    }
+
+    /**
+     * @param taxNumber the taxNumber to set
+     */
+    public void setTaxNumber(String taxNumber) {
+        this.taxNumber = taxNumber;
+    }
     private Integer index;
     private String clientImage ;
     private String code;
@@ -90,6 +104,8 @@ public class InvOrganizationSiteDTO extends BaseEntityDTO {
     private String legalAffairsRemark;
     private Boolean isEdited = Boolean.FALSE;
     private Integer nationIdSerial;
+    private String taxNumber;
+    
     public InvOrganizationSiteDTO() {
     }
 
