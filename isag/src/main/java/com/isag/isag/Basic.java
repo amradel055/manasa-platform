@@ -17,9 +17,7 @@ import com.isag.businessservice.IsagUserLoginService;
 import com.isag.common.FindClientData;
 import com.isag.common.SendEmailSMTP;
 import com.isag.converter.InvInventoryConverter;
-import com.isag.converter.InvInventoryDTOConverter;
 import com.isag.define.HttpMethode;
-import com.isag.dto.InvInventoryDTO;
 import com.isag.dto.IsagErrorDTO;
 import com.isag.entity.Branch;
 import com.isag.entity.GlYear;
@@ -111,9 +109,9 @@ public class Basic implements Serializable {
 
     private String uri;
     
-    private List<InvInventoryDTO> inventoryList;
-    private InvInventoryDTO invInventorySelection;
-    private InvInventoryDTOConverter invInventoryConverter;
+    private List<InvInventory> inventoryList;
+    private InvInventory invInventorySelection;
+    private InvInventoryConverter invInventoryConverter;
     
      public void OpenDlg(String dlgvar) {
         RequestContext context = RequestContext.getCurrentInstance();
@@ -594,11 +592,11 @@ public class Basic implements Serializable {
     /**
      * @return the inventoryList
      */
-    public List<InvInventoryDTO> getInventoryList() {
+    public List<InvInventory> getInventoryList() {
         if(inventoryList == null){
-            inventoryList = isagUserInventoryService.getAllInventroisByUserAndBranchPerDTO(getUserData().getUser().getId(), getUserlogin().getBranchId().getId());
+            inventoryList = isagUserInventoryService.getAllInventroisByUserAndBranchPer(getUserData().getUser().getId(), getUserlogin().getBranchId().getId());
             if (inventoryList != null && !inventoryList.isEmpty()) {
-                setInvInventoryConverter(new InvInventoryDTOConverter(getInventoryList()));
+                setInvInventoryConverter(new InvInventoryConverter(getInventoryList()));
                  setInvInventorySelection(getInventoryList() == null || getInventoryList().isEmpty() ? null : getInventoryList().get(0));
             }
         }
@@ -608,35 +606,35 @@ public class Basic implements Serializable {
     /**
      * @param inventoryList the inventoryList to set
      */
-    public void setInventoryList(List<InvInventoryDTO> inventoryList) {
+    public void setInventoryList(List<InvInventory> inventoryList) {
         this.inventoryList = inventoryList;
     }
 
     /**
      * @return the invInventorySelection
      */
-    public InvInventoryDTO getInvInventorySelection() {
+    public InvInventory getInvInventorySelection() {
         return invInventorySelection;
     }
 
     /**
      * @param invInventorySelection the invInventorySelection to set
      */
-    public void setInvInventorySelection(InvInventoryDTO invInventorySelection) {
+    public void setInvInventorySelection(InvInventory invInventorySelection) {
         this.invInventorySelection = invInventorySelection;
     }
 
     /**
      * @return the invInventoryConverter
      */
-    public InvInventoryDTOConverter getInvInventoryConverter() {
+    public InvInventoryConverter getInvInventoryConverter() {
         return invInventoryConverter;
     }
 
     /**
      * @param invInventoryConverter the invInventoryConverter to set
      */
-    public void setInvInventoryConverter(InvInventoryDTOConverter invInventoryConverter) {
+    public void setInvInventoryConverter(InvInventoryConverter invInventoryConverter) {
         this.invInventoryConverter = invInventoryConverter;
     }
 
