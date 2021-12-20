@@ -542,9 +542,7 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
 
                     if (itemDataEntity.getInvInventoryId() != null) {
                         InvInventory invInventory = new InvInventory();
-                        invInventory.setId(invItem.getInvInventoryId().getId());
-                        invInventory.setName(invItem.getInvInventoryId().getName());
-                        invInventory.setCode(invItem.getInvInventoryId().getCode());
+                        invInventory.setId(itemDataEntity.getInvInventoryId().getId());
                         invItem.setInvInventoryId(invInventory);
                     }
 

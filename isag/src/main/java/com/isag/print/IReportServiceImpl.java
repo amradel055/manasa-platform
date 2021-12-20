@@ -508,6 +508,7 @@ public class IReportServiceImpl implements IReportService {
             hashMap.put("payedValue", invPurchaseInvoiceDTO.getPayed());
             hashMap.put("remainValue", invPurchaseInvoiceDTO.getRemain());
             hashMap.put("receiptNumberValue", invPurchaseInvoiceDTO.getSerial());
+            hashMap.put("clientTaxNumber", invPurchaseInvoiceDTO.getOrganizationSiteId().getTaxNumber());
             if (invPurchaseInvoiceDTO.getInvInventoryId() != null) {
                 hashMap.put("invName", invPurchaseInvoiceDTO.getInvInventoryId().getName());
             }
@@ -653,10 +654,11 @@ public class IReportServiceImpl implements IReportService {
             hashMap.put("supplierValue", invPurchaseInvoiceDTO.getOrganizationSiteId() != null ? invPurchaseInvoiceDTO.getOrganizationSiteId().getCode() : "");
             hashMap.put("supplierName", invPurchaseInvoiceDTO.getOrganizationSiteId() != null ? invPurchaseInvoiceDTO.getOrganizationSiteId().getName() : "");
             hashMap.put("supplierReceiptValue", invPurchaseInvoiceDTO.getSupplierInvoiceNumber());
+            hashMap.put("clientTaxNumber", invPurchaseInvoiceDTO.getOrganizationSiteId().getTaxNumber());
+
 //        hashMap.put("transportationSupplierValue", invPurchaseInvoiceEntity.get);
 //        hashMap.put("transportationSupplierName", "الصافي");
             hashMap.put("nolonValue", invPurchaseInvoiceDTO.getExtraCost());
-
             hashMap.put("discountValue", invPurchaseInvoiceDTO.getDiscount());
             if (invPurchaseInvoiceDTO.getDiscountType() != 0) {
                 hashMap.put("%", " % ");
