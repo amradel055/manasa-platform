@@ -94,25 +94,29 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
         try {
             
             if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("addGmSubscriptions")) {
+             getGmSubscriptionsDTO().setShowCustomerDate(Boolean.FALSE);
                 reset();
                 fillDefaultList();
             } else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("editGmSubscriptions")) {
-                
+                             getGmSubscriptionsDTO().setShowCustomerDate(Boolean.FALSE);
+
                 getGmSubscriptionsDTO().setIsEdit(Boolean.TRUE);
                 fillInvInvoiceDTO();
                 fillDefaultList();
-                getGmSubscriptionsDTO().setIsEdit(Boolean.FALSE);
             }
             
-            else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("editorganization")) {
-                
+            else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("editorganization")) {   
                 getOrganizationSiteId().setIsEdited(Boolean.TRUE);
+                
                 fillClientDTO();
             } 
               else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("resumeinvOrganizationSite")) {
-               gmSubscriptionsDTO.setShowCustomerDate(false);
-                getOrganizationSiteId().setIsEdited(Boolean.TRUE);
+                                               getGmSubscriptionsDTO().setShowCustomerDate(Boolean.FALSE);
+
+               getGmSubscriptionsDTO().setIsEdit(Boolean.FALSE);
                 fillResumeClientDTO();
+                               
+
             }
             else {
                 exit("../gmsubscriptions/gmsubscriptionslist.xhtml");
