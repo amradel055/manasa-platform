@@ -185,6 +185,21 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
             return null;
         }
     }
+    
+     public String goToMovment() {
+        try {
+            ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+            context.getSessionMap().put("ScreenMode", "addGmMovement");
+            context.getSessionMap().put("typeActivity", 0);
+            context.getSessionMap().put("gmCustomerIdSelected", getGmSubscriptionsDTOSelected().getOrganizationSiteId().getId());
+             exit("../gmsubscriptions/gmsubscriptionsformmovment.xhtml");
+
+            return "";
+        } catch (Exception e) {
+            saveError(e, "InvPurchaseInvoiceListMB", "goToAdd");
+            return null;
+        }
+    }
 
     public void goTOAddForm() {
         exit("../gmregistration/gmregistrationForm.xhtml");

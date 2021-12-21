@@ -392,6 +392,18 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
         List<GmSubscriptions> details = dao.findListByQuery(builder.toString(), filters);
         return returnListDTOForList(details);
     }
+    
+      @Override
+    public GmSubscriptionsDTO getValidGmSubscriptionsDTOByCustomerId(Integer customerId) {
+        Map<String, Object> filters = new HashMap<>();
+        filters.put("customerId", customerId);
+        filters.put("date", new Date());
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT s FROM GmSubscriptions s WHERE  s.organizationSiteId.id =:customerId  AND :date BETWEEN s.startDate AND s.endDate ");
+
+        GmSubscriptions details = dao.findEntityByQuery(builder.toString(), filters);
+        return mapToDTO(details);
+    }
 
     private List<GmSubscriptionsDTO> returnListDTOForList(List<GmSubscriptions> gmSubscriptionsList) {
         List<GmSubscriptionsDTO> gmSubscriptionsDTOList = new ArrayList<>();
