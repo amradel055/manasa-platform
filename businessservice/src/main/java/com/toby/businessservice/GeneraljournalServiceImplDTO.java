@@ -185,14 +185,26 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
     public void addGeneralJournalDTOWithDetail(List<GeneralJournalDTO> list, TobyUser tobyUser) {
         Integer generaldocumet = 1;
         Integer serial = 5454;
+        Integer id = 10000;
+//        Integer id = 25500;
+//        Integer id = 41000;
+//        Integer id = 56000;
+        Integer idDtail = 45000;
+//        Integer idDtail = 120000;
+//        Integer idDtail = 200000;
+//        Integer idDtail = 280000;
         for (GeneralJournalDTO dto : list) {
+            System.err.println("----------> "+id + " <---------------------"+ new Date());
             generaldocumet++;
             serial++;
             dto.setSerial(serial);
+            dto.setId(id);
             dto.setGeneralDecument(generaldocumet);
             GeneralJournal entity = mapFromDTO(dto, tobyUser);
-            entity = dao.updateEntity(entity);
-            generaljournalDetailsService.addGenDetalilsGlobal(dto.getDetailList(), tobyUser, entity.getId());
+            dao.saveEntity(entity);
+            generaljournalDetailsService.addGenDetalilsGlobal(dto.getDetailList(), tobyUser, id,idDtail);            
+            idDtail = idDtail+5;            
+            id++;
         }
 
     }
@@ -357,6 +369,7 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
             entity.setGlYear(parent);
         }
 
+        entity.setId(dTO.getId());
         entity.setGeneralNumber(dTO.getGeneralNumber());
         entity.setGeneralData(dTO.getGeneralData());
         entity.setGeneralStatement(dTO.getGeneralStatement());

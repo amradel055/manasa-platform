@@ -268,7 +268,10 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
         params20.put("companyId", 125);
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT s FROM GlBankTransactionDetail s WHERE  s.companyId.id = :companyId AND s.glBankTransactionId.transactionType = 1 AND s.bankIdFrom IS NOT NULL");
-        List<GlBankTransactionDetail> details = dao.findListByQuery(builder.toString(), params20);
+        List<GlBankTransactionDetail> details = dao.findListByQuery(builder.toString(), params20,1, 15000);
+//        List<GlBankTransactionDetail> details = dao.findListByQuery(builder.toString(), params20,15001, 30000);
+//        List<GlBankTransactionDetail> details = dao.findListByQuery(builder.toString(), params20,30001, 45000);
+//        List<GlBankTransactionDetail> details = dao.findListByQuery(builder.toString(), params20,45001, 60000);
 
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", tobyUser.getBranchId().getId());
