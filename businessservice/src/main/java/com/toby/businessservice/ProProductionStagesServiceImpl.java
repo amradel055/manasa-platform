@@ -103,6 +103,9 @@ public class ProProductionStagesServiceImpl implements ProProductionStagesServic
         List<ProProductionStages> list = new ArrayList<>();
 
         for (TobyUserProproduction productionStagese : productionStageses) {
+            ProProductionStages productionStagesNew = new ProProductionStages();
+            productionStagesNew.setId(productionStagese.getProproductionId().getId());
+            productionStagesNew.setName(productionStagese.getProproductionId().getName());
             list.add(productionStagese.getProproductionId() != null ? productionStagese.getProproductionId() : null);
         }
 

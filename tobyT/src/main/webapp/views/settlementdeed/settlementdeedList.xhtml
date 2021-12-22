@@ -36,13 +36,6 @@
                                 <p:inputText id="globalFilter" onkeyup="PF('bTable').filter()" style="width:150px" />
                             </p:outputPanel>
 
-
-                            <p:fileUpload style="margin-right: 80%; margin-top: -2%;" value="#{notesReceivablesFormMB.contractFile}" mode="simple" onstart="disableChoosing()" 
-                                          oncomplete="enableChoosing()" />
-
-                            <p:commandButton class="notesUpload" id="btncustomer" widgetVar="btn" ajax="false" onclick="PF('pbAjax').start();PF('pbAjax').getJQ().css('display', 'block');" action="#{notesReceivablesFormMB.readCashTasahel()}"  value="تحميل">
-                                <p:ajax  delay="100"  onstart="PF('btn').disable();" />                          
-                            </p:commandButton>
                         </f:facet>
 
                         <p:column style="width: 11vh;text-align: center;font-size: 1.8vh;border-radius: 0px" 

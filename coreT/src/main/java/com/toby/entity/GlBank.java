@@ -209,6 +209,9 @@ public class GlBank extends BaseEntity {
      * @return the commition
      */
     public BigDecimal getCommition() {
+        if(commition == null){
+            commition = BigDecimal.ZERO;
+        }
         return commition;
     }
 

@@ -62,6 +62,12 @@ public class GlBankServiceImpl implements GlBankService {
     public GlBank findGlBank(Integer id) {
         return dao.findEntityById(GlBank.class, id);
     }
+    
+    @Override
+    public GlBankDTO findGlBankDTO(Integer id) {
+        GlBank glBank = dao.findEntityById(GlBank.class, id);
+        return mapToDTO(glBank);
+    }
 
     @Override
     public List<GlBank> getAllGlBankByCompanyId(Integer companyId) {

@@ -8,7 +8,6 @@
                 xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
                 xmlns="http://www.w3.org/1999/xhtml" >
     <ui:define name="content">
-        <f:event listener="#{userData.authorize}" type="preRenderView" />
 
         <h:head>
             <title>#{userData.userDDs['SERVICES_DIRECT']}</title>
@@ -544,7 +543,7 @@
             </p:dialog>
 
             <p:dialog class="dialogueCRM" header="إضافةعميل جديد"  id="dlg12" widgetVar="dlg12" minHeight="40">
-
+            
                 <h:panelGrid id="pn1" > 
                     <div class="ui-g-12 ui-g-nopad"  >
                         <div class="ui-g">
@@ -667,17 +666,6 @@
                                     <h:panelGroup>
                                         <p:outputLabel style="width: 89px;margin-right: 4%;" value="اسم الوحده"/>
                                     </h:panelGroup>
-                                    <p:autoComplete style="width:49%!important " 
-                                                    dropdown="true"
-                                                    converter="#{autoComplete.instProjectGuideDTOConverter}"
-                                                    value="#{crmEventFormDTOMB.invOrganizationSiteDTO.instProjectGuideDTO}"
-                                                    var="project"
-                                                    itemLabel="#{project}" 
-                                                    itemValue="#{project}" 
-                                                    forceSelection="true" 
-                                                    completeMethod="#{autoComplete.completeInstProjectDTOTo}"
-                                                    >
-                                    </p:autoComplete>
                                 </h:panelGroup>
                             </div>
                             <div class="ui-g-12 ui-md-6">

@@ -20,6 +20,7 @@ public class InvInventoryDTO extends BaseEntityDTO implements Comparable<InvInve
     private InventoryPricesGroupEnum sellPriceType;
     private GlAccountDTO accountId;
     private GlAccountDTO runningAccount;
+    private GlAccountDTO costAccount;
     private CostCenterDTO costCenterId;
     private GlAdminUnitDTO glAdminUnitId;
     private String daribaValue;
@@ -281,6 +282,20 @@ public class InvInventoryDTO extends BaseEntityDTO implements Comparable<InvInve
      */
     public void setSellerName(String sellerName) {
         this.sellerName = sellerName;
+    }
+
+    /**
+     * @return the costAccount
+     */
+    public GlAccountDTO getCostAccount() {
+        return costAccount;
+    }
+
+    /**
+     * @param costAccount the costAccount to set
+     */
+    public void setCostAccount(GlAccountDTO costAccount) {
+        this.costAccount = costAccount;
     }
 
 }

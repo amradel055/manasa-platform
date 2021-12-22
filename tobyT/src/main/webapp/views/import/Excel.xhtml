@@ -9,6 +9,15 @@
     <ui:define name="content">
         <h:form id="form" enctype="multipart/form-data" dir="#{userData.dir}" style="margin-right: 20px">
 
+            <p:commandButton id="btninvitem5999"  actionListener="#{importMB.tarhilInvoiceOne()}" ajax="false" value="ترحيل الفواتير">
+                <f:ajax execute="@all" render="@form"/>
+                <p:ajax/>
+            </p:commandButton>
+
+            <p:commandButton id="btninvitem58888"  actionListener="#{importMB.tarhilCashOne()}" ajax="false" value="ترحيل السندات">
+                <f:ajax execute="@all" render="@form"/>
+                <p:ajax/>
+            </p:commandButton>
             <p:fieldset  legend="ادخال نوعية الاصناف" id="invitem5"  style="margin-bottom:20px">
                 <div id="invitemloader5" class="form-group col-md-12">
 
@@ -76,7 +85,7 @@
 
 
             </p:fieldset>
-            
+
             <p:fieldset  legend="ادخل شركات جديده" id="newOfferCompany"  style="margin-bottom:20px">
                 <div id="newOferCompany" class="form-group col-md-12">
 
@@ -146,6 +155,25 @@
 
 
             </p:fieldset>
+            
+            <p:fieldset  legend="ادخال  قيود اليومية" id="generalJournalID"  style="margin-bottom:20px">
+                <div id="generalJournalloader" class="form-group col-md-12">
+
+                    <p:fileUpload value="#{importMB.generalJournalHeadFile}" mode="simple" onstart="disableChoosing()" 
+                                  oncomplete="enableChoosing()" />
+                </div>
+
+                <div class="form-group col-md-12">
+                    <p:commandButton id="generalJournalBTN"  actionListener="#{importMB.readGeneralJournalHead()}" ajax="false" value="تحميل">
+                        <f:ajax execute="@all" render="@form"/>
+                        <p:ajax/>
+                    </p:commandButton>
+                </div>
+
+
+
+            </p:fieldset>
+
 
 
             <p:blockUI block="form" trigger=" " animate="true" >

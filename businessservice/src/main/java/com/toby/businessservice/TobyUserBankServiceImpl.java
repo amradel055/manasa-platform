@@ -107,7 +107,10 @@ public class TobyUserBankServiceImpl implements TobyUserBankService {
         List<GlBank> glBanks = new ArrayList<>();
 
         for (TobyUserBank tobyUserBank : tobyUserBankList) {
-            glBanks.add(tobyUserBank.getBankId() != null ? tobyUserBank.getBankId() : null);
+            GlBank glBankNew = new GlBank();
+            glBankNew.setId(tobyUserBank.getBankId().getId());
+            glBankNew.setName(tobyUserBank.getBankId().getName());
+            glBanks.add(glBankNew);
         }
 
         return glBanks;

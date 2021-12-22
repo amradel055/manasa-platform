@@ -8,6 +8,7 @@ package com.toby.businessservice;
 import com.toby.dto.GlAccountDTO;
 import com.toby.entity.GlAccount;
 import java.util.List;
+import java.util.Map;
 import javax.ejb.Remote;
 
 /**
@@ -26,5 +27,7 @@ public interface GlAccountServiceDTO {
     public GlAccount findGlAccount(Integer glAccount);
     
     public GlAccountDTO getGlAccountForBank(Integer branchId, Integer type);
+    
+     public Map<Integer,Integer> getBranchGLAccountsByMap(Integer branchId);
 
 }

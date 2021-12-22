@@ -101,6 +101,9 @@ public class GlBankTransactionDetail extends BaseEntity {
     }
 
     public BigDecimal getValue() {
+        if(value == null){
+            value = BigDecimal.ZERO;
+        }
         return value;
     }
 
@@ -261,6 +264,9 @@ public class GlBankTransactionDetail extends BaseEntity {
      * @return the bankCommition
      */
     public BigDecimal getBankCommition() {
+        if(bankCommition == null){
+            bankCommition = BigDecimal.ZERO;
+        }
         return bankCommition;
     }
 

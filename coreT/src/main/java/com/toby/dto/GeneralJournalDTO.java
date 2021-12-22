@@ -5,7 +5,10 @@
  */
 package com.toby.dto;
 
+import com.toby.entity.GeneralJournalDetails;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -25,9 +28,11 @@ public class GeneralJournalDTO extends BaseEntityDTO {
     private String macId;
     private boolean userModifyAbility;
     private Integer companyId;
-    private Integer modifiedBy ; 
+    private Integer modifiedBy;
     private Date modificationDate;
     private TobyUserDTO created_by;
+    private List<GeneralJournalDetails> detailList;
+
     /**
      * @return the generalNumber
      */
@@ -245,6 +250,23 @@ public class GeneralJournalDTO extends BaseEntityDTO {
      */
     public void setCreated_by(TobyUserDTO created_by) {
         this.created_by = created_by;
+    }
+
+    /**
+     * @return the detailList
+     */
+    public List<GeneralJournalDetails> getDetailList() {
+        if(detailList == null){
+            detailList = new ArrayList<>();
+        }
+        return detailList;
+    }
+
+    /**
+     * @param detailList the detailList to set
+     */
+    public void setDetailList(List<GeneralJournalDetails> detailList) {
+        this.detailList = detailList;
     }
 
 }

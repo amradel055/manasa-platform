@@ -10,6 +10,7 @@ import com.toby.businessservice.InvPurchaseInvoiceService_1;
 import com.toby.businessservice.ProFactoryDeliveryService;
 import com.toby.define.ScreenNameClassEnum;
 import com.toby.toby.InventoryBasicDataForm;
+import java.util.ArrayList;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -108,13 +109,14 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
     @Override
     public String save() {
         if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getInvPurchaseInvoiceDetailList() != null && !getInvInvoiceDTO().getInvPurchaseInvoiceDetailList().isEmpty()) {
+           Integer id = getInvInvoiceDTO().getId();
             getInvInvoiceDTO().setMsg(null);
             setInvInvoiceDTO(invPurchaseInvoiceService.save(getInvInvoiceDTO(), getUserData().getUser()));
             checkDetailData();
             setOrganizationSiteId(getInvInvoiceDTO().getOrganizationSiteId());
             msgSave(getInvInvoiceDTO().getMsg());
             findAccountStatement();
-            if (getUri().contains("proworkorderform")) {
+            if (id == null && getUri().contains("proworkorderform")) {
                 StringBuilder message = new StringBuilder();
                 message.append("عميلنا العزيز ، شكراً لتسوقك تمت عملية شراء رقم ");
                 message.append(getInvInvoiceDTO().getSerial());
@@ -124,12 +126,12 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
                     message.append("\n");
                     message.append("نسعد بتلقي تقييمكم عن الخدمة المقدمة لكم من برنس  \n");
                     message.append(" https://forms.gle/jARVyTyhGMT9MQRi7 ");
-//                    sendSms(getInvInvoiceDTO().getOrganizationSiteId().getMobile(), "التوبى العالمى", message.toString(), "20099319", "0564933202");
+                    sendSms(getInvInvoiceDTO().getOrganizationSiteId().getMobile(), "التوبى العالمى", message.toString(), "20099319", "0564933202");
                 } else if (getInvInvoiceDTO().getGallaryId().getInvName() != null && getInvInvoiceDTO().getGallaryId().getInvName() == 1) {
                     message.append("\n");
                     message.append("نسعد بتلقي تقييمكم عن الخدمة المقدمة لكم من لي رويال  \n");
                     message.append(" https://forms.gle/qS56hBNPw6T1rUkm6 ");
-//                    sendSms(getInvInvoiceDTO().getOrganizationSiteId().getMobile(), "التوبى العالمى", message.toString(), "20099320", "Royal@e12z");
+                    sendSms(getInvInvoiceDTO().getOrganizationSiteId().getMobile(), "التوبى العالمى", message.toString(), "20099320", "Royal@e12z");
                 }
             }
         } else {

@@ -32,6 +32,8 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
 
     @EJB
     private GenericDAO dao;
+    @EJB
+    private GeneraljournalDetailsService generaljournalDetailsService;
 
     @Override
     public Long getTotalGeneralJournal(GlYearDTO year, Integer branchId, Map<String, Object> filters) {
@@ -46,24 +48,24 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
     }
 
     @Override
-    public Long getTotalGeneralJournalForRevision(GlYearDTO year, Integer branchId,Date dateFrom , Date dateTo, Integer revisionAccount , Map<String, Object> filters) {
+    public Long getTotalGeneralJournalForRevision(GlYearDTO year, Integer branchId, Date dateFrom, Date dateTo, Integer revisionAccount, Map<String, Object> filters) {
         StringBuilder builder = new StringBuilder();
         filters.put("branchId", branchId);
         filters.put("dateYearFrom", year.getDateFrom());
         filters.put("dateYearTo", year.getDateTo());
         builder.append("SELECT count(e) FROM GeneralJournal e WHERE e.branchId.id = :branchId AND ( e.generalType.serial < 1000 OR e.generalType.serial > 2000) "
                 + " AND e.generalData >= :dateYearFrom AND e.generalData <= :dateYearTo   ");
-        
-        if(dateFrom != null){
+
+        if (dateFrom != null) {
             filters.put("dateFrom", dateFrom);
             builder.append(" AND e.generalData >= :dateFrom ");
         }
-        
-        if(dateTo != null){
+
+        if (dateTo != null) {
             filters.put("dateTo", dateTo);
             builder.append(" AND e.generalData <= :dateTo ");
         }
-        
+
         if (revisionAccount != null && revisionAccount == 0) {
             builder.append("  AND ( e.post_flag IS NULL  OR e.post_flag = 0 )  ");
         } else if (revisionAccount != null && revisionAccount == 1) {
@@ -73,11 +75,11 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
         Long details = dao.findEntityByQuery(builder.toString(), filters);
         return details;
     }
-    
+
     @Override
-    public List<GeneralJournalDTO> getGeneralJournalDTOByBranchIdForRevision(GlYearDTO year, Integer branchId,Date dateFrom , Date dateTo , 
+    public List<GeneralJournalDTO> getGeneralJournalDTOByBranchIdForRevision(GlYearDTO year, Integer branchId, Date dateFrom, Date dateTo,
             Integer revisionAccount, int first,
-            Integer pageSize,  Map<String, Object> filters) {
+            Integer pageSize, Map<String, Object> filters) {
         filters.put("branchId", branchId);
         filters.put("dateFrom", year.getDateFrom());
         filters.put("dateTo", year.getDateTo());
@@ -85,17 +87,17 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
 
         builder.append("SELECT e FROM GeneralJournal e WHERE e.branchId.id = :branchId AND ( e.generalType.serial < 1000 OR e.generalType.serial > 2000 ) "
                 + "AND e.generalData >= :dateFrom AND e.generalData <= :dateTo   ");
-       
-        if(dateFrom != null){
+
+        if (dateFrom != null) {
             filters.put("dateFrom", dateFrom);
             builder.append(" AND e.generalData >= :dateFrom ");
         }
-        
-        if(dateTo != null){
+
+        if (dateTo != null) {
             filters.put("dateTo", dateTo);
             builder.append(" AND e.generalData <= :dateTo ");
-        }        
-        
+        }
+
         if (revisionAccount != null && revisionAccount == 0) {
             builder.append("  AND ( e.post_flag IS NULL  OR e.post_flag = 0 )  ");
         } else if (revisionAccount != null && revisionAccount == 1) {
@@ -105,14 +107,14 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
         appendFilter(filters, branchId, builder);
         builder.append(" order by e.serial DESC");
         List<GeneralJournal> details = null;
-        if(pageSize != null){
-         details = dao.findListByQuery(builder.toString(), filters, first, pageSize);
-        }else{
+        if (pageSize != null) {
+            details = dao.findListByQuery(builder.toString(), filters, first, pageSize);
+        } else {
             details = dao.findListByQuery(builder.toString(), filters);
         }
         return returnListDTO(details);
     }
-    
+
     public void appendFilter(Map<String, Object> filters, Integer branchId, StringBuilder builder) {
         if (filters.get("globalFilter") != null && !filters.get("globalFilter").toString().isEmpty()) {
             String filter = " and (e.serial like CONCAT('%',:globalFilter ,'%') OR e.generalData  like CONCAT('%',:globalFilter ,'%') OR e.generalType.name like CONCAT('%',:globalFilter ,'%') OR e.generalDecument like CONCAT('%',:globalFilter ,'%')  OR e.createdBy.name like CONCAT('%',:globalFilter ,'%') OR e.generalStatement like CONCAT('%',:globalFilter ,'%') ) ";
@@ -177,6 +179,22 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
         entity = dao.updateEntity(entity);
         generalJournalDTO = mapTODTO(entity, false);
         return generalJournalDTO;
+    }
+
+    @Override
+    public void addGeneralJournalDTOWithDetail(List<GeneralJournalDTO> list, TobyUser tobyUser) {
+        Integer generaldocumet = 1;
+        Integer serial = 5454;
+        for (GeneralJournalDTO dto : list) {
+            generaldocumet++;
+            serial++;
+            dto.setSerial(serial);
+            dto.setGeneralDecument(generaldocumet);
+            GeneralJournal entity = mapFromDTO(dto, tobyUser);
+            entity = dao.updateEntity(entity);
+            generaljournalDetailsService.addGenDetalilsGlobal(dto.getDetailList(), tobyUser, entity.getId());
+        }
+
     }
 
     @Override
@@ -247,7 +265,6 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
 
     }
 
-    
     private List<GeneralJournalDTO> returnListDTO(List<GeneralJournal> list) {
         List<GeneralJournalDTO> dTOList = new ArrayList<>();
         for (GeneralJournal entity : list) {
@@ -290,7 +307,7 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
         if (entity.getGeneralType() != null) {
             SymbolDTO symbolDTO = new SymbolDTO();
             symbolDTO.setId(entity.getGeneralType().getId());
-            symbolDTO.setAccountId(entity.getGeneralType().getAccountId() != null ? entity.getGeneralType().getAccountId().getId() : null );
+            symbolDTO.setAccountId(entity.getGeneralType().getAccountId() != null ? entity.getGeneralType().getAccountId().getId() : null);
             symbolDTO.setName(entity.getGeneralType().getName());
             symbolDTO.setSerial(entity.getGeneralType().getSerial());
             symbolDTO.setGeneralSymbolId(entity.getGeneralType().getGeneralSymbolId() != null ? entity.getGeneralType().getGeneralSymbolId().getId() : null);

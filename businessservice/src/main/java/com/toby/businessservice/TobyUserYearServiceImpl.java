@@ -119,7 +119,10 @@ public class TobyUserYearServiceImpl implements TobyUserYearService {
             for (TobyUserYear tobyUserYear : tobyUserYearList) {
                 if (!glYearMap.containsKey(tobyUserYear.getYearId().getId())) {
                     glYearMap.put(tobyUserYear.getYearId().getId(), tobyUserYear.getYearId());
-                    yearList.add(tobyUserYear.getYearId());
+                    GlYear glYearNew = new GlYear();
+                    glYearNew.setId(tobyUserYear.getYearId().getId());
+                    glYearNew.setName(tobyUserYear.getYearId().getName());
+                    yearList.add(glYearNew);
                 }
             }
         }

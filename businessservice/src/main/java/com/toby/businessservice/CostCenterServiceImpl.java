@@ -463,5 +463,17 @@ public class CostCenterServiceImpl implements CostCenterService {
 
         return dTO;
     }
+    
+    @Override
+    public Map<Integer,Integer> getBranchCostCentersByMap(Integer branchId) {
+        Map<Integer,Integer> map = new HashMap<>();
+        Map<String, Object> params = new HashMap();
+        params.put("branchId", branchId);
+        List<CostCenter> list =  dao.findListByQuery("SELECT cs FROM CostCenter cs WHERE cs.branchId.id=:branchId ", params);
+        for(CostCenter costCenter : list){
+            map.put(costCenter.getCode(), costCenter.getId());
+        }
+        return map;
+    }
 
 }

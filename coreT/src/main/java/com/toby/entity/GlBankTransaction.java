@@ -119,6 +119,9 @@ public class GlBankTransaction extends BaseEntity {
     private Integer documentSerial;
     @Transient
     private Boolean dublara = Boolean.FALSE;
+    @JoinColumn(name = "glAccount_id", referencedColumnName = "id")
+    @ManyToOne
+    private GlAccount glAccountId;
 
     public GlBankTransaction() {
     }
@@ -415,6 +418,20 @@ public class GlBankTransaction extends BaseEntity {
      */
     public void setGallaryId(InvInventory gallaryId) {
         this.gallaryId = gallaryId;
+    }
+
+    /**
+     * @return the glAccountId
+     */
+    public GlAccount getGlAccountId() {
+        return glAccountId;
+    }
+
+    /**
+     * @param glAccountId the glAccountId to set
+     */
+    public void setGlAccountId(GlAccount glAccountId) {
+        this.glAccountId = glAccountId;
     }
 
 }

@@ -72,7 +72,7 @@ public class AutoComplete1 extends Basic {
     private ProGroupService proGroupService;
     @EJB
     private OfferCompanyService offerCompanyService;
-    
+
     private Integer branchId;
     private ProDetailTypeDTOConverter proDetailTypeDTOConverter;
     private InvOrganizationSiteDTOConverter organizationSiteDTOConvertor;
@@ -143,7 +143,7 @@ public class AutoComplete1 extends Basic {
 
     public List<InvOrganizationSiteDTO> completeCustomerFrom(String query) {
         List<InvOrganizationSiteDTO> invOrganizationSiteDTOList = new ArrayList<>();
-        invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getBranchId(), Boolean.TRUE, 0, query,null);
+        invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getBranchId(), Boolean.TRUE, 0, query, null);
         organizationSiteDTOConvertor = new InvOrganizationSiteDTOConverter(invOrganizationSiteDTOList);
         return invOrganizationSiteDTOList;
 
@@ -157,15 +157,28 @@ public class AutoComplete1 extends Basic {
     }
 
     public List<ItemsBarcodesDetailsView> completeItemsBarcodesDetailsView(String query) {
-        List<ItemsBarcodesDetailsView> autoCompleteInvItem;
-        autoCompleteInvItem = autoCompleteService.autoCompleteItemsBarcodesDetailsViewBranchId(getBranchId(), query);
-        setItemsBarcodesDetailsViewConverter(new ItemsBarcodesDetailsViewConverter(autoCompleteInvItem));
-        return autoCompleteInvItem;
+        if (query != null && !query.trim().isEmpty()) {
+            List<ItemsBarcodesDetailsView> autoCompleteInvItem;
+            autoCompleteInvItem = autoCompleteService.autoCompleteItemsBarcodesDetailsViewBranchId(getBranchId(), 0, query);
+            setItemsBarcodesDetailsViewConverter(new ItemsBarcodesDetailsViewConverter(autoCompleteInvItem));
+            return autoCompleteInvItem;
+        }
+        return null;
+    }
+
+    public List<ItemsBarcodesDetailsView> completeItemsBarcodesDetailsViewCode(String query) {
+        if (query != null && !query.trim().isEmpty()) {
+            List<ItemsBarcodesDetailsView> autoCompleteInvItem;
+            autoCompleteInvItem = autoCompleteService.autoCompleteItemsBarcodesDetailsViewBranchId(getBranchId(), 1, query);
+            setItemsBarcodesDetailsViewConverter(new ItemsBarcodesDetailsViewConverter(autoCompleteInvItem));
+            return autoCompleteInvItem;
+        }
+        return null;
     }
 
     public List<InvOrganizationSiteDTO> completeCustomerTo(String query) {
         List<InvOrganizationSiteDTO> invOrganizationSiteDTOList = new ArrayList<>();
-        invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getBranchId(), Boolean.TRUE, 0, query,null);
+        invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getBranchId(), Boolean.TRUE, 0, query, null);
         organizationSiteDTOConvertor = new InvOrganizationSiteDTOConverter(invOrganizationSiteDTOList);
         return invOrganizationSiteDTOList;
 
@@ -173,7 +186,7 @@ public class AutoComplete1 extends Basic {
 
     public List<InvOrganizationSiteDTO> completeSupplierFrom(String query) {
         List<InvOrganizationSiteDTO> invOrganizationSiteDTOList;
-        invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getBranchId(), Boolean.TRUE, 1, query,null);
+        invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getBranchId(), Boolean.TRUE, 1, query, null);
         setSupplierConvertorFrom(new InvOrganizationSiteDTOConverter(invOrganizationSiteDTOList));
         return invOrganizationSiteDTOList;
 
@@ -181,7 +194,7 @@ public class AutoComplete1 extends Basic {
 
     public List<InvOrganizationSiteDTO> completeSupplierTo(String query) {
         List<InvOrganizationSiteDTO> invOrganizationSiteDTOList;
-        invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getBranchId(), Boolean.TRUE, 1, query,null);
+        invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getBranchId(), Boolean.TRUE, 1, query, null);
         setOrganizationSiteDTOConvertor(new InvOrganizationSiteDTOConverter(invOrganizationSiteDTOList));
         return invOrganizationSiteDTOList;
 
@@ -189,7 +202,7 @@ public class AutoComplete1 extends Basic {
 
     public List<InvOrganizationSiteDTO> completeCustomerAndSupplierFrom(String query) {
         List<InvOrganizationSiteDTO> invOrganizationSiteDTOList = new ArrayList<>();
-        invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getBranchId(), Boolean.TRUE, 2, query,null);
+        invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getBranchId(), Boolean.TRUE, 2, query, null);
         organizationSiteDTOConvertor = new InvOrganizationSiteDTOConverter(invOrganizationSiteDTOList);
         return invOrganizationSiteDTOList;
 
@@ -197,7 +210,7 @@ public class AutoComplete1 extends Basic {
 
     public List<InvOrganizationSiteDTO> completeCustomerAndSupplierTo(String query) {
         List<InvOrganizationSiteDTO> invOrganizationSiteDTOList = new ArrayList<>();
-        invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getBranchId(), Boolean.TRUE, 2, query,null);
+        invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getBranchId(), Boolean.TRUE, 2, query, null);
         organizationSiteDTOConvertor = new InvOrganizationSiteDTOConverter(invOrganizationSiteDTOList);
         return invOrganizationSiteDTOList;
 
@@ -213,7 +226,7 @@ public class AutoComplete1 extends Basic {
 
     public List<InvOrganizationSiteDTO> completeContractorFrom(String query) {
         List<InvOrganizationSiteDTO> invOrganizationSiteDTOList = new ArrayList<>();
-        invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getBranchId(), Boolean.TRUE, 4, query,null);
+        invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getBranchId(), Boolean.TRUE, 4, query, null);
         organizationSiteDTOConvertor = new InvOrganizationSiteDTOConverter(invOrganizationSiteDTOList);
         return invOrganizationSiteDTOList;
 
@@ -221,7 +234,7 @@ public class AutoComplete1 extends Basic {
 
     public List<InvOrganizationSiteDTO> completeContractorTo(String query) {
         List<InvOrganizationSiteDTO> invOrganizationSiteDTOList = new ArrayList<>();
-        invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getBranchId(), Boolean.TRUE, 4, query,null);
+        invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getBranchId(), Boolean.TRUE, 4, query, null);
         organizationSiteDTOConvertor = new InvOrganizationSiteDTOConverter(invOrganizationSiteDTOList);
         return invOrganizationSiteDTOList;
 
@@ -299,7 +312,7 @@ public class AutoComplete1 extends Basic {
 
     public List<ProProductionStagesDTO> completeProProductionStagesDTO(String query) {
         List<ProProductionStagesDTO> proProductionStagesDTOList = new ArrayList<>();
-        proProductionStagesDTOList = proProductionStagesService.getAllProproductionStages(getUserData().getUser(),getUserData().getUserBranch().getId());
+        proProductionStagesDTOList = proProductionStagesService.getAllProproductionStages(getUserData().getUser(), getUserData().getUserBranch().getId());
         setProProductionStagesDTOConverter(new ProProductionStagesDTOConverter(proProductionStagesDTOList));
         return proProductionStagesDTOList;
     }
@@ -310,7 +323,7 @@ public class AutoComplete1 extends Basic {
         setProGroupDTOConverter(new ProGroupDTOConverter(proGroups));
         return proGroups;
     }
-    
+
     public List<OfferCompanyDTO> completeOfferCompany(String query) {
         List<OfferCompanyDTO> offerCompanyDTOList = new ArrayList<>();
         offerCompanyDTOList = offerCompanyService.getALLOfferCompanyByBranchId(getUserData().getUser());
@@ -447,7 +460,7 @@ public class AutoComplete1 extends Basic {
                 }
 
                 code = glBankFilter.getCode();
-                if (code != null ) {
+                if (code != null) {
                     if (!filteredGlBanks.contains(glBankFilter)) {
                         filteredGlBanks.add(glBankFilter);
                     }

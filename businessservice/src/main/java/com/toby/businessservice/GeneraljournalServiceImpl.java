@@ -51,7 +51,7 @@ public class GeneraljournalServiceImpl implements GeneraljournalService {
     private SymbolService symbolService;
     
     @Override
-    public synchronized GeneralJournal addGeneralJournalGlobal(GlYear yearSelection , Integer specialDocumentsTypes ,Integer serial,Date date ,String remark,TobyUser tobyUser) {
+    public synchronized GeneralJournal addGeneralJournalGlobal(Integer yearSelectionId , Integer specialDocumentsTypes ,Integer serial,Date date ,String remark,TobyUser tobyUser) {
         
         GeneralJournal generalJournal = new GeneralJournal();
         generalJournal.setGeneralStatement(remark);
@@ -59,13 +59,16 @@ public class GeneraljournalServiceImpl implements GeneraljournalService {
         generalJournal.setGeneralDecument(serial);
         generalJournal.setPost_flag(true);
         Symbol symbol = symbolService.getSpecialDocumentsTypes(specialDocumentsTypes);
-        generalJournal.setGlYear(yearSelection);
+        GlYear glYear = new GlYear();
+        glYear.setId(yearSelectionId);
+        generalJournal.setGlYear(glYear);
         generalJournal.setGeneralType(symbol != null ? symbol : null);
         generalJournal.setBranchId(tobyUser.getBranchId());
         generalJournal.setCompanyId(tobyUser.getCompanyId());
         generalJournal.setCreatedBy(tobyUser);  
+        generalJournal.setCreationDate(new Date());
         Map<String, Object> params = new HashMap<>();
-        params.put("glYear",yearSelection == null ? null : yearSelection.getId());
+        params.put("glYear",yearSelectionId == null ? null : yearSelectionId);
          Integer max = 0;
         synchronized (max) {
             try {
@@ -84,6 +87,10 @@ public class GeneraljournalServiceImpl implements GeneraljournalService {
         
         return dao.updateEntity(generalJournal);
     }
+   
+    
+    
+    
     @Override
     public synchronized GeneralJournal addGeneralJournal(GeneralJournal generalJournal) {
         Map<String, Object> params = new HashMap<>();

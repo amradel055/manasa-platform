@@ -44,5 +44,7 @@ public interface GeneraljournalServiceDTO {
     
     public void addGeneralJournalDTOForCorrectence(List<GeneralJournalDTO> generalJournals,TobyUser tobyUser); 
     
+    public void addGeneralJournalDTOWithDetail(List<GeneralJournalDTO> list, TobyUser tobyUser);
+    
     
 }

@@ -40,7 +40,7 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
     @EJB
     private GenericDAO dao;
     private EntityManager em;
-    private BigDecimal value ;
+    private BigDecimal value;
     private Map<Integer, BigDecimal> balance = new HashMap<>();
     private Map<Integer, BigDecimal> openingBalance = new HashMap<>();
     GlBankDTO bankDTOTo = new GlBankDTO();
@@ -55,9 +55,10 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
     private GlBankService bankService;
 
     @Override
-    public GlBankTransaction addGlBankTransaction(GlBankTransaction glBankTransaction, List<GlBankTransactionDetail> glBankTransactionDetailList, List<GlBankTransactionDetail> glBankTransactionDetailListDeleted, Integer companyId) {
+    public GlBankTransaction addGlBankTransaction(GlBankTransaction glBankTransaction, List<GlBankTransactionDetail> glBankTransactionDetailList,
+            List<GlBankTransactionDetail> glBankTransactionDetailListDeleted, Integer companyId, TobyUser tobyUser) {
 
-        addingForGlBank(glBankTransaction, glBankTransactionDetailListDeleted, glBankTransactionDetailList);
+        addingForGlBank(glBankTransaction, glBankTransactionDetailListDeleted, glBankTransactionDetailList, tobyUser);
         if (glBankTransaction.getTransactionType() != null && glBankTransaction.getTransactionType() == 1) {
 
             AccountsSystemSettings accountsSystemSettings = new AccountsSystemSettings();
@@ -70,7 +71,8 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
         return glBankTransaction;
     }
 
-    public void addingForGlBank(GlBankTransaction glBankTransaction, List<GlBankTransactionDetail> glBankTransactionDetailListDeleted, List<GlBankTransactionDetail> glBankTransactionDetailList) {
+    public void addingForGlBank(GlBankTransaction glBankTransaction, List<GlBankTransactionDetail> glBankTransactionDetailListDeleted,
+            List<GlBankTransactionDetail> glBankTransactionDetailList, TobyUser tobyUser) {
         if (glBankTransaction.getId() != null) {
             dao.updateEntity(glBankTransaction);
         } else {
@@ -96,10 +98,10 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
             glBankTransactionDetail.setGlBankTransactionId(glBankTransaction);
 
             if (glBankTransactionDetail.getId() != null) {
-                glBankTransactionDetailsService.updateGlBankTransactionDetails(glBankTransactionDetail);
+                glBankTransactionDetailsService.updateGlBankTransactionDetails(glBankTransactionDetail, tobyUser);
             } else {
                 glBankTransactionDetail.setSerial(maxSerial);
-                glBankTransactionDetailsService.addGlBankTransactionDetails(glBankTransactionDetail);
+                glBankTransactionDetailsService.updateGlBankTransactionDetails(glBankTransactionDetail, tobyUser);
                 maxSerial++;
             }
         }
@@ -156,22 +158,22 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
     }
 
     @Override
-    public GlBankTransaction addOneGlBankTransaction(GlBankTransaction glBankTransaction, GlBankTransactionDetail bankTransactionDetail) {
+    public GlBankTransaction addOneGlBankTransaction(GlBankTransaction glBankTransaction, GlBankTransactionDetail bankTransactionDetail, TobyUser tobyUser) {
         if (glBankTransaction.getId() != null) {
             glBankTransaction = dao.updateEntity(glBankTransaction);
         } else {
 
             glBankTransaction.setSerial(getMaxSerail(glBankTransaction));
-            dao.saveEntity(glBankTransaction);
+            glBankTransaction = dao.updateEntity(glBankTransaction);
         }
 
         bankTransactionDetail.setGlBankTransactionId(glBankTransaction);
-        glBankTransactionDetailsService.updateGlBankTransactionDetails(bankTransactionDetail);
+        glBankTransactionDetailsService.updateGlBankTransactionDetails(bankTransactionDetail, tobyUser);
         return glBankTransaction;
     }
 
     @Override
-    public GlBankTransaction findGlBankTransactionSettlmentBySerial(Integer branchId,Integer serial,Integer transactionType) {
+    public GlBankTransaction findGlBankTransactionSettlmentBySerial(Integer branchId, Integer serial, Integer transactionType) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         params.put("transactionType", transactionType);
@@ -179,6 +181,7 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
         List<GlBankTransaction> glBankTransactionList = dao.findListByQuery("SELECT e FROM GlBankTransaction e WHERE e.serial = :serial AND e.branchId.id = :branchId AND e.transactionType =:transactionType order by e.serial DESC ", params);
         return (glBankTransactionList == null || glBankTransactionList.isEmpty()) ? null : glBankTransactionList.get(0);
     }
+
     @Override
     public List<GlBankTransaction> getALLGlBankTransactionSettlmentByBranchId(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
@@ -222,8 +225,8 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
     }
 
     @Override
-    public GlBankTransaction addGlBankTransactionForInstallment(GlBankTransaction glBankTransaction, List<GlBankTransactionDetail> glBankTransactionDetailList, List<GlBankTransactionDetail> glBankTransactionDetailListDeleted) {
-        addingForGlBank(glBankTransaction, glBankTransactionDetailListDeleted, glBankTransactionDetailList);
+    public GlBankTransaction addGlBankTransactionForInstallment(GlBankTransaction glBankTransaction, List<GlBankTransactionDetail> glBankTransactionDetailList, List<GlBankTransactionDetail> glBankTransactionDetailListDeleted, TobyUser tobyUser) {
+        addingForGlBank(glBankTransaction, glBankTransactionDetailListDeleted, glBankTransactionDetailList, tobyUser);
         /*if (glBankTransaction.getInstallmentId() != null) {
          InstContractDetail contractDetail = instContractDetailsService.findInstContractDetailsById(glBankTransaction.getInstallmentId().getId());
          contractDetail.setStatus(glBankTransaction.getFullPayment());
@@ -253,7 +256,7 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
 
         return details;
     }
-    
+
     public void appendFilter(Map<String, Object> filters, Integer branchId, Integer userId, StringBuilder builder, Integer selectGlBankId, Integer transactionType) {
         filters.put("branchId", branchId);
         if (selectGlBankId != null) {
@@ -271,7 +274,6 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
             filters.remove("globalFilter");
         }
     }
-
 
     public void appendFilter(Map<String, Object> filters, Integer branchId, StringBuilder builder) {
         filters.put("branchId", branchId);
@@ -457,9 +459,15 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
 
         glBankTransaction = dao.updateEntity(glBankTransaction);
 
-        glBankTransactionDetailsService.addCashDetail(dTO, glBankTransaction.getId(), tobyUser);
+        Integer tarhil = glBankTransactionDetailsService.addCashDetail(dTO, glBankTransaction.getId(), glBankTransaction.getSerial(), tobyUser);
+
+        GeneralJournal generalJournal = new GeneralJournal();
+        generalJournal.setId(tarhil);
+        glBankTransaction.setGeneralJournalId(generalJournal);
+        glBankTransaction.setPostFlag(1);
+        dao.updateEntity(glBankTransaction);
     }
-    
+
     private GlBankTransactionDTO transfareTo(GlBankTransaction entity, Integer brankId) {
 
         if (entity.getTransactionType() != null && entity.getTransactionType() == 2) {
@@ -499,7 +507,6 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
         return null;
     }
 
-    
     public GlBankTransactionDTO mapTODTO(GlBankTransaction entity, Boolean needDetail, Integer brankId) {
 
         GlBankTransactionDTO dTO = initMapToDTO(entity, brankId);
@@ -510,8 +517,8 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
 
         return dTO;
     }
-    
-     private GlBankTransactionDTO initMapToDTO(GlBankTransaction entity, Integer brankId) {
+
+    private GlBankTransactionDTO initMapToDTO(GlBankTransaction entity, Integer brankId) {
 
         GlBankTransactionDTO dTO = new GlBankTransactionDTO();
 
@@ -564,7 +571,6 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
                 setValue(balance.get(entity.getDocumentSerial()));
             }
 
-            
             if (entity.getTransactionType() == 0) {
                 dTO.setTransactionTypeName("سند صرف	");
                 dTO.setCredit(entity.getValueLocal());
@@ -614,9 +620,6 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
         return dTO;
     }
 
-    
-    
-
     public GlBankTransaction mapToEntityFromInvSales(InvInvoiceDTO dTO, TobyUser tobyUser) {
         GlBankTransaction entity = new GlBankTransaction();
 
@@ -654,13 +657,12 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
 
         return entity;
     }
-    
 
     /**
      * @return the value
      */
     public BigDecimal getValue() {
-        if(value == null){
+        if (value == null) {
             value = BigDecimal.ZERO;
         }
         return value;
@@ -672,5 +674,5 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
     public void setValue(BigDecimal value) {
         this.value = value;
     }
-   
+
 }

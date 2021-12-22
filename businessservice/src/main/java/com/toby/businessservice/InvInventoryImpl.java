@@ -83,6 +83,11 @@ public class InvInventoryImpl implements InvInventoryService {
                 account.setId(dto.getRunningAccount().getId());
                 entity.setRunningAccount(account);
             }
+            if (dto.getCostAccount() != null) {
+                GlAccount account = new GlAccount();
+                account.setId(dto.getCostAccount().getId());
+                entity.setCostAccount(account);
+            }
 
             if (dto.getCreatedBy() != null) {
                 TobyUser user = new TobyUser();
@@ -138,13 +143,22 @@ public class InvInventoryImpl implements InvInventoryService {
             GlAccountDTO accountDTO = new GlAccountDTO();
             accountDTO.setId(entity.getAccountId().getId());
             accountDTO.setName(entity.getAccountId().getName());
+            accountDTO.setAccNumber(entity.getAccountId().getAccNumber());
             dto.setAccountId(accountDTO);
         }
         if (entity.getRunningAccount() != null) {
             GlAccountDTO accountDTO = new GlAccountDTO();
             accountDTO.setId(entity.getRunningAccount().getId());
             accountDTO.setName(entity.getRunningAccount().getName());
+            accountDTO.setAccNumber(entity.getRunningAccount().getAccNumber());
             dto.setRunningAccount(accountDTO);
+        }
+        if (entity.getCostAccount() != null) {
+            GlAccountDTO accountDTO = new GlAccountDTO();
+            accountDTO.setId(entity.getCostAccount().getId());
+            accountDTO.setName(entity.getCostAccount().getName());
+            accountDTO.setAccNumber(entity.getCostAccount().getAccNumber());
+            dto.setCostAccount(accountDTO);
         }
         if (entity.getAdminUnitId() != null) {
             GlAdminUnitDTO glAdminUnit = new GlAdminUnitDTO();

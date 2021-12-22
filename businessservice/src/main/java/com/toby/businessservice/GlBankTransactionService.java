@@ -21,9 +21,9 @@ import javax.ejb.Remote;
 @Remote
 public interface GlBankTransactionService {
 
-    public GlBankTransaction addGlBankTransaction(GlBankTransaction glBankTransaction, List<GlBankTransactionDetail> glBankTransactionDetailList, List<GlBankTransactionDetail> glBankTransactionDetailListDeleted,Integer companyId);
+    public GlBankTransaction addGlBankTransaction(GlBankTransaction glBankTransaction, List<GlBankTransactionDetail> glBankTransactionDetailList, List<GlBankTransactionDetail> glBankTransactionDetailListDeleted,Integer companyId,TobyUser tobyUser);
 
-    public GlBankTransaction addGlBankTransactionForInstallment(GlBankTransaction glBankTransaction, List<GlBankTransactionDetail> glBankTransactionDetailList, List<GlBankTransactionDetail> glBankTransactionDetailListDeleted);
+    public GlBankTransaction addGlBankTransactionForInstallment(GlBankTransaction glBankTransaction, List<GlBankTransactionDetail> glBankTransactionDetailList, List<GlBankTransactionDetail> glBankTransactionDetailListDeleted,TobyUser tobyUser);
 
     public void deleteGlBankTransaction(GlBankTransaction glBankTransaction);
     
@@ -41,7 +41,7 @@ public interface GlBankTransactionService {
 
     public GlBankTransaction findGlBankTransactionSettlmentBySerial(Integer branchId,Integer serial,Integer transactionType);
             
-    public GlBankTransaction addOneGlBankTransaction(GlBankTransaction glBankTransaction, GlBankTransactionDetail bankTransactionDetail);
+    public GlBankTransaction addOneGlBankTransaction(GlBankTransaction glBankTransaction, GlBankTransactionDetail bankTransactionDetail,TobyUser tobyUser);
 
     public Integer getMaxSerail(GlBankTransaction glBankTransaction);
 

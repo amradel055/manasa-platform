@@ -164,6 +164,7 @@ public class ItemsBarcodesDetailsView implements Serializable {
     }
 
     public BigDecimal getScrewing() {
+        screwing = BigDecimal.ONE;
         return screwing;
     }
 

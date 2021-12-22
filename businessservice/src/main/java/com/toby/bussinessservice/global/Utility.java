@@ -5,6 +5,8 @@
  */
 package com.toby.bussinessservice.global;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,5 +33,13 @@ public class Utility {
             return true;
         }
         return false;
+    }
+    
+    public static Date sumDateAndNumer(Date date , Integer number) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.add(Calendar.DAY_OF_MONTH, number);
+        date = c.getTime() ;
+         return date ;
     }
 }

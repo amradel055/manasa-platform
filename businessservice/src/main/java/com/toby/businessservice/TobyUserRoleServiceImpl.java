@@ -11,6 +11,7 @@ import com.toby.entity.GlBank;
 import com.toby.entity.GlYear;
 import com.toby.entity.InvInventory;
 import com.toby.entity.ProProductionStages;
+import com.toby.entity.TobyRole;
 import com.toby.entity.TobyUser;
 import com.toby.entity.TobyUserBank;
 import com.toby.entity.TobyUserInventory;
@@ -102,7 +103,27 @@ public class TobyUserRoleServiceImpl implements TobyUserRoleService {
         params.put("branchId", branchId);
         List<TobyUserRole> userRoles = dao.findListByQuery("SELECT u FROM TobyUserRole u "
                 + " WHERE u.branchId.id = :branchId", params);
+        List<TobyUserRole> userRolesNew = new ArrayList<>();
         for (TobyUserRole tobyUserRole : userRoles) {
+            TobyUserRole tobyUserRoleNew = new TobyUserRole();
+            tobyUserRoleNew.setId(tobyUserRole.getId());
+            tobyUserRoleNew.setCostAvarageUpdate(tobyUserRole.getCostAvarageUpdate());
+            tobyUserRoleNew.setSellPriceUpdate(tobyUserRole.getSellPriceUpdate());
+            TobyRole tobyRole = new TobyRole();
+            tobyRole.setId(tobyUserRole.getRoleId().getId());
+            tobyRole.setName(tobyUserRole.getRoleId().getName());
+            tobyUserRoleNew.setRoleId(tobyRole);
+            TobyUser tobyUser = new TobyUser();
+            tobyUser.setId(tobyUserRole.getUserId().getId());
+            tobyUserRoleNew.setUserId(tobyUser);
+            Branch branch = new Branch();
+            branch.setId(tobyUserRole.getBranchId().getId());
+            tobyUserRoleNew.setBranchId(branch);
+            userRolesNew.add(tobyUserRoleNew);
+            }
+        Integer x = 0 ;
+        for (TobyUserRole tobyUserRole : userRolesNew) {
+            System.err.println(x++);
             tobyUserRole.setGlYearList(tobyUserYearService.findYearByUserId(tobyUserRole.getUserId().getId(), tobyUserRole.getBranchId()));
             tobyUserRole.setGlBankList(tobyUserBankService.getAllBankListByUserAndBranch(tobyUserRole.getUserId().getId(), tobyUserRole.getBranchId().getId()));
             tobyUserRole.setInventoryList(tobyUserInventoryService.getAllInventroisByUserAndBranch(tobyUserRole.getUserId().getId(), tobyUserRole.getBranchId().getId(),0));

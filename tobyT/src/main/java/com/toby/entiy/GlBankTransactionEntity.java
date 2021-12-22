@@ -5,6 +5,7 @@
  */
 package com.toby.entiy;
 
+import com.toby.dto.GlAccountDTO;
 import com.toby.entity.GlBank;
 import com.toby.views.InstTransactionView;
 import java.math.BigDecimal;
@@ -50,6 +51,7 @@ public class GlBankTransactionEntity extends BaseEntity {
     private Integer serailParent;
     private String createdNameParent;
     private String createdByName;
+    private GlAccountDTO costAccount;
 
     public Date getDate() {
         return date;
@@ -394,6 +396,20 @@ public class GlBankTransactionEntity extends BaseEntity {
      */
     public void setInvoiceSerial(Integer invoiceSerial) {
         this.invoiceSerial = invoiceSerial;
+    }
+
+    /**
+     * @return the costAccount
+     */
+    public GlAccountDTO getCostAccount() {
+        return costAccount;
+    }
+
+    /**
+     * @param costAccount the costAccount to set
+     */
+    public void setCostAccount(GlAccountDTO costAccount) {
+        this.costAccount = costAccount;
     }
 
 }

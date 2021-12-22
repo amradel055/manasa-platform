@@ -33,7 +33,7 @@ import javax.ejb.Stateless;
 @Stateless
 public class GeneraljournalDetailsServiceImpl implements GeneraljournalDetailsService {
 
-    private Integer maxSerial;
+    private Integer maxSerial = 1;
     @EJB
     private GeneraljournalDetailsService detailsService;
     @EJB
@@ -119,11 +119,10 @@ public class GeneraljournalDetailsServiceImpl implements GeneraljournalDetailsSe
     }
 
     @Override
-    public List<GeneralJournalDetails> addGenDetalilsGlobal(List<GeneralJournalDetails> details, TobyUser tobyUser) {
+    public List<GeneralJournalDetails> addGenDetalilsGlobal(List<GeneralJournalDetails> details, TobyUser tobyUser, Integer generalJournalId) {
         List<GeneralJournalDetails> list = new ArrayList<>();
         GeneralJournalDetails gjd;
         if (details != null && !details.isEmpty()) {
-            findTheMaximumSerial(details);
             for (GeneralJournalDetails journalDetails : details) {
                 if (journalDetails.getCostCenterId() != null && journalDetails.getCostCenterId().getId() == -1) {
                     journalDetails.setCostCenterId(null);
@@ -136,6 +135,12 @@ public class GeneraljournalDetailsServiceImpl implements GeneraljournalDetailsSe
                 journalDetails.setBranchId(tobyUser.getBranchId());
                 journalDetails.setCreationDate(new Date());
                 journalDetails.setCreatedBy(tobyUser);
+
+                if (generalJournalId != null) {
+                    GeneralJournal generalJournal = new GeneralJournal();
+                    generalJournal.setId(generalJournalId);
+                    journalDetails.setGeneralJournalId(generalJournal);
+                }
 
                 gjd = dao.updateEntity(journalDetails);
                 list.add(gjd);

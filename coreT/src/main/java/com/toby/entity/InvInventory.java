@@ -27,13 +27,20 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "inv_inventory")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "InvInventory.findAll", query = "SELECT i FROM InvInventory i"),
-    @NamedQuery(name = "InvInventory.findById", query = "SELECT i FROM InvInventory i WHERE i.id = :id"),
-    @NamedQuery(name = "InvInventory.findByCode", query = "SELECT i FROM InvInventory i WHERE i.code = :code"),
-    @NamedQuery(name = "InvInventory.findByName", query = "SELECT i FROM InvInventory i WHERE i.name = :name"),
-    @NamedQuery(name = "InvInventory.findByTypeItem", query = "SELECT i FROM InvInventory i WHERE i.typeItem = :typeItem"),
-    @NamedQuery(name = "InvInventory.findBySellPriceType", query = "SELECT i FROM InvInventory i WHERE i.sellPriceType = :sellPriceType"),
-    @NamedQuery(name = "InvInventory.findByModificationDate", query = "SELECT i FROM InvInventory i WHERE i.modificationDate = :modificationDate"),
+    @NamedQuery(name = "InvInventory.findAll", query = "SELECT i FROM InvInventory i")
+    ,
+    @NamedQuery(name = "InvInventory.findById", query = "SELECT i FROM InvInventory i WHERE i.id = :id")
+    ,
+    @NamedQuery(name = "InvInventory.findByCode", query = "SELECT i FROM InvInventory i WHERE i.code = :code")
+    ,
+    @NamedQuery(name = "InvInventory.findByName", query = "SELECT i FROM InvInventory i WHERE i.name = :name")
+    ,
+    @NamedQuery(name = "InvInventory.findByTypeItem", query = "SELECT i FROM InvInventory i WHERE i.typeItem = :typeItem")
+    ,
+    @NamedQuery(name = "InvInventory.findBySellPriceType", query = "SELECT i FROM InvInventory i WHERE i.sellPriceType = :sellPriceType")
+    ,
+    @NamedQuery(name = "InvInventory.findByModificationDate", query = "SELECT i FROM InvInventory i WHERE i.modificationDate = :modificationDate")
+    ,
     @NamedQuery(name = "InvInventory.findByCreationDate", query = "SELECT i FROM InvInventory i WHERE i.creationDate = :creationDate")})
 public class InvInventory extends BaseEntity {
 
@@ -53,6 +60,9 @@ public class InvInventory extends BaseEntity {
     @JoinColumn(name = "running_account", referencedColumnName = "id")
     @ManyToOne
     private GlAccount runningAccount;
+    @JoinColumn(name = "cost_account", referencedColumnName = "id")
+    @ManyToOne
+    private GlAccount costAccount;
     @JoinColumn(name = "branch_id", referencedColumnName = "id")
     @ManyToOne
     private Branch branchId;
@@ -62,9 +72,9 @@ public class InvInventory extends BaseEntity {
     @JoinColumn(name = "admin_unit_id", referencedColumnName = "id")
     @ManyToOne
     private GlAdminUnit adminUnitId;
-     @Column(name = "inv_type")
-     private Integer invType;
-     @Column(name = "dariba_value")
+    @Column(name = "inv_type")
+    private Integer invType;
+    @Column(name = "dariba_value")
     private String daribaValue;
     @Column(name = "segil_value")
     private String segilValue;
@@ -272,5 +282,19 @@ public class InvInventory extends BaseEntity {
      */
     public void setSellerName(String sellerName) {
         this.sellerName = sellerName;
+    }
+
+    /**
+     * @return the costAccount
+     */
+    public GlAccount getCostAccount() {
+        return costAccount;
+    }
+
+    /**
+     * @param costAccount the costAccount to set
+     */
+    public void setCostAccount(GlAccount costAccount) {
+        this.costAccount = costAccount;
     }
 }

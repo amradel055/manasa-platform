@@ -27,6 +27,8 @@ public interface GlBankService {
     public GlBank addGlBank(GlBank glBank);
 
     public GlBank findGlBank(Integer id);
+    
+    public GlBankDTO findGlBankDTO(Integer id) ;
 
     public List<GlBank> getAllGlBankByCompanyId(Integer companyId);
 

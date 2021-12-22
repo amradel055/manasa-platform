@@ -130,7 +130,7 @@
                             <p:outputLabel style="width:85px" value="#{userData.userDDs['HANDLING']}"/>
                         </div>
                     </div>
-                    
+
                     <div class="ui-g-12 ui-xl-12">
 
                         <div class="ui-g-6 ui-xl-6">
@@ -140,6 +140,26 @@
                         </div>
                         <div class="ui-g-6 ui-xl-6">
                             <p:outputLabel style="width:85px" value="عمولة البنك"/>
+                        </div>
+                    </div>
+
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:autoComplete style="width: 85%" id="running_GlAccount_ID" 
+
+                                            dropdown="true"
+                                            converter="#{SettlementDeedFormMB.runningAccountDTOConverter}"
+                                            value="#{SettlementDeedFormMB.glBankTransactionEntity.costAccount}"
+                                            var="p"
+                                            itemLabel="#{p}" 
+                                            itemValue="#{p}" 
+                                            forceSelection="false" 
+                                            completeMethod="#{SettlementDeedFormMB.completeRunningGlAccount}" >
+                            </p:autoComplete>
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel style="width: 65px" value="رقم الحساب الدائن"/>
+
                         </div>
                     </div>
                 </div>
@@ -169,7 +189,7 @@
                             </p:fieldset>
                         </h:panelGroup>
                     </div>
-                  
+
                     <div class="ui-g-12 ui-xl-12">
                         <div class="ui-g-6 ui-xl-6">
                             <p:inputText style="width: 38%!important" id="notes"

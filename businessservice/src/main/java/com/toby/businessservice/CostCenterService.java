@@ -10,6 +10,7 @@ import com.toby.dto.CostCenterDTO;
 import com.toby.entity.CostCenter;
 import com.toby.entity.TobyUser;
 import java.util.List;
+import java.util.Map;
 import javax.ejb.Remote;
 
 /**
@@ -62,4 +63,6 @@ public interface CostCenterService {
     public List<CostCenterDTO> getAllCostCenterDTOList(TobyUser tobyUser);
     
     public List<CostCenterDTO> getActiveSubCostCentersByBranchDTO(Integer branchId);
+    
+    public Map<Integer,Integer> getBranchCostCentersByMap(Integer branchId);
 }

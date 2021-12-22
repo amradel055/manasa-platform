@@ -252,7 +252,7 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
             validateSave();
             if (saveValidation) {
                 glBankTransaction.setPostFlag(0);
-                glBankTransaction = bankTransactionService.addOneGlBankTransaction(glBankTransaction, glBankTransactionDetail);
+                glBankTransaction = bankTransactionService.addOneGlBankTransaction(glBankTransaction, glBankTransactionDetail,getUserData().getUser());
                 return exit();
             }
             return "";

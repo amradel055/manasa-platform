@@ -22,7 +22,7 @@ public interface GlBankTransactionDetailsService {
 
     public void deleteGlBankTransactionDetails(GlBankTransactionDetail glBankTransactionDetail);
 
-    public GlBankTransactionDetail updateGlBankTransactionDetails(GlBankTransactionDetail glBankTransactionDetail);
+    public GlBankTransactionDetail updateGlBankTransactionDetails(GlBankTransactionDetail glBankTransactionDetail,TobyUser tobyUser);
 
     public List<GlBankTransactionDetail> getAllGlBankTransactionDetailsByGlBankTransactionId(Integer glBankTransactionId);
 
@@ -34,6 +34,8 @@ public interface GlBankTransactionDetailsService {
 
     public Integer finMaxSerial(Integer glBankTransactionId);
     
-    public void addCashDetail(InvInvoiceDTO dTO, Integer glBankTransactionId, TobyUser tobyUser);
+    public Integer addCashDetail(InvInvoiceDTO dTO, Integer glBankTransactionId, Integer glBankTransactionSerial, TobyUser tobyUser);
+    
+    public void tarhilOne(TobyUser tobyUser);
 
 }

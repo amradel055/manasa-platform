@@ -587,18 +587,19 @@ public class GlAccountServiceImpl implements GlAccountService {
     
     
 
-    public GlAccountDTO mapToDTO(GlAccount glAccount) {
+    public GlAccountDTO mapToDTO(GlAccount entity) {
         
         GlAccountDTO glAccountDTO = new GlAccountDTO();
-        glAccountDTO.setCreatedBy(glAccount.getCreatedBy() != null ? glAccount.getCreatedBy().getId() : null);
-        glAccountDTO.setCreatedDate(glAccount.getCreationDate());
-        glAccountDTO.setBranchId(glAccount.getBranchId() !=null ? glAccount.getBranchId().getId() : null);
-        glAccountDTO.setId(glAccount.getId());
-        glAccountDTO.setCompanyId(glAccount.getCompanyId() !=null ? glAccount.getCompanyId().getId() : null );
-        glAccountDTO.setMarkDisable(glAccount.getMarkDisable());
-        glAccountDTO.setMarkEdit(glAccount.getMarkEdit());
-        glAccountDTO.setName(glAccount.getName());
-        glAccountDTO.setMsg(glAccount.getMsg());
+        glAccountDTO.setCreatedBy(entity.getCreatedBy() != null ? entity.getCreatedBy().getId() : null);
+        glAccountDTO.setCreatedDate(entity.getCreationDate());
+        glAccountDTO.setBranchId(entity.getBranchId() !=null ? entity.getBranchId().getId() : null);
+        glAccountDTO.setId(entity.getId());
+        glAccountDTO.setCompanyId(entity.getCompanyId() !=null ? entity.getCompanyId().getId() : null );
+        glAccountDTO.setMarkDisable(entity.getMarkDisable());
+        glAccountDTO.setMarkEdit(entity.getMarkEdit());
+        glAccountDTO.setName(entity.getName());
+        glAccountDTO.setMsg(entity.getMsg());
+        glAccountDTO.setAccNumber(entity.getAccNumber());
         
         return glAccountDTO;
     }

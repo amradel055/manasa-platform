@@ -42,6 +42,9 @@ public class TobyUserInventoryServiceImpl implements TobyUserInventoryService {
         List<InvInventory> inventoryList = new ArrayList<>();
 
         for (TobyUserInventory tobyUserBank : tobyUserBankList) {
+            InvInventory inventoryNew = new InvInventory();
+            inventoryNew.setId(tobyUserBank.getInvInventoryId().getId());
+            inventoryNew.setName(tobyUserBank.getInvInventoryId().getName());            
             inventoryList.add(tobyUserBank.getInvInventoryId() != null ? tobyUserBank.getInvInventoryId() : null);
         }
 

@@ -833,7 +833,7 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
 //                    glBankTransaction.setRate(glBankTransactionEntity.getRate() != null ? glBankTransactionEntity.getRate() : BigDecimal.ONE);
                     glBankTransaction.setValueLocal(glBankTransaction.getValue());
                     glBankTransaction.setRate(BigDecimal.ONE);
-//                    glBankTransaction.setGlYear(getGlYearSelection().getYear() != null ? getGlYearSelection().getYear() : null);
+                    glBankTransaction.setGlYear(getGlYearSelection().getYear() != null ? getGlYearSelection().getId() : null);
                     if (glBankTransactionEntity.getPaymentType() == 1) {
                         glBankTransaction.setChequeDate(glBankTransactionEntity.getChequeDate() != null ? glBankTransactionEntity.getChequeDate() : new Date());
                         glBankTransaction.setChequeNumber(glBankTransactionEntity.getChequeNumber() != null ? glBankTransactionEntity.getChequeNumber() : null);
@@ -942,12 +942,12 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
                         glBankTransactionDetailsUpdatedList.add(bankTransactionDetail);
                         GlBankTransaction bankTransaction;
                         if (installment != null && installment) {
-                            bankTransaction = glBankTransactionService.addGlBankTransactionForInstallment(glBankTransaction, glBankTransactionDetailsUpdatedList, null);
+                            bankTransaction = glBankTransactionService.addGlBankTransactionForInstallment(glBankTransaction, glBankTransactionDetailsUpdatedList, null,getUserData().getUser());
                             if (sendSms) {
                                 sendSms();
                             }
                         } else {
-                            bankTransaction = glBankTransactionService.addGlBankTransaction(glBankTransaction, glBankTransactionDetailsUpdatedList, new ArrayList<>(), companyId);
+                            bankTransaction = glBankTransactionService.addGlBankTransaction(glBankTransaction, glBankTransactionDetailsUpdatedList, new ArrayList<>(), companyId,getUserData().getUser());
                         }
                         if (bankTransaction != null && bankTransaction.getId() != null && printAndSave) {
                             exportPDF(null);
@@ -967,11 +967,11 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
                             if (getGlBankTransactionEntity().getGlBank().getGallaryId() != null && 
                                     getGlBankTransactionEntity().getGlBank().getGallaryId().getInvName() != null && 
                                     getGlBankTransactionEntity().getGlBank().getGallaryId().getInvName() == 0) {
-                                sendSms(getGlBankTransactionDetailEntity().getInvOrganizationSite().getMobile(), "التوبى العالمى", message.toString(), "20099319", "0564933202");
+//                                sendSms(getGlBankTransactionDetailEntity().getInvOrganizationSite().getMobile(), "التوبى العالمى", message.toString(), "20099319", "0564933202");
                             } else if (getGlBankTransactionEntity().getGlBank().getGallaryId() != null && 
                                     getGlBankTransactionEntity().getGlBank().getGallaryId().getInvName() != null && 
                                     getGlBankTransactionEntity().getGlBank().getGallaryId().getInvName() == 1) {
-                                sendSms(getGlBankTransactionDetailEntity().getInvOrganizationSite().getMobile(), "التوبى العالمى", message.toString(), "20099320", "Royal@e12z");
+//                                sendSms(getGlBankTransactionDetailEntity().getInvOrganizationSite().getMobile(), "التوبى العالمى", message.toString(), "20099320", "Royal@e12z");
                             }
                         }
                         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, userDDs.get("INFO"), userDDs.get("SAVED")));

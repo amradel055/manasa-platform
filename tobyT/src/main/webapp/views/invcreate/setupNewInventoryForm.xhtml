@@ -156,6 +156,25 @@
 
                         </div>
                     </div>
+                    
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:autoComplete style="width: 85%" id="running_GlAccount_ID2" 
+
+                                            dropdown="true"
+                                            converter="#{setupNewInventoryFormMB.costAccountDTOConverter}"
+                                            value="#{setupNewInventoryFormMB.invInventoryDTO.costAccount}"
+                                            var="p"
+                                            itemLabel="#{p}" 
+                                            itemValue="#{p}" 
+                                            forceSelection="false" 
+                                            completeMethod="#{setupNewInventoryFormMB.completeCostGlAccount}" >
+                            </p:autoComplete>
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel style="width: 65px" value="رقم حساب المخزون"/>
+                        </div>
+                    </div>
                 </div>
                 <h:panelGrid id="firstSegment" columns="2"  class="col-md-12" cellspacing="10" cellpadding="0" >
 

@@ -214,5 +214,18 @@ public class GlAccountServiceImplDTO implements GlAccountServiceDTO {
         }
         return null;
     }
+    
+    @Override
+    public Map<Integer,Integer> getBranchGLAccountsByMap(Integer branchId) {
+        Map<Integer,Integer> map = new HashMap<>();
+        Map<String, Object> params = new HashMap();
+        params.put("branchId", branchId);
+        List<GlAccount> list = new ArrayList<>();
+        list = dao.findListByQuery("SELECT acc FROM GlAccount acc WHERE acc.branchId.id=:branchId ", params);
+        for(GlAccount account : list){
+            map.put(account.getAccNumber(), account.getId());
+        }
+        return map;
+    }
 
 }

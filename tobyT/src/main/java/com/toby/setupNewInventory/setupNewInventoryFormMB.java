@@ -39,13 +39,17 @@ public class setupNewInventoryFormMB extends BaseFormBean implements Serializabl
 
     private InvInventoryDTO invInventoryDTO;
     private List<GlAccountDTO> glAccountDTOList;
-    private List<GlAccountDTO> glRunningAccountDTOList;
+    
+    private List<GlAccountDTO> glCostAccountDTOList;
     private List<GlAdminUnitDTO> adminUnitDTOList;
     private List<CostCenterDTO> costCenterDTOList;
     private CostCenterDTOConverter costCenterDTOConverter;
     private GlAdminUnitDTOConverter adminUnitDTOConverter;
     private GlAccountDTOConverter accountDTOConverter;
+    private List<GlAccountDTO> glRunningAccountDTOList;
     private GlAccountDTOConverter runningAccountDTOConverter;
+    private GlAccountDTOConverter costAccountDTOConverter;
+    
     private Boolean showGeneralMessage;
 
     @EJB
@@ -120,6 +124,10 @@ public class setupNewInventoryFormMB extends BaseFormBean implements Serializabl
     public List<GlAccountDTO> completeRunningGlAccount(String query) {
         getGlRunningAccountDTOList();
         return AutoComplete.completeGlAccount(query, getGlRunningAccountDTOList(), runningAccountDTOConverter);
+    }
+    public List<GlAccountDTO> completeCostGlAccount(String query) {
+        getGlCostAccountDTOList();
+        return AutoComplete.completeGlAccount(query, getGlCostAccountDTOList(), costAccountDTOConverter);
     }
 
     public boolean validateCode() {
@@ -369,5 +377,37 @@ public class setupNewInventoryFormMB extends BaseFormBean implements Serializabl
      */
     public void setGlRunningAccountDTOList(List<GlAccountDTO> glRunningAccountDTOList) {
         this.glRunningAccountDTOList = glRunningAccountDTOList;
+    }
+
+    /**
+     * @return the glCostAccountDTOList
+     */
+    public List<GlAccountDTO> getGlCostAccountDTOList() {
+        if (glCostAccountDTOList == null || glCostAccountDTOList.isEmpty()) {
+            glCostAccountDTOList = accountService.getBranchGLAccountDTOListActive(getUserData().getUser());
+            costAccountDTOConverter = new GlAccountDTOConverter(glCostAccountDTOList);
+        }
+        return glCostAccountDTOList;
+    }
+
+    /**
+     * @param glCostAccountDTOList the glCostAccountDTOList to set
+     */
+    public void setGlCostAccountDTOList(List<GlAccountDTO> glCostAccountDTOList) {
+        this.glCostAccountDTOList = glCostAccountDTOList;
+    }
+
+    /**
+     * @return the costAccountDTOConverter
+     */
+    public GlAccountDTOConverter getCostAccountDTOConverter() {
+        return costAccountDTOConverter;
+    }
+
+    /**
+     * @param costAccountDTOConverter the costAccountDTOConverter to set
+     */
+    public void setCostAccountDTOConverter(GlAccountDTOConverter costAccountDTOConverter) {
+        this.costAccountDTOConverter = costAccountDTOConverter;
     }
 }
