@@ -186,6 +186,8 @@ public class IReportServiceImpl implements IReportService {
                 } else {
                     if (invInvoiceDTO.getPrintType() != null && invInvoiceDTO.getPrintType() == 3) {
                         fillReport(prepareInvSalesReport(invInvoiceDTO, userData), userData.getReportPath() + "InvReceiptCashPerfun.jasper", invInvoiceDTO.getInvPurchaseInvoiceDetailList(), "pdf");
+                    } else if (invInvoiceDTO.getPrintType() != null && invInvoiceDTO.getPrintType() == 4) {
+                        fillReport(prepareInvSalesReport(invInvoiceDTO, userData), userData.getReportPath() + "InvReceiptCashJoomla.jasper", invInvoiceDTO.getInvPurchaseInvoiceDetailList(), "pdf");
                     } else {
                         fillReport(prepareInvSalesReport(invInvoiceDTO, userData), userData.getReportPath() + "InvReceiptCash.jasper", invInvoiceDTO.getInvPurchaseInvoiceDetailList(), "pdf");
                     }
@@ -508,6 +510,7 @@ public class IReportServiceImpl implements IReportService {
             hashMap.put("payedValue", invPurchaseInvoiceDTO.getPayed());
             hashMap.put("remainValue", invPurchaseInvoiceDTO.getRemain());
             hashMap.put("receiptNumberValue", invPurchaseInvoiceDTO.getSerial());
+            hashMap.put("clientTaxNumber", invPurchaseInvoiceDTO.getOrganizationSiteId().getTaxNumber());
             if (invPurchaseInvoiceDTO.getInvInventoryId() != null) {
                 hashMap.put("invName", invPurchaseInvoiceDTO.getInvInventoryId().getName());
             }
@@ -653,10 +656,11 @@ public class IReportServiceImpl implements IReportService {
             hashMap.put("supplierValue", invPurchaseInvoiceDTO.getOrganizationSiteId() != null ? invPurchaseInvoiceDTO.getOrganizationSiteId().getCode() : "");
             hashMap.put("supplierName", invPurchaseInvoiceDTO.getOrganizationSiteId() != null ? invPurchaseInvoiceDTO.getOrganizationSiteId().getName() : "");
             hashMap.put("supplierReceiptValue", invPurchaseInvoiceDTO.getSupplierInvoiceNumber());
+            hashMap.put("clientTaxNumber", invPurchaseInvoiceDTO.getOrganizationSiteId().getTaxNumber());
+
 //        hashMap.put("transportationSupplierValue", invPurchaseInvoiceEntity.get);
 //        hashMap.put("transportationSupplierName", "الصافي");
             hashMap.put("nolonValue", invPurchaseInvoiceDTO.getExtraCost());
-
             hashMap.put("discountValue", invPurchaseInvoiceDTO.getDiscount());
             if (invPurchaseInvoiceDTO.getDiscountType() != 0) {
                 hashMap.put("%", " % ");

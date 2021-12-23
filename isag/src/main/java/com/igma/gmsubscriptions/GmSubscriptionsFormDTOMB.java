@@ -8,14 +8,17 @@ package com.igma.gmsubscriptions;
 import org.apache.commons.codec.binary.Base64;
 import com.isag.businessservice.GmGlobalService;
 import com.isag.businessservice.GmItemService;
+import com.isag.businessservice.GmMovementService;
 import com.isag.businessservice.GmSubscriptionsService;
 import com.isag.businessservice.OrganizationSiteService;
 import com.isag.businessservice.ReportManagementService;
 import com.isag.bussinessservice.global.AutoCompleteService;
+import com.isag.bussinessservice.global.Utility;
 import com.isag.converter.GlBankDTOConverter;
 import com.isag.converter.InvOrganizationSiteDTOConverter;
 import com.isag.dto.GlBankDTO;
 import com.isag.dto.GmItemDTO;
+import com.isag.dto.GmMovementDTO;
 import com.isag.dto.GmSubscriptionsDTO;
 import com.isag.dto.GmSubscriptionsDetailDTO;
 import com.isag.dto.InvOrganizationSiteDTO;
@@ -73,11 +76,17 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
     @EJB
     private AutoCompleteService autoCompleteService;
     
+    @EJB
+    private GmMovementService gmMovementService;
+    
+    
     private BigDecimal remain;
     private String filename;
     private String file;
     private String host;
     private FileUploadController fileUploadController;
+    private GmMovementDTO gmMovement;
+    
    
     @Override
     @PostConstruct
@@ -97,7 +106,15 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
              getGmSubscriptionsDTO().setShowCustomerDate(Boolean.FALSE);
                 reset();
                 fillDefaultList();
-            } else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("editGmSubscriptions")) {
+            } 
+             if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("addGmMovement")) {
+             getGmSubscriptionsDTO().setShowCustomerDate(Boolean.FALSE);
+                reset();
+                fillDefaultList();
+                updateMovementdata();
+            } 
+            
+            else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("editGmSubscriptions")) {
                              getGmSubscriptionsDTO().setShowCustomerDate(Boolean.FALSE);
 
                 getGmSubscriptionsDTO().setIsEdit(Boolean.TRUE);
@@ -144,6 +161,13 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
         
     }
     
+      public void updateMovementdata() {
+      getGmMovement().getCustomerIdFrom().setId((Integer) getContext().getSessionMap().get("gmCustomerIdSelected"));
+      getGmMovement().setSubscriptionIdFrom(gmSubscriptionsService.getValidGmSubscriptionsDTOByCustomerId(getGmMovement().getCustomerIdFrom().getId()));
+      getGmMovement().setCustomerIdFrom(organizationSiteService.findOrganizationSiteDTOById(getGmMovement().getCustomerIdFrom().getId()));
+      getGmMovement().setDays(Utility.calcDaysBetween(getGmMovement().getSubscriptionIdFrom().getEndDate() , getGmMovement().getDate()));
+    }
+    
     public void fillDefaultList() {
         getInvOrganizationSiteDTOList();
         getGlBankList();
@@ -156,6 +180,14 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
         setGmSubscriptionsDTO(gmSubscriptionsService.save(getGmSubscriptionsDTO(), getUserData().getUser()));
         msgSave(getGmSubscriptionsDTO().getMsg());
         
+        return "";
+    }
+    
+   
+    public String saveMovment() {
+        
+       gmMovementService.save(getGmMovement(), getUserData().getUser());
+      
         return "";
     }
     
@@ -528,6 +560,37 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
      */
     public void setGmItemDTOSelected(GmItemDTO gmItemDTOSelected) {
         this.gmItemDTOSelected = gmItemDTOSelected;
+    }
+
+    /**
+     * @return the gmMovementService
+     */
+    public GmMovementService getGmMovementService() {
+        return gmMovementService;
+    }
+
+    /**
+     * @param gmMovementService the gmMovementService to set
+     */
+    public void setGmMovementService(GmMovementService gmMovementService) {
+        this.gmMovementService = gmMovementService;
+    }
+
+    /**
+     * @return the gmMovement
+     */
+    public GmMovementDTO getGmMovement() {
+        if (gmMovement == null){
+         gmMovement = new GmMovementDTO();
+        }
+        return gmMovement;
+    }
+
+    /**
+     * @param gmMovement the gmMovement to set
+     */
+    public void setGmMovement(GmMovementDTO gmMovement) {
+        this.gmMovement = gmMovement;
     }
 
 

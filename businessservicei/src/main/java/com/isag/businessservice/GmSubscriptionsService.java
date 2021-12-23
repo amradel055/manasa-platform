@@ -44,5 +44,7 @@ public interface GmSubscriptionsService {
     public BigDecimal returnInvInvoiceSummarySummationDuration(Integer BranchId, Integer type, Date dateFrom, Date dateTo);
     
     public List<GmSubscriptionsDTO> getALLGmSubscriptionsDTODTOByCustomerId(Integer customerId);
+    
+    public GmSubscriptionsDTO getValidGmSubscriptionsDTOByCustomerId(Integer customerId);
  
 }
