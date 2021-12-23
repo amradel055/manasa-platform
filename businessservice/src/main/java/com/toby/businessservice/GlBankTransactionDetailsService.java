@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice;
 
+import com.toby.dto.GeneralJournalDTO;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.entity.GlBankTransactionDetail;
 import com.toby.entity.TobyUser;
@@ -36,6 +37,6 @@ public interface GlBankTransactionDetailsService {
     
     public Integer addCashDetail(InvInvoiceDTO dTO, Integer glBankTransactionId, Integer glBankTransactionSerial, TobyUser tobyUser);
     
-    public void tarhilOne(TobyUser tobyUser);
+    public List<GeneralJournalDTO> tarhilOne(TobyUser tobyUser);
 
 }

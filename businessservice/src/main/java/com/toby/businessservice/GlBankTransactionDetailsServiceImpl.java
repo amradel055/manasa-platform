@@ -260,18 +260,18 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
         return journal == null ? null : journal.getId();
     }
 
-    public void tarhilOne(TobyUser tobyUser) {
+    public List<GeneralJournalDTO> tarhilOne(TobyUser tobyUser) {
 
         List<GeneralJournalDTO> generalJournalDTOList = new ArrayList<>();
 
         Map<String, Object> params20 = new HashMap<>();
         params20.put("companyId", 125);
         StringBuilder builder = new StringBuilder();
-        builder.append("SELECT s FROM GlBankTransactionDetail s WHERE  s.companyId.id = :companyId AND s.glBankTransactionId.transactionType = 1 AND s.bankIdFrom IS NOT NULL");
-        List<GlBankTransactionDetail> details = dao.findListByQuery(builder.toString(), params20,1, 15000);
-//        List<GlBankTransactionDetail> details = dao.findListByQuery(builder.toString(), params20,15001, 30000);
-//        List<GlBankTransactionDetail> details = dao.findListByQuery(builder.toString(), params20,30001, 45000);
-//        List<GlBankTransactionDetail> details = dao.findListByQuery(builder.toString(), params20,45001, 60000);
+//        builder.append("SELECT s FROM GlBankTransactionDetail s WHERE  s.companyId.id = :companyId AND s.glBankTransactionId.transactionType = 1 AND s.bankIdFrom IS NOT NULL AND s.id > 3641 and s.id <= 18650 ");
+        builder.append("SELECT s FROM GlBankTransactionDetail s WHERE  s.companyId.id = :companyId AND s.glBankTransactionId.transactionType = 1 AND s.bankIdFrom IS NOT NULL AND s.id > 18650  ");
+//        builder.append("SELECT s FROM GlBankTransactionDetail s WHERE  s.companyId.id = :companyId AND s.glBankTransactionId.transactionType = 1 AND s.bankIdFrom IS NOT NULL AND id > 33650 and id <= 48650 ");
+//        builder.append("SELECT s FROM GlBankTransactionDetail s WHERE  s.companyId.id = :companyId AND s.glBankTransactionId.transactionType = 1 AND s.bankIdFrom IS NOT NULL AND id > 48650 ");
+        List<GlBankTransactionDetail> details = dao.findListByQuery(builder.toString(), params20);
 
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", tobyUser.getBranchId().getId());
@@ -289,7 +289,7 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
 
             if (entity.getGlBankTransactionId().getTransactionType() == 0) {
                 journal = addGeneralJournalGlobal(73, 1001, entity.getSerial(), entity.getGlBankTransactionId().getDate(),
-                        entity.getGlBankTransactionId().getRemark(), tobyUser);
+                        entity.getGlBankTransactionId().getRemark(), tobyUser, entity.getGlBankTransactionId().getId());
 
                 // يتبقى ادخالى العموله يدويا
                 if (entity.getOrganizationSiteId() != null
@@ -321,7 +321,7 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
 
             } else if (entity.getGlBankTransactionId().getTransactionType() == 1) {
                 journal = addGeneralJournalGlobal(73, 1004, entity.getGlBankTransactionId().getSerial(), entity.getGlBankTransactionId().getDate(),
-                        entity.getGlBankTransactionId().getRemark(), tobyUser);
+                        entity.getGlBankTransactionId().getRemark(), tobyUser, entity.getGlBankTransactionId().getId());
 
                 BigDecimal valueCommition = entity.getValue().multiply(entity.getBankIdFrom().getCommition().divide(new BigDecimal(100)));
                 BigDecimal valueCommitionTax = (((entity.getValue().multiply(entity.getBankIdFrom().getCommition().divide(new BigDecimal(100)))).multiply(new BigDecimal(0.15))).setScale(5, RoundingMode.HALF_UP));
@@ -367,17 +367,19 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
             }
             generalJournalDTOList.add(journal);
         }
-
-        generaljournalServiceDTO.addGeneralJournalDTOWithDetail(generalJournalDTOList, tobyUser);
+        return generalJournalDTOList;
     }
 
-    public GeneralJournalDTO addGeneralJournalGlobal(Integer yearSelectionId, Integer specialDocumentsTypes, Integer serial, Date date, String remark, TobyUser tobyUser) {
+    public GeneralJournalDTO addGeneralJournalGlobal(Integer yearSelectionId, Integer specialDocumentsTypes, Integer serial, Date date, String remark, TobyUser tobyUser, Integer id) {
 
         GeneralJournalDTO generalJournal = new GeneralJournalDTO();
         generalJournal.setGeneralStatement(remark);
         generalJournal.setGeneralData(date);
         generalJournal.setGeneralDecument(serial);
+        generalJournal.setSerial(serial);
+        
         generalJournal.setPost_flag(true);
+        generalJournal.setId(id);
 //        Symbol symbol = symbolService.getSpecialDocumentsTypes(specialDocumentsTypes);
         GlYearDTO glYear = new GlYearDTO();
         glYear.setId(73);

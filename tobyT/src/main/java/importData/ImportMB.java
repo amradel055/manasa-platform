@@ -185,7 +185,18 @@ public class ImportMB extends Basic implements Serializable {
     }
 
     public void tarhilCashOne() {
-        bankTransactionDetailsService.tarhilOne(getUserData().getUser());
+        List<GeneralJournalDTO> list = bankTransactionDetailsService.tarhilOne(getUserData().getUser());
+
+//        Integer idDtail = 1;
+        Integer idDtail = 75000;
+//        Integer idDtail = 150000;
+//        Integer idDtail = 225000;
+
+        for (GeneralJournalDTO dto : list) {
+            generaljournalServiceDTO.addGeneralJournalDTOWithDetail(dto, getUserData().getUser(), dto.getSerial(), dto.getId(), idDtail);
+            idDtail = idDtail + 5;
+        }
+
     }
 
     @PostConstruct
