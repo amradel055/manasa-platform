@@ -49,7 +49,10 @@ public class IsagUserRole extends BaseEntity {
     private Boolean sellPriceUpdate;  
     @Column(name = "bank_update")
     private Boolean bankUpdate;
-
+    @Column(name = "client_show")
+    private Boolean clientShow;
+    @Column(name = "price_update")
+    private Boolean priceUpdate;
     @Transient
     private Boolean markEdit;
 
@@ -208,5 +211,39 @@ public class IsagUserRole extends BaseEntity {
      */
     public void setBankUpdate(Boolean bankUpdate) {
         this.bankUpdate = bankUpdate;
+    }
+
+    /**
+     * @return the clientShow
+     */
+    public Boolean getClientShow() {
+        if(clientShow == null){
+        clientShow = Boolean.FALSE;
+        }
+        return clientShow;
+    }
+
+    /**
+     * @param clientShow the clientShow to set
+     */
+    public void setClientShow(Boolean clientShow) {
+        this.clientShow = clientShow;
+    }
+
+    /**
+     * @return the priceUpdate
+     */
+    public Boolean getPriceUpdate() {
+        if(priceUpdate == null){
+        priceUpdate = Boolean.FALSE;
+        }
+        return priceUpdate;
+    }
+
+    /**
+     * @param priceUpdate the priceUpdate to set
+     */
+    public void setPriceUpdate(Boolean priceUpdate) {
+        this.priceUpdate = priceUpdate;
     }
 }

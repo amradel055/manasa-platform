@@ -32,9 +32,6 @@
                     <div class="ui-g">
                         <h:panelGroup id="test">
 
-
-
-
                             <h:panelGroup id="test55">
                                 <div class="ui-g-6 ui-xl-6">
                                     <div class="ui-g-12 ui-xl-12">
@@ -464,7 +461,7 @@
                               filterMatchMode="contains" 
                               sortBy="#{invPurchaseInvoiceDetailsTable.cost}"
                               filterable="false">
-                        <p:inputText id="costTt2"  rendered="false"
+                        <p:inputText id="costTt2"  rendered="#{userData.isagUserRole.sellPriceUpdate}"
                                      value="#{invPurchaseInvoiceDetailsTable.cost}"
 
                                      style="width:95%">

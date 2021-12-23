@@ -286,6 +286,9 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
      * @return the glBankId
      */
     public GlBankDTO getGlBankId() {
+        if(glBankId == null){
+        glBankId = new GlBankDTO();
+        }
         return glBankId;
     }
 

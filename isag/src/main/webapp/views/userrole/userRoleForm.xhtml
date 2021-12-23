@@ -202,6 +202,14 @@
                                headerText="#{userData.userDDs['Safes_Adjustment']}" >
                           <p:selectBooleanCheckbox value="#{userRole.bankUpdate}"/>
                     </p:column>
+                          <p:column  style="width: 13vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                               headerText="فتح السعر" >
+                              <p:selectBooleanCheckbox value="#{userRole.priceUpdate}"/>
+                    </p:column>
+                          <p:column  style="width: 13vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                               headerText="اظهار العملاء" >
+                              <p:selectBooleanCheckbox value="#{userRole.clientShow}"/>
+                    </p:column>
 
                     <p:column  style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"  headerText="#{userData.userDDs['TRANSACTION']}">
 

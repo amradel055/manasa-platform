@@ -5,6 +5,7 @@
  */
 package com.isag.businessservice;
 
+import com.isag.bussinessservice.global.Utility;
 import com.isag.core.GenericDAO;
 import com.isag.dto.GmFreezeDto;
 import com.isag.dto.GmMovementDTO;
@@ -59,6 +60,19 @@ public class GmMovementServiceImpl implements GmMovementService {
         dtoList = returnListDTOForList(gmMovementsList, isagUser);
         return dtoList;
     }
+     @Override
+    public Integer findGmMovementDtoDaysBySubscribtionId(Integer subscribtionId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("subscribtionId", subscribtionId);
+        List<Long> gmMovementsList = dao.findListByQuery("SELECT sum(e.days) FROM GmMovement e WHERE e.subscribtionIdTo.id = :subscribtionId ", params);
+         if(gmMovementsList != null && !gmMovementsList.isEmpty() && gmMovementsList.get(0) != null){
+         return gmMovementsList.get(0).intValue();
+         }else {
+                    return 0;
+
+         }
+    }
+
 
     @Override
     public GmMovementDTO findGmMovementDtoById(GmMovementDTO gmMovementDTO, IsagUser isagUser) {
@@ -160,12 +174,26 @@ public class GmMovementServiceImpl implements GmMovementService {
     }
 
     @Override
-    public GmMovementDTO save(GmMovementDTO gmMovementDTO, IsagUser isagUser) {
+    public GmMovementDTO save(GmMovementDTO gmMovementDTO, GmSubscriptionsDTO gmSubscriptionsDTO  , IsagUser isagUser) {
         try {
             gmMovementDTO = validateSave(gmMovementDTO);
             GmMovement gmMovement;  
             if (gmMovementDTO != null && (gmMovementDTO.getMsg() == null || gmMovementDTO.getMsg().isEmpty())) {
-           
+                GmSubscriptionsDTO gmSubscriptionsDTOTo =  new GmSubscriptionsDTO() ;
+               gmSubscriptionsDTOTo =  gmSubscriptionsService.getValidGmSubscriptionsDTOByCustomerId(gmMovementDTO.getCustomerIdTo().getId());
+                if(gmSubscriptionsDTOTo != null){
+                gmMovementDTO.setSubscriptionIdTo(gmSubscriptionsDTOTo);
+                }
+                else {
+               gmMovementDTO.getSubscriptionIdTo().setGlBankId(gmSubscriptionsDTO.getGlBankId());
+               gmMovementDTO.getSubscriptionIdTo().setOrganizationSiteId(gmMovementDTO.getCustomerIdTo());
+               gmMovementDTO.getSubscriptionIdTo().setDate(new Date());
+               gmMovementDTO.getSubscriptionIdTo().setStartDate(new Date());
+               gmMovementDTO.getSubscriptionIdTo().setEndDate(Utility.sumDateAndNumer(new Date(), gmMovementDTO.getDays()));
+               gmSubscriptionsDTOTo = gmSubscriptionsService.GmSubscribtionAutoSave(gmMovementDTO.getSubscriptionIdTo() , isagUser);
+               gmMovementDTO.setSubscriptionIdTo(gmSubscriptionsDTOTo);
+                
+                }
                 gmMovement = mapToEntity(gmMovementDTO, isagUser);
                 gmMovement = dao.updateEntity(gmMovement);
 

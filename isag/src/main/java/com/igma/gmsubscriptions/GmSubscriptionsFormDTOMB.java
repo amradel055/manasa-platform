@@ -107,7 +107,7 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
                 reset();
                 fillDefaultList();
             } 
-             if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("addGmMovement")) {
+            else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("addGmMovement")) {
              getGmSubscriptionsDTO().setShowCustomerDate(Boolean.FALSE);
                 reset();
                 fillDefaultList();
@@ -185,8 +185,8 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
     
    
     public String saveMovment() {
-        
-       gmMovementService.save(getGmMovement(), getUserData().getUser());
+//       getGmMovement().setCustomerIdTo(organizationSiteService.findOrganizationSiteDTOById(getGmMovement().getCustomerIdTo().getId()));
+       gmMovementService.save(getGmMovement(), getGmSubscriptionsDTO() ,getUserData().getUser());
       
         return "";
     }
