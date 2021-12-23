@@ -175,25 +175,25 @@
                     </p:autoComplete>
                 </div>
                 <div class="ui-g-6 ui-xl-6">
-                    <p:outputLabel style="width: 100px;" value="#{userData.userDDs['SUPPLIER']}"/>
+                    <p:outputLabel style="width: 100px;" value="#اسم العميل "/>
 
                 </div>
             </div>
             <div class="ui-g-12 ui-xl-12">
 
                         <div class="ui-g-6 ui-xl-6">
-                            <p:graphicImage url="#{gmSubscriptionsListDTOMB.host.concat(gmSubscriptionsListDTOMB.invOrganizationS.clientImage)}" library="demo"  style="max-width:80%;max-height:80%;object-fit: cover !important;"/>
+                            <p:graphicImage url="#{gmSubscriptionsListDTOMB.host.concat(gmSubscriptionsListDTOMB.invOrganizationSiteDTOSelected.clientImage)}" library="demo"  style="max-width:80%;max-height:80%;object-fit: cover !important;"/>
                         </div>
                        
                         <div class="ui-g-6 ui-xl-6">
                             <p:outputLabel style="width: 65px" value="صورة العميل"/>
 
                         </div>  
-                    </div
+            </div>
                        <div class="ui-g-12 ui-xl-12">
 
                                             <div class="ui-g-6 ui-xl-6">
-                                                <h:outputText style="width: 35%!important" id="ad333"  value="#{gmSubscriptionsListDTOMB.siteDTO.phone}"/>
+                                                <h:outputText style="width: 35%!important" id="ad333"  value="#{gmSubscriptionsListDTOMB.invOrganizationSiteDTOSelected.phone}"/>
                                             </div>
                                             <div class="ui-g-6 ui-xl-6">
                                                 <p:outputLabel style="width: 85px;margin-right: 3%;" value="رقم الهاتف"/>
@@ -205,7 +205,7 @@
                                         <div class="ui-g-12 ui-xl-12">
 
                                             <div class="ui-g-6 ui-xl-6">
-                                                <p:outputLabel style="width: 35%!important" id="ad191"  value="#{gmSubscriptionsListDTOMB.siteDTO.birthdate}">
+                                                <p:outputLabel style="width: 35%!important" id="ad191"  value="#{gmSubscriptionsListDTOMB.invOrganizationSiteDTOSelected.birthdate}">
                                                     <f:convertDateTime type="date" pattern="dd-MM-yyyy hh:mm:ss"/>
                                                 </p:outputLabel>
                                             </div>
@@ -227,19 +227,7 @@
                                                 </p:outputLabel>
                                             </div>
                                         </div>
-                                        <div class="ui-g-12 ui-xl-12">
-
-                                            <div class="ui-g-6 ui-xl-6">
-                                                <p:outputLabel style="width: 35%!important" id="ad131"  value="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected.endDate}">
-                                                    <f:convertDateTime type="date" pattern="dd-MM-yyyy hh:mm:ss"/>
-                                                </p:outputLabel>
-                                            </div>
-                                            <div class="ui-g-6 ui-xl-6">
-                                                <p:outputLabel style="width: 85px;margin-right: 3%;" value="تاريخ نهايه الاشتراك ">
-
-                                                </p:outputLabel>
-                                            </div>
-                                        </div>
+                                 
 
                                         <div class="ui-g-12 ui-xl-12">
 
@@ -255,7 +243,7 @@
                                         <div class="ui-g-12 ui-xl-12">
 
                                             <div class="ui-g-6 ui-xl-6">
-                                                <h:outputText style="width: 35%!important" id="ad1911"  value="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected.status eq true ? 'مفعل':'غير مفعل '}"/>
+                                                <h:outputText style="width: 35%!important" id="ad1911"  value="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected.status eq false ? 'سارى' : 'معلق'}"/>
                                             </div>
                                             <div class="ui-g-6 ui-xl-6">
                                                 <p:outputLabel style="width: 85px;margin-right: 3%;" value="حاله الاشتراك  "/>
@@ -263,82 +251,46 @@
                                             </div>
                                         </div>
                                   
+                                      
                                         <div class="ui-g-12 ui-xl-12">
 
                                             <div class="ui-g-6 ui-xl-6">
-                                                <p:inputText style="width: 35%!important" id="ad1"  value="#{gmSubscriptionsListDTOMB.gmFreezeDto.number}">
-                                                    <p:ajax event="blur" listener="#{gmSubscriptionsListDTOMB.calcDate()}" update="dateto" />
-                                                </p:inputText>
-                                            </div>
-                                            <div class="ui-g-6 ui-xl-6">
-                                                <p:outputLabel style="width: 85px;margin-right: 3%;" value="ايام التجميد "/>
-
-                                            </div>
-                                        </div>
-                                        <div class="ui-g-12 ui-xl-12">
-
-                                            <div class="ui-g-6 ui-xl-6">
-                                                <p:outputLabel style="width: 85px;margin-right: 3%;" value="#{gmSubscriptionsListDTOMB.gmFreezeDto.datefrom}">
-                                                    <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                                                <p:outputLabel style="width: 85px;margin-right: 3%;" value="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected.takenDays}">
+                                                  
                                                 </p:outputLabel>
 
                                             </div>
                                             <div class="ui-g-6 ui-xl-6">
-                                                <p:outputLabel style="width: 75px;margin-right: 6%"  value="#{userData.userDDs['YEAR_FROM']}" />
+                                                <p:outputLabel style="width: 75px;margin-right: 6%"  value="الايام التي تم تجميدها " />
 
                                             </div>
                                         </div>
                                         <div class="ui-g-12 ui-xl-12">
 
                                             <div class="ui-g-6 ui-xl-6">
-                                                <p:outputLabel id="dateto" style="width: 85px;margin-right: 3%;" value="#{gmSubscriptionsListDTOMB.gmFreezeDto.dateto}">
-                                                    <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                                                <p:outputLabel id="dateto" style="width: 85px;margin-right: 3%;" value="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected.remainDays}">
+                                                  
                                                 </p:outputLabel>
                                             </div>
                                             <div class="ui-g-6 ui-xl-6">
-                                                <p:outputLabel style="width: 75px;margin-right: 6%"  value="#{userData.userDDs['TO_DATE']}" />
+                                                <p:outputLabel style="width: 75px;margin-right: 6%"  value="الايام المتبقية للتجميد" />
 
                                             </div>
                                         </div>
-                                        <div class="ui-g-12 ui-xl-12">
+                   <div class="ui-g-12 ui-xl-12">
 
                                             <div class="ui-g-6 ui-xl-6">
-                                                <p:outputLabel style="width: 85px;margin-right: 3%;" value="#{gmSubscriptionsListDTOMB.gmFreezeDto.mustDays}">
+                                                <p:outputLabel style="width: 35%!important" id="ad131"  value="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected.dateAfterTagmeed}">
+                                                    <f:convertDateTime type="date" pattern="dd-MM-yyyy hh:mm:ss"/>
+                                                </p:outputLabel>
+                                            </div>
+                                            <div class="ui-g-6 ui-xl-6">
+                                                <p:outputLabel style="width: 85px;margin-right: 3%;" value="تاريخ نهايه الاشتراك ">
 
                                                 </p:outputLabel>
-
-                                            </div>
-                                            <div class="ui-g-6 ui-xl-6">
-                                                <p:outputLabel style="width: 75px;margin-right: 6%"  value="الايام المستحقة" />
-
                                             </div>
                                         </div>
-                                        <div class="ui-g-12 ui-xl-12">
 
-                                            <div class="ui-g-6 ui-xl-6">
-                                                <p:outputLabel style="width: 85px;margin-right: 3%;" value="#{gmSubscriptionsListDTOMB.gmFreezeDto.takeDays}">
-
-                                                </p:outputLabel>
-
-                                            </div>
-                                            <div class="ui-g-6 ui-xl-6">
-                                                <p:outputLabel style="width: 75px;margin-right: 6%"  value="الايام تم تجميدها" />
-
-                                            </div>
-                                        </div>
-                                        <div class="ui-g-12 ui-xl-12">
-
-                                            <div class="ui-g-6 ui-xl-6">
-                                                <p:outputLabel style="width: 85px;margin-right: 3%;" value="#{gmSubscriptionsListDTOMB.gmFreezeDto.remainDays}">
-
-                                                </p:outputLabel>
-
-                                            </div>
-                                            <div class="ui-g-6 ui-xl-6">
-                                                <p:outputLabel style="width: 75px;margin-right: 6%"  value="الايام المتبقية" />
-
-                                            </div>
-                                        </div>
         </h:form>
     </ui:define>
 </ui:composition>

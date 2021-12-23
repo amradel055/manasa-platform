@@ -99,9 +99,8 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
     }
       public void show() {
         setInvOrganizationSiteDTOSelected(organizationSiteService.findOrganizationSiteDTOById(invOrganizationSiteDTO.getId()));
-        getGmFreezeDto().setCustomerId(getSiteDTO());
-        getGmFreezeDto().setSubscriptionId(getGmSubscriptionsDTOSelected());
-        getGmFreezeDto().setDatefrom(new Date());
+        setGmSubscriptionsDTOSelected(gmSubscriptionsService.getValidGmSubscriptionsDTOByCustomerId(invOrganizationSiteDTO.getId()));
+       
 
        
     }

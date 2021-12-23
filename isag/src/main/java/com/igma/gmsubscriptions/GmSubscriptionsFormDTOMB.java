@@ -107,7 +107,7 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
                 reset();
                 fillDefaultList();
             } 
-             if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("addGmMovement")) {
+            else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("addGmMovement")) {
              getGmSubscriptionsDTO().setShowCustomerDate(Boolean.FALSE);
                 reset();
                 fillDefaultList();
