@@ -37,6 +37,6 @@ public interface GlBankTransactionDetailsService {
     
     public Integer addCashDetail(InvInvoiceDTO dTO, Integer glBankTransactionId, Integer glBankTransactionSerial, TobyUser tobyUser);
     
-    public List<GeneralJournalDTO> tarhilOne(TobyUser tobyUser);
+    public List<GeneralJournalDTO> tarhilOne(TobyUser tobyUser); 
 
 }

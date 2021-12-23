@@ -265,7 +265,7 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
         List<GeneralJournalDTO> generalJournalDTOList = new ArrayList<>();
 
         Map<String, Object> params20 = new HashMap<>();
-        params20.put("companyId", 125);
+        params20.put("companyId", 125); 
         StringBuilder builder = new StringBuilder();
 //        builder.append("SELECT s FROM GlBankTransactionDetail s WHERE  s.companyId.id = :companyId AND s.glBankTransactionId.transactionType = 1 AND s.bankIdFrom IS NOT NULL AND s.id > 3641 and s.id <= 18650 ");
         builder.append("SELECT s FROM GlBankTransactionDetail s WHERE  s.companyId.id = :companyId AND s.glBankTransactionId.transactionType = 1 AND s.bankIdFrom IS NOT NULL AND s.id > 18650  ");
