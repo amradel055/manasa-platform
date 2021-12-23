@@ -392,6 +392,7 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
         List<GmSubscriptions> details = dao.findListByQuery(builder.toString(), filters);
         return returnListDTOForList(details);
     }
+    
 
     private List<GmSubscriptionsDTO> returnListDTOForList(List<GmSubscriptions> gmSubscriptionsList) {
         List<GmSubscriptionsDTO> gmSubscriptionsDTOList = new ArrayList<>();

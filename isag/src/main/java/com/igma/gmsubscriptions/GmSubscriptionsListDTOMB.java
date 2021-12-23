@@ -97,6 +97,14 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
             increaseDate();
         }
     }
+      public void show() {
+        setInvOrganizationSiteDTOSelected(organizationSiteService.findOrganizationSiteDTOById(invOrganizationSiteDTO.getId()));
+        getGmFreezeDto().setCustomerId(getSiteDTO());
+        getGmFreezeDto().setSubscriptionId(getGmSubscriptionsDTOSelected());
+        getGmFreezeDto().setDatefrom(new Date());
+
+       
+    }
 
     private void increaseDate() {
         Calendar c = Calendar.getInstance();
