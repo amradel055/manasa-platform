@@ -160,12 +160,22 @@ public class GmMovementServiceImpl implements GmMovementService {
     }
 
     @Override
-    public GmMovementDTO save(GmMovementDTO gmMovementDTO, IsagUser isagUser) {
+    public GmMovementDTO save(GmMovementDTO gmMovementDTO, GmSubscriptionsDTO gmSubscriptionsDTO  , IsagUser isagUser) {
         try {
             gmMovementDTO = validateSave(gmMovementDTO);
             GmMovement gmMovement;  
             if (gmMovementDTO != null && (gmMovementDTO.getMsg() == null || gmMovementDTO.getMsg().isEmpty())) {
-           
+                GmSubscriptionsDTO gmSubscriptionsDTOTo =  new GmSubscriptionsDTO() ;
+               gmSubscriptionsDTOTo =  gmSubscriptionsService.getValidGmSubscriptionsDTOByCustomerId(gmMovementDTO.getCustomerIdTo().getId());
+                if(gmSubscriptionsDTOTo != null){
+                gmMovementDTO.setSubscriptionIdTo(gmSubscriptionsDTOTo);
+                }
+                else {
+               gmMovementDTO.getSubscriptionIdTo().setGlBankId(gmSubscriptionsDTO.getGlBankId());
+               gmSubscriptionsDTOTo = gmSubscriptionsService.GmSubscribtionAutoSave(gmMovementDTO.getSubscriptionIdTo() , isagUser);
+
+                
+                }
                 gmMovement = mapToEntity(gmMovementDTO, isagUser);
                 gmMovement = dao.updateEntity(gmMovement);
 

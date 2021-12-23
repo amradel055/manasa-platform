@@ -46,5 +46,7 @@ public interface GmSubscriptionsService {
     public List<GmSubscriptionsDTO> getALLGmSubscriptionsDTODTOByCustomerId(Integer customerId);
     
     public GmSubscriptionsDTO getValidGmSubscriptionsDTOByCustomerId(Integer customerId);
+    
+    public GmSubscriptionsDTO GmSubscribtionAutoSave(GmSubscriptionsDTO dTO , IsagUser isagUser);
  
 }

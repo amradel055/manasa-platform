@@ -607,6 +607,11 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
         }
         return result;
     }
+    @Override
+    public GmSubscriptionsDTO GmSubscribtionAutoSave(GmSubscriptionsDTO dTO , IsagUser isagUser){
+         dTO =  save(dTO, isagUser);
+         return dTO ;
+    }
 
     /**
      * @return the gmFreezeService
