@@ -185,7 +185,7 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
     
    
     public String saveMovment() {
-        
+//       getGmMovement().setCustomerIdTo(organizationSiteService.findOrganizationSiteDTOById(getGmMovement().getCustomerIdTo().getId()));
        gmMovementService.save(getGmMovement(), getGmSubscriptionsDTO() ,getUserData().getUser());
       
         return "";

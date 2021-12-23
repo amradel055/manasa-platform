@@ -26,5 +26,5 @@ public interface GmMovementService {
     public GmMovementDTO findGmMovementDtoById(GmMovementDTO gmMovementDTO, IsagUser isagUser) ;
     public GmMovementDTO save(GmMovementDTO gmMovementDTO, GmSubscriptionsDTO gmSubscriptionsDTO  , IsagUser isagUser);
     public Integer calcTakenDaysByCustomerIdAndSubscribtionId( Integer subscribtionId);
-    
+    public Integer findGmMovementDtoDaysBySubscribtionId(Integer subscribtionId);
 }

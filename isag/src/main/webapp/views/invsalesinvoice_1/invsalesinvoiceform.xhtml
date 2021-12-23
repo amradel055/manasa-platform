@@ -461,7 +461,7 @@
                               filterMatchMode="contains" 
                               sortBy="#{invPurchaseInvoiceDetailsTable.cost}"
                               filterable="false">
-                        <p:inputText id="costTt2"  rendered="false"
+                        <p:inputText id="costTt2"  rendered="#{userData.isagUserRole.sellPriceUpdate}"
                                      value="#{invPurchaseInvoiceDetailsTable.cost}"
 
                                      style="width:95%">

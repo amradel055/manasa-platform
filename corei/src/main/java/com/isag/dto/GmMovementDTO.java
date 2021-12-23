@@ -116,6 +116,9 @@ public class GmMovementDTO  extends BaseEntityDTO {
      * @return the subscriptionIdTo
      */
     public GmSubscriptionsDTO getSubscriptionIdTo() {
+        if(subscriptionIdTo == null){
+        subscriptionIdTo = new GmSubscriptionsDTO();
+        }
         return subscriptionIdTo;
     }
 

@@ -63,6 +63,9 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
     
     @EJB
     private GmFreezeService gmFreezeService ;
+    
+     @EJB
+    private GmMovementService gmMovementService ;
 
     InvPurchaseReturnSave invPurchaseReturnSave;
 
@@ -277,6 +280,7 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
         dto.setTakenDays(gmFreezeService.calcTakenDaysByCustomerIdAndSubscribtionId(entity.getId()));
         dto.setRemainDays(dto.getMustDays() - dto.getTakenDays());
         dto.setDateAfterTagmeed(Utility.sumDateAndNumer(entity.getEndDate(), dto.getTakenDays()));
+        dto.setDateAfterTagmeed(Utility.sumDateAndNumer(dto.getDateAfterTagmeed(), gmMovementService.findGmMovementDtoDaysBySubscribtionId(entity.getId()) ));
         dto.setRemainPeriod(Utility.calcDaysBetween(dto.getDateAfterTagmeed(), new Date()));
         } 
         
@@ -402,7 +406,12 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
         builder.append("SELECT s FROM GmSubscriptions s WHERE  s.organizationSiteId.id =:customerId  AND :date BETWEEN s.startDate AND s.endDate order by s.id desc");
 
         GmSubscriptions details = dao.findEntityByQuery(builder.toString(), filters);
-        return mapToDTO(details);
+        if(details != null){
+        return mapToDTO(details); 
+        } 
+        else {
+        return null ;
+        }
     }
 
     private List<GmSubscriptionsDTO> returnListDTOForList(List<GmSubscriptions> gmSubscriptionsList) {
