@@ -399,7 +399,7 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
         filters.put("customerId", customerId);
         filters.put("date", new Date());
         StringBuilder builder = new StringBuilder();
-        builder.append("SELECT s FROM GmSubscriptions s WHERE  s.organizationSiteId.id =:customerId  AND :date BETWEEN s.startDate AND s.endDate ");
+        builder.append("SELECT s FROM GmSubscriptions s WHERE  s.organizationSiteId.id =:customerId  AND :date BETWEEN s.startDate AND s.endDate order by s.id desc");
 
         GmSubscriptions details = dao.findEntityByQuery(builder.toString(), filters);
         return mapToDTO(details);
