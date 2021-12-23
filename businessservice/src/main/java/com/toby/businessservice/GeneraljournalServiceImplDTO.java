@@ -199,7 +199,7 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
             serial++;
             dto.setSerial(serial);
             dto.setId(id);
-            dto.setGeneralDecument(generaldocumet);  
+            dto.setGeneralDecument(generaldocumet);
             GeneralJournal entity = mapFromDTO(dto, tobyUser);
             dao.saveEntity(entity);
             generaljournalDetailsService.addGenDetalilsGlobal(dto.getDetailList(), tobyUser, id,idDtail);            
