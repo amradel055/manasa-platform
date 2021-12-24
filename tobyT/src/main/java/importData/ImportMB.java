@@ -191,8 +191,8 @@ public class ImportMB extends Basic implements Serializable {
     public void tarhilCashOne() {
         List<GeneralJournalDTO> list = bankTransactionDetailsService.tarhilOne(getUserData().getUser());
 
-//        Integer idDtail = 1; 
-        Integer idDtail = 75000;
+        Integer idDtail = 1; 
+//        Integer idDtail = 75000;
 //        Integer idDtail = 150000;
 //        Integer idDtail = 225000;
 
@@ -201,6 +201,11 @@ public class ImportMB extends Basic implements Serializable {
             idDtail = idDtail + 5;
         }
 
+    }
+    
+    public void tarhilAll() throws CloneNotSupportedException{
+        tarhilCashOne();
+        tarhilInvoiceOne();
     }
 
     @PostConstruct

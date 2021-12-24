@@ -2569,9 +2569,9 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         Integer storeAccountNumber = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"STORE_ACCOUNT_NUMBER\" AND a.accountId IS NOT NULL", params);
 
         Integer index1 = 1;
-        Integer headId = 60000;
+        Integer headId = 100000;
         Integer DetailSerial = 1;
-        Integer DetailId = 250000;
+        Integer DetailId = 700000;
         for (InvInventory gallary : detailsGallary) {
             System.err.println("Gallary Id -> " + gallary.getId() + "Gallary Code ->" + gallary.getCode() + " Gallary Name -> " + gallary.getName() + "---------------------------------------Time Login To Gallary Is : " + new Date() + " -> number -> ");
             try {
@@ -2581,7 +2581,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 String sDate1 = "2021-02-22";
                 Date dateFrom = new SimpleDateFormat("yyyy-MM-dd").parse(sDate1);
 
-                for (int i = 0; i < 303; i++) {
+                for (int i = 0; i < 330; i++) {
 
                     Date dateFromNew = Utility.sumDateAndNumer(dateFrom, i);
                     BigDecimal totalBeforeInvoice = BigDecimal.ZERO;
