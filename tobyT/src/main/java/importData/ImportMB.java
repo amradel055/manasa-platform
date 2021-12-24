@@ -181,7 +181,11 @@ public class ImportMB extends Basic implements Serializable {
     private GlAccountServiceDTO glAccountServiceDTO;
 
     public void tarhilInvoiceOne() throws CloneNotSupportedException {
-        invPurchaseInvoiceService_1.tarhilOne(getUserData().getUser());
+        List<GeneralJournalDTO> list = invPurchaseInvoiceService_1.tarhilOne(getUserData().getUser());
+        
+        for (GeneralJournalDTO dto : list) {
+            generaljournalServiceDTO.addGeneralJournalDTOWithDetail(dto, getUserData().getUser());
+        }
     }
 
     public void tarhilCashOne() {
@@ -701,6 +705,7 @@ public class ImportMB extends Basic implements Serializable {
         Map<Integer, GlAccount> itemMap = new HashMap<>();
         Currency currency = new Currency();
         List<Currency> currencyList = currencyService.getAllCurrencyByCompanyId(getUserData().getCompany().getId());
+        Map<Integer, GlAccount> map = glAccountService.getAllGlAccountMap();
         if (currencyList != null && !currencyList.isEmpty()) {
             currency = currencyList.get(0);
         } else {
@@ -709,11 +714,17 @@ public class ImportMB extends Basic implements Serializable {
         }
         for (int i = 1; i < sheet.getRows(); i++) {
             if (!sheet.getCell(0, i).getContents().isEmpty()) {
-                item = new GlAccount();
-                Cell parent = initGlAccountData(sheet, i, item, itemMap, currency);
-                glAccountParent(parent, itemMap, item, parentCode);
-
-                glAccountService.addGlAccount(item);
+                String accunt = sheet.getCell(6, i).getContents();
+               Integer accNumber =  Integer.parseInt(accunt);
+                if (!map.containsKey(accNumber)) {
+                    item = new GlAccount();
+                    Cell parent = initGlAccountData(sheet, i, item, itemMap, currency);
+                    glAccountParent(parent, itemMap, item, parentCode);
+                     System.out.print(item.getAccNumber());
+                    glAccountService.addGlAccount(item);
+                }else{
+                    itemMap.put(accNumber, map.get(accNumber));
+                }
             }
         }
 

@@ -891,36 +891,36 @@
                                                     value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}"
                                                     maxResults="30"
                                                     var="item"
-                                                    itemLabel="#{item.itemName}" 
+                                                    itemLabel="#{item.name}" 
                                                     itemValue="#{item}" 
                                                     forceSelection="true" 
                                                     completeMethod="#{autoComplete.completeItemsBarcodesDetailsView}" 
                                                     >
-                                        <p:ajax update="itemNameCode proof2 proof QuantityT unitvalue QuantityTOU   costTt DISCOUNTValueT discountT netId totalQuantity   totalNet  form:totalActualWeight form:totalNetAfterDiscount  form:discounthala   form:totalWithTaxValue form:remain  form:taxvalue"
+                                        <p:ajax update="invItemCodeIn proof2 proof QuantityT unitvalue QuantityTOU   costTt DISCOUNTValueT discountT netId totalQuantity   totalNet  form:totalActualWeight form:totalNetAfterDiscount  form:discounthala   form:totalWithTaxValue form:remain  form:taxvalue"
                                                 event="itemSelect" listener="#{invPurchaseInvoiceFormDTOMB.validateItems(invPurchaseInvoiceDetailsTable)}" />
                                     </p:autoComplete>            
                                 </p:column>
                                 
-                                <p:column style="width: 21vh;text-align: -webkit-auto;border-radius: 0px" id="itemNameCode" headerText="#{userData.userDDs['ITEM']}" 
+                                <p:column style="width: 21vh;text-align: -webkit-auto;border-radius: 0px" id="itemNameCode" headerText="الكود" 
                                           filterBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}" 
                                           filterMatchMode="contains" 
                                           sortBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}"
                                           filterable="false">
                                     <p:outputLabel value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}" 
                                                    rendered="#{invPurchaseInvoiceDetailsTable.isEdit}" />
-                                    <p:autoComplete id="invItemNameIn"  
+                                    <p:autoComplete id="invItemCodeIn"  
                                                     style="width:100%"
                                                     rendered="#{not invPurchaseInvoiceDetailsTable.isEdit}"
                                                     converter="#{autoComplete.itemsBarcodesDetailsViewConverter}"
                                                     value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}"
                                                     maxResults="30"
                                                     var="item"
-                                                    itemLabel="#{item.barCode}" 
+                                                    itemLabel="#{item.barcode}" 
                                                     itemValue="#{item}" 
                                                     forceSelection="true" 
                                                     completeMethod="#{autoComplete.completeItemsBarcodesDetailsView}" 
                                                     >
-                                        <p:ajax update=" itemName proof2 proof QuantityT unitvalue QuantityTOU   costTt DISCOUNTValueT discountT netId totalQuantity   totalNet  form:totalActualWeight form:totalNetAfterDiscount  form:discounthala   form:totalWithTaxValue form:remain  form:taxvalue"
+                                        <p:ajax update=" invItemNameIn proof2 proof QuantityT unitvalue QuantityTOU   costTt DISCOUNTValueT discountT netId totalQuantity   totalNet  form:totalActualWeight form:totalNetAfterDiscount  form:discounthala   form:totalWithTaxValue form:remain  form:taxvalue"
                                                 event="itemSelect" listener="#{invPurchaseInvoiceFormDTOMB.validateItems(invPurchaseInvoiceDetailsTable)}" />
                                     </p:autoComplete>            
                                 </p:column>

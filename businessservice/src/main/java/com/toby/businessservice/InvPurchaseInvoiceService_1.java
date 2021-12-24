@@ -9,6 +9,7 @@ import com.toby.entity.TobyUser;
 import com.toby.bussinessservice.global.InvPurchaseReturnSave;
 import com.toby.core.UserDataDTO;
 import com.toby.define.ScreenNameClassEnum;
+import com.toby.dto.GeneralJournalDTO;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.PrintProductionDTO;
@@ -128,6 +129,6 @@ public interface InvPurchaseInvoiceService_1 {
     
     public String validateloginDistributedScreens(UserDataDTO userDataDTO, ScreenNameClassEnum screenNameClassEnum);
     
-    public void tarhilOne(TobyUser tobyUser) throws CloneNotSupportedException ;
+    public List<GeneralJournalDTO> tarhilOne(TobyUser tobyUser) throws CloneNotSupportedException ;
 
 }

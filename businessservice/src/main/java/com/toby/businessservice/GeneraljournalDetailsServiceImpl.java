@@ -117,6 +117,30 @@ public class GeneraljournalDetailsServiceImpl implements GeneraljournalDetailsSe
         BigDecimal total = dao.findEntityByQuery(stringBuilder.toString(), params);
         return total;
     }
+    
+    @Override
+    public void addGenDetalilsGlobal(List<GeneralJournalDetails> details, TobyUser tobyUser) {
+        if (details != null && !details.isEmpty()) {
+            for (GeneralJournalDetails journalDetails : details) {
+                if (journalDetails.getCostCenterId() != null && journalDetails.getCostCenterId().getId() == -1) {
+                    journalDetails.setCostCenterId(null);
+                }
+                if (journalDetails.getAdminUnitId() != null && journalDetails.getAdminUnitId().getId() == -1) {
+                    journalDetails.setAdminUnitId(null);
+                }
+
+                journalDetails.setBranchId(tobyUser.getBranchId());
+                journalDetails.setCreationDate(new Date());
+                journalDetails.setCreatedBy(tobyUser);
+
+
+                dao.saveEntity(journalDetails);
+                System.err.println("--->  <----"+ new Date());
+            }
+        }
+//        return list;
+    }
+
 
     @Override
     public void addGenDetalilsGlobal(List<GeneralJournalDetails> details, TobyUser tobyUser, Integer generalJournalId,Integer idDtail) {

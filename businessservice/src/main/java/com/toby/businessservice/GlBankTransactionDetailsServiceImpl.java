@@ -388,6 +388,7 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
         generalJournal.setBranchId(tobyUser.getBranchId().getId());
         generalJournal.setCompanyId(tobyUser.getCompanyId().getId());
         generalJournal.setCreatedBy(tobyUser.getId());
+        generalJournal.setCreatedDate(new Date());
         Map<String, Object> params = new HashMap<>();
         params.put("glYear", yearSelectionId == null ? null : yearSelectionId);
 

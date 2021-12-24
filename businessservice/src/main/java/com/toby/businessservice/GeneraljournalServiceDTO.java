@@ -48,5 +48,7 @@ public interface GeneraljournalServiceDTO {
     
     public void addGeneralJournalDTOWithDetail(GeneralJournalDTO dto, TobyUser tobyUser,Integer serial ,Integer idHead , Integer idDetail) ;
     
+    public void addGeneralJournalDTOWithDetail(GeneralJournalDTO dto, TobyUser tobyUser) ;
+    
     
 }

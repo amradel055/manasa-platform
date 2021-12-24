@@ -17,8 +17,10 @@ import com.toby.define.ScreenNameClassEnum;
 import com.toby.dto.CostCenterDTO;
 import com.toby.dto.CurrencyDTO;
 import com.toby.dto.CurrencyOperationDTO;
+import com.toby.dto.GeneralJournalDTO;
 import com.toby.dto.GlAdminUnitDTO;
 import com.toby.dto.GlBankDTO;
+import com.toby.dto.GlYearDTO;
 import com.toby.dto.InvDetailDTO;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.InvInvoiceDTO;
@@ -32,6 +34,7 @@ import com.toby.entity.CostCenter;
 import com.toby.entity.Currency;
 import com.toby.entity.DiscountCodes;
 import com.toby.entity.GeneralJournal;
+import com.toby.entity.GeneralJournalDetails;
 import com.toby.entity.GlAccount;
 import com.toby.entity.GlAdminUnit;
 import com.toby.entity.GlBank;
@@ -2548,7 +2551,8 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     }
 
     @Override
-    public void tarhilOne(TobyUser tobyUser) throws CloneNotSupportedException {
+    public List<GeneralJournalDTO> tarhilOne(TobyUser tobyUser) throws CloneNotSupportedException {
+        List<GeneralJournalDTO> journalList = new ArrayList<>();
         Map<String, Object> params20 = new HashMap<>();
         params20.put("branchId", 182);
         StringBuilder builder = new StringBuilder();
@@ -2564,9 +2568,12 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         Integer costOfSoldGoods = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"COST_OF_GOODS_SOLD_ACCOUNT_NUMBER\" AND a.accountId IS NOT NULL", params);
         Integer storeAccountNumber = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"STORE_ACCOUNT_NUMBER\" AND a.accountId IS NOT NULL", params);
 
-        Integer x = 0;
+        Integer index1 = 1;
+        Integer headId = 60000;
+        Integer DetailSerial = 1;
+        Integer DetailId = 250000;
         for (InvInventory gallary : detailsGallary) {
-            System.err.println("Gallary Id -> " + gallary.getId() + "Gallary Code ->"+ gallary.getCode() + " Gallary Name -> "+ gallary.getName() + "---------------------------------------Time Login To Gallary Is : " + new Date() + " -> number -> " + x++);
+            System.err.println("Gallary Id -> " + gallary.getId() + "Gallary Code ->" + gallary.getCode() + " Gallary Name -> " + gallary.getName() + "---------------------------------------Time Login To Gallary Is : " + new Date() + " -> number -> ");
             try {
                 //            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 //            String date1 = dateFormat.format(date);
@@ -2575,12 +2582,12 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 Date dateFrom = new SimpleDateFormat("yyyy-MM-dd").parse(sDate1);
 
                 for (int i = 0; i < 303; i++) {
-                    
+
                     Date dateFromNew = Utility.sumDateAndNumer(dateFrom, i);
                     BigDecimal totalBeforeInvoice = BigDecimal.ZERO;
                     BigDecimal TaxtotalInvoice = BigDecimal.ZERO;
                     BigDecimal totalInvoice = BigDecimal.ZERO;
-                    
+
                     System.err.println("Time Login To New Date Is : " + dateFromNew);
 
                     List<TarhilInvoiceDetail> tarhilInvoiceDetailList = new ArrayList<>();
@@ -2609,101 +2616,174 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                     TaxtotalInvoice = (totalBeforeInvoice.multiply(new BigDecimal(0.15))).setScale(3, RoundingMode.HALF_UP);
                     totalInvoice = totalBeforeInvoice.add(TaxtotalInvoice);
 
-                    GeneralJournal journal = null;
+                    GeneralJournalDTO journal = null;
 
 //        for (InvPurchaseInvoice entity : details) {
 //                    System.out.println(new Date());
 //            InvInvoiceDTO dto = mapToDTO(entity, null, false);
-                    journal = generaljournalService.addGeneralJournalGlobal(73, 1013, 1, new Date(), "قيد مبيعات الفترة", tobyUser);
+                    if (res != null) {
+                        journal = addGeneralJournalGlobal(73, 1013, index1++, new Date(), "قيد مبيعات الفترة", tobyUser, headId++);
 
-                    if (gallary.getCostCenterId() != null && gallary.getCostCenterId().getId() != null) {
-                        // حساب العملاء
-                        generaljournalDetailsService.addGenDetalil(true, totalInvoice, journal.getId(),
-                                8247,
-                                gallary.getCostCenterId().getId(),
-                                "", tobyUser);
+                        if (gallary.getCostCenterId() != null && gallary.getCostCenterId().getId() != null) {
+                            // حساب العملاء
+                            journal.getDetailList().add(addGenDetalil(true, totalInvoice, journal.getId(),
+                                    8247,
+                                    gallary.getCostCenterId().getId(),
+                                    "", tobyUser, ++DetailSerial, ++DetailId));
 //  حساب المبيعات
-                        generaljournalDetailsService.addGenDetalil(false, totalBeforeInvoice, journal.getId(), salesAccountNumber,
-                                gallary.getCostCenterId().getId(),
-                                "", tobyUser);
+                            journal.getDetailList().add(addGenDetalil(false, totalBeforeInvoice, journal.getId(), salesAccountNumber,
+                                    gallary.getCostCenterId().getId(),
+                                    "", tobyUser, ++DetailSerial, ++DetailId));
 // حساب القيمة المضافة
-                        generaljournalDetailsService.addGenDetalil(false, TaxtotalInvoice, journal.getId(), salesTaxAccount,
-                                gallary.getCostCenterId().getId(),
-                                "", tobyUser);
+                            journal.getDetailList().add(addGenDetalil(false, TaxtotalInvoice, journal.getId(), salesTaxAccount,
+                                    gallary.getCostCenterId().getId(),
+                                    "", tobyUser, ++DetailSerial, ++DetailId));
 
 // الشيئ الثالث هو انشاء مراكز التكاليف واستدعا مركز تكلفة الإدارة
-                        if (tarhilInvoiceDetailList != null && tarhilInvoiceDetailList.size() == 1) {
-                            if (835 == tarhilInvoiceDetailList.get(0).getCostCenterId()) {
-                                generaljournalDetailsService.addGenDetalil(true, tarhilInvoiceDetailList.get(0).getTotalCost(), journal.getId(),
-                                        gallary.getCostAccount().getId(),
-                                        835, "", tobyUser);
+                            if (tarhilInvoiceDetailList != null && tarhilInvoiceDetailList.size() == 1) {
+                                if (835 == tarhilInvoiceDetailList.get(0).getCostCenterId()) {
+                                    journal.getDetailList().add(addGenDetalil(true, tarhilInvoiceDetailList.get(0).getTotalCost(), journal.getId(),
+                                            gallary.getCostAccount().getId(),
+                                            835, "", tobyUser, ++DetailSerial, ++DetailId));
 
-                                generaljournalDetailsService.addGenDetalil(false, tarhilInvoiceDetailList.get(0).getTotalCost(), journal.getId(),
-                                        storeAccountNumber,
-                                        835, "", tobyUser);
+                                    journal.getDetailList().add(addGenDetalil(false, tarhilInvoiceDetailList.get(0).getTotalCost(), journal.getId(),
+                                            storeAccountNumber,
+                                            835, "", tobyUser, ++DetailSerial, ++DetailId));
 
-                                generaljournalDetailsService.addGenDetalil(true, tarhilInvoiceDetailList.get(0).getTotalCost(), journal.getId(),
-                                        costOfSoldGoods,
-                                        gallary.getCostCenterId().getId(),
-                                        "", tobyUser);
-                                generaljournalDetailsService.addGenDetalil(false, tarhilInvoiceDetailList.get(0).getTotalCost(), journal.getId(),
-                                        managerCostAccount,
-                                        gallary.getCostCenterId().getId(),
-                                        "", tobyUser);
-                            } else {
-
-                                generaljournalDetailsService.addGenDetalil(false, tarhilInvoiceDetailList.get(0).getTotalCost(), journal.getId(),
-                                        tarhilInvoiceDetailList.get(0).getCostAccountId(),
-                                        tarhilInvoiceDetailList.get(0).getCostCenterId(), "", tobyUser);
-
-                                generaljournalDetailsService.addGenDetalil(true, tarhilInvoiceDetailList.get(0).getTotalCost(), journal.getId(),
-                                        costOfSoldGoods,
-                                        tarhilInvoiceDetailList.get(0).getCostCenterId(),
-                                        "", tobyUser);
-                            }
-                        } else {
-                            TarhilInvoiceDetail tarhilInvoiceDetailMaster = null;
-                            BigDecimal totalCost = BigDecimal.ZERO;
-                            for (TarhilInvoiceDetail tarhilInvoiceDetail : tarhilInvoiceDetailList) {
-                                if (835 == tarhilInvoiceDetail.getCostCenterId()) {
-                                    tarhilInvoiceDetailMaster = (TarhilInvoiceDetail) tarhilInvoiceDetail.clone();
+                                    journal.getDetailList().add(addGenDetalil(true, tarhilInvoiceDetailList.get(0).getTotalCost(), journal.getId(),
+                                            costOfSoldGoods,
+                                            gallary.getCostCenterId().getId(),
+                                            "", tobyUser, ++DetailSerial, ++DetailId));
+                                    journal.getDetailList().add(addGenDetalil(false, tarhilInvoiceDetailList.get(0).getTotalCost(), journal.getId(),
+                                            managerCostAccount,
+                                            gallary.getCostCenterId().getId(),
+                                            "", tobyUser, ++DetailSerial, ++DetailId));
                                 } else {
-                                    generaljournalDetailsService.addGenDetalil(false, tarhilInvoiceDetail.getTotalCost(), journal.getId(),
-                                            tarhilInvoiceDetail.getCostAccountId(),
-                                            tarhilInvoiceDetail.getCostCenterId(),
-                                            "", tobyUser);
-                                    totalCost = totalCost.add(tarhilInvoiceDetail.getTotalCost());
+
+                                    journal.getDetailList().add(addGenDetalil(false, tarhilInvoiceDetailList.get(0).getTotalCost(), journal.getId(),
+                                            tarhilInvoiceDetailList.get(0).getCostAccountId(),
+                                            tarhilInvoiceDetailList.get(0).getCostCenterId(), "", tobyUser, ++DetailSerial, ++DetailId));
+
+                                    journal.getDetailList().add(addGenDetalil(true, tarhilInvoiceDetailList.get(0).getTotalCost(), journal.getId(),
+                                            costOfSoldGoods,
+                                            tarhilInvoiceDetailList.get(0).getCostCenterId(),
+                                            "", tobyUser, ++DetailSerial, ++DetailId));
+                                }
+                            } else {
+                                TarhilInvoiceDetail tarhilInvoiceDetailMaster = null;
+                                BigDecimal totalCost = BigDecimal.ZERO;
+                                for (TarhilInvoiceDetail tarhilInvoiceDetail : tarhilInvoiceDetailList) {
+                                    if (835 == tarhilInvoiceDetail.getCostCenterId()) {
+                                        tarhilInvoiceDetailMaster = (TarhilInvoiceDetail) tarhilInvoiceDetail.clone();
+                                    } else {
+                                        journal.getDetailList().add(addGenDetalil(false, tarhilInvoiceDetail.getTotalCost(), journal.getId(),
+                                                tarhilInvoiceDetail.getCostAccountId(),
+                                                tarhilInvoiceDetail.getCostCenterId(),
+                                                "", tobyUser, ++DetailSerial, ++DetailId));
+                                        totalCost = totalCost.add(tarhilInvoiceDetail.getTotalCost());
+                                    }
+                                }
+
+                                if (tarhilInvoiceDetailMaster != null) {
+                                    journal.getDetailList().add(addGenDetalil(true, tarhilInvoiceDetailList.get(0).getTotalCost(), journal.getId(),
+                                            gallary.getCostAccount().getId(),
+                                            835, "", tobyUser, ++DetailSerial, ++DetailId));
+
+                                    journal.getDetailList().add(addGenDetalil(false, tarhilInvoiceDetailList.get(0).getTotalCost(), journal.getId(),
+                                            storeAccountNumber,
+                                            835, "", tobyUser, ++DetailSerial, ++DetailId));
+
+                                    journal.getDetailList().add(addGenDetalil(true, tarhilInvoiceDetailList.get(0).getTotalCost().add(totalCost), journal.getId(),
+                                            costOfSoldGoods,
+                                            gallary.getCostCenterId().getId(),
+                                            "", tobyUser, ++DetailSerial, ++DetailId));
+                                    journal.getDetailList().add(addGenDetalil(false, tarhilInvoiceDetailList.get(0).getTotalCost(), journal.getId(),
+                                            managerCostAccount,
+                                            gallary.getCostCenterId().getId(),
+                                            "", tobyUser, ++DetailSerial, ++DetailId));
+                                } else {
+                                    // here
+
                                 }
                             }
-
-                            if (tarhilInvoiceDetailMaster != null) {
-                                generaljournalDetailsService.addGenDetalil(true, tarhilInvoiceDetailList.get(0).getTotalCost(), journal.getId(),
-                                        gallary.getCostAccount().getId(),
-                                        835, "", tobyUser);
-
-                                generaljournalDetailsService.addGenDetalil(false, tarhilInvoiceDetailList.get(0).getTotalCost(), journal.getId(),
-                                        storeAccountNumber,
-                                        835, "", tobyUser);
-
-                                generaljournalDetailsService.addGenDetalil(true, tarhilInvoiceDetailList.get(0).getTotalCost().add(totalCost), journal.getId(),
-                                        costOfSoldGoods,
-                                        gallary.getCostCenterId().getId(),
-                                        "", tobyUser);
-                                generaljournalDetailsService.addGenDetalil(false, tarhilInvoiceDetailList.get(0).getTotalCost(), journal.getId(),
-                                        managerCostAccount,
-                                        gallary.getCostCenterId().getId(),
-                                        "", tobyUser);
-                            } else {
-                                // here
-
-                            }
                         }
-                    }
 //        }
+                        journalList.add(journal);
+                    }
                 }
             } catch (ParseException ex) {
                 Logger.getLogger(InvPurchaseInvoiceServiceImpl_1.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        return journalList;
     }
+
+    public GeneralJournalDTO addGeneralJournalGlobal(Integer yearSelectionId, Integer specialDocumentsTypes, Integer serial, Date date, String remark, TobyUser tobyUser, Integer id) {
+
+        GeneralJournalDTO generalJournal = new GeneralJournalDTO();
+        generalJournal.setGeneralStatement(remark);
+        generalJournal.setGeneralData(date);
+        generalJournal.setGeneralDecument(serial);
+        generalJournal.setSerial(serial);
+
+        generalJournal.setPost_flag(true);
+        generalJournal.setId(id);
+//        Symbol symbol = symbolService.getSpecialDocumentsTypes(specialDocumentsTypes);
+        GlYearDTO glYear = new GlYearDTO();
+        glYear.setId(73);
+        generalJournal.setGlYear(glYear);
+//        generalJournal.setGeneralType(symbol != null ? symbol : null);
+        generalJournal.setBranchId(tobyUser.getBranchId().getId());
+        generalJournal.setCompanyId(tobyUser.getCompanyId().getId());
+        generalJournal.setCreatedBy(tobyUser.getId());
+        generalJournal.setCreatedDate(new Date());
+        Map<String, Object> params = new HashMap<>();
+        params.put("glYear", yearSelectionId == null ? null : yearSelectionId);
+
+        return generalJournal;
+    }
+
+    public GeneralJournalDetails addGenDetalil(Boolean isDebit, BigDecimal value, Integer generalJournalId, Integer accountId, Integer costCenterId, String remark, TobyUser tobyUser, Integer serial, Integer id) {
+
+        GeneralJournalDetails generalJournalDetail = new GeneralJournalDetails();
+
+        if (generalJournalId != null) {
+            GeneralJournal journal = new GeneralJournal();
+            journal.setId(generalJournalId);
+            generalJournalDetail.setGeneralJournalId(journal);
+        }
+        if (isDebit) {
+            generalJournalDetail.setDebitAmount(value);
+            generalJournalDetail.setDebitAmountLocal(value);
+        } else {
+            generalJournalDetail.setCreditamount(value);
+            generalJournalDetail.setCreditamountLocal(value);
+        }
+
+        if (accountId != null) {
+            GlAccount glAccount = new GlAccount();
+            glAccount.setId(accountId);
+            generalJournalDetail.setGlACCOUNTId(glAccount);
+        }
+        generalJournalDetail.setDiscribtion(remark);
+        generalJournalDetail.setRate(BigDecimal.ONE);
+        Currency currency = new Currency();
+        currency.setId(110);
+        generalJournalDetail.setCurrencyId(currency);
+
+        if (costCenterId != null) {
+            CostCenter costCenter = new CostCenter();
+            costCenter.setId(costCenterId);
+            generalJournalDetail.setCostCenterId(costCenter);
+        }
+        generalJournalDetail.setBranchId(tobyUser.getBranchId());
+        generalJournalDetail.setCompanyId(tobyUser.getCompanyId());
+        generalJournalDetail.setCreatedBy(tobyUser);
+        generalJournalDetail.setCreationDate(new Date());
+        generalJournalDetail.setSerial(serial);
+        generalJournalDetail.setId(id);
+
+        return generalJournalDetail;
+    }
+
 }

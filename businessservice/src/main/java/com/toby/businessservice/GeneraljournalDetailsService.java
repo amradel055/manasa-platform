@@ -26,6 +26,8 @@ public interface GeneraljournalDetailsService {
 
     public GeneralJournalDetails addGenDetalils(GeneralJournalDetails details);
     
+    public void addGenDetalilsGlobal(List<GeneralJournalDetails> details, TobyUser tobyUser);
+    
     public void addGenDetalilsGlobal(List<GeneralJournalDetails> details, TobyUser tobyUser, Integer generalJournalId,Integer idDtail);
     
     public GeneralJournalDetails addGenDetalil(Boolean isDebit,BigDecimal value, Integer generalJournalId, Integer accountId, Integer costCenterId, String remark, TobyUser tobyUser);

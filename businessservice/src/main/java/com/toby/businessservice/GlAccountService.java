@@ -13,6 +13,7 @@ import com.toby.dto.GlAccountDTO;
 import com.toby.entity.GlAccount;
 import com.toby.entity.TobyUser;
 import java.util.List;
+import java.util.Map;
 import javax.ejb.Remote;
 
 /**
@@ -63,9 +64,9 @@ public interface GlAccountService {
     public List<GlAccount> getGLAccountsForBranchForMainAccounts(Integer selectedBranchId, AccountGroupEnum accountGroup);
 
     public List<GlAccount> getBranchGLAccountsActive(Integer id);
-    
+
     public List<GlAccountDTO> getBranchGLAccountDTOListActive(TobyUser tobyUser);
-    
+
     public List<GlAccount> getBranchAllGLAccountsActive(Integer branchId);
 
     public List<GlAccount> getGLAccountsActiveByBranchAndCurrencyId(Integer branchId, Integer currencyId);
@@ -117,6 +118,9 @@ public interface GlAccountService {
     public List<GlAccount> getBranchGLAccountsActiveWithoutGlBankAccounts(Integer branchId);
 
     public List<GlAccount> getBranchGLAccountsActiveWithException(Integer branchId);
-     public List<GlAccountDTO> getBranchGLAccountsActiveDTO(Integer id,TobyUser tobyUser);
-    
+
+    public List<GlAccountDTO> getBranchGLAccountsActiveDTO(Integer id, TobyUser tobyUser);
+
+    public Map<Integer, GlAccount> getAllGlAccountMap();
+
 }
