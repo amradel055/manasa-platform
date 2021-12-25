@@ -135,7 +135,7 @@ public class InvStripFormMB extends InventoryBasicDataForm {
             if (!sheet.getCell(0, i).getContents().isEmpty()) {
                 String code = sheet.getCell(0, i).getContents();
                 String amount = sheet.getCell(1, i).getContents();
-                List<ItemsBarcodesDetailsView> barcodesDetailsViewList = autoCompleteService.autoCompleteItemsBarcodesDetailsViewBranchId(getUserData().getUserBranch().getId(), code);
+                List<ItemsBarcodesDetailsView> barcodesDetailsViewList = autoCompleteService.autoCompleteItemsBarcodesDetailsViewBranchId(getUserData().getUserBranch().getId(), code,getInvInvoiceDTO().getInvInventoryId() == null ? null : getInvInvoiceDTO().getInvInventoryId().getId());
                 if (barcodesDetailsViewList != null && !barcodesDetailsViewList.isEmpty()) {
                     InvDetailDTO dTO = new InvDetailDTO();
                     dTO.setActualQuantity(new BigDecimal(amount));

@@ -105,6 +105,8 @@ public class ItemsBarcodesDetailsView implements Serializable {
     private String barcodeMain;
     @Transient
     private InvItemDTO invItem;
+    @Column(name = "inv_inventory_id")
+    private Integer invInventoryId;
 
     @Override
     public String toString() {
@@ -519,5 +521,19 @@ public class ItemsBarcodesDetailsView implements Serializable {
      */
     public void setInvItem(InvItemDTO invItem) {
         this.invItem = invItem;
+    }
+
+    /**
+     * @return the invInventoryId
+     */
+    public Integer getInvInventoryId() {
+        return invInventoryId;
+    }
+
+    /**
+     * @param invInventoryId the invInventoryId to set
+     */
+    public void setInvInventoryId(Integer invInventoryId) {
+        this.invInventoryId = invInventoryId;
     }
 }

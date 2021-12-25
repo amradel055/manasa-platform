@@ -234,19 +234,19 @@ public class AutoComplateImpl implements AutoCompleteService {
     }
 
     @Override
-    public List<SymbolDTO> autoCompleteSymbolByCompanyId(Integer companyId,Integer symbolType , String qeury) {
+    public List<SymbolDTO> autoCompleteSymbolByCompanyId(Integer companyId, Integer symbolType, String qeury) {
         List<SymbolDTO> list = new ArrayList<>();
         StringBuilder query = new StringBuilder();
         Map<String, Object> params = new HashMap<>();
         params.put("companyId", companyId);
         query.append("SELECT sym FROM Symbol sym WHERE  sym.generalSymbolId.serial=41 AND sym.companyId.id=:companyId");
-        if(symbolType != null){
+        if (symbolType != null) {
             params.put("symbolType", symbolType);
             query.append(" AND sym.symbolType = :symbolType");
         }
         appendQuery(qeury, query, params);
         List<Symbol> detailses = dao.findListByQuery(query.toString(), params);
-       list = returnListDTO(detailses);
+        list = returnListDTO(detailses);
         return list;
     }
 
@@ -524,7 +524,7 @@ public class AutoComplateImpl implements AutoCompleteService {
             return mapToHrSalaryEffectDTO(Entity);
         } else if (Entity.getClass().equals(GlBank.class)) {
             return mapToGlBankDTO(Entity);
-        }else if (Entity.getClass().equals(Symbol.class)) {
+        } else if (Entity.getClass().equals(Symbol.class)) {
             return mapToSymbolDTO(Entity);
         }
         return null;
@@ -639,7 +639,7 @@ public class AutoComplateImpl implements AutoCompleteService {
         dTO.setName(entity.getName());
         return (T) dTO;
     }
-    
+
     private <E, T> T mapToSymbolDTO(E Entity) {
         SymbolDTO dTO = new SymbolDTO();
         Symbol entity = (Symbol) Entity;
@@ -653,13 +653,19 @@ public class AutoComplateImpl implements AutoCompleteService {
     }
 
     @Override
-    public List<ItemsBarcodesDetailsView> autoCompleteItemsBarcodesDetailsViewBranchId(Integer branchId, String qeury) {
+    public List<ItemsBarcodesDetailsView> autoCompleteItemsBarcodesDetailsViewBranchId(Integer branchId, String qeury, Integer invInventoryId) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
 
         StringBuilder sql = new StringBuilder();
 
         sql.append(" SELECT e FROM ItemsBarcodesDetailsView e WHERE e.branchId = :branchId  ");
+
+        if (invInventoryId != null) {
+            params.put("invInventoryId", invInventoryId);
+            sql.append(" AND ( e.invInventoryId = :invInventoryId  OR e.invInventoryId IS NULL )");
+        }
+
         if (qeury != null && !qeury.isEmpty()) {
             sql.append(" AND ((:qeury is null OR e.name  like CONCAT('%',:qeury ,'%')) OR (:qeury is null OR e.barcode  like CONCAT('%',:qeury ,'%') ) )");
             params.put("qeury", qeury);

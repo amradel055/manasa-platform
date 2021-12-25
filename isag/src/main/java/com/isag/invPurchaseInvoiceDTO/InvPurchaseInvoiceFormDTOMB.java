@@ -7,7 +7,6 @@ package com.isag.invPurchaseInvoiceDTO;
 
 import com.isag.businessservice.InvPurchaseInvoiceService_1;
 import com.isag.define.ScreenNameClassEnum;
-import com.isag.dto.InvDetailDTO;
 import com.isag.isag.InventoryBasicDataForm;
 import java.math.BigDecimal;
 import javax.annotation.PostConstruct;
@@ -68,6 +67,9 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
                 if (typeActivity == 1) {
                     getInvInvoiceDTO().setTypeActivity(1);
                 }
+                if(!getUserData().getIsagUserRole().getCustomerShow()){
+                    getInvInvoiceDTO().setOrganizationSiteId(null);
+                }
             } else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("editInvoice")) {
                 reset();
                 getInvInvoiceDTO().setIsEdit(Boolean.TRUE);
@@ -75,6 +77,7 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
                 fillDefaultList();
                 putCurrency();
                 getInvInvoiceDTO().setIsEdit(Boolean.FALSE);
+                
             } else {
                 exit("../invpurchaseinvoice_1/invpurchaseinvoicelist.xhtml");
             }

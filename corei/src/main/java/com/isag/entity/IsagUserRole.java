@@ -41,14 +41,18 @@ public class IsagUserRole extends BaseEntity {
     private IsagRole roleId;
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ManyToOne
-    private IsagUser userId;  
-    
+    private IsagUser userId;
+
     @Column(name = "cost_avarage_update")
-    private Boolean costAvarageUpdate;    
+    private Boolean costAvarageUpdate;
     @Column(name = "sell_price_update")
-    private Boolean sellPriceUpdate;  
+    private Boolean sellPriceUpdate;
     @Column(name = "bank_update")
     private Boolean bankUpdate;
+    @Column(name = "sell_price_show")
+    private Boolean sellPriceShow;
+    @Column(name = "customer_show")
+    private Boolean customerShow;
 
     @Transient
     private Boolean markEdit;
@@ -61,7 +65,7 @@ public class IsagUserRole extends BaseEntity {
 
     @Transient
     private List<InvInventory> inventoryList;
-    
+
     @Transient
     private List<Employee> employeeList;
 
@@ -197,8 +201,8 @@ public class IsagUserRole extends BaseEntity {
      * @return the bankUpdate
      */
     public Boolean getBankUpdate() {
-        if(bankUpdate == null){
-        bankUpdate = Boolean.FALSE;
+        if (bankUpdate == null) {
+            bankUpdate = Boolean.FALSE;
         }
         return bankUpdate;
     }
@@ -208,5 +212,36 @@ public class IsagUserRole extends BaseEntity {
      */
     public void setBankUpdate(Boolean bankUpdate) {
         this.bankUpdate = bankUpdate;
+    }
+
+    /**
+     * @return the sellPriceShow
+     */
+    public Boolean getSellPriceShow() {
+        return sellPriceShow;
+    }
+
+    /**
+     * @param sellPriceShow the sellPriceShow to set
+     */
+    public void setSellPriceShow(Boolean sellPriceShow) {
+        this.sellPriceShow = sellPriceShow;
+    }
+
+    /**
+     * @return the customerShow
+     */
+    public Boolean getCustomerShow() {
+        if (customerShow == null) {
+            customerShow = Boolean.FALSE;
+        }
+        return customerShow;
+    }
+
+    /**
+     * @param customerShow the customerShow to set
+     */
+    public void setCustomerShow(Boolean customerShow) {
+        this.customerShow = customerShow;
     }
 }

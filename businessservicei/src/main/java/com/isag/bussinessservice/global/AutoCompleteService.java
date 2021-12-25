@@ -68,7 +68,7 @@ public interface AutoCompleteService {
 
     public List<HrSalaryEffectDTO> autoCompleteHrSalaryEffect(Integer branchId, String qeury);
 
-    public List<ItemsBarcodesDetailsView> autoCompleteItemsBarcodesDetailsViewBranchId(Integer branchId, String qeury);
+    public List<ItemsBarcodesDetailsView> autoCompleteItemsBarcodesDetailsViewBranchId(Integer branchId, String qeury, Integer invInventoryId);
 
     public List<GlBankDTO> autoCompleteGlbankByUserAndBranchId(Integer branchId, Integer userId, String qeury);
 

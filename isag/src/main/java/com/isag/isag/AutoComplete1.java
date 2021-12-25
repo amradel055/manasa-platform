@@ -169,7 +169,7 @@ public class AutoComplete1 implements Serializable {
             RequestContext context = RequestContext.getCurrentInstance();
             context.execute("PF('dlg4').show();");
         } else {
-            autoCompleteInvItem = autoCompleteService.autoCompleteItemsBarcodesDetailsViewBranchId(getBranchId(), query);
+            autoCompleteInvItem = autoCompleteService.autoCompleteItemsBarcodesDetailsViewBranchId(getBranchId(), query,null);
             setItemsBarcodesDetailsViewConverter(new ItemsBarcodesDetailsViewConverter(autoCompleteInvItem));
         }
         return autoCompleteInvItem;
