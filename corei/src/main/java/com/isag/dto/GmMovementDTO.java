@@ -7,12 +7,13 @@ package com.isag.dto;
 
 import java.util.Date;
 
+
 /**
  *
  * @author Lenovo
  */
+
 public class GmMovementDTO  extends BaseEntityDTO {
-    
        private InvOrganizationSiteDTO customerIdFrom;
        private InvOrganizationSiteDTO customerIdTo;
        private Date date;
@@ -20,6 +21,7 @@ public class GmMovementDTO  extends BaseEntityDTO {
        private Integer days;
        private GmSubscriptionsDTO subscriptionIdFrom ;
        private GmSubscriptionsDTO subscriptionIdTo ;
+      
 
     /**
      * @return the customerIdFrom
@@ -129,6 +131,9 @@ public class GmMovementDTO  extends BaseEntityDTO {
         this.subscriptionIdTo = subscriptionIdTo;
     }
 
+  
+     
+   
 
 }
 

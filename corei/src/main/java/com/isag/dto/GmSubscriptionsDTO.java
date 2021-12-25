@@ -16,10 +16,8 @@ import java.util.List;
  * @author IT Shop
  */
 public class GmSubscriptionsDTO extends BaseEntityDTO {
-        private Boolean barcodeSelect;
-
-
-        
+    private Boolean barcodeSelect;
+    private Integer transDaysNumber;
     private InvOrganizationSiteDTO organizationSiteId;
     private BigDecimal customerBalance;
     private InvInventoryDTO invInventoryId;
@@ -769,4 +767,23 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
     public void setMustDays(Integer mustDays) {
         this.mustDays = mustDays;
     }
+
+    /**
+     * @return the transDaysNumber
+     */
+    public Integer getTransDaysNumber() {
+        if(transDaysNumber==null){
+        transDaysNumber=0;
+        }
+        return transDaysNumber;
+    }
+
+    /**
+     * @param transDaysNumber the transDaysNumber to set
+     */
+    public void setTransDaysNumber(Integer transDaysNumber) {
+        this.transDaysNumber = transDaysNumber;
+    }
+
+   
 }

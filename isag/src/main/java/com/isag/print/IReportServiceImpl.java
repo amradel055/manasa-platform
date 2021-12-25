@@ -383,9 +383,9 @@ public class IReportServiceImpl implements IReportService {
             hashMap.put("remainText", "المبلغ المتبقى");
             hashMap.put("tax", "الضريبةً");
             hashMap.put("taxValue", invPurchasegmSubscriptionsDTO.getTaxvalue());
-//            hashMap.put("totalValue", invPurchaseInvoiceDTO.getTotalNet());
-            hashMap.put("totalValue", invPurchasegmSubscriptionsDTO.getTotalNet());
-            hashMap.put("totalWithTaxValue", invPurchasegmSubscriptionsDTO.getTaxvalue().add(invPurchasegmSubscriptionsDTO.getTotalNet()));
+//            hashMap.put("totalValue", invPurchasegmSubscriptionsDTO.getTotalNet());
+            hashMap.put("totalValue", invPurchasegmSubscriptionsDTO.getFinalNet());
+//            hashMap.put("totalWithTaxValue", invPurchasegmSubscriptionsDTO.getTaxvalue().add(invPurchasegmSubscriptionsDTO.getFinalNet()));
             hashMap.put("payedValue", invPurchasegmSubscriptionsDTO.getPayed());
             hashMap.put("remainValue", invPurchasegmSubscriptionsDTO.getRemain());
             hashMap.put("receiptNumberValue", invPurchasegmSubscriptionsDTO.getSerial());
@@ -415,7 +415,6 @@ public class IReportServiceImpl implements IReportService {
             hashMap.put("email", invPurchasegmSubscriptionsDTO.getOrganizationSiteId().getEmail());
 
             printQRCode(invPurchasegmSubscriptionsDTO, hashMap, reportManagement);
-
             return hashMap;
         } catch (Exception e) {
 //            saveError(e, "SalesInvoiceFormMB", "prepareReport");
