@@ -97,6 +97,13 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
             increaseDate();
         }
     }
+      public void show() {
+        setInvOrganizationSiteDTOSelected(organizationSiteService.findOrganizationSiteDTOById(invOrganizationSiteDTO.getId()));
+        setGmSubscriptionsDTOSelected(gmSubscriptionsService.getValidGmSubscriptionsDTOByCustomerId(invOrganizationSiteDTO.getId()));
+       
+
+       
+    }
 
     private void increaseDate() {
         Calendar c = Calendar.getInstance();
@@ -185,6 +192,21 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
             return null;
         }
     }
+    
+     public String goToMovment() {
+        try {
+            ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+            context.getSessionMap().put("ScreenMode", "addGmMovement");
+            context.getSessionMap().put("typeActivity", 0);
+            context.getSessionMap().put("gmCustomerIdSelected", getGmSubscriptionsDTOSelected().getOrganizationSiteId().getId());
+             exit("../gmsubscriptions/gmsubscriptionsformmovment.xhtml");
+
+            return "";
+        } catch (Exception e) {
+            saveError(e, "InvPurchaseInvoiceListMB", "goToAdd");
+            return null;
+        }
+    }
 
     public void goTOAddForm() {
         exit("../gmregistration/gmregistrationForm.xhtml");
@@ -212,8 +234,8 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
         try {
             if (getGmSubscriptionsDTOSelected().getOrganizationSiteId()!= null && getGmSubscriptionsDTOSelected().getOrganizationSiteId().getId() > 0) {
                 ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-                context.getSessionMap().put("invOrganizationSiteDTOSelected", getGmSubscriptionsDTOSelected().getOrganizationSiteId().getId());
-                context.getSessionMap().put("ScreenMode", "resumeinvOrganizationSite");
+                context.getSessionMap().put("TamdedId", getGmSubscriptionsDTOSelected().getId());
+                context.getSessionMap().put("ScreenMode", "Tamded");
                 goToScreen();
                 return "";
             } else {

@@ -8,14 +8,17 @@ package com.igma.gmsubscriptions;
 import org.apache.commons.codec.binary.Base64;
 import com.isag.businessservice.GmGlobalService;
 import com.isag.businessservice.GmItemService;
+import com.isag.businessservice.GmMovementService;
 import com.isag.businessservice.GmSubscriptionsService;
 import com.isag.businessservice.OrganizationSiteService;
 import com.isag.businessservice.ReportManagementService;
 import com.isag.bussinessservice.global.AutoCompleteService;
+import com.isag.bussinessservice.global.Utility;
 import com.isag.converter.GlBankDTOConverter;
 import com.isag.converter.InvOrganizationSiteDTOConverter;
 import com.isag.dto.GlBankDTO;
 import com.isag.dto.GmItemDTO;
+import com.isag.dto.GmMovementDTO;
 import com.isag.dto.GmSubscriptionsDTO;
 import com.isag.dto.GmSubscriptionsDetailDTO;
 import com.isag.dto.InvOrganizationSiteDTO;
@@ -44,19 +47,21 @@ import javax.servlet.http.HttpServletRequest;
 @Named(value = "gmSubscriptionsFormDTOMB")
 @ViewScoped
 public class GmSubscriptionsFormDTOMB extends BaseFormBean {
-    
+
     private GmSubscriptionsDTO gmSubscriptionsDTO;
+    private GmSubscriptionsDTO gmSubscriptionsDTOold;
+
     private GmItemDTO gmItemDTOSelected;
-    
+
     private InvOrganizationSiteDTO organizationSiteId;
-    
+
     private List<InvOrganizationSiteDTO> invOrganizationSiteDTOList;
     private InvOrganizationSiteDTOConverter organizationSiteDTOConvertor;
     private List<GmSubscriptionsDTO> list;
     private List<GlBankDTO> glBankList;
     private GlBankDTOConverter glBankConverter;
     IReportService iReportService = new IReportServiceImpl();
-    
+
     private List<GmItemDTO> gmItemDTOList;
 
     // EJBs
@@ -69,16 +74,20 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
     @EJB
     private GmGlobalService gmGlobalService;
     @EJB
-    private ReportManagementService reportManagementService;    
+    private ReportManagementService reportManagementService;
     @EJB
     private AutoCompleteService autoCompleteService;
-    
+
+    @EJB
+    private GmMovementService gmMovementService;
+
     private BigDecimal remain;
     private String filename;
     private String file;
     private String host;
     private FileUploadController fileUploadController;
-   
+    private GmMovementDTO gmMovement;
+
     @Override
     @PostConstruct
     public void init() {
@@ -88,129 +97,171 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
             saveError(e, "InvPurchaseInvoiceFormMB", "init");
         }
     }
-    
+
     @Override
     public void load() {
         try {
-            
+
             if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("addGmSubscriptions")) {
-             getGmSubscriptionsDTO().setShowCustomerDate(Boolean.FALSE);
+                getGmSubscriptionsDTO().setShowCustomerDate(Boolean.FALSE);
                 reset();
                 fillDefaultList();
+            } else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("addGmMovement")) {
+                getGmSubscriptionsDTO().setShowCustomerDate(Boolean.FALSE);
+                reset();
+                fillDefaultList();
+                updateMovementdata();
             } else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("editGmSubscriptions")) {
-                             getGmSubscriptionsDTO().setShowCustomerDate(Boolean.FALSE);
+                getGmSubscriptionsDTO().setShowCustomerDate(Boolean.FALSE);
 
                 getGmSubscriptionsDTO().setIsEdit(Boolean.TRUE);
                 fillInvInvoiceDTO();
                 fillDefaultList();
-            }
-            
-            else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("editorganization")) {   
+            } else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("editorganization")) {
                 getOrganizationSiteId().setIsEdited(Boolean.TRUE);
-                
+
                 fillClientDTO();
-            } 
-              else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("resumeinvOrganizationSite")) {
-                                               getGmSubscriptionsDTO().setShowCustomerDate(Boolean.FALSE);
-
-               getGmSubscriptionsDTO().setIsEdit(Boolean.FALSE);
+            } else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("Tamded")) {
+                getGmSubscriptionsDTO().setShowCustomerDate(Boolean.FALSE);
+                getGmSubscriptionsDTO().setIsEdit(Boolean.FALSE);
+                fillGmSubscribtionOld();
                 fillResumeClientDTO();
-                               
 
-            }
-            else {
+            } else {
                 exit("../gmsubscriptions/gmsubscriptionslist.xhtml");
             }
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceFormMB", "load");
         }
     }
-    
+
     public void updatedata() {
-        
+        Calendar c = Calendar.getInstance();
         gmSubscriptionsDTO.setValue(getGmItemDTOSelected().getCost());
         if (getGmItemDTOSelected().getPeriod() != null) {
-            gmSubscriptionsDTO.setDate(new Date());
-            gmSubscriptionsDTO.setStartDate(new Date());
-            gmSubscriptionsDTO.setGmItemDTO(getGmItemDTOSelected());
-            Calendar c = Calendar.getInstance();
-            c.setTime(gmSubscriptionsDTO.getStartDate());
-            c.add(Calendar.DAY_OF_MONTH, getGmItemDTOSelected().getPeriod());
-            gmSubscriptionsDTO.setEndDate(c.getTime());
-        }        
+            if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("Tamded")) {
+                if (getGmSubscriptionsDTOold() != null && new Date().compareTo(getGmSubscriptionsDTOold().getEndDate()) != 1) {
+                    c.setTime(getGmSubscriptionsDTOold().getEndDate());
+                    c.add(Calendar.DAY_OF_MONTH, getGmItemDTOSelected().getPeriod());
+                    gmSubscriptionsDTO.setEndDate(c.getTime());
+                    c.setTime(getGmSubscriptionsDTOold().getEndDate());
+                    c.add(Calendar.DAY_OF_MONTH, 1);
+                    gmSubscriptionsDTO.setStartDate(c.getTime());
+                } else {
+                    gmSubscriptionsDTO.setDate(new Date());
+                    gmSubscriptionsDTO.setStartDate(new Date());
+                    c.setTime(gmSubscriptionsDTO.getStartDate());
+                    c.add(Calendar.DAY_OF_MONTH, getGmItemDTOSelected().getPeriod());
+                    gmSubscriptionsDTO.setEndDate(c.getTime());
+                }
+            } else {
+                gmSubscriptionsDTO.setDate(new Date());
+                gmSubscriptionsDTO.setStartDate(new Date());
+                c.setTime(gmSubscriptionsDTO.getStartDate());
+                c.add(Calendar.DAY_OF_MONTH, getGmItemDTOSelected().getPeriod());
+                gmSubscriptionsDTO.setEndDate(c.getTime());
+            }
+
+        }
+        gmSubscriptionsDTO.setGmItemDTO(getGmItemDTOSelected());
         gmSubscriptionsDTO.setTaxFlag(Boolean.TRUE);
         gmSubscriptionsDTO.setTaxvalue(gmSubscriptionsDTO.getValue().multiply(new BigDecimal(0.15)).setScale(2, RoundingMode.HALF_UP));
         gmSubscriptionsDTO.setFinalNet(gmSubscriptionsDTO.getValue().add(gmSubscriptionsDTO.getTaxvalue()).setScale(2, RoundingMode.HALF_UP));
-        
+
     }
-    
+
+    public void updateMovementdata() {
+        getGmMovement().getCustomerIdFrom().setId((Integer) getContext().getSessionMap().get("gmCustomerIdSelected"));
+        getGmMovement().setSubscriptionIdFrom(gmSubscriptionsService.getValidGmSubscriptionsDTOByCustomerId(getGmMovement().getCustomerIdFrom().getId()));
+        getGmMovement().setCustomerIdFrom(organizationSiteService.findOrganizationSiteDTOById(getGmMovement().getCustomerIdFrom().getId()));
+        getGmMovement().setDays(Utility.calcDaysBetween(getGmMovement().getSubscriptionIdFrom().getEndDate(), getGmMovement().getDate()));
+    }
+
     public void fillDefaultList() {
         getInvOrganizationSiteDTOList();
         getGlBankList();
     }
-    
+
+    public void saveAndPrint() {
+        save();
+        print();
+    }
+
     @Override
     public String save() {
         getGmSubscriptionsDTO().setMsg(null);
         getGmSubscriptionsDTO().setType(0);
         setGmSubscriptionsDTO(gmSubscriptionsService.save(getGmSubscriptionsDTO(), getUserData().getUser()));
         msgSave(getGmSubscriptionsDTO().getMsg());
-        
+
         return "";
     }
-    
+
+    public String saveMovment() {
+//       getGmMovement().setCustomerIdTo(organizationSiteService.findOrganizationSiteDTOById(getGmMovement().getCustomerIdTo().getId()));
+        gmMovementService.save(getGmMovement(), getGmSubscriptionsDTO(), getUserData().getUser());
+
+        return "";
+    }
+
     public void fillInvInvoiceDTO() {
-        getGmSubscriptionsDTO().setId((Integer) getContext().getSessionMap().get("gmSubscriptionsIdSelected"));
+        getGmSubscriptionsDTO().setId((Integer) getContext().getSessionMap().get("TamdedId"));
         setGmSubscriptionsDTO(gmSubscriptionsService.findGmSubscriptionsDTOById(getGmSubscriptionsDTO()));
     }
-    
+
+    public void fillGmSubscribtionOld() {
+        setGmSubscriptionsDTOold(new GmSubscriptionsDTO());
+        getGmSubscriptionsDTOold().setId((Integer) getContext().getSessionMap().get("TamdedId"));
+        setGmSubscriptionsDTOold(gmSubscriptionsService.findGmSubscriptionsDTOById(getGmSubscriptionsDTOold()));
+    }
+
     public void fillClientDTO() {
         getOrganizationSiteId().setId((Integer) getContext().getSessionMap().get("invOrganizationSiteDTOSelected"));
         setOrganizationSiteId(organizationSiteService.findOrganizationSiteDTOById(getOrganizationSiteId().getId()));
     }
-      public void fillResumeClientDTO() {
-        getOrganizationSiteId().setId((Integer) getContext().getSessionMap().get("invOrganizationSiteDTOSelected"));
-        getGmSubscriptionsDTO().setOrganizationSiteId(organizationSiteService.findOrganizationSiteDTOById(getOrganizationSiteId().getId()));
+
+    public void fillResumeClientDTO() {
+
+        getGmSubscriptionsDTO().setOrganizationSiteId(getGmSubscriptionsDTOold().getOrganizationSiteId());
     }
-    
+
     @Override
     public String getScreenName() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     public String exit() {
         exit("../gmsubscriptions/gmsubscriptionslist.xhtml");
         return "";
     }
-    
-    
+
     public List<InvOrganizationSiteDTO> completeCustomerFrom(String query) {
         invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getUserData().getUserBranch().getId(), Boolean.TRUE, 0, query);
         organizationSiteDTOConvertor = new InvOrganizationSiteDTOConverter(invOrganizationSiteDTOList);
         return invOrganizationSiteDTOList;
-        
+
     }
-    
+
     public void addNewCustomer2() {
         getGmSubscriptionsDTO().setOrganizationSiteId(organizationSiteService.addNewCustomer(getOrganizationSiteId(), getInvOrganizationSiteDTOList(), getUserData().getUser()));
         getGmSubscriptionsDTO().setShowCustomerDate(Boolean.FALSE);
         saveImage();
         leaveScreen();
-        
+
     }
-    
+
     public void leaveScreen() {
         if (getUri().contains("gmregistration")) {
             exit("../gmregistration/gmclientlist.xhtml");
-            
+
         }
     }
-    
+
     public void print() {
         getGmSubscriptionsDTO().setReportManagement(reportManagementService.reportManagementByBranch(getUserData().getUserBranch().getId()));
         iReportService.printReportGmInvoice(getGmSubscriptionsDTO(), getUserData());
     }
-    
+
     public void addInvDetail() {
         try {
             getGmSubscriptionsDTO().setMsg(null);
@@ -220,31 +271,31 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
             saveError(e, "InvPurchaseInvoiceFormMB", "addInvPurchaseInvoiceDetail");
         }
     }
-    
+
     public Boolean validateItems(GmSubscriptionsDetailDTO gmSubscriptionsDetailDTO) {
         try {
             gmSubscriptionsDetailDTO.setMsg(null);
             gmSubscriptionsDetailDTO.setCost(gmSubscriptionsDetailDTO.getItemSymbolId().getCost());
             afterValidation(gmSubscriptionsDetailDTO);
             changeFocus("form:invPurchaseInvoiceDetailsTable:" + (getGmSubscriptionsDTO().getGmSubscriptionsDetailList().size() - 1) + ":QuantityT");
-            
+
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceFormMB", "validateItems");
             return null;
         }
         return true;
     }
-    
+
     private void afterValidation(GmSubscriptionsDetailDTO gmSubscriptionsDetailDTO) {
         replacedetail(gmSubscriptionsDetailDTO);
         updateSummition();
         errorMsg(gmSubscriptionsDetailDTO.getMsg());
     }
-    
+
     public void updateSummition() {
         setGmSubscriptionsDTO(gmGlobalService.updateSummition(getGmSubscriptionsDTO()));
     }
-    
+
     private void replacedetail(GmSubscriptionsDetailDTO gmSubscriptionsDetailDTO) {
         for (GmSubscriptionsDetailDTO detailDTO : getGmSubscriptionsDTO().getGmSubscriptionsDetailList()) {
             if (detailDTO.getIndex().equals(gmSubscriptionsDetailDTO.getIndex())) {
@@ -255,7 +306,7 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
             }
         }
     }
-    
+
     public void deleteDetail(GmSubscriptionsDetailDTO gmSubscriptionsDetailDTO) {
         try {
             if (gmSubscriptionsDetailDTO.getId() != null) {
@@ -272,7 +323,7 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
             saveError(e, "InvPurchaseInvoiceFormMB", "deleteInvPurchaseInvoiceDetail");
         }
     }
-    
+
     public void recalcHeadValues() {
         try {
             setGmSubscriptionsDTO(gmGlobalService.recalcHeadValues(getGmSubscriptionsDTO()));
@@ -281,7 +332,7 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
             saveError(e, "InvPurchaseInvoiceFormMB", "recalcHeadValues");
         }
     }
-    
+
     public void calculateRemainValue() {
         try {
             getGmSubscriptionsDTO().setRemain(getGmSubscriptionsDTO().getPayed().add(getGmSubscriptionsDTO().getPayNet()).add(getGmSubscriptionsDTO().getDiscount()).subtract(getGmSubscriptionsDTO().getTotalNet()));
@@ -289,9 +340,9 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
             saveError(e, "SalesInvoiceFormMB", "calculateRemainValue");
         }
     }
-    
+
     public String updateImage() {
-        
+
         if (getOrganizationSiteId().getClientImage() != null && !getOrganizationSiteId().getClientImage().isEmpty()) {
             organizationSiteService.updateImage(getGmSubscriptionsDTO().getOrganizationSiteId().getId(), getOrganizationSiteId().getClientImage());
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "تم التسجيل بنجاح", "تم التسجيل بنجاح"));
@@ -300,7 +351,7 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
         }
         return "";
     }
-    
+
     public String saveImage() {
         if (getFile() != null && !getFile().isEmpty()) {
             byte[] byteFile = Base64.decodeBase64(getFile().substring(getFile().indexOf("base64,") + 6));
@@ -310,13 +361,11 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
         }
         return "";
     }
-    
+
     public void reset() {
         try {
             setGmSubscriptionsDTO(null);
-            setGmSubscriptionsDTO(null);
-            addInvDetail();
-            changeFocus("form:invPurchaseInvoiceDetailsTable:0:invItemNameIn");
+            setGmItemDTOSelected(null);
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceFormMB", "resetInvPurchaseInvoiceForm");
         }
@@ -530,6 +579,49 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
         this.gmItemDTOSelected = gmItemDTOSelected;
     }
 
+    /**
+     * @return the gmMovementService
+     */
+    public GmMovementService getGmMovementService() {
+        return gmMovementService;
+    }
 
-    
+    /**
+     * @param gmMovementService the gmMovementService to set
+     */
+    public void setGmMovementService(GmMovementService gmMovementService) {
+        this.gmMovementService = gmMovementService;
+    }
+
+    /**
+     * @return the gmMovement
+     */
+    public GmMovementDTO getGmMovement() {
+        if (gmMovement == null) {
+            gmMovement = new GmMovementDTO();
+        }
+        return gmMovement;
+    }
+
+    /**
+     * @param gmMovement the gmMovement to set
+     */
+    public void setGmMovement(GmMovementDTO gmMovement) {
+        this.gmMovement = gmMovement;
+    }
+
+    /**
+     * @return the gmSubscriptionsDTOold
+     */
+    public GmSubscriptionsDTO getGmSubscriptionsDTOold() {
+        return gmSubscriptionsDTOold;
+    }
+
+    /**
+     * @param gmSubscriptionsDTOold the gmSubscriptionsDTOold to set
+     */
+    public void setGmSubscriptionsDTOold(GmSubscriptionsDTO gmSubscriptionsDTOold) {
+        this.gmSubscriptionsDTOold = gmSubscriptionsDTOold;
+    }
+
 }

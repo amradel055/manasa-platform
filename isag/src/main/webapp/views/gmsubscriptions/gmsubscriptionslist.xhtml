@@ -223,6 +223,9 @@
                         <p:commandButton style="margin-right: 40%" update="@form"  value="تمديد"  action ="#{gmSubscriptionsListDTOMB.goToresume()}"> 
                             <f:setPropertyActionListener value="#{invInvoicePurchaseTable}" target="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected}" />
                         </p:commandButton>
+                         <p:commandButton style="margin-right: 40%" update="@form"  value="نقل الاشتراك"  action ="#{gmSubscriptionsListDTOMB.goToMovment()}"> 
+                            <f:setPropertyActionListener value="#{invInvoicePurchaseTable}" target="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected}" />
+                        </p:commandButton>
                     </p:column>
                 </p:dataTable>
 
@@ -262,6 +265,7 @@
 
                                             </div>
                                         </div>
+                                        
                                         <div class="ui-g-12 ui-xl-12">
 
                                             <div class="ui-g-6 ui-xl-6">
