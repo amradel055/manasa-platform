@@ -6,6 +6,7 @@
 package com.isag.businessservice;
 
 import com.isag.views.ProfitOfItemsSold;
+import com.isag.views.SalesReportByValueAdedDetails;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -31,4 +32,6 @@ public interface ReportsService {
 //    public List<ItemBalancesStatement> getItemBalancesStatement(ItemBalancesStatement itemBalancesStatement, Integer branchId);
 
     public List<ProfitOfItemsSold> getProfitOfItemsSold(ProfitOfItemsSold profitOfItemsSold, Integer branchId , Integer type);
+    
+    public List<SalesReportByValueAdedDetails> getSalesReportByValueAdedDetails(SalesReportByValueAdedDetails salesReportByValueAdedDetails, Integer branchId);
 }
