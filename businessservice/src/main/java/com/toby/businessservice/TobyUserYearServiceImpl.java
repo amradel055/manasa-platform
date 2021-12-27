@@ -122,6 +122,8 @@ public class TobyUserYearServiceImpl implements TobyUserYearService {
                     GlYear glYearNew = new GlYear();
                     glYearNew.setId(tobyUserYear.getYearId().getId());
                     glYearNew.setName(tobyUserYear.getYearId().getName());
+                    glYearNew.setDateFrom(tobyUserYear.getYearId().getDateFrom());
+                    glYearNew.setDateTo(tobyUserYear.getYearId().getDateTo());
                     yearList.add(glYearNew);
                 }
             }

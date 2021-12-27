@@ -44,6 +44,8 @@ public interface GeneraljournalServiceDTO {
     
     public void addGeneralJournalDTOForCorrectence(List<GeneralJournalDTO> generalJournals,TobyUser tobyUser); 
     
+    public void addGeneralJournalDTOWithDetailFromExcel(List<GeneralJournalDTO> list, TobyUser tobyUser);
+    
     public void addGeneralJournalDTOWithDetail(List<GeneralJournalDTO> list, TobyUser tobyUser);
     
     public void addGeneralJournalDTOWithDetail(GeneralJournalDTO dto, TobyUser tobyUser,Integer serial ,Integer idHead , Integer idDetail) ;

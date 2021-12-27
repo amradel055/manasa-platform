@@ -1360,7 +1360,7 @@ public class ImportMB extends Basic implements Serializable {
 
         List<GeneralJournalDTO> list = new ArrayList<GeneralJournalDTO>(mapGeneraljournal.values());
 
-        generaljournalServiceDTO.addGeneralJournalDTOWithDetail(list, getUserData().getUser());
+        generaljournalServiceDTO.addGeneralJournalDTOWithDetailFromExcel(list, getUserData().getUser());
 
         OpenDlg("sucesses");
 
@@ -1408,10 +1408,10 @@ public class ImportMB extends Basic implements Serializable {
         glAccount.setId(accountId);
         journalDetails.setGlACCOUNTId(glAccount);
 
-        journalDetails.setDebitAmount(!credit.getContents().isEmpty() ? (new BigDecimal(credit.getContents())) : null);
-        journalDetails.setDebitAmountLocal(!creditF.getContents().isEmpty() ? (new BigDecimal(creditF.getContents())) : null);
-        journalDetails.setCreditamount(!debit.getContents().isEmpty() ? (new BigDecimal(debit.getContents())) : null);
-        journalDetails.setCreditamountLocal(!debitF.getContents().isEmpty() ? (new BigDecimal(debitF.getContents())) : null);
+        journalDetails.setDebitAmount(!credit.getContents().isEmpty() ? (new BigDecimal(debit.getContents())) : null);
+        journalDetails.setDebitAmountLocal(!creditF.getContents().isEmpty() ? (new BigDecimal(debitF.getContents())) : null);
+        journalDetails.setCreditamount(!debit.getContents().isEmpty() ? (new BigDecimal(credit.getContents())) : null);
+        journalDetails.setCreditamountLocal(!debitF.getContents().isEmpty() ? (new BigDecimal(creditF.getContents())) : null);
         journalDetails.setDiscribtion(remark.getContents());
         journalDetails.setBranchId(getUserData().getUserBranch());
         journalDetails.setCreatedBy(getUserData().getUser());
