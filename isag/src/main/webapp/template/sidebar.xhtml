@@ -1099,16 +1099,40 @@
                                     <p:menuitem id="gm_lnk550" value="إنشاء البنود" icon="&#xE8D2;" url="/faces/views/gmitemsymbol/itemsymbollist.xhtml" 
                                                 rendered="#{userData.userScreens['gmitemsymbol'].view or userData.isAdmin}"
                                                 />
-                                    <p:menuitem id="gm_lnk552" value="تسجيل عميل جديد" icon="&#xE8D2;" url="/faces/views/gmregistration/gmclientlist.xhtml" 
-                                                rendered="#{userData.userScreens['gmregistration'].view or userData.isAdmin}"
-                                                />
                                     <p:menuitem id="gm_lnk551" value="استعلام" icon="&#xE8D2;" url="/faces/views/gmsubscriptionstatue/gmsubscriptionstatue.xhtml" 
                                                 rendered="#{userData.userScreens['gmsubscriptionstatue'].view or userData.isAdmin}"
                                                 />
-                                    <p:menuitem id="gm_lnk553" value="الإشتراكات" icon="&#xE8D2;" url="/faces/views/gmsubscriptions/gmsubscriptionslist.xhtml" 
+                                    <p:menuitem id="gm_lnk552" value="الإشتراكات" icon="&#xE8D2;" url="/faces/views/gmsubscriptions/gmsubscriptionslist.xhtml" 
                                                 rendered="#{userData.userScreens['gmsubscriptions'].view or userData.isAdmin}"
                                                 />
-                                    
+                                    <p:menuitem id="gm_lnk553" value="المقبوضات" icon="&#xE8D2;" url="/faces/views/notesreceivables/notesreceivablesList.xhtml" 
+                                                rendered="#{userData.userScreens['notesreceivables'].view or userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="gm_lnk554" value="المدفوعات" icon="&#xE8D2;" url="/faces/views/notesreceivables/notesreceivablesList.xhtml" 
+                                                rendered="#{userData.userScreens['notesreceivables'].view or userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="gm_lnk555" value="تحويلات الخزائن " icon="&#xE8D2;" url="/faces/views/glBankTransaction/glBankTransactionList.xhtml" 
+                                                rendered="#{userData.userScreens['glBankTransaction'].view or userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="gm_lnk556" value="أرصدة الخزائن والبنوك " icon="&#xE8D2;" url="/faces/views/accountreport/banksBalanceReport.xhtml" 
+                                                rendered="#{userData.userScreens['accountreport'].view or userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="gm_lnk557" value="كشف حساب خزنة  " icon="&#xE8D2;" url="/faces/views/bankreport/cashaccountsettlement_1.xhtml" 
+                                                rendered="#{userData.userScreens['cashaccountsettlement_1'].view or userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="gm_lnk558" value="كشف حساب بند  " icon="&#xE8D2;" url="/faces/views/bankreport/cashaccountItems.xhtml" 
+                                                rendered="#{userData.userScreens['cashaccountItems'].view or userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="gm_lnk559" value="أرصدة البنود  " icon="&#xE8D2;" url="/faces/views/accountreport/itemsBalanceReport.xhtml" 
+                                                rendered="#{userData.userScreens['itemsBalanceReport'].view or userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="gm_lnk560" value="تقرير التجميد  " icon="&#xE8D2;" url="/faces/views/gmreports/gmfreezsubscriptionsreport.xhtml" 
+                                                rendered="#{userData.userScreens['gmfreezsubscriptionsreport'].view or userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="gm_lnk561" value="تقرير الإشتراكات  " icon="&#xE8D2;" url="/faces/views/gmreports/gmsubscriptionsreport.xhtml" 
+                                                rendered="#{userData.userScreens['gmsubscriptionsreport'].view or userData.isAdmin}"
+                                                />
+
                                 </p:submenu>
                             </p:submenu>
                             <p:submenu id="sr_sm55" label="الترحيلات" icon="&#xE8D2;"
