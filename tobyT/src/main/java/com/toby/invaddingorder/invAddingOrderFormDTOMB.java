@@ -68,7 +68,9 @@ public class invAddingOrderFormDTOMB extends InventoryBasicDataForm implements S
     public String save() {
         if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getInvPurchaseInvoiceDetailList() != null && !getInvInvoiceDTO().getInvPurchaseInvoiceDetailList().isEmpty()) {
             getInvInvoiceDTO().setMsg(null);
+            checkDetailData();
             setInvInvoiceDTO(invAddingOrderService.save(getInvInvoiceDTO(), getUserData().getUser()));
+            checkDetailData();
             msgSave(getInvInvoiceDTO().getMsg());
         } else {
             FacesContext.getCurrentInstance().addMessage(null,

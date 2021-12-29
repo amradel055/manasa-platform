@@ -733,6 +733,35 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
             }
         }
     }
+    
+    public void discountOfferForALLQomash(Integer number) {
+        for (InvDetailDTO detailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
+            if (detailDTO.getItemsBarcodesDetail() == null && detailDTO.getItemsBarcodesDetailTrans() != null) {
+                detailDTO.setItemsBarcodesDetail(detailDTO.getItemsBarcodesDetailTrans());
+            }
+
+            if (detailDTO.getItemId() != null
+                    && detailDTO.getItemId().getProGroupId() != null
+                    && detailDTO.getItemId().getProGroupId().getId() == 1
+                    && detailDTO.getItemId().getId() != 22194
+                    //                    && detailDTO.getItemId().getId() != 22560
+                    //                    && detailDTO.getItemId().getId() != 22561
+                    //                    && detailDTO.getItemId().getId() != 22563   
+                    //                    && detailDTO.getItemId().getId() != 22632
+                    //                    && detailDTO.getItemId().getId() != 22634
+                    //                    && detailDTO.getItemId().getId() != 22655
+                    //                    && detailDTO.getItemId().getId() != 22656
+                    //                    && detailDTO.getItemId().getId() != 22657
+                    ) {
+                detailDTO.setDiscount(new BigDecimal(number));
+            }
+        }
+
+        checkDetailData();
+        updateSummition(false);
+        checkDetailData();
+
+    }
 
     public void discountOffer(Integer number) {
         for (InvDetailDTO detailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
@@ -760,7 +789,11 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                 detailDTO.setDiscount(new BigDecimal(number));
             }
         }
+
+        checkDetailData();
         updateSummition(false);
+        checkDetailData();
+
     }
 
     public void discount25ForAll(Integer number) {

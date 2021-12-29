@@ -97,11 +97,11 @@ public class AutoComplateImpl implements AutoCompleteService {
                 + "         where ii.branch_id = 182 AND ");
         if (type != null && type == 0) {
             sql.append("      (ii.name  like CONCAT('%','").append(qeury).append("' ,'%')) ");
-        } else if (type != null && type == 0) {
-            sql.append(" OR (ii.code  like CONCAT('%','").append(qeury).append("' ,'%') )");
+        } else if (type != null && type == 1) {
+            sql.append("  (ii.code  like CONCAT('%','").append(qeury).append("' ,'%') )");
         } else {
-            sql.append("      (ii.name  like CONCAT('%','").append(qeury).append("' ,'%')) ");
-            sql.append(" OR (ii.code  like CONCAT('%','").append(qeury).append("' ,'%') )");
+            sql.append("      ((ii.name  like CONCAT('%','").append(qeury).append("' ,'%')) ");
+            sql.append(" OR (ii.code  like CONCAT('%','").append(qeury).append("' ,'%') ))");
         }
 
         sql.append(" order by ii.code limit 30 ");

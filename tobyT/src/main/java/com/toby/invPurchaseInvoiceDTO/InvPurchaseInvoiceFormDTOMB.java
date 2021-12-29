@@ -111,6 +111,7 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
         if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getInvPurchaseInvoiceDetailList() != null && !getInvInvoiceDTO().getInvPurchaseInvoiceDetailList().isEmpty()) {
            Integer id = getInvInvoiceDTO().getId();
             getInvInvoiceDTO().setMsg(null);
+            checkDetailData();
             setInvInvoiceDTO(invPurchaseInvoiceService.save(getInvInvoiceDTO(), getUserData().getUser()));
             checkDetailData();
             setOrganizationSiteId(getInvInvoiceDTO().getOrganizationSiteId());

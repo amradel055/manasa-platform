@@ -129,12 +129,18 @@ public class Basic implements Serializable {
     private List<GlBankDTO> glBankDTOListSelected;
     private GlBankDTO glBankDTOSelect;
     private String glBankDTOIdList;
-    
+
     private InvInventoryDTOConverter inventoryDTOConverters;
     private List<InvInventoryDTO> inventoryLists;
     private List<InvInventoryDTO> inventoryListSelected;
     private InvInventoryDTO inventoryDTOSelect;
     private String inventoryIdList;
+
+    public Date findDateFromHijriFrom(Integer year, Integer month, Integer day) {
+        HijrahDate date = HijrahChronology.INSTANCE.date(year, month, day);
+        LocalDate dateFrom = IsoChronology.INSTANCE.date(date);
+        return java.sql.Date.valueOf(dateFrom);
+    }
 
     public Date findDateFromHijriFrom() {
         if (getYearHijriFrom() != null && getMonthHijriFrom() != null && getDayHijriFrom() != null) {
@@ -869,12 +875,12 @@ public class Basic implements Serializable {
      * @return the glBankDTOLists
      */
     public List<GlBankDTO> getGlBankDTOLists() {
-            if (getGallaryIdList() != null && !getGallaryIdList().isEmpty()) {
-                glBankDTOLists = tobyUserBankService.getAllGlBankForUserByTypeAndBranchIdAndGallaryListPerDTO(getUserData().getUser().getId(), getUserData().getUserBranch().getId(), null, getGallaryIdList());
-            } else {
-                glBankDTOLists = tobyUserBankService.getAllGlBankForUserByTypeAndBranchIdPerDTO(getUserData().getUser().getId(), getUserData().getUserBranch().getId(), null, null);
-            }
-            setGlBankDTOConverter(new GlBankDTOConverter(glBankDTOLists));
+        if (getGallaryIdList() != null && !getGallaryIdList().isEmpty()) {
+            glBankDTOLists = tobyUserBankService.getAllGlBankForUserByTypeAndBranchIdAndGallaryListPerDTO(getUserData().getUser().getId(), getUserData().getUserBranch().getId(), null, getGallaryIdList());
+        } else {
+            glBankDTOLists = tobyUserBankService.getAllGlBankForUserByTypeAndBranchIdPerDTO(getUserData().getUser().getId(), getUserData().getUserBranch().getId(), null, null);
+        }
+        setGlBankDTOConverter(new GlBankDTOConverter(glBankDTOLists));
         return glBankDTOLists;
     }
 
@@ -975,7 +981,7 @@ public class Basic implements Serializable {
      * @return the inventoryListSelected
      */
     public List<InvInventoryDTO> getInventoryListSelected() {
-         if (inventoryListSelected == null) {
+        if (inventoryListSelected == null) {
             inventoryListSelected = getInventoryLists();
         }
         return inventoryListSelected;
@@ -992,7 +998,7 @@ public class Basic implements Serializable {
      * @return the inventoryDTOSelect
      */
     public InvInventoryDTO getInventoryDTOSelect() {
-       if (inventoryDTOSelect == null) {
+        if (inventoryDTOSelect == null) {
             if (getUserData().getInventoryDTOList() == null || getUserData().getInventoryDTOList().isEmpty()) {
                 inventoryDTOSelect = null;
             } else {

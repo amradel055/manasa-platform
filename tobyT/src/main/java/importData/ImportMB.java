@@ -182,7 +182,7 @@ public class ImportMB extends Basic implements Serializable {
 
     public void tarhilInvoiceOne() throws CloneNotSupportedException {
         List<GeneralJournalDTO> list = invPurchaseInvoiceService_1.tarhilOne(getUserData().getUser());
-        
+
         for (GeneralJournalDTO dto : list) {
             generaljournalServiceDTO.addGeneralJournalDTOWithDetail(dto, getUserData().getUser());
         }
@@ -191,19 +191,20 @@ public class ImportMB extends Basic implements Serializable {
     public void tarhilCashOne() {
         List<GeneralJournalDTO> list = bankTransactionDetailsService.tarhilOne(getUserData().getUser());
 
-        Integer idDtail = 1; 
+        Integer idDtail = 1;
 //        Integer idDtail = 75000;
 //        Integer idDtail = 150000;
 //        Integer idDtail = 225000;
 
         for (GeneralJournalDTO dto : list) {
             generaljournalServiceDTO.addGeneralJournalDTOWithDetail(dto, getUserData().getUser(), dto.getSerial(), dto.getId(), idDtail);
+//            generaljournalServiceDTO.addGeneralJournalDTOWithDetailFromExcel(list, getUserData().getUser());
             idDtail = idDtail + 5;
         }
 
     }
-    
-    public void tarhilAll() throws CloneNotSupportedException{
+
+    public void tarhilAll() throws CloneNotSupportedException {
         tarhilCashOne();
         tarhilInvoiceOne();
     }
@@ -720,14 +721,14 @@ public class ImportMB extends Basic implements Serializable {
         for (int i = 1; i < sheet.getRows(); i++) {
             if (!sheet.getCell(0, i).getContents().isEmpty()) {
                 String accunt = sheet.getCell(6, i).getContents();
-               Integer accNumber =  Integer.parseInt(accunt);
+                Integer accNumber = Integer.parseInt(accunt);
                 if (!map.containsKey(accNumber)) {
                     item = new GlAccount();
                     Cell parent = initGlAccountData(sheet, i, item, itemMap, currency);
                     glAccountParent(parent, itemMap, item, parentCode);
-                     System.out.print(item.getAccNumber());
+                    System.out.print(item.getAccNumber());
                     glAccountService.addGlAccount(item);
-                }else{
+                } else {
                     itemMap.put(accNumber, map.get(accNumber));
                 }
             }
@@ -1368,22 +1369,35 @@ public class ImportMB extends Basic implements Serializable {
     }
 
     public GeneralJournalDTO initGeneralJournalHeadDataTasaheet(Sheet sheet, int i, GeneralJournalDTO item) throws NumberFormatException, ParseException {
-        Cell remarkHead = sheet.getCell(4, i);
+        try {
+            Cell remarkHead = sheet.getCell(4, i);
+            Cell dateHigri = sheet.getCell(9, i);
+            System.out.println(dateHigri.getContents());
+            String[] dateHigriSplit = dateHigri.getContents().split("/");
 
-        GlYear glYear = new GlYear();
-        glYear.setId(73);
-        GlYearDTO glYearDTO = new GlYearDTO();
-        glYearDTO.setId(glYear.getId());
-        item.setGlYear(glYearDTO);
-        SymbolDTO generalType = new SymbolDTO();
-        generalType.setId(81);
-        generalType.setSerial(1);
-        item.setGeneralType(generalType);
-        item.setPost_flag(false);
-        item.setGeneralStatement(remarkHead.getContents());
-        item.setBranchId(getUserData().getUserBranch().getId());
-        item.setCreatedBy(getUserData().getUser().getId());
-        item.setCompanyId(getUserData().getCompany().getId());
+            Integer year = Integer.parseInt(dateHigriSplit[0]);
+            Integer month = Integer.parseInt(dateHigriSplit[1]);
+            Integer day = Integer.parseInt(dateHigriSplit[2]);
+
+            Date date = findDateFromHijriFrom(year, month, day);
+            item.setGeneralData(date);
+            GlYear glYear = new GlYear();
+            glYear.setId(73);
+            GlYearDTO glYearDTO = new GlYearDTO();
+            glYearDTO.setId(glYear.getId());
+            item.setGlYear(glYearDTO);
+            SymbolDTO generalType = new SymbolDTO();
+            generalType.setId(81);
+            generalType.setSerial(1);
+            item.setGeneralType(generalType);
+            item.setPost_flag(false);
+            item.setGeneralStatement(remarkHead.getContents());
+            item.setBranchId(getUserData().getUserBranch().getId());
+            item.setCreatedBy(getUserData().getUser().getId());
+            item.setCompanyId(getUserData().getCompany().getId());
+        } catch (Exception e) {
+            System.out.println(e);
+        }
 
         return item;
     }

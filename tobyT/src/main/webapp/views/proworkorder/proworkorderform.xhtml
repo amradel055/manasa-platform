@@ -290,9 +290,9 @@
                             </p:commandButton>
                             <p:commandButton     class="saveButton"  
                                                  title="العرض"
-                                                 value="عرض الخصم 30 %" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 1 and false}"
+                                                 value="عرض الخصم 25 %" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 0 }"
                                                  icon="fa fa-fw fa-save" 
-                                                 action="#{invPurchaseInvoiceFormDTOMB.discount25ForAll(30)}"
+                                                 action="#{invPurchaseInvoiceFormDTOMB.discountOfferForALLQomash(25)}"
                                                  update="@form"
                                                  >
                             </p:commandButton>
@@ -884,7 +884,7 @@
                                           filterable="false">
                                     <p:outputLabel value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}" 
                                                    rendered="#{invPurchaseInvoiceDetailsTable.isEdit}" />
-                                    <p:autoComplete id="invItemNameIn"  
+                                    <p:autoComplete id="invItemNameIn"    
                                                     style="width:100%"
                                                     rendered="#{not invPurchaseInvoiceDetailsTable.isEdit}"
                                                     converter="#{autoComplete.itemsBarcodesDetailsViewConverter}"
@@ -896,7 +896,7 @@
                                                     forceSelection="true" 
                                                     completeMethod="#{autoComplete.completeItemsBarcodesDetailsView}" 
                                                     >
-                                        <p:ajax update="invItemCodeIn proof2 proof QuantityT unitvalue QuantityTOU   costTt DISCOUNTValueT discountT netId totalQuantity   totalNet  form:totalActualWeight form:totalNetAfterDiscount  form:discounthala   form:totalWithTaxValue form:remain  form:taxvalue"
+                                        <p:ajax update="invItemCodeIn proof2 proof QuantityT  QuantityTOU   costTt DISCOUNTValueT discountT netId totalQuantity   totalNet  form:totalActualWeight form:totalNetAfterDiscount  form:discounthala   form:totalWithTaxValue form:remain  form:taxvalue"
                                                 event="itemSelect" listener="#{invPurchaseInvoiceFormDTOMB.validateItems(invPurchaseInvoiceDetailsTable)}" />
                                     </p:autoComplete>            
                                 </p:column>
@@ -908,7 +908,7 @@
                                           filterable="false">
                                     <p:outputLabel value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}" 
                                                    rendered="#{invPurchaseInvoiceDetailsTable.isEdit}" />
-                                    <p:autoComplete id="invItemCodeIn"  
+                                    <p:autoComplete id="invItemCodeIn"  dir="LTR"
                                                     style="width:100%"
                                                     rendered="#{not invPurchaseInvoiceDetailsTable.isEdit}"
                                                     converter="#{autoComplete.itemsBarcodesDetailsViewConverter}"
@@ -918,23 +918,11 @@
                                                     itemLabel="#{item.barcode}" 
                                                     itemValue="#{item}" 
                                                     forceSelection="true" 
-                                                    completeMethod="#{autoComplete.completeItemsBarcodesDetailsView}" 
+                                                    completeMethod="#{autoComplete.completeItemsBarcodesDetailsViewCode}" 
                                                     >
-                                        <p:ajax update=" invItemNameIn proof2 proof QuantityT unitvalue QuantityTOU   costTt DISCOUNTValueT discountT netId totalQuantity   totalNet  form:totalActualWeight form:totalNetAfterDiscount  form:discounthala   form:totalWithTaxValue form:remain  form:taxvalue"
+                                        <p:ajax update=" invItemNameIn proof2 proof QuantityT  QuantityTOU   costTt DISCOUNTValueT discountT netId totalQuantity   totalNet  form:totalActualWeight form:totalNetAfterDiscount  form:discounthala   form:totalWithTaxValue form:remain  form:taxvalue"
                                                 event="itemSelect" listener="#{invPurchaseInvoiceFormDTOMB.validateItems(invPurchaseInvoiceDetailsTable)}" />
                                     </p:autoComplete>            
-                                </p:column>
-
-                                <p:column  style="width: 14vh;text-align: -webkit-auto;border-radius: 0px; font-size: 14px;" id="Unit"
-
-                                           filterBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.unitName}" 
-                                           filterMatchMode="contains" 
-                                           sortBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.unitName}"
-                                           filterable="false"
-                                           headerText="الوحدة">
-                                    <p:outputLabel id="unitvalue"
-                                                   value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.unitName}" style="width: 95%" />  
-
                                 </p:column>
 
 
@@ -948,7 +936,7 @@
                                           filterMatchMode="contains" 
                                           sortBy="#{invPurchaseInvoiceDetailsTable.quantityOfOneUnit}"
                                           filterable="false">
-                                    <p:inputText id="QuantityTOU"  
+                                    <p:inputText id="QuantityTOU"  dir="LTR"
                                                  value="#{invPurchaseInvoiceDetailsTable.quantityOfOneUnit}" 
                                                  disabled="#{not userData.userScreens['proworkorder'].edit and invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id ne null}"
                                                  style="width:95%; text-align: left;">
@@ -967,7 +955,7 @@
                                           sortBy="#{invPurchaseInvoiceDetailsTable.number}"
                                           filterable="false">
 
-                                    <p:inputText id="NUMBER"  
+                                    <p:inputText id="NUMBER"  dir="LTR"
                                                  value="#{invPurchaseInvoiceDetailsTable.number}" 
                                                  disabled="#{not userData.userScreens['proworkorder'].edit and invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id ne null}"
                                                  style="width:95%; text-align: left;">
@@ -987,7 +975,7 @@
                                           sortBy="#{invPurchaseInvoiceDetailsTable.quantity}"
                                           filterable="false">
 
-                                    <p:outputLabel id="QuantityT"  
+                                    <p:outputLabel id="QuantityT"  dir="LTR"
                                                    value="#{invPurchaseInvoiceDetailsTable.quantity}" 
                                                    style="width:95%; text-align: left;"/>
 
@@ -1014,7 +1002,7 @@
                                           sortBy="#{invPurchaseInvoiceDetailsTable.cost}"
                                           
                                           filterable="false">
-                                    <p:inputText id="costTt" 
+                                    <p:inputText id="costTt" dir="LTR"
                                                  value="#{invPurchaseInvoiceDetailsTable.cost}"
                                                  disabled="#{not userData.userScreens['proworkorder'].edit and invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id ne null}"
                                                  style="width:95%; text-align: right;">
@@ -1024,7 +1012,7 @@
                                 </p:column>
 
                                 <p:column style="width: 12vh;text-align: -webkit-auto;border-radius: 0px; font-size: 14px;" id="DISCOUNTValue" headerText="خ قيمة">
-                                    <p:inputText id="DISCOUNTValueT" 
+                                    <p:inputText id="DISCOUNTValueT" dir="LTR"
                                                  value="#{invPurchaseInvoiceDetailsTable.discountValue}" 
                                                  disabled="#{not userData.userScreens['proworkorder'].edit or invPurchaseInvoiceDetailsTable.showPrice}"
                                                  style="width:70%!important;display: inline!important; text-align: left;">
@@ -1035,7 +1023,7 @@
                                 </p:column>
 
                                 <p:column style="width: 12vh;text-align: -webkit-auto;border-radius: 0px; font-size: 14px;" id="DISCOUNT" headerText="#{userData.userDDs['DISCOUNT']}">
-                                    <p:inputText id="discountT" 
+                                    <p:inputText id="discountT" dir="LTR"
                                                  value="#{invPurchaseInvoiceDetailsTable.discount}" 
                                                  disabled="#{not userData.userScreens['proworkorder'].edit or invPurchaseInvoiceDetailsTable.showPrice}"
                                                  style="width:70%!important;display: inline!important; text-align: left;">
@@ -1047,13 +1035,13 @@
                                 </p:column>
 
 
-                                <p:column style="width: 11vh;text-align: left;border-radius: 0px;font-size: 14px;" 
+                                <p:column style="width: 11vh;text-align: left;border-radius: 0px;font-size: 11px;" 
                                           id="net" headerText="#{userData.userDDs['TOTAL']}" 
                                           filterBy="#{invPurchaseInvoiceDetailsTable.net}" 
                                           filterMatchMode="contains" 
                                           sortBy="#{invPurchaseInvoiceDetailsTable.net}"
                                           filterable="false">
-                                    <p:outputLabel id="netId" value="#{invPurchaseInvoiceDetailsTable.net}"   />
+                                    <p:outputLabel id="netId" value="#{invPurchaseInvoiceDetailsTable.net}" dir="LTR"  />
                                 </p:column>
 
 
@@ -1071,11 +1059,11 @@
                                     </p:column>
                                     <p:column colspan="2" />
                                     <p:column>
-                                        <h:outputText id="totalQuantity" value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.totalQuatity}"/>
+                                        <h:outputText id="totalQuantity" dir="LTR" value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.totalQuatity}"/>
                                     </p:column>
                                     <p:column colspan="5" />
                                     <p:column>
-                                        <h:outputText id="totalNet" value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.totalNet}"/>
+                                        <h:outputText id="totalNet" dir="LTR" style="width: 15vh;text-align: left;border-radius: 0px;font-size: 11px;" value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.totalNet}"/>
                                     </p:column>
                                     <p:column colspan="3" />
                                 </p:summaryRow>
