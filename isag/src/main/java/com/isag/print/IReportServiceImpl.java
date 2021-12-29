@@ -323,98 +323,97 @@ public class IReportServiceImpl implements IReportService {
             Map<String, String> userDDs = userData.getUserDDs();
             HashMap hashMap = new HashMap();
 
-            ReportManagement reportManagement = invPurchasegmSubscriptionsDTO.getReportManagement();
-            if (reportManagement != null) {
-                hashMap.put("LeftUp1", reportManagement.getLeftUp1());
-                hashMap.put("LeftUp2", reportManagement.getLeftUp2());
-                hashMap.put("LeftUp3", reportManagement.getLeftUp3());
-                hashMap.put("LeftUp4", reportManagement.getLeftUp4());
-                hashMap.put("RightUp1", reportManagement.getRightUp1());
-                hashMap.put("RightUp2", reportManagement.getRightUp2());
-                hashMap.put("RightUp3", reportManagement.getRightUp3());
-                hashMap.put("RightUp4", reportManagement.getRightUp4());
-
-            }
-            if (isFileExist(userData.getImageReportPath(), userData)) {
-                hashMap.put("companyImage", userData.getImageReportPath());
-            } else {
-                hashMap.put("companyImage", null);
-            }
-            hashMap.put("PrintedBy", userData.getUser().getName());
-            hashMap.put("branchName", userData.getUserBranch().getNameAr());
-            hashMap.put("companyName", userData.getCompany().getName());
-            hashMap.put("phone", userData.getUserBranch().getPhone());
-            hashMap.put("phoneText", "تليفون");
-            hashMap.put("address", userData.getUserBranch().getAddress1());
-            hashMap.put("branchNameEn", userData.getUserBranch().getNameEn());
-            hashMap.put("companyNameEn", userData.getCompany().getNameEn());
-            hashMap.put("addressEn", userData.getUserBranch().getAddress2());
-            hashMap.put("cashier", invPurchasegmSubscriptionsDTO.getCreatedByName());
-
-            hashMap.put("taxCodeText", userData.getUserBranch().getTaxCode());
-            hashMap.put("salesReceiptText", "فاتورة  ");
-            hashMap.put("receiptNumberText", "رقم الفاتورة");
-
-            if (invPurchasegmSubscriptionsDTO.getDiscountType() != null && invPurchasegmSubscriptionsDTO.getDiscountType() == 1) {
-                hashMap.put("percentage", "%");
-            }
-            hashMap.put("adressText", userData.getUserBranch().getAddress1());
-            hashMap.put("customerText", "العميل");
-            hashMap.put("addressText", "المخزن");
-            hashMap.put("invNameText", "المخزن");
-            hashMap.put("timeText", "الوقت");
-            hashMap.put("remarkText", userDDs.get("REMARK"));
-            hashMap.put("dateText", userDDs.get("DATE"));
-            hashMap.put("salesText", "المندوب");
-            hashMap.put("sellText", "المبيعات");
-            hashMap.put("accountText", "الحسابات");
-            hashMap.put("deliveryText", "المستلم");
-            hashMap.put("serialText", "م");
-            hashMap.put("itemNumberText", "رقم الصنف");
-            hashMap.put("itemNameText", "اسم الصنف");
-            hashMap.put("unitText", "الوحدة");
-            hashMap.put("amountText", "كمية");
-            hashMap.put("unitCostText", "السعر");
-            hashMap.put("totalText", "القيمة");
-            hashMap.put("discountText", "الخصم");
-            hashMap.put("netText", "الصافي");
-            hashMap.put("totalWithTaxText", "الإجمالي");
-            hashMap.put("payedText", "المبلغ المدفوع");
-            hashMap.put("remainText", "المبلغ المتبقى");
-            hashMap.put("tax", "الضريبةً");
-            hashMap.put("taxValue", invPurchasegmSubscriptionsDTO.getTaxvalue());
-//            hashMap.put("totalValue", invPurchasegmSubscriptionsDTO.getTotalNet());
-            hashMap.put("totalValue", invPurchasegmSubscriptionsDTO.getFinalNet());
-//            hashMap.put("totalWithTaxValue", invPurchasegmSubscriptionsDTO.getTaxvalue().add(invPurchasegmSubscriptionsDTO.getFinalNet()));
-            hashMap.put("payedValue", invPurchasegmSubscriptionsDTO.getPayed());
-            hashMap.put("remainValue", invPurchasegmSubscriptionsDTO.getRemain());
-            hashMap.put("receiptNumberValue", invPurchasegmSubscriptionsDTO.getSerial());
-            if (invPurchasegmSubscriptionsDTO.getInvInventoryId() != null) {
-                hashMap.put("invName", invPurchasegmSubscriptionsDTO.getInvInventoryId().getName());
-            }
-
-            if (invPurchasegmSubscriptionsDTO.getOrganizationSiteId() != null) {
-                hashMap.put("customerName", invPurchasegmSubscriptionsDTO.getOrganizationSiteId().getName());
-                hashMap.put("customerAddress", invPurchasegmSubscriptionsDTO.getOrganizationSiteId().getAddress());
-                hashMap.put("customerPhone", invPurchasegmSubscriptionsDTO.getOrganizationSiteId().getMobile());
-                hashMap.put("addressValue", invPurchasegmSubscriptionsDTO.getOrganizationSiteId().getAddress());
-            }
-
-            hashMap.put("remarkValue", invPurchasegmSubscriptionsDTO.getRemarks());
-            hashMap.put("dateValue", invPurchasegmSubscriptionsDTO.getDate());
-            if (invPurchasegmSubscriptionsDTO.getInvDelegatorId() != null) {
-                hashMap.put("salesValue", invPurchasegmSubscriptionsDTO.getInvDelegatorId().getName());
-            }
-//        hashMap.put("companyImage", getUserData().getImageReportPath());
-            hashMap.put("discountValue", invPurchasegmSubscriptionsDTO.getDiscountValue());
-            hashMap.put("netValue", invPurchasegmSubscriptionsDTO.getFinalNet());
-
-            hashMap.put("subscribtionName", invPurchasegmSubscriptionsDTO.getGmItemDTO().getName());
-            hashMap.put("endDate", invPurchasegmSubscriptionsDTO.getEndDate());
-            hashMap.put("nationId", invPurchasegmSubscriptionsDTO.getOrganizationSiteId().getNationId());
-            hashMap.put("email", invPurchasegmSubscriptionsDTO.getOrganizationSiteId().getEmail());
-
-            printQRCode(invPurchasegmSubscriptionsDTO, hashMap, reportManagement);
+//            ReportManagement reportManagement = invPurchasegmSubscriptionsDTO.getReportManagement();
+//            if (reportManagement != null) {
+//                hashMap.put("LeftUp1", reportManagement.getLeftUp1());
+//                hashMap.put("LeftUp2", reportManagement.getLeftUp2());
+//                hashMap.put("LeftUp3", reportManagement.getLeftUp3());
+//                hashMap.put("LeftUp4", reportManagement.getLeftUp4());
+//                hashMap.put("RightUp1", reportManagement.getRightUp1());
+//                hashMap.put("RightUp2", reportManagement.getRightUp2());
+//                hashMap.put("RightUp3", reportManagement.getRightUp3());
+//                hashMap.put("RightUp4", reportManagement.getRightUp4());
+//
+//            }
+//            if (isFileExist(userData.getImageReportPath(), userData)) {
+//                hashMap.put("companyImage", userData.getImageReportPath());
+//            } else {
+//                hashMap.put("companyImage", null);
+//            }
+//            hashMap.put("PrintedBy", userData.getUser().getName());
+//            hashMap.put("branchName", userData.getUserBranch().getNameAr());
+//            hashMap.put("companyName", userData.getCompany().getName());
+//            hashMap.put("phone", userData.getUserBranch().getPhone());
+//            hashMap.put("phoneText", "تليفون");
+//            hashMap.put("address", userData.getUserBranch().getAddress1());
+//            hashMap.put("branchNameEn", userData.getUserBranch().getNameEn());
+//            hashMap.put("companyNameEn", userData.getCompany().getNameEn());
+//            hashMap.put("addressEn", userData.getUserBranch().getAddress2());
+//            hashMap.put("cashier", invPurchasegmSubscriptionsDTO.getCreatedByName());
+//
+//            hashMap.put("taxCodeText", userData.getUserBranch().getTaxCode());
+//            hashMap.put("salesReceiptText", "فاتورة  ");
+//            hashMap.put("receiptNumberText", "رقم الفاتورة");
+//
+//            if (invPurchasegmSubscriptionsDTO.getDiscountType() != null && invPurchasegmSubscriptionsDTO.getDiscountType() == 1) {
+//                hashMap.put("percentage", "%");
+//            }
+//            hashMap.put("adressText", userData.getUserBranch().getAddress1());
+//            hashMap.put("customerText", "العميل");
+//            hashMap.put("addressText", "المخزن");
+//            hashMap.put("invNameText", "المخزن");
+//            hashMap.put("timeText", "الوقت");
+//            hashMap.put("remarkText", userDDs.get("REMARK"));
+//            hashMap.put("dateText", userDDs.get("DATE"));
+//            hashMap.put("salesText", "المندوب");
+//            hashMap.put("sellText", "المبيعات");
+//            hashMap.put("accountText", "الحسابات");
+//            hashMap.put("deliveryText", "المستلم");
+//            hashMap.put("serialText", "م");
+//            hashMap.put("itemNumberText", "رقم الصنف");
+//            hashMap.put("itemNameText", "اسم الصنف");
+//            hashMap.put("unitText", "الوحدة");
+//            hashMap.put("amountText", "كمية");
+//            hashMap.put("unitCostText", "السعر");
+//            hashMap.put("totalText", "القيمة");
+//            hashMap.put("discountText", "الخصم");
+//            hashMap.put("netText", "الصافي");
+//            hashMap.put("totalWithTaxText", "الإجمالي");
+//            hashMap.put("payedText", "المبلغ المدفوع");
+//            hashMap.put("remainText", "المبلغ المتبقى");
+//            hashMap.put("tax", "الضريبةً");
+//            hashMap.put("taxValue", invPurchasegmSubscriptionsDTO.getTaxvalue());
+////            hashMap.put("totalValue", invPurchasegmSubscriptionsDTO.getTotalNet());
+//            hashMap.put("totalValue", invPurchasegmSubscriptionsDTO.getFinalNet());
+////            hashMap.put("totalWithTaxValue", invPurchasegmSubscriptionsDTO.getTaxvalue().add(invPurchasegmSubscriptionsDTO.getFinalNet()));
+//            hashMap.put("payedValue", invPurchasegmSubscriptionsDTO.getPayed());
+//            hashMap.put("remainValue", invPurchasegmSubscriptionsDTO.getRemain());
+//            hashMap.put("receiptNumberValue", invPurchasegmSubscriptionsDTO.getSerial());
+//            if (invPurchasegmSubscriptionsDTO.getInvInventoryId() != null) {
+//                hashMap.put("invName", invPurchasegmSubscriptionsDTO.getInvInventoryId().getName());
+//            }
+//
+//            if (invPurchasegmSubscriptionsDTO.getOrganizationSiteId() != null) {
+//                hashMap.put("customerName", invPurchasegmSubscriptionsDTO.getOrganizationSiteId().getName());
+//                hashMap.put("customerAddress", invPurchasegmSubscriptionsDTO.getOrganizationSiteId().getAddress());
+//                hashMap.put("customerPhone", invPurchasegmSubscriptionsDTO.getOrganizationSiteId().getMobile());
+//                hashMap.put("addressValue", invPurchasegmSubscriptionsDTO.getOrganizationSiteId().getAddress());
+//            }
+//
+//            hashMap.put("remarkValue", invPurchasegmSubscriptionsDTO.getRemarks());
+//            hashMap.put("dateValue", invPurchasegmSubscriptionsDTO.getDate());
+//            if (invPurchasegmSubscriptionsDTO.getInvDelegatorId() != null) {
+//                hashMap.put("salesValue", invPurchasegmSubscriptionsDTO.getInvDelegatorId().getName());
+//            }
+////        hashMap.put("companyImage", getUserData().getImageReportPath());
+//            hashMap.put("discountValue", invPurchasegmSubscriptionsDTO.getDiscountValue());
+//            hashMap.put("netValue", invPurchasegmSubscriptionsDTO.getFinalNet());
+//
+////            hashMap.put("subscribtionName", invPurchasegmSubscriptionsDTO.getGmItemDTO().getName());
+//            hashMap.put("endDate", invPurchasegmSubscriptionsDTO.getEndDate());
+//            hashMap.put("nationId", invPurchasegmSubscriptionsDTO.getOrganizationSiteId().getNationId());
+//            hashMap.put("email", invPurchasegmSubscriptionsDTO.getOrganizationSiteId().getEmail());
+//            printQRCode(invPurchasegmSubscriptionsDTO, hashMap, reportManagement);
             return hashMap;
         } catch (Exception e) {
 //            saveError(e, "SalesInvoiceFormMB", "prepareReport");

@@ -435,9 +435,7 @@
                             <p:commandButton  id="saveB" 
                                               class="saveButton"
                                               title="#{userData.userDDs['SAVE']}"
-                                              value="#{userData.userDDs['SAVE']}" 
-                                              ajax="false"
-                                              onclick="form.target = '_blank'"  
+                                              value="#{userData.userDDs['SAVE']}"  
                                               action="#{gmSubscriptionsFormDTOMB.saveAndPrint()}"
                                               rendered="#{not gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.revision}"
                                               update="@form"/>

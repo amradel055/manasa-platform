@@ -184,7 +184,7 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
 
     public void saveAndPrint() {
         save();
-        print();
+//        print();
     }
 
     @Override
