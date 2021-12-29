@@ -39,7 +39,7 @@ public class setupNewInventoryFormMB extends BaseFormBean implements Serializabl
 
     private InvInventoryDTO invInventoryDTO;
     private List<GlAccountDTO> glAccountDTOList;
-    
+
     private List<GlAccountDTO> glCostAccountDTOList;
     private List<GlAdminUnitDTO> adminUnitDTOList;
     private List<CostCenterDTO> costCenterDTOList;
@@ -49,7 +49,9 @@ public class setupNewInventoryFormMB extends BaseFormBean implements Serializabl
     private List<GlAccountDTO> glRunningAccountDTOList;
     private GlAccountDTOConverter runningAccountDTOConverter;
     private GlAccountDTOConverter costAccountDTOConverter;
-    
+    private List<GlAccountDTO> customerAccountDTOList;
+    private GlAccountDTOConverter customerAccountDTOConverter;
+
     private Boolean showGeneralMessage;
 
     @EJB
@@ -121,17 +123,24 @@ public class setupNewInventoryFormMB extends BaseFormBean implements Serializabl
         getGlAccountDTOList();
         return AutoComplete.completeGlAccount(query, glAccountDTOList, accountDTOConverter);
     }
+
     public List<GlAccountDTO> completeRunningGlAccount(String query) {
         getGlRunningAccountDTOList();
         return AutoComplete.completeGlAccount(query, getGlRunningAccountDTOList(), runningAccountDTOConverter);
     }
+
     public List<GlAccountDTO> completeCostGlAccount(String query) {
         getGlCostAccountDTOList();
         return AutoComplete.completeGlAccount(query, getGlCostAccountDTOList(), costAccountDTOConverter);
     }
 
+    public List<GlAccountDTO> completeCustomerGlAccount(String query) {
+        getCustomerAccountDTOList();
+        return AutoComplete.completeGlAccount(query, getCustomerAccountDTOList(), customerAccountDTOConverter);
+    }
+
     public boolean validateCode() {
-        if (invInventoryDTO != null&&invInventoryDTO.getCode()!=null&&invInventoryDTO.getMsg()==null) {
+        if (invInventoryDTO != null && invInventoryDTO.getCode() != null && invInventoryDTO.getMsg() == null) {
             Boolean x = inventoryService.validateCode(getUserData().getUser(), invInventoryDTO.getId(), invInventoryDTO.getCode());
             if (!x) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "الكود موجود", null));
@@ -147,7 +156,7 @@ public class setupNewInventoryFormMB extends BaseFormBean implements Serializabl
     }
 
     public boolean validateName() {
-        if (invInventoryDTO != null&&invInventoryDTO.getName()!=null&&invInventoryDTO.getMsg()==null) {
+        if (invInventoryDTO != null && invInventoryDTO.getName() != null && invInventoryDTO.getMsg() == null) {
             Boolean x = inventoryService.validateName(getUserData().getUser(), invInventoryDTO.getId(), invInventoryDTO.getName());
             if (!x) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "الاسم موجود", null));
@@ -409,5 +418,37 @@ public class setupNewInventoryFormMB extends BaseFormBean implements Serializabl
      */
     public void setCostAccountDTOConverter(GlAccountDTOConverter costAccountDTOConverter) {
         this.costAccountDTOConverter = costAccountDTOConverter;
+    }
+
+    /**
+     * @return the customerAccountDTOConverter
+     */
+    public GlAccountDTOConverter getCustomerAccountDTOConverter() {
+        return customerAccountDTOConverter;
+    }
+
+    /**
+     * @param customerAccountDTOConverter the customerAccountDTOConverter to set
+     */
+    public void setCustomerAccountDTOConverter(GlAccountDTOConverter customerAccountDTOConverter) {
+        this.customerAccountDTOConverter = customerAccountDTOConverter;
+    }
+
+    /**
+     * @return the customerAccountDTOList
+     */
+    public List<GlAccountDTO> getCustomerAccountDTOList() {
+        if (customerAccountDTOList == null || customerAccountDTOList.isEmpty()) {
+            customerAccountDTOList = accountService.getBranchGLAccountDTOListActive(getUserData().getUser());
+            customerAccountDTOConverter = new GlAccountDTOConverter(customerAccountDTOList);
+        }
+        return customerAccountDTOList;
+    }
+
+    /**
+     * @param customerAccountDTOList the customerAccountDTOList to set
+     */
+    public void setCustomerAccountDTOList(List<GlAccountDTO> customerAccountDTOList) {
+        this.customerAccountDTOList = customerAccountDTOList;
     }
 }

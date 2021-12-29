@@ -1002,11 +1002,11 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
             errorMessageBuilder.append("يجب اختيار ");
             errorNoNeedMessageBuilder.append("لا يمكن اختيار ");
 
-            if (glBankTransactionEntity != null && glBankTransactionEntity.getPostFlag() != null && glBankTransactionEntity.getPostFlag() == 1) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "تم ترحيل السند"));
-                setShowMessageDetails(true);
-                saveValidation = false;
-            }
+//            if (glBankTransactionEntity != null && glBankTransactionEntity.getPostFlag() != null && glBankTransactionEntity.getPostFlag() == 1) {
+//                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "تم ترحيل السند"));
+//                setShowMessageDetails(true);
+//                saveValidation = false;
+//            }
             if (glBankTransactionEntity.getGlBank() == null && glBankTransactionEntity.getGlBank().getAccountId() == null) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب اختيار الخزنة"));
                 setShowMessageDetails(true);
@@ -1055,12 +1055,12 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
                     saveValidation = false;
                 }
 
-                if (isPreviosBalance && glBankTransactionEntity.getInvoiceId() != null) {
+                if (getIsPreviosBalance() && glBankTransactionEntity.getInvoiceId() != null) {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب عدم اختيار فاتورة او الغاء الرصيد السابق"));
                     saveValidation = false;
                 }
 
-                if (!isPreviosBalance && glBankTransactionEntity.getInvoiceId() == null) {
+                if (!getIsPreviosBalance() && glBankTransactionEntity.getInvoiceId() == null) {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب  اختيار فاتورة"));
                     saveValidation = false;
                 }

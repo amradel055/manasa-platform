@@ -164,8 +164,6 @@
                                              title="#{userData.userDDs['DELETE']}" 
                                              action="#{notesReceivablesListMB.delete}"
                                              rendered="#{userData.userScreens['notesreceivablesadmin'].delete or userData.isAdmin}"
-                                             disabled="#{(glBankTransactionTable.postFlag == 1)}"
-
                                              >
                                 <f:setPropertyActionListener value="#{glBankTransactionTable}"
                                                              target="#{notesReceivablesListMB.glBankTransactionEntitySelected}" />

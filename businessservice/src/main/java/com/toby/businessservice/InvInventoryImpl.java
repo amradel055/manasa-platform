@@ -60,6 +60,7 @@ public class InvInventoryImpl implements InvInventoryService {
             entity.setPhone(dto.getPhone());
             entity.setInvName(dto.getInvName());
             entity.setSellerName(dto.getSellerName());
+            
             if (dto.getGlAdminUnitId() != null) {
                 GlAdminUnit glAdminUnit = new GlAdminUnit();
                 glAdminUnit.setId(dto.getGlAdminUnitId().getId());
@@ -67,26 +68,36 @@ public class InvInventoryImpl implements InvInventoryService {
                 glAdminUnit.setCode(dto.getGlAdminUnitId().getCode());
                 entity.setAdminUnitId(glAdminUnit);
             }
+            
             if (dto.getCostCenterId() != null) {
                 CostCenter costCenter = new CostCenter();
                 costCenter.setId(dto.getCostCenterId().getId());
                 costCenter.setName(dto.getCostCenterId().getName());
                 entity.setCostCenterId(costCenter);
             }
+            
             if (dto.getAccountId() != null) {
                 GlAccount account = new GlAccount();
                 account.setId(dto.getAccountId().getId());
                 entity.setAccountId(account);
             }
+            
             if (dto.getRunningAccount() != null) {
                 GlAccount account = new GlAccount();
                 account.setId(dto.getRunningAccount().getId());
                 entity.setRunningAccount(account);
             }
+            
             if (dto.getCostAccount() != null) {
                 GlAccount account = new GlAccount();
                 account.setId(dto.getCostAccount().getId());
                 entity.setCostAccount(account);
+            }
+            
+            if (dto.getCustomerAccount() != null) {
+                GlAccount account = new GlAccount();
+                account.setId(dto.getCostAccount().getId());
+                entity.setCustomerAccount(account);
             }
 
             if (dto.getCreatedBy() != null) {
@@ -128,15 +139,14 @@ public class InvInventoryImpl implements InvInventoryService {
         dto.setCreatedBy(entity.getCreatedBy() != null ? entity.getCreatedBy().getId() : null);
         dto.setCreatedDate(entity.getCreationDate());
         dto.setBranchId(entity.getBranchId() != null ? entity.getBranchId().getId() : null);
-        
+
         maptoDTOSmall(dto, entity);
-        
-        dto.setCompanyId(entity.getCompanyId() != null ? entity.getCompanyId().getId() : null);        
+
+        dto.setCompanyId(entity.getCompanyId() != null ? entity.getCompanyId().getId() : null);
         dto.setPhone(entity.getPhone());
-        
 
         dto.setTypeItem(entity.getTypeItem());
-        
+
         dto.setMsg(entity.getMsg());
         dto.setSellerName(entity.getSellerName());
         if (entity.getAccountId() != null) {
@@ -179,7 +189,7 @@ public class InvInventoryImpl implements InvInventoryService {
 
     @Override
     public InvInventoryDTO maptoDTOSmall(InvInventoryDTO dto, InvInventory entity) {
-        if(dto == null){
+        if (dto == null) {
             dto = new InvInventoryDTO();
         }
         dto.setId(entity.getId());

@@ -23,7 +23,7 @@ public interface GlBankTransactionDetailsService {
 
     public void deleteGlBankTransactionDetails(GlBankTransactionDetail glBankTransactionDetail);
 
-    public GlBankTransactionDetail updateGlBankTransactionDetails(GlBankTransactionDetail glBankTransactionDetail,TobyUser tobyUser);
+    public Integer updateGlBankTransactionDetails(GlBankTransactionDetail glBankTransactionDetail,TobyUser tobyUser);
 
     public List<GlBankTransactionDetail> getAllGlBankTransactionDetailsByGlBankTransactionId(Integer glBankTransactionId);
 
