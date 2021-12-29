@@ -38,6 +38,8 @@ public class GlBank extends BaseEntity {
     @Size(max = 45)
     @Column(name = "name")
     private String name;
+    @Column(name = "remark")
+    private String remark;
     @Column(name = "code")
     private Integer code;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -262,6 +264,20 @@ public class GlBank extends BaseEntity {
      */
     public void setCash(Integer cash) {
         this.cash = cash;
+    }
+
+    /**
+     * @return the remark
+     */
+    public String getRemark() {
+        return remark;
+    }
+
+    /**
+     * @param remark the remark to set
+     */
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
 }
