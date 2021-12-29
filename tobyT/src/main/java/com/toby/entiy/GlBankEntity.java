@@ -26,13 +26,14 @@ public class GlBankEntity extends BaseEntity {
     private Branch branchId;
     private Currency currencyId;
     private List<GlBankTransactionEntity> glBankTransactionCollection;
-
+    
     private Integer type;
     private String typeName;
     private Integer raghiPoint;
     private BigDecimal commition;
     private BigDecimal rate;
     private Integer cash;
+    private String remark;
 
     public String getName() {
         return name;
@@ -180,5 +181,19 @@ public class GlBankEntity extends BaseEntity {
      */
     public void setCash(Integer cash) {
         this.cash = cash;
+    }
+
+    /**
+     * @return the remark
+     */
+    public String getRemark() {
+        return remark;
+    }
+
+    /**
+     * @param remark the remark to set
+     */
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

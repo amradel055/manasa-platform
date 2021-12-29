@@ -192,8 +192,9 @@ public class GlBankServiceImpl implements GlBankService {
     
     //mapToEntity
     public GlBank mapToEntity(GlBankDTO glBankDTO, TobyUser tobyUser) {
-        
+       
         GlBank glBank = new GlBank();
+        glBank.setRemark(glBankDTO.getRemark());
         glBank.setCode(glBankDTO.getCode());
         glBank.setCode(glBankDTO.getCode());
         glBank.setId(glBankDTO.getId());
@@ -252,8 +253,8 @@ public class GlBankServiceImpl implements GlBankService {
     
 
     public GlBankDTO mapToDTO(GlBank glBank) {
-        
         GlBankDTO glBankDTO = new GlBankDTO();
+        glBankDTO.setRemark(glBank.getRemark());
         glBankDTO.setCreatedBy(glBank.getCreatedBy() !=null ? glBank.getCreatedBy().getId() : null);
         glBankDTO.setCreatedDate(glBank.getCreationDate());
         glBankDTO.setBranchId(glBank.getBranchId() !=null ? glBank.getBranchId().getId() : null );

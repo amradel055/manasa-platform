@@ -166,6 +166,7 @@ public class glBankFromMB extends BaseFormBean {
             glBankEntity.setCommition(glBank.getCommition());
             glBankEntity.setRate(glBank.getRate());
             glBankEntity.setCash(glBank.getCash());
+            glBankEntity.setRemark(glBank.getRemark());
             
             if (glBank.getGallaryId() != null) {
                 InvInventoryDTO inventory = new InvInventoryDTO();
@@ -227,6 +228,7 @@ public class glBankFromMB extends BaseFormBean {
                 glBank.setCommition(glBankEntity.getCommition());
                 glBank.setRate(glBankEntity.getRate());
                 glBank.setCash(glBankEntity.getCash());
+                glBank.setRemark(glBankEntity.getRemark());
                 if (getGallaryDTOSelect() != null) {
                     InvInventory inventory = new InvInventory();
                     inventory.setId(getGallaryDTOSelect().getId());

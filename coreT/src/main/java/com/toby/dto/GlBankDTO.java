@@ -12,6 +12,7 @@ import java.util.Date;
 public class GlBankDTO extends BaseEntityDTO implements Comparable<GlBankDTO> , Serializable{
 
     private String name;
+    private String remark;
     private Integer code;
     private BigDecimal openinngBalance;
     private Date dateOpeninngBalance;
@@ -193,6 +194,20 @@ public class GlBankDTO extends BaseEntityDTO implements Comparable<GlBankDTO> , 
      */
     public void setCash(Integer cash) {
         this.cash = cash;
+    }
+
+    /**
+     * @return the remark
+     */
+    public String getRemark() {
+        return remark;
+    }
+
+    /**
+     * @param remark the remark to set
+     */
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
 }
