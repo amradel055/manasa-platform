@@ -7,11 +7,13 @@ package com.isag.businessservice;
 
 import com.isag.core.GenericDAO;
 import com.isag.views.ProfitOfItemsSold;
+import com.isag.views.SalesReportByValueAdedDetails;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -580,6 +582,77 @@ public class ReportsServiceImpl implements ReportsService {
     private void appendGallery7(ProfitOfItemsSold profitOfItemsSold, StringBuilder sql) {
         if (profitOfItemsSold.getGallaryFrom() != null) {
             sql.append(" and ipi.inv_inventory_id =  ").append(profitOfItemsSold.getGallaryFrom().getId());
+        }
+    }
+    
+    
+    @Override
+    public List<SalesReportByValueAdedDetails> getSalesReportByValueAdedDetails(SalesReportByValueAdedDetails salesReportByValueAdedDetails, Integer branchId) {
+
+        List<SalesReportByValueAdedDetails> salesReportByValueAdeds = new ArrayList<>();
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT \n"
+                + "        `ip`.`serial` AS `serial`,\n"
+                + "        `ip`.`type` AS `type`,\n"
+                + "        `ip`.`date` AS `date`,\n"
+                + "        `inv`.`name` AS `gallary_name`,\n"
+                + "        `ios`.`name` AS `organization_site_name`,\n"
+                + "        `ip`.`discount` AS `head_discount`,\n"
+                + "        IFNULL(NET(IFNULL(SUM(`ipd`.`net`), 0.0),\n"
+                + "                        IFNULL(`ip`.`discount_type`, 0.0),\n"
+                + "                        IFNULL(`ip`.`discount`, 0.0),\n"
+                + "                        IFNULL(`ip`.`tax_flag`, 0.0),\n"
+                + "                        15,\n"
+                + "                        0, 0, 0, 0),\n"
+                + "                0.0) AS `net`,\n"
+                + "                IFNULL(NET(IFNULL(SUM(`ipd`.`net`), 0.0),\n"
+                + "                        IFNULL(`ip`.`discount_type`, 0.0),\n"
+                + "                        IFNULL(`ip`.`discount`, 0.0),\n"
+                + "                        IFNULL(`ip`.`tax_flag`, 0.0),\n"
+                + "                        0 ,0 ,0 ,0 , 0),\n"
+                + "                0.0) AS `netBeforTax`\n"
+                + "    FROM\n"
+                + "        `inv_purchase_invoice` `ip`\n"
+                + "        LEFT JOIN `inv_purchase_invoice_detail` `ipd` ON `ip`.`id` = `ipd`.`inv_purchase_invoice_id`\n"
+                + "        LEFT JOIN `inv_inventory` `inv` ON `inv`.`id` = `ip`.`inv_inventory_id`\n"
+                + "        LEFT JOIN `inv_organization_site` `ios` ON `ios`.`id` = `ip`.`organization_site_id`\n"
+                + " ");
+        sql.append(" where ip.type = 4 AND  ip.branch_id = ").append(branchId);
+        appendGallery1(salesReportByValueAdedDetails, sql);
+        appendDate1(salesReportByValueAdedDetails, sql);
+        sql.append(" GROUP BY `ip`.`id`");
+        List<Object[]> res = dao.executeNativeQuery(sql.toString());
+        for (Object[] object : res) {
+            SalesReportByValueAdedDetails reportByValueAdedDetails = new SalesReportByValueAdedDetails();
+            reportByValueAdedDetails.setInvoiceNumber((Integer) object[0]);
+            reportByValueAdedDetails.setInvoiceType((Integer) object[1]);
+            reportByValueAdedDetails.setInvoiceDate((Date) object[2]);
+            reportByValueAdedDetails.setGalleryName((String) object[3]);
+            reportByValueAdedDetails.setEmployeeName((String) object[4]);
+            reportByValueAdedDetails.setDiscount((BigDecimal) object[5]);
+            reportByValueAdedDetails.setTotalAfterTax((BigDecimal) object[6]);
+            reportByValueAdedDetails.setTotalBeforeTax((BigDecimal) object[7]);
+            reportByValueAdedDetails.setTax(reportByValueAdedDetails.getTotalAfterTax().subtract(reportByValueAdedDetails.getTotalBeforeTax()));
+            salesReportByValueAdeds.add(reportByValueAdedDetails);
+        }
+        return salesReportByValueAdeds;
+    }
+  
+    
+      private void appendDate1(SalesReportByValueAdedDetails salesReportByValueAded, StringBuilder query) {
+        if (salesReportByValueAded.getDateFrom() != null) {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+            query.append(" and ip.date >=  '").append(dateFormat.format(salesReportByValueAded.getDateFrom())).append("' ");
+        }
+        if (salesReportByValueAded.getDateTo() != null) {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 23:59:59");
+            query.append(" and ip.date <=  '").append(dateFormat.format(salesReportByValueAded.getDateTo())).append("' ");
+        }
+    }
+      
+        private void appendGallery1(SalesReportByValueAdedDetails salesReportByValueAded, StringBuilder query) {
+        if (salesReportByValueAded.getInvInventoryDTO()!= null) {
+            query.append(" and ip.inv_inventory_id =  ").append(salesReportByValueAded.getInvInventoryDTO().getId());
         }
     }
 

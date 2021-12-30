@@ -40,7 +40,12 @@ import java.net.SocketException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
+import java.time.LocalDate;
+import java.time.chrono.HijrahChronology;
+import java.time.chrono.HijrahDate;
+import java.time.chrono.IsoChronology;
 import java.util.Base64;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -113,6 +118,16 @@ public class Basic implements Serializable {
     private InvInventory invInventorySelection;
     private InvInventoryConverter invInventoryConverter;
     
+     private Integer dayHijriFrom;
+    private Integer monthHijriFrom;
+    private Integer yearHijriFrom;
+    private Integer dayHijriTo;
+    private Integer monthHijriTo;
+    private Integer yearHijriTo;
+
+    private HijrahDate islamyYear;
+    private HijrahDate islamyMonth;
+    private HijrahDate islamyDay;
      public void OpenDlg(String dlgvar) {
         RequestContext context = RequestContext.getCurrentInstance();
         context.execute("PF('" + dlgvar + "').show();");
@@ -163,7 +178,60 @@ public class Basic implements Serializable {
             e.printStackTrace();
         }
     }
+    
+         public Date findDateFromHijriFrom() {
+        if (getYearHijriFrom() != null && getMonthHijriFrom() != null && getDayHijriFrom() != null) {
+            HijrahDate date = HijrahChronology.INSTANCE.date(getYearHijriFrom(), getMonthHijriFrom(), getDayHijriFrom());
+            LocalDate dateFrom = IsoChronology.INSTANCE.date(date);
+            return java.sql.Date.valueOf(dateFrom);
+        }
+        return null;
+    }
 
+    public Date findDateFromHijriTo() {
+        if (getYearHijriTo() != null && getMonthHijriTo() != null && getDayHijriTo() != null) {
+            HijrahDate date = HijrahChronology.INSTANCE.date(getYearHijriTo(), getMonthHijriTo(), getDayHijriTo());
+            LocalDate dateFrom = IsoChronology.INSTANCE.date(date);
+            return java.sql.Date.valueOf(dateFrom);
+        }
+        return null;
+    }
+
+    public HijrahDate findHijriYear() {
+        Date date = new Date(); // Gregorian date
+        Calendar cl = Calendar.getInstance();
+        cl.setTime(date);
+
+        setIslamyYear(HijrahChronology.INSTANCE.date(LocalDate.of(cl.get(Calendar.YEAR), cl.get(Calendar.MONTH) + 1, cl.get(Calendar.DATE))));
+        //islamyMonth = HijrahChronology.INSTANCE.date(LocalDate.of(cl.get(Calendar.YEAR), cl.get(Calendar.MONTH) + 1, cl.get(Calendar.DATE)));
+        // islamyDay = HijrahChronology.INSTANCE.date(LocalDate.of(cl.get(Calendar.YEAR), cl.get(Calendar.MONTH) + 1, cl.get(Calendar.DATE)));
+
+        return getIslamyYear();
+    }
+
+    public HijrahDate findHijriMonth() {
+        Date date = new Date(); // Gregorian date
+        Calendar cl = Calendar.getInstance();
+        cl.setTime(date);
+
+        //islamyYear = HijrahChronology.INSTANCE.date(LocalDate.of(cl.get(Calendar.YEAR), cl.get(Calendar.MONTH) + 1, cl.get(Calendar.DATE)));
+        setIslamyMonth(HijrahChronology.INSTANCE.date(LocalDate.of(cl.get(Calendar.YEAR), cl.get(Calendar.MONTH) + 1, cl.get(Calendar.DATE))));
+        // islamyDay = HijrahChronology.INSTANCE.date(LocalDate.of(cl.get(Calendar.YEAR), cl.get(Calendar.MONTH) + 1, cl.get(Calendar.DATE)));
+
+        return getIslamyMonth();
+    }
+
+    public HijrahDate findHijriDay() {
+        Date date = new Date(); // Gregorian date
+        Calendar cl = Calendar.getInstance();
+        cl.setTime(date);
+
+        //islamyYear = HijrahChronology.INSTANCE.date(LocalDate.of(cl.get(Calendar.YEAR), cl.get(Calendar.MONTH) + 1, cl.get(Calendar.DATE)));
+        //islamyMonth = HijrahChronology.INSTANCE.date(LocalDate.of(cl.get(Calendar.YEAR), cl.get(Calendar.MONTH) + 1, cl.get(Calendar.DATE)));
+        setIslamyDay(HijrahChronology.INSTANCE.date(LocalDate.of(cl.get(Calendar.YEAR), cl.get(Calendar.MONTH) + 1, cl.get(Calendar.DATE))));
+
+        return getIslamyDay();
+    }
 
     public void saveError(Exception e, String className, String methodName) {
         getIsagErrorDTO().setClassName(className);
@@ -636,6 +704,132 @@ public class Basic implements Serializable {
      */
     public void setInvInventoryConverter(InvInventoryConverter invInventoryConverter) {
         this.invInventoryConverter = invInventoryConverter;
+    }
+
+    /**
+     * @return the dayHijriFrom
+     */
+    public Integer getDayHijriFrom() {
+        return dayHijriFrom;
+    }
+
+    /**
+     * @param dayHijriFrom the dayHijriFrom to set
+     */
+    public void setDayHijriFrom(Integer dayHijriFrom) {
+        this.dayHijriFrom = dayHijriFrom;
+    }
+
+    /**
+     * @return the monthHijriFrom
+     */
+    public Integer getMonthHijriFrom() {
+        return monthHijriFrom;
+    }
+
+    /**
+     * @param monthHijriFrom the monthHijriFrom to set
+     */
+    public void setMonthHijriFrom(Integer monthHijriFrom) {
+        this.monthHijriFrom = monthHijriFrom;
+    }
+
+    /**
+     * @return the yearHijriFrom
+     */
+    public Integer getYearHijriFrom() {
+        return yearHijriFrom;
+    }
+
+    /**
+     * @param yearHijriFrom the yearHijriFrom to set
+     */
+    public void setYearHijriFrom(Integer yearHijriFrom) {
+        this.yearHijriFrom = yearHijriFrom;
+    }
+
+    /**
+     * @return the dayHijriTo
+     */
+    public Integer getDayHijriTo() {
+        return dayHijriTo;
+    }
+
+    /**
+     * @param dayHijriTo the dayHijriTo to set
+     */
+    public void setDayHijriTo(Integer dayHijriTo) {
+        this.dayHijriTo = dayHijriTo;
+    }
+
+    /**
+     * @return the monthHijriTo
+     */
+    public Integer getMonthHijriTo() {
+        return monthHijriTo;
+    }
+
+    /**
+     * @param monthHijriTo the monthHijriTo to set
+     */
+    public void setMonthHijriTo(Integer monthHijriTo) {
+        this.monthHijriTo = monthHijriTo;
+    }
+
+    /**
+     * @return the yearHijriTo
+     */
+    public Integer getYearHijriTo() {
+        return yearHijriTo;
+    }
+
+    /**
+     * @param yearHijriTo the yearHijriTo to set
+     */
+    public void setYearHijriTo(Integer yearHijriTo) {
+        this.yearHijriTo = yearHijriTo;
+    }
+
+    /**
+     * @return the islamyYear
+     */
+    public HijrahDate getIslamyYear() {
+        return islamyYear;
+    }
+
+    /**
+     * @param islamyYear the islamyYear to set
+     */
+    public void setIslamyYear(HijrahDate islamyYear) {
+        this.islamyYear = islamyYear;
+    }
+
+    /**
+     * @return the islamyMonth
+     */
+    public HijrahDate getIslamyMonth() {
+        return islamyMonth;
+    }
+
+    /**
+     * @param islamyMonth the islamyMonth to set
+     */
+    public void setIslamyMonth(HijrahDate islamyMonth) {
+        this.islamyMonth = islamyMonth;
+    }
+
+    /**
+     * @return the islamyDay
+     */
+    public HijrahDate getIslamyDay() {
+        return islamyDay;
+    }
+
+    /**
+     * @param islamyDay the islamyDay to set
+     */
+    public void setIslamyDay(HijrahDate islamyDay) {
+        this.islamyDay = islamyDay;
     }
 
 }

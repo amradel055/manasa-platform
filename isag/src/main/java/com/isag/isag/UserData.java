@@ -421,6 +421,11 @@ public class UserData extends Basic implements Serializable {
                 entity = uri.substring(uri.indexOf("posReport"));
                 entity = entity.substring(13, entity.lastIndexOf("."));
             }
+            
+            if (entity.equalsIgnoreCase("gmreports")) {
+                entity = uri.substring(uri.indexOf("gmreports"));
+                entity = entity.substring(10, entity.lastIndexOf("."));
+            }
 
             targetScreen = entity;
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
