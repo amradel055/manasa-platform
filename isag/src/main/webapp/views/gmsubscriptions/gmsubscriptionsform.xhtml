@@ -215,16 +215,7 @@
                                                 <div class="ui-g">
 
                                                     <div class="ui-g-6 ui-xl-6">
-                                                        <div class="ui-g-12 ui-xl-12">
-
-                                                            <div class="ui-g-6 ui-xl-6">
-                                                                <p:inputText style="width: 35%!important" id="ad012"  value="#{gmSubscriptionsFormDTOMB.organizationSiteId.code}"/>
-                                                            </div>
-                                                            <div class="ui-g-6 ui-xl-6">
-                                                                <p:outputLabel style="width: 85px;margin-right: 3%;" value="رقم العميل"/>
-
-                                                            </div>
-                                                        </div>
+                                                 
                                                         <div class="ui-g-12 ui-xl-12">
 
                                                             <div class="ui-g-6 ui-xl-6">
@@ -250,11 +241,11 @@
                                                         <div class="ui-g-12 ui-xl-12">
 
                                                             <div class="ui-g-6 ui-xl-6">
-                                                                <p:inputText style="width: 35%!important" id="ad312" value="#{gmSubscriptionsFormDTOMB.organizationSiteId.mobile}"/>
+                                                                <p:inputText style="width: 35%!important" id="ad312" value="#{gmSubscriptionsFormDTOMB.organizationSiteId.address}"/>
 
                                                             </div>
                                                             <div class="ui-g-6 ui-xl-6">
-                                                                <p:outputLabel style="width: 85px;" value="الجوال"/>
+                                                                <p:outputLabel style="width: 85px;" value="العنوان"/>
 
                                                             </div>
                                                         </div>
@@ -435,10 +426,8 @@
                             <p:commandButton  id="saveB" 
                                               class="saveButton"
                                               title="#{userData.userDDs['SAVE']}"
-                                              value="#{userData.userDDs['SAVE']}" 
-                                              ajax="false"
-                                              onclick="form.target = '_blank'"  
-                                              action="#{gmSubscriptionsFormDTOMB.saveAndPrint}"
+                                              value="#{userData.userDDs['SAVE']}"  
+                                              action="#{gmSubscriptionsFormDTOMB.save}"
                                               rendered="#{not gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.revision}"
                                               update="@form"/>
                             <p:commandButton 
@@ -462,9 +451,9 @@
                                               onclick="form.target = '_blank'"  
                                               value="#{userData.userDDs['PRINT']}" 
                                               title="#{userData.userDDs['PRINT']}" 
-                                              actionListener="#{gmSubscriptionsFormDTOMB.print()}"                                
+                                              actionListener="#{gmSubscriptionsFormDTOMB.print}"                                
                                               update="@form"/>
-
+                              
                             <h:commandLink  style="float:left" class="sdcreenimg" rendered="#{gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.id ne null}">  
                                 <p:graphicImage name="/img/excel.jpg" width="24" style='margin-right:25%;'/>  
                                 <p:dataExporter type="xls"
