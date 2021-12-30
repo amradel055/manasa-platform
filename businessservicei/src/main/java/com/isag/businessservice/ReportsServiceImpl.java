@@ -630,8 +630,49 @@ public class ReportsServiceImpl implements ReportsService {
             reportByValueAdedDetails.setGalleryName((String) object[3]);
             reportByValueAdedDetails.setEmployeeName((String) object[4]);
             reportByValueAdedDetails.setDiscount((BigDecimal) object[5]);
-            reportByValueAdedDetails.setTotalAfterTax((BigDecimal) object[6]);
-            reportByValueAdedDetails.setTotalBeforeTax((BigDecimal) object[7]);
+            reportByValueAdedDetails.setTotalAfterTax((BigDecimal) object[7]);
+            reportByValueAdedDetails.setTotalBeforeTax((BigDecimal) object[6]);
+            reportByValueAdedDetails.setTax(reportByValueAdedDetails.getTotalAfterTax().subtract(reportByValueAdedDetails.getTotalBeforeTax()));
+            salesReportByValueAdeds.add(reportByValueAdedDetails);
+        }
+        return salesReportByValueAdeds;
+    }
+    
+    @Override
+    public List<SalesReportByValueAdedDetails> getGmSalesReportByValueAdedDetails(SalesReportByValueAdedDetails salesReportByValueAdedDetails, Integer branchId) {
+
+        List<SalesReportByValueAdedDetails> salesReportByValueAdeds = new ArrayList<>();
+        StringBuilder sql = new StringBuilder();
+        sql.append(
+              "SELECT \n" +
+"        `ip`.`serial` AS `serial`,\n" +
+"        `ip`.`type` AS `type`,\n" +
+"        `ip`.`date` AS `date`,\n" +
+"        null AS `gallary_name`,\n" +
+"        `ios`.`name` AS `organization_site_name`,\n" +
+"        `ip`.`discount` AS `head_discount`,\n" +
+"        value AS `net`,\n" +
+"        value + taxvalue AS `netBeforTax`\n" +
+"    FROM\n" +
+"        `gm_subscriptions` `ip`\n" +
+"        LEFT JOIN `inv_organization_site` `ios` ON `ios`.`id` = `ip`.`organization_site_id`\n" +
+"  where ip.type = 0 AND  ip.branch_id = 239"
+        );
+        
+//        appendGallery1(salesReportByValueAdedDetails, sql);
+        appendDate1(salesReportByValueAdedDetails, sql);
+        sql.append(" GROUP BY `ip`.`id`");
+        List<Object[]> res = dao.executeNativeQuery(sql.toString());
+        for (Object[] object : res) {
+            SalesReportByValueAdedDetails reportByValueAdedDetails = new SalesReportByValueAdedDetails();
+            reportByValueAdedDetails.setInvoiceNumber((Integer) object[0]);
+            reportByValueAdedDetails.setInvoiceType((Integer) object[1]);
+            reportByValueAdedDetails.setInvoiceDate((Date) object[2]);
+            reportByValueAdedDetails.setGalleryName((String) object[3]);
+            reportByValueAdedDetails.setEmployeeName((String) object[4]);
+            reportByValueAdedDetails.setDiscount((BigDecimal) object[5]);
+            reportByValueAdedDetails.setTotalAfterTax((BigDecimal) object[7]);
+            reportByValueAdedDetails.setTotalBeforeTax((BigDecimal) object[6]);
             reportByValueAdedDetails.setTax(reportByValueAdedDetails.getTotalAfterTax().subtract(reportByValueAdedDetails.getTotalBeforeTax()));
             salesReportByValueAdeds.add(reportByValueAdedDetails);
         }
