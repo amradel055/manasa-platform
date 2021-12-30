@@ -93,7 +93,7 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
 
     private Integer index = 0;
     private String uri;
-
+     private Integer number;
     private Integer branchId;
     private Integer companyId;
     private Integer glBankTransactionId;
@@ -745,10 +745,11 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
 
     public void updateValue() {
         if (glBankTransactionDetailEntity != null && glBankTransactionDetailEntity.getGlItems() != null && glBankTransactionDetailEntity.getGlItems().getCost() != null) {
-            glBankTransactionEntity.setValue(glBankTransactionDetailEntity.getGlItems().getCost());
+            glBankTransactionEntity.setValue(glBankTransactionDetailEntity.getGlItems().getCost().multiply(BigDecimal.valueOf(number)));
         }
         updateTransactionRate();
         updateAllSummationsRate();
+        
     }
 
     public void updateTransactionRate() {
@@ -2353,5 +2354,22 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
      */
     public void setCustomerBalance(BigDecimal customerBalance) {
         this.customerBalance = customerBalance;
+    }
+
+    /**
+     * @return the number
+     */
+    public Integer getNumber() {
+        if(number==null){
+        number=1;
+        }
+        return number;
+    }
+
+    /**
+     * @param number the number to set
+     */
+    public void setNumber(Integer number) {
+        this.number = number;
     }
 }
