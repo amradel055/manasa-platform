@@ -134,6 +134,18 @@
                         </div>
 
                         <div class="ui-g-6 ui-xl-6">
+                      
+                             <div class="ui-g-12 ui-xl-12">
+                            <p:inputText style="width:69%!important;margin-top: 0% !important;" id="notes22" 
+                                         value="#{notesReceivablesFormMB.number}">
+                                <p:ajax event="blur" listener="#{notesReceivablesFormMB.updateValue()}" />
+
+                                    </p:inputText>
+                            <div class="ui-g-6 ui-xl-6">
+                               <p:outputLabel style="width: 105px;font-size: 16px!important;" value="العدد"/>
+
+                                </div>
+                                </div>
 
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
