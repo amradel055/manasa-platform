@@ -44,6 +44,9 @@ public class GlItemsListMB extends BaseListBean {
          else if (getUri().contains("gmitemsymbol")) {
             setSymbolDTOList(symbolService.findItemSymbolByCompanyId(getUserData().getCompany().getId()));
         }
+          else if (getUri().contains("gmitems")) {
+            setSymbolDTOList(symbolService.findItemSymbolByCompanyId(getUserData().getCompany().getId()));
+        }
            
     }
 
@@ -75,6 +78,9 @@ public class GlItemsListMB extends BaseListBean {
              else if (getUri().contains("gmitemsymbol")) {
                 exit("../gmitemsymbol/gmitemsymbolForm.xhtml");
             }
+            else if (getUri().contains("gmitems")) {
+                exit("../gmitems/itemsymbolForm.xhtml");
+            }
             return "";
         } catch (Exception e) {
             saveError(e, "notesReceivablesListMB", "load");
@@ -95,6 +101,9 @@ public class GlItemsListMB extends BaseListBean {
                     exit("../glExpenses/glExpensesForm.xhtml");
                 }else if (getUri().contains("gmitemsymbol")) {
                     exit("../gmitemsymbol/gmitemsymbolForm.xhtml");
+                }
+                else if (getUri().contains("gmitems")) {
+                    exit("../gmitems/itemsymbolForm.xhtml");
                 }
                 return "";
             } else {
