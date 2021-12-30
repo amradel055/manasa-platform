@@ -36,6 +36,7 @@ public class GmSubscriptionsDetailDTO extends BaseEntityDTO {
     private BigDecimal totalBeforeDiscount;
     private String itemName;
     private String itemCode;
+    private String unitName;
 
     public GmSubscriptionsDetailDTO() {
     }
@@ -352,6 +353,20 @@ public class GmSubscriptionsDetailDTO extends BaseEntityDTO {
      */
     public void setItemCode(String itemCode) {
         this.itemCode = itemCode;
+    }
+
+    /**
+     * @return the unitName
+     */
+    public String getUnitName() {
+        return unitName;
+    }
+
+    /**
+     * @param unitName the unitName to set
+     */
+    public void setUnitName(String unitName) {
+        this.unitName = unitName;
     }
 
 }
