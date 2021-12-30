@@ -66,12 +66,12 @@
 
                     </p:column>
                     <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px;"  filterStyle="display:none" 
-                               filterBy="#{invInvoicePurchaseTable.organizationSiteId.phone}" 
+                               filterBy="#{invInvoicePurchaseTable.organizationSiteId.mobile}" 
                                filterMatchMode="contains" 
                                headerText="رقم الهاتف"
-                               sortBy="#{invInvoicePurchaseTable.organizationSiteId.phone}"
+                               sortBy="#{invInvoicePurchaseTable.organizationSiteId.mobile}"
                                >
-                        <p:outputLabel value="#{invInvoicePurchaseTable.organizationSiteId.phone}" />
+                        <p:outputLabel value="#{invInvoicePurchaseTable.organizationSiteId.mobile}" />
                     </p:column>
                       <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px;"  filterStyle="display:none" 
                                  filterBy="#{invInvoicePurchaseTable.organizationSiteId.nationId}" 
@@ -85,7 +85,7 @@
                     <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px;"  filterStyle="display:none" 
                                filterBy="#{invInvoicePurchaseTable.serial}" 
                                filterMatchMode="contains" 
-                               headerText="#{userData.userDDs['INVOICE_NO']}"
+                               headerText="رقم الاشتراك"
                                sortBy="#{invInvoicePurchaseTable.serial}"
                                >
                         <p:outputLabel value="#{invInvoicePurchaseTable.serial}" />
@@ -269,7 +269,7 @@
                                         <div class="ui-g-12 ui-xl-12">
 
                                             <div class="ui-g-6 ui-xl-6">
-                                                <h:outputText style="width: 35%!important" id="ad333"  value="#{gmSubscriptionsListDTOMB.siteDTO.phone}"/>
+                                                <h:outputText style="width: 35%!important" id="ad377773"  value="#{gmSubscriptionsListDTOMB.siteDTO.mobile}"/>
                                             </div>
                                             <div class="ui-g-6 ui-xl-6">
                                                 <p:outputLabel style="width: 85px;margin-right: 3%;" value="رقم الهاتف"/>
@@ -281,7 +281,7 @@
                                         <div class="ui-g-12 ui-xl-12">
 
                                             <div class="ui-g-6 ui-xl-6">
-                                                <p:outputLabel style="width: 35%!important" id="ad191"  value="#{gmSubscriptionsListDTOMB.siteDTO.birthdate}">
+                                                <p:outputLabel style="width: 35%!important" id="ad181"  value="#{gmSubscriptionsListDTOMB.siteDTO.birthdate}">
                                                     <f:convertDateTime type="date" pattern="dd-MM-yyyy hh:mm:ss"/>
                                                 </p:outputLabel>
                                             </div>

@@ -73,7 +73,7 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
     private String statusName;
     private Integer remainPeriod;
     private Date dateAfterTagmeed;
-
+    private boolean freezeStatus = false;
     public GmSubscriptionsDTO() {
     }
 
@@ -503,6 +503,7 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
      * @return the endDate
      */
     public Date getEndDate() {
+     
         return endDate;
     }
 
@@ -783,6 +784,21 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
      */
     public void setTransDaysNumber(Integer transDaysNumber) {
         this.transDaysNumber = transDaysNumber;
+    }
+
+    /**
+     * @return the freezeStatus
+     */
+    public boolean isFreezeStatus() {
+       
+        return freezeStatus;
+    }
+
+    /**
+     * @param freezeStatus the freezeStatus to set
+     */
+    public void setFreezeStatus(boolean freezeStatus) {
+        this.freezeStatus = freezeStatus;
     }
 
    
