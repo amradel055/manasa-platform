@@ -56,6 +56,7 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
     private String filename;
     private String file;
     private String host;
+    private String access ;
     @EJB
     private GmSubscriptionsService gmSubscriptionsService;
 
@@ -499,5 +500,25 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
     public void setHost(String host) {
         this.host = host;
     }
+
+    /**
+     * @return the access
+     */
+    public String getAccess() {
+    if(gmSubscriptionsDTOSelected!=null && gmSubscriptionsDTOSelected.getStatus()!=true && gmSubscriptionsDTOSelected.isFreezeStatus()!=true){
+       access = "يسمح له بدخول الجيم ";
+        }else
+    { 
+        access ="لا يسمح له بدخول الجيم";
+            }
+        return access;
+    }
+
+    /**
+     * @param access the access to set
+     */
+   public void setAccess(String access) {
+        this.access = access;
+    } 
 
 }

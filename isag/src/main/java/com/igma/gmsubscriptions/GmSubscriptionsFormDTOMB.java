@@ -22,8 +22,10 @@ import com.isag.dto.GmMovementDTO;
 import com.isag.dto.GmSubscriptionsDTO;
 import com.isag.dto.GmSubscriptionsDetailDTO;
 import com.isag.dto.InvOrganizationSiteDTO;
+import com.isag.entity.ReportManagement;
 import com.isag.isag.AutoComplete;
 import com.isag.isag.BaseFormBean;
+import com.isag.isag.UserData;
 import com.isag.print.IReportService;
 import com.isag.print.IReportServiceImpl;
 import java.math.BigDecimal;
@@ -35,10 +37,22 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import com.isag.uploadfile.FileUploadController;
+import java.io.IOException;
 import java.math.RoundingMode;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import javax.faces.event.ActionEvent;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import tafqeet.Tafqeet;
 
 /**
  *
@@ -191,6 +205,7 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
     public String save() {
         getGmSubscriptionsDTO().setMsg(null);
         getGmSubscriptionsDTO().setType(0);
+      
         setGmSubscriptionsDTO(gmSubscriptionsService.save(getGmSubscriptionsDTO(), getUserData().getUser()));
         msgSave(getGmSubscriptionsDTO().getMsg());
 
@@ -260,6 +275,83 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
     public void print() {
         getGmSubscriptionsDTO().setReportManagement(reportManagementService.reportManagementByBranch(getUserData().getUserBranch().getId()));
         iReportService.printReportGmInvoice(getGmSubscriptionsDTO(), getUserData());
+    }
+   public void exportPDF(){
+              try {
+      String reportName = "notesReceivablesDetialCopyGM.jasper";
+      fillReport(prepareReport(getGmSubscriptionsDTO(), getUserData()), getUserData().getReportPath() + reportName, getGmSubscriptionsDTO().getGmSubscriptionsDetailList(),"pdf");
+
+        } 
+        catch (JRException | IOException e) {
+            System.out.println(e);
+        }
+    }
+          @Override
+    public <T> void fillReport(HashMap hashMap, String reportPath, List<T> listBean, String exportType) throws JRException, IOException {
+        try {
+            JRBeanCollectionDataSource beanCollectionDataSource = new JRBeanCollectionDataSource(listBean);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(reportPath, hashMap, beanCollectionDataSource);
+            FacesContext context = FacesContext.getCurrentInstance();
+            HttpServletResponse httpServletResponse = (HttpServletResponse) context.getExternalContext().getResponse();
+            ServletOutputStream servletOutputStream = httpServletResponse.getOutputStream();
+            if (null != exportType) switch (exportType) {
+                case "pdf":
+                    JasperExportManager.exportReportToPdfStream(jasperPrint, servletOutputStream);
+                    httpServletResponse.flushBuffer();
+                    servletOutputStream.flush();
+                    servletOutputStream.close();
+                    context.renderResponse();
+                    context.responseComplete();
+                    break;
+                case "excel":
+                    break;
+                case "html":
+                    break;
+            }
+        } catch (JRException | IOException ex) {
+            System.out.println(ex + "exception ++++++++++++++++++");
+        }
+
+    }
+
+    public HashMap prepareReport(GmSubscriptionsDTO invPurchasegmSubscriptionsDTO, UserData userData) {
+         try {  
+            HashMap hashMap = new HashMap();
+//            ReportManagement reportManagement = invPurchasegmSubscriptionsDTO.getReportManagement();
+//            if (reportManagement != null) {
+//                hashMap.put("LeftUp1", reportManagement.getLeftUp1());
+//                hashMap.put("LeftUp2", reportManagement.getLeftUp2());
+//                hashMap.put("LeftUp3", reportManagement.getLeftUp3());
+//                hashMap.put("LeftUp4", reportManagement.getLeftUp4());
+//                hashMap.put("RightUp1", reportManagement.getRightUp1());
+//                hashMap.put("RightUp2", reportManagement.getRightUp2());
+//                hashMap.put("RightUp3", reportManagement.getRightUp3());
+//                hashMap.put("RightUp4", reportManagement.getRightUp4());
+//
+//            }
+            
+//            hashMap.put("PrintedBy", userData.getUser().getName());
+//            hashMap.put("address", userData.getUserBranch().getAddress1());
+//            hashMap.put("taxValue", invPurchasegmSubscriptionsDTO.getTaxvalue());
+//            hashMap.put("receiptNumberValue", invPurchasegmSubscriptionsDTO.getSerial());
+//
+//            if (invPurchasegmSubscriptionsDTO.getOrganizationSiteId() != null) {
+//                hashMap.put("customerName", invPurchasegmSubscriptionsDTO.getOrganizationSiteId().getName());
+//                hashMap.put("customerPhone", invPurchasegmSubscriptionsDTO.getOrganizationSiteId().getMobile());
+//            }
+////            hashMap.put("dateValue", invPurchasegmSubscriptionsDTO.getDate());
+//            hashMap.put("netValue", invPurchasegmSubscriptionsDTO.getFinalNet());
+//
+//            hashMap.put("subscribtionName", invPurchasegmSubscriptionsDTO.getGmItemDTO().getName());
+//            hashMap.put("endDate", invPurchasegmSubscriptionsDTO.getEndDate());
+//            hashMap.put("nationId", invPurchasegmSubscriptionsDTO.getOrganizationSiteId().getNationId());
+//            hashMap.put("email", invPurchasegmSubscriptionsDTO.getOrganizationSiteId().getEmail());
+            return hashMap;
+        } catch (Exception e) {
+//            saveError(e, "SalesInvoiceFormMB", "prepareReport");
+            return null;
+        }
+ 
     }
 
     public void addInvDetail() {

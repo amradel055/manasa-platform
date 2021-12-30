@@ -184,5 +184,19 @@ public class GmFreezeServiceImpl implements GmFreezeService {
         
       return 0 ;
     }
+       @Override
+    public boolean calcFreezeStatusBySubscribtionId(Integer subscribtionId){
+      
+        Map<String, Object> params = new HashMap<>();
+        params.put("subscribtionId", subscribtionId);
+         params.put("newdate", new Date());
+        List<GmFreeze> list = dao.findListByQuery("SELECT e FROM  GmFreeze e where e.subscirbtionId.id = :subscribtionId And :newdate between e.datefrom And e.dateto", params);
+        if(list != null && !list.isEmpty() && list.get(0) != null ){
+         return true ;
+        }else{ 
+         return false;
+        }
+        
+    }
 
 }

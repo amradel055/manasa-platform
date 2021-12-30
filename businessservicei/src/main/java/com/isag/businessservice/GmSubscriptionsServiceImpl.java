@@ -107,7 +107,7 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
 
         GmSubscriptionsDTO gmSubscriptionsDTODTO = new GmSubscriptionsDTO();
 
-        initData(gmSubscriptionsDTODTO, entity);
+        initData(entity,gmSubscriptionsDTODTO );
 
         return gmSubscriptionsDTODTO;
     }
@@ -131,7 +131,7 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
         entity.setId(dto.getId());
         entity.setSerial(dto.getSerial());
         entity.setSerialTax(dto.getSerialTax());
-        entity.setDate(dto.getDate());
+        entity.setDate(new Date());
         entity.setStartDate(dto.getStartDate());
         entity.setEndDate(dto.getEndDate());
         entity.setDiscount(dto.getDiscount());
@@ -215,17 +215,9 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
                     gmSubscriptions = dao.updateEntity(gmSubscriptions);
                 } else {
                     // فى حالة ان الفاتورة جديدة بروح اجيب السيريال الاول 
-                    Integer serial = genericService.getMaxGenericSerialByType(GmSubscriptions.class, gmSubscriptionsDTO.getBranchId(), gmSubscriptionsDTO.getType());
-                    if (serial == null) {
-                        gmSubscriptionsDTO.setMsg("من فضلك اعد حفظ الفاتورة");
-                        dao.rollbackQuery();
-                        return gmSubscriptionsDTO;
-                    }
-                    gmSubscriptionsDTO.setSerial(serial);
+                    Integer serial = genericService.getMaxGenericSerialByType(GmSubscriptions.class, gmSubscriptions.getBranchId().getId(), gmSubscriptionsDTO.getType());
                     gmSubscriptions.setSerial(serial);
-
                     gmSubscriptions = dao.updateEntity(gmSubscriptions);
-                    gmSubscriptionsDTO.setId(gmSubscriptions.getId());
                 }
                 gmSubscriptionsDTO = mapToDTO(gmSubscriptions, gmSubscriptionsDTO);
             }
@@ -248,12 +240,12 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
 
     private GmSubscriptionsDTO mapToDTO(GmSubscriptions entity, GmSubscriptionsDTO dto) {
 
-        dto = initData(dto, entity);
+        dto = initData(entity,dto );
 
         return dto;
     }
 
-    private GmSubscriptionsDTO initData(GmSubscriptionsDTO dto, GmSubscriptions entity) {
+    private GmSubscriptionsDTO initData(GmSubscriptions entity,GmSubscriptionsDTO dto ) {
         dto.setId(entity.getId());
         dto.setValue(entity.getValue());
         dto.setFinalNet(entity.getFinalNet());
@@ -277,15 +269,15 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
         }
 
         if (entity.getStartDate() != null && entity.getEndDate() != null) {
-            dto.setMustDays(Utility.calcDays(entity.getStartDate(), entity.getEndDate(), 5));
+       dto.setMustDays(Utility.calcDays(entity.getStartDate(), entity.getEndDate(), 5));
             dto.setTakenDays(gmFreezeService.calcTakenDaysByCustomerIdAndSubscribtionId(entity.getId()));
             dto.setRemainDays(dto.getMustDays() - dto.getTakenDays());
             dto.setDateAfterTagmeed(Utility.sumDateAndNumer(entity.getEndDate(), dto.getTakenDays()));
             dto.setTransDaysNumber(gmMovementService.findGmMovementDtoDaysBySubscribtionId(entity.getId()));
             dto.setDateAfterTagmeed(Utility.sumDateAndNumer(dto.getDateAfterTagmeed(), dto.getTransDaysNumber()));
             dto.setRemainPeriod(Utility.calcDaysBetween(dto.getDateAfterTagmeed(), new Date()));
+            
         }
-      
 
 //        if (entity.getEndDate() != null) {
 //
@@ -336,17 +328,18 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
         Date today = Date.from(Instant.now());
         if (today.after(entity.getStartDate()) && today.before(entity.getEndDate())) {
             dto.setStatusName("ساري");
-
         } else {
             dto.setStatusName("منتهي");
         }
-
         if (entity.getStatus() != null && entity.getStatus() == 0) {
             dto.setStatus(false);
         } else if (entity.getStatus() != null) {
             dto.setStatus(true);
         }
-
+        
+  
+        dto.setFreezeStatus(gmFreezeService.calcFreezeStatusBySubscribtionId(entity.getId()));
+      
 //        List<GmSubscriptionsDetailDTO> gmSubscriptionsDTODetailsListDTO = gmSubscriptionsDTODetailsService.getAllGmSubscriptionsDetailDTOsByGmSubscriptionsDTOIdDTO(dto);
 //        dto.setGmSubscriptionsDetailList(gmSubscriptionsDTODetailsListDTO);
 //        dto.setGmSubscriptionsDetailDeletedList(new ArrayList<GmSubscriptionsDetailDTO>());
