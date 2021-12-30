@@ -82,6 +82,9 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
     }
 
     public void findCustomerData() {
+        if(getGmSubscriptionsDTOSelected() == null && invOrganizationSiteDTO != null){
+            setGmSubscriptionsDTOSelected(gmSubscriptionsService.getValidGmSubscriptionsDTOByCustomerId(invOrganizationSiteDTO.getId()));
+        }
         setSiteDTO(organizationSiteService.findOrganizationSiteDTOByIdSmall(getGmSubscriptionsDTOSelected().getOrganizationSiteId().getId()));
         getGmFreezeDto().setCustomerId(getSiteDTO());
         getGmFreezeDto().setSubscriptionId(getGmSubscriptionsDTOSelected());
@@ -103,9 +106,7 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
       public void show() {
         setInvOrganizationSiteDTOSelected(organizationSiteService.findOrganizationSiteDTOById(invOrganizationSiteDTO.getId()));
         setGmSubscriptionsDTOSelected(gmSubscriptionsService.getValidGmSubscriptionsDTOByCustomerId(invOrganizationSiteDTO.getId()));
-       
 
-       
     }
 
     private void increaseDate() {
@@ -195,13 +196,25 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
     
      public String goToMovment() {
         try {
+            if(getGmSubscriptionsDTOSelected() != null){
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
             context.getSessionMap().put("ScreenMode", "addGmMovement");
             context.getSessionMap().put("typeActivity", 0);
             context.getSessionMap().put("gmCustomerIdSelected", getGmSubscriptionsDTOSelected().getOrganizationSiteId().getId());
              exit("../gmsubscriptions/gmsubscriptionsformmovment.xhtml");
 
+            return ""; } 
+            else { 
+                
+            setGmSubscriptionsDTOSelected(gmSubscriptionsService.getValidGmSubscriptionsDTOByCustomerId(invOrganizationSiteDTO.getId()));
+             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+            context.getSessionMap().put("ScreenMode", "addGmMovement");
+            context.getSessionMap().put("typeActivity", 0);
+            context.getSessionMap().put("gmCustomerIdSelected", getGmSubscriptionsDTOSelected().getOrganizationSiteId().getId());
+             exit("../gmsubscriptions/gmsubscriptionsformmovment.xhtml");
+
             return "";
+            }
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceListMB", "goToAdd");
             return null;
@@ -232,14 +245,21 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
     }
       public String goToresume() {
         try {
-            if (getGmSubscriptionsDTOSelected().getOrganizationSiteId()!= null && getGmSubscriptionsDTOSelected().getOrganizationSiteId().getId() > 0) {
+            if (getGmSubscriptionsDTOSelected() != null && getGmSubscriptionsDTOSelected().getOrganizationSiteId()!= null && getGmSubscriptionsDTOSelected().getOrganizationSiteId().getId() > 0) {
+                ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+                context.getSessionMap().put("TamdedId", getGmSubscriptionsDTOSelected().getId());
+                context.getSessionMap().put("ScreenMode", "Tamded");
+                goToScreen();
+                return "";
+            } else if(getGmSubscriptionsDTOSelected() == null && invOrganizationSiteDTO != null){
+                setGmSubscriptionsDTOSelected(gmSubscriptionsService.getValidGmSubscriptionsDTOByCustomerId(invOrganizationSiteDTO.getId()));
                 ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
                 context.getSessionMap().put("TamdedId", getGmSubscriptionsDTOSelected().getId());
                 context.getSessionMap().put("ScreenMode", "Tamded");
                 goToScreen();
                 return "";
             } else {
-                return "";
+            return "";
             }
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceListMB", "goToresume");

@@ -244,7 +244,6 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
 
         return dto;
     }
-
     private GmSubscriptionsDTO initData(GmSubscriptions entity,GmSubscriptionsDTO dto ) {
         dto.setId(entity.getId());
         dto.setValue(entity.getValue());
