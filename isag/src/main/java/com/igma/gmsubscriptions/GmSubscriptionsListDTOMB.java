@@ -8,6 +8,7 @@ package com.igma.gmsubscriptions;
 import com.isag.businessservice.GmFreezeService;
 import com.isag.businessservice.GmSubscriptionsService;
 import com.isag.businessservice.OrganizationSiteService;
+import com.isag.bussinessservice.global.Utility;
 import com.isag.converter.InvOrganizationSiteDTOConverter;
 import com.isag.dto.GmFreezeDto;
 import com.isag.dto.GmItemDTO;
@@ -98,6 +99,7 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
             increaseDate();
         }
     }
+    
       public void show() {
         setInvOrganizationSiteDTOSelected(organizationSiteService.findOrganizationSiteDTOById(invOrganizationSiteDTO.getId()));
         setGmSubscriptionsDTOSelected(gmSubscriptionsService.getValidGmSubscriptionsDTOByCustomerId(invOrganizationSiteDTO.getId()));
@@ -114,11 +116,8 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
     }
 
     public void calcDays() {
-        LocalDate startDate = getGmSubscriptionsDTOSelected().getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        LocalDate endDate = getGmSubscriptionsDTOSelected().getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        Long monthBetween = ChronoUnit.MONTHS.between(startDate, endDate);
-        Calendar c = Calendar.getInstance();
-        getGmFreezeDto().setMustDays(5 * monthBetween.intValue());
+      
+        getGmFreezeDto().setMustDays(Utility.calcDays(getGmSubscriptionsDTOSelected().getStartDate(), getGmSubscriptionsDTOSelected().getEndDate(), 5));
         getGmFreezeDto().setTakeDays(gmFreezeService.calcTakenDaysByCustomerIdAndSubscribtionId(getGmSubscriptionsDTOSelected().getId()));
         getGmFreezeDto().setRemainDays(getGmFreezeDto().getMustDays() - getGmFreezeDto().getTakeDays());
     }

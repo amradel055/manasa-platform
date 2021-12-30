@@ -154,11 +154,11 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
         gmSubscriptionsDTO.setValue(getGmItemDTOSelected().getCost());
         if (getGmItemDTOSelected().getPeriod() != null) {
             if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("Tamded")) {
-                if (getGmSubscriptionsDTOold() != null && new Date().compareTo(getGmSubscriptionsDTOold().getEndDate()) != 1) {
-                    c.setTime(getGmSubscriptionsDTOold().getEndDate());
+                if (getGmSubscriptionsDTOold() != null && new Date().compareTo(getGmSubscriptionsDTOold().getDateAfterTagmeed()) != 1) {
+                    c.setTime(getGmSubscriptionsDTOold().getDateAfterTagmeed());
                     c.add(Calendar.DAY_OF_MONTH, getGmItemDTOSelected().getPeriod());
                     gmSubscriptionsDTO.setEndDate(c.getTime());
-                    c.setTime(getGmSubscriptionsDTOold().getEndDate());
+                    c.setTime(getGmSubscriptionsDTOold().getDateAfterTagmeed());
                     c.add(Calendar.DAY_OF_MONTH, 1);
                     gmSubscriptionsDTO.setStartDate(c.getTime());
                 } else {

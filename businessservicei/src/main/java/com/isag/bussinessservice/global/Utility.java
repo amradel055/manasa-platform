@@ -66,8 +66,7 @@ public class Utility {
         LocalDate startDateNew = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate endDateNew = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         Long monthBetween = ChronoUnit.MONTHS.between(startDateNew, endDateNew);
-       
-         return (number * monthBetween.intValue());
+         return (number * (monthBetween.intValue() + 1));
        
     }
     
