@@ -40,7 +40,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
         if (detailEntity.getItemsBarcodesDetail() == null && detailEntity.getItemsBarcodesDetailTrans() != null) {
             detailEntity.setItemsBarcodesDetail(detailEntity.getItemsBarcodesDetailTrans());
         }
-        quantity = (calculateQuantity(detailEntity, invInvoiceDTO)).setScale(3, BigDecimal.ROUND_HALF_UP);
+        quantity = (calculateQuantity(detailEntity, invInvoiceDTO)).setScale(3, BigDecimal.ROUND_HALF_UP).stripTrailingZeros();
         weight = detailEntity.getWeight() == null ? BigDecimal.ZERO : detailEntity.getWeight();
         cost = detailEntity.getCost() != null ? detailEntity.getCost().multiply(invInvoiceDTO.getRate()) : BigDecimal.ZERO;
         
@@ -75,11 +75,11 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                 valueAfterDiscount = total.add(detailEntity.getAddTotal());
             }
             detailEntity.setValueAfterDiscount(valueAfterDiscount);
-            detailEntity.setTotalBeforeDiscount(total.setScale(3, BigDecimal.ROUND_HALF_UP));
+            detailEntity.setTotalBeforeDiscount(total.setScale(3, BigDecimal.ROUND_HALF_UP).stripTrailingZeros());
         }
 
-            detailEntity.setNet(valueAfterDiscount.setScale(3, BigDecimal.ROUND_HALF_UP));
-        detailEntity.setTotalQuantityWithScrewing((detailEntity.getQuantity().multiply(detailEntity.getScrewing())).setScale(3, BigDecimal.ROUND_HALF_UP));
+            detailEntity.setNet(valueAfterDiscount.setScale(3, BigDecimal.ROUND_HALF_UP).stripTrailingZeros());
+        detailEntity.setTotalQuantityWithScrewing((detailEntity.getQuantity().multiply(detailEntity.getScrewing())).setScale(3, BigDecimal.ROUND_HALF_UP).stripTrailingZeros());
         detailEntity.setDifferanceQuantity(detailEntity.getDifferanceQuantity());
         if (isNeeadQuantity && invInvoiceDTO.getInventorySetupDTO() != null && !invInvoiceDTO.getInventorySetupDTO().getNegativeSell()) {
             detailEntity = updateAvailableQuantityRow(invInvoiceDTO.getScreenName(), detailEntity, invInvoiceDTO.getInvInventoryId() != null ? invInvoiceDTO.getInvInventoryId().getId() : null, invInvoiceDTO.getInventorySetupDTO().getSellBuy(), invInvoiceDTO.getInventorySetupDTO().getNegativeSell(), invInvoiceDTO.getIsEdit());
@@ -134,11 +134,11 @@ public class InvGlobalServiceImpl implements InvGlobalService {
         BigDecimal totalAdd = (detailEntity.getAdd1().add(detailEntity.getAdd2().add(detailEntity.getAdd3())));
 
         finalPrice = finalPrice.add(totalAdd);
-        detailEntity.setFinalPrice(finalPrice.setScale(3, BigDecimal.ROUND_HALF_UP));
-        detailEntity.setValuefracture((finalPrice.multiply(detailEntity.getFractureNumber()).multiply(detailEntity.getCartonsCapacity())).setScale(3, BigDecimal.ROUND_HALF_UP));
+        detailEntity.setFinalPrice(finalPrice.setScale(3, BigDecimal.ROUND_HALF_UP).stripTrailingZeros());
+        detailEntity.setValuefracture((finalPrice.multiply(detailEntity.getFractureNumber()).multiply(detailEntity.getCartonsCapacity())).setScale(3, BigDecimal.ROUND_HALF_UP).stripTrailingZeros());
         valueAfterDiscount = finalPrice.multiply(detailEntity.getQuantity());
-        detailEntity.setTotalBeforefracture(valueAfterDiscount.setScale(3, BigDecimal.ROUND_HALF_UP));
-        valueAfterDiscount = (valueAfterDiscount.subtract(detailEntity.getValuefracture())).setScale(3, BigDecimal.ROUND_HALF_UP);
+        detailEntity.setTotalBeforefracture(valueAfterDiscount.setScale(3, BigDecimal.ROUND_HALF_UP).stripTrailingZeros());
+        valueAfterDiscount = (valueAfterDiscount.subtract(detailEntity.getValuefracture())).setScale(3, BigDecimal.ROUND_HALF_UP).stripTrailingZeros();
 
         return valueAfterDiscount;
     }
@@ -149,15 +149,15 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                 || (invInvoiceDTO.getCompanyActivity().equals(CompanyActivityClassEnum.CERAMIC) && invInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.INVOPENINGBALANCEITEMFORM))
                 || (invInvoiceDTO.getCompanyActivity().equals(CompanyActivityClassEnum.CERAMIC) && invInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.INVTRANSFERINVENTORY))
                 || (invInvoiceDTO.getCompanyActivity().equals(CompanyActivityClassEnum.CERAMIC) && (invInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.INVUPDATE)) && invInvoiceDTO.getTypeActivity() != null && invInvoiceDTO.getTypeActivity() == 1)) {
-            detailEntity.setQuantity((detailEntity.getCartonsCapacity().multiply(detailEntity.getCartonsNumber())).setScale(3, BigDecimal.ROUND_HALF_UP));
-            detailEntity.setActualQuantity((detailEntity.getCartonsCapacity().multiply(detailEntity.getCartonsNumber())).setScale(3, BigDecimal.ROUND_HALF_UP));
-            quantity = (detailEntity.getCartonsCapacity().multiply(detailEntity.getCartonsNumber())).setScale(3, BigDecimal.ROUND_HALF_UP);
+            detailEntity.setQuantity((detailEntity.getCartonsCapacity().multiply(detailEntity.getCartonsNumber())).setScale(3, BigDecimal.ROUND_HALF_UP).stripTrailingZeros());
+            detailEntity.setActualQuantity((detailEntity.getCartonsCapacity().multiply(detailEntity.getCartonsNumber())).setScale(3, BigDecimal.ROUND_HALF_UP).stripTrailingZeros());
+            quantity = (detailEntity.getCartonsCapacity().multiply(detailEntity.getCartonsNumber())).setScale(3, BigDecimal.ROUND_HALF_UP).stripTrailingZeros();
         } else {
             quantity = detailEntity.getQuantity() != null ? detailEntity.getQuantity() : BigDecimal.ZERO;
             if (quantity.equals(BigDecimal.ZERO) && invInvoiceDTO.getScreenName().equals(ScreenNameClassEnum.INVSALESINVOICEFORM)) {
                 quantity = BigDecimal.ONE;
             }
-            detailEntity.setQuantity(quantity.setScale(3, BigDecimal.ROUND_HALF_UP));
+            detailEntity.setQuantity(quantity.setScale(3, BigDecimal.ROUND_HALF_UP).stripTrailingZeros());
         }
         return quantity;
     }
@@ -215,10 +215,10 @@ public class InvGlobalServiceImpl implements InvGlobalService {
         resetHeadTotals(invPurchaseInvoiceDTO);
         invPurchaseInvoiceDTO = calculateDiscountValue(invPurchaseInvoiceDTO);
 
-        invPurchaseInvoiceDTO.setTotalNetAfterDiscount((invPurchaseInvoiceDTO.getTotalNet().subtract(invPurchaseInvoiceDTO.getDiscountValue() != null ? invPurchaseInvoiceDTO.getDiscountValue() : BigDecimal.ZERO)).setScale(3, BigDecimal.ROUND_HALF_UP));
+        invPurchaseInvoiceDTO.setTotalNetAfterDiscount((invPurchaseInvoiceDTO.getTotalNet().subtract(invPurchaseInvoiceDTO.getDiscountValue() != null ? invPurchaseInvoiceDTO.getDiscountValue() : BigDecimal.ZERO)).setScale(3, BigDecimal.ROUND_HALF_UP).stripTrailingZeros());
         invPurchaseInvoiceDTO = calculateTaxDiscValue(invPurchaseInvoiceDTO);
         invPurchaseInvoiceDTO = calculateTaxValue(invPurchaseInvoiceDTO);
-        invPurchaseInvoiceDTO.setFinalNet((invPurchaseInvoiceDTO.getTotalNetAfterDiscount().add(invPurchaseInvoiceDTO.getTaxvalue() != null ? invPurchaseInvoiceDTO.getTaxvalue() : BigDecimal.ZERO).subtract(invPurchaseInvoiceDTO.getTaxdiscvalue() != null ? invPurchaseInvoiceDTO.getTaxdiscvalue() : BigDecimal.ZERO)).setScale(3, BigDecimal.ROUND_HALF_UP));
+        invPurchaseInvoiceDTO.setFinalNet((invPurchaseInvoiceDTO.getTotalNetAfterDiscount().add(invPurchaseInvoiceDTO.getTaxvalue() != null ? invPurchaseInvoiceDTO.getTaxvalue() : BigDecimal.ZERO).subtract(invPurchaseInvoiceDTO.getTaxdiscvalue() != null ? invPurchaseInvoiceDTO.getTaxdiscvalue() : BigDecimal.ZERO)).setScale(3, BigDecimal.ROUND_HALF_UP).stripTrailingZeros());
         return invPurchaseInvoiceDTO;
     }
 
@@ -241,7 +241,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                             && invPurchaseInvoiceDTO.getDiscount() != null
                             && invPurchaseInvoiceDTO.getTotalNet().compareTo(BigDecimal.ZERO) == 1
                             && invPurchaseInvoiceDTO.getTotalNet().compareTo(invPurchaseInvoiceDTO.getDiscount()) != -1) {
-                        invPurchaseInvoiceDTO.setDiscountValue((invPurchaseInvoiceDTO.getDiscount() != null ? invPurchaseInvoiceDTO.getDiscount() : BigDecimal.ZERO).setScale(3, BigDecimal.ROUND_HALF_UP));
+                        invPurchaseInvoiceDTO.setDiscountValue((invPurchaseInvoiceDTO.getDiscount() != null ? invPurchaseInvoiceDTO.getDiscount() : BigDecimal.ZERO).setScale(3, BigDecimal.ROUND_HALF_UP).stripTrailingZeros());
                     }
                 } else if (Validation.isDiscountValid(invPurchaseInvoiceDTO.getDiscountValue())) {
                     invPurchaseInvoiceDTO.setDiscountValue(invPurchaseInvoiceDTO.getTotalNet().multiply(invPurchaseInvoiceDTO.getDiscount()).divide(BigDecimal.valueOf(100)));
@@ -293,8 +293,8 @@ public class InvGlobalServiceImpl implements InvGlobalService {
         }
         invPurchaseInvoiceDTO.setTotalQuatity(invPurchaseInvoiceDTO.getTotalQuatity().add(detailEntity.getQuantity() != null ? detailEntity.getQuantity() : BigDecimal.ZERO));
         invPurchaseInvoiceDTO.setTotalQuatityCost(invPurchaseInvoiceDTO.getTotalQuatityCost().add(detailEntity.getTotalQuantityCost() != null ? detailEntity.getTotalQuantityCost() : BigDecimal.ZERO));
-        invPurchaseInvoiceDTO.setTotalNet((invPurchaseInvoiceDTO.getTotalNet().add(detailEntity.getNet() != null ? detailEntity.getNet() : BigDecimal.ZERO)).setScale(3, BigDecimal.ROUND_HALF_UP));
-        invPurchaseInvoiceDTO.setTotalBeforeDiscount((invPurchaseInvoiceDTO.getTotalBeforeDiscount().add(detailEntity.getTotalBeforeDiscount() != null ? detailEntity.getTotalBeforeDiscount() : BigDecimal.ZERO)).setScale(3, BigDecimal.ROUND_HALF_UP));
+        invPurchaseInvoiceDTO.setTotalNet((invPurchaseInvoiceDTO.getTotalNet().add(detailEntity.getNet() != null ? detailEntity.getNet() : BigDecimal.ZERO)).setScale(3, BigDecimal.ROUND_HALF_UP).stripTrailingZeros());
+        invPurchaseInvoiceDTO.setTotalBeforeDiscount((invPurchaseInvoiceDTO.getTotalBeforeDiscount().add(detailEntity.getTotalBeforeDiscount() != null ? detailEntity.getTotalBeforeDiscount() : BigDecimal.ZERO)).setScale(3, BigDecimal.ROUND_HALF_UP).stripTrailingZeros());
         return invPurchaseInvoiceDTO;
     }
 
@@ -614,7 +614,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                 || ScreenNameClassEnum.INVRESERVATIONFORM.equals(screenNameClassEnum)
                 || ScreenNameClassEnum.INVRETURNPURCHASEFORM.equals(screenNameClassEnum)) {
             detailDTO.setTotalQuantityWithScrewing(detailDTO.getQuantity().multiply(detailDTO.getScrewing()));
-            detailDTO.setAvailableQuantityRow((quantityItemsStoreAddExitService.getQuantatyItemByinventory(inventoryId, detailDTO.getItemsBarcodesDetail().getItemId(), sellBuy, null)).setScale(3, BigDecimal.ROUND_UP));
+            detailDTO.setAvailableQuantityRow((quantityItemsStoreAddExitService.getQuantatyItemByinventory(inventoryId, detailDTO.getItemsBarcodesDetail().getItemId(), sellBuy, null)).setScale(3, BigDecimal.ROUND_UP).stripTrailingZeros());
             if ((detailDTO.getAvailableQuantityRow() == null || detailDTO.getAvailableQuantityRow().compareTo(BigDecimal.ZERO) < 1) && !sellNegative && !isEdit) {
                 detailDTO.setItemsBarcodesDetail(null);
                 detailDTO.setItemsBarcodesDetailTrans(null);
@@ -714,7 +714,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
     }
 
     private InvDetailDTO setDefaultQuantity(InvDetailDTO detailDTO) {
-        detailDTO.setQuantity(detailDTO.getOriginQuantity().setScale(3, BigDecimal.ROUND_HALF_UP));
+        detailDTO.setQuantity(detailDTO.getOriginQuantity().setScale(3, BigDecimal.ROUND_HALF_UP).stripTrailingZeros());
         detailDTO.setTotalQuantityWithScrewing(detailDTO.getOriginQuantity().multiply(detailDTO.getScrewing()));
         return detailDTO;
     }
@@ -786,12 +786,12 @@ public class InvGlobalServiceImpl implements InvGlobalService {
         dTO.setSerial(serial);
 
         dTO.setBranchId(branchId);
-        dTO.setCost(cost != null ? cost.setScale(3, BigDecimal.ROUND_UP) : BigDecimal.ZERO);
-        dTO.setDiscount(discount != null ? discount.setScale(3, BigDecimal.ROUND_UP) : BigDecimal.ZERO);
-        dTO.setQuantity(quantity != null ? quantity.setScale(3, BigDecimal.ROUND_UP) : BigDecimal.ZERO);
+        dTO.setCost(cost != null ? cost.setScale(3, BigDecimal.ROUND_UP).stripTrailingZeros() : BigDecimal.ZERO);
+        dTO.setDiscount(discount != null ? discount.setScale(3, BigDecimal.ROUND_UP).stripTrailingZeros() : BigDecimal.ZERO);
+        dTO.setQuantity(quantity != null ? quantity.setScale(3, BigDecimal.ROUND_UP).stripTrailingZeros() : BigDecimal.ZERO);
         dTO.setOriginQuantity(dTO.getQuantity().multiply(screwing == null ? BigDecimal.ONE : screwing));
-        dTO.setActualQuantity(actualQuantity != null ? actualQuantity.setScale(3, BigDecimal.ROUND_UP) : BigDecimal.ZERO);
-        dTO.setOldQuantity(oldQuantity != null ? oldQuantity.setScale(3, BigDecimal.ROUND_UP) : BigDecimal.ZERO);
+        dTO.setActualQuantity(actualQuantity != null ? actualQuantity.setScale(3, BigDecimal.ROUND_UP).stripTrailingZeros() : BigDecimal.ZERO);
+        dTO.setOldQuantity(oldQuantity != null ? oldQuantity.setScale(3, BigDecimal.ROUND_UP).stripTrailingZeros() : BigDecimal.ZERO);
         dTO.setTotalQuantityWithScrewing(dTO.getQuantity().multiply(dTO.getScrewing()));
         dTO.setIsEdit(Boolean.TRUE);
         dTO.setDiscountType(discountType);

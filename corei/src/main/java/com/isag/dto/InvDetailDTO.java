@@ -83,6 +83,7 @@ public class InvDetailDTO extends BaseEntityDTO {
     //
     private BigDecimal profitVlaue;
     private BigDecimal profitPercent;
+    private BigDecimal tax15;
 
     public InvDetailDTO() {
     }
@@ -1039,6 +1040,21 @@ public class InvDetailDTO extends BaseEntityDTO {
      */
     public void setProfitPercent(BigDecimal profitPercent) {
         this.profitPercent = profitPercent;
+    }
+
+    /**
+     * @return the tax15
+     */
+    public BigDecimal getTax15() {
+        tax15 = getNet().multiply(new BigDecimal(0.15)).setScale(1, RoundingMode.HALF_UP).stripTrailingZeros();
+        return tax15;
+    }
+
+    /**
+     * @param tax15 the tax15 to set
+     */
+    public void setTax15(BigDecimal tax15) {
+        this.tax15 = tax15;
     }
 
 }
