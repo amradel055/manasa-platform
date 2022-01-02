@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition 
+
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    template="./../../template/newTemplate.xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <h:form id="form"  enctype="multipart/form-data"  dir="#{userData.dir}" style="margin-right: 20px"  >
+            <p:messages id="messages" showDetail="true" closable="true"/>
+            <p:fieldset id="test" legend="#{userData.userDDs['SALES_INVOICES']}" style="margin-bottom:20px"> 
+                <div class="ui-g-12 ui-xl-12">
+                    <div class="ui-g-6 ui-xl-6">
+                        <p:outputLabel style="width: 36.5%"  value="#{JournalCloseFormMB.journalCloseDTO.date}"> 
+                            <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                        </p:outputLabel>
+
+                    </div>
+                    <div class="ui-g-6 ui-xl-6">
+                        <p:outputLabel style="width: 95px; " value="التاريخ"/>
+
+                    </div>
+                </div>
+                <div class="ui-g-12 ui-md-6">
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 65px" value="المعرض"/>
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:autoComplete style="width:95%!important" 
+                                            converter="#{JournalCloseFormMB.invInventoryDTOConverter}"
+                                            value="#{JournalCloseFormMB.journalCloseDTO.galleryId}"
+                                            var="inventoryDTO"
+                                            itemLabel="#{inventoryDTO}" 
+                                            itemValue="#{inventoryDTO}" 
+                                            forceSelection="true" 
+                                            dropdown="true" 
+                                            id="inventoryDTO"
+                                            completeMethod="#{JournalCloseFormMB.completeInventory}"
+                                            widgetVar="inventoryDTO"
+                                            >
+
+                            </p:autoComplete>
+                        </h:panelGroup>
+                    </h:panelGroup>
+                </div>
+                <div class="card">
+                      <h:panelGroup>
+                            <p:outputLabel style="width: 65px" value="رفع الصور"/>
+                        </h:panelGroup>
+                    <h:form enctype="multipart/form-data">
+                        <p:fileUpload value="#{JournalCloseFormMB.files}" mode="advanced" skinSimple="true" multiple="true" fileUploadListener="#{JournalCloseFormMB.upload}"/>
+                        
+                    </h:form>
+                </div>
+                
+                <p:commandButton class="saveButton" 
+
+                                         id="saveB" 
+                                         title="#{userData.userDDs['SAVE']}" 
+                                         value="#{userData.userDDs['SAVE']}" 
+                                         icon="fa fa-fw fa-save" 
+                                         action="#{JournalCloseFormMB.save()}"
+                                         update="@form" />
+
+            </p:fieldset>
+
+    
+
+
+        </h:form>
+        <script>
+
+            document.addEventListener("keydown", function (e) {
+                console.log(e.which);
+                if (e.which === 13) {
+                    e.preventDefault();
+                    return false;
+                }
+                ;
+            });
+
+        </script>
+
+    </ui:define>
+</ui:composition>
