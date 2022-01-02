@@ -44,6 +44,8 @@ public class GlYear extends BaseEntity{
     private Integer openning;
     @Column(name = "is_default")
     private Boolean isDefault;
+     @Column(name = "company_type")
+    private Integer companyType;
     @JoinColumn(name = "branch_id", referencedColumnName = "id")
     @ManyToOne
     private Branch branchId;
@@ -161,6 +163,20 @@ public class GlYear extends BaseEntity{
     @Override
     public String toString() {
         return "com.toby.entity.GlYear[ id=" + id + " ]";
+    }
+
+    /**
+     * @return the companyType
+     */
+    public Integer getCompanyType() {
+        return companyType;
+    }
+
+    /**
+     * @param companyType the companyType to set
+     */
+    public void setCompanyType(Integer companyType) {
+        this.companyType = companyType;
     }
 
 }
