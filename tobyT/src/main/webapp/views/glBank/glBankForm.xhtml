@@ -118,6 +118,28 @@
                                                    for="GlAccount_ID"/>
                                 </div>
                             </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:autoComplete id="GlAccount_ID34" 
+                                                    style="width: 85%" 
+                                                    dropdown="true"
+                                                    converter="#{glBankFromMB.accountConverter}"
+                                                    value="#{glBankFromMB.glBankEntity.transferaccountId}"
+                                                    var="p"
+                                                    itemLabel="#{p}" 
+                                                    itemValue="#{p}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{glBankFromMB.completeGlAccount}" >
+
+
+                                    </p:autoComplete>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 65px"
+                                                   value="حساب التحويل "
+                                                   for="GlAccount_ID"/>
+                                </div>
+                            </div>
                         </div>
                         <div class="ui-g-6 ui-xl-6">
                             <div class="ui-g-12 ui-xl-12">

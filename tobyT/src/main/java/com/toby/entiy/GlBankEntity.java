@@ -25,8 +25,7 @@ public class GlBankEntity extends BaseEntity {
     private GlAccount accountId;
     private Branch branchId;
     private Currency currencyId;
-    private List<GlBankTransactionEntity> glBankTransactionCollection;
-    
+    private List<GlBankTransactionEntity> glBankTransactionCollection; 
     private Integer type;
     private String typeName;
     private Integer raghiPoint;
@@ -34,6 +33,8 @@ public class GlBankEntity extends BaseEntity {
     private BigDecimal rate;
     private Integer cash;
     private String remark;
+    private GlAccount transferaccountId ;
+    
 
     public String getName() {
         return name;
@@ -196,4 +197,19 @@ public class GlBankEntity extends BaseEntity {
     public void setRemark(String remark) {
         this.remark = remark;
     }
+
+    /**
+     * @return the transferaccountId
+     */
+    public GlAccount getTransferaccountId() {
+        return transferaccountId;
+    }
+
+    /**
+     * @param transferaccountId the transferaccountId to set
+     */
+    public void setTransferaccountId(GlAccount transferaccountId) {
+        this.transferaccountId = transferaccountId;
+    }
+
 }
