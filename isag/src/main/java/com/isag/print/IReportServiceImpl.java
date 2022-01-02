@@ -399,7 +399,7 @@ public class IReportServiceImpl implements IReportService {
             hashMap.put("addressEn", userData.getUserBranch().getAddress2());
             hashMap.put("cashier", invPurchaseInvoiceDTO.getCreatedByName());
 
-            if (invPurchaseInvoiceDTO.getTaxFlagFinal() != null && invPurchaseInvoiceDTO.getTaxFlagFinal()) {
+            if (invPurchaseInvoiceDTO.getTaxflag()!= null && invPurchaseInvoiceDTO.getTaxflag()) {
                 hashMap.put("taxCodeText", userData.getUserBranch().getTaxCode());
                 if (invPurchaseInvoiceDTO.getPaymentType() == 0) {
                     hashMap.put("salesReceiptText", "فاتورة مبيعات نقدي");
@@ -446,10 +446,10 @@ public class IReportServiceImpl implements IReportService {
             hashMap.put("payedText", "المبلغ المدفوع");
             hashMap.put("remainText", "المبلغ المتبقى");
             hashMap.put("tax", "الضريبةً");
-            hashMap.put("taxValue", invPurchaseInvoiceDTO.getTaxvalue().setScale(0, RoundingMode.HALF_UP));
+            hashMap.put("taxValue", invPurchaseInvoiceDTO.getTaxvalue().setScale(3, RoundingMode.HALF_UP).stripTrailingZeros());
 //            hashMap.put("totalValue", invPurchaseInvoiceDTO.getTotalNet());
-            hashMap.put("totalValue", invPurchaseInvoiceDTO.getTotalNet().setScale(2, RoundingMode.HALF_UP));
-            hashMap.put("totalWithTaxValue", (invPurchaseInvoiceDTO.getTaxvalue().add(invPurchaseInvoiceDTO.getTotalNet())).setScale(2, RoundingMode.HALF_UP));
+            hashMap.put("totalValue", invPurchaseInvoiceDTO.getTotalNet().setScale(3, RoundingMode.HALF_UP).stripTrailingZeros());
+            hashMap.put("totalWithTaxValue", (invPurchaseInvoiceDTO.getTaxvalue().add(invPurchaseInvoiceDTO.getTotalNet())).setScale(3, RoundingMode.HALF_UP).stripTrailingZeros());
             hashMap.put("payedValue", invPurchaseInvoiceDTO.getPayed());
             hashMap.put("remainValue", invPurchaseInvoiceDTO.getRemain());
             hashMap.put("receiptNumberValue", invPurchaseInvoiceDTO.getSerial());
@@ -472,7 +472,7 @@ public class IReportServiceImpl implements IReportService {
             }
 //        hashMap.put("companyImage", getUserData().getImageReportPath());
             hashMap.put("discountValue", invPurchaseInvoiceDTO.getDiscountValue());
-            hashMap.put("netValue", invPurchaseInvoiceDTO.getFinalNet().setScale(0, RoundingMode.HALF_UP));
+            hashMap.put("netValue", invPurchaseInvoiceDTO.getFinalNet().setScale(3, RoundingMode.HALF_UP).stripTrailingZeros());
 
             hashMap.put("size", "المقاس");
             hashMap.put("costText", "السعر");
@@ -992,13 +992,13 @@ public class IReportServiceImpl implements IReportService {
         hashMap.put("remainToLabel", "الباقى من المستخلص");
         hashMap.put("remainToValue", rscExtractRegisterDTO == null ? null : rscExtractRegisterDTO.getRemain());
         hashMap.put("totalDetailNetLabel", "الإجمالى");
-        hashMap.put("totalDetailNetValue", rscExtractRegisterDTO == null ? null : rscExtractRegisterDTO.getTotalDetailNet().setScale(2, RoundingMode.HALF_UP));
+        hashMap.put("totalDetailNetValue", rscExtractRegisterDTO == null ? null : rscExtractRegisterDTO.getTotalDetailNet().setScale(3, RoundingMode.HALF_UP).stripTrailingZeros());
         hashMap.put("totalAccrualNetvalueLabel", "اجمالي الاستحقاق");
-        hashMap.put("totalAccrualNetvalue", rscExtractRegisterDTO == null ? null : rscExtractRegisterDTO.getTotalAccrualNetvalue().setScale(2, RoundingMode.HALF_UP));
+        hashMap.put("totalAccrualNetvalue", rscExtractRegisterDTO == null ? null : rscExtractRegisterDTO.getTotalAccrualNetvalue().setScale(3, RoundingMode.HALF_UP).stripTrailingZeros());
         hashMap.put("totalDeductionNetvalueLabel", "اجمالي الاستقطاعات");
-        hashMap.put("totalDeductionNetvalue", rscExtractRegisterDTO == null ? null : rscExtractRegisterDTO.getTotalDeductionNetvalue().setScale(2, RoundingMode.HALF_UP));
+        hashMap.put("totalDeductionNetvalue", rscExtractRegisterDTO == null ? null : rscExtractRegisterDTO.getTotalDeductionNetvalue().setScale(3, RoundingMode.HALF_UP).stripTrailingZeros());
         hashMap.put("totalFinalLabel", "صافي المستخلص");
-        hashMap.put("totalFinalValue", rscExtractRegisterDTO == null ? null : rscExtractRegisterDTO.getTotalFinal().setScale(2, RoundingMode.HALF_UP));
+        hashMap.put("totalFinalValue", rscExtractRegisterDTO == null ? null : rscExtractRegisterDTO.getTotalFinal().setScale(3, RoundingMode.HALF_UP).stripTrailingZeros());
         hashMap.put("customerLabel", "العميل");
         hashMap.put("customerValue", rscExtractRegisterDTO == null || (rscExtractRegisterDTO.getCustomerId() == null) ? null : rscExtractRegisterDTO.getCustomerId().getName());
         hashMap.put("projectLabel", "المشروع");
@@ -1010,7 +1010,7 @@ public class IReportServiceImpl implements IReportService {
         hashMap.put("totalBeforPercentageLabel", "الاجمالي قبل النسبه");
         hashMap.put("totalBeforPercentageValue", rscExtractRegisterDTO == null ? null : rscExtractRegisterDTO.getTotalBeforePercentage());
         hashMap.put("valueLabel", "القيمة");
-        hashMap.put("value", rscExtractRegisterDTO != null && rscExtractRegisterDTO.getTotalPercentage() != null ? rscExtractRegisterDTO.getTotalPercentage().setScale(2, BigDecimal.ROUND_UP) : BigDecimal.ZERO);
+        hashMap.put("value", rscExtractRegisterDTO != null && rscExtractRegisterDTO.getTotalPercentage() != null ? rscExtractRegisterDTO.getTotalPercentage().setScale(3, BigDecimal.ROUND_UP).stripTrailingZeros() : BigDecimal.ZERO);
         hashMap.put("itemName", "البند");
         hashMap.put("code", "الكود");
         hashMap.put("unitName", "الوحده");
