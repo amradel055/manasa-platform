@@ -26,6 +26,7 @@ import com.isag.views.SubAccountSummaryReport;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -1549,14 +1550,18 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
     }
 
     public void addDateFromAndTo(StringBuilder sql, SubAccountSummarySearchBean cashAccountSettlementSearchBean) {
+        //        if (salesReportByValueAded.getDateFrom() != null) {
+//            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+//            query.append(" and ip.date >=  '").append(dateFormat.format(salesReportByValueAded.getDateFrom())).append("' ");
+//        }
         if (cashAccountSettlementSearchBean.getDateFrom() != null) {
             String d3 = new SimpleDateFormat("yyyy-MM-dd").format(cashAccountSettlementSearchBean.getDateFrom());
-            sql.append(" and cas.date >= '").append(d3).append("'");
+            sql.append(" and cas.date >= '").append(d3).append(" 00:00:00").append("'");
         }
 
         if (cashAccountSettlementSearchBean.getDateTo() != null) {
             String d3 = new SimpleDateFormat("yyyy-MM-dd").format(cashAccountSettlementSearchBean.getDateTo());
-            sql.append(" and cas.date <= '").append(d3).append("'");
+            sql.append(" and cas.date <= '").append(d3).append(" 59:59:59").append("'");
         }
     }
 
