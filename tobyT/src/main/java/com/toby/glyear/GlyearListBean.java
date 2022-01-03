@@ -10,19 +10,18 @@ import com.toby.businessservice.GlYearService;
 import com.toby.entity.GlYear;
 import com.toby.toby.BaseListBean;
 import com.toby.toby.UserData;
-import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ViewScoped;
+import javax.faces.view.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 
 @Named(value = "glyearListBean")
 @ViewScoped
-public class GlyearListBean extends BaseListBean implements Serializable {
+public class GlyearListBean extends BaseListBean {
 
     @EJB
     private GlYearService glYearService;
@@ -87,9 +86,9 @@ public class GlyearListBean extends BaseListBean implements Serializable {
     @Override
     public String goToEdit() {
         try {
-        if (glYearselected != null) {
+        if (getGlYearselected() != null) {
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-            context.getSessionMap().put("glyearSelected", glYearselected);
+            context.getSessionMap().put("glyearSelected", getGlYearselected());
             context.getSessionMap().put("ScreenMode", "Edit");
             exit("../Glyear/glyearform.xhtml");
             return "-";

@@ -12,7 +12,19 @@
         <h:form id="glyearform"  enctype="multipart/form-data" dir="#{userData.dir}" class='formmargin'>
             <p:fieldset legend="#{userData.userDDs['Gl_year']}" >
                 <div class="row">
-                    <p:messages autoUpdate="true" rendered="false"  id="messages" showDetail="true" closable="true"/>   
+                    <p:messages autoUpdate="true" rendered="false"  id="messages" showDetail="true" closable="true"/>  
+                         <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:selectOneMenu  style="width: 51%" id="co000000000m" value="#{glyearFormBean.newGLYear.companyType}" >
+                                    <f:selectItem itemLabel="الكل"  />
+                                    <f:selectItem  itemLabel="شركه توبي العالميه" itemValue="0"/> 
+                                     <f:selectItem  itemLabel="شركه توبي العالمي" itemValue="1"/> 
+                                </p:selectOneMenu>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel  style="width: 50px;margin-right: 25px;" value="اسم الشركه" />
+                            </div>
+                                                      </div>
 
                     <div class="ui-g-6 ui-xl-6">
 

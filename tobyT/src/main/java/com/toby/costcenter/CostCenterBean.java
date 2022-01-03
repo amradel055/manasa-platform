@@ -15,9 +15,6 @@ import com.toby.entity.TobyCompany;
 import com.toby.toby.BaseTreeBean;
 import com.toby.toby.UserData;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -28,7 +25,6 @@ import javax.faces.context.FacesContext;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
-import org.primefaces.util.TreeUtils;
 
 /**
  *

@@ -57,7 +57,8 @@
         <dependency>
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
-            <version>6.1</version>
+            <version>6.2</version>
+            <type>jar</type>
         </dependency>
         
         <dependency>

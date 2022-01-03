@@ -33,6 +33,7 @@ public class GlyearFormBean extends BaseFormBean implements Serializable {
     private String screenMode;
     private UserData user;
     private List<TobyCompany> companies;
+   
 
     private GlYear glyearSelected;
 
@@ -69,12 +70,11 @@ public class GlyearFormBean extends BaseFormBean implements Serializable {
              ExistedYear++;
              }               
              }*/
+            
             Integer newYear = newGLYear.getYear();
             Integer length = String.valueOf(newYear).length();
-
             glYears = glYearService.getSimilarYearsByBranchId(user.getSelectedBranch(), newGLYear);
             glYearsDate = glYearService.checkDateWithinDate(user.getSelectedBranch(), newGLYear);
-
             if (!glYears.isEmpty() || !glYearsDate.isEmpty() || length != 4) {
                 if (!glYears.isEmpty()) {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, user.getUserDDs().get("ERROR"), user.getUserDDs().get("DUBLICATED_YEAR_YEAR_ERROR")));
@@ -85,10 +85,8 @@ public class GlyearFormBean extends BaseFormBean implements Serializable {
                 if (length != 4) {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, user.getUserDDs().get("ERROR"), user.getUserDDs().get("ERROR_WITH_YEAR")));
                 }
-
                 return "";
             } else {
-                
                 proceedSaveAfterValidation();
                 exit("../Glyear/glyearlist.xhtml");
                 return "";
@@ -98,7 +96,6 @@ public class GlyearFormBean extends BaseFormBean implements Serializable {
             return null;
         }
     }
-
     public void proceedSaveAfterValidation() {
         try {
             if (selectedCompanyId != null && newGLYear != null) {
@@ -109,6 +106,7 @@ public class GlyearFormBean extends BaseFormBean implements Serializable {
                 if (user.getSelectedBranch() != null) {
                     branch = branchService.findBranch(user.getSelectedBranch());
                     newGLYear.setBranchId(branch);
+                    
                 }
                 saveLogic();
 
@@ -164,7 +162,7 @@ public class GlyearFormBean extends BaseFormBean implements Serializable {
 
             if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("Add")) {
                 newGLYear = new GlYear();
-            } else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("EDIT")) {
+            } else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("Edit")) {
                 try {
                     glyearSelected = (GlYear) context.getSessionMap().get("glyearSelected");
                     newGLYear = glyearSelected;
@@ -300,5 +298,6 @@ public class GlyearFormBean extends BaseFormBean implements Serializable {
     public void setGlYearsDate(List<GlYear> glYearsDate) {
         this.glYearsDate = glYearsDate;
     }
+
 
 }

@@ -54,6 +54,9 @@ public class GlBank extends BaseEntity {
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     @ManyToOne
     private GlAccount accountId;
+     @JoinColumn(name = "transferaccount_id", referencedColumnName = "id")
+    @ManyToOne
+    private GlAccount transferaccountId;
     @Column(name = "type")
     private Integer type;
     @JoinColumn(name = "branch_id", referencedColumnName = "id")
@@ -62,6 +65,7 @@ public class GlBank extends BaseEntity {
     @JoinColumn(name = "currency_id", referencedColumnName = "id")
     @ManyToOne
     private Currency currencyId;
+    
     @Column(name = "commition")
     private BigDecimal commition;
     @Column(name = "rate")
@@ -278,6 +282,20 @@ public class GlBank extends BaseEntity {
      */
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    /**
+     * @return the transferaccountId
+     */
+    public GlAccount getTransferaccountId() {
+        return transferaccountId;
+    }
+
+    /**
+     * @param transferaccountId the transferaccountId to set
+     */
+    public void setTransferaccountId(GlAccount transferaccountId) {
+        this.transferaccountId = transferaccountId;
     }
 
 }
