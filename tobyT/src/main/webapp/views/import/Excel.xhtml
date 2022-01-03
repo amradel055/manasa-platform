@@ -14,7 +14,11 @@
                 <p:ajax/>
             </p:commandButton>
 
-            <p:commandButton id="btninvitem58888"  actionListener="#{importMB.tarhilCashOne()}" ajax="false" value="ترحيل السندات">
+            <p:commandButton id="btninvitem58888"  actionListener="#{importMB.tarhilCashOne()}" ajax="false" value="ترحيل سندات القبض">
+                <f:ajax execute="@all" render="@form"/>
+                <p:ajax/>
+            </p:commandButton>
+            <p:commandButton id="btninvitem588888"  actionListener="#{importMB.tarhilExitOne()}" ajax="false" value="ترحيل سندات الصرف">
                 <f:ajax execute="@all" render="@form"/>
                 <p:ajax/>
             </p:commandButton>

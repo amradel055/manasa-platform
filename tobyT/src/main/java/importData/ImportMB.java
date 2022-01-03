@@ -189,24 +189,27 @@ public class ImportMB extends Basic implements Serializable {
     }
 
     public void tarhilCashOne() {
-        List<GeneralJournalDTO> list = bankTransactionDetailsService.tarhilOne(getUserData().getUser());
-
+        List<GeneralJournalDTO> list = bankTransactionDetailsService.tarhilOne(getUserData().getUser(), 1);
         Integer idDtail = 1;
-//        Integer idDtail = 75000;
-//        Integer idDtail = 150000;
-//        Integer idDtail = 225000;
-
         for (GeneralJournalDTO dto : list) {
             generaljournalServiceDTO.addGeneralJournalDTOWithDetail(dto, getUserData().getUser(), dto.getSerial(), dto.getId(), idDtail);
-//            generaljournalServiceDTO.addGeneralJournalDTOWithDetailFromExcel(list, getUserData().getUser());
             idDtail = idDtail + 5;
         }
+    }
 
+    public void tarhilExitOne() {
+        List<GeneralJournalDTO> list = bankTransactionDetailsService.tarhilOne(getUserData().getUser(), 0);
+        Integer idDtail = 600000;
+        for (GeneralJournalDTO dto : list) {
+            generaljournalServiceDTO.addGeneralJournalDTOWithDetail(dto, getUserData().getUser(), dto.getSerial(), dto.getId(), idDtail);
+            idDtail = idDtail + 5;
+        }
     }
 
     public void tarhilAll() throws CloneNotSupportedException {
         tarhilCashOne();
         tarhilInvoiceOne();
+        tarhilExitOne();
     }
 
     @PostConstruct
@@ -1372,6 +1375,7 @@ public class ImportMB extends Basic implements Serializable {
         try {
             Cell remarkHead = sheet.getCell(4, i);
             Cell dateHigri = sheet.getCell(9, i);
+            Cell serial = sheet.getCell(10, i);
             System.out.println(dateHigri.getContents());
             String[] dateHigriSplit = dateHigri.getContents().split("/");
 
@@ -1395,6 +1399,7 @@ public class ImportMB extends Basic implements Serializable {
             item.setBranchId(getUserData().getUserBranch().getId());
             item.setCreatedBy(getUserData().getUser().getId());
             item.setCompanyId(getUserData().getCompany().getId());
+            item.setSerial(Integer.parseInt(serial.getContents()));
         } catch (Exception e) {
             System.out.println(e);
         }

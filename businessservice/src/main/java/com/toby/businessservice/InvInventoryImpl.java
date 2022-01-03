@@ -96,7 +96,7 @@ public class InvInventoryImpl implements InvInventoryService {
             
             if (dto.getCustomerAccount() != null) {
                 GlAccount account = new GlAccount();
-                account.setId(dto.getCostAccount().getId());
+                account.setId(dto.getCustomerAccount().getId());
                 entity.setCustomerAccount(account);
             }
 
@@ -169,6 +169,13 @@ public class InvInventoryImpl implements InvInventoryService {
             accountDTO.setName(entity.getCostAccount().getName());
             accountDTO.setAccNumber(entity.getCostAccount().getAccNumber());
             dto.setCostAccount(accountDTO);
+        }
+        if (entity.getCustomerAccount() != null) {
+            GlAccountDTO accountDTO = new GlAccountDTO();
+            accountDTO.setId(entity.getCustomerAccount().getId());
+            accountDTO.setName(entity.getCustomerAccount().getName());
+            accountDTO.setAccNumber(entity.getCustomerAccount().getAccNumber());
+            dto.setCustomerAccount(accountDTO);
         }
         if (entity.getAdminUnitId() != null) {
             GlAdminUnitDTO glAdminUnit = new GlAdminUnitDTO();

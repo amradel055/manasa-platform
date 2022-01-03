@@ -103,14 +103,9 @@
                                 <h:outputText id="totalNetAfterDiscount" 
                                               style="text-align:right" 
                                               value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.totalNetAfterDiscount}" />
-
                             </div>
                             <div class="ui-g-8 ui-xl-8">
-
-
                                 <p:outputLabel style="width: 155px;" value="#{userData.userDDs['TOT_AF_TOT_DIS']}"/>
-
-
                             </div>
                         </div>
 
@@ -198,7 +193,7 @@
 
                         <div class="ui-g-12 ui-xl-12">
                             <p:selectOneMenu id="inventory" value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId}"
-                                             rendered="#{(userData.userScreens['proworkorder'].edit)}"
+                                             rendered="#{(userData.userScreens['proworkorder'].view)}"
                                              converter="#{invPurchaseInvoiceFormDTOMB.gallaryDTOConverters}" 
                                              style="float:right;width: 100%!important;color:#fff;height: 30px!important;margin-right: 0.5%;">
 

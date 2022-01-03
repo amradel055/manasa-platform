@@ -619,7 +619,6 @@
                                           value="#{userData.userDDs['SAVE']}" 
                                           style=""
                                           action="#{SettlementDeedFormMB.save()}"
-                                          disabled="#{SettlementDeedFormMB.glBankTransactionEntity.postFlag == 1}"
                                           rendered="#{(userData.userScreens['settlementdeed'].add or userData.userScreens['settlementdeed'].edit) or userData.isAdmin}"
                                           />
                         <p:commandButton  class="newButton" title="#{userData.userDDs['RESET']}" 

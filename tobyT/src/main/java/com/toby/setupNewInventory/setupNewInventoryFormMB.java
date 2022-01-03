@@ -85,6 +85,9 @@ public class setupNewInventoryFormMB extends BaseFormBean implements Serializabl
                         getAdminUnitDTOList();
                         getCostCenterDTOList();
                         getGlAccountDTOList();
+                        getGlRunningAccountDTOList();
+                        getGlCostAccountDTOList();
+                        getCustomerAccountDTOList();
 
                     } catch (Exception e) {
                         e.printStackTrace();

@@ -184,13 +184,12 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
     @Override
     public void addGeneralJournalDTOWithDetailFromExcel(List<GeneralJournalDTO> list, TobyUser tobyUser) {
         Integer generaldocumet = 1;
-        Integer serial = 1;
+//        Integer serial = 1;
         Integer idDtail = 1;
         for (GeneralJournalDTO dto : list) {
-            System.err.println("----------> " + serial + " <---------------------" + new Date());
+            System.err.println("----------> " + dto.getSerial() + " <---------------------" + new Date());
             generaldocumet++;
-            serial++;
-            dto.setSerial(serial);
+            dto.setSerial(dto.getSerial());
             dto.setGeneralDecument(generaldocumet);
             GeneralJournal entity = mapFromDTO(dto, tobyUser);
             entity = dao.updateEntity(entity);

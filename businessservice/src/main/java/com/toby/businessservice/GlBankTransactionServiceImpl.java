@@ -66,7 +66,8 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
             AccountsSystemSettings accountsSystemSettings = new AccountsSystemSettings();
             accountsSystemSettings = accountsSystemSettingsService.getInventoryByCompanyId(companyId);
 
-            if (accountsSystemSettings != null && accountsSystemSettings.getWorkWithAccounts() != null && accountsSystemSettings.getNoteSreceivablesType().equals("NOT_ALLOW_DETAIL")) {
+            if (accountsSystemSettings != null && accountsSystemSettings.getWorkWithAccounts() != null 
+                    && accountsSystemSettings.getNoteSreceivablesType().equals("NOT_ALLOW_DETAIL")) {
                 checkDuplicateDetails(glBankTransaction);
             }
         }
@@ -105,7 +106,7 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
         }
 
         for (GlBankTransactionDetail glBankTransactionDetail : glBankTransactionDetailList) {
-            glBankTransactionDetail.setGlBankTransactionId(glBankTransaction);
+            glBankTransactionDetail.setGlBankTransactionId(entity);
 
             if (glBankTransactionDetail.getId() != null) {
                 tarhilId = glBankTransactionDetailsService.updateGlBankTransactionDetails(glBankTransactionDetail, tobyUser);
