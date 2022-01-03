@@ -182,7 +182,7 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
 
         // إدخال سندات الصرف
         if (dto.getGlBankTransactionId().getTransactionType() == 0) {
-            journal = generaljournalService.addGeneralJournalGlobal(dto.getGlBankTransactionId().getGlYear(), 1001, dto.getSerial(), dto.getGlBankTransactionId().getDate(),
+            journal = generaljournalService.addGeneralJournalGlobal(dto.getGlBankTransactionId().getGlYear(), 1001, dto.getGlBankTransactionId().getSerial(), dto.getGlBankTransactionId().getDate(),
                     dto.getGlBankTransactionId().getRemark(), tobyUser,0);
 
             // يتبقى ادخالى العموله يدويا
