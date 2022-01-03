@@ -66,7 +66,6 @@ import com.toby.entity.InvOrganizationSite;
 import com.toby.entity.OfferCopoun;
 import com.toby.print.IReportService;
 import com.toby.print.IReportServiceImpl;
-import com.toby.views.GlBankTransactionInvoiceView;
 import com.toby.views.ItemsBarcodesDetailsView;
 import com.toby.views.QuantityItemsStore;
 import java.math.BigDecimal;
@@ -375,6 +374,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
     public void addInvDetail() {
         try {
+            checkDetailData();
             getInvInvoiceDTO().setMsg(null);
             setInvInvoiceDTO(invGlobalService.addInvPurchaseInvoiceDetail(getInvInvoiceDTO(), getIndex()));
             errorMsg(getInvInvoiceDTO().getMsg());
@@ -1004,7 +1004,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
     public void addNewCustomer() {
         getOrganizationSiteId().setGallaryIdDTO(getInvInvoiceDTO().getGallaryId());
-        getInvInvoiceDTO().setOrganizationSiteId(organizationSiteService.addNewCustomer(getOrganizationSiteId(), getInvOrganizationSiteDTOList(true, 0), getUserData().getUser()));
+        getInvInvoiceDTO().setOrganizationSiteId(organizationSiteService.addNewCustomer(getOrganizationSiteId(), getInvOrganizationSiteDTOList(true, 0), getUserData().getUser(),getInvInvoiceDTO().getGallaryId().getCustomerAccount().getId()));
         getInvInvoiceDTO().setShowCustomerDate(Boolean.FALSE);
     }
 
@@ -1293,6 +1293,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     }
 
     public void hishis() {
+        checkDetailData();
         System.out.print("ttt");
     }
 

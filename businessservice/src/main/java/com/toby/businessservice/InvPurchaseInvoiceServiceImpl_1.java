@@ -28,6 +28,7 @@ import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.dto.InventoryDelegatorDTO;
 import com.toby.dto.PrintProductionDTO;
 import com.toby.dto.ProGroupDTO;
+import com.toby.dto.SymbolDTO;
 import com.toby.dto.TarhilInvoiceDetail;
 import com.toby.entity.Branch;
 import com.toby.entity.CostCenter;
@@ -56,6 +57,7 @@ import com.toby.entity.InvTransferDetail;
 import com.toby.entity.InventoryDelegator;
 import com.toby.entity.InventorySetup;
 import com.toby.entity.ProFactoryDelivery;
+import com.toby.entity.Symbol;
 import com.toby.views.ClientsNoMovment;
 import com.toby.views.FactoryInvoiceStatus;
 import com.toby.views.QuantityItemsStore;
@@ -2376,7 +2378,8 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         params.put("branchId", tobyUser.getBranchId().getId());
         GeneralJournal journal = null;
         if (dto.getScreenName().equals(ScreenNameClassEnum.PROWORKORDER)) {
-            journal = generaljournalService.addGeneralJournalGlobal(dto.getGlYearSelection().getId(), 1013, dto.getSerial(), dto.getDate(), dto.getRemarks(), tobyUser);
+            // ادخال المبيعات
+            journal = generaljournalService.addGeneralJournalGlobal(dto.getGlYearSelection().getId(), 1013, dto.getSerial(), dto.getDate(), dto.getRemarks(), tobyUser, 1);
 
             if (dto.getGallaryId() != null && dto.getGallaryId().getCostCenterId() != null && dto.getGallaryId().getCostCenterId().getId() != null) {
                 Integer salesTaxAccount = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"SALES_TAX_ACCOUNT\" AND a.accountId IS NOT NULL", params);
@@ -2384,7 +2387,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 generaljournalDetailsService.addGenDetalil(true, dto.getFinalNet(), journal.getId(),
                         (dto.getOrganizationSiteId() == null || dto.getOrganizationSiteId().getAccountId() == null || dto.getOrganizationSiteId().getAccountId().getId() == null) ? null : dto.getOrganizationSiteId().getAccountId().getId(),
                         (dto.getGallaryId() == null || dto.getGallaryId().getCostCenterId() == null || dto.getGallaryId().getCostCenterId().getId() == null) ? null : dto.getGallaryId().getCostCenterId().getId(),
-                        dto.getRemarks(), tobyUser);
+                        "مبيعات", tobyUser);
 //  حساب المبيعات
                 Integer salesAccountNumber = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"SALES_ACCOUNT_NUMBER\" AND a.accountId IS NOT NULL", params);
                 generaljournalDetailsService.addGenDetalil(false, dto.getTotalNetAfterDiscount(), journal.getId(), salesAccountNumber,
@@ -2484,23 +2487,23 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                     }
                 }
             }
-
+            // ادخال المشتريات
         } else if (dto.getScreenName().equals(ScreenNameClassEnum.INVPURCHASEINVOICEFORM)) {
-            journal = generaljournalService.addGeneralJournalGlobal(dto.getGlYearSelection().getId(), 1010, dto.getSerial(), dto.getDate(), dto.getRemarks(), tobyUser);
+            journal = generaljournalService.addGeneralJournalGlobal(dto.getGlYearSelection().getId(), 1010, dto.getSerial(), dto.getDate(), "فاتورة مشتريات", tobyUser, 0);
 
             Integer storeAccountNumber = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"STORE_ACCOUNT_NUMBER\" AND a.accountId IS NOT NULL", params);
             Integer purchseTaxAccount = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"PURCHASE_TAX_ACCOUNT\" AND a.accountId IS NOT NULL", params);
 
             generaljournalDetailsService.addGenDetalil(true, dto.getTotalNetAfterDiscount(), journal.getId(), storeAccountNumber,
                     835,
-                    dto.getRemarks(), tobyUser);
+                    "فاتورة المورد " + dto.getOrganizationSiteId() == null ? "" : dto.getOrganizationSiteId().getName() + " رقم " + dto.getSupplierInvoiceNumber(), tobyUser);
             generaljournalDetailsService.addGenDetalil(false, dto.getFinalNet(), journal.getId(),
                     (dto.getOrganizationSiteId() == null || dto.getOrganizationSiteId().getAccountId() == null || dto.getOrganizationSiteId().getAccountId().getId() == null) ? null : dto.getOrganizationSiteId().getAccountId().getId(),
                     (dto.getGallaryId() == null || dto.getGallaryId().getCostCenterId() == null || dto.getGallaryId().getCostCenterId().getId() == null) ? null : dto.getGallaryId().getCostCenterId().getId(),
-                    dto.getRemarks(), tobyUser);
+                    "فاتورة مشتريات" + " رقم " + dto.getSupplierInvoiceNumber(), tobyUser);
             generaljournalDetailsService.addGenDetalil(true, dto.getTaxvalue(), journal.getId(), purchseTaxAccount,
                     (dto.getGallaryId() == null || dto.getGallaryId().getCostCenterId() == null || dto.getGallaryId().getCostCenterId().getId() == null) ? null : dto.getGallaryId().getCostCenterId().getId(),
-                    dto.getRemarks(), tobyUser);
+                    "فاتورة مشتريات" + " رقم " + dto.getSupplierInvoiceNumber(), tobyUser);
 
         }
         return journal == null ? null : journal;
@@ -2569,7 +2572,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         Integer storeAccountNumber = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"STORE_ACCOUNT_NUMBER\" AND a.accountId IS NOT NULL", params);
 
         Integer index1 = 1;
-        Integer headId = 100000;
+        Integer headId = 250000;
         Integer DetailSerial = 1;
         Integer DetailId = 700000;
         for (InvInventory gallary : detailsGallary) {
@@ -2732,7 +2735,10 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         GlYearDTO glYear = new GlYearDTO();
         glYear.setId(73);
         generalJournal.setGlYear(glYear);
-//        generalJournal.setGeneralType(symbol != null ? symbol : null);
+        SymbolDTO symbol = new SymbolDTO();
+        symbol.setId(509);
+        generalJournal.setGeneralType(symbol != null ? symbol : null);
+
         generalJournal.setBranchId(tobyUser.getBranchId().getId());
         generalJournal.setCompanyId(tobyUser.getCompanyId().getId());
         generalJournal.setCreatedBy(tobyUser.getId());

@@ -42,8 +42,10 @@ public class InvTransferFormMB1 extends InventoryBasicDataForm {
     public String save() {
         if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getInvPurchaseInvoiceDetailList() != null && !getInvInvoiceDTO().getInvPurchaseInvoiceDetailList().isEmpty()) {
             getInvInvoiceDTO().setMsg(null);
+            checkDetailData();
             setInvInvoiceDTO(invTransferService.save(getInvInvoiceDTO(), getUserData().getUser()));
             msgSave(getInvInvoiceDTO().getMsg());
+            checkDetailData();
         } else {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "لا يوجد تفاصيل للفاتورة"));

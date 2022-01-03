@@ -127,7 +127,7 @@
                                              icon="fa fa-remove" 
                                              title="#{userData.userDDs['DELETE']}" 
                                              action="#{notesReceivablesListMB.delete}"
-                                              rendered="#{userData.userScreens['notesreceivables'].delete or userData.isAdmin}"
+                                             rendered="#{userData.userScreens['notesreceivables'].delete or userData.isAdmin}"
                                              >
                                 <f:setPropertyActionListener value="#{glBankTransactionTable}"
                                                              target="#{notesReceivablesListMB.glBankTransactionEntitySelected}" />

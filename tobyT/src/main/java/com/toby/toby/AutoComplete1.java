@@ -159,6 +159,16 @@ public class AutoComplete1 extends Basic {
     public List<ItemsBarcodesDetailsView> completeItemsBarcodesDetailsView(String query) {
         if (query != null && !query.trim().isEmpty()) {
             List<ItemsBarcodesDetailsView> autoCompleteInvItem;
+            autoCompleteInvItem = autoCompleteService.autoCompleteItemsBarcodesDetailsViewBranchId(getBranchId(), null, query);
+            setItemsBarcodesDetailsViewConverter(new ItemsBarcodesDetailsViewConverter(autoCompleteInvItem));
+            return autoCompleteInvItem;
+        }
+        return null;
+    }
+    
+    public List<ItemsBarcodesDetailsView> completeItemsBarcodesDetailsViewName(String query) {
+        if (query != null && !query.trim().isEmpty()) {
+            List<ItemsBarcodesDetailsView> autoCompleteInvItem;
             autoCompleteInvItem = autoCompleteService.autoCompleteItemsBarcodesDetailsViewBranchId(getBranchId(), 0, query);
             setItemsBarcodesDetailsViewConverter(new ItemsBarcodesDetailsViewConverter(autoCompleteInvItem));
             return autoCompleteInvItem;

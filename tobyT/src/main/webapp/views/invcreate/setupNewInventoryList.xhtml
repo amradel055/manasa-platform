@@ -46,16 +46,30 @@
                                    filterMatchMode="contains" headerText="#{userData.userDDs['INVENT_NAM']}" sortBy="#{invInventoryTable.name}" >
                             <p:outputLabel value="#{invInventoryTable.name}" />
                         </p:column>
-                        <p:column  style="width: 10vh;text-align: right;font-size: 1.8vh"  
-                                   filterStyle="display:none" filterBy="#{invInventoryTable.typeItem}"  
-                                   filterMatchMode="contains" headerText="#{userData.userDDs['PRODUCT_TYPE']}" sortBy="#{invInventoryTable.typeItem}" >
-                            <p:outputLabel value="#{invInventoryTable.typeItem}" />
-                        </p:column>
 
                         <p:column  style="width: 14vh;text-align: right;font-size: 1.8vh"  
-                                   filterStyle="display:none" filterBy="#{invInventoryTable.adminUnitId}"  
-                                   filterMatchMode="contains" headerText="#{userData.userDDs['ADMIN_UNIT']}" sortBy="#{invInventoryTable.adminUnitId}" >
-                            <p:outputLabel value="#{invInventoryTable.adminUnitId.name}" />
+                                   filterStyle="display:none" filterBy="#{invInventoryTable.accountId}"  
+                                   filterMatchMode="contains" headerText="حساب المبيعات" 
+                                   sortBy="#{invInventoryTable.accountId}" >
+                            <p:outputLabel value="#{invInventoryTable.accountId}" />
+                        </p:column>
+                        <p:column  style="width: 14vh;text-align: right;font-size: 1.8vh"  
+                                   filterStyle="display:none" filterBy="#{invInventoryTable.runningAccount}"  
+                                   filterMatchMode="contains" headerText="الحساب الجاري" 
+                                   sortBy="#{invInventoryTable.runningAccount}" >
+                            <p:outputLabel value="#{invInventoryTable.runningAccount}" />
+                        </p:column>
+                        <p:column  style="width: 14vh;text-align: right;font-size: 1.8vh"  
+                                   filterStyle="display:none" filterBy="#{invInventoryTable.costAccount}"  
+                                              filterMatchMode="contains" headerText="حساب المخزون" 
+                                              sortBy="#{invInventoryTable.costAccount}" >
+                            <p:outputLabel value="#{invInventoryTable.costAccount}" />
+                        </p:column>
+                        <p:column  style="width: 14vh;text-align: right;font-size: 1.8vh"  
+                                   filterStyle="display:none" filterBy="#{invInventoryTable.customerAccount}"  
+                                              filterMatchMode="contains" headerText="حساب العملاء" 
+                                              sortBy="#{invInventoryTable.customerAccount}" >
+                            <p:outputLabel value="#{invInventoryTable.customerAccount}" />
                         </p:column>
 
                         <p:column  style="width: 14vh;text-align: right;font-size: 1.8vh"  

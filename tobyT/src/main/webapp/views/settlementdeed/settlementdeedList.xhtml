@@ -144,7 +144,7 @@
 
                             <p:commandButton  class="sdeleteButtons" update="@form" icon="fa fa-remove"  title="#{userData.userDDs['DELETE']}" style="background-color: red;border-radius: 3px;margin-bottom:3px"  action="#{settlementDeedListMB.delete}" 
                                               rendered="#{userData.userScreens['settlementdeed'].delete or userData.isAdmin}"
-                                              disabled="#{glBankTransactionTable.postFlag == 1 }">
+                                              >
                                 <f:setPropertyActionListener value="#{glBankTransactionTable}" target="#{settlementDeedListMB.glBankTransactionEntitySelected}" />
                                 <p:confirm header="Confirmation" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
                             </p:commandButton>

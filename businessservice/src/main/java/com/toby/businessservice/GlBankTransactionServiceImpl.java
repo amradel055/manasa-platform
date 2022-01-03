@@ -39,6 +39,8 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
 
     @EJB
     private GenericDAO dao;
+    @EJB
+    private GeneraljournalService generaljournalService;
     private EntityManager em;
     private BigDecimal value;
     private Map<Integer, BigDecimal> balance = new HashMap<>();
@@ -64,7 +66,8 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
             AccountsSystemSettings accountsSystemSettings = new AccountsSystemSettings();
             accountsSystemSettings = accountsSystemSettingsService.getInventoryByCompanyId(companyId);
 
-            if (accountsSystemSettings != null && accountsSystemSettings.getWorkWithAccounts() != null && accountsSystemSettings.getNoteSreceivablesType().equals("NOT_ALLOW_DETAIL")) {
+            if (accountsSystemSettings != null && accountsSystemSettings.getWorkWithAccounts() != null 
+                    && accountsSystemSettings.getNoteSreceivablesType().equals("NOT_ALLOW_DETAIL")) {
                 checkDuplicateDetails(glBankTransaction);
             }
         }
@@ -73,12 +76,20 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
 
     public GlBankTransaction addingForGlBank(GlBankTransaction glBankTransaction, List<GlBankTransactionDetail> glBankTransactionDetailListDeleted,
             List<GlBankTransactionDetail> glBankTransactionDetailList, TobyUser tobyUser) {
+        GlBankTransaction entity = null;
+        Integer tarhilId;
         if (glBankTransaction.getId() != null) {
-           glBankTransaction = dao.updateEntity(glBankTransaction);
+
+            deleteTarhilGeneralJournal(glBankTransaction);
+            glBankTransaction.setPostFlag(0);
+            glBankTransaction.setGeneralJournalId(null);
+
+            entity = dao.updateEntity(glBankTransaction);
+
         } else {
 
             glBankTransaction.setSerial(getMaxSerail(glBankTransaction));
-           glBankTransaction = dao.updateEntity(glBankTransaction);
+            entity = dao.updateEntity(glBankTransaction);
         }
 
         if (glBankTransactionDetailListDeleted != null && !glBankTransactionDetailListDeleted.isEmpty()) {
@@ -95,17 +106,26 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
         }
 
         for (GlBankTransactionDetail glBankTransactionDetail : glBankTransactionDetailList) {
-            glBankTransactionDetail.setGlBankTransactionId(glBankTransaction);
+            glBankTransactionDetail.setGlBankTransactionId(entity);
 
             if (glBankTransactionDetail.getId() != null) {
-                glBankTransactionDetailsService.updateGlBankTransactionDetails(glBankTransactionDetail, tobyUser);
+                tarhilId = glBankTransactionDetailsService.updateGlBankTransactionDetails(glBankTransactionDetail, tobyUser);
             } else {
                 glBankTransactionDetail.setSerial(maxSerial);
-                glBankTransactionDetailsService.updateGlBankTransactionDetails(glBankTransactionDetail, tobyUser);
+                tarhilId = glBankTransactionDetailsService.updateGlBankTransactionDetails(glBankTransactionDetail, tobyUser);
                 maxSerial++;
             }
+            tarhilglBankTransaction(tarhilId, entity);
         }
-        return glBankTransaction ;
+        return glBankTransaction;
+    }
+
+    private void deleteTarhilGeneralJournal(GlBankTransaction glBankTransaction) {
+        GlBankTransaction oldentity = dao.findEntityById(GlBankTransaction.class, glBankTransaction.getId());
+        if (oldentity.getGeneralJournalId() != null && oldentity.getGeneralJournalId().getId() != null) {
+            generaljournalService.deleteGeneralJournal(oldentity.getGeneralJournalId().getId());
+        }
+//        return glBankTransaction ;
     }
 
     @Override
@@ -134,6 +154,7 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
             dao.executeDeleteQuery("delete from GlBankTransactionDetail e WHERE e.id > 0 AND e.glBankTransactionId.id = " + glBankTransaction.getId());
         }
         dao.deleteEntity(glBankTransaction);
+        deleteTarhilGeneralJournal(glBankTransaction);
     }
 
     @Override
@@ -462,6 +483,10 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
 
         Integer tarhil = glBankTransactionDetailsService.addCashDetail(dTO, glBankTransaction.getId(), glBankTransaction.getSerial(), tobyUser);
 
+        tarhilglBankTransaction(tarhil, glBankTransaction);
+    }
+
+    private void tarhilglBankTransaction(Integer tarhil, GlBankTransaction glBankTransaction) {
         GeneralJournal generalJournal = new GeneralJournal();
         generalJournal.setId(tarhil);
         glBankTransaction.setGeneralJournalId(generalJournal);

@@ -23,7 +23,7 @@ public interface GlBankTransactionDetailsService {
 
     public void deleteGlBankTransactionDetails(GlBankTransactionDetail glBankTransactionDetail);
 
-    public GlBankTransactionDetail updateGlBankTransactionDetails(GlBankTransactionDetail glBankTransactionDetail,TobyUser tobyUser);
+    public Integer updateGlBankTransactionDetails(GlBankTransactionDetail glBankTransactionDetail,TobyUser tobyUser);
 
     public List<GlBankTransactionDetail> getAllGlBankTransactionDetailsByGlBankTransactionId(Integer glBankTransactionId);
 
@@ -37,6 +37,6 @@ public interface GlBankTransactionDetailsService {
     
     public Integer addCashDetail(InvInvoiceDTO dTO, Integer glBankTransactionId, Integer glBankTransactionSerial, TobyUser tobyUser);
     
-    public List<GeneralJournalDTO> tarhilOne(TobyUser tobyUser); 
+    public List<GeneralJournalDTO> tarhilOne(TobyUser tobyUser,Integer type); 
 
 }

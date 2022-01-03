@@ -63,6 +63,9 @@ public class InvInventory extends BaseEntity {
     @JoinColumn(name = "cost_account", referencedColumnName = "id")
     @ManyToOne
     private GlAccount costAccount;
+    @JoinColumn(name = "customer_account", referencedColumnName = "id")
+    @ManyToOne
+    private GlAccount customerAccount;
     @JoinColumn(name = "branch_id", referencedColumnName = "id")
     @ManyToOne
     private Branch branchId;
@@ -296,5 +299,19 @@ public class InvInventory extends BaseEntity {
      */
     public void setCostAccount(GlAccount costAccount) {
         this.costAccount = costAccount;
+    }
+
+    /**
+     * @return the customerAccount
+     */
+    public GlAccount getCustomerAccount() {
+        return customerAccount;
+    }
+
+    /**
+     * @param customerAccount the customerAccount to set
+     */
+    public void setCustomerAccount(GlAccount customerAccount) {
+        this.customerAccount = customerAccount;
     }
 }

@@ -290,7 +290,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
         } else {
             price = detailEntity.getItemsBarcodesDetail().getMaxPriceMen();
         }
-
+        cost = price;
         if (price != null
                 && (price.compareTo(new BigDecimal(25)) == 0 || price.compareTo(new BigDecimal(150)) == 0)) {
             if (detailEntity.getQuantityOfOneUnit() != null && detailEntity.getQuantityOfOneUnit().compareTo(new BigDecimal(5)) == -1) {

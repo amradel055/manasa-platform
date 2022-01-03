@@ -64,15 +64,15 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
     }
 
     @Override
-    public GlBankTransactionDetail updateGlBankTransactionDetails(GlBankTransactionDetail glBankTransactionDetail, TobyUser tobyUser) {
+    public Integer updateGlBankTransactionDetails(GlBankTransactionDetail glBankTransactionDetail, TobyUser tobyUser) {
         GlBankTransactionDetail bankTransactionDetail = dao.updateEntity(glBankTransactionDetail);
         if (glBankTransactionDetail.getGlBankTransactionId() != null
                 && glBankTransactionDetail.getGlBankTransactionId().getGeneralJournalId() != null
                 && glBankTransactionDetail.getGlBankTransactionId().getGeneralJournalId().getId() != null) {
             generaljournalService.deleteGeneralJournal(glBankTransactionDetail.getGlBankTransactionId().getGeneralJournalId().getId());
         }
-        tarhil(bankTransactionDetail, tobyUser);
-        return bankTransactionDetail;
+        Integer id = tarhil(bankTransactionDetail, tobyUser);
+        return id;
     }
 
     @Override
@@ -180,9 +180,10 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
         params.put("branchId", tobyUser.getBranchId().getId());
         GeneralJournal journal = null;
 
+        // إدخال سندات الصرف
         if (dto.getGlBankTransactionId().getTransactionType() == 0) {
-            journal = generaljournalService.addGeneralJournalGlobal(dto.getGlBankTransactionId().getGlYear(), 1001, dto.getGlBankTransactionId().getSerial(), dto.getGlBankTransactionId().getDate(),
-                    dto.getGlBankTransactionId().getRemark(), tobyUser);
+            journal = generaljournalService.addGeneralJournalGlobal(dto.getGlBankTransactionId().getGlYear(), 1001, dto.getSerial(), dto.getGlBankTransactionId().getDate(),
+                    dto.getGlBankTransactionId().getRemark(), tobyUser,0);
 
             // يتبقى ادخالى العموله يدويا
             if (dto.getOrganizationSiteId() != null
@@ -213,9 +214,10 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
 
             }
 
+            // ادخال سندات القبض
         } else if (dto.getGlBankTransactionId().getTransactionType() == 1) {
             journal = generaljournalService.addGeneralJournalGlobal(dto.getGlBankTransactionId().getGlYear(), 1004, dto.getGlBankTransactionId().getSerial(), dto.getGlBankTransactionId().getDate(),
-                    dto.getGlBankTransactionId().getRemark(), tobyUser);
+                    dto.getGlBankTransactionId().getRemark(), tobyUser,1);
 
             BigDecimal valueCommition = dto.getValue().multiply(dto.getBankIdFrom().getCommition().divide(new BigDecimal(100)));
             BigDecimal valueCommitionTax = (((dto.getValue().multiply(dto.getBankIdFrom().getCommition().divide(new BigDecimal(100)))).multiply(new BigDecimal(0.15))).setScale(5, RoundingMode.HALF_UP));
@@ -259,19 +261,23 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
         }
         return journal == null ? null : journal.getId();
     }
-
-    public List<GeneralJournalDTO> tarhilOne(TobyUser tobyUser) {
+    
+    @Override
+    public List<GeneralJournalDTO> tarhilOne(TobyUser tobyUser,Integer type) {
 
         List<GeneralJournalDTO> generalJournalDTOList = new ArrayList<>();
 
         Map<String, Object> params20 = new HashMap<>();
         params20.put("companyId", 125); 
+        params20.put("type", type); 
         StringBuilder builder = new StringBuilder();
-        builder.append("SELECT s FROM GlBankTransactionDetail s WHERE  s.companyId.id = :companyId AND s.glBankTransactionId.transactionType = 1 AND s.bankIdFrom IS NOT NULL   ");
-//        builder.append("SELECT s FROM GlBankTransactionDetail s WHERE  s.companyId.id = :companyId AND s.glBankTransactionId.transactionType = 1 AND s.bankIdFrom IS NOT NULL AND s.id > 3641 and s.id <= 18650 ");
-//        builder.append("SELECT s FROM GlBankTransactionDetail s WHERE  s.companyId.id = :companyId AND s.glBankTransactionId.transactionType = 1 AND s.bankIdFrom IS NOT NULL AND s.id > 18650  ");
-//        builder.append("SELECT s FROM GlBankTransactionDetail s WHERE  s.companyId.id = :companyId AND s.glBankTransactionId.transactionType = 1 AND s.bankIdFrom IS NOT NULL AND id > 33650 and id <= 48650 ");
-//        builder.append("SELECT s FROM GlBankTransactionDetail s WHERE  s.companyId.id = :companyId AND s.glBankTransactionId.transactionType = 1 AND s.bankIdFrom IS NOT NULL AND id > 48650 ");
+        builder.append("SELECT s FROM GlBankTransactionDetail s WHERE  s.companyId.id = :companyId AND s.glBankTransactionId.transactionType = :type");
+        if(type == 1){
+            builder.append(" AND s.bankIdFrom IS NOT NULL   ");
+        }else{
+            builder.append(" AND s.bankIdTo IS NOT NULL   ");
+        }
+        
         List<GlBankTransactionDetail> details = dao.findListByQuery(builder.toString(), params20);
 
         Map<String, Object> params = new HashMap<>();
@@ -281,16 +287,17 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
         Integer accountId_3 = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"BANK_COMMITION\" AND a.accountId IS NOT NULL", params);
 
         Integer xx = 1;
+        Integer cashId = 100001;
+        Integer SettelMentId = 90000;
         for (GlBankTransactionDetail entity : details) {
-            if (xx == 19773) {
-                System.out.println("com.toby.businessservice.GlBankTransactionDetailsServiceImpl.tarhilOne()");
-            }
+            cashId++;
+            SettelMentId++;
             System.err.println("------------ > " + new Date() + " ----------> Number " + xx++);
             GeneralJournalDTO journal = null;
 
             if (entity.getGlBankTransactionId().getTransactionType() == 0) {
-                journal = addGeneralJournalGlobal(73, 1001, entity.getSerial(), entity.getGlBankTransactionId().getDate(),
-                        entity.getGlBankTransactionId().getRemark(), tobyUser, entity.getGlBankTransactionId().getId());
+                journal = addGeneralJournalGlobal(73, 1001, entity.getGlBankTransactionId().getSerial(), entity.getGlBankTransactionId().getDate(),
+                        "سند صرف", tobyUser, SettelMentId,175);
 
                 // يتبقى ادخالى العموله يدويا
                 if (entity.getOrganizationSiteId() != null
@@ -322,7 +329,7 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
 
             } else if (entity.getGlBankTransactionId().getTransactionType() == 1) {
                 journal = addGeneralJournalGlobal(73, 1004, entity.getGlBankTransactionId().getSerial(), entity.getGlBankTransactionId().getDate(),
-                        entity.getGlBankTransactionId().getRemark(), tobyUser, entity.getGlBankTransactionId().getId());
+                        entity.getBankIdFrom().getRemark(), tobyUser, cashId,178);
 
                 BigDecimal valueCommition = entity.getValue().multiply(entity.getBankIdFrom().getCommition().divide(new BigDecimal(100)));
                 BigDecimal valueCommitionTax = (((entity.getValue().multiply(entity.getBankIdFrom().getCommition().divide(new BigDecimal(100)))).multiply(new BigDecimal(0.15))).setScale(5, RoundingMode.HALF_UP));
@@ -371,7 +378,7 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
         return generalJournalDTOList;
     }
 
-    public GeneralJournalDTO addGeneralJournalGlobal(Integer yearSelectionId, Integer specialDocumentsTypes, Integer serial, Date date, String remark, TobyUser tobyUser, Integer id) {
+    public GeneralJournalDTO addGeneralJournalGlobal(Integer yearSelectionId, Integer specialDocumentsTypes, Integer serial, Date date, String remark, TobyUser tobyUser, Integer id,Integer symbolId) {
 
         GeneralJournalDTO generalJournal = new GeneralJournalDTO();
         generalJournal.setGeneralStatement(remark);
@@ -385,7 +392,9 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
         GlYearDTO glYear = new GlYearDTO();
         glYear.setId(73);
         generalJournal.setGlYear(glYear);
-//        generalJournal.setGeneralType(symbol != null ? symbol : null);
+        SymbolDTO symbol = new SymbolDTO();
+        symbol.setId(symbolId);
+        generalJournal.setGeneralType(symbol != null ? symbol : null);
         generalJournal.setBranchId(tobyUser.getBranchId().getId());
         generalJournal.setCompanyId(tobyUser.getCompanyId().getId());
         generalJournal.setCreatedBy(tobyUser.getId());

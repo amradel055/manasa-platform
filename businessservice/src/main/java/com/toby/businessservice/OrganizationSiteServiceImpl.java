@@ -1502,7 +1502,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
     }
 
     @Override
-    public InvOrganizationSiteDTO addNewCustomer(InvOrganizationSiteDTO invOrganizationSiteDTO, List<InvOrganizationSiteDTO> invOrganizationSiteDTOList, TobyUser tobyUser) {
+    public InvOrganizationSiteDTO addNewCustomer(InvOrganizationSiteDTO invOrganizationSiteDTO, List<InvOrganizationSiteDTO> invOrganizationSiteDTOList, TobyUser tobyUser,Integer accountId) {
 
         CurrencyDTO currencyDefault = currencyServiceDTO.getDefaultCurrenciesByCompanyId(tobyUser.getCompanyId().getId());
 
@@ -1512,7 +1512,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             invOrganizationSiteDTO.setActive(1);
             Integer code = getMaxGenericSerialForDetail(tobyUser.getBranchId().getId(), 0);
             GlAccountDTO glAccountDTO = new GlAccountDTO();
-            glAccountDTO.setId(8247);
+            glAccountDTO.setId(accountId);
             invOrganizationSiteDTO.setAccountId(glAccountDTO);
             InventoryDelegatorDTO inventoryDelegatorDTO = new InventoryDelegatorDTO();
             inventoryDelegatorDTO.setId(77);

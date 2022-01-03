@@ -49,10 +49,10 @@ public class GeneraljournalServiceImpl implements GeneraljournalService {
     private InvReturnPurchaseService invReturnPurchaseService;
     @EJB
     private SymbolService symbolService;
-    
+
     @Override
-    public synchronized GeneralJournal addGeneralJournalGlobal(Integer yearSelectionId , Integer specialDocumentsTypes ,Integer serial,Date date ,String remark,TobyUser tobyUser) {
-        
+    public synchronized GeneralJournal addGeneralJournalGlobal(Integer yearSelectionId, Integer specialDocumentsTypes, Integer serial, Date date, String remark, TobyUser tobyUser, Integer type) {
+
         GeneralJournal generalJournal = new GeneralJournal();
         generalJournal.setGeneralStatement(remark);
         generalJournal.setGeneralData(date);
@@ -65,32 +65,39 @@ public class GeneraljournalServiceImpl implements GeneraljournalService {
         generalJournal.setGeneralType(symbol != null ? symbol : null);
         generalJournal.setBranchId(tobyUser.getBranchId());
         generalJournal.setCompanyId(tobyUser.getCompanyId());
-        generalJournal.setCreatedBy(tobyUser);  
+        generalJournal.setCreatedBy(tobyUser);
         generalJournal.setCreationDate(new Date());
         Map<String, Object> params = new HashMap<>();
-        params.put("glYear",yearSelectionId == null ? null : yearSelectionId);
-         Integer max = 0;
-        synchronized (max) {
-            try {
-                max = dao.findEntityByQuery("SELECT MAX(g.serial) FROM GeneralJournal g  WHERE g.branchId.id =182 AND g.companyId.id =125 and g.glYear.id =:glYear  ", params);
-            } catch (Exception e) {
-                e.printStackTrace();
+        params.put("glYear", yearSelectionId == null ? null : yearSelectionId);
+        Integer max = 0;
+        if (type != null && type == 0) {
+            synchronized (max) {
+                try {
+                    max = dao.findEntityByQuery("SELECT MAX(g.serial) FROM GeneralJournal g  WHERE g.branchId.id =182 AND g.companyId.id =125 and g.glYear.id =:glYear AND g.id < 100000 ", params);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            synchronized (max) {
+                try {
+                    max = dao.findEntityByQuery("SELECT MAX(g.serial) FROM GeneralJournal g  WHERE g.branchId.id =182 AND g.companyId.id =125 and g.glYear.id =:glYear AND g.id > 100000  ", params);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
         if (max == null) {
             max = 0;
         }
-        
+
         if (generalJournal.getId() == null) {
             generalJournal.setSerial(max + 1);
         }
-        
+
         return dao.updateEntity(generalJournal);
     }
-   
-    
-    
-    
+
     @Override
     public synchronized GeneralJournal addGeneralJournal(GeneralJournal generalJournal) {
         Map<String, Object> params = new HashMap<>();
@@ -149,7 +156,7 @@ public class GeneraljournalServiceImpl implements GeneraljournalService {
     public void deleteGeneralJournal(GeneralJournal generalJournal) {
         dao.deleteEntity(generalJournal);
     }
-    
+
     @Override
     public void deleteGeneralJournal(Integer id) {
         detailsService.deleteGenDetalilsByGeneralJournal(id);
@@ -362,11 +369,11 @@ public class GeneraljournalServiceImpl implements GeneraljournalService {
         }
 
     }
-    
+
     private void appendGeneralJournalAmountForQueryBuilder(StringBuilder queryBuilder, Map<String, Object> params, JournalDocumentsReportSearchBean journalDocumentsReportSearchBean) {
         if (journalDocumentsReportSearchBean.getValue() != null) {
             params.put("amount", journalDocumentsReportSearchBean.getValue());
-            queryBuilder.append(" and ( d.debitAmount = :amount ");  
+            queryBuilder.append(" and ( d.debitAmount = :amount ");
             queryBuilder.append(" OR d.creditamount =  :amount )");
         }
 
@@ -404,8 +411,8 @@ public class GeneraljournalServiceImpl implements GeneraljournalService {
                 if (prvDelete.getGeneralJournalId() != null && prvDelete.getGeneralJournalId().compareTo(0) == 1) {
 
                     if (prvDelete.getScreenCode() < 1009) {
-                         if (prvDelete.getScreenCode() > 0) {
-                        updateGlBankData(prvDelete, generalJournalId, flow);
+                        if (prvDelete.getScreenCode() > 0) {
+                            updateGlBankData(prvDelete, generalJournalId, flow);
                         } else {
                             List<GlBankTransaction> glBankTransactions = glBankTransactionService.getALLGlBankTransactionByGeneralJournalId(prvDelete.getGeneralJournalId());
                             if (glBankTransactions != null && !glBankTransactions.isEmpty()) {
