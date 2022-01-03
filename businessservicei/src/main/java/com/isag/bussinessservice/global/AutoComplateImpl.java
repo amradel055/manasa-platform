@@ -296,7 +296,7 @@ public class AutoComplateImpl implements AutoCompleteService {
         params.put("type", type);
         sql.append("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId");
         if (qeury != null && !qeury.trim().isEmpty()) {
-            sql.append(" AND ((:qeury is null OR e.name  like CONCAT('%',:qeury ,'%')) OR (:qeury is null OR e.code  like CONCAT('%',:qeury ,'%') ) OR (:qeury is null OR e.phone  like CONCAT('%',:qeury ,'%') ) OR (:qeury is null OR e.mobile  like CONCAT('%',:qeury ,'%') ) OR (:qeury is null OR e.email  like CONCAT('%',:qeury ,'%') ) )");
+            sql.append(" AND ((:qeury is null OR e.name  like CONCAT('%',:qeury ,'%')) OR (:qeury is null OR e.code  like CONCAT('%',:qeury ,'%') )  OR (:qeury is null OR e.nationId  like CONCAT('%',:qeury ,'%') ) OR (:qeury is null OR e.phone  like CONCAT('%',:qeury ,'%') ) OR (:qeury is null OR e.mobile  like CONCAT('%',:qeury ,'%') ) OR (:qeury is null OR e.email  like CONCAT('%',:qeury ,'%') ) )");
             params.put("qeury", qeury);
         }
         if (type == 0 || type == 1) {

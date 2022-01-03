@@ -249,6 +249,10 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
         exit("../gmsubscriptions/gmsubscriptionslist.xhtml");
         return "";
     }
+     public String exitToStatue() {
+        exit("../gmsubscriptionstatue/gmsubscriptionstatue.xhtml");
+        return "";
+    }
 
     public List<InvOrganizationSiteDTO> completeCustomerFrom(String query) {
         invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getUserData().getUserBranch().getId(), Boolean.TRUE, 0, query);
