@@ -76,7 +76,6 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
 
     public GlBankTransaction addingForGlBank(GlBankTransaction glBankTransaction, List<GlBankTransactionDetail> glBankTransactionDetailListDeleted,
             List<GlBankTransactionDetail> glBankTransactionDetailList, TobyUser tobyUser) {
-        GlBankTransaction entity = null;
         Integer tarhilId;
         if (glBankTransaction.getId() != null) {
 
@@ -84,12 +83,12 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
             glBankTransaction.setPostFlag(0);
             glBankTransaction.setGeneralJournalId(null);
 
-            entity = dao.updateEntity(glBankTransaction);
+            glBankTransaction = dao.updateEntity(glBankTransaction);
 
         } else {
 
             glBankTransaction.setSerial(getMaxSerail(glBankTransaction));
-            entity = dao.updateEntity(glBankTransaction);
+            glBankTransaction = dao.updateEntity(glBankTransaction);
         }
 
         if (glBankTransactionDetailListDeleted != null && !glBankTransactionDetailListDeleted.isEmpty()) {
@@ -97,26 +96,29 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
                 glBankTransactionDetailsService.deleteGlBankTransactionDetails(deleted);
             }
         }
+        
+        tarhilId = glBankTransactionDetailsService.updateGlBankTransactionDetails(glBankTransactionDetailList, glBankTransaction, tobyUser);
+        tarhilglBankTransaction(tarhilId, glBankTransaction);
 
-        Integer maxSerial = 0;
-        if (glBankTransaction != null && glBankTransaction.getId() != null) {
-            maxSerial = glBankTransactionDetailsService.finMaxSerial(glBankTransaction.getId());
-        } else {
-            maxSerial++;
-        }
-
-        for (GlBankTransactionDetail glBankTransactionDetail : glBankTransactionDetailList) {
-            glBankTransactionDetail.setGlBankTransactionId(entity);
-
-            if (glBankTransactionDetail.getId() != null) {
-                tarhilId = glBankTransactionDetailsService.updateGlBankTransactionDetails(glBankTransactionDetail, tobyUser);
-            } else {
-                glBankTransactionDetail.setSerial(maxSerial);
-                tarhilId = glBankTransactionDetailsService.updateGlBankTransactionDetails(glBankTransactionDetail, tobyUser);
-                maxSerial++;
-            }
-            tarhilglBankTransaction(tarhilId, entity);
-        }
+//        Integer maxSerial = 0;
+//        if (glBankTransaction != null && glBankTransaction.getId() != null) {
+//            maxSerial = glBankTransactionDetailsService.finMaxSerial(glBankTransaction.getId());
+//        } else {
+//            maxSerial++;
+//        }
+//
+//        for (GlBankTransactionDetail glBankTransactionDetail : glBankTransactionDetailList) {
+//            glBankTransactionDetail.setGlBankTransactionId(glBankTransaction);
+//
+//            if (glBankTransactionDetail.getId() != null) {
+//                tarhilId = glBankTransactionDetailsService.updateGlBankTransactionDetails(glBankTransactionDetail, tobyUser);
+//            } else {
+//                glBankTransactionDetail.setSerial(maxSerial);
+//                tarhilId = glBankTransactionDetailsService.updateGlBankTransactionDetails(glBankTransactionDetail, tobyUser);
+//                maxSerial++;
+//            }
+//            tarhilglBankTransaction(tarhilId, glBankTransaction);
+//        }
         return glBankTransaction;
     }
 

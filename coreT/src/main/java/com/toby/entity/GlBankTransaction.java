@@ -122,6 +122,9 @@ public class GlBankTransaction extends BaseEntity {
     @JoinColumn(name = "glAccount_id", referencedColumnName = "id")
     @ManyToOne
     private GlAccount glAccountId;
+    @Column(name = "bank_commetion")
+    private BigDecimal bankCommetion;
+   
 
     public GlBankTransaction() {
     }
@@ -433,5 +436,21 @@ public class GlBankTransaction extends BaseEntity {
     public void setGlAccountId(GlAccount glAccountId) {
         this.glAccountId = glAccountId;
     }
+
+    /**
+     * @return the bankCommetion
+     */
+    public BigDecimal getBankCommetion() {
+        return bankCommetion;
+    }
+
+    /**
+     * @param bankCommetion the bankCommetion to set
+     */
+    public void setBankCommetion(BigDecimal bankCommetion) {
+        this.bankCommetion = bankCommetion;
+    }
+
+  
 
 }

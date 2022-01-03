@@ -664,6 +664,8 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
             glBankTransactionEntityMapper.setSerailParent(bankTransaction.getParent() != null ? bankTransaction.getParent().getSerial() : null);
             glBankTransactionEntityMapper.setCreatedBy(bankTransaction.getCreatedBy());
             glBankTransactionEntityMapper.setCreationDate(bankTransaction.getCreationDate());
+            glBankTransactionEntityMapper.setBankCommition(bankTransaction.getBankCommetion());
+
             if (bankTransaction.getGlAccountId() != null) {
                 GlAccountDTO glAccountDTO = new GlAccountDTO();
                 glAccountDTO.setId(bankTransaction.getGlAccountId().getId());
@@ -1030,7 +1032,7 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
                     glBankTransaction.setRemark(glBankTransactionEntity.getRemark());
                     glBankTransaction.setRemark2(glBankTransactionEntity.getRemark2());
                     glBankTransaction.setOrganizationType(glBankTransactionExist != null ? glBankTransactionExist.getOrganizationType() : glBankTransactionEntity.getOrganizationType());
-
+                    glBankTransaction.setBankCommetion(glBankTransactionEntity.getBankCommition());
                     if (glBankTransactionEntity.getCostAccount() != null) {
                         GlAccount glAccount = new GlAccount();
                         glAccount.setId(glBankTransactionEntity.getCostAccount().getId());
@@ -2690,7 +2692,7 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
      * @param glRunningAccountDTOList the glRunningAccountDTOList to set
      */
     public void setGlRunningAccountDTOList(List<GlAccountDTO> glRunningAccountDTOList) {
-        
+
         this.glRunningAccountDTOList = glRunningAccountDTOList;
     }
 
