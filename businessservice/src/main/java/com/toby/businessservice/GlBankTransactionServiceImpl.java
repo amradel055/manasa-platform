@@ -58,7 +58,7 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
     public GlBankTransaction addGlBankTransaction(GlBankTransaction glBankTransaction, List<GlBankTransactionDetail> glBankTransactionDetailList,
             List<GlBankTransactionDetail> glBankTransactionDetailListDeleted, Integer companyId, TobyUser tobyUser) {
 
-        addingForGlBank(glBankTransaction, glBankTransactionDetailListDeleted, glBankTransactionDetailList, tobyUser);
+      glBankTransaction = addingForGlBank(glBankTransaction, glBankTransactionDetailListDeleted, glBankTransactionDetailList, tobyUser);
         if (glBankTransaction.getTransactionType() != null && glBankTransaction.getTransactionType() == 1) {
 
             AccountsSystemSettings accountsSystemSettings = new AccountsSystemSettings();
@@ -71,14 +71,14 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
         return glBankTransaction;
     }
 
-    public void addingForGlBank(GlBankTransaction glBankTransaction, List<GlBankTransactionDetail> glBankTransactionDetailListDeleted,
+    public GlBankTransaction addingForGlBank(GlBankTransaction glBankTransaction, List<GlBankTransactionDetail> glBankTransactionDetailListDeleted,
             List<GlBankTransactionDetail> glBankTransactionDetailList, TobyUser tobyUser) {
         if (glBankTransaction.getId() != null) {
-            dao.updateEntity(glBankTransaction);
+           glBankTransaction = dao.updateEntity(glBankTransaction);
         } else {
 
             glBankTransaction.setSerial(getMaxSerail(glBankTransaction));
-            dao.saveEntity(glBankTransaction);
+           glBankTransaction = dao.updateEntity(glBankTransaction);
         }
 
         if (glBankTransactionDetailListDeleted != null && !glBankTransactionDetailListDeleted.isEmpty()) {
@@ -105,6 +105,7 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
                 maxSerial++;
             }
         }
+        return glBankTransaction ;
     }
 
     @Override

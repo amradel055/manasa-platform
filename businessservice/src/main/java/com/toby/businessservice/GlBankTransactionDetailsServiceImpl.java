@@ -181,7 +181,7 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
         GeneralJournal journal = null;
 
         if (dto.getGlBankTransactionId().getTransactionType() == 0) {
-            journal = generaljournalService.addGeneralJournalGlobal(dto.getGlBankTransactionId().getGlYear(), 1001, dto.getSerial(), dto.getGlBankTransactionId().getDate(),
+            journal = generaljournalService.addGeneralJournalGlobal(dto.getGlBankTransactionId().getGlYear(), 1001, dto.getGlBankTransactionId().getSerial(), dto.getGlBankTransactionId().getDate(),
                     dto.getGlBankTransactionId().getRemark(), tobyUser);
 
             // يتبقى ادخالى العموله يدويا

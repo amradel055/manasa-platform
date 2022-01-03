@@ -439,7 +439,7 @@
                         <h:outputText value="#{glBankTransactionDetailsTable.invOrganizationSite.accountId.name}"  />
                     </p:column>
 
-
+                    
 
 
                     <p:column  style="width: 17vh;font-size: 1.8vh;text-align: right;border-radius: 0px" 
@@ -468,7 +468,20 @@
                         <h:outputText value="#{glBankTransactionDetailsTable.glAccount.name}"  rendered="#{not glBankTransactionDetailsTable.markEdit}" style="width: auto"/>
                     </p:column>
 
+                     <p:column  style="width: 18vh;font-size: 1.8vh;text-align: right;border-radius: 0px" 
+                               id="value"  headerText="#{userData.userDDs['AMOUNT']}">
 
+
+                        <p:inputNumber id="valueT" value="#{glBankTransactionDetailsTable.value}" 
+                                       rendered="#{glBankTransactionDetailsTable.markEdit}" style="width: 25em;">
+                            <p:ajax event="blur" 
+                                    listener="#{SettlementDeedFormMB.updateAllSummations}"
+                                    />
+                        </p:inputNumber>
+                        <h:outputText value="#{glBankTransactionDetailsTable.value}"
+                                      rendered="#{not glBankTransactionDetailsTable.markEdit}"/>
+
+                    </p:column>
                     <p:column  style="width: 17vh;font-size: 1.8vh;text-align: right;border-radius: 0px"  id="costCode" 
                                filterBy="#{glBankTransactionDetailsTable.costCenter.name}"  
                                filterMatchMode="contains" sortBy="#{glBankTransactionDetailsTable.costCenter.name}" filterable="false"
@@ -536,20 +549,7 @@
 
                     </p:column>
 
-                    <p:column  style="width: 18vh;font-size: 1.8vh;text-align: right;border-radius: 0px" 
-                               id="value"  headerText="#{userData.userDDs['AMOUNT']}">
-
-
-                        <p:inputNumber id="valueT" value="#{glBankTransactionDetailsTable.value}" 
-                                       rendered="#{glBankTransactionDetailsTable.markEdit}" style="width: 25em;">
-                            <p:ajax event="blur" 
-                                    listener="#{SettlementDeedFormMB.updateAllSummations}"
-                                    />
-                        </p:inputNumber>
-                        <h:outputText value="#{glBankTransactionDetailsTable.value}"
-                                      rendered="#{not glBankTransactionDetailsTable.markEdit}"/>
-
-                    </p:column>
+                    
 
 
 
