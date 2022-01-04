@@ -53,6 +53,7 @@ public class CostCenterBean extends BaseTreeBean {
     private List<GlAccount> currentacccountList;
     private GlaccountConverter currentaccountConverter;
     private CostCenterDTO costcenterdto;
+    
     @EJB
     private BranchService branchService;
     @EJB
@@ -67,7 +68,7 @@ public class CostCenterBean extends BaseTreeBean {
             setShowMessage(Boolean.TRUE);
             List<CostCenter> costCenterList;
            
-              
+            
 
             if (selectedCS.getId() == null) {
                 costCenterList = costCenterService.getAllCostCenterByBranchIdAndAccNumOrShotCode(userData.getUserBranch().getId(), selectedCS.getCode());
