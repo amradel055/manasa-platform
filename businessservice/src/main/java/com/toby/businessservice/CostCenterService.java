@@ -64,5 +64,5 @@ public interface CostCenterService {
     
     public List<CostCenterDTO> getActiveSubCostCentersByBranchDTO(Integer branchId);
     
-    public Map<Integer,Integer> getBranchCostCentersByMap(Integer branchId);
+    public Map<Integer,Integer> getBranchCostCentersByMap(Integer selectedBranchId);
 }

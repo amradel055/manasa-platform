@@ -8,9 +8,13 @@ package com.toby.costcenter;
 import com.toby.businessservice.BranchService;
 import com.toby.businessservice.CompanyService;
 import com.toby.businessservice.CostCenterService;
+import com.toby.businessservice.GlAccountService;
 import com.toby.comparatorsVars.CostCenterCodeComparator;
+import com.toby.converter.GlaccountConverter;
+import com.toby.dto.CostCenterDTO;
 import com.toby.entity.Branch;
 import com.toby.entity.CostCenter;
+import com.toby.entity.GlAccount;
 import com.toby.entity.TobyCompany;
 import com.toby.toby.BaseTreeBean;
 import com.toby.toby.UserData;
@@ -34,7 +38,6 @@ public class CostCenterBean extends BaseTreeBean {
 
     private UserData userData;
     private TreeNode costCenterHierarchy;
-
     private TreeNode selectedCostCenter;
     private CostCenter selectedCS;
     private CostCenter parentCostCenter;
@@ -43,24 +46,29 @@ public class CostCenterBean extends BaseTreeBean {
     private List<Branch> branchList = new ArrayList<>();
     private String action;
     private Branch selectedBranch;
-
     private Integer selectedCompanyId;
     private Integer selectedBranchId;
     private Integer selectedParentId;
     private List<CostCenter> allCostCenters;
-
+    private List<GlAccount> currentacccountList;
+    private GlaccountConverter currentaccountConverter;
+    private CostCenterDTO costcenterdto;
     @EJB
     private BranchService branchService;
     @EJB
     private CostCenterService costCenterService;
     @EJB
     private CompanyService companyService;
-
+    @EJB
+    private GlAccountService glAccountService;
     @Override
     public String save() {
         try {
             setShowMessage(Boolean.TRUE);
             List<CostCenter> costCenterList;
+           
+              
+
             if (selectedCS.getId() == null) {
                 costCenterList = costCenterService.getAllCostCenterByBranchIdAndAccNumOrShotCode(userData.getUserBranch().getId(), selectedCS.getCode());
             } else {
@@ -106,6 +114,61 @@ public class CostCenterBean extends BaseTreeBean {
             return null;
         }
     }
+    
+      public void fillLists() {
+        try {
+
+            updateGlAccounts();
+
+        } catch (Exception e) {
+            saveError(e, "costCenterBean", "fillLists");
+        }
+    }
+          public List<GlAccount> updateGlAccounts() {            
+               
+                if (getCurrentacccountList() != null) {      
+                    currentacccountList = glAccountService.getGLAccountsByBranch(selectedBranchId);
+                    
+                }
+                return currentacccountList;
+          }
+          
+       public List<GlAccount> completecurrentaccount(String query) {
+        try {
+            List<GlAccount> glaccounts = getCurrentacccountList();
+            if (query == null || query.trim().equals("")) {
+                currentaccountConverter = new GlaccountConverter(glaccounts);
+                return glaccounts;
+            }
+            List<GlAccount> filteredGlaccounts = new ArrayList<>();
+
+            String nameAr;
+            Integer code;
+            GlAccount glaccount;
+            for (int i = 0; i < getCurrentacccountList().size(); i++) {
+                glaccount = glaccounts.get(i);
+                nameAr = glaccount.getName();
+                if (nameAr != null && nameAr.toLowerCase().contains(query.toLowerCase())) {
+                    if (!filteredGlaccounts.contains(glaccount)) {
+                        filteredGlaccounts.add(glaccount);
+                    }
+                }
+
+                code = glaccount.getAccNumber();
+                if (code != null && String.valueOf(code).contains(query)) {
+                    if (!filteredGlaccounts.contains(glaccount)) {
+                        filteredGlaccounts.add(glaccount);
+                    }
+                }
+            }
+
+            currentaccountConverter = new GlaccountConverter(filteredGlaccounts);
+            return filteredGlaccounts;
+        } catch (Exception e) {
+            saveError(e, "glBankFromMB", "completeGlAccount");
+            return null;
+        }
+    }
 
     public void edit() {
         try {
@@ -133,7 +196,11 @@ public class CostCenterBean extends BaseTreeBean {
     @Override
     public void load() {
         try {
+                  
+
+            
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+            
             userData = (UserData) context.getSessionMap().get("userLogInData");
             if (userData.getIsAdmin()) {
                 //  allCompanies = companyService.getAllCompanies();
@@ -161,6 +228,7 @@ public class CostCenterBean extends BaseTreeBean {
                 }
             }
             selectedCS.setActive(Boolean.TRUE);
+                fillLists();
         } catch (Exception e) {
             saveError(e, "CostCenterBean", "load");
         }
@@ -562,6 +630,65 @@ public class CostCenterBean extends BaseTreeBean {
      */
     public void setAllCostCenters(List<CostCenter> allCostCenters) {
         this.allCostCenters = allCostCenters;
+    }
+
+    /**
+     * @return the currentaccountConverter
+     */
+    public GlaccountConverter getCurrentaccountConverter() {
+        return currentaccountConverter;
+    }
+
+    /**
+     * @param currentaccountConverter the currentaccountConverter to set
+     */
+    public void setCurrentaccountConverter(GlaccountConverter currentaccountConverter) {
+        this.currentaccountConverter = currentaccountConverter;
+    }
+
+    /**
+     * @return the glAccountService
+     */
+    public GlAccountService getGlAccountService() {
+        return glAccountService;
+    }
+
+    /**
+     * @param glAccountService the glAccountService to set
+     */
+    public void setGlAccountService(GlAccountService glAccountService) {
+        this.glAccountService = glAccountService;
+    }
+
+    /**
+     * @return the currentacccountList
+     */
+    public List<GlAccount> getCurrentacccountList() {
+       if(currentacccountList == null){
+       currentacccountList = new ArrayList<>();
+       }
+        return currentacccountList;
+    }
+
+    /**
+     * @param currentacccountList the currentacccountList to set
+     */
+    public void setCurrentacccountList(List<GlAccount> currentacccountList) {
+        this.currentacccountList = currentacccountList;
+    }
+
+    /**
+     * @return the costcenterdto
+     */
+    public CostCenterDTO getCostcenterdto() {
+        return costcenterdto;
+    }
+
+    /**
+     * @param costcenterdto the costcenterdto to set
+     */
+    public void setCostcenterdto(CostCenterDTO costcenterdto) {
+        this.costcenterdto = costcenterdto;
     }
 
 }

@@ -133,6 +133,24 @@
 
                                                 </div>
                                             </div>
+                                            
+                                                <div class="ui-g-6 ui-xl-6">
+                                    <p:autoComplete id="GlAccount_ID555" 
+                                                    style="width: 85%" 
+                                                    dropdown="true"
+                                                    converter="#{costCenterBean.currentaccountConverter}"
+                                                    value="#{costCenterBean.selectedCS.currentaccountId}"
+                                                    var="p"
+                                                    itemLabel="#{p}" 
+                                                    itemValue="#{p}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{costCenterBean.completecurrentaccount}" >
+                                    </p:autoComplete>
+                                                     <div class="ui-g-6 ui-xl-6">
+                                                    <p:outputLabel style="width: 80px" value="الحساب الجاري "/>
+
+                                                </div>
+                                </div>
                                         </div>
 
                                       <div class="ui-g-12 ui-xl-12">
