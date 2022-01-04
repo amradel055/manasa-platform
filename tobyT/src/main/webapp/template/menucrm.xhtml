@@ -1,0 +1,343 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:pa="http://primefaces.org/serenity">
+
+    
+                                    <!-- CRM -->
+
+                                    <a href="#crm" 
+                                       class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} list-group-item list-group-item-success" 
+                                       data-toggle="collapse" data-parent="#MainMenu" 
+                                       style="background-color: #22323a;color: #fff   ; #{userData.userScreens['crm'].view
+                                                                                          or userData.userScreens['crmDashboard'].view
+                                                                                          or userData.userScreens['crmCalendarList'].view
+                                                                                          or userData.userScreens['crmLeads'].view
+                                                                                          or userData.userScreens['crmMyCalendar'].view
+                                                                                          or userData.userScreens['crmSetting'].view
+                                                                                          or userData.userScreens['crmTodoEvent'].view
+                                                                                          or userData.userScreens['crmSalesReport'].view
+                                                                                          or userData.userScreens['crmDashboardList'].view
+                                                                                          or userData.userScreens['crmDashboardEventList'].view
+                                                                                          or userData.userScreens['crmLeadsTransfer'].view
+                                                                                          or userData.isAdmin ? '' : 'display:none'}
+                                       ">#{userData.userDDs['Clients_Relationship_Management']}<i class="fa fa-caret-down"></i></a>
+
+                                    <h:panelGroup    rendered="#{userData.userScreens['crm'].view 
+                                                                 or userData.userScreens['crmDashboard'].view
+                                                                 or userData.userScreens['crmCalendarList'].view 
+                                                                 or userData.userScreens['crmLeads'].view 
+                                                                 or userData.userScreens['crmMyCalendar'].view 
+                                                                 or userData.userScreens['crmSetting'].view                                                                  
+                                                                 or userData.userScreens['crmTodoEvent'].view                                                                  
+                                                                 or userData.userScreens['crmSalesReport'].view
+                                                                 or userData.userScreens['crmDashboardList'].view
+                                                                 or userData.userScreens['crmDashboardEventList'].view
+                                                                 or userData.userScreens['crmLeadsTransfer'].view
+                                                                 or userData.isAdmin}"> 
+
+
+                                        <div class="generalsystems collapse #{(userData.targetScreen.equalsIgnoreCase('crm') || 
+                                                                              userData.targetScreen.equalsIgnoreCase('crmDashboard')  ||
+                                                                              userData.targetScreen.equalsIgnoreCase('crmCalendarList')  ||
+                                                                              userData.targetScreen.equalsIgnoreCase('crmLeads')  || 
+                                                                              userData.targetScreen.equalsIgnoreCase('crmMyCalendar')  || 
+                                                                              userData.targetScreen.equalsIgnoreCase('crmSetting')  ||
+                                                                              userData.targetScreen.equalsIgnoreCase('crmSalesReport')  ||
+                                                                              userData.targetScreen.equalsIgnoreCase('crmDashboardList')  ||
+                                                                              userData.targetScreen.equalsIgnoreCase('crmDashboardEventList')  ||
+                                                                              userData.targetScreen.equalsIgnoreCase('crmLeadsTransfer')  ||
+                                                                              userData.targetScreen.equalsIgnoreCase('crmTodoEvent')
+                                                                              )? 'in': ''}" id="crm"  >
+
+                                            <div class="list-group panel">
+
+                                                <a href="#crmMainData" 
+                                                   class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} list-group-item list-group-item-success" 
+                                                   data-toggle="collapse" data-parent="#crm" 
+                                                   style="background-color:#007d9b;color:#fff  ;
+                                                   #{userData.userScreens['crm'].view 
+                                                     or userData.userScreens['crmSetting'].view
+                                                     or userData.userScreens['crmDashboard'].view
+                                                     or userData.userScreens['crmSalesReport'].view
+                                                     or userData.userScreens['crmDashboardList'].view
+                                                     or userData.userScreens['crmDashboardEventList'].view
+                                                     or userData.isAdmin ? '' : 'display:none'}
+                                                   ">#{userData.userDDs['MAIN_DATA']}<i class="fa fa-caret-down"></i></a>
+
+                                                <h:panelGroup   rendered="#{userData.userScreens['crm'].view
+                                                                            or userData.userScreens['crmDashboard'].view
+                                                                            or userData.userScreens['crmDashboardList'].view
+                                                                             or userData.userScreens['crmSetting'].view
+                                                                             or userData.userScreens['crmDashboardEventList'].view
+                                                                             or userData.userScreens['crmSalesReport'].view
+                                                                            or userData.isAdmin}"> 
+
+                                                    <div class="collapse #{(userData.targetScreen.equalsIgnoreCase('crm') ||
+                                                                           userData.targetScreen.equalsIgnoreCase('crmSetting') ||
+                                                                           userData.targetScreen.equalsIgnoreCase('crmSalesReport') ||
+                                                                           userData.targetScreen.equalsIgnoreCase('crmDashboardList') ||
+                                                                           userData.targetScreen.equalsIgnoreCase('crmDashboardEventList') ||
+                                                                           userData.targetScreen.equalsIgnoreCase('crmDashboard')
+                                                                           )? 'in': ''}" id="crmMainData">
+
+
+                                                        <h:panelGroup rendered="#{userData.userScreens['crmDashboard'].view or userData.isAdmin}">
+                                                            <a href="../crmDashboard/dashboard.xhtml" 
+                                                               class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('crmDashboard')?'ui-state-highlight':''}  list-group-item" 
+                                                               style="#{userData.targetScreen.equalsIgnoreCase('crmDashboard')?'':'background-color: #92d2e6f2!important; color:#21323A!important;'}">#{userData.userDDs['Dashboard']}</a>
+                                                        </h:panelGroup>
+                                                        
+                                                        <h:panelGroup rendered="#{userData.userScreens['crmDashboardList'].view or userData.isAdmin}">    
+                                                            <a href="../crmDashboardList/dashboardLeadsList.xhtml" 
+                                                               class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('crmDashboardList')?'ui-state-highlight':''}  list-group-item" 
+                                                               style="#{userData.targetScreen.equalsIgnoreCase('crmDashboardList')?'':'background-color: #92d2e6f2!important; color:#21323A!important;'}">#{userData.userDDs['DashboardLeads']}</a>
+                                                        </h:panelGroup>
+                                                        
+                                                        <h:panelGroup rendered="#{userData.userScreens['crmDashboardEventList'].view or userData.isAdmin}">    
+                                                            <a href="../crmDashboardEventList/dashboardEventList.xhtml" 
+                                                               class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('crmDashboardEventList')?'ui-state-highlight':''}  list-group-item" 
+                                                               style="#{userData.targetScreen.equalsIgnoreCase('crmDashboardEventList')?'':'background-color: #92d2e6f2!important; color:#21323A!important;'}">بنك المهام والأحداث</a>
+                                                        </h:panelGroup>
+                                                        
+                                                        <h:panelGroup rendered="#{userData.userScreens['crmSalesReport'].view or userData.isAdmin}">    
+                                                            <a href="../crmSalesReport/employeesSalesReport.xhtml" 
+                                                               class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('crmSalesReport')?'ui-state-highlight':''}  list-group-item" 
+                                                               style="#{userData.targetScreen.equalsIgnoreCase('crmSalesReport')?'':'background-color: #92d2e6f2!important; color:#21323A!important;'}">تقييم أداء الموظفين</a>
+                                                        </h:panelGroup>
+
+                                                        <h:panelGroup rendered="#{userData.userScreens['crm'].view or userData.isAdmin}">
+                                                            <a href="../crm/main.xhtml" 
+                                                               class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('crm')?'ui-state-highlight':''}  list-group-item" 
+                                                               style="#{userData.targetScreen.equalsIgnoreCase('crm')?'':'background-color: #92d2e6f2!important; color:#21323A!important;'}">#{userData.userDDs['Main']}</a>
+                                                        </h:panelGroup>
+                                                        
+                                                        <h:panelGroup rendered="#{userData.userScreens['crmSetting'].view or userData.isAdmin}">
+                                                            <a href="../crmSetting/crmNotificationSetting.xhtml" 
+                                                               class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('crmSetting')?'ui-state-highlight':''}  list-group-item" 
+                                                               style="#{userData.targetScreen.equalsIgnoreCase('crmSetting')?'':'background-color: #92d2e6f2!important; color:#21323A!important;'}">الاعدادات</a>
+                                                        </h:panelGroup>
+
+
+
+
+                                                    </div>
+                                                </h:panelGroup>
+                                                <a href="#crmMovement"
+
+                                                   class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 
+                                                            'direction-en'} list-group-item list-group-item-success" data-toggle="collapse" 
+                                                   data-parent="#crm" 
+                                                   style="background-color:#007d9b;color:#fff  ;
+                                                   #{userData.userScreens['crmTodoEvent'].view 
+                                                     or userData.userScreens['crmLeads'].view
+                                                     or userData.userScreens['crmMyCalendar'].view
+                                                     or userData.userScreens['crmLeadsTransfer'].view
+                                                     or userData.userScreens[''].view
+                                                     or userData.userScreens[''].view
+                                                     or userData.isAdmin ? '' : 'display:none'}
+                                                   ">#{userData.userDDs['Clients_Relationship_Transaction']}<i class="fa fa-caret-down"></i></a>
+
+                                                <h:panelGroup   rendered="#{userData.userScreens['crmTodoEvent'].view 
+                                                                            or userData.userScreens['crmLeads'].view 
+                                                                            or userData.userScreens['crmMyCalendar'].view 
+                                                                            or userData.userScreens['crmLeadsTransfer'].view 
+                                                                            or userData.userScreens[''].view 
+                                                                            or userData.isAdmin}"> 
+
+                                                    <div class="collapse #{(userData.targetScreen.equalsIgnoreCase('crmTodoEvent') || 
+                                                                           userData.targetScreen.equalsIgnoreCase('crmLeads')|| 
+                                                                           userData.targetScreen.equalsIgnoreCase('crmMyCalendar')|| 
+                                                                           userData.targetScreen.equalsIgnoreCase('crmLeadsTransfer')|| 
+                                                                           userData.targetScreen.equalsIgnoreCase('')
+                                                                           )? 'in': ''}" id="crmMovement">
+
+
+                                                        <h:panelGroup rendered="#{userData.userScreens['crmLeads'].view or userData.isAdmin}">
+                                                            <a href="../crmLeads/leadsList.xhtml" 
+                                                               class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('crmLeads')?'ui-state-highlight':''}  list-group-item" 
+                                                               style="#{userData.targetScreen.equalsIgnoreCase('crmLeads')?'':'background-color: #92d2e6f2!important; color:#21323A!important;'}">#{userData.userDDs['Leads']}</a>
+                                                        </h:panelGroup>
+
+                                                        <h:panelGroup rendered="#{userData.userScreens['crmTodoEvent'].view or userData.isAdmin}">
+                                                            <a href="../crmTodoEvent/TodoEventList.xhtml" 
+                                                               class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('crmTodoEvent')?'ui-state-highlight':''}  list-group-item" 
+                                                               style="#{userData.targetScreen.equalsIgnoreCase('crmTodoEvent')?'':'background-color: #92d2e6f2!important; color:#21323A!important;'}">#{userData.userDDs['Todo_Event']}</a>
+                                                        </h:panelGroup>
+
+                                                        <h:panelGroup rendered="#{userData.userScreens['crmMyCalendar'].view or userData.isAdmin}">
+                                                            <a href="../crmMyCalendar/main.xhtml" 
+                                                               class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('crmMyCalendar')?'ui-state-highlight':''}  list-group-item" 
+                                                               style="#{userData.targetScreen.equalsIgnoreCase('crmMyCalendar')?'':'background-color: #92d2e6f2!important; color:#21323A!important;'}">#{userData.userDDs['MyCalendar']}</a>
+                                                        </h:panelGroup>
+                                                        
+                                                        <h:panelGroup rendered="#{userData.userScreens['crmLeadsTransfer'].view or userData.isAdmin}">
+                                                            <a href="../crmLeadsTransfer/transferLeads.xhtml" 
+                                                               class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('crmLeadsTransfer')?'ui-state-highlight':''}  list-group-item" 
+                                                               style="#{userData.targetScreen.equalsIgnoreCase('crmLeadsTransfer')?'':'background-color: #92d2e6f2!important; color:#21323A!important;'}">تحويل العملاء</a>
+                                                        </h:panelGroup>
+
+                                                    </div>
+                                                </h:panelGroup>
+
+                                            </div>
+                                        </div>
+                                    </h:panelGroup>
+
+
+                                    <!-- بداية تقارير علاقات العملاء -->
+
+
+                                    <a  href="#CRMreport"
+                                        class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'}  list-group-item"
+                                        data-toggle="collapse" data-parent="#MainMenu" 
+                                        style="background-color: #22323a;color: #fff;width: 255px; border-bottom:none;
+                                        ; #{userData.userScreens['customerProject'].view   
+                                            or userData.userScreens['eventsReport'].view
+                                            or userData.userScreens['leadsData'].view
+                                            or userData.userScreens['projectsCustomer'].view
+                                            or userData.userScreens[''].view
+                                            or userData.userScreens[''].view 
+                                            or userData.userScreens[''].view 
+                                            or userData.userScreens[''].view 
+                                            or userData.userScreens[''].view
+                                            or userData.userScreens[''].view
+                                            or userData.userScreens[''].view
+                                            or userData.userScreens[''].view
+                                            or userData.userScreens[''].view
+                                            or userData.userScreens[''].view
+                                            or userData.userScreens[''].view
+                                            or userData.isAdmin ? '' : 'display:none'}
+                                        ">#{userData.userDDs['Clients_Relationship_Management_Reports']}<i class="fa fa-caret-down"></i></a>
+
+                                    <h:panelGroup    rendered="#{userData.userScreens['customerProject'].view   
+                                                                 or userData.userScreens['eventsReport'].view
+                                                                 or userData.userScreens['leadsData'].view
+                                                                 or userData.userScreens['projectsCustomer'].view
+                                                                 or userData.userScreens[''].view 
+                                                                 or userData.userScreens[''].view 
+                                                                 or userData.userScreens[''].view 
+
+                                                                 or userData.userScreens[''].view
+                                                                 or userData.userScreens[''].view
+                                                                 or userData.userScreens[''].view
+                                                                 or userData.userScreens[''].view
+                                                                 or userData.userScreens[''].view
+                                                                 or userData.userScreens[''].view
+                                                                 or userData.userScreens[''].view
+                                                                 or userData.isAdmin}"> 
+
+
+                                        <div class="generalsystems collapse #{(userData.targetScreen.equalsIgnoreCase('customerProject') || 
+                                                                              userData.targetScreen.equalsIgnoreCase('eventsReport') ||
+                                                                              userData.targetScreen.equalsIgnoreCase('leadsData') ||
+                                                                              userData.targetScreen.equalsIgnoreCase('projectsCustomer') ||
+                                                                              userData.targetScreen.equalsIgnoreCase('')   ||
+                                                                              userData.targetScreen.equalsIgnoreCase('')  ||
+                                                                              userData.targetScreen.equalsIgnoreCase('')  ||
+                                                                              userData.targetScreen.equalsIgnoreCase('')  ||
+                                                                              userData.targetScreen.equalsIgnoreCase('')  ||
+                                                                              userData.targetScreen.equalsIgnoreCase('')  ||
+                                                                              userData.targetScreen.equalsIgnoreCase('')  
+                                                                              )? 'in': ''}" id="CRMreport"  >
+
+                                            <div class="list-group panel">
+
+
+
+                                                <a href="#CRMreport1" class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'}  list-group-item list-group-item-success menu2-bgColor" data-toggle="collapse" data-parent="#CRMreport" 
+                                                   style="background-color: #007d9b;color: #fff;
+                                                   ; #{userData.userScreens['leadsData'].view   
+                                                       or userData.userScreens[''].view
+                                                       or userData.userScreens[''].view
+                                                       or userData.userScreens[''].view 
+                                                       or userData.userScreens[''].view 
+
+                                                       or userData.isAdmin ? '' : 'display:none'}
+                                                   ">#{userData.userDDs['BASIC_REPORT']}<i class="fa fa-caret-down"></i></a>
+
+                                                <h:panelGroup   rendered="#{userData.userScreens['leadsData'].view   
+                                                                            or userData.userScreens[''].view
+                                                                            or userData.userScreens[''].view 
+                                                                            or userData.userScreens[''].view 
+                                                                            or userData.userScreens[''].view 
+
+                                                                            or userData.isAdmin}"> 
+
+                                                    <div class="generalsystems collapse #{(userData.targetScreen.equalsIgnoreCase('leadsData') || 
+                                                                                          userData.targetScreen.equalsIgnoreCase('') ||
+                                                                                          userData.targetScreen.equalsIgnoreCase('') ||
+                                                                                          userData.targetScreen.equalsIgnoreCase('') ||
+                                                                                          userData.targetScreen.equalsIgnoreCase('') 
+
+                                                                                          )? 'in': ''}" id="CRMreport1">
+
+
+
+
+
+                                                        <h:panelGroup rendered="#{userData.userScreens['leadsData'].view or userData.isAdmin}">
+                                                            <a href="../crmReports/leadsData.xhtml" 
+                                                               class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('leadsData')?'ui-state-highlight':''}  list-group-item" 
+                                                               style="#{userData.targetScreen.equalsIgnoreCase('leadsData')?'':'background-color: #92d2e6f2!important; color:#21323A!important;'}">#{userData.userDDs['Leads_Data_Reports']}</a>
+
+                                                        </h:panelGroup>
+
+                                                    </div>
+                                                </h:panelGroup>
+
+                                                <a href="#CRMreport2"
+                                                   class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'}  list-group-item list-group-item-success" 
+                                                   data-toggle="collapse" data-parent="#CRMreport" 
+                                                   style="background-color:#007d9b;color:#ffffff
+                                                   ; #{userData.userScreens['customerProject'].view
+                                                       or userData.userScreens['eventsReport'].view
+                                                       or userData.userScreens['projectsCustomer'].view
+                                                       or userData.isAdmin ? '' : 'display:none'}
+                                                   ">#{userData.userDDs['Projects_Transaction_Reports']}<i class="fa fa-caret-down"></i></a>
+
+                                                <h:panelGroup   rendered="#{userData.userScreens['customerProject'].view
+                                                                            or userData.userScreens['eventsReport'].view
+                                                                            or userData.userScreens['projectsCustomer'].view 
+                                                                            or userData.isAdmin}"> 
+
+                                                    <div  class="generalsystems collapse #{(userData.targetScreen.equalsIgnoreCase('customerProject') ||
+                                                                                           userData.targetScreen.equalsIgnoreCase('eventsReport') ||
+                                                                                           userData.targetScreen.equalsIgnoreCase('projectsCustomer')  
+
+                                                                                           )? 'in': ''}"  id="CRMreport2">
+
+
+                                                        <h:panelGroup rendered="#{userData.userScreens['eventsReport'].view or userData.isAdmin}">
+                                                            <a href="../crmReports/eventsReport.xhtml" 
+                                                               class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('eventsReport')?'ui-state-highlight':''}  list-group-item" 
+                                                               style="#{userData.targetScreen.equalsIgnoreCase('eventsReport')?'':'background-color: #92d2e6f2!important; color:#21323A!important;'}">#{userData.userDDs['Todo_Events_Report']}</a>
+
+                                                        </h:panelGroup>
+
+                                                        <h:panelGroup rendered="#{userData.userScreens['customerProject'].view or userData.isAdmin}">
+                                                            <a href="../crmReports/customerProject.xhtml" 
+                                                               class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('customerProject')?'ui-state-highlight':''}  list-group-item" 
+                                                               style="#{userData.targetScreen.equalsIgnoreCase('customerProject')?'':'background-color: #92d2e6f2!important; color:#21323A!important;'}">#{userData.userDDs['Clients_Projects']}</a>
+
+                                                        </h:panelGroup>
+                                                        <h:panelGroup rendered="#{userData.userScreens['projectsCustomer'].view or userData.isAdmin}">
+                                                            <a href="../crmReports/projectsCustomer.xhtml" 
+                                                               class="#{userData.dir.equalsIgnoreCase('RTL') ? '' : 'direction-en'} #{userData.targetScreen.equalsIgnoreCase('projectsCustomer')?'ui-state-highlight':''}  list-group-item" 
+                                                               style="#{userData.targetScreen.equalsIgnoreCase('projectsCustomer')?'':'background-color: #92d2e6f2!important; color:#21323A!important;'}">#{userData.userDDs['Projects_Clients']}</a>
+
+                                                        </h:panelGroup>
+
+                                                    </div>
+
+                                                </h:panelGroup>
+
+                                            </div>
+                                        </div>
+                                    </h:panelGroup>
+
+
+</ui:composition>

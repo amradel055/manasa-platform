@@ -264,7 +264,7 @@ public class CostCenterServiceImpl implements CostCenterService {
         }
          if (centerDTO.getCurrentaccountId()!= null) {
              GlAccount glAccount =new GlAccount();
-             glAccount.setId(centerDTO.getCurrentaccountId());
+             glAccount.setId(centerDTO.getCurrentaccountId().getId());
              costCenter.setCurrentaccountId(glAccount);
             }
 
@@ -289,7 +289,7 @@ public class CostCenterServiceImpl implements CostCenterService {
         costCenterDTO.setShortCode(costCenter.getShortCode());
         costCenterDTO.setLevel(costCenter.getLevel());
         costCenterDTO.setMsg(costCenter.getMsg());
-        costCenterDTO.setCurrentaccountId(costCenter.getCurrentaccountId() !=null ? costCenter.getCurrentaccountId().getId() : null);
+        costCenterDTO.setCurrentaccountId(costCenter.getCurrentaccountId() !=null ? costCenter.getCurrentaccountId() : null);
   
         return costCenterDTO;
     }

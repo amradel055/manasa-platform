@@ -5,7 +5,9 @@
  */
 package com.toby.dto;
 
+import com.toby.entity.GlAccount;
 import java.util.List;
+import javax.ejb.EJB;
 
 
 public class CostCenterDTO extends BaseEntityDTO {
@@ -17,8 +19,7 @@ public class CostCenterDTO extends BaseEntityDTO {
     private Boolean active;
     private List<CostCenterDTO> childNodes;
     private CostCenterDTO parent;
-    private Integer currentaccountId;
-
+    private GlAccount currentaccountId;
     public CostCenterDTO() {
     }
 
@@ -116,16 +117,18 @@ public class CostCenterDTO extends BaseEntityDTO {
     /**
      * @return the currentaccountId
      */
-    public Integer getCurrentaccountId() {
+    public GlAccount getCurrentaccountId() {
         return currentaccountId;
     }
 
     /**
      * @param currentaccountId the currentaccountId to set
      */
-    public void setCurrentaccountId(Integer currentaccountId) {
+    public void setCurrentaccountId(GlAccount currentaccountId) {
         this.currentaccountId = currentaccountId;
     }
+
+    
 
    
 
