@@ -60,13 +60,13 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
     public GlBankTransaction addGlBankTransaction(GlBankTransaction glBankTransaction, List<GlBankTransactionDetail> glBankTransactionDetailList,
             List<GlBankTransactionDetail> glBankTransactionDetailListDeleted, Integer companyId, TobyUser tobyUser) {
 
-      glBankTransaction = addingForGlBank(glBankTransaction, glBankTransactionDetailListDeleted, glBankTransactionDetailList, tobyUser);
+        glBankTransaction = addingForGlBank(glBankTransaction, glBankTransactionDetailListDeleted, glBankTransactionDetailList, tobyUser);
         if (glBankTransaction.getTransactionType() != null && glBankTransaction.getTransactionType() == 1) {
 
             AccountsSystemSettings accountsSystemSettings = new AccountsSystemSettings();
             accountsSystemSettings = accountsSystemSettingsService.getInventoryByCompanyId(companyId);
 
-            if (accountsSystemSettings != null && accountsSystemSettings.getWorkWithAccounts() != null 
+            if (accountsSystemSettings != null && accountsSystemSettings.getWorkWithAccounts() != null
                     && accountsSystemSettings.getNoteSreceivablesType().equals("NOT_ALLOW_DETAIL")) {
                 checkDuplicateDetails(glBankTransaction);
             }
@@ -96,29 +96,32 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
                 glBankTransactionDetailsService.deleteGlBankTransactionDetails(deleted);
             }
         }
-        
-        tarhilId = glBankTransactionDetailsService.updateGlBankTransactionDetails(glBankTransactionDetailList, glBankTransaction, tobyUser);
-        tarhilglBankTransaction(tarhilId, glBankTransaction);
 
-//        Integer maxSerial = 0;
-//        if (glBankTransaction != null && glBankTransaction.getId() != null) {
-//            maxSerial = glBankTransactionDetailsService.finMaxSerial(glBankTransaction.getId());
-//        } else {
-//            maxSerial++;
-//        }
-//
-//        for (GlBankTransactionDetail glBankTransactionDetail : glBankTransactionDetailList) {
-//            glBankTransactionDetail.setGlBankTransactionId(glBankTransaction);
-//
-//            if (glBankTransactionDetail.getId() != null) {
-//                tarhilId = glBankTransactionDetailsService.updateGlBankTransactionDetails(glBankTransactionDetail, tobyUser);
-//            } else {
-//                glBankTransactionDetail.setSerial(maxSerial);
-//                tarhilId = glBankTransactionDetailsService.updateGlBankTransactionDetails(glBankTransactionDetail, tobyUser);
-//                maxSerial++;
-//            }
-//            tarhilglBankTransaction(tarhilId, glBankTransaction);
-//        }
+        if (glBankTransaction.getTransactionType() != null && glBankTransaction.getTransactionType() == 0) {
+
+            tarhilId = glBankTransactionDetailsService.updateGlBankTransactionDetails(glBankTransactionDetailList, glBankTransaction, tobyUser);
+            tarhilglBankTransaction(tarhilId, glBankTransaction);
+        } else {
+            Integer maxSerial = 0;
+            if (glBankTransaction != null && glBankTransaction.getId() != null) {
+                maxSerial = glBankTransactionDetailsService.finMaxSerial(glBankTransaction.getId());
+            } else {
+                maxSerial++;
+            }
+
+            for (GlBankTransactionDetail glBankTransactionDetail : glBankTransactionDetailList) {
+                glBankTransactionDetail.setGlBankTransactionId(glBankTransaction);
+
+                if (glBankTransactionDetail.getId() != null) {
+                    tarhilId = glBankTransactionDetailsService.updateGlBankTransactionDetails(glBankTransactionDetail, tobyUser);
+                } else {
+                    glBankTransactionDetail.setSerial(maxSerial);
+                    tarhilId = glBankTransactionDetailsService.updateGlBankTransactionDetails(glBankTransactionDetail, tobyUser);
+                    maxSerial++;
+                }
+                tarhilglBankTransaction(tarhilId, glBankTransaction);
+            }
+        }
         return glBankTransaction;
     }
 
@@ -152,11 +155,11 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
 
     @Override
     public void deleteGlBankTransaction(GlBankTransaction glBankTransaction) {
+        deleteTarhilGeneralJournal(glBankTransaction);
         if (glBankTransaction.getId() != null && glBankTransaction.getId() > 0) {
             dao.executeDeleteQuery("delete from GlBankTransactionDetail e WHERE e.id > 0 AND e.glBankTransactionId.id = " + glBankTransaction.getId());
         }
         dao.deleteEntity(glBankTransaction);
-        deleteTarhilGeneralJournal(glBankTransaction);
     }
 
     @Override

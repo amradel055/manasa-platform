@@ -52,51 +52,7 @@
                             <p:outputLabel style="width: 50px"  value="من تاريخ هجري" />
                         </div>
                     </div>
-                    <div class="ui-g-12 ui-xl-12">
 
-                        <p:fieldset id="radioLinks"  legend="#{userData.userDDs['HAND_HANDLE']}"   >
-                            <p:selectOneRadio id="console" 
-                                              value ="#{SettlementDeedFormMB.glBankTransactionEntity.organizationType}">
-
-                                <f:selectItem itemLabel="#{userData.userDDs['ACCOUNTS']}" itemValue="2" itemDisabled="#{not SettlementDeedFormMB.printButton}" />
-                                <f:selectItem itemLabel="#{userData.userDDs['CUSTOMER']}"  itemValue="0" itemDisabled="#{not SettlementDeedFormMB.printButton}" />                            
-                                <f:selectItem itemLabel="#{userData.userDDs['SUPPLIER']}" itemValue="1" itemDisabled="#{not SettlementDeedFormMB.printButton}"/>
-                                <p:ajax event="click" listener="#{SettlementDeedFormMB.showOrHideDialog}" update="form"/> 
-                            </p:selectOneRadio>
-
-                            <p:dialog modal="true"
-                                      position='center,center'
-                                      minHeight="40" minWidth="100"
-                                      header="#{userData.userDDs['WARNING']}" widgetVar="dlg1"  >
-
-                                <p:ajax event="close" listener="#{SettlementDeedFormMB.changeOrganizationSiteCancel()}" update="radioLinks console"/>
-
-                                <h:outputText value="#{userData.userDDs['ARE_YOU_SU_CH_ORG_SI']}"  />
-
-
-                                <p:commandButton id="saveIm"
-                                                 title="#{userData.userDDs['YES']}" 
-                                                 value="#{userData.userDDs['YES']}"
-                                                 action ="#{SettlementDeedFormMB.changeOrganizationSiteOk()}"
-                                                 icon="fa fa-fw fa-save"
-                                                 validateClient="true" 
-                                                 onclick="PF('dlg1').hide();"
-                                                 style="background-color: #0059b3"
-                                                 update="radioLinks glBankTransactionDetailsTable" />
-                                <p:commandButton 
-                                    title="#{userData.userDDs['NO']}" 
-                                    value="#{userData.userDDs['NO']}" 
-                                    action="#{SettlementDeedFormMB.changeOrganizationSiteCancel()}"
-                                    icon="fa fa-fw fa-close" 
-                                    update="radioLinks console"
-                                    onclick="PF('dlg1').hide();"
-                                    style="margin: 10px;background-color: #0059b3"/>
-
-
-                            </p:dialog> 
-
-                        </p:fieldset>
-                    </div>
                     <div class="ui-g-12 ui-xl-12">
 
                         <div class="ui-g-6 ui-xl-6">
@@ -173,22 +129,6 @@
                             <p:outputLabel style="width:65px;margin-right: 6%" value="#{userData.userDDs['SERIAL']}"/>
                         </div>
                     </div>
-                    <div class="ui-g-12 ui-xl-12">
-                        <h:panelGroup rendered="#{SettlementDeedFormMB.paymentDropDownView}">
-
-                            <p:fieldset legend="#{userData.userDDs['PAYMENT_TYPE']}" style="margin-right: 6%!important;">
-                                <p:selectOneRadio id="paymentType"  
-                                                  value="#{SettlementDeedFormMB.glBankTransactionEntity.paymentType}" >                                                             
-                                    <f:selectItem itemLabel="#{userData.userDDs['CASH']}" itemValue="0"  />
-                                    <f:selectItem itemLabel="#{userData.userDDs['CHECK']}" itemValue="1"  />
-                                    <f:selectItem itemLabel="#{userData.userDDs['LINE_CHEC']}" itemValue="2"  />
-
-                                    <p:ajax update="form" listener="#{SettlementDeedFormMB.viewPaymentFields}" />
-                                </p:selectOneRadio>  
-
-                            </p:fieldset>
-                        </h:panelGroup>
-                    </div>
 
                     <div class="ui-g-12 ui-xl-12">
                         <div class="ui-g-6 ui-xl-6">
@@ -205,7 +145,7 @@
 
                     <div class="ui-g-12 ui-xl-12">
                         <div class="ui-g-6 ui-xl-6">
-                            <p:selectOneMenu id="group" value="#{SettlementDeedFormMB.gallaryDTOSelect}"
+                            <p:selectOneMenu id="group" value="#{SettlementDeedFormMB.gallaryDTOSelect}" rendered="#{SettlementDeedFormMB.organizationSiteView}"
                                              converter="#{SettlementDeedFormMB.gallaryDTOConverters}">
                                 <f:selectItem itemLabel="اختر معرض" itemValue=""/>
                                 <f:selectItems value="#{SettlementDeedFormMB.gallaryLists}" 
@@ -216,8 +156,53 @@
                             </p:selectOneMenu>
                         </div>
                         <div class="ui-g-6 ui-xl-6">
-                            <p:outputLabel style="width: 50px;margin-right: 1%" value="المعرض"/>
+                            <p:outputLabel style="width: 50px;margin-right: 1%" value="المعرض" rendered="#{SettlementDeedFormMB.organizationSiteView}"/>
                         </div>
+                    </div>
+                    <div class="ui-g-12 ui-xl-12">
+
+                        <p:fieldset id="radioLinks"  legend="#{userData.userDDs['HAND_HANDLE']}"   >
+                            <p:selectOneRadio id="console" 
+                                              value ="#{SettlementDeedFormMB.glBankTransactionEntity.organizationType}">
+
+                                <f:selectItem itemLabel="#{userData.userDDs['ACCOUNTS']}" itemValue="2" itemDisabled="#{not SettlementDeedFormMB.printButton}" />
+                                <f:selectItem itemLabel="#{userData.userDDs['CUSTOMER']}"  itemValue="0" itemDisabled="#{not SettlementDeedFormMB.printButton}" />                            
+                                <f:selectItem itemLabel="#{userData.userDDs['SUPPLIER']}" itemValue="1" itemDisabled="#{not SettlementDeedFormMB.printButton}"/>
+                                <p:ajax event="click" listener="#{SettlementDeedFormMB.showOrHideDialog}" update="form"/> 
+                            </p:selectOneRadio>
+
+                            <p:dialog modal="true"
+                                      position='center,center'
+                                      minHeight="40" minWidth="100"
+                                      header="#{userData.userDDs['WARNING']}" widgetVar="dlg1"  >
+
+                                <p:ajax event="close" listener="#{SettlementDeedFormMB.changeOrganizationSiteCancel()}" update="radioLinks console"/>
+
+                                <h:outputText value="#{userData.userDDs['ARE_YOU_SU_CH_ORG_SI']}"  />
+
+
+                                <p:commandButton id="saveIm"
+                                                 title="#{userData.userDDs['YES']}" 
+                                                 value="#{userData.userDDs['YES']}"
+                                                 action ="#{SettlementDeedFormMB.changeOrganizationSiteOk()}"
+                                                 icon="fa fa-fw fa-save"
+                                                 validateClient="true" 
+                                                 onclick="PF('dlg1').hide();"
+                                                 style="background-color: #0059b3"
+                                                 update="radioLinks glBankTransactionDetailsTable" />
+                                <p:commandButton 
+                                    title="#{userData.userDDs['NO']}" 
+                                    value="#{userData.userDDs['NO']}" 
+                                    action="#{SettlementDeedFormMB.changeOrganizationSiteCancel()}"
+                                    icon="fa fa-fw fa-close" 
+                                    update="radioLinks console"
+                                    onclick="PF('dlg1').hide();"
+                                    style="margin: 10px;background-color: #0059b3"/>
+
+
+                            </p:dialog> 
+
+                        </p:fieldset>
                     </div>
                 </div>
 
@@ -439,7 +424,7 @@
                         <h:outputText value="#{glBankTransactionDetailsTable.invOrganizationSite.accountId.name}"  />
                     </p:column>
 
-                    
+
 
 
                     <p:column  style="width: 17vh;font-size: 1.8vh;text-align: right;border-radius: 0px" 
@@ -468,7 +453,7 @@
                         <h:outputText value="#{glBankTransactionDetailsTable.glAccount.name}"  rendered="#{not glBankTransactionDetailsTable.markEdit}" style="width: auto"/>
                     </p:column>
 
-                     <p:column  style="width: 18vh;font-size: 1.8vh;text-align: right;border-radius: 0px" 
+                    <p:column  style="width: 18vh;font-size: 1.8vh;text-align: right;border-radius: 0px" 
                                id="value"  headerText="#{userData.userDDs['AMOUNT']}">
 
 
@@ -549,7 +534,7 @@
 
                     </p:column>
 
-                    
+
 
 
 
@@ -643,23 +628,7 @@
                                           value="#{userData.userDDs['BACK']}" 
                                           style=""
                                           action="#{SettlementDeedFormMB.exit()}"   />
-
-                        <p:commandButton id="btncontracttasahel"  
-                                         actionListener="#{SettlementDeedFormMB.readCashTasahel()}"
-                                         ajax="false" 
-                                         class="uploadButton"
-                                         value="رفع ملف"
-                                         update="@form">
-                            <f:ajax execute="@all"  render="@form"/>  
-                        </p:commandButton>
                         <br/>
-                        <p:fileUpload style="" 
-                                      value="#{SettlementDeedFormMB.contractFile}"  
-                                      label="اختر ملف" 
-                                      mode="simple" 
-                                      onstart="disableChoosing()" 
-                                      oncomplete="enableChoosing()"
-                                      update="@form" /> 
 
                     </h:panelGroup>
                 </h:panelGrid>

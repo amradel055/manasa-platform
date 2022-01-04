@@ -11,7 +11,6 @@ import com.toby.entity.CostCenter;
 import com.toby.entity.GlAccount;
 import com.toby.entity.GlAdminUnit;
 import com.toby.entity.GlBank;
-import com.toby.entity.InvOrganizationSite;
 import com.toby.entity.Symbol;
 import com.toby.views.GlBankTransactionInvoiceView;
 import java.math.BigDecimal;

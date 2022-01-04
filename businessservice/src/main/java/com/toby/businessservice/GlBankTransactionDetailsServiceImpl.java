@@ -475,47 +475,74 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
         return id;
     }
 
-    public Integer tarhilSettlement( List<GlBankTransactionDetail> list , TobyUser tobyUser, GlBankTransaction entity ) {
+    public Integer tarhilSettlement(List<GlBankTransactionDetail> list, TobyUser tobyUser, GlBankTransaction glBankTransaction) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", tobyUser.getBranchId().getId());
+        Integer accountId = null;
+        Integer costCenterIdMain = null;
         GeneralJournal journal = null;
         BigDecimal finalValue = BigDecimal.ZERO;
+        BigDecimal finalValueCurrent = BigDecimal.ZERO;
+        Boolean check = false;
         // إدخال سندات الصرف
-        journal = generaljournalService.addGeneralJournalGlobal(entity.getGlYear(), 1001, entity.getSerial(), entity.getDate(),
-                entity.getRemark(), tobyUser, 0);
+        journal = generaljournalService.addGeneralJournalGlobal(glBankTransaction.getGlYear(), 1001, glBankTransaction.getSerial(), glBankTransaction.getDate(),
+                glBankTransaction.getRemark(), tobyUser, 0);
+        finalValue = glBankTransaction.getValueLocal().subtract(glBankTransaction.getBankCommetion());
 
-        if (entity.getGlBankId().getCommition().compareTo(BigDecimal.ZERO) == 1) {
+        if (glBankTransaction.getGlAccountId() != null) {
+            accountId = glBankTransaction.getGlAccountId().getId();
+            costCenterIdMain = glBankTransaction.getGlAccountId().getCostCenterId().getId();
+        } else {
+            accountId = glBankTransaction.getGlBankId().getAccountId().getId();
+            costCenterIdMain = glBankTransaction.getGlBankId().getGallaryId().getCostCenterId().getId();
+        }
+
+        if (glBankTransaction.getGlBankId().getCommition().compareTo(BigDecimal.ZERO) == 1) {
             // كيفية ادخال عمولة البنك
             Integer accountId_3 = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"BANK_COMMITION\" AND a.accountId IS NOT NULL", params);
-//          BigDecimal commitionValue = dto.getValue().multiply(dto.getBankCommition().divide(new BigDecimal(100)));
-            finalValue = entity.getValueLocal().subtract(entity.getBankCommetion());
-            generaljournalDetailsService.addGenDetalil(true, entity.getBankCommetion(), journal.getId(), accountId_3,
-                    entity.getGlBankId().getGallaryId().getCostCenterId().getId(),
+            generaljournalDetailsService.addGenDetalil(true, glBankTransaction.getBankCommetion(), journal.getId(), accountId_3,
+                    costCenterIdMain,
                     "عمولة البنك", tobyUser);
         }
 
-        generaljournalDetailsService.addGenDetalil(false, finalValue, journal.getId(), entity.getGlAccountId().getId(),
-                entity.getGlBankId().getGallaryId().getCostCenterId().getId(),
-                entity.getRemark(), tobyUser);
+        generaljournalDetailsService.addGenDetalil(false, finalValue, journal.getId(), accountId,
+                costCenterIdMain,
+                glBankTransaction.getRemark(), tobyUser);
 
         for (GlBankTransactionDetail dto : list) {
 
-            // يتبقى ادخالى العموله يدويا
-            if (dto.getBankIdTo().getGallaryId() != null
-                    && dto.getCostCenterId() != null
+            Integer costCeterDetailId = dto.getCostCenterId().getId();
+            
+            if (dto.getCostCenterId() != null
                     && dto.getCostCenterId().getId() != null) {
-                finalValue = dto.getValue();
 
-                generaljournalDetailsService.addGenDetalil(true, finalValue, journal.getId(), dto.getAccountDebitId().getId(),
+                generaljournalDetailsService.addGenDetalil(true, dto.getValue(), journal.getId(), dto.getAccountDebitId().getId(),
+                        costCeterDetailId,
+                        dto.getRemarks(), tobyUser);
+            }
+            if (!costCeterDetailId.equals(costCenterIdMain)) {
+                finalValueCurrent = finalValueCurrent.add(dto.getValue());
+                generaljournalDetailsService.addGenDetalil(true, dto.getValue(), journal.getId(), dto.getCostCenterId().getCurrentaccountId().getId(),
                         dto.getCostCenterId().getId(),
                         dto.getRemarks(), tobyUser);
-
+                check = true;
             }
         }
-        if (entity.getBankCommetion().compareTo(BigDecimal.ZERO) == 1) {
-            generaljournalDetailsService.addGenDetalil(false, entity.getBankCommetion(), journal.getId(), entity.getGlAccountId().getId(),
-                    entity.getGlBankId().getGallaryId().getCostCenterId().getId(),
-                    entity.getRemark(), tobyUser);
+        if (glBankTransaction.getBankCommetion().compareTo(BigDecimal.ZERO) == 1) {
+            generaljournalDetailsService.addGenDetalil(false,
+                    glBankTransaction.getBankCommetion(),
+                    journal.getId(),
+                    accountId,
+                    costCenterIdMain,
+                    glBankTransaction.getRemark(), tobyUser);
+        }
+        if (check) {
+            generaljournalDetailsService.addGenDetalil(false,
+                    finalValueCurrent,
+                    journal.getId(),
+                    glBankTransaction.getGlAccountId().getCostCenterId().getCurrentaccountId().getId(),
+                    costCenterIdMain,
+                    glBankTransaction.getRemark(), tobyUser);
         }
 
         return journal == null ? null : journal.getId();
