@@ -10,7 +10,7 @@ import com.toby.core.GenericDAO;
 import com.toby.dto.CostCenterDTO;
 import com.toby.entity.Branch;
 import com.toby.entity.CostCenter;
-import com.toby.entity.InventoryDelegator;
+import com.toby.entity.GlAccount;
 import com.toby.entity.TobyCompany;
 import com.toby.entity.TobyUser;
 import java.util.ArrayList;
@@ -262,6 +262,11 @@ public class CostCenterServiceImpl implements CostCenterService {
             costCenter.setCompanyId(tobyUser.getCompanyId());
             costCenter.setBranchId(tobyUser.getBranchId());
         }
+         if (centerDTO.getCurrentaccountId()!= null) {
+             GlAccount glAccount =new GlAccount();
+             glAccount.setId(centerDTO.getCurrentaccountId());
+             costCenter.setCurrentaccountId(glAccount);
+            }
 
         return costCenter;
     }
@@ -284,7 +289,8 @@ public class CostCenterServiceImpl implements CostCenterService {
         costCenterDTO.setShortCode(costCenter.getShortCode());
         costCenterDTO.setLevel(costCenter.getLevel());
         costCenterDTO.setMsg(costCenter.getMsg());
-        
+        costCenterDTO.setCurrentaccountId(costCenter.getCurrentaccountId() !=null ? costCenter.getCurrentaccountId().getId() : null);
+  
         return costCenterDTO;
     }
 

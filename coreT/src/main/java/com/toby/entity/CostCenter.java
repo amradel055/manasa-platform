@@ -44,6 +44,9 @@ public class CostCenter extends BaseEntity {
     @JoinColumn(name = "branch_id", referencedColumnName = "id")
     @ManyToOne
     private Branch branchId;
+    @JoinColumn(name = "currentaccount_id", referencedColumnName = "id")
+    @ManyToOne
+    private GlAccount currentaccountId;
 
     public CostCenter() {
     }
@@ -158,6 +161,20 @@ public class CostCenter extends BaseEntity {
      */
     public void setChildNodes(List<CostCenter> childNodes) {
         this.childNodes = childNodes;
+    }
+
+    /**
+     * @return the currentaccountId
+     */
+    public GlAccount getCurrentaccountId() {
+        return currentaccountId;
+    }
+
+    /**
+     * @param currentaccountId the currentaccountId to set
+     */
+    public void setCurrentaccountId(GlAccount currentaccountId) {
+        this.currentaccountId = currentaccountId;
     }
 
 }

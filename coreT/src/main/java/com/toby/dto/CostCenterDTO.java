@@ -17,6 +17,7 @@ public class CostCenterDTO extends BaseEntityDTO {
     private Boolean active;
     private List<CostCenterDTO> childNodes;
     private CostCenterDTO parent;
+    private Integer currentaccountId;
 
     public CostCenterDTO() {
     }
@@ -111,5 +112,22 @@ public class CostCenterDTO extends BaseEntityDTO {
     public void setChildNodes(List<CostCenterDTO> childNodes) {
         this.childNodes = childNodes;
     }
+
+    /**
+     * @return the currentaccountId
+     */
+    public Integer getCurrentaccountId() {
+        return currentaccountId;
+    }
+
+    /**
+     * @param currentaccountId the currentaccountId to set
+     */
+    public void setCurrentaccountId(Integer currentaccountId) {
+        this.currentaccountId = currentaccountId;
+    }
+
+   
+
 
 }
