@@ -128,6 +128,7 @@ public class Basic implements Serializable {
     private HijrahDate islamyYear;
     private HijrahDate islamyMonth;
     private HijrahDate islamyDay;
+    
      public void OpenDlg(String dlgvar) {
         RequestContext context = RequestContext.getCurrentInstance();
         context.execute("PF('" + dlgvar + "').show();");
