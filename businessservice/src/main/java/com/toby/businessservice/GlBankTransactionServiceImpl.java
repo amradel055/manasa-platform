@@ -293,6 +293,8 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
         List<Integer> glBankIdList = tobyUserBankService.getAllGlBankIdForUserByTypeAndBranchId(userId, branchId, transactionType);
         filters.put("glBankIdList", glBankIdList);
         builder.append(" AND s.glBankId.id in :glBankIdList ");
+        
+        
 
         if (filters.get("globalFilter") != null && !filters.get("globalFilter").toString().isEmpty()) {
             String filter = " and (s.serial like CONCAT('%',:globalFilter ,'%')  OR s.glBankId.name  like CONCAT('%',:globalFilter ,'%') OR s.valueLocal like CONCAT('%',:globalFilter ,'%') OR s.createdBy.name like CONCAT('%',:globalFilter ,'%')  OR s.remark like CONCAT('%',:globalFilter ,'%') OR s.remark2 like CONCAT('%',:globalFilter ,'%') OR s.value like CONCAT('%',:globalFilter ,'%') ) ";
@@ -317,6 +319,9 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
         filters.put("transactionType", transactionType);
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT s FROM GlBankTransaction s WHERE s.branchId.id = :branchId AND s.transactionType =:transactionType  ");
+        if(transactionType != null && transactionType == 0 ){
+            builder.append(" OR (s.transactionType = 0 AND s.glBankId IS NULL ) ");
+        }
         appendFilter(filters, branchId, userId, builder, selectGlBankId, transactionType);
         builder.append(" order by s.serial DESC");
         List<GlBankTransaction> details = dao.findListByQuery(builder.toString(), filters, first, pageSize);

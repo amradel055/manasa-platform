@@ -124,13 +124,5 @@ public interface GlAccountService {
 
     public List<GlAccountDTO> getBranchGLAccountsActiveDTO(Integer id, TobyUser tobyUser);
 
-    public Map<Integer, GlAccount> getAllGlAccountMap(); 
-    
-    public List<GlAccount> getGLAccountsByBranch(Integer branchId) ;
-
-
-
-
-
-
+    public Map<Integer, GlAccount> getAllGlAccountMap();
 }

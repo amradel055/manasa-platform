@@ -287,12 +287,12 @@ public class GlAccountServiceImpl implements GlAccountService {
         params.put("branchId", branchId);
         return dao.findListByQuery("SELECT acc FROM GlAccount acc WHERE acc.branchId.id=:branchId ORDER BY acc.accNumber ASC ", params);
     }
-     @Override
-    public List<GlAccount> getGLAccountsByBranch(Integer branchId) {
-        Map<String, Object> params = new HashMap();
-        params.put("branchId", branchId);
-        return dao.findListByQuery("SELECT acc FROM GlAccount acc WHERE acc.branchId.id= :branchId ", params);
-    }
+//     @Override
+//    public List<GlAccount> getGLAccountsByBranch(Integer branchId) {
+//        Map<String, Object> params = new HashMap();
+//        params.put("branchId", branchId);
+//        return dao.findListByQuery("SELECT acc FROM GlAccount acc WHERE acc.branchId.id= :branchId ", params);
+//    }
 
     @Override
     public List<GlAccount> getBranchGLAccountsOnlyActiveByBranch(Integer branchId) {

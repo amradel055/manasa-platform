@@ -167,7 +167,7 @@
                                     <h:panelGroup  id="edit"    class="col-md-12"  >
 
 
-                                       
+
                                         <div class="ui-g-6 ui-xl-6">
 
                                             <div class="ui-g-12 ui-xl-12">
@@ -249,27 +249,27 @@
                                             </div>
                                             <div class="ui-g-12 ui-xl-12">
                                                 <div class="ui-g-6 ui-xl-6">
-                                                <p:outputLabel value="#{glAccountBean.selectedAcc.debitAmount}" style="margin-right: 1%" />  
+                                                    <p:outputLabel value="#{glAccountBean.selectedAcc.debitAmount}" style="margin-right: 1%" />  
 
                                                 </div>
                                                 <div class="ui-g-6 ui-xl-6">
-                                                <p:outputLabel style="width: 13%" value="#{userData.userDDs['DEBIT_AMOUNT']}" />
+                                                    <p:outputLabel style="width: 13%" value="#{userData.userDDs['DEBIT_AMOUNT']}" />
 
                                                 </div>
                                             </div>
                                             <div class="ui-g-12 ui-xl-12">
                                                 <div class="ui-g-6 ui-xl-6">
-                                                <p:outputLabel value="#{glAccountBean.selectedAcc.creditAmount}" style="margin-right: 1%" />  
+                                                    <p:outputLabel value="#{glAccountBean.selectedAcc.creditAmount}" style="margin-right: 1%" />  
 
                                                 </div>
                                                 <div class="ui-g-6 ui-xl-6">
-                                                <p:outputLabel  style="width: 13%" value="#{userData.userDDs['CREDIT_AMOUNT']}  "  />
+                                                    <p:outputLabel  style="width: 13%" value="#{userData.userDDs['CREDIT_AMOUNT']}  "  />
 
                                                 </div>
                                             </div>
                                         </div>
 
- <div class="ui-g-6 ui-xl-6">
+                                        <div class="ui-g-6 ui-xl-6">
 
                                             <div class="ui-g-12 ui-xl-12">
                                                 <div class="ui-g-6 ui-xl-6">
@@ -358,6 +358,28 @@
                                                     <p:outputLabel style="width: 13%" value="#{userData.userDDs['ACCOUNT_TYPE']}  "/>
 
                                                 </div>
+                                            </div>
+                                            
+                                            <div class="ui-g-12 ui-xl-12">
+                                                <div class="ui-g-6 ui-xl-6">
+                                                    <p:autoComplete id="GlAccount_ID555" 
+                                                                    style="width: 85%" 
+                                                                    dropdown="true"
+                                                                    converter="#{glAccountBean.currentaccountConverter}"
+                                                                    value="#{glAccountBean.selectedAcc.costCenterId}"
+                                                                    var="p"
+                                                                    itemLabel="#{p}" 
+                                                                    itemValue="#{p}" 
+                                                                    forceSelection="true" 
+                                                                    completeMethod="#{glAccountBean.completecurrentaccount}" >
+                                                    </p:autoComplete>
+                                                </div>
+                                                <div class="ui-g-6 ui-xl-6">
+                                                    <p:outputLabel style="width: 80px" value="مركز التكلفة "/>
+
+                                                </div>
+
+
                                             </div>
                                         </div>
 

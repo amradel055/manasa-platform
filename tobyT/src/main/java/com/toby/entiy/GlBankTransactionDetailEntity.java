@@ -54,6 +54,7 @@ public class GlBankTransactionDetailEntity extends BaseEntity {
     private List<GlBankTransactionDetailEntity> glBankTransactionDetailEntityList;
     private List<GlBankTransactionInvoiceView> glBankTransactionInvoiceViewList;
     private Integer invoiceId;
+    private BigDecimal bankCommition;
 
     public GlBankTransactionDetailEntity() {
     }
@@ -433,6 +434,23 @@ public class GlBankTransactionDetailEntity extends BaseEntity {
      */
     public void setInvoiceId(Integer invoiceId) {
         this.invoiceId = invoiceId;
+    }
+
+    /**
+     * @return the bankCommition
+     */
+    public BigDecimal getBankCommition() {
+        if(bankCommition == null){
+            bankCommition = BigDecimal.ZERO;
+        }
+        return bankCommition;
+    }
+
+    /**
+     * @param bankCommition the bankCommition to set
+     */
+    public void setBankCommition(BigDecimal bankCommition) {
+        this.bankCommition = bankCommition;
     }
 
 }
