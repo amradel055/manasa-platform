@@ -328,13 +328,19 @@ public class AutoComplateImpl implements AutoCompleteService {
     }
 
     private void appendOrganizationTypeAndActive(Map<String, Object> params, Integer type, StringBuilder sql, boolean active, Integer gallaryId) {
-        params.put("type", type);
+        
         sql.append("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND ((:qeury is null OR e.name  like CONCAT('%',:qeury ,'%')) OR (:qeury is null OR e.code  like CONCAT('%',:qeury ,'%') )  OR (:qeury is null OR e.mobile  like CONCAT('%',:qeury ,'%') ) )");
+        
+        if(type != null){
+             params.put("type", type);
         if (type == 0 || type == 1) {
+           
             sql.append(" AND (e.type = :type OR e.type = 2) ");
-        } else {
+        } else{
+            
             sql.append(" AND e.type = :type  ");
-        }
+        }}
+        
         if (gallaryId != null) {
             params.put("gallaryId", gallaryId);
             sql.append(" AND e.gallaryId.id = :gallaryId ");

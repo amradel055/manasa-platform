@@ -1761,6 +1761,8 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         List<InvPurchaseInvoice> details = dao.findListByQuery(builder.toString(), params);
         return returnListDTOForList(details);
     }
+    
+    
 
     @Override
     public List<InvInvoiceDTO> getALLInvPurchaseInvoiceDTOByStatus(PrintProductionDTO printProductionDTO, Integer branchId) {

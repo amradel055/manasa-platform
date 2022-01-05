@@ -260,6 +260,22 @@
                         </h:panelGroup>
                     </div>
                     <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                            <p:outputLabel style="width:104px;margin-right: 5%"  value="المعرض" />
+                        </h:panelGroup>
+                      <p:selectOneMenu id="inventory" value="#{globalMB.gallaryDTOSelect}"
+                                         converter="#{globalMB.gallaryDTOConverters}" 
+                                         >
+
+                            <p:ajax listener="#{globalMB.loadGallaryList()}" />
+                            <f:selectItem itemLabel="#{userData.userDDs['ALL']}" itemValue="" />
+
+                            <f:selectItems value="#{globalMB.gallaryLists}" 
+                                           var="inventory" itemLabel="#{inventory.name}"
+                                           itemValue="#{inventory}"/> 
+                        </p:selectOneMenu>
+                           </div>
+                    <div class="ui-g-12 ui-md-6" style="padding: 0px;">
                         <h:panelGroup>
                             <h:panelGroup>
                                 <p:outputLabel style="width:104px;margin-right: 5%"  value="المتابع له" />
