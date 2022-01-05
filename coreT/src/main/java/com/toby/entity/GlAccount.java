@@ -87,6 +87,9 @@ public class GlAccount extends BaseEntity {
     @JoinColumn(name = "general_budget_id", referencedColumnName = "id")
     @ManyToOne
     private GeneralBudgetGuide generalBudgetId;
+    @JoinColumn(name = "cost_center_id", referencedColumnName = "id")
+    @ManyToOne
+    private CostCenter costCenterId;
 
     /**
      * @return the accNumber
@@ -396,5 +399,19 @@ public class GlAccount extends BaseEntity {
      */
     public void setRemarks(String remarks) {
         this.remarks = remarks;
+    }
+
+    /**
+     * @return the costCenterId
+     */
+    public CostCenter getCostCenterId() {
+        return costCenterId;
+    }
+
+    /**
+     * @param costCenterId the costCenterId to set
+     */
+    public void setCostCenterId(CostCenter costCenterId) {
+        this.costCenterId = costCenterId;
     }
 }

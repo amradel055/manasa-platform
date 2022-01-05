@@ -142,7 +142,8 @@
                                                              target="#{settlementDeedListMB.glBankTransactionIdSeclected}" />
                             </p:commandButton>
 
-                            <p:commandButton  class="sdeleteButtons" update="@form" icon="fa fa-remove"  title="#{userData.userDDs['DELETE']}" style="background-color: red;border-radius: 3px;margin-bottom:3px"  action="#{settlementDeedListMB.delete}" 
+                            <p:commandButton  class="sdeleteButtons" update="@form" icon="fa fa-remove"  title="#{userData.userDDs['DELETE']}" style="background-color: red;border-radius: 3px;margin-bottom:3px"  
+                                              action="#{settlementDeedListMB.delete}" 
                                               rendered="#{userData.userScreens['settlementdeed'].delete or userData.isAdmin}"
                                               >
                                 <f:setPropertyActionListener value="#{glBankTransactionTable}" target="#{settlementDeedListMB.glBankTransactionEntitySelected}" />

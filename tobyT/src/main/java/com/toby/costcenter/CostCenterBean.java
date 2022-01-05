@@ -10,8 +10,10 @@ import com.toby.businessservice.CompanyService;
 import com.toby.businessservice.CostCenterService;
 import com.toby.businessservice.GlAccountService;
 import com.toby.comparatorsVars.CostCenterCodeComparator;
+import com.toby.converter.GlAccountDTOConverter;
 import com.toby.converter.GlaccountConverter;
 import com.toby.dto.CostCenterDTO;
+import com.toby.dto.GlAccountDTO;
 import com.toby.entity.Branch;
 import com.toby.entity.CostCenter;
 import com.toby.entity.GlAccount;
@@ -53,7 +55,7 @@ public class CostCenterBean extends BaseTreeBean {
     private List<GlAccount> currentacccountList;
     private GlaccountConverter currentaccountConverter;
     private CostCenterDTO costcenterdto;
-    
+
     @EJB
     private BranchService branchService;
     @EJB
@@ -62,13 +64,12 @@ public class CostCenterBean extends BaseTreeBean {
     private CompanyService companyService;
     @EJB
     private GlAccountService glAccountService;
+
     @Override
     public String save() {
         try {
             setShowMessage(Boolean.TRUE);
             List<CostCenter> costCenterList;
-           
-            
 
             if (selectedCS.getId() == null) {
                 costCenterList = costCenterService.getAllCostCenterByBranchIdAndAccNumOrShotCode(userData.getUserBranch().getId(), selectedCS.getCode());
@@ -115,26 +116,8 @@ public class CostCenterBean extends BaseTreeBean {
             return null;
         }
     }
-    
-      public void fillLists() {
-        try {
 
-            updateGlAccounts();
-
-        } catch (Exception e) {
-            saveError(e, "costCenterBean", "fillLists");
-        }
-    }
-          public List<GlAccount> updateGlAccounts() {            
-               
-                if (getCurrentacccountList() != null) {      
-                    currentacccountList = glAccountService.getGLAccountsByBranch(selectedBranchId);
-                    
-                }
-                return currentacccountList;
-          }
-          
-       public List<GlAccount> completecurrentaccount(String query) {
+    public List<GlAccount> completecurrentaccount(String query) {
         try {
             List<GlAccount> glaccounts = getCurrentacccountList();
             if (query == null || query.trim().equals("")) {
@@ -197,11 +180,9 @@ public class CostCenterBean extends BaseTreeBean {
     @Override
     public void load() {
         try {
-                  
 
-            
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-            
+
             userData = (UserData) context.getSessionMap().get("userLogInData");
             if (userData.getIsAdmin()) {
                 //  allCompanies = companyService.getAllCompanies();
@@ -229,7 +210,7 @@ public class CostCenterBean extends BaseTreeBean {
                 }
             }
             selectedCS.setActive(Boolean.TRUE);
-                fillLists();
+            getCurrentacccountList();
         } catch (Exception e) {
             saveError(e, "CostCenterBean", "load");
         }
@@ -665,9 +646,9 @@ public class CostCenterBean extends BaseTreeBean {
      * @return the currentacccountList
      */
     public List<GlAccount> getCurrentacccountList() {
-       if(currentacccountList == null){
-       currentacccountList = new ArrayList<>();
-       }
+        if (currentacccountList == null) {
+            currentacccountList = glAccountService.getBranchAllGLAccountsActive(getUserData().getUserBranch().getId());
+        }
         return currentacccountList;
     }
 

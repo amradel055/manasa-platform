@@ -7,9 +7,11 @@ package com.toby.glaccount;
 
 import com.toby.businessservice.BranchService;
 import com.toby.businessservice.CompanyService;
+import com.toby.businessservice.CostCenterService;
 import com.toby.businessservice.CurrencyService;
 import com.toby.businessservice.GeneraljournalService;
 import com.toby.businessservice.GlAccountService;
+import com.toby.converter.CostCenterConverter;
 import com.toby.converter.GlaccountConverter;
 import com.toby.define.AccountClassEnum;
 import com.toby.define.AccountGroupEnum;
@@ -17,6 +19,7 @@ import com.toby.define.AdminUnitDependantEnum;
 import com.toby.define.AssisstantAccountDependantEnum;
 import com.toby.define.CostCenterDependantEnum;
 import com.toby.entity.Branch;
+import com.toby.entity.CostCenter;
 import com.toby.entity.Currency;
 import com.toby.entity.GlAccount;
 import com.toby.entity.TobyCompany;
@@ -64,6 +67,9 @@ public class GlAccountBean extends BaseTreeBean {
 
     private List<GlAccount> glAccountList;
     private GlaccountConverter accountConverter;
+    
+    private List<CostCenter> costCenterList;
+    private CostCenterConverter costCenterConverter;
 
     @EJB
     private BranchService branchService;
@@ -75,6 +81,8 @@ public class GlAccountBean extends BaseTreeBean {
     private CurrencyService currencyService;
     @EJB
     private GeneraljournalService generalJournalService;
+    @EJB
+    private CostCenterService costCenterService;
 
     @PostConstruct
     @Override
@@ -819,5 +827,37 @@ public class GlAccountBean extends BaseTreeBean {
      */
     public void setValidateAccountNumber(boolean validateAccountNumber) {
         this.validateAccountNumber = validateAccountNumber;
+    }
+
+    /**
+     * @return the costCenterList
+     */
+    public List<CostCenter> getCostCenterList() {
+        if(costCenterList == null){
+            costCenterList = costCenterService.getActiveSubCostCentersByBranch(getUserData().getUserBranch().getId());
+            costCenterConverter = new CostCenterConverter(costCenterList);
+        }
+        return costCenterList;
+    }
+
+    /**
+     * @param costCenterList the costCenterList to set
+     */
+    public void setCostCenterList(List<CostCenter> costCenterList) {
+        this.costCenterList = costCenterList;
+    }
+
+    /**
+     * @return the costCenterConverter
+     */
+    public CostCenterConverter getCostCenterConverter() {
+        return costCenterConverter;
+    }
+
+    /**
+     * @param costCenterConverter the costCenterConverter to set
+     */
+    public void setCostCenterConverter(CostCenterConverter costCenterConverter) {
+        this.costCenterConverter = costCenterConverter;
     }
 }
