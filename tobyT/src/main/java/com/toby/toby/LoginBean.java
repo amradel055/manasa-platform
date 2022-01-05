@@ -54,6 +54,7 @@ public class LoginBean extends Basic implements Serializable {
     /**
      * Creates a new instance of LoginBean
      */
+    
     @EJB
     private TobyUserLoginService tobyUserLoginService1;
     @EJB

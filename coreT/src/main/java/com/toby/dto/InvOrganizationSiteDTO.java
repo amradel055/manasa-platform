@@ -7,6 +7,8 @@ package com.toby.dto;
 
 import com.toby.entity.Symbol;
 import java.math.BigDecimal;
+import java.util.AbstractList;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -1045,6 +1047,9 @@ public class InvOrganizationSiteDTO extends BaseEntityDTO {
      * @return the crmEventDTOList
      */
     public List<CrmEventDTO> getCrmEventDTOList() {
+        if (crmEventDTOList == null){
+        crmEventDTOList = new ArrayList<>();
+        }
         return crmEventDTOList;
     }
 

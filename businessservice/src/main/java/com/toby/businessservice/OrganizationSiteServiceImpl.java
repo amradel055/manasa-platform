@@ -2415,10 +2415,8 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             }
         }
         if (invOrganizationSiteDTO != null) {
-            if (invOrganizationSiteDTO.getName() == null || invOrganizationSiteDTO.getName().isEmpty()) {
-                error.append("\n يجب تسجيل اسم العميل");
-            }
-            if ((invOrganizationSiteDTO.getMobile() == null || invOrganizationSiteDTO.getMobile().isEmpty()) && (invOrganizationSiteDTO.getEmail() == null || invOrganizationSiteDTO.getEmail().isEmpty())) {
+           
+            if ((invOrganizationSiteDTO.getEmail() == null || invOrganizationSiteDTO.getEmail().isEmpty())) {
                 error.append("\nيجب تسجيل بيان للاتصال ");
             }
             String vaildationContacts = vaildationContacts(invOrganizationSiteDTO, tobyUser);
@@ -2435,11 +2433,59 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
                     }
                 });
             }
+            validateSmallSaveLead(error , invOrganizationSiteDTO , tobyUser );
         } else {
             error.append("لا يوجد تفاصيل");
         }
 
         return (error == null || error.toString().isEmpty()) ? null : error.toString();
+    }
+    
+     @Override
+    public String validateSmallSaveLead(StringBuilder error , InvOrganizationSiteDTO invOrganizationSiteDTO, TobyUser tobyUser) {
+     
+        if (invOrganizationSiteDTO != null) {
+            if (invOrganizationSiteDTO.getName() == null || invOrganizationSiteDTO.getName().isEmpty()) {
+                error.append("\n يجب تسجيل اسم العميل");
+            }
+            if ((invOrganizationSiteDTO.getMobile() == null || invOrganizationSiteDTO.getMobile().isEmpty())) {
+                error.append("\nيجب تسجيل بيان للاتصال ");
+            }
+         
+        } else {
+            error.append("لا يوجد تفاصيل");
+        }
+
+        return (error == null || error.toString().isEmpty()) ? null : error.toString();
+    }
+    
+      @Override
+    public synchronized InvOrganizationSiteDTO saveSmallLead(InvOrganizationSiteDTO invOrganizationSiteDTO, TobyUser tobyUser) {
+        try {
+            StringBuilder error = new StringBuilder();     
+            validateSmallSaveLead(error ,invOrganizationSiteDTO, tobyUser);
+            if (error.toString().isEmpty()) {
+                InvOrganizationSite invOrganizationSite;
+                if (invOrganizationSiteDTO != null && (invOrganizationSiteDTO.getMsg() == null || invOrganizationSiteDTO.getMsg().isEmpty())) {
+                    invOrganizationSite = mapToEntity(invOrganizationSiteDTO, tobyUser);
+                    invOrganizationSite.setType(5);
+                    if (invOrganizationSite.getId() == null) {
+                        Integer code = getMaxGenericSerialForDetail(tobyUser.getBranchId().getId(), 5);
+                        invOrganizationSite.setCode(code.toString());
+                    }
+
+                    invOrganizationSite = dao.updateEntity(invOrganizationSite);
+                    invOrganizationSiteDTO = mapTODTO(invOrganizationSiteDTO, invOrganizationSite, true);
+                }
+            } else {
+                invOrganizationSiteDTO.setMsg(error.toString());
+            }
+        } catch (Exception e) {
+            invOrganizationSiteDTO.setMsg(e.toString());
+            dao.rollbackQuery();
+        }
+
+        return invOrganizationSiteDTO;
     }
 
     @Override

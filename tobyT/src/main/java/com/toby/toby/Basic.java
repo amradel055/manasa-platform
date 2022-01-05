@@ -49,6 +49,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.mail.Message;
@@ -67,6 +68,7 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.primefaces.context.RequestContext;
 
 /**
  *
@@ -135,6 +137,43 @@ public class Basic implements Serializable {
     private List<InvInventoryDTO> inventoryListSelected;
     private InvInventoryDTO inventoryDTOSelect;
     private String inventoryIdList;
+    
+     public boolean savedMeesage(String msg) {
+
+        FacesContext.getCurrentInstance().addMessage(null,
+                new FacesMessage(FacesMessage.SEVERITY_INFO, getUserData().getUserDDs().get("INFO"), msg));
+        return false;
+    }
+     
+     
+    public boolean errorMessage(String msg) {
+        FacesContext.getCurrentInstance().addMessage(null,
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), msg));
+        return false;
+    }
+
+   
+     
+     
+     public void errorMsg(String error) {
+        if (error != null && !error.isEmpty()) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), error));
+        }
+    }
+     
+      public void msgSave(String error) {
+        if (error != null && !error.isEmpty()) {
+            errorMsg(error);
+        }else{
+            savedMeesage(getUserData().getUserDDs().get("SAVED"));
+        }
+    }
+    
+      public void OpenDlg(String dlgvar) {
+        RequestContext context = RequestContext.getCurrentInstance();
+        context.execute("PF('" + dlgvar + "').show();");
+    }
 
     public Date findDateFromHijriFrom(Integer year, Integer month, Integer day) {
         HijrahDate date = HijrahChronology.INSTANCE.date(year, month, day);
