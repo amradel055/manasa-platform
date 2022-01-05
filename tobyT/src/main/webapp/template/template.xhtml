@@ -36,12 +36,7 @@
                     </ul>
 
                     <div class="layout-breadcrumb-options">
-                        <a href="#" title="Backup">
-                            <i class="material-icons">&#xE864;</i>
-                        </a>
-                        <a href="#" title="Bookmark">
-                            <i class="material-icons">&#xE866;</i>
-                        </a>
+
                         <a href="#" title="Logout" >
 
                             <h:form>
@@ -51,7 +46,16 @@
 
                             </h:form>
                         </a>
+                        <h:form>
+                            <p:commandButton    action="#{globalMB.showAddDialog}"   label="اضافة عميل محتمل" title="اضافة عميل محتمل"
+                                                id="addProbCustomer"   style=" width:100%;" 
+                                                />
+                              
+
+                        </h:form>
+
                     </div>
+
                 </div>
 
                 <div class="layout-content">
@@ -78,6 +82,217 @@
         <h:outputStylesheet name="css/nanoscroller.css" library="serenity-layout" />
         <h:outputStylesheet name="css/ripple.css" library="serenity-layout" />
         <h:outputStylesheet name="css/layout-#{guestPreferences.layout}.css" library="serenity-layout" />
+        <h:form>
+            <p:dialog class="dialogueCRM" header="إضافةعميل جديد"  id="dlg12add" widgetVar="dlg12add" minHeight="40">
+                 <p:fieldset legend="تفاصيل العملاء المحتملين" style="margin-bottom:20px">
+                <p:messages autoUpdate="true"  id="messages" showDetail="true" closable="true" /> 
+                <div   class="ui-g-12 ui-g-nopad" style="padding: 0px;">
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-12" style="padding: 0px;">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:99px;margin-right: 2.5%"  value="كود العميل" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 35%!important"  id="employeeCode"  value="#{globalMB.invOrganizationSiteDTO.code}">
+                                    </p:outputLabel>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:99px;margin-right: 5%"  value="الاسم" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText  style="width: 35%!important"  id="employeeName"  value="#{globalMB.invOrganizationSiteDTO.name}">
+                                    
+                                    </p:inputText>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <h:panelGroup>
+
+                                    <p:outputLabel style="width:98px; margin-right: 5%;"  value="الموبايل" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText  style="width: 35%!important"  id="mobile" validatorMessage="يجب ادخال هاتف صحيح"  value="#{globalMB.invOrganizationSiteDTO.mobile}">
+                                    
+                                    </p:inputText>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <p:outputLabel style="width:99px;margin-right: 5%"  value="البريد الالكتروني" />
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:inputText  style="width: 35%!important"  id="employeeCode2" value="#{globalMB.invOrganizationSiteDTO.email}" validatorMessage="الايميل غير صحيح">
+                                   
+                                </p:inputText>
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <h:panelGroup>
+
+                                    <p:outputLabel style="width:99px; margin-right: 5%;"  value="الشركة" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText  style="width: 35%!important"  id="companyName"  value="#{globalMB.invOrganizationSiteDTO.companyName}">
+                                    </p:inputText>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+
+
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <p:outputLabel style="width:104px;margin-right: 5%"  value="مصدر العميل" />
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:autoComplete style="width:34%!important " 
+                                                dropdown="true"
+                                                converter="#{globalMB.learnAboutCompanyfromconverter}"
+                                                value="#{globalMB.invOrganizationSiteDTO.learnAboutCompanyFrom}"
+                                                var="learnAboutCompanyfrom"
+                                                itemLabel="#{learnAboutCompanyfrom}" 
+                                                itemValue="#{learnAboutCompanyfrom}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{globalMB.completeLearnAboutCompanyfrom}"
+                                                >
+
+                                </p:autoComplete>
+                            </h:panelGroup>
+                        </div>
+                    </div>
+
+
+
+                    <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                        <h:panelGroup>
+                            <p:outputLabel style="width:99px;margin-right: 5%"  value="الفاكس" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:inputText  style="width: 35%!important"  id="fax" value="#{globalMB.invOrganizationSiteDTO.fax}">
+                            </p:inputText>
+                        </h:panelGroup>
+                    </div>
+
+
+                    <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                        <h:panelGroup>
+                            <p:outputLabel style="width:99px;margin-right: 5%"  value="الموقع الالكتروني" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:inputText  style="width: 35%!important"  id="employeeCode4"  value="#{globalMB.invOrganizationSiteDTO.urlSite}">
+                            </p:inputText>
+                        </h:panelGroup>
+                    </div>
+                   
+                 
+                  
+                    <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                        <h:panelGroup>
+                            <p:outputLabel style="width:99px;margin-right: 5%"  value="صندوق بريد" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:inputText  style="width: 35%!important"  id="employeeCode13"  value="#{globalMB.invOrganizationSiteDTO.postBox}">
+                            </p:inputText>
+                        </h:panelGroup>
+                    </div>
+                   
+                      <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                        <h:panelGroup>
+                            <p:outputLabel style="width:104px;margin-right: 5%"  value="الوظيفه" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:autoComplete style="width:34%!important " 
+                                            dropdown="true"
+                                            converter="#{globalMB.jobConverter}"
+                                            value="#{globalMB.invOrganizationSiteDTO.workTypeId}"
+                                            var="workTypeId"
+                                            itemLabel="#{workTypeId}" 
+                                            itemValue="#{workTypeId}" 
+                                            forceSelection="true" 
+                                            completeMethod="#{globalMB.completeWorkType}"
+                                            >
+
+                            </p:autoComplete>
+                        </h:panelGroup>
+                    </div>
+                         <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                        <h:panelGroup>
+                            <p:outputLabel style="width:104px;margin-right: 5%"  value="ملاحظات" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:inputText style="width:34%!important " 
+                                         value="#{globalMB.invOrganizationSiteDTO.remark}"
+                                            />
+
+                        </h:panelGroup>
+                    </div>
+                     <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                        <h:panelGroup>
+                            <p:outputLabel style="width:104px;margin-right: 5%"  value="حالة العميل" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:autoComplete style="width:34%!important " 
+                                            dropdown="true"
+                                            converter="#{globalMB.leadStatusDTOconverter}"
+                                            value="#{globalMB.invOrganizationSiteDTO.leadStatus}"
+                                            var="leadStatus"
+                                            itemLabel="#{leadStatus}" 
+                                            itemValue="#{leadStatus}" 
+                                            forceSelection="true" 
+                                            completeMethod="#{globalMB.completeLeadStatus}"
+                                            disabled="true" 
+                                            >
+
+                            </p:autoComplete>
+                        </h:panelGroup>
+                    </div>
+                    <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                        <h:panelGroup>
+                            <h:panelGroup>
+                                <p:outputLabel style="width:104px;margin-right: 5%"  value="المتابع له" />
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:autoComplete style="width:34%!important " 
+                                                dropdown="true"
+                                                converter="#{globalMB.employeeDTOConverter}"
+                                                value="#{globalMB.invOrganizationSiteDTO.assignedTo}"
+                                                var="employee"
+                                                itemLabel="#{employee}" 
+                                                itemValue="#{employee}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{globalMB.completeEmployeeDTO}"
+                                                disabled="true"
+                                                >
+                                </p:autoComplete>
+                            </h:panelGroup>
+                        </h:panelGroup>
+                    </div>
+                </div>
+            </p:fieldset>
+                  <p:commandButton   class="saveButton"  
+                                       id="saveB" 
+                                       title="#{userData.userDDs['SAVE']}"
+                                       value="#{userData.userDDs['SAVE']}" 
+                                       style="color: #fff;"
+                                       action="#{globalMB.saveLead()}" 
+                                       update="@form" />
+
+            </p:dialog>
+        </h:form>
     </h:body>
+
 
 </html>

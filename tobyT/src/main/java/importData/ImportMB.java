@@ -127,7 +127,7 @@ public class ImportMB extends Basic implements Serializable {
 
     private Integer moduleId = 1;
     private Integer level;
-
+    private Integer progress;
     public ImportMB() {
     }
 
@@ -1438,6 +1438,20 @@ public class ImportMB extends Basic implements Serializable {
         journalDetails.setCompanyId(getUserData().getCompany());
 
         return journalDetails;
+    }
+
+    /**
+     * @return the progress
+     */
+    public Integer getProgress() {
+        return progress;
+    }
+
+    /**
+     * @param progress the progress to set
+     */
+    public void setProgress(Integer progress) {
+        this.progress = progress;
     }
 
 }

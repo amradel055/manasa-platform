@@ -210,5 +210,9 @@ public interface OrganizationSiteService {
     public Integer getNumberOfNewCustomerByBranchId(Integer branchId, Integer assignedTo, Integer createdBy, Date dateFrom, Date dateTo);
     
     public ChartDTO getCountCustomerPerMonth(Integer branchId, Integer type, Integer dateFilter);
+    
+    public String validateSmallSaveLead(StringBuilder error , InvOrganizationSiteDTO invOrganizationSiteDTO, TobyUser tobyUser);
+    
+    public InvOrganizationSiteDTO saveSmallLead(InvOrganizationSiteDTO invOrganizationSiteDTO, TobyUser tobyUser);
 
 }

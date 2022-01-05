@@ -146,7 +146,7 @@ public abstract class CrmBasicDataForm extends BaseFormBean {
         return error;
     }
 
-    public String saveEvent() {
+    public String saveEvent() { 
         if (!getEmployeeIsSupervisor()) {
             getCrmEventDTO().setAssignedTo(getUserData().getEmployeeDTODefault());
         }
