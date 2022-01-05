@@ -409,7 +409,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     public void validateNetColumn(InvDetailDTO invPurchaseInvoiceDetailsValidate) {
         try {
             invPurchaseInvoiceDetailsValidate.setMsg(null);
-            invPurchaseInvoiceDetailsValidate.setCost((invPurchaseInvoiceDetailsValidate.getNet().divide(invPurchaseInvoiceDetailsValidate.getQuantity(), 3, RoundingMode.HALF_UP)).setScale(3, RoundingMode.HALF_UP).stripTrailingZeros());
+            invPurchaseInvoiceDetailsValidate.setCost(new BigDecimal((invPurchaseInvoiceDetailsValidate.getNet().divide(invPurchaseInvoiceDetailsValidate.getQuantity(), 3, RoundingMode.HALF_UP)).setScale(3, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString() ));
             invPurchaseInvoiceDetailsValidate = invGlobalService.validateNetColumn(invPurchaseInvoiceDetailsValidate);
             afterValidation(invPurchaseInvoiceDetailsValidate);
 //            addInvDetail();
@@ -1050,7 +1050,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         if (invDetailDTO.getDiscount() != null) {
             setCheckDiscountValue(true);
             BigDecimal discount = (invDetailDTO.getTotalBeforeDiscount()).multiply(invDetailDTO.getDiscount().divide(new BigDecimal(100)));
-            invDetailDTO.setValueRowDiscount(discount.setScale(3, RoundingMode.HALF_UP).stripTrailingZeros());
+            invDetailDTO.setValueRowDiscount(new BigDecimal(discount.setScale(3, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
             invDetailDTO.setNet(invDetailDTO.getTotalBeforeDiscount().subtract(discount));
 
         } else {
