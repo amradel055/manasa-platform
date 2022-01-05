@@ -103,7 +103,7 @@ public class Basic implements Serializable {
 
     private ExternalContext context;
 
-    private UserData userData;
+    private UserData getUserData;
 
     private String ScreenMode;
 
@@ -649,17 +649,17 @@ public class Basic implements Serializable {
      * @return the userData
      */
     public UserData getUserData() {
-        if (userData == null) {
+        if (getUserData == null) {
             setUserData((UserData) getContext().getSessionMap().get("userLogInData"));
         }
-        return userData;
+        return getUserData;
     }
 
     /**
      * @param userData the userData to set
      */
     public void setUserData(UserData userData) {
-        this.userData = userData;
+        this.getUserData = userData;
     }
 
     /**

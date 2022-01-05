@@ -94,12 +94,12 @@ public class GlAccountBean extends BaseTreeBean {
         load();
 
         allCompanies = companyService.getAllCompanies();
-        if (userData.getIsAdmin()) {
+        if (getUserData().getIsAdmin()) {
             branchList = branchService.getAllBranchByCompanyId(allCompanies.get(0).getId());
             currencyList = currencyService.getAllCurrencyByCompanyId(allCompanies.get(0).getId());
             fillAccountsByCompany();
         } else {
-            currencyList = currencyService.getAllCurrencyByCompanyId(userData.getCompany().getId());
+            currencyList = currencyService.getAllCurrencyByCompanyId(getUserData().getCompany().getId());
         }
 
         selectedAcc.setLevelAcc(1);
@@ -113,20 +113,20 @@ public class GlAccountBean extends BaseTreeBean {
     public void load() {
         try {
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-        userData = (UserData) context.getSessionMap().get("userLogInData");
+        setUserData((UserData) context.getSessionMap().get("userLogInData"));
         fetchedAccount = new GlAccount();
 
-        setGlAccountList(accountService.getBranchGLAccountsActiveByBranch(userData.getUserBranch().getId()));
+        setGlAccountList(accountService.getBranchGLAccountsActiveByBranch(getUserData().getUserBranch().getId()));
         glAccountLocalList = getGlAccountList();
         accountConverter = new GlaccountConverter(glAccountLocalList);
 
-        if (userData.getIsAdmin()) {
+        if (getUserData().getIsAdmin()) {
             accountHierarchy = loadAllCostCenters();
             fillAccountsByCompany();
         } else {
-            selectedBranchId = userData.getSelectedBranch();
-            selectedCompany = userData.getCompany();
-            accountHierarchy = loadAccountForBranch(userData.getSelectedBranch());
+            selectedBranchId = getUserData().getSelectedBranch();
+            selectedCompany = getUserData().getCompany();
+            accountHierarchy = loadAccountForBranch(getUserData().getSelectedBranch());
             fillAccountsByBranch();
         }
         setShowMessage(Boolean.FALSE);
@@ -141,7 +141,7 @@ public class GlAccountBean extends BaseTreeBean {
     public void fillAccountsByBranch() {
         try {
         if (selectedAcc != null && selectedAcc.getAccGroup() != null) {
-            allAccounts = accountService.getGLAccountsForBranchForMainAccounts(userData.getUserBranch().getId(), selectedAcc.getAccGroup());
+            allAccounts = accountService.getGLAccountsForBranchForMainAccounts(getUserData().getUserBranch().getId(), selectedAcc.getAccGroup());
         } else {
             allAccounts = new ArrayList<>();
         }
@@ -153,7 +153,7 @@ public class GlAccountBean extends BaseTreeBean {
     public void fillAccountsByCompany() {
         try {
         if (selectedAcc != null && selectedAcc.getAccGroup() != null) {
-            allAccounts = accountService.getCompanyGLAccountsForMainAccounts(userData.getCompany().getId(), selectedAcc.getAccGroup());
+            allAccounts = accountService.getCompanyGLAccountsForMainAccounts(getUserData().getCompany().getId(), selectedAcc.getAccGroup());
         } else {
             allAccounts = new ArrayList<>();
         }
@@ -171,8 +171,8 @@ public class GlAccountBean extends BaseTreeBean {
             if (selectedCompany == null) {
                 selectedAcc.setCompanyId(companyService.findCompany(selectedCompanyId));
             }
-            selectedAcc.setBranchId(branchService.findBranch(userData.getSelectedBranch()));
-            selectedAcc.setModifiedBy(userData.getUser());
+            selectedAcc.setBranchId(branchService.findBranch(getUserData().getSelectedBranch()));
+            selectedAcc.setModifiedBy(getUserData().getUser());
             if (selectedParentId == null) {
                 selectedAcc.setLevelAcc((1));
             } else {
@@ -186,21 +186,21 @@ public class GlAccountBean extends BaseTreeBean {
 
             List<GlAccount> glAccounts;
             if (selectedAcc.getId() == null) {
-                glAccounts = accountService.getAllGlAccountsByBranchIdAndAccNumOrShotCode(userData.getUserBranch().getId(), selectedAcc.getAccNumber(), selectedAcc.getShotCode());
+                glAccounts = accountService.getAllGlAccountsByBranchIdAndAccNumOrShotCode(getUserData().getUserBranch().getId(), selectedAcc.getAccNumber(), selectedAcc.getShotCode());
             } else {
-                glAccounts = accountService.getAllGlAccountsByBranchIdAndAccNumOrShotCode(userData.getUserBranch().getId(), selectedAcc.getAccNumber(), selectedAcc.getShotCode(), selectedAcc.getId());
+                glAccounts = accountService.getAllGlAccountsByBranchIdAndAccNumOrShotCode(getUserData().getUserBranch().getId(), selectedAcc.getAccNumber(), selectedAcc.getShotCode(), selectedAcc.getId());
             }
             if (glAccounts == null || glAccounts.isEmpty()) {
                 accountService.addGlAccount(selectedAcc);
                 init();
                 selectedAcc = new GlAccount();
                 setShowMessage(Boolean.TRUE);
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, userData.getUserDDs().get("INFO"), userData.getUserDDs().get("GLACCOUNT_SAVED")));
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, getUserData().getUserDDs().get("INFO"), getUserData().getUserDDs().get("GLACCOUNT_SAVED")));
             } else {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, userData.getUserDDs().get("ERROR"), "رقم الحساب او رقم الحساب المختصر موجود من قبل!"));
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "رقم الحساب او رقم الحساب المختصر موجود من قبل!"));
             }
         } catch (Exception e) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, userData.getUserDDs().get("ERROR"), userData.getUserDDs().get("GLACCOUNT_ERROR")));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), getUserData().getUserDDs().get("GLACCOUNT_ERROR")));
             e.printStackTrace();
         }
         return "";
@@ -229,15 +229,15 @@ public class GlAccountBean extends BaseTreeBean {
             selectedAcc = (GlAccount) selectedAccount.getData();
             if (selectedAcc.getChildAccounts() != null && !selectedAcc.getChildAccounts().isEmpty()) {
                 setShowMessage(Boolean.TRUE);
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, userData.getUserDDs().get("ERROR"), userData.getUserDDs().get("GLACCOUNT_DELETE_HAS_CHILD")));
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), getUserData().getUserDDs().get("GLACCOUNT_DELETE_HAS_CHILD")));
             } else {
                 accountService.deleteGlAccount(selectedAcc);
                 init();
                 setShowMessage(Boolean.TRUE);
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, userData.getUserDDs().get("INFO"), userData.getUserDDs().get("GLACCOUNT_DELETED")));
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, getUserData().getUserDDs().get("INFO"), getUserData().getUserDDs().get("GLACCOUNT_DELETED")));
             }
         } catch (Exception e) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, userData.getUserDDs().get("ERROR"), userData.getUserDDs().get("GLACCOUNT_DELETE_ERROR")));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), getUserData().getUserDDs().get("GLACCOUNT_DELETE_ERROR")));
             e.printStackTrace();
         }
         } catch (Exception e) {
@@ -262,7 +262,7 @@ public class GlAccountBean extends BaseTreeBean {
             newelectedAcc.setAssistantAcc(parentAccount.getAssistantAcc());
             newelectedAcc.setStatus(true);
             selectedParentId = parentAccount.getId();
-            newelectedAcc.setCreatedBy(userData.getUser());
+            newelectedAcc.setCreatedBy(getUserData().getUser());
             if (parentAccount.getId() == null) {
                 newelectedAcc.setLevelAcc((1));
             } else {
@@ -273,7 +273,7 @@ public class GlAccountBean extends BaseTreeBean {
         } else {
             selectedAcc = new GlAccount();
             selectedAcc.setBranchId(selectedBranch);
-            selectedAcc.setCreatedBy(userData.getUser());
+            selectedAcc.setCreatedBy(getUserData().getUser());
             selectedAcc.setLevelAcc((1));
             selectedAcc.setStatus(true);
         }
@@ -320,7 +320,7 @@ public class GlAccountBean extends BaseTreeBean {
             fillAccountsByBranch();
             visibalitiy = true;
         } else {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, userData.getUserDDs().get("ERROR"), ("يجب اختيار حساب ")));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), ("يجب اختيار حساب ")));
             setShowMessage(true);
         }
         } catch (Exception e) {
@@ -482,11 +482,11 @@ public class GlAccountBean extends BaseTreeBean {
         for (GlAccount ga : glAccountList) {
             if (ga.getAccNumber().equals(selectedAcc.getAccNumber())) {
                 setShowMessage(Boolean.TRUE);
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, userData.getUserDDs().get("ERROR"), ("هذا الحساب موجود ")));
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), ("هذا الحساب موجود ")));
                 setValidateAccountNumber(false);
                 fetchedAccount = new GlAccount();
                 glAccountSelected = new GlAccount();
-                fetchedAccount = accountService.findGlAccountbyBranchIdAndAccountNumber(userData.getUserBranch().getId(), selectedAcc.getAccNumber());
+                fetchedAccount = accountService.findGlAccountbyBranchIdAndAccountNumber(getUserData().getUserBranch().getId(), selectedAcc.getAccNumber());
                 glAccountSelected = fetchedAccount;
                 searchForGlAccount();
                 visibalitiy = true;
@@ -859,5 +859,23 @@ public class GlAccountBean extends BaseTreeBean {
      */
     public void setCostCenterConverter(CostCenterConverter costCenterConverter) {
         this.costCenterConverter = costCenterConverter;
+    }
+
+    /**
+     * @return the userData
+     */
+    public UserData getUserData() {
+        if(userData == null){
+           ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+            userData = (UserData) context.getSessionMap().get("userLogInData");
+        }
+        return userData;
+    }
+
+    /**
+     * @param userData the userData to set
+     */
+    public void setUserData(UserData userData) {
+        this.userData = userData;
     }
 }
