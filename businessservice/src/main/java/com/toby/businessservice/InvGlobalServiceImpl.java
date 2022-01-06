@@ -302,6 +302,16 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                 cost = ((detailEntity.getQuantityOfOneUnit().subtract(new BigDecimal(8))).multiply(new BigDecimal(25))).add(new BigDecimal(150));
             }
         } else if (price != null
+                && (price.compareTo(new BigDecimal(120)) == 0)) {
+            if (detailEntity.getQuantityOfOneUnit() != null && detailEntity.getQuantityOfOneUnit().compareTo(new BigDecimal(5)) == -1) {
+                cost = detailEntity.getQuantityOfOneUnit().multiply(new BigDecimal(20));
+            } else if (detailEntity.getQuantityOfOneUnit() != null && detailEntity.getQuantityOfOneUnit().compareTo(new BigDecimal(4)) == 1
+                    && detailEntity.getQuantityOfOneUnit() != null && detailEntity.getQuantityOfOneUnit().compareTo(new BigDecimal(9)) == -1) {
+                cost = new BigDecimal(120);
+            } else {
+                cost = ((detailEntity.getQuantityOfOneUnit().subtract(new BigDecimal(8))).multiply(new BigDecimal(20))).add(new BigDecimal(120));
+            }
+        } else if (price != null
                 && (price.compareTo(new BigDecimal(35)) == 0 || price.compareTo(new BigDecimal(200)) == 0)) {
             if (detailEntity.getQuantityOfOneUnit() != null && detailEntity.getQuantityOfOneUnit().compareTo(new BigDecimal(3)) == -1) {
                 cost = detailEntity.getQuantityOfOneUnit().multiply(new BigDecimal(35));

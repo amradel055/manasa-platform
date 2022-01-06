@@ -109,9 +109,9 @@ public abstract class BaseGlBankListBean extends BaseListBean {
 
             glBankTransactionDetailEntity.setId(transactionDetail.getId() != null ? transactionDetail.getId() : null);
             glBankTransactionDetailEntity.setCostCenterId(transactionDetail.getCostCenterId() != null ? transactionDetail.getCostCenterId().getId() : null);
-            glBankTransactionDetailEntity.setCostCenter(transactionDetail.getCostCenterId() != null ? transactionDetail.getCostCenterId() : null);
+//            glBankTransactionDetailEntity.setCostCenter(transactionDetail.getCostCenterId() != null ? transactionDetail.getCostCenterId() : null);
             glBankTransactionDetailEntity.setAccountCreditId(transactionDetail.getAccountCreditId() != null ? transactionDetail.getAccountCreditId().getId() : null);
-            glBankTransactionDetailEntity.setGlAccount(transactionDetail.getAccountDebitId() != null ? transactionDetail.getAccountDebitId() : null);
+//            glBankTransactionDetailEntity.setGlAccount(transactionDetail.getAccountDebitId() != null ? transactionDetail.getAccountDebitId() : null);
             glBankTransactionDetailEntity.setAccountDebitId(transactionDetail.getAccountDebitId() != null ? transactionDetail.getAccountDebitId().getId() : null);
             glBankTransactionDetailEntity.setAdminUnitId(transactionDetail.getAdminUnitId() != null ? transactionDetail.getAdminUnitId().getId() : null);
             glBankTransactionDetailEntity.setGlAdminUnit(transactionDetail.getAdminUnitId() != null ? transactionDetail.getAdminUnitId() : null);

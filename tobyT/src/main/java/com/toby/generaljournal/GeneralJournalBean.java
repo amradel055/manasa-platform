@@ -5,6 +5,7 @@
  */
 package com.toby.generaljournal;
 
+import com.toby.bean.JournalDocumentArrangedReportBean;
 import com.toby.businessservice.AccountsSystemSettingsService;
 import com.toby.businessservice.BranchService;
 import com.toby.businessservice.CloseAndSaveMonthService;
@@ -34,7 +35,6 @@ import com.toby.entity.Symbol;
 import com.toby.toby.BaseFormBean;
 import com.toby.toby.UserData;
 import com.toby.reports.GeneralJournalShowBean;
-import com.toby.report.entity.JournalDocumentArrangedReportBean;
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;

@@ -90,7 +90,7 @@
                     <div class="ui-g-12 ui-xl-12">
                         <div class="ui-g-6 ui-xl-6">
                             <p:autoComplete style="width: 85%" id="running_GlAccount_ID" rendered="#{not SettlementDeedFormMB.organizationSiteView}"
-
+                    
                                             dropdown="true"
                                             converter="#{SettlementDeedFormMB.runningAccountDTOConverter}"
                                             value="#{SettlementDeedFormMB.glBankTransactionEntity.costAccount}"
@@ -100,8 +100,8 @@
                                             forceSelection="false" 
                                             completeMethod="#{SettlementDeedFormMB.completeRunningGlAccount}" >
                             </p:autoComplete>
-                        </div>
-                        <div class="ui-g-6 ui-xl-6">
+                </div>
+                <div class="ui-g-6 ui-xl-6">
                             <p:outputLabel style="width: 65px" value="رقم الحساب الدائن" rendered="#{not SettlementDeedFormMB.organizationSiteView}"/>
 
                         </div>
@@ -604,26 +604,27 @@
                         <p:commandButton  class="saveButton" id="saveB" 
                                           title="#{userData.userDDs['SAVE']}" 
                                           value="#{userData.userDDs['SAVE']}" 
-                                          style=""
+                                          update="@form"
                                           action="#{SettlementDeedFormMB.save()}"
                                           rendered="#{(userData.userScreens['settlementdeed'].add or userData.userScreens['settlementdeed'].edit) or userData.isAdmin}"
                                           />
                         <p:commandButton  class="newButton" title="#{userData.userDDs['RESET']}" 
-                                          immediate="true"
+                                          immediate="true" update="@form"
                                           id="newA"
                                           style=""
                                           value="#{userData.userDDs['NEW']}"
-                                          actionListener="#{SettlementDeedFormMB.loadThePageAgain}"   />
+                                          actionListener="#{SettlementDeedFormMB.reset()}"   />
 
+                    
+                        
                         <p:commandButton class="printButtons"
-                                         ajax="false" onclick="someFunc();
-                                                 form.target = '_blank';" 
-                                         style=""
+                                         ajax="false" 
+                                         onclick="form.target = '_blank'" 
                                          title="#{userData.userDDs['PRINT']}"
-                                         value="#{userData.userDDs['PRINT']}" actionListener="#{SettlementDeedFormMB.exportPDF}" 
+                                         value="#{userData.userDDs['PRINT']}" 
+                                         actionListener="#{SettlementDeedFormMB.exportPDFVoutcher}" 
                                          rendered="#{ SettlementDeedFormMB.glBankTransactionEntity.id gt 0}"/>
-
-
+                        
 
                         <p:commandButton  class="closeButton" title="#{userData.userDDs['BACK']}" 
                                           immediate="true"

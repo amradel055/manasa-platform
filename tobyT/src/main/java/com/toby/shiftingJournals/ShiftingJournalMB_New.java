@@ -2554,7 +2554,7 @@ public class ShiftingJournalMB_New extends GeneralJournalBean {
      */
     public List<CostCenterDTO> getCostCenterDTOList() {
         if (costCenterDTOList == null) {
-            costCenterDTOList = costCenterService.getAllCostCenterDTOList(getUserData().getUser());
+            costCenterDTOList = costCenterService.getAllCostCenterDTOList(getUserData().getUserBranch().getId());
             setCostCenterDTOConverter(new CostCenterDTOConverter(costCenterDTOList));
         }
         return costCenterDTOList;

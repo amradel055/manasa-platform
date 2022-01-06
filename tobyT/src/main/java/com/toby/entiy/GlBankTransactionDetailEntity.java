@@ -5,10 +5,10 @@
  */
 package com.toby.entiy;
 
+import com.toby.dto.CostCenterDTO;
+import com.toby.dto.GlAccountDTO;
 import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.entity.BaseEntity;
-import com.toby.entity.CostCenter;
-import com.toby.entity.GlAccount;
 import com.toby.entity.GlAdminUnit;
 import com.toby.entity.GlBank;
 import com.toby.entity.Symbol;
@@ -39,10 +39,10 @@ public class GlBankTransactionDetailEntity extends BaseEntity {
     private String accountName;
     private String organizationsiteName;
     private Integer accountNumber;
-    private GlAccount glAccount;
-    private GlAccount glAccountBak;
-    private CostCenter costCenter;
-    private CostCenter costCenterBak;
+    private GlAccountDTO glAccount;
+    private GlAccountDTO glAccountBak;
+    private CostCenterDTO costCenter;
+    private CostCenterDTO costCenterBak;
     private GlAdminUnit glAdminUnit;
     private GlAdminUnit glAdminUnitBak;
     private Symbol glItems;
@@ -194,28 +194,28 @@ public class GlBankTransactionDetailEntity extends BaseEntity {
     /**
      * @return the glAccount
      */
-    public GlAccount getGlAccount() {
+    public GlAccountDTO getGlAccount() {
         return glAccount;
     }
 
     /**
      * @param glAccount the glAccount to set
      */
-    public void setGlAccount(GlAccount glAccount) {
+    public void setGlAccount(GlAccountDTO glAccount) {
         this.glAccount = glAccount;
     }
 
     /**
      * @return the costCenter
      */
-    public CostCenter getCostCenter() {
+    public CostCenterDTO getCostCenter() {
         return costCenter;
     }
 
     /**
      * @param costCenter the costCenter to set
      */
-    public void setCostCenter(CostCenter costCenter) {
+    public void setCostCenter(CostCenterDTO costCenter) {
         this.costCenter = costCenter;
     }
 
@@ -236,28 +236,28 @@ public class GlBankTransactionDetailEntity extends BaseEntity {
     /**
      * @return the glAccountBak
      */
-    public GlAccount getGlAccountBak() {
+    public GlAccountDTO getGlAccountBak() {
         return glAccountBak;
     }
 
     /**
      * @param glAccountBak the glAccountBak to set
      */
-    public void setGlAccountBak(GlAccount glAccountBak) {
+    public void setGlAccountBak(GlAccountDTO glAccountBak) {
         this.glAccountBak = glAccountBak;
     }
 
     /**
      * @return the costCenterBak
      */
-    public CostCenter getCostCenterBak() {
+    public CostCenterDTO getCostCenterBak() {
         return costCenterBak;
     }
 
     /**
      * @param costCenterBak the costCenterBak to set
      */
-    public void setCostCenterBak(CostCenter costCenterBak) {
+    public void setCostCenterBak(CostCenterDTO costCenterBak) {
         this.costCenterBak = costCenterBak;
     }
 
@@ -452,5 +452,31 @@ public class GlBankTransactionDetailEntity extends BaseEntity {
     public void setBankCommition(BigDecimal bankCommition) {
         this.bankCommition = bankCommition;
     }
+    
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (index != null ? index.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof GlBankTransactionDetailEntity)) {
+            return false;
+        }
+        GlBankTransactionDetailEntity other = (GlBankTransactionDetailEntity) object;
+        if ((this.index == null && other.index != null) || (this.index != null && !this.index.equals(other.index))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "toby.com.entity.GlBankTransactionDetailEntity[ id=" + id + " ]";
+    }
+
 
 }

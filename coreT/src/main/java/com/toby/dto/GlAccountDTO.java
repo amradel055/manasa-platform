@@ -35,6 +35,7 @@ public class GlAccountDTO extends BaseEntityDTO {
     private Integer currencyId;
     private GlAccountDTO parentAcc;
     private Integer parentAccId;
+    private Integer costCenterId;
 
     public Integer getAccNumber() {
         return accNumber;
@@ -219,6 +220,20 @@ public class GlAccountDTO extends BaseEntityDTO {
      */
     public void setParentAccId(Integer parentAccId) {
         this.parentAccId = parentAccId;
+    }
+
+    /**
+     * @return the costCenterId
+     */
+    public Integer getCostCenterId() {
+        return costCenterId;
+    }
+
+    /**
+     * @param costCenterId the costCenterId to set
+     */
+    public void setCostCenterId(Integer costCenterId) {
+        this.costCenterId = costCenterId;
     }
 
 }

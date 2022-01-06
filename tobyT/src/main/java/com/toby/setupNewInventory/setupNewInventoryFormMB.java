@@ -268,7 +268,7 @@ public class setupNewInventoryFormMB extends BaseFormBean implements Serializabl
      */
     public List<CostCenterDTO> getCostCenterDTOList() {
         if (costCenterDTOList == null || costCenterDTOList.isEmpty()) {
-            costCenterDTOList = costCenterService.getAllCostCenterDTOList(getUserData().getUser());
+            costCenterDTOList = costCenterService.getActiveSubCostCentersByBranchDTO(getUserData().getUserBranch().getId());
             costCenterDTOConverter = new CostCenterDTOConverter(costCenterDTOList);
         }
         return costCenterDTOList;

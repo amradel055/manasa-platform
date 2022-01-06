@@ -74,7 +74,7 @@ public class GlBankTransactionDetail extends BaseEntity {
     @Column(name = "rate_bank_to")
     private BigDecimal rateBankTo;
     
-    @Transient
+    @Column(name = "bank_commition")
     private BigDecimal bankCommition;
     
     

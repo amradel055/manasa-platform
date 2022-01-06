@@ -5,15 +5,19 @@
  */
 package com.toby.businessservice;
 
+
+import com.toby.bean.JournalDocumentArrangedReportBean;
 import com.toby.dto.TobyUserDTO;
 import com.toby.entity.TobyUser;
 import com.toby.core.GenericDAO;
 import com.toby.dto.GeneralJournalDTO;
+import com.toby.dto.GeneralJournalDetailsDTO;
 import com.toby.dto.GlYearDTO;
 import com.toby.dto.SymbolDTO;
 import com.toby.entity.GeneralJournal;
 import com.toby.entity.GlYear;
 import com.toby.entity.Symbol;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,6 +31,8 @@ import javax.ejb.Stateless;
  *
  * @author AhmedEssam
  */
+
+
 @Stateless
 public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
 
@@ -34,6 +40,8 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
     private GenericDAO dao;
     @EJB
     private GeneraljournalDetailsService generaljournalDetailsService;
+    @EJB
+    private GeneraljournalDetailsServiceDTO generaljournalDetailsServiceDTO;
 
     @Override
     public Long getTotalGeneralJournal(GlYearDTO year, Integer branchId, Map<String, Object> filters) {
@@ -448,4 +456,44 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
     public GeneralJournal convertFromDTO(GeneralJournalDTO dTO, TobyUser tobyUser) {
         return mapFromDTO(dTO, tobyUser);
     }
+
+    public List<JournalDocumentArrangedReportBean> printVoutcher(Integer generalJournalId) {
+        List<JournalDocumentArrangedReportBean> list = new ArrayList<>();
+        if (generalJournalId != null) {
+            GeneralJournal entity = dao.findEntityById(GeneralJournal.class, generalJournalId);
+            List<GeneralJournalDetailsDTO> detailsList = generaljournalDetailsServiceDTO.getAllJournalDetailsForJorunal(generalJournalId);
+            for (GeneralJournalDetailsDTO generalJournalDetails : detailsList) {
+                JournalDocumentArrangedReportBean journalDocumentArrangedReportBean = new JournalDocumentArrangedReportBean();
+                journalDocumentArrangedReportBean.setJournalNum(entity.getSerial());
+                journalDocumentArrangedReportBean.setDocumentNum(entity.getGeneralDecument());
+                journalDocumentArrangedReportBean.setJournalDate(entity.getGeneralData());
+                journalDocumentArrangedReportBean.setUser(entity.getCreatedBy().getName());
+                journalDocumentArrangedReportBean.setGeneralType(entity.getGeneralType() != null ? entity.getGeneralType().getName() : null);
+//                if (summaryDebit.compareTo(summaryCredit) == 0) {
+//                    journalDocumentArrangedReportBean.setPosting("موزون");
+//                } else {
+//                    journalDocumentArrangedReportBean.setPosting("غير موزون");
+//                }
+                if (entity != null && entity.isPost_flag()) {
+                    journalDocumentArrangedReportBean.setPostFlag("مرحل");
+
+                } else {
+                    journalDocumentArrangedReportBean.setPostFlag("غير مرحل");
+                }
+                journalDocumentArrangedReportBean.setRemarks(entity.getGeneralStatement());
+                journalDocumentArrangedReportBean.setAccountName(generalJournalDetails.getGlACCOUNTId() != null ? (generalJournalDetails.getGlACCOUNTId().getName() != null ? generalJournalDetails.getGlACCOUNTId().getName() : null) : null);
+                journalDocumentArrangedReportBean.setAccountNumber(generalJournalDetails.getGlACCOUNTId() != null ? (generalJournalDetails.getGlACCOUNTId().getAccNumber() != null ? generalJournalDetails.getGlACCOUNTId().getAccNumber() : null) : null);
+                journalDocumentArrangedReportBean.setAdminUnitName(generalJournalDetails.getAdminUnitId() != null ? (generalJournalDetails.getAdminUnitId().getName() != null ? generalJournalDetails.getAdminUnitId().getName() : null) : null);
+                journalDocumentArrangedReportBean.setCostCenterName(generalJournalDetails.getCostCenterId() != null ? (generalJournalDetails.getCostCenterId().getName() != null ? generalJournalDetails.getCostCenterId().getName() : null) : null);
+                journalDocumentArrangedReportBean.setCreditAmount(generalJournalDetails.getCreditamount() != null ? generalJournalDetails.getCreditamount() : BigDecimal.ZERO);
+                journalDocumentArrangedReportBean.setDebitAmount(generalJournalDetails.getDebitAmount() != null ? generalJournalDetails.getDebitAmount() : BigDecimal.ZERO);
+                journalDocumentArrangedReportBean.setDiscribtion(generalJournalDetails.getDiscribtion() != null ? generalJournalDetails.getDiscribtion() : null);
+                journalDocumentArrangedReportBean.setCreationDate(generalJournalDetails.getCreatedDate() != null ? generalJournalDetails.getCreatedDate() : null);
+                list.add(journalDocumentArrangedReportBean);
+            }
+            return list;
+        }
+        return null;
+    }
+
 }

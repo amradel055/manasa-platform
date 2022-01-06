@@ -122,7 +122,7 @@ public interface GlAccountService {
 
     public List<GlAccount> getBranchGLAccountsActiveWithException(Integer branchId);
 
-    public List<GlAccountDTO> getBranchGLAccountsActiveDTO(Integer id, TobyUser tobyUser);
+    public List<GlAccountDTO> getBranchGLAccountsActiveDTO(Integer branchId);
 
     public Map<Integer, GlAccount> getAllGlAccountMap();
 }
