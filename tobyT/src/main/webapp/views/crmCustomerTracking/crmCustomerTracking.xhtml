@@ -26,7 +26,7 @@
 
                 <div class="ui-g-12 ui-md-6" style="padding: 0px;">
                     <h:panelGroup>
-                        <p:outputLabel style="width:104px;margin-right: 5%"  value="العميل" />
+                        <p:outputLabel style="width:104px;margin-right: 5%; margin-left: 5%"  value="العميل" />
                     </h:panelGroup>
                     <h:panelGroup>
                         <p:autoComplete style="width:34%!important " 
@@ -39,14 +39,15 @@
                                         forceSelection="true" 
                                         completeMethod="#{CustomerTrackingMB.completeCustomerDTO}"
                                         >
-                            <p:ajax event="itemSelect" listener="#{CustomerTrackingMB.search()}" update="invInvoicePurchaseTable2"  />
+                            <p:ajax event="itemSelect" listener="#{CustomerTrackingMB.search}" update="invInvoicePurchaseTable2"  />
                         </p:autoComplete>
                     </h:panelGroup>
                 </div>
 
             </p:fieldset>
-            <p:fieldset   legend="بحث بالعميل" >
-
+            <p:fieldset   legend="اوامر الشغل الخاصه بالعميل" >
+            
+                
 
                 <p:dataTable id="invInvoicePurchaseTable2"
                              draggableColumns="true"
@@ -57,12 +58,16 @@
                              value="#{CustomerTrackingMB.invInvoiceList}"
                              paginator="true"
                              rows="10" 
+                             selectionMode="single"
+                             rowKey="#{invInvoicePurchaseTable2.serial}"
+                             selection="#{CustomerTrackingMB.invInvoiceDTOSelected}" 
                              paginatorTemplate="{CurrentPageReport} {FirstPageLink}
                              {PreviousPageLink} {PageLinks} {NextPageLink}
                              {LastPageLink} {RowsPerPageDropdown}" 
                              emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" 
+                             
                              >
-
+                    <p:ajax event="rowSelect" listener="#{CustomerTrackingMB.searchProductionStagesReport}" update="@form"  />
                     <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px; text-align: right"  filterStyle="display:none" 
                                filterBy="#{invInvoicePurchaseTable2.serial}" 
                                filterMatchMode="contains" 
@@ -181,6 +186,53 @@
                 </p:confirmDialog>
 
             </p:fieldset>
+              <p:fieldset  legend="البيانات"   style="margin-bottom:20px">
+                    <p:dataTable  id="table"
+                                  var="data"
+                                  value="#{CustomerTrackingMB.invoiceProductionStagesReports}"
+                                  draggableColumns="true"
+                                  paginator="true"
+                                  widgetVar="data" 
+                                  rowIndexVar="index" 
+                                  emptyMessage="EMPTY_TABLE"
+                                  sortBy="#{data.invInvoice}"
+                                  rows="20"
+                                  >
+                        <p:headerRow>
+                            <p:column colspan="1" style="width: 15vh;font-size: 2vh;border-radius: 0px;" >
+                                <h:outputText value="عدد الثوب" />
+                            </p:column>
+                            <p:column colspan="5" style="width: 15vh;font-size: 2vh;border-radius: 0px;" >
+                                <h:outputText value="#{data.number}" />
+                            </p:column>
+                        </p:headerRow>
+                        <p:column headerText="#" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText 
+                                value="#{index + 1}" />
+                        </p:column>
+                        <p:column headerText="التاريخ" style="width: 13vh;text-align: center!important;font-size: 2vh">
+                            <h:outputText value="#{data.date}">
+                                <f:convertDateTime pattern="dd/MM/yyyy hh:mm:ss" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="اسم الصنف" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.productName}" />
+                        </p:column>
+                        <p:column headerText="الكمية" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.quantity}" />
+                        </p:column>
+                        <p:column headerText="المرحلة" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.stage}" />
+                        </p:column>
+                        <p:column headerText="الموظف" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.empName}" />
+                        </p:column>
+
+
+
+                    </p:dataTable>
+                    
+                </p:fieldset>
 
         </h:form>
     </ui:define>

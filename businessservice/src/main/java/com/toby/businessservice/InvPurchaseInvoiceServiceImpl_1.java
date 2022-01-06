@@ -1754,15 +1754,18 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         Map<String, Object> params = new HashMap<>();
         params.put("type", type);
         params.put("customerId", customerId);
-        params.put("galaryId", galaryId);
         StringBuilder builder = new StringBuilder();
-        builder.append("SELECT s FROM InvPurchaseInvoice s WHERE  s.type =:type AND  (:galaryId is Null OR  s.galaryId.id = :galaryId) AND s.organizationSiteId.id = :customerId");
+        builder.append("SELECT s FROM InvPurchaseInvoice s WHERE  s.type =:type AND s.organizationSiteId.id = :customerId");
+
+        if (galaryId != null) {
+            params.put("galaryId", galaryId);
+            builder.append(" AND (:galaryId is Null OR  s.galaryId.id = :galaryId) ");
+        }
+
         builder.append(" order by s.serial DESC");
         List<InvPurchaseInvoice> details = dao.findListByQuery(builder.toString(), params);
         return returnListDTOForList(details);
     }
-    
-    
 
     @Override
     public List<InvInvoiceDTO> getALLInvPurchaseInvoiceDTOByStatus(PrintProductionDTO printProductionDTO, Integer branchId) {

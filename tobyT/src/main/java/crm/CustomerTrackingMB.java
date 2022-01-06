@@ -8,6 +8,7 @@ package crm;
 import com.toby.toby.*;
 import com.toby.businessservice.EmployeeService;
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
+import com.toby.businessservice.InvoiceProductionStagesReportService;
 import java.io.Serializable;
 import java.util.List;
 import javax.ejb.EJB;
@@ -16,9 +17,14 @@ import com.toby.bussinessservice.global.AutoCompleteService;
 import com.toby.converter.InvOrganizationSiteDTOConverter;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.InvOrganizationSiteDTO;
+import com.toby.dto.PrintProductionDTO;
+import com.toby.views.InvoiceProductionStagesReport;
 import java.util.ArrayList;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
+import org.primefaces.event.SelectEvent;
 
 /**
  *
@@ -27,7 +33,9 @@ import javax.inject.Named;
 @Named(value = "CustomerTrackingMB")
 @ViewScoped
 public class CustomerTrackingMB extends Basic implements Serializable {
-
+ 
+    
+            
     private InvOrganizationSiteDTO invOrganizationSiteDTO;
     
     private Boolean errorMsgbool = Boolean.TRUE;
@@ -39,6 +47,12 @@ public class CustomerTrackingMB extends Basic implements Serializable {
     private List<InvOrganizationSiteDTO> invOrganizationSiteDTOList;
     
     private List<InvInvoiceDTO> invInvoiceList;
+ 
+    private InvInvoiceDTO  invInvoiceDTOSelected ;
+    
+    private PrintProductionDTO printProductionDTO;
+       
+    private List<InvoiceProductionStagesReport> invoiceProductionStagesReports;
     /**
      * Creates a new instance of LoginBean
      */
@@ -53,11 +67,35 @@ public class CustomerTrackingMB extends Basic implements Serializable {
 
     @EJB
     private InvPurchaseInvoiceService_1 invPurchaseInvoiceService;
-
+  
+    @EJB
+    private InvoiceProductionStagesReportService invoiceProductionStagesReportService;
+      
     public void search() {
-        Integer type = 4 , invGallarySelectionId = null;
-        invGallarySelectionId = getGallaryDTOSelect() != null ? getGallaryDTOSelect().getId() : null;
-        setInvInvoiceList(invPurchaseInvoiceService.getALLInvPurchaseInvoiceDTOByTypeAndBranchIdFroGallary2(type, invGallarySelectionId, getInvOrganizationSiteDTO().getId()));
+        if ( getInvOrganizationSiteDTO() != null && getInvOrganizationSiteDTO().getId() != null ){
+        Integer type = 4 ;
+        
+        setInvInvoiceList(invPurchaseInvoiceService.getALLInvPurchaseInvoiceDTOByTypeAndBranchIdFroGallary2(type, null , getInvOrganizationSiteDTO().getId()));
+        }
+    }
+    
+    
+        public void searchProductionStagesReport(SelectEvent event) {
+            try{
+           
+            invInvoiceDTOSelected = (InvInvoiceDTO) event.getObject() ;
+            getPrintProductionDTO().setFromInvInvoice(invInvoiceDTOSelected.getSerial());
+        if ((printProductionDTO.getFromInvInvoice() != null)) {
+//            InvInvoiceDTO invoiceDTO = invPurchaseInvoiceService.getInvPurchaseInvoiceDTOBySerial(printProductionDTO.getFromInvInvoice(), getUserData().getUserBranch().getId());
+            getPrintProductionDTO().setFromInvoice(invInvoiceDTOSelected);
+            invoiceProductionStagesReports = invoiceProductionStagesReportService.searchReport(printProductionDTO, getUserData().getUserBranch().getId());
+        } else {
+            printProductionDTO.setMsg("ادخل رقم فاتوره ");
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", printProductionDTO.getMsg()));
+        } } 
+            catch (Exception e) {
+                e.printStackTrace();
+            }
     }
 
     public void reset() {
@@ -159,5 +197,51 @@ public class CustomerTrackingMB extends Basic implements Serializable {
     public void setInvInvoiceList(List<InvInvoiceDTO> invInvoiceList) {
         this.invInvoiceList = invInvoiceList;
     }
+
+    /**
+     * @return the printProductionDTO
+     */
+    public PrintProductionDTO getPrintProductionDTO() {
+        if(printProductionDTO == null){
+        printProductionDTO = new PrintProductionDTO();
+        }
+        return printProductionDTO;
+    }
+
+    /**
+     * @param printProductionDTO the printProductionDTO to set
+     */
+    public void setPrintProductionDTO(PrintProductionDTO printProductionDTO) {
+        this.printProductionDTO = printProductionDTO;
+    }
+
+    /**
+     * @return the invoiceProductionStagesReports
+     */
+    public List<InvoiceProductionStagesReport> getInvoiceProductionStagesReports() {
+        return invoiceProductionStagesReports;
+    }
+
+    /**
+     * @param invoiceProductionStagesReports the invoiceProductionStagesReports to set
+     */
+    public void setInvoiceProductionStagesReports(List<InvoiceProductionStagesReport> invoiceProductionStagesReports) {
+        this.invoiceProductionStagesReports = invoiceProductionStagesReports;
+    }
+
+    /**
+     * @return the invInvoiceDTOSelected
+     */
+    public InvInvoiceDTO getInvInvoiceDTOSelected() {
+        return invInvoiceDTOSelected;
+    }
+
+    /**
+     * @param invInvoiceDTOSelected the invInvoiceDTOSelected to set
+     */
+    public void setInvInvoiceDTOSelected(InvInvoiceDTO invInvoiceDTOSelected) {
+        this.invInvoiceDTOSelected = invInvoiceDTOSelected;
+    }
+
 
 }
