@@ -416,10 +416,12 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
         if (crmEventList != null && !crmEventList.isEmpty()) {
             int index = 0;
             for (CrmEvent entity : crmEventList) {
-                index++;
+                 index++;
                 CrmEventDTO crmEventDTO = initMapToDTO(entity);
-                if (crmEventList.size() == index && !crmEventDTO.getCloseEvent()) {
+                if (crmEventList.size() == index && crmEventDTO.getCloseEvent() != null) {
+                    if(!crmEventDTO.getCloseEvent()){
                     crmEventDTO.setCloseEvent(Boolean.FALSE);
+                    }
                 }
                 crmEventDTOList.add(crmEventDTO);
             }
@@ -851,20 +853,20 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
             params.put("endDate", endDate);
         }
         StringBuilder builder = new StringBuilder();
-        builder.append("SELECT e FROM CrmEvent e where (e.createdBy.id = :createdBy OR ");
-
+        builder.append("SELECT e FROM CrmEvent e where (e.createdBy.id = :createdBy  ");
+       if(assignedTo != null){
         if (employeeIsSupervisor) {
 
 //            List<Integer> assignedList = employeeService.getAllEmployeesListByParentAndchield(branchId, assignedTo);
 //            params.put("assignedTo", assignedList);
             StringBuilder empIds = new StringBuilder();
             empIds = employeeService.returnEmployeeList(assignedTo, empIds);
-            builder.append(" e.assignedTo.id IN ( " + empIds + " ))");
+            builder.append(" OR e.assignedTo.id IN ( " + empIds + " )");
         } else {
             params.put("assignedTo", assignedTo);
-            builder.append(" e.assignedTo.id = :assignedTo) ");
-        }
-        builder.append(" AND e.deletedBy IS NULL AND e.startDate >= :startDate AND e.startDate <= :endDate AND e.status.serial != 0 ");
+            builder.append(" OR e.assignedTo.id = :assignedTo ");
+        }}
+        builder.append(" ) AND e.deletedBy IS NULL AND e.startDate >= :startDate AND e.startDate <= :endDate AND e.status.serial != 0 ");
         List<CrmEvent> crmEventList = dao.findListByQuery(builder.toString(), params);
         return mapToDTOList(crmEventList);
     }
