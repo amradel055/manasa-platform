@@ -132,6 +132,24 @@
 
                     </div>
                 </div>
+                           <div>
+                               
+                                               <p:selectOneMenu style="width:45%" id="MACUCode" 
+                                                     filter="true" 
+                                                     filterMatchMode="contains"
+                                                     converter="#{glBankFromMB.glBankConverter}"
+                                                     value="#{glBankFromMB.glBankListSelected}"> 
+                                        <f:selectItems value="#{glBankFromMB.glBankList}"  
+                                                       var="bank"
+                                                       itemLabel="#{bank}"
+                                                       itemValue="#{bank}"/>
+                                    </p:selectOneMenu>  
+                                 <div class="ui-g-6 ui-xl-6">
+
+                        <p:outputLabel style="width: 115px;" value="خزنه تقفيل"/>
+
+                    </div>
+                                </div>
              
                 <div class="ui-g-12 ui-xl-12">
                     <p:fieldset style="width: 80%; "

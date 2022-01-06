@@ -9,8 +9,12 @@ import com.isag.businessservice.CurrencyService;
 import com.isag.businessservice.GlAccountService;
 import com.isag.businessservice.GlBankService;
 import com.isag.businessservice.GlBankTransactionDetailsService;
+import com.isag.businessservice.IsagUserBankService;
 import com.isag.converter.CurrencyConverter;
+import com.isag.converter.GlBankConverter;
+import com.isag.converter.GlBankDTOConverter;
 import com.isag.converter.GlaccountConverter;
+import com.isag.dto.GlBankDTO;
 import com.isag.entity.Currency;
 import com.isag.entity.GlAccount;
 import com.isag.entity.GlBank;
@@ -37,6 +41,12 @@ import javax.inject.Named;
 @Named(value = "glBankFromMB")
 @ViewScoped
 public class glBankFromMB extends BaseFormBean {
+  private GlBankConverter bankConverter;
+  private GlBankDTOConverter glBankConverter;
+
+  private List<GlBankDTO> glBankList;
+  private GlBankDTO glBankListSelected ;
+
 
     private GlBank glBank;
     private Integer glBankId;
@@ -69,6 +79,8 @@ public class glBankFromMB extends BaseFormBean {
 
     @EJB
     private GlBankTransactionDetailsService bankTransactionDetailsService;
+     @EJB
+    private IsagUserBankService isagUserBankService;
 
     @Override
     @PostConstruct
@@ -110,7 +122,6 @@ public class glBankFromMB extends BaseFormBean {
             saveError(e, "glBankFromMB", "load");
         }
     }
-
     public void fillLists() {
         try {
             currencylist = currencyService.getAllCurrencyByCompanyId(companyId);
@@ -156,7 +167,6 @@ public class glBankFromMB extends BaseFormBean {
         try {
             glBank = new GlBank();
             glBank = glBankService.findGlBank(glBankTrId);
-
             glBankEntity.setId(glBank.getId());
             glBankEntity.setAccountId(glBank.getAccountId() != null ? glBank.getAccountId() : null);
             glBankEntity.setBranchId(glBank.getBranchId());
@@ -209,6 +219,7 @@ public class glBankFromMB extends BaseFormBean {
                 glBank.setType(glBankEntity.getType() != null ? glBankEntity.getType() : null);
                 glBank.setName(glBankEntity.getName());
                 glBank.setCode(glBankEntity.getCode());
+//              glBank.setClosedglbankId(glBankEntity.getClosedglbankId());
                 glBank.setOpeninngBalance(glBankEntity.getOpeningBalance());
                 glBank.setDateOpeninngBalance(glBankEntity.getOpeningBalanceDate());
                 glBank.setCurrencyId(glBankEntity.getCurrencyId());
@@ -221,7 +232,8 @@ public class glBankFromMB extends BaseFormBean {
                     glBank.setModificationDate(new Date());
                     glBank.setModifiedBy(getUserData().getUser());
                 }
-
+           GlBank bank   = glBankService.mapToEntity(glBankListSelected, getUserData().getUser());
+                glBank.setClosedglbankId(bank);
                 glBankService.addGlBank(glBank);
                 return exit();
             } else {
@@ -481,5 +493,65 @@ public class glBankFromMB extends BaseFormBean {
 
     public void setDisableSave(Boolean disableSave) {
         this.disableSave = disableSave;
+    }
+
+    /**
+     * @return the bankConverter
+     */
+    public GlBankConverter getBankConverter() {
+     
+        return bankConverter;
+    }
+
+    /**
+     * @param bankConverter the bankConverter to set
+     */
+    public void setBankConverter(GlBankConverter bankConverter) {
+        this.bankConverter = bankConverter;
+    }
+
+    /**
+     * @return the glBankList
+     */
+    public List<GlBankDTO> getGlBankList() {
+    glBankList = getUserData().getGlBankDTOList();
+    glBankConverter =  new GlBankDTOConverter(glBankList);
+     return glBankList;
+        
+    }
+
+    /**
+     * @param glBankList the glBankList to set
+     */
+    public void setGlBankList(List<GlBankDTO> glBankList) {
+        this.glBankList = glBankList;
+    }
+
+    /**
+     * @return the glBankConverter
+     */
+    public GlBankDTOConverter getGlBankConverter() {
+        return glBankConverter;
+    }
+
+    /**
+     * @param glBankConverter the glBankConverter to set
+     */
+    public void setGlBankConverter(GlBankDTOConverter glBankConverter) {
+        this.glBankConverter = glBankConverter;
+    }
+
+    /**
+     * @return the glBankListSelected
+     */
+    public GlBankDTO getGlBankListSelected() {
+        return glBankListSelected;
+    }
+
+    /**
+     * @param glBankListSelected the glBankListSelected to set
+     */
+    public void setGlBankListSelected(GlBankDTO glBankListSelected) {
+        this.glBankListSelected = glBankListSelected;
     }
 }

@@ -237,8 +237,8 @@ public class GlBankServiceImpl implements GlBankService {
 
         return dTO;
     }
-
-    private GlBank mapToEntity(GlBankDTO dTO, IsagUser isagUser) {
+        @Override
+       public GlBank mapToEntity(GlBankDTO dTO, IsagUser isagUser) {
         GlBank entity = new GlBank();
         Currency currency = new Currency();
         GlAccount glAccount = new GlAccount();

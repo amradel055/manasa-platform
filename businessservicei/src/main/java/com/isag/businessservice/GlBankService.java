@@ -19,6 +19,8 @@ import java.util.List;
 public interface GlBankService {
 
     public List<GlBank> getAllGlBank();
+    
+    public GlBank mapToEntity(GlBankDTO dTO, IsagUser isagUser);
 
     public void deleteGlBank(GlBank glBank);
 

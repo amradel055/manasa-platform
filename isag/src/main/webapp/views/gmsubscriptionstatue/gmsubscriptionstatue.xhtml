@@ -7,6 +7,34 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns="http://www.w3.org/1999/xhtml">
     <ui:define name="content">
+        
+        <style>
+            div#form\:customer_panel li {
+                text-align: right;
+                font-size: 25px;
+                font-family: system-ui;
+            }
+            .ui-g-12.ui-xl-6 {
+                padding-bottom: 1%;
+            }
+            input#form\:customer_input {
+                font-size: 25px;
+                font-family: system-ui;
+                width: 200%;
+            }
+            .smallButtons {
+                margin-right: 40% !important;
+            }
+            .smallButtons button {
+                margin-left: 1%;
+            }
+            .smallButtons button span {
+                font-size: 17px !important;
+                font-family: system-ui;
+                /* color: #000; */
+            }
+        </style>
+        
         <h:form id="form"  dir="#{userData.dir}" class='formmargin'>
   <div style=" position: absolute;left: 20px"> 
 
@@ -22,318 +50,207 @@
                                   action="exit" />
 
             </div>
-            <div class="col-xs-12">
-                <p:messages id="curmsg" showDetail="true" rendered="true" closable="true"/>   
-            </div>
-            <p:dataTable id="invInvoicePurchaseTable"
-                         var="invInvoicePurchaseTable" 
-                         widgetVar="bTable" 
-                         rowIndexVar="index" 
-                         value="#{gmSubscriptionsListDTOMB.subscribtionList}"
-                         paginator="true"
-                         rows="10" 
-                         paginatorTemplate="{CurrentPageReport} {FirstPageLink}
-                         {PreviousPageLink} {PageLinks} {NextPageLink}
-                         {LastPageLink} {RowsPerPageDropdown}" 
-                         emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" 
-                         >
-
-                <f:facet name="header" >
-                    <p:commandButton  icon="fa fa-plus" 
-                                      class="saddButton"
-                                      title="#{userData.userDDs['ADD']}" 
-                                      action="#{gmSubscriptionsListDTOMB.goToAdd()}" 
-                                      style="float:right" 
-                                      rendered="#{(userData.userScreens['invsalesinvoice_1'].add)  or userData.isAdmin}"/>
-                     
-
-                    <p:outputPanel  >
-
-                    </p:outputPanel>
-                </f:facet>
-
-                <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px;"  filterStyle="display:none" 
-                           filterBy="#{invInvoicePurchaseTable.serial}" 
-                           filterMatchMode="contains" 
-                           headerText="#{userData.userDDs['INVOICE_NO']}"
-                           sortBy="#{invInvoicePurchaseTable.serial}"
-                           >
-                    <p:outputLabel value="#{invInvoicePurchaseTable.serial}" />
-                </p:column>
-
-
-
-                <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px;"  filterStyle="display:none" 
-                           filterBy="#{invInvoicePurchaseTable.status}" 
-                           filterMatchMode="contains" 
-                           headerText="حالة الاشتراك"
-                           sortBy="#{invInvoicePurchaseTable.status}"
-                           >
-                    <p:outputLabel value="#{invInvoicePurchaseTable.status eq 0 ? 'ساري' : 'مفعل'}" />
-                </p:column>
-
-                <p:column style="width: 9vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" filterStyle="display:none" 
-                          filterBy="#{invInvoicePurchaseTable.date}" 
-                          filterMatchMode="contains"
-                          headerText="#{userData.userDDs['DATEE']}"
-                          sortBy="#{invInvoicePurchaseTable.date}" 
-                          >
-                    <p:outputLabel value="#{invInvoicePurchaseTable.date}" >
-                        <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
-                    </p:outputLabel>                           
-                </p:column>
-
-                <p:column style="width: 9vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
-                          filterBy="#{invInvoicePurchaseTable.startDate}"
-                          filterMatchMode="contains" 
-                          headerText="بداية الاشتراك"
-                          sortBy="#{invInvoicePurchaseTable.startDate}" 
-                          >
-                    <p:outputLabel value="#{invInvoicePurchaseTable.startDate}" >
-                     <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
-                    </p:outputLabel>   
-                </p:column>
-                <p:column style="width: 8vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
-                          filterBy="#{invInvoicePurchaseTable.endDate}"
-                          filterMatchMode="contains" 
-                          headerText="نهاية الاشتراك"
-                          sortBy="#{invInvoicePurchaseTable.endDate}" 
-                          >
-                    <p:outputLabel value="#{invInvoicePurchaseTable.endDate}" >
-                         <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
-                    </p:outputLabel>   
-                </p:column>
-                 <p:column style="width: 8vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
-                          filterBy="#{invInvoicePurchaseTable.statusName}"
-                          filterMatchMode="contains" 
-                          headerText="حالة الاشتراك "
-                          sortBy="#{invInvoicePurchaseTable.statusName}" 
-                          >
-                     <p:outputLabel value="#{invInvoicePurchaseTable.statusName}" /> 
-                </p:column>
-
-                <p:column style="width: 10vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
-                          filterBy="#{invInvoicePurchaseTable.remarks}"
-                          filterMatchMode="contains" 
-                          headerText="#{userData.userDDs['NOTE']}"
-                          sortBy="#{invInvoicePurchaseTable.remarks}" >
-                    <p:outputLabel value="#{invInvoicePurchaseTable.remarks}" />
-                </p:column>
-                <p:column  style="width: 12vh;font-size: 1.8vh;text-align:center;border-radius: 0px;" headerText="#{userData.userDDs['TRANSACTION']}" >
-                    <p:commandButton   onclick="form.target = '_blank'"  ajax="false"
-                                       update="@form" 
-                                       class="smsearchButtons"
-                                       icon="fa fa-fw fa-search-plus"  style="background-color: rgba(63, 81, 181, 0.88);border-radius: 3px;"
-                                       title="#{userData.userDDs['VIEW']}" 
-                                       action="#{gmSubscriptionsListDTOMB.goToEdit()}" 
-                                       rendered="#{userData.userScreens['invsalesinvoice_1'].edit or userData.isAdmin}" >
-
-                        <f:setPropertyActionListener value="#{invInvoicePurchaseTable}" 
-                                                     target="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected}" />
-                    </p:commandButton>
-
-                    <p:commandButton update="@form" 
-                                     class="sdeleteButtons"
-                                     icon="fa fa-remove" 
-                                     style="background-color: red;border-radius: 3px;"
-                                     title="#{userData.userDDs['DELETE']}" 
-                                     action="#{gmSubscriptionsListDTOMB.delete()}" 
-                                     rendered="#{(userData.userScreens['invsalesinvoice_1'].delete or userData.isAdmin)}">
-                        <f:setPropertyActionListener value="#{invInvoicePurchaseTable}" target="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected}" />
-                        <p:confirm header="Confirmation" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
-
-                    </p:commandButton>
-
-
-
-                </p:column>
-            </p:dataTable> 
-            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
-                <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-                <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
-            </p:confirmDialog>
             
-  <p:commandButton  icon="fa fa-plus" 
-                                          class="saddButton"
-                                          title="#{userData.userDDs['ADD']}" 
-                                          action="#{gmSubscriptionsListDTOMB.goToAdd()}" 
-                                          style="float:right" 
-                                          rendered="#{(userData.userScreens['gmsubscriptions'].add)  or userData.isAdmin}"/>
-           
-            <div class="ui-g-12 ui-xl-12">
+            
+            <div   class="ui-g-12 ui-g-nopad" style='margin-top: 5%;'>
+                <div class="ui-g">
+                    
+                    <div class="ui-g-12 ui-md-12" style="display: inline-block;">
+                        
+                        <div class="ui-g-12 ui-xl-12" style="padding: 3% 0;
+                                                             background-color: #ffb3004d;
+                                                             border: solid 1px #fff;
+                                                             border-radius: 2%;
+                                                             margin-bottom: 1%;">
 
-                <div class="ui-g-6 ui-xl-6">
-                    <p:autoComplete id="customer"
-                                     style="width:37%!important" 
-                                    dropdown="true"
-                                    converter="#{autoComplete.organizationSiteDTOConvertor}"
-                                    value="#{gmSubscriptionsListDTOMB.invOrganizationSiteDTO}"
-                                    var="customer"
-                                    itemLabel="#{customer}" 
-                                    itemValue="#{customer}" 
-                                    forceSelection="true" 
-                                    completeMethod="#{autoComplete.completeCustomerFrom}" 
-                                    >
-                        <p:ajax update="@form"
-                                process="@form"
-                                event="itemSelect"
-                                listener="#{gmSubscriptionsListDTOMB.show()}" />
-
-
-                    </p:autoComplete>
-                </div>
-                <div class="ui-g-6 ui-xl-6">
-                    <p:outputLabel style="width: 100px;" value="#اسم العميل "/>
-
-                </div>
-            </div>
-            <div class="ui-g-12 ui-xl-12">
-
-                        <div class="ui-g-6 ui-xl-6">
-                            <p:graphicImage url="#{gmSubscriptionsListDTOMB.host.concat(gmSubscriptionsListDTOMB.invOrganizationSiteDTOSelected.clientImage)}" library="demo"  style="max-width:80%;max-height:80%;object-fit: cover !important;"/>
+                            <div class="ui-g-12 ui-xl-9">
+                                <p:autoComplete id="customer"
+                                                 style="width:37%!important;font-size: 17px;font-family: system-ui;" 
+                                                dropdown="true"
+                                                converter="#{autoComplete.organizationSiteDTOConvertor}"
+                                                value="#{gmSubscriptionsListDTOMB.invOrganizationSiteDTO}"
+                                                var="customer"
+                                                itemLabel="#{customer}" 
+                                                itemValue="#{customer}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{autoComplete.completeCustomerFrom}" 
+                                                >
+                                    <p:ajax update="@form"
+                                            process="@form"
+                                            event="itemSelect"
+                                            listener="#{gmSubscriptionsListDTOMB.show()}" />
+                                </p:autoComplete>
+                            </div>
+                            <div class="ui-g-12 ui-xl-3">
+                                <p:outputLabel style="width: 85px;margin-right: 3%;font-size: 25px;font-family: system-ui;" value="اسم العميل "/>
+                            </div>
                         </div>
-                       
-                        <div class="ui-g-6 ui-xl-6">
-                            <p:outputLabel style="width: 65px" value="صورة العميل"/>
+                        
+                    </div>
+                    
+                    <div class="ui-g-12 ui-md-8" style="display: inline-block;">
+                        
+                        <div class="ui-g-12 ui-xl-6" style="float: right;">
+                            <div class="ui-g-12 ui-xl-6">
+                                <h:outputText style="width: 35%!important;font-size: 17px;font-family: system-ui;" id="ad1995444991"  value="#{gmSubscriptionsListDTOMB.access}"/>
+                            </div>
+                            <div class="ui-g-12 ui-xl-6">
+                                <p:outputLabel style="width: 85px;margin-right: 3%;font-size: 17px;font-family: system-ui;" value="امكانيه دخول الجيم  "/>
+                            </div>
+                        </div>
+                        
+                        <div class="ui-g-12 ui-xl-6">
+                            <div class="ui-g-12 ui-xl-6">
+                                <h:outputText style="width: 35%!important;font-size: 17px;font-family: system-ui;" id="ad199991"  value="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected.freezeStatus eq false ? 'غير مجمد' : 'مجمد'}"/>
+                            </div>
+                            <div class="ui-g-12 ui-xl-6">
+                                <p:outputLabel style="width: 85px;margin-right: 3%;font-size: 17px;font-family: system-ui;" value="حاله التجميد  "/>
+                            </div>
+                        </div>
+                                                
+                        <div class="ui-g-12 ui-xl-6" style="float: right;">
 
-                        </div>  
-            </div>
-                       <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-12 ui-xl-6">
+                                <h:outputText style="width: 35%!important;font-size: 17px;font-family: system-ui;" id="ad333"  value="#{gmSubscriptionsListDTOMB.invOrganizationSiteDTOSelected.mobile}"/>
+                            </div>
+                            <div class="ui-g-12 ui-xl-6">
+                                <p:outputLabel style="width: 85px;margin-right: 3%;font-size: 17px;font-family: system-ui;" value="رقم الهاتف"/>
 
-                                            <div class="ui-g-6 ui-xl-6">
-                                                <h:outputText style="width: 35%!important" id="ad333"  value="#{gmSubscriptionsListDTOMB.invOrganizationSiteDTOSelected.mobile}"/>
-                                            </div>
-                                            <div class="ui-g-6 ui-xl-6">
-                                                <p:outputLabel style="width: 85px;margin-right: 3%;" value="رقم الهاتف"/>
+                            </div>
+                        </div>
 
-                                            </div>
-                                        </div>
+                        <div class="ui-g-12 ui-xl-6" style="">
 
+                            <div class="ui-g-12 ui-xl-6">
+                                <p:outputLabel style="width: 35%!important;font-size: 17px;font-family: system-ui;" id="ad191"  value="#{gmSubscriptionsListDTOMB.invOrganizationSiteDTOSelected.birthdate}">
+                                    <f:convertDateTime type="date" pattern="dd-MM-yyyy hh:mm:ss"/>
+                                </p:outputLabel>
+                            </div>
+                            <div class="ui-g-12 ui-xl-6">
+                                <p:outputLabel style="width: 85px;margin-right: 3%;font-size: 17px;font-family: system-ui;" value="تاريخ الميلاد">
+                                </p:outputLabel>
 
-                                        <div class="ui-g-12 ui-xl-12">
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-6" style="float: right;">
 
-                                            <div class="ui-g-6 ui-xl-6">
-                                                <p:outputLabel style="width: 35%!important" id="ad191"  value="#{gmSubscriptionsListDTOMB.invOrganizationSiteDTOSelected.birthdate}">
-                                                    <f:convertDateTime type="date" pattern="dd-MM-yyyy hh:mm:ss"/>
-                                                </p:outputLabel>
-                                            </div>
-                                            <div class="ui-g-6 ui-xl-6">
-                                                <p:outputLabel style="width: 85px;margin-right: 3%;" value="تاريخ الميلاد">
-                                                </p:outputLabel>
+                            <div class="ui-g-12 ui-xl-6">
+                                <p:outputLabel style="width: 35%!important;font-size: 17px;font-family: system-ui;" id="ad211"  value="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected.startDate}">
+                                    <f:convertDateTime type="date" pattern="dd-MM-yyyy hh:mm:ss"/>
+                                </p:outputLabel>
+                            </div>
+                            <div class="ui-g-12 ui-xl-6">
+                                <p:outputLabel style="width: 85px;margin-right: 3%;font-size: 17px;font-family: system-ui;" value="تاريخ الاشتراك ">
+                                </p:outputLabel>
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-6">
 
-                                            </div>
-                                        </div>
-                                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-12 ui-xl-6">
+                                <h:outputText style="width: 35%!important;font-size: 17px;font-family: system-ui;" id="ad141"  value="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected.gmItemDTO.name}"/>
+                            </div>
+                            <div class="ui-g-12 ui-xl-6">
+                                <p:outputLabel style="width: 85px;margin-right: 3%;font-size: 17px;font-family: system-ui;" value="النشاط المشترك فيه  "/>
 
-                                            <div class="ui-g-6 ui-xl-6">
-                                                <p:outputLabel style="width: 35%!important" id="ad211"  value="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected.startDate}">
-                                                    <f:convertDateTime type="date" pattern="dd-MM-yyyy hh:mm:ss"/>
-                                                </p:outputLabel>
-                                            </div>
-                                            <div class="ui-g-6 ui-xl-6">
-                                                <p:outputLabel style="width: 85px;margin-right: 3%;" value="تاريخ الاشتراك ">
-                                                </p:outputLabel>
-                                            </div>
-                                        </div>
-                                 
+                            </div>
+                        </div>
 
-                                        <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-12 ui-xl-6" style="float: right;">
 
-                                            <div class="ui-g-6 ui-xl-6">
-                                                <h:outputText style="width: 35%!important" id="ad141"  value="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected.gmItemDTO.name}"/>
-                                            </div>
-                                            <div class="ui-g-6 ui-xl-6">
-                                                <p:outputLabel style="width: 85px;margin-right: 3%;" value="النشاط المشترك فيه  "/>
+                            <div class="ui-g-12 ui-xl-6">
+                                <h:outputText style="width: 35%!important;font-size: 17px;font-family: system-ui;" id="ad1911"  value="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected.status eq false ? 'سارى' : 'معلق'}"/>
+                            </div>
+                            <div class="ui-g-12 ui-xl-6">
+                                <p:outputLabel style="width: 85px;margin-right: 3%;font-size: 17px;font-family: system-ui;" value="حاله الاشتراك  "/>
 
-                                            </div>
-                                        </div>
+                            </div>
+                        </div>
+                
+                        <div class="ui-g-12 ui-xl-6">
 
-                                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-12 ui-xl-6">
+                                <p:outputLabel style="width: 85px;margin-right: 3%;font-size: 17px;font-family: system-ui;" value="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected.takenDays}">
 
-                                            <div class="ui-g-6 ui-xl-6">
-                                                <h:outputText style="width: 35%!important" id="ad1911"  value="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected.status eq false ? 'سارى' : 'معلق'}"/>
-                                            </div>
-                                            <div class="ui-g-6 ui-xl-6">
-                                                <p:outputLabel style="width: 85px;margin-right: 3%;" value="حاله الاشتراك  "/>
+                                </p:outputLabel>
 
-                                            </div>
-                                        </div>
-                                      <div class="ui-g-12 ui-xl-12">
-                                            <div class="ui-g-6 ui-xl-6">
-                                                <h:outputText style="width: 35%!important" id="ad199991"  value="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected.freezeStatus eq false ? 'غير مجمد' : 'مجمد'}"/>
-                                            </div>
-                                            <div class="ui-g-6 ui-xl-6">
-                                                <p:outputLabel style="width: 85px;margin-right: 3%;" value="حاله التجميد  "/>
-                                            </div>
-                                        </div>
-                                     <div class="ui-g-12 ui-xl-12">
-                                            <div class="ui-g-6 ui-xl-6">
-                                                <h:outputText style="width: 35%!important" id="ad1995444991"  value="#{gmSubscriptionsListDTOMB.access}"/>
-                                            </div>
-                                            <div class="ui-g-6 ui-xl-6">
-                                                <p:outputLabel style="width: 85px;margin-right: 3%;" value="امكانيه دخول الجيم  "/>
-                                            </div>
-                                        </div>
-                                  
-                                      
-                                        <div class="ui-g-12 ui-xl-12">
+                            </div>
+                            <div class="ui-g-12 ui-xl-6">
+                                <p:outputLabel style="width: 85px;margin-right: 3%;font-size: 17px;font-family: system-ui;"  value="الايام التي تم تجميدها " />
 
-                                            <div class="ui-g-6 ui-xl-6">
-                                                <p:outputLabel style="width: 85px;margin-right: 3%;" value="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected.takenDays}">
-                                                  
-                                                </p:outputLabel>
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-6" style="float: right;">
 
-                                            </div>
-                                            <div class="ui-g-6 ui-xl-6">
-                                                <p:outputLabel style="width: 75px;margin-right: 6%"  value="الايام التي تم تجميدها " />
+                            <div class="ui-g-12 ui-xl-6">
+                                <p:outputLabel id="dateto" style="width: 85px;margin-right: 3%;font-size: 17px;font-family: system-ui;" value="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected.remainDays}">
 
-                                            </div>
-                                        </div>
-                                        <div class="ui-g-12 ui-xl-12">
+                                </p:outputLabel>
+                            </div>
+                            <div class="ui-g-12 ui-xl-6">
+                                <p:outputLabel style="width: 85px;margin-right: 3%;font-size: 17px;font-family: system-ui;"  value="الايام المتبقية للتجميد" />
 
-                                            <div class="ui-g-6 ui-xl-6">
-                                                <p:outputLabel id="dateto" style="width: 85px;margin-right: 3%;" value="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected.remainDays}">
-                                                  
-                                                </p:outputLabel>
-                                            </div>
-                                            <div class="ui-g-6 ui-xl-6">
-                                                <p:outputLabel style="width: 75px;margin-right: 6%"  value="الايام المتبقية للتجميد" />
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-6" >
 
-                                            </div>
-                                        </div>
-                   <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-12 ui-xl-6">
+                                <p:outputLabel style="width: 35%!important;font-size: 17px;font-family: system-ui;" id="ad131"  value="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected.dateAfterTagmeed}">
+                                    <f:convertDateTime type="date" pattern="dd-MM-yyyy hh:mm:ss"/>
+                                </p:outputLabel>
+                            </div>
+                            <div class="ui-g-12 ui-xl-6">
+                                <p:outputLabel style="width: 85px;margin-right: 3%;font-size: 17px;font-family: system-ui;" value="تاريخ نهايه الاشتراك ">
 
-                                            <div class="ui-g-6 ui-xl-6">
-                                                <p:outputLabel style="width: 35%!important" id="ad131"  value="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected.dateAfterTagmeed}">
-                                                    <f:convertDateTime type="date" pattern="dd-MM-yyyy hh:mm:ss"/>
-                                                </p:outputLabel>
-                                            </div>
-                                            <div class="ui-g-6 ui-xl-6">
-                                                <p:outputLabel style="width: 85px;margin-right: 3%;" value="تاريخ نهايه الاشتراك ">
+                                </p:outputLabel>
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-6" style="float: right;">
 
-                                                </p:outputLabel>
-                                            </div>
-                                        </div>
-                 <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-12 ui-xl-6">
+                                <p:outputLabel style="width: 35%!important;font-size: 17px;font-family: system-ui;" id="ad3333"  value="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected.transDaysNumber}">
+                                </p:outputLabel>
+                            </div>
+                            <div class="ui-g-12 ui-xl-6">
+                                <p:outputLabel style="width: 85px;margin-right: 3%;font-size: 17px;font-family: system-ui;" value=" عدد ايام النقل">
 
-                                            <div class="ui-g-6 ui-xl-6">
-                                                <p:outputLabel style="width: 35%!important" id="ad3333"  value="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected.transDaysNumber}">
-                                                </p:outputLabel>
-                                            </div>
-                                            <div class="ui-g-6 ui-xl-6">
-                                                <p:outputLabel style="width: 85px;margin-right: 3%;" value=" عدد ايام النقل">
+                                </p:outputLabel>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="ui-g-12 ui-md-4" style="display: inline-block;">
+                        <div class="ui-g-12 ui-xl-12" style="">
+                            
+                            <div class="ui-g-12 ui-xl-12">
+                                <p:outputLabel style="width: 85px;margin-right: 3%;font-size: 17px;font-family: system-ui;" value="صورة العميل"/>
 
-                                                </p:outputLabel>
-                                            </div>
-                     <p:commandButton style="margin-right: 40%" update="@form"  value="تجميد"  action ="#{gmSubscriptionsListDTOMB.findCustomerData()}"> 
+                            </div> 
+
+                            <div class="ui-g-12 ui-xl-12">
+                                <p:graphicImage url="#{gmSubscriptionsListDTOMB.host.concat(gmSubscriptionsListDTOMB.invOrganizationSiteDTOSelected.clientImage)}" library="demo"  style="max-width:80%;max-height:80%;object-fit: cover !important;"/>
+                            </div>
+
+                                     
+                        </div>
+                    </div>
+            </div> 
+            
+                <div class='smallButtons'>     
+                    <p:commandButton  icon="" 
+                                        class=""
+                                        value="#{userData.userDDs['ADD']}" 
+                                        action="#{gmSubscriptionsListDTOMB.goToAdd()}" 
+                                        rendered="#{(userData.userScreens['gmsubscriptions'].add)  or userData.isAdmin}"/>
+                    <p:commandButton style="" update="@form"  value="تجميد"  action ="#{gmSubscriptionsListDTOMB.findCustomerData()}"> 
                       <f:setPropertyActionListener value="#{customer}" target="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected}" />
-                        </p:commandButton>
-                        <p:commandButton style="margin-right: 40%" update="@form"  value="تمديد"  action ="#{gmSubscriptionsListDTOMB.goToresume()}"> 
-                            <f:setPropertyActionListener value="#{customer}" target="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected}" />
-                        </p:commandButton>
-                         <p:commandButton style="margin-right: 40%" update="@form"  value="نقل الاشتراك"  action ="#{gmSubscriptionsListDTOMB.goToMovment()}"> 
-                             <f:setPropertyActionListener value="#{customer}" target="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected}" />
-                        </p:commandButton>
+                    </p:commandButton>
+                    <p:commandButton style="" update="@form"  value="تمديد"  action ="#{gmSubscriptionsListDTOMB.goToresume()}"> 
+                        <f:setPropertyActionListener value="#{customer}" target="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected}" />
+                    </p:commandButton>
+                     <p:commandButton style="" update="@form"  value="نقل الاشتراك"  action ="#{gmSubscriptionsListDTOMB.goToMovment()}"> 
+                         <f:setPropertyActionListener value="#{customer}" target="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected}" />
+                    </p:commandButton>
+                </div>
                      
                                         </div>
                 <div class="ui-g-12 ui-xl-12">

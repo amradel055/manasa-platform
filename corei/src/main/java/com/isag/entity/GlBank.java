@@ -61,6 +61,9 @@ public class GlBank extends BaseEntity {
     @JoinColumn(name = "currency_id", referencedColumnName = "id")
     @ManyToOne
     private Currency currencyId;
+    @JoinColumn(name = "closedglbank_id", referencedColumnName = "id")
+    @ManyToOne
+    private GlBank closedglbankId;
     @OneToMany(mappedBy = "glBankId")
     private Collection<GlBankTransaction> glBankTransactionCollection;
       
@@ -175,6 +178,20 @@ public class GlBank extends BaseEntity {
 
     public void setDateOpeninngBalance(Date dateOpeninngBalance) {
         this.dateOpeninngBalance = dateOpeninngBalance;
+    }
+
+    /**
+     * @return the closedglbankId
+     */
+    public GlBank getClosedglbankId() {
+        return closedglbankId;
+    }
+
+    /**
+     * @param closedglbankId the closedglbankId to set
+     */
+    public void setClosedglbankId(GlBank closedglbankId) {
+        this.closedglbankId = closedglbankId;
     }
   
 }

@@ -6,6 +6,7 @@
 package com.isag.dto;
 
 import com.isag.entity.GlAccount;
+import com.isag.entity.GlBank;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -24,6 +25,7 @@ public class GlBankDTO extends BaseEntityDTO {
     private Integer type;
     private Integer currencyId;
     private CurrencyDTO currency;
+
 
     public GlBankDTO() {
     }
@@ -154,5 +156,7 @@ public class GlBankDTO extends BaseEntityDTO {
     public void setGlAccountId(GlAccountDTO glAccountId) {
         this.glAccountId = glAccountId;
     }
+
+  
 
 }

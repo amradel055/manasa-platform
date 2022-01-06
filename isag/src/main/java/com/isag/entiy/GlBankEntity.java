@@ -8,6 +8,7 @@ package com.isag.entiy;
 import com.isag.entity.Branch;
 import com.isag.entity.Currency;
 import com.isag.entity.GlAccount;
+import com.isag.entity.GlBank;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -25,8 +26,8 @@ public class GlBankEntity extends BaseEntity {
     private GlAccount accountId;
     private Branch branchId;
     private Currency currencyId;
+    private GlBank closedglbankId;
     private List<GlBankTransactionEntity> glBankTransactionCollection;
-    
     private Integer type;
     private String typeName;
     private Boolean bankHavetransaction;
@@ -135,5 +136,19 @@ public class GlBankEntity extends BaseEntity {
      */
     public void setBankHavetransaction(Boolean bankHavetransaction) {
         this.bankHavetransaction = bankHavetransaction;
+    }
+
+    /**
+     * @return the closedglbankId
+     */
+    public GlBank getClosedglbankId() {
+        return closedglbankId;
+    }
+
+    /**
+     * @param closedglbankId the closedglbankId to set
+     */
+    public void setClosedglbankId(GlBank closedglbankId) {
+        this.closedglbankId = closedglbankId;
     }
 }
