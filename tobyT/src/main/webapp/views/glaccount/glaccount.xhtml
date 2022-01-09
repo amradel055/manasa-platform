@@ -366,13 +366,13 @@
                                                     <p:autoComplete id="GlAccount_ID555" 
                                                                     style="width: 85%" 
                                                                     dropdown="true"
-                                                                    converter="#{glAccountBean.accountConverter}"
+                                                                    converter="#{glAccountBean.costCenterConverter}"
                                                                     value="#{glAccountBean.selectedAcc.costCenterId}"
                                                                     var="p"
                                                                     itemLabel="#{p}" 
                                                                     itemValue="#{p}" 
                                                                     forceSelection="true" 
-                                                                    completeMethod="#{glAccountBean.completeGlAccount}" >
+                                                                    completeMethod="#{glAccountBean.completeCostCenter}" >
                                                     </p:autoComplete>
                                                 </div>
                                                 <div class="ui-g-6 ui-xl-6">
