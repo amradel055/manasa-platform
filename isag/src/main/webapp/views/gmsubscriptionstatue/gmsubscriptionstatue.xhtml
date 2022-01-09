@@ -250,17 +250,9 @@
                     <p:commandButton style="" update="@form"  value="نقل الاشتراك"  action ="#{gmSubscriptionsListDTOMB.goToMovment()}"> 
                         <f:setPropertyActionListener value="#{customer}" target="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected}" />
                     </p:commandButton>
-                    <p:commandButton   onclick="form.target = '_blank'"  ajax="false"
-                                       update="@form" 
-                                       class="smsearchButtons"
-                                       icon="fa fa-fw fa-search-plus"  style="background-color: rgba(63, 81, 181, 0.88);border-radius: 3px;"
-                                       title="تعديل بيانات العميل" 
-                                       action="#{gmSubscriptionsListDTOMB.goToEdit()}" 
-                                       rendered="#{userData.userScreens['gmsubscriptions'].edit or userData.isAdmin}" >
-
-                        <f:setPropertyActionListener value="#{invInvoicePurchaseTable}" 
-                                                     target="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected}" />
-                    </p:commandButton>
+                    <p:commandButton style=""   value="تعديل بيانات العميل"  action ="#{gmSubscriptionsListDTOMB.EditClientData()}"/> 
+                    
+                    
                 </div>
 
             </div>

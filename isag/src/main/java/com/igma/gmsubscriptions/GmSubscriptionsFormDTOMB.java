@@ -272,7 +272,7 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
         getGmSubscriptionsDTO().setOrganizationSiteId(organizationSiteService.addNewCustomer(getOrganizationSiteId(), getInvOrganizationSiteDTOList(), getUserData().getUser()));
         getGmSubscriptionsDTO().setShowCustomerDate(Boolean.FALSE);
         saveImage();
-        leaveScreen();
+        exit("../gmsubscriptionstatue/gmsubscriptionstatue.xhtml");
 
     }
 
