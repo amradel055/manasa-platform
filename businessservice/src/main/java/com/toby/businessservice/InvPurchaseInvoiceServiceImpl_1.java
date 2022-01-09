@@ -2493,6 +2493,117 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                 }
             }
             // ادخال المشتريات
+        } else if (dto.getScreenName().equals(ScreenNameClassEnum.INVRETURNSALESFORM)) {
+            // ادخال المبيعات
+            journal = generaljournalService.addGeneralJournalGlobal(dto.getGlYearSelection().getId(), 1013, dto.getSerial(), dto.getDate(), dto.getRemarks(), tobyUser, 0);
+
+            if (dto.getGallaryId() != null && dto.getGallaryId().getCostCenterId() != null && dto.getGallaryId().getCostCenterId().getId() != null) {
+                Integer salesTaxAccount = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"SALES_TAX_ACCOUNT\" AND a.accountId IS NOT NULL", params);
+                // حساب القيمة المضافة 
+                generaljournalDetailsService.addGenDetalil(false, dto.getFinalNet(), journal.getId(),
+                        (dto.getOrganizationSiteId() == null || dto.getOrganizationSiteId().getAccountId() == null || dto.getOrganizationSiteId().getAccountId().getId() == null) ? null : dto.getOrganizationSiteId().getAccountId().getId(),
+                        (dto.getGallaryId() == null || dto.getGallaryId().getCostCenterId() == null || dto.getGallaryId().getCostCenterId().getId() == null) ? null : dto.getGallaryId().getCostCenterId().getId(),
+                        "مبيعات", tobyUser);
+//  حساب المبيعات
+                Integer salesAccountNumber = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"SALES_ACCOUNT_NUMBER\" AND a.accountId IS NOT NULL", params);
+                generaljournalDetailsService.addGenDetalil(true, dto.getTotalNetAfterDiscount(), journal.getId(), salesAccountNumber,
+                        (dto.getGallaryId() == null || dto.getGallaryId().getCostCenterId() == null || dto.getGallaryId().getCostCenterId().getId() == null) ? null : dto.getGallaryId().getCostCenterId().getId(),
+                        dto.getRemarks(), tobyUser);
+                generaljournalDetailsService.addGenDetalil(true, dto.getTaxvalue(), journal.getId(), salesTaxAccount,
+                        (dto.getGallaryId() == null || dto.getGallaryId().getCostCenterId() == null || dto.getGallaryId().getCostCenterId().getId() == null) ? null : dto.getGallaryId().getCostCenterId().getId(),
+                        dto.getRemarks(), tobyUser);
+
+                List<TarhilInvoiceDetail> tarhilInvoiceDetailList = new ArrayList<>();
+                Map<String, Object> params2 = new HashMap();
+                params2.put("invPurchaseInvoiceId", dto.getId());
+                StringBuilder sql = new StringBuilder();
+                sql.append("SELECT sum(ipid.costAvarage) , ipid.invInventoryId.costCenterId.id , ipid.invInventoryId.costAccount.id FROM InvPurchaseInvoiceDetail ipid  WHERE ipid.invPurchaseInvoiceId.id = :invPurchaseInvoiceId group by ipid.invInventoryId.id");
+
+                List<Object[]> res = dao.findListByQuery(sql.toString(), params2);
+
+                Iterator it = res.iterator();
+                while (it.hasNext()) {
+                    Object[] line = (Object[]) it.next();
+                    TarhilInvoiceDetail tarhilInvoiceDetail = new TarhilInvoiceDetail();
+                    tarhilInvoiceDetail.setTotalCost((BigDecimal) line[0]);
+                    tarhilInvoiceDetail.setCostCenterId((Integer) line[1]);
+                    tarhilInvoiceDetail.setCostAccountId((Integer) line[2]);
+                    tarhilInvoiceDetailList.add(tarhilInvoiceDetail);
+                }
+
+                // الشيئ الثالث هو انشاء مراكز التكاليف واستدعا مركز تكلفة الإدارة
+                Integer managerCostAccount = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"MANAGER_CURRENT_ACCOUNT\" AND a.accountId IS NOT NULL", params);
+                Integer costOfSoldGoods = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"COST_OF_GOODS_SOLD_ACCOUNT_NUMBER\" AND a.accountId IS NOT NULL", params);
+                Integer storeAccountNumber = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"STORE_ACCOUNT_NUMBER\" AND a.accountId IS NOT NULL", params);
+
+                if (tarhilInvoiceDetailList != null && tarhilInvoiceDetailList.size() == 1) {
+                    if (835 == tarhilInvoiceDetailList.get(0).getCostCenterId()) {
+                        generaljournalDetailsService.addGenDetalil(false, tarhilInvoiceDetailList.get(0).getTotalCost(), journal.getId(),
+                                (dto.getGallaryId() == null || dto.getGallaryId().getRunningAccount() == null || dto.getGallaryId().getRunningAccount().getId() == null) ? null : dto.getGallaryId().getRunningAccount().getId(),
+                                835, dto.getRemarks(), tobyUser);
+
+                        generaljournalDetailsService.addGenDetalil(true, tarhilInvoiceDetailList.get(0).getTotalCost(), journal.getId(),
+                                storeAccountNumber,
+                                835, dto.getRemarks(), tobyUser);
+
+                        generaljournalDetailsService.addGenDetalil(false, tarhilInvoiceDetailList.get(0).getTotalCost(), journal.getId(),
+                                costOfSoldGoods,
+                                (dto.getGallaryId() == null || dto.getGallaryId().getCostCenterId() == null || dto.getGallaryId().getCostCenterId().getId() == null) ? null : dto.getGallaryId().getCostCenterId().getId(),
+                                dto.getRemarks(), tobyUser);
+                        generaljournalDetailsService.addGenDetalil(true, tarhilInvoiceDetailList.get(0).getTotalCost(), journal.getId(),
+                                managerCostAccount,
+                                (dto.getGallaryId() == null || dto.getGallaryId().getCostCenterId() == null || dto.getGallaryId().getCostCenterId().getId() == null) ? null : dto.getGallaryId().getCostCenterId().getId(),
+                                dto.getRemarks(), tobyUser);
+                    } else {
+
+                        generaljournalDetailsService.addGenDetalil(true, tarhilInvoiceDetailList.get(0).getTotalCost(), journal.getId(),
+                                tarhilInvoiceDetailList.get(0).getCostAccountId(),
+                                tarhilInvoiceDetailList.get(0).getCostCenterId(), dto.getRemarks(), tobyUser);
+
+                        generaljournalDetailsService.addGenDetalil(false, tarhilInvoiceDetailList.get(0).getTotalCost(), journal.getId(),
+                                costOfSoldGoods,
+                                tarhilInvoiceDetailList.get(0).getCostCenterId(),
+                                dto.getRemarks(), tobyUser);
+                    }
+                } else {
+                    TarhilInvoiceDetail tarhilInvoiceDetailMaster = null;
+                    BigDecimal totalCost = BigDecimal.ZERO;
+                    for (TarhilInvoiceDetail tarhilInvoiceDetail : tarhilInvoiceDetailList) {
+                        if (835 == tarhilInvoiceDetail.getCostCenterId()) {
+                            tarhilInvoiceDetailMaster = (TarhilInvoiceDetail) tarhilInvoiceDetail.clone();
+                        } else {
+                            generaljournalDetailsService.addGenDetalil(true, tarhilInvoiceDetail.getTotalCost(), journal.getId(),
+                                    tarhilInvoiceDetail.getCostAccountId(),
+                                    tarhilInvoiceDetail.getCostCenterId(),
+                                    dto.getRemarks(), tobyUser);
+                            totalCost = totalCost.add(tarhilInvoiceDetail.getTotalCost());
+                        }
+                    }
+
+                    if (tarhilInvoiceDetailMaster != null) {
+                        generaljournalDetailsService.addGenDetalil(false, tarhilInvoiceDetailList.get(0).getTotalCost(), journal.getId(),
+                                (dto.getGallaryId() == null || dto.getGallaryId().getRunningAccount() == null || dto.getGallaryId().getRunningAccount().getId() == null) ? null : dto.getGallaryId().getRunningAccount().getId(),
+                                835, dto.getRemarks(), tobyUser);
+
+                        generaljournalDetailsService.addGenDetalil(true, tarhilInvoiceDetailList.get(0).getTotalCost(), journal.getId(),
+                                storeAccountNumber,
+                                835, dto.getRemarks(), tobyUser);
+
+                        generaljournalDetailsService.addGenDetalil(false, tarhilInvoiceDetailList.get(0).getTotalCost().add(totalCost), journal.getId(),
+                                costOfSoldGoods,
+                                (dto.getGallaryId() == null || dto.getGallaryId().getCostCenterId() == null || dto.getGallaryId().getCostCenterId().getId() == null) ? null : dto.getGallaryId().getCostCenterId().getId(),
+                                dto.getRemarks(), tobyUser);
+                        generaljournalDetailsService.addGenDetalil(true, tarhilInvoiceDetailList.get(0).getTotalCost(), journal.getId(),
+                                managerCostAccount,
+                                (dto.getGallaryId() == null || dto.getGallaryId().getCostCenterId() == null || dto.getGallaryId().getCostCenterId().getId() == null) ? null : dto.getGallaryId().getCostCenterId().getId(),
+                                dto.getRemarks(), tobyUser);
+                    } else {
+                        // here
+
+                    }
+                }
+            }
+            // ادخال المشتريات
         } else if (dto.getScreenName().equals(ScreenNameClassEnum.INVPURCHASEINVOICEFORM)) {
             journal = generaljournalService.addGeneralJournalGlobal(dto.getGlYearSelection().getId(), 1010, dto.getSerial(), dto.getDate(), "فاتورة مشتريات", tobyUser, 0);
 
@@ -2509,6 +2620,23 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             generaljournalDetailsService.addGenDetalil(true, dto.getTaxvalue(), journal.getId(), purchseTaxAccount,
                     (dto.getGallaryId() == null || dto.getGallaryId().getCostCenterId() == null || dto.getGallaryId().getCostCenterId().getId() == null) ? null : dto.getGallaryId().getCostCenterId().getId(),
                     "فاتورة مشتريات" + " رقم " + dto.getSupplierInvoiceNumber(), tobyUser);
+
+        } else if (dto.getScreenName().equals(ScreenNameClassEnum.INVRETURNPURCHASEFORM)) {
+            journal = generaljournalService.addGeneralJournalGlobal(dto.getGlYearSelection().getId(), 1010, dto.getSerial(), dto.getDate(), "مردود مشتريات", tobyUser, 0);
+
+            Integer storeAccountNumber = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"STORE_ACCOUNT_NUMBER\" AND a.accountId IS NOT NULL", params);
+            Integer purchseTaxAccount = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"PURCHASE_TAX_ACCOUNT\" AND a.accountId IS NOT NULL", params);
+
+            generaljournalDetailsService.addGenDetalil(false, dto.getTotalNetAfterDiscount(), journal.getId(), storeAccountNumber,
+                    835,
+                    "فاتورة المورد " + dto.getOrganizationSiteId() == null ? "" : dto.getOrganizationSiteId().getName() + " رقم " + dto.getSupplierInvoiceNumber(), tobyUser);
+            generaljournalDetailsService.addGenDetalil(true, dto.getFinalNet(), journal.getId(),
+                    (dto.getOrganizationSiteId() == null || dto.getOrganizationSiteId().getAccountId() == null || dto.getOrganizationSiteId().getAccountId().getId() == null) ? null : dto.getOrganizationSiteId().getAccountId().getId(),
+                    (dto.getGallaryId() == null || dto.getGallaryId().getCostCenterId() == null || dto.getGallaryId().getCostCenterId().getId() == null) ? null : dto.getGallaryId().getCostCenterId().getId(),
+                    "مردود مشتريات" + " رقم " + dto.getSupplierInvoiceNumber(), tobyUser);
+            generaljournalDetailsService.addGenDetalil(false, dto.getTaxvalue(), journal.getId(), purchseTaxAccount,
+                    (dto.getGallaryId() == null || dto.getGallaryId().getCostCenterId() == null || dto.getGallaryId().getCostCenterId().getId() == null) ? null : dto.getGallaryId().getCostCenterId().getId(),
+                    "مردود مشتريات" + " رقم " + dto.getSupplierInvoiceNumber(), tobyUser);
 
         }
         return journal == null ? null : journal;

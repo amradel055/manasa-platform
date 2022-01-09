@@ -169,8 +169,7 @@
                             <p:commandButton   class="sprintButtons"  onclick="form.target = '_blank'"  ajax="false"
                                                icon="fa fa-fw fa-print" style="background-color: rgb(0, 74, 128);border-radius: 3px;"
                                                title="print" 
-                                               action="#{invAddingOrderListDTOMB.printList()}" 
-                                               rendered="#{userData.userScreens['invpermissionorder_1'].edit or userData.isAdmin}" >
+                                               action="#{invAddingOrderListDTOMB.printList()}"  >
 
                                 <f:setPropertyActionListener value="#{invAddingOrderTable}" 
                                                              target="#{invAddingOrderListDTOMB.invInvoiceDTOSelected}" />

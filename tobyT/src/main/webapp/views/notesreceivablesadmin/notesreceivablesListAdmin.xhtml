@@ -172,8 +172,7 @@
                             <p:commandButton   class="sprintButton" ajax="false" onclick="form.target = '_blank'" 
                                                icon="fa fa-fw fa-print"
                                                style="background-color:#0A487B;border-radius: 3px;margin-bottom:3px"
-                                               actionListener="#{notesReceivablesListMB.exportPDF}" 
-                                               rendered="#{userData.userScreens['notesreceivablesadmin'].view or userData.isAdmin}">
+                                               actionListener="#{notesReceivablesListMB.exportPDF}" >
                                 <f:attribute name="varValue" value="#{glBankTransactionTable}" />
                             </p:commandButton>
                         </p:column>

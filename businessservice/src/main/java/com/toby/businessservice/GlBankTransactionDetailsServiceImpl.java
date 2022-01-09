@@ -257,6 +257,17 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
                         dto.getBankIdFrom().getGallaryId().getCostCenterId().getId(),
                         dto.getRemarks(), tobyUser);
             }
+        } else if (dto.getGlBankTransactionId().getTransactionType() == 2) {
+            journal = generaljournalService.addGeneralJournalGlobal(dto.getGlBankTransactionId().getGlYear(), 1007, dto.getGlBankTransactionId().getSerial(), dto.getGlBankTransactionId().getDate(),
+                    dto.getGlBankTransactionId().getRemark(), tobyUser, 1);
+
+            generaljournalDetailsService.addGenDetalil(true, dto.getGlBankTransactionId().getValueLocal(), journal.getId(), dto.getAccountDebitId().getId(),
+                    dto.getAccountDebitId().getCostCenterId().getId(),
+                    dto.getRemarks(), tobyUser);
+
+            generaljournalDetailsService.addGenDetalil(false, dto.getGlBankTransactionId().getValueLocal(), journal.getId(), dto.getAccountCreditId().getId(),
+                    dto.getBankIdFrom().getGallaryId().getCostCenterId().getId(),
+                    dto.getRemarks(), tobyUser);
         }
         return journal == null ? null : journal.getId();
     }
