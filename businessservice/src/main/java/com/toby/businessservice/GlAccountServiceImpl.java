@@ -608,7 +608,7 @@ public class GlAccountServiceImpl implements GlAccountService {
         return glAccountDTO;
     }
 
-    public List<GlAccountDTO> mapToDTOList(List<GlAccount> adminUnitList, TobyUser tobyUser) {
+    public List<GlAccountDTO> mapToDTOList(List<GlAccount> adminUnitList) {
         List<GlAccountDTO> glAccountDTOList = new ArrayList<>();
         for (GlAccount glAccount : adminUnitList) {
             glAccountDTOList.add(mapToDTO(glAccount));
@@ -621,15 +621,15 @@ public class GlAccountServiceImpl implements GlAccountService {
         Map<String, Object> params = new HashMap();
         params.put("branchId", tobyUser.getBranchId().getId());
         List<GlAccount> glAccountList = dao.findListByQuery("SELECT acc FROM GlAccount acc WHERE acc.branchId.id=:branchId AND acc.status=1  ORDER BY acc.accNumber ASC ", params);
-        return mapToDTOList(glAccountList, tobyUser);
+        return mapToDTOList(glAccountList);
     }
 
     @Override
-    public List<GlAccountDTO> getBranchGLAccountsActiveDTO(Integer id, TobyUser tobyUser) {
+    public List<GlAccountDTO> getBranchGLAccountsActiveDTO(Integer branchId) {
         Map<String, Object> params = new HashMap();
-        params.put("branchId", tobyUser.getBranchId().getId());
+        params.put("branchId", branchId);
         List<GlAccount> details = dao.findListByQuery("SELECT acc FROM GlAccount acc WHERE acc.branchId.id=:branchId AND acc.status=1  ORDER BY acc.accNumber ASC ", params);
-        return mapToDTOList(details, tobyUser);
+        return mapToDTOList(details);
     }
 
     @Override

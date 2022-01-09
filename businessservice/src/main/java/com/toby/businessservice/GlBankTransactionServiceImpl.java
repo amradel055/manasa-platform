@@ -61,16 +61,16 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
             List<GlBankTransactionDetail> glBankTransactionDetailListDeleted, Integer companyId, TobyUser tobyUser) {
 
         glBankTransaction = addingForGlBank(glBankTransaction, glBankTransactionDetailListDeleted, glBankTransactionDetailList, tobyUser);
-        if (glBankTransaction.getTransactionType() != null && glBankTransaction.getTransactionType() == 1) {
-
-            AccountsSystemSettings accountsSystemSettings = new AccountsSystemSettings();
-            accountsSystemSettings = accountsSystemSettingsService.getInventoryByCompanyId(companyId);
-
-            if (accountsSystemSettings != null && accountsSystemSettings.getWorkWithAccounts() != null
-                    && accountsSystemSettings.getNoteSreceivablesType().equals("NOT_ALLOW_DETAIL")) {
-                checkDuplicateDetails(glBankTransaction);
-            }
-        }
+//        if (glBankTransaction.getTransactionType() != null && glBankTransaction.getTransactionType() == 1) {
+//
+//            AccountsSystemSettings accountsSystemSettings = new AccountsSystemSettings();
+//            accountsSystemSettings = accountsSystemSettingsService.getInventoryByCompanyId(companyId);
+//
+//            if (accountsSystemSettings != null && accountsSystemSettings.getWorkWithAccounts() != null
+//                    && accountsSystemSettings.getNoteSreceivablesType().equals("NOT_ALLOW_DETAIL")) {
+//                checkDuplicateDetails(glBankTransaction);
+//            }
+//        }
         return glBankTransaction;
     }
 
@@ -100,7 +100,7 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
         if (glBankTransaction.getTransactionType() != null && glBankTransaction.getTransactionType() == 0) {
 
             tarhilId = glBankTransactionDetailsService.updateGlBankTransactionDetails(glBankTransactionDetailList, glBankTransaction, tobyUser);
-            tarhilglBankTransaction(tarhilId, glBankTransaction);
+           glBankTransaction =  tarhilglBankTransaction(tarhilId, glBankTransaction);
         } else {
             Integer maxSerial = 0;
             if (glBankTransaction != null && glBankTransaction.getId() != null) {
@@ -119,7 +119,7 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
                     tarhilId = glBankTransactionDetailsService.updateGlBankTransactionDetails(glBankTransactionDetail, tobyUser);
                     maxSerial++;
                 }
-                tarhilglBankTransaction(tarhilId, glBankTransaction);
+                glBankTransaction = tarhilglBankTransaction(tarhilId, glBankTransaction);
             }
         }
         return glBankTransaction;
@@ -496,12 +496,12 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
         tarhilglBankTransaction(tarhil, glBankTransaction);
     }
 
-    private void tarhilglBankTransaction(Integer tarhil, GlBankTransaction glBankTransaction) {
+    private GlBankTransaction tarhilglBankTransaction(Integer tarhil, GlBankTransaction glBankTransaction) {
         GeneralJournal generalJournal = new GeneralJournal();
         generalJournal.setId(tarhil);
         glBankTransaction.setGeneralJournalId(generalJournal);
         glBankTransaction.setPostFlag(1);
-        dao.updateEntity(glBankTransaction);
+        return glBankTransaction = dao.updateEntity(glBankTransaction);
     }
 
     private GlBankTransactionDTO transfareTo(GlBankTransaction entity, Integer brankId) {

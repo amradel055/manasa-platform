@@ -351,7 +351,6 @@
                                           class="saddButton"
                                           icon="fa fa-plus"
                                           title="#{userData.userDDs['ADD']}" 
-                                          disabled="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id != null or invPurchaseInvoiceFormDTOMB.invInvoiceDTO.loadedSerial  ne null}"
                                           actionListener="#{invPurchaseInvoiceFormDTOMB.addInvDetail()}" 
                                           update=":form:fieldSetId"  
                                           oncomplete="PrimeFaces.focus('form:invPurchaseInvoiceDetailsTable:'+#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.invPurchaseInvoiceDetailList.size()}+':invItemNameIn')"
@@ -728,7 +727,6 @@
                                           class="saveButtons"
                                           title="#{userData.userDDs['SAVE']}"
                                           value="#{userData.userDDs['SAVE']}" 
-                                          rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id == null}"
                                           action="#{invPurchaseInvoiceFormDTOMB.save()}"
                                           update="@form"/>
 

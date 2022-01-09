@@ -294,7 +294,7 @@ public class CostCenterServiceImpl implements CostCenterService {
         return costCenterDTO;
     }
 
-    public List<CostCenterDTO> mapToDTOList(List<CostCenter> costCenterList, TobyUser tobyUser) {
+    public List<CostCenterDTO> mapToDTOList(List<CostCenter> costCenterList) {
         List<CostCenterDTO> costCenterDTOList = new ArrayList<>();
         for (CostCenter costCenter : costCenterList) {
             costCenterDTOList.add(mapToDTO(costCenter));
@@ -303,9 +303,9 @@ public class CostCenterServiceImpl implements CostCenterService {
     }
 
     @Override
-    public List<CostCenterDTO> getAllCostCenterDTOList(TobyUser tobyUser) {
-        List<CostCenter> details = getAllSubCostCenterByBranchIdActive(tobyUser.getBranchId().getId());
-        return mapToDTOList(details, tobyUser);
+    public List<CostCenterDTO> getAllCostCenterDTOList(Integer branchId) {
+        List<CostCenter> details = getAllSubCostCenterByBranchIdActive(branchId);
+        return mapToDTOList(details);
     }
 
     @Override
@@ -313,7 +313,7 @@ public class CostCenterServiceImpl implements CostCenterService {
          Map<String, Object> params = new HashMap();
         params.put("id", tobyUser.getBranchId().getId());
         List<CostCenter> costCenterList =  dao.findListByQuery("SELECT cs FROM CostCenter cs WHERE cs.parent IS NOT NULL AND cs.branchId.id=:id AND cs.active = 1   ORDER BY cs.code ASC ", params);
-        return mapToDTOList(costCenterList, tobyUser);
+        return mapToDTOList(costCenterList);
     }
     
      ///////////// new /////////////////////

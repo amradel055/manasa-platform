@@ -60,7 +60,7 @@ public interface CostCenterService {
 
     public List<CostCenter> getAllSubCostCenterByBranchIdActiveAndLevel(Integer branchId, Integer level);
     
-    public List<CostCenterDTO> getAllCostCenterDTOList(TobyUser tobyUser);
+    public List<CostCenterDTO> getAllCostCenterDTOList(Integer branchId);
     
     public List<CostCenterDTO> getActiveSubCostCentersByBranchDTO(Integer branchId);
     

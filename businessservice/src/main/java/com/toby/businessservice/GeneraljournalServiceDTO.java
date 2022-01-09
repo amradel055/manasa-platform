@@ -5,6 +5,7 @@
  */
 package com.toby.businessservice;
 
+import com.toby.bean.JournalDocumentArrangedReportBean;
 import com.toby.entity.TobyUser;
 import com.toby.dto.GeneralJournalDTO;
 import com.toby.dto.GlYearDTO;
@@ -51,6 +52,8 @@ public interface GeneraljournalServiceDTO {
     public void addGeneralJournalDTOWithDetail(GeneralJournalDTO dto, TobyUser tobyUser,Integer serial ,Integer idHead , Integer idDetail) ;
     
     public void addGeneralJournalDTOWithDetail(GeneralJournalDTO dto, TobyUser tobyUser) ;
+    
+    public List<JournalDocumentArrangedReportBean> printVoutcher(Integer generalJournalId) ;
     
     
 }

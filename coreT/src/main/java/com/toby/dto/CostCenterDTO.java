@@ -7,7 +7,6 @@ package com.toby.dto;
 
 import com.toby.entity.GlAccount;
 import java.util.List;
-import javax.ejb.EJB;
 
 
 public class CostCenterDTO extends BaseEntityDTO {

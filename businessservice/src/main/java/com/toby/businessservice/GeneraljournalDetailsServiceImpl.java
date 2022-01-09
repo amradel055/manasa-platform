@@ -176,7 +176,7 @@ public class GeneraljournalDetailsServiceImpl implements GeneraljournalDetailsSe
     }
 
     @Override
-    public GeneralJournalDetails addGenDetalil(Boolean isDebit, BigDecimal value, Integer generalJournalId, Integer accountId, Integer costCenterId, String remark, TobyUser tobyUser) {
+    public void addGenDetalil(Boolean isDebit, BigDecimal value, Integer generalJournalId, Integer accountId, Integer costCenterId, String remark, TobyUser tobyUser) {
 
         GeneralJournalDetails generalJournalDetail = new GeneralJournalDetails();
 
@@ -217,9 +217,9 @@ public class GeneraljournalDetailsServiceImpl implements GeneraljournalDetailsSe
         findTheMaximumSerial(generalJournalDetail);
 
         fillSerial(generalJournalDetail);
-        generalJournalDetail = dao.updateEntity(generalJournalDetail);
+        dao.saveEntity(generalJournalDetail);
 
-        return generalJournalDetail;
+//        return generalJournalDetail;
     }
 
     @Override

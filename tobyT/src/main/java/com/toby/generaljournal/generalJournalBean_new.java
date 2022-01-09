@@ -5,6 +5,7 @@
  */
 package com.toby.generaljournal;
 
+import com.toby.bean.JournalDocumentArrangedReportBean;
 import com.toby.businessservice.TobyUserYearService;
 import com.toby.dto.TobyCompanyDTO;
 import com.toby.entity.TobyCompany;
@@ -43,8 +44,6 @@ import com.toby.dto.GlYearDTO;
 import com.toby.dto.SymbolDTO;
 import com.toby.entity.GlYear;
 import com.toby.entity.Symbol;
-import com.toby.generaljournal.GeneralJournalBean;
-import com.toby.report.entity.JournalDocumentArrangedReportBean;
 import com.toby.reports.GeneralJournalShowBean;
 import com.toby.toby.BaseFormBean;
 import com.toby.toby.UserData;

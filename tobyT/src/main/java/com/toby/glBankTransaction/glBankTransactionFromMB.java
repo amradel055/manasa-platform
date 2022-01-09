@@ -72,7 +72,7 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
 
     private Map<Integer, GlBankTransactionDetail> invQuotationDetailList;
 
-    private Boolean disableSave = false;
+//    private Boolean disableSave = false;
     private Boolean saveValidation;
     private List<GlBankTransactionDetailEntity> glBankTransactionDetailEntityList;
     private String remark;
@@ -115,9 +115,9 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
             glBankTransactionEntity = new GlBankTransactionEntity();
             GlBankTransactionDetailEntity = new GlBankTransactionDetailEntity();
             glBankTransactionEntity.setPaymentType(0);
-            glBankListTo = tobyUserBankService.getAllGlBankForUserByTypeAndBranchId(getUserData().getUser().getId(), getUserData().getUserBranch().getId(), glBankTransactionEntity.getPaymentType());
+//            glBankListTo = tobyUserBankService.getAllGlBankForUserByTypeAndBranchId(getUserData().getUser().getId(), getUserData().getUserBranch().getId(), glBankTransactionEntity.getPaymentType());
             glBankListFrom = tobyUserBankService.getAllGlBankByTypeAndBranchId(getUserData().getUserBranch().getId(), glBankTransactionEntity.getPaymentType());
-            setGlBankConverterTo(new GlBankConverter(glBankListTo));
+//            setGlBankConverterTo(new GlBankConverter(glBankListTo));
             setGlBankConverterFrom(new GlBankConverter(glBankListFrom));
 
             if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("add")) {
@@ -157,14 +157,14 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
     public void fillGlBanks() {
         try {
             GlBankTransactionDetailEntity.setBankFrom((glBankListFrom != null && !glBankListFrom.isEmpty()) ? glBankListFrom.get(0) : null);
-            GlBankTransactionDetailEntity.setBankTo((glBankListTo != null && !glBankListTo.isEmpty()) ? glBankListTo.get(0) : null);
+            GlBankTransactionDetailEntity.setBankTo(null);
+//            GlBankTransactionDetailEntity.setBankTo((glBankListTo != null && !glBankListTo.isEmpty()) ? glBankListTo.get(0) : null);
 
-            disableSave = false;
-
-            if (glBankListTo == null || glBankListTo.isEmpty() || glBankListFrom == null || glBankListFrom.isEmpty()) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "لا توجد خزائن لهذا النوع من التحويل"));
-                disableSave = true;
-            }
+//            disableSave = false;
+//            if (glBankListTo == null || glBankListTo.isEmpty() || glBankListFrom == null || glBankListFrom.isEmpty()) {
+//                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "لا توجد خزائن لهذا النوع من التحويل"));
+//                disableSave = true;
+//            }
         } catch (Exception e) {
             saveError(e, "glBankTransactionFromMB", "fillGlBanks");
         }
@@ -203,7 +203,7 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
             GlBankTransactionDetailEntity.setGlBankTransactionId(glBankTransactionDetail.getGlBankTransactionId() != null ? glBankTransactionDetail.getGlBankTransactionId().getId() : null);
 
             GlBankTransactionDetailEntity.setBankFrom(glBankTransactionDetail.getBankIdFrom() != null ? glBankTransactionDetail.getBankIdFrom() : null);
-            GlBankTransactionDetailEntity.setBankTo(glBankTransactionDetail.getBankIdTo() != null ? glBankTransactionDetail.getBankIdTo() : null);
+//            GlBankTransactionDetailEntity.setBankTo(glBankTransactionDetail.getBankIdTo() != null ? glBankTransactionDetail.getBankIdTo() : null);
             remark = glBankTransactionEntity.getRemark();
         } catch (Exception e) {
             saveError(e, "glBankTransactionFromMB", "validateGlBankUpdatedValues");
@@ -250,7 +250,7 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
             validateSave();
             if (saveValidation) {
                 glBankTransaction.setPostFlag(0);
-                glBankTransaction = bankTransactionService.addOneGlBankTransaction(glBankTransaction, glBankTransactionDetail,getUserData().getUser());
+                glBankTransaction = bankTransactionService.addOneGlBankTransaction(glBankTransaction, glBankTransactionDetail, getUserData().getUser());
                 return exit();
             }
             return "";
@@ -277,9 +277,10 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
             glBankTransactionDetail.setValue(GlBankTransactionDetailEntity.getValue() != null ? GlBankTransactionDetailEntity.getValue() : null);
             glBankTransactionDetail.setValueLocal(GlBankTransactionDetailEntity.getValueLocal() != null ? GlBankTransactionDetailEntity.getValueLocal() : null);
             glBankTransactionDetail.setAccountDebitId(GlBankTransactionDetailEntity.getBankFrom() != null ? GlBankTransactionDetailEntity.getBankFrom().getAccountId() : null);
-            glBankTransactionDetail.setAccountCreditId(GlBankTransactionDetailEntity.getBankTo() != null ? GlBankTransactionDetailEntity.getBankTo().getAccountId() : null);
+//            glBankTransactionDetail.setAccountCreditId(GlBankTransactionDetailEntity.getBankTo() != null ? GlBankTransactionDetailEntity.getBankTo().getAccountId() : null);
+            glBankTransactionDetail.setAccountCreditId(GlBankTransactionDetailEntity.getBankFrom() != null ? GlBankTransactionDetailEntity.getBankFrom().getTransferaccountId() : null);
             glBankTransactionDetail.setBankIdFrom(GlBankTransactionDetailEntity.getBankFrom() != null ? GlBankTransactionDetailEntity.getBankFrom() : null);
-            glBankTransactionDetail.setBankIdTo(GlBankTransactionDetailEntity.getBankTo() != null ? GlBankTransactionDetailEntity.getBankTo() : null);
+//            glBankTransactionDetail.setBankIdTo(GlBankTransactionDetailEntity.getBankTo() != null ? GlBankTransactionDetailEntity.getBankTo() : null);
             glBankTransactionDetail.setRemarks(glBankTransactionEntity.getRemark() != null ? glBankTransactionEntity.getRemark() : null);
             glBankTransactionDetail.setRateBankFrom(glBankTransactionEntity.getRateBankFrom());
             glBankTransactionDetail.setRateBankTo(glBankTransactionEntity.getRateBankTo());
@@ -294,19 +295,20 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
             if (GlBankTransactionDetailEntity.getBankFrom() == null) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "خزنة التحويل غير مربوطة بحساب"));
                 saveValidation = false;
-            } else if (GlBankTransactionDetailEntity.getBankTo() == null) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "خزنة الاستلام غير مربوطة بحساب"));
-                saveValidation = false;
             }
-            if (GlBankTransactionDetailEntity.getBankFrom().equals(GlBankTransactionDetailEntity.getBankTo())) {
-                GlBankTransactionDetailEntity.setBankTo(null);
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "لا يمكن التحويل الى نفس الحساب"));
-                saveValidation = false;
-            }
-            if (glBankTransactionEntity != null && glBankTransactionEntity.getPostFlag() != null && glBankTransactionEntity.getPostFlag() == 1) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "تم ترحيل السند"));
-                saveValidation = false;
-            }
+//            else if (GlBankTransactionDetailEntity.getBankTo() == null) {
+//                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "خزنة الاستلام غير مربوطة بحساب"));
+//                saveValidation = false;
+//            }
+//            if (GlBankTransactionDetailEntity.getBankFrom().equals(GlBankTransactionDetailEntity.getBankTo())) {
+//                GlBankTransactionDetailEntity.setBankTo(null);
+//                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "لا يمكن التحويل الى نفس الحساب"));
+//                saveValidation = false;
+//            }
+//            if (glBankTransactionEntity != null && glBankTransactionEntity.getPostFlag() != null && glBankTransactionEntity.getPostFlag() == 1) {
+//                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "تم ترحيل السند"));
+//                saveValidation = false;
+//            }
         } catch (Exception e) {
             saveError(e, "glBankTransactionFromMB", "validateSave");
         }
@@ -317,11 +319,11 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
 
             if (GlBankTransactionDetailEntity.getBankFrom() != null && GlBankTransactionDetailEntity.getBankFrom().getCurrencyId() != null) {
                 if (glBankTransactionEntity.getDate() != null) {
-                    currencyOperation = currencyOperationService.getRatesByDates(GlBankTransactionDetailEntity.getBankFrom().getCurrencyId().getId(), glBankTransactionEntity.getDate(), getUserData().getCompany().getId());
+//                    currencyOperation = currencyOperationService.getRatesByDates(GlBankTransactionDetailEntity.getBankFrom().getCurrencyId().getId(), glBankTransactionEntity.getDate(), getUserData().getCompany().getId());
                     glBankTransactionEntity.setRate(currencyOperation == null ? BigDecimal.ONE : currencyOperation.getRate());
                     glBankTransactionEntity.setRateBankFrom(currencyOperation == null ? BigDecimal.ONE : currencyOperation.getRate());
 
-                    currencyOperation = currencyOperationService.getRatesByDates(GlBankTransactionDetailEntity.getBankTo().getCurrencyId().getId(), glBankTransactionEntity.getDate(), getUserData().getCompany().getId());
+//                    currencyOperation = currencyOperationService.getRatesByDates(GlBankTransactionDetailEntity.getBankTo().getCurrencyId().getId(), glBankTransactionEntity.getDate(), getUserData().getCompany().getId());
                     glBankTransactionEntity.setRateBankTo(currencyOperation == null ? BigDecimal.ONE : currencyOperation.getRate());
 
                     calculateLocalValue();
@@ -356,10 +358,11 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
             gbtdes.add(glBankTransactionEntity);
             if (glBankTransactionEntity != null && glBankTransactionEntity.getId() != null) {
                 fillReport(prepareReport(), getUserData().getReportPath() + "glBankTransaction.jasper", gbtdes, "pdf");
-            } else {
-                save();
-                fillReport(prepareReport(), getUserData().getReportPath() + "glBankTransaction.jasper", gbtdes, "pdf");
             }
+//            else {
+//                save();
+//                fillReport(prepareReport(), getUserData().getReportPath() + "glBankTransaction.jasper", gbtdes, "pdf");
+//            }
         } catch (Exception e) {
             saveError(e, "glBankTransactionFromMB", "exportPDF");
         }
@@ -469,7 +472,7 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
                 }
 
                 code = glBankFilter.getCode();
-                if (code != null ) {
+                if (code != null) {
                     if (!filteredGlBanks.contains(glBankFilter)) {
                         filteredGlBanks.add(glBankFilter);
                     }
@@ -507,7 +510,7 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
                 }
 
                 code = glBankFilter.getCode();
-                if (code != null ) {
+                if (code != null) {
                     if (!filteredGlBanks.contains(glBankFilter)) {
                         filteredGlBanks.add(glBankFilter);
                     }
@@ -772,14 +775,13 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
         this.invQuotationDetailList = invQuotationDetailList;
     }
 
-    public Boolean getDisableSave() {
-        return disableSave;
-    }
-
-    public void setDisableSave(Boolean disableSave) {
-        this.disableSave = disableSave;
-    }
-
+//    public Boolean getDisableSave() {
+//        return disableSave;
+//    }
+//
+//    public void setDisableSave(Boolean disableSave) {
+//        this.disableSave = disableSave;
+//    }
     /**
      * @return the saveValidation
      */

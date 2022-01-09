@@ -5,24 +5,24 @@
  */
 package com.toby.settlementdeed;
 
+import com.toby.bean.GlBankTransactionDetailFromEntity;
+import com.toby.bean.JournalDocumentAndSettelment;
 import com.toby.businessservice.AccountsSystemSettingsService;
 import com.toby.businessservice.CostCenterService;
+import com.toby.businessservice.GeneraljournalServiceDTO;
 import com.toby.businessservice.GlAccountService;
-import com.toby.businessservice.GlAdminUnitService;
-import com.toby.businessservice.GlBankService;
 import com.toby.businessservice.GlBankTransactionDetailsService;
 import com.toby.businessservice.GlBankTransactionInvoiceViewService;
 import com.toby.businessservice.GlBankTransactionService;
 import com.toby.businessservice.TobyUserBankService;
-import com.toby.businessservice.OrganizationSiteService;
 import com.toby.businessservice.SymbolService;
-import com.toby.converter.CostCenterConverter;
+import com.toby.converter.CostCenterDTOConverter;
 import com.toby.converter.GlAccountDTOConverter;
 import com.toby.converter.GlAdminUnitConverter;
 import com.toby.converter.GlBankConverter;
-import com.toby.converter.GlaccountConverter;
 import com.toby.converter.InvOrganizationSiteConverter;
 import com.toby.converter.SymbolConverter;
+import com.toby.dto.CostCenterDTO;
 import com.toby.dto.GlAccountDTO;
 import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.entity.AccountsSystemSettings;
@@ -35,12 +35,10 @@ import com.toby.entity.GlBankTransactionDetail;
 import com.toby.entity.InvOrganizationSite;
 import com.toby.entity.InvPurchaseInvoice;
 import com.toby.entity.Symbol;
-import com.toby.entiy.GlBankTransactionDetailEntity;
 import com.toby.entiy.GlBankTransactionEntity;
 import com.toby.generaljournal.GeneralJournalBean;
 import com.toby.toby.AutoComplete;
 import com.toby.toby.GlBankBasicDataForm;
-import com.toby.toby.UserData;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -59,10 +57,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-import javax.servlet.http.HttpServletRequest;
 import net.sf.jasperreports.engine.JRException;
 import org.primefaces.context.RequestContext;
-import org.primefaces.event.CellEditEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
 import tafqeet.Tafqeet;
@@ -81,7 +77,6 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
     private SymbolConverter glItemConverter;
     
     private Integer index = 0;
-    private String uri;
     
     private Integer branchId;
     private Integer companyId;
@@ -122,20 +117,20 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
     // Interface Entities
     private GlBankTransactionEntity glBankTransactionEntity = new GlBankTransactionEntity();
     private GlBankTransactionEntity glBankTransactionEntityMapper = new GlBankTransactionEntity();
-    private GlBankTransactionDetailEntity glBankTransactionDetailEntity;
-    private GlBankTransactionDetailEntity glBankTransactionDetailEntitySelected;
-    private GlBankTransactionDetailEntity glBankTransactionDetailEntityUnSelected;
+    private GlBankTransactionDetailFromEntity glBankTransactionDetailEntity;
+    private GlBankTransactionDetailFromEntity glBankTransactionDetailEntitySelected;
+    private GlBankTransactionDetailFromEntity glBankTransactionDetailEntityUnSelected;
     
-    private List<GlBankTransactionDetailEntity> glBankTransactionDetailEntityList;
+    private List<GlBankTransactionDetailFromEntity> glBankTransactionDetailEntityList;
     
-    private List<GlBankTransactionDetailEntity> rowsDeleted;
+    private List<GlBankTransactionDetailFromEntity> rowsDeleted;
     
     private boolean organizationSiteView = false;
     private boolean accounts = false;
     private boolean saveValidation = true;
     // Lists
-    private List<GlAccount> glAccountList;
-    private List<CostCenter> costCenterList;
+    private List<GlAccountDTO> glAccountList;
+    private List<CostCenterDTO> costCenterList;
     private List<GlBank> glBankList;
     private List<GlAdminUnit> adminUnitList;
     private List<InvOrganizationSite> organizationList;
@@ -147,7 +142,7 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
     private GlBankConverter bankConverter;
     private InvOrganizationSiteConverter invOrganizationSiteConverter;
     
-    private GlaccountConverter glAccountConverter;
+    private GlAccountDTOConverter glAccountConverter;
     
     private Symbol symbol;
     private List<Symbol> symbolList;
@@ -159,10 +154,10 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
     
     private Integer organizeType;
     
-    private CostCenterConverter costCenterConverter;
+    private CostCenterDTOConverter costCenterConverter;
     private GlAdminUnitConverter glAdminUnitConverter;
     private GlAccount glAccountSelected;
-    private CostCenter costCenterSelected;
+    private CostCenterDTO costCenterSelected;
     private GlAdminUnit glAdminUnitSelected;
     
     private InvOrganizationSiteConverter supplierConvertor;
@@ -174,9 +169,6 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
     
     private List<GlAccountDTO> glRunningAccountDTOList;
     private GlAccountDTOConverter runningAccountDTOConverter;
-    
-    @EJB
-    private GlAccountService accountService;
     
     @EJB
     AccountsSystemSettingsService accountsSystemSettingsService;
@@ -194,15 +186,6 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
     private CostCenterService costCenterService;
     
     @EJB
-    private GlBankService glBankService;
-    
-    @EJB
-    private GlAdminUnitService glAdminUnitService;
-    
-    @EJB
-    private OrganizationSiteService organizationSiteService;
-    
-    @EJB
     private TobyUserBankService tobyUserBankService;
     
     @EJB
@@ -211,29 +194,28 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
     @EJB
     private GlBankTransactionInvoiceViewService bankTransactionInvoiceViewService;
     
+    @EJB
+    private GeneraljournalServiceDTO generaljournalServiceDTO;
+    
     @Override
     @PostConstruct
     public void init() {
         try {
-            ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-            setUserData((UserData) context.getSessionMap().get("userLogInData"));
-            setScreenMode((String) context.getSessionMap().get("ScreenMode"));
             setBranchId(getUserData().getUserBranch().getId());
             setCompanyId(getUserData().getCompany().getId());
-            setUri(((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getRequestURI());
+            System.err.println("---> 1 " + new Date());
             // lists
-            glAccountList = new ArrayList<>();
-            costCenterList = new ArrayList<>();
+//            glAccountList = new ArrayList<>();
+//            costCenterList = new ArrayList<>();
             glBankList = new ArrayList<>();
             adminUnitList = new ArrayList<>();
             organizationList = new ArrayList<>();
-            glItemsList = new ArrayList<>();
             
             rowsDeleted = new ArrayList<>();
             symbolList = new ArrayList<>();
-            
+            System.err.println("---> 2 " + new Date());
             load();
-            
+            System.err.println("---> 3 " + new Date());
             paymentDropDownView = true;
             
             organizationTypeUpdated = 0; // set to 0 during ad
@@ -243,13 +225,13 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
             if (getAccountsSystemSettings() != null && getAccountsSystemSettings().getWorkWithAccounts() != null && !getAccountsSystemSettings().getWorkWithAccounts().equals("ALLOW_ACCOUNT")) {
                 setAllowAccount(Boolean.FALSE);
             }
-            
+            System.err.println("---> 4 " + new Date());
             glBankTransaction.setCompanyId(getUserData().getCompany());
             glBankTransaction.setBranchId(getUserData().getUserBranch());
             glBankTransaction.setTransactionType(0);
             
             if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("edit")) {
-                setGlBankTransactionId((Integer) context.getSessionMap().get("glBankTransactionIdSeclected"));
+                setGlBankTransactionId((Integer) getContext().getSessionMap().get("glBankTransactionIdSeclected"));
                 findSettlementDeedObject(getGlBankTransactionId(), true);
             }
             
@@ -257,12 +239,12 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
             if (symbolList != null && !symbolList.isEmpty()) {
                 symbolConverter = new SymbolConverter(symbolList);
             }
-            
-            fillLists();
-            
-            viewPaymentFields();
+            System.err.println("---> 5 " + new Date());
+            fillLists(); // here 4 second
+            System.err.println("---> 6 " + new Date());
+            viewPaymentFields(); // here 3 second System.err.println("---> 60 " + new Date());
             updateTransactionRate();
-            
+            System.err.println("---> 7 " + new Date());
             if (glBankList == null) {
                 FacesContext fc = FacesContext.getCurrentInstance();
                 try {
@@ -271,17 +253,28 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
                     Logger.getLogger(GeneralJournalBean.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            
+            System.err.println("---> 8 " + new Date());
             checkVisability();
             if (glBankTransactionEntity.getId() == null) {
                 printButton = Boolean.TRUE;
             } else {
                 printButton = Boolean.FALSE;
             }
-            
+            System.err.println("---> 9 " + new Date());
         } catch (Exception e) {
             saveError(e, "SettlementDeedFormMB", "init");
         }
+    }
+    
+    public void reset() {
+        getGlBankTransactionEntity().setId(null);
+        getGlBankTransactionEntity().setSerial(null);
+        setGlBankTransactionDetailEntityList(new ArrayList<>());
+        valueSummary = BigDecimal.ZERO;
+        localValue = BigDecimal.ZERO;
+        printButton = Boolean.TRUE;
+        paymentTypeName = new String();
+        paymentDropDownView = Boolean.TRUE;
     }
     
     public void convertDateFrom() {
@@ -291,6 +284,7 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
     private void findSettlementDeedObject(int glBankTransId, Boolean isUpdate) {
         try {
             glBankTransactionExist = glBankTransactionService.findGlBankTransactionById(glBankTransId);
+            glBankTransaction = (GlBankTransaction) glBankTransactionExist.clone();
             glBankTransactionDetailsList = new ArrayList<>();
             glBankTransactionDetailEntityList = new ArrayList<>();
             glBankTransactionDetailsUpdatedList = new ArrayList<>();
@@ -319,24 +313,24 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
         try {
             glBankTransactionEntity = new GlBankTransactionEntity();
             glBankTransactionEntity.setOrganizationType(2);
-            glBankTransactionEntity.setChequeStatus(0);
-            glBankTransactionEntity.setChequeDate(getGlYearSelection() != null ? getGlYearSelection().getDateFrom() : null);
-            glBankTransactionEntity.setChequeDueDate(getGlYearSelection() != null ? getGlYearSelection().getDateFrom() : null);
+//            glBankTransactionEntity.setChequeStatus(0);
+//            glBankTransactionEntity.setChequeDate(getGlYearSelection() != null ? getGlYearSelection().getDateFrom() : null);
+//            glBankTransactionEntity.setChequeDueDate(getGlYearSelection() != null ? getGlYearSelection().getDateFrom() : null);
             glBankTransactionEntity.setPaymentType(0);
             glBankTransactionEntity.setSerial(null);
-            glBankTransactionEntity.setValue(glBankTransactionEntity.getValue() != null ? glBankTransactionEntity.getValue().setScale(2, BigDecimal.ROUND_UP) : null);
+//            glBankTransactionEntity.setValue(glBankTransactionEntity.getValue() != null ? glBankTransactionEntity.getValue().setScale(2, BigDecimal.ROUND_UP) : null);
 //            glBankTransactionEntity.setValueLocal(glBankTransactionEntity.getValueLocal() != null ? glBankTransactionEntity.getValueLocal().setScale(2, BigDecimal.ROUND_UP) : null);
-            glBankTransactionEntity.setValueLocal(glBankTransactionEntity.getValue() != null ? glBankTransactionEntity.getValue().setScale(2, BigDecimal.ROUND_UP) : null);
-            glBankTransactionEntity.setRate(glBankTransactionEntity.getRate() != null ? glBankTransactionEntity.getRate().setScale(2, BigDecimal.ROUND_UP) : null);
+//            glBankTransactionEntity.setValueLocal(glBankTransactionEntity.getValue() != null ? glBankTransactionEntity.getValue().setScale(2, BigDecimal.ROUND_UP) : null);
+//            glBankTransactionEntity.setRate(glBankTransactionEntity.getRate() != null ? glBankTransactionEntity.getRate().setScale(2, BigDecimal.ROUND_UP) : null);
             glBankTransactionEntity.setDate(new Date());
             
             glBankTransaction = new GlBankTransaction();
-            glBankTransactionDetailEntity = new GlBankTransactionDetailEntity();
+            glBankTransactionDetailEntity = new GlBankTransactionDetailFromEntity();
             glBankTransactionDetailsList = new ArrayList<>();
             glBankTransactionDetailsUpdatedList = new ArrayList<>();
             glBankTransactionDetailEntityList = new ArrayList<>();
             glBankTransactionDetailsDeletedList = new ArrayList<>();
-            glBankTransactionDetailEntitySelected = new GlBankTransactionDetailEntity();
+            glBankTransactionDetailEntitySelected = new GlBankTransactionDetailFromEntity();
             valueSummary = BigDecimal.ZERO;
             localValue = BigDecimal.ZERO;
             printButton = Boolean.TRUE;
@@ -354,18 +348,19 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
     
     private void fillLists() {
         try {
-            costCenterList = costCenterService.getAllSubCostCenterByBranchIdActive(branchId);
-            costCenterConverter = new CostCenterConverter(costCenterList);
 
 //        glBankList = glBankService.getAllGlBankByBranchId(branchId);
-            fillGlBanks();
-            
-            adminUnitList = glAdminUnitService.getAllSubAdminUnitByBranchIdActive(branchId);
-            glAdminUnitConverter = new GlAdminUnitConverter(adminUnitList);
-            
-            glItemsList = symbolService.getGLItemsByCompanyId(companyId);
-            glItemConverter = new SymbolConverter(glItemsList);
-            
+            if (glBankTransactionEntity.getOrganizationType() != null && glBankTransactionEntity.getOrganizationType() == 2) {
+                getGlAccountList();
+                getGlRunningAccountDTOList();
+            } else {
+                fillGlBanks();
+            }
+
+//            adminUnitList = glAdminUnitService.getAllSubAdminUnitByBranchIdActive(branchId);
+//            glAdminUnitConverter = new GlAdminUnitConverter(adminUnitList);
+//            glItemsList = symbolService.getGLItemsByCompanyId(companyId);
+//            glItemConverter = new SymbolConverter(glItemsList);
             fillAccounts();
             
             if (glBankTransactionEntity.getGlBank() == null) {
@@ -418,23 +413,14 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
 //                organizationList = supplierList;
 //                supplierConvertor = new InvOrganizationSiteConverter(organizationList);
             } else if (type == 2) {
-                if (glAccountList == null || glAccountList.size() == 0) {
-                    if (allowAccount) {
-                        glAccountList = glAccountService.getBranchGLAccountsActiveWithoutGlBankAccounts(branchId);
-                    } else {
-                        glAccountList = new ArrayList<>();
-                        for (Symbol symbol : getGlItemsList()) {
-                            setAccountGLItems(new GlAccount());
-                            setAccountGLItems(symbol.getAccountId());
-                            glAccountList.add(getAccountGLItems());
-                        }
-                    }
+                if (getGlAccountList() == null || getGlAccountList().size() == 0) {
+//                        glAccountList = glAccountService.getBranchGLAccountsActiveDTO(getUserData().getUserBranch().getId()); 
                 }
                 
             }
             
             if ((type == 0 || type == 1) && organizationList != null && !organizationList.isEmpty()) {
-                glAccountList = new ArrayList<>();
+//                glAccountList = new ArrayList<>();
 //                for (InvOrganizationSite invOrganizationSite : organizationList) {
 //                    account = new GlAccount();
 //                    account = invOrganizationSite.getAccountId();
@@ -443,8 +429,8 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
 
 //                setInvOrganizationSiteConverter(new InvOrganizationSiteConverter(organizationList));
             }
-            
-            setGlAccountConverter(new GlaccountConverter(glAccountList));
+
+//            setGlAccountConverter(new GlAccountDTOConverter(glAccountList)); 
         } catch (Exception e) {
             saveError(e, "SettlementDeedFormMB", "fillAccounts");
         }
@@ -552,7 +538,7 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
             }
             valueSummary = localValue = BigDecimal.ZERO;
             
-            glBankTransactionDetailEntitySelected = new GlBankTransactionDetailEntity();
+            glBankTransactionDetailEntitySelected = new GlBankTransactionDetailFromEntity();
             glBankTransactionDetailEntityList = new ArrayList<>();
             fillAccounts();
             viewFooterColms();
@@ -675,19 +661,20 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
                 glAccountDTO.setAccNumber(bankTransaction.getGlAccountId().getAccNumber());
                 glBankTransactionEntityMapper.setCostAccount(glAccountDTO);
             }
+            
             if (isUpdate) {
                 setGlBankTransactionSelectionPre(bankTransaction.getParent());
             }
             for (GlBankTransactionDetail transactionDetail : glBankTransactionDetailsList) {
-                glBankTransactionDetailEntity = new GlBankTransactionDetailEntity();
+                glBankTransactionDetailEntity = new GlBankTransactionDetailFromEntity();
                 ++index;
                 glBankTransactionDetailEntity.setIndex(index);
                 
                 glBankTransactionDetailEntity.setId(transactionDetail.getId() != null ? transactionDetail.getId() : null);
                 glBankTransactionDetailEntity.setCostCenterId(transactionDetail.getCostCenterId() != null ? transactionDetail.getCostCenterId().getId() : null);
-                glBankTransactionDetailEntity.setCostCenter(transactionDetail.getCostCenterId() != null ? transactionDetail.getCostCenterId() : null);
+                glBankTransactionDetailEntity.setCostCenter(mapCostCenterToDTO(transactionDetail.getCostCenterId() != null ? transactionDetail.getCostCenterId() : null));
                 glBankTransactionDetailEntity.setAccountCreditId(transactionDetail.getAccountCreditId() != null ? transactionDetail.getAccountCreditId().getId() : null);
-                glBankTransactionDetailEntity.setGlAccount(transactionDetail.getAccountDebitId() != null ? transactionDetail.getAccountDebitId() : null);
+                glBankTransactionDetailEntity.setGlAccount(mapAccountToDTO(transactionDetail.getAccountDebitId() != null ? transactionDetail.getAccountDebitId() : null));
                 glBankTransactionDetailEntity.setAccountDebitId(transactionDetail.getAccountDebitId() != null ? transactionDetail.getAccountDebitId().getId() : null);
                 glBankTransactionDetailEntity.setAdminUnitId(transactionDetail.getAdminUnitId() != null ? transactionDetail.getAdminUnitId().getId() : null);
                 glBankTransactionDetailEntity.setGlAdminUnit(transactionDetail.getAdminUnitId() != null ? transactionDetail.getAdminUnitId() : null);
@@ -721,7 +708,7 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
                 valueSummary = valueSummary.add(glBankTransactionDetailEntity.getValue() != null ? glBankTransactionDetailEntity.getValue() : BigDecimal.ZERO);
                 localValue = localValue.add(glBankTransactionDetailEntity.getValue() != null ? glBankTransactionDetailEntity.getValue() : BigDecimal.ZERO);
 //                localValue = localValue.add(glBankTransactionDetailEntity.getValueLocal() != null ? glBankTransactionDetailEntity.getValueLocal() : BigDecimal.ZERO);
-                glBankTransactionDetailEntity.setBankCommition(glBankTransactionDetailEntity.getBankCommition());
+                glBankTransactionDetailEntity.setBankCommition(transactionDetail.getBankCommition());
                 glBankTransactionDetailsMap.put(transactionDetail.getId(), transactionDetail);
                 glBankTransactionDetailEntityList.add(glBankTransactionDetailEntity);
             }
@@ -738,20 +725,19 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
         try {
 
 //            checkDate(true);
-            if (glBankTransactionEntity.getGlBank() != null && glBankTransactionEntity.getGlBank().getCurrencyId() != null) {
-                if (glBankTransactionEntity.getId() == null) {
-//                    glBankTransactionEntity.setRate(updateRate(glBankTransactionEntity.getGlBank().getCurrencyId(), glBankTransactionEntity.getDate()));
-                    glBankTransactionEntity.setRate(BigDecimal.ONE);
-                }
-                glBankTransactionEntity.setRate(glBankTransactionEntity.getRate() != null ? glBankTransactionEntity.getRate().setScale(2, BigDecimal.ROUND_UP) : null);
-                
-                changeRate();
-            } else {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب اختيار العملة"));
-                glBankTransactionEntity.setValue(null);
-                glBankTransactionEntity.setValueLocal(null);
-            }
-            
+//            if (glBankTransactionEntity.getGlBank() != null && glBankTransactionEntity.getGlBank().getCurrencyId() != null) {
+//                if (glBankTransactionEntity.getId() == null) {
+////                    glBankTransactionEntity.setRate(updateRate(glBankTransactionEntity.getGlBank().getCurrencyId(), glBankTransactionEntity.getDate()));
+//                    glBankTransactionEntity.setRate(BigDecimal.ONE);
+//                }
+//                glBankTransactionEntity.setRate(glBankTransactionEntity.getRate() != null ? glBankTransactionEntity.getRate().setScale(2, BigDecimal.ROUND_UP) : null);
+//                
+//                changeRate();
+//            } else {
+//                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب اختيار العملة"));
+//                glBankTransactionEntity.setValue(null);
+//                glBankTransactionEntity.setValueLocal(null);
+//            }
             checkAllowDate();
             
         } catch (Exception e) {
@@ -783,7 +769,7 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
         }
     }
     
-    public void setNewValueOfAmount(GlBankTransactionDetailEntity bankTransactionDetailEntity) {
+    public void setNewValueOfAmount(GlBankTransactionDetailFromEntity bankTransactionDetailEntity) {
         glBankTransactionEntity.setValue(bankTransactionDetailEntity.getValue());
         changeRate();
     }
@@ -791,7 +777,7 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
     public void updatetransactionDetailLocalValue() {
         try {
             localValue = BigDecimal.ZERO;
-            for (GlBankTransactionDetailEntity detailEntity : glBankTransactionDetailEntityList) {
+            for (GlBankTransactionDetailFromEntity detailEntity : glBankTransactionDetailEntityList) {
 //                BigDecimal detailRate = null;
                 BigDecimal detailRate = BigDecimal.ONE;
 //                if (accounts) {
@@ -822,7 +808,7 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
             }
             
             if (glBankTransactionDetailEntityList != null && !glBankTransactionDetailEntityList.isEmpty()) {
-                GlBankTransactionDetailEntity bankTransactionDetailEntity = glBankTransactionDetailEntityList.get(glBankTransactionDetailEntityList.size() - 1);
+                GlBankTransactionDetailFromEntity bankTransactionDetailEntity = glBankTransactionDetailEntityList.get(glBankTransactionDetailEntityList.size() - 1);
                 if ((organizationType.compareTo(0) == 0 || organizationType.compareTo(1) == 0)) {
                     if (bankTransactionDetailEntity.getInvOrganizationSite() == null || bankTransactionDetailEntity.getInvOrganizationSite().getAccountId() == null
                             || bankTransactionDetailEntity.getValue() == null || bankTransactionDetailEntity.getValue().compareTo(BigDecimal.ZERO) == 0) {
@@ -848,11 +834,11 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
     
     private void addNewGlBankItem() {
         try {
-            for (GlBankTransactionDetailEntity detailEntity : glBankTransactionDetailEntityList) {
+            for (GlBankTransactionDetailFromEntity detailEntity : glBankTransactionDetailEntityList) {
                 detailEntity.setMarkEdit(Boolean.FALSE);
             }
             
-            GlBankTransactionDetailEntity glBankTransactionDetailsEntityNew = new GlBankTransactionDetailEntity();
+            GlBankTransactionDetailFromEntity glBankTransactionDetailsEntityNew = new GlBankTransactionDetailFromEntity();
             glBankTransactionDetailsEntityNew.setMarkEdit(Boolean.TRUE);
             glBankTransactionDetailsEntityNew.setIndex(++index);
             
@@ -889,44 +875,44 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
         }
     }
     
-    public void onCellEdit(CellEditEvent event) {
-        try {
-            
-            FacesContext context = FacesContext.getCurrentInstance();
-            GlBankTransactionDetailEntity transactionDetailEntityUpdated = context.getApplication().evaluateExpressionGet(context, "#{glBankTransactionDetailsTable}", GlBankTransactionDetailEntity.class);
-            
-            glBankTransactionDetailEntitySelected = transactionDetailEntityUpdated;
-            String column_name = event.getColumn().getClientId();
-            
-            if (glBankTransactionDetailEntitySelected != null) {
-                
-                if (column_name.contains("value")) {
-                    
-                    event.getSource();
-                    BigDecimal newValue = (BigDecimal) event.getNewValue();
-                    BigDecimal oldValue = (BigDecimal) event.getOldValue();
-
-//                    BigDecimal detailRate = null;
-                    BigDecimal detailRate = BigDecimal.ONE;
-//                    if (accounts) {
-//                        detailRate = updateRate(glBankTransactionDetailEntitySelected.getGlAccount().getCurrencyId(), glBankTransactionEntity.getDate());
-//                    } else if (organizationSiteView) {
-//                        detailRate = updateRate(glBankTransactionDetailEntitySelected.getInvOrganizationSite().getCurrencyId(), glBankTransactionEntity.getDate());
-//                    }
-                    glBankTransactionDetailEntitySelected.setValueLocal(newValue != null ? newValue.multiply(detailRate) : null);
-                    
-                    updateSummition(newValue, oldValue, detailRate);
-                }
-            } else {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "لم يتم تحديد بيانات الصرف"));
-                setShowMessageDetails(Boolean.TRUE);
-                setShowMessageGeneral(Boolean.FALSE);
-            }
-        } catch (Exception e) {
-            saveError(e, "SettlementDeedFormMB", "onCellEdit");
-        }
-    }
-    
+//    public void onCellEdit(CellEditEvent event) {
+//        try {
+//            
+//            FacesContext context = FacesContext.getCurrentInstance();
+//            GlBankTransactionDetailFromEntity transactionDetailEntityUpdated = context.getApplication().evaluateExpressionGet(context, "#{glBankTransactionDetailsTable}", GlBankTransactionDetailEntity.class);
+//            
+//            glBankTransactionDetailEntitySelected = transactionDetailEntityUpdated;
+//            String column_name = event.getColumn().getClientId();
+//            
+//            if (glBankTransactionDetailEntitySelected != null) {
+//                
+//                if (column_name.contains("value")) {
+//                    
+//                    event.getSource();
+//                    BigDecimal newValue = (BigDecimal) event.getNewValue();
+//                    BigDecimal oldValue = (BigDecimal) event.getOldValue();
+//
+////                    BigDecimal detailRate = null;
+//                    BigDecimal detailRate = BigDecimal.ONE;
+////                    if (accounts) {
+////                        detailRate = updateRate(glBankTransactionDetailEntitySelected.getGlAccount().getCurrencyId(), glBankTransactionEntity.getDate());
+////                    } else if (organizationSiteView) {
+////                        detailRate = updateRate(glBankTransactionDetailEntitySelected.getInvOrganizationSite().getCurrencyId(), glBankTransactionEntity.getDate());
+////                    }
+//                    glBankTransactionDetailEntitySelected.setValueLocal(newValue != null ? newValue.multiply(detailRate) : null);
+//                    
+//                    updateSummition(newValue, oldValue, detailRate);
+//                }
+//            } else {
+//                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "لم يتم تحديد بيانات الصرف"));
+//                setShowMessageDetails(Boolean.TRUE);
+//                setShowMessageGeneral(Boolean.FALSE);
+//            }
+//        } catch (Exception e) {
+//            saveError(e, "SettlementDeedFormMB", "onCellEdit");
+//        }
+//    }
+//    
     public void onRowSelectDetails(SelectEvent e) {
         try {
             
@@ -1001,7 +987,7 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
                     glBankTransaction.setCompanyId(getUserData().getCompany() != null ? getUserData().getCompany() : null);
                     
                     if (glBankTransactionSelectionPre != null && glBankTransactionSelectionPre.getId() != null) {
-                        if (!uri.contains("notesreceivablesdatailFormPre")) {
+                        if (!getUri().contains("notesreceivablesdatailFormPre")) {
                             glBankTransaction.setParent(glBankTransactionSelectionPre);
                         }
                         
@@ -1075,7 +1061,7 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
                     glBankTransactionDetailsUpdatedList = new ArrayList<>();
                     
                     GlBankTransactionDetail bankTransactionDetail;
-                    for (GlBankTransactionDetailEntity detailsEntity : glBankTransactionDetailEntityList) {
+                    for (GlBankTransactionDetailFromEntity detailsEntity : glBankTransactionDetailEntityList) {
                         
                         bankTransactionDetail = new GlBankTransactionDetail();
                         
@@ -1136,7 +1122,7 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
                          } else {
                          bankTransactionDetail.setCostCenterId(null);
                          }*/
-                        bankTransactionDetail.setCostCenterId(detailsEntity.getCostCenter() != null ? detailsEntity.getCostCenter() : null);
+                        bankTransactionDetail.setCostCenterId(mapCostCentertToEntity(detailsEntity.getCostCenter() != null ? detailsEntity.getCostCenter() : (detailsEntity.getCostCenterBak() != null ? detailsEntity.getCostCenterBak() : null)));
 //                if(detailsEntity.getInvOrganizationSite() != null){}
                         InvOrganizationSiteDTO ios = detailsEntity.getInvOrganizationSite();
                         InvOrganizationSite invOrganizationSite = new InvOrganizationSite();
@@ -1166,18 +1152,21 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
                     }
                     
                     if (getRowsDeleted() != null && !getRowsDeleted().isEmpty()) {
-                        for (GlBankTransactionDetailEntity rowDeleted : getRowsDeleted()) {
+                        for (GlBankTransactionDetailFromEntity rowDeleted : getRowsDeleted()) {
                             bankTransactionDetail = new GlBankTransactionDetail();
                             bankTransactionDetail.setId(rowDeleted.getId());
                             glBankTransactionDetailsDeletedList.add(bankTransactionDetail);
                         }
                     }
                     if (saveValidation != false) {
-                        GlBankTransaction glBankTransId = glBankTransactionService.addGlBankTransaction(glBankTransaction, glBankTransactionDetailsUpdatedList, glBankTransactionDetailsDeletedList, companyId, getUserData().getUser());
+                        glBankTransaction = glBankTransactionService.addGlBankTransaction(glBankTransaction, glBankTransactionDetailsUpdatedList, glBankTransactionDetailsDeletedList, companyId, getUserData().getUser());
                         rowsDeleted = new ArrayList<>();
                         glBankTransactionDetailsDeletedList = new ArrayList<>();
-                        findSettlementDeedObject(glBankTransId.getId(), true);
-                        
+                        glBankTransactionEntity.setSerial(glBankTransaction.getSerial());
+                        glBankTransactionEntity.setId(glBankTransaction.getId());
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, getUserData().getUserDDs().get("INFO"), "يتم الخفظ بنجاح"));
+//                        findSettlementDeedObject(glBankTransId.getId(), true);
+
 //                        if (getUri().contains("settlementdeedForm")) {
 //                            exit("../settlementdeed/settlementdeedList.xhtml");
 //                        } else if (getUri().contains("notesreceivablesdatailFormPre") || getUri().contains("notesreceivablesFormpre")) {
@@ -1185,7 +1174,6 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
 //                        } else if (getUri().contains("notesreceivablesForm") || getUri().contains("notesreceivablesdatailForm")) {
 //                            exit("../notesreceivables/notesreceivablesList.xhtml");
 //                        }
-
 //                        if (getUri().contains("notesreceivablesdatailForm")) {
 //                            exit("../notesreceivables/notesreceivablesList.xhtml");
 //                        } else {
@@ -1210,13 +1198,13 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
         }
     }
     
-    private void setAccountCreditId(Integer organizationType, GlBankTransactionDetailEntity detailsEntity, GlBankTransactionDetail bankTransactionDetail) {
+    private void setAccountCreditId(Integer organizationType, GlBankTransactionDetailFromEntity detailsEntity, GlBankTransactionDetail bankTransactionDetail) {
         
         if (organizationType == 2) {
             if (allowAccount) {
                 //GlAccount accountDebitId = new GlAccount();
                 // accountDebitId.setId(detailsEntity.getAccountDebitId());
-                bankTransactionDetail.setAccountCreditId(detailsEntity.getGlAccount());
+                bankTransactionDetail.setAccountCreditId(mapAccountToEntity(detailsEntity.getGlAccount()));
             } else {
                 bankTransactionDetail.setAccountCreditId(detailsEntity.getGlItems().getAccountId());
             }
@@ -1232,12 +1220,12 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
         }
     }
     
-    private void setAccountDebitId(Integer organizationType, GlBankTransactionDetailEntity detailsEntity, GlBankTransactionDetail bankTransactionDetail) {
+    private void setAccountDebitId(Integer organizationType, GlBankTransactionDetailFromEntity detailsEntity, GlBankTransactionDetail bankTransactionDetail) {
         if (organizationType == 2) {
             if (allowAccount) {
                 //GlAccount accountDebitId = new GlAccount();
                 // accountDebitId.setId(detailsEntity.getAccountDebitId());
-                bankTransactionDetail.setAccountDebitId(detailsEntity.getGlAccount());
+                bankTransactionDetail.setAccountDebitId(mapAccountToEntity(detailsEntity.getGlAccount()));
             } else {
                 bankTransactionDetail.setAccountDebitId(detailsEntity.getGlItems().getAccountId());
             }
@@ -1427,7 +1415,7 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
     
     public void forHashasa() {
         try {
-            for (GlBankTransactionDetailEntity detailEntity : glBankTransactionDetailEntityList) {
+            for (GlBankTransactionDetailFromEntity detailEntity : glBankTransactionDetailEntityList) {
                 if (accounts) {
                     if (detailEntity.getGlAccount() == null) {
                         detailEntity.setGlAccount(detailEntity.getGlAccountBak());
@@ -1563,33 +1551,39 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
     public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {
         try {
             String reportName;
-            List<GlBankTransactionDetailEntity> reportList = null;
-            if (uri.contains("notesreceivablesdatailForm")) {
-                reportList = listDuplara();
-                reportName = "notesReceivablesDetial.jasper";
-            } else {
-                reportList = glBankTransactionDetailEntityList;
-                reportName = "settlementdeed.jasper";
+            List<GlBankTransactionDetailFromEntity> reportList = null;
+//            if (getUri().contains("notesreceivablesdatailForm")) {
+//                reportList = listDuplara();
+//                reportName = "notesReceivablesDetial.jasper";
+//            } else {
+//                reportList = glBankTransactionDetailEntityList;
+//                reportName = "settlementdeed.jasper";
+//            }
+
+//            if (glBankTransactionEntity != null && glBankTransactionEntity.getId() != null) {
+//                //   Integer y = Integer.parseInt(glBankTransactionEntity.getRemark2());
+//                // Integer y = glBankTransactionEntity.getId();
+//                Integer glBankTransactionEntityId = glBankTransactionEntity.getHiddenId();
+//                findSettlementDeedObject(glBankTransactionEntityId, true);
+//            } else {
+//                save();
+//            }
+//            if (getUri().contains("notesreceivablesdatailForm")) {
+//                reportList = listDuplara();
+//                reportName = "notesReceivablesDetial.jasper";
+//            } else {
+            reportList = glBankTransactionDetailEntityList;
+            reportName = "settlementdeed.jasper";
+            if (2 != glBankTransactionEntity.getOrganizationType()) {
+                reportName = "settlementdeedforOrganizationSite.jasper";
             }
             
-            if (glBankTransactionEntity != null && glBankTransactionEntity.getId() != null) {
-                //   Integer y = Integer.parseInt(glBankTransactionEntity.getRemark2());
-                // Integer y = glBankTransactionEntity.getId();
-                Integer glBankTransactionEntityId = glBankTransactionEntity.getHiddenId();
-                findSettlementDeedObject(glBankTransactionEntityId, true);
-            } else {
-                save();
+            HashMap prepareReport = prepareReport();
+            
+            if (reportList != null && !reportList.isEmpty()) {
+                fillReport(prepareReport, getUserData().getReportPath() + reportName, reportList, "pdf");
             }
-            if (uri.contains("notesreceivablesdatailForm")) {
-                reportList = listDuplara();
-                reportName = "notesReceivablesDetial.jasper";
-            } else {
-                reportList = glBankTransactionDetailEntityList;
-                reportName = "settlementdeed.jasper";
-                if (2 != glBankTransactionEntity.getOrganizationType()) {
-                    reportName = "settlementdeedforOrganizationSite.jasper";
-                }
-            }
+//            }
         } catch (Exception e) {
             saveError(e, "SettlementDeedFormMB", "exportPDF");
         }
@@ -1599,7 +1593,7 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
         try {
             valueSummary = BigDecimal.ZERO;
             localValue = BigDecimal.ZERO;
-            for (GlBankTransactionDetailEntity detailEntity : glBankTransactionDetailEntityList) {
+            for (GlBankTransactionDetailFromEntity detailEntity : glBankTransactionDetailEntityList) {
 //                BigDecimal detailRate = null;
                 BigDecimal detailRate = BigDecimal.ONE;
 //                if (accounts) {
@@ -1621,10 +1615,10 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
         }
     }
     
-    private List<GlBankTransactionDetailEntity> listDuplara() throws CloneNotSupportedException {
-        List<GlBankTransactionDetailEntity> list = new ArrayList<>();
-        for (GlBankTransactionDetailEntity bankTransactionDetailEntity : glBankTransactionDetailEntityList) {
-            GlBankTransactionDetailEntity bean = (GlBankTransactionDetailEntity) bankTransactionDetailEntity.clone();
+    private List<GlBankTransactionDetailFromEntity> listDuplara() throws CloneNotSupportedException {
+        List<GlBankTransactionDetailFromEntity> list = new ArrayList<>();
+        for (GlBankTransactionDetailFromEntity bankTransactionDetailEntity : glBankTransactionDetailEntityList) {
+            GlBankTransactionDetailFromEntity bean = (GlBankTransactionDetailFromEntity) bankTransactionDetailEntity.clone();
             if (accountsSystemSettings.getWorkWithAccounts().equals("ALLOW_ACCOUNT")) {
                 bean.setAccountName(bankTransactionDetailEntity.getGlAccount().getName());
                 bean.setAccountNumber(bankTransactionDetailEntity.getGlAccount().getAccNumber());
@@ -1637,8 +1631,8 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
             list.add(bean);
         }
         
-        for (GlBankTransactionDetailEntity bankTransactionDetailEntity : glBankTransactionDetailEntityList) {
-            GlBankTransactionDetailEntity bean = (GlBankTransactionDetailEntity) bankTransactionDetailEntity.clone();
+        for (GlBankTransactionDetailFromEntity bankTransactionDetailEntity : glBankTransactionDetailEntityList) {
+            GlBankTransactionDetailFromEntity bean = (GlBankTransactionDetailFromEntity) bankTransactionDetailEntity.clone();
             if (accountsSystemSettings.getWorkWithAccounts().equals("ALLOW_ACCOUNT")) {
                 bean.setAccountName(bankTransactionDetailEntity.getGlAccount().getName());
                 bean.setAccountNumber(bankTransactionDetailEntity.getGlAccount().getAccNumber());
@@ -1671,25 +1665,25 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
             hashMap.put("confirmationText", "اعتماد");
             hashMap.put("valueFromText", "وذلك قيمة");
             hashMap.put("documentNumberText", "رقم السند");
-            hashMap.put("chequeDateText", "تاريخ الشيك");
-            hashMap.put("chequeDateValue", glBankTransactionEntityMapper.getChequeDate() != null ? glBankTransactionEntityMapper.getChequeDate() : null);
-            hashMap.put("deservedDateText", "تاريخ الاستحقاق");
-            hashMap.put("deservedDateValue", glBankTransactionEntityMapper.getChequeDueDate() != null ? glBankTransactionEntityMapper.getChequeDueDate() : null);
+//            hashMap.put("chequeDateText", "تاريخ الشيك");
+//            hashMap.put("chequeDateValue", glBankTransactionEntity.getChequeDate() != null ? glBankTransactionEntity.getChequeDate() : null);
+//            hashMap.put("deservedDateText", "تاريخ الاستحقاق");
+//            hashMap.put("deservedDateValue", glBankTransactionEntity.getChequeDueDate() != null ? glBankTransactionEntity.getChequeDueDate() : null);
             //  hashMap.put("companyImage", getUserData().getImageReportPath());
-            hashMap.put("dateValue", glBankTransactionEntityMapper.getDate());
-            hashMap.put("documentNumberValue", glBankTransactionEntityMapper.getSerial());
-            hashMap.put("payAccountValue", glBankTransactionEntityMapper.getGlBank() != null ? glBankTransactionEntityMapper.getGlBank().getName() : null);
-            hashMap.put("amountValue", glBankTransactionEntityMapper.getValue());
-            hashMap.put("amountValueText", Tafqeet.numberToText(Double.parseDouble(glBankTransactionEntityMapper.getValue().toString()), "ريـال", "هلله"));
+            hashMap.put("dateValue", glBankTransactionEntity.getDate());
+            hashMap.put("documentNumberValue", glBankTransactionEntity.getSerial());
+            hashMap.put("payAccountValue", glBankTransactionEntity.getGlBank() != null ? glBankTransactionEntity.getGlBank().getName() : null);
+            hashMap.put("amountValue", glBankTransactionEntity.getValue());
+            hashMap.put("amountValueText", Tafqeet.numberToText(Double.parseDouble(glBankTransactionEntity.getValue().toString()), "ريـال", "هلله"));
             hashMap.put("valueFromValue", remark1);
             hashMap.put("explainationValue", remark2);
             hashMap.put("accountManager", "مدير الحسابات");
             
             hashMap.put("rateText", "المعدل");
-            hashMap.put("rateValue", glBankTransactionEntityMapper.getRate());
+            hashMap.put("rateValue", glBankTransactionEntity.getRate());
             hashMap.put("amountInRateText", userDDs.get("TOTAL"));
-//            hashMap.put("amountInRateValue", glBankTransactionEntityMapper.getValueLocal());
-            hashMap.put("amountInRateValue", glBankTransactionEntityMapper.getValue());
+//            hashMap.put("amountInRateValue", glBankTransactionEntity.getValueLocal());
+            hashMap.put("amountInRateValue", glBankTransactionEntity.getValue());
             
             hashMap.put("sumValue", valueSummary);
             hashMap.put("localValue", localValue);
@@ -1699,9 +1693,9 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
             hashMap.put("stampText", "الختم");
             hashMap.put("tellerText", "امين الخزينه");
             hashMap.put("responsibleText", "مسئول الخدمة");
-            hashMap.put("responsibleValue", glBankTransactionEntityMapper.getCreatedNameParent());
+            hashMap.put("responsibleValue", glBankTransactionEntity.getCreatedNameParent());
             hashMap.put("listSize", glBankTransactionDetailEntityList.size());
-            hashMap.put("CreatedBy", glBankTransactionEntityMapper.getCreatedByName());
+            hashMap.put("CreatedBy", glBankTransactionEntity.getCreatedByName());
             hashMap.put("organizationSiteText", "اسم جهة التعامل");
             hashMap.put("organizationsiteNameText", "الاسم");
 
@@ -1718,7 +1712,7 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
                 if (accountsSystemSettings.getWorkWithAccounts().equals("ALLOW_ACCOUNT")) {
                     hashMap.put("accountNameText", userDDs.get("ACCOUNT_NAME"));
                     hashMap.put("accountNumberText", userDDs.get("ACCOUNT_NUMBER"));
-                    for (GlBankTransactionDetailEntity transactionDetailEntity : glBankTransactionDetailEntityList) {
+                    for (GlBankTransactionDetailFromEntity transactionDetailEntity : glBankTransactionDetailEntityList) {
                         if (transactionDetailEntity.getGlAccount() != null && transactionDetailEntity.getGlAccount().getId() != null) {
                             transactionDetailEntity.setAccountName(transactionDetailEntity.getGlAccount().getName());
                             transactionDetailEntity.setAccountNumber(transactionDetailEntity.getGlAccount().getAccNumber());
@@ -1727,7 +1721,7 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
                 } else if (accountsSystemSettings.getWorkWithAccounts().equals("NOT_ALLOW_ACCOUNT")) {
                     hashMap.put("accountNameText", "اسم البند");
                     hashMap.put("accountNumberText", "كود البند");
-                    for (GlBankTransactionDetailEntity transactionDetailEntity : glBankTransactionDetailEntityList) {
+                    for (GlBankTransactionDetailFromEntity transactionDetailEntity : glBankTransactionDetailEntityList) {
                         if (transactionDetailEntity.getGlItems() != null && transactionDetailEntity.getGlItems().getId() != null) {
                             transactionDetailEntity.setAccountName(transactionDetailEntity.getGlItems().getName());
                             transactionDetailEntity.setAccountNumber(transactionDetailEntity.getGlItems().getSerial());
@@ -1737,8 +1731,8 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
                 
             }
             
-            if (glBankTransactionEntityMapper.getPaymentType() != null) {
-                switch (glBankTransactionEntityMapper.getPaymentType()) {
+            if (glBankTransactionEntity.getPaymentType() != null) {
+                switch (glBankTransactionEntity.getPaymentType()) {
                     case 0:
                         hashMap.put("reportNameText", "سند صرف نقدي ");
                         break;
@@ -1774,18 +1768,18 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
         
     }
     
-    public List<CostCenter> completeCostCenter(String query) {
+    public List<CostCenterDTO> completeCostCenter(String query) {
         try {
-            List<CostCenter> costCenterList = getCostCenterList();
+            List<CostCenterDTO> costCenterList = getCostCenterList();
             if (query == null || query.trim().equals("")) {
-                costCenterConverter = new CostCenterConverter(costCenterList);
+                costCenterConverter = new CostCenterDTOConverter(costCenterList);
                 return costCenterList;
             }
-            List<CostCenter> filteredCostCenters = new ArrayList<>();
+            List<CostCenterDTO> filteredCostCenters = new ArrayList<>();
             
             String nameAr;
             Integer code;
-            CostCenter costCenter;
+            CostCenterDTO costCenter;
             for (int i = 0; i < getCostCenterList().size(); i++) {
                 costCenter = costCenterList.get(i);
                 nameAr = costCenter.getName();
@@ -1803,7 +1797,7 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
                 }
             }
             
-            costCenterConverter = new CostCenterConverter(filteredCostCenters);
+            costCenterConverter = new CostCenterDTOConverter(filteredCostCenters);
             return filteredCostCenters;
         } catch (Exception e) {
             saveError(e, "SettlementDeedFormMB", "completeCostCenter");
@@ -1847,17 +1841,17 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
         }
     }
     
-    public List<GlAccount> completeGlAccount(String query) {
+    public List<GlAccountDTO> completeGlAccount(String query) {
         try {
-            List<GlAccount> glaccounts = getGlAccountList();//45
+            List<GlAccountDTO> glaccounts = getGlAccountList();//45
             if (query == null || query.trim().equals("")) {
-                glAccountConverter = new GlaccountConverter(glaccounts);
+                glAccountConverter = new GlAccountDTOConverter(glaccounts);
                 return glaccounts;
             }
-            List<GlAccount> filteredGlaccounts = new ArrayList<>();
+            List<GlAccountDTO> filteredGlaccounts = new ArrayList<>();
             String nameAr;
             Integer code;
-            GlAccount glaccount;
+            GlAccountDTO glaccount;
             for (int i = 0; i < getGlAccountList().size(); i++) {
                 glaccount = glaccounts.get(i);
                 nameAr = glaccount.getName();
@@ -1875,7 +1869,7 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
                 }
             }
             
-            glAccountConverter = new GlaccountConverter(filteredGlaccounts);
+            glAccountConverter = new GlAccountDTOConverter(filteredGlaccounts);
             return filteredGlaccounts;
         } catch (Exception e) {
             saveError(e, "SettlementDeedFormMB", "completeGlAccount");
@@ -2028,35 +2022,35 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
         this.glBankTransactionEntity = glBankTransactionEntity;
     }
     
-    public GlBankTransactionDetailEntity getGlBankTransactionDetailEntity() {
+    public GlBankTransactionDetailFromEntity getGlBankTransactionDetailEntity() {
         return glBankTransactionDetailEntity;
     }
     
-    public void setGlBankTransactionDetailEntity(GlBankTransactionDetailEntity glBankTransactionDetailEntity) {
+    public void setGlBankTransactionDetailEntity(GlBankTransactionDetailFromEntity glBankTransactionDetailEntity) {
         this.glBankTransactionDetailEntity = glBankTransactionDetailEntity;
     }
     
-    public GlBankTransactionDetailEntity getGlBankTransactionDetailEntitySelected() {
+    public GlBankTransactionDetailFromEntity getGlBankTransactionDetailEntitySelected() {
         return glBankTransactionDetailEntitySelected;
     }
     
-    public void setGlBankTransactionDetailEntitySelected(GlBankTransactionDetailEntity glBankTransactionDetailEntitySelected) {
+    public void setGlBankTransactionDetailEntitySelected(GlBankTransactionDetailFromEntity glBankTransactionDetailEntitySelected) {
         this.glBankTransactionDetailEntitySelected = glBankTransactionDetailEntitySelected;
     }
     
-    public List<GlBankTransactionDetailEntity> getGlBankTransactionDetailEntityList() {
+    public List<GlBankTransactionDetailFromEntity> getGlBankTransactionDetailEntityList() {
         return glBankTransactionDetailEntityList;
     }
     
-    public void setGlBankTransactionDetailEntityList(List<GlBankTransactionDetailEntity> glBankTransactionDetailEntityList) {
+    public void setGlBankTransactionDetailEntityList(List<GlBankTransactionDetailFromEntity> glBankTransactionDetailEntityList) {
         this.glBankTransactionDetailEntityList = glBankTransactionDetailEntityList;
     }
     
-    public List<GlBankTransactionDetailEntity> getRowsDeleted() {
+    public List<GlBankTransactionDetailFromEntity> getRowsDeleted() {
         return rowsDeleted;
     }
     
-    public void setRowsDeleted(List<GlBankTransactionDetailEntity> rowsDeleted) {
+    public void setRowsDeleted(List<GlBankTransactionDetailFromEntity> rowsDeleted) {
         this.rowsDeleted = rowsDeleted;
     }
     
@@ -2076,19 +2070,27 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
         this.showMessageGeneral = showMessageGeneral;
     }
     
-    public List<GlAccount> getGlAccountList() {
+    public List<GlAccountDTO> getGlAccountList() {
+        if (glAccountList == null || glAccountList.isEmpty()) {
+            glAccountList = glAccountService.getBranchGLAccountsActiveDTO(getUserData().getUserBranch().getId());
+            setGlAccountConverter(new GlAccountDTOConverter(glAccountList));
+        }
         return glAccountList;
     }
     
-    public void setGlAccountList(List<GlAccount> glAccountList) {
+    public void setGlAccountList(List<GlAccountDTO> glAccountList) {
         this.glAccountList = glAccountList;
     }
     
-    public List<CostCenter> getCostCenterList() {
+    public List<CostCenterDTO> getCostCenterList() {
+        if (costCenterList == null || costCenterList.isEmpty()) {
+            costCenterList = costCenterService.getAllCostCenterDTOList(branchId);
+            costCenterConverter = new CostCenterDTOConverter(costCenterList);
+        }
         return costCenterList;
     }
     
-    public void setCostCenterList(List<CostCenter> costCenterList) {
+    public void setCostCenterList(List<CostCenterDTO> costCenterList) {
         this.costCenterList = costCenterList;
     }
     
@@ -2211,11 +2213,11 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
         this.accounts = accounts;
     }
     
-    public GlaccountConverter getGlAccountConverter() {
+    public GlAccountDTOConverter getGlAccountConverter() {
         return glAccountConverter;
     }
     
-    public void setGlAccountConverter(GlaccountConverter glAccountConverter) {
+    public void setGlAccountConverter(GlAccountDTOConverter glAccountConverter) {
         this.glAccountConverter = glAccountConverter;
     }
 
@@ -2439,14 +2441,14 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
     /**
      * @return the costCenterConverter
      */
-    public CostCenterConverter getCostCenterConverter() {
+    public CostCenterDTOConverter getCostCenterConverter() {
         return costCenterConverter;
     }
 
     /**
      * @param costCenterConverter the costCenterConverter to set
      */
-    public void setCostCenterConverter(CostCenterConverter costCenterConverter) {
+    public void setCostCenterConverter(CostCenterDTOConverter costCenterConverter) {
         this.costCenterConverter = costCenterConverter;
     }
 
@@ -2481,14 +2483,14 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
     /**
      * @return the costCenterSelected
      */
-    public CostCenter getCostCenterSelected() {
+    public CostCenterDTO getCostCenterSelected() {
         return costCenterSelected;
     }
 
     /**
      * @param costCenterSelected the costCenterSelected to set
      */
-    public void setCostCenterSelected(CostCenter costCenterSelected) {
+    public void setCostCenterSelected(CostCenterDTO costCenterSelected) {
         this.costCenterSelected = costCenterSelected;
     }
 
@@ -2509,7 +2511,7 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
     /**
      * @return the glBankTransactionDetailEntityUnSelected
      */
-    public GlBankTransactionDetailEntity getGlBankTransactionDetailEntityUnSelected() {
+    public GlBankTransactionDetailFromEntity getGlBankTransactionDetailEntityUnSelected() {
         return glBankTransactionDetailEntityUnSelected;
     }
 
@@ -2517,7 +2519,7 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
      * @param glBankTransactionDetailEntityUnSelected the
      * glBankTransactionDetailEntityUnSelected to set
      */
-    public void setGlBankTransactionDetailEntityUnSelected(GlBankTransactionDetailEntity glBankTransactionDetailEntityUnSelected) {
+    public void setGlBankTransactionDetailEntityUnSelected(GlBankTransactionDetailFromEntity glBankTransactionDetailEntityUnSelected) {
         this.glBankTransactionDetailEntityUnSelected = glBankTransactionDetailEntityUnSelected;
     }
 
@@ -2634,20 +2636,6 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
     }
 
     /**
-     * @return the uri
-     */
-    public String getUri() {
-        return uri;
-    }
-
-    /**
-     * @param uri the uri to set
-     */
-    public void setUri(String uri) {
-        this.uri = uri;
-    }
-
-    /**
      * @return the glBankTransactionSelectionPre
      */
     public GlBankTransaction getGlBankTransactionSelectionPre() {
@@ -2681,7 +2669,7 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
      */
     public List<GlAccountDTO> getGlRunningAccountDTOList() {
         if (glRunningAccountDTOList == null || glRunningAccountDTOList.isEmpty()) {
-            glRunningAccountDTOList = accountService.getBranchGLAccountDTOListActive(getUserData().getUser());
+            glRunningAccountDTOList = getGlAccountList();
             runningAccountDTOConverter = new GlAccountDTOConverter(glRunningAccountDTOList);
         }
         return glRunningAccountDTOList;
@@ -2708,4 +2696,165 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
     public void setRunningAccountDTOConverter(GlAccountDTOConverter runningAccountDTOConverter) {
         this.runningAccountDTOConverter = runningAccountDTOConverter;
     }
+    
+    public GlAccountDTO mapAccountToDTO(GlAccount account) {
+        GlAccountDTO accountDTO = null;
+        if (account != null) {
+            accountDTO = new GlAccountDTO();
+            accountDTO.setId(account.getId());
+            accountDTO.setName(account.getName());
+            accountDTO.setAccNumber(account.getAccNumber());
+            
+            if (account.getCostCenterId() != null) {
+                accountDTO.setCostCenterId(account.getCostCenterId().getId());
+            }
+        }
+        
+        return accountDTO;
+    }
+    
+    public GlAccount mapAccountToEntity(GlAccountDTO accountDTO) {
+        GlAccount glAccount = null;
+        if (accountDTO != null) {
+            glAccount = new GlAccount();
+            glAccount.setId(accountDTO.getId());
+            glAccount.setName(accountDTO.getName());
+            glAccount.setAccNumber(accountDTO.getAccNumber());
+            
+            if (glAccount.getCostCenterId() != null) {
+                CostCenter costCenter = new CostCenter();
+                costCenter.setId(accountDTO.getCostCenterId());
+                glAccount.setCostCenterId(costCenter);
+            }
+        }
+        return glAccount;
+    }
+    
+    public CostCenterDTO mapCostCenterToDTO(CostCenter costCenter) {
+        CostCenterDTO costCenterDTO = null;
+        if (costCenter != null) {
+            costCenterDTO = new CostCenterDTO();
+            costCenterDTO.setId(costCenter.getId());
+            costCenterDTO.setName(costCenter.getName());
+            costCenterDTO.setCode(costCenter.getCode());
+            
+            if (costCenter.getCurrentaccountId() != null) {
+                GlAccount glAccount = new GlAccount();
+                glAccount.setId(costCenter.getCurrentaccountId().getId());
+                costCenterDTO.setCurrentaccountId(glAccount);
+            }
+        }
+        return costCenterDTO;
+    }
+    
+    public CostCenter mapCostCentertToEntity(CostCenterDTO costCenterDTO) {
+        CostCenter costCenter = null;
+        if (costCenterDTO != null) {
+            costCenter = new CostCenter();
+            costCenter.setId(costCenterDTO.getId());
+            costCenter.setName(costCenterDTO.getName());
+            costCenter.setCode(costCenterDTO.getCode());
+            
+            if (costCenterDTO.getCurrentaccountId() != null) {
+                GlAccount account = new GlAccount();
+                account.setId(costCenterDTO.getCurrentaccountId().getId());
+                costCenter.setCurrentaccountId(account);
+            }
+        }
+        return costCenter;
+    }
+    
+    public void print(ActionEvent actionEvent) throws JRException, IOException {
+
+        exportPDF(actionEvent);
+        exportPDFVoutcher(actionEvent);
+    }
+    
+    public void exportPDFVoutcher(ActionEvent actionEvent) throws JRException, IOException {
+        if (glBankTransaction != null && glBankTransaction.getId() != null && glBankTransaction.getGeneralJournalId() != null) {
+            List<com.toby.bean.JournalDocumentArrangedReportBean> journalDocumentArrangedReportBeanList = generaljournalServiceDTO.printVoutcher(glBankTransaction.getGeneralJournalId().getId());
+            if (journalDocumentArrangedReportBeanList != null && !journalDocumentArrangedReportBeanList.isEmpty()) {
+                List<JournalDocumentAndSettelment> listAll = new ArrayList<>();
+                JournalDocumentAndSettelment journalDocumentAndSettelment = new JournalDocumentAndSettelment();
+                journalDocumentAndSettelment.getGlBankTransactionDetailEntityList().addAll(glBankTransactionDetailEntityList);
+                journalDocumentAndSettelment.getJournalDocumentArrangedReportBeanList().addAll(journalDocumentArrangedReportBeanList);
+                listAll.add(journalDocumentAndSettelment);
+                HashMap hashMap = new HashMap();
+                hashMap.put("param1", prepareReportVoutcher());
+                hashMap.put("param2", prepareReport());
+                hashMap.put("report1path", getUserData().getReportPath() + "generalJournalReportTotal.jasper");
+                hashMap.put("report2path", getUserData().getReportPath() + "settlementdeed.jasper");
+                fillReport(hashMap, getUserData().getReportPath() + "constraintWithsettlementd.jasper", listAll, "pdf");
+                
+            }
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "لا يمكن طباعة قيد بدون تفاصيل"));
+            showMessageGeneral = Boolean.TRUE;
+        }
+    }
+    
+    public HashMap prepareReportVoutcher() {
+        Map<String, String> userDDs = getUserData().getUserDDs();
+        
+        HashMap hashMap = new HashMap();
+        hashMap.put("journalDocumentDailyReportText", "بيان قيوداليومية");
+        hashMap.put("journalNumberText", "رقم القيد");
+        hashMap.put("generalTypeText", "نوع القيد");
+        hashMap.put("journalDocumentText", "رقم السند");
+        hashMap.put("documentTypeText", "نوع السند");
+        hashMap.put("documentDateText", "تاريخ السند");
+        hashMap.put("statementText", "البيان");
+        
+        hashMap.put("debitText", "مدين");
+        hashMap.put("creditText", "دائن");
+        hashMap.put("accountNumberText", "رقم الحساب");
+        hashMap.put("accountNameText", "اسم الحساب");
+        hashMap.put("costCenterText", "مركز التكلفة");
+        hashMap.put("adminUnitText", "وحدة ادارية");
+        hashMap.put("journalCreatorText", "اسم وتاريخ منشئ القيد");
+        hashMap.put("journalDateText", "تاريخ انشاء القيد");
+        hashMap.put("journaText", "قيد");
+        hashMap.put("descriptionText", "الشرح");
+        
+        hashMap.put("journalDocumentReportText", userDDs.get("JOURNAL_DOCUMENT_REPORT"));
+        hashMap.put("fromJournalDocumentTypeText", userDDs.get("FROM_JOURNAL_DOCUMENT_TYPE"));
+        hashMap.put("toJournalDocumentTypeText", userDDs.get("TO_JOURNAL_DOCUMENT_TYPE"));
+        hashMap.put("fromJournalDocumentNumberText", userDDs.get("FROM_JOURNAL_DOCUMENT_NUMBER"));
+        hashMap.put("toJournalDocumentNumberText", userDDs.get("TO_JOURNAL_DOCUMENT_NUMBER"));
+        hashMap.put("fromJournalNumberText", userDDs.get("FROM_JOURNAL_NUMBER"));
+        hashMap.put("toJournalNumberText", userDDs.get("TO_JOURNAL_NUMBER"));
+        hashMap.put("yearFromText", userDDs.get("YEAR_FROM"));
+        hashMap.put("yearToText", userDDs.get("YEAR_TO"));
+        hashMap.put("reviewAccountText", userDDs.get("REVIEW_ACCOUNT"));
+        hashMap.put("journalDailyBalancedText", userDDs.get("JOURNALS_DAILY_BALANCED"));
+        hashMap.put("fromUserText", userDDs.get("FROM_USER"));
+        hashMap.put("toUserText", userDDs.get("TO_USER"));
+        hashMap.put("generalNumberText", userDDs.get("GENERAL_NUMBER"));
+        hashMap.put("documentNumberText", userDDs.get("DOCUMENT_NUMBER"));
+        hashMap.put("dateText", userDDs.get("DATE"));
+        hashMap.put("reviewAccountingText", userDDs.get("REVIEW_ACCOUNTING"));
+        hashMap.put("postingText", userDDs.get("POSTING"));
+        hashMap.put("amountText", userDDs.get("AMOUNT"));
+        hashMap.put("journalAddedByText", userDDs.get("JOURNAL_ADDED_BY"));
+        hashMap.put("generalStatementText", userDDs.get("GERNAL_STATEMENT"));
+        hashMap.put("remarksText", userDDs.get("REMARKS"));
+//        hashMap.put("summaryCreditString", summaryCreditString);
+//        hashMap.put("summaryDebitString", summaryDebitString);
+
+        hashMap.put("tellerText", "المحاسب");
+        hashMap.put("accountsText", "مدير الحسابات");
+        hashMap.put("confirmationText", "اعتماد");
+        
+        hashMap.put("PrintedBy", getUserData().getUser().getName());
+        //  hashMap.put("companyImage", getUserData().getImageReportPath());
+        hashMap.put("branchName", getUserData().getUserBranch().getNameAr());
+        //  hashMap.put("companyName", getUserData().getCompany().getName());
+        if (isFileExist(getUserData().getImageReportPath())) {
+            hashMap.put("companyImage", null);
+        } else {
+            hashMap.put("companyImage", null);
+        }
+        return hashMap;
+    }
+    
 }

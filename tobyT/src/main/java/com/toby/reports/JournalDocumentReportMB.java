@@ -1,5 +1,6 @@
 package com.toby.reports;
 
+import com.toby.bean.JournalDocumentArrangedReportBean;
 import com.toby.businessservice.CostCenterService;
 import com.toby.businessservice.GeneralSymbolService;
 import com.toby.businessservice.GeneraljournalDetailsService;
@@ -16,7 +17,6 @@ import com.toby.entity.GeneralJournalDetails;
 import com.toby.entity.GlAccount;
 import com.toby.entity.GlAdminUnit;
 import com.toby.entity.Symbol;
-import com.toby.report.entity.JournalDocumentArrangedReportBean;
 import com.toby.report.entity.JournalDocumentDailyReportBean;
 import com.toby.report.entity.JournalDocumentReportBean;
 import com.toby.toby.BaseGlAccountReportBean;

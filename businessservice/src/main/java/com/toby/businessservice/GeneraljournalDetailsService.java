@@ -30,7 +30,7 @@ public interface GeneraljournalDetailsService {
     
     public void addGenDetalilsGlobal(List<GeneralJournalDetails> details, TobyUser tobyUser, Integer generalJournalId,Integer idDtail);
     
-    public GeneralJournalDetails addGenDetalil(Boolean isDebit,BigDecimal value, Integer generalJournalId, Integer accountId, Integer costCenterId, String remark, TobyUser tobyUser);
+    public void addGenDetalil(Boolean isDebit,BigDecimal value, Integer generalJournalId, Integer accountId, Integer costCenterId, String remark, TobyUser tobyUser);
 
     public List<GeneralJournalDetails> addGenDetalils(List<GeneralJournalDetails> details, List<GeneralJournalDetails> generalListDeleted);
 
