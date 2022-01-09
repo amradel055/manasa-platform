@@ -131,7 +131,10 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
                 getGmSubscriptionsDTO().setIsEdit(Boolean.TRUE);
                 fillInvInvoiceDTO();
                 fillDefaultList();
-            } else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("editorganization")) {
+            }  else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("editCustomerData")) {
+                fillInvOrgan(); 
+            }
+            else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("editorganization")) {
                 getOrganizationSiteId().setIsEdited(Boolean.TRUE);
 
                 fillClientDTO();
@@ -222,6 +225,10 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
     public void fillInvInvoiceDTO() {
         getGmSubscriptionsDTO().setId((Integer) getContext().getSessionMap().get("TamdedId"));
         setGmSubscriptionsDTO(gmSubscriptionsService.findGmSubscriptionsDTOById(getGmSubscriptionsDTO()));
+    }
+     public void fillInvOrgan() {
+        getOrganizationSiteId().setId((Integer) getContext().getSessionMap().get("invOrganizationSiteDTO"));
+        setOrganizationSiteId(organizationSiteService.findOrganizationSiteDTOById(getOrganizationSiteId().getId()));
     }
 
     public void fillGmSubscribtionOld() {

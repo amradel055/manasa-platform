@@ -243,6 +243,22 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
             return null;
         }
     }
+     public String EditClientData() {
+        try {
+            if (getInvOrganizationSiteDTO() != null && getInvOrganizationSiteDTO().getId() > 0) {
+                ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+                context.getSessionMap().put("invOrganizationSiteDTO", getInvOrganizationSiteDTO().getId());
+                context.getSessionMap().put("ScreenMode", "editCustomerData");
+                goToScreenCustomerData();
+                return "";
+            } else {
+                return "";
+            }
+        } catch (Exception e) {
+            saveError(e, "InvPurchaseInvoiceListMB", "EditClientData");
+            return null;
+        }
+    }
       public String goToresume() {
         try {
             if (getGmSubscriptionsDTOSelected() != null && getGmSubscriptionsDTOSelected().getOrganizationSiteId()!= null && getGmSubscriptionsDTOSelected().getOrganizationSiteId().getId() > 0) {
@@ -286,6 +302,9 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
 
     public void goToScreen() {
         exit("../gmsubscriptions/gmsubscriptionsform.xhtml");
+    }
+     public void goToScreenCustomerData() {
+        exit("../gmregistration/gmregistrationForm.xhtml");
     }
   
     public void goToClientEditScreen() {

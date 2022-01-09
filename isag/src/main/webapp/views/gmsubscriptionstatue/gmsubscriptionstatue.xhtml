@@ -7,7 +7,7 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns="http://www.w3.org/1999/xhtml">
     <ui:define name="content">
-        
+
         <style>
             div#form\:customer_panel li {
                 text-align: right;
@@ -34,9 +34,9 @@
                 /* color: #000; */
             }
         </style>
-        
+
         <h:form id="form"  dir="#{userData.dir}" class='formmargin'>
-  <div style=" position: absolute;left: 20px"> 
+            <div style=" position: absolute;left: 20px"> 
 
                 <p:commandButton  style="z-index: 2;
                                   margin-top: 24%;
@@ -50,22 +50,22 @@
                                   action="exit" />
 
             </div>
-            
-            
+
+
             <div   class="ui-g-12 ui-g-nopad" style='margin-top: 5%;'>
                 <div class="ui-g">
-                    
+
                     <div class="ui-g-12 ui-md-12" style="display: inline-block;">
-                        
+
                         <div class="ui-g-12 ui-xl-12" style="padding: 3% 0;
-                                                             background-color: #ffb3004d;
-                                                             border: solid 1px #fff;
-                                                             border-radius: 2%;
-                                                             margin-bottom: 1%;">
+                             background-color: #ffb3004d;
+                             border: solid 1px #fff;
+                             border-radius: 2%;
+                             margin-bottom: 1%;">
 
                             <div class="ui-g-12 ui-xl-9">
                                 <p:autoComplete id="customer"
-                                                 style="width:37%!important;font-size: 17px;font-family: system-ui;" 
+                                                style="width:37%!important;font-size: 17px;font-family: system-ui;" 
                                                 dropdown="true"
                                                 converter="#{autoComplete.organizationSiteDTOConvertor}"
                                                 value="#{gmSubscriptionsListDTOMB.invOrganizationSiteDTO}"
@@ -85,11 +85,11 @@
                                 <p:outputLabel style="width: 85px;margin-right: 3%;font-size: 25px;font-family: system-ui;" value="اسم العميل "/>
                             </div>
                         </div>
-                        
+
                     </div>
-                    
+
                     <div class="ui-g-12 ui-md-8" style="display: inline-block;">
-                        
+
                         <div class="ui-g-12 ui-xl-6" style="float: right;">
                             <div class="ui-g-12 ui-xl-6">
                                 <h:outputText style="width: 35%!important;font-size: 17px;font-family: system-ui;" id="ad1995444991"  value="#{gmSubscriptionsListDTOMB.access}"/>
@@ -98,7 +98,7 @@
                                 <p:outputLabel style="width: 85px;margin-right: 3%;font-size: 17px;font-family: system-ui;" value="امكانيه دخول الجيم  "/>
                             </div>
                         </div>
-                        
+
                         <div class="ui-g-12 ui-xl-6">
                             <div class="ui-g-12 ui-xl-6">
                                 <h:outputText style="width: 35%!important;font-size: 17px;font-family: system-ui;" id="ad199991"  value="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected.freezeStatus eq false ? 'غير مجمد' : 'مجمد'}"/>
@@ -107,7 +107,7 @@
                                 <p:outputLabel style="width: 85px;margin-right: 3%;font-size: 17px;font-family: system-ui;" value="حاله التجميد  "/>
                             </div>
                         </div>
-                                                
+
                         <div class="ui-g-12 ui-xl-6" style="float: right;">
 
                             <div class="ui-g-12 ui-xl-6">
@@ -165,7 +165,7 @@
 
                             </div>
                         </div>
-                
+
                         <div class="ui-g-12 ui-xl-6">
 
                             <div class="ui-g-12 ui-xl-6">
@@ -217,10 +217,10 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="ui-g-12 ui-md-4" style="display: inline-block;">
                         <div class="ui-g-12 ui-xl-12" style="">
-                            
+
                             <div class="ui-g-12 ui-xl-12">
                                 <p:outputLabel style="width: 85px;margin-right: 3%;font-size: 17px;font-family: system-ui;" value="صورة العميل"/>
 
@@ -230,30 +230,41 @@
                                 <p:graphicImage url="#{gmSubscriptionsListDTOMB.host.concat(gmSubscriptionsListDTOMB.invOrganizationSiteDTOSelected.clientImage)}" library="demo"  style="max-width:80%;max-height:80%;object-fit: cover !important;"/>
                             </div>
 
-                                     
+
                         </div>
                     </div>
-            </div> 
-            
+                </div> 
+
                 <div class='smallButtons'>     
                     <p:commandButton  icon="" 
-                                        class=""
-                                        value="#{userData.userDDs['ADD']}" 
-                                        action="#{gmSubscriptionsListDTOMB.goToAdd()}" 
-                                        rendered="#{(userData.userScreens['gmsubscriptions'].add)  or userData.isAdmin}"/>
+                                      class=""
+                                      value="#{userData.userDDs['ADD']}" 
+                                      action="#{gmSubscriptionsListDTOMB.goToAdd()}" 
+                                      rendered="#{(userData.userScreens['gmsubscriptions'].add)  or userData.isAdmin}"/>
                     <p:commandButton style="" update="@form"  value="تجميد"  action ="#{gmSubscriptionsListDTOMB.findCustomerData()}"> 
-                      <f:setPropertyActionListener value="#{customer}" target="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected}" />
+                        <f:setPropertyActionListener value="#{customer}" target="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected}" />
                     </p:commandButton>
                     <p:commandButton style="" update="@form"  value="تمديد"  action ="#{gmSubscriptionsListDTOMB.goToresume()}"> 
                         <f:setPropertyActionListener value="#{customer}" target="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected}" />
                     </p:commandButton>
-                     <p:commandButton style="" update="@form"  value="نقل الاشتراك"  action ="#{gmSubscriptionsListDTOMB.goToMovment()}"> 
-                         <f:setPropertyActionListener value="#{customer}" target="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected}" />
+                    <p:commandButton style="" update="@form"  value="نقل الاشتراك"  action ="#{gmSubscriptionsListDTOMB.goToMovment()}"> 
+                        <f:setPropertyActionListener value="#{customer}" target="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected}" />
+                    </p:commandButton>
+                    <p:commandButton   onclick="form.target = '_blank'"  ajax="false"
+                                       update="@form" 
+                                       class="smsearchButtons"
+                                       icon="fa fa-fw fa-search-plus"  style="background-color: rgba(63, 81, 181, 0.88);border-radius: 3px;"
+                                       title="تعديل بيانات العميل" 
+                                       action="#{gmSubscriptionsListDTOMB.goToEdit()}" 
+                                       rendered="#{userData.userScreens['gmsubscriptions'].edit or userData.isAdmin}" >
+
+                        <f:setPropertyActionListener value="#{invInvoicePurchaseTable}" 
+                                                     target="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected}" />
                     </p:commandButton>
                 </div>
-                     
-                                        </div>
-                <div class="ui-g-12 ui-xl-12">
+
+            </div>
+            <div class="ui-g-12 ui-xl-12">
                 <div class="ui-g-6 ui-xl-6"/>
                 <div class="ui-g-6 ui-xl-6">
 
@@ -280,7 +291,7 @@
 
                                             </div>
                                         </div>
-                                        
+
                                         <div class="ui-g-12 ui-xl-12">
 
                                             <div class="ui-g-6 ui-xl-6">
