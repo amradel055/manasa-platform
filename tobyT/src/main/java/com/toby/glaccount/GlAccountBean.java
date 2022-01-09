@@ -841,6 +841,43 @@ public class GlAccountBean extends BaseTreeBean {
         }
         return costCenterList;
     }
+    public List<CostCenter> completeCostCenter(String query) {
+        try {
+        List<CostCenter> costCenters = getCostCenterList();
+        if (query == null || query.trim().equals("")) {
+            costCenterConverter = new CostCenterConverter(costCenters);
+            return costCenters;
+        }
+        List<CostCenter> filteredCenters = new ArrayList<>();
+
+        String nameAr;
+        Integer code;
+        CostCenter costCenter ;
+     
+        for (int i = 0; i < costCenterList.size(); i++) {
+            costCenter = costCenters.get(i);
+            nameAr = costCenter.getName();
+            if (nameAr != null && nameAr.toLowerCase().contains(query.toLowerCase())) {
+                if (!filteredCenters.contains(costCenter)) {
+                    filteredCenters.add(costCenter);
+                }
+            }
+
+            code = costCenter.getCode();
+            if (code != null && String.valueOf(code).contains(query)) {
+                if (!filteredCenters.contains(costCenter)) {
+                    filteredCenters.add(costCenter);
+                }
+            }
+        }
+
+        costCenterConverter = new CostCenterConverter(filteredCenters);
+        return filteredCenters;
+         } catch (Exception e) {
+            saveError(e, "GlAccountBean", "completeCostCenter");
+            return null;
+        }
+    }
 
     /**
      * @param costCenterList the costCenterList to set
