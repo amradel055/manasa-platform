@@ -173,6 +173,8 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
     private Boolean isPreviosBalance;
 
     private Integer serialSelected;
+    
+    private InvOrganizationSiteDTO invOrganizationSiteDTOSelected ;
 
     @EJB
     private GlBankTransactionInvoiceViewService bankTransactionInvoiceViewService;
@@ -323,6 +325,14 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
     public void check() {
         if (glBankTransactionDetailEntity.getInvOrganizationSite() != null
                 && glBankTransactionDetailEntity.getInvOrganizationSite().getId() != null) {
+            glBankTransactionInvoiceViewList = bankTransactionInvoiceViewService.getGlBankTransactionInvoiceViewList(glBankTransactionDetailEntity.getInvOrganizationSite().getId(), getUserData().getUser());
+            glBankTransactionEntity.setAccountStatement(supplierAccountService.getAccountForOrganizationSite(glBankTransactionDetailEntity.getInvOrganizationSite().getId()));
+        }
+    }
+    
+     public void editCustomer() {
+        if (invOrganizationSiteDTOSelected != null) {
+            glBankTransactionDetailEntity.setInvOrganizationSite(getInvOrganizationSiteDTOSelected());
             glBankTransactionInvoiceViewList = bankTransactionInvoiceViewService.getGlBankTransactionInvoiceViewList(glBankTransactionDetailEntity.getInvOrganizationSite().getId(), getUserData().getUser());
             glBankTransactionEntity.setAccountStatement(supplierAccountService.getAccountForOrganizationSite(glBankTransactionDetailEntity.getInvOrganizationSite().getId()));
         }
@@ -941,15 +951,10 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
                     try {
                         glBankTransactionDetailsUpdatedList.add(bankTransactionDetail);
                         GlBankTransaction bankTransaction;
-                        if (installment != null && installment) {
-                            bankTransaction = glBankTransactionService.addGlBankTransactionForInstallment(glBankTransaction, glBankTransactionDetailsUpdatedList, null,getUserData().getUser());
-                            if (sendSms) {
-                                sendSms();
-                            }
-                        } else {
+                        
                             bankTransaction = glBankTransactionService.addGlBankTransaction(glBankTransaction, glBankTransactionDetailsUpdatedList, new ArrayList<>(), companyId,getUserData().getUser());
-                        }
-                        if (bankTransaction != null && bankTransaction.getId() != null && printAndSave) {
+
+                            if (bankTransaction != null && bankTransaction.getId() != null && printAndSave) {
                             exportPDF(null);
                             printAndSave = false;
                         }
@@ -2141,6 +2146,20 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
      */
     public void setIsPreviosBalance(Boolean isPreviosBalance) {
         this.isPreviosBalance = isPreviosBalance;
+    }
+
+    /**
+     * @return the invOrganizationSiteDTOSelected
+     */
+    public InvOrganizationSiteDTO getInvOrganizationSiteDTOSelected() {
+        return invOrganizationSiteDTOSelected;
+    }
+
+    /**
+     * @param invOrganizationSiteDTOSelected the invOrganizationSiteDTOSelected to set
+     */
+    public void setInvOrganizationSiteDTOSelected(InvOrganizationSiteDTO invOrganizationSiteDTOSelected) {
+        this.invOrganizationSiteDTOSelected = invOrganizationSiteDTOSelected;
     }
 
 }
