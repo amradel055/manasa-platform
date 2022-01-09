@@ -656,7 +656,7 @@ public class ReportsServiceImpl implements ReportsService {
 "    FROM\n" +
 "        `gm_subscriptions` `ip`\n" +
 "        LEFT JOIN `inv_organization_site` `ios` ON `ios`.`id` = `ip`.`organization_site_id`\n" +
-"  where ip.type = 0 AND  ip.branch_id = 239"
+"  where ip.type = 0 AND  ip.branch_id = 239 AND ip.deleted_by IS NULL "
         );
         
 //        appendGallery1(salesReportByValueAdedDetails, sql);

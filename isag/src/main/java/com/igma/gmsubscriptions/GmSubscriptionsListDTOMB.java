@@ -295,7 +295,7 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
     public void delete() {
         try {
             if (getGmSubscriptionsDTOSelected() != null && getGmSubscriptionsDTOSelected().getId() != null) {
-                gmSubscriptionsService.deleteGmSubscriptionsDTODTO(getGmSubscriptionsDTOSelected().getId());
+                gmSubscriptionsService.updateDeleteGmSubscriptionsDTODTO(getGmSubscriptionsDTOSelected() , getUserlogin());
                 load();
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "تم الجذذف بنجاح", "تم الجذذف بنجاح"));
             }

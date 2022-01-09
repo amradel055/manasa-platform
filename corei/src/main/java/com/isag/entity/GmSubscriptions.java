@@ -100,6 +100,13 @@ public class GmSubscriptions extends BaseEntity {
     @JoinColumn(name = "gm_item_id", referencedColumnName = "id")
     @ManyToOne
     private GmItem gmItemId;
+    @JoinColumn(name = "deleted_by", referencedColumnName = "id")
+    @ManyToOne
+    private IsagUser deletedBy;
+    @Column(name = "deletion_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date deletionDate;
+    
     public GmSubscriptions() {
     }
 
@@ -392,6 +399,34 @@ public class GmSubscriptions extends BaseEntity {
      */
     public void setGmItemId(GmItem gmItemId) {
         this.gmItemId = gmItemId;
+    }
+
+    /**
+     * @return the deletedBy
+     */
+    public IsagUser getDeletedBy() {
+        return deletedBy;
+    }
+
+    /**
+     * @param deletedBy the deletedBy to set
+     */
+    public void setDeletedBy(IsagUser deletedBy) {
+        this.deletedBy = deletedBy;
+    }
+
+    /**
+     * @return the deletionDate
+     */
+    public Date getDeletionDate() {
+        return deletionDate;
+    }
+
+    /**
+     * @param deletionDate the deletionDate to set
+     */
+    public void setDeletionDate(Date deletionDate) {
+        this.deletionDate = deletionDate;
     }
 
 }

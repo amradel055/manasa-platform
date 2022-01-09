@@ -5,6 +5,7 @@
  */
 package com.isag.dto;
 
+import com.isag.entity.IsagUser;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -17,6 +18,8 @@ public class resualtDTO {
     private String clientName;
     private String phone ;
     private Date creationDate ;
+    private Date deletionDate ;
+    private IsagUser deletedBy ;
     private BigDecimal value;
     private BigDecimal sumValue ;
     /**
@@ -105,5 +108,33 @@ public class resualtDTO {
     public void setSumValue(BigDecimal sumValue) {
         
         this.sumValue = sumValue;
+    }
+
+    /**
+     * @return the deletionDate
+     */
+    public Date getDeletionDate() {
+        return deletionDate;
+    }
+
+    /**
+     * @param deletionDate the deletionDate to set
+     */
+    public void setDeletionDate(Date deletionDate) {
+        this.deletionDate = deletionDate;
+    }
+
+    /**
+     * @return the deletedBy
+     */
+    public IsagUser getDeletedBy() {
+        return deletedBy;
+    }
+
+    /**
+     * @param deletedBy the deletedBy to set
+     */
+    public void setDeletedBy(IsagUser deletedBy) {
+        this.deletedBy = deletedBy;
     }
 }

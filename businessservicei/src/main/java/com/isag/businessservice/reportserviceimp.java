@@ -28,7 +28,10 @@ public class reportserviceimp implements ReportService {
 
     @EJB
     private GenericDAO dao;
-
+    
+    @EJB
+    private IsagUserService isagUseService;
+     
     @Override
     public List<resualtDTO> getReporySearch(searchDTO search) {
         Map<String, Object> params = new HashMap<>();
@@ -58,6 +61,30 @@ public class reportserviceimp implements ReportService {
         if(search.getDateTo() != null){
             params.put("dateTo", search.getDateTo());
             query.append(" AND e.endDate <= :dateTo");
+        }
+
+        List<GmSubscriptions> gmSubscriptionses = dao.findListByQuery(query.toString() , params);
+        List<resualtDTO> dtos = mapToDtoList(gmSubscriptionses);
+        return dtos;
+    }
+    
+    @Override
+    public List<resualtDTO> getAllDeletedSubsByDate(searchDTO search) {
+
+        Map<String, Object> params = new HashMap<>();
+        
+        params.put("branchId", search.getBranchId());
+      
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT e FROM GmSubscriptions e WHERE e.branchId.id = :branchId AND e.deletedBy IS NOT NULL");
+        if(search.getDateFrom() != null){
+            params.put("dateFrom", search.getDateFrom());
+            query.append(" AND e.deletionDate >= :dateFrom");
+        }
+        
+        if(search.getDateTo() != null){
+            params.put("dateTo", search.getDateTo());
+            query.append(" AND e.deletionDate <= :dateTo");
         }
 
         List<GmSubscriptions> gmSubscriptionses = dao.findListByQuery(query.toString() , params);
@@ -133,9 +160,18 @@ public class reportserviceimp implements ReportService {
         dTO.setClientName(entity.getOrganizationSiteId().getName());
         dTO.setClientName(entity.getOrganizationSiteId().getName());
         dTO.setSerial(entity.getSerial());
-        dTO.setPhone(entity.getOrganizationSiteId().getPhone());
+        dTO.setPhone(entity.getOrganizationSiteId().getMobile());
         dTO.setCreationDate(entity.getCreationDate());
         dTO.setValue(entity.getFinalNet());
+        if(entity.getDeletedBy() != null){
+       
+        dTO.setDeletedBy(entity.getDeletedBy());
+        }
+        
+        if(entity.getDeletionDate()!= null){
+        dTO.setDeletionDate(entity.getDeletionDate());
+        }
+        
         
         return dTO;
 

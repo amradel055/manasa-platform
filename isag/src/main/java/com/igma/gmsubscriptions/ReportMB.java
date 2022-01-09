@@ -31,11 +31,18 @@ public class ReportMB extends BaseFormBean {
     private resualtDTO resualtDTO;
     private searchDTO searchdto;
     private List<resualtDTO> resultList;
+    
+    
 
     public void search() {
         searchdto.setBranchId(getUserData().getUserBranch().getId());
         resultList = reportservice.getAllValidSubsByDate(searchdto);
         resualtDTO.setSumValue(reportservice.getAllValidSubsFinalNet(searchdto));
+    }
+    
+     public void searchDeletedSubscribtion() {
+        searchdto.setBranchId(getUserData().getUserBranch().getId());
+        resultList = reportservice.getAllDeletedSubsByDate(searchdto);
     }
 
     public void searchFreeze() {

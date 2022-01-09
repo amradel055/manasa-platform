@@ -7,6 +7,7 @@ package com.isag.businessservice;
 
 import com.isag.businessservice.reports.searchBean.SubAccountSummarySearchBean;
 import com.isag.dto.GmSubscriptionsDTO;
+import com.isag.entity.GmSubscriptions;
 import com.isag.entity.IsagUser;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -48,5 +49,7 @@ public interface GmSubscriptionsService {
     public GmSubscriptionsDTO getValidGmSubscriptionsDTOByCustomerId(Integer customerId);
     
     public GmSubscriptionsDTO GmSubscribtionAutoSave(GmSubscriptionsDTO dTO , IsagUser isagUser);
+    
+     public void updateDeleteGmSubscriptionsDTODTO(GmSubscriptionsDTO gmSubscriptionsDTO , IsagUser user);
  
 }

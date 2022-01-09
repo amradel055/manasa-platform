@@ -16,13 +16,15 @@ import java.util.List;
  * @author Lenovo
  */
 public interface ReportService {
-    
- public  List<resualtDTO> getReporySearch(searchDTO search);
- 
-  public List<resualtDTO> getAllValidSubsByDate(searchDTO search);
-  
-  public BigDecimal getAllValidSubsFinalNet(searchDTO search);
- 
-public List<resualtDTO> getAllFreezeByDate(searchDTO search) ;
-    
+
+    public List<resualtDTO> getReporySearch(searchDTO search);
+
+    public List<resualtDTO> getAllValidSubsByDate(searchDTO search);
+
+    public BigDecimal getAllValidSubsFinalNet(searchDTO search);
+
+    public List<resualtDTO> getAllFreezeByDate(searchDTO search);
+
+    public List<resualtDTO> getAllDeletedSubsByDate(searchDTO search);
+
 }

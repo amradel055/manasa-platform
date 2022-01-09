@@ -194,7 +194,9 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
         if (gmSubscriptionsDTO.getOrganizationSiteId() == null) {
             error.append("\n يجب أختيار عميل ");
         }
-
+        if (gmSubscriptionsDTO.getGmItemDTO()== null) {
+            error.append("\n يجب أختيار تفاصيل الاشتراك ");
+        }
         if (!error.toString().isEmpty()) {
             gmSubscriptionsDTO.setMsg(error.toString());
         }
@@ -350,7 +352,7 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
         StringBuilder builder = new StringBuilder();
         filters.put("type", type);
         filters.put("branchId", branchId);
-        builder.append("SELECT count(s) FROM GmSubscriptions s WHERE   s.branchId.id = :branchId AND s.type =:type ");
+        builder.append("SELECT count(s) FROM GmSubscriptions s WHERE   s.branchId.id = :branchId AND s.type =:type AND s.deletionDate IS NULL ");
         appendFilter(filters, builder);
         Long details = dao.findEntityByQuery(builder.toString(), filters);
         return details == null ? 0 : details;
@@ -370,7 +372,7 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
         filters.put("type", type);
         filters.put("branchId", branchId);
         StringBuilder builder = new StringBuilder();
-        builder.append("SELECT s FROM GmSubscriptions s WHERE  s.branchId.id = :branchId AND s.type =:type  ");
+        builder.append("SELECT s FROM GmSubscriptions s WHERE  s.branchId.id = :branchId AND s.type =:type  AND s.deletionDate IS NULL  ");
         appendFilter(filters, builder);
         builder.append(" order by s.serial DESC");
         List<GmSubscriptions> details = dao.findListByQuery(builder.toString(), filters, first, pageSize);
@@ -452,6 +454,8 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
 
         }
     }
+    
+  
 
     @Override
     public BigDecimal netPay(SubAccountSummarySearchBean cashAccountSettlementSearchBean, Integer bankId) {
@@ -613,19 +617,20 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
         dTO = save(dTO, isagUser);
         return dTO;
     }
+    
+    
+    @Override
+    public void updateDeleteGmSubscriptionsDTODTO(GmSubscriptionsDTO gmSubscriptionsDTO , IsagUser user) {
+        if (gmSubscriptionsDTO != null) {
+//            gmSubscriptionsDTODetailsService.deleteGmSubscriptionsDetailDTOListDTO(invoiceId);
+            GmSubscriptions gmSubscriptions = mapToEntity(gmSubscriptionsDTO, user);
+            gmSubscriptions.setDeletedBy(user);
+            gmSubscriptions.setDeletionDate(new Date());
+            gmSubscriptions = dao.updateEntity(gmSubscriptions);
 
-    /**
-     * @return the gmFreezeService
-     */
-    public GmFreezeService getGmFreezeService() {
-        return gmFreezeService;
+        }
     }
+    
 
-    /**
-     * @param gmFreezeService the gmFreezeService to set
-     */
-    public void setGmFreezeService(GmFreezeService gmFreezeService) {
-        this.gmFreezeService = gmFreezeService;
-    }
 
 }
