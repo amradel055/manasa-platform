@@ -119,6 +119,8 @@ public class GlAccountBean extends BaseTreeBean {
         setGlAccountList(accountService.getBranchGLAccountsActiveByBranch(getUserData().getUserBranch().getId()));
         glAccountLocalList = getGlAccountList();
         accountConverter = new GlaccountConverter(glAccountLocalList);
+        
+        getCostCenterList();
 
         if (getUserData().getIsAdmin()) {
             accountHierarchy = loadAllCostCenters();
@@ -834,7 +836,7 @@ public class GlAccountBean extends BaseTreeBean {
      */
     public List<CostCenter> getCostCenterList() {
         if(costCenterList == null){
-            costCenterList = costCenterService.getActiveSubCostCentersByBranch(getUserData().getUserBranch().getId());
+            costCenterList = costCenterService.getAllCostCenters(getUserData().getUserBranch().getId());
             costCenterConverter = new CostCenterConverter(costCenterList);
         }
         return costCenterList;

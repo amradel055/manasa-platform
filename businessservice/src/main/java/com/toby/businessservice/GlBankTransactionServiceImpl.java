@@ -78,8 +78,14 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
             List<GlBankTransactionDetail> glBankTransactionDetailList, TobyUser tobyUser) {
         Integer tarhilId;
         if (glBankTransaction.getId() != null) {
-
-            deleteTarhilGeneralJournal(glBankTransaction);
+            if (glBankTransaction.getGeneralJournalId() != null) {
+                deleteTarhilGeneralJournal(glBankTransaction.getGeneralJournalId().getId());
+            } else {
+                GlBankTransaction gbt = dao.findEntityById(GlBankTransaction.class, glBankTransaction.getId());
+                if (gbt.getGeneralJournalId() != null) {
+                    deleteTarhilGeneralJournal(gbt.getGeneralJournalId().getId());
+                }
+            }
             glBankTransaction.setPostFlag(0);
             glBankTransaction.setGeneralJournalId(null);
 
@@ -100,7 +106,7 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
         if (glBankTransaction.getTransactionType() != null && glBankTransaction.getTransactionType() == 0) {
 
             tarhilId = glBankTransactionDetailsService.updateGlBankTransactionDetails(glBankTransactionDetailList, glBankTransaction, tobyUser);
-           glBankTransaction =  tarhilglBankTransaction(tarhilId, glBankTransaction);
+            glBankTransaction = tarhilglBankTransaction(tarhilId, glBankTransaction);
         } else {
             Integer maxSerial = 0;
             if (glBankTransaction != null && glBankTransaction.getId() != null) {
@@ -125,10 +131,10 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
         return glBankTransaction;
     }
 
-    private void deleteTarhilGeneralJournal(GlBankTransaction glBankTransaction) {
-        GlBankTransaction oldentity = dao.findEntityById(GlBankTransaction.class, glBankTransaction.getId());
-        if (oldentity.getGeneralJournalId() != null && oldentity.getGeneralJournalId().getId() != null) {
-            generaljournalService.deleteGeneralJournal(oldentity.getGeneralJournalId().getId());
+    private void deleteTarhilGeneralJournal(Integer generalJournalId) {
+//        GlBankTransaction oldentity = dao.findEntityById(GlBankTransaction.class, glBankTransactionId);
+        if (generalJournalId != null) {
+            generaljournalService.deleteGeneralJournal(generalJournalId);
         }
 //        return glBankTransaction ;
     }
@@ -155,11 +161,14 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
 
     @Override
     public void deleteGlBankTransaction(GlBankTransaction glBankTransaction) {
-        deleteTarhilGeneralJournal(glBankTransaction);
+        GlBankTransaction gbt = dao.findEntityById(GlBankTransaction.class, glBankTransaction.getId());
         if (glBankTransaction.getId() != null && glBankTransaction.getId() > 0) {
             dao.executeDeleteQuery("delete from GlBankTransactionDetail e WHERE e.id > 0 AND e.glBankTransactionId.id = " + glBankTransaction.getId());
         }
         dao.deleteEntity(glBankTransaction);
+        if (gbt != null && gbt.getGeneralJournalId() != null) {
+            deleteTarhilGeneralJournal(gbt.getGeneralJournalId().getId());
+        }
     }
 
     @Override
@@ -293,8 +302,6 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
         List<Integer> glBankIdList = tobyUserBankService.getAllGlBankIdForUserByTypeAndBranchId(userId, branchId, transactionType);
         filters.put("glBankIdList", glBankIdList);
         builder.append(" AND s.glBankId.id in :glBankIdList ");
-        
-        
 
         if (filters.get("globalFilter") != null && !filters.get("globalFilter").toString().isEmpty()) {
             String filter = " and (s.serial like CONCAT('%',:globalFilter ,'%')  OR s.glBankId.name  like CONCAT('%',:globalFilter ,'%') OR s.valueLocal like CONCAT('%',:globalFilter ,'%') OR s.createdBy.name like CONCAT('%',:globalFilter ,'%')  OR s.remark like CONCAT('%',:globalFilter ,'%') OR s.remark2 like CONCAT('%',:globalFilter ,'%') OR s.value like CONCAT('%',:globalFilter ,'%') ) ";
@@ -319,7 +326,7 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
         filters.put("transactionType", transactionType);
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT s FROM GlBankTransaction s WHERE s.branchId.id = :branchId AND s.transactionType =:transactionType  ");
-        if(transactionType != null && transactionType == 0 ){
+        if (transactionType != null && transactionType == 0) {
             builder.append(" OR (s.transactionType = 0 AND s.glBankId IS NULL ) ");
         }
         appendFilter(filters, branchId, userId, builder, selectGlBankId, transactionType);

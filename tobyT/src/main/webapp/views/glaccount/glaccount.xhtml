@@ -19,7 +19,7 @@
                 <p:messages autoUpdate="true"  id="messages" showDetail="true" closable="true" rendered="#{glAccountBean.showMessage}"/>
                 <div class="ui-g-12 ui-g-nopad">
                     <div class="ui-g">
-                         <div class="ui-g-12 ui-md-4">
+                        <div class="ui-g-12 ui-md-4">
                             <h:panelGroup style="width: 25%">
                                 <p:tree value="#{glAccountBean.accountHierarchy}" var="acc" dir="#{userData.dir}"
                                         selectionMode="single" selection="#{glAccountBean.selectedAccount}"
@@ -34,136 +34,12 @@
 
 
 
-                       
+
                         <div class="ui-g-12 ui-md-8">
                             <h:panelGroup>
-                                <p:fieldset legend="#{userData.userDDs['CHART_OF_ACCOUNT']}" style="margin-bottom:2px;text-align: right" 
-                                            rendered="#{not(userData.userScreens['glaccount'].add or userData.userScreens['glaccount'].edit or userData.isAdmin)}">
-                                    <h:panelGrid  id="view"  columns="4"   >
-
-                                        <h:panelGroup>
-                                            <p:outputLabel for="accountnum" value="#{userData.userDDs['ACCOUNT_NUMBER']}  "/>
-                                        </h:panelGroup>
-
-                                        <h:panelGroup>
-                                            <p:outputLabel id="accountnum"  value="#{glAccountBean.selectedAcc.accNumber}"  />
-                                        </h:panelGroup>
-
-                                        <h:panelGroup>
-                                            <p:outputLabel for="accountnum" value="#{userData.userDDs['ACCOUNT_NAME']}  "/>
-                                        </h:panelGroup>
-
-                                        <h:panelGroup>
-                                            <p:outputLabel id="accpname"  value="#{glAccountBean.selectedAcc.name}"  />
-                                        </h:panelGroup>
-
-                                        <h:panelGroup>
-                                            <p:outputLabel for="shortcode" value="#{userData.userDDs['SHORT_CODE']}  "/>
-                                        </h:panelGroup>
-
-                                        <h:panelGroup>
-                                            <p:outputLabel id="shortcode" value="#{glAccountBean.selectedAcc.shotCode}"  />  
-                                        </h:panelGroup>
-
-                                        <h:panelGroup>
-                                            <p:outputLabel for="level" value="#{userData.userDDs['ACCOUNT_LEVEL']}"/>
-                                        </h:panelGroup>
-
-                                        <h:panelGroup> 
-                                            <p:outputLabel id="level" value="#{glAccountBean.selectedAcc.levelAcc}" />
-                                        </h:panelGroup>
-
-                                        <h:panelGroup>
-                                            <p:outputLabel for="accgroup" value=" #{userData.userDDs['ACCOUNT_GROUP']}"/>
-                                        </h:panelGroup>
-
-                                        <h:panelGroup>
-                                            <p:outputLabel id="accgroup" value="#{glAccountBean.selectedAcc.accGroup}"  />  
-                                        </h:panelGroup>
-
-                                        <h:panelGroup>
-                                            <p:outputLabel for="accmain" value="#{userData.userDDs['ACCOUNT_MAIN']}  "/>
-                                        </h:panelGroup>
-
-                                        <h:panelGroup>
-                                            <p:outputLabel id="accmain" value="#{glAccountBean.selectedAcc.parentAcc.name}"  />  
-                                        </h:panelGroup>
-
-                                        <h:panelGroup>
-                                            <p:outputLabel for="accType" value="#{userData.userDDs['ACCOUNT_TYPE']}  "/>
-                                        </h:panelGroup>
-
-                                        <h:panelGroup>
-                                            <p:outputLabel id="accType" value="#{glAccountBean.selectedAcc.type}"  />  
-                                        </h:panelGroup>
-
-                                        <h:panelGroup>
-                                            <p:outputLabel for="status" value="#{userData.userDDs['ACCOUNT_STATUS']}  "/>
-                                        </h:panelGroup>
-
-                                        <h:panelGroup>
-                                            <h:selectBooleanCheckbox id="status" value="#{glAccountBean.selectedAcc.status}"  />
-                                        </h:panelGroup> 
-
-                                        <h:panelGroup>
-                                            <p:outputLabel for="cost" value="#{userData.userDDs['COST_CENTER']}  "/>
-                                        </h:panelGroup>
-
-                                        <h:panelGroup>
-                                            <p:outputLabel id="cost" value="#{glAccountBean.selectedAcc.costCenter}"  />  
-                                        </h:panelGroup>
-
-                                        <h:panelGroup>
-                                            <p:outputLabel for="adminunit" value="#{userData.userDDs['ADMIN_UNIT']}  "/>
-                                        </h:panelGroup>
-
-                                        <h:panelGroup>
-                                            <p:outputLabel id="adminunit" value="#{glAccountBean.selectedAcc.administrativeUnit}"  />  
-                                        </h:panelGroup>
-
-                                        <h:panelGroup>
-                                            <p:outputLabel for="asaccount" value="#{userData.userDDs['ASSISTANT_ACCOUNT']}  "/>
-                                        </h:panelGroup>
-
-                                        <h:panelGroup>
-                                            <p:outputLabel id="asaccount" value="#{glAccountBean.selectedAcc.assistantAcc}"  />  
-                                        </h:panelGroup>
-
-                                        <h:panelGroup>
-                                            <p:outputLabel for="helpacc" value="#{userData.userDDs['ACCOUNT_CLASS']}  "/>
-                                        </h:panelGroup>
-
-                                        <h:panelGroup>
-                                            <p:outputLabel id="helpacc" value="#{glAccountBean.selectedAcc.accClass}"  />  
-                                        </h:panelGroup>
-
-                                        <h:panelGroup>
-                                            <p:outputLabel for="currency" value="#{userData.userDDs['ACCOUNT_CURRENCY']}  "/>
-                                        </h:panelGroup>
-
-                                        <h:panelGroup>
-                                            <p:outputLabel id="currency" value="#{glAccountBean.selectedAcc.currencyId.name}"  />  
-                                        </h:panelGroup>
-
-                                        <h:panelGroup>
-                                            <p:outputLabel for="daccount" value="#{userData.userDDs['DEBIT_AMOUNT']}  "/>
-                                        </h:panelGroup>
-
-                                        <h:panelGroup>
-                                            <p:outputLabel id="daccount" value="#{glAccountBean.selectedAcc.debitAmount}"  />  
-                                        </h:panelGroup>
-
-                                        <h:panelGroup>
-                                            <p:outputLabel for="caccount" value="#{userData.userDDs['CREDIT_AMOUNT']}  "/>
-                                        </h:panelGroup>
-
-                                        <h:panelGroup>
-                                            <p:outputLabel id="caccount" value="#{glAccountBean.selectedAcc.creditAmount}"  />  
-                                        </h:panelGroup>
-                                    </h:panelGrid>
-                                </p:fieldset>
-
-                                <p:fieldset legend="#{userData.userDDs['CHART_OF_ACCOUNT']}" style="margin-bottom:2px;text-align: right" rendered="#{userData.userScreens['glaccount'].add or userData.userScreens['glaccount'].edit or userData.isAdmin}">
+                                <p:fieldset legend="#{userData.userDDs['CHART_OF_ACCOUNT']}" 
+                                            style="margin-bottom:2px;text-align: right" 
+                                            rendered="#{userData.userScreens['glaccount'].add or userData.userScreens['glaccount'].edit or userData.isAdmin}">
 
                                     <h:panelGroup  id="edit"    class="col-md-12"  >
 
@@ -360,20 +236,18 @@
 
                                                 </div>
                                             </div>
-                                            
+
                                             <div class="ui-g-12 ui-xl-12">
                                                 <div class="ui-g-6 ui-xl-6">
-                                                    <p:autoComplete id="GlAccount_ID555" 
-                                                                    style="width: 85%" 
-                                                                    dropdown="true"
-                                                                    converter="#{glAccountBean.accountConverter}"
-                                                                    value="#{glAccountBean.selectedAcc.costCenterId}"
-                                                                    var="p"
-                                                                    itemLabel="#{p}" 
-                                                                    itemValue="#{p}" 
-                                                                    forceSelection="true" 
-                                                                    completeMethod="#{glAccountBean.completeGlAccount}" >
-                                                    </p:autoComplete>
+                                                    <p:selectOneMenu id="accgrp55" style="width: 50%!important;"  
+                                                                     converter="#{glAccountBean.costCenterConverter}"
+                                                                     value="#{glAccountBean.selectedAcc.costCenterId}"  
+                                                                     required="true" requiredMessage="#{userData.userDDs['REQUIRED']}" >
+                                                        <f:selectItem itemLabel="اختر" itemValue="" />
+                                                        <f:selectItems value="#{glAccountBean.costCenterList}" 
+                                                                       var="grp" itemLabel="#{grp}" 
+                                                                       itemValue="#{grp}"/> 
+                                                    </p:selectOneMenu>
                                                 </div>
                                                 <div class="ui-g-6 ui-xl-6">
                                                     <p:outputLabel style="width: 80px" value="مركز التكلفة "/>

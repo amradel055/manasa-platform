@@ -437,9 +437,9 @@ public class GlAccountServiceImpl implements GlAccountService {
         Map<String, Object> params = new HashMap();
         params.put("id", selectedBranchId);
         params.put("accNumber", accNumber);
-        params.put("shotCode", shotCode);
+//        params.put("shotCode", shotCode);
         params.put("glAccountId", glAccountId);
-        String sql = "SELECT acc FROM GlAccount acc WHERE acc.id != :glAccountId and acc.branchId.id = :id AND (acc.accNumber = :accNumber OR acc.shotCode= :shotCode)   order by acc.accNumber ASC";
+        String sql = "SELECT acc FROM GlAccount acc WHERE acc.id != :glAccountId and acc.branchId.id = :id AND (acc.accNumber = :accNumber )   order by acc.accNumber ASC";
         return dao.findListByQuery(sql, params);
     }
 

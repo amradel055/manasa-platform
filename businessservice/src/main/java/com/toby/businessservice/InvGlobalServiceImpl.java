@@ -846,6 +846,11 @@ public class InvGlobalServiceImpl implements InvGlobalService {
             invDetailDTO.setQuantity(invDetailDTO.getQuantityOfOneUnit().multiply(invDetailDTO.getNumber()));
             invDetailDTO.setDiscount(barcodesDetailsView.getDiscountrate());
             invDetailDTO.setScrewing(barcodesDetailsView.getScrewing());
+            if (invInvoiceDTO.getGallaryId() != null && invInvoiceDTO.getGallaryId().getInvName() != null
+                    && invInvoiceDTO.getGallaryId().getInvName() == 1 && invDetailDTO.getItemId() != null 
+                    && invDetailDTO.getItemId().getProGroupId() != null && invDetailDTO.getItemId().getProGroupId().getId() == 1) {
+                invDetailDTO.setCost((invDetailDTO.getCost().multiply(new BigDecimal(0.85))).setScale(5, RoundingMode.HALF_DOWN));
+            }
         } else {
             invDetailDTO = updatePriceRow(invInvoiceDTO.getScreenName(), invDetailDTO);
         }
