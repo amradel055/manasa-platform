@@ -29,7 +29,8 @@ import org.primefaces.model.SortOrder;
 public class ProFactoryDeliveryListDTOMB extends InventoryBasicDataForm {
 
     private InvInvoiceDTO invInvoiceDTOSelected;
-
+    private Integer serialSelected ;
+    private List<InvInvoiceDTO> invInvoiceDTOList ;
     @EJB
     private ProFactoryDeliveryService factoryDeliveryService;
 
@@ -66,6 +67,14 @@ public class ProFactoryDeliveryListDTOMB extends InventoryBasicDataForm {
         } catch (Exception e) {
             saveError(e, "invAddingOrderListMB", "load");
         }
+    }
+    
+    public void search(){
+      if (serialSelected != null){
+      invInvoiceDTOList = factoryDeliveryService.getALLProFactoryDeliveryDTOByBranchIdAndSerial(getUserData().getUserBranch().getId(), serialSelected);
+      }else {
+      FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR !", "يرجي ادخال رقم الفاتورة"));
+      }
     }
 
     public String goToAdd() {
@@ -160,4 +169,34 @@ public class ProFactoryDeliveryListDTOMB extends InventoryBasicDataForm {
     public void setInvInvoiceDTOSelected(InvInvoiceDTO invInvoiceDTOSelected) {
         this.invInvoiceDTOSelected = invInvoiceDTOSelected;
     }
+
+    /**
+     * @return the serialSelected
+     */
+    public Integer getSerialSelected() {
+        return serialSelected;
+    }
+
+    /**
+     * @param serialSelected the serialSelected to set
+     */
+    public void setSerialSelected(Integer serialSelected) {
+        this.serialSelected = serialSelected;
+    }
+
+    /**
+     * @return the invInvoiceDTOList
+     */
+    public List<InvInvoiceDTO> getInvInvoiceDTOList() {
+        return invInvoiceDTOList;
+    }
+
+    /**
+     * @param invInvoiceDTOList the invInvoiceDTOList to set
+     */
+    public void setInvInvoiceDTOList(List<InvInvoiceDTO> invInvoiceDTOList) {
+        this.invInvoiceDTOList = invInvoiceDTOList;
+    }
+
+  
 }

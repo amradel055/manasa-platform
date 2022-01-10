@@ -14,7 +14,39 @@
                 <p:messages id="curmsg" showDetail="true" rendered="true" closable="true"/>   
             </div>
             <p:fieldset   legend="ارسال الفاتورة للمعرض" >
+                        <div  id="firstLine" class="ui-g-12 ui-g-nopad">
+                    <div class="ui-g">
 
+                        <div class="ui-g-6 ui-xl-6">
+
+
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 35%!important" id="ad1" value="#{proFactoryDeliveryListDTOMB.serialSelected}"/>
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 85px;" value=" رقم الفاتورة"/>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="asmaa" style="text-align: center">
+
+                    <p:commandButton     class="saveButton" id="search" 
+                                         value="بحث" 
+                                         icon="fa fa-fw fa-save"
+                                         action="#{proFactoryDeliveryListDTOMB.search()}"
+                                          update="@form"
+                                         >
+
+                    </p:commandButton>
+
+
+                </div>
                 <div>
                     <p:dataTable id="invAddingOrderTable"
                                  draggableColumns="true"
@@ -22,7 +54,7 @@
                                  var="invAddingOrderTable" 
                                  widgetVar="invAddingOrderTable" 
                                  rowIndexVar="index" 
-                                 value="#{proFactoryDeliveryListDTOMB.dataModel}"
+                                 value="#{proFactoryDeliveryListDTOMB.invInvoiceDTOList}"
                                  rows="10" 
                                  paginator="true"
                                  emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"  

@@ -156,6 +156,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     private ItemDTOConverter itemDTOParentConverter;
     private InvInventory invInventorySelection;
     private List<InvInventory> inventoryList;
+    
+   
 
     // offer test 
     Map<Integer, BigDecimal> groupAndNumberMap = new HashMap<>();
@@ -2660,7 +2662,9 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
      * @param invInvoiceList the invInvoiceList to set
      */
     public void setInvInvoiceList(List<InvInvoiceDTO> invInvoiceList) {
-        this.invInvoiceList = invInvoiceList;
+        /**
+     * @return the dataModelList
+     */
     }
 
 }

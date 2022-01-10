@@ -494,4 +494,18 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
         List<ProFactoryDelivery> details = dao.findListByQuery(builder.toString(), params);
         return returnListDTOForList(details);
     }
+    
+     @Override
+    public List<InvInvoiceDTO> getALLProFactoryDeliveryDTOByBranchIdAndSerial(Integer branchId, Integer serial) {
+        Map<String, Object> filters = new HashMap<>();
+        filters.put("branchId", branchId);
+        filters.put("serial", serial);
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT s FROM ProFactoryDelivery s WHERE   s.branchId.id = :branchId AND s.invPurchaseInvoiceId.serial = :serial ");
+        appendFilter(filters, builder);
+        builder.append(" order by s.serial DESC");
+
+        List<ProFactoryDelivery> details = dao.findListByQuery(builder.toString(), filters);
+        return returnListDTOForList(details);
+    }
 }
