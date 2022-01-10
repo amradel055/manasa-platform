@@ -1,14 +1,13 @@
 package com.toby.reports;
 
 import com.toby.businessservice.ProProductionItemsTransactionService;
-import com.toby.businessservice.TobyUserInventoryService;
-import com.toby.converter.InvInventoryDTOConverter;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.ProProductionItemsTransactionDTO;
 import com.toby.toby.Basic;
 import com.toby.views.ProProductionTransactionFactoryView;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import javax.annotation.PostConstruct;

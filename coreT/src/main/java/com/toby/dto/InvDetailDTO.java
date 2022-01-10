@@ -75,7 +75,7 @@ public class InvDetailDTO extends BaseEntityDTO implements  Comparable< InvDetai
     private BigDecimal costBefor;
     private BigDecimal costAfter;
     private Integer indexSerial;
-    
+    private BigDecimal costAfterDiscount;
     private List<ProDetailTypeDTO> proDetailTypeDTOList ;
     
     private List<InvPurchaseInvoiceDetailDetailDTO> invPurchaseInvoiceDetailDetailDTOList;
@@ -892,6 +892,20 @@ public class InvDetailDTO extends BaseEntityDTO implements  Comparable< InvDetai
      */
     public void setIndexSerial(Integer indexSerial) {
         this.indexSerial = indexSerial;
+    }
+
+    /**
+     * @return the costAfterDiscount
+     */
+    public BigDecimal getCostAfterDiscount() {
+        return costAfterDiscount;
+    }
+
+    /**
+     * @param costAfterDiscount the costAfterDiscount to set
+     */
+    public void setCostAfterDiscount(BigDecimal costAfterDiscount) {
+        this.costAfterDiscount = costAfterDiscount;
     }
 
 }

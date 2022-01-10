@@ -206,6 +206,10 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
             saveError(e, "invItemDataFormMB", "initObjs");
         }
     }
+    
+    public void calcDiscountValue(){
+     getItemDataEntity().setDiscountvalue(getItemDataEntity().getMaxpricemen().multiply((new BigDecimal(100).subtract(getItemDataEntity().getDiscountrate())).divide(new BigDecimal(100))));
+    }
 
     private void fillLists() {
         try {
