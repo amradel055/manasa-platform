@@ -192,8 +192,9 @@ public class GlBankServiceImpl implements GlBankService {
         }
         return dTOList;
     }
-
-    private GlBankDTO mapTODTO(GlBank entity) {
+    
+    @Override
+    public GlBankDTO mapTODTO(GlBank entity) {
         GlBankDTO dTO = initMapToDTO(entity);
         return dTO;
     }
