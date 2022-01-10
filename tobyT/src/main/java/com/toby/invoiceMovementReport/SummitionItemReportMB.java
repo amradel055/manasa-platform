@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -53,6 +54,7 @@ public class SummitionItemReportMB extends Basic {
     private BigDecimal sumNumberTotal;
     private BigDecimal sumAllCostTotal;
     private BigDecimal sumAllAvarageCost;
+    private Map<String, String> userDDs;
 
     @EJB
     InvPurchaseInvoiceService_1 invPurchaseInvoiceService_1;
@@ -61,10 +63,31 @@ public class SummitionItemReportMB extends Basic {
 
     @PostConstruct
     public void init() {
+    setUserDDs(getUserData().getUserDDs());
 
+
+    }
+    public boolean validateSearch(){
+    if(getGallaryListSelected().isEmpty()){
+      FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "يجب اختيار المعرض "));
+    }
+      else if(getProGroupListSelected().isEmpty()){
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "يجب اختيار الفئة "));     
+      }
+       else if(getDateFrom()==null){
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "يجب اختيار التاريخ من  "));     
+      }
+        else if(getDateTo()==null){
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "يجب اختيار التاريخ الي  "));     
+      }
+             else{
+                   return true ;
+                   }
+    return false;
     }
 
     public void search() {
+        if(validateSearch()==true){
 //        List<SummitionItemsView> itemsViewForGallary = null;
         if (getGallaryListSelected() != null && !getGallaryListSelected().isEmpty()) {
             if (getProGroupListSelected() != null && !getProGroupListSelected().isEmpty()) {
@@ -129,6 +152,7 @@ public class SummitionItemReportMB extends Basic {
             }
         }
     }
+        }
 
     private void distributeDate(InvInventoryDTO invInventoryDTO, HashMap<Integer, Test> map, SummitionItemsView view) {
         Test test;
@@ -467,9 +491,6 @@ public class SummitionItemReportMB extends Basic {
      * @return the dateFrom
      */
     public Date getDateFrom() {
-        if(dateFrom == null){
-        dateFrom = new Date();
-        }
         return dateFrom;
     }
 
@@ -484,9 +505,6 @@ public class SummitionItemReportMB extends Basic {
      * @return the dateTo
      */
     public Date getDateTo() {
-           if(dateTo == null){
-        dateTo = new Date();
-        }
         return dateTo;
     }
 
@@ -730,6 +748,20 @@ public class SummitionItemReportMB extends Basic {
      */
     public void setInvoiceType(Integer invoiceType) {
         this.invoiceType = invoiceType;
+    }
+
+    /**
+     * @return the userDDs
+     */
+    public Map<String, String> getUserDDs() {
+        return userDDs;
+    }
+
+    /**
+     * @param userDDs the userDDs to set
+     */
+    public void setUserDDs(Map<String, String> userDDs) {
+        this.userDDs = userDDs;
     }
 
 }
