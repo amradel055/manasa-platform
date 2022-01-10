@@ -318,6 +318,32 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
             saveError(e, "glBankTransactionFromMB", "validateSave");
         }
     }
+     public void updateRateClosed() {
+        try {
+
+            if (GlBankTransactionDetailEntity.getBankFrom() != null && GlBankTransactionDetailEntity.getBankFrom().getCurrencyId() != null) {
+                if (glBankTransactionEntity.getDate() != null) {
+                    currencyOperation = currencyOperationService.getRatesByDates(GlBankTransactionDetailEntity.getBankFrom().getCurrencyId().getId(), glBankTransactionEntity.getDate(), getUserData().getCompany().getId());
+                    glBankTransactionEntity.setRate(currencyOperation == null ? BigDecimal.ONE : currencyOperation.getRate());
+                    glBankTransactionEntity.setRateBankFrom(currencyOperation == null ? BigDecimal.ONE : currencyOperation.getRate());
+                    currencyOperation = currencyOperationService.getRatesByDates(GlBankTransactionDetailEntity.getBankTo().getCurrencyId().getId(), glBankTransactionEntity.getDate(), getUserData().getCompany().getId());
+                    glBankTransactionEntity.setRateBankTo(currencyOperation == null ? BigDecimal.ONE : currencyOperation.getRate());
+                    if(getGlBankTransactionDetailEntity().getBankFrom().getClosedglbankId()!=null){
+                    GlBankTransactionDetailEntity.setBankTo(getGlBankTransactionDetailEntity().getBankFrom().getClosedglbankId());
+                    }
+                    calculateLocalValue();
+                } else {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), getUserData().getUserDDs().get("NO_CURRENCY_ERROR")));
+
+                }
+            } else {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), getUserData().getUserDDs().get("MUST_SELECT_DATE")));
+            }
+        } catch (Exception e) {
+            saveError(e, "glBankTransactionFromMB", "updateRate");
+        }
+
+    }
 
     public void updateRate() {
         try {
@@ -327,10 +353,9 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
                     currencyOperation = currencyOperationService.getRatesByDates(GlBankTransactionDetailEntity.getBankFrom().getCurrencyId().getId(), glBankTransactionEntity.getDate(), getUserData().getCompany().getId());
                     glBankTransactionEntity.setRate(currencyOperation == null ? BigDecimal.ONE : currencyOperation.getRate());
                     glBankTransactionEntity.setRateBankFrom(currencyOperation == null ? BigDecimal.ONE : currencyOperation.getRate());
-
                     currencyOperation = currencyOperationService.getRatesByDates(GlBankTransactionDetailEntity.getBankTo().getCurrencyId().getId(), glBankTransactionEntity.getDate(), getUserData().getCompany().getId());
                     glBankTransactionEntity.setRateBankTo(currencyOperation == null ? BigDecimal.ONE : currencyOperation.getRate());
-
+                  
                     calculateLocalValue();
                 } else {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), getUserData().getUserDDs().get("NO_CURRENCY_ERROR")));

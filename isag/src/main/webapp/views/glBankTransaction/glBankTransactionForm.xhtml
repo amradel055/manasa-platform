@@ -75,8 +75,8 @@
                                                     completeMethod="#{glBankTransactionFromMB.completeGlBankFrom}" >
 
 
-                                        <p:ajax update="@form" event="itemSelect" listener="#{glBankTransactionFromMB.updateRate}"/>
-                                        <p:ajax update="@form" event="change" listener="#{glBankTransactionFromMB.updateRate}"/>
+                                        <p:ajax update="@form" event="itemSelect" listener="#{glBankTransactionFromMB.updateRateClosed}"/>
+                                        <p:ajax update="@form" event="change" listener="#{glBankTransactionFromMB.updateRateClosed}"/>
 
                                     </p:autoComplete>
                                 </div>

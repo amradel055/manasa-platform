@@ -138,7 +138,7 @@
                                                      filter="true" 
                                                      filterMatchMode="contains"
                                                      converter="#{glBankFromMB.glBankConverter}"
-                                                     value="#{glBankFromMB.glBankListSelected}"> 
+                                                     value="#{glBankFromMB.glBankEntity.closedglbankId}"> 
                                         <f:selectItems value="#{glBankFromMB.glBankList}"  
                                                        var="bank"
                                                        itemLabel="#{bank}"

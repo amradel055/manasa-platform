@@ -5,6 +5,7 @@
  */
 package com.isag.entiy;
 
+import com.isag.dto.GlBankDTO;
 import com.isag.entity.Branch;
 import com.isag.entity.Currency;
 import com.isag.entity.GlAccount;
@@ -26,7 +27,7 @@ public class GlBankEntity extends BaseEntity {
     private GlAccount accountId;
     private Branch branchId;
     private Currency currencyId;
-    private GlBank closedglbankId;
+    private GlBankDTO closedglbankId;
     private List<GlBankTransactionEntity> glBankTransactionCollection;
     private Integer type;
     private String typeName;
@@ -141,14 +142,14 @@ public class GlBankEntity extends BaseEntity {
     /**
      * @return the closedglbankId
      */
-    public GlBank getClosedglbankId() {
+    public GlBankDTO getClosedglbankId() {
         return closedglbankId;
     }
 
     /**
      * @param closedglbankId the closedglbankId to set
      */
-    public void setClosedglbankId(GlBank closedglbankId) {
+    public void setClosedglbankId(GlBankDTO closedglbankId) {
         this.closedglbankId = closedglbankId;
     }
 }

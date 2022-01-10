@@ -45,4 +45,6 @@ public interface GlBankService {
     public List<GlBankDTO> getAllGlBankDTOByBranchId(Integer branchId);
     
     public List<GlBankDTO> findGlBankDTOList(StringBuilder stringBuilder);
+    
+    public GlBankDTO mapTODTO(GlBank entity);
 }

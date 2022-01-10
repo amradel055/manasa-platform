@@ -18,6 +18,7 @@ import com.isag.dto.GlBankDTO;
 import com.isag.entity.Currency;
 import com.isag.entity.GlAccount;
 import com.isag.entity.GlBank;
+import com.isag.entity.GlBank_;
 import com.isag.entiy.GlBankEntity;
 import com.isag.isag.BaseFormBean;
 import com.isag.isag.UserData;
@@ -41,12 +42,12 @@ import javax.inject.Named;
 @Named(value = "glBankFromMB")
 @ViewScoped
 public class glBankFromMB extends BaseFormBean {
-  private GlBankConverter bankConverter;
-  private GlBankDTOConverter glBankConverter;
 
-  private List<GlBankDTO> glBankList;
-  private GlBankDTO glBankListSelected ;
+    private GlBankConverter bankConverter;
+    private GlBankDTOConverter glBankConverter;
 
+    private List<GlBankDTO> glBankList;
+    private GlBankDTO glBankListSelected;
 
     private GlBank glBank;
     private Integer glBankId;
@@ -79,7 +80,7 @@ public class glBankFromMB extends BaseFormBean {
 
     @EJB
     private GlBankTransactionDetailsService bankTransactionDetailsService;
-     @EJB
+    @EJB
     private IsagUserBankService isagUserBankService;
 
     @Override
@@ -122,6 +123,7 @@ public class glBankFromMB extends BaseFormBean {
             saveError(e, "glBankFromMB", "load");
         }
     }
+
     public void fillLists() {
         try {
             currencylist = currencyService.getAllCurrencyByCompanyId(companyId);
@@ -182,6 +184,12 @@ public class glBankFromMB extends BaseFormBean {
             if (glBankEntity.getBankHavetransaction()) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, userDDs.get("WARNING"), "لايمكن تعديل اسم الحساب و العمله الا بعد الغاء سندات الصرف والقبض علي البنك او الخزينه"));
             }
+            if (glBank.getClosedglbankId() != null) {
+                GlBankDTO glBankDTO = new GlBankDTO();
+                glBankDTO.setId(glBank.getClosedglbankId().getId());
+                glBankEntity.setClosedglbankId(glBankDTO);
+            }
+
         } catch (Exception e) {
             saveError(e, "glBankFromMB", "setEditedGlBankValues");
         }
@@ -219,11 +227,15 @@ public class glBankFromMB extends BaseFormBean {
                 glBank.setType(glBankEntity.getType() != null ? glBankEntity.getType() : null);
                 glBank.setName(glBankEntity.getName());
                 glBank.setCode(glBankEntity.getCode());
-//              glBank.setClosedglbankId(glBankEntity.getClosedglbankId());
                 glBank.setOpeninngBalance(glBankEntity.getOpeningBalance());
                 glBank.setDateOpeninngBalance(glBankEntity.getOpeningBalanceDate());
                 glBank.setCurrencyId(glBankEntity.getCurrencyId());
                 glBank.setAccountId(glBankEntity.getAccountId());
+                if(glBankEntity.getClosedglbankId() != null && glBankEntity.getClosedglbankId().getId() != null){
+                    GlBank bank = new GlBank();
+                    bank.setId(glBankEntity.getClosedglbankId().getId());
+                    glBank.setClosedglbankId(bank);
+                }
 
                 if (glBank.getId() == null) {
                     glBank.setCreationDate(new Date());
@@ -232,8 +244,9 @@ public class glBankFromMB extends BaseFormBean {
                     glBank.setModificationDate(new Date());
                     glBank.setModifiedBy(getUserData().getUser());
                 }
-           GlBank bank   = glBankService.mapToEntity(glBankListSelected, getUserData().getUser());
-                glBank.setClosedglbankId(bank);
+                
+//                GlBank bank = glBankService.mapToEntity(glBankListSelected, getUserData().getUser());
+//                glBank.setClosedglbankId(bank);
                 glBankService.addGlBank(glBank);
                 return exit();
             } else {
@@ -499,7 +512,7 @@ public class glBankFromMB extends BaseFormBean {
      * @return the bankConverter
      */
     public GlBankConverter getBankConverter() {
-     
+
         return bankConverter;
     }
 
@@ -514,10 +527,10 @@ public class glBankFromMB extends BaseFormBean {
      * @return the glBankList
      */
     public List<GlBankDTO> getGlBankList() {
-    glBankList = getUserData().getGlBankDTOList();
-    glBankConverter =  new GlBankDTOConverter(glBankList);
-     return glBankList;
-        
+        glBankList = getUserData().getGlBankDTOList();
+        glBankConverter = new GlBankDTOConverter(glBankList);
+        return glBankList;
+
     }
 
     /**
