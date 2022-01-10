@@ -844,13 +844,13 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
                     glBankTransaction.setValueLocal(glBankTransaction.getValue());
                     glBankTransaction.setRate(BigDecimal.ONE);
                     glBankTransaction.setGlYear(getGlYearSelection().getYear() != null ? getGlYearSelection().getId() : null);
-                    if (glBankTransactionEntity.getPaymentType() == 1) {
-                        glBankTransaction.setChequeDate(glBankTransactionEntity.getChequeDate() != null ? glBankTransactionEntity.getChequeDate() : new Date());
-                        glBankTransaction.setChequeNumber(glBankTransactionEntity.getChequeNumber() != null ? glBankTransactionEntity.getChequeNumber() : null);
-                    }
+//                    if (glBankTransactionEntity.getPaymentType() == 1) {
+//                        glBankTransaction.setChequeDate(glBankTransactionEntity.getChequeDate() != null ? glBankTransactionEntity.getChequeDate() : new Date());
+//                        glBankTransaction.setChequeNumber(glBankTransactionEntity.getChequeNumber() != null ? glBankTransactionEntity.getChequeNumber() : null);
+//                    }
 
-                    glBankTransaction.setChequeDueDate(glBankTransactionEntity.getChequeDueDate() != null ? glBankTransactionEntity.getChequeDueDate() : new Date());
-                    glBankTransaction.setChequeStatus(glBankTransactionEntity.getChequeStatus() != null ? glBankTransactionEntity.getChequeStatus() : 0);
+//                    glBankTransaction.setChequeDueDate(glBankTransactionEntity.getChequeDueDate() != null ? glBankTransactionEntity.getChequeDueDate() : new Date());
+//                    glBankTransaction.setChequeStatus(glBankTransactionEntity.getChequeStatus() != null ? glBankTransactionEntity.getChequeStatus() : 0);
 
                     if (glBankTransactionEntity.getGlBank() != null) {
                         glBankTransaction.setGlBankId(glBankTransactionEntity.getGlBank());

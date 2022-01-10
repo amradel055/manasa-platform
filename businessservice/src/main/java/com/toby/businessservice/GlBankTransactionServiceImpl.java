@@ -77,22 +77,21 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
     public GlBankTransaction addingForGlBank(GlBankTransaction glBankTransaction, List<GlBankTransactionDetail> glBankTransactionDetailListDeleted,
             List<GlBankTransactionDetail> glBankTransactionDetailList, TobyUser tobyUser) {
         Integer tarhilId;
+        Integer generalJournalId = null;
         if (glBankTransaction.getId() != null) {
             if (glBankTransaction.getGeneralJournalId() != null) {
-                deleteTarhilGeneralJournal(glBankTransaction.getGeneralJournalId().getId());
+                generalJournalId = glBankTransaction.getGeneralJournalId().getId();
             } else {
                 GlBankTransaction gbt = dao.findEntityById(GlBankTransaction.class, glBankTransaction.getId());
                 if (gbt.getGeneralJournalId() != null) {
-                    deleteTarhilGeneralJournal(gbt.getGeneralJournalId().getId());
+                    generalJournalId = gbt.getGeneralJournalId().getId();
                 }
             }
             glBankTransaction.setPostFlag(0);
             glBankTransaction.setGeneralJournalId(null);
-
             glBankTransaction = dao.updateEntity(glBankTransaction);
 
         } else {
-
             glBankTransaction.setSerial(getMaxSerail(glBankTransaction));
             glBankTransaction = dao.updateEntity(glBankTransaction);
         }
@@ -104,7 +103,9 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
         }
 
         if (glBankTransaction.getTransactionType() != null && glBankTransaction.getTransactionType() == 0) {
-
+            if (generalJournalId != null) {
+                deleteTarhilGeneralJournal(generalJournalId);
+            }
             tarhilId = glBankTransactionDetailsService.updateGlBankTransactionDetails(glBankTransactionDetailList, glBankTransaction, tobyUser);
             glBankTransaction = tarhilglBankTransaction(tarhilId, glBankTransaction);
         } else {
@@ -119,13 +120,19 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
                 glBankTransactionDetail.setGlBankTransactionId(glBankTransaction);
 
                 if (glBankTransactionDetail.getId() != null) {
+                    if (generalJournalId != null) {
+//                        deleteTarhilGeneralJournal(generalJournalId);
+                    }
                     tarhilId = glBankTransactionDetailsService.updateGlBankTransactionDetails(glBankTransactionDetail, tobyUser);
                 } else {
                     glBankTransactionDetail.setSerial(maxSerial);
+                    if (generalJournalId != null) {
+                        deleteTarhilGeneralJournal(generalJournalId);
+                    }
                     tarhilId = glBankTransactionDetailsService.updateGlBankTransactionDetails(glBankTransactionDetail, tobyUser);
                     maxSerial++;
                 }
-                glBankTransaction = tarhilglBankTransaction(tarhilId, glBankTransaction);
+//                glBankTransaction = tarhilglBankTransaction(tarhilId, glBankTransaction);
             }
         }
         return glBankTransaction;

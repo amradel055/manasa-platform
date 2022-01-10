@@ -66,12 +66,13 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
     @Override
     public Integer updateGlBankTransactionDetails(GlBankTransactionDetail glBankTransactionDetail, TobyUser tobyUser) {
         GlBankTransactionDetail bankTransactionDetail = dao.updateEntity(glBankTransactionDetail);
-        if (glBankTransactionDetail.getGlBankTransactionId() != null
-                && glBankTransactionDetail.getGlBankTransactionId().getGeneralJournalId() != null
-                && glBankTransactionDetail.getGlBankTransactionId().getGeneralJournalId().getId() != null) {
-            generaljournalService.deleteGeneralJournal(glBankTransactionDetail.getGlBankTransactionId().getGeneralJournalId().getId());
-        }
-        Integer id = tarhil(bankTransactionDetail, tobyUser);
+        Integer id = null ;
+//        if (glBankTransactionDetail.getGlBankTransactionId() != null
+//                && glBankTransactionDetail.getGlBankTransactionId().getGeneralJournalId() != null
+//                && glBankTransactionDetail.getGlBankTransactionId().getGeneralJournalId().getId() != null) {
+//            generaljournalService.deleteGeneralJournal(glBankTransactionDetail.getGlBankTransactionId().getGeneralJournalId().getId());
+//        }
+//        id = tarhil(bankTransactionDetail, tobyUser);
         return id;
     }
 
