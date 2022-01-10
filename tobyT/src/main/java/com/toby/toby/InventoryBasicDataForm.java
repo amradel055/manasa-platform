@@ -517,7 +517,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         try {
             if (checkdetail(invPurchaseInvoiceDetailsValidate)) {
                 invPurchaseInvoiceDetailsValidate.setMsg(null);
-                invPurchaseInvoiceDetailsValidate.setQuantity((invPurchaseInvoiceDetailsValidate.getQuantityInch().multiply(new BigDecimal(0.9))).setScale(3, RoundingMode.HALF_UP));
+                invPurchaseInvoiceDetailsValidate.setQuantity(new BigDecimal((invPurchaseInvoiceDetailsValidate.getQuantityInch().multiply(new BigDecimal(0.9))).setScale(3, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
                 invPurchaseInvoiceDetailsValidate = invGlobalService.validateQuantityColum(invPurchaseInvoiceDetailsValidate, (getInvInvoiceDTO().getLoadedSerial() != null), getInvInvoiceDTO().getScreenName(), getInvInvoiceDTO().getInventorySetupDTO().getNegativeSell(), getInvInvoiceDTO().getCompanyActivity());
                 afterValidation(invPurchaseInvoiceDetailsValidate, false);
             }
@@ -1306,7 +1306,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                 for (InvDetailDTO dTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
                     InvDetailDTO invDetailDTO = new InvDetailDTO();
                     invDetailDTO = (InvDetailDTO) dTO.clone();
-                    invDetailDTO.setCost((invDetailDTO.getCost().add(invDetailDTO.getCost().multiply(new BigDecimal(0.15)))).setScale(3, BigDecimal.ROUND_UP));
+                    invDetailDTO.setCost(new BigDecimal((invDetailDTO.getCost().add(invDetailDTO.getCost().multiply(new BigDecimal(0.15)))).setScale(3, BigDecimal.ROUND_UP).stripTrailingZeros().toPlainString()));
                     listNew.add(invDetailDTO);
                 }
                 fillReport(prepareReport(), getUserData().getReportPath() + "itemBarcodeToby.jasper", listNew, "pdf");
@@ -2127,7 +2127,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getId() != null) {
 //            BigDecimal remain = invPurchaseInvoiceService_1.remainForInvPurchaseInvoice(getInvInvoiceDTO().getId());
             BigDecimal remain = invPurchaseInvoiceService_1.returnRemain(getInvInvoiceDTO());
-            getInvInvoiceDTO().setRemain(remain.setScale(2, RoundingMode.HALF_UP));
+            getInvInvoiceDTO().setRemain(new BigDecimal(remain.setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
         }
     }
 
