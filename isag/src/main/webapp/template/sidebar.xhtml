@@ -1135,8 +1135,11 @@
                                     <p:menuitem id="gm_lnk561" value="تقرير الإشتراكات  " icon="&#xE8D2;" url="/faces/views/gmreports/gmsubscriptionsreport.xhtml" 
                                                 rendered="#{userData.userScreens['gmsubscriptionsreport'].view or userData.isAdmin}"
                                                 />
-                                       <p:menuitem id="gm_lnk562" value="تقرير تقارير المضافة  " icon="&#xE8D2;" url="/faces/views/gmreports/SalesReportByValueAdedDetailsReport.xhtml" 
-                                                rendered="#{userData.userScreens['SalesReportByValueAdedDetailsReport'].view or userData.isAdmin}"
+                                       <p:menuitem id="gm_lnk562" value="تقرير القيمة المضافة " icon="&#xE8D2;" url="/faces/views/gmreports/SalesGmReportByValueAdedDetailsReport.xhtml" 
+                                                rendered="#{userData.userScreens['SalesGmReportByValueAdedDetailsReport'].view or userData.isAdmin}"
+                                                />
+                                            <p:menuitem id="gm_lnk563" value="تقرير العملاء المحذوفيين " icon="&#xE8D2;" url="/faces/views/gmreports/gmdeletedsubscriptionsreport.xhtml" 
+                                                rendered="#{userData.userScreens['gmdeletedsubscriptionsreport'].view or userData.isAdmin}"
                                                 />
 
                                 </p:submenu>
