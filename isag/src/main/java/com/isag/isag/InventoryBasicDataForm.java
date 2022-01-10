@@ -334,6 +334,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
     public void addInvDetail() {
         try {
+            checkDetailData();
             getInvInvoiceDTO().setMsg(null);
             setInvInvoiceDTO(invGlobalService.addInvPurchaseInvoiceDetail(getInvInvoiceDTO(), getIndex()));
             errorMsg(getInvInvoiceDTO().getMsg());
@@ -646,16 +647,21 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
             if (invPurchaseInvoiceDetailsValidate.getId() != null) {
                 getInvInvoiceDTO().getInvPurchaseInvoiceDetailsDeletedList().add(invPurchaseInvoiceDetailsValidate);
             }
-            for (InvDetailDTO detailEntity : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
-                if (detailEntity.getItemsBarcodesDetail() == null && detailEntity.getItemsBarcodesDetailTrans() != null) {
-                    detailEntity.setItemsBarcodesDetail(detailEntity.getItemsBarcodesDetailTrans());
-                }
-            }
+            checkDetailData();
             getInvInvoiceDTO().getInvPurchaseInvoiceDetailList().remove(invPurchaseInvoiceDetailsValidate);
             getInvInvoiceDTO().setItemsNumber(Boolean.FALSE);
             updateSummition();
+            checkDetailData();
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceFormMB", "deleteInvPurchaseInvoiceDetail");
+        }
+    }
+    
+    public void checkDetailData() {
+        for (InvDetailDTO detailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
+            if (detailDTO.getItemsBarcodesDetailTrans() != null) {
+                detailDTO.setItemsBarcodesDetail(detailDTO.getItemsBarcodesDetailTrans());
+            }
         }
     }
 
