@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
@@ -37,10 +39,22 @@ public class InvoiceRegisteredMoreThanOnceMB extends Basic {
         getRegisteredMoreThanOnce().setDate(new Date());
     }
 
+    public boolean validateSearch() {
+        if (getRegisteredMoreThanOnce().getDate() == null) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب اختيار التاريخ "));
+        } else if (getRegisteredMoreThanOnce().getSerial() == null) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب اختيار رقم الفاتورة   "));
+        } else {
+            return true;
+        }
+        return false;
+    }
+
     public void search() {
+        if (validateSearch() == true) {
 
-        setList(reportsService.getInvoicesRegisteredMoreThanOnce(registeredMoreThanOnce, getRegisteredMoreThanOnce().getSerial(), getRegisteredMoreThanOnce().getDate(), getUserData().getUserBranch().getId()));
-
+            setList(reportsService.getInvoicesRegisteredMoreThanOnce(registeredMoreThanOnce, getRegisteredMoreThanOnce().getSerial(), getRegisteredMoreThanOnce().getDate(), getUserData().getUserBranch().getId()));
+        }
     }
 
     public void delete() {
