@@ -30,6 +30,7 @@ import org.apache.poi.hssf.util.HSSFColor;
 @Named(value = "clientsByInvInventoryReport")
 @ViewScoped
 public class ClientsByInvInventoryReport extends Basic {
+
     private Map<String, String> userDDs;
 
     private List<ClientsByInvInventory> List;
@@ -46,30 +47,27 @@ public class ClientsByInvInventoryReport extends Basic {
     public void init() {
         InvInventoryDTO inventoryDTO = getGallaryLists().get(0);
         getInvInventory().getGallaryListSelected().add(inventoryDTO);
-         setUserDDs(getUserData().getUserDDs());
+        setUserDDs(getUserData().getUserDDs());
 
     }
 
     public void search() {
-        if(validateSearch()==true){
-        List = new ArrayList<>();
-        getList().addAll(reportsService.getClientsByInvInventory(getInvInventory(), getUserData().getUserBranch().getId()));
+        if (validateSearch() == true) {
+            List = new ArrayList<>();
+            getList().addAll(reportsService.getClientsByInvInventory(getInvInventory(), getUserData().getUserBranch().getId()));
         }
+    }
+
+    public boolean validateSearch() {
+        if (getInvInventory().getGallaryListSelected().isEmpty()) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "يجب اختيار المعرض "));
+        } else if (getInvInventory().getOfferCompanyListSelected().isEmpty()) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "يجب اختيار الشركه "));
+        } else {
+            return true;
         }
-    public boolean validateSearch(){
-    if(getInvInventory().getGallaryListSelected().isEmpty()){
-      FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "يجب اختيار المعرض "));
+        return false;
     }
-      else if(getInvInventory().getOfferCompanyListSelected().isEmpty()){
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "يجب اختيار الشركه "));     
-      }
-             else{
-                   return true ;
-                   }
-    return false;
-    }
-         
-    
 
     public void postProcessXLS(Object document) {
         HSSFWorkbook wb = (HSSFWorkbook) document;
