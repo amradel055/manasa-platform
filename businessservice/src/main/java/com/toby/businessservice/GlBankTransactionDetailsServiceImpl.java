@@ -72,7 +72,7 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
 //                && glBankTransactionDetail.getGlBankTransactionId().getGeneralJournalId().getId() != null) {
 //            generaljournalService.deleteGeneralJournal(glBankTransactionDetail.getGlBankTransactionId().getGeneralJournalId().getId());
 //        }
-//        id = tarhil(bankTransactionDetail, tobyUser);
+        id = tarhil(bankTransactionDetail, tobyUser);
         return id;
     }
 
