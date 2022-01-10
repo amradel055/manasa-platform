@@ -8,11 +8,14 @@ import com.toby.dto.PrintProductionDTO;
 import com.toby.toby.Basic;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
@@ -42,9 +45,32 @@ public class ProInvoiceStatusReportMB extends Basic {
     @PostConstruct
     public void init() {
         getPrintProductionDTO().getGallaryListSelected().addAll(getGallaryLists());
+        getPrintProductionDTO().setFromDate(new Date());
+        getPrintProductionDTO().setToDate(new Date());
+    }
+    
+    public boolean validateSearch(){
+        
+    if(getPrintProductionDTO().getGallaryListSelected().isEmpty()){
+      FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب اختيار المعرض "));
+    }
+      else if(getPrintProductionDTO().getInvoiceStatus()==null){
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب اختيار الحالة "));     
+      }
+       else if(getPrintProductionDTO().getFromDate()==null){
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب اختيار التاريخ من  "));     
+      }
+        else if(getPrintProductionDTO().getToDate()==null){
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب اختيار التاريخ الي  "));     
+      }
+             else{
+                   return true ;
+                   }
+    return false;
     }
 
     public void search() {
+          if(validateSearch()== true){
         if (getPrintProductionDTO() != null && getPrintProductionDTO().getGallaryListSelected() != null && !getPrintProductionDTO().getGallaryListSelected().isEmpty()) {
             list = new ArrayList<>();
             for (InvInventoryDTO invInventoryDTO : getPrintProductionDTO().getGallaryListSelected()) {
@@ -62,6 +88,7 @@ public class ProInvoiceStatusReportMB extends Basic {
             setNumber(getList() == null ? 0 : getList().size());
         }
     }
+        }
 
     public void convertDateFrom() {
         getPrintProductionDTO().setFromDate(findDateFromHijriFrom());

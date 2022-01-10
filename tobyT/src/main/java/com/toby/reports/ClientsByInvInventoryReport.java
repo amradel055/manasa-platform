@@ -11,8 +11,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
@@ -28,6 +31,8 @@ import org.apache.poi.hssf.util.HSSFColor;
 @ViewScoped
 public class ClientsByInvInventoryReport extends Basic {
 
+    private Map<String, String> userDDs;
+
     private List<ClientsByInvInventory> List;
     private ClientsByInvInventory invInventory;
     private List<OfferCompanyDTO> offerCompanyList;
@@ -42,11 +47,26 @@ public class ClientsByInvInventoryReport extends Basic {
     public void init() {
         InvInventoryDTO inventoryDTO = getGallaryLists().get(0);
         getInvInventory().getGallaryListSelected().add(inventoryDTO);
+        setUserDDs(getUserData().getUserDDs());
+
     }
 
     public void search() {
-        List = new ArrayList<>();
-        getList().addAll(reportsService.getClientsByInvInventory(getInvInventory(), getUserData().getUserBranch().getId()));
+        if (validateSearch() == true) {
+            List = new ArrayList<>();
+            getList().addAll(reportsService.getClientsByInvInventory(getInvInventory(), getUserData().getUserBranch().getId()));
+        }
+    }
+
+    public boolean validateSearch() {
+        if (getInvInventory().getGallaryListSelected().isEmpty()) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "يجب اختيار المعرض "));
+        } else if (getInvInventory().getOfferCompanyListSelected().isEmpty()) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "يجب اختيار الشركه "));
+        } else {
+            return true;
+        }
+        return false;
     }
 
     public void postProcessXLS(Object document) {
@@ -156,6 +176,20 @@ public class ClientsByInvInventoryReport extends Basic {
      */
     public void setOfferCompanyDTOConverter(OfferCompanyDTOConverter offerCompanyDTOConverter) {
         this.offerCompanyDTOConverter = offerCompanyDTOConverter;
+    }
+
+    /**
+     * @return the userDDs
+     */
+    public Map<String, String> getUserDDs() {
+        return userDDs;
+    }
+
+    /**
+     * @param userDDs the userDDs to set
+     */
+    public void setUserDDs(Map<String, String> userDDs) {
+        this.userDDs = userDDs;
     }
 
 }

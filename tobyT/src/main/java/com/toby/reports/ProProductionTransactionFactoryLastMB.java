@@ -8,10 +8,13 @@ import com.toby.toby.Basic;
 import com.toby.views.ProProductionTransactionFactoryView;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
@@ -37,15 +40,40 @@ public class ProProductionTransactionFactoryLastMB extends Basic {
     @PostConstruct
     public void init() {
         getProProductionTransactionFactoryView().getGallerySelectedList().addAll(getGallaryLists());
+        getProProductionTransactionFactoryView().setDate(new Date());
+        getProProductionTransactionFactoryView().setDateTo(new Date());
+    }
+    public boolean validateSearch(){
+    
+    if(getProProductionTransactionFactoryView().getGallerySelectedList().isEmpty()){
+      FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب اختيار المعرض "));
+    }
+      else if (getProProductionTransactionFactoryView().getStatus()==null){
+      FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب اختيار الحالة  "));
     }
 
+       else if(getProProductionTransactionFactoryView().getDate()==null){
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب اختيار التاريخ من  "));     
+      }
+        else if(getProProductionTransactionFactoryView().getDateTo()==null){
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب اختيار التاريخ الي  "));     
+      }
+             else{
+                   return true ;
+                   }
+    return false;
+    }
+
+
     public void search() {
+        if(validateSearch()==true){
         if (getProProductionTransactionFactoryView() != null && getProProductionTransactionFactoryView().getGallerySelectedList() != null && !getProProductionTransactionFactoryView().getGallerySelectedList().isEmpty()) {
             proProductionItemsTransactionDTOList = new ArrayList<>();
             for (InvInventoryDTO invInventoryDTO : getProProductionTransactionFactoryView().getGallerySelectedList()) {
                 getProProductionTransactionFactoryView().setGallerySelected(invInventoryDTO);
                 getProProductionItemsTransactionDTOList().addAll(proProductionItemsTransactionService.getALLProProductionItemsTransactionLastDTO(getProProductionTransactionFactoryView(), getUserData().getUserBranch().getId()));
             }
+        }
         }
     }
 

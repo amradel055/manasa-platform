@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
@@ -50,8 +52,24 @@ public class FactoryInvoiceStatusReportMB extends Basic {
     public void init() {
         getGallarySelected().addAll(getGallaryListSelected());
     }
-
+      public boolean validateSearch(){
+        
+    if(getGallaryListSelected().isEmpty()){
+      FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب اختيار المعرض "));
+    }
+       else if(getFromDate()==null){
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب اختيار التاريخ من  "));     
+      }
+        else if(getToDate()==null){
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب اختيار التاريخ الي  "));     
+      }
+             else{
+                   return true ;
+                   }
+    return false;
+    }
     public void search() {
+        if(validateSearch()==true){
         if (getGallarySelected() != null && !getGallarySelected().isEmpty()) {
             list = new ArrayList<>();
             for (InvInventoryDTO invInventoryDTO : getGallarySelected()) {
@@ -59,6 +77,9 @@ public class FactoryInvoiceStatusReportMB extends Basic {
                 getList().addAll(invPurchaseInvoiceService.findInvoiceStatus(getFromDate(), getToDate(), getStatus() == null ? null : getStatus().getId(), getGalleryList() == null ? null : getGalleryList().getId(), getUserData().getUserBranch().getId()));
             }
         }
+        }
+        
+    
     }
 
     public void convertDateFrom() {
@@ -146,6 +167,9 @@ public class FactoryInvoiceStatusReportMB extends Basic {
      * @return the toDate
      */
     public Date getToDate() {
+          if(toDate == null){
+        toDate = new Date();
+        }
         return toDate;
     }
 
@@ -160,6 +184,9 @@ public class FactoryInvoiceStatusReportMB extends Basic {
      * @return the fromDate
      */
     public Date getFromDate() {
+        if(fromDate == null){
+        fromDate = new Date();
+        }
         return fromDate;
     }
 
