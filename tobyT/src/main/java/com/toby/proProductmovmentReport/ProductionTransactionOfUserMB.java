@@ -21,6 +21,7 @@ import com.toby.views.ProductionTransactionOfUser;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -235,7 +236,8 @@ public class ProductionTransactionOfUserMB extends BaseFormBean {
         getProProductionStagesDTOList();
         getTobyUserDTOList();
         setUserDDs(getUserData().getUserDDs());
-
+        getPrintProductionDTO().setFromDate(new Date());
+        getPrintProductionDTO().setToDate(new Date());
     }
 
     @Override

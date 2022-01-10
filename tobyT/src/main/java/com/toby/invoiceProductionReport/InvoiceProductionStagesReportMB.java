@@ -18,6 +18,7 @@ import com.toby.views.InvoiceMovementReport;
 import com.toby.views.InvoiceProductionStagesReport;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,9 +75,9 @@ public class InvoiceProductionStagesReportMB extends BaseListBean {
         setUserData((UserData) context.getSessionMap().get("userLogInData"));
         proProductionStagesDTOList = new ArrayList<>();
         getInvPurchaseInvoiceDTOList();
-         setUserDDs(getUserData().getUserDDs());
-
-        
+        setUserDDs(getUserData().getUserDDs());
+        getPrintProductionDTO().setFromDate(new Date());
+        getPrintProductionDTO().setToDate(new Date());
         if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("proproductionreportFormAdd")) {
             getPrintProductionDTO().setFromInvoice((InvInvoiceDTO) getContext().getSessionMap().get("proSalesFormSelected"));
             getPrintProductionDTO().setFromInvInvoice(getPrintProductionDTO().getFromInvoice().getSerial());

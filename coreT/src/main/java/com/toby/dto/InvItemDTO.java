@@ -74,6 +74,7 @@ public class InvItemDTO extends BaseEntityDTO {
     private BigDecimal commissionvalue;
     private BigDecimal price_edit;
     private Integer isinventoryitem;
+    private Integer isOfferItem;
     private BigDecimal quantity;
     private ProGroupDTO proGroupId;
     private Integer type;
@@ -1038,6 +1039,20 @@ public class InvItemDTO extends BaseEntityDTO {
      */
     public void setPriceType(Integer priceType) {
         this.priceType = priceType;
+    }
+
+    /**
+     * @return the isOfferItem
+     */
+    public Integer getIsOfferItem() {
+        return isOfferItem;
+    }
+
+    /**
+     * @param isOfferItem the isOfferItem to set
+     */
+    public void setIsOfferItem(Integer isOfferItem) {
+        this.isOfferItem = isOfferItem;
     }
 
    

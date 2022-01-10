@@ -208,6 +208,8 @@ public class InvItem extends BaseEntity {
     private Integer type;
     @Column(name = "price_type")
     private Integer priceType;
+     @Column(name = "is_offer_item")
+    private Integer isOfferItem;
 
     public InvItem() {
     }
@@ -870,6 +872,20 @@ public class InvItem extends BaseEntity {
      */
     public void setPriceType(Integer priceType) {
         this.priceType = priceType;
+    }
+
+    /**
+     * @return the isOfferItem
+     */
+    public Integer getIsOfferItem() {
+        return isOfferItem;
+    }
+
+    /**
+     * @param isOfferItem the isOfferItem to set
+     */
+    public void setIsOfferItem(Integer isOfferItem) {
+        this.isOfferItem = isOfferItem;
     }
 
 }

@@ -9,6 +9,7 @@ import com.toby.toby.Basic;
 import com.toby.views.ProProductionTransactionFactoryView;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -31,13 +32,14 @@ public class ProProductionTransactionFactoryMB extends Basic {
     private List<ProProductionItemsTransactionDTO> proProductionItemsTransactionDTOList;
     private ProProductionTransactionFactoryView proProductionTransactionFactoryView;
 
-
     @EJB
     private ProProductionItemsTransactionService proProductionItemsTransactionService;
 
     @PostConstruct
     public void init() {
         getProProductionTransactionFactoryView().getGallerySelectedList().addAll(getGallaryLists());
+        getProProductionTransactionFactoryView().setDate(new Date());
+        getProProductionTransactionFactoryView().setDateTo(new Date());
     }
 
     public void search() {

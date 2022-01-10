@@ -467,6 +467,9 @@ public class SummitionItemReportMB extends Basic {
      * @return the dateFrom
      */
     public Date getDateFrom() {
+        if(dateFrom == null){
+        dateFrom = new Date();
+        }
         return dateFrom;
     }
 
@@ -481,6 +484,9 @@ public class SummitionItemReportMB extends Basic {
      * @return the dateTo
      */
     public Date getDateTo() {
+           if(dateTo == null){
+        dateTo = new Date();
+        }
         return dateTo;
     }
 

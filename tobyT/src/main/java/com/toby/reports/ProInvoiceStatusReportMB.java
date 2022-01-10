@@ -8,6 +8,7 @@ import com.toby.dto.PrintProductionDTO;
 import com.toby.toby.Basic;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +43,8 @@ public class ProInvoiceStatusReportMB extends Basic {
     @PostConstruct
     public void init() {
         getPrintProductionDTO().getGallaryListSelected().addAll(getGallaryLists());
+        getPrintProductionDTO().setFromDate(new Date());
+        getPrintProductionDTO().setToDate(new Date());
     }
 
     public void search() {

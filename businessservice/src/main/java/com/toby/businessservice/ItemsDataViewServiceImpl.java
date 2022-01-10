@@ -346,6 +346,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         invItemDTO.setCommissionvalue(invItem.getCommissionvalue());
         invItemDTO.setPrice_edit(invItem.getPrice_edit());
         invItemDTO.setIsinventoryitem(invItem.getIsInventoryItem());
+        invItemDTO.setIsOfferItem(invItem.getIsOfferItem());
         invItemDTO.setTypeshow(invItem.getTypeshow());
         invItemDTO.setQuantity(invItem.getQuantity());
         invItemDTO.setItemNatural(invItem.getItemNatural());
@@ -555,6 +556,8 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             invItem.setCompanyId(tobyUser.getCompanyId());
             invItem.setBranchId(tobyUser.getBranchId());
         }
+        
+         invItem.setIsOfferItem(invItemDTO.getIsOfferItem());
         return invItem;
     }
 
