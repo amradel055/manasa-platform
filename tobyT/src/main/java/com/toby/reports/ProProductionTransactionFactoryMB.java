@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
@@ -39,8 +41,31 @@ public class ProProductionTransactionFactoryMB extends Basic {
     public void init() {
         getProProductionTransactionFactoryView().getGallerySelectedList().addAll(getGallaryLists());
     }
+         public boolean validateSearch(){
+    
+    if(getProProductionTransactionFactoryView().getGallerySelectedList().isEmpty()){
+      FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب اختيار المعرض "));
+    }
+      else if(getProProductionTransactionFactoryView().getStatus()==null){
+      FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب اختيار الحالة  "));
+    }
+      else if(getProProductionTransactionFactoryView().getUser()==null){
+      FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب اختيار الموظف  "));
+    }
+       else if(getProProductionTransactionFactoryView().getDate()==null){
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب اختيار التاريخ من  "));     
+      }
+        else if(getProProductionTransactionFactoryView().getDateTo()==null){
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب اختيار التاريخ الي  "));     
+      }
+             else{
+                   return true ;
+                   }
+    return false;
+    }
 
     public void search() {
+        if(validateSearch()==true){
         if (getProProductionTransactionFactoryView() != null && getProProductionTransactionFactoryView().getGallerySelectedList() != null && !getProProductionTransactionFactoryView().getGallerySelectedList().isEmpty()) {
             proProductionItemsTransactionDTOList = new ArrayList<>();
             for (InvInventoryDTO invInventoryDTO : getProProductionTransactionFactoryView().getGallerySelectedList()) {
@@ -48,6 +73,7 @@ public class ProProductionTransactionFactoryMB extends Basic {
                 getProProductionItemsTransactionDTOList().addAll(proProductionItemsTransactionService.getALLProProductionItemsTransactionDTO(proProductionTransactionFactoryView, getUserData().getUserBranch().getId()));
             }
         }
+    }
     }
 
     public void convertDateFrom() {
