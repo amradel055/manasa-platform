@@ -47,6 +47,8 @@ import org.apache.poi.hssf.util.HSSFColor;
 @Named(value = "productionTransactionOfUserMB")
 @ViewScoped
 public class ProductionTransactionOfUserMB extends BaseFormBean {
+    private Boolean showMessage = false;
+    private Map<String, String> userDDs;
 
     private PrintProductionDTO printProductionDTO;
     private List<TobyUserDTO> tobyUserDTOList;
@@ -87,6 +89,8 @@ public class ProductionTransactionOfUserMB extends BaseFormBean {
         // if((printProductionDTO.getFromUser()!=null&&printProductionDTO.getToUser()!=null)
         // ||(printProductionDTO.getFromDate()!=null&&printProductionDTO.getToDate()!=null)
         //  ||(printProductionDTO.getFromStatus()!=null)&&(printProductionDTO.getToStatus()!=null)){
+         validateSearch();
+         if (!getShowMessage()){
         totalQuantity = BigDecimal.ZERO;
         Total = BigDecimal.ZERO;
         productionTransactionOfUserList = proProductionItemsTransactionService.getProProductionTransactionDTOForAllUsersList(printProductionDTO, getUserData().getUserBranch().getId(), getProductionStagesDTOSelected() == null ? null : getProductionStagesDTOSelected().getSerial(), getProductionStagesListSelected());
@@ -99,14 +103,47 @@ public class ProductionTransactionOfUserMB extends BaseFormBean {
         //    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", printProductionDTO.getMsg()));
 
         //  }
+         }
+    }
+       public void validateSearch() {
+        try {
+            if (getProductionStagesListSelected().isEmpty()) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "يجب اختيار الفئة "));
+                setShowMessage((Boolean) true);
+            }
+            else if (getPrintProductionDTO().getFromUser()==null) {
+                  FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "يجب اختيار من عميل  "));
+                setShowMessage((Boolean) true); 
+            }
+             else if (getPrintProductionDTO().getToUser()==null) {
+                  FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "يجب اختيار الي عميل  "));
+                setShowMessage((Boolean) true); 
+            }
+              else if (getPrintProductionDTO().getFromDate()==null) {
+                  FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "يجب اختيار من تاريخ  "));
+                setShowMessage((Boolean) true); 
+            }
+              else if (getPrintProductionDTO().getToDate()==null) {
+                  FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "يجب اختيار الي  تاريخ  "));
+                setShowMessage((Boolean) true); 
+            }
+            
+            
+            
+        } catch (Exception e) {
+            saveError(e, "invoiceProductionStagesReportMB", "validateSearch");
+        }
     }
 
     public void searchItem() {
+        validateSearch();
+        if(!getShowMessage()){
         totalQuantity = BigDecimal.ZERO;
         Total = BigDecimal.ZERO;
         productionTransactionOfUserList = proProductionItemsTransactionService.getProProductionItemOForAllUsersList(printProductionDTO, getUserData().getUserBranch().getId(), getProductionStagesDTOSelected() == null ? null : getProductionStagesDTOSelected().getSerial(), getProductionStagesListSelected());
         for (ProductionTransactionOfUser productionTransactionOfUser : productionTransactionOfUserList) {
             setTotalQuantity(productionTransactionOfUser.getNumberExcute().add(getTotalQuantity()));
+        }
         }
     }
 
@@ -197,6 +234,8 @@ public class ProductionTransactionOfUserMB extends BaseFormBean {
         setUserData((UserData) context.getSessionMap().get("userLogInData"));
         getProProductionStagesDTOList();
         getTobyUserDTOList();
+        setUserDDs(getUserData().getUserDDs());
+
     }
 
     @Override
@@ -413,6 +452,34 @@ public class ProductionTransactionOfUserMB extends BaseFormBean {
      */
     public void setStagesDTOConverter(ProProductionStagesDTOConverter stagesDTOConverter) {
         this.stagesDTOConverter = stagesDTOConverter;
+    }
+
+    /**
+     * @return the showMessage
+     */
+    public Boolean getShowMessage() {
+        return showMessage;
+    }
+
+    /**
+     * @param showMessage the showMessage to set
+     */
+    public void setShowMessage(Boolean showMessage) {
+        this.showMessage = showMessage;
+    }
+
+    /**
+     * @return the userDDs
+     */
+    public Map<String, String> getUserDDs() {
+        return userDDs;
+    }
+
+    /**
+     * @param userDDs the userDDs to set
+     */
+    public void setUserDDs(Map<String, String> userDDs) {
+        this.userDDs = userDDs;
     }
 
 }

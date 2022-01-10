@@ -48,6 +48,10 @@ public class InvoiceProductionStagesReportMB extends BaseListBean {
     
     private ProProductionStagesDTOConverter proProductionStagesDTOConverter;
     private InvPurchaseInvoiceDTOConverter invPurchaseInvoiceDTOConverter;
+    private Boolean showMessage = false;
+    private Map<String, String> userDDs;
+
+
     
     private InvoiceMovementReport invoiceMovementReport;
     
@@ -70,6 +74,8 @@ public class InvoiceProductionStagesReportMB extends BaseListBean {
         setUserData((UserData) context.getSessionMap().get("userLogInData"));
         proProductionStagesDTOList = new ArrayList<>();
         getInvPurchaseInvoiceDTOList();
+         setUserDDs(getUserData().getUserDDs());
+
         
         if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("proproductionreportFormAdd")) {
             getPrintProductionDTO().setFromInvoice((InvInvoiceDTO) getContext().getSessionMap().get("proSalesFormSelected"));
@@ -85,6 +91,8 @@ public class InvoiceProductionStagesReportMB extends BaseListBean {
 //     }
 
     public void search() {
+        validateSearch();
+         if (!getShowMessage()){
         if ((printProductionDTO.getFromInvInvoice() != null)) {
             InvInvoiceDTO invoiceDTO = invPurchaseInvoiceService.getInvPurchaseInvoiceDTOBySerial(printProductionDTO.getFromInvInvoice(), getUserData().getUserBranch().getId());
             getPrintProductionDTO().setFromInvoice(invoiceDTO);
@@ -92,6 +100,18 @@ public class InvoiceProductionStagesReportMB extends BaseListBean {
         } else {
             printProductionDTO.setMsg("ادخل رقم فاتوره ");
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", printProductionDTO.getMsg()));
+        }
+         }
+    }
+      public void validateSearch() {
+        try {
+        
+            if (getPrintProductionDTO().getFromInvInvoice() == null) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "يجب اختيار رقم الفاتورة "));
+                setShowMessage((Boolean) true);
+            }
+        } catch (Exception e) {
+            saveError(e, "invoiceProductionStagesReportMB", "validateSearch");
         }
     }
     
@@ -281,6 +301,34 @@ public class InvoiceProductionStagesReportMB extends BaseListBean {
      */
     public void setInvoiceMovementReport(InvoiceMovementReport invoiceMovementReport) {
         this.invoiceMovementReport = invoiceMovementReport;
+    }
+
+    /**
+     * @return the showMessage
+     */
+    public Boolean getShowMessage() {
+        return showMessage;
+    }
+
+    /**
+     * @param showMessage the showMessage to set
+     */
+    public void setShowMessage(Boolean showMessage) {
+        this.showMessage = showMessage;
+    }
+
+    /**
+     * @return the userDDs
+     */
+    public Map<String, String> getUserDDs() {
+        return userDDs;
+    }
+
+    /**
+     * @param userDDs the userDDs to set
+     */
+    public void setUserDDs(Map<String, String> userDDs) {
+        this.userDDs = userDDs;
     }
     
 }
