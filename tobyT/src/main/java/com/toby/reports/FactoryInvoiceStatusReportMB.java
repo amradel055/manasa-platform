@@ -167,9 +167,6 @@ public class FactoryInvoiceStatusReportMB extends Basic {
      * @return the toDate
      */
     public Date getToDate() {
-        if(toDate == null){
-        toDate = new Date();
-        }
         return toDate;
     }
 
@@ -184,9 +181,6 @@ public class FactoryInvoiceStatusReportMB extends Basic {
      * @return the fromDate
      */
     public Date getFromDate() {
-        if(fromDate == null){
-        fromDate = new Date();
-        }
         return fromDate;
     }
 
