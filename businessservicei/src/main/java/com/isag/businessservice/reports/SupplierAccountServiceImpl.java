@@ -441,7 +441,7 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "        null AS `look`,\n"
                 + "        null AS `is_done`,\n"
                 + "        0 AS `exitt`, "
-                + "IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`, 15,0,0,0),0) AS `adding`  , ipi.id AS idNumber \n"
+                + " ipi.finalNet AS `adding`  , ipi.id AS idNumber \n"
                 + "                	FROM `gm_subscriptions` `ipi` LEFT JOIN `gm_subscriptions_detail` `ipid` ON `ipi`.`id` = `ipid`.`gm_subscriptions_id`\n"
                 + "                    LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `ipi`.`organization_site_id`))\n"
                 + "                	WHERE ((`ipi`.`type` = 0) AND (`ipi`.`date` IS NOT NULL)) \n"
