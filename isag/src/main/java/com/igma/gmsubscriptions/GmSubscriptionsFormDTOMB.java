@@ -127,7 +127,6 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
                 updateMovementdata();
             } else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("editGmSubscriptions")) {
                 getGmSubscriptionsDTO().setShowCustomerDate(Boolean.FALSE);
-
                 getGmSubscriptionsDTO().setIsEdit(Boolean.TRUE);
                 fillInvInvoiceDTO();
                 fillDefaultList();
@@ -223,7 +222,7 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
     }
 
     public void fillInvInvoiceDTO() {
-        getGmSubscriptionsDTO().setId((Integer) getContext().getSessionMap().get("TamdedId"));
+        getGmSubscriptionsDTO().setId((Integer) getContext().getSessionMap().get("gmSubscriptionsIdSelected"));
         setGmSubscriptionsDTO(gmSubscriptionsService.findGmSubscriptionsDTOById(getGmSubscriptionsDTO()));
     }
      public void fillInvOrgan() {

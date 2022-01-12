@@ -26,6 +26,8 @@ public class SubAccountSummarySearchBean implements Serializable {
     private String accClass;
     private GlBankDTO glBankFrom;
     private GlBankDTO glBankTo;
+    
+    
     private Integer type;
 
     private Integer orderBy;
@@ -402,5 +404,6 @@ public class SubAccountSummarySearchBean implements Serializable {
     public void setGlBankDTOListSelected(List<GlBankDTO> glBankDTOListSelected) {
         this.glBankDTOListSelected = glBankDTOListSelected;
     }
+
 
 }

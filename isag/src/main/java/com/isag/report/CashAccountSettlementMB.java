@@ -59,7 +59,7 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
     private List<IsagUser> users = new ArrayList<>();
     private GlBankDTOConverter glBankConverter;
     private List<GlBankDTO> glBankList;
-
+    private List<GlBankDTO> glBankListSelected;
     private IsagUserConverter isagUserConverter;
     private List<IsagUser> isagUserList;
 
@@ -179,8 +179,8 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
 
     public void search2() {
         glBankCopyMap = new HashMap<>();
-        if (glBankList != null && !glBankList.isEmpty()) {
-            for (GlBankDTO gb : glBankList) {
+        if (glBankListSelected != null && !glBankListSelected.isEmpty()) {
+            for (GlBankDTO gb : glBankListSelected) {
                 glBankMap.put(gb.getId(), gb);
                 totalForDebitMap.put(gb.getId(), BigDecimal.ZERO);
                 totalForCreditMap.put(gb.getId(), BigDecimal.ZERO);
@@ -190,7 +190,7 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
         }
 
         for (Integer key : glBankMap.keySet()) {
-            if (key >= cashAccountSettlementSearchBean.getGlBankFrom().getId() && key <= cashAccountSettlementSearchBean.getGlBankTo().getId()) {
+            if (key >= getGlBankListSelected().get(0).getId() && key <= getGlBankListSelected().get(glBankListSelected.size()-1).getId()) {
                 glBankCopyMap.put(key, glBankMap.get(key));
                 System.out.println("Key = " + key);
             }
@@ -953,6 +953,20 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
      */
     public void setAccountSettlementBean(CashAccountSettlementBean accountSettlementBean) {
         this.accountSettlementBean = accountSettlementBean;
+    }
+
+    /**
+     * @return the glBankListSelected
+     */
+    public List<GlBankDTO> getGlBankListSelected() {
+        return glBankListSelected;
+    }
+
+    /**
+     * @param glBankListSelected the glBankListSelected to set
+     */
+    public void setGlBankListSelected(List<GlBankDTO> glBankListSelected) {
+        this.glBankListSelected = glBankListSelected;
     }
 
 }

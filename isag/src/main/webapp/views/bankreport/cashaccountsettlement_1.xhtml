@@ -127,42 +127,22 @@
                             <div class="ui-g-6 ui-xl-6">
                                 <div class="ui-g-12 ui-xl-12">
                                     <div class="ui-g-6 ui-xl-6">
-                                        <p:selectOneMenu  style="width: 70%" id="MACUCode" 
-                                                          filter="true" 
-                                                          filterMatchMode="startsWith"
-                                                          converter="#{CashAccountSettlementMB.glBankConverter}"
-                                                          value="#{CashAccountSettlementMB.cashAccountSettlementSearchBean.glBankFrom}"> 
-
-                                            <f:selectItems value="#{CashAccountSettlementMB.glBankList}"  
-                                                           var="bank"
-                                                           itemLabel="#{bank}"
-                                                           itemValue="#{bank}"/>
-                                        </p:selectOneMenu> 
+                                        <p:selectCheckboxMenu id="gallary_From" value="#{CashAccountSettlementMB.glBankListSelected}" 
+                                                              converter="#{CashAccountSettlementMB.glBankConverter}"
+                                                              label="الخزينة" style="width: 15rem"
+                                                              filter="true" filterMatchMode="startsWith" panelStyle="width: 15rem" scrollHeight="250">
+                                            <f:selectItems value="#{CashAccountSettlementMB.glBankList}" 
+                                                           var="gallary"
+                                                           itemLabel="#{gallary}"
+                                                           itemValue="#{gallary}"/>
+                                        </p:selectCheckboxMenu>
                                     </div>
                                     <div class="ui-g-6 ui-xl-6">
-                                        <p:outputLabel style="width: 80px;" value="#{userData.userDDs['FROM_SAVE']}" />
-
+                                        <p:outputLabel style="width: 50px;margin-right: 1%" value="الخزائن"/>
                                     </div>
                                 </div>
-                                <div class="ui-g-12 ui-xl-12">
-                                    <div class="ui-g-6 ui-xl-6">
-                                        <p:selectOneMenu style="width: 70%" 
-                                                         filter="true" 
-                                                         filterMatchMode="startsWith"
-                                                         converter="#{CashAccountSettlementMB.glBankConverter}"
-                                                         value="#{CashAccountSettlementMB.cashAccountSettlementSearchBean.glBankTo}" > 
-
-                                            <f:selectItems value="#{CashAccountSettlementMB.glBankList}"  
-                                                           var="bank"
-                                                           itemLabel="#{bank}"
-                                                           itemValue="#{bank}"/>
-                                        </p:selectOneMenu>   
-                                    </div>
-                                    <div class="ui-g-6 ui-xl-6">
-                                        <p:outputLabel style="width: 80px;"  value="#{userData.userDDs['TO_SAFE']}" />
-
-                                    </div>
-                                </div>
+                               
+                              
                                 <div class="ui-g-12 ui-xl-12">
                                     <div class="ui-g-6 ui-xl-6">
                                         <p:calendar id="dateFrom" 
@@ -195,8 +175,8 @@
                                     </div>
                                 </div>
 
-                                
-                                
+
+
                                 <div class="ui-g-12 ui-xl-12">
                                     <div class="ui-g-6 ui-xl-6">
 
