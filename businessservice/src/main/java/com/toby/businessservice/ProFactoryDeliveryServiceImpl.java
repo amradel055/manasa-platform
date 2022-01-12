@@ -442,7 +442,7 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
     @Override
     public List<InvInvoiceDTO> getALLProFactoryDeliveryDTOByStatusNew(PrintProductionDTO printProductionDTO, Integer branchId) {
 
-        DateFormat alfrescoDateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+        DateFormat formatDate = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
         StringBuilder builder = new StringBuilder();
         builder.append(" SELECT s.id,s.serial , s.date , s.serial , s.remark , ipi.serial  , invi.name , ipi.date , ios.code , ios.name ,  ios.mobile , ipi.due_date ,\n"
                 + " (SELECT sum(i.number) FROM inv_purchase_invoice_detail i left join inv_item ii on ii.id = i.item_id\n"
@@ -454,7 +454,7 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
                 + " WHERE   s.branch_id = " + branchId + "\n"
                 + " AND s.type = 0  AND s.inv_purchase_invoice_id not in (\n"
                 + " select p.inv_purchase_invoice_id FROM pro_factory_delivery p WHERE   p.branch_id = " + branchId + " AND p.type = 1) \n"
-                + " AND   s.date >= " + " '" + alfrescoDateFormat.format(printProductionDTO.getFromDate())+ "'" +   "  AND   s.date <=  " + " '" +  alfrescoDateFormat.format(printProductionDTO.getToDate()) + "'" +  " order by s.serial DESC;");
+                + " AND   s.date >= " + " '" + formatDate.format(printProductionDTO.getFromDate())+ "'" +   "  AND   s.date <=  " + " '" +  formatDate.format(printProductionDTO.getToDate()) + "'" +  " order by s.serial DESC;");
 
 // List<Object[]> res = dao.executeNativeQuery(sql.toString());
 //
