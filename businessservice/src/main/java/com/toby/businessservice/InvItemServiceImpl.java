@@ -296,6 +296,7 @@ public class InvItemServiceImpl implements InvItemService {
         invItemDTO.setDiscountvalue(invItem.getDiscountvalue());
         invItemDTO.setDiscountrate(invItem.getDiscountrate());
         invItemDTO.setPriceType(invItem.getPriceType());
+        invItemDTO.setIsOfferItem(invItem.getIsOfferItem());
         if (invItem.getProGroupId() != null) {
             ProGroupDTO invGroupDTO = new ProGroupDTO();
             invGroupDTO.setId(invItem.getProGroupId().getId());

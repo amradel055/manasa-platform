@@ -108,8 +108,8 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                         && detailEntity.getItemsBarcodesDetail().getProGroupId() != 5
                         && (detailEntity.getItemsBarcodesDetail().getSupplierId() != null
                         && detailEntity.getItemsBarcodesDetail().getSupplierId() != 203401)
-                        && (detailEntity.getItemId().getIsOfferItem() == null || detailEntity.getItemId().getIsOfferItem() != 0)
-                        && detailEntity.getItemId().getType() != null))) {
+                        && (detailEntity.getItemId().getIsOfferItem() == 1)
+                        && (detailEntity.getItemId().getType() == null || detailEntity.getItemId().getType() != 1)))) {
                     if (detailEntity.getDiscount().compareTo(BigDecimal.ZERO) != 1) {
                         return calaDiscountCustomerCompany(invInvoiceDTO, detailEntity);
                     } else {
@@ -174,6 +174,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                 BigDecimal priceFinalPriceYoung = detailEntity.getItemsBarcodesDetail().getMaxPriceYoung();
                 if (invInvoiceDTO.getGallaryId() != null && invInvoiceDTO.getGallaryId().getInvName() != null
                         && invInvoiceDTO.getGallaryId().getInvName() == 0
+                        && calaDiscountCustomerCompany(invInvoiceDTO, detailEntity).compareTo(BigDecimal.ZERO) != 1
                         && detailEntity.getItemId().getDiscountvalue().compareTo(BigDecimal.ZERO) == 1) {
                     priceFinalPriceYoung = priceFinalPriceMen = detailEntity.getItemId().getDiscountvalue();
 
@@ -326,7 +327,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
             price = detailEntity.getItemsBarcodesDetail().getMaxPriceMen();
         }
         if (invInvoiceDTO.getGallaryId() != null && invInvoiceDTO.getGallaryId().getInvName() != null
-                && invInvoiceDTO.getGallaryId().getInvName() == 0 
+                && invInvoiceDTO.getGallaryId().getInvName() == 0
                 && detailEntity.getItemId().getDiscountvalue().compareTo(BigDecimal.ZERO) == 1) {
             price = detailEntity.getItemId().getDiscountvalue();
         }
@@ -421,7 +422,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
 
     private BigDecimal PriceGallary(Integer invNameGallary, InvItemDTO invItemDTO, BigDecimal cost) {
         if (invNameGallary != null && invNameGallary == 1 && invItemDTO != null
-                && invItemDTO.getProGroupId() != null && invItemDTO.getProGroupId().getId() == 1) {
+                && invItemDTO.getProGroupId() != null && invItemDTO.getProGroupId().getId() == 1 && (invItemDTO.getType() == null || invItemDTO.getType() != 1)) {
             cost = new BigDecimal((cost.multiply(new BigDecimal(0.85))).setScale(5, RoundingMode.HALF_DOWN).stripTrailingZeros().toPlainString());
         }
         return cost;
@@ -895,11 +896,12 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                 }
             }
             invDetailDTO.setQuantity(invDetailDTO.getQuantityOfOneUnit().multiply(invDetailDTO.getNumber()));
-            invDetailDTO.setDiscount(barcodesDetailsView.getDiscountrate());
+//            invDetailDTO.setDiscount(barcodesDetailsView.getDiscountrate());
             invDetailDTO.setScrewing(barcodesDetailsView.getScrewing());
             if (invInvoiceDTO.getGallaryId() != null && invInvoiceDTO.getGallaryId().getInvName() != null
                     && invInvoiceDTO.getGallaryId().getInvName() == 1 && invDetailDTO.getItemId() != null
-                    && invDetailDTO.getItemId().getProGroupId() != null && invDetailDTO.getItemId().getProGroupId().getId() == 1) {
+                    && invDetailDTO.getItemId().getProGroupId() != null && invDetailDTO.getItemId().getProGroupId().getId() == 1
+                    && (invDetailDTO.getItemId().getType() == null || invDetailDTO.getItemId().getType() != 2)) {
                 invDetailDTO.setCost(new BigDecimal((invDetailDTO.getCost().multiply(new BigDecimal(0.85))).setScale(5, RoundingMode.HALF_DOWN).stripTrailingZeros().toPlainString()));
             }
             if (calaDiscountCustomerCompany(invInvoiceDTO, invDetailDTO).compareTo(BigDecimal.ZERO) != 1
