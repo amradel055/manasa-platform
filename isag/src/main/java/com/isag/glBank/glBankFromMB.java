@@ -18,7 +18,6 @@ import com.isag.dto.GlBankDTO;
 import com.isag.entity.Currency;
 import com.isag.entity.GlAccount;
 import com.isag.entity.GlBank;
-import com.isag.entity.GlBank_;
 import com.isag.entiy.GlBankEntity;
 import com.isag.isag.BaseFormBean;
 import com.isag.isag.UserData;
