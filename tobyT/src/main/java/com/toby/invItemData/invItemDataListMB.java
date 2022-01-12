@@ -104,6 +104,10 @@ public class invItemDataListMB extends BaseListBean implements Serializable {
                 invDetailDTO.setCost((item.getMaxpricemen().add(item.getMaxpricemen().multiply(new BigDecimal(0.15)))).setScale(3, BigDecimal.ROUND_UP));
                 invDetailDTO.setItemCode(item.getCode());
                 invDetailDTO.setItemName(item.getName());
+                 if(item.getDiscountrate() != null && item.getDiscountrate().compareTo(BigDecimal.ZERO) == 1){
+                    BigDecimal priceAfterDiscount = item.getDiscountvalue();
+                     invDetailDTO.setCostAfterDiscount((priceAfterDiscount.add(priceAfterDiscount.multiply(new BigDecimal(0.15)))).setScale(3, BigDecimal.ROUND_UP));
+                 }
                 listNew.add(invDetailDTO);
                 fillReport(prepareReport(), getUserData().getReportPath() + "itemBarcodeToby.jasper", listNew, "pdf");
             }

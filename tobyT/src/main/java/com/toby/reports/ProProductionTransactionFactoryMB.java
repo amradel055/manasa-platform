@@ -1,8 +1,6 @@
 package com.toby.reports;
 
 import com.toby.businessservice.ProProductionItemsTransactionService;
-import com.toby.businessservice.TobyUserInventoryService;
-import com.toby.converter.InvInventoryDTOConverter;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.ProProductionItemsTransactionDTO;
 import com.toby.toby.Basic;
