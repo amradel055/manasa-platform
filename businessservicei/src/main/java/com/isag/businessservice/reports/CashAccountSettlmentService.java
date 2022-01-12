@@ -44,4 +44,6 @@ public interface CashAccountSettlmentService {
     public List<Object[]> findDateWithDocumentSerial(SubAccountSummarySearchBean cashAccountSettlementSearchBean);
     
     public CashAccountSettlementBean search(SubAccountSummarySearchBean cashAccountSettlementSearchBean );
+    
+    public CashAccountSettlementBean searchNew(SubAccountSummarySearchBean cashAccountSettlementSearchBean);
 }
