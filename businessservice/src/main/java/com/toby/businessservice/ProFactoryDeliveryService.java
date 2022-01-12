@@ -40,4 +40,6 @@ public interface ProFactoryDeliveryService {
     public List<InvInvoiceDTO> getALLProFactoryDeliveryDTOByStatusRemain(PrintProductionDTO printProductionDTO, Integer branchId);
     
     public List<InvInvoiceDTO> getALLProFactoryDeliveryDTOByBranchIdAndSerial(Integer branchId, Integer serial);
+    
+      public List<InvInvoiceDTO> getALLProFactoryDeliveryDTOByStatusNew(PrintProductionDTO printProductionDTO, Integer branchId);
 }

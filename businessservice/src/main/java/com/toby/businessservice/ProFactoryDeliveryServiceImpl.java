@@ -16,6 +16,9 @@ import com.toby.entity.InvPurchaseInvoice;
 import com.toby.entity.ProFactoryDelivery;
 import com.toby.entity.TobyCompany;
 import com.toby.entity.TobyUser;
+import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -95,7 +98,9 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
 
     private List<InvInvoiceDTO> returnListDTOForList(List<ProFactoryDelivery> proFactoryDeliveryList) {
         List<InvInvoiceDTO> invInvoiceDTOList = new ArrayList<>();
+        int i = 0;
         for (ProFactoryDelivery invAddingorder : proFactoryDeliveryList) {
+            System.out.println(i++);
             InvInvoiceDTO invInvoiceDTO = new InvInvoiceDTO();
             invInvoiceDTO = initDataForList(invInvoiceDTO, invAddingorder);
             invInvoiceDTOList.add(invInvoiceDTO);
@@ -435,6 +440,91 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
     }
 
     @Override
+    public List<InvInvoiceDTO> getALLProFactoryDeliveryDTOByStatusNew(PrintProductionDTO printProductionDTO, Integer branchId) {
+
+        DateFormat formatDate = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+        StringBuilder builder = new StringBuilder();
+        builder.append(" SELECT s.id,s.serial , s.date , s.serial , s.remark , ipi.serial  , invi.name , ipi.date , ios.code , ios.name ,  ios.mobile , ipi.due_date ,\n"
+                + " (SELECT sum(i.number) FROM inv_purchase_invoice_detail i left join inv_item ii on ii.id = i.item_id\n"
+                + " WHERE  i.inv_purchase_invoice_id = s.inv_purchase_invoice_id  AND( ii.pro_group_id = 1 or ii.pro_group_id= 5)) numberoftob  \n"
+                + " FROM pro_factory_delivery s \n"
+                + " left join inv_purchase_invoice ipi on ipi.id = s.inv_purchase_invoice_id \n"
+                + " left join inv_inventory invi on invi.id = ipi.galary_Id\n"
+                + " left join inv_organization_site ios on ios.id = ipi.organization_site_id\n"
+                + " WHERE   s.branch_id = " + branchId + "\n"
+                + " AND s.type = 0  AND s.inv_purchase_invoice_id not in (\n"
+                + " select p.inv_purchase_invoice_id FROM pro_factory_delivery p WHERE   p.branch_id = " + branchId + " AND p.type = 1) \n"
+                + " AND   s.date >= " + " '" + formatDate.format(printProductionDTO.getFromDate())+ "'" +   "  AND   s.date <=  " + " '" +  formatDate.format(printProductionDTO.getToDate()) + "'" +  " order by s.serial DESC;");
+
+// List<Object[]> res = dao.executeNativeQuery(sql.toString());
+//
+//        for (Object[] object : res) {
+//            ProductionTransactionOfUser productionTransactionOfUser = new ProductionTransactionOfUser();
+//            productionTransactionOfUser.setProductionStagesId((Integer) object[0]);
+//            productionTransactionOfUser.setStageName((String) object[1]);
+//            productionTransactionOfUser.setUserCode((String) object[2]);
+//            productionTransactionOfUser.setUserName((String) object[3]);
+//            productionTransactionOfUser.setResidencyNumber((String) object[4]);
+//            productionTransactionOfUser.setNumberExcute((BigDecimal) object[5]);
+//            productionTransactionOfUser.setPrice((BigDecimal) object[6]);
+//            productionTransactionOfUser.setTotalNumber((BigDecimal) object[7]);
+//            productionTransactionOfUser.setAvarage(((BigDecimal) object[8]).setScale(3, RoundingMode.HALF_UP));
+//
+//            productionTransactionOfUsers.add(productionTransactionOfUser);
+//        }
+//        List<ProFactoryDelivery> details = dao.findListByQuery(builder.toString(), params);
+        List<Object[]> res = dao.executeNativeQuery(builder.toString());
+
+        return returnInvoiceData(res);
+    }
+
+    private List<InvInvoiceDTO> returnInvoiceData(List<Object[]> res) {
+        List<InvInvoiceDTO> list = new ArrayList<>();
+        InvInvoiceDTO invInvoiceDTO = new InvInvoiceDTO();
+        for (Object[] object : res) {
+            invInvoiceDTO = new InvInvoiceDTO();
+            invInvoiceDTO.setId((Integer) object[0]);
+            invInvoiceDTO.setSerial((Integer) object[1]);
+            invInvoiceDTO.setDate((Date) object[2]);
+            invInvoiceDTO.setIndex((Integer) object[3]);
+            invInvoiceDTO.setRemarks((String) object[4]);
+            invInvoiceDTO.setInvoiceSerial((Integer) object[5]);
+            invInvoiceDTO.setGallaryName((String) object[6]);
+            invInvoiceDTO.setDate((Date) object[7]);
+            invInvoiceDTO.setCustomerCode((String) object[8]);
+            invInvoiceDTO.setCustomerName((String) object[9]);
+            invInvoiceDTO.setCustomerMobile((String) object[10]);
+            invInvoiceDTO.setDueDate((Date) object[11]);
+            invInvoiceDTO.setNumberOfToob((BigDecimal) object[12]);
+
+//            if (entity.getInvPurchaseInvoiceId() != null) {
+//                invInvoiceDTO.setInvoiceSerial(entity.getInvPurchaseInvoiceId().getSerial());
+//                invInvoiceDTO.setDueDate(entity.getInvPurchaseInvoiceId().getDueDate());
+//                if (entity.getInvPurchaseInvoiceId().getDueDate() != null) {
+//                    invInvoiceDTO.setDiffrentTime(entity.getInvPurchaseInvoiceId().getDueDate().getTime() - (new Date()).getTime());
+//                }
+//                if (entity.getInvPurchaseInvoiceId().getGalaryId() != null) {
+//                    InvInventoryDTO invInventoryDTO = new InvInventoryDTO();
+//                    invInventoryDTO.setId(entity.getInvPurchaseInvoiceId().getGalaryId().getId());
+//                    invInventoryDTO.setName(entity.getInvPurchaseInvoiceId().getGalaryId().getName());
+//                    invInventoryDTO.setCode(entity.getInvPurchaseInvoiceId().getGalaryId().getCode());
+//                    invInvoiceDTO.setGallary(invInventoryDTO);
+//                    invInvoiceDTO.setGallaryId(invInventoryDTO);
+//                    invInvoiceDTO.setGallaryName(invInventoryDTO.getName());
+//
+//                }
+//                customerData(entity, invInvoiceDTO);
+//            }
+//
+//            if (entity.getInvPurchaseInvoiceId() != null) {
+//                invInvoiceDTO.setLoadedSerial(entity.getInvPurchaseInvoiceId().getSerial());
+//            }
+            list.add(invInvoiceDTO);
+        }
+        return list;
+    }
+
+    @Override
     public List<InvInvoiceDTO> getALLProFactoryDeliveryDTOByStatus(PrintProductionDTO printProductionDTO, Integer branchId) {
         Map<String, Object> params = new HashMap<>();
         params.put("type", printProductionDTO.getInvoiceStatus());
@@ -494,8 +584,8 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
         List<ProFactoryDelivery> details = dao.findListByQuery(builder.toString(), params);
         return returnListDTOForList(details);
     }
-    
-     @Override
+
+    @Override
     public List<InvInvoiceDTO> getALLProFactoryDeliveryDTOByBranchIdAndSerial(Integer branchId, Integer serial) {
         Map<String, Object> filters = new HashMap<>();
         filters.put("branchId", branchId);
