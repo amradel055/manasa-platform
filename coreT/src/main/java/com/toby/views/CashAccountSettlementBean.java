@@ -22,6 +22,7 @@ import java.util.TreeMap;
 public class CashAccountSettlementBean implements Serializable{
 
     private List<CashAccountSettlmentView> cashAccountSettlementList;
+    private List<CashAccountSettlment> cashAccountSettlementListNew;
     private List<CashAccountSettlmentView> cashAccountSettlementOpeningBalanceList;
     private List<SubAccountSummaryReport> cashAccountSettlementReports;
 
@@ -312,5 +313,19 @@ public class CashAccountSettlementBean implements Serializable{
      */
     public void setCompanyActivity(CompanyActivityClassEnum companyActivity) {
         this.companyActivity = companyActivity;
+    }
+
+    /**
+     * @return the cashAccountSettlementListNew
+     */
+    public List<CashAccountSettlment> getCashAccountSettlementListNew() {
+        return cashAccountSettlementListNew;
+    }
+
+    /**
+     * @param cashAccountSettlementListNew the cashAccountSettlementListNew to set
+     */
+    public void setCashAccountSettlementListNew(List<CashAccountSettlment> cashAccountSettlementListNew) {
+        this.cashAccountSettlementListNew = cashAccountSettlementListNew;
     }
 }

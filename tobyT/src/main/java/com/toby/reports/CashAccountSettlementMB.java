@@ -58,7 +58,7 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
     private List<TobyUser> users = new ArrayList<>();
     private GlBankDTOConverter glBankConverter;
     private List<GlBankDTO> glBankList;
-
+   
     private TobyUserConverter tobyUserConverter;
     private List<TobyUser> tobyUserList;
 
@@ -180,7 +180,8 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
         GlYearDTO glYearDTO = new GlYearDTO();
         glYearDTO.setId(getGlYearSelection().getId());
         getCashAccountSettlementSearchBean().setGlYearSelected(glYearDTO);
-        setAccountSettlementBean(cashAccountSettlmentService.search(getCashAccountSettlementSearchBean()));
+        fillBankList();
+        setAccountSettlementBean(cashAccountSettlmentService.searchNew(getCashAccountSettlementSearchBean()));
     }
     
     public void exportPDFNew(ActionEvent actionEvent) {
@@ -193,6 +194,25 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
             System.out.println(e + "    exeption ++++++++++++++++++++++++++++++ ");
         }
 
+    }
+    
+    
+    private void fillBankList() {
+        StringBuilder builder = null;
+        
+        for (GlBankDTO gb : getCashAccountSettlementSearchBean().getGlBankDTOListSelected()) {
+            
+            if (builder == null) {
+                builder = new StringBuilder();
+                builder.append(gb.getId());
+                
+            } else {
+                
+                builder.append(",").append(gb.getId());
+            }
+        }
+        
+        cashAccountSettlementSearchBean.setGlBankIdSelected(builder.toString());
     }
     
     public HashMap prepareReportNew() {
@@ -971,4 +991,5 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
         this.accountSettlementBean = accountSettlementBean;
     }
 
+  
 }

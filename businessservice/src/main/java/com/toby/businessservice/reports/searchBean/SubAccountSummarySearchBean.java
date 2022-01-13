@@ -37,7 +37,7 @@ public class SubAccountSummarySearchBean implements Serializable {
     
     private GlYearDTO glYearSelected;
     private List<GlBankDTO> glBankDTOListSelected;
-    
+    private String glBankIdSelected ;
     public GlBankDTO getGlBankFrom() {
         return glBankFrom;
     }
@@ -322,6 +322,20 @@ public class SubAccountSummarySearchBean implements Serializable {
      */
     public void setGlBankDTOListSelected(List<GlBankDTO> glBankDTOListSelected) {
         this.glBankDTOListSelected = glBankDTOListSelected;
+    }
+
+    /**
+     * @return the glBankIdSelected
+     */
+    public String getGlBankIdSelected() {
+        return glBankIdSelected;
+    }
+
+    /**
+     * @param glBankIdSelected the glBankIdSelected to set
+     */
+    public void setGlBankIdSelected(String glBankIdSelected) {
+        this.glBankIdSelected = glBankIdSelected;
     }
 
 }
