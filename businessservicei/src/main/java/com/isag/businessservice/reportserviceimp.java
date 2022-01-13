@@ -55,18 +55,19 @@ public class reportserviceimp implements ReportService {
         query.append("SELECT e FROM GmSubscriptions e WHERE e.branchId.id = :branchId ");
         if(search.getDateFrom() != null){
             params.put("dateFrom", search.getDateFrom());
-            query.append(" AND e.startDate >= :dateFrom");
+            query.append(" AND e.date >= :dateFrom");
         }
         
         if(search.getDateTo() != null){
             params.put("dateTo", search.getDateTo());
-            query.append(" AND e.endDate <= :dateTo");
+            query.append(" AND e.date <= :dateTo");
         }
 
         List<GmSubscriptions> gmSubscriptionses = dao.findListByQuery(query.toString() , params);
         List<resualtDTO> dtos = mapToDtoList(gmSubscriptionses);
         return dtos;
     }
+    
     
     @Override
     public List<resualtDTO> getAllDeletedSubsByDate(searchDTO search) {
@@ -103,12 +104,12 @@ public class reportserviceimp implements ReportService {
         query.append("SELECT sum(e.finalNet) FROM GmSubscriptions e WHERE e.branchId.id = :branchId ");
         if(search.getDateFrom() != null){
             params.put("dateFrom", search.getDateFrom());
-            query.append(" AND e.startDate >= :dateFrom");
+            query.append(" AND e.date >= :dateFrom");
         }
         
         if(search.getDateTo() != null){
             params.put("dateTo", search.getDateTo());
-            query.append(" AND e.endDate <= :dateTo");
+            query.append(" AND e.date <= :dateTo");
         }
 
         List<BigDecimal> finalNet = dao.findListByQuery(query.toString() , params);
@@ -156,7 +157,7 @@ public class reportserviceimp implements ReportService {
 
     private resualtDTO initMapToDTO(GmSubscriptions entity) {
         resualtDTO dTO = new resualtDTO();
-
+        dTO.setId(entity.getId());
         dTO.setClientName(entity.getOrganizationSiteId().getName());
         dTO.setClientName(entity.getOrganizationSiteId().getName());
         dTO.setSerial(entity.getSerial());
@@ -183,6 +184,13 @@ public class reportserviceimp implements ReportService {
             dtos.add(initMapToDTO(GmSubscriptionsDTOList.get(i)));
         }
         return dtos;
+    }
+    
+    @Override
+    public resualtDTO findElresultById(resualtDTO reseualtdto) {
+        GmSubscriptions gmSubscriptions = dao.findEntityById(GmSubscriptions.class,reseualtdto.getId());
+        resualtDTO resualt= initMapToDTO(gmSubscriptions);
+        return resualt;
     }
 
 }

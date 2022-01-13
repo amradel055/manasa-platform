@@ -165,4 +165,6 @@ public interface OrganizationSiteService {
      public InvOrganizationSiteDTO getInvOrganizationSiteByQuery(String query,IsagUser isagUser);
      
      public InvOrganizationSiteDTO findOrganizationSiteDTOByIdSmall(Integer invOrganizationSiteId);
+     
+     public void updateGMCustomer(InvOrganizationSiteDTO invOrganizationSiteDTO);
 }

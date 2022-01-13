@@ -84,6 +84,8 @@
                            <p:outputLabel value="#{invInvoicePurchaseTable.value}" />
 
                     </p:column>
+                   
+              
                  
                 </p:dataTable> 
                             <div class="ui-g-3 ui-xl-3">
@@ -103,7 +105,7 @@
                                     <div class="ui-g-6 ui-xl-6">
                                         <p:calendar style="width: 35%"  id="dateFrom"
                                                     value="#{reportMB.searchdto.dateFrom}"
-                                                    pattern="dd/MM/yyyy  HH:mm:ss"  showButtonPanel="true" >
+                                                    pattern="dd/MM/yyyy  HH:mm:ss"   >
                                            
                                         </p:calendar>
                                     </div>
@@ -117,7 +119,8 @@
                                     <div class="ui-g-6 ui-xl-6">
                                         <p:calendar style="width: 35%"  id="dateTo"
                                                     value="#{reportMB.searchdto.dateTo}"
-                                                    pattern="dd/MM/yyyy  HH:mm:ss"  showButtonPanel="true" >
+                                                    
+                                                    pattern="dd/MM/yyyy  HH:mm:ss"   >
                                             
                                         </p:calendar>
                                     </div>
@@ -132,6 +135,16 @@
                                           value="#{userData.userDDs['SEARCH']}"                                      
                                           action="#{reportMB.search()}" 
                                           update="@form"/>
+              <p:commandButton 
+                            class="sprintButtons"
+                            update="@form" onclick="form.target = '_blank'"  ajax="false"
+                            icon="fa fa-fw fa-print" style="background-color: rgb(0, 74, 128);border-radius: 3px;"
+                            title="print" 
+                            action="#{reportMB.exportPDF(actionEvent)}" >
+                            
+                        </p:commandButton>
+       
+                     
 
                 
         </h:form>

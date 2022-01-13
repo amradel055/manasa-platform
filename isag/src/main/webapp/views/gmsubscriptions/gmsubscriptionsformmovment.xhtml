@@ -168,7 +168,7 @@
                                                 <div class="ui-g-12 ui-xl-12">
 
                                                     <div class="ui-g-6 ui-xl-6">
-                                                        <p:graphicImage url="#{gmSubscriptionsFormDTOMB.host.concat(gmSubscriptionsFormDTOMB.organizationSiteId.clientImage)}" library="demo"  style="max-width:80%;max-height:80%;object-fit: cover !important;"/>
+                                                        <p:graphicImage url="#{gmSubscriptionsFormDTOMB.host.concat(gmSubscriptionsFormDTOMB.invOrganizationSiteDTOSelected.clientImage)}" library="demo"  style="max-width:80%;max-height:80%;object-fit: cover !important;"/>
                                                     </div>
 
                                                     <div class="ui-g-6 ui-xl-6">
@@ -198,7 +198,7 @@
                                                         <div class="ui-g-12 ui-xl-12">
 
                                                             <div class="ui-g-6 ui-xl-6">
-                                                                <p:inputText style="width: 35%!important" id="ad012"  value="#{gmSubscriptionsFormDTOMB.organizationSiteId.code}"/>
+                                                                <p:inputText style="width: 35%!important" id="ad012"  value="#{gmSubscriptionsFormDTOMB.invOrganizationSiteDTOSelected.code}"/>
                                                             </div>
                                                             <div class="ui-g-6 ui-xl-6">
                                                                 <p:outputLabel style="width: 85px;margin-right: 3%;" value="رقم العميل"/>
@@ -208,7 +208,7 @@
                                                         <div class="ui-g-12 ui-xl-12">
 
                                                             <div class="ui-g-6 ui-xl-6">
-                                                                <p:inputText style="width: 35%!important" id="ad112" value="#{gmSubscriptionsFormDTOMB.organizationSiteId.name}"/>
+                                                                <p:inputText style="width: 35%!important" id="ad112" value="#{gmSubscriptionsFormDTOMB.invOrganizationSiteDTOSelected.name}"/>
                                                             </div>
                                                             <div class="ui-g-6 ui-xl-6">
                                                                 <p:outputLabel style="width: 85px;margin-right: 3%;" value="الاسم"/>
@@ -219,7 +219,7 @@
                                                         <div class="ui-g-12 ui-xl-12">
 
                                                             <div class="ui-g-6 ui-xl-6">
-                                                                <p:inputText style="width: 35%!important" id="ad212" value="#{gmSubscriptionsFormDTOMB.organizationSiteId.mobile}"/>
+                                                                <p:inputText style="width: 35%!important" id="ad212" value="#{gmSubscriptionsFormDTOMB.invOrganizationSiteDTOSelected.mobile}"/>
 
                                                             </div>
                                                             <div class="ui-g-6 ui-xl-6">
@@ -230,7 +230,7 @@
                                                         <div class="ui-g-12 ui-xl-12">
 
                                                             <div class="ui-g-6 ui-xl-6">
-                                                                <p:inputText style="width: 35%!important" id="ad312" value="#{gmSubscriptionsFormDTOMB.organizationSiteId.mobile}"/>
+                                                                <p:inputText style="width: 35%!important" id="ad312" value="#{gmSubscriptionsFormDTOMB.invOrganizationSiteDTOSelected.mobile}"/>
 
                                                             </div>
                                                             <div class="ui-g-6 ui-xl-6">
@@ -242,7 +242,7 @@
                                                         <div class="ui-g-12 ui-xl-12">
 
                                                             <div class="ui-g-6 ui-xl-6">
-                                                                <p:inputText style="width: 35%!important" id="ad812"  value="#{gmSubscriptionsFormDTOMB.organizationSiteId.nationId}"/>
+                                                                <p:inputText style="width: 35%!important" id="ad812"  value="#{gmSubscriptionsFormDTOMB.invOrganizationSiteDTOSelected.nationId}"/>
 
                                                             </div>
                                                             <div class="ui-g-6 ui-xl-6">
@@ -254,7 +254,7 @@
                                                             <div class="ui-g-12 ui-xl-12">
 
                                                                 <div class="ui-g-6 ui-xl-6">
-                                                                    <p:inputText style="width: 35%!important" id="ad512" value="#{gmSubscriptionsFormDTOMB.organizationSiteId.nationIdSerial}"/>
+                                                                    <p:inputText style="width: 35%!important" id="ad512" value="#{gmSubscriptionsFormDTOMB.invOrganizationSiteDTOSelected.nationIdSerial}"/>
 
                                                                 </div>
                                                                 <div class="ui-g-6 ui-xl-6">
@@ -265,7 +265,7 @@
 
                                                             <div class="ui-g-6 ui-xl-6">
                                                                 <p:calendar id="dateFrom12" 
-                                                                            value="#{gmSubscriptionsFormDTOMB.organizationSiteId.birthdate}"
+                                                                            value="#{gmSubscriptionsFormDTOMB.invOrganizationSiteDTOSelected.birthdate}"
                                                                             pattern="dd/MM/yyyy"
                                                                             style="width:50%!important"/>
                                                             </div>

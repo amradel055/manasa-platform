@@ -5,22 +5,14 @@
  */
 package com.igma.gmsubscriptions;
 
-import com.isag.businessservice.GmFreezeService;
+import com.igma.basic.GMBasicData;
 import com.isag.businessservice.GmSubscriptionsService;
 import com.isag.businessservice.OrganizationSiteService;
-import com.isag.bussinessservice.global.Utility;
 import com.isag.converter.InvOrganizationSiteDTOConverter;
-import com.isag.dto.GmFreezeDto;
-import com.isag.dto.GmItemDTO;
 import com.isag.dto.GmSubscriptionsDTO;
 import com.isag.dto.InvOrganizationSiteDTO;
-import com.isag.isag.BaseListBean;
 import com.isag.isag.UserData;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
@@ -31,7 +23,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
-import static javax.ws.rs.client.Entity.entity;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 
@@ -41,30 +32,24 @@ import org.primefaces.model.SortOrder;
  */
 @Named(value = "gmSubscriptionsListDTOMB")
 @ViewScoped
-public class GmSubscriptionsListDTOMB extends BaseListBean {
+public class GmSubscriptionsListDTOMB extends GMBasicData {
 
     private String nameClient;
     private LazyDataModel<GmSubscriptionsDTO> dataModel;
-    private GmSubscriptionsDTO gmSubscriptionsDTOSelected;
+
     private List<GmSubscriptionsDTO> subscribtionList;
-    private InvOrganizationSiteDTO invOrganizationSiteDTO;
     private List<InvOrganizationSiteDTO> invOrganizationSiteDTOList;
-    private InvOrganizationSiteDTO invOrganizationSiteDTOSelected;
-    private InvOrganizationSiteDTO siteDTO;
     private InvOrganizationSiteDTOConverter organizationSiteDTOConvertor;
-    private GmFreezeDto gmFreezeDto;
+
     private String filename;
     private String file;
     private String host;
-    private String access ;
+    private String access;
     @EJB
     private GmSubscriptionsService gmSubscriptionsService;
 
     @EJB
     private OrganizationSiteService organizationSiteService;
-
-    @EJB
-    private GmFreezeService gmFreezeService;
 
     @Override
     @PostConstruct
@@ -77,21 +62,7 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
     }
 
     public void reset() {
-
-        gmFreezeDto.setNumber(null);
-    }
-
-    public void findCustomerData() {
-        if(getGmSubscriptionsDTOSelected() == null && invOrganizationSiteDTO != null){
-            setGmSubscriptionsDTOSelected(gmSubscriptionsService.getValidGmSubscriptionsDTOByCustomerId(invOrganizationSiteDTO.getId()));
-        }
-        setSiteDTO(organizationSiteService.findOrganizationSiteDTOByIdSmall(getGmSubscriptionsDTOSelected().getOrganizationSiteId().getId()));
-        getGmFreezeDto().setCustomerId(getSiteDTO());
-        getGmFreezeDto().setSubscriptionId(getGmSubscriptionsDTOSelected());
-        getGmFreezeDto().setDatefrom(new Date());
-
-        calcDays();
-        OpenDlg("dlg3");
+        getGmFreezeDto().setNumber(null);
     }
 
     public void calcDate() {
@@ -102,10 +73,10 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
             increaseDate();
         }
     }
-    
-      public void show() {
-        setInvOrganizationSiteDTOSelected(organizationSiteService.findOrganizationSiteDTOById(invOrganizationSiteDTO.getId()));
-        setGmSubscriptionsDTOSelected(gmSubscriptionsService.getValidGmSubscriptionsDTOByCustomerId(invOrganizationSiteDTO.getId()));
+
+    public void show() {
+        setInvOrganizationSiteDTOSelected(organizationSiteService.findOrganizationSiteDTOById(getInvOrganizationSiteDTOSelected().getId()));
+        setGmSubscriptionsDTOSelected(gmSubscriptionsService.getValidGmSubscriptionsDTOByCustomerId(getInvOrganizationSiteDTOSelected().getId()));
 
     }
 
@@ -116,29 +87,13 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
         getGmFreezeDto().setDateto(c.getTime());
     }
 
-    public void calcDays() {
-      
-        getGmFreezeDto().setMustDays(Utility.calcDays(getGmSubscriptionsDTOSelected().getStartDate(), getGmSubscriptionsDTOSelected().getEndDate(), 5));
-        getGmFreezeDto().setTakeDays(gmFreezeService.calcTakenDaysByCustomerIdAndSubscribtionId(getGmSubscriptionsDTOSelected().getId()));
-        getGmFreezeDto().setRemainDays(getGmFreezeDto().getMustDays() - getGmFreezeDto().getTakeDays());
-    }
-
-    public String saveFreeze() {
-        if (gmFreezeDto.getNumber().compareTo(gmFreezeDto.getRemainDays()) != 1) {
-            gmFreezeService.save(getGmFreezeDto(), getUserData().getUser());
-        } else {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "خطأ", "يجب ان يكون عدد ايام التجميد اقل من او يساوي عدد الايام المتاحه"));
-        }
-        gmFreezeDto.setNumber(null);
-
-        return "";
-    }
+   
 
     public List<GmSubscriptionsDTO> search() {
 
         try {
 
-            setSubscribtionList(gmSubscriptionsService.getALLGmSubscriptionsDTODTOByCustomerId(invOrganizationSiteDTO.getId()));
+            setSubscribtionList(gmSubscriptionsService.getALLGmSubscriptionsDTODTOByCustomerId(getInvOrganizationSiteDTOSelected().getId()));
 
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceFormMB", "load");
@@ -184,7 +139,6 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
         try {
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
             context.getSessionMap().put("ScreenMode", "addGmSubscriptions");
-            context.getSessionMap().put("typeActivity", 0);
             goToScreen();
 
             return "";
@@ -193,27 +147,27 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
             return null;
         }
     }
-    
-     public String goToMovment() {
+
+    public String goToMovment() {
         try {
-            if(getGmSubscriptionsDTOSelected() != null){
-            ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-            context.getSessionMap().put("ScreenMode", "addGmMovement");
-            context.getSessionMap().put("typeActivity", 0);
-            context.getSessionMap().put("gmCustomerIdSelected", getGmSubscriptionsDTOSelected().getOrganizationSiteId().getId());
-             exit("../gmsubscriptions/gmsubscriptionsformmovment.xhtml");
+            if (getGmSubscriptionsDTOSelected() != null) {
+                ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+                context.getSessionMap().put("ScreenMode", "addGmMovement");
+                context.getSessionMap().put("typeActivity", 0);
+                context.getSessionMap().put("gmCustomerIdSelected", getGmSubscriptionsDTOSelected().getOrganizationSiteId().getId());
+                exit("../gmsubscriptions/gmsubscriptionsformmovment.xhtml");
 
-            return ""; } 
-            else { 
-                
-            setGmSubscriptionsDTOSelected(gmSubscriptionsService.getValidGmSubscriptionsDTOByCustomerId(invOrganizationSiteDTO.getId()));
-             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-            context.getSessionMap().put("ScreenMode", "addGmMovement");
-            context.getSessionMap().put("typeActivity", 0);
-            context.getSessionMap().put("gmCustomerIdSelected", getGmSubscriptionsDTOSelected().getOrganizationSiteId().getId());
-             exit("../gmsubscriptions/gmsubscriptionsformmovment.xhtml");
+                return "";
+            } else {
 
-            return "";
+                setGmSubscriptionsDTOSelected(gmSubscriptionsService.getValidGmSubscriptionsDTOByCustomerId(getInvOrganizationSiteDTOSelected().getId()));
+                ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+                context.getSessionMap().put("ScreenMode", "addGmMovement");
+                context.getSessionMap().put("typeActivity", 0);
+                context.getSessionMap().put("gmCustomerIdSelected", getGmSubscriptionsDTOSelected().getOrganizationSiteId().getId());
+                exit("../gmsubscriptions/gmsubscriptionsformmovment.xhtml");
+
+                return "";
             }
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceListMB", "goToAdd");
@@ -224,8 +178,6 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
     public void goTOAddForm() {
         exit("../gmregistration/gmregistrationForm.xhtml");
     }
-    
-
 
     public String goToEdit() {
         try {
@@ -243,39 +195,32 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
             return null;
         }
     }
-     public String EditClientData() {
+
+    public void EditClientData() {
         try {
-            if (getInvOrganizationSiteDTO() != null && getInvOrganizationSiteDTO().getId() > 0) {
-                ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-                context.getSessionMap().put("invOrganizationSiteDTO", getInvOrganizationSiteDTO().getId());
-                context.getSessionMap().put("ScreenMode", "editCustomerData");
-                goToScreenCustomerData();
-                return "";
-            } else {
-                return "";
-            }
+            OpenDlg("dlg3New");
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceListMB", "EditClientData");
-            return null;
         }
     }
-      public String goToresume() {
+
+    public String goToresume() {
         try {
-            if (getGmSubscriptionsDTOSelected() != null && getGmSubscriptionsDTOSelected().getOrganizationSiteId()!= null && getGmSubscriptionsDTOSelected().getOrganizationSiteId().getId() > 0) {
+            if (getGmSubscriptionsDTOSelected() != null && getGmSubscriptionsDTOSelected().getOrganizationSiteId() != null && getGmSubscriptionsDTOSelected().getOrganizationSiteId().getId() > 0) {
                 ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
                 context.getSessionMap().put("TamdedId", getGmSubscriptionsDTOSelected().getId());
                 context.getSessionMap().put("ScreenMode", "Tamded");
                 goToScreen();
                 return "";
-            } else if(getGmSubscriptionsDTOSelected() == null && invOrganizationSiteDTO != null){
-                setGmSubscriptionsDTOSelected(gmSubscriptionsService.getValidGmSubscriptionsDTOByCustomerId(invOrganizationSiteDTO.getId()));
+            } else if (getGmSubscriptionsDTOSelected() == null && getInvOrganizationSiteDTOSelected() != null) {
+                setGmSubscriptionsDTOSelected(gmSubscriptionsService.getValidGmSubscriptionsDTOByCustomerId(getInvOrganizationSiteDTOSelected().getId()));
                 ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
                 context.getSessionMap().put("TamdedId", getGmSubscriptionsDTOSelected().getId());
                 context.getSessionMap().put("ScreenMode", "Tamded");
                 goToScreen();
                 return "";
             } else {
-            return "";
+                return "";
             }
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceListMB", "goToresume");
@@ -303,10 +248,11 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
     public void goToScreen() {
         exit("../gmsubscriptions/gmsubscriptionsform.xhtml");
     }
-     public void goToScreenCustomerData() {
+
+    public void goToScreenCustomerData() {
         exit("../gmregistration/gmregistrationForm.xhtml");
     }
-  
+
     public void goToClientEditScreen() {
         exit("../gmregistration/gmregistrationForm.xhtml");
     }
@@ -314,7 +260,7 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
     public void delete() {
         try {
             if (getGmSubscriptionsDTOSelected() != null && getGmSubscriptionsDTOSelected().getId() != null) {
-                gmSubscriptionsService.updateDeleteGmSubscriptionsDTODTO(getGmSubscriptionsDTOSelected() , getUserlogin());
+                gmSubscriptionsService.updateDeleteGmSubscriptionsDTODTO(getGmSubscriptionsDTOSelected(), getUserlogin());
                 load();
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "تم الجذذف بنجاح", "تم الجذذف بنجاح"));
             }
@@ -342,11 +288,6 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public void filter() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     /**
      * @return the dataModel
      */
@@ -359,34 +300,6 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
      */
     public void setDataModel(LazyDataModel<GmSubscriptionsDTO> dataModel) {
         this.dataModel = dataModel;
-    }
-
-    /**
-     * @return the gmSubscriptionsDTOSelected
-     */
-    public GmSubscriptionsDTO getGmSubscriptionsDTOSelected() {
-        return gmSubscriptionsDTOSelected;
-    }
-
-    /**
-     * @param gmSubscriptionsDTOSelected the gmSubscriptionsDTOSelected to set
-     */
-    public void setGmSubscriptionsDTOSelected(GmSubscriptionsDTO gmSubscriptionsDTOSelected) {
-        this.gmSubscriptionsDTOSelected = gmSubscriptionsDTOSelected;
-    }
-
-    /**
-     * @return the invOrganizationSiteDTO
-     */
-    public InvOrganizationSiteDTO getInvOrganizationSiteDTO() {
-        return invOrganizationSiteDTO;
-    }
-
-    /**
-     * @param invOrganizationSiteDTO the invOrganizationSiteDTO to set
-     */
-    public void setInvOrganizationSiteDTO(InvOrganizationSiteDTO invOrganizationSiteDTO) {
-        this.invOrganizationSiteDTO = invOrganizationSiteDTO;
     }
 
     /**
@@ -419,21 +332,6 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
     }
 
     /**
-     * @return the invOrganizationSiteDTOSelected
-     */
-    public InvOrganizationSiteDTO getInvOrganizationSiteDTOSelected() {
-        return invOrganizationSiteDTOSelected;
-    }
-
-    /**
-     * @param invOrganizationSiteDTOSelected the invOrganizationSiteDTOSelected
-     * to set
-     */
-    public void setInvOrganizationSiteDTOSelected(InvOrganizationSiteDTO invOrganizationSiteDTOSelected) {
-        this.invOrganizationSiteDTOSelected = invOrganizationSiteDTOSelected;
-    }
-
-    /**
      * @return the organizationSiteDTOConvertor
      */
     public InvOrganizationSiteDTOConverter getOrganizationSiteDTOConvertor() {
@@ -446,40 +344,6 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
      */
     public void setOrganizationSiteDTOConvertor(InvOrganizationSiteDTOConverter organizationSiteDTOConvertor) {
         this.organizationSiteDTOConvertor = organizationSiteDTOConvertor;
-    }
-
-    /**
-     * @return the siteDTO
-     */
-    public InvOrganizationSiteDTO getSiteDTO() {
-        if (siteDTO == null) {
-            siteDTO = new InvOrganizationSiteDTO();
-        }
-        return siteDTO;
-    }
-
-    /**
-     * @param siteDTO the siteDTO to set
-     */
-    public void setSiteDTO(InvOrganizationSiteDTO siteDTO) {
-        this.siteDTO = siteDTO;
-    }
-
-    /**
-     * @return the gmFreezeDto
-     */
-    public GmFreezeDto getGmFreezeDto() {
-        if (gmFreezeDto == null) {
-            gmFreezeDto = new GmFreezeDto();
-        }
-        return gmFreezeDto;
-    }
-
-    /**
-     * @param gmFreezeDto the gmFreezeDto to set
-     */
-    public void setGmFreezeDto(GmFreezeDto gmFreezeDto) {
-        this.gmFreezeDto = gmFreezeDto;
     }
 
     /**
@@ -544,20 +408,19 @@ public class GmSubscriptionsListDTOMB extends BaseListBean {
      * @return the access
      */
     public String getAccess() {
-    if(gmSubscriptionsDTOSelected!=null && gmSubscriptionsDTOSelected.getStatus()!=true && gmSubscriptionsDTOSelected.isFreezeStatus()!=true){
-       access = "يسمح له بدخول الجيم ";
-        }else
-    { 
-        access ="لا يسمح له بدخول الجيم";
-            }
+        if (getGmSubscriptionsDTOSelected() != null && getGmSubscriptionsDTOSelected().getStatus() != true && getGmSubscriptionsDTOSelected().isFreezeStatus() != true) {
+            access = "يسمح له بدخول الجيم ";
+        } else {
+            access = "لا يسمح له بدخول الجيم";
+        }
         return access;
     }
 
     /**
      * @param access the access to set
      */
-   public void setAccess(String access) {
+    public void setAccess(String access) {
         this.access = access;
-    } 
+    }
 
 }

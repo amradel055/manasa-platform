@@ -100,6 +100,7 @@
                                             <f:selectItem itemLabel="فاتورة مبيعات"  itemValue="6" />
                                             <f:selectItem itemLabel="مردود مشتريات"  itemValue="7" />
                                             <f:selectItem itemLabel="مردود مبيعات"  itemValue="8" />
+                                            <f:selectItem itemLabel="الأندية الرياضية"  itemValue="9" />
                                         </p:selectOneMenu>
                                     </div>
                                     <div class="ui-g-6 ui-xl-6">
@@ -127,42 +128,22 @@
                             <div class="ui-g-6 ui-xl-6">
                                 <div class="ui-g-12 ui-xl-12">
                                     <div class="ui-g-6 ui-xl-6">
-                                        <p:selectOneMenu  style="width: 70%" id="MACUCode" 
-                                                          filter="true" 
-                                                          filterMatchMode="startsWith"
-                                                          converter="#{CashAccountSettlementMB.glBankConverter}"
-                                                          value="#{CashAccountSettlementMB.cashAccountSettlementSearchBean.glBankFrom}"> 
-
-                                            <f:selectItems value="#{CashAccountSettlementMB.glBankList}"  
-                                                           var="bank"
-                                                           itemLabel="#{bank}"
-                                                           itemValue="#{bank}"/>
-                                        </p:selectOneMenu> 
+                                        <p:selectCheckboxMenu id="gallary_From" value="#{CashAccountSettlementMB.glBankListSelected}" 
+                                                              converter="#{CashAccountSettlementMB.glBankConverter}"
+                                                              label="الخزينة" style="width: 15rem"
+                                                              filter="true" filterMatchMode="startsWith" panelStyle="width: 15rem" scrollHeight="250">
+                                            <f:selectItems value="#{CashAccountSettlementMB.glBankList}" 
+                                                           var="gallary"
+                                                           itemLabel="#{gallary}"
+                                                           itemValue="#{gallary}"/>
+                                        </p:selectCheckboxMenu>
                                     </div>
                                     <div class="ui-g-6 ui-xl-6">
-                                        <p:outputLabel style="width: 80px;" value="#{userData.userDDs['FROM_SAVE']}" />
-
+                                        <p:outputLabel style="width: 50px;margin-right: 1%" value="الخزائن"/>
                                     </div>
                                 </div>
-                                <div class="ui-g-12 ui-xl-12">
-                                    <div class="ui-g-6 ui-xl-6">
-                                        <p:selectOneMenu style="width: 70%" 
-                                                         filter="true" 
-                                                         filterMatchMode="startsWith"
-                                                         converter="#{CashAccountSettlementMB.glBankConverter}"
-                                                         value="#{CashAccountSettlementMB.cashAccountSettlementSearchBean.glBankTo}" > 
-
-                                            <f:selectItems value="#{CashAccountSettlementMB.glBankList}"  
-                                                           var="bank"
-                                                           itemLabel="#{bank}"
-                                                           itemValue="#{bank}"/>
-                                        </p:selectOneMenu>   
-                                    </div>
-                                    <div class="ui-g-6 ui-xl-6">
-                                        <p:outputLabel style="width: 80px;"  value="#{userData.userDDs['TO_SAFE']}" />
-
-                                    </div>
-                                </div>
+                               
+                              
                                 <div class="ui-g-12 ui-xl-12">
                                     <div class="ui-g-6 ui-xl-6">
                                         <p:calendar id="dateFrom" 
@@ -195,8 +176,8 @@
                                     </div>
                                 </div>
 
-                                
-                                
+
+
                                 <div class="ui-g-12 ui-xl-12">
                                     <div class="ui-g-6 ui-xl-6">
 
@@ -233,7 +214,7 @@
                                              style="color: #fff!important;background-color: #9813e4e6;margin-left: 5px" 
                                              id="searchS"
                                              value="#{userData.userDDs['SEARCH']}"
-                                             action="#{CashAccountSettlementMB.search2()}" 
+                                             action="#{CashAccountSettlementMB.search()}" 
                                              update="cashAccount"
                                              />
 
@@ -270,11 +251,11 @@
                 </p:fieldset>
 
                 <p:fieldset>
-                    <p:dataTable id="cashAccount" 
+                   <p:dataTable id="cashAccount" 
                                  draggableColumns="true"
 
                                  paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
-                                 value="#{CashAccountSettlementMB.cashAccountSettlementReports}"
+                                 value="#{CashAccountSettlementMB.accountSettlementBean.cashAccountSettlementReports}"
                                  var="subaccReport"
                                  widgetVar="cashSett"
                                  sortBy="#{subaccReport.bankId}" expandableRowGroups="true"
@@ -379,9 +360,9 @@
                                              title="#{userData.userDDs['EDIT']}"  onclick="form.target = '_blank'" ajax="false"
                                              action="#{CashAccountSettlementMB.goToEdit()}" > 
                                 <f:setPropertyActionListener value="#{subaccReport.id}" 
-                                                             target="#{CashAccountSettlementMB.glBankTransactionIdSeclected}"/>
+                                                             target="#{CashAccountSettlementMB.accountSettlementBean.glBankTransactionIdSeclected}"/>
                                 <f:setPropertyActionListener value="#{subaccReport}"
-                                                             target="#{CashAccountSettlementMB.glBankTransactionTypeSeclected}"/>
+                                                             target="#{CashAccountSettlementMB.accountSettlementBean.glBankTransactionTypeSeclected}"/>
                             </p:commandButton>
                         </p:column>
                         <p:summaryRow>

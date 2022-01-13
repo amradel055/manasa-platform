@@ -14,6 +14,7 @@ import java.util.Date;
  * @author Lenovo
  */
 public class resualtDTO {
+    private Integer Id;
     private Integer serial ;
     private String clientName;
     private String phone ;
@@ -22,6 +23,7 @@ public class resualtDTO {
     private IsagUser deletedBy ;
     private BigDecimal value;
     private BigDecimal sumValue ;
+
     /**
      * @return the serial
      */
@@ -137,4 +139,19 @@ public class resualtDTO {
     public void setDeletedBy(IsagUser deletedBy) {
         this.deletedBy = deletedBy;
     }
+
+    /**
+     * @return the Id
+     */
+    public Integer getId() {
+        return Id;
+    }
+
+    /**
+     * @param Id the Id to set
+     */
+    public void setId(Integer Id) {
+        this.Id = Id;
+    }
+ 
 }

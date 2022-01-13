@@ -5,26 +5,17 @@
  */
 package com.igma.gmsubscriptions;
 
-import org.apache.commons.codec.binary.Base64;
+import com.igma.basic.GMBasicData;
 import com.isag.businessservice.GmGlobalService;
 import com.isag.businessservice.GmItemService;
 import com.isag.businessservice.GmMovementService;
 import com.isag.businessservice.GmSubscriptionsService;
-import com.isag.businessservice.OrganizationSiteService;
 import com.isag.businessservice.ReportManagementService;
-import com.isag.bussinessservice.global.AutoCompleteService;
-import com.isag.bussinessservice.global.Utility;
 import com.isag.converter.GlBankDTOConverter;
-import com.isag.converter.InvOrganizationSiteDTOConverter;
 import com.isag.dto.GlBankDTO;
 import com.isag.dto.GmItemDTO;
-import com.isag.dto.GmMovementDTO;
 import com.isag.dto.GmSubscriptionsDTO;
 import com.isag.dto.GmSubscriptionsDetailDTO;
-import com.isag.dto.InvOrganizationSiteDTO;
-import com.isag.entity.ReportManagement;
-import com.isag.isag.AutoComplete;
-import com.isag.isag.BaseFormBean;
 import com.isag.isag.UserData;
 import com.isag.print.IReportService;
 import com.isag.print.IReportServiceImpl;
@@ -32,27 +23,21 @@ import java.math.BigDecimal;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-import com.isag.uploadfile.FileUploadController;
 import java.io.IOException;
 import java.math.RoundingMode;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
-import javax.faces.event.ActionEvent;
 import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-import tafqeet.Tafqeet;
 
 /**
  *
@@ -60,17 +45,13 @@ import tafqeet.Tafqeet;
  */
 @Named(value = "gmSubscriptionsFormDTOMB")
 @ViewScoped
-public class GmSubscriptionsFormDTOMB extends BaseFormBean {
+public class GmSubscriptionsFormDTOMB extends GMBasicData {
 
-    private GmSubscriptionsDTO gmSubscriptionsDTO;
     private GmSubscriptionsDTO gmSubscriptionsDTOold;
 
     private GmItemDTO gmItemDTOSelected;
 
-    private InvOrganizationSiteDTO organizationSiteId;
 
-    private List<InvOrganizationSiteDTO> invOrganizationSiteDTOList;
-    private InvOrganizationSiteDTOConverter organizationSiteDTOConvertor;
     private List<GmSubscriptionsDTO> list;
     private List<GlBankDTO> glBankList;
     private GlBankDTOConverter glBankConverter;
@@ -81,26 +62,20 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
     // EJBs
     @EJB
     private GmSubscriptionsService gmSubscriptionsService;
-    @EJB
-    private OrganizationSiteService organizationSiteService;
+   
     @EJB
     private GmItemService gmItemService;
     @EJB
     private GmGlobalService gmGlobalService;
     @EJB
     private ReportManagementService reportManagementService;
-    @EJB
-    private AutoCompleteService autoCompleteService;
+  
+    
 
     @EJB
     private GmMovementService gmMovementService;
 
-    private BigDecimal remain;
-    private String filename;
-    private String file;
-    private String host;
-    private FileUploadController fileUploadController;
-    private GmMovementDTO gmMovement;
+    
 
     @Override
     @PostConstruct
@@ -127,7 +102,6 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
                 updateMovementdata();
             } else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("editGmSubscriptions")) {
                 getGmSubscriptionsDTO().setShowCustomerDate(Boolean.FALSE);
-
                 getGmSubscriptionsDTO().setIsEdit(Boolean.TRUE);
                 fillInvInvoiceDTO();
                 fillDefaultList();
@@ -135,7 +109,7 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
                 fillInvOrgan(); 
             }
             else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("editorganization")) {
-                getOrganizationSiteId().setIsEdited(Boolean.TRUE);
+                getInvOrganizationSiteDTOSelected().setIsEdited(Boolean.TRUE);
 
                 fillClientDTO();
             } else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("Tamded")) {
@@ -154,45 +128,40 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
 
     public void updatedata() {
         Calendar c = Calendar.getInstance();
-        gmSubscriptionsDTO.setValue(getGmItemDTOSelected().getCost());
+        getGmSubscriptionsDTO().setValue(getGmItemDTOSelected().getCost());
         if (getGmItemDTOSelected().getPeriod() != null) {
             if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("Tamded")) {
                 if (getGmSubscriptionsDTOold() != null && new Date().compareTo(getGmSubscriptionsDTOold().getDateAfterTagmeed()) != 1) {
                     c.setTime(getGmSubscriptionsDTOold().getDateAfterTagmeed());
                     c.add(Calendar.DAY_OF_MONTH, getGmItemDTOSelected().getPeriod());
-                    gmSubscriptionsDTO.setEndDate(c.getTime());
+                     getGmSubscriptionsDTO().setEndDate(c.getTime());
                     c.setTime(getGmSubscriptionsDTOold().getDateAfterTagmeed());
                     c.add(Calendar.DAY_OF_MONTH, 1);
-                    gmSubscriptionsDTO.setStartDate(c.getTime());
+                     getGmSubscriptionsDTO().setStartDate(c.getTime());
                 } else {
-                    gmSubscriptionsDTO.setDate(new Date());
-                    gmSubscriptionsDTO.setStartDate(new Date());
-                    c.setTime(gmSubscriptionsDTO.getStartDate());
+                     getGmSubscriptionsDTO().setDate(new Date());
+                     getGmSubscriptionsDTO().setStartDate(new Date());
+                    c.setTime( getGmSubscriptionsDTO().getStartDate());
                     c.add(Calendar.DAY_OF_MONTH, getGmItemDTOSelected().getPeriod());
-                    gmSubscriptionsDTO.setEndDate(c.getTime());
+                     getGmSubscriptionsDTO().setEndDate(c.getTime());
                 }
             } else {
-                gmSubscriptionsDTO.setDate(new Date());
-                gmSubscriptionsDTO.setStartDate(new Date());
-                c.setTime(gmSubscriptionsDTO.getStartDate());
+                 getGmSubscriptionsDTO().setDate(new Date());
+                 getGmSubscriptionsDTO().setStartDate(new Date());
+                c.setTime( getGmSubscriptionsDTO().getStartDate());
                 c.add(Calendar.DAY_OF_MONTH, getGmItemDTOSelected().getPeriod());
-                gmSubscriptionsDTO.setEndDate(c.getTime());
+                 getGmSubscriptionsDTO().setEndDate(c.getTime());
             }
 
         }
-        gmSubscriptionsDTO.setGmItemDTO(getGmItemDTOSelected());
-        gmSubscriptionsDTO.setTaxFlag(Boolean.TRUE);
-        gmSubscriptionsDTO.setTaxvalue(gmSubscriptionsDTO.getValue().multiply(new BigDecimal(0.15)).setScale(2, RoundingMode.HALF_UP));
-        gmSubscriptionsDTO.setFinalNet(gmSubscriptionsDTO.getValue().add(gmSubscriptionsDTO.getTaxvalue()).setScale(2, RoundingMode.HALF_UP));
+         getGmSubscriptionsDTO().setGmItemDTO(getGmItemDTOSelected());
+         getGmSubscriptionsDTO().setTaxFlag(Boolean.TRUE);
+         getGmSubscriptionsDTO().setTaxvalue( getGmSubscriptionsDTO().getValue().multiply(new BigDecimal(0.15)).setScale(2, RoundingMode.HALF_UP));
+         getGmSubscriptionsDTO().setFinalNet( getGmSubscriptionsDTO().getValue().add( getGmSubscriptionsDTO().getTaxvalue()).setScale(2, RoundingMode.HALF_UP));
 
     }
 
-    public void updateMovementdata() {
-        getGmMovement().getCustomerIdFrom().setId((Integer) getContext().getSessionMap().get("gmCustomerIdSelected"));
-        getGmMovement().setSubscriptionIdFrom(gmSubscriptionsService.getValidGmSubscriptionsDTOByCustomerId(getGmMovement().getCustomerIdFrom().getId()));
-        getGmMovement().setCustomerIdFrom(organizationSiteService.findOrganizationSiteDTOById(getGmMovement().getCustomerIdFrom().getId()));
-        getGmMovement().setDays(Utility.calcDaysBetween(getGmMovement().getSubscriptionIdFrom().getEndDate(), getGmMovement().getDate()));
-    }
+ 
 
     public void fillDefaultList() {
         getInvOrganizationSiteDTOList();
@@ -223,13 +192,10 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
     }
 
     public void fillInvInvoiceDTO() {
-        getGmSubscriptionsDTO().setId((Integer) getContext().getSessionMap().get("TamdedId"));
+        getGmSubscriptionsDTO().setId((Integer) getContext().getSessionMap().get("gmSubscriptionsIdSelected"));
         setGmSubscriptionsDTO(gmSubscriptionsService.findGmSubscriptionsDTOById(getGmSubscriptionsDTO()));
     }
-     public void fillInvOrgan() {
-        getOrganizationSiteId().setId((Integer) getContext().getSessionMap().get("invOrganizationSiteDTO"));
-        setOrganizationSiteId(organizationSiteService.findOrganizationSiteDTOById(getOrganizationSiteId().getId()));
-    }
+   
 
     public void fillGmSubscribtionOld() {
         setGmSubscriptionsDTOold(new GmSubscriptionsDTO());
@@ -237,10 +203,7 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
         setGmSubscriptionsDTOold(gmSubscriptionsService.findGmSubscriptionsDTOById(getGmSubscriptionsDTOold()));
     }
 
-    public void fillClientDTO() {
-        getOrganizationSiteId().setId((Integer) getContext().getSessionMap().get("invOrganizationSiteDTOSelected"));
-        setOrganizationSiteId(organizationSiteService.findOrganizationSiteDTOById(getOrganizationSiteId().getId()));
-    }
+  
 
     public void fillResumeClientDTO() {
 
@@ -261,20 +224,9 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
         return "";
     }
 
-    public List<InvOrganizationSiteDTO> completeCustomerFrom(String query) {
-        invOrganizationSiteDTOList = autoCompleteService.autoCompleteOrganizationSiteDTO(getUserData().getUserBranch().getId(), Boolean.TRUE, 0, query);
-        organizationSiteDTOConvertor = new InvOrganizationSiteDTOConverter(invOrganizationSiteDTOList);
-        return invOrganizationSiteDTOList;
+ 
 
-    }
-
-    public void addNewCustomer2() {
-        getGmSubscriptionsDTO().setOrganizationSiteId(organizationSiteService.addNewCustomer(getOrganizationSiteId(), getInvOrganizationSiteDTOList(), getUserData().getUser()));
-        getGmSubscriptionsDTO().setShowCustomerDate(Boolean.FALSE);
-        saveImage();
-        exit("../gmsubscriptionstatue/gmsubscriptionstatue.xhtml");
-
-    }
+  
 
     public void leaveScreen() {
         if (getUri().contains("gmregistration")) {
@@ -444,26 +396,8 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
         }
     }
 
-    public String updateImage() {
 
-        if (getOrganizationSiteId().getClientImage() != null && !getOrganizationSiteId().getClientImage().isEmpty()) {
-            organizationSiteService.updateImage(getGmSubscriptionsDTO().getOrganizationSiteId().getId(), getOrganizationSiteId().getClientImage());
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "تم التسجيل بنجاح", "تم التسجيل بنجاح"));
-        } else {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "خطأ", getOrganizationSiteId().getMsg()));
-        }
-        return "";
-    }
-
-    public String saveImage() {
-        if (getFile() != null && !getFile().isEmpty()) {
-            byte[] byteFile = Base64.decodeBase64(getFile().substring(getFile().indexOf("base64,") + 6));
-            String imageName = getFileUploadController().upload(byteFile);
-            getOrganizationSiteId().setClientImage(imageName);
-            updateImage();
-        }
-        return "";
-    }
+  
 
     public void reset() {
         try {
@@ -474,55 +408,7 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
         }
     }
 
-    /**
-     * @return the remain
-     */
-    public BigDecimal getRemain() {
-        if (remain == null) {
-            remain = BigDecimal.ZERO;
-        }
-        return remain;
-    }
 
-    /**
-     * @param remain the remain to set
-     */
-    public void setRemain(BigDecimal remain) {
-        this.remain = remain;
-    }
-
-    /**
-     * @return the organizationSiteDTOConvertor
-     */
-    public InvOrganizationSiteDTOConverter getOrganizationSiteDTOConvertor() {
-        return organizationSiteDTOConvertor;
-    }
-
-    /**
-     * @param organizationSiteDTOConvertor the organizationSiteDTOConvertor to
-     * set
-     */
-    public void setOrganizationSiteDTOConvertor(InvOrganizationSiteDTOConverter organizationSiteDTOConvertor) {
-        this.organizationSiteDTOConvertor = organizationSiteDTOConvertor;
-    }
-
-    /**
-     * @return the invOrganizationSiteDTOList
-     */
-    public List<InvOrganizationSiteDTO> getInvOrganizationSiteDTOList() {
-        if (invOrganizationSiteDTOList == null) {
-            setInvOrganizationSiteDTOList(organizationSiteService.getorganizationSiteByBranchIdDTO(getUserlogin().getBranchId().getId(), true, 0));
-            setOrganizationSiteDTOConvertor(new InvOrganizationSiteDTOConverter(invOrganizationSiteDTOList));
-        }
-        return invOrganizationSiteDTOList;
-    }
-
-    /**
-     * @param invOrganizationSiteDTOList the invOrganizationSiteDTOList to set
-     */
-    public void setInvOrganizationSiteDTOList(List<InvOrganizationSiteDTO> invOrganizationSiteDTOList) {
-        this.invOrganizationSiteDTOList = invOrganizationSiteDTOList;
-    }
 
     /**
      * @return the glBankList
@@ -554,101 +440,6 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
      */
     public void setGlBankConverter(GlBankDTOConverter glBankConverter) {
         this.glBankConverter = glBankConverter;
-    }
-
-    /**
-     * @return the gmSubscriptionsDTO
-     */
-    public GmSubscriptionsDTO getGmSubscriptionsDTO() {
-        if (gmSubscriptionsDTO == null) {
-            gmSubscriptionsDTO = new GmSubscriptionsDTO();
-        }
-        return gmSubscriptionsDTO;
-    }
-
-    /**
-     * @param gmSubscriptionsDTO the gmSubscriptionsDTO to set
-     */
-    public void setGmSubscriptionsDTO(GmSubscriptionsDTO gmSubscriptionsDTO) {
-        this.gmSubscriptionsDTO = gmSubscriptionsDTO;
-    }
-
-    /**
-     * @return the organizationSiteId
-     */
-    public InvOrganizationSiteDTO getOrganizationSiteId() {
-        if (organizationSiteId == null) {
-            setOrganizationSiteId(new InvOrganizationSiteDTO());
-        }
-        return organizationSiteId;
-    }
-
-    /**
-     * @return the filename
-     */
-    public String getFilename() {
-        return filename;
-    }
-
-    /**
-     * @param filename the filename to set
-     */
-    public void setFilename(String filename) {
-        this.filename = filename;
-    }
-
-    /**
-     * @return the file
-     */
-    public String getFile() {
-        return file;
-    }
-
-    /**
-     * @param file the file to set
-     */
-    public void setFile(String file) {
-        this.file = file;
-    }
-
-    /**
-     * @return the host
-     */
-    public String getHost() {
-        HttpServletRequest request = (HttpServletRequest) getContext().getRequest();
-        setHost(request.getRequestURL().substring(0, request.getRequestURL().indexOf("faces/")).concat("images/"));
-        return host;
-    }
-
-    /**
-     * @param host the host to set
-     */
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    /**
-     * @return the fileUploadController
-     */
-    public FileUploadController getFileUploadController() {
-        if (fileUploadController == null) {
-            fileUploadController = new FileUploadController();
-        }
-        return fileUploadController;
-    }
-
-    /**
-     * @param fileUploadController the fileUploadController to set
-     */
-    public void setFileUploadController(FileUploadController fileUploadController) {
-        this.fileUploadController = fileUploadController;
-    }
-
-    /**
-     * @param organizationSiteId the organizationSiteId to set
-     */
-    public void setOrganizationSiteId(InvOrganizationSiteDTO organizationSiteId) {
-        this.organizationSiteId = organizationSiteId;
     }
 
     /**
@@ -696,22 +487,7 @@ public class GmSubscriptionsFormDTOMB extends BaseFormBean {
         this.gmMovementService = gmMovementService;
     }
 
-    /**
-     * @return the gmMovement
-     */
-    public GmMovementDTO getGmMovement() {
-        if (gmMovement == null) {
-            gmMovement = new GmMovementDTO();
-        }
-        return gmMovement;
-    }
-
-    /**
-     * @param gmMovement the gmMovement to set
-     */
-    public void setGmMovement(GmMovementDTO gmMovement) {
-        this.gmMovement = gmMovement;
-    }
+  
 
     /**
      * @return the gmSubscriptionsDTOold

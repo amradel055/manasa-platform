@@ -59,7 +59,7 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
     private List<IsagUser> users = new ArrayList<>();
     private GlBankDTOConverter glBankConverter;
     private List<GlBankDTO> glBankList;
-
+    private List<GlBankDTO> glBankListSelected;
     private IsagUserConverter isagUserConverter;
     private List<IsagUser> isagUserList;
 
@@ -86,7 +86,7 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
     private AccountsSystemSettings accountsSystemSettings;
     private CompanyActivityClassEnum companyActivity;
     private SubAccountSummaryReport glBankTransactionTypeSeclected;
-    
+
     private CashAccountSettlementBean accountSettlementBean;
 
     @EJB
@@ -174,7 +174,8 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
         GlYearDTO glYearDTO = new GlYearDTO();
         glYearDTO.setId(getGlYearSelection().getId());
         getCashAccountSettlementSearchBean().setGlYearSelected(glYearDTO);
-        setAccountSettlementBean(cashAccountSettlmentService.search(getCashAccountSettlementSearchBean()));
+        fillBankList();
+        setAccountSettlementBean(cashAccountSettlmentService.searchNew(getCashAccountSettlementSearchBean()));
     }
 
     public void search2() {
@@ -188,6 +189,8 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
                 openingBalanceMap.put(gb.getId(), BigDecimal.ZERO);
             }
         }
+        fillBankList();
+        
 
         for (Integer key : glBankMap.keySet()) {
             if (key >= cashAccountSettlementSearchBean.getGlBankFrom().getId() && key <= cashAccountSettlementSearchBean.getGlBankTo().getId()) {
@@ -300,6 +303,24 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
 
     }
 
+    private void fillBankList() {
+        StringBuilder builder = null;
+        
+        for (GlBankDTO gb : glBankListSelected) {
+            
+            if (builder == null) {
+                builder = new StringBuilder();
+                builder.append(gb.getId());
+                
+            } else {
+                
+                builder.append(",").append(gb.getId());
+            }
+        }
+        
+        cashAccountSettlementSearchBean.setGlBankIdSelected(builder.toString());
+    }
+
     public void addOpeningBalance(SubAccountSummaryReport cashAccountSettlment) {
         openingBalance = BigDecimal.ZERO;
         if (cashAccountSettlment.getBankId() != null && distinctBankId.compareTo(cashAccountSettlment.getBankId()) != 0) {
@@ -371,10 +392,10 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
         }
         if (builder.length() != 0 && builder != null) {
             List<GlBankDTO> glBankList = glBankService.findGlBankDTOList(builder);
-            
+
             if (glBankList != null && !glBankList.isEmpty()) {
 
-                for ( GlBankDTO bankDTO : glBankList) {
+                for (GlBankDTO bankDTO : glBankList) {
                     BigDecimal debitOpenBalance = cashAccountSettlmentService.findOpeningBalancesForSpecificCashAccount(cashAccountSettlementSearchBean, bankDTO.getId(), 1);
                     BigDecimal creditOpenBalance = cashAccountSettlmentService.findOpeningBalancesForSpecificCashAccount(cashAccountSettlementSearchBean, bankDTO.getId(), 0);
                     openingBalance = (debitOpenBalance != null ? debitOpenBalance : BigDecimal.ZERO).subtract(creditOpenBalance != null ? creditOpenBalance : BigDecimal.ZERO);
@@ -483,7 +504,7 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
         }
 
     }
-    
+
     public void exportPDFNew(ActionEvent actionEvent) {
 //        search();
         try {
@@ -495,7 +516,7 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
         }
 
     }
-    
+
     public HashMap prepareReportNew() {
 
         Map<String, String> userDDs = getUserData().getUserDDs();
@@ -540,7 +561,6 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
         }
         return hashMap;
     }
-
 
     @Override
     public void exportExcel(ActionEvent actionEvent) throws JRException, IOException {
@@ -953,6 +973,20 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
      */
     public void setAccountSettlementBean(CashAccountSettlementBean accountSettlementBean) {
         this.accountSettlementBean = accountSettlementBean;
+    }
+
+    /**
+     * @return the glBankListSelected
+     */
+    public List<GlBankDTO> getGlBankListSelected() {
+        return glBankListSelected;
+    }
+
+    /**
+     * @param glBankListSelected the glBankListSelected to set
+     */
+    public void setGlBankListSelected(List<GlBankDTO> glBankListSelected) {
+        this.glBankListSelected = glBankListSelected;
     }
 
 }
