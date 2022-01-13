@@ -2,9 +2,6 @@ package com.isag.businessservice.reports.searchBean;
 
 import com.isag.dto.GlBankDTO;
 import com.isag.dto.GlYearDTO;
-import com.isag.entity.GlBank;
-import com.isag.entity.GlYear;
-import com.isag.entity.IsagUser;
 import com.isag.entity.Symbol;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -26,6 +23,8 @@ public class SubAccountSummarySearchBean implements Serializable {
     private String accClass;
     private GlBankDTO glBankFrom;
     private GlBankDTO glBankTo;
+    
+    
     private Integer type;
 
     private Integer orderBy;
@@ -45,7 +44,7 @@ public class SubAccountSummarySearchBean implements Serializable {
 
     private GlYearDTO glYearSelected;
     private List<GlBankDTO> glBankDTOListSelected;
-
+    private String glBankIdSelected ;
     public Date getDateFrom() {
         return dateFrom;
     }
@@ -402,5 +401,20 @@ public class SubAccountSummarySearchBean implements Serializable {
     public void setGlBankDTOListSelected(List<GlBankDTO> glBankDTOListSelected) {
         this.glBankDTOListSelected = glBankDTOListSelected;
     }
+
+    /**
+     * @return the glBankIdSelected
+     */
+    public String getGlBankIdSelected() {
+        return glBankIdSelected;
+    }
+
+    /**
+     * @param glBankIdSelected the glBankIdSelected to set
+     */
+    public void setGlBankIdSelected(String glBankIdSelected) {
+        this.glBankIdSelected = glBankIdSelected;
+    }
+
 
 }
