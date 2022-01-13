@@ -188,6 +188,9 @@ public class SubAccountSummaryReport implements Serializable {
      * @return the totalCredit
      */
     public BigDecimal getTotalCredit() {
+        if(totalCredit == null){
+            totalCredit = BigDecimal.ZERO;
+        }
         return totalCredit;
     }
 

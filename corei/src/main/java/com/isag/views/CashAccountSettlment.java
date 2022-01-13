@@ -67,6 +67,9 @@ public class CashAccountSettlment implements Serializable {
     }
 
     public BigDecimal getValue() {
+          if(value == null){
+        value = BigDecimal.ZERO ;
+        }
         return value;
     }
 
@@ -75,6 +78,9 @@ public class CashAccountSettlment implements Serializable {
     }
 
     public BigDecimal getValueLocal() {
+        if(valueLocal == null){
+        valueLocal = BigDecimal.ZERO ;
+        }
         return valueLocal;
     }
 
