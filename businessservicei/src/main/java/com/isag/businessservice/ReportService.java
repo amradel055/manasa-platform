@@ -26,5 +26,7 @@ public interface ReportService {
     public List<resualtDTO> getAllFreezeByDate(searchDTO search);
 
     public List<resualtDTO> getAllDeletedSubsByDate(searchDTO search);
+    
+    public resualtDTO findElresultById(resualtDTO reseualtdto);
 
 }
