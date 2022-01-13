@@ -4,18 +4,24 @@
  * and open the template in the editor.
  */
 package com.igma.gmsubscriptions;
-
 import com.isag.businessservice.ReportService;
 import com.isag.dto.resualtDTO;
 import com.isag.dto.searchDTO;
 import com.isag.entity.search;
 import com.isag.isag.BaseFormBean;
+import com.isag.print.IReportService;
+import com.isag.print.IReportServiceImpl;
+import java.io.IOException;
 import java.math.MathContext;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.event.ActionEvent;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
+import net.sf.jasperreports.engine.JRException;
 
 /**
  *
@@ -31,9 +37,35 @@ public class ReportMB extends BaseFormBean {
     private resualtDTO resualtDTO;
     private searchDTO searchdto;
     private List<resualtDTO> resultList;
-    
-    
+    private resualtDTO resultDtoSelected ;
+    IReportService iReportService = new IReportServiceImpl();
 
+//       public void printList() {
+//    
+//        if (getUri().contains("gmreports") || getUri().contains("gmsubscriptionsreport")) {
+//            getResualtDTO().setId((Integer) getContext().getSessionMap().get("resultDtoSelected"));
+//            setResualtDTO(reportservice.findElresultById(getResualtDTO(), getUserData().getUser()));
+//        print();
+//    }
+//       }
+  public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {
+//        search();
+        String reportName = "salesReceiptCashGMReport.jasper";
+        fillReport(prepareReport(), getUserData().getReportPath() + reportName, getResultList(), "pdf");
+    }
+
+    public HashMap prepareReport() {
+        Map<String, String> userDDs = getUserData().getUserDDs();
+        HashMap hashMap = new HashMap();
+        hashMap.put("datefrom", searchdto.getDateFrom());
+        hashMap.put("dateto", searchdto.getDateTo());
+         hashMap.put("sumValue", resualtDTO.getSumValue());
+
+   
+
+        return hashMap;
+    }
+   
     public void search() {
         searchdto.setBranchId(getUserData().getUserBranch().getId());
         resultList = reportservice.getAllValidSubsByDate(searchdto);
@@ -137,5 +169,24 @@ public class ReportMB extends BaseFormBean {
     public String getScreenName() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    /**
+     * @return the resultDtoSelected
+     */
+    public resualtDTO getResultDtoSelected() {
+         if (resultDtoSelected == null) {
+             setResultDtoSelected(reportservice.findElresultById(getResualtDTO()));
+        }
+        return resultDtoSelected;
+    }
+
+    /**
+     * @param resultDtoSelected the resultDtoSelected to set
+     */
+    public void setResultDtoSelected(resualtDTO resultDtoSelected) {
+        this.resultDtoSelected = resultDtoSelected;
+    }
+
+ 
 
 }

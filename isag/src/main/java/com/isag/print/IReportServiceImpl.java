@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 package com.isag.print;
-
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.common.BitMatrix;
