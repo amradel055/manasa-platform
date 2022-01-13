@@ -8,6 +8,7 @@ package com.toby.businessservice.report;
 import com.toby.businessservice.GlBankService;
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
 import com.toby.businessservice.reports.searchBean.SubAccountSummarySearchBean;
+import com.toby.comparatorsVars.CashAccountSettlmentComparator1;
 import com.toby.comparatorsVars.CashAccountSettlmentViewComparator;
 import com.toby.core.GenericDAO;
 import com.toby.dto.GlBankDTO;
@@ -20,6 +21,7 @@ import com.toby.entity.InvOrganizationSite;
 import com.toby.entity.InvPurchaseInvoiceDetail;
 import com.toby.entity.InvReturnPurchase;
 import com.toby.views.CashAccountSettlementBean;
+import com.toby.views.CashAccountSettlment;
 import com.toby.views.CashAccountSettlmentView;
 import com.toby.views.NetView;
 import com.toby.views.SubAccountSummaryReport;
@@ -30,6 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -1368,5 +1371,660 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
             }
         }
     }
+    
+    @Override
+    public CashAccountSettlementBean searchNew(SubAccountSummarySearchBean cashAccountSettlementSearchBean) {
+        if (cashAccountSettlementSearchBean.getGlBankIdSelected() != null && !cashAccountSettlementSearchBean.getGlBankIdSelected().isEmpty()) {
+            CashAccountSettlementBean cashAccountSettlementBean = new CashAccountSettlementBean();
+            cashAccountSettlementBean.setGlBankCopyMap(new HashMap<>());
+            if (cashAccountSettlementSearchBean.getGlBankDTOListSelected() != null && !cashAccountSettlementSearchBean.getGlBankDTOListSelected().isEmpty()) {
+                for (GlBankDTO gb : cashAccountSettlementSearchBean.getGlBankDTOListSelected()) {
+                    cashAccountSettlementBean.getGlBankMap().put(gb.getId(), gb);
+                    cashAccountSettlementBean.getTotalForDebitMap().put(gb.getId(), BigDecimal.ZERO);
+                    cashAccountSettlementBean.getTotalForCreditMap().put(gb.getId(), BigDecimal.ZERO);
+                    cashAccountSettlementBean.getTotalForBalanceMap().put(gb.getId(), BigDecimal.ZERO);
+                    cashAccountSettlementBean.getOpeningBalanceMap().put(gb.getId(), BigDecimal.ZERO);
+                    cashAccountSettlementBean.getGlBankCopyMap().put(gb.getId(), gb);
+                    System.out.println("Key = " + gb.getId());
+                }
+            }
+
+            cashAccountSettlementBean.setCashAccountSettlementReports(new ArrayList<>());
+            cashAccountSettlementBean.setCashAccountSettlementOpeningBalanceList(new ArrayList<>());
+            cashAccountSettlementBean.setCashAccountSettlementListNew(findAllCashAccountSettlmentNew(cashAccountSettlementSearchBean)); // here
+            if (cashAccountSettlementSearchBean.getOrderBy() == 1) {
+                cashAccountSettlementBean.getCashAccountSettlementListNew().sort(new CashAccountSettlmentComparator1());
+            }
+
+            cashAccountSettlementBean.setTotalDebit(BigDecimal.ZERO);
+            cashAccountSettlementBean.setTotalCredit(BigDecimal.ZERO);
+
+            BigDecimal debit = BigDecimal.ZERO;
+            BigDecimal credit = BigDecimal.ZERO;
+            BigDecimal balance = BigDecimal.ZERO;
+            SubAccountSummaryReport cashAccountSettlment;
+            cashAccountSettlementBean.setDistinctBankId(0);
+            int i = 0 ;
+            for (CashAccountSettlment cashAccountSettlmentView : cashAccountSettlementBean.getCashAccountSettlementListNew()) {
+
+                cashAccountSettlment = new SubAccountSummaryReport();
+                cashAccountSettlment.setId(cashAccountSettlmentView.getBanktransactionId());
+                cashAccountSettlment.setBankId(cashAccountSettlmentView.getBankId());
+                cashAccountSettlment.setBankName(cashAccountSettlmentView.getName());
+                cashAccountSettlment.setDate(cashAccountSettlmentView.getDate() != null ? cashAccountSettlmentView.getDate() : null);
+                cashAccountSettlment.setRemark(cashAccountSettlmentView.getRemark() != null ? cashAccountSettlmentView.getRemark() : null);
+                cashAccountSettlment.setRemark2(cashAccountSettlmentView.getRemark2() != null ? cashAccountSettlmentView.getRemark2() : null);
+                cashAccountSettlment.setCode(cashAccountSettlmentView.getCode() != null ? Integer.valueOf(cashAccountSettlmentView.getCode()) : null);
+                cashAccountSettlment.setCurrencyName(cashAccountSettlmentView.getCurrencyName() != null ? cashAccountSettlmentView.getCurrencyName() : null);
+                cashAccountSettlment.setCurrencyCode(cashAccountSettlmentView.getCurrencyCode() != null ? cashAccountSettlmentView.getCurrencyCode() : null);
+                cashAccountSettlment.setSerial(cashAccountSettlmentView.getSerial() != null ? cashAccountSettlmentView.getSerial() + "" : null);
+//                cashAccountSettlment.setTransactionTypeNumber(cashAccountSettlmentView.getTypeId());
+                cashAccountSettlment.setCreatedBy(cashAccountSettlmentView.getCreatedBy());
+//                cashAccountSettlment.setCustomerName(cashAccountSettlmentView.getCustomerName());
+//                cashAccountSettlment.setCustomerCode(cashAccountSettlmentView.getCustomerCode());
+//                cashAccountSettlment.setInvoiceNumber(cashAccountSettlmentView.getInvoiceNumber());
+
+                if (cashAccountSettlmentView.getStatus() != null) {
+                    if (cashAccountSettlementSearchBean.getCurrencyType() == 1) {
+
+                        if (cashAccountSettlmentView.getStatus() == 1) {
+                            cashAccountSettlment.setDebitAmount(cashAccountSettlmentView.getValue().setScale(2, RoundingMode.UP));
+                            cashAccountSettlment.setTransactionType(cashAccountSettlmentView.getTypeName());
+
+                        } else if (cashAccountSettlmentView.getStatus() == 0) {
+                            cashAccountSettlment.setCreditAmount(cashAccountSettlmentView.getValue().setScale(2, RoundingMode.UP));
+                            cashAccountSettlment.setTransactionType(cashAccountSettlmentView.getTypeName());
+
+                        }
+                    } else {
+                        if (cashAccountSettlmentView.getStatus() == 1) {
+                            cashAccountSettlment.setDebitAmount(cashAccountSettlmentView.getValueLocal().setScale(2, RoundingMode.UP));
+                            cashAccountSettlment.setTransactionType(cashAccountSettlmentView.getTypeName());
+                        } else if (cashAccountSettlmentView.getStatus() == 0) {
+                            cashAccountSettlment.setCreditAmount(cashAccountSettlmentView.getValueLocal().setScale(2, RoundingMode.UP));
+                            cashAccountSettlment.setTransactionType(cashAccountSettlmentView.getTypeName());
+
+                        }
+                    }
+                }
+                addOpeningBalanceNew(cashAccountSettlment, cashAccountSettlementBean, cashAccountSettlementSearchBean);
+                debit = cashAccountSettlment.getDebitAmount() != null ? cashAccountSettlment.getDebitAmount().setScale(2, RoundingMode.UP) : BigDecimal.ZERO;
+                credit = cashAccountSettlment.getCreditAmount() != null ? cashAccountSettlment.getCreditAmount().setScale(2, RoundingMode.UP) : BigDecimal.ZERO;
+                balance = cashAccountSettlementBean.getTotalForBalanceMap().get(cashAccountSettlment.getBankId());
+                if (balance == null) {
+                    balance = BigDecimal.ZERO;
+                }
+                balance = balance.add(debit.subtract(credit));
+                cashAccountSettlementBean.getTotalForBalanceMap().put(cashAccountSettlment.getBankId(), balance.setScale(2, RoundingMode.UP));
+                cashAccountSettlment.setBalance(balance.setScale(2, RoundingMode.UP));
+
+                fillDebitAndCreditTotalsNew(cashAccountSettlment, cashAccountSettlementBean, debit, credit);
+                cashAccountSettlementBean.getCashAccountSettlementReports().add(cashAccountSettlment);
+                System.out.println(new Date());
+                System.out.println(i++);
+            }
+            calculateExceedDateOpeningBalanceNew(cashAccountSettlementBean, cashAccountSettlementSearchBean);
+            if (cashAccountSettlementBean.getCashAccountSettlementReports() != null && !cashAccountSettlementBean.getCashAccountSettlementReports().isEmpty()) {
+                for (SubAccountSummaryReport cash : cashAccountSettlementBean.getCashAccountSettlementReports()) {
+                    cash.setTotalCredit(cashAccountSettlementBean.getTotalForCreditMap() == null ? BigDecimal.ZERO : cashAccountSettlementBean.getTotalForCreditMap().get(cash.getBankId()).setScale(2, RoundingMode.UP));
+                    cash.setTotalDebit(cashAccountSettlementBean.getTotalForDebitMap() == null ? BigDecimal.ZERO : cashAccountSettlementBean.getTotalForDebitMap().get(cash.getBankId()).setScale(2, RoundingMode.UP));
+                    cash.setOpeningBalance(cashAccountSettlementBean.getOpeningBalanceMap() == null ? BigDecimal.ZERO : cashAccountSettlementBean.getOpeningBalanceMap().get(cash.getBankId()).setScale(2, RoundingMode.UP));
+                }
+            }
+            cashAccountSettlementBean.setCashAccountSettlementList(null);
+            cashAccountSettlementBean.setCashAccountSettlementListNew(null);
+            cashAccountSettlementBean.setOpeningBalanceMap(null);
+            cashAccountSettlementBean.setTotalForBalanceMap(null);
+            cashAccountSettlementBean.setTotalForCreditMap(null);
+            cashAccountSettlementBean.setTotalForDebitMap(null);
+            return cashAccountSettlementBean;
+        }
+        return null;
+    }
+    
+        public List<CashAccountSettlment> findAllCashAccountSettlmentNew(SubAccountSummarySearchBean cashAccountSettlementSearchBean) {
+        List<CashAccountSettlment> list = new ArrayList<>();
+        Map<String, Object> params = new HashMap();
+        params.put("branchId", cashAccountSettlementSearchBean.getBranchId());
+        String sql = createSQL(cashAccountSettlementSearchBean, false);
+        List<Object[]> res = dao.executeNativeQuery(sql.toString());
+        for (Object[] object : res) {
+            CashAccountSettlment cashAccountSettlmentView = new CashAccountSettlment();
+            cashAccountSettlmentView.setCreatedBy(object[0] != null ? (String) object[0] : null);
+            cashAccountSettlmentView.setBankId(object[1] != null ? (Integer) object[1] : null);
+//            cashAccountSettlmentView.setPaymentType(object[2] != null ? (Integer) object[2] : null);
+            cashAccountSettlmentView.setDate(object[3] != null ? (Date) object[3] : null);
+            cashAccountSettlmentView.setSerial(object[4] != null ? BigInteger.valueOf(Long.valueOf(object[4].toString())) : null);
+            cashAccountSettlmentView.setValue(object[5] != null ? (BigDecimal) object[5] : null);
+            cashAccountSettlmentView.setValueLocal(object[6] != null ? (BigDecimal) object[6] : null);
+            cashAccountSettlmentView.setRemark(object[7] != null ? (String) object[7] : null);
+            cashAccountSettlmentView.setRemark2(object[8] != null ? (String) object[8] : null); 
+            cashAccountSettlmentView.setName(object[9] != null ? (String) object[9] : null);
+            cashAccountSettlmentView.setCode(object[10] != null ? object[10].toString() : null);
+            cashAccountSettlmentView.setCurrencyName(object[11] != null ? (String) object[11] : null);
+            cashAccountSettlmentView.setCurrencyCode(object[12] != null ? (String) object[12] : null);
+            cashAccountSettlmentView.setStatus(object[13] != null ? Integer.valueOf(object[13].toString())  : null);
+            cashAccountSettlmentView.setContractSerial(object[14] != null ? (String) object[14] : null);
+            cashAccountSettlmentView.setTypeName(object[15] != null ? (String) object[15] : null);
+            cashAccountSettlmentView.setDocumentSerial(object[16] != null ? (Integer) object[16] : null);
+            list.add(cashAccountSettlmentView);
+        }
+        return list;
+    }
+            public String createSQL(SubAccountSummarySearchBean cashAccountSettlementSearchBean, boolean isOpenningBalance) {
+        StringBuilder query = null;
+        String dateFrom = new SimpleDateFormat("yyyy-MM-dd").format(cashAccountSettlementSearchBean.getDateFrom());
+        String dateTo = new SimpleDateFormat("yyyy-MM-dd").format(cashAccountSettlementSearchBean.getDateTo());
+
+        if (cashAccountSettlementSearchBean.getGlBankIdSelected() != null && !cashAccountSettlementSearchBean.getGlBankIdSelected().isEmpty()) {
+            if ((cashAccountSettlementSearchBean.getTransactionType() == null || cashAccountSettlementSearchBean.getTransactionType() == 0) && cashAccountSettlementSearchBean.getType() == 3
+                    && cashAccountSettlementSearchBean.getSerialFrom() == null && cashAccountSettlementSearchBean.getSerialTo() == null) {
+                query = new StringBuilder();
+                query.append("SELECT \n"
+                        + "        `i`.`name` AS `createdBy`,\n"
+                        + "        `gb`.`id` AS `bankId`,\n"
+                        + "        0 AS `paymentType`,\n"
+                        + "        `gb`.`date_openinng_balance` AS `date`,\n"
+                        + "        CAST(`gb`.`code` AS SIGNED) AS `serial`,\n"
+                        + "        `gb`.`openinng_balance` AS `value`,\n"
+                        + "        `gb`.`openinng_balance` AS `value_local`,\n"
+                        + "        '' AS `remark`,\n"
+                        + "        '' AS `remark2`,\n"
+                        + "        `gb`.`name` AS `name`,\n"
+                        + "        `gb`.`code` AS `code`,\n"
+                        + "        `c`.`name` AS `currencyName`,\n"
+                        + "        `c`.`code` AS `currencyCode`,\n"
+                        + "        CAST(1 AS SIGNED) AS `status`,\n"
+                        + "        '' AS `contractSerial`,\n"
+                        + "        'رصيد افتتاحي' AS `type_name`,\n"
+                        + "        NULL AS `documentSerial`\n"
+                        + "    FROM\n"
+                        + "        (( `gl_bank` `gb`\n"
+                        + "        LEFT JOIN `currency` `c` ON ((`c`.`id` = `gb`.`currency_id`)))\n"
+                        + "        LEFT JOIN `toby_user` `i` ON ((`i`.`id` = `gb`.`created_by`)))\n"
+                        + "    WHERE\n"
+                        + "        ((`gb`.`date_openinng_balance` IS NOT NULL)\n"
+                        + "            AND (`gb`.`openinng_balance` > 0)) \n"
+                        + "            AND `gb`.`id` in (").append(cashAccountSettlementSearchBean.getGlBankIdSelected()).append(")");
+                if (isOpenningBalance) {
+                    query.append("            AND `gb`.`date_openinng_balance` < '").append(dateFrom).append("'");
+                } else {
+                    query.append("            AND `gb`.`date_openinng_balance` >= '").append(dateFrom).append("' AND `gb`.`date_openinng_balance` <= '").append(dateTo).append("'");
+                }
+            }
+            if (cashAccountSettlementSearchBean.getTransactionType() == null || cashAccountSettlementSearchBean.getTransactionType() == 1 || cashAccountSettlementSearchBean.getTransactionType() == 2) {
+                if (query == null) {
+                    query = new StringBuilder();
+
+                } else {
+                    query.append("    UNION ALL ");
+                }
+
+                query.append(" SELECT \n"
+                        + "        `i`.`name` AS `createdBy`,\n"
+                        + "        `bt`.`gl_bank_id` AS `bankId`,\n"
+                        + "        `bt`.`payment_type` AS `paymentType`,\n"
+                        + "        `bt`.`date` AS `date`,\n"
+                        + "        `bt`.`serial` AS `serial`,\n"
+                        + "        `bt`.`value` AS `value`,\n"
+                        + "        `bt`.`value_local` AS `value_local`,\n"
+                        + "        `bt`.`remark` AS `remark`,\n"
+                        + "        `bt`.`remark2` AS `remark2`,\n"
+                        + "        `gb`.`name` AS `name`,\n"
+                        + "        `gb`.`code` AS `code`,\n"
+                        + "        `c`.`name` AS `currencyName`,\n"
+                        + "        `c`.`code` AS `currencyCode`,\n"
+                        + "        `bt`.`transaction_type` AS `status`,\n"
+                        + "        `ic`.`serial` AS `contractSerial`,\n"
+                        + "        (CASE\n"
+                        + "            WHEN (`bt`.`transaction_type` = 0) THEN 'سند صرف'\n"
+                        + "            WHEN (`bt`.`transaction_type` = 1) THEN 'سند قبض'\n"
+                        + "        END) AS `type_name`,\n"
+                        + "        `bt`.`document_serial` AS `documentSerial`\n"
+                        + "    FROM\n"
+                        + "        ((((( `gl_bank_transaction` `bt`\n"
+                        + "        LEFT JOIN `gl_bank` `gb` ON ((`gb`.`id` = `bt`.`gl_bank_id`)))\n"
+                        + "        LEFT JOIN `inst_contract_detail` `icd` ON ((`icd`.`id` = `bt`.`installment_id`)))\n"
+                        + "        LEFT JOIN `inst_contract` `ic` ON ((`ic`.`id` = `icd`.`inst_contract_id`)))\n"
+                        + "        LEFT JOIN `currency` `c` ON ((`c`.`id` = `gb`.`currency_id`)))\n"
+                        + "        LEFT JOIN `toby_user` `i` ON ((`i`.`id` = `bt`.`created_by`)))\n"
+                        + "    WHERE\n"
+                        + "        ((`bt`.`transaction_type` <> 2)\n"
+                        + "            AND (`bt`.`transaction_type` <> 3)) "
+                        + "            AND `bt`.`gl_bank_id` in (").append(cashAccountSettlementSearchBean.getGlBankIdSelected()).append(")");
+                if (isOpenningBalance) {
+                    query.append("            AND `bt`.`date` < '").append(dateFrom).append("'");
+                } else {
+                    query.append("            AND `bt`.`date` >= '").append(dateFrom).append("' AND `bt`.`date` <= '").append(dateTo).append("'");
+                }
+                if (cashAccountSettlementSearchBean.getType() != null && cashAccountSettlementSearchBean.getType() != 3) {
+                    query.append(" AND `bt`.`transaction_type` = ").append(cashAccountSettlementSearchBean.getType());
+                }
+
+                if (cashAccountSettlementSearchBean.getTransactionType() != null) {
+                    query.append(" AND `bt`.`transaction_type` = ").append(cashAccountSettlementSearchBean.getTransactionType());
+                }
+
+                if (cashAccountSettlementSearchBean.getSerialFrom() != null) {
+                    query.append(" AND `bt`.`serial` >= ").append(cashAccountSettlementSearchBean.getSerialFrom());
+                }
+
+                if (cashAccountSettlementSearchBean.getSerialTo() != null) {
+                    query.append(" AND `bt`.`serial` <= ").append(cashAccountSettlementSearchBean.getSerialTo());
+                }
+
+            }
+
+            if ((cashAccountSettlementSearchBean.getTransactionType() == null || cashAccountSettlementSearchBean.getTransactionType() == 3)
+                    && cashAccountSettlementSearchBean.getType() != null && (cashAccountSettlementSearchBean.getType() == 3 || cashAccountSettlementSearchBean.getType() == 0)) {
+                if (query == null) {
+                    query = new StringBuilder();
+
+                } else {
+                    query.append("    UNION ALL ");
+                }
+
+                query.append(" SELECT \n"
+                        + "        `i`.`name` AS `createdBy`,\n"
+                        + "        `btd`.`bank_id_from` AS `bankId`,\n"
+                        + "        `bt`.`payment_type` AS `paymentType`,\n"
+                        + "        `bt`.`date` AS `date`,\n"
+                        + "        `bt`.`serial` AS `serial`,\n"
+                        + "        `btd`.`value` AS `value`,\n"
+                        + "        `btd`.`value_local` AS `value_local`,\n"
+                        + "        `btd`.`remarks` AS `remark`,\n"
+                        + "        `bt`.`remark2` AS `remark2`,\n"
+                        + "        `gb`.`name` AS `name`,\n"
+                        + "        `gb`.`code` AS `code`,\n"
+                        + "        `c`.`name` AS `currencyName`,\n"
+                        + "        `c`.`code` AS `currencyCode`,\n"
+                        + "        0 AS `status`,\n"
+                        + "        '' AS `contractSerial`,\n"
+                        + "        'تحويل صادر' AS `type_name`,\n"
+                        + "        `bt`.`document_serial` AS `documentSerial`\n"
+                        + "    FROM\n"
+                        + "        (((( `gl_bank_transaction` `bt`\n"
+                        + "        LEFT JOIN `gl_bank_transaction_detail` `btd` ON ((`bt`.`id` = `btd`.`gl_bank_transaction_id`)))\n"
+                        + "        LEFT JOIN `gl_bank` `gb` ON ((`gb`.`id` = `btd`.`bank_id_from`)))\n"
+                        + "        LEFT JOIN `currency` `c` ON ((`c`.`id` = `gb`.`currency_id`)))\n"
+                        + "        LEFT JOIN `toby_user` `i` ON ((`i`.`id` = `bt`.`created_by`)))\n"
+                        + "    WHERE\n"
+                        + "        ((`bt`.`transaction_type` = 2)\n"
+                        + "            AND (`btd`.`bank_id_from` IS NOT NULL))  "
+                        + "            AND `btd`.`bank_id_from` in (").append(cashAccountSettlementSearchBean.getGlBankIdSelected()).append(")");
+                if (isOpenningBalance) {
+                    query.append("            AND `bt`.`date` < '").append(dateFrom).append("'");
+                } else {
+                    query.append("            AND `bt`.`date` >= '").append(dateFrom).append("' AND `bt`.`date` <= '").append(dateTo).append("'");
+                }
+                if (cashAccountSettlementSearchBean.getSerialFrom() != null) {
+                    query.append(" AND `bt`.`serial` >= ").append(cashAccountSettlementSearchBean.getSerialFrom());
+                }
+
+                if (cashAccountSettlementSearchBean.getSerialTo() != null) {
+                    query.append(" AND `bt`.`serial` <= ").append(cashAccountSettlementSearchBean.getSerialTo());
+                }
+
+            }
+
+            if ((cashAccountSettlementSearchBean.getTransactionType() == null || cashAccountSettlementSearchBean.getTransactionType() == 4)
+                    && cashAccountSettlementSearchBean.getType() != null && (cashAccountSettlementSearchBean.getType() == 3 || cashAccountSettlementSearchBean.getType() == 1)) {
+                if (query == null) {
+                    query = new StringBuilder();
+
+                } else {
+                    query.append("    UNION ALL ");
+                }
+
+                query.append(" SELECT \n"
+                        + "        `i`.`name` AS `createdBy`,\n"
+                        + "        `btd`.`bank_id_to` AS `bankId`,\n"
+                        + "        `bt`.`payment_type` AS `paymentType`,\n"
+                        + "        `bt`.`date` AS `date`,\n"
+                        + "        `bt`.`serial` AS `serial`,\n"
+                        + "        ((`btd`.`value` * IFNULL(`btd`.`rate_bank_from`, 1)) / IFNULL(`btd`.`rate_bank_to`, 1)) AS `value`,\n"
+                        + "        `btd`.`value_local` AS `value_local`,\n"
+                        + "        `btd`.`remarks` AS `remark`,\n"
+                        + "        `bt`.`remark2` AS `remark2`,\n"
+                        + "        `gb`.`name` AS `name`,\n"
+                        + "        `gb`.`code` AS `code`,\n"
+                        + "        `c`.`name` AS `currencyName`,\n"
+                        + "        `c`.`code` AS `currencyCode`,\n"
+                        + "        1 AS `status`,\n"
+                        + "        '' AS `contractSerial`,\n"
+                        + "        'تحويل وارد' AS `type_name`,\n"
+                        + "        `bt`.`document_serial` AS `documentSerial`\n"
+                        + "    FROM\n"
+                        + "        (((( `gl_bank_transaction` `bt`\n"
+                        + "        LEFT JOIN `gl_bank_transaction_detail` `btd` ON ((`bt`.`id` = `btd`.`gl_bank_transaction_id`)))\n"
+                        + "        LEFT JOIN `gl_bank` `gb` ON ((`gb`.`id` = `btd`.`bank_id_to`)))\n"
+                        + "        LEFT JOIN `currency` `c` ON ((`c`.`id` = `gb`.`currency_id`)))\n"
+                        + "        LEFT JOIN `toby_user` `i` ON ((`i`.`id` = `bt`.`created_by`)))\n"
+                        + "    WHERE\n"
+                        + "        ((`bt`.`transaction_type` = 2)\n"
+                        + "            AND (`btd`.`bank_id_to` IS NOT NULL))   "
+                        + "            AND `btd`.`bank_id_to` in (").append(cashAccountSettlementSearchBean.getGlBankIdSelected()).append(")");
+                if (isOpenningBalance) {
+                    query.append("            AND `bt`.`date` < '").append(dateFrom).append("'");
+                } else {
+                    query.append("            AND `bt`.`date` >= '").append(dateFrom).append("' AND `bt`.`date` <= '").append(dateTo).append("'");
+                }
+                if (cashAccountSettlementSearchBean.getSerialFrom() != null) {
+                    query.append(" AND `bt`.`serial` >= ").append(cashAccountSettlementSearchBean.getSerialFrom());
+                }
+
+                if (cashAccountSettlementSearchBean.getSerialTo() != null) {
+                    query.append(" AND `bt`.`serial` <= ").append(cashAccountSettlementSearchBean.getSerialTo());
+                }
+
+            }
+
+            if ((cashAccountSettlementSearchBean.getTransactionType() == null || cashAccountSettlementSearchBean.getTransactionType() == 5)
+                    && cashAccountSettlementSearchBean.getType() != null && (cashAccountSettlementSearchBean.getType() == 3 || cashAccountSettlementSearchBean.getType() == 0)) {
+                if (query == null) {
+                    query = new StringBuilder();
+
+                } else {
+                    query.append("    UNION ALL ");
+                }
+
+                query.append(" SELECT \n"
+                        + "        `i`.`name` AS `createdBy`,\n"
+                        + "        `ipi`.`gl_bank_id` AS `bankId`,\n"
+                        + "        `ipi`.`payment_type` AS `paymentType`,\n"
+                        + "        `ipi`.`date` AS `date`,\n"
+                        + "        `ipi`.`serial` AS `serial`,\n"
+                        + "        IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`, 15, IFNULL(`disc_halala`, 0)),0) AS `value`,\n"
+                        + "        IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`, 15, IFNULL(`disc_halala`, 0)),0) AS `value_local`,\n"
+                        + "        `ipi`.`remarks` AS `remark`,\n"
+                        + "        '' AS `remark2`,\n"
+                        + "        `gb`.`name` AS `name`,\n"
+                        + "        `gb`.`code` AS `code`,\n"
+                        + "        `c`.`name` AS `currencyName`,\n"
+                        + "        `c`.`code` AS `currencyCode`,\n"
+                        + "        `ipi`.`type` AS `status`,\n"
+                        + "        '' AS `contractSerial`,\n"
+                        + "        'فاتورة مشتريات' AS `type_name`,\n"
+                        + "        NULL AS `documentSerial`\n"
+                        + "    FROM\n"
+                        + "        (((((`inv_purchase_invoice` `ipi` )\n"
+                        + "        LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON ((`ipi`.`id` = `ipid`.`inv_purchase_invoice_id`)))\n"
+                        + "        LEFT JOIN `gl_bank` `gb` ON ((`gb`.`id` = `ipi`.`gl_bank_id`)))\n"
+                        + "        LEFT JOIN `currency` `c` ON ((`c`.`id` = `ipi`.`currency_id`)))\n"
+                        + "        LEFT JOIN `toby_user` `i` ON ((`i`.`id` = `ipi`.`created_by`)))\n"
+                        + "    WHERE\n"
+                        + "        (`ipi`.`payment_type` = 0)    "
+                        + "            AND `ipi`.`gl_bank_id` in (").append(cashAccountSettlementSearchBean.getGlBankIdSelected()).append(")");
+                if (isOpenningBalance) {
+                    query.append("            AND `ipi`.`date` < '").append(dateFrom).append("'");
+                } else {
+                    query.append("            AND `ipi`.`date` >= '").append(dateFrom).append("' AND `ipi`.`date` <= '").append(dateTo).append("'");
+                }
+                if (cashAccountSettlementSearchBean.getSerialFrom() != null) {
+                    query.append(" AND `ipi`.`serial` >= ").append(cashAccountSettlementSearchBean.getSerialFrom());
+                }
+
+                if (cashAccountSettlementSearchBean.getSerialTo() != null) {
+                    query.append(" AND `ipi`.`serial` <= ").append(cashAccountSettlementSearchBean.getSerialTo());
+                }
+
+                query.append(" AND `ipi`.`type` = 0  group by ipi.id ");
+            }
+
+            if ((cashAccountSettlementSearchBean.getTransactionType() == null || cashAccountSettlementSearchBean.getTransactionType() == 6)
+                    && cashAccountSettlementSearchBean.getType() != null && (cashAccountSettlementSearchBean.getType() == 3 || cashAccountSettlementSearchBean.getType() == 1)) {
+                if (query == null) {
+                    query = new StringBuilder();
+
+                } else {
+                    query.append("    UNION ALL ");
+                }
+
+                query.append(" SELECT \n"
+                        + "        `i`.`name` AS `createdBy`,\n"
+                        + "        `ipi`.`gl_bank_id` AS `bankId`,\n"
+                        + "        `ipi`.`payment_type` AS `paymentType`,\n"
+                        + "        `ipi`.`date` AS `date`,\n"
+                        + "        `ipi`.`serial` AS `serial`,\n"
+                        + "       IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`, 15, IFNULL(`disc_halala`, 0)),0) AS `value`,\n"
+                        + "      IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`, 15, IFNULL(`disc_halala`, 0)),0) AS `value_local`,\n"
+                        + "        `ipi`.`remarks` AS `remark`,\n"
+                        + "        '' AS `remark2`,\n"
+                        + "        `gb`.`name` AS `name`,\n"
+                        + "        `gb`.`code` AS `code`,\n"
+                        + "        `c`.`name` AS `currencyName`,\n"
+                        + "        `c`.`code` AS `currencyCode`,\n"
+                        + "        `ipi`.`type` AS `status`,\n"
+                        + "        '' AS `contractSerial`,\n"
+                        + "        'فاتورة مبيعات' AS `type_name`,\n"
+                        + "        NULL AS `documentSerial`\n"
+                        + "    FROM\n"
+                        + "        (((((`inv_purchase_invoice` `ipi` )\n"
+                        + "        LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON ((`ipi`.`id` = `ipid`.`inv_purchase_invoice_id`)))\n"
+                        + "        LEFT JOIN `gl_bank` `gb` ON ((`gb`.`id` = `ipi`.`gl_bank_id`)))\n"
+                        + "        LEFT JOIN `currency` `c` ON ((`c`.`id` = `ipi`.`currency_id`)))\n"
+                        + "        LEFT JOIN `toby_user` `i` ON ((`i`.`id` = `ipi`.`created_by`)))\n"
+                        + "    WHERE\n"
+                        + "        (`ipi`.`payment_type` = 0)    "
+                        + "            AND `ipi`.`gl_bank_id` in (").append(cashAccountSettlementSearchBean.getGlBankIdSelected()).append(")");
+                if (isOpenningBalance) {
+                    query.append("            AND `ipi`.`date` < '").append(dateFrom).append("'");
+                } else {
+                    query.append("            AND `ipi`.`date` >= '").append(dateFrom).append("' AND `ipi`.`date` <= '").append(dateTo).append("'");
+                }
+                if (cashAccountSettlementSearchBean.getSerialFrom() != null) {
+                    query.append(" AND `ipi`.`serial` >= ").append(cashAccountSettlementSearchBean.getSerialFrom());
+                }
+
+                if (cashAccountSettlementSearchBean.getSerialTo() != null) {
+                    query.append(" AND `ipi`.`serial` <= ").append(cashAccountSettlementSearchBean.getSerialTo());
+                }
+
+                query.append(" AND `ipi`.`type` = 1  group by ipi.id ");
+            }
+
+            if ((cashAccountSettlementSearchBean.getTransactionType() == null || cashAccountSettlementSearchBean.getTransactionType() == 7)
+                    && cashAccountSettlementSearchBean.getType() != null && (cashAccountSettlementSearchBean.getType() == 3 || cashAccountSettlementSearchBean.getType() == 1)) {
+                if (query == null) {
+                    query = new StringBuilder();
+
+                } else {
+                    query.append("    UNION ALL ");
+                }
+
+                query.append(" SELECT \n"
+                        + "        `i`.`name` AS `createdBy`,\n"
+                        + "        `ipi`.`gl_bank_id` AS `bankId`,\n"
+                        + "        `ipi`.`payment_type` AS `paymentType`,\n"
+                        + "        `ipi`.`date` AS `date`,\n"
+                        + "        `ipi`.`serial` AS `serial`,\n"
+                        + "         IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`, 15, IFNULL(`disc_halala`, 0)),0) AS `value`,\n"
+                        + "         IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`, 15, IFNULL(`disc_halala`, 0)),0) AS `value_local`,\n"
+                        + "        `ipi`.`remarks` AS `remark`,\n"
+                        + "        '' AS `remark2`,\n"
+                        + "        `gb`.`name` AS `name`,\n"
+                        + "        `gb`.`code` AS `code`,\n"
+                        + "        `c`.`name` AS `currencyName`,\n"
+                        + "        `c`.`code` AS `currencyCode`,\n"
+                        + "        `ipi`.`type` AS `status`,\n"
+                        + "        '' AS `contractSerial`,\n"
+                        + "        ' مردود مشتريات' AS `type_name`,\n"
+                        + "        NULL AS `documentSerial`\n"
+                        + "    FROM\n"
+                        + "        (((((`inv_purchase_invoice` `ipi` )\n"
+                        + "        LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON ((`ipi`.`id` = `ipid`.`inv_purchase_invoice_id`)))\n"
+                        + "        LEFT JOIN `gl_bank` `gb` ON ((`gb`.`id` = `ipi`.`gl_bank_id`)))\n"
+                        + "        LEFT JOIN `currency` `c` ON ((`c`.`id` = `ipi`.`currency_id`)))\n"
+                        + "        LEFT JOIN `toby_user` `i` ON ((`i`.`id` = `ipi`.`created_by`)))\n"
+                        + "    WHERE\n"
+                        + "        (`ipi`.`payment_type` = 0)    "
+                        + "            AND `ipi`.`gl_bank_id` in (").append(cashAccountSettlementSearchBean.getGlBankIdSelected()).append(")");
+                if (isOpenningBalance) {
+                    query.append("            AND `ipi`.`date` < '").append(dateFrom).append("'");
+                } else {
+                    query.append("            AND `ipi`.`date` >= '").append(dateFrom).append("' AND `ipi`.`date` <= '").append(dateTo).append("'");
+                }
+                if (cashAccountSettlementSearchBean.getSerialFrom() != null) {
+                    query.append(" AND `ipi`.`serial` >= ").append(cashAccountSettlementSearchBean.getSerialFrom());
+                }
+
+                if (cashAccountSettlementSearchBean.getSerialTo() != null) {
+                    query.append(" AND `ipi`.`serial` <= ").append(cashAccountSettlementSearchBean.getSerialTo());
+                }
+
+                query.append(" AND `ipi`.`type` = 2  group by ipi.id ");
+            }
+
+            if ((cashAccountSettlementSearchBean.getTransactionType() == null || cashAccountSettlementSearchBean.getTransactionType() == 8)
+                    && cashAccountSettlementSearchBean.getType() != null && (cashAccountSettlementSearchBean.getType() == 3 || cashAccountSettlementSearchBean.getType() == 0)) {
+                if (query == null) {
+                    query = new StringBuilder();
+
+                } else {
+                    query.append("    UNION ALL ");
+                }
+
+                query.append(" SELECT \n"
+                        + "        `i`.`name` AS `createdBy`,\n"
+                        + "        `ipi`.`gl_bank_id` AS `bankId`,\n"
+                        + "        `ipi`.`payment_type` AS `paymentType`,\n"
+                        + "        `ipi`.`date` AS `date`,\n"
+                        + "        `ipi`.`serial` AS `serial`,\n"
+                        + "        IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`, 15, IFNULL(`disc_halala`, 0)),0) AS `value`,\n"
+                        + "        IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`, 15, IFNULL(`disc_halala`, 0)),0) `value_local`,\n"
+                        + "        `ipi`.`remarks` AS `remark`,\n"
+                        + "        '' AS `remark2`,\n"
+                        + "        `gb`.`name` AS `name`,\n"
+                        + "        `gb`.`code` AS `code`,\n"
+                        + "        `c`.`name` AS `currencyName`,\n"
+                        + "        `c`.`code` AS `currencyCode`,\n"
+                        + "        `ipi`.`type` AS `status`,\n"
+                        + "        '' AS `contractSerial`,\n"
+                        + "        'مردود مبيعات' AS `type_name`,\n"
+                        + "        NULL AS `documentSerial`\n"
+                        + "    FROM\n"
+                        + "        ((((`inv_purchase_invoice` `ipi` \n"
+                        + "        LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON ((`ipi`.`id` = `ipid`.`inv_purchase_invoice_id`)))\n"
+                        + "        LEFT JOIN `gl_bank` `gb` ON ((`gb`.`id` = `ipi`.`gl_bank_id`)))\n"
+                        + "        LEFT JOIN `currency` `c` ON ((`c`.`id` = `ipi`.`currency_id`)))\n"
+                        + "        LEFT JOIN `toby_user` `i` ON ((`i`.`id` = `ipi`.`created_by`)))\n"
+                        + "    WHERE\n"
+                        + "        (`ipi`.`payment_type` = 0)    "
+                        + "            AND `ipi`.`gl_bank_id` in (").append(cashAccountSettlementSearchBean.getGlBankIdSelected()).append(")");
+                if (isOpenningBalance) {
+                    query.append("            AND `ipi`.`date` < '").append(dateFrom).append("'");
+                } else {
+                    query.append("            AND `ipi`.`date` >= '").append(dateFrom).append("' AND `ipi`.`date` <= '").append(dateTo).append("'");
+                }
+                if (cashAccountSettlementSearchBean.getSerialFrom() != null) {
+                    query.append(" AND `ipi`.`serial` >= ").append(cashAccountSettlementSearchBean.getSerialFrom());
+                }
+
+                if (cashAccountSettlementSearchBean.getSerialTo() != null) {
+                    query.append(" AND `ipi`.`serial` <= ").append(cashAccountSettlementSearchBean.getSerialTo());
+                }
+
+                query.append(" AND `ipi`.`type` = 3  group by ipi.id  ");
+            }
+
+         
+        }
+        return query == null ? null : query.toString();
+    }
+
+
+
+    public BigDecimal findOpeningBalancesForSpecificCashAccountNew(SubAccountSummarySearchBean cashAccountSettlementSearchBean, Integer bankId, Integer type) {
+        Map<String, Object> params = new HashMap();
+        params.put("branchId", cashAccountSettlementSearchBean.getBranchId());
+        params.put("bankId", bankId);
+        params.put("type", type);
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT sum(COALESCE(cas.value_local,0)) FROM (").append(createSQL(cashAccountSettlementSearchBean, true)).append(") cas where cas.status = ").append(type).append(" AND cas.bankId = ").append(bankId);
+        List<Object[]> res = dao.executeNativeQuery(builder.toString());
+        BigDecimal value = BigDecimal.ZERO;
+        if (res != null && !res.isEmpty()) {
+            for (Object[] object : res) {
+                if (object != null) {
+                    value = object[0] != null ? (BigDecimal) object[0] : BigDecimal.ZERO;
+                }
+            }
+        }
+
+        return value;
+    }
+    
+        public void addOpeningBalanceNew(SubAccountSummaryReport cashAccountSettlment, CashAccountSettlementBean cashAccountSettlementBean,
+            SubAccountSummarySearchBean cashAccountSettlementSearchBean) {
+        cashAccountSettlementBean.setOpeningBalance(BigDecimal.ZERO);
+        if (cashAccountSettlment.getBankId() != null && cashAccountSettlementBean.getDistinctBankId().compareTo(cashAccountSettlment.getBankId()) != 0) {
+            cashAccountSettlementBean.setDistinctBankId(cashAccountSettlment.getBankId());
+            BigDecimal debitOpenBalance = findOpeningBalancesForSpecificCashAccountNew(cashAccountSettlementSearchBean, cashAccountSettlment.getBankId(), 1);
+            BigDecimal creditOpenBalance = findOpeningBalancesForSpecificCashAccountNew(cashAccountSettlementSearchBean, cashAccountSettlment.getBankId(), 0);
+            cashAccountSettlementBean.setOpeningBalance((debitOpenBalance != null ? debitOpenBalance : BigDecimal.ZERO).subtract(creditOpenBalance != null ? creditOpenBalance : BigDecimal.ZERO));
+            cashAccountSettlementBean.getOpeningBalanceMap().put(cashAccountSettlment.getBankId(), cashAccountSettlementBean.getOpeningBalance().setScale(2, RoundingMode.UP));
+            /*if (openingBalance.signum() == -1 && openingBalance.compareTo(BigDecimal.ZERO) != 0) {
+             cashAccountSettlment.setCreditAmount(cashAccountSettlment.getCreditAmount() != null ? cashAccountSettlment.getCreditAmount() : BigDecimal.ZERO);
+             } else if ((openingBalance.signum() == 1 && openingBalance.compareTo(BigDecimal.ZERO) != 0)) {
+             cashAccountSettlment.setDebitAmount(cashAccountSettlment.getDebitAmount() != null ? cashAccountSettlment.getDebitAmount() : BigDecimal.ZERO);
+             }*/
+            BigDecimal bala = cashAccountSettlementBean.getTotalForBalanceMap().get(cashAccountSettlment.getBankId());
+            if (bala == null) {
+                bala = BigDecimal.ZERO;
+            }
+            bala = bala.add(cashAccountSettlementBean.getOpeningBalance());
+            cashAccountSettlementBean.getTotalForBalanceMap().put(cashAccountSettlment.getBankId(), bala.setScale(2, RoundingMode.UP));
+        }
+    }
+
+    public void fillDebitAndCreditTotalsNew(SubAccountSummaryReport cashAccountSettlment, CashAccountSettlementBean cashAccountSettlementBean,
+            BigDecimal debit, BigDecimal credit) {
+        BigDecimal catchDebit = cashAccountSettlementBean.getTotalForDebitMap().get(cashAccountSettlment.getBankId());
+        BigDecimal catchCredit = cashAccountSettlementBean.getTotalForCreditMap().get(cashAccountSettlment.getBankId());
+        if (catchDebit == null) {
+            catchDebit = BigDecimal.ZERO;
+        }
+        if (catchCredit == null) {
+            catchCredit = BigDecimal.ZERO;
+        }
+        catchDebit = catchDebit.add(debit);
+        catchCredit = catchCredit.add(credit);
+        cashAccountSettlementBean.getTotalForDebitMap().put(cashAccountSettlment.getBankId(), catchDebit.setScale(2, RoundingMode.UP));
+        cashAccountSettlementBean.getTotalForCreditMap().put(cashAccountSettlment.getBankId(), catchCredit.setScale(2, RoundingMode.UP));
+    }
+
+    public void calculateExceedDateOpeningBalanceNew(CashAccountSettlementBean cashAccountSettlementBean, SubAccountSummarySearchBean cashAccountSettlementSearchBean) {
+        cashAccountSettlementBean.setBuilder(new StringBuilder());
+        for (Integer key : cashAccountSettlementBean.getGlBankCopyMap().keySet()) {
+            if (cashAccountSettlementBean.getBuilder().length() == 0 && cashAccountSettlementBean.getBuilder() != null) {
+                cashAccountSettlementBean.getBuilder().append(key);
+            } else {
+                cashAccountSettlementBean.getBuilder().append(",").append(key);
+            }
+        }
+        if (cashAccountSettlementBean.getBuilder().length() != 0 && cashAccountSettlementBean.getBuilder() != null) {
+            List<GlBankDTO> glBankList = glBankService.findGlBankDTOList(cashAccountSettlementBean.getBuilder());
+
+            if (glBankList != null && !glBankList.isEmpty()) {
+
+                for (GlBankDTO bankDTO : glBankList) {
+                    BigDecimal debitOpenBalance = findOpeningBalancesForSpecificCashAccountNew(cashAccountSettlementSearchBean, bankDTO.getId(), 1);
+                    BigDecimal creditOpenBalance = findOpeningBalancesForSpecificCashAccountNew(cashAccountSettlementSearchBean, bankDTO.getId(), 0);
+                    cashAccountSettlementBean.setOpeningBalance((debitOpenBalance != null ? debitOpenBalance : BigDecimal.ZERO).subtract(creditOpenBalance != null ? creditOpenBalance : BigDecimal.ZERO));
+                    cashAccountSettlementBean.getOpeningBalanceMap().put(bankDTO.getId(), cashAccountSettlementBean.getOpeningBalance().setScale(2, RoundingMode.UP));
+                    cashAccountSettlementBean.getTotalForBalanceMap().put(bankDTO.getId(), cashAccountSettlementBean.getOpeningBalance().setScale(2, RoundingMode.UP));
+                    if (cashAccountSettlementBean.getOpeningBalance().compareTo(BigDecimal.ZERO) == 1) {
+                        SubAccountSummaryReport summaryReport = new SubAccountSummaryReport();
+                        summaryReport.setBankId(bankDTO.getId());
+                        summaryReport.setBankName(bankDTO.getName());
+                        summaryReport.setCode(bankDTO.getCode());
+                        summaryReport.setBalance(cashAccountSettlementBean.getOpeningBalance().setScale(2, RoundingMode.UP));
+                        cashAccountSettlementBean.getCashAccountSettlementReports().add(summaryReport);
+                    }
+                }
+            }
+        }
+    }
+
 
 }

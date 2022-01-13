@@ -36,4 +36,6 @@ public interface CashAccountSettlmentService {
 
     public CashAccountSettlementBean search(SubAccountSummarySearchBean cashAccountSettlementSearchBean );
     
+        public CashAccountSettlementBean searchNew(SubAccountSummarySearchBean cashAccountSettlementSearchBean);
+    
 }
