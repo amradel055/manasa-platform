@@ -277,7 +277,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         params.put("query", query);
         List<InvOrganizationSite> detailses = dao.findListByQuery("SELECT e FROM InvOrganizationSite e WHERE  ((e.name  =:query )) OR (e.code =:query ) OR (e.phone =:query) OR (e.mobile =:query )  ", params);
         List<InvOrganizationSiteDTO> list = mapToDTOList(detailses, isagUser);
-        if(list != null && !list.isEmpty()){
+        if (list != null && !list.isEmpty()) {
             return list.get(0);
         }
         return null;
@@ -345,7 +345,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         InvOrganizationSite invOrganizationSite = dao.findEntityById(InvOrganizationSite.class, invOrganizationSiteId);
         return mapTODTO(invOrganizationSiteDTO, invOrganizationSite);
     }
-    
+
     @Override
     public InvOrganizationSiteDTO findOrganizationSiteDTOByIdSmall(Integer invOrganizationSiteId) {
         InvOrganizationSite invOrganizationSite = dao.findEntityById(InvOrganizationSite.class, invOrganizationSiteId);
@@ -1954,6 +1954,21 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
 
     }
 
+    @Override
+    public void updateGMCustomer(InvOrganizationSiteDTO invOrganizationSiteDTO) {
+        try {
+            InvOrganizationSite entity = dao.findEntityById(InvOrganizationSite.class, invOrganizationSiteDTO.getId());
+            entity.setName(invOrganizationSiteDTO.getName());
+            entity.setMobile(invOrganizationSiteDTO.getMobile());
+            entity.setAddress(invOrganizationSiteDTO.getAddress());
+            entity.setNationId(invOrganizationSiteDTO.getNationId());
+            entity.setNationIdSerial(invOrganizationSiteDTO.getNationIdSerial());
+            entity.setBirthdate(invOrganizationSiteDTO.getBirthdate());
+            dao.updateEntity(entity);
+        } catch (Exception e) {
+        }
+    }
+
     public String genralValidateDelivery(IsagUser isagUser, InvOrganizationSiteDTO invOrganizationSiteDTO) {
         StringBuilder errorMessage = new StringBuilder();
 //        if (!validateName(isagUser, invOrganizationSiteDTO.getId(), invOrganizationSiteDTO.getName(), invOrganizationSiteDTO.getType())) {
@@ -2055,7 +2070,6 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         }
 
     }
-    
 
     public InvOrganizationSiteDTO mapTODTOSmall(InvOrganizationSite entity) {
         InvOrganizationSiteDTO dTO = new InvOrganizationSiteDTO();
@@ -2074,8 +2088,8 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         invOrganizationSiteDTO.setAddress(invOrganizationSite.getAddress());
         invOrganizationSiteDTO.setBirthdate(invOrganizationSite.getBirthdate());
         invOrganizationSiteDTO.setClientImage(invOrganizationSite.getClientImage());
-         invOrganizationSiteDTO.setNationId(invOrganizationSite.getNationId());
-         invOrganizationSiteDTO.setTaxNumber(invOrganizationSite.getTaxNumber());
+        invOrganizationSiteDTO.setNationId(invOrganizationSite.getNationId());
+        invOrganizationSiteDTO.setTaxNumber(invOrganizationSite.getTaxNumber());
         if (invOrganizationSite.getCurrencyId() != null) {
             CurrencyDTO currencyDTO = new CurrencyDTO();
             currencyDTO.setId(invOrganizationSite.getCurrencyId().getId());
