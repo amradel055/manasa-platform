@@ -1498,6 +1498,7 @@ public class notesReceivablesFormMB extends GlBankBasicDataForm {
             hashMap.put("companyName", getUserData().getCompany().getName());
             hashMap.put("amountText", userDDs.get("AMOUNT"));
             hashMap.put("dateText", userDDs.get("DATE"));
+            hashMap.put("qr-code-GM", "qr-code.png");
             //  hashMap.put("companyImage", getUserData().getImageReportPath());
 
             // hashMap.put("reportNameText", "سند قبض ");
