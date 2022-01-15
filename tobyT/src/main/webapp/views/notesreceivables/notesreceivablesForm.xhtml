@@ -44,7 +44,7 @@
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:calendar  style="width:60%!important"  id="date" 
                                                  value="#{notesReceivablesFormMB.glBankTransactionEntity.date}"
-                                                 pattern="dd/MM/yyyy"
+                                                 pattern="dd/MM/yyyy hh:mm:ss"
                                                  >
 
                                         <p:ajax event="dateSelect" update="form" listener="#{notesReceivablesFormMB.updateTransactionRate}" />

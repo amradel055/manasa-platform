@@ -17,9 +17,7 @@ import java.util.Date;
 public class CashAccountSettlment implements Serializable {
 
     private Integer banktransactionId;
-
-    private Integer bankId;
-  
+    private Integer bankId;  
     private BigInteger serial;
     private Integer paymentType;
     private Date date;
@@ -29,18 +27,17 @@ public class CashAccountSettlment implements Serializable {
     private String name;
     private String code;
     private String currencyName;
-
     private String currencyCode;
-
     private Integer status;
- 
     private String typeName;
-  
     private String remark2;
     private String createdBy;
-    private String contractSerial;
-   
+    private String contractSerial;   
     private Integer documentSerial;
+    private String customerName;  
+    private String customerCode;  
+    private Integer invoiceNumber;  
+    
     
 
     public CashAccountSettlment() {
@@ -271,6 +268,48 @@ public class CashAccountSettlment implements Serializable {
      */
     public void setDocumentSerial(Integer documentSerial) {
         this.documentSerial = documentSerial;
+    }
+
+    /**
+     * @return the customerName
+     */
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    /**
+     * @param customerName the customerName to set
+     */
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    /**
+     * @return the customerCode
+     */
+    public String getCustomerCode() {
+        return customerCode;
+    }
+
+    /**
+     * @param customerCode the customerCode to set
+     */
+    public void setCustomerCode(String customerCode) {
+        this.customerCode = customerCode;
+    }
+
+    /**
+     * @return the invoiceNumber
+     */
+    public Integer getInvoiceNumber() {
+        return invoiceNumber;
+    }
+
+    /**
+     * @param invoiceNumber the invoiceNumber to set
+     */
+    public void setInvoiceNumber(Integer invoiceNumber) {
+        this.invoiceNumber = invoiceNumber;
     }
 
 

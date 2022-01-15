@@ -76,8 +76,8 @@ public class InvoiceProductionStagesReportMB extends BaseListBean {
         proProductionStagesDTOList = new ArrayList<>();
         getInvPurchaseInvoiceDTOList();
         setUserDDs(getUserData().getUserDDs());
-        getPrintProductionDTO().setFromDate(new Date());
-        getPrintProductionDTO().setToDate(new Date());
+//        getPrintProductionDTO().setFromDate(new Date());
+//        getPrintProductionDTO().setToDate(new Date());
         if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("proproductionreportFormAdd")) {
             getPrintProductionDTO().setFromInvoice((InvInvoiceDTO) getContext().getSessionMap().get("proSalesFormSelected"));
             getPrintProductionDTO().setFromInvInvoice(getPrintProductionDTO().getFromInvoice().getSerial());

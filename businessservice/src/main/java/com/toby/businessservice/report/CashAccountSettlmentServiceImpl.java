@@ -1371,7 +1371,7 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
             }
         }
     }
-    
+
     @Override
     public CashAccountSettlementBean searchNew(SubAccountSummarySearchBean cashAccountSettlementSearchBean) {
         if (cashAccountSettlementSearchBean.getGlBankIdSelected() != null && !cashAccountSettlementSearchBean.getGlBankIdSelected().isEmpty()) {
@@ -1404,7 +1404,7 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
             BigDecimal balance = BigDecimal.ZERO;
             SubAccountSummaryReport cashAccountSettlment;
             cashAccountSettlementBean.setDistinctBankId(0);
-            int i = 0 ;
+            int i = 0;
             for (CashAccountSettlment cashAccountSettlmentView : cashAccountSettlementBean.getCashAccountSettlementListNew()) {
 
                 cashAccountSettlment = new SubAccountSummaryReport();
@@ -1420,9 +1420,9 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
                 cashAccountSettlment.setSerial(cashAccountSettlmentView.getSerial() != null ? cashAccountSettlmentView.getSerial() + "" : null);
 //                cashAccountSettlment.setTransactionTypeNumber(cashAccountSettlmentView.getTypeId());
                 cashAccountSettlment.setCreatedBy(cashAccountSettlmentView.getCreatedBy());
-//                cashAccountSettlment.setCustomerName(cashAccountSettlmentView.getCustomerName());
-//                cashAccountSettlment.setCustomerCode(cashAccountSettlmentView.getCustomerCode());
-//                cashAccountSettlment.setInvoiceNumber(cashAccountSettlmentView.getInvoiceNumber());
+                cashAccountSettlment.setCustomerName(cashAccountSettlmentView.getCustomerName());
+                cashAccountSettlment.setCustomerCode(cashAccountSettlmentView.getCustomerCode());
+                cashAccountSettlment.setInvoiceNumber(cashAccountSettlmentView.getInvoiceNumber());
 
                 if (cashAccountSettlmentView.getStatus() != null) {
                     if (cashAccountSettlementSearchBean.getCurrencyType() == 1) {
@@ -1481,8 +1481,8 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
         }
         return null;
     }
-    
-        public List<CashAccountSettlment> findAllCashAccountSettlmentNew(SubAccountSummarySearchBean cashAccountSettlementSearchBean) {
+
+    public List<CashAccountSettlment> findAllCashAccountSettlmentNew(SubAccountSummarySearchBean cashAccountSettlementSearchBean) {
         List<CashAccountSettlment> list = new ArrayList<>();
         Map<String, Object> params = new HashMap();
         params.put("branchId", cashAccountSettlementSearchBean.getBranchId());
@@ -1498,20 +1498,24 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
             cashAccountSettlmentView.setValue(object[5] != null ? (BigDecimal) object[5] : null);
             cashAccountSettlmentView.setValueLocal(object[6] != null ? (BigDecimal) object[6] : null);
             cashAccountSettlmentView.setRemark(object[7] != null ? (String) object[7] : null);
-            cashAccountSettlmentView.setRemark2(object[8] != null ? (String) object[8] : null); 
+            cashAccountSettlmentView.setRemark2(object[8] != null ? (String) object[8] : null);
             cashAccountSettlmentView.setName(object[9] != null ? (String) object[9] : null);
             cashAccountSettlmentView.setCode(object[10] != null ? object[10].toString() : null);
             cashAccountSettlmentView.setCurrencyName(object[11] != null ? (String) object[11] : null);
             cashAccountSettlmentView.setCurrencyCode(object[12] != null ? (String) object[12] : null);
-            cashAccountSettlmentView.setStatus(object[13] != null ? Integer.valueOf(object[13].toString())  : null);
+            cashAccountSettlmentView.setStatus(object[13] != null ? Integer.valueOf(object[13].toString()) : null);
             cashAccountSettlmentView.setContractSerial(object[14] != null ? (String) object[14] : null);
             cashAccountSettlmentView.setTypeName(object[15] != null ? (String) object[15] : null);
             cashAccountSettlmentView.setDocumentSerial(object[16] != null ? (Integer) object[16] : null);
+            cashAccountSettlmentView.setCustomerName(object[17] != null ? (String) object[17] : null);
+            cashAccountSettlmentView.setCustomerCode(object[18] != null ? (String) object[18] : null);
+            cashAccountSettlmentView.setInvoiceNumber(object[19] != null ? (Integer) object[19] : null);
             list.add(cashAccountSettlmentView);
         }
         return list;
     }
-            public String createSQL(SubAccountSummarySearchBean cashAccountSettlementSearchBean, boolean isOpenningBalance) {
+
+    public String createSQL(SubAccountSummarySearchBean cashAccountSettlementSearchBean, boolean isOpenningBalance) {
         StringBuilder query = null;
         String dateFrom = new SimpleDateFormat("yyyy-MM-dd").format(cashAccountSettlementSearchBean.getDateFrom());
         String dateTo = new SimpleDateFormat("yyyy-MM-dd").format(cashAccountSettlementSearchBean.getDateTo());
@@ -1537,7 +1541,10 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
                         + "        CAST(1 AS SIGNED) AS `status`,\n"
                         + "        '' AS `contractSerial`,\n"
                         + "        'رصيد افتتاحي' AS `type_name`,\n"
-                        + "        NULL AS `documentSerial`\n"
+                        + "        NULL AS `documentSerial` ,\n"
+                        + "        NULL as customerName , \n"
+                        + "        NULL as customerCode , \n"
+                        + "        NULL as invoiceNumber \n"
                         + "    FROM\n"
                         + "        (( `gl_bank` `gb`\n"
                         + "        LEFT JOIN `currency` `c` ON ((`c`.`id` = `gb`.`currency_id`)))\n"
@@ -1566,8 +1573,8 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
                         + "        `bt`.`payment_type` AS `paymentType`,\n"
                         + "        `bt`.`date` AS `date`,\n"
                         + "        `bt`.`serial` AS `serial`,\n"
-                        + "        `bt`.`value` AS `value`,\n"
-                        + "        `bt`.`value_local` AS `value_local`,\n"
+                        + "        `btd`.`value` AS `value`,\n"
+                        + "        `btd`.`value_local` AS `value_local`,\n"
                         + "        `bt`.`remark` AS `remark`,\n"
                         + "        `bt`.`remark2` AS `remark2`,\n"
                         + "        `gb`.`name` AS `name`,\n"
@@ -1580,14 +1587,20 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
                         + "            WHEN (`bt`.`transaction_type` = 0) THEN 'سند صرف'\n"
                         + "            WHEN (`bt`.`transaction_type` = 1) THEN 'سند قبض'\n"
                         + "        END) AS `type_name`,\n"
-                        + "        `bt`.`document_serial` AS `documentSerial`\n"
+                        + "        `bt`.`document_serial` AS `documentSerial`,\n"
+                        + "          ios.name as customerName , \n"
+                        + "        ios.code as customerCode , \n"
+                        + "        ipi.serial as invoiceNumber \n"
                         + "    FROM\n"
-                        + "        ((((( `gl_bank_transaction` `bt`\n"
-                        + "        LEFT JOIN `gl_bank` `gb` ON ((`gb`.`id` = `bt`.`gl_bank_id`)))\n"
+                        + "        (((((((( `gl_bank_transaction` `bt`\n"
+                        + "        LEFT JOIN `gl_bank` `gb` ON ((`gb`.`id` = `bt`.`gl_bank_id`))) "
+                        + "        LEFT JOIN `gl_bank_transaction_detail` `btd` ON ((`bt`.`id` = `btd`.`gl_bank_transaction_id`)))"
                         + "        LEFT JOIN `inst_contract_detail` `icd` ON ((`icd`.`id` = `bt`.`installment_id`)))\n"
                         + "        LEFT JOIN `inst_contract` `ic` ON ((`ic`.`id` = `icd`.`inst_contract_id`)))\n"
                         + "        LEFT JOIN `currency` `c` ON ((`c`.`id` = `gb`.`currency_id`)))\n"
-                        + "        LEFT JOIN `toby_user` `i` ON ((`i`.`id` = `bt`.`created_by`)))\n"
+                        + "        LEFT JOIN `toby_user` `i` ON ((`i`.`id` = `bt`.`created_by`)))         \n"
+                        + "        LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `btd`.`organization_site_id`)))\n"
+                        + "        LEFT JOIN `inv_purchase_invoice` `ipi` ON ((`ipi`.`id` = `btd`.`invoice_id`)))\n "
                         + "    WHERE\n"
                         + "        ((`bt`.`transaction_type` <> 2)\n"
                         + "            AND (`bt`.`transaction_type` <> 3)) "
@@ -1641,7 +1654,10 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
                         + "        0 AS `status`,\n"
                         + "        '' AS `contractSerial`,\n"
                         + "        'تحويل صادر' AS `type_name`,\n"
-                        + "        `bt`.`document_serial` AS `documentSerial`\n"
+                        + "        `bt`.`document_serial` AS `documentSerial`,\n"
+                        + "        NULL as customerName , \n"
+                        + "        NULL as customerCode , \n"
+                        + "        NULL as invoiceNumber\n"
                         + "    FROM\n"
                         + "        (((( `gl_bank_transaction` `bt`\n"
                         + "        LEFT JOIN `gl_bank_transaction_detail` `btd` ON ((`bt`.`id` = `btd`.`gl_bank_transaction_id`)))\n"
@@ -1693,7 +1709,10 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
                         + "        1 AS `status`,\n"
                         + "        '' AS `contractSerial`,\n"
                         + "        'تحويل وارد' AS `type_name`,\n"
-                        + "        `bt`.`document_serial` AS `documentSerial`\n"
+                        + "        `bt`.`document_serial` AS `documentSerial`,\n"
+                        + "        NULL as customerName , \n"
+                        + "        NULL as customerCode , \n"
+                        + "        NULL as invoiceNumber\n"
                         + "    FROM\n"
                         + "        (((( `gl_bank_transaction` `bt`\n"
                         + "        LEFT JOIN `gl_bank_transaction_detail` `btd` ON ((`bt`.`id` = `btd`.`gl_bank_transaction_id`)))\n"
@@ -1745,13 +1764,17 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
                         + "        `ipi`.`type` AS `status`,\n"
                         + "        '' AS `contractSerial`,\n"
                         + "        'فاتورة مشتريات' AS `type_name`,\n"
-                        + "        NULL AS `documentSerial`\n"
+                        + "        NULL AS `documentSerial`,\n"
+                        + "         ios.name as customerName , \n"
+                        + "         ios.code as customerCode , \n"
+                        + "         `ipi`.`serial` as invoiceNumber \n"
                         + "    FROM\n"
-                        + "        (((((`inv_purchase_invoice` `ipi` )\n"
+                        + "        ((((((`inv_purchase_invoice` `ipi` )\n"
                         + "        LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON ((`ipi`.`id` = `ipid`.`inv_purchase_invoice_id`)))\n"
                         + "        LEFT JOIN `gl_bank` `gb` ON ((`gb`.`id` = `ipi`.`gl_bank_id`)))\n"
                         + "        LEFT JOIN `currency` `c` ON ((`c`.`id` = `ipi`.`currency_id`)))\n"
-                        + "        LEFT JOIN `toby_user` `i` ON ((`i`.`id` = `ipi`.`created_by`)))\n"
+                        + "        LEFT JOIN `toby_user` `i` ON ((`i`.`id` = `ipi`.`created_by`))) \n "
+                        + "        LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `ipi`.`organization_site_id`)))"
                         + "    WHERE\n"
                         + "        (`ipi`.`payment_type` = 0)    "
                         + "            AND `ipi`.`gl_bank_id` in (").append(cashAccountSettlementSearchBean.getGlBankIdSelected()).append(")");
@@ -1797,13 +1820,17 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
                         + "        `ipi`.`type` AS `status`,\n"
                         + "        '' AS `contractSerial`,\n"
                         + "        'فاتورة مبيعات' AS `type_name`,\n"
-                        + "        NULL AS `documentSerial`\n"
+                        + "        NULL AS `documentSerial`,\n"
+                        + "         ios.name as customerName , \n"
+                        + "         ios.code as customerCode , \n"
+                        + "         `ipi`.`serial` as invoiceNumber \n"
                         + "    FROM\n"
-                        + "        (((((`inv_purchase_invoice` `ipi` )\n"
+                        + "        ((((((`inv_purchase_invoice` `ipi` )\n"
                         + "        LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON ((`ipi`.`id` = `ipid`.`inv_purchase_invoice_id`)))\n"
                         + "        LEFT JOIN `gl_bank` `gb` ON ((`gb`.`id` = `ipi`.`gl_bank_id`)))\n"
                         + "        LEFT JOIN `currency` `c` ON ((`c`.`id` = `ipi`.`currency_id`)))\n"
                         + "        LEFT JOIN `toby_user` `i` ON ((`i`.`id` = `ipi`.`created_by`)))\n"
+                        + "        LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `ipi`.`organization_site_id`)))"
                         + "    WHERE\n"
                         + "        (`ipi`.`payment_type` = 0)    "
                         + "            AND `ipi`.`gl_bank_id` in (").append(cashAccountSettlementSearchBean.getGlBankIdSelected()).append(")");
@@ -1849,13 +1876,17 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
                         + "        `ipi`.`type` AS `status`,\n"
                         + "        '' AS `contractSerial`,\n"
                         + "        ' مردود مشتريات' AS `type_name`,\n"
-                        + "        NULL AS `documentSerial`\n"
+                        + "        NULL AS `documentSerial`,\n"
+                        + "         ios.name as customerName , \n"
+                        + "         ios.code as customerCode , \n"
+                        + "         `ipi`.`serial` as invoiceNumber \n"
                         + "    FROM\n"
-                        + "        (((((`inv_purchase_invoice` `ipi` )\n"
+                        + "        ((((((`inv_purchase_invoice` `ipi` )\n"
                         + "        LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON ((`ipi`.`id` = `ipid`.`inv_purchase_invoice_id`)))\n"
                         + "        LEFT JOIN `gl_bank` `gb` ON ((`gb`.`id` = `ipi`.`gl_bank_id`)))\n"
                         + "        LEFT JOIN `currency` `c` ON ((`c`.`id` = `ipi`.`currency_id`)))\n"
                         + "        LEFT JOIN `toby_user` `i` ON ((`i`.`id` = `ipi`.`created_by`)))\n"
+                        + "        LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `ipi`.`organization_site_id`)))"
                         + "    WHERE\n"
                         + "        (`ipi`.`payment_type` = 0)    "
                         + "            AND `ipi`.`gl_bank_id` in (").append(cashAccountSettlementSearchBean.getGlBankIdSelected()).append(")");
@@ -1901,13 +1932,17 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
                         + "        `ipi`.`type` AS `status`,\n"
                         + "        '' AS `contractSerial`,\n"
                         + "        'مردود مبيعات' AS `type_name`,\n"
-                        + "        NULL AS `documentSerial`\n"
+                        + "        NULL AS `documentSerial`,\n"
+                        + "         ios.name as customerName , \n"
+                        + "         ios.code as customerCode , \n"
+                        + "         `ipi`.`serial` as invoiceNumber \n"
                         + "    FROM\n"
-                        + "        ((((`inv_purchase_invoice` `ipi` \n"
+                        + "        (((((`inv_purchase_invoice` `ipi` \n"
                         + "        LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON ((`ipi`.`id` = `ipid`.`inv_purchase_invoice_id`)))\n"
                         + "        LEFT JOIN `gl_bank` `gb` ON ((`gb`.`id` = `ipi`.`gl_bank_id`)))\n"
                         + "        LEFT JOIN `currency` `c` ON ((`c`.`id` = `ipi`.`currency_id`)))\n"
                         + "        LEFT JOIN `toby_user` `i` ON ((`i`.`id` = `ipi`.`created_by`)))\n"
+                        + "        LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `ipi`.`organization_site_id`)))"
                         + "    WHERE\n"
                         + "        (`ipi`.`payment_type` = 0)    "
                         + "            AND `ipi`.`gl_bank_id` in (").append(cashAccountSettlementSearchBean.getGlBankIdSelected()).append(")");
@@ -1927,12 +1962,9 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
                 query.append(" AND `ipi`.`type` = 3  group by ipi.id  ");
             }
 
-         
         }
         return query == null ? null : query.toString();
     }
-
-
 
     public BigDecimal findOpeningBalancesForSpecificCashAccountNew(SubAccountSummarySearchBean cashAccountSettlementSearchBean, Integer bankId, Integer type) {
         Map<String, Object> params = new HashMap();
@@ -1953,8 +1985,8 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
 
         return value;
     }
-    
-        public void addOpeningBalanceNew(SubAccountSummaryReport cashAccountSettlment, CashAccountSettlementBean cashAccountSettlementBean,
+
+    public void addOpeningBalanceNew(SubAccountSummaryReport cashAccountSettlment, CashAccountSettlementBean cashAccountSettlementBean,
             SubAccountSummarySearchBean cashAccountSettlementSearchBean) {
         cashAccountSettlementBean.setOpeningBalance(BigDecimal.ZERO);
         if (cashAccountSettlment.getBankId() != null && cashAccountSettlementBean.getDistinctBankId().compareTo(cashAccountSettlment.getBankId()) != 0) {
@@ -2025,6 +2057,5 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
             }
         }
     }
-
 
 }

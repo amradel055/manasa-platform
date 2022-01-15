@@ -753,11 +753,13 @@
                     <div class="ui-g-4 ui-xl-4" style="margin-top: -2%;" >
                         <div class="ui-g-12 ui-xl-12" >
                             <div class="ui-g-6 ui-xl-6" style="overflow: hidden;">
-                                <p:calendar id="dateFrom"  locale="es"
+                                <p:calendar id="dateFrom"  locale="es" rendered="#{(userData.userScreens['proworkorder'].edit)}"
                                             value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.date}"
-                                            pattern="dd/MM/yyyy"
+                                            pattern="dd/MM/yyyy hh:mm:ss"
                                             style="width:50%!important"/>
-
+                                <p:outputLabel value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.date}" rendered="#{not (userData.userScreens['proworkorder'].edit)}" >
+                                    <f:convertDateTime type="date" pattern="dd-MM-yyyy  hh:mm:ss"/>
+                                </p:outputLabel>  
                             </div>
                             <div class="ui-g-6 ui-xl-6">
 
@@ -895,7 +897,7 @@
                                                 event="itemSelect" listener="#{invPurchaseInvoiceFormDTOMB.validateItems(invPurchaseInvoiceDetailsTable)}" />
                                     </p:autoComplete>            
                                 </p:column>
-                                
+
                                 <p:column style="width: 17vh;text-align: -webkit-auto;border-radius: 0px" id="itemNameCode" headerText="الكود" 
                                           filterBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}" 
                                           filterMatchMode="contains" 
@@ -995,7 +997,7 @@
                                           filterBy="#{invPurchaseInvoiceDetailsTable.cost}" 
                                           filterMatchMode="contains" 
                                           sortBy="#{invPurchaseInvoiceDetailsTable.cost}"
-                                          
+
                                           filterable="false">
                                     <p:inputText id="costTt" dir="LTR"
                                                  value="#{invPurchaseInvoiceDetailsTable.cost}"
