@@ -5,6 +5,7 @@
  */
 package com.toby.entiy;
 
+import com.toby.dto.CostCenterDTO;
 import com.toby.dto.GlAccountDTO;
 import com.toby.entity.GlBank;
 import com.toby.views.InstTransactionView;
@@ -52,6 +53,7 @@ public class GlBankTransactionEntity extends BaseEntity {
     private String createdNameParent;
     private String createdByName;
     private GlAccountDTO costAccount;
+    private CostCenterDTO costCenterDTO;
 
     public Date getDate() {
         return date;
@@ -413,6 +415,20 @@ public class GlBankTransactionEntity extends BaseEntity {
      */
     public void setCostAccount(GlAccountDTO costAccount) {
         this.costAccount = costAccount;
+    }
+
+    /**
+     * @return the costCenterDTO
+     */
+    public CostCenterDTO getCostCenterDTO() {
+        return costCenterDTO;
+    }
+
+    /**
+     * @param costCenterDTO the costCenterDTO to set
+     */
+    public void setCostCenterDTO(CostCenterDTO costCenterDTO) {
+        this.costCenterDTO = costCenterDTO;
     }
 
 }

@@ -1393,6 +1393,18 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
         }
     }
     
+    public void fillCostCenter() {
+        try {
+            Integer xjg = 0;
+            if (glBankTransactionEntity != null && glBankTransactionEntity.getCostAccount() != null && glBankTransactionEntity.getCostAccount().getCostCenterId() != null) {
+                glBankTransactionEntity.setCostCenterDTO(costCenterService.findCostCenterDTO(glBankTransactionEntity.getCostAccount().getCostCenterId()));
+            }            
+            forHashasa();
+        } catch (Exception e) {
+            saveError(e, "SettlementDeedFormMB", "notLoseData");
+        }
+    }
+    
     public void notLoseData() {
         try {
             Integer xjg = 0;

@@ -604,6 +604,9 @@ public class GlAccountServiceImpl implements GlAccountService {
         glAccountDTO.setName(entity.getName());
         glAccountDTO.setMsg(entity.getMsg());
         glAccountDTO.setAccNumber(entity.getAccNumber());
+        if(entity.getCostCenterId() != null){
+            glAccountDTO.setCostCenterId(entity.getCostCenterId().getId());
+        }
 
         return glAccountDTO;
     }

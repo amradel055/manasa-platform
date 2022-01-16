@@ -81,6 +81,8 @@ public interface SymbolService {
     public List<Symbol> getSpecialDocumentsTypes();
     
     public Symbol getSpecialDocumentsTypes(Integer serial);
+    
+    public Symbol getSymbolTypes(Integer serial);
 
     public Symbol findSymbol(Integer id);
 

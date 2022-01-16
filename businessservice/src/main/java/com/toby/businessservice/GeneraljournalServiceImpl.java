@@ -51,14 +51,15 @@ public class GeneraljournalServiceImpl implements GeneraljournalService {
     private SymbolService symbolService;
 
     @Override
-    public synchronized GeneralJournal addGeneralJournalGlobal(Integer yearSelectionId, Integer specialDocumentsTypes, Integer serial, Date date, String remark, TobyUser tobyUser, Integer type) {
+    public synchronized GeneralJournal addGeneralJournalGlobal(Integer yearSelectionId, Integer specialDocumentsTypes,
+            Integer serial, Date date, String remark, TobyUser tobyUser, Integer type,boolean postFlag) {
 
         GeneralJournal generalJournal = new GeneralJournal();
         generalJournal.setGeneralStatement(remark);
         generalJournal.setGeneralData(date);
         generalJournal.setGeneralDecument(serial);
-        generalJournal.setPost_flag(true);
-        Symbol symbol = symbolService.getSpecialDocumentsTypes(specialDocumentsTypes);
+        generalJournal.setPost_flag(postFlag);
+        Symbol symbol = symbolService.getSymbolTypes(specialDocumentsTypes);
         GlYear glYear = new GlYear();
         glYear.setId(yearSelectionId);
         generalJournal.setGlYear(glYear);
@@ -93,6 +94,9 @@ public class GeneraljournalServiceImpl implements GeneraljournalService {
 
         if (generalJournal.getId() == null) {
             generalJournal.setSerial(max + 1);
+            if (serial == null) {
+                generalJournal.setGeneralDecument(max + 1);
+            }
         }
 
         return dao.updateEntity(generalJournal);

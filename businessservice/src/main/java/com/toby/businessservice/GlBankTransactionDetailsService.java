@@ -41,5 +41,8 @@ public interface GlBankTransactionDetailsService {
     public List<GeneralJournalDTO> tarhilOne(TobyUser tobyUser,Integer type); 
     
     public Integer updateGlBankTransactionDetails(List<GlBankTransactionDetail> glBankTransactionDetailList, GlBankTransaction glBankTransaction, TobyUser tobyUser);
+        
+    public Integer tarhilSettlement(List<GlBankTransactionDetail> list, GlBankTransaction glBankTransaction, TobyUser tobyUser, Integer specialDocumentsTypes,boolean postFlag);
+    
 
 }

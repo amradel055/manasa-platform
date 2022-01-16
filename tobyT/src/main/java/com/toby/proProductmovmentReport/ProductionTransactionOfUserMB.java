@@ -112,14 +112,14 @@ public class ProductionTransactionOfUserMB extends BaseFormBean {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "يجب اختيار الفئة "));
                 setShowMessage((Boolean) true);
             }
-            else if (getPrintProductionDTO().getFromUser()==null) {
-                  FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "يجب اختيار من عميل  "));
-                setShowMessage((Boolean) true); 
-            }
-             else if (getPrintProductionDTO().getToUser()==null) {
-                  FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "يجب اختيار الي عميل  "));
-                setShowMessage((Boolean) true); 
-            }
+//            else if (getPrintProductionDTO().getFromUser()==null) {
+//                  FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "يجب اختيار من عميل  "));
+//                setShowMessage((Boolean) true); 
+//            }
+//             else if (getPrintProductionDTO().getToUser()==null) {
+//                  FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "يجب اختيار الي عميل  "));
+//                setShowMessage((Boolean) true); 
+//            }
               else if (getPrintProductionDTO().getFromDate()==null) {
                   FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "يجب اختيار من تاريخ  "));
                 setShowMessage((Boolean) true); 

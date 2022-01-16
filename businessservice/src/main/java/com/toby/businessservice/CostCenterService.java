@@ -25,6 +25,8 @@ public interface CostCenterService {
     public List<CostCenter> getCompanyCostCenterRoots(Integer companyId);
 
     public List<CostCenter> getAllCostCenters(Integer branchId);
+    
+    public CostCenterDTO findCostCenterDTO(Integer costCenterId);
 
     public List<CostCenter> getCompanyCostCenters(Integer companyId);
 

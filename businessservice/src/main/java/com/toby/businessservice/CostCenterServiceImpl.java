@@ -153,6 +153,16 @@ public class CostCenterServiceImpl implements CostCenterService {
             return null;
         }
     }
+    
+    @Override
+    public CostCenterDTO findCostCenterDTO(Integer costCenterId) {
+        if (costCenterId != null) {
+           CostCenter entity = dao.findEntityById(CostCenter.class, costCenterId);
+            return mapTODTO(entity, Boolean.TRUE);
+        } else {
+            return null;
+        }
+    }
 
     @Override
     public CostCenter findCostCenterByCode(Integer parentCode, Integer branchId) {

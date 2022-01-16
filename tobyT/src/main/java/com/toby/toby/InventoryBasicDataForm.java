@@ -2662,9 +2662,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
      * @param invInvoiceList the invInvoiceList to set
      */
     public void setInvInvoiceList(List<InvInvoiceDTO> invInvoiceList) {
-        /**
-     * @return the dataModelList
-     */
+        this.invInvoiceList = invInvoiceList;
     }
 
 }

@@ -121,6 +121,13 @@ public class SymbolServiceImpl implements SymbolService {
         List<Symbol> list = dao.findListByQuery("SELECT sym FROM Symbol sym WHERE  sym.generalSymbolId.serial=1 AND sym.serial >= 1000 AND sym.serial <= 2000  AND sym.serial = :serial",params);
         return (list != null && !list.isEmpty()) ? list.get(0) : null;
     }
+    @Override
+    public Symbol getSymbolTypes(Integer serial) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("serial", serial);
+        List<Symbol> list = dao.findListByQuery("SELECT sym FROM Symbol sym WHERE  sym.generalSymbolId.serial=1   AND sym.serial = :serial",params);
+        return (list != null && !list.isEmpty()) ? list.get(0) : null;
+    }
 
     @Override
     public Symbol getSymbol(Integer SymbolId) {
