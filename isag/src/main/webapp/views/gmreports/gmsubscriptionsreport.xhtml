@@ -24,129 +24,137 @@
             <div class="col-xs-12">
                 <p:messages id="curmsg" showDetail="true" rendered="true" closable="true"/>   
             </div>
-            
-            
-            
-               
-             <p:dataTable id="invInvoicePurchaseTable"
-                             var="invInvoicePurchaseTable" 
-                             widgetVar="bTable" 
-                             rowIndexVar="index" 
-                             value="#{reportMB.resultList}"
-                             paginator="true"
-                             rows="10" 
-                             lazy="true" 
-                             paginatorTemplate="{CurrentPageReport} {FirstPageLink}
-                             {PreviousPageLink} {PageLinks} {NextPageLink}
-                             {LastPageLink} {RowsPerPageDropdown}" 
-                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" 
-                             >
-                    <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px;"  filterStyle="display:none" 
-                               filterBy="#{invInvoicePurchaseTable.serial}" 
-                               filterMatchMode="contains" 
-                               headerText="#{userData.userDDs['INVOICE_NO']}"
-                               sortBy="#{invInvoicePurchaseTable.serial}"
-                               >
-                        <p:outputLabel value="#{invInvoicePurchaseTable.serial}" />
-                    </p:column>
 
 
 
-                    <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px;"  filterStyle="display:none" 
-                               filterBy="#{invInvoicePurchaseTable.clientName}" 
-                               filterMatchMode="contains" 
-                               headerText="اسم المشترك "
-                               sortBy="#{invInvoicePurchaseTable.clientName}" >
-                         <p:outputLabel value="#{invInvoicePurchaseTable.clientName}" />
-                    </p:column>
-                       <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px;"  filterStyle="display:none" 
-                                  filterBy="#{invInvoicePurchaseTable.phone}" 
-                               filterMatchMode="contains" 
-                               headerText="الهاتف "
-                               sortBy="#{invInvoicePurchaseTable.phone}" >
-                            <p:outputLabel value="#{invInvoicePurchaseTable.phone}" />
-                    </p:column>
-                      <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px;"  filterStyle="display:none" 
-                                 filterBy="#{invInvoicePurchaseTable.creationDate}" 
-                               filterMatchMode="contains" 
-                               headerText=" تاريخ السند "
-                               sortBy="#{invInvoicePurchaseTable.creationDate}" >
-                           <p:outputLabel value="#{invInvoicePurchaseTable.creationDate}" >
-                                <f:convertDateTime type="date" pattern="dd-MM-yyyy hh:mm:ss"/>
-                               </p:outputLabel>
-                               
-                    </p:column>
-                             <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px;"  filterStyle="display:none" 
-                                        filterBy="#{invInvoicePurchaseTable.value}" 
-                               filterMatchMode="contains" 
-                               headerText=" المدفوع "
-                               sortBy="#{invInvoicePurchaseTable.value}" >
-                           <p:outputLabel value="#{invInvoicePurchaseTable.value}" />
 
-                    </p:column>
-                   
-              
-                 
-                </p:dataTable> 
-                            <div class="ui-g-3 ui-xl-3">
+            <p:dataTable id="invInvoicePurchaseTable"
+                         var="invInvoicePurchaseTable" 
+                         widgetVar="bTable" 
+                         rowIndexVar="index" 
+                         value="#{reportMB.resultList}"
+                         paginator="true"
+                         rows="10" 
+                         lazy="true" 
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink}
+                         {PreviousPageLink} {PageLinks} {NextPageLink}
+                         {LastPageLink} {RowsPerPageDropdown}" 
+                         emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" 
+                         >
+                <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px;"  filterStyle="display:none" 
+                           filterBy="#{invInvoicePurchaseTable.serial}" 
+                           filterMatchMode="contains" 
+                           headerText="#{userData.userDDs['INVOICE_NO']}"
+                           sortBy="#{invInvoicePurchaseTable.serial}"
+                           >
+                    <p:outputLabel value="#{invInvoicePurchaseTable.serial}" />
+                </p:column>
 
-                                <div class="ui-g-6 ui-xl-6">
-                                    <h:outputText id="taxvalue" 
-                                                  style="text-align:right" 
-                                                  value="#{reportMB.resualtDTO.sumValue}" />
-                                </div>
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 105px" value="القيمه الاجمالية"/>
 
-                                </div>
-                            </div>
-                             <div class="ui-g-12 ui-xl-12">
 
-                                    <div class="ui-g-6 ui-xl-6">
-                                        <p:calendar style="width: 35%"  id="dateFrom"
-                                                    value="#{reportMB.searchdto.dateFrom}"
-                                                    pattern="dd/MM/yyyy  HH:mm:ss"   >
-                                           
-                                        </p:calendar>
-                                    </div>
-                                    <div class="ui-g-6 ui-xl-6">
-                                        <p:outputLabel style="width: 75px;margin-right: 6%"  value="#{userData.userDDs['YEAR_FROM']}" />
+                <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px;"  filterStyle="display:none" 
+                           filterBy="#{invInvoicePurchaseTable.clientName}" 
+                           filterMatchMode="contains" 
+                           headerText="اسم المشترك "
+                           sortBy="#{invInvoicePurchaseTable.clientName}" >
+                    <p:outputLabel value="#{invInvoicePurchaseTable.clientName}" />
+                </p:column>
+                <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px;"  filterStyle="display:none" 
+                           filterBy="#{invInvoicePurchaseTable.phone}" 
+                           filterMatchMode="contains" 
+                           headerText="الهاتف "
+                           sortBy="#{invInvoicePurchaseTable.phone}" >
+                    <p:outputLabel value="#{invInvoicePurchaseTable.phone}" />
+                </p:column>
+                <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px;"  filterStyle="display:none" 
+                           filterBy="#{invInvoicePurchaseTable.creationDate}" 
+                           filterMatchMode="contains" 
+                           headerText=" تاريخ السند "
+                           sortBy="#{invInvoicePurchaseTable.creationDate}" >
+                    <p:outputLabel value="#{invInvoicePurchaseTable.creationDate}" >
+                        <f:convertDateTime type="date" pattern="dd-MM-yyyy hh:mm:ss"/>
+                    </p:outputLabel>
 
-                                    </div>
-                                </div>
-                                <div class="ui-g-12 ui-xl-12">
+                </p:column>
+                <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px;"  filterStyle="display:none" 
+                           filterBy="#{invInvoicePurchaseTable.value}" 
+                           filterMatchMode="contains" 
+                           headerText=" المدفوع "
+                           sortBy="#{invInvoicePurchaseTable.value}" >
+                    <p:outputLabel value="#{invInvoicePurchaseTable.value}" />
 
-                                    <div class="ui-g-6 ui-xl-6">
-                                        <p:calendar style="width: 35%"  id="dateTo"
-                                                    value="#{reportMB.searchdto.dateTo}"
-                                                    
-                                                    pattern="dd/MM/yyyy  HH:mm:ss"   >
-                                            
-                                        </p:calendar>
-                                    </div>
-                                    <div class="ui-g-6 ui-xl-6">
-                                        <p:outputLabel style="width: 75px;margin-right: 6%"  value="#{userData.userDDs['TO_DATE']}" />
+                </p:column>
+                <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px;"  filterStyle="display:none" 
+                           filterBy="#{invInvoicePurchaseTable.createdBy}" 
+                           filterMatchMode="contains" 
+                           headerText="منشئ الاشتراك"
+                           sortBy="#{invInvoicePurchaseTable.createdBy}" >
+                    <p:outputLabel value="#{invInvoicePurchaseTable.createdBy}" />
 
-                                    </div>
-                                </div>
-            
-             
-             <p:commandButton  class="searchButtons"
-                                          value="#{userData.userDDs['SEARCH']}"                                      
-                                          action="#{reportMB.search()}" 
-                                          update="@form"/>
-              <p:commandButton 
-                            class="sprintButtons"
-                            update="@form" onclick="form.target = '_blank'"  ajax="false"
-                            icon="fa fa-fw fa-print" style="background-color: rgb(0, 74, 128);border-radius: 3px;"
-                            title="print" 
-                            action="#{reportMB.exportPDF(actionEvent)}" >
-                            
-                        </p:commandButton>
-       
-                     
+                </p:column>
 
-                
+
+
+            </p:dataTable> 
+            <div class="ui-g-3 ui-xl-3">
+
+                <div class="ui-g-6 ui-xl-6">
+                    <h:outputText id="taxvalue" 
+                                  style="text-align:right" 
+                                  value="#{reportMB.resualtDTO.sumValue}" />
+                </div>
+                <div class="ui-g-6 ui-xl-6">
+                    <p:outputLabel style="width: 105px" value="القيمه الاجمالية"/>
+
+                </div>
+            </div>
+            <div class="ui-g-12 ui-xl-12">
+
+                <div class="ui-g-6 ui-xl-6">
+                    <p:calendar style="width: 35%"  id="dateFrom"
+                                value="#{reportMB.searchdto.dateFrom}"
+                                pattern="dd/MM/yyyy  HH:mm:ss"   >
+
+                    </p:calendar>
+                </div>
+                <div class="ui-g-6 ui-xl-6">
+                    <p:outputLabel style="width: 75px;margin-right: 6%"  value="#{userData.userDDs['YEAR_FROM']}" />
+
+                </div>
+            </div>
+            <div class="ui-g-12 ui-xl-12">
+
+                <div class="ui-g-6 ui-xl-6">
+                    <p:calendar style="width: 35%"  id="dateTo"
+                                value="#{reportMB.searchdto.dateTo}"
+
+                                pattern="dd/MM/yyyy  HH:mm:ss"   >
+
+                    </p:calendar>
+                </div>
+                <div class="ui-g-6 ui-xl-6">
+                    <p:outputLabel style="width: 75px;margin-right: 6%"  value="#{userData.userDDs['TO_DATE']}" />
+
+                </div>
+            </div>
+
+
+            <p:commandButton  class="searchButtons"
+                              value="#{userData.userDDs['SEARCH']}"                                      
+                              action="#{reportMB.search()}" 
+                              update="@form"/>
+            <p:commandButton 
+                class="sprintButtons"
+                update="@form" onclick="form.target = '_blank'"  ajax="false"
+                icon="fa fa-fw fa-print" style="background-color: rgb(0, 74, 128);border-radius: 3px;"
+                title="print" 
+                action="#{reportMB.exportPDF(actionEvent)}" >
+
+            </p:commandButton>
+
+
+
+
         </h:form>
     </ui:define>
 </ui:composition>

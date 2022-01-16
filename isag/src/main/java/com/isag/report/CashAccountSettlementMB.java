@@ -178,7 +178,7 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
         setAccountSettlementBean(cashAccountSettlmentService.searchNew(getCashAccountSettlementSearchBean()));
     }
 
-    public void search2() {
+    public void search2() {//
         glBankCopyMap = new HashMap<>();
         if (glBankList != null && !glBankList.isEmpty()) {
             for (GlBankDTO gb : glBankList) {
