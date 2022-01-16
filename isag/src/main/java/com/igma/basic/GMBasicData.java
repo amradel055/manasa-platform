@@ -88,7 +88,7 @@ public class GMBasicData extends BaseFormBean {
     public String updateImage() {
 
         if (getInvOrganizationSiteDTOSelected().getClientImage() != null && !getInvOrganizationSiteDTOSelected().getClientImage().isEmpty()) {
-            organizationSiteService.updateImage(getGmSubscriptionsDTO().getOrganizationSiteId().getId(), getInvOrganizationSiteDTOSelected().getClientImage());
+            organizationSiteService.updateImage(getInvOrganizationSiteDTOSelected().getId() , getInvOrganizationSiteDTOSelected().getClientImage());
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "تم التسجيل بنجاح", "تم التسجيل بنجاح"));
         } else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "خطأ", getInvOrganizationSiteDTOSelected().getMsg()));
@@ -108,6 +108,7 @@ public class GMBasicData extends BaseFormBean {
 
     public void addNewCustomer2() {
         getGmSubscriptionsDTO().setOrganizationSiteId(organizationSiteService.addNewCustomer(getInvOrganizationSiteDTOSelected(), getInvOrganizationSiteDTOList(), getUserData().getUser()));
+        setInvOrganizationSiteDTOSelected(getGmSubscriptionsDTO().getOrganizationSiteId());
         getGmSubscriptionsDTO().setShowCustomerDate(Boolean.FALSE);
         saveImage();
         CloseDlg("dlg3");
