@@ -20,11 +20,13 @@ import com.toby.converter.GlAccountDTOConverter;
 import com.toby.converter.GlAdminUnitConverter;
 import com.toby.converter.GlBankConverter;
 import com.toby.converter.SymbolConverter;
+import com.toby.core.GenericDAO;
 import com.toby.dto.CostCenterDTO;
 import com.toby.dto.GlAccountDTO;
 import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.entity.AccountsSystemSettings;
 import com.toby.entity.CostCenter;
+import com.toby.entity.GeneralJournal;
 import com.toby.entity.GlAccount;
 import com.toby.entity.GlAdminUnit;
 import com.toby.entity.GlBank;
@@ -185,6 +187,9 @@ public class SettlementDeedVoucherFormMB extends GlBankBasicDataForm {
 
     @EJB
     private GeneraljournalServiceDTO generaljournalServiceDTO;
+
+    @EJB
+    private GenericDAO dao;
 
     @Override
     @PostConstruct
@@ -719,6 +724,12 @@ public class SettlementDeedVoucherFormMB extends GlBankBasicDataForm {
                         glBankTransaction.setGlAccountId(glAccount);
                     }
 
+                    if (glBankTransactionEntity.getCostCenterDTO() != null) {
+                        CostCenter costCenter = new CostCenter();
+                        costCenter.setId(glBankTransactionEntity.getCostCenterDTO().getId());
+                        glBankTransaction.setCostCenter(costCenter);
+                    }
+
                     String noteSreceivablesType = accountsSystemSettings.getNoteSreceivablesType();
 
                     if (getUri().contains("settlementdeedForm")) {
@@ -831,8 +842,13 @@ public class SettlementDeedVoucherFormMB extends GlBankBasicDataForm {
                     }
 
                     if (saveValidation != false) {
-                        glBankTransactionDetailsService.tarhilSettlement(glBankTransactionDetailsUpdatedList, glBankTransaction, getUserData().getUser(),3,false);
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, getUserData().getUserDDs().get("INFO"), "يتم الخفظ بنجاح"));
+                        GeneralJournal generalJournal = new GeneralJournal();
+                        generalJournal.setId(glBankTransactionDetailsService.tarhilSettlement(glBankTransactionDetailsUpdatedList, glBankTransaction, getUserData().getUser(), 3, false));
+                        generalJournal = dao.findEntityById(GeneralJournal.class, generalJournal.getId());
+                        glBankTransactionEntity.setSerial(generalJournal.getSerial());
+                        glBankTransaction.setId(generalJournal.getId());
+                        glBankTransaction.setGeneralJournalId(generalJournal);
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, getUserData().getUserDDs().get("INFO"), "تم الخفظ بنجاح"));
                     }
 
                     return "";
@@ -1052,6 +1068,8 @@ public class SettlementDeedVoucherFormMB extends GlBankBasicDataForm {
         } catch (Exception e) {
             saveError(e, "SettlementDeedFormMB", "notLoseData");
         }
+        
+       
     }
 
     public void forHashasa() {

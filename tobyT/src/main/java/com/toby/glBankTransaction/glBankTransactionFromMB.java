@@ -5,12 +5,16 @@
  */
 package com.toby.glBankTransaction;
 
+import com.toby.bean.BankBalanceReportBean;
+import com.toby.bean.BankBalanceReportSearchBean;
 import com.toby.businessservice.CurrencyOperationService;
 import com.toby.businessservice.GlAccountService;
 import com.toby.businessservice.GlBankTransactionDetailsService;
 import com.toby.businessservice.GlBankTransactionService;
 import com.toby.businessservice.TobyUserBankService;
+import com.toby.businessservice.report.BankBalanceViewService;
 import com.toby.converter.GlBankConverter;
+import com.toby.dto.GlBankDTO;
 import com.toby.entity.Currency;
 import com.toby.entity.CurrencyOperation;
 import com.toby.entity.GlBank;
@@ -47,29 +51,29 @@ import tafqeet.Tafqeet;
 @Named(value = "glBankTransactionFromMB")
 @ViewScoped
 public class glBankTransactionFromMB extends GlBankBasicDataForm {
-
+    
     private GlBankTransaction glBankTransaction;
     private GlBankTransactionEntity glBankTransactionEntity;
-
+    private BigDecimal bankCash;
     private GlBankTransactionDetail glBankTransactionDetail;
     private GlBankTransactionDetailEntity GlBankTransactionDetailEntity;
-
+    private BankBalanceReportSearchBean balanceReportSearchBean;
     private Integer glBankTransactionId;
-
+    
     private GlBank glBank;
     private List<GlBank> glBankListTo;
     private List<GlBank> glBankListFrom;
     private GlBankEntity glBankEntity;
-
+    
     private GlBankConverter glBankConverterTo;
     private GlBankConverter glBankConverterFrom;
-
+    
     private List<Currency> currencylist;
     private Currency currency;
-
+    
     private CurrencyOperation currencyOperation;
     private List<CurrencyOperation> currencyOperations;
-
+    
     private Map<Integer, GlBankTransactionDetail> invQuotationDetailList;
 
 //    private Boolean disableSave = false;
@@ -78,19 +82,22 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
     private String remark;
     @EJB
     private CurrencyOperationService currencyOperationService;
-
+    
     @EJB
     GlBankTransactionService bankTransactionService;
-
+    
     @EJB
     GlBankTransactionDetailsService bankTransactionDetailsService;
-
+    
     @EJB
     TobyUserBankService tobyUserBankService;
-
+    
     @EJB
     private GlAccountService glAccountService;
-
+    
+    @EJB
+    private BankBalanceViewService bankBalanceViewService;
+    
     @Override
     @PostConstruct
     public void init() {
@@ -104,14 +111,14 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
             saveError(e, "glBankTransactionFromMB", "init");
         }
     }
-
+    
     @Override
     public void load() {
         try {
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
             setUserData((UserData) context.getSessionMap().get("userLogInData"));
             setScreenMode((String) context.getSessionMap().get("ScreenMode"));
-
+            
             glBankTransactionEntity = new GlBankTransactionEntity();
             GlBankTransactionDetailEntity = new GlBankTransactionDetailEntity();
             glBankTransactionEntity.setPaymentType(0);
@@ -119,41 +126,43 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
             glBankListFrom = tobyUserBankService.getAllGlBankByTypeAndBranchId(getUserData().getUserBranch().getId(), glBankTransactionEntity.getPaymentType());
 //            setGlBankConverterTo(new GlBankConverter(glBankListTo));
             setGlBankConverterFrom(new GlBankConverter(glBankListFrom));
-
+            
             if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("add")) {
                 setGlBankTransactionDataEmpty();
+                  getBankCashBalance();
                 return;
             } else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("edit")) {
                 try {
                     glBankTransactionId = (Integer) context.getSessionMap().get("glBankTransactionSelected");
                     validateGlBankUpdatedValues(glBankTransactionId);
-
+                    getBankCashBalance();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
+          
         } catch (Exception e) {
             saveError(e, "glBankTransactionFromMB", "load");
         }
-
+        
     }
-
+    
     public void convertDateFrom() {
         getGlBankTransactionEntity().setDate(findDateFromHijriFrom());
     }
-
+    
     public void setGlBankTransactionDataEmpty() {
         try {
-
+            
             fillGlBanks();
             glBankTransactionEntity.setDate(new Date());
-
+            
             updateRate();
         } catch (Exception e) {
             saveError(e, "glBankTransactionFromMB", "setGlBankTransactionDataEmpty");
         }
     }
-
+    
     public void fillGlBanks() {
         try {
             GlBankTransactionDetailEntity.setBankFrom((glBankListFrom != null && !glBankListFrom.isEmpty()) ? glBankListFrom.get(0) : null);
@@ -169,14 +178,30 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
             saveError(e, "glBankTransactionFromMB", "fillGlBanks");
         }
     }
-
+    
+    public void getBankCashBalance() {
+        if (GlBankTransactionDetailEntity.getBankFrom() != null) {
+            getBalanceReportSearchBean().setDateTo(new Date());
+            GlBankDTO bankDTO = new GlBankDTO();
+            bankDTO.setId(GlBankTransactionDetailEntity.getBankFrom().getId());
+            getBalanceReportSearchBean().setGlBankList(new ArrayList<>());
+            getBalanceReportSearchBean().getGlBankList().add(bankDTO);
+            getBalanceReportSearchBean().setBranchId(getUserData().getSelectedBranch());
+            List<BankBalanceReportBean> balanceReportBeans = bankBalanceViewService.search(balanceReportSearchBean);
+            if(balanceReportBeans != null && !balanceReportBeans.isEmpty() && balanceReportBeans.get(0) != null){
+            bankCash = balanceReportBeans.get(0).getBalance(); 
+            }
+        }
+        
+    }
+    
     public void validateGlBankUpdatedValues(Integer glBankTrId) {
         try {
             glBankTransaction = new GlBankTransaction();
             glBankTransactionDetail = new GlBankTransactionDetail();
             glBankTransaction = bankTransactionService.findGlBankTransactionById(glBankTrId);
             glBankTransactionDetail = bankTransactionDetailsService.getGlBankTransactionDetailByGlBankTransactionId(glBankTrId);
-
+            
             glBankTransactionEntity.setId(glBankTransaction.getId());
             glBankTransactionEntity.setMarkEdit(glBankTransaction.getMarkEdit() != null ? glBankTransaction.getMarkEdit() : null);
             glBankTransactionEntity.setValue(glBankTransaction.getValue() != null ? glBankTransaction.getValue() : null);
@@ -201,7 +226,7 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
             GlBankTransactionDetailEntity.setAdminUnitId(glBankTransactionDetail.getAdminUnitId() != null ? glBankTransactionDetail.getAdminUnitId().getId() : null);
             GlBankTransactionDetailEntity.setCostCenterId(glBankTransactionDetail.getCostCenterId() != null ? glBankTransactionDetail.getCostCenterId().getId() : null);
             GlBankTransactionDetailEntity.setGlBankTransactionId(glBankTransactionDetail.getGlBankTransactionId() != null ? glBankTransactionDetail.getGlBankTransactionId().getId() : null);
-
+            
             GlBankTransactionDetailEntity.setBankFrom(glBankTransactionDetail.getBankIdFrom() != null ? glBankTransactionDetail.getBankIdFrom() : null);
 //            GlBankTransactionDetailEntity.setBankTo(glBankTransactionDetail.getBankIdTo() != null ? glBankTransactionDetail.getBankIdTo() : null);
             remark = glBankTransactionEntity.getRemark();
@@ -209,7 +234,7 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
             saveError(e, "glBankTransactionFromMB", "validateGlBankUpdatedValues");
         }
     }
-
+    
     public String exit() {
         try {
             exit("../glBankTransaction/glBankTransactionList.xhtml");
@@ -219,14 +244,14 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
             return null;
         }
     }
-
+    
     @Override
     public String save() {
         try {
-
+            
             glBankTransaction.setBranchId(getUserData().getUserBranch());
             glBankTransaction.setCompanyId(getUserData().getCompany());
-
+            
             if (glBankTransaction.getId() == null) {
                 glBankTransaction.setCreationDate(new Date());
                 glBankTransaction.setCreatedBy(getUserData().getUser());
@@ -234,9 +259,9 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
                 glBankTransaction.setModificationDate(new Date());
                 glBankTransaction.setModifiedBy(getUserData().getUser());
             }
-
+            
             glBankTransactionDetail.setCompanyId(getUserData().getCompany());
-
+            
             if (glBankTransactionDetail.getId() == null) {
                 glBankTransactionDetail.setCreationDate(new Date());
                 glBankTransactionDetail.setCreatedBy(getUserData().getUser());
@@ -244,7 +269,7 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
                 glBankTransactionDetail.setModificationDate(new Date());
                 glBankTransactionDetail.setModifiedBy(getUserData().getUser());
             }
-
+            
             validateInputsForSave();
             saveValidation = true;
             validateSave();
@@ -259,7 +284,7 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
             return null;
         }
     }
-
+    
     public void validateInputsForSave() {
         try {
             glBankTransactionDetailEntityList = new ArrayList<>();
@@ -273,7 +298,7 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
             glBankTransaction.setTransactionType(2);
             glBankTransaction.setValue(GlBankTransactionDetailEntity.getValue());
             glBankTransaction.setValueLocal(GlBankTransactionDetailEntity.getValueLocal());
-
+            
             glBankTransactionDetail.setValue(GlBankTransactionDetailEntity.getValue() != null ? GlBankTransactionDetailEntity.getValue() : null);
             glBankTransactionDetail.setValueLocal(GlBankTransactionDetailEntity.getValueLocal() != null ? GlBankTransactionDetailEntity.getValueLocal() : null);
             glBankTransactionDetail.setAccountDebitId(GlBankTransactionDetailEntity.getBankFrom() != null ? GlBankTransactionDetailEntity.getBankFrom().getAccountId() : null);
@@ -289,7 +314,7 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
             saveError(e, "glBankTransactionFromMB", "validateInputsForSave");
         }
     }
-
+    
     public void validateSave() {
         try {
             if (GlBankTransactionDetailEntity.getBankFrom() == null) {
@@ -313,10 +338,10 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
             saveError(e, "glBankTransactionFromMB", "validateSave");
         }
     }
-
+    
     public void updateRate() {
         try {
-
+            
             if (GlBankTransactionDetailEntity.getBankFrom() != null && GlBankTransactionDetailEntity.getBankFrom().getCurrencyId() != null) {
                 if (glBankTransactionEntity.getDate() != null) {
 //                    currencyOperation = currencyOperationService.getRatesByDates(GlBankTransactionDetailEntity.getBankFrom().getCurrencyId().getId(), glBankTransactionEntity.getDate(), getUserData().getCompany().getId());
@@ -325,11 +350,12 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
 
 //                    currencyOperation = currencyOperationService.getRatesByDates(GlBankTransactionDetailEntity.getBankTo().getCurrencyId().getId(), glBankTransactionEntity.getDate(), getUserData().getCompany().getId());
                     glBankTransactionEntity.setRateBankTo(currencyOperation == null ? BigDecimal.ONE : currencyOperation.getRate());
-
+                    
                     calculateLocalValue();
+                    getBankCashBalance();
                 } else {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), getUserData().getUserDDs().get("NO_CURRENCY_ERROR")));
-
+                    
                 }
             } else {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), getUserData().getUserDDs().get("MUST_SELECT_DATE")));
@@ -337,9 +363,9 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
         } catch (Exception e) {
             saveError(e, "glBankTransactionFromMB", "updateRate");
         }
-
+        
     }
-
+    
     public void calculateLocalValue() {
         try {
             GlBankTransactionDetailEntity.setValueLocal(glBankTransactionEntity.getRate().multiply(GlBankTransactionDetailEntity.getValue() == null ? BigDecimal.ZERO : GlBankTransactionDetailEntity.getValue()));
@@ -347,11 +373,11 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
             saveError(e, "glBankTransactionFromMB", "calculateLocalValue");
         }
     }
-
+    
     public void updateDate(SelectEvent event) {
         updateRate();
     }
-
+    
     public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {
         try {
             List<GlBankTransactionEntity> gbtdes = new ArrayList<>();
@@ -366,14 +392,14 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
         } catch (Exception e) {
             saveError(e, "glBankTransactionFromMB", "exportPDF");
         }
-
+        
     }
-
+    
     public HashMap prepareReport() {
         try {
             Map<String, String> userDDs = getUserData().getUserDDs();
             HashMap hashMap = new HashMap();
-
+            
             hashMap.put("PrintedBy", getUserData().getUser().getName());
             hashMap.put("branchName", getUserData().getUserBranch().getNameAr());
             hashMap.put("companyName", getUserData().getCompany().getName());
@@ -397,7 +423,7 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
             hashMap.put("rateValue", glBankTransactionEntity.getRate());
             hashMap.put("amountInRateText", userDDs.get("TOTAL"));
             hashMap.put("amountInRateValue", glBankTransactionEntity.getValueLocal());
-
+            
             hashMap.put("dateValue", glBankTransactionEntity.getDate());
             hashMap.put("documentNumberValue", glBankTransaction.getSerial() != null ? glBankTransaction.getSerial() : null);
             //hashMap.put("recipientValue", glBankTransactionEntity.getGlBank().getName());
@@ -448,17 +474,17 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
             return null;
         }
     }
-
+    
     public List<GlBank> completeGlBankTo(String query) {
         try {
             List<GlBank> glBanksList = getGlBankListTo();
             if (query == null || query.trim().equals("")) {
-
+                
                 glBankConverterTo = new GlBankConverter(glBanksList);
                 return glBanksList;
             }
             List<GlBank> filteredGlBanks = new ArrayList<>();
-
+            
             String nameAr;
             Integer code;
             GlBank glBankFilter;
@@ -470,7 +496,7 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
                         filteredGlBanks.add(glBankFilter);
                     }
                 }
-
+                
                 code = glBankFilter.getCode();
                 if (code != null) {
                     if (!filteredGlBanks.contains(glBankFilter)) {
@@ -478,7 +504,7 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
                     }
                 }
             }
-
+            
             glBankConverterTo = new GlBankConverter(filteredGlBanks);
             return filteredGlBanks;
         } catch (Exception e) {
@@ -486,17 +512,17 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
             return null;
         }
     }
-
+    
     public List<GlBank> completeGlBankFrom(String query) {
         try {
             List<GlBank> glBanksList = getGlBankListFrom();
             if (query == null || query.trim().equals("")) {
-
+                
                 glBankConverterFrom = new GlBankConverter(glBanksList);
                 return glBanksList;
             }
             List<GlBank> filteredGlBanks = new ArrayList<>();
-
+            
             String nameAr;
             Integer code;
             GlBank glBankFilter;
@@ -508,7 +534,7 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
                         filteredGlBanks.add(glBankFilter);
                     }
                 }
-
+                
                 code = glBankFilter.getCode();
                 if (code != null) {
                     if (!filteredGlBanks.contains(glBankFilter)) {
@@ -516,16 +542,16 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
                     }
                 }
             }
-
+            
             glBankConverterFrom = new GlBankConverter(filteredGlBanks);
             return filteredGlBanks;
         } catch (Exception e) {
             saveError(e, "glBankTransactionFromMB", "completeGlBankFrom");
             return null;
         }
-
+        
     }
-
+    
     public boolean checkGlBankSimilarityAndPostFlagStatus() {
         try {
             if (GlBankTransactionDetailEntity.getBankFrom().equals(GlBankTransactionDetailEntity.getBankTo())) {
@@ -540,7 +566,7 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
             return false;
         }
     }
-
+    
     public boolean isGlBankHasAccount() {
         try {
             if (GlBankTransactionDetailEntity.getBankFrom() == null) {
@@ -557,7 +583,7 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
             return false;
         }
     }
-
+    
     @Override
     public String getScreenName() {
         try {
@@ -750,27 +776,27 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
     public void setCurrencyOperations(List<CurrencyOperation> currencyOperations) {
         this.currencyOperations = currencyOperations;
     }
-
+    
     public List<GlBank> getGlBankListFrom() {
         return glBankListFrom;
     }
-
+    
     public void setGlBankListFrom(List<GlBank> glBankListFrom) {
         this.glBankListFrom = glBankListFrom;
     }
-
+    
     public GlBankConverter getGlBankConverterFrom() {
         return glBankConverterFrom;
     }
-
+    
     public void setGlBankConverterFrom(GlBankConverter glBankConverterFrom) {
         this.glBankConverterFrom = glBankConverterFrom;
     }
-
+    
     public Map<Integer, GlBankTransactionDetail> getInvQuotationDetailList() {
         return invQuotationDetailList;
     }
-
+    
     public void setInvQuotationDetailList(Map<Integer, GlBankTransactionDetail> invQuotationDetailList) {
         this.invQuotationDetailList = invQuotationDetailList;
     }
@@ -795,17 +821,17 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
     public void setSaveValidation(Boolean saveValidation) {
         this.saveValidation = saveValidation;
     }
-
+    
     @Override
     public void checkDate(Boolean dateType) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     @Override
     public void resetDateFrom() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     @Override
     public void resetDateTo() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -840,4 +866,38 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
         this.remark = remark;
     }
 
+    /**
+     * @return the balanceReportSearchBean
+     */
+    public BankBalanceReportSearchBean getBalanceReportSearchBean() {
+        if(balanceReportSearchBean == null){
+        balanceReportSearchBean = new BankBalanceReportSearchBean();
+        }
+        return balanceReportSearchBean;
+    }
+
+    /**
+     * @param balanceReportSearchBean the balanceReportSearchBean to set
+     */
+    public void setBalanceReportSearchBean(BankBalanceReportSearchBean balanceReportSearchBean) {
+        this.balanceReportSearchBean = balanceReportSearchBean;
+    }
+
+    /**
+     * @param bankCash the bankCash to set
+     */
+    public void setBankCash(BigDecimal bankCash) {
+        this.bankCash = bankCash;
+    }
+
+    /**
+     * @return the bankCash
+     */
+    public BigDecimal getBankCash() {
+        if (bankCash == null){
+        bankCash = BigDecimal.ZERO ;
+        }
+        return bankCash;
+    }
+    
 }

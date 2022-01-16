@@ -129,7 +129,7 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
                         balanceReportBean.setSerial(balanceReportView.getSerial());
                         balanceReportBean.setBankName(balanceReportView.getBankNameTo() == null ? balanceReportBean.getBankName() : balanceReportView.getBankNameTo());
                         balanceReportBean.setAccountIdTo(balanceReportView.getAccountIdTo());
-                        if (balanceReportView.getDate().before(bankBalanceReportSearchBean.getDateFrom())) {
+                        if (bankBalanceReportSearchBean.getDateFrom() != null &&balanceReportView.getDate().before(bankBalanceReportSearchBean.getDateFrom())) {
                             balanceReportBean.setBankToBalance(balanceReportView.getValueLocal() == null ? BigDecimal.ZERO : balanceReportView.getValueLocal().setScale(2, RoundingMode.UP));
                             balanceReportBean.setPreviousBalance((balanceReportBean.getBankToBalance().subtract(balanceReportBean.getBankFromBalance())).setScale(2, RoundingMode.UP));
                         } else {
@@ -142,7 +142,7 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
                         balanceReportBean.setBankName(balanceReportView.getBankNameTo() == null ? balanceReportBean.getBankName() : balanceReportView.getBankNameTo());
                         balanceReportBean.setAccountIdTo(balanceReportView.getAccountIdTo());
                         balanceReportBean = balanceViewMap.get(balanceReportView.getBankIdTo());
-                        if (balanceReportView.getDate().before(bankBalanceReportSearchBean.getDateFrom())) {
+                        if (bankBalanceReportSearchBean.getDateFrom() != null &&balanceReportView.getDate().before(bankBalanceReportSearchBean.getDateFrom())) {
                             balanceReportBean.setBankToBalance(balanceReportView.getValueLocal() == null ? balanceReportBean.getBankToBalance().setScale(2, RoundingMode.UP) : (balanceReportView.getValueLocal().add(balanceReportBean.getBankToBalance())).setScale(2, RoundingMode.UP));
                             balanceReportBean.setPreviousBalance((balanceReportBean.getBankToBalance().subtract(balanceReportBean.getBankFromBalance())).setScale(2, RoundingMode.UP));
                         } else {
@@ -163,7 +163,7 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
                         balanceReportBean.setSerial(balanceReportView.getSerial());
                         balanceReportBean.setBankName(balanceReportView.getBankNameFrom() == null ? balanceReportBean.getBankName() : balanceReportView.getBankNameFrom());
                         balanceReportBean.setAccountIdFrom(balanceReportView.getAccountIdFrom());
-                        if (balanceReportView.getDate().before(bankBalanceReportSearchBean.getDateFrom())) {
+                        if (bankBalanceReportSearchBean.getDateFrom() != null && balanceReportView.getDate().before(bankBalanceReportSearchBean.getDateFrom())) {
                             balanceReportBean.setBankFromBalance(balanceReportView.getValueLocal() == null ? BigDecimal.ZERO : balanceReportView.getValueLocal().setScale(2, RoundingMode.UP));
                             balanceReportBean.setPreviousBalance((balanceReportBean.getBankToBalance().subtract(balanceReportBean.getBankFromBalance())).setScale(2, RoundingMode.UP));
                         } else {
@@ -176,7 +176,7 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
                         balanceReportBean.setBankName(balanceReportView.getBankNameFrom() == null ? balanceReportBean.getBankName() : balanceReportView.getBankNameFrom());
                         balanceReportBean.setAccountIdFrom(balanceReportView.getAccountIdFrom());
                         balanceReportBean = balanceViewMap.get(balanceReportView.getBankIdFrom());
-                        if (balanceReportView.getDate().before(bankBalanceReportSearchBean.getDateFrom())) {
+                        if (bankBalanceReportSearchBean.getDateFrom() != null &&balanceReportView.getDate().before(bankBalanceReportSearchBean.getDateFrom())) {
                             balanceReportBean.setBankFromBalance(balanceReportView.getValueLocal() == null ? balanceReportBean.getBankFromBalance().setScale(2, RoundingMode.UP) : (balanceReportView.getValueLocal().add(balanceReportBean.getBankFromBalance())).setScale(2, RoundingMode.UP));
                             balanceReportBean.setPreviousBalance((balanceReportBean.getBankToBalance().subtract(balanceReportBean.getBankFromBalance())).setScale(2, RoundingMode.UP));
 
