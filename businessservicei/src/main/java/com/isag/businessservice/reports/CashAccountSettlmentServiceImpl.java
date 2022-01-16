@@ -2593,14 +2593,14 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
         params.put("type", type);
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT sum(COALESCE(cas.value_local,0)) FROM (").append(createSQL(cashAccountSettlementSearchBean, true)).append(") cas where cas.status = ").append(type).append(" AND cas.bankId = ").append(bankId);
-        List<Object[]> res = dao.executeNativeQuery(builder.toString());
+        List<BigDecimal> res = dao.executeNativeQuery(builder.toString());
         BigDecimal value = BigDecimal.ZERO;
         if (res != null && !res.isEmpty()) {
-            for (Object[] object : res) {
-                if (object != null) {
-                    value = object[0] != null ? (BigDecimal) object[0] : BigDecimal.ZERO;
+//            for (Object[] object : res) {
+                if (res.get(0) != null) {
+                    value = res.get(0) != null ? res.get(0) : BigDecimal.ZERO;
                 }
-            }
+//            }
         }
 
         return value;
