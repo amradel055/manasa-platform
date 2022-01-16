@@ -884,25 +884,25 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
         while (it.hasNext()) {
             Object[] line = (Object[]) it.next();
             OrganizationSiteStatementView view = new OrganizationSiteStatementView();
-            view.setSerial(((Long) line[0]).intValue());
-            view.setDate((Date) line[1]);
-            view.setScreenName((String) line[2]);
-            view.setGlBankName((String) line[3]);
-            view.setOrganizationSiteId((Integer) line[4]);
-            view.setOrganizationCode((String) line[5]);
-            view.setOrganizationName((String) line[6]);
-            view.setOrganizationType((Integer) line[7]);
-            view.setInstContractSerial((Integer) line[8]);
-            view.setRemarks((String) line[9]);
-            view.setSupplierInvoiceNumber((String) line[10]);
-            view.setTotalBeforeFracture((BigDecimal) line[11]);
-            view.setFractureNumber((BigDecimal) line[12]);
-            view.setValueFracture((BigDecimal) line[13]);
-            view.setLook((Integer) line[14]);
-            view.setIsDone((Integer) line[15]);
-            view.setExitt((BigDecimal) line[16]);
-            view.setAdding((BigDecimal) line[17]);
-            view.setIdNumber((Integer) line[18]);
+            view.setSerial( line[0] != null ? ((Long) line[0]).intValue() : null);
+            view.setDate(line[1] != null ?(Date) line[1] : null);
+            view.setScreenName(line[2] != null ?(String) line[2] : null);
+            view.setGlBankName(line[3] != null ?(String) line[3]: null);
+            view.setOrganizationSiteId(line[4] != null ?(Integer) line[4]: null);
+            view.setOrganizationCode(line[5] != null ?(String) line[5]: null);
+            view.setOrganizationName(line[6] != null ?(String) line[6]: null);
+            view.setOrganizationType(line[7] != null ?(Integer) line[7]: null);
+            view.setInstContractSerial(line[8] != null ?(Integer) line[8]: null);
+            view.setRemarks(line[9] != null ?(String) line[9]: null);
+            view.setSupplierInvoiceNumber(line[10] != null ?(String) line[10]: null);
+            view.setTotalBeforeFracture(line[11] != null ?(BigDecimal) line[11]: null);
+            view.setFractureNumber(line[12] != null ?(BigDecimal) line[12]: null);
+            view.setValueFracture(line[13] != null ?(BigDecimal) line[13]: null);
+            view.setLook(line[14] != null ?(Integer) line[14]: null);
+            view.setIsDone(line[15] != null ?(Integer) line[15]: null);
+            view.setExitt(line[16] != null ?(BigDecimal) line[16]: null);
+            view.setAdding(line[17] != null ?(BigDecimal) line[17]: null);
+            view.setIdNumber(line[18] != null ?(Integer) line[18]: null);
                     
             organizationSiteStatementViewList.add(view);
         }
