@@ -31,6 +31,7 @@ import java.math.RoundingMode;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import javax.faces.application.FacesMessage;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import net.sf.jasperreports.engine.JRException;
@@ -90,7 +91,7 @@ public class GmSubscriptionsFormDTOMB extends GMBasicData {
     @Override
     public void load() {
         try {
-
+                
             if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("addGmSubscriptions")) {
                 getGmSubscriptionsDTO().setShowCustomerDate(Boolean.FALSE);
                 reset();
@@ -177,10 +178,9 @@ public class GmSubscriptionsFormDTOMB extends GMBasicData {
     public String save() {
         getGmSubscriptionsDTO().setMsg(null);
         getGmSubscriptionsDTO().setType(0);
-      
         setGmSubscriptionsDTO(gmSubscriptionsService.save(getGmSubscriptionsDTO(), getUserData().getUser()));
         msgSave(getGmSubscriptionsDTO().getMsg());
-
+        
         return "";
     }
 
@@ -194,6 +194,7 @@ public class GmSubscriptionsFormDTOMB extends GMBasicData {
     public void fillInvInvoiceDTO() {
         getGmSubscriptionsDTO().setId((Integer) getContext().getSessionMap().get("gmSubscriptionsIdSelected"));
         setGmSubscriptionsDTO(gmSubscriptionsService.findGmSubscriptionsDTOById(getGmSubscriptionsDTO()));
+        setGmItemDTOSelected(getGmSubscriptionsDTO().getGmItemDTO());
     }
    
 
@@ -361,6 +362,7 @@ public class GmSubscriptionsFormDTOMB extends GMBasicData {
             }
         }
     }
+  
 
     public void deleteDetail(GmSubscriptionsDetailDTO gmSubscriptionsDetailDTO) {
         try {
