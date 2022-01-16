@@ -57,6 +57,7 @@ public class InvUpdateFormMB extends InventoryBasicDataForm {
     @Override
     public String save() {
         if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getInvPurchaseInvoiceDetailList() != null && !getInvInvoiceDTO().getInvPurchaseInvoiceDetailList().isEmpty()) {
+            checkDetailData();
             getInvInvoiceDTO().setMsg(null);
             setInvInvoiceDTO(invUpdateService.save(getInvInvoiceDTO(), getUserData().getUser()));
             msgSave(getInvInvoiceDTO().getMsg());

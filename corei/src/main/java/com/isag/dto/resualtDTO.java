@@ -17,6 +17,7 @@ public class resualtDTO {
     private Integer Id;
     private Integer serial ;
     private String clientName;
+    private String createdBy;
     private String phone ;
     private Date creationDate ;
     private Date deletionDate ;
@@ -152,6 +153,20 @@ public class resualtDTO {
      */
     public void setId(Integer Id) {
         this.Id = Id;
+    }
+
+    /**
+     * @return the createdBy
+     */
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    /**
+     * @param createdBy the createdBy to set
+     */
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
  
 }

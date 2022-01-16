@@ -178,7 +178,7 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
         setAccountSettlementBean(cashAccountSettlmentService.searchNew(getCashAccountSettlementSearchBean()));
     }
 
-    public void search2() {
+    public void search2() {//
         glBankCopyMap = new HashMap<>();
         if (glBankList != null && !glBankList.isEmpty()) {
             for (GlBankDTO gb : glBankList) {
@@ -190,7 +190,6 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
             }
         }
         fillBankList();
-        
 
         for (Integer key : glBankMap.keySet()) {
             if (key >= cashAccountSettlementSearchBean.getGlBankFrom().getId() && key <= cashAccountSettlementSearchBean.getGlBankTo().getId()) {
@@ -304,21 +303,23 @@ public class CashAccountSettlementMB extends BaseGlAccountReportBean {
     }
 
     private void fillBankList() {
-        StringBuilder builder = null;
-        
-        for (GlBankDTO gb : glBankListSelected) {
-            
-            if (builder == null) {
-                builder = new StringBuilder();
-                builder.append(gb.getId());
-                
-            } else {
-                
-                builder.append(",").append(gb.getId());
+        if (glBankListSelected != null && !glBankListSelected.isEmpty()) {
+            StringBuilder builder = null;
+
+            for (GlBankDTO gb : glBankListSelected) {
+
+                if (builder == null) {
+                    builder = new StringBuilder();
+                    builder.append(gb.getId());
+
+                } else {
+
+                    builder.append(",").append(gb.getId());
+                }
             }
+
+            cashAccountSettlementSearchBean.setGlBankIdSelected(builder.toString());
         }
-        
-        cashAccountSettlementSearchBean.setGlBankIdSelected(builder.toString());
     }
 
     public void addOpeningBalance(SubAccountSummaryReport cashAccountSettlment) {
