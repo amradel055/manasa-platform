@@ -440,10 +440,18 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
     }
 
     @Override
-    public List<InvInvoiceDTO> getALLProFactoryDeliveryDTOByStatusNew(PrintProductionDTO printProductionDTO, Integer branchId) {
+    public List<InvInvoiceDTO> getALLProFactoryDeliveryDTOByStatusNew(PrintProductionDTO printProductionDTO, Integer branchId, String gallarySelected) {
 
-        DateFormat formatDate = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+        DateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         StringBuilder builder = new StringBuilder();
+        Integer typeTo = null;
+        if (0 == printProductionDTO.getInvoiceStatus()) {
+            typeTo = 1;
+        } else if (1 == printProductionDTO.getInvoiceStatus()) {
+            typeTo = 2;
+        } else if (2 == printProductionDTO.getInvoiceStatus()) {
+            typeTo = 3;
+        }
         builder.append(" SELECT s.id,s.serial , s.date , s.serial , s.remark , ipi.serial  , invi.name , ipi.date , ios.code , ios.name ,  ios.mobile , ipi.due_date ,\n"
                 + " (SELECT sum(i.number) FROM inv_purchase_invoice_detail i left join inv_item ii on ii.id = i.item_id\n"
                 + " WHERE  i.inv_purchase_invoice_id = s.inv_purchase_invoice_id  AND( ii.pro_group_id = 1 or ii.pro_group_id= 5)) numberoftob  \n"
@@ -452,30 +460,36 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
                 + " left join inv_inventory invi on invi.id = ipi.galary_Id\n"
                 + " left join inv_organization_site ios on ios.id = ipi.organization_site_id\n"
                 + " WHERE   s.branch_id = " + branchId + "\n"
-                + " AND s.type = 0  AND s.inv_purchase_invoice_id not in (\n"
-                + " select p.inv_purchase_invoice_id FROM pro_factory_delivery p WHERE   p.branch_id = " + branchId + " AND p.type = 1) \n"
-                + " AND   s.date >= " + " '" + formatDate.format(printProductionDTO.getFromDate())+ "'" +   "  AND   s.date <=  " + " '" +  formatDate.format(printProductionDTO.getToDate()) + "'" +  " order by s.serial DESC;");
+                + " AND s.type = " + printProductionDTO.getInvoiceStatus());
+        if (3 != printProductionDTO.getInvoiceStatus()) {
+            builder.append(" AND s.inv_purchase_invoice_id not in (\n"
+                    + " select p.inv_purchase_invoice_id FROM pro_factory_delivery p WHERE   p.branch_id = " + branchId);
+            if (typeTo != null) {
 
-// List<Object[]> res = dao.executeNativeQuery(sql.toString());
-//
-//        for (Object[] object : res) {
-//            ProductionTransactionOfUser productionTransactionOfUser = new ProductionTransactionOfUser();
-//            productionTransactionOfUser.setProductionStagesId((Integer) object[0]);
-//            productionTransactionOfUser.setStageName((String) object[1]);
-//            productionTransactionOfUser.setUserCode((String) object[2]);
-//            productionTransactionOfUser.setUserName((String) object[3]);
-//            productionTransactionOfUser.setResidencyNumber((String) object[4]);
-//            productionTransactionOfUser.setNumberExcute((BigDecimal) object[5]);
-//            productionTransactionOfUser.setPrice((BigDecimal) object[6]);
-//            productionTransactionOfUser.setTotalNumber((BigDecimal) object[7]);
-//            productionTransactionOfUser.setAvarage(((BigDecimal) object[8]).setScale(3, RoundingMode.HALF_UP));
-//
-//            productionTransactionOfUsers.add(productionTransactionOfUser);
-//        }
-//        List<ProFactoryDelivery> details = dao.findListByQuery(builder.toString(), params);
+                builder.append(" AND p.type = " + typeTo + " )");
+            } else {
+                builder.append(")");
+            }
+        }
+
+        builder.append(" AND   s.date >= " + " '").append(formatDate.format(printProductionDTO.getFromDate())).append("'" + "  AND   s.date <=  " + " '").append(formatDate.format(printProductionDTO.getToDate())).append("'");
+        if (gallarySelected != null) {
+            builder.append(" AND invi.id IN ( ").append(gallarySelected).append(")");
+        }
+
+        builder.append(" order by s.serial DESC;");
+
         List<Object[]> res = dao.executeNativeQuery(builder.toString());
 
         return returnInvoiceData(res);
+    }
+
+    public void appendFilter(Map<String, Object> filters, Integer branchId, StringBuilder builder) {
+        filters.put("branchId", branchId);
+        if (filters.get("globalFilter") != null && !filters.get("globalFilter").toString().isEmpty()) {
+            String filter = " and (s.serial like CONCAT('%',:globalFilter ,'%')  OR invi.name  like CONCAT('%',:globalFilter ,'%')  OR ios.code like CONCAT('%',:globalFilter ,'%') OR ios.mobile like CONCAT('%',:globalFilter ,'%') OR ipi.due_date like CONCAT('%',:globalFilter ,'%') ) ";
+            builder.append(filter);
+        }
     }
 
     private List<InvInvoiceDTO> returnInvoiceData(List<Object[]> res) {
@@ -497,28 +511,6 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
             invInvoiceDTO.setDueDate((Date) object[11]);
             invInvoiceDTO.setNumberOfToob((BigDecimal) object[12]);
 
-//            if (entity.getInvPurchaseInvoiceId() != null) {
-//                invInvoiceDTO.setInvoiceSerial(entity.getInvPurchaseInvoiceId().getSerial());
-//                invInvoiceDTO.setDueDate(entity.getInvPurchaseInvoiceId().getDueDate());
-//                if (entity.getInvPurchaseInvoiceId().getDueDate() != null) {
-//                    invInvoiceDTO.setDiffrentTime(entity.getInvPurchaseInvoiceId().getDueDate().getTime() - (new Date()).getTime());
-//                }
-//                if (entity.getInvPurchaseInvoiceId().getGalaryId() != null) {
-//                    InvInventoryDTO invInventoryDTO = new InvInventoryDTO();
-//                    invInventoryDTO.setId(entity.getInvPurchaseInvoiceId().getGalaryId().getId());
-//                    invInventoryDTO.setName(entity.getInvPurchaseInvoiceId().getGalaryId().getName());
-//                    invInventoryDTO.setCode(entity.getInvPurchaseInvoiceId().getGalaryId().getCode());
-//                    invInvoiceDTO.setGallary(invInventoryDTO);
-//                    invInvoiceDTO.setGallaryId(invInventoryDTO);
-//                    invInvoiceDTO.setGallaryName(invInventoryDTO.getName());
-//
-//                }
-//                customerData(entity, invInvoiceDTO);
-//            }
-//
-//            if (entity.getInvPurchaseInvoiceId() != null) {
-//                invInvoiceDTO.setLoadedSerial(entity.getInvPurchaseInvoiceId().getSerial());
-//            }
             list.add(invInvoiceDTO);
         }
         return list;

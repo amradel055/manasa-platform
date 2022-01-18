@@ -1772,7 +1772,6 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         Map<String, Object> params = new HashMap<>();
         params.put("type", printProductionDTO.getInvoiceStatus());
         params.put("galaryId", printProductionDTO.getGallaryFrom().getId());
-
         params.put("branchId", branchId);
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT s FROM InvPurchaseInvoice s WHERE s.branchId.id = :branchId AND  s.type =:type AND s.id not in (SELECT p.invPurchaseInvoiceId.id from ProFactoryDelivery p ) ");
@@ -1790,6 +1789,77 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         builder.append(" order by s.serial ");
         List<InvPurchaseInvoice> details = dao.findListByQuery(builder.toString(), params);
         return returnListDTOForList(details);
+    }
+
+    @Override
+    public List<InvInvoiceDTO> getALLInvPurchaseInvoiceDTOByStatusNew(PrintProductionDTO printProductionDTO, Integer branchId, String gallarySelected) {
+
+        DateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        StringBuilder builder = new StringBuilder();
+
+        builder.append(" SELECT  s.id,s.serial , s.date , s.serial , s.remarks , s.serial  , invi.name , s.date , ios.code , ios.name ,  ios.mobile , s.due_date ,\n"
+                + " (SELECT sum(i.number) FROM inv_purchase_invoice_detail i left join inv_item ii on ii.id = i.item_id\n"
+                + " WHERE  i.inv_purchase_invoice_id = s.id  AND( ii.pro_group_id = 1 or ii.pro_group_id= 5)) numberoftob  \n"
+                + " FROM inv_purchase_invoice s"
+                + " left join inv_inventory invi on invi.id = s.galary_Id "
+                + " left join inv_organization_site ios on ios.id = s.organization_site_id "
+                + " WHERE s.branch_id = ").append(branchId).append(
+                        " AND  s.type = ").append(printProductionDTO.getInvoiceStatus()).append(
+                        " AND s.id not in (SELECT p.inv_purchase_invoice_id from pro_factory_delivery p )  \n"
+                        + " AND  s.galary_Id IN (").append(gallarySelected).append(" )  AND   s.date >= '"
+                        + formatDate.format(printProductionDTO.getFromDate()) + "'"
+                        + " AND   s.date <= '" + formatDate.format(printProductionDTO.getToDate()) + "'"
+                        + " order by s.serial");
+
+        List<Object[]> res = dao.executeNativeQuery(builder.toString());
+
+        return returnInvoiceData(res);
+    }
+
+    private List<InvInvoiceDTO> returnInvoiceData(List<Object[]> res) {
+        List<InvInvoiceDTO> list = new ArrayList<>();
+        InvInvoiceDTO invInvoiceDTO = new InvInvoiceDTO();
+        for (Object[] object : res) {
+            invInvoiceDTO = new InvInvoiceDTO();
+            invInvoiceDTO.setId((Integer) object[0]);
+            invInvoiceDTO.setSerial((Integer) object[1]);
+            invInvoiceDTO.setDate((Date) object[2]);
+            invInvoiceDTO.setIndex((Integer) object[3]);
+            invInvoiceDTO.setRemarks((String) object[4]);
+            invInvoiceDTO.setInvoiceSerial((Integer) object[5]);
+            invInvoiceDTO.setGallaryName((String) object[6]);
+            invInvoiceDTO.setDate((Date) object[7]);
+            invInvoiceDTO.setCustomerCode((String) object[8]);
+            invInvoiceDTO.setCustomerName((String) object[9]);
+            invInvoiceDTO.setCustomerMobile((String) object[10]);
+            invInvoiceDTO.setDueDate((Date) object[11]);
+            invInvoiceDTO.setNumberOfToob((BigDecimal) object[12]);
+
+//            if (entity.getInvPurchaseInvoiceId() != null) {
+//                invInvoiceDTO.setInvoiceSerial(entity.getInvPurchaseInvoiceId().getSerial());
+//                invInvoiceDTO.setDueDate(entity.getInvPurchaseInvoiceId().getDueDate());
+//                if (entity.getInvPurchaseInvoiceId().getDueDate() != null) {
+//                    invInvoiceDTO.setDiffrentTime(entity.getInvPurchaseInvoiceId().getDueDate().getTime() - (new Date()).getTime());
+//                }
+//                if (entity.getInvPurchaseInvoiceId().getGalaryId() != null) {
+//                    InvInventoryDTO invInventoryDTO = new InvInventoryDTO();
+//                    invInventoryDTO.setId(entity.getInvPurchaseInvoiceId().getGalaryId().getId());
+//                    invInventoryDTO.setName(entity.getInvPurchaseInvoiceId().getGalaryId().getName());
+//                    invInventoryDTO.setCode(entity.getInvPurchaseInvoiceId().getGalaryId().getCode());
+//                    invInvoiceDTO.setGallary(invInventoryDTO);
+//                    invInvoiceDTO.setGallaryId(invInventoryDTO);
+//                    invInvoiceDTO.setGallaryName(invInventoryDTO.getName());
+//
+//                }
+//                customerData(entity, invInvoiceDTO);
+//            }
+//
+//            if (entity.getInvPurchaseInvoiceId() != null) {
+//                invInvoiceDTO.setLoadedSerial(entity.getInvPurchaseInvoiceId().getSerial());
+//            }
+            list.add(invInvoiceDTO);
+        }
+        return list;
     }
 
     @Override
@@ -2384,7 +2454,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         GeneralJournal journal = null;
         if (dto.getScreenName().equals(ScreenNameClassEnum.PROWORKORDER)) {
             // ادخال المبيعات
-            journal = generaljournalService.addGeneralJournalGlobal(dto.getGlYearSelection().getId(), 1013, dto.getSerial(), dto.getDate(), dto.getRemarks(), tobyUser, 1,true);
+            journal = generaljournalService.addGeneralJournalGlobal(dto.getGlYearSelection().getId(), 1013, dto.getSerial(), dto.getDate(), dto.getRemarks(), tobyUser, 1, true);
 
             if (dto.getGallaryId() != null && dto.getGallaryId().getCostCenterId() != null && dto.getGallaryId().getCostCenterId().getId() != null) {
                 Integer salesTaxAccount = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"SALES_TAX_ACCOUNT\" AND a.accountId IS NOT NULL", params);
@@ -2495,7 +2565,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             // ادخال المشتريات
         } else if (dto.getScreenName().equals(ScreenNameClassEnum.INVRETURNSALESFORM)) {
             // ادخال المبيعات
-            journal = generaljournalService.addGeneralJournalGlobal(dto.getGlYearSelection().getId(), 1013, dto.getSerial(), dto.getDate(), dto.getRemarks(), tobyUser, 0,true);
+            journal = generaljournalService.addGeneralJournalGlobal(dto.getGlYearSelection().getId(), 1013, dto.getSerial(), dto.getDate(), dto.getRemarks(), tobyUser, 0, true);
 
             if (dto.getGallaryId() != null && dto.getGallaryId().getCostCenterId() != null && dto.getGallaryId().getCostCenterId().getId() != null) {
                 Integer salesTaxAccount = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"SALES_TAX_ACCOUNT\" AND a.accountId IS NOT NULL", params);
@@ -2605,7 +2675,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             }
             // ادخال المشتريات
         } else if (dto.getScreenName().equals(ScreenNameClassEnum.INVPURCHASEINVOICEFORM)) {
-            journal = generaljournalService.addGeneralJournalGlobal(dto.getGlYearSelection().getId(), 1010, dto.getSerial(), dto.getDate(), "فاتورة مشتريات", tobyUser, 0,true);
+            journal = generaljournalService.addGeneralJournalGlobal(dto.getGlYearSelection().getId(), 1010, dto.getSerial(), dto.getDate(), "فاتورة مشتريات", tobyUser, 0, true);
 
             Integer storeAccountNumber = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"STORE_ACCOUNT_NUMBER\" AND a.accountId IS NOT NULL", params);
             Integer purchseTaxAccount = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"PURCHASE_TAX_ACCOUNT\" AND a.accountId IS NOT NULL", params);
@@ -2622,7 +2692,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                     "فاتورة مشتريات" + " رقم " + dto.getSupplierInvoiceNumber(), tobyUser);
 
         } else if (dto.getScreenName().equals(ScreenNameClassEnum.INVRETURNPURCHASEFORM)) {
-            journal = generaljournalService.addGeneralJournalGlobal(dto.getGlYearSelection().getId(), 1010, dto.getSerial(), dto.getDate(), "مردود مشتريات", tobyUser, 0,true);
+            journal = generaljournalService.addGeneralJournalGlobal(dto.getGlYearSelection().getId(), 1010, dto.getSerial(), dto.getDate(), "مردود مشتريات", tobyUser, 0, true);
 
             Integer storeAccountNumber = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"STORE_ACCOUNT_NUMBER\" AND a.accountId IS NOT NULL", params);
             Integer purchseTaxAccount = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"PURCHASE_TAX_ACCOUNT\" AND a.accountId IS NOT NULL", params);

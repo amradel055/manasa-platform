@@ -178,39 +178,53 @@
                                   widgetVar="data" 
                                   rowIndexVar="index" 
                                   emptyMessage="EMPTY_TABLE"
-                                  rows="20" lazy="true"
+                                  rows="20" 
+                                  
+                                  lazy="true"
+                                  editable="true"
+                                  paginatorTemplate="{CurrentPageReport} {FirstPageLink}
+                                  {PreviousPageLink} {PageLinks} {NextPageLink}
+                                  {LastPageLink} {RowsPerPageDropdown}"
                                   >
-                        <p:column headerText="#" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                        <f:facet name="header">
+                            <p:outputPanel  >
+                                <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                                <p:inputText id="globalFilter" onkeyup="PF('data').filter()" style="width:150px" />
+                            </p:outputPanel>
+                        </f:facet>
+                        <p:column headerText="#" style="width: 10vh;text-align: center!important;font-size: 1.8vh" 
+
+                                  >
                             <h:outputText 
                                 value="#{index + 1}" />
                         </p:column>
-                        <p:column headerText="الفاتورة" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                        <p:column headerText="الفاتورة" style="width: 10vh;text-align: center!important;font-size: 1.8vh"   filterBy="#{data.invoiceSerial}" filterMatchMode="contains" filterStyle="display:none">
                             <h:outputText value="#{data.invoiceSerial}" />
                         </p:column>
-                        <p:column headerText="الفرع" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
-                            <h:outputText value="#{data.gallary.name}" />
+                        <p:column headerText="الفرع" style="width: 10vh;text-align: center!important;font-size: 1.8vh"   filterBy="#{data.gallaryName}" filterMatchMode="contains" filterStyle="display:none">
+                            <h:outputText value="#{data.gallaryName}" />
                         </p:column>
-                        <p:column headerText="تاريخ الفاتورة" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                        <p:column headerText="تاريخ الفاتورة" style="width: 10vh;text-align: center!important;font-size: 1.8vh"   filterBy="#{data.date}" filterMatchMode="contains" filterStyle="display:none">
                             <h:outputText value="#{data.date}">
                                 <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
                             </h:outputText>
                         </p:column>
-                        <p:column headerText="كود العميل" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
-                            <h:outputText value="#{data.organizationSiteId.code}" />
+                        <p:column headerText="كود العميل" style="width: 10vh;text-align: center!important;font-size: 1.8vh"   filterBy="#{data.customerCode}" filterMatchMode="contains" filterStyle="display:none">
+                            <h:outputText value="#{data.customerCode}" />
                         </p:column>
-                        <p:column headerText="اسم العميل" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
-                            <h:outputText value="#{data.organizationSiteId.name}" />
+                        <p:column headerText="اسم العميل" style="width: 10vh;text-align: center!important;font-size: 1.8vh"   filterBy="#{data.customerName}" filterMatchMode="contains" filterStyle="display:none">
+                            <h:outputText value="#{data.customerName}" />
                         </p:column>
-                        <p:column headerText="رقم العميل" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
-                            <h:outputText value="#{data.organizationSiteId.mobile}" />
+                        <p:column headerText="رقم العميل" style="width: 10vh;text-align: center!important;font-size: 1.8vh"   filterBy="#{data.customerMobile}" filterMatchMode="contains" filterStyle="display:none">
+                            <h:outputText value="#{data.customerMobile}" />
                         </p:column>
 
-                        <p:column headerText="تاريخ الاستحقاق" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                        <p:column headerText="تاريخ الاستحقاق" style="width: 10vh;text-align: center!important;font-size: 1.8vh"   filterBy="#{data.dueDate}" filterMatchMode="contains" filterStyle="display:none">
                             <h:outputText value="#{data.dueDate}">
                                 <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
                             </h:outputText>
                         </p:column>
-                        <p:column headerText="عدد التوب" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                        <p:column headerText="عدد التوب" style="width: 10vh;text-align: center!important;font-size: 1.8vh"   filterBy="#{data.numberOfToob}" filterMatchMode="contains" filterStyle="display:none">
                             <h:outputText value="#{data.numberOfToob}" />
                         </p:column>
                     </p:dataTable>

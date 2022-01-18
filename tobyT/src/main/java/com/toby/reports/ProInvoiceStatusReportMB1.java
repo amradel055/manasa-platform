@@ -48,47 +48,53 @@ public class ProInvoiceStatusReportMB1 extends Basic {
         getPrintProductionDTO().setFromDate(new Date());
         getPrintProductionDTO().setToDate(new Date());
     }
-    
-    public boolean validateSearch(){
-        
-    if(getPrintProductionDTO().getGallaryListSelected().isEmpty()){
-      FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب اختيار المعرض "));
-    }
-      else if(getPrintProductionDTO().getInvoiceStatus()==null){
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب اختيار الحالة "));     
-      }
-       else if(getPrintProductionDTO().getFromDate()==null){
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب اختيار التاريخ من  "));     
-      }
-        else if(getPrintProductionDTO().getToDate()==null){
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب اختيار التاريخ الي  "));     
-      }
-             else{
-                   return true ;
-                   }
-    return false;
+
+    public boolean validateSearch() {
+
+        if (getPrintProductionDTO().getGallaryListSelected().isEmpty()) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب اختيار المعرض "));
+        } else if (getPrintProductionDTO().getInvoiceStatus() == null) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب اختيار الحالة "));
+        } else if (getPrintProductionDTO().getFromDate() == null) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب اختيار التاريخ من  "));
+        } else if (getPrintProductionDTO().getToDate() == null) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب اختيار التاريخ الي  "));
+        } else {
+            return true;
+        }
+        return false;
     }
 
     public void search() {
-          if(validateSearch()== true){
-        if (getPrintProductionDTO() != null && getPrintProductionDTO().getGallaryListSelected() != null && !getPrintProductionDTO().getGallaryListSelected().isEmpty()) {
-            list = new ArrayList<>();
-            for (InvInventoryDTO invInventoryDTO : getPrintProductionDTO().getGallaryListSelected()) {
-
-                getPrintProductionDTO().setGallaryFrom(invInventoryDTO);
-                if (printProductionDTO.getInvoiceStatus() == 4) {
-                    getList().addAll(invPurchaseInvoiceService.getALLInvPurchaseInvoiceDTOByStatus(getPrintProductionDTO(), getUserData().getUserBranch().getId()));
-                } else if (printProductionDTO.getInvoiceStatus() == 10) {
-                    getList().addAll(proFactoryDeliveryService.getALLProFactoryDeliveryDTOByStatusRemain(getPrintProductionDTO(), getUserData().getUserBranch().getId()));
-                } else {
-                    getList().addAll(proFactoryDeliveryService.getALLProFactoryDeliveryDTOByStatusNew(getPrintProductionDTO(), getUserData().getUserBranch().getId()));
+        if (validateSearch() == true) {
+            if (getPrintProductionDTO() != null && getPrintProductionDTO().getGallaryListSelected() != null && !getPrintProductionDTO().getGallaryListSelected().isEmpty()) {
+                list = new ArrayList<>();
+                StringBuilder gallarySelected = null ;
+                for (InvInventoryDTO invInventoryDTO : getPrintProductionDTO().getGallaryListSelected()) {
+                  if (gallarySelected == null){
+                      gallarySelected = new StringBuilder();
+                  gallarySelected.append(invInventoryDTO.getId());
+                  }else {
+                  gallarySelected.append(",");
+                  gallarySelected.append(invInventoryDTO.getId());
+                  }
+           
                 }
+                    if (printProductionDTO.getInvoiceStatus() == 4) {
+                        getList().addAll(invPurchaseInvoiceService.getALLInvPurchaseInvoiceDTOByStatusNew(getPrintProductionDTO(), getUserData().getUserBranch().getId() ,gallarySelected != null ? gallarySelected.toString(): null ));
+                    } else if (printProductionDTO.getInvoiceStatus() == 10) {
+                        getList().addAll(proFactoryDeliveryService.getALLProFactoryDeliveryDTOByStatusRemain(getPrintProductionDTO(), getUserData().getUserBranch().getId()));
+                    } else {
+                        getList().addAll(proFactoryDeliveryService.getALLProFactoryDeliveryDTOByStatusNew(getPrintProductionDTO(), getUserData().getUserBranch().getId() , gallarySelected != null ? gallarySelected.toString(): null));
+                    }
 
+                
+                setNumber(getList() == null ? 0 : getList().size());
             }
-            setNumber(getList() == null ? 0 : getList().size());
         }
     }
-        }
+
+  
 
     public void convertDateFrom() {
         getPrintProductionDTO().setFromDate(findDateFromHijriFrom());
