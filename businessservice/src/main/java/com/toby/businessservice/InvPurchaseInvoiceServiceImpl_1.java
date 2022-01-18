@@ -2198,6 +2198,10 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
 
     @Override // إجماليات الفئات 
     public List<SummitionItemsView> findSummitionQuantity(Integer gallaryId, Integer branchId, Date dateFrom, Date dateTo, Integer groupId, List<InvInventoryDTO> invInventoryDTOs, List<ProGroupDTO> proGroupListSelected, Integer invoiceType) {
+
+        dateTo.setHours(23);
+        dateTo.setMinutes(59);
+        dateTo.setSeconds(59);
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         StringBuilder builder = new StringBuilder();

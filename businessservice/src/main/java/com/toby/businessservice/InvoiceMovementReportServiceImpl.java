@@ -205,14 +205,17 @@ public class InvoiceMovementReportServiceImpl implements InvoiceMovementReportSe
     }
 
     private String appendDateInvoice(PrintProductionDTO productionDTO) {
+
         StringBuilder query = new StringBuilder();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
         if (productionDTO.getFromDate() != null) {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
             query.append(" and ipi.date >=  '").append(dateFormat.format(productionDTO.getFromDate())).append("'");
         }
 
         if (productionDTO.getToDate() != null) {
-            query.append(" and ipi.date <=  '").append(dateFormat.format(productionDTO.getToDate())).append("'");
+            DateFormat dateToFormat = new SimpleDateFormat("yyyy-MM-dd 23:59:59");
+            query.append(" and ipi.date <=  '").append(dateToFormat.format(productionDTO.getToDate())).append("'");
         }
         if (!query.toString().isEmpty()) {
             return query.toString();
