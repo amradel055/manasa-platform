@@ -29,8 +29,6 @@ import org.primefaces.model.SortOrder;
 @ViewScoped
 public class InvPurchaseInvoiceListDTOMB extends InventoryBasicDataForm {
 
-    
-
     @EJB
     private InvPurchaseInvoiceService_1 invPurchaseInvoiceService;
 
