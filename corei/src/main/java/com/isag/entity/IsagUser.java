@@ -41,7 +41,7 @@ public class IsagUser extends BaseEntity {
     private Symbol lang;
     
     @Column(name = "master")
-    private Integer master;
+    private Integer master; 
 
     @JoinColumn(name = "branch_id", referencedColumnName = "id")
     @ManyToOne
