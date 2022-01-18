@@ -2049,8 +2049,8 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
 
     public String createSQL(SubAccountSummarySearchBean cashAccountSettlementSearchBean, boolean isOpenningBalance) {
         StringBuilder query = null;
-        String dateFrom = new SimpleDateFormat("yyyy-MM-dd").format(cashAccountSettlementSearchBean.getDateFrom());
-        String dateTo = new SimpleDateFormat("yyyy-MM-dd").format(cashAccountSettlementSearchBean.getDateTo());
+        String dateFrom = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(cashAccountSettlementSearchBean.getDateFrom());
+        String dateTo = new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(cashAccountSettlementSearchBean.getDateTo());
 
         if (cashAccountSettlementSearchBean.getGlBankIdSelected() != null && !cashAccountSettlementSearchBean.getGlBankIdSelected().isEmpty()) {
             if ((cashAccountSettlementSearchBean.getTransactionType() == null || cashAccountSettlementSearchBean.getTransactionType() == 0) && cashAccountSettlementSearchBean.getType() == 3
