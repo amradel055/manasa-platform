@@ -439,39 +439,48 @@
 
 
                     </div>
-              
+
 
                 </p:fieldset>
-                       <p:fieldset class="last-part" style=" position: static; max-height: available ;background-color: #e6e4e4;width: 25%;" >
-                    <div class="ui-g-6 ui-xl-6">
-                        <div class="ui-g-6 ui-xl-6">
-                            <p:autoComplete style="width:37%!important"
-                                            dropdown="true"
-                                            converter="#{invPurchaseInvoiceFormDTOMB.organizationSiteDTOConvertor}"
-                                            value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.organizationSiteId}"
-                                            var="supplier"
-                                            itemLabel="#{supplier}" 
-                                            itemValue="#{supplier}" 
-                                            forceSelection="true" 
-                                            completeMethod="#{invPurchaseInvoiceFormDTOMB.completeCustomerFrom}" 
-                                            >
-                                <p:ajax event="itemSelect" listener="#{invPurchaseInvoiceFormDTOMB.search()}" update="inventory1"  />
-                            </p:autoComplete>
+                <p:fieldset class="last-part" style=" position: static; max-height: available ;background-color: #e6e4e4;width: 25%;" >
+                    <div class="ui-g-12 ui-xl-12">
+                          
+                        <div class="ui-g-12 ui-xl-6">
+                             العميل
+                            <div class="ui-g-6 ui-xl-12">
+                                <p:autoComplete style="width:37%!important"
+                                                dropdown="true"
+                                                converter="#{invPurchaseInvoiceFormDTOMB.organizationSiteDTOConvertor}"
+                                                value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.organizationSiteId}"
+                                                var="supplier"
+                                                itemLabel="#{supplier}" 
+                                                itemValue="#{supplier}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{invPurchaseInvoiceFormDTOMB.completeCustomerFrom}" 
+                                                >
+                                    <p:ajax event="itemSelect" listener="#{invPurchaseInvoiceFormDTOMB.search()}" update="inventory1"  />
+                                </p:autoComplete>
+                            </div>
+                         
+
                         </div>
-                        العميل
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:selectOneMenu id="inventory1" value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO}"
+                                                 converter="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTOConverter}" 
+                                                 style="float:right;width: 100%!important;color:#fff;">
+
+                                    <p:ajax event="itemSelect" listener="#{invPurchaseInvoiceFormDTOMB.searchInvoiceBySerial()}" update="form" />
+                                    <f:selectItem itemLabel="#{userData.userDDs['ALL']}" itemValue="" />
+
+                                    <f:selectItems value="#{invPurchaseInvoiceFormDTOMB.invInvoiceList}" 
+                                                   var="inventory" itemLabel="#{inventory.name}"
+                                                   itemValue="#{inventory}"/> 
+                                </p:selectOneMenu>
+                            </div>
+                            فواتير العميل
+                        </div>
                     </div>
-                    
-                    <p:selectOneMenu id="inventory1" value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO}"
-                                         converter="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTOConverter}" 
-                                         style="float:right;width: 20%!important;color:#fff;height: 30px!important;margin-right: 0.5%;">
-
-                            <p:ajax event="itemSelect" listener="#{invPurchaseInvoiceFormDTOMB.searchInvoiceBySerial()}" update="form" />
-                            <f:selectItem itemLabel="#{userData.userDDs['ALL']}" itemValue="" />
-
-                            <f:selectItems value="#{invPurchaseInvoiceFormDTOMB.invInvoiceList}" 
-                                           var="inventory" itemLabel="#{inventory.name}"
-                                           itemValue="#{inventory}"/> 
-                        </p:selectOneMenu>
                 </p:fieldset>
 
             </div>
