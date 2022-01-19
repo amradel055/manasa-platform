@@ -14,6 +14,7 @@ import com.toby.toby.UserData;
 import com.toby.views.InvItemView;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -94,6 +95,44 @@ public class invItemDataListMB extends BaseListBean implements Serializable {
 
     }
 
+    public void printBarcodeLeRoyal() {
+
+        try {
+            if (itemDataEntityId != null) {
+                InvItem item = itemDataService.findInvItem(itemDataEntityId);
+                List<InvDetailDTO> listNew = new ArrayList<>();
+                InvDetailDTO invDetailDTO = new InvDetailDTO();
+
+                if (item != null && item.getProGroupId() != null && item.getProGroupId().getId() == 1 && item.getIsOfferItem() == 1) {
+                    item.setMaxpricemen(new BigDecimal((item.getMaxpricemen().multiply(new BigDecimal(0.85))).setScale(5, RoundingMode.HALF_DOWN).stripTrailingZeros().toPlainString()));
+                }
+
+                invDetailDTO.setCost((item.getMaxpricemen().add(item.getMaxpricemen().multiply(new BigDecimal(0.15)))).setScale(3, BigDecimal.ROUND_UP));
+                invDetailDTO.setItemCode(item.getCode());
+                invDetailDTO.setItemName(item.getName());
+                if (item.getDiscountrate() != null && item.getDiscountrate().compareTo(BigDecimal.ZERO) == 1) {
+                    BigDecimal priceAfterDiscount = item.getDiscountvalue();
+                    invDetailDTO.setCostAfterDiscount((priceAfterDiscount.add(priceAfterDiscount.multiply(new BigDecimal(0.15)))).setScale(3, BigDecimal.ROUND_UP));
+                }
+                listNew.add(invDetailDTO);
+                fillReport(prepareReportLeRoyal(), getUserData().getReportPath() + "itemBarcodeToby.jasper", listNew, "pdf");
+            }
+        } catch (Exception e) {
+
+        }
+    }
+    
+    public HashMap prepareReportLeRoyal() {
+        try {
+            HashMap hashMap = new HashMap();
+            hashMap.put("companyName", "لي رويال");
+            return hashMap;
+        } catch (Exception e) {
+            saveError(e, "invItemDataListMB", "prepareReport");
+            return null;
+        }
+    }
+
     public void printBarcode() {
 
         try {
@@ -104,10 +143,10 @@ public class invItemDataListMB extends BaseListBean implements Serializable {
                 invDetailDTO.setCost((item.getMaxpricemen().add(item.getMaxpricemen().multiply(new BigDecimal(0.15)))).setScale(3, BigDecimal.ROUND_UP));
                 invDetailDTO.setItemCode(item.getCode());
                 invDetailDTO.setItemName(item.getName());
-                 if(item.getDiscountrate() != null && item.getDiscountrate().compareTo(BigDecimal.ZERO) == 1){
+                if (item.getDiscountrate() != null && item.getDiscountrate().compareTo(BigDecimal.ZERO) == 1) {
                     BigDecimal priceAfterDiscount = item.getDiscountvalue();
-                     invDetailDTO.setCostAfterDiscount((priceAfterDiscount.add(priceAfterDiscount.multiply(new BigDecimal(0.15)))).setScale(3, BigDecimal.ROUND_UP));
-                 }
+                    invDetailDTO.setCostAfterDiscount((priceAfterDiscount.add(priceAfterDiscount.multiply(new BigDecimal(0.15)))).setScale(3, BigDecimal.ROUND_UP));
+                }
                 listNew.add(invDetailDTO);
                 fillReport(prepareReport(), getUserData().getReportPath() + "itemBarcodeToby.jasper", listNew, "pdf");
             }
@@ -115,11 +154,11 @@ public class invItemDataListMB extends BaseListBean implements Serializable {
 
         }
     }
-    
+
     public HashMap prepareReport() {
         try {
             HashMap hashMap = new HashMap();
-            hashMap.put("companyName", getUserData().getCompany().getName());
+            hashMap.put("companyName","البرنس");
             return hashMap;
         } catch (Exception e) {
             saveError(e, "invItemDataListMB", "prepareReport");

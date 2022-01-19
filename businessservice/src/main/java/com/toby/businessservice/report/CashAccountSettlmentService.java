@@ -26,16 +26,16 @@ public interface CashAccountSettlmentService {
 
     public List<CashAccountSettlmentView> findAllCashAccountSettlmentForLineCheck(SubAccountSummarySearchBean cashAccountSettlementSearchBean);
 
-    public BigDecimal findOpeningBalancesForSpecificCashAccount(SubAccountSummarySearchBean cashAccountSettlementSearchBean, Integer bankId, Integer type );
+    public BigDecimal findOpeningBalancesForSpecificCashAccount(SubAccountSummarySearchBean cashAccountSettlementSearchBean, Integer bankId, Integer type);
 
-    public BigDecimal findOpeningBalancesForSpecificCashAccount2(SubAccountSummarySearchBean cashAccountSettlementSearchBean, Integer bankId, Integer type );
+    public BigDecimal findOpeningBalancesForSpecificCashAccount2(SubAccountSummarySearchBean cashAccountSettlementSearchBean, Integer bankId, Integer type);
 
     public List<CashAccountSettlmentView> findOpeningBalancesForSpecificCashAccountByGroups(SubAccountSummarySearchBean cashAccountSettlementSearchBean, Integer type, GlYear glYear);
 
     public List<CashAccountSettlmentView> findAllRemainingCashAccountSettlment(SubAccountSummarySearchBean cashAccountSettlementSearchBean, StringBuilder stringBuilder);
 
-    public CashAccountSettlementBean search(SubAccountSummarySearchBean cashAccountSettlementSearchBean );
-    
-        public CashAccountSettlementBean searchNew(SubAccountSummarySearchBean cashAccountSettlementSearchBean);
-    
+    public CashAccountSettlementBean search(SubAccountSummarySearchBean cashAccountSettlementSearchBean);
+
+    public CashAccountSettlementBean searchNew(SubAccountSummarySearchBean cashAccountSettlementSearchBean);
+
 }

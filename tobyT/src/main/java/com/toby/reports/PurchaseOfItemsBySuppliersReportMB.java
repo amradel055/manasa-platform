@@ -17,6 +17,7 @@ import com.toby.views.ItemSalesViewGroup;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,6 +92,8 @@ public class PurchaseOfItemsBySuppliersReportMB extends BaseInventoryReportBean 
         fillLists();
         getPurchaseOfItemsBySuppliersSearchBean().setFromInventoryName(getInvInventoryList().get(0));
         getPurchaseOfItemsBySuppliersSearchBean().setToInventoryName(getInvInventoryList().get(0));
+        getPurchaseOfItemsBySuppliersSearchBean().setDateTo(new Date());
+        getPurchaseOfItemsBySuppliersSearchBean().setDateFrom(new Date());
         setOrganizationSiteRootList(new ArrayList<>());
 //        if (isSales) {
 //            setOrganizationSiteRootList(organizationSiteService.getorganizationSiteByBranchIdForGlBankModule(getUserData().getUserBranch().getId(),true,0));

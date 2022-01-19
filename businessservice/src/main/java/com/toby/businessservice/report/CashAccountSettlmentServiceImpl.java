@@ -1517,8 +1517,8 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
 
     public String createSQL(SubAccountSummarySearchBean cashAccountSettlementSearchBean, boolean isOpenningBalance) {
         StringBuilder query = null;
-        String dateFrom = new SimpleDateFormat("yyyy-MM-dd").format(cashAccountSettlementSearchBean.getDateFrom());
-        String dateTo = new SimpleDateFormat("yyyy-MM-dd").format(cashAccountSettlementSearchBean.getDateTo());
+        String dateFrom = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(cashAccountSettlementSearchBean.getDateFrom());
+        String dateTo = new SimpleDateFormat("yyyy-MM-dd  23:59:59").format(cashAccountSettlementSearchBean.getDateTo());
 
         if (cashAccountSettlementSearchBean.getGlBankIdSelected() != null && !cashAccountSettlementSearchBean.getGlBankIdSelected().isEmpty()) {
             if ((cashAccountSettlementSearchBean.getTransactionType() == null || cashAccountSettlementSearchBean.getTransactionType() == 0) && cashAccountSettlementSearchBean.getType() == 3
@@ -1600,7 +1600,7 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
                         + "        LEFT JOIN `currency` `c` ON ((`c`.`id` = `gb`.`currency_id`)))\n"
                         + "        LEFT JOIN `toby_user` `i` ON ((`i`.`id` = `bt`.`created_by`)))         \n"
                         + "        LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `btd`.`organization_site_id`)))\n"
-                        + "        LEFT JOIN `inv_purchase_invoice` `ipi` ON ((`ipi`.`id` = `btd`.`invoice_id`)))\n "
+                        + "        LEFT JOIN `inv_purchase_invoice` `ipi` ON ((`ipi`.`id` = `bt`.`invoice_id`)))\n "
                         + "    WHERE\n"
                         + "        ((`bt`.`transaction_type` <> 2)\n"
                         + "            AND (`bt`.`transaction_type` <> 3)) "
@@ -1973,14 +1973,14 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
         params.put("type", type);
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT sum(COALESCE(cas.value_local,0)) FROM (").append(createSQL(cashAccountSettlementSearchBean, true)).append(") cas where cas.status = ").append(type).append(" AND cas.bankId = ").append(bankId);
-        List<Object[]> res = dao.executeNativeQuery(builder.toString());
+        List<BigDecimal> res = dao.executeNativeQuery(builder.toString());
         BigDecimal value = BigDecimal.ZERO;
         if (res != null && !res.isEmpty()) {
-            for (Object[] object : res) {
-                if (object != null) {
-                    value = object[0] != null ? (BigDecimal) object[0] : BigDecimal.ZERO;
-                }
+//            for (Object[] object : res) {
+            if (res.get(0) != null) {
+                value = res.get(0) != null ? res.get(0) : BigDecimal.ZERO;
             }
+//            }
         }
 
         return value;

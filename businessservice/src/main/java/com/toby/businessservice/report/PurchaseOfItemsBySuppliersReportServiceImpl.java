@@ -150,13 +150,21 @@ public class PurchaseOfItemsBySuppliersReportServiceImpl implements PurchaseOfIt
     private void appendDateNew(PurchaseOfItemsBySuppliersSearchBean purchaseOfItemsBySuppliersSearchBean, StringBuilder stringBuilder, Map<String, Object> params) {
 
         if (purchaseOfItemsBySuppliersSearchBean.getDateFrom() != null) {
-            params.put("dateFrom", purchaseOfItemsBySuppliersSearchBean.getDateFrom());
-            stringBuilder.append(" AND ipid.invPurchaseInvoiceId.date >= :dateFrom");
+//            params.put("dateFrom", purchaseOfItemsBySuppliersSearchBean.getDateFrom());
+//            stringBuilder.append(" AND ipid.invPurchaseInvoiceId.date >= :dateFrom");
+            
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+            stringBuilder.append(" AND ipid.invPurchaseInvoiceId.date >= '").append(dateFormat.format(purchaseOfItemsBySuppliersSearchBean.getDateFrom())).append("'");
         }
 
         if (purchaseOfItemsBySuppliersSearchBean.getDateTo() != null) {
-            params.put("dateTo", purchaseOfItemsBySuppliersSearchBean.getDateTo());
-            stringBuilder.append(" AND ipid.invPurchaseInvoiceId.date <= :dateTo");
+//            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 23:59:59");
+//            params.put("dateTo", purchaseOfItemsBySuppliersSearchBean.getDateTo());
+            
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 23:59:59");
+            stringBuilder.append(" AND ipid.invPurchaseInvoiceId.date <= '").append(dateFormat.format(purchaseOfItemsBySuppliersSearchBean.getDateTo())).append("'");
+            
+//            stringBuilder.append(" AND ipid.invPurchaseInvoiceId.date <= :dateTo");
         }
 
     }
