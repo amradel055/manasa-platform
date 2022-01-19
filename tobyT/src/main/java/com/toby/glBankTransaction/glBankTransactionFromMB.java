@@ -123,7 +123,7 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
             GlBankTransactionDetailEntity = new GlBankTransactionDetailEntity();
             glBankTransactionEntity.setPaymentType(0);
 //            glBankListTo = tobyUserBankService.getAllGlBankForUserByTypeAndBranchId(getUserData().getUser().getId(), getUserData().getUserBranch().getId(), glBankTransactionEntity.getPaymentType());
-            glBankListFrom = tobyUserBankService.getAllGlBankByTypeAndBranchId(getUserData().getUserBranch().getId(), glBankTransactionEntity.getPaymentType());
+            glBankListFrom = tobyUserBankService.getCashGlBankByBranchId(getUserData().getUserBranch().getId());
 //            setGlBankConverterTo(new GlBankConverter(glBankListTo));
             setGlBankConverterFrom(new GlBankConverter(glBankListFrom));
             
