@@ -160,6 +160,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     private InvInvoiceDTOConverter invInvoiceDTOConverter;
    private InvInvoiceDTO invoiceDTOSelected ;
 
+   
+
     // offer test 
     Map<Integer, BigDecimal> groupAndNumberMap = new HashMap<>();
     Map<Integer, List<InvDetailDTO>> groupAndListMap = new HashMap<>();
@@ -642,7 +644,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                         || detailDTO.getItemId().getProGroupId().getId() == 22
                         || detailDTO.getItemId().getProGroupId().getId() == 24
                         || detailDTO.getItemId().getProGroupId().getId() == 25) {
-                    detailDTO.setDiscount(new BigDecimal(50));
+                    detailDTO.setDiscount(new BigDecimal(20));
                 } else if (detailDTO.getItemId().getProGroupId().getId() == 1) {
                     if (detailDTO.getItemsBarcodesDetail().getTypeShow() == 1) {
                         if (detailDTO.getItemsBarcodesDetail().getSellPrice().compareTo(BigDecimal.valueOf(16.67)) != 1) {
@@ -678,6 +680,52 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         }
         updateSummition(false);
 
+    }
+
+    
+    public void offer999Les16Les20Only() {
+        checkDetailData();
+        for (InvDetailDTO detailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
+            if (detailDTO.getItemsBarcodesDetail() == null && detailDTO.getItemsBarcodesDetailTrans() != null) {
+                detailDTO.setItemsBarcodesDetail(detailDTO.getItemsBarcodesDetailTrans());
+            }
+            
+            detailDTO.setIndexSerial(1);
+
+            if (detailDTO.getItemId() != null
+                    && detailDTO.getItemId().getProGroupId() != null
+                    && detailDTO.getItemId().getProGroupId().getId() != null) {
+
+                if (detailDTO.getItemId().getProGroupId().getId() == 6
+                        || detailDTO.getItemId().getProGroupId().getId() == 11
+                        || detailDTO.getItemId().getProGroupId().getId() == 12
+                        || detailDTO.getItemId().getProGroupId().getId() == 16
+                        || detailDTO.getItemId().getProGroupId().getId() == 20
+                        || detailDTO.getItemId().getProGroupId().getId() == 22
+                        || detailDTO.getItemId().getProGroupId().getId() == 24
+                        || detailDTO.getItemId().getProGroupId().getId() == 25) {
+                    detailDTO.setDiscount(new BigDecimal(20));
+                } else if (detailDTO.getItemId().getProGroupId().getId() == 1) {
+                    if (detailDTO.getItemsBarcodesDetail().getTypeShow() == 1) {
+                        if (detailDTO.getItemsBarcodesDetail().getSellPrice().compareTo(BigDecimal.valueOf(16.67)) != 1) {
+                            detailDTO.setCost(new BigDecimal(289.565));
+                            detailDTO.setDiscount(BigDecimal.ZERO);
+                            zeroDiscount();
+                        }
+                    } else if (detailDTO.getItemsBarcodesDetail().getTypeShow() == 2) {
+                        if (detailDTO.getItemsBarcodesDetail().getSellPrice().compareTo(BigDecimal.valueOf(20)) != 1) {
+                            detailDTO.setCost(new BigDecimal(289.565));
+                            detailDTO.setDiscount(BigDecimal.ZERO);
+                            zeroDiscount();
+                        }
+                    }
+                }
+
+            }
+
+        }
+        updateSummition(false);
+        checkDetailData();
     }
 
     private void zeroDiscount() {
@@ -733,6 +781,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         for (InvDetailDTO detailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
             if (detailDTO.getItemsBarcodesDetailTrans() != null) {
                 detailDTO.setItemsBarcodesDetail(detailDTO.getItemsBarcodesDetailTrans());
+                detailDTO.setCost(detailDTO.getCostBak());
             }
         }
     }
@@ -1158,6 +1207,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
     public void deleteInvDetail(InvDetailDTO invPurchaseInvoiceDetailsValidate) {
         try {
+            checkDetailData();
             if (invPurchaseInvoiceDetailsValidate.getId() != null) {
                 getInvInvoiceDTO().getInvPurchaseInvoiceDetailsDeletedList().add(invPurchaseInvoiceDetailsValidate);
             }
@@ -2677,7 +2727,6 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
      * @return the invInvoiceList
      */
     public List<InvInvoiceDTO> getInvInvoiceList() {
-        
         return invInvoiceList;
     }
 

@@ -52,6 +52,7 @@ public class InvDetailDTO extends BaseEntityDTO implements  Comparable< InvDetai
     private BigDecimal discount;
     private BigDecimal discountValue;
     private BigDecimal cost;
+    private BigDecimal costBak;
     private BigDecimal net;
     private Integer serial;
     private BigDecimal screwing;
@@ -906,6 +907,23 @@ public class InvDetailDTO extends BaseEntityDTO implements  Comparable< InvDetai
      */
     public void setCostAfterDiscount(BigDecimal costAfterDiscount) {
         this.costAfterDiscount = costAfterDiscount;
+    }
+
+    /**
+     * @return the costBak
+     */
+    public BigDecimal getCostBak() {
+        if (costBak == null) {
+            costBak = BigDecimal.ZERO;
+        }
+        return costBak;
+    }
+
+    /**
+     * @param costBak the costBak to set
+     */
+    public void setCostBak(BigDecimal costBak) {
+        this.costBak = costBak;
     }
 
 }

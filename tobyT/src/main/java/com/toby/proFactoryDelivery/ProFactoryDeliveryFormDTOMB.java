@@ -52,6 +52,7 @@ public class ProFactoryDeliveryFormDTOMB extends ProductionBasicDataForm {
                 fillDefaultList();
                 getInvInvoiceDTO().setLoadedSerial((Integer) getContext().getSessionMap().get("proSalesFormSelected"));
                 loadDlg();
+                findAccountStatement();
             } else {
                 exit("../profactoryDelivery/profactorydeviveryList.xhtml");
             }

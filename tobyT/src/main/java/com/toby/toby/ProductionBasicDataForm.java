@@ -10,6 +10,7 @@ import com.toby.businessservice.InvDialogueService;
 import com.toby.businessservice.ProFactoryDeliveryDetailService;
 import com.toby.businessservice.ProFactoryDeliveryService;
 import com.toby.businessservice.ReportManagementService;
+import com.toby.businessservice.report.SupplierAccountService;
 import com.toby.bussinessservice.global.AutoCompleteService;
 import com.toby.define.ModuleClassEnum;
 import com.toby.define.ScreenNameClassEnum;
@@ -60,6 +61,8 @@ public abstract class ProductionBasicDataForm extends BaseFormBean {
     private InvDialogueService invDialogueService;
     @EJB
     private ProFactoryDeliveryDetailService deliveryDetailService;
+    @EJB
+    SupplierAccountService supplierAccountService;
     
     @Override
     public abstract String save();
@@ -98,6 +101,12 @@ public abstract class ProductionBasicDataForm extends BaseFormBean {
             saveError(e, "invPurchaseOrderFormMB", "fillLists");
         }
         
+    }
+    
+    public void findAccountStatement() {
+        if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getOrganizationSiteId() != null && getInvInvoiceDTO().getOrganizationSiteId().getId() != null) {
+            getInvInvoiceDTO().setAccountStatement(supplierAccountService.getAccountForOrganizationSite(getInvInvoiceDTO().getOrganizationSiteId().getId()));
+        }
     }
     
     public void deleteInvDetail(InvDetailDTO invPurchaseInvoiceDetailsValidate) {

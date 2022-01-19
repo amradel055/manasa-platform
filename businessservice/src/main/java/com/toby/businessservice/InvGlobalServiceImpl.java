@@ -62,6 +62,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
 //        cost = detailEntity.getCost() != null ? detailEntity.getCost().multiply(invInvoiceDTO.getRate()) : BigDecimal.ZERO;
         cost = new BigDecimal(calcCost(detailEntity, invInvoiceDTO, findCost).setScale(3, BigDecimal.ROUND_HALF_UP).stripTrailingZeros().toPlainString());
         detailEntity.setCost(cost);
+        detailEntity.setCostBak(cost);
         if (invInvoiceDTO.getCompanyActivity() != null) {
             if (invInvoiceDTO.getCompanyActivity().equals(CompanyActivityClassEnum.RetailSaleForClothFactory)
                     && (ScreenNameClassEnum.INVSALESINVOICEFORM.equals(invInvoiceDTO.getScreenName())
@@ -423,7 +424,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
 
     private BigDecimal PriceGallary(Integer invNameGallary, InvItemDTO invItemDTO, BigDecimal cost) {
         if (invNameGallary != null && invNameGallary == 1 && invItemDTO != null
-                && invItemDTO.getProGroupId() != null && invItemDTO.getProGroupId().getId() == 1 && (invItemDTO.getType() == null || invItemDTO.getType() != 1)) {
+                && invItemDTO.getProGroupId() != null && invItemDTO.getProGroupId().getId() == 1 && invItemDTO.getIsOfferItem() ==1) {
             cost = new BigDecimal((cost.multiply(new BigDecimal(0.85))).setScale(5, RoundingMode.HALF_DOWN).stripTrailingZeros().toPlainString());
         }
         return cost;
@@ -792,6 +793,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                         && !"".equals(detailDTO.getItemsBarcodesDetail().getUnitName())) {
                     if (ScreenNameClassEnum.INVPURCHASEINVOICEFORM.equals(invInvoiceDTO.getScreenName())) {
                         detailDTO.setCost(invPurchaseInvoiceDetailsService.findLastCost(detailDTO.getItemsBarcodesDetail().getItemId()));
+                        detailDTO.setCostBak(detailDTO.getCost());
                     }
                     SymbolDTO unit = new SymbolDTO();
                     unit.setId(detailDTO.getItemsBarcodesDetail().getUnitId());
@@ -812,6 +814,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
                     detailDTO.setItemId(itemService.findInvItemDTO(detailDTO.getItemsBarcodesDetail().getItemId()));
                     detailDTO.setIsInventoryItem(detailDTO.getItemsBarcodesDetail().getIsInventoryItem());
                     detailDTO = findDataForItem(detailDTO, invInvoiceDTO, null, findCost);
+                    detailDTO.setCostBak(detailDTO.getCost());
                     if (!invInvoiceDTO.getInventorySetupDTO().getNegativeSell()) {
                         detailDTO = updateAvailableQuantityRow(invInvoiceDTO.getScreenName(), detailDTO, invInvoiceDTO.getInvInventoryId() == null ? null : invInvoiceDTO.getInvInventoryId().getId(), invInvoiceDTO.getInventorySetupDTO().getSellBuy(), invInvoiceDTO.getInventorySetupDTO().getNegativeSell(), invInvoiceDTO.getIsEdit());
                     }
@@ -915,6 +918,7 @@ public class InvGlobalServiceImpl implements InvGlobalService {
         } else {
             invDetailDTO = updatePriceRow(invInvoiceDTO.getScreenName(), invDetailDTO);
         }
+        invDetailDTO.setCostBak(invDetailDTO.getCost());
         return invDetailDTO;
     }
 
