@@ -350,6 +350,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         invItemDTO.setTypeshow(invItem.getTypeshow());
         invItemDTO.setQuantity(invItem.getQuantity());
         invItemDTO.setItemNatural(invItem.getItemNatural());
+        invItemDTO.setType(invItem.getType());
         if (invItem.getOriginCountry() != null) {
             SymbolDTO symbolDTO = new SymbolDTO();
             symbolDTO.setId(invItem.getOriginCountry().getId());
@@ -467,6 +468,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         invItem.setIsInventoryItem(invItemDTO.getIsinventoryitem());
         invItem.setTypeshow(invItemDTO.getTypeshow());
         invItem.setItemNatural(invItemDTO.getItemNatural());
+        invItem.setType(invItemDTO.getType());
         invItem.setQuantity(invItemDTO.getQuantity());
         /// Get Serial ///
 //        Map<String, Object> params = new HashMap<>();
