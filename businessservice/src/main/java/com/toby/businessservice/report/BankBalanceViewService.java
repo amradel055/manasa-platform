@@ -25,4 +25,6 @@ public interface BankBalanceViewService {
     public List<BankBalanceView> getAllBankBalancesTransactionsByBankId(Integer branchId, Date dateTo, StringBuilder builder, Date dateFrom);
     
     public List<BankBalanceReportBean> search(BankBalanceReportSearchBean bankBalanceReportSearchBean);
+    
+     public List<BankBalanceReportBean> searchNative(BankBalanceReportSearchBean bankBalanceReportSearchBean) ;
 }

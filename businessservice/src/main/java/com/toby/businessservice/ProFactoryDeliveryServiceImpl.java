@@ -442,7 +442,8 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
     @Override
     public List<InvInvoiceDTO> getALLProFactoryDeliveryDTOByStatusNew(PrintProductionDTO printProductionDTO, Integer branchId, String gallarySelected) {
 
-        DateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        DateFormat formatDateFrom = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+        DateFormat formatDateTo = new SimpleDateFormat("yyyy-MM-dd 23:59:59");
         StringBuilder builder = new StringBuilder();
         Integer typeTo = null;
         if (0 == printProductionDTO.getInvoiceStatus()) {
@@ -472,7 +473,7 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
             }
         }
 
-        builder.append(" AND   s.date >= " + " '").append(formatDate.format(printProductionDTO.getFromDate())).append("'" + "  AND   s.date <=  " + " '").append(formatDate.format(printProductionDTO.getToDate())).append("'");
+        builder.append(" AND   s.date >= " + " '").append(formatDateFrom.format(printProductionDTO.getFromDate())).append("'" + "  AND   s.date <=  " + " '").append(formatDateTo.format(printProductionDTO.getToDate())).append("'");
         if (gallarySelected != null) {
             builder.append(" AND invi.id IN ( ").append(gallarySelected).append(")");
         }

@@ -187,7 +187,7 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
             getBalanceReportSearchBean().setGlBankList(new ArrayList<>());
             getBalanceReportSearchBean().getGlBankList().add(bankDTO);
             getBalanceReportSearchBean().setBranchId(getUserData().getSelectedBranch());
-            List<BankBalanceReportBean> balanceReportBeans = bankBalanceViewService.search(balanceReportSearchBean);
+            List<BankBalanceReportBean> balanceReportBeans = bankBalanceViewService.searchNative(balanceReportSearchBean);
             if(balanceReportBeans != null && !balanceReportBeans.isEmpty() && balanceReportBeans.get(0) != null){
             bankCash = balanceReportBeans.get(0).getBalance(); 
             }

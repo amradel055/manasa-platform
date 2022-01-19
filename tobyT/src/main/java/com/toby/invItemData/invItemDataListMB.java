@@ -14,6 +14,7 @@ import com.toby.toby.UserData;
 import com.toby.views.InvItemView;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -104,10 +105,11 @@ public class invItemDataListMB extends BaseListBean implements Serializable {
                 invDetailDTO.setCost((item.getMaxpricemen().add(item.getMaxpricemen().multiply(new BigDecimal(0.15)))).setScale(3, BigDecimal.ROUND_UP));
                 invDetailDTO.setItemCode(item.getCode());
                 invDetailDTO.setItemName(item.getName());
-                 if(item.getDiscountrate() != null && item.getDiscountrate().compareTo(BigDecimal.ZERO) == 1){
+                if (item.getDiscountrate() != null && item.getDiscountrate().compareTo(BigDecimal.ZERO) == 1) {
                     BigDecimal priceAfterDiscount = item.getDiscountvalue();
-                     invDetailDTO.setCostAfterDiscount((priceAfterDiscount.add(priceAfterDiscount.multiply(new BigDecimal(0.15)))).setScale(3, BigDecimal.ROUND_UP));
-                 }
+                    invDetailDTO.setCostAfterDiscount((priceAfterDiscount.add(priceAfterDiscount.multiply(new BigDecimal(0.15)))).setScale(3, BigDecimal.ROUND_UP));
+                }
+                invDetailDTO.setCost(PriceGallary(invDetailDTO.getInventoryDTO().getInvName(), invDetailDTO.getItemId(), invDetailDTO.getCost()));
                 listNew.add(invDetailDTO);
                 fillReport(prepareReport(), getUserData().getReportPath() + "itemBarcodeToby.jasper", listNew, "pdf");
             }
@@ -115,7 +117,15 @@ public class invItemDataListMB extends BaseListBean implements Serializable {
 
         }
     }
-    
+
+    private BigDecimal PriceGallary(Integer invNameGallary, InvItemDTO invItemDTO, BigDecimal cost) {
+        if (invNameGallary != null && invNameGallary == 1 && invItemDTO != null
+                && invItemDTO.getProGroupId() != null && invItemDTO.getProGroupId().getId() == 1 && (invItemDTO.getType() == null || invItemDTO.getType() != 1)) {
+            cost = new BigDecimal((cost.multiply(new BigDecimal(0.85))).setScale(5, RoundingMode.HALF_DOWN).stripTrailingZeros().toPlainString());
+        }
+        return cost;
+    }
+
     public HashMap prepareReport() {
         try {
             HashMap hashMap = new HashMap();
