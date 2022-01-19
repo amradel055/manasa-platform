@@ -130,5 +130,7 @@ public interface InvPurchaseInvoiceService_1 {
     public String validateloginDistributedScreens(UserDataDTO userDataDTO, ScreenNameClassEnum screenNameClassEnum);
     
     public List<GeneralJournalDTO> tarhilOne(TobyUser tobyUser) throws CloneNotSupportedException ;
+    
+    public List<InvInvoiceDTO> getALLInvPurchaseInvoiceDTOByStatusNew(PrintProductionDTO printProductionDTO, Integer branchId  ,String gallarySelected );
 
 }

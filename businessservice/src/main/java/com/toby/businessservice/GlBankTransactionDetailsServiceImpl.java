@@ -516,12 +516,18 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
         if (glBankTransaction.getGlAccountId() != null) {
             GlAccount account = dao.findEntityById(GlAccount.class, glBankTransaction.getGlAccountId().getId());
             accountId = account.getId();
+            if(account.getCostCenterId() != null){
             currentAccountId = account.getCostCenterId().getCurrentaccountId().getId();
             costCenterIdMain = account.getCostCenterId().getId();
+            }else if(glBankTransaction.getCostCenter() != null) {
+              costCenterIdMain = glBankTransaction.getCostCenter().getId();
+            }
         } else {
             accountId = glBankTransaction.getGlBankId().getAccountId().getId();
             costCenterIdMain = glBankTransaction.getGlBankId().getGallaryId().getCostCenterId().getId();
         }
+        
+        
 
         for (GlBankTransactionDetail dto : list) {
 

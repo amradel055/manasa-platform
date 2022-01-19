@@ -40,6 +40,7 @@ import com.toby.converter.InvDelegatorConvertor;
 import com.toby.converter.InvDelegatorDTOConvertor;
 import com.toby.converter.InvInventoryConverter;
 import com.toby.converter.InvInventoryDTOConverter;
+import com.toby.converter.InvInvoiceDTOConverter;
 import com.toby.converter.InvOrganizationSiteConverter;
 import com.toby.converter.InvOrganizationSiteDTOConverter;
 import com.toby.converter.ItemDTOConverter;
@@ -156,8 +157,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     private ItemDTOConverter itemDTOParentConverter;
     private InvInventory invInventorySelection;
     private List<InvInventory> inventoryList;
-    
-   
+    private InvInvoiceDTOConverter invInvoiceDTOConverter;
+   private InvInvoiceDTO invoiceDTOSelected ;
 
     // offer test 
     Map<Integer, BigDecimal> groupAndNumberMap = new HashMap<>();
@@ -1041,6 +1042,27 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
             errorMessage("برجاء اختيار الصنف أولا");
             return false;
         }
+    }
+    
+      public void search() {
+        Integer type = 0, invInventorySelectionId = null, invGallarySelectionId = null;
+        invGallarySelectionId = getGallaryDTOSelect() != null ? getGallaryDTOSelect().getId() : null;
+
+        if (getUri().contains("invpurchaseinvoicelist")) {
+            type = 0;
+        } else if (getUri().contains("invsalesinvoicelist")) {
+            type = 1;
+        } else if (getUri().contains("invreturnpurchaselist")) {
+            type = 2;
+        } else if (getUri().contains("invreturnsaleslist")) {
+            type = 3;
+        } else if (getUri().contains("proworkorderlist") ||getUri().contains("proworkorderform")) {
+            type = 4;
+        }else if (getUri().contains("invpurchaseaddinglist")) {
+            type = 5;
+        }
+        setInvInvoiceList(invPurchaseInvoiceService.getALLInvPurchaseInvoiceDTOByTypeAndBranchIdFroGallary2(type, invGallarySelectionId, getInvInvoiceDTO().getOrganizationSiteId() == null ? null : getInvInvoiceDTO().getOrganizationSiteId().getId()));
+        invInvoiceDTOConverter = new InvInvoiceDTOConverter(invInvoiceList);
     }
 
     private void replacedetail(InvDetailDTO invPurchaseInvoiceDetailsValidate) {
@@ -2655,6 +2677,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
      * @return the invInvoiceList
      */
     public List<InvInvoiceDTO> getInvInvoiceList() {
+        
         return invInvoiceList;
     }
 
@@ -2663,6 +2686,34 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
      */
     public void setInvInvoiceList(List<InvInvoiceDTO> invInvoiceList) {
         this.invInvoiceList = invInvoiceList;
+    }
+
+    /**
+     * @return the invInvoiceDTOConverter
+     */
+    public InvInvoiceDTOConverter getInvInvoiceDTOConverter() {
+        return invInvoiceDTOConverter;
+    }
+
+    /**
+     * @param invInvoiceDTOConverter the invInvoiceDTOConverter to set
+     */
+    public void setInvInvoiceDTOConverter(InvInvoiceDTOConverter invInvoiceDTOConverter) {
+        this.invInvoiceDTOConverter = invInvoiceDTOConverter;
+    }
+
+    /**
+     * @return the invoiceDTOSelected
+     */
+    public InvInvoiceDTO getInvoiceDTOSelected() {
+        return invoiceDTOSelected;
+    }
+
+    /**
+     * @param invoiceDTOSelected the invoiceDTOSelected to set
+     */
+    public void setInvoiceDTOSelected(InvInvoiceDTO invoiceDTOSelected) {
+        this.invoiceDTOSelected = invoiceDTOSelected;
     }
 
 }

@@ -76,15 +76,16 @@ public class customerDelegatorFormMB extends InventoryBasicDataForm {
             saveError(e, "OrganizationSiteFormMB", "reset");
         }
     }
-
-    public String search() {
+    
+    @Override
+    public void search() {
         try {
             invOrganizationSiteDTOList = organizationSiteService.getCustomerDTOFromAndTo(getUserlogin().getBranchId().getId(), organizationSiteSearchBean);
             updateEdit();
-            return "";
+            
         } catch (Exception e) {
             saveError(e, "OrganizationSiteFormMB", "search");
-            return null;
+        
         }
     }
 

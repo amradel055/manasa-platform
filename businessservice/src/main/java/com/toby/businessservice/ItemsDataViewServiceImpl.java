@@ -414,7 +414,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
         InvItem invItem = new InvItem();
         invItem.setId(invItemDTO.getId());
         if (invItemDTO.getId() == null && invItemDTO.getSiteId() != null && invItemDTO.getSiteId().getId() != null && invItemDTO.getSiteId().getCode() != null) {
-          invItem.setCode((findMaxItemCode(0, invItemDTO.getSiteId().getId(), invItemDTO.getSiteId().getCode())).toString());  
+            invItem.setCode((findMaxItemCode(0, invItemDTO.getSiteId().getId(), invItemDTO.getSiteId().getCode())).toString());
         } else {
             invItem.setCode(invItemDTO.getCode());
 
@@ -556,8 +556,8 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             invItem.setCompanyId(tobyUser.getCompanyId());
             invItem.setBranchId(tobyUser.getBranchId());
         }
-        
-         invItem.setIsOfferItem(invItemDTO.getIsOfferItem());
+
+        invItem.setIsOfferItem(invItemDTO.getIsOfferItem());
         return invItem;
     }
 
@@ -751,7 +751,6 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             stringBuilder.append(appendTillDate(itemCardReportSerachBean, glYear, params));
             stringBuilder.append(appendInventory(itemCardReportSerachBean, params));
             stringBuilder.append(appendInvItem(itemCardReportSerachBean, params));
-           
 
             stringBuilder.append(" group by IDV.itemId ,IDV.itemName");
 //            stringBuilder.append(" order by IDV.itemId ,IDV.date ASC");
@@ -896,6 +895,11 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
     }
 
     private String appendDate(ItemCardReportSerachBean itemCardReportSerachBean, Map<String, Object> params) {
+        if (itemCardReportSerachBean.getDateTo() != null) {
+            itemCardReportSerachBean.getDateTo().setHours(23);
+            itemCardReportSerachBean.getDateTo().setMinutes(59);
+            itemCardReportSerachBean.getDateTo().setSeconds(59);
+        }
         StringBuilder appendQuery = new StringBuilder();
         if (itemCardReportSerachBean.getDateFrom() != null) {
             params.put("dateFrom", itemCardReportSerachBean.getDateFrom());
@@ -909,15 +913,13 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
 
         return appendQuery.toString();
     }
-    
-      private String appendInvoiceType(ItemCardReportSerachBean itemCardReportSerachBean, Map<String, Object> params) {
+
+    private String appendInvoiceType(ItemCardReportSerachBean itemCardReportSerachBean, Map<String, Object> params) {
         StringBuilder appendQuery = new StringBuilder();
         if (itemCardReportSerachBean.getInvoiceType() != null) {
             params.put("invoiceType", itemCardReportSerachBean.getInvItemForm().getCode());
             appendQuery.append(" AND IDV.itemCode >= :itemCodeFrom");
         }
-
-      
 
         return appendQuery.toString();
     }

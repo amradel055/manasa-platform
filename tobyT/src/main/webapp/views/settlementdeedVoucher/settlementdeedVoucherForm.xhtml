@@ -129,7 +129,7 @@
                             </p:autoComplete>
                         </div>
                         <div class="ui-g-6 ui-xl-6">
-                             <p:outputLabel style="width:64px;margin-right: 6%;" value="مركز التكلفة"/>
+                            <p:outputLabel style="width:64px;margin-right: 6%;" value="مركز التكلفة"/>
 
                         </div>
                     </div>
@@ -168,6 +168,7 @@
                                          actionListener="#{settlementDeedVoucherFormMB.addGlBankTransactionDetail()}" 
                                          update=":form:curmsg glBankTransactionDetailsTable" 
                                          disabled="#{settlementDeedVoucherFormMB.glBankTransactionEntity.postFlag == 1}"
+                                         oncomplete="PrimeFaces.focus('form:glBankTransactionDetailsTable:'+#{settlementDeedVoucherFormMB.glBankTransactionDetailEntityList.size()}+':GlAccount_ID_from')"
 
                                          ajax="true"
                                          style="float:right"/>
@@ -367,7 +368,7 @@
                             class="saddButtons"
                             id="b7" icon="fa fa-plus"
                             title="#{userData.userDDs['ADD']}" 
-
+                            oncomplete="PrimeFaces.focus('form:glBankTransactionDetailsTable:'+#{settlementDeedVoucherFormMB.glBankTransactionDetailEntityList.size()}+':GlAccount_ID_from')"
                             actionListener="#{settlementDeedVoucherFormMB.addGlBankTransactionDetail()}"  
                             disabled="#{settlementDeedVoucherFormMB.glBankTransactionEntity.postFlag == 1}"
                             update=":form:curmsg glBankTransactionDetailsTable" 
@@ -403,7 +404,7 @@
                         <p:commandButton  class="saveButton" id="saveB" 
                                           title="#{userData.userDDs['SAVE']}" 
                                           value="#{userData.userDDs['SAVE']}" 
-                                          update="@form"
+                                          update="@form settelmentId"
                                           action="#{settlementDeedVoucherFormMB.save()}"
                                           rendered="#{(userData.userScreens['settlementdeed'].add or userData.userScreens['settlementdeed'].edit) or userData.isAdmin}"
                                           />
@@ -422,7 +423,7 @@
                                          title="#{userData.userDDs['PRINT']}"
                                          value="#{userData.userDDs['PRINT']}" 
                                          actionListener="#{settlementDeedVoucherFormMB.exportPDFVoutcher}" 
-                                         rendered="#{ settlementDeedVoucherFormMB.glBankTransactionEntity.id gt 0}"/>
+                                         rendered="#{settlementDeedVoucherFormMB.glBankTransactionEntity.serial gt 0}"/>
 
 
                         <p:commandButton  class="closeButton" title="#{userData.userDDs['BACK']}" 

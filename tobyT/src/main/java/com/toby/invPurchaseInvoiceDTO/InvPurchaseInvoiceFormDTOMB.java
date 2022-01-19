@@ -260,6 +260,9 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
 
     public void searchInvoiceBySerial() {
         try {
+            if(getInvInvoiceDTO() != null && getInvInvoiceDTO().getSearchBySerial() == null){
+            getInvInvoiceDTO().setSearchBySerial(getInvInvoiceDTO().getSerial());
+            }
             if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getSearchBySerial() > 0) {
                 Integer invoiceId = invPurchaseInvoiceService_1.getInvoiceBySerial(getInvInvoiceDTO().getSearchBySerial());
                 ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
