@@ -98,6 +98,15 @@ public class TobyUserBankServiceImpl implements TobyUserBankService {
         return dao.findListByQuery("SELECT e FROM GlBank e WHERE e.branchId.id = :branchId", params);
 
     }
+    
+     @Override
+    public List<GlBank> getCashGlBankByBranchId(Integer branchId) {
+
+        Map<String, Object> params = new HashMap();
+        params.put("branchId", branchId);
+        return dao.findListByQuery("SELECT e FROM GlBank e WHERE e.branchId.id = :branchId AND e.cash = 0 ", params);
+
+    }
 
     @Override
     public List<GlBank> getAllBankListByUserAndBranch(Integer userId, Integer branchId) {

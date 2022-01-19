@@ -123,7 +123,7 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
             GlBankTransactionDetailEntity = new GlBankTransactionDetailEntity();
             glBankTransactionEntity.setPaymentType(0);
 //            glBankListTo = tobyUserBankService.getAllGlBankForUserByTypeAndBranchId(getUserData().getUser().getId(), getUserData().getUserBranch().getId(), glBankTransactionEntity.getPaymentType());
-            glBankListFrom = tobyUserBankService.getAllGlBankByTypeAndBranchId(getUserData().getUserBranch().getId(), glBankTransactionEntity.getPaymentType());
+            glBankListFrom = tobyUserBankService.getCashGlBankByBranchId(getUserData().getUserBranch().getId());
 //            setGlBankConverterTo(new GlBankConverter(glBankListTo));
             setGlBankConverterFrom(new GlBankConverter(glBankListFrom));
             
@@ -187,7 +187,7 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
             getBalanceReportSearchBean().setGlBankList(new ArrayList<>());
             getBalanceReportSearchBean().getGlBankList().add(bankDTO);
             getBalanceReportSearchBean().setBranchId(getUserData().getSelectedBranch());
-            List<BankBalanceReportBean> balanceReportBeans = bankBalanceViewService.search(balanceReportSearchBean);
+            List<BankBalanceReportBean> balanceReportBeans = bankBalanceViewService.searchNative(balanceReportSearchBean);
             if(balanceReportBeans != null && !balanceReportBeans.isEmpty() && balanceReportBeans.get(0) != null){
             bankCash = balanceReportBeans.get(0).getBalance(); 
             }

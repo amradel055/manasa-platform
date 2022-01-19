@@ -232,13 +232,23 @@
                                 <f:selectItem itemLabel="عرض واحد" itemValue="1" />
                                 <f:selectItem itemLabel="عرضين" itemValue="2" />
                             </p:selectOneMenu>
-                        </div>
+                        </div>     
                         <div class="ui-g-6 ui-xl-6">
 
                             <p:outputLabel style="width:70px" value="  نوع العرض"/>
+                        </div>
+                    </div>
+                      <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:selectOneMenu value="#{itemDataFormMB.itemDataEntity.type}" >
+                                <f:selectItem itemLabel="اختر" itemValue="" />
+                                <f:selectItem itemLabel="صوف" itemValue="1" />
+                                <f:selectItem itemLabel="شتوي" itemValue="2" />
+                            </p:selectOneMenu>
+                        </div>     
+                        <div class="ui-g-6 ui-xl-6">
 
-
-
+                            <p:outputLabel style="width:70px" value="  نوع التوب"/>
                         </div>
                     </div>
                     <div class="ui-g-12 ui-xl-12">

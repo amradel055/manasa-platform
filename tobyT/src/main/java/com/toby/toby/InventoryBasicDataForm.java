@@ -151,6 +151,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
     private LazyDataModel<InvInvoiceDTO> dataModel;
     private LazyDataModel<InvDailogueData> dataModelInvDailogueData;
+    
+     private InvOrganizationSiteDTO invOrganizationSiteDTOSelected ;
 
     //////Cloth/////
     private List<InvItemDTO> invItemDTOParentList;
@@ -159,6 +161,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     private List<InvInventory> inventoryList;
     private InvInvoiceDTOConverter invInvoiceDTOConverter;
    private InvInvoiceDTO invoiceDTOSelected ;
+   
 
    
 
@@ -1110,7 +1113,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         }else if (getUri().contains("invpurchaseaddinglist")) {
             type = 5;
         }
-        setInvInvoiceList(invPurchaseInvoiceService.getALLInvPurchaseInvoiceDTOByTypeAndBranchIdFroGallary2(type, invGallarySelectionId, getInvInvoiceDTO().getOrganizationSiteId() == null ? null : getInvInvoiceDTO().getOrganizationSiteId().getId()));
+        setInvInvoiceList(invPurchaseInvoiceService.getALLInvPurchaseInvoiceDTOByTypeAndBranchIdFroGallary2(type, invGallarySelectionId, getInvOrganizationSiteDTOSelected() == null ? getInvInvoiceDTO().getOrganizationSiteId() == null ? null : getInvInvoiceDTO().getOrganizationSiteId().getId() : getInvOrganizationSiteDTOSelected().getId() ));
         invInvoiceDTOConverter = new InvInvoiceDTOConverter(invInvoiceList);
     }
 
@@ -2763,6 +2766,20 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
      */
     public void setInvoiceDTOSelected(InvInvoiceDTO invoiceDTOSelected) {
         this.invoiceDTOSelected = invoiceDTOSelected;
+    }
+
+    /**
+     * @return the invOrganizationSiteDTOSelected
+     */
+    public InvOrganizationSiteDTO getInvOrganizationSiteDTOSelected() {
+        return invOrganizationSiteDTOSelected;
+    }
+
+    /**
+     * @param invOrganizationSiteDTOSelected the invOrganizationSiteDTOSelected to set
+     */
+    public void setInvOrganizationSiteDTOSelected(InvOrganizationSiteDTO invOrganizationSiteDTOSelected) {
+        this.invOrganizationSiteDTOSelected = invOrganizationSiteDTOSelected;
     }
 
 }

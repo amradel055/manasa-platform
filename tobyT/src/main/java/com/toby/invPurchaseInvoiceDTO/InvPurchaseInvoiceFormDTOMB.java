@@ -9,6 +9,8 @@ import com.toby.businessservice.InvGlobalService;
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
 import com.toby.businessservice.ProFactoryDeliveryService;
 import com.toby.define.ScreenNameClassEnum;
+import com.toby.dto.InvInvoiceDTO;
+import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.toby.InventoryBasicDataForm;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -28,8 +30,10 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
 
     private Boolean checkFactory;
     
-     private Boolean checkDiscountValue = false ;
+    private Boolean checkDiscountValue = false ;
     private Boolean checkDiscountRate = false ;
+   
+    private InvInvoiceDTO invInvoiceDTOSelected ;
 
 // EJBs
     @EJB
@@ -260,8 +264,8 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
 
     public void searchInvoiceBySerial() {
         try {
-            if(getInvInvoiceDTO() != null && getInvInvoiceDTO().getSearchBySerial() == null){
-            getInvInvoiceDTO().setSearchBySerial(getInvInvoiceDTO().getSerial());
+            if(getInvInvoiceDTOSelected() != null && getInvInvoiceDTO().getSearchBySerial() == null){
+            getInvInvoiceDTO().setSearchBySerial(getInvInvoiceDTOSelected().getSerial());
             }
             if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getSearchBySerial() > 0) {
                 Integer invoiceId = invPurchaseInvoiceService_1.getInvoiceBySerial(getInvInvoiceDTO().getSearchBySerial());
@@ -337,6 +341,22 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
      */
     public void setCheckDiscountRate(Boolean checkDiscountRate) {
         this.checkDiscountRate = checkDiscountRate;
+    }
+
+ 
+
+    /**
+     * @return the invInvoiceDTOSelected
+     */
+    public InvInvoiceDTO getInvInvoiceDTOSelected() {
+        return invInvoiceDTOSelected;
+    }
+
+    /**
+     * @param invInvoiceDTOSelected the invInvoiceDTOSelected to set
+     */
+    public void setInvInvoiceDTOSelected(InvInvoiceDTO invInvoiceDTOSelected) {
+        this.invInvoiceDTOSelected = invInvoiceDTOSelected;
     }
 
 }

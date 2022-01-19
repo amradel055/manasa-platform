@@ -45,5 +45,7 @@ public interface TobyUserBankService {
     public List<GlBankDTO> getAllGlBankForUserByTypeAndBranchIdAndGallaryListPerDTO(Integer userId, Integer branchId, Integer type, String gallaryId) ;
     
     public List<Integer> getAllGlBankIdForUserByTypeAndBranchId(Integer userId, Integer branchId, Integer type);
+    
+    public List<GlBank> getCashGlBankByBranchId(Integer branchId);
 
 }
