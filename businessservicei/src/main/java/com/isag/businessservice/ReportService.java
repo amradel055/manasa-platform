@@ -30,6 +30,6 @@ public interface ReportService {
 
     public resualtDTO findElresultById(resualtDTO reseualtdto);
 
-    public void deleteGmSubscribtionDeleted(GmSubscriptions gmSubscriptions);
+   public void deleteGmSubscribtionDeleted(Integer id);
 
 }

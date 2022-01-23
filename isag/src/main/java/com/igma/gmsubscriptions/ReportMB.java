@@ -4,9 +4,12 @@
  * and open the template in the editor.
  */
 package com.igma.gmsubscriptions;
+import com.isag.businessservice.GmSubscriptionsServiceImpl;
 import com.isag.businessservice.ReportService;
+import com.isag.dto.GmSubscriptionsDTO;
 import com.isag.dto.resualtDTO;
 import com.isag.dto.searchDTO;
+import com.isag.entity.GmSubscriptions;
 import com.isag.entity.search;
 import com.isag.isag.BaseFormBean;
 import com.isag.print.IReportService;
@@ -18,6 +21,8 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
@@ -33,12 +38,14 @@ public class ReportMB extends BaseFormBean {
 
     @EJB
     ReportService reportservice;
+ 
     private search search;
     private resualtDTO resualtDTO;
     private searchDTO searchdto;
     private List<resualtDTO> resultList;
     private resualtDTO resultDtoSelected ;
     IReportService iReportService = new IReportServiceImpl();
+    GmSubscriptions gmSubscriptions;
 
 //       public void printList() {
 //    
@@ -49,9 +56,13 @@ public class ReportMB extends BaseFormBean {
 //    }
 //       }
   public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {
-//        search();
+      if(getUri().contains("gmdeletedsubscriptionsreport")){
+         String reportName = "DeletedSubscribtionReport.jasper";
+        fillReport(prepareReport(), getUserData().getReportPath() + reportName, getResultList(), "pdf");
+      }else{
         String reportName = "salesReceiptCashGMReport.jasper";
         fillReport(prepareReport(), getUserData().getReportPath() + reportName, getResultList(), "pdf");
+        }
     }
 
     public HashMap prepareReport() {
@@ -59,13 +70,27 @@ public class ReportMB extends BaseFormBean {
         HashMap hashMap = new HashMap();
         hashMap.put("datefrom", searchdto.getDateFrom());
         hashMap.put("dateto", searchdto.getDateTo());
-         hashMap.put("sumValue", resualtDTO.getSumValue());
+        if(!getUri().contains("gmdeletedsubscriptionsreport")){
+          hashMap.put("sumValue", resualtDTO.getSumValue());
+        }
 
    
 
         return hashMap;
     }
-   
+    
+    
+    public void delete() {
+        try {
+            if (getResultDtoSelected()!= null && getResultDtoSelected().getId() != null) {
+                reportservice.deleteGmSubscribtionDeleted(getResultDtoSelected().getId());
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "تم الجذذف بنجاح", "تم الجذذف بنجاح"));
+            }
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "خطأ", "خطأ فى الحف"));
+            saveError(e, "InvPurchaseInvoiceListMB", "delete");
+        }
+    }
     public void search() {
         searchdto.setBranchId(getUserData().getUserBranch().getId());
         resultList = reportservice.getAllValidSubsByDate(searchdto);
@@ -186,6 +211,7 @@ public class ReportMB extends BaseFormBean {
     public void setResultDtoSelected(resualtDTO resultDtoSelected) {
         this.resultDtoSelected = resultDtoSelected;
     }
+
 
  
 

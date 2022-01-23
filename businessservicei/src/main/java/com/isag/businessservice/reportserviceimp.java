@@ -69,13 +69,14 @@ public class reportserviceimp implements ReportService {
     }
 
     @Override
-    public void deleteGmSubscribtionDeleted(GmSubscriptions gmSubscriptions) {
-        if (gmSubscriptions.getId() != null && gmSubscriptions.getId() > 0) {
-            dao.executeDeleteQuery("delete from GmSubscriptions e WHERE e.id > 0 " + gmSubscriptions.getId());
-        }
+    public void deleteGmSubscribtionDeleted(Integer id) {
+        
+        GmSubscriptions gmSubscriptions=new  GmSubscriptions();
+        gmSubscriptions.setId(id);
+     dao.executeDeleteQuery("delete from GmFreeze e WHERE e.subscirbtionId.id =  " + id);
+        
         dao.deleteEntity(gmSubscriptions);
     }
-
     @Override
     public List<resualtDTO> getAllDeletedSubsByDate(searchDTO search) {
 
@@ -173,7 +174,7 @@ public class reportserviceimp implements ReportService {
         dTO.setCreatedBy(entity.getCreatedBy().getName());
         if (entity.getDeletedBy() != null) {
 
-            dTO.setDeletedBy(entity.getDeletedBy());
+            dTO.setDeletedBy(entity.getDeletedBy().getName());
         }
 
         if (entity.getDeletionDate() != null) {

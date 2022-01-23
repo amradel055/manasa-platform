@@ -5,13 +5,14 @@
  */
 package com.isag.dto;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  *
  * @author AhmedEssam
  */
-public class ActionsDTO extends BaseEntityDTO{
+public class ActionsDTO implements Serializable{
 
     /**
      * @return the userId
@@ -26,7 +27,7 @@ public class ActionsDTO extends BaseEntityDTO{
     public void setUserId(Integer userId) {
         this.userId = userId;
     }
-
+    private Integer id;
     private Date date;
     private Integer userId;
     private String screenName;
@@ -76,6 +77,20 @@ public class ActionsDTO extends BaseEntityDTO{
      */
     public void setType(String type) {
         this.type = type;
+    }
+
+    /**
+     * @return the id
+     */
+    public Integer getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(Integer id) {
+        this.id = id;
     }
 
 

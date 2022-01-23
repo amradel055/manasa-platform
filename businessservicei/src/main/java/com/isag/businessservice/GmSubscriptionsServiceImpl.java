@@ -45,8 +45,8 @@ import javax.ejb.Stateless;
 @Stateless
 public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
 //
-//    @EJB
-//    CreateActionImpl createActionImpl;
+    @EJB
+    CreateActionService createActionService;
     @EJB
     private GenericDAO dao;
     @EJB
@@ -219,17 +219,20 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
                 if (gmSubscriptionsDTO.getId() != null) {
                     //بعمل حفظ فى حالة التعديل
                     gmSubscriptions = dao.updateEntity(gmSubscriptions);
+                    createActionService.SaveAction(SetActionDto( isagUser, "gmsubscriptions", "Save"), isagUser);
+
 
                 } else {
                     // فى حالة ان الفاتورة جديدة بروح اجيب السيريال الاول 
                     Integer serial = genericService.getMaxGenericSerialByType(GmSubscriptions.class, gmSubscriptions.getBranchId().getId(), gmSubscriptionsDTO.getType());
                     gmSubscriptions.setSerial(serial);
                     gmSubscriptions = dao.updateEntity(gmSubscriptions);
+                     createActionService.SaveAction(SetActionDto( isagUser, "gmsubscriptions", "Save"), isagUser);
+
 
                 }
-//                createActionImpl.SaveAction(SetActionDto( isagUser, "gmsubscriptions", "Save"), isagUser);
-
                 gmSubscriptionsDTO = mapToDTO(gmSubscriptions, gmSubscriptionsDTO);
+
 
             }
         } catch (Exception e) {

@@ -9,6 +9,7 @@ import com.isag.core.GenericDAO;
 import com.isag.dto.ActionsDTO;
 import com.isag.entity.CreateAction;
 import com.isag.entity.IsagUser;
+import java.util.Date;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
@@ -27,6 +28,7 @@ public class CreateActionImpl implements CreateActionService{
         actionsdto.setId(actions.getId());
         actionsdto.setType(actions.getType());
         actionsdto.setUserId(isagUser.getId());
+        actions.setDateAction(actions.getDateAction());
 
         actionsdto.setScreenName(actions.getScreenName());
         return actionsdto;
@@ -38,6 +40,7 @@ public class CreateActionImpl implements CreateActionService{
         actions.setType(actionsdto.getType());
         actions.setUserId(isagUser);
         actions.setScreenName(actionsdto.getScreenName());
+        actions.setDateAction(new Date());
         return actions;
     }
  
