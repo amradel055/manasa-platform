@@ -94,6 +94,7 @@ public class GeneraljournalDetailsServiceImpl implements GeneraljournalDetailsSe
 
     @Override
     public BigDecimal getBalanceForGlAccount(Integer glACCOUNTId, Date startGlYear, Date endDate) {
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         Map<String, Object> params = new HashMap();
         params.put("glACCOUNTId", glACCOUNTId);
 
@@ -401,6 +402,7 @@ public class GeneraljournalDetailsServiceImpl implements GeneraljournalDetailsSe
     }
 
     public void makeAppendWork(CommonSearchBean commonSearchBean, Integer debitOrCredit, StringBuilder stringBuilder, Map<String, Object> params) {
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         if (commonSearchBean.getDateFrom() != null) {
             String formatDateFrom = new SimpleDateFormat("yyyy-MM-dd").format(commonSearchBean.getDateFrom());
             stringBuilder.append(" and gj.generalData >= '").append(formatDateFrom).append("'");

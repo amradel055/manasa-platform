@@ -34,6 +34,7 @@ public class SupplierAccountViewBean {
     private Boolean main;
     
     private Integer instContractSerial;
+    private Integer invoiceSerial;
 
     /**
      * @return the adding
@@ -243,6 +244,20 @@ public class SupplierAccountViewBean {
      */
     public void setInstContractSerial(Integer instContractSerial) {
         this.instContractSerial = instContractSerial;
+    }
+
+    /**
+     * @return the invoiceSerial
+     */
+    public Integer getInvoiceSerial() {
+        return invoiceSerial;
+    }
+
+    /**
+     * @param invoiceSerial the invoiceSerial to set
+     */
+    public void setInvoiceSerial(Integer invoiceSerial) {
+        this.invoiceSerial = invoiceSerial;
     }
 
 }

@@ -37,14 +37,14 @@
                                           style="float:right" 
                                           rendered="#{userData.userScreens['invreturnsales_1'].add or userData.isAdmin}"/>
 
-                        <p:selectOneMenu id="inventory" value="#{invPurchaseInvoiceListDTOMB.invInventorySelection}"
-                                         converter="#{invPurchaseInvoiceListDTOMB.invInventoryConverter}" 
+                        <p:selectOneMenu id="inventory" value="#{invPurchaseInvoiceListDTOMB.gallaryDTOSelect}"
+                                         converter="#{invPurchaseInvoiceListDTOMB.gallaryDTOConverters}" 
                                          style="float:right;width: 20%!important;color:#fff;height: 30px!important;margin-right: 0.5%;">
 
-                            <p:ajax listener="#{invPurchaseInvoiceListDTOMB.loadInventoryList()}" update="form" />
+                            <p:ajax listener="#{invPurchaseInvoiceListDTOMB.loadGallaryList()}" update="form" />
                             <f:selectItem itemLabel="#{userData.userDDs['ALL']}" itemValue="" />
 
-                            <f:selectItems value="#{invPurchaseInvoiceListDTOMB.inventoryList}" 
+                            <f:selectItems value="#{invPurchaseInvoiceListDTOMB.gallaryLists}" 
                                            var="inventory" itemLabel="#{inventory.name}"
                                            itemValue="#{inventory}"/> 
                         </p:selectOneMenu>

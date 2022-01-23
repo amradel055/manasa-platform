@@ -2024,6 +2024,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
 
     @Override
     public ChartDTO getCountCustomerByLearnAboutCompanyfrom(Integer branchId, Date dateFrom, Date dateTo) {
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         StringBuilder builder = new StringBuilder();
@@ -2056,6 +2057,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
 
     @Override
     public ChartDTO getCountCustomerByleadStatus(Integer branchId, Date dateFrom, Date dateTo) {
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         StringBuilder builder = new StringBuilder();
@@ -2088,6 +2090,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
 
     @Override
     public ChartDTO getCountCustomerByAssignedTo(Integer branchId, Date fromDate, Date toDate) {
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         StringBuilder builder = new StringBuilder();
@@ -2101,6 +2104,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
 
     @Override
     public ChartDTO getCountCustomerByAssignedToAndStatus(Integer branchId, Integer status, Date fromDate, Date toDate) {
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         StringBuilder builder = new StringBuilder();
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
@@ -2118,6 +2122,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         StringBuilder builder = new StringBuilder();
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         builder.append("SELECT count(e.id) , e.projectName.name FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND e.type = 5 ");
         if (dateFrom != null) {
             Calendar calFrom = Calendar.getInstance();
@@ -2337,6 +2342,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
 
     @Override
     public ChartDTO getCountLeadByAssignedToChartBar(Integer branchId, Date fromDate, Date toDate) {
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         StringBuilder builder = new StringBuilder();
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
@@ -2394,6 +2400,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
 
     @Override
     public ChartDTO getCountLeadByAssignedToANDContractTypeChartBar(Integer branchId, Date fromDate, Date toDate) {
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         StringBuilder builder = new StringBuilder();
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
@@ -2647,6 +2654,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
     @Override
     public ChartDTO getCountCustomerPerMonth(Integer branchId, Integer type, Integer dateFilter) {
 
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         StringBuilder builder = new StringBuilder();
         builder.append("select DATE_FORMAT(i.creation_date, ");
         String date_Filter = "";

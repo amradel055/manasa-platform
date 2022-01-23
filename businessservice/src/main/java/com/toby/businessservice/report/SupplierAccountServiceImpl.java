@@ -116,6 +116,7 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
     @Override
     public List<OrganizationSiteStatementView> getAllOpeningBalanceBeforeBalanceBySearchBean(SupplierAccountSearchBean supplierAccountSearchBean) {
 
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", supplierAccountSearchBean.getBranchId());
         params.put("type", supplierAccountSearchBean.getOrganizationType());
@@ -153,6 +154,7 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
 
     @Override
     public BigDecimal getAccountForOrganizationSite(Integer organizationSiteId) {
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
 
         params.put("organizationSiteId", organizationSiteId);
@@ -251,7 +253,7 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "       ios.code,ios.name as customerName,\n"
                 + "        (IFNULL(`ios`.`open_balance_debit`,\n"
                 + "                0) - IFNULL(`ios`.`open_balance_credit`,\n"
-                + "                0)) AS `openning_balance` , ipi.remarks \n"
+                + "                0)) AS `openning_balance` , ipi.remarks , ipi.serial as invoice_serial \n"
                 + "	FROM `inv_purchase_invoice` `ipi` "
                 + "    LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id` 	"
                 + "    Left join gl_bank gb on gb.id = ipi.gl_bank_id\n"
@@ -264,7 +266,7 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "       ios.code,ios.name as customerName,\n"
                 + "        (IFNULL(`ios`.`open_balance_debit`,\n"
                 + "                0) - IFNULL(`ios`.`open_balance_credit`,\n"
-                + "                0)) AS `openning_balance` , ipi.remarks \n"
+                + "                0)) AS `openning_balance` , ipi.remarks , ipi.serial as invoice_serial \n"
                 + "    FROM `inv_purchase_invoice` `ipi` LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id` "
                 + "    Left join gl_bank gb on gb.id = ipi.gl_bank_id\n"
                 + "    left join inv_organization_site ios on ios.id = ipi.organization_site_id\n"
@@ -276,7 +278,7 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "       ios.code,ios.name as customerName,\n"
                 + "        (IFNULL(`ios`.`open_balance_debit`,\n"
                 + "                0) - IFNULL(`ios`.`open_balance_credit`,\n"
-                + "                0)) AS `openning_balance` , ipi.remarks \n"
+                + "                0)) AS `openning_balance` , ipi.remarks , ipi.serial as invoice_serial \n"
                 + "    FROM  `inv_purchase_invoice` `ipi` LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`     "
                 + "    Left join gl_bank gb on gb.id = ipi.gl_bank_id\n"
                 + "    left join inv_organization_site ios on ios.id = ipi.organization_site_id\n"
@@ -288,7 +290,7 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "       ios.code,ios.name as customerName,\n"
                 + "        (IFNULL(`ios`.`open_balance_debit`,\n"
                 + "                0) - IFNULL(`ios`.`open_balance_credit`,\n"
-                + "                0)) AS `openning_balance` , ipi.remarks \n"
+                + "                0)) AS `openning_balance` , ipi.remarks , ipi.serial as invoice_serial \n"
                 + "    FROM `inv_purchase_invoice` `ipi` LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`     "
                 + "    Left join gl_bank gb on gb.id = ipi.gl_bank_id\n"
                 + "    left join inv_organization_site ios on ios.id = ipi.organization_site_id\n"
@@ -300,9 +302,9 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "       ios.code,ios.name as customerName,\n"
                 + "        (IFNULL(`ios`.`open_balance_debit`,\n"
                 + "                0) - IFNULL(`ios`.`open_balance_credit`,\n"
-                + "                0)) AS `openning_balance` , gbt.remark\n"
+                + "                0)) AS `openning_balance` , gbt.remark , ipi.serial as invoice_serial \n"
                 + "    FROM `gl_bank_transaction` `gbt`  LEFT JOIN `gl_bank_transaction_detail` `gbtd` ON `gbt`.`id` = `gbtd`.`gl_bank_transaction_id`     "
-                + "     Left join gl_bank gb on gb.id = gbt.gl_bank_id\n"
+                + "     Left join gl_bank gb on gb.id = gbt.gl_bank_id left join `inv_purchase_invoice` ipi on ipi.id = gbt.invoice_id \n"
                 + "    left join inv_organization_site ios on ios.id = gbtd.organization_site_id\n"
                 + "    WHERE ((`gbt`.`payment_type` = 0) "
                 + "     AND gbtd.organization_site_id = " + organizationSiteId + "\n"
@@ -313,9 +315,9 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "       ios.code,ios.name as customerName,\n"
                 + "        (IFNULL(`ios`.`open_balance_debit`,\n"
                 + "                0) - IFNULL(`ios`.`open_balance_credit`,\n"
-                + "                0)) AS `openning_balance` , gbt.remark \n"
+                + "                0)) AS `openning_balance` , gbt.remark , ipi.serial as invoice_serial  \n"
                 + "	FROM `gl_bank_transaction` `gbt` LEFT JOIN `gl_bank_transaction_detail` `gbtd` ON `gbt`.`id` = `gbtd`.`gl_bank_transaction_id`     "
-                + "     Left join gl_bank gb on gb.id = gbt.gl_bank_id\n"
+                + "     Left join gl_bank gb on gb.id = gbt.gl_bank_id  left join `inv_purchase_invoice` ipi on ipi.id = gbt.invoice_id \n"
                 + "    left join inv_organization_site ios on ios.id = gbtd.organization_site_id\n"
                 + "    WHERE (`gbt`.`payment_type` = 1) "
                 + "     AND gbtd.organization_site_id = " + organizationSiteId + "\n"
@@ -326,9 +328,9 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "       ios.code,ios.name as customerName,\n"
                 + "        (IFNULL(`ios`.`open_balance_debit`,\n"
                 + "                0) - IFNULL(`ios`.`open_balance_credit`,\n"
-                + "                0)) AS `openning_balance` , gbt.remark \n"
+                + "                0)) AS `openning_balance` , gbt.remark , ipi.serial as invoice_serial  \n"
                 + "    FROM `gl_bank_transaction` `gbt`  LEFT JOIN `gl_bank_transaction_detail` `gbtd` ON `gbt`.`id` = `gbtd`.`gl_bank_transaction_id` "
-                + "    Left join gl_bank gb on gb.id = gbt.gl_bank_id\n"
+                + "    Left join gl_bank gb on gb.id = gbt.gl_bank_id  left join `inv_purchase_invoice` ipi on ipi.id = gbt.invoice_id \n"
                 + "    left join inv_organization_site ios on ios.id = gbtd.organization_site_id\n"
                 + "    WHERE (`gbt`.`payment_type` = 2)  "
                 + "     AND gbtd.organization_site_id = " + organizationSiteId + "\n"
@@ -339,9 +341,9 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "       ios.code,ios.name as customerName,\n"
                 + "        (IFNULL(`ios`.`open_balance_debit`,\n"
                 + "                0) - IFNULL(`ios`.`open_balance_credit`,\n"
-                + "                0)) AS `openning_balance` , gbt.remark \n"
+                + "                0)) AS `openning_balance` , gbt.remark , ipi.serial as invoice_serial  \n"
                 + "    FROM `gl_bank_transaction` `gbt`  LEFT JOIN `gl_bank_transaction_detail` `gbtd` ON `gbt`.`id` = `gbtd`.`gl_bank_transaction_id`     "
-                + "     Left join gl_bank gb on gb.id = gbt.gl_bank_id\n"
+                + "     Left join gl_bank gb on gb.id = gbt.gl_bank_id  left join `inv_purchase_invoice` ipi on ipi.id = gbt.invoice_id \n"
                 + "    left join inv_organization_site ios on ios.id = gbtd.organization_site_id\n"
                 + "    WHERE (`gbt`.`payment_type` = 0)  "
                 + "     AND gbtd.organization_site_id = " + organizationSiteId + "\n"
@@ -352,9 +354,9 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "       ios.code,ios.name as customerName,\n"
                 + "        (IFNULL(`ios`.`open_balance_debit`,\n"
                 + "                0) - IFNULL(`ios`.`open_balance_credit`,\n"
-                + "                0)) AS `openning_balance` , gbt.remark \n"
+                + "                0)) AS `openning_balance` , gbt.remark , ipi.serial as invoice_serial  \n"
                 + "    FROM `gl_bank_transaction` `gbt` LEFT JOIN `gl_bank_transaction_detail` `gbtd` ON `gbt`.`id` = `gbtd`.`gl_bank_transaction_id`     "
-                + "     Left join gl_bank gb on gb.id = gbt.gl_bank_id\n"
+                + "     Left join gl_bank gb on gb.id = gbt.gl_bank_id  left join `inv_purchase_invoice` ipi on ipi.id = gbt.invoice_id \n"
                 + "    left join inv_organization_site ios on ios.id = gbtd.organization_site_id\n"
                 + "    WHERE (`gbt`.`payment_type` = 1) "
                 + "     AND gbtd.organization_site_id = " + organizationSiteId + "\n"
@@ -365,9 +367,9 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "       ios.code,ios.name as customerName,\n"
                 + "        (IFNULL(`ios`.`open_balance_debit`,\n"
                 + "                0) - IFNULL(`ios`.`open_balance_credit`,\n"
-                + "                0)) AS `openning_balance` , gbt.remark \n"
+                + "                0)) AS `openning_balance` , gbt.remark , ipi.serial as invoice_serial  \n"
                 + "    FROM `gl_bank_transaction` `gbt` LEFT JOIN `gl_bank_transaction_detail` `gbtd` ON `gbt`.`id` = `gbtd`.`gl_bank_transaction_id`"
-                + "     Left join gl_bank gb on gb.id = gbt.gl_bank_id\n"
+                + "     Left join gl_bank gb on gb.id = gbt.gl_bank_id  left join `inv_purchase_invoice` ipi on ipi.id = gbt.invoice_id \n"
                 + "    left join inv_organization_site ios on ios.id = gbtd.organization_site_id\n"
                 + "    WHERE  (`gbt`.`payment_type` = 2) "
                 + "     AND gbtd.organization_site_id = " + organizationSiteId + "\n"
@@ -378,7 +380,7 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "       ios.code,ios.name as customerName,\n"
                 + "        (IFNULL(`ios`.`open_balance_debit`,\n"
                 + "                0) - IFNULL(`ios`.`open_balance_credit`,\n"
-                + "                0)) AS `openning_balance` , ''\n"
+                + "                0)) AS `openning_balance` , '', null as invoice_serial \n"
                 + "    FROM  `inv_organization_site` `ios` WHERE  "
                 + "     `ios`.id = " + organizationSiteId + " AND\n"
                 + "     (`ios`.`open_balance_debit` > 0 or `ios`.`open_balance_credit` > 0 ) \n"
@@ -387,7 +389,7 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "       ios.code,ios.name as customerName,\n"
                 + "        (IFNULL(`ios`.`open_balance_debit`,\n"
                 + "                0) - IFNULL(`ios`.`open_balance_credit`,\n"
-                + "                0)) AS `openning_balance` ,  `in`.remark \n"
+                + "                0)) AS `openning_balance` ,  `in`.remark , null as invoice_serial  \n"
                 + "    FROM `inv_notice` `in`  	left join `inv_organization_site` `ios` on ios.id = `in`.organization_site_id  WHERE (`in`.`type` = 0)  "
                 + "     and `in`.organization_site_id =  " + organizationSiteId + "\n"
                 + "     UNION ALL SELECT   0 AS `exitt`, IFNULL(`in`.`value`, 0) AS `adding` ,\n"
@@ -395,7 +397,7 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "       ios.code,ios.name as customerName,\n"
                 + "        (IFNULL(`ios`.`open_balance_debit`,\n"
                 + "                0) - IFNULL(`ios`.`open_balance_credit`,\n"
-                + "                0)) AS `openning_balance` ,  `in`.remark \n"
+                + "                0)) AS `openning_balance` ,  `in`.remark  , null as invoice_serial \n"
                 + "    FROM `inv_notice` `in` left join `inv_organization_site` `ios` on ios.id = `in`.organization_site_id  WHERE  (`in`.`type` = 1 or `in`.`type` = 4 )  "
                 + "     and `in`.organization_site_id =  " + organizationSiteId + "\n"
                 + "     UNION ALL SELECT  0 AS `exitt`,IFNULL(`in`.`value`, 0) AS `adding` ,\n"
@@ -403,7 +405,7 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "       ios.code,ios.name as customerName,\n"
                 + "        (IFNULL(`ios`.`open_balance_debit`,\n"
                 + "                0) - IFNULL(`ios`.`open_balance_credit`,\n"
-                + "                0)) AS `openning_balance` ,  `in`.remark \n"
+                + "                0)) AS `openning_balance` ,  `in`.remark , null as invoice_serial  \n"
                 + "    FROM `inv_notice` `in` left join `inv_organization_site` `ios` on ios.id = `in`.organization_site_id WHERE  (`in`.`type` = 2) "
                 + "     and `in`.organization_site_id =  " + organizationSiteId + "\n"
                 + "     UNION ALL SELECT  IFNULL(`in`.`value`, 0) AS `exitt`,  0 AS `adding` ,\n"
@@ -411,7 +413,7 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "       ios.code,ios.name as customerName,\n"
                 + "        (IFNULL(`ios`.`open_balance_debit`,\n"
                 + "                0) - IFNULL(`ios`.`open_balance_credit`,\n"
-                + "                0)) AS `openning_balance` ,  `in`.remark \n"
+                + "                0)) AS `openning_balance` ,  `in`.remark  , null as invoice_serial \n"
                 + "    FROM  `inv_notice` `in`   left join `inv_organization_site` `ios` on ios.id = `in`.organization_site_id WHERE   (`in`.`type` = 3) "
                 + "     and `in`.organization_site_id =  " + organizationSiteId + "\n"
                 + " ");
@@ -436,6 +438,7 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
             siteStatementView.setOrganizationName((String) object[8]);
             siteStatementView.setOpenningBalance((BigDecimal) object[9]);
             siteStatementView.setRemarks((String) object[10]);
+            siteStatementView.setInvoiceSerial((Integer) object[11]);
 
             list.add(siteStatementView);
         }

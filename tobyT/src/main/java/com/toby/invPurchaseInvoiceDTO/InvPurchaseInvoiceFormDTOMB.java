@@ -9,6 +9,7 @@ import com.toby.businessservice.InvGlobalService;
 import com.toby.businessservice.InvPurchaseInvoiceService_1;
 import com.toby.businessservice.ProFactoryDeliveryService;
 import com.toby.define.ScreenNameClassEnum;
+import com.toby.dto.InvDetailDTO;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.toby.InventoryBasicDataForm;
@@ -99,6 +100,10 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
                 getInvInvoiceDTO().setLoadedSerial(getInvInvoiceDTO().getSerial());
                 getInvInvoiceDTO().setSerial(null);
                 getInvInvoiceDTO().setSerialTax(null);
+                for(InvDetailDTO detailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()){
+                    detailDTO.setId(null);
+                    detailDTO.setSerial(null);
+                }
                 
             } else {
                 exit("../base/error.xhtml");

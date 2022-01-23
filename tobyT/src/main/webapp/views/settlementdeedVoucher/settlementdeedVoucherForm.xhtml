@@ -115,13 +115,13 @@
                         <div class="ui-g-6 ui-xl-6">
                             <p:autoComplete style="width: 110%;font-size: 1.8vh;text-align: right;border-radius: 0px; margin-right: -10%;" id="Cost_Center_From" 
 
-                                            converter="#{SettlementDeedFormMB.costCenterConverter}"
+                                            converter="#{settlementDeedVoucherFormMB.costCenterConverter}"
                                             value="#{settlementDeedVoucherFormMB.glBankTransactionEntity.costCenterDTO}"
                                             var="cost"
                                             itemLabel="#{cost}" 
                                             itemValue="#{cost}" 
                                             forceSelection="true" 
-                                            completeMethod="#{SettlementDeedFormMB.completeCostCenter}"
+                                            completeMethod="#{settlementDeedVoucherFormMB.completeCostCenter}"
                                             widgetVar="cost">
                                 <p:ajax 
                                     event="itemSelect"
@@ -190,29 +190,12 @@
                     </p:column>
 
 
-
-                    <p:column style="width: 14vh;font-size: 1.8vh;text-align: right" 
-                              filterBy="#{userData.userDDs['ACCOUNT_NUMBER']}"  filterMatchMode="contains" sortBy="#{userData.userDDs['ACCOUNT_NUMBER']}" filterable="false"
-                              headerText="#{userData.userDDs['ACCOUNT_NUMBER']}"  rendered="#{settlementDeedVoucherFormMB.organizationSiteView}">
-                        <h:outputText value="#{glBankTransactionDetailsTable.invOrganizationSite.accountId.accNumber}"  />
-                    </p:column>
-
-
-                    <p:column style="width: 12vh;font-size: 1.8vh;text-align: right" 
-                              headerText="#{userData.userDDs['ACCOUNT_NAM']}" 
-                              filterBy="#{glBankTransactionDetailsTable.invOrganizationSite.accountId.name}"  
-                              filterMatchMode="contains" sortBy="#{glBankTransactionDetailsTable.invOrganizationSite.accountId.name}" filterable="false"
-                              rendered="#{settlementDeedVoucherFormMB.organizationSiteView}" >
-                        <h:outputText value="#{glBankTransactionDetailsTable.invOrganizationSite.accountId.name}"  />
-                    </p:column>
-
-
                     <p:column  style="width: 17vh;font-size: 1.8vh;text-align: right;border-radius: 0px" 
                                filterBy="#{glBankTransactionDetailsTable.glAccount.name}"  
                                filterMatchMode="contains" sortBy="#{glBankTransactionDetailsTable.glAccount.name}" filterable="false"
-                               headerText="#{userData.userDDs['ACCOUNT_NAM']}" rendered="#{settlementDeedVoucherFormMB.accounts}">
+                               headerText="كود الحساب" >
 
-                        <h:outputText value="#{glBankTransactionDetailsTable.glAccount.accNumber}"  rendered="#{not glBankTransactionDetailsTable.markEdit}" style="width: auto"/>
+                        <h:outputText id="accountCode" value="#{glBankTransactionDetailsTable.glAccount.accNumber}"  style="width: auto"/>
                     </p:column>
 
                     <p:column  style="width: 17vh;font-size: 1.8vh;text-align: right;border-radius: 0px" 
@@ -235,7 +218,7 @@
                             <f:attribute name="varValue" value="#{glBankTransactionDetailsTable}" />
 
                             <p:ajax 
-                                event="itemSelect"
+                                event="itemSelect" update="accountCode"
                                 listener="#{settlementDeedVoucherFormMB.notLoseData}" />
                         </p:autoComplete>  
                         <h:outputText value="#{glBankTransactionDetailsTable.glAccount.name}"  rendered="#{not glBankTransactionDetailsTable.markEdit}" style="width: auto"/>

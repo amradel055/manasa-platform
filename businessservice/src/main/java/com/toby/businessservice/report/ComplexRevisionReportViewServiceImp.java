@@ -126,6 +126,7 @@ public class ComplexRevisionReportViewServiceImp implements ComplexRevisionRepor
 
     @Override
     public List<ComplexRevisionBalance> getALLRevisionBalanceReportWithSumOfDebitAndCredit(ComplexRevisionBalanceSearchBean complexRevisionBalanceSearchBean, GlYear glYear) {
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", complexRevisionBalanceSearchBean.getBranchId());
         StringBuilder firstQueryBuilder = new StringBuilder();;
@@ -160,6 +161,7 @@ public class ComplexRevisionReportViewServiceImp implements ComplexRevisionRepor
 
     @Override
     public List<ComplexRevisionBalance> getALLRevisionBalanceReportWithSumOfDebitAndCreditBasedOnCostCenter(ComplexRevisionBalanceSearchBean complexRevisionBalanceSearchBean, GlYear glYear, StringBuilder stringBuilder) {
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", complexRevisionBalanceSearchBean.getBranchId());
         StringBuilder firstQueryBuilder = new StringBuilder();;
@@ -191,6 +193,7 @@ public class ComplexRevisionReportViewServiceImp implements ComplexRevisionRepor
 
     @Override
     public List<ComplexRevisionBalance> getALLRevisionBalanceReportWithSumOfDebitAndCreditBasedOnAdminUnit(ComplexRevisionBalanceSearchBean complexRevisionBalanceSearchBean, GlYear glYear, StringBuilder stringBuilder) {
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", complexRevisionBalanceSearchBean.getBranchId());
         StringBuilder firstQueryBuilder = new StringBuilder();;
@@ -259,6 +262,7 @@ public class ComplexRevisionReportViewServiceImp implements ComplexRevisionRepor
      */
     @Override
     public List<ComplexRevisionBalance> getFirstPeriodByBranchId(ComplexRevisionBalanceSearchBean complexRevisionBalanceSearchBean, GlYear glYear) {
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", complexRevisionBalanceSearchBean.getBranchId());
         StringBuilder secondQueryBuilder = new StringBuilder();

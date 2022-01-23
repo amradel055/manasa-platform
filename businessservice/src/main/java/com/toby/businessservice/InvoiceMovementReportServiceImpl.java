@@ -132,6 +132,7 @@ public class InvoiceMovementReportServiceImpl implements InvoiceMovementReportSe
     @Override
     public BigDecimal summitionTob(Integer id) {
         if (id != null) {
+            dao.executeNativeQuery("select toby.sql_mode_function()");
             Map<String, Object> params = new HashMap<>();
             params.put("id", id);
             StringBuilder builder = new StringBuilder();
@@ -147,6 +148,7 @@ public class InvoiceMovementReportServiceImpl implements InvoiceMovementReportSe
     @Override
     public BigDecimal summitionTob(Integer id, Integer type) {
         if (id != null && type != null) {
+            dao.executeNativeQuery("select toby.sql_mode_function()");
             Map<String, Object> params = new HashMap<>();
             params.put("id", id);
             params.put("type", type);

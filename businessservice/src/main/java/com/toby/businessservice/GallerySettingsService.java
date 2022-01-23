@@ -32,4 +32,6 @@ public interface GallerySettingsService {
     public List<GallerySettingsDTO> getDeliveryDaysByGalleryId(Integer galleryId);
 
     public String getNoticeByCustomerId(Integer id);
+    
+    public void updateGallarySetting(Integer gallaryId);
 }

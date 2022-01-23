@@ -856,6 +856,7 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
     
     @Override
     public Long getTotalRegistors(Integer type, Integer branchId, Integer gallaryId, Map<String, Object> filters) {
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         StringBuilder builder = new StringBuilder();
         filters.put("type", type);
         filters.put("branchId", branchId);
@@ -879,6 +880,7 @@ public class InvAddingOrderServiceImpl implements InvAddingOrderService {
     
     @Override
     public List<InvInvoiceDTO> getALLInvAddingorderDTOByBranchId(Integer type, Integer gallaryId, int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters) {
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         filters.put("type", type);
         filters.put("branchId", branchId);
         filters.put("gallaryId", gallaryId);

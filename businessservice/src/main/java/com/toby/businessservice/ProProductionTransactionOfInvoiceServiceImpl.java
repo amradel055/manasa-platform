@@ -59,7 +59,7 @@ public class ProProductionTransactionOfInvoiceServiceImpl implements ProProducti
 //        params.put("branchId", tobyUser.getBranchId().getId());
 //        params.put("invInvoiceSerial", invInvoiceSerial);
 //        ProProductionTransactionOfInvoice proProductionTransactionOfInvoice = dao.findEntityByQuery("SELECT e FROM ProProductionTransactionOfInvoice e where  e.invPurchaseInvoiceserial =:invInvoiceSerial and e.productionStagesId =:proProductionStage and e.itemId=:itemId  and e.branchId=:branchId  ", params);
-
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         StringBuilder query = new StringBuilder();
         query.append(" SELECT \n"
                 + "        (SELECT \n"

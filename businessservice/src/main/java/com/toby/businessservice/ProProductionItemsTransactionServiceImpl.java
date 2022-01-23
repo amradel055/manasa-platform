@@ -221,6 +221,7 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
     @Override
     public List<ProductionTransactionOfUser> getProProductionTransactionDTOForAllUsersList(PrintProductionDTO printProductionDTO, Integer branchId, Integer stageId, List<ProProductionStagesDTO> productionStagesDTOs) {
 
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         List<ProductionTransactionOfUser> productionTransactionOfUsers = new ArrayList<>();
         Map<String, Object> params = new HashMap<>();
 
@@ -287,6 +288,7 @@ public class ProProductionItemsTransactionServiceImpl implements ProProductionIt
      @Override
     public List<ProductionTransactionOfUser> getProProductionItemOForAllUsersList(PrintProductionDTO printProductionDTO, Integer branchId, Integer stageId, List<ProProductionStagesDTO> productionStagesDTOs) {
 
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         List<ProductionTransactionOfUser> productionTransactionOfUsers = new ArrayList<>();
         Map<String, Object> params = new HashMap<>();
 

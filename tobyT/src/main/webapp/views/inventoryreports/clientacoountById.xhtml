@@ -170,6 +170,18 @@
 
                         <h:outputText value="#{SupplierAccountViewTable.screenName}" style="font-size: 1.5vh;width: 95%"/>
                     </p:column>
+                    
+                    <p:column style="width: 12vh;text-align: right;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
+                              headerText="رقم فاتورة المبيعات"
+
+                              filterBy="#{SupplierAccountViewTable.invoiceSerial}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{SupplierAccountViewTable.invoiceSerial}"
+                              filterable="false">
+
+                        <h:outputText value="#{SupplierAccountViewTable.invoiceSerial}" style="font-size: 1.5vh;width: 95%"/>
+                    </p:column>
+                    
                     <p:column style="width: 12vh;text-align: right;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
                               headerText="الخزينه"
 

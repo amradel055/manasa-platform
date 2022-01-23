@@ -38,10 +38,7 @@
                         paginator="true" emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
                         id="busesListForm">
                         <f:facet name="header" class="col-md-12">
-                            <p:commandButton icon="fa fa-plus" title="#{userData.userDDs['ADD']}" 
-                                             class="saddButton"
-                                             action="#{gallerySettingsListBean.goToAdd()}" 
-                                             style="float:right;margin: 0" />
+                           
                             <p:outputPanel  >
                                 <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large;" />
                                 <p:inputText id="globalFilter" a:autofocus="true" onkeyup="PF('bTable').filter()" style="width: 50%important" />

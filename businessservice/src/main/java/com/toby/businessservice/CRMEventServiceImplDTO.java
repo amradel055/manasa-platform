@@ -897,6 +897,7 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
 
     @Override
     public ChartDTO getCountEventByStatus(Integer branchId, Date dateFrom, Date dateTo) {
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         StringBuilder builder = new StringBuilder();
@@ -929,6 +930,7 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
 
     @Override
     public ChartDTO getCountEventByAssignedTo(Integer branchId, Date fromDate, Date toDate) {
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         StringBuilder builder = new StringBuilder();
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
@@ -942,6 +944,7 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
 
     @Override
     public ChartDTO getCountEventByStatusAndAssignedTo(Integer branchId, Integer status, Date fromDate, Date toDate) {
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         StringBuilder builder = new StringBuilder();
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
@@ -956,6 +959,7 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
 
     @Override
     public ChartDTO getCountEventByActivityType(Integer branchId, Date dateFrom, Date dateTo) {
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         StringBuilder builder = new StringBuilder();
@@ -988,6 +992,7 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
 
     @Override
     public ChartDTO getCountEventByPriority(Integer branchId, Date dateFrom, Date dateTo) {
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         StringBuilder builder = new StringBuilder();
@@ -1176,6 +1181,7 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
 
     @Override
     public List<CrmEventEvaluationDTO> findEvaluationCrmEvent(Integer branchId, CrmEventsReportSearchBean crmEventDTOSearch) {
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         StringBuilder builder = new StringBuilder();

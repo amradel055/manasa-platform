@@ -556,6 +556,7 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
 
     @Override
     public List<CashAccountSettlmentView> findAllRemainingCashAccountSettlment(SubAccountSummarySearchBean cashAccountSettlementSearchBean, StringBuilder stringBuilder) {
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         Map<String, Object> params = new HashMap();
         params.put("branchId", cashAccountSettlementSearchBean.getBranchId());
         String sql = "SELECT cas FROM CashAccountSettlmentView cas WHERE cas.branchId = :branchId";
@@ -933,7 +934,7 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
     @Override
     public List<CashAccountSettlmentView> findOpeningBalancesForSpecificCashAccountByGroups(SubAccountSummarySearchBean cashAccountSettlementSearchBean, Integer type, GlYear glYear) {
         List<CashAccountSettlmentView> cashAccountSettlmentViewReturnedList = new ArrayList<>();
-
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         Map<String, Object> params = new HashMap();
         params.put("branchId", cashAccountSettlementSearchBean.getBranchId());
         params.put("type", type);
@@ -1516,6 +1517,7 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
     }
 
     public String createSQL(SubAccountSummarySearchBean cashAccountSettlementSearchBean, boolean isOpenningBalance) {
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         StringBuilder query = null;
         String dateFrom = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(cashAccountSettlementSearchBean.getDateFrom());
         String dateTo = new SimpleDateFormat("yyyy-MM-dd  23:59:59").format(cashAccountSettlementSearchBean.getDateTo());

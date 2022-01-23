@@ -294,7 +294,7 @@
                             <p:commandButton     class="saveButton"  
                                                  title="العرض"
                                                  value="عرض الخصم 999" 
-                                                 icon="fa fa-fw fa-save"  rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 0 }"
+                                                 icon="fa fa-fw fa-save"  rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 0 and false }"
                                                  action="#{invPurchaseInvoiceFormDTOMB.offer999Les16Les20Only}"
                                                  update="@form"
                                                  >
@@ -441,6 +441,9 @@
                     </div>
 
 
+                </p:fieldset>
+                <p:fieldset class="last-part" style=" position: static; max-height: available ;background-color: #e6e4e4;width: 25%;" >
+                    <div class="ui-g-12 ui-xl-12">
                           
                         <div class="ui-g-12 ui-xl-6">
                              العميل

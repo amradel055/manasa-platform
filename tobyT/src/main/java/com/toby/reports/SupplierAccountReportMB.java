@@ -432,6 +432,7 @@ public class SupplierAccountReportMB extends BaseReportBean {
                         reportViewBean.setGlBankName(idv.getGlBankName());
                         reportViewBean.setRemark(idv.getRemarks());
                         reportViewBean.setMain(Boolean.FALSE);
+                        reportViewBean.setInvoiceSerial(idv.getInvoiceSerial());
                         calculateTotalForColumns(reportViewBean, 0);
                         getSupplierAccountViewBeanList().add(reportViewBean);
                     }

@@ -378,6 +378,7 @@ public class ProProductionTransactionServiceIMPL implements ProProductionTransac
 
     @Override
     public List<InvPurchaseInvoiceDTO1> getAllInvoiceForFinalCheckNew(TobyUser tobyUser) {
+        dao.executeNativeQuery("select toby.sql_mode_function()");
 //        Map<String, Object> params = new HashMap<>();
         List<InvPurchaseInvoiceDTO1> invPurchaseInvoiceDTOList = new ArrayList<>();
 //        params.put("branchId", tobyUser.getBranchId().getId());;
@@ -433,12 +434,14 @@ public class ProProductionTransactionServiceIMPL implements ProProductionTransac
     @Override
     public Integer getAllStagesByInvoice(Integer invoice, TobyUser tobyUser) {
         // List<Integer> list = dao.executeNativeQuery("select ipid.id from inv_purchase_invoice_detail ipid left join pro_item_production_stages pips on  ipid.item_id = pips.inv_item_id where inv_purchase_invoice_id = " + invoice+" group by pips.pro_production_stages_id");
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         List<Integer> list = dao.executeNativeQuery("select ipid.id from inv_purchase_invoice_detail ipid , pro_item_production_stages pips where  ipid.item_id = pips.inv_item_id and inv_purchase_invoice_id = " + invoice + " group by pips.pro_production_stages_id");
         return list.size();
     }
 
     @Override
     public Integer getAllStagesByInvoiceFromView(Integer invoice, TobyUser tobyUser) {
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         List<Integer> list = dao.executeNativeQuery("SELECT * FROM toby.pro_production_transaction_of_invoice where invPurchaseInvoiceId = " + invoice + " and numberRemain <= 0 group by productionStagesId");
         return list.size();
     }
@@ -484,6 +487,7 @@ public class ProProductionTransactionServiceIMPL implements ProProductionTransac
 
     @Override
     public Integer getAllItemsByInvoiceFromView(Integer invoice, TobyUser tobyUser) {
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", tobyUser.getBranchId().getId());
         params.put("invoice", invoice);

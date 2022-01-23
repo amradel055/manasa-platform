@@ -129,6 +129,7 @@ public class GlBankTransaction extends BaseEntity {
     private CostCenter costCenter;
 
     public GlBankTransaction() {
+        
     }
 
     public GlBankTransaction(Integer id) {

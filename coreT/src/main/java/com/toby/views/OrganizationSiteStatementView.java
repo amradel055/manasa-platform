@@ -17,6 +17,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -79,6 +80,8 @@ public class OrganizationSiteStatementView implements Serializable {
     private String glBankName;
     @Column(name = "remarks")
     private String remarks;
+    @Transient
+    private Integer invoiceSerial;
 
     public OrganizationSiteStatementView() {
     }
@@ -231,6 +234,20 @@ public class OrganizationSiteStatementView implements Serializable {
      */
     public void setRemarks(String remarks) {
         this.remarks = remarks;
+    }
+
+    /**
+     * @return the invoiceSerial
+     */
+    public Integer getInvoiceSerial() {
+        return invoiceSerial;
+    }
+
+    /**
+     * @param invoiceSerial the invoiceSerial to set
+     */
+    public void setInvoiceSerial(Integer invoiceSerial) {
+        this.invoiceSerial = invoiceSerial;
     }
 
 }

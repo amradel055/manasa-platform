@@ -39,13 +39,13 @@ public class TobyUserRoleServiceImpl implements TobyUserRoleService {
 
     @EJB
     private TobyUserBankService tobyUserBankService;
-    
+
     @EJB
     private TobyUserProproductionService tobyUserProproductionService;
 
     @EJB
     private TobyUserInventoryService tobyUserInventoryService;
-    
+
     @EJB
     private ProProductionStagesService proProductionStagesService;
 
@@ -120,16 +120,8 @@ public class TobyUserRoleServiceImpl implements TobyUserRoleService {
             branch.setId(tobyUserRole.getBranchId().getId());
             tobyUserRoleNew.setBranchId(branch);
             userRolesNew.add(tobyUserRoleNew);
-            }
-        Integer x = 0 ;
-        for (TobyUserRole tobyUserRole : userRolesNew) {
-            System.err.println(x++);
-            tobyUserRole.setGlYearList(tobyUserYearService.findYearByUserId(tobyUserRole.getUserId().getId(), tobyUserRole.getBranchId()));
-            tobyUserRole.setGlBankList(tobyUserBankService.getAllBankListByUserAndBranch(tobyUserRole.getUserId().getId(), tobyUserRole.getBranchId().getId()));
-            tobyUserRole.setInventoryList(tobyUserInventoryService.getAllInventroisByUserAndBranch(tobyUserRole.getUserId().getId(), tobyUserRole.getBranchId().getId(),0));
-            tobyUserRole.setGallaryList(tobyUserInventoryService.getAllInventroisByUserAndBranch(tobyUserRole.getUserId().getId(), tobyUserRole.getBranchId().getId(),2));
-            tobyUserRole.setProductionStagesList(proProductionStagesService.getAllProproductionListByUserAndBranch(tobyUserRole.getUserId(), tobyUserRole.getBranchId().getId()));
         }
+        Integer x = 0;
         return userRoles;
     }
 
@@ -154,7 +146,7 @@ public class TobyUserRoleServiceImpl implements TobyUserRoleService {
     @Override
     public TobyUserRole addUserRole(TobyUserRole userRole, List<GlYear> yearListDeleted, List<TobyUserYear> tobyUserYearListSelection,
             List<GlBank> glBankListDeleted, List<TobyUserBank> tobyUserBankListAdded,
-            List<ProProductionStages> productionStagesDTOListDeleted,List<TobyUserProproduction> tobyUserProProductionStagesListAdded,
+            List<ProProductionStages> productionStagesDTOListDeleted, List<TobyUserProproduction> tobyUserProProductionStagesListAdded,
             List<InvInventory> inventoryListDeleted, List<TobyUserInventory> tobyUserInventoryListAdded,
             List<InvInventory> gallaryListDeleted, List<TobyUserInventory> tobyUsergallaryListAdded) {
         TobyUserRole tobyUserRole = dao.updateEntity(userRole);
@@ -172,15 +164,15 @@ public class TobyUserRoleServiceImpl implements TobyUserRoleService {
         }
 
         // Delete  TobyUserProproduction
-        for ( ProProductionStages  proProductionStages : productionStagesDTOListDeleted) {
+        for (ProProductionStages proProductionStages : productionStagesDTOListDeleted) {
             tobyUserProproductionService.deleteProductionStages(tobyUserRole, proProductionStages);
         }
 
         // Update  TobyUserProproduction
-        for ( TobyUserProproduction proproductionDTO : tobyUserProProductionStagesListAdded) {
+        for (TobyUserProproduction proproductionDTO : tobyUserProProductionStagesListAdded) {
             tobyUserProproductionService.updateTobyUserProproduction(proproductionDTO, userRole.getUserId());
         }
-        
+
         // Delete TobyUserBank
         for (GlBank glBank : glBankListDeleted) {
             tobyUserBankService.deleteGlBank(tobyUserRole, glBank);

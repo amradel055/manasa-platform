@@ -411,6 +411,7 @@ public class InvPurchaseInvoiceDetailsImpl implements InvPurchaseInvoiceDetailSe
     @Override
     public List<ProProductionTransactionDetailDetailViewDTO> getInvPurchaseInvoiceDetailItems(Integer invPurchaseInvoiceId,
             Integer clothNumber, Integer proProductionStagesId) {
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         params.put("invPurchaseInvoiceId", invPurchaseInvoiceId);         //////  AND ((e.type = 0 OR e.type = 2) AND e.active = 1) ORDER BY e.code
         params.put("clothNumber", clothNumber);         //////  AND ((e.type = 0 OR e.type = 2) AND e.active = 1) ORDER BY e.code

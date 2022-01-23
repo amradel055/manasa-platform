@@ -37,14 +37,14 @@ public class GallerySettingsListBean extends BaseFormBean {
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         setUserData((UserData) context.getSessionMap().get("userLogInData"));
         gallerySettingsList = new ArrayList<>();
-        setScreenMode((String) context.getSessionMap().get("ScreenMode"));
-        if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("save")) {
+//        setScreenMode((String) context.getSessionMap().get("ScreenMode"));
+//        if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("save")) {
             try {
                 gallerySettingsList = gallerySettingsService.getALLGlgallerySettingsByBranchId(getUserData().getUserBranch().getId(), getUserData().getUser());
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
+//        }
 
     }
 

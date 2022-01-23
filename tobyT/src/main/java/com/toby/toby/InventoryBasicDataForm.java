@@ -491,7 +491,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
     public void validatePriceColumn(InvDetailDTO invPurchaseInvoiceDetailsValidate) {
         try {
-            if (getInvInvoiceDTO().getPricetype() != null && getInvInvoiceDTO().getPricetype() == 0) {
+            if (getInvInvoiceDTO().getPricetype() != null && getInvInvoiceDTO().getPricetype() == 0 && getInvInvoiceDTO().getId() == null ) {
                 if (invPurchaseInvoiceDetailsValidate.getCost().compareTo(invPurchaseInvoiceDetailsValidate.getItemsBarcodesDetail().getMinPriceYoung()) == -1) {
                     invPurchaseInvoiceDetailsValidate.setCost(invPurchaseInvoiceDetailsValidate.getItemsBarcodesDetail().getMinPriceYoung());
                     invPurchaseInvoiceDetailsValidate.setIndexSerial(1);
@@ -501,7 +501,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                     return;
                 }
 
-            } else if (getInvInvoiceDTO().getPricetype() != null && getInvInvoiceDTO().getPricetype() == 1) {
+            } else if (getInvInvoiceDTO().getPricetype() != null && getInvInvoiceDTO().getPricetype() == 1 && getInvInvoiceDTO().getId() == null ) {
                 if (invPurchaseInvoiceDetailsValidate.getCost().compareTo(invPurchaseInvoiceDetailsValidate.getItemsBarcodesDetail().getMinPriceMen()) == -1) {
                     invPurchaseInvoiceDetailsValidate.setCost(invPurchaseInvoiceDetailsValidate.getItemsBarcodesDetail().getMinPriceMen());
                     invPurchaseInvoiceDetailsValidate.setIndexSerial(1);
@@ -1113,7 +1113,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         }else if (getUri().contains("invpurchaseaddinglist")) {
             type = 5;
         }
-        setInvInvoiceList(invPurchaseInvoiceService.getALLInvPurchaseInvoiceDTOByTypeAndBranchIdFroGallary2(type, invGallarySelectionId, getInvOrganizationSiteDTOSelected() == null ? getInvInvoiceDTO().getOrganizationSiteId() == null ? null : getInvInvoiceDTO().getOrganizationSiteId().getId() : getInvOrganizationSiteDTOSelected().getId() ));
+        setInvInvoiceList(invPurchaseInvoiceService.getALLInvPurchaseInvoiceDTOByTypeAndBranchIdFroGallary2(type, getInvInvoiceDTO().getGallaryId().getId(), getInvOrganizationSiteDTOSelected() == null ? getInvInvoiceDTO().getOrganizationSiteId() == null ? null : getInvInvoiceDTO().getOrganizationSiteId().getId() : getInvOrganizationSiteDTOSelected().getId() ));
         invInvoiceDTOConverter = new InvInvoiceDTOConverter(invInvoiceList);
     }
 

@@ -48,6 +48,7 @@ public class ReportsServiceImpl implements ReportsService {
     @Override  // بيان الفواتير حسب الضريبة 
     public List<SalesReportByValueAded> getSalesReportByValueAded(SalesReportByValueAded salesReportByValueAded, Integer branchId) {
 
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         List<SalesReportByValueAded> salesReportByValueAdeds = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         sql.append("select sum(s.net) , sum(s.netBeforTax) , s.gallary_name  from ( SELECT \n"
@@ -165,7 +166,7 @@ public class ReportsServiceImpl implements ReportsService {
 
     @Override
     public List<CustomerBalances> getCustomerBalances(CustomerBalances customerBalances, Integer branchId) {
-
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         List<CustomerBalances> customerBalanceses = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT organization_code , organization_name , sum(exitt) as exitt , sum(adding) as adding\n"
@@ -189,7 +190,7 @@ public class ReportsServiceImpl implements ReportsService {
 
     @Override
     public List<StatementOfBondsByBranche> getStatementOfBondsByBranch(StatementOfBondsByBranche statementOfBondsByBranche, Integer branchId) {
-
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         List<StatementOfBondsByBranche> statementOfBondsByBrancheList = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         sql.append(" select s.ScreenName , s.gl_bank_name , s.adding , s.gallary_id , s.gallary_code , s.gallary_name from (SELECT \n"
@@ -464,7 +465,7 @@ public class ReportsServiceImpl implements ReportsService {
 
     @Override
     public List<ProfitOfItemsSold> getProfitOfItemsSold(ProfitOfItemsSold profitOfItemsSold, Integer branchId, Integer type, Integer invoiceType) {
-
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         List<ProfitOfItemsSold> profitOfItemsSoldList = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         sql.append("select ii.id , ii.code , ii.name , IFNULL(ii.cost_average,0) as cost_average , sum(IFNULL(ipid.quantity,0)) as totalSell , \n"
@@ -518,7 +519,7 @@ public class ReportsServiceImpl implements ReportsService {
 
     @Override
     public List<SalesStatementForThePeriod> getSalesStatementForThePeriod(SalesStatementForThePeriod statementForThePeriod) {
-
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         List<SalesStatementForThePeriod> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         sql.append("select ipi.serial , ipi.date , ios.code , ios.name,\n"
@@ -552,7 +553,7 @@ public class ReportsServiceImpl implements ReportsService {
 
     @Override
     public List<InvoicesRegisteredMoreThanOnce> getInvoicesRegisteredMoreThanOnce(InvoicesRegisteredMoreThanOnce registeredMoreThanOnce, Integer serial, Date date, Integer branchId) {
-
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         List<InvoicesRegisteredMoreThanOnce> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         sql.append(" SELECT ipi.id ,pps.name,ii.name , ifnull(sum(ppit.number),0) as workNumber , ifnull(ipid.number,0) as originNumber, pps.id , ii.id ,pfdd.id,\n"

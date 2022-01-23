@@ -49,6 +49,7 @@ public class PostRestrictionsDetailsServiceImpl implements PostRestrictionsDetai
     @Override
     public List<PostRestrictionsDetailsView> getPostRestrictionsDetailsByBankIdDebitAccountAndDate(PostRestrictionsView postRestrictionsView, Date documentDate) {
 
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         params.put("accountId", postRestrictionsView.getAccountId());
 

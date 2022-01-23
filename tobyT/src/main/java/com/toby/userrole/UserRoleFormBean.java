@@ -464,6 +464,15 @@ public class UserRoleFormBean extends BaseFormBean implements Serializable {
             inventoryOldList = tobyUserInventoryService.getAllInventroisByUserAndBranchPerByType(selectedUserRole.getUserId().getId(), selectedUserRole.getBranchId().getId(),0);
             gallaryOldList   = tobyUserInventoryService.getAllInventroisByUserAndBranchPerByType(selectedUserRole.getUserId().getId(), selectedUserRole.getBranchId().getId(),2);
             productionStagesListOld = proProductionStagesService.getAllProproductionListByUserAndBranch(selectedUserRole.getUserId(), selectedUserRole.getBranchId().getId());
+       
+            selectedUserRole.setGlYearList(yearsListSelectionOld);
+            selectedUserRole.setGlBankList(glBankOld);
+            selectedUserRole.setInventoryList(inventoryOldList);
+            selectedUserRole.setGallaryList(gallaryOldList);
+            selectedUserRole.setProductionStagesList(productionStagesListOld);
+
+        
+        
         } catch (Exception e) {
             saveError(e, "UserRoleFormBean", "edit");
         }

@@ -32,11 +32,13 @@ import com.toby.businessservice.TobyUserService;
 import com.toby.businessservice.BranchService;
 import com.toby.businessservice.CompanyService;
 import com.toby.businessservice.DDService;
+import com.toby.businessservice.GallerySettingsService;
 import com.toby.businessservice.GlAnalyticsAccountsServcie;
 import com.toby.businessservice.GlYearService;
 import com.toby.businessservice.PathService;
 import com.toby.businessservice.PrivilegeService;
 import com.toby.businessservice.TobyUserRoleService;
+import com.toby.bussinessservice.global.Utility;
 import com.toby.core.UserDataDTO;
 import com.toby.dto.GlBankDTO;
 import com.toby.dto.InvInventoryDTO;
@@ -54,7 +56,7 @@ public class LoginBean extends Basic implements Serializable {
     /**
      * Creates a new instance of LoginBean
      */
-    
+
     @EJB
     private TobyUserLoginService tobyUserLoginService1;
     @EJB
@@ -85,6 +87,9 @@ public class LoginBean extends Basic implements Serializable {
 
     @EJB
     private TobyUserInventoryService tobyUserInventoryService;
+
+    @EJB
+    private GallerySettingsService gallerySettingsService;
 
     private List<InvInventoryDTO> userInventorys;
 
@@ -168,13 +173,15 @@ public class LoginBean extends Basic implements Serializable {
 
                 saveUserData(userData, true);
 
-                if (userData.getUserBranch() != null) {
-//                    designateMonitoringForEachBranch();
-//                    purchaseAndSalesAccountsForEachBranch();
-                    if (userData.getMaster() != null && userData.getMaster() == 1) {
-                        return "views/monitoring/monitoringForm?faces-redirect=true";
-                    }
-                }
+//                if (userData.getUserBranch() != null) {
+////                    designateMonitoringForEachBranch();
+////                    purchaseAndSalesAccountsForEachBranch();
+//                    if (userData.getMaster() != null && userData.getMaster() == 1) {
+//                        return "views/monitoring/monitoringForm?faces-redirect=true";
+//                    }
+//                }
+                InvInventoryDTO gallaryDTOSelect1 = getUserData().getGallaryDTOList().get(0);
+                gallerySettingsService.updateGallarySetting(gallaryDTOSelect1.getId());
 
                 return "dashboard?faces-redirect=true";
 
@@ -313,7 +320,7 @@ public class LoginBean extends Basic implements Serializable {
                 userData.setInventoryDTODefault(tobyUserInventoryDTO.get(0));
             }
 
-            List<GlBankDTO> glBankDTOList = tobyUserBankService.getAllGlBankForUserByTypeAndBranchIdPerDTO(userData.getUser().getId(), userData.getUserBranch().getId(), null,null);
+            List<GlBankDTO> glBankDTOList = tobyUserBankService.getAllGlBankForUserByTypeAndBranchIdPerDTO(userData.getUser().getId(), userData.getUserBranch().getId(), null, null);
             userData.setGlBankDTOList(glBankDTOList);
             if (glBankDTOList != null && glBankDTOList.size() > 0) {
                 userData.setGlBankDTODefault(glBankDTOList.get(0));

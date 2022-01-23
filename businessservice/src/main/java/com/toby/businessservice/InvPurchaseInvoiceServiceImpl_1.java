@@ -1794,7 +1794,8 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     @Override
     public List<InvInvoiceDTO> getALLInvPurchaseInvoiceDTOByStatusNew(PrintProductionDTO printProductionDTO, Integer branchId, String gallarySelected) {
 
-        DateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        DateFormat formatDateFrom = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+        DateFormat formatDateTo = new SimpleDateFormat("yyyy-MM-dd 23:59:59");
         StringBuilder builder = new StringBuilder();
 
         builder.append(" SELECT  s.id,s.serial , s.date , s.serial , s.remarks , s.serial  , invi.name , s.date , ios.code , ios.name ,  ios.mobile , s.due_date ,\n"
@@ -1807,8 +1808,8 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                         " AND  s.type = ").append(printProductionDTO.getInvoiceStatus()).append(
                         " AND s.id not in (SELECT p.inv_purchase_invoice_id from pro_factory_delivery p )  \n"
                         + " AND  s.galary_Id IN (").append(gallarySelected).append(" )  AND   s.date >= '"
-                        + formatDate.format(printProductionDTO.getFromDate()) + "'"
-                        + " AND   s.date <= '" + formatDate.format(printProductionDTO.getToDate()) + "'"
+                        + formatDateFrom.format(printProductionDTO.getFromDate()) + "'"
+                        + " AND   s.date <= '" + formatDateTo.format(printProductionDTO.getToDate()) + "'"
                         + " order by s.serial");
 
         List<Object[]> res = dao.executeNativeQuery(builder.toString());
@@ -2198,7 +2199,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
 
     @Override // إجماليات الفئات 
     public List<SummitionItemsView> findSummitionQuantity(Integer gallaryId, Integer branchId, Date dateFrom, Date dateTo, Integer groupId, List<InvInventoryDTO> invInventoryDTOs, List<ProGroupDTO> proGroupListSelected, Integer invoiceType) {
-
+dao.executeNativeQuery("select toby.sql_mode_function()");
         dateTo.setHours(23);
         dateTo.setMinutes(59);
         dateTo.setSeconds(59);
@@ -2275,6 +2276,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     }
 
     private BigDecimal tobNumberFactoryDelivary(Integer gallaryId, Date dateFrom, Date dateTo, Integer groupId, Integer type, List<InvInventoryDTO> invInventoryDTOs, List<ProGroupDTO> proGroupListSelected) {
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         StringBuilder builder = new StringBuilder();
         params.put("type", type);
@@ -2371,6 +2373,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
 
     @Override
     public List<ClientsNoMovment> findClientsNoMovment(Integer branchId, Integer gallaryId, Date date, Integer type) {
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         params.put("gallaryId", gallaryId);
@@ -2453,6 +2456,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     }
 
     public GeneralJournal tarhil(InvInvoiceDTO dto, TobyUser tobyUser) throws CloneNotSupportedException {
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", tobyUser.getBranchId().getId());
         GeneralJournal journal = null;
@@ -2762,6 +2766,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
 
     @Override
     public List<GeneralJournalDTO> tarhilOne(TobyUser tobyUser) throws CloneNotSupportedException {
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         List<GeneralJournalDTO> journalList = new ArrayList<>();
         Map<String, Object> params20 = new HashMap<>();
         params20.put("branchId", 182);

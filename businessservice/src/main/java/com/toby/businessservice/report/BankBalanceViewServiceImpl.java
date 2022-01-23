@@ -104,6 +104,7 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
 
     public List<BankBalanceViewNew> getAllBankBalancesTransactionsByBankIdNativ(BankBalanceReportSearchBean bankBalanceReportSearchBean) {
 
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         Integer branchId = bankBalanceReportSearchBean.getBranchId();
         String bankBuilder = bankBalanceReportSearchBean.getBankBuilder();
         StringBuilder queryBuilder = new StringBuilder();

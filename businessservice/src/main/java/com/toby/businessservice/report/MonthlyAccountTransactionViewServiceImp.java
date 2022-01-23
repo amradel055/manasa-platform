@@ -27,6 +27,7 @@ public class MonthlyAccountTransactionViewServiceImp implements MonthlyAccountTr
     @Override
     public List<MonthlyAccountTransactionBean> getMonthlyAccountTransactionViewList(MonthlyAccountTransactionSearchBean monthlyAccountTransactionSearchBean, List<GlAccount> glAccountForSummaryList) {
 
+        dao.executeNativeQuery("select isag.sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", monthlyAccountTransactionSearchBean.getBranchId());
         StringBuilder queryBuilder = new StringBuilder();

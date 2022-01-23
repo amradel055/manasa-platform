@@ -623,6 +623,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
 
     @Override
     public List<ItemsDataView> getAllInvStripListByInvStripSearchBean(InvItemSalesSearchBean invStripSearchBean) {
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", invStripSearchBean.getBranchId());
         StringBuilder stringBuilder = new StringBuilder();
@@ -732,6 +733,7 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
 
     @Override
     public List<ItemsDataView> getAllItemCardByInvStripSearchBean(ItemCardReportSerachBean itemCardReportSerachBean, GlYear glYear) {
+        dao.executeNativeQuery("select toby.sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", itemCardReportSerachBean.getBranchId());
 
