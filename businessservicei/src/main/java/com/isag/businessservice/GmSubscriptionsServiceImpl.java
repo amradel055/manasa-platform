@@ -11,9 +11,9 @@ import com.isag.businessservice.reports.searchBean.SubAccountSummarySearchBean;
 import com.isag.bussinessservice.global.InvPurchaseReturnSave;
 import com.isag.bussinessservice.global.Utility;
 import com.isag.core.GenericDAO;
+import com.isag.dto.ActionsDTO;
 import com.isag.dto.GlBankDTO;
 import com.isag.dto.GmSubscriptionsDTO;
-
 import com.isag.entity.Branch;
 import com.isag.entity.GlBank;
 import com.isag.entity.GmItem;
@@ -44,7 +44,9 @@ import javax.ejb.Stateless;
  */
 @Stateless
 public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
-
+//
+    @EJB
+    CreateActionService createActionService;
     @EJB
     private GenericDAO dao;
     @EJB
@@ -61,12 +63,14 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
     private GlBankTransactionService glBankTransactionService;
     @EJB
     private GmItemService gmItemService;
+ 
 
     @EJB
     private GmFreezeService gmFreezeService;
 
     @EJB
     private GmMovementService gmMovementService;
+    
 
     InvPurchaseReturnSave invPurchaseReturnSave;
 
@@ -107,7 +111,7 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
 
         GmSubscriptionsDTO gmSubscriptionsDTODTO = new GmSubscriptionsDTO();
 
-        initData(entity,gmSubscriptionsDTODTO );
+        initData(entity, gmSubscriptionsDTODTO);
 
         return gmSubscriptionsDTODTO;
     }
@@ -194,7 +198,7 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
         if (gmSubscriptionsDTO.getOrganizationSiteId() == null) {
             error.append("\n يجب أختيار عميل ");
         }
-        if (gmSubscriptionsDTO.getGmItemDTO()== null) {
+        if (gmSubscriptionsDTO.getGmItemDTO() == null) {
             error.append("\n يجب أختيار تفاصيل الاشتراك ");
         }
         if (!error.toString().isEmpty()) {
@@ -215,13 +219,21 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
                 if (gmSubscriptionsDTO.getId() != null) {
                     //بعمل حفظ فى حالة التعديل
                     gmSubscriptions = dao.updateEntity(gmSubscriptions);
+                    createActionService.SaveAction(SetActionDto( isagUser, "gmsubscriptions", "Save"), isagUser);
+
+
                 } else {
                     // فى حالة ان الفاتورة جديدة بروح اجيب السيريال الاول 
                     Integer serial = genericService.getMaxGenericSerialByType(GmSubscriptions.class, gmSubscriptions.getBranchId().getId(), gmSubscriptionsDTO.getType());
                     gmSubscriptions.setSerial(serial);
                     gmSubscriptions = dao.updateEntity(gmSubscriptions);
+                     createActionService.SaveAction(SetActionDto( isagUser, "gmsubscriptions", "Save"), isagUser);
+
+
                 }
                 gmSubscriptionsDTO = mapToDTO(gmSubscriptions, gmSubscriptionsDTO);
+
+
             }
         } catch (Exception e) {
             gmSubscriptionsDTO.setMsg(e.toString());
@@ -229,6 +241,15 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
         }
 
         return gmSubscriptionsDTO;
+    }
+
+    public ActionsDTO SetActionDto(IsagUser isagUser,String screenname,String type) {
+        ActionsDTO actionsDTO = new ActionsDTO();
+        actionsDTO.setDate(new Date());
+        actionsDTO.setUserId(isagUser.getId());
+        actionsDTO.setScreenName(screenname);
+        actionsDTO.setType(type);
+        return actionsDTO;
     }
 
     private GmSubscriptionsDTO findGmSubscriptionsDTOByGmSubscriptionsDTOId(Integer serial, Integer type, Integer branchId) {
@@ -242,11 +263,12 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
 
     private GmSubscriptionsDTO mapToDTO(GmSubscriptions entity, GmSubscriptionsDTO dto) {
 
-        dto = initData(entity,dto );
+        dto = initData(entity, dto);
 
         return dto;
     }
-    private GmSubscriptionsDTO initData(GmSubscriptions entity,GmSubscriptionsDTO dto ) {
+
+    private GmSubscriptionsDTO initData(GmSubscriptions entity, GmSubscriptionsDTO dto) {
         dto.setId(entity.getId());
         dto.setValue(entity.getValue());
         dto.setFinalNet(entity.getFinalNet());
@@ -270,14 +292,14 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
         }
 
         if (entity.getStartDate() != null && entity.getEndDate() != null) {
-       dto.setMustDays(Utility.calcDays(entity.getStartDate(), entity.getEndDate(), 5));
+            dto.setMustDays(Utility.calcDays(entity.getStartDate(), entity.getEndDate(), 5));
             dto.setTakenDays(gmFreezeService.calcTakenDaysByCustomerIdAndSubscribtionId(entity.getId()));
             dto.setRemainDays(dto.getMustDays() - dto.getTakenDays());
             dto.setDateAfterTagmeed(Utility.sumDateAndNumer(entity.getEndDate(), dto.getTakenDays()));
             dto.setTransDaysNumber(gmMovementService.findGmMovementDtoDaysBySubscribtionId(entity.getId()));
             dto.setDateAfterTagmeed(Utility.sumDateAndNumer(dto.getDateAfterTagmeed(), dto.getTransDaysNumber()));
             dto.setRemainPeriod(Utility.calcDaysBetween(dto.getDateAfterTagmeed(), new Date()));
-            
+
         }
 
 //        if (entity.getEndDate() != null) {
@@ -337,10 +359,9 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
         } else if (entity.getStatus() != null) {
             dto.setStatus(true);
         }
-        
-  
+
         dto.setFreezeStatus(gmFreezeService.calcFreezeStatusBySubscribtionId(entity.getId()));
-      
+
 //        List<GmSubscriptionsDetailDTO> gmSubscriptionsDTODetailsListDTO = gmSubscriptionsDTODetailsService.getAllGmSubscriptionsDetailDTOsByGmSubscriptionsDTOIdDTO(dto);
 //        dto.setGmSubscriptionsDetailList(gmSubscriptionsDTODetailsListDTO);
 //        dto.setGmSubscriptionsDetailDeletedList(new ArrayList<GmSubscriptionsDetailDTO>());
@@ -454,8 +475,6 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
 
         }
     }
-    
-  
 
     @Override
     public BigDecimal netPay(SubAccountSummarySearchBean cashAccountSettlementSearchBean, Integer bankId) {
@@ -617,10 +636,9 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
         dTO = save(dTO, isagUser);
         return dTO;
     }
-    
-    
+
     @Override
-    public void updateDeleteGmSubscriptionsDTODTO(GmSubscriptionsDTO gmSubscriptionsDTO , IsagUser user) {
+    public void updateDeleteGmSubscriptionsDTODTO(GmSubscriptionsDTO gmSubscriptionsDTO, IsagUser user) {
         if (gmSubscriptionsDTO != null) {
 //            gmSubscriptionsDTODetailsService.deleteGmSubscriptionsDetailDTOListDTO(invoiceId);
             GmSubscriptions gmSubscriptions = mapToEntity(gmSubscriptionsDTO, user);
@@ -630,7 +648,5 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
 
         }
     }
-    
-
 
 }

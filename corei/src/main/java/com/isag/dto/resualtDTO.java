@@ -21,7 +21,7 @@ public class resualtDTO {
     private String phone ;
     private Date creationDate ;
     private Date deletionDate ;
-    private IsagUser deletedBy ;
+    private String deletedBy ;
     private BigDecimal value;
     private BigDecimal sumValue ;
 
@@ -130,14 +130,14 @@ public class resualtDTO {
     /**
      * @return the deletedBy
      */
-    public IsagUser getDeletedBy() {
+    public String getDeletedBy() {
         return deletedBy;
     }
 
     /**
      * @param deletedBy the deletedBy to set
      */
-    public void setDeletedBy(IsagUser deletedBy) {
+    public void setDeletedBy(String deletedBy) {
         this.deletedBy = deletedBy;
     }
 

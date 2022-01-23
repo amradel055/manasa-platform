@@ -103,11 +103,26 @@
 
                 </p:column>
                 <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px;"  filterStyle="display:none" 
-                           filterBy="#{invInvoicePurchaseTable.deletedBy.name}" 
+                           filterBy="#{invInvoicePurchaseTable.deletedBy}" 
                            filterMatchMode="contains" 
                            headerText="خذفت بواسطة"
-                           sortBy="#{invInvoicePurchaseTable.deletedBy.name}" >
-                    <p:outputLabel value="#{invInvoicePurchaseTable.deletedBy.name}" />
+                           sortBy="#{invInvoicePurchaseTable.deletedBy}" >
+                    <p:outputLabel value="#{invInvoicePurchaseTable.deletedBy}" />
+
+                </p:column>
+                <p:column  style="width: 12vh;font-size: 1.8vh;text-align:center;border-radius: 0px;" headerText="#{userData.userDDs['TRANSACTION']}" >
+
+                    <p:commandButton update="@form" 
+                                     class="sdeleteButtons"
+                                     icon="fa fa-remove" 
+                                     style="background-color: red;border-radius: 3px;"
+                                     title="#{userData.userDDs['DELETE']}" 
+                                     action="#{reportMB.delete()}" 
+                                     rendered="#{(userData.userScreens['gmdeletedsubscriptionsreport'].delete or userData.isAdmin)}">
+                        <f:setPropertyActionListener value="#{invInvoicePurchaseTable}" target="#{reportMB.resultDtoSelected}" />
+
+
+                    </p:commandButton>
 
                 </p:column>
 
@@ -147,6 +162,23 @@
                               value="#{userData.userDDs['SEARCH']}"                                      
                               action="#{reportMB.searchDeletedSubscribtion()}" 
                               update="@form"/>
+            <p:commandButton 
+                class="sprintButtons"
+                update="@form" onclick="form.target = '_blank'"  ajax="false"
+                icon="fa fa-fw fa-print" style="background-color: rgb(0, 74, 128);border-radius: 3px;"
+                title="print" 
+                action="#{reportMB.exportPDF(actionEvent)}" >
+
+            </p:commandButton>
+            <h:commandLink  class="sdcreenimg" style="margin-right: 4px;">  
+
+                <p:graphicImage name="/img/excel.jpg" width="24"/>  
+
+                <p:dataExporter type="xls"
+                                target="invInvoicePurchaseTable" 
+                                fileName=" تقرير الاشتراكات المحذوفه"
+                                postProcessor="#{reportMB.postProcessXLS}" />  
+            </h:commandLink>
 
 
         </h:form>
