@@ -180,6 +180,7 @@ public abstract class BaseGlBankListBean extends BaseListBean {
         hashMap.put("amountText", userDDs.get("AMOUNT"));
         hashMap.put("dateText", userDDs.get("DATE"));
         hashMap.put("ModifiedBy", glBankTransactionEntityMapper.getModifiedByName());
+        hashMap.put("qr-code-GM", "qr-code.png");
 
 //        hashMap.put("accountNameText", userDDs.get("ACCOUNT_NAME"));
 //        hashMap.put("accountNumberText", userDDs.get("ACCOUNT_NUMBER"));

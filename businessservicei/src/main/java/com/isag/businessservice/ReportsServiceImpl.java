@@ -584,8 +584,7 @@ public class ReportsServiceImpl implements ReportsService {
             sql.append(" and ipi.inv_inventory_id =  ").append(profitOfItemsSold.getGallaryFrom().getId());
         }
     }
-    
-    
+
     @Override
     public List<SalesReportByValueAdedDetails> getSalesReportByValueAdedDetails(SalesReportByValueAdedDetails salesReportByValueAdedDetails, Integer branchId) {
 
@@ -603,13 +602,18 @@ public class ReportsServiceImpl implements ReportsService {
                 + "                        IFNULL(`ip`.`discount`, 0.0),\n"
                 + "                        IFNULL(`ip`.`tax_flag`, 0.0),\n"
                 + "                        15,\n"
-                + "                        0, 0, 0, 0),\n"
+                + "                        0.0,\n"
+                + "                         0.0,\n"
+                + "                         0.0),\n"
                 + "                0.0) AS `net`,\n"
                 + "                IFNULL(NET(IFNULL(SUM(`ipd`.`net`), 0.0),\n"
                 + "                        IFNULL(`ip`.`discount_type`, 0.0),\n"
                 + "                        IFNULL(`ip`.`discount`, 0.0),\n"
                 + "                        IFNULL(`ip`.`tax_flag`, 0.0),\n"
-                + "                        0 ,0 ,0 ,0 , 0),\n"
+                + "                        0.0,\n"
+                + "                        0.0,\n"
+                + "                         0.0,\n"
+                + "                         0.0),\n"
                 + "                0.0) AS `netBeforTax`\n"
                 + "    FROM\n"
                 + "        `inv_purchase_invoice` `ip`\n"
@@ -617,7 +621,7 @@ public class ReportsServiceImpl implements ReportsService {
                 + "        LEFT JOIN `inv_inventory` `inv` ON `inv`.`id` = `ip`.`inv_inventory_id`\n"
                 + "        LEFT JOIN `inv_organization_site` `ios` ON `ios`.`id` = `ip`.`organization_site_id`\n"
                 + " ");
-        sql.append(" where ip.type = 4 AND  ip.branch_id = ").append(branchId);
+        sql.append(" where ip.type = ").append(salesReportByValueAdedDetails.getInvoiceType()).append(" AND  ip.branch_id = ").append(branchId);
         appendGallery1(salesReportByValueAdedDetails, sql);
         appendDate1(salesReportByValueAdedDetails, sql);
         sql.append(" GROUP BY `ip`.`id`");
@@ -632,33 +636,33 @@ public class ReportsServiceImpl implements ReportsService {
             reportByValueAdedDetails.setDiscount((BigDecimal) object[5]);
             reportByValueAdedDetails.setTotalAfterTax((BigDecimal) object[7]);
             reportByValueAdedDetails.setTotalBeforeTax((BigDecimal) object[6]);
-            reportByValueAdedDetails.setTax(reportByValueAdedDetails.getTotalAfterTax().subtract(reportByValueAdedDetails.getTotalBeforeTax()));
+            reportByValueAdedDetails.setTax(reportByValueAdedDetails.getTotalBeforeTax().subtract(reportByValueAdedDetails.getTotalAfterTax()));
             salesReportByValueAdeds.add(reportByValueAdedDetails);
         }
         return salesReportByValueAdeds;
     }
-    
+
     @Override
     public List<SalesReportByValueAdedDetails> getGmSalesReportByValueAdedDetails(SalesReportByValueAdedDetails salesReportByValueAdedDetails, Integer branchId) {
 
         List<SalesReportByValueAdedDetails> salesReportByValueAdeds = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         sql.append(
-              "SELECT \n" +
-"        `ip`.`serial` AS `serial`,\n" +
-"        `ip`.`type` AS `type`,\n" +
-"        `ip`.`date` AS `date`,\n" +
-"        null AS `gallary_name`,\n" +
-"        `ios`.`name` AS `organization_site_name`,\n" +
-"        `ip`.`discount` AS `head_discount`,\n" +
-"        value AS `net`,\n" +
-"        value + taxvalue AS `netBeforTax`\n" +
-"    FROM\n" +
-"        `gm_subscriptions` `ip`\n" +
-"        LEFT JOIN `inv_organization_site` `ios` ON `ios`.`id` = `ip`.`organization_site_id`\n" +
-"  where ip.type = 0 AND  ip.branch_id = 239 AND ip.deleted_by IS NULL "
+                "SELECT \n"
+                + "        `ip`.`serial` AS `serial`,\n"
+                + "        `ip`.`type` AS `type`,\n"
+                + "        `ip`.`date` AS `date`,\n"
+                + "        null AS `gallary_name`,\n"
+                + "        `ios`.`name` AS `organization_site_name`,\n"
+                + "        `ip`.`discount` AS `head_discount`,\n"
+                + "        value AS `net`,\n"
+                + "        value + taxvalue AS `netBeforTax`\n"
+                + "    FROM\n"
+                + "        `gm_subscriptions` `ip`\n"
+                + "        LEFT JOIN `inv_organization_site` `ios` ON `ios`.`id` = `ip`.`organization_site_id`\n"
+                + "  where ip.type = 0 AND  ip.branch_id = 239 AND ip.deleted_by IS NULL "
         );
-        
+
 //        appendGallery1(salesReportByValueAdedDetails, sql);
         appendDate1(salesReportByValueAdedDetails, sql);
         sql.append(" GROUP BY `ip`.`id`");
@@ -678,9 +682,8 @@ public class ReportsServiceImpl implements ReportsService {
         }
         return salesReportByValueAdeds;
     }
-  
-    
-      private void appendDate1(SalesReportByValueAdedDetails salesReportByValueAded, StringBuilder query) {
+
+    private void appendDate1(SalesReportByValueAdedDetails salesReportByValueAded, StringBuilder query) {
         if (salesReportByValueAded.getDateFrom() != null) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
             query.append(" and ip.date >=  '").append(dateFormat.format(salesReportByValueAded.getDateFrom())).append("' ");
@@ -690,9 +693,9 @@ public class ReportsServiceImpl implements ReportsService {
             query.append(" and ip.date <=  '").append(dateFormat.format(salesReportByValueAded.getDateTo())).append("' ");
         }
     }
-      
-        private void appendGallery1(SalesReportByValueAdedDetails salesReportByValueAded, StringBuilder query) {
-        if (salesReportByValueAded.getInvInventoryDTO()!= null) {
+
+    private void appendGallery1(SalesReportByValueAdedDetails salesReportByValueAded, StringBuilder query) {
+        if (salesReportByValueAded.getInvInventoryDTO() != null) {
             query.append(" and ip.inv_inventory_id =  ").append(salesReportByValueAded.getInvInventoryDTO().getId());
         }
     }
