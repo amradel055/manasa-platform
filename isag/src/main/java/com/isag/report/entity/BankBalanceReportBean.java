@@ -12,7 +12,6 @@ import java.math.BigDecimal;
  * @author hq002
  */
 public class BankBalanceReportBean {
-
     private String bankName;
     private String bankCode;
     private Integer bankId;
