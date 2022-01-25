@@ -12,8 +12,12 @@ import com.isag.businessservice.GlBankTransactionService;
 import com.isag.businessservice.IsagUserBankService;
 import com.isag.businessservice.ReportManagementService;
 import com.isag.businessservice.ReportSignatureService;
+import com.isag.businessservice.reports.BankBalanceViewService;
 import com.isag.converter.GlBankConverter;
 import com.isag.define.ReportSignatureEnum;
+import com.isag.dto.BankBalanceReportBeanNew;
+import com.isag.dto.BankBalanceReportSearchBean;
+import com.isag.dto.GlBankDTO;
 import com.isag.dto.ReportSignatureDTO;
 import com.isag.entity.Currency;
 import com.isag.entity.CurrencyOperation;
@@ -28,6 +32,7 @@ import com.isag.entiy.GlBankTransactionEntity;
 import com.isag.isag.BaseFormBean;
 import com.isag.isag.GlBankBasicDataForm;
 import com.isag.isag.UserData;
+import com.isag.report.entity.BankBalanceReportBean;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -57,7 +62,8 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
 
     private GlBankTransaction glBankTransaction;
     private GlBankTransactionEntity glBankTransactionEntity;
-
+    private BigDecimal bankCash;
+    private BankBalanceReportSearchBean balanceReportSearchBean;
     private GlBankTransactionDetail glBankTransactionDetail;
     private GlBankTransactionDetailEntity GlBankTransactionDetailEntity;
 
@@ -94,13 +100,15 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
 
     @EJB
     IsagUserBankService isagUserBankService;
-    
+
     @EJB
     private GlAccountService glAccountService;
     @EJB
     private ReportManagementService reportManagementService;
     @EJB
     private ReportSignatureService reportSignatureService;
+    @EJB
+    private BankBalanceViewService bankBalanceViewService;
 
     @Override
     @PostConstruct
@@ -133,11 +141,14 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
 
             if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("add")) {
                 setGlBankTransactionDataEmpty();
+                getBankCashBalance();
+
                 return;
             } else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("edit")) {
                 try {
                     glBankTransactionId = (Integer) context.getSessionMap().get("glBankTransactionSelected");
                     validateGlBankUpdatedValues(glBankTransactionId);
+                    getBankCashBalance();
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -225,6 +236,22 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
             saveError(e, "glBankTransactionFromMB", "exit");
             return null;
         }
+    }
+
+    public void getBankCashBalance() {
+        if (GlBankTransactionDetailEntity.getBankFrom() != null) {
+            getBalanceReportSearchBean().setDateTo(new Date());
+            GlBankDTO bankDTO = new GlBankDTO();
+            bankDTO.setId(GlBankTransactionDetailEntity.getBankFrom().getId());
+            getBalanceReportSearchBean().setGlBankList(new ArrayList<>());
+            getBalanceReportSearchBean().getGlBankList().add(bankDTO);
+            getBalanceReportSearchBean().setBranchId(getUserData().getSelectedBranch());
+            List<BankBalanceReportBeanNew> balanceReportBeans = bankBalanceViewService.searchNative(balanceReportSearchBean);
+            if (balanceReportBeans != null && !balanceReportBeans.isEmpty() && balanceReportBeans.get(0) != null) {
+                GlBankTransactionDetailEntity.setValue(balanceReportBeans.get(0).getBalance()); 
+            }
+        }
+
     }
 
     @Override
@@ -318,7 +345,8 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
             saveError(e, "glBankTransactionFromMB", "validateSave");
         }
     }
-     public void updateRateClosed() {
+
+    public void updateRateClosed() {
         try {
 
             if (GlBankTransactionDetailEntity.getBankFrom() != null && GlBankTransactionDetailEntity.getBankFrom().getCurrencyId() != null) {
@@ -328,10 +356,12 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
                     glBankTransactionEntity.setRateBankFrom(currencyOperation == null ? BigDecimal.ONE : currencyOperation.getRate());
                     currencyOperation = currencyOperationService.getRatesByDates(GlBankTransactionDetailEntity.getBankTo().getCurrencyId().getId(), glBankTransactionEntity.getDate(), getUserData().getCompany().getId());
                     glBankTransactionEntity.setRateBankTo(currencyOperation == null ? BigDecimal.ONE : currencyOperation.getRate());
-                    if(getGlBankTransactionDetailEntity().getBankFrom().getClosedglbankId()!=null){
-                    GlBankTransactionDetailEntity.setBankTo(getGlBankTransactionDetailEntity().getBankFrom().getClosedglbankId());
+                    if (getGlBankTransactionDetailEntity().getBankFrom().getClosedglbankId() != null) {
+                        GlBankTransactionDetailEntity.setBankTo(getGlBankTransactionDetailEntity().getBankFrom().getClosedglbankId());
                     }
                     calculateLocalValue();
+                    getBankCashBalance();
+
                 } else {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), getUserData().getUserDDs().get("NO_CURRENCY_ERROR")));
 
@@ -355,8 +385,9 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
                     glBankTransactionEntity.setRateBankFrom(currencyOperation == null ? BigDecimal.ONE : currencyOperation.getRate());
                     currencyOperation = currencyOperationService.getRatesByDates(GlBankTransactionDetailEntity.getBankTo().getCurrencyId().getId(), glBankTransactionEntity.getDate(), getUserData().getCompany().getId());
                     glBankTransactionEntity.setRateBankTo(currencyOperation == null ? BigDecimal.ONE : currencyOperation.getRate());
-                  
+
                     calculateLocalValue();
+
                 } else {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), getUserData().getUserDDs().get("NO_CURRENCY_ERROR")));
 
@@ -899,6 +930,40 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
      */
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    /**
+     * @param bankCash the bankCash to set
+     */
+    public void setBankCash(BigDecimal bankCash) {
+        this.bankCash = bankCash;
+    }
+
+    /**
+     * @return the bankCash
+     */
+    public BigDecimal getBankCash() {
+        if (bankCash == null) {
+            bankCash = BigDecimal.ZERO;
+        }
+        return bankCash;
+    }
+
+    /**
+     * @return the balanceReportSearchBean
+     */
+    public BankBalanceReportSearchBean getBalanceReportSearchBean() {
+        if (balanceReportSearchBean == null) {
+            balanceReportSearchBean = new BankBalanceReportSearchBean();
+        }
+        return balanceReportSearchBean;
+    }
+
+    /**
+     * @param balanceReportSearchBean the balanceReportSearchBean to set
+     */
+    public void setBalanceReportSearchBean(BankBalanceReportSearchBean balanceReportSearchBean) {
+        this.balanceReportSearchBean = balanceReportSearchBean;
     }
 
 }

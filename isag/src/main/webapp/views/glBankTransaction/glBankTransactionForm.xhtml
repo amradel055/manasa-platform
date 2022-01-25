@@ -77,6 +77,7 @@
 
                                         <p:ajax update="@form" event="itemSelect" listener="#{glBankTransactionFromMB.updateRateClosed}"/>
                                         <p:ajax update="@form" event="change" listener="#{glBankTransactionFromMB.updateRateClosed}"/>
+                                        
 
                                     </p:autoComplete>
                                 </div>
@@ -108,6 +109,7 @@
                                                 listener="#{glBankTransactionFromMB.updateRate}"  />
                                     </p:autoComplete>
                                 </div>
+                                        
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:outputLabel style="width: 92px;" value="#{userData.userDDs['SAFE_RECEIVED']}" />
 

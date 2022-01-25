@@ -6,9 +6,16 @@
 package com.isag.businessservice.reports;
 
 import com.isag.core.GenericDAO;
+import com.isag.dto.BankBalanceReportBeanNew;
+import com.isag.dto.BankBalanceReportSearchBean;
+import com.isag.dto.BankBalanceViewNew;
+import com.isag.dto.GlBankDTO;
 import com.isag.entity.GlYear;
 import com.isag.views.BankBalanceView;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -85,5 +92,269 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
             sql.append(" or bbv.bankIdTo in (").append(builder).append("))");
         }
     }
+
+    @Override
+    public List<BankBalanceReportBeanNew> searchNative(BankBalanceReportSearchBean bankBalanceReportSearchBean) {
+        List<BankBalanceReportBeanNew> list = null;
+        if (bankBalanceReportSearchBean.getGlBankList() != null && !bankBalanceReportSearchBean.getGlBankList().isEmpty()) {
+            StringBuilder bankBuilder = new StringBuilder();
+            for (GlBankDTO glBankDTO : bankBalanceReportSearchBean.getGlBankList()) {
+                if (bankBuilder.length() == 0) {
+                    bankBuilder.append(glBankDTO.getId());
+                } else {
+                    bankBuilder.append(",");
+                    bankBuilder.append(glBankDTO.getId());
+                }
+                bankBalanceReportSearchBean.getSerchedBanksSet().add(glBankDTO.getId());
+                bankBalanceReportSearchBean.setBankBuilder(bankBuilder.toString());
+            }
+            List<BankBalanceViewNew> bankBalanceViewList = getAllBankBalancesTransactionsByBankIdNativ(bankBalanceReportSearchBean);
+            list = testNative(bankBalanceViewList, bankBalanceReportSearchBean);
+        }
+        return list;
+    }
+
+    private List<BankBalanceReportBeanNew> testNative(List<BankBalanceViewNew> bankBalanceViewList, BankBalanceReportSearchBean bankBalanceReportSearchBean) {
+        List<BankBalanceReportBeanNew> bankBalanceReportBeanList = new ArrayList<>();
+        Map<Integer, BankBalanceReportBeanNew> balanceViewMap = new HashMap<>();
+        if (bankBalanceViewList != null && !bankBalanceViewList.isEmpty()) {
+
+            for (BankBalanceViewNew balanceReportView : bankBalanceViewList) {
+                BankBalanceReportBeanNew balanceReportBeanNew;
+                if (balanceReportView.getBankIdTo() != null && bankBalanceReportSearchBean.getSerchedBanksSet().contains(balanceReportView.getBankIdTo())) {
+                    balanceReportBeanNew = new BankBalanceReportBeanNew();
+                    if (!balanceViewMap.containsKey(balanceReportView.getBankIdTo())) {
+                        balanceReportBeanNew.setBankId(balanceReportView.getBankIdTo());
+                        balanceReportBeanNew.setSerial(balanceReportView.getSerial());
+                        balanceReportBeanNew.setBankName(balanceReportView.getBankNameTo() == null ? balanceReportBeanNew.getBankName() : balanceReportView.getBankNameTo());
+//                        balanceReportBean.setAccountIdTo(balanceReportView.getAccountIdTo());
+                        if (bankBalanceReportSearchBean.getDateFrom() != null && balanceReportView.getDate().before(bankBalanceReportSearchBean.getDateFrom())) {
+                            balanceReportBeanNew.setBankToBalance(balanceReportView.getValueLocal() == null ? BigDecimal.ZERO : balanceReportView.getValueLocal().setScale(2, RoundingMode.UP));
+                            balanceReportBeanNew.setPreviousBalance((balanceReportBeanNew.getBankToBalance().subtract(balanceReportBeanNew.getBankFromBalance())).setScale(2, RoundingMode.UP));
+                        } else {
+                            balanceReportBeanNew.setCredit(BigDecimal.ZERO);
+                            balanceReportBeanNew.setDebit(balanceReportView.getValueLocal() != null ? balanceReportView.getValueLocal().setScale(2, RoundingMode.UP) : BigDecimal.ZERO);
+                        }
+                    } else {
+                        balanceReportBeanNew.setBankId(balanceReportView.getBankIdTo());
+                        balanceReportBeanNew.setSerial(balanceReportView.getSerial());
+                        balanceReportBeanNew.setBankName(balanceReportView.getBankNameTo() == null ? balanceReportBeanNew.getBankName() : balanceReportView.getBankNameTo());
+//                        balanceReportBean.setAccountIdTo(balanceReportView.getAccountIdTo());
+                        balanceReportBeanNew = balanceViewMap.get(balanceReportView.getBankIdTo());
+                        if (bankBalanceReportSearchBean.getDateFrom() != null && balanceReportView.getDate().before(bankBalanceReportSearchBean.getDateFrom())) {
+                            balanceReportBeanNew.setBankToBalance(balanceReportView.getValueLocal() == null ? balanceReportBeanNew.getBankToBalance().setScale(2, RoundingMode.UP) : (balanceReportView.getValueLocal().add(balanceReportBeanNew.getBankToBalance())).setScale(2, RoundingMode.UP));
+                            balanceReportBeanNew.setPreviousBalance((balanceReportBeanNew.getBankToBalance().subtract(balanceReportBeanNew.getBankFromBalance())).setScale(2, RoundingMode.UP));
+                        } else {
+                            balanceReportBeanNew.setDebit(balanceReportView.getValueLocal() != null ? (balanceReportBeanNew.getDebit().add(balanceReportView.getValueLocal())).setScale(2, RoundingMode.UP) : balanceReportBeanNew.getDebit().setScale(2, RoundingMode.UP));
+                        }
+                    }
+
+                    balanceReportBeanNew.setBalance((balanceReportBeanNew.getDebit().subtract(balanceReportBeanNew.getCredit()).add(balanceReportBeanNew.getPreviousBalance() != null ? balanceReportBeanNew.getPreviousBalance() : BigDecimal.ZERO)).setScale(2, RoundingMode.UP));
+                    //  addOpeneingBalanceToPreviousBalance(balanceReportBean.getAccountIdTo(), balanceReportBean);
+                    balanceViewMap.put(balanceReportView.getBankIdTo(), balanceReportBeanNew);
+
+                }
+
+                if (balanceReportView.getBankIdFrom() != null && bankBalanceReportSearchBean.getSerchedBanksSet().contains(balanceReportView.getBankIdFrom())) {
+                    balanceReportBeanNew = new BankBalanceReportBeanNew();
+                    if (!balanceViewMap.containsKey(balanceReportView.getBankIdFrom())) {
+                        balanceReportBeanNew.setBankId(balanceReportView.getBankIdFrom());
+                        balanceReportBeanNew.setSerial(balanceReportView.getSerial());
+                        balanceReportBeanNew.setBankName(balanceReportView.getBankNameFrom() == null ? balanceReportBeanNew.getBankName() : balanceReportView.getBankNameFrom());
+//                        balanceReportBean.setAccountIdFrom(balanceReportView.getAccountIdFrom());
+                        if (bankBalanceReportSearchBean.getDateFrom() != null && balanceReportView.getDate().before(bankBalanceReportSearchBean.getDateFrom())) {
+                            balanceReportBeanNew.setBankFromBalance(balanceReportView.getValueLocal() == null ? BigDecimal.ZERO : balanceReportView.getValueLocal().setScale(2, RoundingMode.UP));
+                            balanceReportBeanNew.setPreviousBalance((balanceReportBeanNew.getBankToBalance().subtract(balanceReportBeanNew.getBankFromBalance())).setScale(2, RoundingMode.UP));
+                        } else {
+                            balanceReportBeanNew.setCredit(balanceReportView.getValueLocal() != null ? balanceReportView.getValueLocal().setScale(2, RoundingMode.UP) : BigDecimal.ZERO);
+                            balanceReportBeanNew.setDebit(BigDecimal.ZERO);
+                        }
+                    } else {
+                        balanceReportBeanNew.setBankId(balanceReportView.getBankIdFrom());
+                        balanceReportBeanNew.setSerial(balanceReportView.getSerial());
+                        balanceReportBeanNew.setBankName(balanceReportView.getBankNameFrom() == null ? balanceReportBeanNew.getBankName() : balanceReportView.getBankNameFrom());
+//                        balanceReportBean.setAccountIdFrom(balanceReportView.getAccountIdFrom());
+                        balanceReportBeanNew = balanceViewMap.get(balanceReportView.getBankIdFrom());
+                        if (bankBalanceReportSearchBean.getDateFrom() != null && balanceReportView.getDate().before(bankBalanceReportSearchBean.getDateFrom())) {
+                            balanceReportBeanNew.setBankFromBalance(balanceReportView.getValueLocal() == null ? balanceReportBeanNew.getBankFromBalance().setScale(2, RoundingMode.UP) : (balanceReportView.getValueLocal().add(balanceReportBeanNew.getBankFromBalance())).setScale(2, RoundingMode.UP));
+                            balanceReportBeanNew.setPreviousBalance((balanceReportBeanNew.getBankToBalance().subtract(balanceReportBeanNew.getBankFromBalance())).setScale(2, RoundingMode.UP));
+
+                        } else {
+                            balanceReportBeanNew.setCredit(balanceReportView.getValueLocal() != null ? (balanceReportBeanNew.getCredit().add(balanceReportView.getValueLocal()).setScale(2, RoundingMode.UP)) : balanceReportBeanNew.getCredit().setScale(2, RoundingMode.UP));
+                        }
+                    }
+                    balanceReportBeanNew.setBalance((balanceReportBeanNew.getDebit().subtract(balanceReportBeanNew.getCredit()).add(balanceReportBeanNew.getPreviousBalance() != null ? balanceReportBeanNew.getPreviousBalance() : BigDecimal.ZERO)).setScale(2, RoundingMode.UP));
+                    //  addOpeneingBalanceToPreviousBalance(balanceReportBean.getAccountIdFrom(), balanceReportBean);
+                    balanceViewMap.put(balanceReportView.getBankIdFrom(), balanceReportBeanNew);
+
+                }
+            }
+        }
+        bankBalanceReportBeanList = new ArrayList<>(balanceViewMap.values());
+        return bankBalanceReportBeanList;
+    }
+
+    public List<BankBalanceViewNew> getAllBankBalancesTransactionsByBankIdNativ(BankBalanceReportSearchBean bankBalanceReportSearchBean) {
+
+        dao.executeNativeQuery("select isag.sql_mode_function()");
+        Integer branchId = bankBalanceReportSearchBean.getBranchId();
+        String bankBuilder = bankBalanceReportSearchBean.getBankBuilder();
+        StringBuilder queryBuilder = new StringBuilder();
+        queryBuilder.append("    SELECT \n"
+                + "\n"
+                + "        `gb`.`date_openinng_balance` AS `date`,\n"
+                + "        '' AS `remark`,\n"
+                + "        NULL AS `gl_year`,\n"
+                + "        `gb`.`code` AS `serial`,\n"
+                + "        `gb`.`openinng_balance` AS `glValue`,\n"
+                + "        `gb`.`openinng_balance` AS `value_local`,\n"
+                + "        NULL AS `transactionType`,\n"
+                + "        `gb`.`id` AS `bankIdTo`,\n"
+                + "        NULL AS `bankIdfrom`,\n"
+                + "        `gb`.`name` AS `bankNameTo`,\n"
+                + "        '' AS `bankNameFrom`,\n"
+                + "        `gb`.`account_id` AS `accountIdTo`,\n"
+                + "        NULL AS `accountIdFrom`,\n"
+                + "        `gb`.`branch_id` AS `branchId`,\n"
+                + "        `gb`.`code` AS `bankCodeto`,\n"
+                + "        `gb`.`code` AS `bankCodeFrom`\n"
+                + "    FROM\n"
+                + "        `gl_bank` `gb`\n"
+                + "    WHERE\n"
+                + "        ((`gb`.`date_openinng_balance` IS NOT NULL)\n"
+                + "            AND (`gb`.`openinng_balance` > 0)) AND  `gb`.`branch_id` = ").append(branchId).append(
+                " And `gb`.`id` IN ( ").append(bankBuilder).append(
+                "  )          UNION ALL SELECT \n"
+                + "        `glb`.`date` AS `date`,\n"
+                + "        `glb`.`remark` AS `remark`,\n"
+                + "        `glb`.`gl_year` AS `gl_year`,\n"
+                + "        `glb`.`serial` AS `serial`,\n"
+                + "        `glbt`.`value` AS `glValue`,\n"
+                + "        `glbt`.`value_local` AS `value_local`,\n"
+                + "        `glb`.`transaction_type` AS `transactionType`,\n"
+                + "        `glbt`.`bank_id_to` AS `bankIdTo`,\n"
+                + "        `glbt`.`bank_id_from` AS `bankIdfrom`,\n"
+                + "        `glb1`.`name` AS `bankNameTo`,\n"
+                + "        `glb2`.`name` AS `bankNameFrom`,\n"
+                + "        `glb1`.`account_id` AS `accountIdTo`,\n"
+                + "        `glb2`.`account_id` AS `accountIdFrom`,\n"
+                + "        `glb`.`branch_id` AS `branchId`,\n"
+                + "        `glb1`.`code` AS `bankCodeto`,\n"
+                + "        `glb2`.`code` AS `bankCodeFrom`\n"
+                + "    FROM\n"
+                + "        (((`gl_bank_transaction` `glb`\n"
+                + "        LEFT JOIN `gl_bank_transaction_detail` `glbt` ON ((`glb`.`id` = `glbt`.`gl_bank_transaction_id`)))\n"
+                + "        LEFT JOIN `gl_bank` `glb1` ON ((`glb1`.`id` = `glbt`.`bank_id_to`)))\n"
+                + "        LEFT JOIN `gl_bank` `glb2` ON ((`glb2`.`id` = `glbt`.`bank_id_from`)))\n"
+                + "    WHERE\n"
+                + "        (`glb`.`transaction_type` = 2)  AND  `glb`.`branch_id` = ").append(branchId).append(" And  (`glb1`.`id` IN (").append(bankBuilder).append(") OR `glb2`.`id` IN (").append(bankBuilder).append("))\n"
+                + "    UNION ALL SELECT \n"
+                + "      \n"
+                + "        `glb`.`date` AS `date`,\n"
+                + "        `glb`.`remark` AS `remark`,\n"
+                + "        `glb`.`gl_year` AS `gl_year`,\n"
+                + "        `glb`.`serial` AS `serial`,\n"
+                + "        `glbt`.`value` AS `glValue`,\n"
+                + "        `glbt`.`value_local` AS `value_local`,\n"
+                + "        `glb`.`transaction_type` AS `transactionType`,\n"
+                + "        `glbt`.`bank_id_to` AS `bankIdTo`,\n"
+                + "        `glbt`.`bank_id_from` AS `bankIdfrom`,\n"
+                + "        `glb1`.`name` AS `bankNameTo`,\n"
+                + "        `glb2`.`name` AS `bankNameFrom`,\n"
+                + "        `glb1`.`account_id` AS `accountIdTo`,\n"
+                + "        `glb2`.`account_id` AS `accountIdFrom`,\n"
+                + "        `glb`.`branch_id` AS `branchId`,\n"
+                + "        `glb1`.`code` AS `bankCodeto`,\n"
+                + "        `glb2`.`code` AS `bankCodeFrom`\n"
+                + "    FROM\n"
+                + "        (((`gl_bank_transaction` `glb`\n"
+                + "        LEFT JOIN `gl_bank_transaction_detail` `glbt` ON ((`glb`.`id` = `glbt`.`gl_bank_transaction_id`)))\n"
+                + "        LEFT JOIN `gl_bank` `glb1` ON ((`glb1`.`id` = `glbt`.`bank_id_to`)))\n"
+                + "        LEFT JOIN `gl_bank` `glb2` ON ((`glb2`.`id` = `glbt`.`bank_id_from`)))\n"
+                + "    WHERE\n"
+                + "        ((`glb`.`transaction_type` = 1)\n"
+                + "            OR (`glb`.`transaction_type` = 0))  AND  `glb`.`branch_id` = ").append(branchId).append("  And (`glb1`.`id` IN (").append(bankBuilder).append(") OR `glb2`.`id` IN (").append(bankBuilder).append("))\n"
+                + "            \n"
+                + "            \n"
+                + "    UNION ALL SELECT \n"
+                + "      \n"
+                + "        `ipi`.`date` AS `date`,\n"
+                + "        `ipi`.`remarks` AS `remark`,\n"
+                + "        NULL AS `gl_year`,\n"
+                + "        `ipi`.`serial` AS `serial`,\n"
+                + "        IFNULL(NET(IFNULL(SUM(`ipid`.`net`), 0.0),IFNULL(`ipi`.`discount_type`, 0.0),IFNULL(`ipi`.`discount`, 0.0),\n"
+                + "                IFNULL(`ipi`.`tax_flag`, 0.0),15,IFNULL(0, 0.0)),0.0) AS `glValue`,\n"
+                + "        IFNULL(NET(IFNULL(SUM(`ipid`.`net`), 0.0),IFNULL(`ipi`.`discount_type`, 0.0),IFNULL(`ipi`.`discount`, 0.0),\n"
+                + "                IFNULL(`ipi`.`tax_flag`, 0.0),15,IFNULL(0, 0.0)),0.0)  AS `value_local`,\n"
+                + "        `ipi`.`type` AS `transactionType`,\n"
+                + "        (CASE\n"
+                + "            WHEN (`ipi`.`type` = 0) THEN NULL\n"
+                + "            WHEN (`ipi`.`type` = 1) THEN `ipi`.`gl_bank_id`\n"
+                + "        END) AS `bankIdTo`,\n"
+                + "        (CASE\n"
+                + "            WHEN (`ipi`.`type` = 0) THEN `ipi`.`gl_bank_id`\n"
+                + "            WHEN (`ipi`.`type` = 1) THEN NULL\n"
+                + "        END) AS `bankIdfrom`,\n"
+                + "        (CASE\n"
+                + "            WHEN (`ipi`.`type` = 0) THEN NULL\n"
+                + "            WHEN (`ipi`.`type` = 1) THEN `glb1`.`name`\n"
+                + "        END) AS `bankNameTo`,\n"
+                + "        (CASE\n"
+                + "            WHEN (`ipi`.`type` = 0) THEN `glb1`.`name`\n"
+                + "            WHEN (`ipi`.`type` = 1) THEN NULL\n"
+                + "        END) AS `bankNameFrom`,\n"
+                + "        `glb1`.`account_id` AS `accountIdTo`,\n"
+                + "        `glb1`.`account_id` AS `accountIdFrom`,\n"
+                + "        `ipi`.`branch_id` AS `branchId`,\n"
+                + "        (CASE\n"
+                + "            WHEN (`ipi`.`type` = 0) THEN NULL\n"
+                + "            WHEN (`ipi`.`type` = 1) THEN `glb1`.`code`\n"
+                + "        END) AS `bankCodeto`,\n"
+                + "        (CASE\n"
+                + "            WHEN (`ipi`.`type` = 0) THEN `glb1`.`code`\n"
+                + "            WHEN (`ipi`.`type` = 1) THEN NULL\n"
+                + "        END) AS `bankCodeFrom`\n"
+                + "    FROM\n"
+                + "       `inv_purchase_invoice` `ipi`  LEFT JOIN  `inv_purchase_invoice_detail` `ipid`  ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
+                + "        LEFT JOIN `gl_bank` `glb1` ON `glb1`.`id` = `ipi`.`gl_bank_id`\n"
+                + "    WHERE\n"
+                + "        (`ipi`.`payment_type` = 0)  AND  `ipi`.`branch_id` = ").append(branchId).append("  And (`ipi`.`gl_bank_id` IN (").append(bankBuilder).append("))\n"
+                + "        group by ipi.id");
+//        appendDateForQueryBuilder(queryBuilder, glYear.getDateFrom(), dateTo);
+//        appendDateForQueryBuilder(queryBuilder, bankBalanceReportSearchBean.getDateFrom(), bankBalanceReportSearchBean.getDateTo());
+//        appendBanksIdFromAndToNew(queryBuilder, params,);
+//        queryBuilder.append(" and bbv.glYear = :glYear");
+
+        List<Object[]> data = dao.executeNativeQuery(queryBuilder.toString());
+        return returnBankBalanceData(data);
+    }
+
+    private List<BankBalanceViewNew> returnBankBalanceData(List<Object[]> res) {
+        List<BankBalanceViewNew> list = new ArrayList<>();
+        BankBalanceViewNew bankBalanceViewNew = new BankBalanceViewNew();
+        for (Object[] object : res) {
+
+            bankBalanceViewNew = new BankBalanceViewNew();
+            bankBalanceViewNew.setDate((Date) object[0]);
+            bankBalanceViewNew.setRemark(object[1] != null ? object[1].toString() : null);
+            bankBalanceViewNew.setGlYear(object[2] != null ? Integer.valueOf(object[2].toString()) : null);
+            bankBalanceViewNew.setSerial(object[3] != null ? object[3].toString() : null);
+            bankBalanceViewNew.setGlValue((BigDecimal) object[4]);
+            bankBalanceViewNew.setValueLocal((BigDecimal) object[5]);
+            bankBalanceViewNew.setTransactionType(object[6] != null ? Integer.valueOf(object[6].toString()) : null);
+            bankBalanceViewNew.setBankIdTo(object[7] != null ? Integer.valueOf(object[7].toString()) : null);
+            bankBalanceViewNew.setBankIdFrom(object[8] != null ? Integer.valueOf(object[8].toString()) : null);
+            bankBalanceViewNew.setBankNameTo(object[9] != null ? object[9].toString() : null);
+            bankBalanceViewNew.setBankNameFrom(object[10] != null ? object[10].toString() : null);
+            bankBalanceViewNew.setAccountIdTo(object[11] != null ? object[11].toString() : null);
+            bankBalanceViewNew.setAccountIdFrom(object[12] != null ? object[12].toString() : null);
+            bankBalanceViewNew.setBranchId(object[13] != null ? Integer.valueOf(object[13].toString()) : null);
+            bankBalanceViewNew.setBankCodeto(object[14] != null ? object[14].toString() : null);
+            bankBalanceViewNew.setBankCodeFrom(object[15] != null ? object[13].toString() : null);
+            list.add(bankBalanceViewNew);
+        }
+        return list;
+    }
+    
 
 }
