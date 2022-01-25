@@ -7,9 +7,14 @@ package com.isag.businessservice;
 
 import com.isag.core.GenericDAO;
 import com.isag.dto.ActionsDTO;
+import com.isag.dto.searchDTO;
 import com.isag.entity.CreateAction;
 import com.isag.entity.IsagUser;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
@@ -23,12 +28,12 @@ public class CreateActionImpl implements CreateActionService{
     
     @EJB
     private GenericDAO dao;
-     private ActionsDTO mapToDto(CreateAction actions, IsagUser isagUser) {
+     private ActionsDTO mapToDto(CreateAction actions , IsagUser isagUser) {
         ActionsDTO actionsdto = new ActionsDTO();
         actionsdto.setId(actions.getId());
         actionsdto.setType(actions.getType());
-        actionsdto.setUserId(isagUser.getId());
-        actions.setDateAction(actions.getDateAction());
+        actionsdto.setUserId(actions.getUserId().getName());
+        actionsdto.setDate(actions.getDateAction());
 
         actionsdto.setScreenName(actions.getScreenName());
         return actionsdto;
@@ -49,6 +54,34 @@ public class CreateActionImpl implements CreateActionService{
         CreateAction actions;
         actions = mapToEntity(actionsDTO, isagUser);
         actions = dao.updateEntity(actions);
+    }
+    
+    @Override
+    public List<ActionsDTO> getAllValidSubsByDate(searchDTO search,IsagUser isagUser) {
+
+        Map<String, Object> params = new HashMap<>();
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT e FROM CreateAction e   ");
+        if (search.getDateFrom() != null) {
+            params.put("dateFrom", search.getDateFrom());
+            query.append("WHERE e.dateAction >= :dateFrom");
+        }
+
+        if (search.getDateTo() != null) {
+            params.put("dateTo", search.getDateTo());
+            query.append(" AND e.dateAction <= :dateTo");
+        }
+
+        List<CreateAction> createActions = dao.findListByQuery(query.toString(), params);
+        List<ActionsDTO> dtos = mapToDtoList(createActions , isagUser);
+        return dtos;
+    }
+      private List<ActionsDTO> mapToDtoList(List<CreateAction> actionsDtoList,IsagUser isagUser) {
+        List<ActionsDTO> dtos = new ArrayList<>();
+        for (int i = 0; i < actionsDtoList.size(); i++) {
+            dtos.add(mapToDto(actionsDtoList.get(i),isagUser));
+        }
+        return dtos;
     }
     
 }

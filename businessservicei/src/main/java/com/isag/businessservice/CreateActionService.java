@@ -6,7 +6,9 @@
 package com.isag.businessservice;
 
 import com.isag.dto.ActionsDTO;
+import com.isag.dto.searchDTO;
 import com.isag.entity.IsagUser;
+import java.util.List;
 import javax.ejb.Remote;
 
 /**
@@ -18,5 +20,6 @@ import javax.ejb.Remote;
 public interface CreateActionService {
 
     public void SaveAction(ActionsDTO actionsDTO, IsagUser isagUser);
+   public List<ActionsDTO> getAllValidSubsByDate(searchDTO search,IsagUser isagUser);
 
 }

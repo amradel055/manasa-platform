@@ -23,6 +23,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
+import org.omg.CORBA.PRIVATE_MEMBER;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 
@@ -36,7 +37,7 @@ public class GmSubscriptionsListDTOMB extends GMBasicData {
 
     private String nameClient;
     private LazyDataModel<GmSubscriptionsDTO> dataModel;
-
+    private boolean color =false ;
     private List<GmSubscriptionsDTO> subscribtionList;
     private List<InvOrganizationSiteDTO> invOrganizationSiteDTOList;
     private InvOrganizationSiteDTOConverter organizationSiteDTOConvertor;
@@ -410,8 +411,10 @@ public class GmSubscriptionsListDTOMB extends GMBasicData {
     public String getAccess() {
         if (getGmSubscriptionsDTOSelected() != null && getGmSubscriptionsDTOSelected().getStatus() != true && getGmSubscriptionsDTOSelected().isFreezeStatus() != true) {
             access = "يسمح له بدخول الجيم ";
+            setColor(true);
         } else {
             access = "لا يسمح له بدخول الجيم";
+            setColor(false);
         }
         return access;
     }
@@ -421,6 +424,19 @@ public class GmSubscriptionsListDTOMB extends GMBasicData {
      */
     public void setAccess(String access) {
         this.access = access;
+    }
+    /**
+     * @return the color
+     */
+    public boolean isColor() {
+        return color;
+    }
+
+    /**
+     * @param color the color to set
+     */
+    public void setColor(boolean color) {
+        this.color = color;
     }
 
 }
