@@ -7,6 +7,7 @@ package com.isag.settlementdeed;
 
 import com.isag.businessservice.AccountsSystemSettingsService;
 import com.isag.businessservice.CostCenterService;
+import com.isag.businessservice.CreateActionService;
 import com.isag.businessservice.GlAccountService;
 import com.isag.businessservice.GlAdminUnitService;
 import com.isag.businessservice.GlBankService;
@@ -24,6 +25,7 @@ import com.isag.converter.GlaccountConverter;
 import com.isag.converter.InvOrganizationSiteConverter;
 import com.isag.converter.SymbolConverter;
 import com.isag.define.ReportSignatureEnum;
+import com.isag.dto.ActionsDTO;
 import com.isag.dto.ReportSignatureDTO;
 import com.isag.entity.AccountsSystemSettings;
 import com.isag.entity.CostCenter;
@@ -34,6 +36,7 @@ import com.isag.entity.GlBankTransaction;
 import com.isag.entity.GlBankTransactionDetail;
 import com.isag.entity.InvOrganizationSite;
 import com.isag.entity.InvPurchaseInvoice;
+import com.isag.entity.IsagUser;
 import com.isag.entity.ReportManagement;
 import com.isag.entity.Symbol;
 import com.isag.entiy.GlBankTransactionDetailEntity;
@@ -206,6 +209,8 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
     private ReportManagementService reportManagementService;
     @EJB
     private ReportSignatureService reportSignatureService;
+    @EJB
+    CreateActionService createActionService;
 
     @Override
     @PostConstruct
@@ -349,7 +354,7 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
             adminUnitList = glAdminUnitService.getAllSubAdminUnitByBranchIdActive(branchId);
             glAdminUnitConverter = new GlAdminUnitConverter(adminUnitList);
 
-            glItemsList = symbolService.getGLItemsByCompanyId(companyId,null);
+            glItemsList = symbolService.getGLItemsByCompanyId(companyId, null);
             glItemConverter = new SymbolConverter(glItemsList);
 
             fillAccounts();
@@ -1111,6 +1116,7 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
                         rowsDeleted = new ArrayList<>();
                         glBankTransactionDetailsDeletedList = new ArrayList<>();
                         findSettlementDeedObject(glBankTransId.getId(), true);
+                        createActionService.SaveAction(SetActionDto(getUserData().getUser(), "settlementdeed", "save"), getUserData().getUser());
 
                         if (getUri().contains("settlementdeedForm")) {
                             exit("../settlementdeed/settlementdeedList.xhtml");
@@ -1142,6 +1148,14 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
             saveError(e, "SettlementDeedFormMB", "save");
             return null;
         }
+    }
+      public ActionsDTO SetActionDto(IsagUser isagUser, String screenname, String type) {
+        ActionsDTO actionsDTO = new ActionsDTO();
+        actionsDTO.setDate(new Date());
+        actionsDTO.setUserId(isagUser.getName());
+        actionsDTO.setScreenName(screenname);
+        actionsDTO.setType(type);
+        return actionsDTO;
     }
 
     private void setAccountCreditId(Integer organizationType, GlBankTransactionDetailEntity detailsEntity, GlBankTransactionDetail bankTransactionDetail) {
@@ -1538,6 +1552,7 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
 
             if (reportList != null && !reportList.isEmpty()) {
                 fillReport(prepareReport, getUserData().getReportPath() + reportName, reportList, "pdf");
+                createActionService.SaveAction(SetActionDto(getUserData().getUser(), "settlementdeed", "print"), getUserData().getUser());
             }
         } catch (Exception e) {
             saveError(e, "SettlementDeedFormMB", "exportPDF");
@@ -1665,7 +1680,7 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
             hashMap.put("documentNumberValue", glBankTransactionEntityMapper.getSerial());
             hashMap.put("payAccountValue", glBankTransactionEntityMapper.getGlBank() != null ? glBankTransactionEntityMapper.getGlBank().getName() : null);
             hashMap.put("amountValue", glBankTransactionEntityMapper.getValue());
-            hashMap.put("amountValueText", Tafqeet.numberToText(Double.parseDouble(glBankTransactionEntityMapper.getValue().toString()), glBankTransactionEntityMapper.getGlBank().getCurrencyId().getName(),  glBankTransactionEntityMapper.getGlBank().getCurrencyId().getSubName()));
+            hashMap.put("amountValueText", Tafqeet.numberToText(Double.parseDouble(glBankTransactionEntityMapper.getValue().toString()), glBankTransactionEntityMapper.getGlBank().getCurrencyId().getName(), glBankTransactionEntityMapper.getGlBank().getCurrencyId().getSubName()));
             hashMap.put("valueFromValue", remark1);
             hashMap.put("explainationValue", remark2);
             hashMap.put("accountManager", "مدير الحسابات");

@@ -5,6 +5,7 @@
  */
 package com.isag.glBankTransaction;
 
+import com.isag.businessservice.CreateActionService;
 import com.isag.businessservice.CurrencyOperationService;
 import com.isag.businessservice.GlAccountService;
 import com.isag.businessservice.GlBankTransactionDetailsService;
@@ -15,6 +16,7 @@ import com.isag.businessservice.ReportSignatureService;
 import com.isag.businessservice.reports.BankBalanceViewService;
 import com.isag.converter.GlBankConverter;
 import com.isag.define.ReportSignatureEnum;
+import com.isag.dto.ActionsDTO;
 import com.isag.dto.BankBalanceReportBeanNew;
 import com.isag.dto.BankBalanceReportSearchBean;
 import com.isag.dto.GlBankDTO;
@@ -25,6 +27,7 @@ import com.isag.entity.GlAccount;
 import com.isag.entity.GlBank;
 import com.isag.entity.GlBankTransaction;
 import com.isag.entity.GlBankTransactionDetail;
+import com.isag.entity.IsagUser;
 import com.isag.entity.ReportManagement;
 import com.isag.entiy.GlBankEntity;
 import com.isag.entiy.GlBankTransactionDetailEntity;
@@ -109,6 +112,8 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
     private ReportSignatureService reportSignatureService;
     @EJB
     private BankBalanceViewService bankBalanceViewService;
+     @EJB
+    CreateActionService createActionService;
 
     @Override
     @PostConstruct
@@ -248,7 +253,7 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
             getBalanceReportSearchBean().setBranchId(getUserData().getSelectedBranch());
             List<BankBalanceReportBeanNew> balanceReportBeans = bankBalanceViewService.searchNative(balanceReportSearchBean);
             if (balanceReportBeans != null && !balanceReportBeans.isEmpty() && balanceReportBeans.get(0) != null) {
-                GlBankTransactionDetailEntity.setValue(balanceReportBeans.get(0).getBalance()); 
+                GlBankTransactionDetailEntity.setValue(balanceReportBeans.get(0).getBalance());
             }
         }
 
@@ -285,6 +290,8 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
             if (saveValidation) {
                 glBankTransaction.setPostFlag(0);
                 glBankTransaction = bankTransactionService.addOneGlBankTransaction(glBankTransaction, glBankTransactionDetail);
+                createActionService.SaveAction(SetActionDto(getUserData().getUser(), "glBankTransaction", "save"), getUserData().getUser());
+
                 return exit();
             }
             return "";
@@ -292,6 +299,15 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
             saveError(e, "glBankTransactionFromMB", "exit");
             return null;
         }
+    }
+
+    public ActionsDTO SetActionDto(IsagUser isagUser, String screenname, String type) {
+        ActionsDTO actionsDTO = new ActionsDTO();
+        actionsDTO.setDate(new Date());
+        actionsDTO.setUserId(isagUser.getName());
+        actionsDTO.setScreenName(screenname);
+        actionsDTO.setType(type);
+        return actionsDTO;
     }
 
     public void validateInputsForSave() {

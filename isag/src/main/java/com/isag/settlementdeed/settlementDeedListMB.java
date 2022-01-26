@@ -6,20 +6,24 @@
 package com.isag.settlementdeed;
 
 import com.isag.businessservice.AccountsSystemSettingsService;
+import com.isag.businessservice.CreateActionService;
 import com.isag.businessservice.GlBankTransactionService;
 import com.isag.businessservice.IsagUserBankService;
 import com.isag.converter.GlBankConverter;
+import com.isag.dto.ActionsDTO;
 import com.isag.dto.GlBankDTO;
 import com.isag.dto.GlBankTransactionDTO;
 import com.isag.entity.AccountsSystemSettings;
 import com.isag.entity.GlBank;
 import com.isag.entity.GlBankTransaction;
+import com.isag.entity.IsagUser;
 import com.isag.entiy.GlBankTransactionDetailEntity;
 import com.isag.entiy.GlBankTransactionEntity;
 import com.isag.isag.BaseGlBankListBean;
 import com.isag.isag.UserData;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,6 +75,8 @@ public class settlementDeedListMB extends BaseGlBankListBean {
     AccountsSystemSettingsService accountsSystemSettingsService;
     @EJB
     private IsagUserBankService isagUserBankService;
+    @EJB
+    CreateActionService createActionService;
 
     @Override
     @PostConstruct
@@ -230,6 +236,7 @@ public class settlementDeedListMB extends BaseGlBankListBean {
                 try {
                     glBankTransactionService.deleteGlBankTransaction(glBankTransaction);
                     getGlBankTransactionEntityList().remove(getGlBankTransactionEntitySelected());
+                    createActionService.SaveAction(SetActionDto(getUserData().getUser(), "settlementdeed", "delete"), getUserData().getUser());
 
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, userDDs.get("INFO"), userDDs.get("DELETED")));
                 } catch (Exception e) {
@@ -241,6 +248,15 @@ public class settlementDeedListMB extends BaseGlBankListBean {
         } catch (Exception e) {
             saveError(e, "settlementDeedListMB", "delete");
         }
+    }
+
+    public ActionsDTO SetActionDto(IsagUser isagUser, String screenname, String type) {
+        ActionsDTO actionsDTO = new ActionsDTO();
+        actionsDTO.setDate(new Date());
+        actionsDTO.setUserId(isagUser.getName());
+        actionsDTO.setScreenName(screenname);
+        actionsDTO.setType(type);
+        return actionsDTO;
     }
 
     public void exportPDFWithCopy(ActionEvent actionEvent) throws JRException, IOException {
@@ -280,6 +296,8 @@ public class settlementDeedListMB extends BaseGlBankListBean {
             } else {
                 if (getGlBankTransactionDetailEntityList() != null && !getGlBankTransactionDetailEntityList().isEmpty()) {
                     fillReport(prepareReport(), getUserData().getReportPath() + reportName, getGlBankTransactionDetailEntityList(), "pdf");
+                    createActionService.SaveAction(SetActionDto(getUserData().getUser(), "settlementdeed", "print"), getUserData().getUser());
+
                 }
             }
         } catch (Exception e) {

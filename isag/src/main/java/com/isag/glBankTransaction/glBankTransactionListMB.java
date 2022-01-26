@@ -5,6 +5,7 @@
  */
 package com.isag.glBankTransaction;
 
+import com.isag.businessservice.CreateActionService;
 import com.isag.businessservice.GlBankTransactionDetailsService;
 import com.isag.businessservice.GlBankTransactionService;
 import com.isag.businessservice.IsagUserBankService;
@@ -13,10 +14,12 @@ import com.isag.businessservice.ReportSignatureService;
 import com.isag.businessservice.reports.GlTransactionBankListViewService;
 import com.isag.converter.GlBankConverter;
 import com.isag.define.ReportSignatureEnum;
+import com.isag.dto.ActionsDTO;
 import com.isag.dto.ReportSignatureDTO;
 import com.isag.entity.GlBank;
 import com.isag.entity.GlBankTransaction;
 import com.isag.entity.GlBankTransactionDetail;
+import com.isag.entity.IsagUser;
 import com.isag.entity.ReportManagement;
 import com.isag.entiy.GlBankTransactionDetailEntity;
 import com.isag.entiy.GlBankTransactionEntity;
@@ -27,6 +30,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,6 +72,8 @@ public class glBankTransactionListMB extends BaseListBean {
     private GlBank selectGlBank;
 
     private LazyDataModel<GlTransactionBankListView> dataModel;
+    @EJB
+    CreateActionService createActionService;
 
     @EJB
     private GlBankTransactionService glBankTransactionService;
@@ -193,6 +199,7 @@ public class glBankTransactionListMB extends BaseListBean {
                 try {
                     glBankTransactionService.deleteGlBankTransaction(glBankTransaction);
                     glBankTransactionEntityList.remove(glBankTransactionEntitySelected);
+                    createActionService.SaveAction(SetActionDto(getUserData().getUser(), "glBankTransaction", "delete"), getUserData().getUser());
 
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, userDDs.get("INFO"), userDDs.get("DELETED")));
                 } catch (Exception e) {
@@ -204,6 +211,15 @@ public class glBankTransactionListMB extends BaseListBean {
         } catch (Exception e) {
             saveError(e, "glBankTransactionListMB", "delete");
         }
+    }
+
+    public ActionsDTO SetActionDto(IsagUser isagUser, String screenname, String type) {
+        ActionsDTO actionsDTO = new ActionsDTO();
+        actionsDTO.setDate(new Date());
+        actionsDTO.setUserId(isagUser.getName());
+        actionsDTO.setScreenName(screenname);
+        actionsDTO.setType(type);
+        return actionsDTO;
     }
 
     @Override
@@ -251,6 +267,8 @@ public class glBankTransactionListMB extends BaseListBean {
             gbtdes.add(glBankTransactionEntity);
             if (glBankTransactionEntity != null && glBankTransactionEntity.getId() != null) {
                 fillReport(prepareReport(), getUserData().getReportPath() + "glBankTransaction.jasper", gbtdes, "pdf");
+                createActionService.SaveAction(SetActionDto(getUserData().getUser(), "glBankTransaction", "print"), getUserData().getUser());
+
             }
         } catch (Exception e) {
             saveError(e, "glBankTransactionListMB", "exportPDF");
