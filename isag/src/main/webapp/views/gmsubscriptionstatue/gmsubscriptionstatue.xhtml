@@ -250,13 +250,13 @@
                     </div>
                 </div>
                  <div   >
-                        <p:graphicImage name="images/red.png" library="serenity-layout" styleClass="mobile-logo" rendered="#{!gmSubscriptionsListDTOMB.color}" style="width:50px; height: 50px;"/>
+                     <p:graphicImage name="images/red.png" library="serenity-layout" styleClass="mobile-logo" rendered="#{gmSubscriptionsListDTOMB.color eq 2}" style="width:50px; height: 50px;"/>
                     </div>
                     <div >
-                        <p:graphicImage name="images/green.png" library="serenity-layout" styleClass="mobile-logo" rendered="#{gmSubscriptionsListDTOMB.color}" style="width:50px; height: 50px;"/>
+                        <p:graphicImage name="images/green.png" library="serenity-layout" styleClass="mobile-logo" rendered="#{gmSubscriptionsListDTOMB.color eq 0}" style="width:50px; height: 50px;"/>
                     </div>
                     <div >
-                        <p:graphicImage name="images/blue.png" library="serenity-layout" styleClass="mobile-logo" rendered="#{!gmSubscriptionsListDTOMB.color}" style="width:50px; height: 50px;"/>
+                        <p:graphicImage name="images/blue.png" library="serenity-layout" styleClass="mobile-logo" rendered="#{gmSubscriptionsListDTOMB.color eq 1}" style="width:50px; height: 50px;"/>
                     </div>
 
                 <div class='smallButtons'>     

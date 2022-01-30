@@ -37,7 +37,7 @@ public class GmSubscriptionsListDTOMB extends GMBasicData {
 
     private String nameClient;
     private LazyDataModel<GmSubscriptionsDTO> dataModel;
-    private boolean color =false ;
+    private Integer color  ;
     private List<GmSubscriptionsDTO> subscribtionList;
     private List<InvOrganizationSiteDTO> invOrganizationSiteDTOList;
     private InvOrganizationSiteDTOConverter organizationSiteDTOConvertor;
@@ -409,12 +409,18 @@ public class GmSubscriptionsListDTOMB extends GMBasicData {
      * @return the access
      */
     public String getAccess() {
-        if (getGmSubscriptionsDTOSelected() != null && getGmSubscriptionsDTOSelected().getStatus() != true && getGmSubscriptionsDTOSelected().isFreezeStatus() != true) {
-            access = "يسمح له بدخول الجيم ";
-            setColor(true);
+        if (getGmSubscriptionsDTOSelected() != null && getGmSubscriptionsDTOSelected().getStatus() != true ) {
+            if(getGmSubscriptionsDTOSelected().isFreezeStatus() != true){
+             access = "يسمح له بدخول الجيم ";
+            setColor(0);
+            }
+            else if(getGmSubscriptionsDTOSelected().isFreezeStatus() != false){
+            access = "لا يسمح له بدخول الجيم كونه مجمد ";
+            setColor(1);
+            }
         } else {
             access = "لا يسمح له بدخول الجيم";
-            setColor(false);
+            setColor(2);
         }
         return access;
     }
@@ -428,14 +434,14 @@ public class GmSubscriptionsListDTOMB extends GMBasicData {
     /**
      * @return the color
      */
-    public boolean isColor() {
+    public Integer getColor() {
         return color;
     }
 
     /**
      * @param color the color to set
      */
-    public void setColor(boolean color) {
+    public void setColor(Integer color) {
         this.color = color;
     }
 
