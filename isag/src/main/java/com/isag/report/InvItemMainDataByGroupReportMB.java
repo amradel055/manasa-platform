@@ -61,6 +61,8 @@ public class InvItemMainDataByGroupReportMB extends BaseReportBean {
     private InvInventoryConverter invInventoryConverter;
     private List<InvInventory> invInventoryIteratedList;
     private List<InvItem> invItems;
+    private List<InvItem> invItemsList;
+
     private ItemConverter itemConverter;
     private Integer level;
     private List<ItemMainDataByGroupView> itemMainDataByGroupViewList;
@@ -104,9 +106,9 @@ public class InvItemMainDataByGroupReportMB extends BaseReportBean {
         invGroupRootList = new ArrayList<>();
         invGroupRootList = InvGroupService.getInvGroupsRootsByBranchId(branchId);
         itemMainDataByGroupSearchBean.setGroupSelected(new ArrayList<>());
-        for (InvGroup sublist : invGroupSubList) {
-            itemMainDataByGroupSearchBean.getGroupSelected().add(sublist.getId().toString());
-        }
+//        for (InvGroup sublist : invGroupSubList) {
+//            itemMainDataByGroupSearchBean.getGroupSelected().add(sublist.getId().toString());
+//        }
 
     }
 
@@ -161,8 +163,25 @@ public class InvItemMainDataByGroupReportMB extends BaseReportBean {
     public void showItemReport() {
     }
 
+    public String AddItemsString() {
+        StringBuilder stringBuilder = null;
+        for (InvItem item : invItemsList) {
+            if (stringBuilder == null) {
+                stringBuilder = new StringBuilder();
+                stringBuilder.append(item.getId());
+
+            } else {
+                stringBuilder.append(",").append(item.getId());
+            }
+
+        }
+        return stringBuilder != null ? stringBuilder.toString() : "";
+
+    }
+
     @Override
     public void search() {
+        getItemMainDataByGroupSearchBean().setItemSelected(AddItemsString());
         stripMapReference = 0;
         setitemMainDataByGroupBeanList(new ArrayList<>());
         setItemMainDataByGroupSearchViewBean(new ItemMainDataByGroupSearchBean());
@@ -226,6 +245,25 @@ public class InvItemMainDataByGroupReportMB extends BaseReportBean {
 
                 }
                 setitemMainDataByGroupBeanList(finalBean);
+            }
+        }
+
+    }
+
+    public void updateitems() {
+        if (itemMainDataByGroupSearchBean.getGroupSelected() != null) {
+            StringBuilder stringBuilder = null;
+            for (String group : getItemMainDataByGroupSearchBean().getGroupSelected()) {
+                if (stringBuilder == null) {
+                    stringBuilder = new StringBuilder();
+                    stringBuilder.append(group);
+                } else {
+                    stringBuilder.append(",").append(group);
+
+                }
+
+                setInvItems(invItemService.getInvItemByBranchIdAndGroupIdUpdate(branchId, stringBuilder.toString()));
+
             }
         }
 
@@ -519,8 +557,9 @@ public class InvItemMainDataByGroupReportMB extends BaseReportBean {
                 hashMap.put("toItem", itemMainDataByGroupSearchBean.getToItem().getName());
             }
         }
-            return hashMap;
+        return hashMap;
     }
+
     public List<InvGroup> completGroup(String query) {
         List<InvGroup> invGroList = getInvGroupList();
         if (query == null || query.trim().equals("")) {
@@ -914,6 +953,20 @@ public class InvItemMainDataByGroupReportMB extends BaseReportBean {
      */
     public void setLevel(Integer level) {
         this.level = level;
+    }
+
+    /**
+     * @return the invItemsList
+     */
+    public List<InvItem> getInvItemsList() {
+        return invItemsList;
+    }
+
+    /**
+     * @param invItemsList the invItemsList to set
+     */
+    public void setInvItemsList(List<InvItem> invItemsList) {
+        this.invItemsList = invItemsList;
     }
 
 }

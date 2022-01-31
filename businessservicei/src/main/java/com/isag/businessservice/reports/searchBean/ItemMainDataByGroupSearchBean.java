@@ -19,13 +19,12 @@ import java.util.List;
  */
 public class ItemMainDataByGroupSearchBean {
 
-    
-
     private Integer branchId;
-
+    private String itemSelected;
     private InvGroup fromGroup;
     private InvGroup toGroup;
     private List<String> groupSelected;
+    private List<InvGroup> invgroupSelected;
     private InvItem fromItem;
     private InvItem toItem;
     private InvInventory frominventory;
@@ -37,7 +36,8 @@ public class ItemMainDataByGroupSearchBean {
     private Boolean showReport;
     private Date dateFrom;
     private Date dateTo;
-    private int supplier ;
+    private int supplier;
+
     public Integer getBranchId() {
         return branchId;
     }
@@ -137,7 +137,7 @@ public class ItemMainDataByGroupSearchBean {
     public void setDateTo(Date dateTo) {
         this.dateTo = dateTo;
     }
-    
+
     /**
      * @return the fromItem
      */
@@ -248,5 +248,33 @@ public class ItemMainDataByGroupSearchBean {
      */
     public void setToinventoryDTO(InvInventoryDTO toinventoryDTO) {
         this.toinventoryDTO = toinventoryDTO;
+    }
+
+    /**
+     * @return the itemSelected
+     */
+    public String getItemSelected() {
+        return itemSelected;
+    }
+
+    /**
+     * @param itemSelected the itemSelected to set
+     */
+    public void setItemSelected(String itemSelected) {
+        this.itemSelected = itemSelected;
+    }
+
+    /**
+     * @return the invgroupSelected
+     */
+    public List<InvGroup> getInvgroupSelected() {
+        return invgroupSelected;
+    }
+
+    /**
+     * @param invgroupSelected the invgroupSelected to set
+     */
+    public void setInvgroupSelected(List<InvGroup> invgroupSelected) {
+        this.invgroupSelected = invgroupSelected;
     }
 }
