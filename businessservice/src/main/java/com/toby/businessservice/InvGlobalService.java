@@ -22,6 +22,10 @@ import javax.ejb.Remote;
 public interface InvGlobalService {
 
     public InvDetailDTO calculateDetailTotalsRow(InvDetailDTO detailEntity, InvInvoiceDTO invPurchaseInvoiceDTO, Boolean isNeeadQuantity,Boolean findCost);
+    
+    public BigDecimal calcRowTotal(ScreenNameClassEnum screenName, BigDecimal number, BigDecimal cost, BigDecimal quantity);
+    
+    public InvDetailDTO calcRowAfterCalcTotal(BigDecimal total, BigDecimal discount, InvDetailDTO detailEntity);
 
     public InvInvoiceDTO updateSummition(InvInvoiceDTO invPurchaseInvoiceDTO,Boolean findCost);
     
@@ -59,7 +63,7 @@ public interface InvGlobalService {
             String itemBarcode, BigDecimal screwing, Integer itemId, BigDecimal weight,
             Integer unitId, Integer unitSerial, String unitName, Integer inventoryItem, BigDecimal number, BigDecimal quantityOfOneUnit,
             InvInventory inventoryDTO, InvItem invItem,
-            CompanyActivityClassEnum companyActivityClassEnum, ScreenNameClassEnum screenNameClassEnum, Integer detailId);
+            CompanyActivityClassEnum companyActivityClassEnum, ScreenNameClassEnum screenNameClassEnum, Integer detailId, BigDecimal costAvarage);
 
     public Date sumDateToDueDate(Date date, Date dueDate, Integer duePeroid);
 

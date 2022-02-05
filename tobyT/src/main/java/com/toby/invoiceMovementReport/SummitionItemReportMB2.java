@@ -8,6 +8,7 @@ import com.toby.views.SummitionItemsView;
 import com.toby.views.Test;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -92,7 +93,7 @@ public class SummitionItemReportMB2 extends Basic {
 
                 } else {
 //                    itemsViewForGallaryinner = invPurchaseInvoiceService_1.findSummitionQuantity(invInventoryDTO.getId(), getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), null, null, null);
-                    itemsViewForGallaryinner = invPurchaseInvoiceService_1.findSummitionQuantity(invInventoryDTO.getId(), getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), null, getProGroupListSelected(),getInvoiceType());
+                    itemsViewForGallaryinner = invPurchaseInvoiceService_1.findSummitionQuantity(invInventoryDTO.getId(), getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), null, getProGroupListSelected(), getInvoiceType());
 
                 }
                 if (itemsViewForGallaryinner != null && !itemsViewForGallaryinner.isEmpty()) {
@@ -120,7 +121,7 @@ public class SummitionItemReportMB2 extends Basic {
                 itemsViewForGallaryinnerForAll = invPurchaseInvoiceService_1.getTheListBasedOnStagesList(null, getDateFrom(), getDateTo(), getUserData().getUserBranch().getId(), getUserData().getUser(), getGallaryListSelected(), getProGroupListSelected());
             } else {
 //                itemsViewForGallaryinnerForAll = invPurchaseInvoiceService_1.findSummitionQuantity(null, getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), getGallaryListSelected(), null, null);
-                itemsViewForGallaryinnerForAll = invPurchaseInvoiceService_1.findSummitionQuantity(null, getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), getGallaryListSelected(), getProGroupListSelected(),getInvoiceType());
+                itemsViewForGallaryinnerForAll = invPurchaseInvoiceService_1.findSummitionQuantity(null, getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getProGroupDTOSelected() == null ? null : getProGroupDTOSelected().getId(), getGallaryListSelected(), getProGroupListSelected(), getInvoiceType());
             }
             if (itemsViewForGallaryinnerForAll != null && !itemsViewForGallaryinnerForAll.isEmpty()) {
                 summitionItemsView = new SummitionItemsView();
@@ -136,9 +137,111 @@ public class SummitionItemReportMB2 extends Basic {
                         test.setCode(view.getCode());
                         test.setName(view.getName());
                     }
-                    test.getTotal().setNumber(view.getNumber());
-                    test.getTotal().setPrice(view.getAllCost());
-                    test.getTotal().setTotalCost(view.getAllAvarageCost());
+                    test.getTotal().setNumber(new BigDecimal(view.getNumber().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
+                    test.getTotal().setPrice(new BigDecimal(view.getAllCost().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
+                    test.getTotal().setTotalCost(new BigDecimal(view.getAllAvarageCost().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
+                    map.put(view.getCode(), test);
+                }
+                getItemsViewList().add(summitionItemsView);
+                getItemsViewList().addAll(itemsViewForGallaryinnerForAll);
+
+            }
+            setList(new ArrayList<Test>(map.values()));
+        }
+
+    }
+
+    public void searchNew() {
+//        List<SummitionItemsView> itemsViewForGallary = null;
+        if (getGallaryListSelected() != null && !getGallaryListSelected().isEmpty()) {
+            itemsViewList = new ArrayList<>();
+            sumFactoryNumberTotal = BigDecimal.ZERO;
+            sumSendNumberTotal = BigDecimal.ZERO;
+            sumDeliveryNumberTotal = BigDecimal.ZERO;
+            sumCustomerNumberTotal = BigDecimal.ZERO;
+            sumDifferentTotal = BigDecimal.ZERO;
+            setSumNumberTotal(BigDecimal.ZERO);
+            setSumAllCostTotal(BigDecimal.ZERO);
+            setSumAllAvarageCost(BigDecimal.ZERO);
+            List<SummitionItemsView> itemsViewForGallaryinner = new ArrayList<>();
+            List<SummitionItemsView> itemsViewForGallaryinnerForAll = new ArrayList<>();
+            SummitionItemsView summitionItemsView = null;
+            HashMap<Integer, Test> map = new HashMap();
+            Test test = new Test();
+            List<Test> listTest = new ArrayList<>();
+            Boolean update = Boolean.TRUE;
+            for (InvInventoryDTO invInventoryDTO : getGallaryListSelected()) {
+                System.out.println(invInventoryDTO.getName());
+                listTest = new ArrayList<>();
+
+                summitionItemsView = new SummitionItemsView();
+
+                summitionItemsView.setName(invInventoryDTO.getName());
+                summitionItemsView.setCode(Integer.parseInt(invInventoryDTO.getCode()));
+                summitionItemsView.setRowType(1);
+
+                BigDecimal totalNotice = BigDecimal.ZERO;
+                BigDecimal totalPersentageNotice = BigDecimal.ZERO;
+                if (getUri().contains("summitionItemReportPro")) {
+//                    itemsViewForGallaryinner = invPurchaseInvoiceService_1.getTheListBasedOnStagesList(invInventoryDTO.getId(), getDateFrom(), getDateTo(), getUserData().getUserBranch().getId(), getUserData().getUser(), null, null);
+                    itemsViewForGallaryinner = invPurchaseInvoiceService_1.getTheListBasedOnStagesList(invInventoryDTO.getId(), getDateFrom(), getDateTo(), getUserData().getUserBranch().getId(), getUserData().getUser(), null, getProGroupListSelected());
+
+                } else {
+                    itemsViewForGallaryinner = invPurchaseInvoiceService_1.findSummitionQuantityNew(invInventoryDTO.getId(), getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), null, getProGroupListSelected(), getInvoiceType(), update);
+                    update = Boolean.FALSE;
+                    totalNotice = invPurchaseInvoiceService_1.findNotice(invInventoryDTO.getId(), getUserData().getUserBranch().getId(), dateFrom, dateTo, getGallaryListSelected());
+                    totalPersentageNotice = invPurchaseInvoiceService_1.findPersentageNotice(invInventoryDTO.getId(), getUserData().getUserBranch().getId(), dateFrom, dateTo, getGallaryListSelected());
+                }
+                if (itemsViewForGallaryinner != null && !itemsViewForGallaryinner.isEmpty()) {
+                    for (SummitionItemsView view : itemsViewForGallaryinner) {
+                        view.setAllCost(new BigDecimal((view.getAllCost().subtract(view.getAllCost().multiply(totalPersentageNotice))).setScale(3, RoundingMode.HALF_UP).toPlainString()));
+                        if (tobAndKhiata) {
+                            if (view.getCode() == 1 || view.getCode() == 2) {
+                                setValueForGallary(summitionItemsView, view);
+                            }
+                        } else {
+                            setValueForGallary(summitionItemsView, view);
+                        }
+                        distributeDate(invInventoryDTO, map, view);
+                    }
+                    getItemsViewList().add(summitionItemsView);
+                    getItemsViewList().addAll(itemsViewForGallaryinner);
+                    setFinalTotals(summitionItemsView);
+                }
+            }
+            BigDecimal totalNotice = BigDecimal.ZERO;
+            BigDecimal totalPersentageNotice = BigDecimal.ZERO;
+            if (getUri().contains("summitionItemReportPro")) {
+//                itemsViewForGallaryinnerForAll = invPurchaseInvoiceService_1.getTheListBasedOnStagesList(null, getDateFrom(), getDateTo(), getUserData().getUserBranch().getId(), getUserData().getUser(), getGallaryListSelected(), null);
+                itemsViewForGallaryinnerForAll = invPurchaseInvoiceService_1.getTheListBasedOnStagesList(null, getDateFrom(), getDateTo(), getUserData().getUserBranch().getId(), getUserData().getUser(), getGallaryListSelected(), getProGroupListSelected());
+            } else {
+                itemsViewForGallaryinnerForAll = invPurchaseInvoiceService_1.findSummitionQuantityNew(null, getUserData().getUserBranch().getId(), getDateFrom(), getDateTo(), getGallaryListSelected(), getProGroupListSelected(), getInvoiceType(), update);
+                totalNotice = invPurchaseInvoiceService_1.findNotice(null, invoiceType, dateFrom, dateTo, getGallaryListSelected());
+                totalPersentageNotice = invPurchaseInvoiceService_1.findPersentageNotice(null, getUserData().getUserBranch().getId(), dateFrom, dateTo, getGallaryListSelected());
+            }
+            if (itemsViewForGallaryinnerForAll != null && !itemsViewForGallaryinnerForAll.isEmpty()) {
+
+                summitionItemsView = new SummitionItemsView();
+                summitionItemsView.setName("إجماليات المعارض");
+                summitionItemsView.setRowType(1);
+                for (SummitionItemsView view : itemsViewForGallaryinnerForAll) {
+                    view.setAllCost(new BigDecimal((view.getAllCost().subtract(view.getAllCost().multiply(totalPersentageNotice))).setScale(3, RoundingMode.HALF_UP).toPlainString()));
+                    if (tobAndKhiata) {
+                        if (view.getCode() == 1 || view.getCode() == 2) {
+                            setValueForGallary(summitionItemsView, view);
+                        }
+                    } else {
+                        setValueForGallary(summitionItemsView, view);
+                    }
+                    test = map.get(view.getCode());
+                    if (test == null) {
+                        test = new Test();
+                        test.setCode(view.getCode());
+                        test.setName(view.getName());
+                    }
+                    test.getTotal().setNumber(new BigDecimal(view.getNumber().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
+                    test.getTotal().setPrice(new BigDecimal(view.getAllCost().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
+                    test.getTotal().setTotalCost(new BigDecimal(view.getAllAvarageCost().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
                     map.put(view.getCode(), test);
                 }
                 getItemsViewList().add(summitionItemsView);
@@ -161,9 +264,9 @@ public class SummitionItemReportMB2 extends Basic {
                 test.setName(view.getName());
             }
 
-            test.getB1().setNumber(view.getNumber());
-            test.getB1().setPrice(view.getAllCost());
-            test.getB1().setTotalCost(view.getAllAvarageCost());
+            test.getB1().setNumber(new BigDecimal(view.getNumber().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
+            test.getB1().setPrice(new BigDecimal(view.getAllCost().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
+            test.getB1().setTotalCost(new BigDecimal(view.getAllAvarageCost().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
             map.put(view.getCode(), test);
         }
         if (invInventoryDTO.getCode() != null && invInventoryDTO.getCode().equals("002")) {
@@ -173,9 +276,9 @@ public class SummitionItemReportMB2 extends Basic {
                 test.setCode(view.getCode());
                 test.setName(view.getName());
             }
-            test.getB2().setNumber(view.getNumber());
-            test.getB2().setPrice(view.getAllCost());
-            test.getB2().setTotalCost(view.getAllAvarageCost());
+            test.getB2().setNumber(new BigDecimal(view.getNumber().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
+            test.getB2().setPrice(new BigDecimal(view.getAllCost().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
+            test.getB2().setTotalCost(new BigDecimal(view.getAllAvarageCost().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
             map.put(view.getCode(), test);
 
         }
@@ -186,9 +289,9 @@ public class SummitionItemReportMB2 extends Basic {
                 test.setCode(view.getCode());
                 test.setName(view.getName());
             }
-            test.getB3().setNumber(view.getNumber());
-            test.getB3().setPrice(view.getAllCost());
-            test.getB3().setTotalCost(view.getAllAvarageCost());
+            test.getB3().setNumber(new BigDecimal(view.getNumber().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
+            test.getB3().setPrice(new BigDecimal(view.getAllCost().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
+            test.getB3().setTotalCost(new BigDecimal(view.getAllAvarageCost().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
             map.put(view.getCode(), test);
 
         }
@@ -199,9 +302,9 @@ public class SummitionItemReportMB2 extends Basic {
                 test.setCode(view.getCode());
                 test.setName(view.getName());
             }
-            test.getB4().setNumber(view.getNumber());
-            test.getB4().setPrice(view.getAllCost());
-            test.getB4().setTotalCost(view.getAllAvarageCost());
+            test.getB4().setNumber(new BigDecimal(view.getNumber().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
+            test.getB4().setPrice(new BigDecimal(view.getAllCost().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
+            test.getB4().setTotalCost(new BigDecimal(view.getAllAvarageCost().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
             map.put(view.getCode(), test);
 
         }
@@ -212,9 +315,9 @@ public class SummitionItemReportMB2 extends Basic {
                 test.setCode(view.getCode());
                 test.setName(view.getName());
             }
-            test.getB5().setNumber(view.getNumber());
-            test.getB5().setPrice(view.getAllCost());
-            test.getB5().setTotalCost(view.getAllAvarageCost());
+            test.getB5().setNumber(new BigDecimal(view.getNumber().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
+            test.getB5().setPrice(new BigDecimal(view.getAllCost().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
+            test.getB5().setTotalCost(new BigDecimal(view.getAllAvarageCost().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
             map.put(view.getCode(), test);
 
         }
@@ -225,9 +328,9 @@ public class SummitionItemReportMB2 extends Basic {
                 test.setCode(view.getCode());
                 test.setName(view.getName());
             }
-            test.getB6().setNumber(view.getNumber());
-            test.getB6().setPrice(view.getAllCost());
-            test.getB6().setTotalCost(view.getAllAvarageCost());
+            test.getB6().setNumber(new BigDecimal(view.getNumber().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
+            test.getB6().setPrice(new BigDecimal(view.getAllCost().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
+            test.getB6().setTotalCost(new BigDecimal(view.getAllAvarageCost().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
             map.put(view.getCode(), test);
 
         }
@@ -238,9 +341,9 @@ public class SummitionItemReportMB2 extends Basic {
                 test.setCode(view.getCode());
                 test.setName(view.getName());
             }
-            test.getB7().setNumber(view.getNumber());
-            test.getB7().setPrice(view.getAllCost());
-            test.getB7().setTotalCost(view.getAllAvarageCost());
+            test.getB7().setNumber(new BigDecimal(view.getNumber().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
+            test.getB7().setPrice(new BigDecimal(view.getAllCost().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
+            test.getB7().setTotalCost(new BigDecimal(view.getAllAvarageCost().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
             map.put(view.getCode(), test);
 
         }
@@ -251,9 +354,9 @@ public class SummitionItemReportMB2 extends Basic {
                 test.setCode(view.getCode());
                 test.setName(view.getName());
             }
-            test.getB8().setNumber(view.getNumber());
-            test.getB8().setPrice(view.getAllCost());
-            test.getB8().setTotalCost(view.getAllAvarageCost());
+            test.getB8().setNumber(new BigDecimal(view.getNumber().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
+            test.getB8().setPrice(new BigDecimal(view.getAllCost().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
+            test.getB8().setTotalCost(new BigDecimal(view.getAllAvarageCost().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
             map.put(view.getCode(), test);
 
         }
@@ -264,9 +367,9 @@ public class SummitionItemReportMB2 extends Basic {
                 test.setCode(view.getCode());
                 test.setName(view.getName());
             }
-            test.getB9().setNumber(view.getNumber());
-            test.getB9().setPrice(view.getAllCost());
-            test.getB9().setTotalCost(view.getAllAvarageCost());
+            test.getB9().setNumber(new BigDecimal(view.getNumber().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
+            test.getB9().setPrice(new BigDecimal(view.getAllCost().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
+            test.getB9().setTotalCost(new BigDecimal(view.getAllAvarageCost().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
             map.put(view.getCode(), test);
 
         }
@@ -277,9 +380,9 @@ public class SummitionItemReportMB2 extends Basic {
                 test.setCode(view.getCode());
                 test.setName(view.getName());
             }
-            test.getB10().setNumber(view.getNumber());
-            test.getB10().setPrice(view.getAllCost());
-            test.getB10().setTotalCost(view.getAllAvarageCost());
+            test.getB10().setNumber(new BigDecimal(view.getNumber().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
+            test.getB10().setPrice(new BigDecimal(view.getAllCost().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
+            test.getB10().setTotalCost(new BigDecimal(view.getAllAvarageCost().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
             map.put(view.getCode(), test);
 
         }
@@ -290,9 +393,9 @@ public class SummitionItemReportMB2 extends Basic {
                 test.setCode(view.getCode());
                 test.setName(view.getName());
             }
-            test.getB11().setNumber(view.getNumber());
-            test.getB11().setPrice(view.getAllCost());
-            test.getB11().setTotalCost(view.getAllAvarageCost());
+            test.getB11().setNumber(new BigDecimal(view.getNumber().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
+            test.getB11().setPrice(new BigDecimal(view.getAllCost().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
+            test.getB11().setTotalCost(new BigDecimal(view.getAllAvarageCost().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
             map.put(view.getCode(), test);
 
         }
@@ -303,9 +406,9 @@ public class SummitionItemReportMB2 extends Basic {
                 test.setCode(view.getCode());
                 test.setName(view.getName());
             }
-            test.getB12().setNumber(view.getNumber());
-            test.getB12().setPrice(view.getAllCost());
-            test.getB12().setTotalCost(view.getAllAvarageCost());
+            test.getB12().setNumber(new BigDecimal(view.getNumber().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
+            test.getB12().setPrice(new BigDecimal(view.getAllCost().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
+            test.getB12().setTotalCost(new BigDecimal(view.getAllAvarageCost().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
             map.put(view.getCode(), test);
 
         }
@@ -316,9 +419,9 @@ public class SummitionItemReportMB2 extends Basic {
                 test.setCode(view.getCode());
                 test.setName(view.getName());
             }
-            test.getB13().setNumber(view.getNumber());
-            test.getB13().setPrice(view.getAllCost());
-            test.getB13().setTotalCost(view.getAllAvarageCost());
+            test.getB13().setNumber(new BigDecimal(view.getNumber().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
+            test.getB13().setPrice(new BigDecimal(view.getAllCost().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
+            test.getB13().setTotalCost(new BigDecimal(view.getAllAvarageCost().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
             map.put(view.getCode(), test);
 
         }
@@ -329,9 +432,9 @@ public class SummitionItemReportMB2 extends Basic {
                 test.setCode(view.getCode());
                 test.setName(view.getName());
             }
-            test.getB14().setNumber(view.getNumber());
-            test.getB14().setPrice(view.getAllCost());
-            test.getB14().setTotalCost(view.getAllAvarageCost());
+            test.getB14().setNumber(new BigDecimal(view.getNumber().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
+            test.getB14().setPrice(new BigDecimal(view.getAllCost().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
+            test.getB14().setTotalCost(new BigDecimal(view.getAllAvarageCost().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
             map.put(view.getCode(), test);
 
         }
@@ -342,9 +445,9 @@ public class SummitionItemReportMB2 extends Basic {
                 test.setCode(view.getCode());
                 test.setName(view.getName());
             }
-            test.getB15().setNumber(view.getNumber());
-            test.getB15().setPrice(view.getAllCost());
-            test.getB15().setTotalCost(view.getAllAvarageCost());
+            test.getB15().setNumber(new BigDecimal(view.getNumber().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
+            test.getB15().setPrice(new BigDecimal(view.getAllCost().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
+            test.getB15().setTotalCost(new BigDecimal(view.getAllAvarageCost().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
             map.put(view.getCode(), test);
 
         }
@@ -355,9 +458,9 @@ public class SummitionItemReportMB2 extends Basic {
                 test.setCode(view.getCode());
                 test.setName(view.getName());
             }
-            test.getB16().setNumber(view.getNumber());
-            test.getB16().setPrice(view.getAllCost());
-            test.getB16().setTotalCost(view.getAllAvarageCost());
+            test.getB16().setNumber(new BigDecimal(view.getNumber().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
+            test.getB16().setPrice(new BigDecimal(view.getAllCost().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
+            test.getB16().setTotalCost(new BigDecimal(view.getAllAvarageCost().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
             map.put(view.getCode(), test);
 
         }
@@ -368,9 +471,9 @@ public class SummitionItemReportMB2 extends Basic {
                 test.setCode(view.getCode());
                 test.setName(view.getName());
             }
-            test.getB17().setNumber(view.getNumber());
-            test.getB17().setPrice(view.getAllCost());
-            test.getB17().setTotalCost(view.getAllAvarageCost());
+            test.getB17().setNumber(new BigDecimal(view.getNumber().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
+            test.getB17().setPrice(new BigDecimal(view.getAllCost().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
+            test.getB17().setTotalCost(new BigDecimal(view.getAllAvarageCost().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
             map.put(view.getCode(), test);
 
         }
@@ -641,6 +744,9 @@ public class SummitionItemReportMB2 extends Basic {
      * @return the sumNumberTotal
      */
     public BigDecimal getSumNumberTotal() {
+        if (sumNumberTotal == null) {
+            sumNumberTotal = BigDecimal.ZERO;
+        }
         return sumNumberTotal;
     }
 
@@ -655,6 +761,9 @@ public class SummitionItemReportMB2 extends Basic {
      * @return the sumAllCostTotal
      */
     public BigDecimal getSumAllCostTotal() {
+        if (sumAllCostTotal == null) {
+            sumAllCostTotal = BigDecimal.ZERO;
+        }
         return sumAllCostTotal;
     }
 
@@ -669,6 +778,9 @@ public class SummitionItemReportMB2 extends Basic {
      * @return the sumAllAvarageCost
      */
     public BigDecimal getSumAllAvarageCost() {
+        if (sumAllAvarageCost == null) {
+            sumAllAvarageCost = BigDecimal.ZERO;
+        }
         return sumAllAvarageCost;
     }
 

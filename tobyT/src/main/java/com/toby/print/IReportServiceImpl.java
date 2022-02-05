@@ -424,7 +424,7 @@ public class IReportServiceImpl implements IReportService {
 
 //            if (invPurchaseInvoiceDTO.getTaxFlagFinal()) {
             hashMap.put("taxCodeText", userData.getUserBranch().getTaxCode());
-            hashMap.put("salesReceiptText", "فاتورة مبيعات ");
+            hashMap.put("salesReceiptText", "فاتورة ضريبية مبسطة ");
 
             hashMap.put("receiptNumberText", "رقم الفاتورة");
 //            } else {

@@ -336,7 +336,7 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
                         entity.getInvItemParentId() == null ? null : entity.getInvItemParentId().getId(),
                         entity.getInvItemParentId() == null ? null : entity.getInvItemParentId().getCode(),
                         entity.getInvItemParentId() == null ? null : entity.getInvItemParentId().getName(),
-                        invInvoiceDTO.getCompanyActivity(), invInvoiceDTO.getScreenName());
+                        invInvoiceDTO.getCompanyActivity(), invInvoiceDTO.getScreenName(),entity.getCostAvarage());
             } else if (Entity.getClass().equals(InvoiceNotLoadedYetProFactoeyProcedure.class)) {
                 InvoiceNotLoadedYetProFactoeyProcedure entity = (InvoiceNotLoadedYetProFactoeyProcedure) Entity;
 
@@ -350,7 +350,7 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
                         entity.getItemBarcode(), null, entity.getItemId(), null,
                         null, null, null, null,
                         entity.getNumber(), null, null, null,
-                        invInvoiceDTO.getCompanyActivity(), invInvoiceDTO.getScreenName(), entity.getDetailId());
+                        invInvoiceDTO.getCompanyActivity(), invInvoiceDTO.getScreenName(), entity.getDetailId(),BigDecimal.ZERO);
 
             }
         } else {
@@ -367,7 +367,7 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
                         entity.getUnitId().getId(), entity.getUnitId().getSerial(), entity.getUnitId().getName(),
                         entity.getItemId().getIsInventoryItem(),
                         entity.getNumber(), entity.getQuantityOfOneUnit(), entity.getInvInventoryId(), entity.getItemId(),
-                        invInvoiceDTO.getCompanyActivity(), invInvoiceDTO.getScreenName(), null);
+                        invInvoiceDTO.getCompanyActivity(), invInvoiceDTO.getScreenName(), null,entity.getCostAvarage());
 //                dTO = invGlobalService.calculateDetailTotalsRow(dTO, invInvoiceDTO, true,false);
 //                dTO.setRealQuantity(dTO.getQuantity().multiply(dTO.getScrewing()));
                 dTO.setDiscountValue(entity.getDiscountValue());
@@ -386,7 +386,7 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
                         entity.getItemBarcode(), entity.getScrewing(), entity.getItemId(), entity.getWeight(),
                         entity.getUnitId(), entity.getUnitSerial(), entity.getUnitName(), entity.getIsInventoryItem(),
                         null, null, null, null,
-                        invInvoiceDTO.getCompanyActivity(), invInvoiceDTO.getScreenName(), null);
+                        invInvoiceDTO.getCompanyActivity(), invInvoiceDTO.getScreenName(), null,entity.getCostAvarage());
 
                 dTO = invGlobalService.calculateDetailTotalsRow(dTO, invInvoiceDTO, true,false);
                 dTO.setRealQuantity(dTO.getQuantity().multiply(dTO.getScrewing()));

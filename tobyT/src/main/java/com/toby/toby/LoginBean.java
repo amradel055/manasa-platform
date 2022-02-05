@@ -180,9 +180,12 @@ public class LoginBean extends Basic implements Serializable {
 //                        return "views/monitoring/monitoringForm?faces-redirect=true";
 //                    }
 //                }
-                InvInventoryDTO gallaryDTOSelect1 = getUserData().getGallaryDTOList().get(0);
-                gallerySettingsService.updateGallarySetting(gallaryDTOSelect1.getId());
 
+//                InvInventoryDTO gallaryDTOSelect1 = getUserData().getGallaryDTOList().get(0);
+//                if (gallaryDTOSelect1.getId() == 79) {
+//                    gallerySettingsService.updateGallarySetting(gallaryDTOSelect1.getId());
+//                }
+                
                 return "dashboard?faces-redirect=true";
 
                 /*   } else {

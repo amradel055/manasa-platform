@@ -53,26 +53,7 @@
                         </div>
                     </div>
 
-                    <div class="ui-g-12 ui-xl-12">
-
-                        <div class="ui-g-6 ui-xl-6">
-                            <p:selectOneMenu    style="width: 38%;" rendered="#{SettlementDeedFormMB.organizationSiteView}"
-                                                id="MACUCode" 
-                                                filter="true" 
-                                                filterMatchMode="startsWith"
-                                                converter="#{SettlementDeedFormMB.bankConverter}"
-                                                value="#{SettlementDeedFormMB.glBankTransactionEntity.glBank}" > 
-
-                                <p:ajax listener="#{SettlementDeedFormMB.updateTransactionRate}" update="form" />
-
-                                <f:selectItem itemLabel="اختر خزنة" itemValue=""/>
-                                <f:selectItems value="#{SettlementDeedFormMB.glBankList}"  
-                                               var="bank"
-                                               itemLabel="#{bank}"
-                                               itemValue="#{bank}"/>
-                            </p:selectOneMenu> 
-                        </div>
-                    </div>
+                   
                     <div class="ui-g-12 ui-xl-12">
 
                         <div class="ui-g-6 ui-xl-6">

@@ -30,11 +30,11 @@ import javax.inject.Named;
 public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
 
     private Boolean checkFactory;
-    
-    private Boolean checkDiscountValue = false ;
-    private Boolean checkDiscountRate = false ;
-   
-    private InvInvoiceDTO invInvoiceDTOSelected ;
+
+    private Boolean checkDiscountValue = false;
+    private Boolean checkDiscountRate = false;
+
+    private InvInvoiceDTO invInvoiceDTOSelected;
 
 // EJBs
     @EJB
@@ -96,15 +96,16 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
                 getInvOrganizationSiteDTOList(Boolean.TRUE, 0).add(0, getInvInvoiceDTO().getOrganizationSiteId());
                 setOrganizationSiteId(getInvInvoiceDTO().getOrganizationSiteId());
                 checkFactoryId();
+                getInvInvoiceDTO().setInvPurchaseInvoiceId(getInvInvoiceDTO().getId());
                 getInvInvoiceDTO().setId(null);
                 getInvInvoiceDTO().setLoadedSerial(getInvInvoiceDTO().getSerial());
                 getInvInvoiceDTO().setSerial(null);
                 getInvInvoiceDTO().setSerialTax(null);
-                for(InvDetailDTO detailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()){
+                for (InvDetailDTO detailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
                     detailDTO.setId(null);
                     detailDTO.setSerial(null);
                 }
-                
+
             } else {
                 exit("../base/error.xhtml");
             }
@@ -112,12 +113,11 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
             saveError(e, "InvPurchaseInvoiceFormMB", "load");
         }
     }
-    
 
     @Override
     public String save() {
         if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getInvPurchaseInvoiceDetailList() != null && !getInvInvoiceDTO().getInvPurchaseInvoiceDetailList().isEmpty()) {
-           Integer id = getInvInvoiceDTO().getId();
+            Integer id = getInvInvoiceDTO().getId();
             getInvInvoiceDTO().setMsg(null);
             checkDetailData();
             setInvInvoiceDTO(invPurchaseInvoiceService.save(getInvInvoiceDTO(), getUserData().getUser()));
@@ -269,8 +269,8 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
 
     public void searchInvoiceBySerial() {
         try {
-            if(getInvInvoiceDTOSelected() != null && getInvInvoiceDTO().getSearchBySerial() == null){
-            getInvInvoiceDTO().setSearchBySerial(getInvInvoiceDTOSelected().getSerial());
+            if (getInvInvoiceDTOSelected() != null && getInvInvoiceDTO().getSearchBySerial() == null) {
+                getInvInvoiceDTO().setSearchBySerial(getInvInvoiceDTOSelected().getSerial());
             }
             if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getSearchBySerial() > 0) {
                 Integer invoiceId = invPurchaseInvoiceService_1.getInvoiceBySerial(getInvInvoiceDTO().getSearchBySerial());
@@ -289,14 +289,25 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
         try {
             if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getSearchBySerial() > 0) {
                 Integer invoiceId = invPurchaseInvoiceService_1.getInvoiceBySerial(getInvInvoiceDTO().getSearchBySerial());
-                ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-                context.getSessionMap().put("invPurchaseInvoiceIdSeclected", invoiceId);
-                context.getSessionMap().put("ScreenMode", "editInvoiceReturn");
-                init();
+                if (getInvInvoiceDTO().getScreenName().equals(ScreenNameClassEnum.PROWORKORDER)) {
+                    findinvoice(invoiceId);
+                } else if (!proFactoryDeliveryService.chechIfSalesInFactory(invoiceId)) {
+                    findinvoice(invoiceId);
+                } else {
+                    FacesContext.getCurrentInstance().addMessage(null,
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "تم استلامها بالمشغل"));
+                }
             }
         } catch (Exception e) {
             saveError(e, "invPurchaseInvoiceFormDTOMB", "searchInvoiceBySerial");
         }
+    }
+
+    private void findinvoice(Integer invoiceId) {
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        context.getSessionMap().put("invPurchaseInvoiceIdSeclected", invoiceId);
+        context.getSessionMap().put("ScreenMode", "editInvoiceReturn");
+        init();
     }
 
     public void checkFactoryId() {
@@ -347,8 +358,6 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
     public void setCheckDiscountRate(Boolean checkDiscountRate) {
         this.checkDiscountRate = checkDiscountRate;
     }
-
- 
 
     /**
      * @return the invInvoiceDTOSelected

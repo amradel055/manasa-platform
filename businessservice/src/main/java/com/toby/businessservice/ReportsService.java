@@ -31,7 +31,7 @@ public interface ReportsService {
 
     public List<SalesReportByValueAded> getSalesReportByValueAded(SalesReportByValueAded salesReportByValueAded, Integer branchId);
 
-    public List<SalesReportByValueAdedDetails> getSalesReportByValueAdedDetails(SalesReportByValueAdedDetails salesReportByValueAdedDetails, Integer branchId);
+    public List<SalesReportByValueAdedDetails> getSalesReportByValueAdedDetails(SalesReportByValueAded salesReportByValueAded, Integer branchId);
 
     public List<CustomerBalances> getCustomerBalances(CustomerBalances customerBalances, Integer branchId);
 

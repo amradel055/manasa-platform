@@ -151,8 +151,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
     private LazyDataModel<InvInvoiceDTO> dataModel;
     private LazyDataModel<InvDailogueData> dataModelInvDailogueData;
-    
-     private InvOrganizationSiteDTO invOrganizationSiteDTOSelected ;
+
+    private InvOrganizationSiteDTO invOrganizationSiteDTOSelected;
 
     //////Cloth/////
     private List<InvItemDTO> invItemDTOParentList;
@@ -160,10 +160,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     private InvInventory invInventorySelection;
     private List<InvInventory> inventoryList;
     private InvInvoiceDTOConverter invInvoiceDTOConverter;
-   private InvInvoiceDTO invoiceDTOSelected ;
-   
-
-   
+    private InvInvoiceDTO invoiceDTOSelected;
 
     // offer test 
     Map<Integer, BigDecimal> groupAndNumberMap = new HashMap<>();
@@ -491,7 +488,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
     public void validatePriceColumn(InvDetailDTO invPurchaseInvoiceDetailsValidate) {
         try {
-            if (getInvInvoiceDTO().getPricetype() != null && getInvInvoiceDTO().getPricetype() == 0 && getInvInvoiceDTO().getId() == null ) {
+            if (getInvInvoiceDTO().getPricetype() != null && getInvInvoiceDTO().getPricetype() == 0 && getInvInvoiceDTO().getId() == null) {
                 if (invPurchaseInvoiceDetailsValidate.getCost().compareTo(invPurchaseInvoiceDetailsValidate.getItemsBarcodesDetail().getMinPriceYoung()) == -1) {
                     invPurchaseInvoiceDetailsValidate.setCost(invPurchaseInvoiceDetailsValidate.getItemsBarcodesDetail().getMinPriceYoung());
                     invPurchaseInvoiceDetailsValidate.setIndexSerial(1);
@@ -501,7 +498,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                     return;
                 }
 
-            } else if (getInvInvoiceDTO().getPricetype() != null && getInvInvoiceDTO().getPricetype() == 1 && getInvInvoiceDTO().getId() == null ) {
+            } else if (getInvInvoiceDTO().getPricetype() != null && getInvInvoiceDTO().getPricetype() == 1 && getInvInvoiceDTO().getId() == null) {
                 if (invPurchaseInvoiceDetailsValidate.getCost().compareTo(invPurchaseInvoiceDetailsValidate.getItemsBarcodesDetail().getMinPriceMen()) == -1) {
                     invPurchaseInvoiceDetailsValidate.setCost(invPurchaseInvoiceDetailsValidate.getItemsBarcodesDetail().getMinPriceMen());
                     invPurchaseInvoiceDetailsValidate.setIndexSerial(1);
@@ -662,6 +659,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                             zeroDiscount();
 //detailDTO.setDiscount(((detailDTO.getCost().subtract(new BigDecimal(386))).divide(detailDTO.getCost(), 3, RoundingMode.HALF_DOWN)).multiply(new BigDecimal(100)));
                         }
+
                     } else if (detailDTO.getItemsBarcodesDetail().getTypeShow() == 2) {
                         if (detailDTO.getItemsBarcodesDetail().getSellPrice().compareTo(BigDecimal.valueOf(20)) != 1) {
                             detailDTO.setCost(new BigDecimal(257.3913043));
@@ -685,14 +683,13 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
     }
 
-    
     public void offer999Les16Les20Only() {
         checkDetailData();
         for (InvDetailDTO detailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
             if (detailDTO.getItemsBarcodesDetail() == null && detailDTO.getItemsBarcodesDetailTrans() != null) {
                 detailDTO.setItemsBarcodesDetail(detailDTO.getItemsBarcodesDetailTrans());
             }
-            
+
             detailDTO.setIndexSerial(1);
 
             if (detailDTO.getItemId() != null
@@ -706,7 +703,12 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                         || detailDTO.getItemId().getProGroupId().getId() == 20
                         || detailDTO.getItemId().getProGroupId().getId() == 22
                         || detailDTO.getItemId().getProGroupId().getId() == 24
-                        || detailDTO.getItemId().getProGroupId().getId() == 25) {
+                        || detailDTO.getItemId().getProGroupId().getId() == 25
+                        || detailDTO.getItemId().getProGroupId().getId() == 27
+                        || detailDTO.getItemId().getProGroupId().getId() == 28
+                        || detailDTO.getItemId().getProGroupId().getId() == 9
+                        || detailDTO.getItemId().getProGroupId().getId() == 21
+                        || detailDTO.getItemId().getProGroupId().getId() == 29) {
                     detailDTO.setDiscount(new BigDecimal(20));
                 } else if (detailDTO.getItemId().getProGroupId().getId() == 1) {
                     if (detailDTO.getItemsBarcodesDetail().getTypeShow() == 1) {
@@ -717,18 +719,147 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                         }
                     } else if (detailDTO.getItemsBarcodesDetail().getTypeShow() == 2) {
                         if (detailDTO.getItemsBarcodesDetail().getSellPrice().compareTo(BigDecimal.valueOf(20)) != 1) {
-                            detailDTO.setCost(new BigDecimal(289.565));
+                            detailDTO.setCost(new BigDecimal(289.565).setScale(3, RoundingMode.UP));
                             detailDTO.setDiscount(BigDecimal.ZERO);
                             zeroDiscount();
                         }
                     }
+                    specialItems(detailDTO);
                 }
-
             }
+            detailDTO.setCostBak(detailDTO.getCost());
+            InvDetailDTO detailDTONew = invGlobalService.calcRowAfterCalcTotal(invGlobalService.calcRowTotal(getInvInvoiceDTO().getScreenName(), detailDTO.getNumber(), detailDTO.getCost(), null), BigDecimal.ZERO, detailDTO);
+            replacedetail(detailDTONew);
+        }
+        updateSummitionSmall();
+    }
+
+    private void specialItems(InvDetailDTO detailDTO) {
+        if (detailDTO.getItemId().getId() != null && (detailDTO.getItemId().getId() == 12371
+                || detailDTO.getItemId().getId() == 12372
+                || detailDTO.getItemId().getId() == 12373
+                || detailDTO.getItemId().getId() == 12374
+                || detailDTO.getItemId().getId() == 12375
+                || detailDTO.getItemId().getId() == 12376
+                || detailDTO.getItemId().getId() == 12377
+                || detailDTO.getItemId().getId() == 12378
+                || detailDTO.getItemId().getId() == 12379
+                || detailDTO.getItemId().getId() == 12380
+                || detailDTO.getItemId().getId() == 12381
+                || detailDTO.getItemId().getId() == 12382
+                || detailDTO.getItemId().getId() == 12383
+                || detailDTO.getItemId().getId() == 12384
+                || detailDTO.getItemId().getId() == 12385
+                || detailDTO.getItemId().getId() == 12386
+                || detailDTO.getItemId().getId() == 12387
+                || detailDTO.getItemId().getId() == 12388
+                || detailDTO.getItemId().getId() == 12389
+                || detailDTO.getItemId().getId() == 12390
+                || detailDTO.getItemId().getId() == 12391
+                || detailDTO.getItemId().getId() == 12392
+                || detailDTO.getItemId().getId() == 12393
+                || detailDTO.getItemId().getId() == 12394
+                || detailDTO.getItemId().getId() == 12395
+                || detailDTO.getItemId().getId() == 12396
+                || detailDTO.getItemId().getId() == 12397
+                || detailDTO.getItemId().getId() == 12398
+                || detailDTO.getItemId().getId() == 12399
+                || detailDTO.getItemId().getId() == 12400
+                || detailDTO.getItemId().getId() == 12413
+                || detailDTO.getItemId().getId() == 12414
+                || detailDTO.getItemId().getId() == 12415
+                || detailDTO.getItemId().getId() == 12416
+                || detailDTO.getItemId().getId() == 12417
+                || detailDTO.getItemId().getId() == 12418
+                || detailDTO.getItemId().getId() == 12419
+                || detailDTO.getItemId().getId() == 12420
+                || detailDTO.getItemId().getId() == 12421
+                || detailDTO.getItemId().getId() == 12422
+                || detailDTO.getItemId().getId() == 12423
+                || detailDTO.getItemId().getId() == 12424
+                || detailDTO.getItemId().getId() == 21306
+                || detailDTO.getItemId().getId() == 21307
+                || detailDTO.getItemId().getId() == 21308
+                || detailDTO.getItemId().getId() == 21309
+                || detailDTO.getItemId().getId() == 21310
+                || detailDTO.getItemId().getId() == 21311
+                || detailDTO.getItemId().getId() == 21312
+                || detailDTO.getItemId().getId() == 21313
+                || detailDTO.getItemId().getId() == 21314
+                || detailDTO.getItemId().getId() == 21315
+                || detailDTO.getItemId().getId() == 21316
+                || detailDTO.getItemId().getId() == 21317
+                || detailDTO.getItemId().getId() == 21318
+                || detailDTO.getItemId().getId() == 21319
+                || detailDTO.getItemId().getId() == 21320
+                || detailDTO.getItemId().getId() == 21321
+                || detailDTO.getItemId().getId() == 21322
+                || detailDTO.getItemId().getId() == 21323
+                || detailDTO.getItemId().getId() == 21324
+                || detailDTO.getItemId().getId() == 21325
+                || detailDTO.getItemId().getId() == 21326
+                || detailDTO.getItemId().getId() == 21327
+                || detailDTO.getItemId().getId() == 21328
+                || detailDTO.getItemId().getId() == 21329
+                || detailDTO.getItemId().getId() == 21336
+                || detailDTO.getItemId().getId() == 21337
+                || detailDTO.getItemId().getId() == 21338
+                || detailDTO.getItemId().getId() == 21339
+                || detailDTO.getItemId().getId() == 21340
+                || detailDTO.getItemId().getId() == 21341
+                || detailDTO.getItemId().getId() == 21342
+                || detailDTO.getItemId().getId() == 21343
+                || detailDTO.getItemId().getId() == 21344
+                || detailDTO.getItemId().getId() == 21345
+                || detailDTO.getItemId().getId() == 21346
+                || detailDTO.getItemId().getId() == 21347
+                || detailDTO.getItemId().getId() == 21697
+                || detailDTO.getItemId().getId() == 21698
+                || detailDTO.getItemId().getId() == 21699
+                || detailDTO.getItemId().getId() == 21700
+                || detailDTO.getItemId().getId() == 21701
+                || detailDTO.getItemId().getId() == 21702
+                || detailDTO.getItemId().getId() == 21958
+                || detailDTO.getItemId().getId() == 21959
+                || detailDTO.getItemId().getId() == 21960
+                || detailDTO.getItemId().getId() == 21961
+                || detailDTO.getItemId().getId() == 21962
+                || detailDTO.getItemId().getId() == 12390
+                || detailDTO.getItemId().getId() == 12391
+                || detailDTO.getItemId().getId() == 12393
+                || detailDTO.getItemId().getId() == 12401
+                || detailDTO.getItemId().getId() == 12403
+                || detailDTO.getItemId().getId() == 12404
+                || detailDTO.getItemId().getId() == 14613
+                || detailDTO.getItemId().getId() == 14616
+                || detailDTO.getItemId().getId() == 14617
+                || detailDTO.getItemId().getId() == 11734
+                || detailDTO.getItemId().getId() == 11735
+                || detailDTO.getItemId().getId() == 11736
+                || detailDTO.getItemId().getId() == 11737
+                || detailDTO.getItemId().getId() == 11738
+                || detailDTO.getItemId().getId() == 11739
+                || detailDTO.getItemId().getId() == 11741
+                || detailDTO.getItemId().getId() == 11823
+                || detailDTO.getItemId().getId() == 11824
+                || detailDTO.getItemId().getId() == 11825
+                || detailDTO.getItemId().getId() == 21330
+                || detailDTO.getItemId().getId() == 21331
+                || detailDTO.getItemId().getId() == 21332
+                || detailDTO.getItemId().getId() == 21333
+                || detailDTO.getItemId().getId() == 21334
+                || detailDTO.getItemId().getId() == 21335
+                || detailDTO.getItemId().getId() == 12288
+                || detailDTO.getItemId().getId() == 12289
+                || detailDTO.getItemId().getId() == 12290
+                || detailDTO.getItemId().getId() == 12291
+                || detailDTO.getItemId().getId() == 12292
+                || detailDTO.getItemId().getId() == 12293)) {
+            detailDTO.setCost(new BigDecimal(289.565).setScale(3, RoundingMode.UP));
+            detailDTO.setDiscount(BigDecimal.ZERO);
+            zeroDiscount();
 
         }
-        updateSummition(false);
-        checkDetailData();
     }
 
     private void zeroDiscount() {
@@ -788,7 +919,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
             }
         }
     }
-    
+
     public void discountOfferForALLQomash(Integer number) {
         for (InvDetailDTO detailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
             if (detailDTO.getItemsBarcodesDetail() == null && detailDTO.getItemsBarcodesDetailTrans() != null) {
@@ -798,8 +929,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
             if (detailDTO.getItemId() != null
                     && detailDTO.getItemId().getProGroupId() != null
                     && detailDTO.getItemId().getProGroupId().getId() == 1
-                    && detailDTO.getItemId().getId() != 22194
-                    //                    && detailDTO.getItemId().getId() != 22560
+                    && detailDTO.getItemId().getId() != 22194 //                    && detailDTO.getItemId().getId() != 22560
                     //                    && detailDTO.getItemId().getId() != 22561
                     //                    && detailDTO.getItemId().getId() != 22563   
                     //                    && detailDTO.getItemId().getId() != 22632
@@ -814,7 +944,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
         checkDetailData();
         updateSummition(false);
-        checkDetailData();
+//        checkDetailData();
 
     }
 
@@ -847,7 +977,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
         checkDetailData();
         updateSummition(false);
-        checkDetailData();
+//        checkDetailData();
 
     }
 
@@ -1059,7 +1189,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
     public void addNewCustomer() {
         getOrganizationSiteId().setGallaryIdDTO(getInvInvoiceDTO().getGallaryId());
-        getInvInvoiceDTO().setOrganizationSiteId(organizationSiteService.addNewCustomer(getOrganizationSiteId(), getInvOrganizationSiteDTOList(true, 0), getUserData().getUser(),getInvInvoiceDTO().getGallaryId().getCustomerAccount().getId()));
+        getInvInvoiceDTO().setOrganizationSiteId(organizationSiteService.addNewCustomer(getOrganizationSiteId(), getInvOrganizationSiteDTOList(true, 0), getUserData().getUser(), getInvInvoiceDTO().getGallaryId().getCustomerAccount().getId()));
         getInvInvoiceDTO().setShowCustomerDate(Boolean.FALSE);
     }
 
@@ -1095,8 +1225,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
             return false;
         }
     }
-    
-      public void search() {
+
+    public void search() {
         Integer type = 0, invInventorySelectionId = null, invGallarySelectionId = null;
         invGallarySelectionId = getGallaryDTOSelect() != null ? getGallaryDTOSelect().getId() : null;
 
@@ -1108,12 +1238,12 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
             type = 2;
         } else if (getUri().contains("invreturnsaleslist")) {
             type = 3;
-        } else if (getUri().contains("proworkorderlist") ||getUri().contains("proworkorderform")) {
+        } else if (getUri().contains("proworkorderlist") || getUri().contains("proworkorderform")) {
             type = 4;
-        }else if (getUri().contains("invpurchaseaddinglist")) {
+        } else if (getUri().contains("invpurchaseaddinglist")) {
             type = 5;
         }
-        setInvInvoiceList(invPurchaseInvoiceService.getALLInvPurchaseInvoiceDTOByTypeAndBranchIdFroGallary2(type, getInvInvoiceDTO().getGallaryId().getId(), getInvOrganizationSiteDTOSelected() == null ? getInvInvoiceDTO().getOrganizationSiteId() == null ? null : getInvInvoiceDTO().getOrganizationSiteId().getId() : getInvOrganizationSiteDTOSelected().getId() ));
+        setInvInvoiceList(invPurchaseInvoiceService.getALLInvPurchaseInvoiceDTOByTypeAndBranchIdFroGallary2(type, getInvInvoiceDTO().getGallaryId().getId(), getInvOrganizationSiteDTOSelected() == null ? getInvInvoiceDTO().getOrganizationSiteId() == null ? null : getInvInvoiceDTO().getOrganizationSiteId().getId() : getInvOrganizationSiteDTOSelected().getId()));
         invInvoiceDTOConverter = new InvInvoiceDTOConverter(invInvoiceList);
     }
 
@@ -1217,7 +1347,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
             getInvInvoiceDTO().getInvPurchaseInvoiceDetailList().remove(invPurchaseInvoiceDetailsValidate);
             updateSummition(false);
-            checkDetailData();
+//            checkDetailData();
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceFormMB", "deleteInvPurchaseInvoiceDetail");
         }
@@ -1263,7 +1393,11 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
     public void updateSummition(Boolean findCost) {
         setInvInvoiceDTO(invGlobalService.updateSummition(getInvInvoiceDTO(), findCost));
-//        setInvInvoiceDTO(invGlobalService.updateSummitionSmall(getInvInvoiceDTO()));
+        calculateRemainValue();
+    }
+
+    public void updateSummitionSmall() {
+        setInvInvoiceDTO(invGlobalService.updateSummitionSmall(getInvInvoiceDTO()));
         calculateRemainValue();
     }
 
@@ -1903,8 +2037,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
      */
     public List<CostCenterDTO> getCostCenterList() {
         if (costCenterList == null) {
-            costCenterList = costCenterService.getActiveSubCostCentersByBranchDTO(getUserData().getUserBranch().getId()); // مراكز التكلفة
-            setCostCenterConverter(new CostCenterDTOConverter(costCenterList));
+//             costCenterList = costCenterService.getActiveSubCostCentersByBranchDTO(getUserData().getUserBranch().getId()); // مراكز التكلفة
+//            setCostCenterConverter(new CostCenterDTOConverter(costCenterList));
         }
         return costCenterList;
     }
@@ -1921,8 +2055,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
      */
     public List<GlAdminUnitDTO> getAdminUnitList() {
         if (adminUnitList == null) {
-            adminUnitList = glAdminUnitService.getAllSubAdminUnitByBranchIdActiveDTO(getUserData().getUserBranch().getId()); // الوحدات الادارية
-            setAdminUnitConverter(new GlAdminUnitDTOConverter(adminUnitList));
+//            adminUnitList = glAdminUnitService.getAllSubAdminUnitByBranchIdActiveDTO(getUserData().getUserBranch().getId()); // الوحدات الادارية
+//            setAdminUnitConverter(new GlAdminUnitDTOConverter(adminUnitList));
         }
         return adminUnitList;
     }
@@ -2776,7 +2910,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     }
 
     /**
-     * @param invOrganizationSiteDTOSelected the invOrganizationSiteDTOSelected to set
+     * @param invOrganizationSiteDTOSelected the invOrganizationSiteDTOSelected
+     * to set
      */
     public void setInvOrganizationSiteDTOSelected(InvOrganizationSiteDTO invOrganizationSiteDTOSelected) {
         this.invOrganizationSiteDTOSelected = invOrganizationSiteDTOSelected;

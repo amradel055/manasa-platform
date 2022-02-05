@@ -3,6 +3,7 @@ package com.toby.reports;
 import com.toby.businessservice.ReportsService;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.toby.Basic;
+import com.toby.views.SalesReportByValueAded;
 import com.toby.views.SalesReportByValueAdedDetails;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ import org.apache.poi.hssf.util.HSSFColor;
 public class SalesReportByValueAdedDetailsReportMB extends Basic {
 
     private List<SalesReportByValueAdedDetails> salesReportByValueAdedDetailsList;
-    private SalesReportByValueAdedDetails salesReportByValueAdedDetails;
+    private SalesReportByValueAded salesReportByValueAdedDetails;
 
     @EJB
     private ReportsService reportsService;
@@ -132,10 +133,10 @@ public class SalesReportByValueAdedDetailsReportMB extends Basic {
     /**
      * @return the salesReportByValueAdedDetails
      */
-    public SalesReportByValueAdedDetails getSalesReportByValueAdedDetails() {
+    public SalesReportByValueAded getSalesReportByValueAdedDetails() {
 
         if (salesReportByValueAdedDetails == null) {
-            salesReportByValueAdedDetails = new SalesReportByValueAdedDetails();
+            salesReportByValueAdedDetails = new SalesReportByValueAded();
         }
         return salesReportByValueAdedDetails;
     }
@@ -144,7 +145,7 @@ public class SalesReportByValueAdedDetailsReportMB extends Basic {
      * @param salesReportByValueAdedDetails the salesReportByValueAdedDetails to
      * set
      */
-    public void setSalesReportByValueAdedDetails(SalesReportByValueAdedDetails salesReportByValueAdedDetails) {
+    public void setSalesReportByValueAdedDetails(SalesReportByValueAded salesReportByValueAdedDetails) {
         this.salesReportByValueAdedDetails = salesReportByValueAdedDetails;
     }
 

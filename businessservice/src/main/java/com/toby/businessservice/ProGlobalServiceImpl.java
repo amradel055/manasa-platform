@@ -616,7 +616,7 @@ public class ProGlobalServiceImpl implements ProGlobalService {
             Integer itemId, String itemBarcode, String itemName, Integer clothNumber,
             Integer unitSerial, String unitName, BigDecimal number,
             Integer idParent, String itemBarcodeParent, String itemNameParent,
-            CompanyActivityClassEnum companyActivityClassEnum, ScreenNameClassEnum screenNameClassEnum) {
+            CompanyActivityClassEnum companyActivityClassEnum, ScreenNameClassEnum screenNameClassEnum,BigDecimal costAvarage) {
 
         if (companyActivityClassEnum.equals(CompanyActivityClassEnum.RetailSaleForClothFactory)
                 && (ScreenNameClassEnum.PROFACTORYDELIVERY.equals(screenNameClassEnum)
@@ -635,6 +635,7 @@ public class ProGlobalServiceImpl implements ProGlobalService {
             dTO.setId(id);
         }
         dTO.setSerial(serial);
+        dTO.setCostAvarage(costAvarage);
         dTO.setItemCode(itemBarcode);
         dTO.setItemName(itemName);
         dTO.setUnitName(unitName);

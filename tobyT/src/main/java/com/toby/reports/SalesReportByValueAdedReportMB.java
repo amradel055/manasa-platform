@@ -5,6 +5,7 @@ import com.toby.dto.InvInventoryDTO;
 import com.toby.toby.Basic;
 import com.toby.views.SalesReportByValueAded;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -36,8 +37,8 @@ public class SalesReportByValueAdedReportMB extends Basic {
     }
 
     public void search() {
-        setSalesReportByValueAdedList(reportsService.getSalesReportByValueAded(salesReportByValueAded, getUserData().getUserBranch().getId()));
-
+//        setSalesReportByValueAdedList(reportsService.getSalesReportByValueAded(salesReportByValueAded, getUserData().getUserBranch().getId()));
+        setSalesReportByValueAdedList(new ArrayList<>());
         if (getGallaryListSelected() != null && !getGallaryListSelected().isEmpty()) {
             for (InvInventoryDTO invInventoryDTO : getGallaryListSelected()) {
                 salesReportByValueAded.setGallerySelected(invInventoryDTO);
@@ -45,9 +46,9 @@ public class SalesReportByValueAdedReportMB extends Basic {
                 getSalesReportByValueAdedList().addAll(list);
             }
         }
-        salesReportByValueAded.setGallerySelected(null);
-        List<SalesReportByValueAded> list = reportsService.getSalesReportByValueAded(salesReportByValueAded, getUserData().getUserBranch().getId());
-        getSalesReportByValueAdedList().addAll(list);
+//        salesReportByValueAded.setGallerySelected(null);
+//        List<SalesReportByValueAded> list = reportsService.getSalesReportByValueAded(salesReportByValueAded, getUserData().getUserBranch().getId());
+//        getSalesReportByValueAdedList().addAll(list);
     }
 
     public void convertDateFrom() {
@@ -106,6 +107,9 @@ public class SalesReportByValueAdedReportMB extends Basic {
     }
 
     public List<SalesReportByValueAded> getSalesReportByValueAdedList() {
+        if (salesReportByValueAdedList == null) {
+            salesReportByValueAdedList = new ArrayList<>();
+        }
         return salesReportByValueAdedList;
     }
 

@@ -128,6 +128,7 @@ public class ImportMB extends Basic implements Serializable {
     private Integer moduleId = 1;
     private Integer level;
     private Integer progress;
+
     public ImportMB() {
     }
 
@@ -652,20 +653,21 @@ public class ImportMB extends Basic implements Serializable {
     public void importCustomer(Sheet sheet) throws NumberFormatException, ParseException {
         InvOrganizationSite item;
 
-        Currency currency = new Currency();
-        List<Currency> currencyList = currencyService.getAllCurrencyByCompanyId(getUserData().getCompany().getId());
-        if (currencyList != null && !currencyList.isEmpty()) {
-            currency = currencyList.get(0);
-        } else {
-            System.out.print("not found currency");
-            return;
-        }
-
+//        Currency currency = new Currency();
+//        List<Currency> currencyList = currencyService.getAllCurrencyByCompanyId(getUserData().getCompany().getId());
+//        if (currencyList != null && !currencyList.isEmpty()) {
+//            currency = currencyList.get(0);
+//        } else {
+//            System.out.print("not found currency");
+//            return;
+//        }
         for (int i = 1; i < sheet.getRows(); i++) {
             if (!sheet.getCell(0, i).getContents().isEmpty()) {
-                item = new InvOrganizationSite();
-                initCustomerData(sheet, i, item, currency);
-                organizationSiteService.addOrganizationSite(item);
+                Cell value = sheet.getCell(0, i);
+                Cell customerCode = sheet.getCell(1, i);
+                Cell gallaryCode = sheet.getCell(2, i);
+                System.out.println(i);
+                organizationSiteService.saveOpenningBalance(new BigDecimal(value.getContents()), customerCode.getContents(), gallaryCode.getContents());
             }
         }
 
@@ -745,10 +747,10 @@ public class ImportMB extends Basic implements Serializable {
         Cell remarks = sheet.getCell(0, i);
         Cell accClass = sheet.getCell(1, i);
         Cell levalAcc = sheet.getCell(2, i);
-        Cell accNumber = sheet.getCell(6, i);
+        Cell shotCode = sheet.getCell(3, i);
         Cell parent = sheet.getCell(4, i);
         Cell name = sheet.getCell(5, i);
-        Cell shotCode = sheet.getCell(3, i);
+        Cell accNumber = sheet.getCell(6, i);
 
         item.setRemarks(remarks.getContents());
         item.setAccNumber(Integer.parseInt(!accNumber.getContents().isEmpty() ? accNumber.getContents() : null));
@@ -1452,6 +1454,24 @@ public class ImportMB extends Basic implements Serializable {
      */
     public void setProgress(Integer progress) {
         this.progress = progress;
+    }
+
+    public void importGlAccountNew(Sheet sheet) throws NumberFormatException {
+        for (int i = 1; i < sheet.getRows(); i++) {
+            if (!sheet.getCell(0, i).getContents().isEmpty()) {
+                String accunt = sheet.getCell(0, i).getContents();
+                String accuntCode = sheet.getCell(1, i).getContents();
+                String accuntLevel = sheet.getCell(2, i).getContents();
+                Integer accNumber = Integer.parseInt(accunt);
+                GlAccount glaccount = glAccountService.findGlAccount(accNumber);
+                glaccount.setAccNumber(Integer.parseInt(accuntCode));
+                glaccount.setShotCode(Integer.parseInt(accuntCode));
+                glaccount.setLevelAcc(Integer.parseInt(accuntLevel));
+                glAccountService.addGlAccount(glaccount);
+            }
+        }
+        OpenDlg("sucesses");
+        System.out.println("تم الحفظ بنجاح");
     }
 
 }

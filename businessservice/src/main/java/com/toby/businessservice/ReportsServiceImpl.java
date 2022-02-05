@@ -49,20 +49,37 @@ public class ReportsServiceImpl implements ReportsService {
     public List<SalesReportByValueAded> getSalesReportByValueAded(SalesReportByValueAded salesReportByValueAded, Integer branchId) {
 
         dao.executeNativeQuery("select toby.sql_mode_function()");
+        dao.executeNativeQuery("select toby.net_after_discount_head()");
         List<SalesReportByValueAded> salesReportByValueAdeds = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
-        sql.append("select sum(s.net) , sum(s.netBeforTax) , s.gallary_name  from ( SELECT \n"
+        sql.append("select sum(s.net) , sum(s.netBeforTax) , s.gallary_name  from ( ");
+        
+        daribaSql(sql, branchId, salesReportByValueAded);
+
+        sql.append(" ) as s group by s.gallary_name ");
+        List<Object[]> res = dao.executeNativeQuery(sql.toString());
+        for (Object[] object : res) {
+            SalesReportByValueAded salesReportByValueAded1 = new SalesReportByValueAded();
+            salesReportByValueAded1.setTotalAfterTax((BigDecimal) object[0]);
+            salesReportByValueAded1.setTotalBeforeTax((BigDecimal) object[1]);
+            salesReportByValueAded1.setGalleryName((String) object[2]);
+            salesReportByValueAdeds.add(salesReportByValueAded1);
+
+        }
+        return salesReportByValueAdeds;
+    }
+
+    private StringBuilder daribaSql(StringBuilder sql, Integer branchId, SalesReportByValueAded salesReportByValueAded) {
+        sql.append(" SELECT \n"
                 + "        `ip`.`serial` AS `serial`, `ip`.`type` AS `type`,`ip`.`date` AS `date`,`inv`.`name` AS `gallary_name`,\n"
                 + "        `ios`.`name` AS `organization_site_name`,`ip`.`discount` AS `head_discount`,\n"
-                + "        IFNULL(NET(IFNULL(SUM(`ipd`.`net`), 0.0),IFNULL(`ip`.`discount_type`, 0.0),IFNULL(`ip`.`discount`, 0.0),\n"
-                + "                        IFNULL(`ip`.`tax_flag`, 0.0),15,IFNULL(`ip`.`disc_halala`, 0.0)),0.0) AS `net`,\n"
-                + "                IFNULL(NET(IFNULL(SUM(`ipd`.`net`), 0.0),IFNULL(`ip`.`discount_type`, 0.0),\n"
-                + "                        IFNULL(`ip`.`discount`, 0.0),IFNULL(`ip`.`tax_flag`, 0.0),0,IFNULL(`ip`.`disc_halala`, 0.0)),0.0) AS `netBeforTax`\n"
+                + "        ( IFNULL(SUM(`ipd`.`net_after_discount_head`), 0.0) * 1.15) AS `net`,\n"
+                + "        IFNULL(SUM(`ipd`.`net_after_discount_head`), 0.0) AS `netBeforTax`\n"
                 + "    FROM\n"
                 + "        `inv_purchase_invoice` `ip` LEFT JOIN `inv_purchase_invoice_detail` `ipd` ON `ip`.`id` = `ipd`.`inv_purchase_invoice_id`\n"
                 + "        LEFT JOIN `inv_inventory` `inv` ON `inv`.`id` = `ip`.`galary_Id` LEFT JOIN `inv_organization_site` `ios` ON `ios`.`id` = `ip`.`organization_site_id`\n"
                 + " ");
-        sql.append("  where  ip.type = 4 and ip.branch_id = ").append(branchId);
+        sql.append("  where  ip.type = 4  AND ip.invoice_type IS NULL and ip.branch_id = ").append(branchId);
         appendGallery(salesReportByValueAded, sql);
         appendDate(salesReportByValueAded, sql);
         sql.append(" GROUP BY `ip`.`id` ");
@@ -71,10 +88,8 @@ public class ReportsServiceImpl implements ReportsService {
         sql.append(" SELECT \n"
                 + "        `ip`.`serial` AS `serial`, `ip`.`type` AS `type`,`ip`.`date` AS `date`,`inv`.`name` AS `gallary_name`,\n"
                 + "        `ios`.`name` AS `organization_site_name`,`ip`.`discount` AS `head_discount`,\n"
-                + "        ((IFNULL(NET(IFNULL(SUM(`ipd`.`net`), 0.0),IFNULL(`ip`.`discount_type`, 0.0),IFNULL(`ip`.`discount`, 0.0),\n"
-                + "                        IFNULL(`ip`.`tax_flag`, 0.0),15,IFNULL(`ip`.`disc_halala`, 0.0)),0.0))*-1) AS `net`,\n"
-                + "                ((IFNULL(NET(IFNULL(SUM(`ipd`.`net`), 0.0),IFNULL(`ip`.`discount_type`, 0.0),\n"
-                + "                        IFNULL(`ip`.`discount`, 0.0),IFNULL(`ip`.`tax_flag`, 0.0),0,IFNULL(`ip`.`disc_halala`, 0.0)),0.0))*-1) AS `netBeforTax`\n"
+                + "        ((IFNULL(SUM(`ipd`.`net_after_discount_head`), 0.0) * 1.15)*-1) AS `net`,\n"
+                + "        (IFNULL(SUM(`ipd`.`net_after_discount_head`), 0.0) *-1)  AS `netBeforTax`\n"
                 + "    FROM\n"
                 + "        `inv_purchase_invoice` `ip` LEFT JOIN `inv_purchase_invoice_detail` `ipd` ON `ip`.`id` = `ipd`.`inv_purchase_invoice_id`\n"
                 + "        LEFT JOIN `inv_inventory` `inv` ON `inv`.`id` = `ip`.`galary_Id` LEFT JOIN `inv_organization_site` `ios` ON `ios`.`id` = `ip`.`organization_site_id`\n"
@@ -98,55 +113,16 @@ public class ReportsServiceImpl implements ReportsService {
         appendGallery(salesReportByValueAded, sql);
         appendDate(salesReportByValueAded, sql);
         sql.append(" GROUP BY `ip`.`id` ");
-
-        sql.append(" ) as s group by s.gallary_name ");
-        List<Object[]> res = dao.executeNativeQuery(sql.toString());
-        for (Object[] object : res) {
-            SalesReportByValueAded salesReportByValueAded1 = new SalesReportByValueAded();
-            salesReportByValueAded1.setTotalAfterTax((BigDecimal) object[0]);
-            salesReportByValueAded1.setTotalBeforeTax((BigDecimal) object[1]);
-            salesReportByValueAded1.setGalleryName((String) object[2]);
-            salesReportByValueAdeds.add(salesReportByValueAded1);
-
-        }
-        return salesReportByValueAdeds;
+        
+        return sql;
     }
 
     @Override
-    public List<SalesReportByValueAdedDetails> getSalesReportByValueAdedDetails(SalesReportByValueAdedDetails salesReportByValueAdedDetails, Integer branchId) {
+    public List<SalesReportByValueAdedDetails> getSalesReportByValueAdedDetails(SalesReportByValueAded salesReportByValueAded, Integer branchId) {
 
         List<SalesReportByValueAdedDetails> salesReportByValueAdeds = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT \n"
-                + "        `ip`.`serial` AS `serial`,\n"
-                + "        `ip`.`type` AS `type`,\n"
-                + "        `ip`.`date` AS `date`,\n"
-                + "        `inv`.`name` AS `gallary_name`,\n"
-                + "        `ios`.`name` AS `organization_site_name`,\n"
-                + "        `ip`.`discount` AS `head_discount`,\n"
-                + "        IFNULL(NET(IFNULL(SUM(`ipd`.`net`), 0.0),\n"
-                + "                        IFNULL(`ip`.`discount_type`, 0.0),\n"
-                + "                        IFNULL(`ip`.`discount`, 0.0),\n"
-                + "                        IFNULL(`ip`.`tax_flag`, 0.0),\n"
-                + "                        15,\n"
-                + "                        IFNULL(`ip`.`disc_halala`, 0.0)),\n"
-                + "                0.0) AS `net`,\n"
-                + "                IFNULL(NET(IFNULL(SUM(`ipd`.`net`), 0.0),\n"
-                + "                        IFNULL(`ip`.`discount_type`, 0.0),\n"
-                + "                        IFNULL(`ip`.`discount`, 0.0),\n"
-                + "                        IFNULL(`ip`.`tax_flag`, 0.0),\n"
-                + "                        0,IFNULL(`ip`.`disc_halala`, 0.0)),\n"
-                + "                0.0) AS `netBeforTax`\n"
-                + "    FROM\n"
-                + "        `inv_purchase_invoice` `ip`\n"
-                + "        LEFT JOIN `inv_purchase_invoice_detail` `ipd` ON `ip`.`id` = `ipd`.`inv_purchase_invoice_id`\n"
-                + "        LEFT JOIN `inv_inventory` `inv` ON `inv`.`id` = `ip`.`galary_Id`\n"
-                + "        LEFT JOIN `inv_organization_site` `ios` ON `ios`.`id` = `ip`.`organization_site_id`\n"
-                + " ");
-        sql.append(" where ip.type = 4 AND  ip.branch_id = ").append(branchId);
-        appendGallery1(salesReportByValueAdedDetails, sql);
-        appendDate1(salesReportByValueAdedDetails, sql);
-        sql.append(" GROUP BY `ip`.`id`");
+        sql = daribaSql(sql, branchId, salesReportByValueAded);
         List<Object[]> res = dao.executeNativeQuery(sql.toString());
         for (Object[] object : res) {
             SalesReportByValueAdedDetails reportByValueAdedDetails = new SalesReportByValueAdedDetails();

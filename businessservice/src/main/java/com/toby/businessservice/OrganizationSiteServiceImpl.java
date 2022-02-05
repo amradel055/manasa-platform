@@ -1502,7 +1502,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
     }
 
     @Override
-    public InvOrganizationSiteDTO addNewCustomer(InvOrganizationSiteDTO invOrganizationSiteDTO, List<InvOrganizationSiteDTO> invOrganizationSiteDTOList, TobyUser tobyUser,Integer accountId) {
+    public InvOrganizationSiteDTO addNewCustomer(InvOrganizationSiteDTO invOrganizationSiteDTO, List<InvOrganizationSiteDTO> invOrganizationSiteDTOList, TobyUser tobyUser, Integer accountId) {
 
         CurrencyDTO currencyDefault = currencyServiceDTO.getDefaultCurrenciesByCompanyId(tobyUser.getCompanyId().getId());
 
@@ -1593,6 +1593,8 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         }
         return mobileMap;
     }
+
+    
 
     @Override
     public String saveOpenningBalance(List<InvOrganizationSiteDTO> invOrganizationSiteDTOList) {
@@ -2422,7 +2424,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             }
         }
         if (invOrganizationSiteDTO != null) {
-           
+
             if ((invOrganizationSiteDTO.getEmail() == null || invOrganizationSiteDTO.getEmail().isEmpty())) {
                 error.append("\nيجب تسجيل بيان للاتصال ");
             }
@@ -2440,17 +2442,17 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
                     }
                 });
             }
-            validateSmallSaveLead(error , invOrganizationSiteDTO , tobyUser );
+            validateSmallSaveLead(error, invOrganizationSiteDTO, tobyUser);
         } else {
             error.append("لا يوجد تفاصيل");
         }
 
         return (error == null || error.toString().isEmpty()) ? null : error.toString();
     }
-    
-     @Override
-    public String validateSmallSaveLead(StringBuilder error , InvOrganizationSiteDTO invOrganizationSiteDTO, TobyUser tobyUser) {
-     
+
+    @Override
+    public String validateSmallSaveLead(StringBuilder error, InvOrganizationSiteDTO invOrganizationSiteDTO, TobyUser tobyUser) {
+
         if (invOrganizationSiteDTO != null) {
             if (invOrganizationSiteDTO.getName() == null || invOrganizationSiteDTO.getName().isEmpty()) {
                 error.append("\n يجب تسجيل اسم العميل");
@@ -2458,19 +2460,19 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             if ((invOrganizationSiteDTO.getMobile() == null || invOrganizationSiteDTO.getMobile().isEmpty())) {
                 error.append("\nيجب تسجيل بيان للاتصال ");
             }
-         
+
         } else {
             error.append("لا يوجد تفاصيل");
         }
 
         return (error == null || error.toString().isEmpty()) ? null : error.toString();
     }
-    
-      @Override
+
+    @Override
     public synchronized InvOrganizationSiteDTO saveSmallLead(InvOrganizationSiteDTO invOrganizationSiteDTO, TobyUser tobyUser) {
         try {
-            StringBuilder error = new StringBuilder();     
-            validateSmallSaveLead(error ,invOrganizationSiteDTO, tobyUser);
+            StringBuilder error = new StringBuilder();
+            validateSmallSaveLead(error, invOrganizationSiteDTO, tobyUser);
             if (error.toString().isEmpty()) {
                 InvOrganizationSite invOrganizationSite;
                 if (invOrganizationSiteDTO != null && (invOrganizationSiteDTO.getMsg() == null || invOrganizationSiteDTO.getMsg().isEmpty())) {
@@ -2698,4 +2700,24 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         return chartDTO;
     }
 
+    @Override
+    public void saveOpenningBalance(BigDecimal value, String customerCode, String gallaryCode) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", 182);
+        params.put("code", customerCode);
+        params.put("gallaryCode", gallaryCode);
+        List<InvOrganizationSite> list = dao.findListByQuery("SELECT e FROM InvOrganizationSite e WHERE e.branchId.id = :branchId and e.code = :code and e.gallaryId.code = :gallaryCode ", params);
+        if (list != null && !list.isEmpty()) {
+            InvOrganizationSite entity = list.get(0);
+            if (value.compareTo(BigDecimal.ZERO) == 1) {
+                entity.setOpenBalanceDebit(value);
+            } else {
+                entity.setOpenBalanceCredit(value.multiply(new BigDecimal(-1)));
+            }
+            System.out.println(list.size() + " -> " + customerCode + " -> " + value);
+            entity.setOpenBalanceDate(new Date());
+            dao.saveEntity(entity);
+        }
+
+    }
 }

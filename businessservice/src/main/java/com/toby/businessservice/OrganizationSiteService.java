@@ -12,6 +12,7 @@ import com.toby.dto.ChartDTO;
 import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.entity.InvOrganizationSite;
 import com.toby.entity.TobyUser;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -214,5 +215,7 @@ public interface OrganizationSiteService {
     public String validateSmallSaveLead(StringBuilder error , InvOrganizationSiteDTO invOrganizationSiteDTO, TobyUser tobyUser);
     
     public InvOrganizationSiteDTO saveSmallLead(InvOrganizationSiteDTO invOrganizationSiteDTO, TobyUser tobyUser);
+    
+    public void saveOpenningBalance(BigDecimal value, String customerCode, String gallaryCode);
 
 }

@@ -132,5 +132,14 @@ public interface InvPurchaseInvoiceService_1 {
     public List<GeneralJournalDTO> tarhilOne(TobyUser tobyUser) throws CloneNotSupportedException ;
     
     public List<InvInvoiceDTO> getALLInvPurchaseInvoiceDTOByStatusNew(PrintProductionDTO printProductionDTO, Integer branchId  ,String gallarySelected );
+    
+    public BigDecimal findNotice(Integer gallaryId,Integer branchId, Date dateFrom, Date dateTo, List<InvInventoryDTO> invInventoryDTOs);
+    
+    public BigDecimal findPersentageNotice(Integer gallaryId, Integer branchId, Date dateFrom, Date dateTo, List<InvInventoryDTO> invInventoryDTOs);
+    
+    public List<SummitionItemsView> findSummitionQuantityNew(Integer gallaryId,Integer branchId, Date dateFrom, Date dateTo, 
+            List<InvInventoryDTO> invInventoryDTOs, List<ProGroupDTO> proGroupListSelected, Integer invoiceType, Boolean update);
+    
+    public Boolean chechIfinvoiceIsReturn(Integer serial);
 
 }

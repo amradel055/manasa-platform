@@ -61,9 +61,10 @@ public class ClientsByInvInventoryReport extends Basic {
     public boolean validateSearch() {
         if (getInvInventory().getGallaryListSelected().isEmpty()) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "يجب اختيار المعرض "));
-        } else if (getInvInventory().getOfferCompanyListSelected().isEmpty()) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "يجب اختيار الشركه "));
-        } else {
+        } //        else if (getInvInventory().getOfferCompanyListSelected().isEmpty()) {
+        //            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "يجب اختيار الشركه "));
+        //        } 
+        else {
             return true;
         }
         return false;

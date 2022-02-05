@@ -89,7 +89,12 @@ public class GeneraljournalServiceImpl implements GeneraljournalService {
             }
         }
         if (max == null) {
-            max = 0;
+            if (type != null && type == 0){
+                max = 0;
+            }else{
+                max = 100000;
+            }
+            
         }
 
         if (generalJournal.getId() == null) {

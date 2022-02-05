@@ -174,8 +174,9 @@ public class GallerySettingsServiceImpl implements GallerySettingsService {
     }
 
     @Override
-    public void updateGallarySetting(Integer gallaryId) {
+    public Integer updateGallarySetting(Integer gallaryId) {
 
+        int deliveryDays = 16;
         Map<String, Object> params = new HashMap<>();
         params.put("galleryId", gallaryId);
         List<GallerySettings> gallerySettingsList = dao.findListByQuery("SELECT e FROM GallerySettings e WHERE e.galleryId.id =:galleryId", params);
@@ -186,32 +187,32 @@ public class GallerySettingsServiceImpl implements GallerySettingsService {
             builder.append("select (((select sum(s.number) from (SELECT  sum(pfdd.number) as number FROM pro_factory_delivery_detail pfdd  \n"
                     + "left join pro_factory_delivery pfd on pfdd.pro_factory_delivery_id = pfd.id \n"
                     + "left join inv_item ii on ii.id = pfdd.item_Id\n"
-                    + "WHERE pfd.type = 0   AND ii.pro_group_id in (1,4)  group by ii.pro_group_id\n"
+                    + "WHERE pfd.type = 0   AND ii.pro_group_id in (1,5)  \n"
                     + "union all\n"
                     + "SELECT  sum(pfdd.number) * -1 as number FROM pro_factory_delivery_detail pfdd  \n"
                     + "left join pro_factory_delivery pfd on pfdd.pro_factory_delivery_id = pfd.id \n"
                     + "left join inv_item ii on ii.id = pfdd.item_Id\n"
-                    + "WHERE pfd.type = 1   AND ii.pro_group_id in (1,4)  group by ii.pro_group_id\n"
+                    + "WHERE pfd.type = 1   AND ii.pro_group_id in (1,5)  \n"
                     + "\n"
                     + "union all\n"
                     + " SELECT  count(s.id)  as number\n"
-                    + " FROM inv_purchase_invoice s  WHERE s.branch_id = 182 AND  s.type = 4 AND s.id not in (SELECT p.inv_purchase_invoice_id from pro_factory_delivery p )  \n"
-                    + " AND   s.date >= '" + formatDateFrom.format(Utility.sumDateAndNumer(new Date(), -1)) + "' AND   s.date <= '" + formatDateTo.format(Utility.sumDateAndNumer(new Date(), -1)) + "' ) as s) / ( SELECT count(s.id)\n"
-                    + " FROM pro_factory_delivery s \n"
-                    + " left join inv_purchase_invoice ipi on ipi.id = s.inv_purchase_invoice_id \n"
-                    + " WHERE   s.branch_id = 182\n"
-                    + " AND s.type = 1 AND s.inv_purchase_invoice_id not in (\n"
-                    + " select p.inv_purchase_invoice_id FROM pro_factory_delivery p WHERE   p.branch_id = 182 AND p.type = 2 ) \n"
-                    + " AND   s.date >=  '" + formatDateFrom.format(Utility.sumDateAndNumer(new Date(), -1)) + "'  AND   s.date <=   '" + formatDateTo.format(Utility.sumDateAndNumer(new Date(), -1)) + "' )) + 3) as days");
+                    + " FROM inv_purchase_invoice s   left join  inv_purchase_invoice_detail sd on s.id = sd.inv_purchase_invoice_id \n"
+                    + " left join inv_item ii on ii.id = sd.item_id "
+                    + " WHERE s.branch_id = 182 AND  s.type = 4 AND s.id not in (SELECT p.inv_purchase_invoice_id from pro_factory_delivery p )  \n"
+                    + " AND  ( ii.pro_group_id = 1 or ii.pro_group_id = 5 ) ) as s) / (SELECT  sum(pfdd.number) as number FROM pro_factory_delivery_detail pfdd  \n"
+                    + "left join pro_factory_delivery pfd on pfdd.pro_factory_delivery_id = pfd.id \n"
+                    + "left join inv_item ii on ii.id = pfdd.item_Id\n"
+                    + "WHERE pfd.type = 1   AND ii.pro_group_id in (1,5) \n"
+                    + " AND   pfd.date >=  '" + formatDateFrom.format(Utility.sumDateAndNumer(new Date(), -1)) + "'  AND   pfd.date <=   '" + formatDateTo.format(Utility.sumDateAndNumer(new Date(), -1)) + "' )) + 6) as days");
             List<BigDecimal> details = dao.executeNativeQuery(builder.toString());
-            int deliveryDays = 20;
+            
             if (details != null && !details.isEmpty()) {
                 if (details.get(0) != null) {
                     deliveryDays = details.get(0).intValue();
-                    if (gallaryId == 1 || gallaryId == 2) {
-                        deliveryDays = deliveryDays + 1;
-                    } else if (gallaryId == 3) {
+                    if (gallaryId == 87 || gallaryId == 73) {
                         deliveryDays = deliveryDays + 2;
+                    } else if (gallaryId == 81) {
+                        deliveryDays = deliveryDays + 1;
                     }
                 }
             }
@@ -221,7 +222,7 @@ public class GallerySettingsServiceImpl implements GallerySettingsService {
 
             dao.updateEntity(entity);
         }
-
+        return deliveryDays;
     }
 
 }

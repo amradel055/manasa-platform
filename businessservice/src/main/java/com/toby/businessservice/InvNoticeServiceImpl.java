@@ -6,13 +6,21 @@
 package com.toby.businessservice;
 
 import com.toby.core.GenericDAO;
+import com.toby.define.ScreenNameClassEnum;
 import com.toby.dto.GeneralJournalDTO;
 import com.toby.dto.GlAccountDTO;
+import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.InvNoticeDTO;
+import com.toby.dto.TarhilInvoiceDetail;
+import com.toby.entity.GeneralJournal;
 import com.toby.entity.InvNotice;
+import com.toby.entity.TobyUser;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.EJB;
@@ -31,6 +39,10 @@ public class InvNoticeServiceImpl implements InvNoticeService {
     GenericService genericService;
     @EJB
     OrganizationSiteService organizationSiteService;
+    @EJB
+    private GeneraljournalService generaljournalService;
+    @EJB
+    private GeneraljournalDetailsService generaljournalDetailsService;
 
     @Override
     public void deleteInvNotice(InvNotice invNotice) {
@@ -161,15 +173,30 @@ public class InvNoticeServiceImpl implements InvNoticeService {
     }
 
     @Override
-    public InvNotice addInvNotice(InvNotice invNotice) {
+    public InvNotice addInvNotice(InvNotice invNotice, TobyUser tobyUser, Integer yearSelection) {
         String error = null;
         try {
             if (invNotice.getId() == null) {
                 invNotice.setSerial(getMaxGenericSerialByType(InvNotice.class, invNotice.getBranchId().getId(), invNotice.getType()));
-                return dao.updateEntity(invNotice);
+
             } else {
-                return dao.updateEntity(invNotice);
+                Integer tarhilIdOld = invNotice.getGeneralJournalId() == null ? null : invNotice.getGeneralJournalId().getId();
+                invNotice.setPostFlag(0);
+                invNotice.setGeneralJournalId(null);
+                invNotice = dao.updateEntity(invNotice);
+                if (tarhilIdOld != null) {
+                    generaljournalService.deleteGeneralJournal(tarhilIdOld);
+                }
             }
+            ///   الترحيل
+            GeneralJournal generalJournal = tarhil(invNotice, tobyUser, yearSelection);
+            if (generalJournal != null) {
+                invNotice.setPostFlag(1);
+                invNotice.setGeneralJournalId(generalJournal);
+                dao.updateEntity(invNotice);
+            }
+
+            return invNotice;
         } catch (Exception e) {
 //            e.printStackTrace();
             error = "هذا الشيت تم ادخاله من قبل";
@@ -216,28 +243,28 @@ public class InvNoticeServiceImpl implements InvNoticeService {
 
         return dao.updateEntity(invNoticeReq);
     }
-    
+
     @Override
-    public List<InvNoticeDTO> getInvNoticeListDTO(Integer branchId, Integer type,Date dateFrom,
-            Date dateTo,Integer noticeFrom,Integer noticeTo) {
+    public List<InvNoticeDTO> getInvNoticeListDTO(Integer branchId, Integer type, Date dateFrom,
+            Date dateTo, Integer noticeFrom, Integer noticeTo) {
         Map<String, Object> params = new HashMap<>();
         StringBuilder query = new StringBuilder();
         query.append("SELECT i FROM InvNotice i WHERE i.branchId.id = :branchId AND i.type = :type");
         params.put("branchId", branchId);
         params.put("type", type);
-        if(dateFrom != null){
+        if (dateFrom != null) {
             params.put("dateFrom", dateFrom);
             query.append(" AND i.date >=:dateFrom ");
         }
-        if(dateTo != null){
+        if (dateTo != null) {
             params.put("dateTo", dateTo);
             query.append(" AND i.date <= :dateTo ");
         }
-        if(noticeFrom != null){
+        if (noticeFrom != null) {
             params.put("noticeFrom", noticeFrom);
             query.append(" AND i.serial >= :noticeFrom ");
         }
-        if(noticeTo != null){
+        if (noticeTo != null) {
             params.put("noticeTo", noticeTo);
             query.append(" AND i.serial <= :noticeTo ");
         }
@@ -246,4 +273,37 @@ public class InvNoticeServiceImpl implements InvNoticeService {
 
         return returnDTOList(invNoticeList);
     }
+
+    public GeneralJournal tarhil(InvNotice dto, TobyUser tobyUser, Integer yearSelection) throws CloneNotSupportedException {
+        dao.executeNativeQuery("select toby.sql_mode_function()");
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", tobyUser.getBranchId().getId());
+        GeneralJournal journal = null;
+        StringBuilder remark = new StringBuilder();
+        remark.append("اشعار الخصم");
+        remark.append(dto.getOrganizationSiteId().getName());
+        if (dto.getInvInventory() != null && dto.getInvInventory().getCostCenterId() != null && dto.getInvInventory().getCostCenterId().getId() != null) {
+            // ادخال مردود المبيعات
+            journal = generaljournalService.addGeneralJournalGlobal(yearSelection, 1031, dto.getSerial(), dto.getDate(), remark.toString(), tobyUser, 0, true);
+
+            Integer salesTaxAccount = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"SALES_TAX_ACCOUNT\" AND a.accountId IS NOT NULL", params);
+            Integer DISCOUNT_TAX_ACCOUNT = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"DISCOUNT_TAX_ACCOUNT\" AND a.accountId IS NOT NULL", params);
+            // حساب القيمة المضافة 
+            generaljournalDetailsService.addGenDetalil(false, dto.getValue(), journal.getId(),
+                    (dto.getOrganizationSiteId() == null || dto.getOrganizationSiteId().getAccountId() == null || dto.getOrganizationSiteId().getAccountId().getId() == null) ? null : dto.getOrganizationSiteId().getAccountId().getId(),
+                    (dto.getInvInventory() == null || dto.getInvInventory().getCostCenterId() == null || dto.getInvInventory().getCostCenterId().getId() == null) ? null : dto.getInvInventory().getCostCenterId().getId(),
+                    remark.toString(), tobyUser);
+//  حساب المبيعات
+//            Integer salesAccountNumber = (Integer) dao.findEntityByQuery("SELECT a.accountId.id FROM GlAnalyticsAccounts a where a.branchId.id =  :branchId AND a.code = \"SALES_ACCOUNT_NUMBER\" AND a.accountId IS NOT NULL", params);
+            generaljournalDetailsService.addGenDetalil(true, dto.getValue().multiply(new BigDecimal(0.85)), journal.getId(), DISCOUNT_TAX_ACCOUNT,
+                    (dto.getInvInventory() == null || dto.getInvInventory().getCostCenterId() == null || dto.getInvInventory().getCostCenterId().getId() == null) ? null : dto.getInvInventory().getCostCenterId().getId(),
+                    remark.toString(), tobyUser);
+            generaljournalDetailsService.addGenDetalil(true, dto.getValue().multiply(new BigDecimal(0.15)), journal.getId(), salesTaxAccount,
+                    (dto.getInvInventory() == null || dto.getInvInventory().getCostCenterId() == null || dto.getInvInventory().getCostCenterId().getId() == null) ? null : dto.getInvInventory().getCostCenterId().getId(),
+                    remark.toString(), tobyUser);
+
+        }
+        return journal == null ? null : journal;
+    }
+
 }

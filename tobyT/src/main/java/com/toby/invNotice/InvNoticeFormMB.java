@@ -16,7 +16,9 @@ import com.toby.converter.GlaccountConverter;
 import com.toby.converter.SymbolDTOConverter;
 import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.dto.SymbolDTO;
+import com.toby.entity.CostCenter;
 import com.toby.entity.GlAccount;
+import com.toby.entity.InvInventory;
 import com.toby.entity.InvNotice;
 import com.toby.entity.InvOrganizationSite;
 import com.toby.entity.InvPurchaseInvoice;
@@ -111,7 +113,7 @@ public class InvNoticeFormMB extends BaseFormBean {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }else if(getScreenMode() != null && getScreenMode().equalsIgnoreCase("addClientFromInvoice")){
+            } else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("addClientFromInvoice")) {
                 resetInvNoticeData();
                 setDataFromInvoice();
             }
@@ -167,6 +169,15 @@ public class InvNoticeFormMB extends BaseFormBean {
                 invNotice.setInvInvoice(invPurchaseInvoice);
             }
 
+            if (getGallaryDTOSelect() != null) {
+                InvInventory invInventory = new InvInventory();
+                invInventory.setId(getGallaryDTOSelect().getId());
+                CostCenter costCenter = new CostCenter();
+                costCenter.setId(getGallaryDTOSelect().getCostCenterId().getId());
+                invInventory.setCostCenterId(costCenter);
+                invNotice.setInvInventory(invInventory);
+            }
+
             if (invNoticeEntity.getType() != null) {
                 invNotice.setType(invNoticeEntity.getType());
             } else {
@@ -177,6 +188,10 @@ public class InvNoticeFormMB extends BaseFormBean {
             if (invNoticeEntity.getOrganizationSiteId() != null) {
                 InvOrganizationSite invOrganizationSite = new InvOrganizationSite();
                 invOrganizationSite.setId(invNoticeEntity.getOrganizationSiteId().getId());
+                invOrganizationSite.setName(invNoticeEntity.getOrganizationSiteId().getName());
+                GlAccount glAccount = new GlAccount();
+                glAccount.setId(invNoticeEntity.getOrganizationSiteId().getAccountId().getId());
+                invOrganizationSite.setAccountId(glAccount);
                 invNotice.setOrganizationSiteId(invOrganizationSite);
             } else {
                 errorMessage("يجب اختيار جهة التعامل");
@@ -187,7 +202,7 @@ public class InvNoticeFormMB extends BaseFormBean {
 
             Map<String, String> userDDs = getUserData().getUserDDs();
             try {
-                invNotice = invNoticeService.addInvNotice(invNotice);
+                invNotice = invNoticeService.addInvNotice(invNotice,getUserData().getUser(),getUserData().getGlYear().getId());
                 invNoticeEntity.setId(invNotice.getId());
                 invNoticeEntity.setSerial(invNotice.getSerial());
                 if (invNotice.getInvInvoice() != null) {
@@ -531,7 +546,7 @@ public class InvNoticeFormMB extends BaseFormBean {
      * @return the fromInvoice
      */
     public Boolean getFromInvoice() {
-        if(fromInvoice == null){
+        if (fromInvoice == null) {
             fromInvoice = Boolean.FALSE;
         }
         return fromInvoice;

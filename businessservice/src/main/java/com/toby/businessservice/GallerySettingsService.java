@@ -33,5 +33,5 @@ public interface GallerySettingsService {
 
     public String getNoticeByCustomerId(Integer id);
     
-    public void updateGallarySetting(Integer gallaryId);
+    public Integer updateGallarySetting(Integer gallaryId);
 }

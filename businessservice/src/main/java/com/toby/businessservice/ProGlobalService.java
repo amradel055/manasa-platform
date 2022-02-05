@@ -57,7 +57,7 @@ public interface ProGlobalService {
             Integer index, Date createdDate, Integer createdBy,
             Integer itemId,String itemBarcode, String itemName, Integer clothNumber,
             Integer unitSerial, String unitName, BigDecimal number, Integer idParent,String itemBarcodeParent, String itemNameParent,
-            CompanyActivityClassEnum companyActivityClassEnum, ScreenNameClassEnum screenNameClassEnum);
+            CompanyActivityClassEnum companyActivityClassEnum, ScreenNameClassEnum screenNameClassEnum,BigDecimal costAvarage);
 
     public Date sumDateToDueDate(Date date, Date dueDate, Integer duePeroid);
 

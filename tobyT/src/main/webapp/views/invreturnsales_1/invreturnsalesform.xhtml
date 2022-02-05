@@ -34,6 +34,15 @@
                                     <p:outputLabel for="searchBySerial" style="width: 95px;"  value="بحث برقم الفاتورة" />
                                 </div>
                             </div>
+                            
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel id="statusinvoice"  style="width:100%" value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.invoiceStatus}" />
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel for="statusinvoice" style="width: 95px;"  value="حالة الفاتورة المبيعات" />
+                                </div>
+                            </div>
 
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
@@ -143,50 +152,6 @@
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
                                     <p:outputLabel style="width: 100px;" value="#{userData.userDDs['SALES_REPRE']}"/>
-
-                                </div>
-                            </div>
-                            <div class="ui-g-12 ui-xl-12">
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:autoComplete style="width:37%" 
-                                                    dropdown="true"
-                                                    converter="#{invPurchaseInvoiceFormDTOMB.costCenterConverter}"
-                                                    value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.costCenterId}"
-                                                    disabled="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.loadedSerial  ne null}"
-                                                    var="CostCenter"
-                                                    itemLabel="#{CostCenter}" 
-                                                    itemValue="#{CostCenter}" 
-                                                    forceSelection="true" 
-                                                    completeMethod="#{invPurchaseInvoiceFormDTOMB.completeCostCenters}" 
-                                                    >
-
-
-                                    </p:autoComplete>
-                                </div>
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 100px;" value="#{userData.userDDs['SINGLE_COST_CENTER']}"/>                        
-
-                                </div>
-                            </div>
-                            <div class="ui-g-12 ui-xl-12">
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:autoComplete style="width:36%"
-                                                    dropdown="true" 
-                                                    converter="#{invPurchaseInvoiceFormDTOMB.adminUnitConverter}"
-                                                    value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.adminUnitId}"
-                                                    disabled="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.loadedSerial  ne null}"
-                                                    var="adminUnitId"
-                                                    itemLabel="#{adminUnitId}" 
-                                                    itemValue="#{adminUnitId}" 
-                                                    forceSelection="true" 
-                                                    completeMethod="#{invPurchaseInvoiceFormDTOMB.completeAdminUnits}"
-                                                    >
-
-
-                                    </p:autoComplete>
-                                </div>
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 100px;" value="#{userData.userDDs['ADMIN_UNIT']}"/>
 
                                 </div>
                             </div>
@@ -740,6 +705,13 @@
                                           immediate="true"
                                           action="#{invPurchaseInvoiceFormDTOMB.exit()}" 
                                           update="@form"/>
+                        
+                        <p:commandButton  class="printButtons"
+                                              ajax="false"
+                                              onclick="form.target = '_blank'"  
+                                              value="كشف حساب" 
+                                              title="كشف حساب" 
+                                              actionListener="#{invPurchaseInvoiceFormDTOMB.goTClientacoount}"/>
 
                         <h:commandLink  style="float:left" class="sdcreenimg">  
                             <p:graphicImage name="/img/excel.jpg" width="24" style='margin-right:25%;'/>  

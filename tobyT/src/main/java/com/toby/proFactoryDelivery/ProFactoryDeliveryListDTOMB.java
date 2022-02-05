@@ -29,8 +29,8 @@ import org.primefaces.model.SortOrder;
 public class ProFactoryDeliveryListDTOMB extends InventoryBasicDataForm {
 
     private InvInvoiceDTO invInvoiceDTOSelected;
-    private Integer serialSelected ;
-    private List<InvInvoiceDTO> invInvoiceDTOList ;
+    private Integer serialSelected;
+    private List<InvInvoiceDTO> invInvoiceDTOList;
     @EJB
     private ProFactoryDeliveryService factoryDeliveryService;
 
@@ -68,13 +68,21 @@ public class ProFactoryDeliveryListDTOMB extends InventoryBasicDataForm {
             saveError(e, "invAddingOrderListMB", "load");
         }
     }
-    
-    public void search(){
-      if (serialSelected != null){
-      invInvoiceDTOList = factoryDeliveryService.getALLProFactoryDeliveryDTOByBranchIdAndSerial(getUserData().getUserBranch().getId(), serialSelected);
-      }else {
-      FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR !", "يرجي ادخال رقم الفاتورة"));
-      }
+
+    public void search() {
+        if (serialSelected != null) {
+            Integer type = 0;
+            if (getUri().contains("profactorydeviveryList")) {
+                type = 0;
+            } else if (getUri().contains("proSendToGallary")) {
+                type = 1;
+            } else if (getUri().contains("proRecieveGallary")) {
+                type = 2;
+            }
+            invInvoiceDTOList = factoryDeliveryService.getALLProFactoryDeliveryDTOByBranchIdAndSerial(getUserData().getUserBranch().getId(), serialSelected, type);
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR !", "يرجي ادخال رقم الفاتورة"));
+        }
     }
 
     public String goToAdd() {
@@ -198,5 +206,4 @@ public class ProFactoryDeliveryListDTOMB extends InventoryBasicDataForm {
         this.invInvoiceDTOList = invInvoiceDTOList;
     }
 
-  
 }

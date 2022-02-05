@@ -5,8 +5,8 @@
  */
 package com.toby.toby;
 
-import com.toby.businessservice.TobyUserInventoryService;
 import com.toby.businessservice.InvDialogueService;
+import com.toby.businessservice.InvPurchaseInvoiceService_1;
 import com.toby.businessservice.ProFactoryDeliveryDetailService;
 import com.toby.businessservice.ProFactoryDeliveryService;
 import com.toby.businessservice.ReportManagementService;
@@ -52,7 +52,7 @@ public abstract class ProductionBasicDataForm extends BaseFormBean {
     @EJB
     AutoCompleteService autoCompleteService;
     @EJB
-    private TobyUserInventoryService tobyUserInventoryService;
+    private InvPurchaseInvoiceService_1 invPurchaseInvoiceService_1;
     @EJB
     private ProFactoryDeliveryService proFactoryDeliveryService;
     @EJB
@@ -166,6 +166,15 @@ public abstract class ProductionBasicDataForm extends BaseFormBean {
             
         });
         OpenDlg("loaddlg");
+    }
+    
+    public void loadInvoice(){
+        if(invPurchaseInvoiceService_1.chechIfinvoiceIsReturn(getInvInvoiceDTO().getLoadedSerial())){
+            loadDlg();
+        }else{
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "تم عمل مردود للفاتورة "));
+        }
     }
     
     public void loadDlg() {

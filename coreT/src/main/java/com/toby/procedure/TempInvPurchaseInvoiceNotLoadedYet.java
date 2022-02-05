@@ -66,6 +66,8 @@ public class TempInvPurchaseInvoiceNotLoadedYet implements Serializable {
     private BigDecimal net;    
     @Column(name = "is_inventory_item")
     private Integer isInventoryItem;
+    @Column(name = "cost_avarage")
+    private BigDecimal costAvarage;
 
     /**
      * @return the itemId
@@ -289,6 +291,20 @@ public class TempInvPurchaseInvoiceNotLoadedYet implements Serializable {
      */
     public void setNumber(BigDecimal number) {
         this.number = number;
+    }
+
+    /**
+     * @return the costAvarage
+     */
+    public BigDecimal getCostAvarage() {
+        return costAvarage;
+    }
+
+    /**
+     * @param costAvarage the costAvarage to set
+     */
+    public void setCostAvarage(BigDecimal costAvarage) {
+        this.costAvarage = costAvarage;
     }
 
     

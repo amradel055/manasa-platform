@@ -579,11 +579,11 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
                     glBankTransactionDetailEntitySelected.setAccountDebitId(glBankTransactionDetailEntitySelected.getInvOrganizationSite().getAccountId().getId());
                 }
                 
-                if (glBankTransactionEntity.getGlBank() == null) {
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب اختيار الخزنة"));
-                } else {
-                    glBankTransactionDetailEntitySelected.setAccountCreditId(glBankTransactionEntity.getGlBank().getAccountId().getId());
-                }
+//                if (glBankTransactionEntity.getGlBank() == null) {
+//                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب اختيار الخزنة"));
+//                } else {
+//                    glBankTransactionDetailEntitySelected.setAccountCreditId(glBankTransactionEntity.getGlBank().getAccountId().getId());
+//                }
                 
                 glBankTransactionDetailEntitySelected.setGlBankTransactionInvoiceViewList(bankTransactionInvoiceViewService.getGlBankTransactionInvoiceViewList(glBankTransactionDetailEntitySelected.getInvOrganizationSite().getId(), getUserData().getUser()));
             }
@@ -1130,6 +1130,8 @@ public class SettlementDeedFormMB extends GlBankBasicDataForm {
                             invOrganizationSite.setId(ios.getId());
                             GlAccount accountId = new GlAccount();
                             accountId.setId(detailsEntity.getInvOrganizationSite().getAccountId().getId());
+                            invOrganizationSite.setName(ios.getName());
+                            invOrganizationSite.setCode(ios.getCode());
                             invOrganizationSite.setAccountId(accountId);
                         }
                         bankTransactionDetail.setOrganizationSiteId(detailsEntity.getInvOrganizationSite() != null ? invOrganizationSite : null);

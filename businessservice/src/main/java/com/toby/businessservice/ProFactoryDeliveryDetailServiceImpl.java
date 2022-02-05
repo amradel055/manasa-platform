@@ -15,6 +15,7 @@ import com.toby.entity.ProFactoryDelivery;
 import com.toby.entity.ProFactoryDeliveryDetail;
 import com.toby.entity.TobyUser;
 import com.toby.procedure.FactoryNotLoadedYetProFactoeyProcedure;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -134,7 +135,7 @@ public class ProFactoryDeliveryDetailServiceImpl implements ProFactoryDeliveryDe
                     entity.getNumber(), entity.getItemId() == null ? null : entity.getItemId().getId(),
                     entity.getInvItemParentId() == null ? null : entity.getInvItemParentId().getCode(),
                     entity.getInvItemParentId() == null ? null : entity.getInvItemParentId().getName(),
-                    invInvoiceDTO.getCompanyActivity(), invInvoiceDTO.getScreenName());
+                    invInvoiceDTO.getCompanyActivity(), invInvoiceDTO.getScreenName(),BigDecimal.ZERO);
             dTO = invPurchaseInvoiceDetailDetailService.findDetailDetail(dTO,invInvoiceDTO.getScreenName());
             if(proProductionTransactionService.checkFinish(invInvoiceDTO.getInvPurchaseInvoiceId(),invInvoiceDTO.getId(),dTO.getClothNumber())){
                 dTO.setStatusName("تم التشيك");
@@ -153,7 +154,7 @@ public class ProFactoryDeliveryDetailServiceImpl implements ProFactoryDeliveryDe
                     entity.getNumber(), entity.getItemId() == null ? null : entity.getItemId().getId(),
                     entity.getInvItemParentId() == null ? null : entity.getInvItemParentId().getCode(),
                     entity.getInvItemParentId() == null ? null : entity.getInvItemParentId().getName(),
-                    invInvoiceDTO.getCompanyActivity(), invInvoiceDTO.getScreenName());
+                    invInvoiceDTO.getCompanyActivity(), invInvoiceDTO.getScreenName(),entity.getCostAvarage());
         } else if (Entity.getClass().equals(FactoryNotLoadedYetProFactoeyProcedure.class)) {
                 FactoryNotLoadedYetProFactoeyProcedure entity = (FactoryNotLoadedYetProFactoeyProcedure) Entity;
 
@@ -168,7 +169,7 @@ public class ProFactoryDeliveryDetailServiceImpl implements ProFactoryDeliveryDe
                     entity.getNumber(), null,
                     null,
                     null,
-                    invInvoiceDTO.getCompanyActivity(), invInvoiceDTO.getScreenName());
+                    invInvoiceDTO.getCompanyActivity(), invInvoiceDTO.getScreenName(),BigDecimal.ZERO);
 
             } 
         return dTO;

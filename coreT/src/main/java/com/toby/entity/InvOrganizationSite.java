@@ -356,7 +356,7 @@ public class InvOrganizationSite extends BaseEntity {
         return accountId;
     }
 
-    public void setAccountId(GlAccount accountId) {
+   public void setAccountId(GlAccount accountId) {
         this.accountId = accountId;
     }
 

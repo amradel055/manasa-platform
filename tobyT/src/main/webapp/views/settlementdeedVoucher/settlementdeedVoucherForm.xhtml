@@ -12,7 +12,7 @@
 
         <h:form id="form" dir="#{userData.dir}" class='formmargin'>
 
-            <p:fieldset legend="#{userData.userDDs['RECEIPT']}" id="whole" >
+            <p:fieldset legend="القيد المحاسبي" id="whole" >
 
                 <div class="col-xs-12">
                     <p:messages id="curmsg" showDetail="true" rendered="true" autoUpdate="true" closable="true"/>   
@@ -64,6 +64,7 @@
                             <p:outputLabel style="width:85px" value="#{userData.userDDs['HANDLING']}"/>
                         </div>
                     </div>
+                    
 
                     <div class="ui-g-12 ui-xl-12">
                         <div class="ui-g-6 ui-xl-6">
@@ -84,6 +85,29 @@
                         </div>
                         <div class="ui-g-6 ui-xl-6">
                             <p:outputLabel style="width: 65px" value="رقم الحساب الدائن" rendered="#{not settlementDeedVoucherFormMB.organizationSiteView}"/>
+
+                        </div>
+                    </div>
+                    
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:autoComplete style="width: 110%;font-size: 1.8vh;text-align: right;border-radius: 0px; " id="Cost_Center_From" 
+
+                                            converter="#{settlementDeedVoucherFormMB.costCenterConverter}"
+                                            value="#{settlementDeedVoucherFormMB.glBankTransactionEntity.costCenterDTO}"
+                                            var="cost"
+                                            itemLabel="#{cost}" 
+                                            itemValue="#{cost}" 
+                                            forceSelection="true" 
+                                            completeMethod="#{settlementDeedVoucherFormMB.completeCostCenter}"
+                                            widgetVar="cost">
+                                <p:ajax 
+                                    event="itemSelect"
+                                    listener="#{SettlementDeedFormMB.forHashasa()}" />
+                            </p:autoComplete>
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel style="width:64px;" value="مركز التكلفة"/>
 
                         </div>
                     </div>
@@ -111,35 +135,14 @@
                             <p:outputLabel style="width:64px;margin-right: 6%;" value="#{userData.userDDs['STATEMENT']}"/>
                         </div>
                     </div>
-                    <div class="ui-g-12 ui-xl-12">
-                        <div class="ui-g-6 ui-xl-6">
-                            <p:autoComplete style="width: 110%;font-size: 1.8vh;text-align: right;border-radius: 0px; margin-right: -10%;" id="Cost_Center_From" 
-
-                                            converter="#{settlementDeedVoucherFormMB.costCenterConverter}"
-                                            value="#{settlementDeedVoucherFormMB.glBankTransactionEntity.costCenterDTO}"
-                                            var="cost"
-                                            itemLabel="#{cost}" 
-                                            itemValue="#{cost}" 
-                                            forceSelection="true" 
-                                            completeMethod="#{settlementDeedVoucherFormMB.completeCostCenter}"
-                                            widgetVar="cost">
-                                <p:ajax 
-                                    event="itemSelect"
-                                    listener="#{SettlementDeedFormMB.forHashasa()}" />
-                            </p:autoComplete>
-                        </div>
-                        <div class="ui-g-6 ui-xl-6">
-                            <p:outputLabel style="width:64px;margin-right: 6%;" value="مركز التكلفة"/>
-
-                        </div>
-                    </div>
+                    
                 </div>
             </p:fieldset>
 
 
 
             <!-- begin table -->
-            <p:fieldset legend="#{userData.userDDs['RECEIPT_DATA']}"  style="margin:20px 1px">
+            <p:fieldset legend="بيانات القيد المحاسبي"  style="margin:20px 1px">
 
 
                 <div class="col-xs-12">

@@ -146,7 +146,7 @@ public class InvQuotationDetailsServiceImpl implements InvQuotationDetailsServic
                     entity.getUnitId().getId(), entity.getUnitId().getSerial(), entity.getUnitId().getName(),
                     entity.getItemId().getIsInventoryItem(),
                     null,null,null,null,
-                    invInvoiceDTO.getCompanyActivity(),invInvoiceDTO.getScreenName(),null);
+                    invInvoiceDTO.getCompanyActivity(),invInvoiceDTO.getScreenName(),null,BigDecimal.ZERO);
             dTO = invGlobalService.calculateDetailTotalsRow(dTO, invInvoiceDTO, true,false);
             dTO.setRealQuantity(dTO.getQuantity().multiply(dTO.getScrewing()));
         } else if (Entity.getClass().equals(TempInvQotationNotLoadedYet.class)) {
@@ -162,7 +162,7 @@ public class InvQuotationDetailsServiceImpl implements InvQuotationDetailsServic
                     entity.getItemBarcode(), entity.getScrewing(), entity.getItemId(), entity.getWeight(), 
                     entity.getUnitId(), entity.getUnitSerial(), entity.getUnitName(),entity.getIsInventoryItem(),
                     null,null,null,null,
-                    invInvoiceDTO.getCompanyActivity(),invInvoiceDTO.getScreenName(),null);
+                    invInvoiceDTO.getCompanyActivity(),invInvoiceDTO.getScreenName(),null,BigDecimal.ZERO);
              
             dTO = invGlobalService.calculateDetailTotalsRow(dTO, invInvoiceDTO, true,false);
             dTO.setRealQuantity(dTO.getQuantity().multiply(dTO.getScrewing()));

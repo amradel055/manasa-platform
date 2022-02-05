@@ -7,6 +7,7 @@ package com.toby.businessservice;
 
 import com.toby.dto.InvNoticeDTO;
 import com.toby.entity.InvNotice;
+import com.toby.entity.TobyUser;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Remote;
@@ -22,7 +23,7 @@ public interface InvNoticeService {
 
     public void updateInvNotice(InvNotice invNotice);
 
-    public InvNotice addInvNotice(InvNotice invNotice);
+    public InvNotice addInvNotice(InvNotice invNotice,TobyUser tobyUser,Integer yearSelection);
 
     public List<InvNotice> getALLInvNotice();
 

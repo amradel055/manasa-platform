@@ -21,6 +21,9 @@ public class TestDetail {
      * @return the number
      */
     public BigDecimal getNumber() {
+        if(number == null){
+            number = BigDecimal.ZERO;
+        }
         return number;
     }
 
@@ -35,6 +38,9 @@ public class TestDetail {
      * @return the price
      */
     public BigDecimal getPrice() {
+        if(price == null){
+            price = BigDecimal.ZERO;
+        }
         return price;
     }
 
@@ -49,6 +55,9 @@ public class TestDetail {
      * @return the totalCost
      */
     public BigDecimal getTotalCost() {
+        if(totalCost == null){
+            totalCost = BigDecimal.ZERO;
+        }
         return totalCost;
     }
 

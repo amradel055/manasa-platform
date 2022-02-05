@@ -42,13 +42,16 @@
                             </div>
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
-                                    <p:calendar  style="width:60%!important"  id="date" 
+                                    <p:calendar  style="width:60%!important"  id="date" rendered="#{(userData.userScreens['proworkorder'].edit)}"
                                                  value="#{notesReceivablesFormMB.glBankTransactionEntity.date}"
                                                  pattern="dd/MM/yyyy hh:mm:ss"
                                                  >
 
                                         <p:ajax event="dateSelect" update="form" listener="#{notesReceivablesFormMB.updateTransactionRate}" />
                                     </p:calendar>
+                                    <p:outputLabel value="#{notesReceivablesFormMB.glBankTransactionEntity.date}" rendered="#{not (userData.userScreens['proworkorder'].edit)}" >
+                                        <f:convertDateTime type="date" pattern="dd-MM-yyyy  hh:mm:ss"/>
+                                    </p:outputLabel>  
 
                                 </div>
                                 <div class="ui-g-6 ui-xl-6">
@@ -60,22 +63,6 @@
                                 </div>
                             </div>
 
-                            <div class="ui-g-12 ui-xl-12">
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:inputText value="#{notesReceivablesFormMB.dayHijriFrom}" /> يوم
-                                    <p:inputText value="#{notesReceivablesFormMB.monthHijriFrom}" />  شهر
-                                    <p:inputText value="#{notesReceivablesFormMB.yearHijriFrom}" />  سنة
-                                    <p:commandButton     class="saveButton" id="excuteFrom" 
-                                                         value="تنفيذ" 
-                                                         icon="fa fa-fw fa-save"
-                                                         action="#{notesReceivablesFormMB.convertDateFrom()}"
-                                                         update="date"
-                                                         />
-                                </div>
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 50px"  value="من تاريخ هجري" />
-                                </div>
-                            </div>
 
 
                             <div class="ui-g-12 ui-xl-12">
@@ -287,7 +274,7 @@
                                           value="#{userData.userDDs['SAVE']}" 
                                           icon="fa fa-fw fa-save"
                                           action="#{notesReceivablesFormMB.save()}"
-                                          
+
                                           update="@form"/>
 
                         <p:commandButton 
