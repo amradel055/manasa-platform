@@ -188,6 +188,15 @@ public class InvItemServiceImp implements InvItemService {
         List<InvItem> detailsReturn = retriveItemData(details);
         return detailsReturn;
     }
+      @Override
+    public List<InvItem> getInvItemByBranchIdAndGroupIdUpdate(Integer branchId, String groupId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        List<InvItem> details = dao.findListByQuery("SELECT e FROM InvItem e WHERE e.branchId.id = :branchId AND e.groupId.id in( " +groupId+ "  ) ORDER BY e.code", params);
+        List<InvItem> detailsReturn = retriveItemData(details);
+        return detailsReturn;
+    }
+    
     
     @Override
     public List<InvItemDTO> getInvItemByBranchIdAndGroupIdDTO(Integer branchId, Integer groupId) {
@@ -593,7 +602,7 @@ public class InvItemServiceImp implements InvItemService {
         stringBuilder.append("SELECT e FROM InvItem e WHERE e.branchId.id = :branchId ");
 
         stringBuilder.append(appendGroup(ItemMainDataByGroupSearchBean, params));
-        stringBuilder.append(appendItem(ItemMainDataByGroupSearchBean, params));
+        stringBuilder.append(appendItem2(ItemMainDataByGroupSearchBean, params));
 
         List<InvItem> details = dao.findListByQuery(stringBuilder.toString(), params);
         List<InvItem> detailsReturn = retriveItemData(details);
@@ -780,6 +789,18 @@ public class InvItemServiceImp implements InvItemService {
             params.put("toItem", ItemMainDataByGroupSearchBean.getToItem().getCode());//change to get code not id
             appendQuery.append(" AND e.code <= :toItem"); //e.id
         }
+
+        return appendQuery.toString();
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+     private String appendItem2(ItemMainDataByGroupSearchBean ItemMainDataByGroupSearchBean, Map<String, Object> params) {
+        appendQuery = new StringBuilder();
+
+        if (ItemMainDataByGroupSearchBean.getItemSelected() != null && !ItemMainDataByGroupSearchBean.getItemSelected().isEmpty() ) {
+            appendQuery.append(" AND e.id in (").append(ItemMainDataByGroupSearchBean.getItemSelected()).append(")"); 
+        }
+
+      
 
         return appendQuery.toString();
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

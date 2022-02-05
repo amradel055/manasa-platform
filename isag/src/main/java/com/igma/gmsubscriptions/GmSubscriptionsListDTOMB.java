@@ -23,6 +23,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
+import org.omg.CORBA.PRIVATE_MEMBER;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 
@@ -36,7 +37,7 @@ public class GmSubscriptionsListDTOMB extends GMBasicData {
 
     private String nameClient;
     private LazyDataModel<GmSubscriptionsDTO> dataModel;
-
+    private Integer color  ;
     private List<GmSubscriptionsDTO> subscribtionList;
     private List<InvOrganizationSiteDTO> invOrganizationSiteDTOList;
     private InvOrganizationSiteDTOConverter organizationSiteDTOConvertor;
@@ -408,10 +409,18 @@ public class GmSubscriptionsListDTOMB extends GMBasicData {
      * @return the access
      */
     public String getAccess() {
-        if (getGmSubscriptionsDTOSelected() != null && getGmSubscriptionsDTOSelected().getStatus() != true && getGmSubscriptionsDTOSelected().isFreezeStatus() != true) {
-            access = "يسمح له بدخول الجيم ";
+        if (getGmSubscriptionsDTOSelected() != null && getGmSubscriptionsDTOSelected().getStatus() != true ) {
+            if(getGmSubscriptionsDTOSelected().isFreezeStatus() != true){
+             access = "يسمح له بدخول الجيم ";
+            setColor(0);
+            }
+            else if(getGmSubscriptionsDTOSelected().isFreezeStatus() != false){
+            access = "لا يسمح له بدخول الجيم كونه مجمد ";
+            setColor(1);
+            }
         } else {
             access = "لا يسمح له بدخول الجيم";
+            setColor(2);
         }
         return access;
     }
@@ -421,6 +430,19 @@ public class GmSubscriptionsListDTOMB extends GMBasicData {
      */
     public void setAccess(String access) {
         this.access = access;
+    }
+    /**
+     * @return the color
+     */
+    public Integer getColor() {
+        return color;
+    }
+
+    /**
+     * @param color the color to set
+     */
+    public void setColor(Integer color) {
+        this.color = color;
     }
 
 }

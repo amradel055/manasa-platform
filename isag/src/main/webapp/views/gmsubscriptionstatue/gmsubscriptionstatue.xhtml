@@ -233,7 +233,31 @@
 
                         </div>
                     </div>
+
+
+
                 </div> 
+                <div class="ui-g-12 ui-xl-6" style="float: right;">
+
+                    <div class="ui-g-12 ui-xl-6">
+                        <p:outputLabel style="width: 35%!important;font-size: 17px;font-family: system-ui;" id="ad3334443"  value="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected.remainPeriod}">
+                        </p:outputLabel>
+                    </div>
+                    <div class="ui-g-12 ui-xl-6">
+                        <p:outputLabel style="width: 85px;margin-right: 3%;font-size: 17px;font-family: system-ui;" value=" المده المتبقيه">
+
+                        </p:outputLabel>
+                    </div>
+                </div>
+                 <div   >
+                     <p:graphicImage name="images/red.png" library="serenity-layout" styleClass="mobile-logo" rendered="#{gmSubscriptionsListDTOMB.color eq 2}" style="width:50px; height: 50px;"/>
+                    </div>
+                    <div >
+                        <p:graphicImage name="images/green.png" library="serenity-layout" styleClass="mobile-logo" rendered="#{gmSubscriptionsListDTOMB.color eq 0}" style="width:50px; height: 50px;"/>
+                    </div>
+                    <div >
+                        <p:graphicImage name="images/blue.png" library="serenity-layout" styleClass="mobile-logo" rendered="#{gmSubscriptionsListDTOMB.color eq 1}" style="width:50px; height: 50px;"/>
+                    </div>
 
                 <div class='smallButtons'>     
                     <p:commandButton  icon="" 
@@ -251,8 +275,8 @@
                         <f:setPropertyActionListener value="#{customer}" target="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected}" />
                     </p:commandButton>
                     <p:commandButton style=""   value="تعديل بيانات العميل"  action ="#{gmSubscriptionsListDTOMB.EditClientData()}"/> 
-                    
-                    
+
+
                 </div>
 
             </div>
@@ -273,7 +297,7 @@
 
 
                                     <div class="ui-g-6 ui-xl-6">
-                                        
+
                                         <div class="ui-g-12 ui-xl-12">
 
                                             <div class="ui-g-6 ui-xl-6">
@@ -384,165 +408,165 @@
                 </div>
             </div>
 
-                
-                <p:dialog header="تعديل بيانات العميل" widgetVar="dlg3New" showEffect="explode" hideEffect="bounce" height="90%" width="90%">
+
+            <p:dialog header="تعديل بيانات العميل" widgetVar="dlg3New" showEffect="explode" hideEffect="bounce" height="90%" width="90%">
 
 
-            <p:fieldset legend="تعديل بيانات العميل"  style="margin-bottom:5px">
+                <p:fieldset legend="تعديل بيانات العميل"  style="margin-bottom:5px">
 
-                <div  id="firstLine" class="ui-g-12 ui-g-nopad">
-                    <div class="ui-g">
+                    <div  id="firstLine" class="ui-g-12 ui-g-nopad">
+                        <div class="ui-g">
 
-                        <p:outputPanel id="photo">
-                            <button  id="start-camera" type="button">Start Camera</button>
-                            <video id="video"  width="220" height="150" autoplay="true"></video>
-                            <button  id="click-photo" type="button">Click Photo</button>
-                            <canvas id="canvas" width="220" height="150" ></canvas>
+                            <p:outputPanel id="photo">
+                                <button  id="start-camera" type="button">Start Camera</button>
+                                <video id="video"  width="220" height="150" autoplay="true"></video>
+                                <button  id="click-photo" type="button">Click Photo</button>
+                                <canvas id="canvas" width="220" height="150" ></canvas>
 
-                        </p:outputPanel>
-                        <script>
-                            let camera_button = document.querySelector("#start-camera");
-                            let video = document.querySelector("#video");
-                            let click_button = document.querySelector("#click-photo");
-                            let canvas = document.querySelector("#canvas");
-                            camera_button.addEventListener('click', async function () {
-                                let stream = await navigator.mediaDevices.getUserMedia({video: true, audio: false});
-                                video.srcObject = stream;
-                            });
-                            click_button.addEventListener('click', function () {
-                                canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-                                let image_data_url = canvas.toDataURL('image/jpeg');
-                                // data url of the image
-                                document.getElementById("form:img").value = image_data_url;
-                                console.log(image_data_url);
-                            });</script>
-                        <p:inputText type="hidden" style="display: none"  id="img" value="#{gmSubscriptionsListDTOMB.file}">
-                            <p:ajax process="@this" />
-                        </p:inputText>
+                            </p:outputPanel>
+                            <script>
+                                let camera_button = document.querySelector("#start-camera");
+                                let video = document.querySelector("#video");
+                                let click_button = document.querySelector("#click-photo");
+                                let canvas = document.querySelector("#canvas");
+                                camera_button.addEventListener('click', async function () {
+                                    let stream = await navigator.mediaDevices.getUserMedia({video: true, audio: false});
+                                    video.srcObject = stream;
+                                });
+                                click_button.addEventListener('click', function () {
+                                    canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+                                    let image_data_url = canvas.toDataURL('image/jpeg');
+                                    // data url of the image
+                                    document.getElementById("form:img").value = image_data_url;
+                                    console.log(image_data_url);
+                                });</script>
+                            <p:inputText type="hidden" style="display: none"  id="img" value="#{gmSubscriptionsListDTOMB.file}">
+                                <p:ajax process="@this" />
+                            </p:inputText>
 
-                    </div>
-
-
-
-                    <div class="ui-g-12 ui-xl-12">
-
-                        <div class="ui-g-6 ui-xl-6">
-                            <p:graphicImage url="#{gmSubscriptionsListDTOMB.host.concat(gmSubscriptionsListDTOMB.invOrganizationSiteDTOSelected.clientImage)}" library="demo"  style="max-width:80%;max-height:80%;object-fit: cover !important;"/>
                         </div>
 
-                        <div class="ui-g-6 ui-xl-6">
-                            <p:outputLabel style="width: 65px" value="صورة العميل"/>
-                        </div>  
+
+
+                        <div class="ui-g-12 ui-xl-12">
+
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:graphicImage  url="#{gmSubscriptionsListDTOMB.host.concat(gmSubscriptionsListDTOMB.invOrganizationSiteDTOSelected.clientImage)}" library="demo"  style="max-width:80%;max-height:80%;object-fit: cover !important; "/>
+                            </div>
+
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 65px" value="صورة العميل"/>
+                            </div>  
+                        </div>
                     </div>
-                </div>
 
 
-                <panelGrid class="centerButtons col-md-12" style='display: block; text-align: center;'>
+                    <panelGrid class="centerButtons col-md-12" style='display: block; text-align: center;'>
 
-                    <h:panelGroup>
-                        <p:blockUI block="form" trigger="saveB" animate="true" >
+                        <h:panelGroup>
+                            <p:blockUI block="form" trigger="saveB" animate="true" >
 
-                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
-                        </p:blockUI> 
-                    </h:panelGroup>
-                </panelGrid>
+                                <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+                            </p:blockUI> 
+                        </h:panelGroup>
+                    </panelGrid>
 
-                <div class="col-xs-12">
-                    <p:messages autoUpdate="true"  id="msgopp1" showDetail="true" closable="true" />
-                </div>
-                <div  id="firstLine" class="ui-g-12 ui-g-nopad">
-                    <div class="ui-g">
+                    <div class="col-xs-12">
+                        <p:messages autoUpdate="true"  id="msgopp1" showDetail="true" closable="true" />
+                    </div>
+                    <div  id="firstLine" class="ui-g-12 ui-g-nopad">
+                        <div class="ui-g">
 
-                        <div class="ui-g-6 ui-xl-6">
+                            <div class="ui-g-6 ui-xl-6">
 
-                            <div class="ui-g-12 ui-xl-12">
-
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:inputText style="width: 35%!important" id="ad112" value="#{gmSubscriptionsListDTOMB.invOrganizationSiteDTOSelected.name}"/>
-                                </div>
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 85px;margin-right: 3%;" value="الاسم"/>
-
-                                </div>
-                            </div>
-
-                            <div class="ui-g-12 ui-xl-12">
-
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:inputText style="width: 35%!important" id="ad212" value="#{gmSubscriptionsListDTOMB.invOrganizationSiteDTOSelected.mobile}"/>
-
-                                </div>
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 85px;" value="الجوال"/>
-
-                                </div>
-                            </div>
-                            <div class="ui-g-12 ui-xl-12">
-
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:inputText style="width: 35%!important" id="ad312" value="#{gmSubscriptionsListDTOMB.invOrganizationSiteDTOSelected.address}"/>
-
-                                </div>
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 85px;" value="العنوان"/>
-
-                                </div>
-                            </div>
-
-                            <div class="ui-g-12 ui-xl-12">
-
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:inputText style="width: 35%!important" id="ad812"  value="#{gmSubscriptionsListDTOMB.invOrganizationSiteDTOSelected.nationId}"/>
-
-                                </div>
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 85px;" value="رقم الهوية "/>
-
-                                </div>
-                            </div>
-                            <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-12 ui-xl-12">
 
                                     <div class="ui-g-6 ui-xl-6">
-                                        <p:inputText style="width: 35%!important" id="ad512" value="#{gmSubscriptionsListDTOMB.invOrganizationSiteDTOSelected.nationIdSerial}"/>
+                                        <p:inputText style="width: 35%!important" id="ad112" value="#{gmSubscriptionsListDTOMB.invOrganizationSiteDTOSelected.name}"/>
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 85px;margin-right: 3%;" value="الاسم"/>
+
+                                    </div>
+                                </div>
+
+                                <div class="ui-g-12 ui-xl-12">
+
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:inputText style="width: 35%!important" id="ad212" value="#{gmSubscriptionsListDTOMB.invOrganizationSiteDTOSelected.mobile}"/>
 
                                     </div>
                                     <div class="ui-g-6 ui-xl-6">
-                                        <p:outputLabel style="width: 85px;" value="طبعة الهوية"/>
+                                        <p:outputLabel style="width: 85px;" value="الجوال"/>
+
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-xl-12">
+
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:inputText style="width: 35%!important" id="ad312" value="#{gmSubscriptionsListDTOMB.invOrganizationSiteDTOSelected.address}"/>
+
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 85px;" value="العنوان"/>
 
                                     </div>
                                 </div>
 
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:calendar id="dateFrom12" 
-                                                value="#{gmSubscriptionsListDTOMB.invOrganizationSiteDTOSelected.birthdate}"
-                                                pattern="dd/MM/yyyy"
-                                                style="width:50%!important"/>
-                                </div>
-                                <div class="ui-g-6 ui-xl-6">
-                                    <p:outputLabel style="width: 95px; ;" value="تاريخ الميلاد"/>
+                                <div class="ui-g-12 ui-xl-12">
 
-                                </div>
-                            </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:inputText style="width: 35%!important" id="ad812"  value="#{gmSubscriptionsListDTOMB.invOrganizationSiteDTOSelected.nationId}"/>
 
-                        </div>                        
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 85px;" value="رقم الهوية "/>
+
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-xl-12">
+                                    <div class="ui-g-12 ui-xl-12">
+
+                                        <div class="ui-g-6 ui-xl-6">
+                                            <p:inputText style="width: 35%!important" id="ad512" value="#{gmSubscriptionsListDTOMB.invOrganizationSiteDTOSelected.nationIdSerial}"/>
+
+                                        </div>
+                                        <div class="ui-g-6 ui-xl-6">
+                                            <p:outputLabel style="width: 85px;" value="طبعة الهوية"/>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:calendar id="dateFrom12" 
+                                                    value="#{gmSubscriptionsListDTOMB.invOrganizationSiteDTOSelected.birthdate}"
+                                                    pattern="dd/MM/yyyy"
+                                                    style="width:50%!important"/>
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 95px; ;" value="تاريخ الميلاد"/>
+
+                                    </div>
+                                </div>
+
+                            </div>                        
+                        </div>
                     </div>
-                </div>
 
-            </p:fieldset>
+                </p:fieldset>
 
-            <h:panelGroup>
-                <p:commandButton     class="saveButton"  
-                                     title="#{userData.userDDs['SAVE']}"
-                                     value="#{userData.userDDs['SAVE']}" 
-                                     icon="fa fa-fw fa-save" 
-                                     action="#{gmSubscriptionsListDTOMB.updateCustomer()}"
-                                     update="@form"
-                                     >
-                </p:commandButton>
-            </h:panelGroup>
+                <h:panelGroup>
+                    <p:commandButton     class="saveButton"  
+                                         title="#{userData.userDDs['SAVE']}"
+                                         value="#{userData.userDDs['SAVE']}" 
+                                         icon="fa fa-fw fa-save" 
+                                         action="#{gmSubscriptionsListDTOMB.updateCustomer()}"
+                                         update="@form"
+                                         >
+                    </p:commandButton>
+                </h:panelGroup>
 
-        </p:dialog>
+            </p:dialog>
 
         </h:form>
     </ui:define>

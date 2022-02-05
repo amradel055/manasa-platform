@@ -17,19 +17,19 @@ public class ActionsDTO implements Serializable{
     /**
      * @return the userId
      */
-    public Integer getUserId() {
+    public String getUserId() {
         return userId;
     }
 
     /**
      * @param userId the userId to set
      */
-    public void setUserId(Integer userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
     private Integer id;
     private Date date;
-    private Integer userId;
+    private String userId;
     private String screenName;
     private String type;
 

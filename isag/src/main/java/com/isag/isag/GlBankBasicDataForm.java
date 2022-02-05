@@ -64,6 +64,7 @@ public abstract class GlBankBasicDataForm extends BaseFormBean {
     private GlBankTransactionService glBankTransactionService;
     @EJB
     private GlAccountService accountService;
+    
 
     private UploadedFile ContractFile;
     private InputStream inputStreamUploadContract;

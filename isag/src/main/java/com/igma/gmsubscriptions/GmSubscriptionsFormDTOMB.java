@@ -237,7 +237,7 @@ public class GmSubscriptionsFormDTOMB extends GMBasicData {
     public ActionsDTO SetActionDto(IsagUser isagUser, String screenname, String type) {
         ActionsDTO actionsDTO = new ActionsDTO();
         actionsDTO.setDate(new Date());
-        actionsDTO.setUserId(isagUser.getId());
+        actionsDTO.setUserId(isagUser.getName());
         actionsDTO.setScreenName(screenname);
         actionsDTO.setType(type);
         return actionsDTO;

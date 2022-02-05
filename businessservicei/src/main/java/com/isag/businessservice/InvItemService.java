@@ -42,7 +42,7 @@ public interface InvItemService {
     public List<InvItem> getInvItemByBranchIdForInvItemMainDataByGroupReportMB(Integer branchId);
 
     public List<InvItem> getInvItemByBranchIdAndGroupId(Integer branchId, Integer groupId);
-    
+
     public List<InvItemDTO> getInvItemByBranchIdAndGroupIdDTO(Integer branchId, Integer groupId);
 
     public List<InvItem> getImageByCompanyId(String imageName, Integer companyId);
@@ -86,6 +86,9 @@ public interface InvItemService {
     public void updateInvItemCostAverageToZero(Integer branchId);
 
     public List<Integer> getInvItemListByBranchIdNotInInvPurchaseInvoice(Integer branchId);
-    
-    public InvItemDTO mapToDTO(InvItem detail) ;
+
+    public InvItemDTO mapToDTO(InvItem detail);
+
+    public List<InvItem> getInvItemByBranchIdAndGroupIdUpdate(Integer branchId, String groupId);
+
 }
