@@ -105,12 +105,31 @@
                         
                         <p:column style="width:15vh;font-size: 1.8vh;text-align: right;border-radius: 0px "
                                   filterStyle="display:none"
-                                  filterBy="#{organizationSiteTable.sponsorName1}"  
+                                  filterBy="#{organizationSiteTable.taxNumber}"  
                                   filterMatchMode="contains"
-                                  headerText="اسم الضامن"
-                                  sortBy="#{organizationSiteTable.sponsorName1}"
+                                  headerText="الرقم الضريبى"
+                                  sortBy="#{organizationSiteTable.taxNumber}"
                                   >
-                            <p:outputLabel value="#{organizationSiteTable.sponsorName1}" />
+                            <p:outputLabel value="#{organizationSiteTable.taxNumber}" />
+                        </p:column>
+                        
+                        <p:column style="width:15vh;font-size: 1.8vh;text-align: right;border-radius: 0px "
+                                  filterStyle="display:none"
+                                  filterBy="#{organizationSiteTable.regionId.name}"  
+                                  filterMatchMode="contains"
+                                  headerText="المنطقة"
+                                  sortBy="#{organizationSiteTable.regionId.name}"
+                                  >
+                            <p:outputLabel value="#{organizationSiteTable.regionId.name}" />
+                        </p:column>
+                        <p:column style="width:15vh;font-size: 1.8vh;text-align: right;border-radius: 0px "
+                                  filterStyle="display:none"
+                                  filterBy="#{organizationSiteTable.createdByName}"  
+                                  filterMatchMode="contains"
+                                  headerText="منشئ العميل"
+                                  sortBy="#{organizationSiteTable.createdByName}"
+                                  >
+                            <p:outputLabel value="#{organizationSiteTable.createdByName}" />
                         </p:column>
                         
 

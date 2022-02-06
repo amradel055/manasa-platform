@@ -43,6 +43,7 @@ public interface InvNoticeService {
     public List<InvNoticeDTO> getInvNoticeListDTO(Integer branchId, Integer type,Date dateFrom,
             Date dateTo,Integer noticeFrom,Integer noticeTo);
     
+    
     public Map<Integer, Vector<Object>> getAllinstallmentIdAndPayedValue(Integer branchId, Integer installmentParentId);
 
 }

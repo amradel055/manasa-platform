@@ -145,7 +145,7 @@ public class InvNoticeServiceImpl implements InvNoticeService {
             invOrganizationSiteDTO.setCode(entity.getOrganizationSiteId().getCode());
             dTO.setOrganizationSiteId(invOrganizationSiteDTO);
         }
-        
+
         if (entity.getNoticeNaming() != null) {
             SymbolDTO symbolDTO = new SymbolDTO();
             symbolDTO.setId(entity.getNoticeNaming().getId());
@@ -243,28 +243,28 @@ public class InvNoticeServiceImpl implements InvNoticeService {
 
         return dao.updateEntity(invNoticeReq);
     }
-    
+
     @Override
-    public List<InvNoticeDTO> getInvNoticeListDTO(Integer branchId, Integer type,Date dateFrom,
-            Date dateTo,Integer noticeFrom,Integer noticeTo) {
+    public List<InvNoticeDTO> getInvNoticeListDTO(Integer branchId, Integer type, Date dateFrom,
+            Date dateTo, Integer noticeFrom, Integer noticeTo) {
         Map<String, Object> params = new HashMap<>();
         StringBuilder query = new StringBuilder();
         query.append("SELECT i FROM InvNotice i WHERE i.branchId.id = :branchId AND i.type = :type");
         params.put("branchId", branchId);
         params.put("type", type);
-        if(dateFrom != null){
+        if (dateFrom != null) {
             params.put("dateFrom", dateFrom);
             query.append(" AND i.date >=:dateFrom ");
         }
-        if(dateTo != null){
+        if (dateTo != null) {
             params.put("dateTo", dateTo);
             query.append(" AND i.date <= :dateTo ");
         }
-        if(noticeFrom != null){
+        if (noticeFrom != null) {
             params.put("noticeFrom", noticeFrom);
             query.append(" AND i.serial >= :noticeFrom ");
         }
-        if(noticeTo != null){
+        if (noticeTo != null) {
             params.put("noticeTo", noticeTo);
             query.append(" AND i.serial <= :noticeTo ");
         }
@@ -273,9 +273,8 @@ public class InvNoticeServiceImpl implements InvNoticeService {
 
         return returnDTOList(invNoticeList);
     }
-    
-    
-        @Override
+
+    @Override
     public Map<Integer, Vector<Object>> getAllinstallmentIdAndPayedValue(Integer branchId, Integer installmentParentId) {
         Map<String, Object> param = new HashMap<>();
         param.put("branchId", branchId);
@@ -288,7 +287,7 @@ public class InvNoticeServiceImpl implements InvNoticeService {
             Integer installmentId = (Integer) objects[0];
             BigDecimal value = (BigDecimal) objects[1];
             Date date = (Date) objects[2];
-            String bankName = ((Symbol) objects[3]) != null ? ((Symbol) objects[3]).getName() : "" ;
+            String bankName = ((Symbol) objects[3]) != null ? ((Symbol) objects[3]).getName() : "";
             if (map.containsKey(installmentId)) {
                 vector = map.get(installmentId);
                 vector.add(0, ((BigDecimal) vector.firstElement()).add(value != null ? value : BigDecimal.ZERO));
@@ -302,5 +301,4 @@ public class InvNoticeServiceImpl implements InvNoticeService {
         }
         return map;
     }
-
 }

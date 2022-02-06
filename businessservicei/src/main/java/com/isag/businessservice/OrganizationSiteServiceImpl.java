@@ -1110,6 +1110,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         dTO.setIndex(entity.getId());
         dTO.setCreatedDate(entity.getCreationDate());
         dTO.setCreatedBy(entity.getCreatedBy().getId());
+        dTO.setCreatedByName(entity.getCreatedBy().getName());
         dTO.setBranchId(entity.getBranchId().getId());
         dTO.setTaxNumber(entity.getTaxNumber());
 
