@@ -789,6 +789,11 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         OpenDlg("loaddlg");
     }
 
+    public void hishis() {
+        checkDetailData();
+        System.out.print("ttt");
+    }
+    
     public void findInvInvoiceDto() {
         setInvInvoiceDTO(invPurchaseInvoiceService.getInvPurchaseInvoiceDTOBySupplierInvoiceNumber(getInvInvoiceDTO(), getUserData().getUserBranch().getId()));
 

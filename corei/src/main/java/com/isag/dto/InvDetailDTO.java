@@ -613,6 +613,8 @@ public class InvDetailDTO extends BaseEntityDTO {
     public BigDecimal getActualQuantity() {
         if (actualQuantity == null) {
             actualQuantity = BigDecimal.ZERO;
+        } else if (cartonsNumber != null && cartonsCapacity != null && cartonsCapacity.compareTo(BigDecimal.ZERO) == 1) {
+            actualQuantity = cartonsNumber.multiply(cartonsCapacity);
         }
         return actualQuantity;
     }
@@ -1026,8 +1028,8 @@ public class InvDetailDTO extends BaseEntityDTO {
             if (getItemsBarcodesDetail() == null && getItemsBarcodesDetailTrans() != null) {
                 setItemsBarcodesDetail(getItemsBarcodesDetail());
             }
-            BigDecimal sellPrices = BigDecimal.ONE ;
-            if(getItemsBarcodesDetail().getSellPrice() != null && getItemsBarcodesDetail().getSellPrice().compareTo(BigDecimal.ZERO) != 0){
+            BigDecimal sellPrices = BigDecimal.ONE;
+            if (getItemsBarcodesDetail().getSellPrice() != null && getItemsBarcodesDetail().getSellPrice().compareTo(BigDecimal.ZERO) != 0) {
                 sellPrices = getItemsBarcodesDetail().getSellPrice();
             }
             profitPercent = getProfitVlaue().divide(sellPrices, 2, RoundingMode.HALF_UP);
