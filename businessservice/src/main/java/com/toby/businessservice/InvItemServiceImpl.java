@@ -24,7 +24,6 @@ import com.toby.entity.Symbol;
 import com.toby.entity.TobyCompany;
 import com.toby.entity.TobyUser;
 import com.toby.views.ItemsBarcodesDetailsView;
-import com.toby.views.SalesReportByValueAdedDetails;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -815,7 +814,7 @@ public class InvItemServiceImpl implements InvItemService {
     }
 
     @Override
-    public List<InvItem> getInvItemListByBranchIdForOpeningBalanceItemForm(Integer branchId) {
+    public List<InvItem> getInvItemListByBranchIdForOpeningBalanceItemForm (Integer branchId) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         List<InvItem> detailses = dao.findListByQuery("SELECT i FROM InvItem i WHERE i.branchId.id = :branchId  ORDER BY i.code", params);

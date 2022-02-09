@@ -9,7 +9,6 @@ package com.toby.dto;
  *
  * @author `*"<:ahmedShaaban:>"*`
  */
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
