@@ -1690,6 +1690,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         }
     }
 
+
     private void fillInvInvoiceDetailDTO() {
         if (getUri().contains("invpurchaseinvoice_1")
                 || getUri().contains("invsalesinvoice_1")
@@ -1713,7 +1714,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         } else if (getUri().contains("invtransfer")) {
             getInvInvoiceDTO().setId((Integer) getContext().getSessionMap().get("invTransferSelected"));
             setInvInvoiceDTO(invTransferService.findInvTransferById(getInvInvoiceDTO()));
-        } else if (getUri().contains("invMonthTarget")) {
+        } 
+        else if (getUri().contains("invMonthTarget")) {
             getInvInvoiceDTO().setId((Integer) getContext().getSessionMap().get("invMonthTargetSelected"));
             getInvInvoiceDTO().setInvMonthTargetDTO(monthTargetService.getMonthTargetDTOById(getInvInvoiceDTO()));
         } else if (getUri().contains("invstrip")) {
@@ -1727,6 +1729,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
             setInvInvoiceDTO(invOpeningBalanceItemService.findOpeningBalanceById(getInvInvoiceDTO()));
         }
     }
+    
+    
 
     /**
      * @param invPurchaseInvoiceDTO the invInvoiceDTO to set

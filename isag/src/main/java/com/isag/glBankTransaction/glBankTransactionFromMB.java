@@ -71,7 +71,7 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
     private GlBankTransactionDetailEntity GlBankTransactionDetailEntity;
 
     private Integer glBankTransactionId;
-
+    private Integer serial;
     private GlBank glBank;
     private List<GlBank> glBankListTo;
     private List<GlBank> glBankListFrom;
@@ -112,7 +112,7 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
     private ReportSignatureService reportSignatureService;
     @EJB
     private BankBalanceViewService bankBalanceViewService;
-     @EJB
+    @EJB
     CreateActionService createActionService;
 
     @Override
@@ -152,6 +152,15 @@ public class glBankTransactionFromMB extends GlBankBasicDataForm {
             } else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("edit")) {
                 try {
                     glBankTransactionId = (Integer) context.getSessionMap().get("glBankTransactionSelected");
+                    validateGlBankUpdatedValues(glBankTransactionId);
+                    getBankCashBalance();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("EditglBankTransaction")) {
+                try {
+                    glBankTransactionId = (Integer) context.getSessionMap().get("EditglBankTransactionSelected");
                     validateGlBankUpdatedValues(glBankTransactionId);
                     getBankCashBalance();
 

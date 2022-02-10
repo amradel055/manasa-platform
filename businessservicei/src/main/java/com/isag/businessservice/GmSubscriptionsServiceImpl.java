@@ -106,6 +106,18 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
         }
         return null;
     }
+     @Override
+    public Integer findGmSubscriptionsDTOBySerialNew(Integer serial, Integer branchId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        params.put("serial",serial);
+        List<Integer> gmSubscriptionsDTOList = dao.findListByQuery("SELECT e.id FROM GmSubscriptions e WHERE e.branchId.id = :branchId AND e.serial = :serial", params);
+        if (gmSubscriptionsDTOList != null && !gmSubscriptionsDTOList.isEmpty()&&gmSubscriptionsDTOList.get(0)!=null) {
+            Integer gmSubscriptionsDTODTO1 = gmSubscriptionsDTOList.get(0);
+            return gmSubscriptionsDTODTO1;
+        }
+        return null;
+    }
 
     private GmSubscriptionsDTO mapToDTO(GmSubscriptions entity) {
 
@@ -299,6 +311,7 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
             dto.setTransDaysNumber(gmMovementService.findGmMovementDtoDaysBySubscribtionId(entity.getId()));
             dto.setDateAfterTagmeed(Utility.sumDateAndNumer(dto.getDateAfterTagmeed(), dto.getTransDaysNumber()));
             dto.setRemainPeriod(Utility.calcDaysBetween(dto.getDateAfterTagmeed(), new Date()));
+            
 
         }
 
@@ -418,11 +431,11 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
         filters.put("customerId", customerId);
         filters.put("date", new Date());
         StringBuilder builder = new StringBuilder();
-        builder.append("SELECT s FROM GmSubscriptions s WHERE  s.organizationSiteId.id =:customerId  AND :date BETWEEN s.startDate AND s.endDate order by s.id desc");
+        builder.append("SELECT s FROM GmSubscriptions s WHERE  s.organizationSiteId.id =:customerId  AND s.endDate >= :date  order by s.id DESC ");
 
-        GmSubscriptions details = dao.findEntityByQuery(builder.toString(), filters);
+        List<GmSubscriptions> details = dao.findListByQuery(builder.toString(), filters);
         if (details != null) {
-            return mapToDTO(details);
+            return mapToDTO(details.get(0));
         } else {
             return null;
         }

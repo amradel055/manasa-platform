@@ -128,6 +128,8 @@ public class InvPurchaseInvoiceDetail extends BaseEntity {
     private BigDecimal addTotal;
     @Column(name = "discount_value")
     private BigDecimal discountValue;
+    @Column(name = "net_after_discount_head")
+    private BigDecimal netAfterDiscountHead;
 
     public InvPurchaseInvoiceDetail() {
     }
@@ -561,6 +563,20 @@ public class InvPurchaseInvoiceDetail extends BaseEntity {
      */
     public void setDiscountValue(BigDecimal discountValue) {
         this.discountValue = discountValue;
+    }
+
+    /**
+     * @return the netAfterDiscountHead
+     */
+    public BigDecimal getNetAfterDiscountHead() {
+        return netAfterDiscountHead;
+    }
+
+    /**
+     * @param netAfterDiscountHead the netAfterDiscountHead to set
+     */
+    public void setNetAfterDiscountHead(BigDecimal netAfterDiscountHead) {
+        this.netAfterDiscountHead = netAfterDiscountHead;
     }
 
 }

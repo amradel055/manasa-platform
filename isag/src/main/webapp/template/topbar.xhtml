@@ -40,7 +40,12 @@
                     </a>
 
                 </li>
+
+
                 <li>
+
+
+
                     <h:form>
                         <p:commandButton    action="/dashboard"   value="الرئيسية"
                                             id="main1"   style="background-color:green; " 
@@ -53,6 +58,38 @@
                     </h:form>
 
                 </li>
+                <h:form>
+
+                    <p:selectOneMenu  style="width: 15%!important;margin-right: 5%;margin-left:5%;margin-bottom: 5px;" id="master" value="#{dashboardMB.invType}"  >
+                        <f:selectItem   itemLabel="اختر نوع الفاتوره" itemValue=""/>
+                        <f:selectItem   itemLabel="المبيعات" itemValue="0"/>
+                        <f:selectItem   itemLabel="مردود المبيعات" itemValue="1"/>
+                        <f:selectItem   itemLabel="المشتريات" itemValue="2"/>                                  
+                        <f:selectItem   itemLabel="مردود المشتريات" itemValue="3"/>                                  
+                        <f:selectItem   itemLabel="المدفوعات" itemValue="4"/>  
+                        <f:selectItem   itemLabel="المقبوضات " itemValue="5"/>                                  
+                        <f:selectItem   itemLabel="التحويلات" itemValue="6"/>                                  
+                        <f:selectItem   itemLabel="الجيم" itemValue="7"/>                                  
+                    </p:selectOneMenu>
+                    <p:commandButton icon="fa fa-plus" value="إنشاء فاتورة" 
+                                     class="saddButton"
+                                     action="#{dashboardMB.goToAdd()}" 
+                                     style="margin-right:15%;margin-left:5%;margin-bottom:5%;float: right;background-color: #6c4886;width: 10%;"
+                                     update="master"/>
+
+                    <p:inputText style="width: 13%!important " id="ad1"   value="#{dashboardMB.serial}" placeholder="بحث برقم الفاتوره" />
+
+                    <p:commandButton 
+                        class="smsearchButtons"
+                        icon="fa fa-fw fa-search-plus"
+                        style="background-color: #3851a5;border-radius: 0; margin-right: 1%;margin-left: 1%;"
+                        title="#{userData.userDDs['VIEW']}"
+                        action="#{dashboardMB.goToEdit()}" 
+                        />
+
+
+
+                </h:form>
             </ul>
         </div>
     </div>

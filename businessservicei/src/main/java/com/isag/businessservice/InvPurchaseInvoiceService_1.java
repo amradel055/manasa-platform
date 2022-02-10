@@ -58,8 +58,8 @@ public interface InvPurchaseInvoiceService_1 {
     public InvInvoiceDTO findInvPurchaseInvoiceById(InvInvoiceDTO invPurchaseInvoiceDto, IsagUser isagUser);
 
     public InvInvoiceDTO findInvPurchaseInvoiceByTableId(InvInvoiceDTO invPurchaseInvoiceDto, Integer branchId);
-    
-    public InvInvoiceDTO findInvPurchaseInvoiceBySerial(InvInvoiceDTO invInvoiceDTO, Integer branchId) ;
+
+    public InvInvoiceDTO findInvPurchaseInvoiceBySerial(InvInvoiceDTO invInvoiceDTO, Integer branchId);
 
     public InvPurchaseInvoice updateInvPurchaseInvoice(InvPurchaseInvoice invPurchaseInvoice);
 
@@ -93,7 +93,7 @@ public interface InvPurchaseInvoiceService_1 {
     public List<InvInvoiceDTO> getALLInvPurchaseInvoiceDTOByTypeAndBranchId(Integer type, Integer inventoryId, int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters);
 
     public void deleteInvPurchaseInvoiceDTO(InvInvoiceDTO invPurchaseInvoice, Integer isPurchaseOrSales);
-    
+
     public void deleteInvPurchaseInvoiceDTO(Integer invoiceId);
 
     public InvInvoiceDTO returnInvInvoiceSummarySumation(InvPurchaseInvoice entity, BigDecimal sumDetailNet);
@@ -105,7 +105,9 @@ public interface InvPurchaseInvoiceService_1 {
     public void updatelookAndIsDone(SupplierAccountViewBean supplierAccountViewBean);
 
     public void updatelookAndIsDone(List<SupplierAccountViewBean> supplierAccountViewBeanList);
-    
+
     public DistributionApiData distributionApiData(DistributionApiSearch distributionApiSearch);
 
-}
+    public Integer findInvPurchaseInvoiceBySerialNew(Integer serial, Integer branchId, Integer type)  ;
+
+    }

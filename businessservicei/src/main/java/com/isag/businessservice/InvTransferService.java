@@ -33,23 +33,25 @@ public interface InvTransferService {
     InvTransfer findInvTransferByInvTransferId(Integer invTransferId);
 
     Integer findMaxSerialNoByBranch(Integer branchId);
-    
+
     public InvTransfer updateInvTransfer(InvTransfer invTransfer);
-    
-    public List<InvTransfer> getALLInvTransferByBranchIdAndTransferType(Integer Id,Integer transferType) ;
-    
-    public Long getTotalRegistors( Integer branchId,Integer transferType, Map<String, Object> filters);
-    
-    public List<InvInvoiceDTO> getALLInvTransferByBranchId( int first, int pageSize, String sortField, Boolean asc, Integer branchId,Integer transferType, Map<String, Object> filters);
-    
+
+    public List<InvTransfer> getALLInvTransferByBranchIdAndTransferType(Integer Id, Integer transferType);
+
+    public Long getTotalRegistors(Integer branchId, Integer transferType, Map<String, Object> filters);
+
+    public List<InvInvoiceDTO> getALLInvTransferByBranchId(int first, int pageSize, String sortField, Boolean asc, Integer branchId, Integer transferType, Map<String, Object> filters);
+
     public List<InvTransfer> getALLInvTransferByBranchIdAndStatusandType(Integer branchId);
-    
+
     public List<InvTransfer> getALLInvTransferByBranchIdAndStatus(Integer branchId);
-    
-     public InvTransfer addInvTransferMofakroun(InvTransfer invTransfer);
-     
-     public InvInvoiceDTO findInvTransferById(InvInvoiceDTO invInvoiceDTO);
-     
-     public InvInvoiceDTO save(InvInvoiceDTO invInvoiceDTO, IsagUser isagUser); 
+
+    public InvTransfer addInvTransferMofakroun(InvTransfer invTransfer);
+
+    public InvInvoiceDTO findInvTransferById(InvInvoiceDTO invInvoiceDTO);
+
+    public InvInvoiceDTO save(InvInvoiceDTO invInvoiceDTO, IsagUser isagUser);
+
+    public InvInvoiceDTO findInvTransferBySerial(InvInvoiceDTO invInvoiceDTO, Integer branchId);
 
 }

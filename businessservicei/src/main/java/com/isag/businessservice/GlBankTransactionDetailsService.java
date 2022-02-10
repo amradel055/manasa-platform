@@ -35,7 +35,8 @@ public interface GlBankTransactionDetailsService {
     public Integer finMaxSerial(Integer glBankTransactionId);
 
     public Boolean checkGlBankIsUsed(Integer glBankId, Integer branchId);
-    
+
     public void addCashDetail(InvInvoiceDTO dTO, Integer glBankTransactionId, IsagUser tobyUser);
+
 
 }

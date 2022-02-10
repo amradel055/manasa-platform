@@ -121,6 +121,17 @@ public class InvUpdateServiceImp implements InvUpdateService {
         invPurchaseInvoiceDTO = invGlobalService.updateSummition(invPurchaseInvoiceDTO);
         return invPurchaseInvoiceDTO;
     }
+    @Override
+    public InvInvoiceDTO findInvUpdateBySerial(InvInvoiceDTO invInvoiceDTO,Integer branchId) {
+        
+          Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        params.put("serial", invInvoiceDTO.getSerial());
+        InvUpdate invUpdate = dao.findEntityByQuery("SELECT e FROM InvUpdate e WHERE  e.branchId.id = :branchId  AND e.serial = :serial ", params);
+        InvInvoiceDTO invPurchaseInvoiceDTO = mapToDTO(invUpdate, invInvoiceDTO);
+        invPurchaseInvoiceDTO = invGlobalService.updateSummition(invPurchaseInvoiceDTO);
+        return invPurchaseInvoiceDTO;
+    }
 
     private InvInvoiceDTO mapToDTO(InvUpdate entity, InvInvoiceDTO invInvoiceDTO) {
 

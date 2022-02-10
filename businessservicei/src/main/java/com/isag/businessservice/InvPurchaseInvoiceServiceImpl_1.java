@@ -557,6 +557,20 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
     }
 
     @Override
+    public Integer findInvPurchaseInvoiceBySerialNew(Integer serial, Integer branchId, Integer type) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        params.put("serial", serial);
+        params.put("type", type);
+        List<Integer> invPurchaseInvoiceList = dao.findListByQuery("SELECT e.id FROM InvPurchaseInvoice e WHERE  e.branchId.id = :branchId AND e.type = :type AND e.serial = :serial ", params);
+        if (invPurchaseInvoiceList != null && !invPurchaseInvoiceList.isEmpty()&& invPurchaseInvoiceList.get(0)!= null) {
+          Integer invPurchaseInvoiceId = invPurchaseInvoiceList.get(0);
+            return invPurchaseInvoiceId;
+        }
+        return null;
+    }
+
+    @Override
     public List<InvPurchaseInvoice> getALLSalesInvoiceByBranchId(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);

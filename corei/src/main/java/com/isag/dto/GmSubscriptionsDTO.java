@@ -121,6 +121,9 @@ public class GmSubscriptionsDTO extends BaseEntityDTO {
     }
 
     public Integer getType() {
+        if(type==null){
+        type=0;
+        }
         return type;
     }
 

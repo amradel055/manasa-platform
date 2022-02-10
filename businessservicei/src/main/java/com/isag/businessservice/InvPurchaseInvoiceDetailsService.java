@@ -8,10 +8,12 @@ package com.isag.businessservice;
 import com.isag.dto.InvInvoiceDTO;
 import com.isag.dto.InvDetailDTO;
 import com.isag.entity.GlYear;
+import com.isag.entity.InvInventory;
 import com.isag.entity.InvPurchaseInvoiceDetail;
 import com.isag.entity.IsagUser;
 import com.isag.views.ItemsBarcodesDetailsView;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -23,7 +25,7 @@ import javax.ejb.Remote;
 public interface InvPurchaseInvoiceDetailsService {
 
     public List<InvPurchaseInvoiceDetail> getAllInvPurchaseInvoiceDetailByBranchId(Integer branchId);
-    
+
     public List<InvPurchaseInvoiceDetail> getAllInvPurchaseInvoiceDetailByBranchIdByDate(Integer branchId);
 
     public void addInvPurchaseInvoiceDetails(InvPurchaseInvoiceDetail invPurchaseInvoiceDetail);
@@ -39,21 +41,22 @@ public interface InvPurchaseInvoiceDetailsService {
     public InvPurchaseInvoiceDetail findInvPurchaseInvoiceDetailsById(Integer invPurchaseInvoiceDetailsId);
 
     public BigDecimal getLastCostItem(Integer itemId, GlYear glYear, Integer branchId);
-    
+
     public void updateCostAvarage(Integer branchId);
-    
+
     public void reCalcCostAvarage(Integer branchId);
-    
+
     public List<InvDetailDTO> getAllInvPurchaseInvoiceDetailsByInvPurchaseInvoiceIdDTO(InvInvoiceDTO dto);
-    
+
     public List<InvDetailDTO> getAllInvPurchaseInvoiceDetailList(InvInvoiceDTO dto);
-    
+
     public <T> List<ItemsBarcodesDetailsView> findItemBarcodeDetails(List<T> list, InvInvoiceDTO invInvoiceDTO);
-        
+
     public void deleteInvPurchaseInvoiceDetailListDTO(List<InvDetailDTO> invPurchaseInvoiceDetailList);
-    
-    public String addInvPurchaseInvoiceDetailsDTO(List<InvDetailDTO> invPurchaseInvoiceDetailList,InvInvoiceDTO invPurchaseInvoiceDTO , IsagUser isagUser);
-    
+
+    public String addInvPurchaseInvoiceDetailsDTO(List<InvDetailDTO> invPurchaseInvoiceDetailList, InvInvoiceDTO invPurchaseInvoiceDTO, IsagUser isagUser);
+
     public BigDecimal findLastCost(Integer itemId);
-       
+
+    public BigDecimal FindTotalvalueByDate(List<InvInventory> inventoryIdList, Integer branchId);
 }

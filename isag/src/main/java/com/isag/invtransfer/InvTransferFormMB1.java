@@ -66,7 +66,8 @@ public class InvTransferFormMB1 extends InventoryBasicDataForm {
                 if (typeActivity == 1) {
                     getInvInvoiceDTO().setTypeActivity(1);
                 }
-            } else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("edit")) {
+            } 
+            else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("edit")) {
                 fillInvInvoiceDTO();
             } else {
                 exit("../invQuotation_1/invQuotationList.xhtml");

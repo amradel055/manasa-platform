@@ -811,8 +811,8 @@ public class InvGlobalServiceImpl implements InvGlobalService {
             ItemsBarcodesDetailsView barcodesDetailsView = itemsBarcodeMap.get(itemBarcode);
             dTO.setItemsBarcodesDetail(barcodesDetailsView);
             dTO.setItemsBarcodesDetailTrans(dTO.getItemsBarcodesDetail());
-            dTO.setItemName(dTO.getItemsBarcodesDetail().getName());
-            dTO.setItemCode(dTO.getItemsBarcodesDetail().getBarcode());
+            dTO.setItemName(dTO.getItemsBarcodesDetail() !=null ?dTO.getItemsBarcodesDetail().getName():"");
+            dTO.setItemCode(dTO.getItemsBarcodesDetail()!=null ? dTO.getItemsBarcodesDetail().getBarcode():null);
             dTO.setScrewing(screwing);
             if (itemId != null && barcodesDetailsView != null && barcodesDetailsView.getPaintColor() != null) {
                 SymbolDTO paintColor = new SymbolDTO();
