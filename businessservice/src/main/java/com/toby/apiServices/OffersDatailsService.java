@@ -5,6 +5,7 @@
  */
 package com.toby.apiServices;
 
+import com.toby.dto.OffersDetailsDTO;
 import com.toby.entity.OffersDetails;
 import java.util.List;
 import javax.ejb.Remote;
@@ -16,15 +17,17 @@ import javax.ejb.Remote;
 @Remote
 public interface OffersDatailsService {
 
-    public OffersDetails addOffersDetails(OffersDetails offersDetails);
+    public OffersDetailsDTO addOffersDetails(OffersDetailsDTO offersDetails);
 
-    public OffersDetails updateOffersDetails(OffersDetails offersDetails);
+    public OffersDetailsDTO updateOffersDetails(OffersDetailsDTO offersDetails);
 
-    public OffersDetails findOffersDetails(Integer id);
+    public OffersDetailsDTO deleteOffersDetails(OffersDetailsDTO offersDetailsDTO);
 
-    public List<OffersDetails> getAllOffersDetailsByCompanyId(Integer companyId);
-    
-    public List<OffersDetails> getAllOffersDetailsByCompanyIdAndBranchId(Integer companyId , Integer branchId);
+    public OffersDetailsDTO findOffersDetails(OffersDetailsDTO offersDetailsDTO);
+
+    public List<OffersDetailsDTO> getAllOffersDetailsByCompanyId(OffersDetailsDTO offersDetailsDTO);
+
+    public List<OffersDetailsDTO> getAllOffersDetailsByCompanyIdAndBranchId(OffersDetailsDTO offersDetailsDTO);
 
     public Integer getMaxId();
 
