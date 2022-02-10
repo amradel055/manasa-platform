@@ -866,6 +866,9 @@
                                     <p:menuitem id="sr_lnk463" value="#{userData.userDDs['INV_STORES_REP']}" icon="&#xE8D2;" url="/faces/views/inventoryreports/invstripReportCeramic.xhtml" 
                                                 rendered="#{userData.userScreens['invstripReportCeramic'].view or userData.isAdmin}"
                                                 />
+                                    <p:menuitem id="gm_lnk562666" value="تقرير القيمة المضافة " icon="&#xE8D2;" url="/faces/views/gmreports/SalesReportByValueAdedDetailsReport.xhtml" 
+                                                rendered="#{userData.userScreens['SalesReportByValueAdedDetailsReport'].view or userData.isAdmin}"
+                                                />
                                 </p:submenu>
                             </p:submenu>
                             <p:submenu id="sr_sm7" label="#{userData.userDDs['INSTALLMENT_MANAG']}" icon="&#xE8D2;"
@@ -1099,7 +1102,7 @@
                                     <p:menuitem id="gm_lnk550" value="إنشاء البنود" icon="&#xE8D2;" url="/faces/views/gmitemsymbol/itemsymbollist.xhtml" 
                                                 rendered="#{userData.userScreens['gmitemsymbol'].view or userData.isAdmin}"
                                                 />
-                                      <p:menuitem id="gm_lnk55050" value="إنشاء بنود المقبوضات" icon="&#xE8D2;" url="/faces/views/gmitems/itemsymbollist.xhtml" 
+                                    <p:menuitem id="gm_lnk55050" value="إنشاء بنود المقبوضات" icon="&#xE8D2;" url="/faces/views/gmitems/itemsymbollist.xhtml" 
                                                 rendered="#{userData.userScreens['gmitemsymbol'].view or userData.isAdmin}"
                                                 />
                                     <p:menuitem id="gm_lnk551" value="استعلام" icon="&#xE8D2;" url="/faces/views/gmsubscriptionstatue/gmsubscriptionstatue.xhtml" 
@@ -1135,10 +1138,10 @@
                                     <p:menuitem id="gm_lnk561" value="تقرير الإشتراكات  " icon="&#xE8D2;" url="/faces/views/gmreports/gmsubscriptionsreport.xhtml" 
                                                 rendered="#{userData.userScreens['gmsubscriptionsreport'].view or userData.isAdmin}"
                                                 />
-                                       <p:menuitem id="gm_lnk562" value="تقرير القيمة المضافة " icon="&#xE8D2;" url="/faces/views/gmreports/SalesGmReportByValueAdedDetailsReport.xhtml" 
+                                    <p:menuitem id="gm_lnk562" value="تقرير القيمة المضافة " icon="&#xE8D2;" url="/faces/views/gmreports/SalesGmReportByValueAdedDetailsReport.xhtml" 
                                                 rendered="#{userData.userScreens['SalesGmReportByValueAdedDetailsReport'].view or userData.isAdmin}"
                                                 />
-                                            <p:menuitem id="gm_lnk563" value="تقرير العملاء المحذوفيين " icon="&#xE8D2;" url="/faces/views/gmreports/gmdeletedsubscriptionsreport.xhtml" 
+                                    <p:menuitem id="gm_lnk563" value="تقرير العملاء المحذوفيين " icon="&#xE8D2;" url="/faces/views/gmreports/gmdeletedsubscriptionsreport.xhtml" 
                                                 rendered="#{userData.userScreens['gmdeletedsubscriptionsreport'].view or userData.isAdmin}"
                                                 />
 

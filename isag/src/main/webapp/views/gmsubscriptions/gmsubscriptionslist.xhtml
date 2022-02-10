@@ -199,7 +199,7 @@
                                            icon="fa fa-fw fa-search-plus"  style="background-color: rgba(63, 81, 181, 0.88);border-radius: 3px;"
                                            title="#{userData.userDDs['VIEW']}" 
                                            action="#{gmSubscriptionsListDTOMB.goToEdit()}" 
-                                           rendered="#{userData.userScreens['gmsubscriptions'].edit or userData.isAdmin}" >
+                                           rendered="#{userData.userScreens['gmsubscriptions'].add or userData.isAdmin}" >
 
                             <f:setPropertyActionListener value="#{invInvoicePurchaseTable}" 
                                                          target="#{gmSubscriptionsListDTOMB.gmSubscriptionsDTOSelected}" />

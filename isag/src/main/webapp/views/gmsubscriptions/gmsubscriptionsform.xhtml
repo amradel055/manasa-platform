@@ -276,7 +276,7 @@
                                               title="#{userData.userDDs['SAVE']}"
                                               value="#{userData.userDDs['SAVE']}"  
                                               action="#{gmSubscriptionsFormDTOMB.saveAndPrint()}"
-                                              rendered="#{userData.userScreens['user'].add or userData.userScreens['user'].edit or userData.isAdmin }"
+                                              rendered="#{(userData.userScreens['gmsubscriptions'].edit and gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.id ne null )  or (userData.userScreens['gmsubscriptions'].add and gmSubscriptionsFormDTOMB.gmSubscriptionsDTO.id eq null )or userData.isAdmin }"
                                               update="@form"/>
                             <p:commandButton 
                                 id="newN"
