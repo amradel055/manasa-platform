@@ -22,24 +22,6 @@ public class OffersDetailsDTO extends BaseEntityDTO {
 
 
 
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof OffersDetailsDTO)) {
-            return false;
-        }
-        OffersDetailsDTO other = (OffersDetailsDTO) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "com.entity.GeneralJornal[ id=" + id + " ]";
-    }
-
 
 
 

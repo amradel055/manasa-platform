@@ -5,7 +5,7 @@
  */
 package com.toby.apiServices;
 
-import com.toby.entity.Variation;
+import com.toby.dto.VariationDTO;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -16,15 +16,17 @@ import javax.ejb.Remote;
 @Remote
 public interface VariationProductService {
 
-    public Variation addVariation(Variation variation);
+    public VariationDTO addVariation(VariationDTO variation);
 
-    public Variation updateVariation(Variation variation);
+    public VariationDTO updateVariation(VariationDTO variation);
 
-    public Variation findVariation(Integer id);
+    public VariationDTO findVariation(VariationDTO variationDTO);
 
-    public List<Variation> getAllVariationsByCompanyId(Integer companyId);
-    
-    public List<Variation> getAllVariationByCompanyIdAndBranchId(Integer companyId , Integer branchId);
+    public VariationDTO deleteVariation(VariationDTO variationDTO);
+
+    public List<VariationDTO> getAllVariationsByCompanyId(VariationDTO variationDTO);
+
+    public List<VariationDTO> getAllVariationByCompanyIdAndBranchId(VariationDTO variationDTO);
 
     public Integer getMaxId();
 

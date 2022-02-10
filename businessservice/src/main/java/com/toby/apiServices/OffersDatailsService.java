@@ -6,7 +6,6 @@
 package com.toby.apiServices;
 
 import com.toby.dto.OffersDetailsDTO;
-import com.toby.entity.OffersDetails;
 import java.util.List;
 import javax.ejb.Remote;
 
