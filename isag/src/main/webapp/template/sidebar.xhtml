@@ -623,6 +623,9 @@
                                     <p:menuitem id="sr_lnk353" value="#{userData.userDDs['SALES_RETURN']}" icon="&#xE8D2;" url="/faces/views/invreturnsales_1/invreturnsaleslist.xhtml"
                                                 rendered="#{userData.userScreens['invreturnsales_1'].view or userData.isAdmin}"
                                                 />
+                                    <p:menuitem id="sr_lnk353000" value="#{userData.userDDs['QUOTATIONS']}" icon="&#xE8D2;" url="/faces/views/invQuotation_1/invQuotationList.xhtml"
+                                                rendered="#{userData.userScreens['invQuotation_1'].view or userData.isAdmin}"
+                                                />
                                 </p:submenu>
 
                                 <p:submenu id="sr_sm36" label="#{userData.userDDs['STORE_TRANSACTION']}" icon="&#xE8D2;"

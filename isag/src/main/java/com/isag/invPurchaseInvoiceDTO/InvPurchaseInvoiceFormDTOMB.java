@@ -23,9 +23,9 @@ import javax.inject.Named;
 @Named(value = "invPurchaseInvoiceFormDTOMB")
 @ViewScoped
 public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
-    
-    private Boolean checkDiscountValue = false ;
-    private Boolean checkDiscountRate = false ;
+
+    private Boolean checkDiscountValue = false;
+    private Boolean checkDiscountRate = false;
     // EJBs
     @EJB
     private InvPurchaseInvoiceService_1 invPurchaseInvoiceService;
@@ -47,7 +47,6 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
                 setErrorGlobal(error);
                 exit("../base/error.xhtml");
             }
-            
 
             //   getItemsBarcodesDetailsViewList();
         } catch (Exception e) {
@@ -67,7 +66,7 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
                 if (typeActivity == 1) {
                     getInvInvoiceDTO().setTypeActivity(1);
                 }
-                if(!getUserData().getIsagUserRole().getCustomerShow()){
+                if (!getUserData().getIsagUserRole().getCustomerShow()) {
                     getInvInvoiceDTO().setOrganizationSiteId(null);
                 }
             } else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("editInvoice")) {
@@ -77,7 +76,7 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
                 fillDefaultList();
                 putCurrency();
                 getInvInvoiceDTO().setIsEdit(Boolean.FALSE);
-                
+
             } else {
                 exit("../invpurchaseinvoice_1/invpurchaseinvoicelist.xhtml");
             }
@@ -85,11 +84,10 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
             saveError(e, "InvPurchaseInvoiceFormMB", "load");
         }
     }
-    
-   
 
     @Override
     public String save() {
+        checkDetailData();
         if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getInvPurchaseInvoiceDetailList() != null && !getInvInvoiceDTO().getInvPurchaseInvoiceDetailList().isEmpty()) {
             getInvInvoiceDTO().setMsg(null);
             setInvInvoiceDTO(invPurchaseInvoiceService.save(getInvInvoiceDTO(), getUserData().getUser()));
@@ -167,8 +165,7 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
     public void setRemain(BigDecimal remain) {
         this.remain = remain;
     }
-    
-    
+
     /**
      * @return the checkDiscountValue
      */

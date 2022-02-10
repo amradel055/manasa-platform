@@ -8,30 +8,16 @@
                 xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:c="http:addInvDetail//xmlns.jcp.org/jsp/jstl/core">
     <ui:define name="content">
-
-
         <f:event listener="#{userData.authorize}" type="preRenderView" />
         <h:form id="form" dir="#{userData.dir}" class='formmargin'>
-
-            <div >
-                <p:messages id="curmsg" autoUpdate="true" showDetail="true" rendered="true" closable="true"/>   
-            </div>
-
             <p:fieldset id="test5" legend="#{userData.userDDs['SALES_INVOICES']}"> 
                 <p:hotkey  bind="F7" update="form:loadMonthTargetdlg" action="#{invPurchaseInvoiceListDTOMB.MonthTargetDlg()}"/>
-
                 <div  id="firstSegment" class="ui-g-12 ui-g-nopad salesInvoiceFirst">
-
                     <div class="ui-g">
                         <h:panelGroup id="test">
-
-
-
-
                             <h:panelGroup id="test55">
                                 <div class="ui-g-6 ui-xl-6">
                                     <div class="ui-g-12 ui-xl-12">
-
                                         <div class="ui-g-6 ui-xl-6">
                                             <p:calendar id="dateFrom" 
                                                         value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.date}"
@@ -40,7 +26,6 @@
                                         </div>
                                         <div class="ui-g-6 ui-xl-6">
                                             <p:outputLabel style="width: 95px; ;" value="#{userData.userDDs['DATEE']}*"/>
-
                                         </div>
                                     </div>
 
@@ -213,6 +198,9 @@
 
             </p:fieldset>
 
+            <div >
+                <p:messages id="curmsg" autoUpdate="true" showDetail="true" rendered="true" closable="true"/>   
+            </div>
             <div>
                 <p:fieldset id="fieldSetId" legend="#{userData.userDDs['DET_SALE_INVO']}"   >
                     <div >
@@ -1044,6 +1032,91 @@
 
                     </p:dialog>
                 </h:panelGroup>
+            </div>
+
+
+            <div class="ui-g-6 ui-xl-6" >
+
+                <p:dialog header="البحث عن صنف" widgetVar="dlg4" showEffect="explode" hideEffect="bounce" height="440" width="500" style="margin-top: 2%">
+
+                    <h:panelGroup>
+                        <p:outputLabel style="width: 10vh" value="الصنف"/>
+                    </h:panelGroup> 
+                    <h:panelGroup>
+                        <p:inputText value="#{invPurchaseInvoiceFormDTOMB.itemName}"/>  
+                    </h:panelGroup>
+
+                    <h:panelGroup style="margin-right: 6%">
+
+                        <p:commandButton     class="saveButton"  
+                                             title="#{userData.userDDs['SAVE']}"
+                                             value="بحث" 
+                                             icon="fa fa-fw fa-save" 
+                                             action="#{invPurchaseInvoiceFormDTOMB.findAllItemsBarcodesDetailsViewBranchId()}"
+                                             update="itemTable"
+                                             >
+                        </p:commandButton>
+
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <p:dataTable id="itemTable"
+                                     draggableColumns="true" 
+                                     var="itemTable" 
+                                     style="margin-top: 5%"
+                                     widgetVar="itemTable" 
+                                     rowIndexVar="index" 
+                                     dir="rtl" 
+                                     selection="#{invPurchaseInvoiceFormDTOMB.itemsBarcodesDetailsViewListForSearchSelected}"
+                                     value="#{invPurchaseInvoiceFormDTOMB.itemsBarcodesDetailsViewListForSearch}" 
+                                     selectionMode="single"
+                                     rowKey="#{itemTable.id}"  scrollable="true" scrollHeight="250"
+                                     emptyMessage="#{userData.userDDs['EMPTY_TABLE']}">
+
+                            <f:facet name="header" >
+                                <p:outputPanel  >
+                                    <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                                    <p:inputText id="globalFilter" onkeyup="PF('itemTable').filter()" style="width:150px" />
+                                </p:outputPanel>
+                            </f:facet>
+
+                            <p:column style="width:2vw;font-size:0.8vw;text-align: right;border-radius: 0px"
+                                      filterStyle="display:none"
+                                      filterBy="#{itemTable.barcode}"
+                                      filterMatchMode="contains"
+                                      headerText="الكود" 
+                                      sortBy="#{itemTable.barcode}" 
+                                      >
+                                <p:outputLabel value="#{itemTable.barcode}" />
+                            </p:column>  
+
+                            <p:column style="width:10vw;font-size:0.8vw;text-align: right;border-radius: 0px"
+                                      filterStyle="display:none" filterBy="#{itemTable.name}"
+                                      filterMatchMode="contains"
+                                      headerText="الصنف" 
+                                      sortBy="#{itemTable.name}" >
+                                <p:outputLabel value="#{itemTable.name}" />
+                            </p:column>  
+                        </p:dataTable> 
+
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <br/>
+                        <p:commandButton     class="saveButton"  
+                                             title="#{userData.userDDs['SAVE']}"
+                                             value="تحميل" 
+                                             icon="fa fa-fw fa-save" 
+                                             action="#{invPurchaseInvoiceFormDTOMB.putItemsBarcodesDetailsViewBranchId()}"
+                                             update="@form"
+                                             >
+                        </p:commandButton>
+                    </h:panelGroup>
+
+                </p:dialog>
+
+
+
             </div>
 
         </h:form>

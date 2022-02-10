@@ -344,6 +344,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     }
 
     public void validatedetail() {
+        checkDetailData();
         String error = invGlobalService.validateSave(getInvInvoiceDTO().getInvPurchaseInvoiceDetailList(),
                 getInvInvoiceDTO().getInvInventoryId() != null ? getInvInvoiceDTO().getInvInventoryId().getId() : null,
                 getInvInvoiceDTO().getScreenName(), getInvInvoiceDTO().getInventorySetupDTO().getNegativeSell(),
@@ -356,6 +357,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
     public void recalcHeadValues() {
         try {
+            checkDetailData();
             setInvInvoiceDTO(invGlobalService.recalcHeadValues(getInvInvoiceDTO()));
             calculateRemainValue();
         } catch (Exception e) {
@@ -365,6 +367,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
     public void calculateRemainValue() {
         try {
+            checkDetailData();
             getInvInvoiceDTO().setRemain(getInvInvoiceDTO().getPayed().add(getInvInvoiceDTO().getPayNet()).add(getInvInvoiceDTO().getDiscount()).subtract(getInvInvoiceDTO().getTotalNet()));
         } catch (Exception e) {
             saveError(e, "SalesInvoiceFormMB", "calculateRemainValue");
@@ -383,6 +386,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
     public void validateDiscountColumn(InvDetailDTO invPurchaseInvoiceDetailsValidate) {
         try {
+            checkDetailData();
             invPurchaseInvoiceDetailsValidate.setMsg(null);
             invPurchaseInvoiceDetailsValidate = invGlobalService.validateDiscountColumn(invPurchaseInvoiceDetailsValidate);
             afterValidation(invPurchaseInvoiceDetailsValidate);
@@ -399,6 +403,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
     public void validatePriceColumn(InvDetailDTO invPurchaseInvoiceDetailsValidate) {
         try {
+            checkDetailData();
             invPurchaseInvoiceDetailsValidate.setMsg(null);
             invPurchaseInvoiceDetailsValidate = invGlobalService.validatePriceColumn(invPurchaseInvoiceDetailsValidate);
             afterValidation(invPurchaseInvoiceDetailsValidate);
@@ -410,7 +415,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     public void validateNetColumn(InvDetailDTO invPurchaseInvoiceDetailsValidate) {
         try {
             invPurchaseInvoiceDetailsValidate.setMsg(null);
-            invPurchaseInvoiceDetailsValidate.setCost(new BigDecimal((invPurchaseInvoiceDetailsValidate.getNet().divide(invPurchaseInvoiceDetailsValidate.getQuantity(), 3, RoundingMode.HALF_UP)).setScale(3, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString() ));
+            invPurchaseInvoiceDetailsValidate.setCost(new BigDecimal((invPurchaseInvoiceDetailsValidate.getNet().divide(invPurchaseInvoiceDetailsValidate.getQuantity(), 3, RoundingMode.HALF_UP)).setScale(3, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
             invPurchaseInvoiceDetailsValidate = invGlobalService.validateNetColumn(invPurchaseInvoiceDetailsValidate);
             afterValidation(invPurchaseInvoiceDetailsValidate);
 //            addInvDetail();
@@ -421,6 +426,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
     public void validateQuantityColum(InvDetailDTO invPurchaseInvoiceDetailsValidate) {
         try {
+            checkDetailData();
             if (checkdetail(invPurchaseInvoiceDetailsValidate)) {
                 invPurchaseInvoiceDetailsValidate.setMsg(null);
                 invPurchaseInvoiceDetailsValidate = invGlobalService.validateQuantityColum(invPurchaseInvoiceDetailsValidate, (getInvInvoiceDTO().getLoadedSerial() != null), getInvInvoiceDTO().getScreenName(), getInvInvoiceDTO().getInventorySetupDTO().getNegativeSell(), getInvInvoiceDTO().getCompanyActivity());
@@ -445,6 +451,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
     public Boolean validateItems(InvDetailDTO invPurchaseInvoiceDetailsValidate) {
         try {
+            checkDetailData();
             if (checkdetail(invPurchaseInvoiceDetailsValidate)) {
                 invPurchaseInvoiceDetailsValidate.setMsg(null);
                 invPurchaseInvoiceDetailsValidate = invGlobalService.validateItems(invPurchaseInvoiceDetailsValidate,
@@ -452,7 +459,11 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                         getInvInvoiceDTO().getScreenName(), getInvInvoiceDTO().getInventorySetupDTO().getSellBuy(),
                         getInvInvoiceDTO().getInventorySetupDTO().getNegativeSell(), false, getInvInvoiceDTO().getCompanyActivity());
                 afterValidation(invPurchaseInvoiceDetailsValidate);
-                changeFocus("form:invPurchaseInvoiceDetailsTable:" + (getInvInvoiceDTO().getInvPurchaseInvoiceDetailList().size() - 1) + ":QuantityT");
+                if (getUri().contains("invpurchaseinvoiceformCeramic")) {
+                    changeFocus("form:invPurchaseInvoiceDetailsTable:" + (getInvInvoiceDTO().getInvPurchaseInvoiceDetailList().size() - 1) + ":cartonsNumberv");
+                } else {
+                    changeFocus("form:invPurchaseInvoiceDetailsTable:" + (getInvInvoiceDTO().getInvPurchaseInvoiceDetailList().size() - 1) + ":QuantityT");
+                }
                 if (invPurchaseInvoiceDetailsValidate.getMsg() == null || invPurchaseInvoiceDetailsValidate.getMsg().isEmpty()) {
                     posSetting();
                 }
@@ -644,19 +655,20 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 
     public void deleteInvDetail(InvDetailDTO invPurchaseInvoiceDetailsValidate) {
         try {
+            checkDetailData();
             if (invPurchaseInvoiceDetailsValidate.getId() != null) {
                 getInvInvoiceDTO().getInvPurchaseInvoiceDetailsDeletedList().add(invPurchaseInvoiceDetailsValidate);
             }
-            checkDetailData();
+//            checkDetailData();
             getInvInvoiceDTO().getInvPurchaseInvoiceDetailList().remove(invPurchaseInvoiceDetailsValidate);
             getInvInvoiceDTO().setItemsNumber(Boolean.FALSE);
             updateSummition();
-            checkDetailData();
+//            checkDetailData();
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceFormMB", "deleteInvPurchaseInvoiceDetail");
         }
     }
-    
+
     public void checkDetailData() {
         for (InvDetailDTO detailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
             if (detailDTO.getItemsBarcodesDetailTrans() != null) {
@@ -793,7 +805,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
         checkDetailData();
         System.out.print("ttt");
     }
-    
+
     public void findInvInvoiceDto() {
         setInvInvoiceDTO(invPurchaseInvoiceService.getInvPurchaseInvoiceDTOBySupplierInvoiceNumber(getInvInvoiceDTO(), getUserData().getUserBranch().getId()));
 
