@@ -43,7 +43,8 @@ public class InvUpdateFormMB extends InventoryBasicDataForm {
             if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("AddInvUpdate")) {
                 reset();
                 fillDefaultList();
-            } else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("EditInvUpdate")) {
+            } 
+             else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("EditInvUpdate")) {
                 fillInvInvoiceDTO();
             } else {
                 exit("../invupdate/InvUpdateListMB.xhtml");

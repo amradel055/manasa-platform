@@ -262,6 +262,7 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
 
     @Override
     public List<Object[]> findDateWithDocumentSerial(SubAccountSummarySearchBean cashAccountSettlementSearchBean) {
+        dao.executeNativeQuery("select sql_mode_function()");
         Map<String, Object> params = new HashMap();
         params.put("branchId", cashAccountSettlementSearchBean.getBranchId());
         StringBuilder builder = new StringBuilder();
@@ -705,60 +706,60 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
         if (cashAccountSettlementSearchBean.getOrderBy() == 0) {
             Comparator<CashAccountSettlmentView> compare = (CashAccountSettlmentView o1, CashAccountSettlmentView o2)
                     -> {
-                        int value1 = o1.getBankId().compareTo(o2.getBankId());
-                        if (value1 == 0) {
-                            int value2 = o1.getDate().compareTo(o2.getDate());
-                            if (value2 == 0) {
-                                return o1.getOrdered().compareTo(o2.getOrdered());
-                            } else {
-                                return value2;
-                            }
-                        }
-                        return value1;
-                    };
+                int value1 = o1.getBankId().compareTo(o2.getBankId());
+                if (value1 == 0) {
+                    int value2 = o1.getDate().compareTo(o2.getDate());
+                    if (value2 == 0) {
+                        return o1.getOrdered().compareTo(o2.getOrdered());
+                    } else {
+                        return value2;
+                    }
+                }
+                return value1;
+            };
 
             Collections.sort(accountSettlmentViews, compare);
         } else if (cashAccountSettlementSearchBean.getOrderBy() == 1) {
             Comparator<CashAccountSettlmentView> compare = (CashAccountSettlmentView o1, CashAccountSettlmentView o2)
                     -> {
-                        int value1 = o1.getValue().compareTo(o2.getValue());
-                        if (value1 == 0) {
-                            int value2 = o1.getBankId().compareTo(o2.getBankId());
-                            if (value2 == 0) {
-                                int value3 = o1.getDate().compareTo(o2.getDate());
-                                if (value3 == 0) {
-                                    return o1.getOrdered().compareTo(o2.getOrdered());
-                                } else {
-                                    return value3;
-                                }
-                            } else {
-                                return value2;
-                            }
+                int value1 = o1.getValue().compareTo(o2.getValue());
+                if (value1 == 0) {
+                    int value2 = o1.getBankId().compareTo(o2.getBankId());
+                    if (value2 == 0) {
+                        int value3 = o1.getDate().compareTo(o2.getDate());
+                        if (value3 == 0) {
+                            return o1.getOrdered().compareTo(o2.getOrdered());
+                        } else {
+                            return value3;
                         }
-                        return value1;
-                    };
+                    } else {
+                        return value2;
+                    }
+                }
+                return value1;
+            };
 
             Collections.sort(accountSettlmentViews, compare);
         } else if (cashAccountSettlementSearchBean.getOrderBy() == 2) {
 
             Comparator<CashAccountSettlmentView> compare = (CashAccountSettlmentView o1, CashAccountSettlmentView o2)
                     -> {
-                        int value1 = o1.getSerial().compareTo(o2.getSerial());
-                        if (value1 == 0) {
-                            int value2 = o1.getBankId().compareTo(o2.getBankId());
-                            if (value2 == 0) {
-                                int value3 = o1.getDate().compareTo(o2.getDate());
-                                if (value3 == 0) {
-                                    return o1.getOrdered().compareTo(o2.getOrdered());
-                                } else {
-                                    return value3;
-                                }
-                            } else {
-                                return value2;
-                            }
+                int value1 = o1.getSerial().compareTo(o2.getSerial());
+                if (value1 == 0) {
+                    int value2 = o1.getBankId().compareTo(o2.getBankId());
+                    if (value2 == 0) {
+                        int value3 = o1.getDate().compareTo(o2.getDate());
+                        if (value3 == 0) {
+                            return o1.getOrdered().compareTo(o2.getOrdered());
+                        } else {
+                            return value3;
                         }
-                        return value1;
-                    };
+                    } else {
+                        return value2;
+                    }
+                }
+                return value1;
+            };
 
             Collections.sort(accountSettlmentViews, compare);
         }
@@ -806,60 +807,60 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
         if (cashAccountSettlementSearchBean.getOrderBy() == 0) {
             Comparator<CashAccountSettlmentView> compare = (CashAccountSettlmentView o1, CashAccountSettlmentView o2)
                     -> {
-                        int value1 = o1.getBankId().compareTo(o2.getBankId());
-                        if (value1 == 0) {
-                            int value2 = o1.getDate().compareTo(o2.getDate());
-                            if (value2 == 0) {
-                                return o1.getOrdered().compareTo(o2.getOrdered());
-                            } else {
-                                return value2;
-                            }
-                        }
-                        return value1;
-                    };
+                int value1 = o1.getBankId().compareTo(o2.getBankId());
+                if (value1 == 0) {
+                    int value2 = o1.getDate().compareTo(o2.getDate());
+                    if (value2 == 0) {
+                        return o1.getOrdered().compareTo(o2.getOrdered());
+                    } else {
+                        return value2;
+                    }
+                }
+                return value1;
+            };
 
 //            Collections.sort(accountSettlmentViews, compare);
         } else if (cashAccountSettlementSearchBean.getOrderBy() == 1) {
             Comparator<CashAccountSettlmentView> compare = (CashAccountSettlmentView o1, CashAccountSettlmentView o2)
                     -> {
-                        int value1 = o1.getValue().compareTo(o2.getValue());
-                        if (value1 == 0) {
-                            int value2 = o1.getBankId().compareTo(o2.getBankId());
-                            if (value2 == 0) {
-                                int value3 = o1.getDate().compareTo(o2.getDate());
-                                if (value3 == 0) {
-                                    return o1.getOrdered().compareTo(o2.getOrdered());
-                                } else {
-                                    return value3;
-                                }
-                            } else {
-                                return value2;
-                            }
+                int value1 = o1.getValue().compareTo(o2.getValue());
+                if (value1 == 0) {
+                    int value2 = o1.getBankId().compareTo(o2.getBankId());
+                    if (value2 == 0) {
+                        int value3 = o1.getDate().compareTo(o2.getDate());
+                        if (value3 == 0) {
+                            return o1.getOrdered().compareTo(o2.getOrdered());
+                        } else {
+                            return value3;
                         }
-                        return value1;
-                    };
+                    } else {
+                        return value2;
+                    }
+                }
+                return value1;
+            };
 
 //            Collections.sort(accountSettlmentViews, compare);
         } else if (cashAccountSettlementSearchBean.getOrderBy() == 2) {
 
             Comparator<CashAccountSettlmentView> compare = (CashAccountSettlmentView o1, CashAccountSettlmentView o2)
                     -> {
-                        int value1 = o1.getSerial().compareTo(o2.getSerial());
-                        if (value1 == 0) {
-                            int value2 = o1.getBankId().compareTo(o2.getBankId());
-                            if (value2 == 0) {
-                                int value3 = o1.getDate().compareTo(o2.getDate());
-                                if (value3 == 0) {
-                                    return o1.getOrdered().compareTo(o2.getOrdered());
-                                } else {
-                                    return value3;
-                                }
-                            } else {
-                                return value2;
-                            }
+                int value1 = o1.getSerial().compareTo(o2.getSerial());
+                if (value1 == 0) {
+                    int value2 = o1.getBankId().compareTo(o2.getBankId());
+                    if (value2 == 0) {
+                        int value3 = o1.getDate().compareTo(o2.getDate());
+                        if (value3 == 0) {
+                            return o1.getOrdered().compareTo(o2.getOrdered());
+                        } else {
+                            return value3;
                         }
-                        return value1;
-                    };
+                    } else {
+                        return value2;
+                    }
+                }
+                return value1;
+            };
 
 //            Collections.sort(accountSettlmentViews, compare);
         }
@@ -1636,6 +1637,7 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
 
     @Override
     public List<CashAccountSettlmentView> findOpeningBalancesForSpecificCashAccountByGroups(SubAccountSummarySearchBean cashAccountSettlementSearchBean, Integer type, GlYear glYear) {
+        dao.executeNativeQuery("select sql_mode_function()");
         List<CashAccountSettlmentView> cashAccountSettlmentViewReturnedList = new ArrayList<>();
 
         Map<String, Object> params = new HashMap();
@@ -2048,14 +2050,19 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
     }
 
     public String createSQL(SubAccountSummarySearchBean cashAccountSettlementSearchBean, boolean isOpenningBalance) {
+        dao.executeNativeQuery("select sql_mode_function()");
         StringBuilder query = null;
         String dateFrom = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(cashAccountSettlementSearchBean.getDateFrom());
         String dateTo = new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(cashAccountSettlementSearchBean.getDateTo());
-
+        query = new StringBuilder();
+        if (cashAccountSettlementSearchBean.getOrderBy() == 0) {
+            query.append("SELECT s.`createdBy`,s.`bankId`,s.`paymentType`,s.`date`,s.`serial`,s.`value`,s.`value_local`,s.`remark`,s.`remark2`,s.`name`,"
+                    + " s.`code`,s.`currencyName`,s.`currencyCode`, s.`status`,s.`contractSerial`,s.`type_name`, s.`documentSerial` from ( ");
+        }
         if (cashAccountSettlementSearchBean.getGlBankIdSelected() != null && !cashAccountSettlementSearchBean.getGlBankIdSelected().isEmpty()) {
             if ((cashAccountSettlementSearchBean.getTransactionType() == null || cashAccountSettlementSearchBean.getTransactionType() == 0) && cashAccountSettlementSearchBean.getType() == 3
                     && cashAccountSettlementSearchBean.getSerialFrom() == null && cashAccountSettlementSearchBean.getSerialTo() == null) {
-                query = new StringBuilder();
+
                 query.append("SELECT \n"
                         + "        `i`.`name` AS `createdBy`,\n"
                         + "        `gb`.`id` AS `bankId`,\n"
@@ -2527,16 +2534,16 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
                         + "        `gb`.`code` AS `code`,\n"
                         + "        NULL AS `currencyName`,\n"
                         + "        NULL AS `currencyCode`,\n").append(status).append(
-                                "  AS `status`,\n"
-                                + "        '' AS `contractSerial`,\n"
-                                + "        'اشتراكات جيم' AS `type_name`,\n"
-                                + "        NULL AS `documentSerial`\n"
-                                + "    FROM\n"
-                                + "        (((`isag`.`gm_subscriptions` `gs`\n"
-                                + "        LEFT JOIN `isag`.`gm_subscriptions_detail` `gsd` ON ((`gs`.`id` = `gsd`.`gm_subscriptions_id`)))\n"
-                                + "        LEFT JOIN `isag`.`gl_bank` `gb` ON ((`gb`.`id` = `gs`.`gl_bank_id`)))\n"
-                                + "        LEFT JOIN `isag`.`isag_user` `i` ON ((`i`.`id` = `gs`.`created_by`))) where  gs.deleted_by IS NULL  "
-                                + "            AND `gs`.`gl_bank_id` in (").append(cashAccountSettlementSearchBean.getGlBankIdSelected()).append(")");
+                        "  AS `status`,\n"
+                        + "        '' AS `contractSerial`,\n"
+                        + "        'اشتراكات جيم' AS `type_name`,\n"
+                        + "        NULL AS `documentSerial`\n"
+                        + "    FROM\n"
+                        + "        (((`isag`.`gm_subscriptions` `gs`\n"
+                        + "        LEFT JOIN `isag`.`gm_subscriptions_detail` `gsd` ON ((`gs`.`id` = `gsd`.`gm_subscriptions_id`)))\n"
+                        + "        LEFT JOIN `isag`.`gl_bank` `gb` ON ((`gb`.`id` = `gs`.`gl_bank_id`)))\n"
+                        + "        LEFT JOIN `isag`.`isag_user` `i` ON ((`i`.`id` = `gs`.`created_by`))) where  gs.deleted_by IS NULL  "
+                        + "            AND `gs`.`gl_bank_id` in (").append(cashAccountSettlementSearchBean.getGlBankIdSelected()).append(")");
                 if (isOpenningBalance) {
                     query.append("            AND `gs`.`date` < '").append(dateFrom).append("'");
                 } else {
@@ -2552,6 +2559,10 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
 
                 query.append(" AND `gs`.`type` = 0 ");
             }
+        }
+
+        if (cashAccountSettlementSearchBean.getOrderBy() == 0) {
+            query.append(" ) s order by s.`date` ");
         }
         return query == null ? null : query.toString();
     }
@@ -2572,12 +2583,12 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
             cashAccountSettlmentView.setValue(object[5] != null ? (BigDecimal) object[5] : null);
             cashAccountSettlmentView.setValueLocal(object[6] != null ? (BigDecimal) object[6] : null);
             cashAccountSettlmentView.setRemark(object[7] != null ? (String) object[7] : null);
-            cashAccountSettlmentView.setRemark2(object[8] != null ? (String) object[8] : null); 
+            cashAccountSettlmentView.setRemark2(object[8] != null ? (String) object[8] : null);
             cashAccountSettlmentView.setName(object[9] != null ? (String) object[9] : null);
             cashAccountSettlmentView.setCode(object[10] != null ? (String) object[10] : null);
             cashAccountSettlmentView.setCurrencyName(object[11] != null ? (String) object[11] : null);
             cashAccountSettlmentView.setCurrencyCode(object[12] != null ? (String) object[12] : null);
-            cashAccountSettlmentView.setStatus(object[13] != null ? Integer.valueOf(object[13].toString())  : null);
+            cashAccountSettlmentView.setStatus(object[13] != null ? Integer.valueOf(object[13].toString()) : null);
             cashAccountSettlmentView.setContractSerial(object[14] != null ? (String) object[14] : null);
             cashAccountSettlmentView.setTypeName(object[15] != null ? (String) object[15] : null);
             cashAccountSettlmentView.setDocumentSerial(object[16] != null ? (Integer) object[16] : null);
@@ -2597,9 +2608,9 @@ public class CashAccountSettlmentServiceImpl implements CashAccountSettlmentServ
         BigDecimal value = BigDecimal.ZERO;
         if (res != null && !res.isEmpty()) {
 //            for (Object[] object : res) {
-                if (res.get(0) != null) {
-                    value = res.get(0) != null ? res.get(0) : BigDecimal.ZERO;
-                }
+            if (res.get(0) != null) {
+                value = res.get(0) != null ? res.get(0) : BigDecimal.ZERO;
+            }
 //            }
         }
 

@@ -27,29 +27,31 @@ public interface GmSubscriptionsService {
     public List<GmSubscriptionsDTO> getALLGmSubscriptionsDTOByBranchId(Integer branchId);
 
     public GmSubscriptionsDTO findGmSubscriptionsDTOById(GmSubscriptionsDTO gmSubscriptionsDTODto);
-   
-    public GmSubscriptionsDTO findGmSubscriptionsDTOBySerial(GmSubscriptionsDTO gmSubscriptionsDTO, Integer branchId) ;
+
+    public GmSubscriptionsDTO findGmSubscriptionsDTOBySerial(GmSubscriptionsDTO gmSubscriptionsDTO, Integer branchId);
 
     public GmSubscriptionsDTO save(GmSubscriptionsDTO gmSubscriptionsDTODTO, IsagUser isagUser);
 
     public Long getTotalRegistors(Integer type, Integer branchId, Map<String, Object> filters);
 
-    public List<GmSubscriptionsDTO> getALLGmSubscriptionsDTODTOByTypeAndBranchId(Integer type,  int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters);
+    public List<GmSubscriptionsDTO> getALLGmSubscriptionsDTODTOByTypeAndBranchId(Integer type, int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters);
 
     public void deleteGmSubscriptionsDTODTO(GmSubscriptionsDTO gmSubscriptionsDTO, Integer isPurchaseOrSales);
-    
+
     public void deleteGmSubscriptionsDTODTO(Integer invoiceId);
 
     public BigDecimal netPay(SubAccountSummarySearchBean cashAccountSettlementSearchBean, Integer bankId);
 
     public BigDecimal returnInvInvoiceSummarySummationDuration(Integer BranchId, Integer type, Date dateFrom, Date dateTo);
-    
+
     public List<GmSubscriptionsDTO> getALLGmSubscriptionsDTODTOByCustomerId(Integer customerId);
-    
+
     public GmSubscriptionsDTO getValidGmSubscriptionsDTOByCustomerId(Integer customerId);
-    
-    public GmSubscriptionsDTO GmSubscribtionAutoSave(GmSubscriptionsDTO dTO , IsagUser isagUser);
-    
-     public void updateDeleteGmSubscriptionsDTODTO(GmSubscriptionsDTO gmSubscriptionsDTO , IsagUser user);
- 
+
+    public GmSubscriptionsDTO GmSubscribtionAutoSave(GmSubscriptionsDTO dTO, IsagUser isagUser);
+
+    public void updateDeleteGmSubscriptionsDTODTO(GmSubscriptionsDTO gmSubscriptionsDTO, IsagUser user);
+
+    public Integer findGmSubscriptionsDTOBySerialNew(Integer serial, Integer branchId);
+
 }

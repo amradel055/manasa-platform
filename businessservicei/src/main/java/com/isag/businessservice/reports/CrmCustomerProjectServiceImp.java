@@ -42,6 +42,7 @@ import javax.ejb.Stateless;
     
        @Override
     public List<CrmCustomerInterestedProductsDTO> getCrmCustomerInterestedProductsByOrganizationSiteId(Integer branchId, CrmEventsReportSearchBean crmEventsReportSearchBean) {
+        dao.executeNativeQuery("select sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
         

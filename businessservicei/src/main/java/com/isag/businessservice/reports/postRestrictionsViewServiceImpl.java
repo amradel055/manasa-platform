@@ -40,6 +40,7 @@ public class postRestrictionsViewServiceImpl implements postRestrictionsViewServ
 
     @Override
     public List<PostRestrictionsView> getPostRestrictionByScreenCode(Integer branchId, Date dateFrom, Date dateTo, Integer DocumentId, Integer postFlag) {
+        dao.executeNativeQuery("select sql_mode_function()");
         if (branchId != null && branchId != 179) {
             Map<String, Object> params = new HashMap<>();
             String query = "SELECT glb FROM PostRestrictionsView glb WHERE glb.branchId = :branchId AND glb.screenCode = :DocumentId AND glb.postFlag = :postFlag";
@@ -164,6 +165,7 @@ public class postRestrictionsViewServiceImpl implements postRestrictionsViewServ
 
     @Override
     public List<PostRestrictionsView> getTransactionsIdForUpdatePostFlag(Integer BankIdAccount, Date documentDate, Long screenCode) {
+        dao.executeNativeQuery("select sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         String accountClass = "";
 

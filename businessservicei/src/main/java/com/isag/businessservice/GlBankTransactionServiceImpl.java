@@ -245,6 +245,7 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
     }
 
     public void getALLGlBankTransactionOpeningBalance(SubAccountSummarySearchBean subAccountSummarySearchBean) {
+        dao.executeNativeQuery("select sql_mode_function()");
         balance.clear();
         openingBalance.clear();
         if (subAccountSummarySearchBean != null && subAccountSummarySearchBean.getBranchId() != null) {
@@ -299,7 +300,23 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
 
     @Override
     public GlBankTransaction findGlBankTransactionById(Integer glBankTransactionId) {
-        return dao.findEntityById(GlBankTransaction.class, glBankTransactionId);
+        return dao.findEntityById(GlBankTransaction.class , glBankTransactionId);
+    }
+
+    @Override
+    public Integer findGlBankTransactionBySerial(Integer serial, Integer branchId, Integer transactionType) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        params.put("serial", serial);
+        params.put("transactionType", transactionType);
+        List<Integer>GlBankTransactionList= dao.findListByQuery("SELECT e.id FROM GlBankTransaction e WHERE  e.branchId.id = :branchId  AND e.serial = :serial AND e.transactionType = :transactionType ", params);
+        if(GlBankTransactionList!=null&&!GlBankTransactionList.isEmpty()&&GlBankTransactionList.get(0)!=null){
+            Integer  GlBankTransactionId =GlBankTransactionList.get(0);
+            return GlBankTransactionId;
+        
+        }
+                return null;
+
     }
 
     @Override
@@ -664,20 +681,19 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
             dao.updateEntity(bankTransaction);
         }
     }
-    
+
     @Override
     public void updatelookAndIsDone(List<SupplierAccountViewBean> supplierAccountViewBeanList) {
-        for(SupplierAccountViewBean supplierAccountViewBean : supplierAccountViewBeanList){
+        for (SupplierAccountViewBean supplierAccountViewBean : supplierAccountViewBeanList) {
             updatelookAndIsDone(supplierAccountViewBean);
         }
     }
 
-     public GlBankTransaction mapToEntityFromInvSales(InvInvoiceDTO dTO, IsagUser isagUser) {
+    public GlBankTransaction mapToEntityFromInvSales(InvInvoiceDTO dTO, IsagUser isagUser) {
         GlBankTransaction entity = new GlBankTransaction();
 
         entity.setDate(dTO.getDate());
 
-        
         if (dTO.getGlBankId() != null && dTO.getGlBankId().getId() != null) {
             GlBank glBank = new GlBank();
             glBank.setId(dTO.getGlBankId().getId());
@@ -708,8 +724,7 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
 
         return entity;
     }
-    
-     
+
     @Override
     public void addCash(InvInvoiceDTO dTO, IsagUser tobyUser) {
 
@@ -719,7 +734,7 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
 
         glBankTransactionDetailsService.addCashDetail(dTO, glBankTransaction.getId(), tobyUser);
     }
-    
+
     /**
      * @return the value
      */
@@ -736,7 +751,7 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
     public void setValue(BigDecimal value) {
         this.value = value;
     }
-    
+
     @Override
     public Map<Integer, Vector<Object>> getAllinstallmentIdAndPayedValue(Integer branchId, List<Integer> installmentIdList) {
         Map<String, Object> param = new HashMap<>();
@@ -764,6 +779,5 @@ public class GlBankTransactionServiceImpl implements GlBankTransactionService {
         }
         return map;
     }
-
 
 }

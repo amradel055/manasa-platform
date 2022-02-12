@@ -31,6 +31,7 @@ public class RscExtractUnitItemViewServiceImpl implements RscExtractUnitItemAmou
 
     @Override
     public List<RscExtractUnitItemAmountViewBean> findRscExtractUnitItemViewService(RscExtractUnitItemAmountSearchBean rscExtractUnitItemAmountSearchBean, Integer branchId) {
+        dao.executeNativeQuery("select sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         List<RscExtractUnitItemAmountViewBean> list = new ArrayList<>();
 

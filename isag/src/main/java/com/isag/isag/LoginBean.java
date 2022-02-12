@@ -43,7 +43,6 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 import com.isag.businessservice.IsagUserService;
-import com.isag.entity.IsagUserRole;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -116,7 +115,8 @@ public class LoginBean extends Basic implements Serializable {
 
         HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
         if (session.getAttribute("userLogInData") != null) {
-            FacesContext.getCurrentInstance().getExternalContext().redirect("/igma/faces/dashboard.xhtml");
+//            FacesContext.getCurrentInstance().getExternalContext().redirect("/igma/faces/dashboard.xhtml");
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/faces/dashboard.xhtml");
         }
     }
 
@@ -219,7 +219,8 @@ public class LoginBean extends Basic implements Serializable {
             try {
                 userData = (UserData) context.getSessionMap().get("userLogInData");
                 if (userData == null) {
-                    FacesContext.getCurrentInstance().getExternalContext().redirect("/igma/faces/login.xhtml");
+                    FacesContext.getCurrentInstance().getExternalContext().redirect("/");
+//                    FacesContext.getCurrentInstance().getExternalContext().redirect("/igma/faces/login.xhtml");
                 }
 
                 String scheme = context.getRequestScheme() + "://";
@@ -236,6 +237,7 @@ public class LoginBean extends Basic implements Serializable {
                     session.invalidate();
                 }
                 if (!response.isCommitted()) {
+//                    context.redirect("/igma?faces-redirect=true");
                     context.redirect("/igma?faces-redirect=true");
                 }
 //        } catch (IOException ex) {

@@ -92,6 +92,7 @@ public class GeneraljournalDetailsServiceImpl implements GeneraljournalDetailsSe
 
     @Override
     public BigDecimal getBalanceForGlAccount(Integer glACCOUNTId, Date startGlYear, Date endDate) {
+        dao.executeNativeQuery("select sql_mode_function()");
         Map<String, Object> params = new HashMap();
         params.put("glACCOUNTId", glACCOUNTId);
 
@@ -244,7 +245,7 @@ public class GeneraljournalDetailsServiceImpl implements GeneraljournalDetailsSe
     @Override
     public List<GeneralJournalDetails> getTheDifferenceBetweenDebitAndCreditForAllGlAccountForFinancialMenu(Integer branchId, Integer debitOrCredit, CommonSearchBean commonSearchBean, GlYear glYear) {
         Map<String, Object> params = new HashMap();
-
+        dao.executeNativeQuery("select sql_mode_function()");
         List<GeneralJournalDetails> generalJournalDetailsBasedOnAccClassFirsList = new ArrayList<>();
         if (debitOrCredit != null && debitOrCredit == 1) {
             params.put("branchId", branchId);

@@ -61,7 +61,7 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
         Map<String, Object> params = new HashMap<>();
         params.put("glBankId", glBankId);
         params.put("branchId", branchId);
-       Long check = dao.findEntityByQuery("SELECT COALESCE(Count(e),0)  FROM  GlBankTransactionDetail e WHERE  e.glBankTransactionId.branchId.id = :branchId AND (e.glBankTransactionId.glBankId.id = :glBankId  OR (e.bankIdTo.id = :glBankId OR e.bankIdFrom.id = :glBankId))", params);
+        Long check = dao.findEntityByQuery("SELECT COALESCE(Count(e),0)  FROM  GlBankTransactionDetail e WHERE  e.glBankTransactionId.branchId.id = :branchId AND (e.glBankTransactionId.glBankId.id = :glBankId  OR (e.bankIdTo.id = :glBankId OR e.bankIdFrom.id = :glBankId))", params);
         if (check != null) {
             Boolean check1 = (Boolean) (check > 0);
             if (check1 != null && check1) {
@@ -91,6 +91,9 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
 
     }
 
+ 
+
+
     @Override
     public Integer finMaxSerial(Integer glBankTransactionId) {
         Map<String, Object> params = new HashMap<>();
@@ -98,7 +101,7 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
         Integer max = dao.findEntityByQuery("SELECT COALESCE(MAX(g.serial),0) +1  FROM GlBankTransactionDetail g WHERE g.glBankTransactionId.id =:glBankTransactionId  ", params);
         return max;
     }
-    
+
     @Override
     public void addCashDetail(InvInvoiceDTO dTO, Integer glBankTransactionId, IsagUser isagUser) {
 
@@ -106,7 +109,7 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
 
         dao.updateEntity(bankTransactionDetail);
     }
-    
+
     public GlBankTransactionDetail mapToEntityDetailFromInvSales(InvInvoiceDTO dTO, Integer glBankTransactionId, IsagUser isagUser) {
         GlBankTransactionDetail entity = new GlBankTransactionDetail();
 
@@ -160,6 +163,5 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
 
         return entity;
     }
-
 
 }

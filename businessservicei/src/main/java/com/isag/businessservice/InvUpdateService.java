@@ -29,8 +29,10 @@ public interface InvUpdateService {
     InvUpdate findInvUpdateByInvUpdateId(Integer invUpdateId);
 
     Integer getMaxSerialForInvoiceDetail(InvUpdate invUpdate);
-    
+
     public InvInvoiceDTO findInvUpdateById(InvInvoiceDTO invInvoiceDTO);
-    
+
     public InvInvoiceDTO save(InvInvoiceDTO invInvoiceDTO, IsagUser isagUser);
+
+    public InvInvoiceDTO findInvUpdateBySerial(InvInvoiceDTO invInvoiceDTO, Integer branchId);
 }

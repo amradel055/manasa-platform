@@ -47,11 +47,11 @@ public interface GlBankTransactionService {
 
     public GlBankTransaction updateGlBankTransaction(GlBankTransaction glBankTransaction);
 
-    public Long getTotalRegistors(Integer transactionType, Integer branchId,Integer UserId, Map<String, Object> filters,Integer selectGlBankId);
+    public Long getTotalRegistors(Integer transactionType, Integer branchId, Integer UserId, Map<String, Object> filters, Integer selectGlBankId);
 
     public Long getTotalRegistorsPre(Integer transactionType, Integer branchId, Map<String, Object> filters);
 
-    public List<GlBankTransactionDTO> getALLGlBankTransactionRecievableByBranchId(Integer transactionType, int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters,Integer selectGlBankId,Integer UserId);
+    public List<GlBankTransactionDTO> getALLGlBankTransactionRecievableByBranchId(Integer transactionType, int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters, Integer selectGlBankId, Integer UserId);
 
     public List<GlBankTransactionDTO> getALLGlBankTransactionRecievableNotloadByBranchId(Integer transactionType, int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters);
 
@@ -64,12 +64,14 @@ public interface GlBankTransactionService {
     public List<GlBankTransactionDTO> getALLGlBankTransactionIsClosedPeriod(SubAccountSummarySearchBean subAccountSummarySearchBean);
 
     public Boolean checkDocumentSerial(Integer branchId, Integer glBankid);
-    
+
     public void updatelookAndIsDone(SupplierAccountViewBean supplierAccountViewBean);
-    
+
     public void updatelookAndIsDone(List<SupplierAccountViewBean> supplierAccountViewBeanList);
-    
+
     public void addCash(InvInvoiceDTO dTO, IsagUser tobyUser);
-    
+
     public Map<Integer, Vector<Object>> getAllinstallmentIdAndPayedValue(Integer branchId, List<Integer> installmentIdList);
+
+    public Integer findGlBankTransactionBySerial(Integer serial, Integer branchId, Integer transactionType);
 }

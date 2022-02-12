@@ -118,7 +118,7 @@ public class GmSubscriptionsFormDTOMB extends GMBasicData {
                 fillGmSubscribtionOld();
                 fillResumeClientDTO();
 
-            } else {
+            }else {
                 exit("../gmsubscriptions/gmsubscriptionslist.xhtml");
             }
         } catch (Exception e) {
@@ -193,6 +193,7 @@ public class GmSubscriptionsFormDTOMB extends GMBasicData {
         setGmSubscriptionsDTO(gmSubscriptionsService.findGmSubscriptionsDTOById(getGmSubscriptionsDTO()));
         setGmItemDTOSelected(getGmSubscriptionsDTO().getGmItemDTO());
     }
+    
 
     public void fillGmSubscribtionOld() {
         setGmSubscriptionsDTOold(new GmSubscriptionsDTO());

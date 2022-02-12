@@ -83,6 +83,7 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceFormMB", "load");
         }
+
     }
 
     @Override

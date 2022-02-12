@@ -11,6 +11,7 @@ import com.isag.define.ScreenNameClassEnum;
 import com.isag.dto.InvInvoiceDTO;
 import com.isag.dto.InvDetailDTO;
 import com.isag.entity.GlYear;
+import com.isag.entity.InvInventory;
 import com.isag.entity.InvItem;
 import com.isag.entity.InvPurchaseInvoice;
 import com.isag.entity.InvPurchaseInvoiceDetail;
@@ -22,6 +23,7 @@ import com.isag.views.ItemsBarcodesDetailsView;
 import com.isag.procedure.TempInvPurchaseInvoiceNotLoadedYet;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -250,7 +252,7 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
                     entity.getItemBarcode(), entity.getScrewing(), entity.getItemId().getId(), entity.getWeight(),
                     entity.getUnitId().getId(), entity.getUnitId().getSerial(), entity.getUnitId().getName(),
                     entity.getItemId().getIsInventoryItem(), BigDecimal.ZERO, BigDecimal.ZERO, entity.getAdd1(),
-                    entity.getAdd2(), entity.getAdd3(), entity.getDisc1(), entity.getDisc2(), entity.getDisc3(), entity.getTotalBeforefracture(), entity.getFractureNumber(), entity.getValuefracture(), entity.getCartonsNumber(), entity.getCartonsCapacity(), entity.getAddTotal(),entity.getDiscountValue());
+                    entity.getAdd2(), entity.getAdd3(), entity.getDisc1(), entity.getDisc2(), entity.getDisc3(), entity.getTotalBeforefracture(), entity.getFractureNumber(), entity.getValuefracture(), entity.getCartonsNumber(), entity.getCartonsCapacity(), entity.getAddTotal(), entity.getDiscountValue());
             dTO = invGlobalService.calculateDetailTotalsRow(dTO, invInvoiceDTO, true);
             dTO.setRealQuantity(dTO.getQuantity().multiply(dTO.getScrewing()));
             dTO.setItemId(invItemService.mapToDTO(entity.getItemId()));
@@ -421,6 +423,36 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
         quantityItemsStoreByDate = quantityItemsStoreByDateService.getQuantatyItemByinventory(invPurchaseInvoiceDTO.getInvInventoryId().getId(),
                 invDetailDTO.getItemsBarcodesDetail().getItemId(), invPurchaseInvoiceDTO.getInventorySetupDTO().getSellBuy(), invPurchaseInvoiceDTO.getDate());
         return quantityItemsStoreByDate;
+    }
+
+    @Override
+    public BigDecimal FindTotalvalueByDate(List<InvInventory> inventoryIdList, Integer branchId) {
+        
+        Map<String, Object> params = new HashMap();
+        params.put("branchId", branchId);
+        String inv = updateinventoryIdList(inventoryIdList);
+        String dateFrom = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(new Date());
+        String dateTo = new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(new Date());
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT SUM(ipid.netAfterDiscountHead) FROM InvPurchaseInvoiceDetail ipid WHERE ipid.invPurchaseInvoiceId.branchId.id = :branchId AND ipid.invPurchaseInvoiceId.invInventoryId.id in (").append(inv).append(") AND ipid.invPurchaseInvoiceId.date >= '").append(dateFrom).append("' AND ipid.invPurchaseInvoiceId.date <= '").append(dateTo).append("'");
+        List<BigDecimal> list = dao.findListByQuery(query.toString(), params);
+        return list == null ? BigDecimal.ZERO : list.get(0);
+    }
+
+    public String updateinventoryIdList(List<InvInventory> inventoryIdList) {
+        StringBuilder stringBuilder = null;
+        for (InvInventory inventory : inventoryIdList) {
+            if (stringBuilder == null) {
+                stringBuilder = new StringBuilder();
+                stringBuilder.append(inventory.getId());
+            } else {
+                stringBuilder.append(",").append(inventory.getId());
+
+            }
+            return stringBuilder.toString();
+        }
+        return stringBuilder.toString();
+
     }
 
     public synchronized BigDecimal findCostAvarageForItemByDate(Integer inventoryId, Integer branchId, Integer itemId, Date date) {

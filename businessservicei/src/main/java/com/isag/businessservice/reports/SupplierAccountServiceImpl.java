@@ -89,7 +89,7 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
 
     @Override
     public List<OrganizationSiteStatementView> getAllOpeningBalanceBeforeBalanceBySearchBean(SupplierAccountSearchBean supplierAccountSearchBean) {
-
+        dao.executeNativeQuery("select sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", supplierAccountSearchBean.getBranchId());
 //        params.put("type", supplierAccountSearchBean.getOrganizationType());
@@ -265,7 +265,7 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
 
     @Override
     public List<OrganizationSiteStatementView> getAllOrganizationSiteStatementSearchBeanNew(Integer organizationSiteId, Date dateFrom, Date dateTo) {
-
+        dao.executeNativeQuery("select sql_mode_function()");
         String dateStrFrom = null;
         String dateStrTo = null;
             if (dateFrom != null) {

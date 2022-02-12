@@ -44,6 +44,7 @@ public class QuantityItemsStoreServiceByDateImpl implements QuantityItemsStoreBy
 
     @Override
     public synchronized BigDecimal findInventoryItem(Integer inventoryId, Integer branchId, Integer itemId, Boolean sellBuy, Date date) {
+        dao.executeNativeQuery("select sql_mode_function()");
         Map<String, Object> params = new HashMap();
         params.put("inventoryId", inventoryId);
         params.put("branchId", branchId);
@@ -66,6 +67,7 @@ public class QuantityItemsStoreServiceByDateImpl implements QuantityItemsStoreBy
 
     @Override
     public synchronized BigDecimal findInventoryItemByDate(Integer inventoryId, Integer branchId, Integer itemId, Date date) {
+        dao.executeNativeQuery("select sql_mode_function()");
         Map<String, Object> params = new HashMap();
         params.put("inventoryId", inventoryId);
         params.put("branchId", branchId);

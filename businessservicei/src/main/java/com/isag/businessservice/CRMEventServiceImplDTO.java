@@ -890,6 +890,7 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
 
     @Override
     public ChartDTO getCountEventByStatus(Integer branchId) {
+        dao.executeNativeQuery("select sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         List<Object[]> detailses = dao.findListByQuery("SELECT count(c.id) , c.status.name FROM CrmEvent c WHERE c.branchId.id = :branchId  group by c.status.id  ", params);
@@ -898,12 +899,13 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
     }
 
     @Override
-    public ChartDTO getCountEventByAssignedTo(Integer branchId,Date fromDate, Date toDate) {
-       StringBuilder builder = new StringBuilder();
+    public ChartDTO getCountEventByAssignedTo(Integer branchId, Date fromDate, Date toDate) {
+        dao.executeNativeQuery("select sql_mode_function()");
+        StringBuilder builder = new StringBuilder();
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         builder.append("SELECT count(c.id) , c.assignedTo.name FROM CrmEvent c WHERE c.branchId.id = :branchId ");
-        filterChartDate(params,builder,fromDate,toDate);
+        filterChartDate(params, builder, fromDate, toDate);
         builder.append("  group by c.status.id  ");
         List<Object[]> detailses = dao.findListByQuery(builder.toString(), params);
         String title = "نسبه المهمات حسب الموظف ";
@@ -911,14 +913,15 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
     }
 
     @Override
-    public ChartDTO getCountEventByStatusAndAssignedTo(Integer branchId, Integer status,Date fromDate, Date toDate) {
+    public ChartDTO getCountEventByStatusAndAssignedTo(Integer branchId, Integer status, Date fromDate, Date toDate) {
+        dao.executeNativeQuery("select sql_mode_function()");
         StringBuilder builder = new StringBuilder();
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         params.put("status", status);
         builder.append("SELECT count(c.id) , c.assignedTo.name FROM CrmEvent c WHERE c.branchId.id = :branchId AND  c.status.id = :status ");
-         filterChartDate(params,builder,fromDate,toDate);
-          builder.append(" group by c.assignedTo.id  ");
+        filterChartDate(params, builder, fromDate, toDate);
+        builder.append(" group by c.assignedTo.id  ");
         List<Object[]> detailses = dao.findListByQuery(builder.toString(), params);
         String title = "نسبه المهمات حسب الحاله للموظف";
         return preperChartPie(detailses, title);
@@ -926,6 +929,7 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
 
     @Override
     public ChartDTO getCountEventByActivityType(Integer branchId) {
+        dao.executeNativeQuery("select sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         List<Object[]> detailses = dao.findListByQuery("SELECT count(c.id) , c.activityType.name FROM CrmEvent c WHERE c.branchId.id = :branchId  group by c.activityType.id  ", params);
@@ -935,6 +939,7 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
 
     @Override
     public ChartDTO getCountEventByPriority(Integer branchId) {
+        dao.executeNativeQuery("select sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         List<Object[]> detailses = dao.findListByQuery("SELECT count(c.id) , c.priority.name FROM CrmEvent c WHERE c.branchId.id = :branchId  group by c.priority.id  ", params);
@@ -1036,42 +1041,41 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
         }
     }
 
-       @Override
-    public Long getTotalRegistorsAllEvent( Integer branchId, Map<String, Object> filters, CrmEventDTO crmEventDTOSearch,Integer type,Integer taskType) {
+    @Override
+    public Long getTotalRegistorsAllEvent(Integer branchId, Map<String, Object> filters, CrmEventDTO crmEventDTOSearch, Integer type, Integer taskType) {
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT count(e) FROM CrmEvent e WHERE e.branchId.id = :branchId  AND e.deletedBy IS NULL ");
         filters.put("branchId", branchId);
-        appendFilterallEvent(filters, builder, crmEventDTOSearch,type,taskType);
+        appendFilterallEvent(filters, builder, crmEventDTOSearch, type, taskType);
         Long details = dao.findEntityByQuery(builder.toString(), filters);
         return details;
     }
-    
-        @Override
-    public List<CrmEventDTO> findALLEventBank(int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters, CrmEventDTO crmEventDTOSearch,Integer type, Integer taskType) {
+
+    @Override
+    public List<CrmEventDTO> findALLEventBank(int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters, CrmEventDTO crmEventDTOSearch, Integer type, Integer taskType) {
 
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT e FROM CrmEvent e  where e.branchId.id = :branchId  AND e.deletedBy IS NULL ");
-         filters.put("branchId", branchId);
-        appendFilterallEvent(filters, builder, crmEventDTOSearch,type,taskType);
+        filters.put("branchId", branchId);
+        appendFilterallEvent(filters, builder, crmEventDTOSearch, type, taskType);
         builder.append(" order by e.startDate asc ");
         List<CrmEvent> crmEventList = dao.findListByQuery(builder.toString(), filters, first, pageSize);
         return mapToDTOList(crmEventList);
     }
-    
-    private void appendFilterallEvent(Map<String, Object> filters, StringBuilder builder, CrmEventDTO crmEventDTOSearch,Integer type,Integer taskType) {
+
+    private void appendFilterallEvent(Map<String, Object> filters, StringBuilder builder, CrmEventDTO crmEventDTOSearch, Integer type, Integer taskType) {
         StringBuilder empIds = new StringBuilder();
         if (type != null && type == 1) {
             if (crmEventDTOSearch != null && crmEventDTOSearch.getAssignedTo() != null) {
                 empIds = employeeService.returnEmployeeList(crmEventDTOSearch.getAssignedTo().getId(), empIds);
-                 builder.append("  AND (e.assignedTo.id in ( ").append(empIds.toString()).append(" ) ) ");
-            } 
-        }else{
-         if (crmEventDTOSearch != null && crmEventDTOSearch.getAssignedTo() != null) {
-                 builder.append("  AND (e.assignedTo.id in ( ").append(crmEventDTOSearch.getAssignedTo().getId()).append(" ) ) ");
-            } 
+                builder.append("  AND (e.assignedTo.id in ( ").append(empIds.toString()).append(" ) ) ");
+            }
+        } else {
+            if (crmEventDTOSearch != null && crmEventDTOSearch.getAssignedTo() != null) {
+                builder.append("  AND (e.assignedTo.id in ( ").append(crmEventDTOSearch.getAssignedTo().getId()).append(" ) ) ");
+            }
         }
 
-        
         if (crmEventDTOSearch != null && crmEventDTOSearch.getActivityType() != null) {
             filters.put("activityType", crmEventDTOSearch.getActivityType().getId());
             builder.append(" AND e.activityType.id = :activityType ");
@@ -1089,7 +1093,7 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
         } else if (taskType != null && taskType == 2) {
             filters.put("startDate", startDate());
             builder.append(" AND e.status.serial != 0 AND e.closeEvent = false AND e.startDate < :startDate ");
-        } 
+        }
 
         if (filters.get("globalFilter") != null && !filters.get("globalFilter").toString().isEmpty()) {
             String filter = " and (e.customerId.name like CONCAT('%',:globalFilter ,'%')  OR e.customerId.phone  like CONCAT('%',:globalFilter ,'%') OR e.activityType.name like CONCAT('%',:globalFilter ,'%') OR  FUNCTION('DATE_FORMAT',e.startDate, '%d-%m-%Y') like CONCAT('%',:globalFilter ,'%') OR e.discription like CONCAT('%',:globalFilter ,'%') OR  e.status.name like CONCAT('%',:globalFilter ,'%') OR  e.assignedTo.name like CONCAT('%',:globalFilter ,'%')) ";
@@ -1099,9 +1103,9 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
         }
     }
 
-    
     @Override
     public List<CrmEventEvaluationDTO> findEvaluationCrmEvent(Integer branchId, CrmEventsReportSearchBean crmEventDTOSearch) {
+        dao.executeNativeQuery("select sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         StringBuilder builder = new StringBuilder();
@@ -1150,20 +1154,20 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
         endCal.set(Calendar.MILLISECOND, 0);
         return endCal.getTime();
     }
-    
-     private Date getmaxStartDate(Integer branchId) {
+
+    private Date getmaxStartDate(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         return dao.findEntityByQuery("SELECT c.startDate FROM CrmEvent c  WHERE c.branchId.id = :branchId ", params);
     }
-     
+
     private StringBuilder filterChartDate(Map<String, Object> filters, StringBuilder builder, Date fromDate, Date toDate) {
-         Date maxDate = null;
-        if ((fromDate != null || toDate != null) && (fromDate == null || toDate == null) ) {
+        Date maxDate = null;
+        if ((fromDate != null || toDate != null) && (fromDate == null || toDate == null)) {
             maxDate = getmaxStartDate((Integer) filters.get("branchId"));
             filters.put("maxDate", maxDate);
         }
-        
+
         if (fromDate != null && toDate == null) {
             builder.append(" AND c.startDate BETWEEN :fromDate AND :maxDate ");
             filters.put("fromDate", fromDate);
@@ -1181,5 +1185,5 @@ public class CRMEventServiceImplDTO implements CRMEventServiceDTO {
         }
         return builder;
     }
-    
+
 }

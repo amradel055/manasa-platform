@@ -173,7 +173,7 @@ public class InvPurchaseInvoiceListDTOMB extends InventoryBasicDataForm {
     public void goToScreen() {
         if (getUri().contains("invpurchaseinvoicelist")) {
             exit("../invpurchaseinvoice_1/invpurchaseinvoiceform.xhtml");
-        } else if (getUri().contains("invsalesinvoicelist")) {
+        } else if (getUri().contains("/invsalesinvoice_1/invsalesinvoicelist")) {
             exit("../invsalesinvoice_1/invsalesinvoiceform.xhtml");
         } else if (getUri().contains("invreturnpurchaselist")) {
             exit("../invreturnpurchase_1/invreturnpurchaseform.xhtml");

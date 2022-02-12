@@ -64,6 +64,7 @@ public class ComplexRevisionReportViewServiceImp implements ComplexRevisionRepor
         }
 
     }
+
     private void appendSettingOpenningBalance(StringBuilder queryBuilder, ComplexRevisionBalanceSearchBean complexRevisionBalanceSearchBean) {
         if (complexRevisionBalanceSearchBean.isIsOpenningBalance() && complexRevisionBalanceSearchBean.getDateFrom().equals(complexRevisionBalanceSearchBean.getPeriodFrom())) {
             queryBuilder.append(" and crb.symbolSerial != 0 ");
@@ -132,6 +133,7 @@ public class ComplexRevisionReportViewServiceImp implements ComplexRevisionRepor
 
     @Override
     public List<ComplexRevisionBalance> getALLRevisionBalanceReportWithSumOfDebitAndCredit(ComplexRevisionBalanceSearchBean complexRevisionBalanceSearchBean, GlYear glYear) {
+        dao.executeNativeQuery("select sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", complexRevisionBalanceSearchBean.getBranchId());
         StringBuilder firstQueryBuilder = new StringBuilder();;
@@ -167,6 +169,7 @@ public class ComplexRevisionReportViewServiceImp implements ComplexRevisionRepor
 
     @Override
     public List<ComplexRevisionBalance> getALLRevisionBalanceReportWithSumOfDebitAndCreditBasedOnCostCenter(ComplexRevisionBalanceSearchBean complexRevisionBalanceSearchBean, GlYear glYear, StringBuilder stringBuilder) {
+        dao.executeNativeQuery("select sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", complexRevisionBalanceSearchBean.getBranchId());
         StringBuilder firstQueryBuilder = new StringBuilder();;
@@ -198,6 +201,7 @@ public class ComplexRevisionReportViewServiceImp implements ComplexRevisionRepor
 
     @Override
     public List<ComplexRevisionBalance> getALLRevisionBalanceReportWithSumOfDebitAndCreditBasedOnAdminUnit(ComplexRevisionBalanceSearchBean complexRevisionBalanceSearchBean, GlYear glYear, StringBuilder stringBuilder) {
+        dao.executeNativeQuery("select sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", complexRevisionBalanceSearchBean.getBranchId());
         StringBuilder firstQueryBuilder = new StringBuilder();;
@@ -317,6 +321,7 @@ public class ComplexRevisionReportViewServiceImp implements ComplexRevisionRepor
     }
 
     private void appendComplexRevision(StringBuilder secondQueryBuilder, String query, ComplexRevisionBalanceSearchBean complexRevisionBalanceSearchBean, GlYear glYear, Map<String, Object> params) {
+        dao.executeNativeQuery("select sql_mode_function()");
         secondQueryBuilder.append(query);
         if (complexRevisionBalanceSearchBean.isPostFlag()) {
             secondQueryBuilder.append(" and crb.postFlag = true ");
@@ -327,14 +332,15 @@ public class ComplexRevisionReportViewServiceImp implements ComplexRevisionRepor
         appendcomplexNumberForQueryBuilder(secondQueryBuilder, params, complexRevisionBalanceSearchBean);
         appendcomplexCostCenterForQueryBuilder(secondQueryBuilder, params, complexRevisionBalanceSearchBean);
 //        appendcomplexLevelsForQueryBuilder(queryBuilder, params, complexRevisionBalanceSearchBean);
-appendcomplexDateForSecondQueryBuilder(secondQueryBuilder, complexRevisionBalanceSearchBean);
-appendcomplexAdminUnitForQueryBuilder(secondQueryBuilder, params, complexRevisionBalanceSearchBean);
-secondQueryBuilder.append("  group by crb.glAccountId ");
+        appendcomplexDateForSecondQueryBuilder(secondQueryBuilder, complexRevisionBalanceSearchBean);
+        appendcomplexAdminUnitForQueryBuilder(secondQueryBuilder, params, complexRevisionBalanceSearchBean);
+        secondQueryBuilder.append("  group by crb.glAccountId ");
     }
 
     /////////////// AMR //////////////////////////////////
     @Override
     public List<ComplexRevisionBalance> getALLRevisionBalanceReportWithSumOfDebitAndCreditDTO(ComplexRevisionBalanceSearchBean complexRevisionBalanceSearchBean, GlYear glYear) {
+        dao.executeNativeQuery("select sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", complexRevisionBalanceSearchBean.getBranchId());
         StringBuilder firstQueryBuilder = new StringBuilder();;
@@ -427,6 +433,7 @@ secondQueryBuilder.append("  group by crb.glAccountId ");
 
     @Override
     public List<ComplexRevisionBalance> getFirstPeriodByBranchIdDTO(ComplexRevisionBalanceSearchBean complexRevisionBalanceSearchBean, GlYear glYear) {
+        dao.executeNativeQuery("select sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", complexRevisionBalanceSearchBean.getBranchId());
         StringBuilder secondQueryBuilder = new StringBuilder();

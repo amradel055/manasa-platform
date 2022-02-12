@@ -7,6 +7,7 @@ import com.isag.dto.InvInventoryDTO;
 import com.isag.dto.InvInvoiceDTO;
 import com.isag.entity.Branch;
 import com.isag.entity.InvInventory;
+import com.isag.entity.InvPurchaseInvoice;
 import com.isag.entity.InvTransfer;
 import com.isag.entity.InvTransferDetail;
 import com.isag.entity.InventorySetup;
@@ -42,13 +43,14 @@ public class InvTransferServiceImp implements InvTransferService {
     private InvGlobalService invGlobalService;
     @EJB
     private GenericService genericService;
-    
+
     InvPurchaseReturnSave invPurchaseReturnSave;
+
     @Override
-    public InvPurchaseReturnSave  addInvTransfer(InvTransfer invTransfer, List<InvTransferDetail> invTransferDetailDetailList, List<InvTransferDetail> TransferDetailDeleted,
+    public InvPurchaseReturnSave addInvTransfer(InvTransfer invTransfer, List<InvTransferDetail> invTransferDetailDetailList, List<InvTransferDetail> TransferDetailDeleted,
             List<Integer> updatedInvTransferList,
             StringBuilder headIdList, Boolean isTransfer) {
-           invPurchaseReturnSave = new InvPurchaseReturnSave();
+        invPurchaseReturnSave = new InvPurchaseReturnSave();
         if (invTransfer.getId() != null) {
             dao.updateEntity(invTransfer);
         } else {
@@ -74,16 +76,15 @@ public class InvTransferServiceImp implements InvTransferService {
 
         } else {
             invTransfer.setMsg(msg);
-             invPurchaseReturnSave.setMsgTransfer(msg);
+            invPurchaseReturnSave.setMsgTransfer(msg);
             dao.rollbackQuery();
         }
-         invPurchaseReturnSave.setInvTransfer(invTransfer);
+        invPurchaseReturnSave.setInvTransfer(invTransfer);
         invPurchaseReturnSave.setInvTransferDetailList(invTransferDetailService.getAllInvTransferDetailsByInvTransferIdWithStatus(invTransfer.getId()));
         return invPurchaseReturnSave;
     }
 
     //-----------------------
-
     public List<Integer> findHeadSelectedId(StringBuilder headIdList) {
         String query;
 
@@ -106,7 +107,7 @@ public class InvTransferServiceImp implements InvTransferService {
         } else {
             for (InvTransferDetail invTransferDetail : invTransferDetailUpdatedDetailList) {
                 quantityItemsStore = itemsStoreService.findInventoryItem(invTransfer.getInvFrom().getId(),
-                        invTransfer.getBranchId().getId(), invTransferDetail.getInvItemId().getId(),invSetup.getSellBuy());
+                        invTransfer.getBranchId().getId(), invTransferDetail.getInvItemId().getId(), invSetup.getSellBuy());
                 // لو مسموحلة يبيع بكميات سالبة بيخش يشوف شغلة وينفض للباقى
                 if (invSetup.getNegativeSell()) {
                     mergeDetailQuantities(invTransferDetail, isTransfer, invTransfer);
@@ -149,9 +150,9 @@ public class InvTransferServiceImp implements InvTransferService {
             updateFinalAmount(invTransferDetail);
             // فى الاخر بحفظ التفصيلى
             saveDetail(invTransferDetail, isTransfer, invTransfer);
-        }else{
+        } else {
             updateFinalAmount(invTransferDetail);
-            saveDetail(invTransferDetail, isTransfer, invTransfer); 
+            saveDetail(invTransferDetail, isTransfer, invTransfer);
         }
 
     }
@@ -190,7 +191,7 @@ public class InvTransferServiceImp implements InvTransferService {
             InvTransferDetail invAddingorderDetailOld = invTransferDetailService.findInvTransferDetailsById(invTransferDetail.getId());
             quantityInvoiceOld = invAddingorderDetailOld.getAmount();
         }
-       finalQuantity = calculateFinalQuantity(invTransferDetail, purchaseInvoiceFinalQuantity, quantityInvoiceOld);
+        finalQuantity = calculateFinalQuantity(invTransferDetail, purchaseInvoiceFinalQuantity, quantityInvoiceOld);
 
         res = finalQuantity.compareTo(BigDecimal.ZERO);
         if (res == 1) {
@@ -203,6 +204,7 @@ public class InvTransferServiceImp implements InvTransferService {
         // هنحفظ التفصيلى
         invTransferDetailService.updateInvTransferDetails(detail);
     }
+
     public BigDecimal calculateFinalQuantity(InvTransferDetail invTransferDetail,
             BigDecimal existQuantitiyFromDataBaseSource, BigDecimal quantityInvoiceOld) {
         BigDecimal finalQuantity;
@@ -238,7 +240,7 @@ public class InvTransferServiceImp implements InvTransferService {
 //                    InvPurchaseInvoiceDetail dbPurchaseInvoice = invPurchaseInvoiceDetailsService.findInvPurchaseInvoiceDetailsById(invAddingorderDetail.getSelectedId());
                     InvTransferDetail detail = invTransferDetail.getSelectedId();
                     InvTransferDetail detailOld = invTransferDetailService.findInvTransferDetailsById(invTransferDetail.getId());
-                  //  dbPurchaseInvoice.setFinalQuantity(dbPurchaseInvoice.getFinalQuantity().add(invTransferDetail.getQuantity()));
+                    //  dbPurchaseInvoice.setFinalQuantity(dbPurchaseInvoice.getFinalQuantity().add(invTransferDetail.getQuantity()));
                     //    dbPurchaseInvoice.setStatus(restorDetailStatus(dbPurchaseInvoice.getQuantity(), dbPurchaseInvoice.getFinalQuantity()));
                     invTransferDetailService.updateInvTransferDetails(detail);
                     List<Integer> updatedPurchaseOrAddingOrderList = new ArrayList<>();
@@ -286,11 +288,12 @@ public class InvTransferServiceImp implements InvTransferService {
     public InvTransfer findInvTransferByInvTransferId(Integer invTransferId) {
         return dao.findEntityById(InvTransfer.class, invTransferId);
     }
+
     @Override
     public InvTransfer updateInvTransfer(InvTransfer invTransfer) {
         return dao.updateEntity(invTransfer);
     }
-    
+
     @Override
     public Integer findMaxSerialNoByBranch(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
@@ -304,18 +307,18 @@ public class InvTransferServiceImp implements InvTransferService {
         }
         return serialNo;
     }
-    
+
     @Override
-    public List<InvTransfer> getALLInvTransferByBranchIdAndTransferType(Integer Id,Integer transferType) {
+    public List<InvTransfer> getALLInvTransferByBranchIdAndTransferType(Integer Id, Integer transferType) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", Id);
         params.put("transferType", transferType);
         List<InvTransfer> invTransferList = dao.findListByQuery("SELECT e FROM InvTransfer e WHERE e.branchId.id = :branchId AND e.transferType = :transferType", params);
         return invTransferList;
     }
-    
+
     @Override
-    public Long getTotalRegistors( Integer branchId,Integer transferType, Map<String, Object> filters) {
+    public Long getTotalRegistors(Integer branchId, Integer transferType, Map<String, Object> filters) {
         StringBuilder builder = new StringBuilder();
         filters.put("branchId", branchId);
         filters.put("transferType", transferType);
@@ -324,7 +327,7 @@ public class InvTransferServiceImp implements InvTransferService {
         Long details = dao.findEntityByQuery(builder.toString(), filters);
         return details == null ? 0 : details;
     }
-    
+
     private void appendFilter(Map<String, Object> filters, StringBuilder builder) {
         if (filters.get("globalFilter") != null && !filters.get("globalFilter").toString().isEmpty()) {
             String filter = " and ( FUNCTION('DATE_FORMAT',s.transferDate, '%d-%m-%Y')  like CONCAT('%',:globalFilter ,'%') OR  s.serialNo like CONCAT('%',:globalFilter ,'%')  OR  s.invFrom.name like CONCAT('%',:globalFilter ,'%') OR  s.invTo.name like CONCAT('%',:globalFilter ,'%')  OR s.remarks like CONCAT('%',:globalFilter ,'%'))";
@@ -333,9 +336,9 @@ public class InvTransferServiceImp implements InvTransferService {
             filters.remove("globalFilter");
         }
     }
-    
+
     @Override
-    public List<InvInvoiceDTO> getALLInvTransferByBranchId( int first, int pageSize, String sortField, Boolean asc, Integer branchId,Integer transferType, Map<String, Object> filters) {
+    public List<InvInvoiceDTO> getALLInvTransferByBranchId(int first, int pageSize, String sortField, Boolean asc, Integer branchId, Integer transferType, Map<String, Object> filters) {
         filters.put("branchId", branchId);
         filters.put("transferType", transferType);
         StringBuilder builder = new StringBuilder();
@@ -345,8 +348,6 @@ public class InvTransferServiceImp implements InvTransferService {
         List<InvTransfer> details = dao.findListByQuery(builder.toString(), filters, first, pageSize);
         return returnListDTOForList(details);
     }
-    
-    
 
     private List<InvInvoiceDTO> returnListDTOForList(List<InvTransfer> InvTransferList) {
         List<InvInvoiceDTO> invInvoiceDTOList = new ArrayList<>();
@@ -369,15 +370,14 @@ public class InvTransferServiceImp implements InvTransferService {
         invInvoiceDTO.setDate(entity.getTransferDate());
         invInvoiceDTO.setIndex(entity.getId());
         invInvoiceDTO.setRemarks(entity.getRemarks());
-        if (entity.getInvFrom()!= null) {
+        if (entity.getInvFrom() != null) {
             invInvoiceDTO.setInvInventoryNameFrom(entity.getInvFrom().getName());
         }
-        if (entity.getInvTo()!= null) { 
+        if (entity.getInvTo() != null) {
             invInvoiceDTO.setInvInventoryNameTo(entity.getInvTo().getName());
-        } 
+        }
     }
-    
-    
+
     @Override
     public List<InvTransfer> getALLInvTransferByBranchIdAndStatus(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
@@ -385,7 +385,7 @@ public class InvTransferServiceImp implements InvTransferService {
         List<InvTransfer> invTransferList = dao.findListByQuery("SELECT e FROM InvTransfer e WHERE e.branchId.id = :branchId and (e.status != 2  OR e.status is null) and e.transferType = 1 ", params);
         return invTransferList;
     }
-    
+
     @Override
     public List<InvTransfer> getALLInvTransferByBranchIdAndStatusandType(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
@@ -393,16 +393,27 @@ public class InvTransferServiceImp implements InvTransferService {
         List<InvTransfer> invTransferList = dao.findListByQuery("SELECT e FROM InvTransfer e WHERE e.branchId.id = :branchId and (e.status != 2  OR e.status is null) and e.transferType = 0 ", params);
         return invTransferList;
     }
-    
-    
+
     @Override
     public InvTransfer addInvTransferMofakroun(InvTransfer invTransfer) {
-           return  dao.updateEntity(invTransfer);
+        return dao.updateEntity(invTransfer);
     }
-    
+
     @Override
     public InvInvoiceDTO findInvTransferById(InvInvoiceDTO invInvoiceDTO) {
         InvTransfer invTransfer = dao.findEntityById(InvTransfer.class, invInvoiceDTO.getId());
+        InvInvoiceDTO invPurchaseInvoiceDTO = mapToDTO(invTransfer, invInvoiceDTO);
+        invPurchaseInvoiceDTO = invGlobalService.updateSummition(invPurchaseInvoiceDTO);
+        return invPurchaseInvoiceDTO;
+    }
+
+    @Override
+    public InvInvoiceDTO findInvTransferBySerial(InvInvoiceDTO invInvoiceDTO, Integer branchId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        params.put("serial", invInvoiceDTO.getSerial());
+
+        InvTransfer invTransfer = dao.findEntityByQuery("SELECT e FROM InvTransfer e WHERE  e.branchId.id = :branchId  AND e.serial = :serial ", params);
         InvInvoiceDTO invPurchaseInvoiceDTO = mapToDTO(invTransfer, invInvoiceDTO);
         invPurchaseInvoiceDTO = invGlobalService.updateSummition(invPurchaseInvoiceDTO);
         return invPurchaseInvoiceDTO;
@@ -423,14 +434,14 @@ public class InvTransferServiceImp implements InvTransferService {
         invInvoiceDTO.setDate(entity.getTransferDate());
         invInvoiceDTO.setRemarks(entity.getRemarks());
         invInvoiceDTO.setTypeActivity(entity.getTypeActivity());
-        if (entity.getInvFrom()!= null) {
+        if (entity.getInvFrom() != null) {
             InvInventoryDTO invInventoryDTO = new InvInventoryDTO();
             invInventoryDTO.setId(entity.getInvFrom().getId());
             invInventoryDTO.setName(entity.getInvFrom().getName());
             invInventoryDTO.setCode(entity.getInvFrom().getCode());
             invInvoiceDTO.setInvInventoryId(invInventoryDTO);
         }
-        if (entity.getInvTo()!= null) {
+        if (entity.getInvTo() != null) {
             InvInventoryDTO invInventoryDTO = new InvInventoryDTO();
             invInventoryDTO.setId(entity.getInvTo().getId());
             invInventoryDTO.setName(entity.getInvTo().getName());
@@ -452,36 +463,36 @@ public class InvTransferServiceImp implements InvTransferService {
         invInvoiceDTO = invGlobalService.updateSummition(invInvoiceDTO);
         return invInvoiceDTO;
     }
-    
-     public InvInvoiceDTO validateSave(InvInvoiceDTO invPurchaseInvoiceDTO) {
+
+    public InvInvoiceDTO validateSave(InvInvoiceDTO invPurchaseInvoiceDTO) {
         StringBuilder error = new StringBuilder();
 
         if (invPurchaseInvoiceDTO.getInvInventoryId() == null) {
             error.append("\n يجب اختيار من مخزن");
         }
-        if (invPurchaseInvoiceDTO.getInvInventoryIdTo()== null) {
+        if (invPurchaseInvoiceDTO.getInvInventoryIdTo() == null) {
             error.append("\n يجب اختيار إلى مخزن");
         }
-        
+
         if (invPurchaseInvoiceDTO.getDate() == null) {
             error.append("\n يجب اختيار تاريخ");
         }
-        
-        checkIfLoaded(invPurchaseInvoiceDTO,  error) ;
-        
+
+        checkIfLoaded(invPurchaseInvoiceDTO, error);
+
         if (!error.toString().isEmpty()) {
             invPurchaseInvoiceDTO.setMsg(error.toString());
         }
         return invPurchaseInvoiceDTO;
     }
-     
-     public void checkIfLoaded(InvInvoiceDTO invPurchaseInvoiceDTO, StringBuilder error) {
+
+    public void checkIfLoaded(InvInvoiceDTO invPurchaseInvoiceDTO, StringBuilder error) {
         if (invPurchaseInvoiceDTO.getId() != null) {
             List<Integer> id = dao.executeNativeQuery("select id from (select parent as id from inv_transfer "
-                    + " where branch_id = " + invPurchaseInvoiceDTO.getBranchId() + " and parent is not null\n"+" ) as s\n"
-                    + " where id = "+invPurchaseInvoiceDTO.getId());
+                    + " where branch_id = " + invPurchaseInvoiceDTO.getBranchId() + " and parent is not null\n" + " ) as s\n"
+                    + " where id = " + invPurchaseInvoiceDTO.getId());
             if (!id.isEmpty()) {
-                    error.append("\n لا يجوز تعديل هذا السند لأنه تم تحميلة");
+                error.append("\n لا يجوز تعديل هذا السند لأنه تم تحميلة");
             }
         }
     }
@@ -514,38 +525,37 @@ public class InvTransferServiceImp implements InvTransferService {
                     invInvoiceDTO.setMsg(error);
                     dao.rollbackQuery();
                 } else {
-                    invInvoiceDTO = mapToDTO(invTransfer,invInvoiceDTO);
+                    invInvoiceDTO = mapToDTO(invTransfer, invInvoiceDTO);
                     invInvoiceDTO = invGlobalService.updateSummition(invInvoiceDTO);
                 }
 
             }
         } catch (Exception e) {
             invInvoiceDTO.setMsg(e.toString());
-             dao.rollbackQuery();
+            dao.rollbackQuery();
         }
 
         return invInvoiceDTO;
     }
-    
-   //mapToEntity
+
+    //mapToEntity
     private InvTransfer mapToEntity(InvInvoiceDTO invInvoiceDTO, IsagUser isagUser) {
 
         InvTransfer invTransfer = new InvTransfer();
-
 
         if (invInvoiceDTO.getInvInventoryId() != null) {
             InvInventory invInventory = new InvInventory();
             invInventory.setId(invInvoiceDTO.getInvInventoryId().getId());
             invTransfer.setInvFrom(invInventory);
         }
-        if (invInvoiceDTO.getInvInventoryIdTo()!= null) {
+        if (invInvoiceDTO.getInvInventoryIdTo() != null) {
             InvInventory invInventory = new InvInventory();
             invInventory.setId(invInvoiceDTO.getInvInventoryIdTo().getId());
             invTransfer.setInvTo(invInventory);
         }
 
         invTransfer.setId(invInvoiceDTO.getId());
-        
+
         invTransfer.setTransferDate(invInvoiceDTO.getDate());
         invTransfer.setRemarks(invInvoiceDTO.getRemarks());
         invTransfer.setTransferType(invInvoiceDTO.getType());
@@ -579,6 +589,5 @@ public class InvTransferServiceImp implements InvTransferService {
 
         return invTransfer;
     }
-
 
 }

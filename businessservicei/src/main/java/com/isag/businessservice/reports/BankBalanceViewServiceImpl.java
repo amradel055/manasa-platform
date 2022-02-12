@@ -196,7 +196,7 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
 
     public List<BankBalanceViewNew> getAllBankBalancesTransactionsByBankIdNativ(BankBalanceReportSearchBean bankBalanceReportSearchBean) {
 
-        dao.executeNativeQuery("select isag.sql_mode_function()");
+        dao.executeNativeQuery("select sql_mode_function()");
         Integer branchId = bankBalanceReportSearchBean.getBranchId();
         String bankBuilder = bankBalanceReportSearchBean.getBankBuilder();
         StringBuilder queryBuilder = new StringBuilder();
@@ -355,6 +355,68 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
         }
         return list;
     }
-    
+
+    @Override
+    public BigDecimal findBalanceForBankId(Integer bankId) {
+
+        if(bankId != null){
+        dao.executeNativeQuery("select sql_mode_function()");
+        StringBuilder queryBuilder = new StringBuilder();
+        queryBuilder.append(" select   sum(s.value_local) from (SELECT  `gb`.`openinng_balance` AS `value_local` \n"
+                + "	FROM `gl_bank` `gb` \n"
+                + "    WHERE\n"
+                + "        ((`gb`.`date_openinng_balance` IS NOT NULL)\n"
+                + "            AND (`gb`.`openinng_balance` > 0)) ").append(
+                        " And `gb`.`id` =  ").append(bankId).append(
+                "      UNION ALL SELECT sum(`glbt`.`value_local`) AS `value_local`\n"
+                + "         FROM `gl_bank_transaction` `glb` LEFT JOIN `gl_bank_transaction_detail` `glbt` ON `glb`.`id` = `glbt`.`gl_bank_transaction_id` \n"
+                + "    WHERE\n"
+                + "        (`glb`.`transaction_type` = 1)  AND  bank_id_from = ").append(bankId).append(" \n"
+                + "    UNION ALL SELECT (sum(`glbt`.`value_local`) * -1 ) AS `value_local`\n"
+                + "         FROM `gl_bank_transaction` `glb` LEFT JOIN `gl_bank_transaction_detail` `glbt` ON `glb`.`id` = `glbt`.`gl_bank_transaction_id` \n"
+                + "    WHERE\n"
+                + "        (`glb`.`transaction_type` = 0)  AND  bank_id_to = ").append(bankId).append(" \n"
+                + "    UNION ALL SELECT sum(`glbt`.`value_local`) AS `value_local`\n"
+                + "         FROM `gl_bank_transaction` `glb` LEFT JOIN `gl_bank_transaction_detail` `glbt` ON `glb`.`id` = `glbt`.`gl_bank_transaction_id` \n"
+                + "    WHERE\n"
+                + "        (`glb`.`transaction_type` = 2)  AND  bank_id_to = ").append(bankId).append(" \n"
+                + "    UNION ALL SELECT (sum(`glbt`.`value_local`) * -1 ) AS `value_local`\n"
+                + "         FROM `gl_bank_transaction` `glb` LEFT JOIN `gl_bank_transaction_detail` `glbt` ON `glb`.`id` = `glbt`.`gl_bank_transaction_id` \n"
+                + "    WHERE\n"
+                + "        (`glb`.`transaction_type` = 2)  AND  bank_id_from = ").append(bankId).append(" \n"
+                + "    UNION ALL SELECT \n"
+                + "      \n"
+                + "        IFNULL(NET(IFNULL(SUM(`ipid`.`net`), 0.0),IFNULL(`ipi`.`discount_type`, 0.0),IFNULL(`ipi`.`discount`, 0.0),\n"
+                + "                IFNULL(`ipi`.`tax_flag`, 0.0),15,IFNULL(0, 0.0)),0.0)  AS `value_local`  \n"
+                + "    FROM\n"
+                + "       `inv_purchase_invoice` `ipi`  LEFT JOIN  `inv_purchase_invoice_detail` `ipid`  ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
+                + "    WHERE\n"
+                + "       (`ipi`.`type` = 1 or `ipi`.`type` = 2) AND (`ipi`.`payment_type` = 0) ").append("  And (`ipi`.`gl_bank_id` = ").append(bankId).append(")\n"
+                + "        group by ipi.id    UNION ALL SELECT \n"
+                + "      \n"
+                + "        ((IFNULL(NET(IFNULL(SUM(`ipid`.`net`), 0.0),IFNULL(`ipi`.`discount_type`, 0.0),IFNULL(`ipi`.`discount`, 0.0),\n"
+                + "                IFNULL(`ipi`.`tax_flag`, 0.0),15,IFNULL(0, 0.0)),0.0)) * -1 )  AS `value_local`  \n"
+                + "    FROM\n"
+                + "       `inv_purchase_invoice` `ipi`  LEFT JOIN  `inv_purchase_invoice_detail` `ipid`  ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
+                + "    WHERE\n"
+                + "       (`ipi`.`type` = 0 or `ipi`.`type` = 3) AND (`ipi`.`payment_type` = 0)  ").append("  And (`ipi`.`gl_bank_id` = ").append(bankId).append(")\n"
+                + "        group by ipi.id union all SELECT sum(`gs`.`finalNet`)  AS `value_local`\n"
+                + "    FROM `gm_subscriptions` `gs` \n"
+                + "    WHERE   gl_bank_id = ").append(bankId).append("  and `gs`.deleted_by is null )s ");
+        List<BigDecimal> data = dao.executeNativeQuery(queryBuilder.toString());
+        if (data == null) {
+            return BigDecimal.ZERO;
+        } else {
+            if (data.get(0) == null) {
+                return BigDecimal.ZERO;
+            } else {
+                return data.get(0);
+            }
+        }
+        
+        }else {
+            return  BigDecimal.ZERO;
+        }
+    }
 
 }

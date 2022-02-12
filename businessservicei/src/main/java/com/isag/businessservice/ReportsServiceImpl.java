@@ -417,7 +417,7 @@ public class ReportsServiceImpl implements ReportsService {
 //    
     @Override
     public List<ProfitOfItemsSold> getProfitOfItemsSold(ProfitOfItemsSold profitOfItemsSold, Integer branchId, Integer type) {
-
+        dao.executeNativeQuery("select sql_mode_function()");
         dao.executeNativeQuery("select isag.update_net(" + branchId + ")");
 
         List<ProfitOfItemsSold> profitOfItemsSoldList = new ArrayList<>();

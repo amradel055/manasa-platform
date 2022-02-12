@@ -90,7 +90,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
 
     @Override
     public ChartDTO getCountCustomerPerMonth(Integer branchId, Integer type, Integer dateFilter) {
-
+        dao.executeNativeQuery("select sql_mode_function()");
         StringBuilder builder = new StringBuilder();
         builder.append("select DATE_FORMAT(i.creation_date, ");
         String date_Filter = "";
@@ -1718,6 +1718,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
 
     @Override
     public ChartDTO getCountCustomerByLearnAboutCompanyfrom(Integer branchId) {
+        dao.executeNativeQuery("select sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         List<Object[]> detailses = dao.findListByQuery("SELECT count(e.id) , e.LearnAboutCompanyfrom.name FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND e.type = 5  group by e.LearnAboutCompanyfrom.id  ", params);
@@ -1727,6 +1728,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
 
     @Override
     public ChartDTO getCountCustomerByleadStatus(Integer branchId) {
+        dao.executeNativeQuery("select sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         List<Object[]> detailses = dao.findListByQuery("SELECT count(e.id) , e.leadStatus.name FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND e.type = 5  group by e.leadStatus.id  ", params);
@@ -1736,6 +1738,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
 
     @Override
     public ChartDTO getCountCustomerByAssignedTo(Integer branchId, Date fromDate, Date toDate) {
+        dao.executeNativeQuery("select sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         StringBuilder builder = new StringBuilder();
@@ -1749,6 +1752,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
 
     @Override
     public ChartDTO getCountCustomerByAssignedToAndStatus(Integer branchId, Integer status, Date fromDate, Date toDate) {
+        dao.executeNativeQuery("select sql_mode_function()");
         StringBuilder builder = new StringBuilder();
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
@@ -1763,6 +1767,7 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
 
     @Override
     public ChartDTO getCountCustomerByProjectName(Integer branchId) {
+        dao.executeNativeQuery("select sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         List<Object[]> detailses = dao.findListByQuery("SELECT count(e.id) , e.projectName.name FROM InvOrganizationSite e WHERE e.branchId.id = :branchId AND e.type = 5  group by e.projectName.id  ", params);

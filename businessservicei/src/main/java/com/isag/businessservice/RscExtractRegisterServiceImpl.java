@@ -263,6 +263,7 @@ public class RscExtractRegisterServiceImpl implements RscExtractRegisterService 
     }
 
     public BigDecimal getTotalNetFromOldExtraction(Integer tenderId) {
+        dao.executeNativeQuery("select sql_mode_function()");
         Map<String, Object> params = new HashMap();
         params.put("tenderId", tenderId);
         String query = " select ifnull((SELECT sum(value_after_discount) FROM isag.rsc_extract_register_detail rerd\n"

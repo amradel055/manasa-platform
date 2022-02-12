@@ -122,6 +122,7 @@ public class InvItemSalesReportServiceImpl implements InvItemSalesReportService 
 
     @Override
     public List<ItemSalesView> getAllInvoiceDetailByInvItemSalesSearchBean(InvItemSalesSearchBean invItemSalesSearchBean) {
+        dao.executeNativeQuery("select sql_mode_function()");
         StringBuilder stringBuilder = new StringBuilder();
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", invItemSalesSearchBean.getBranchId());

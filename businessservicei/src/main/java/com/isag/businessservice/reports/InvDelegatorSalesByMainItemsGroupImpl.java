@@ -30,6 +30,7 @@ public class InvDelegatorSalesByMainItemsGroupImpl implements InvDelegatorSalesB
     @Override
     public List<SalesDelegateView> findAllSalesDelegate(InvDelegatorSalesByMainItemsGroupSearchBean invDelegatorSalesByMainItemsGroupSearchBean) {
 
+        dao.executeNativeQuery("select sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
 
         params.put("branchId", invDelegatorSalesByMainItemsGroupSearchBean.getBranchId());

@@ -34,6 +34,7 @@ public class InventoryStripReportServiceImpl implements InventoryStripReportServ
 
     @Override
     public List<ItemsDataView> getAllInvStripListByInvStripSearchBean(InvItemSalesSearchBean invStripSearchBean) {
+        dao.executeNativeQuery("select sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", invStripSearchBean.getBranchId());
         StringBuilder stringBuilder = new StringBuilder();
@@ -190,6 +191,7 @@ public class InventoryStripReportServiceImpl implements InventoryStripReportServ
 
     @Override
     public List<ItemsDataView> getAllInvSupplierStripListByInvStripSearchBean(InvItemSalesSearchBean invStripSearchBean) {
+        dao.executeNativeQuery("select sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", invStripSearchBean.getBranchId());
         StringBuilder stringBuilder = new StringBuilder();
@@ -406,6 +408,7 @@ public class InventoryStripReportServiceImpl implements InventoryStripReportServ
 
     @Override
     public List<ItemsDataView> getAllItemsByItemCardReportSerachBean(ItemCardReportSerachBean itemCardReportSerachBean, GlYear glYear) {
+        dao.executeNativeQuery("select sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", itemCardReportSerachBean.getBranchId());
 
@@ -574,6 +577,7 @@ public class InventoryStripReportServiceImpl implements InventoryStripReportServ
 
     @Override
     public List<ItemsDataView> getAllItemsWithInventories(ItemCardReportSerachBean itemCardReportSerachBean) {
+        dao.executeNativeQuery("select sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", itemCardReportSerachBean.getBranchId());
         StringBuilder stringBuilder = new StringBuilder();

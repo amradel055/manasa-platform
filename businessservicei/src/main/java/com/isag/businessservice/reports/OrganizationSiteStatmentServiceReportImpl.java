@@ -98,6 +98,7 @@ public class OrganizationSiteStatmentServiceReportImpl implements OrganizationSi
 // الارصدة
     @Override
     public List<OrganizationSiteStatementView> getAllOrganizationSiteStatementBalancesSearchBean(OrganizationSiteStatementSearchBean organizationSiteStatementSearchBean, Integer type) {
+        dao.executeNativeQuery("select sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", organizationSiteStatementSearchBean.getBranchId());
         params.put("organizationType", organizationSiteStatementSearchBean.getOrganizationType());
@@ -125,6 +126,7 @@ public class OrganizationSiteStatmentServiceReportImpl implements OrganizationSi
 
     @Override
     public Map<Integer, BigDecimal> getAllOrganizationSiteStatementOpeningBalancesSearchBean(OrganizationSiteStatementSearchBean organizationSiteStatementSearchBean) {
+        dao.executeNativeQuery("select sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
         Map<Integer, BigDecimal> openningBalance = new HashMap<>();
         if (organizationSiteStatementSearchBean.getDateFrom() != null) {
