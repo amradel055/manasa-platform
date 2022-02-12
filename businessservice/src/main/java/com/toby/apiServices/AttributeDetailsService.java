@@ -5,6 +5,7 @@
  */
 package com.toby.apiServices;
 
+import com.toby.dto.AttributeDTO;
 import com.toby.dto.AttributeDetailsDTO;
 import java.util.List;
 import javax.ejb.Remote;
@@ -21,6 +22,8 @@ public interface AttributeDetailsService {
     public AttributeDetailsDTO updateAttributeDetails(AttributeDetailsDTO attributeDetailsDTO);
 
     public AttributeDetailsDTO findAttributeDetails(AttributeDetailsDTO attributeDetailsDTO);
+    
+    public List<AttributeDetailsDTO> findAttributeDetailsForHeadByBranchId(AttributeDTO attributeDTO);
 
     public AttributeDetailsDTO DeleteAttributeDetails(AttributeDetailsDTO attributeDetailsDTO);
 

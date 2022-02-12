@@ -5,11 +5,15 @@
  */
 package com.toby.dto;
 
+import java.util.List;
+
 public class AttributeDTO extends BaseEntityDTO  {
         
     private String name;
 
     private Integer parent;
+    
+    private List<AttributeDetailsDTO> terms;
 
     /**
      * @return the name
@@ -37,6 +41,20 @@ public class AttributeDTO extends BaseEntityDTO  {
      */
     public void setParent(Integer parent) {
         this.parent = parent;
+    }
+
+    /**
+     * @return the terms
+     */
+    public List<AttributeDetailsDTO> getTerms() {
+        return terms;
+    }
+
+    /**
+     * @param terms the terms to set
+     */
+    public void setTerms(List<AttributeDetailsDTO> terms) {
+        this.terms = terms;
     }
 
 }

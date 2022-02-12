@@ -6,6 +6,7 @@
 package com.toby.apiServices;
 
 import com.toby.core.GenericDAO;
+import com.toby.dto.AttributeDTO;
 import com.toby.dto.AttributeDetailsDTO;
 import com.toby.entity.Attribute;
 import com.toby.entity.AttributeDetails;
@@ -43,7 +44,7 @@ public class AttributeDetailsServiceImpl implements AttributeDetailsService {
         attributeDetails = dao.updateEntity(attributeDetails);
         return mapToDTO(attributeDetails);
     }
-    
+
     @Override
     public AttributeDetailsDTO DeleteAttributeDetails(AttributeDetailsDTO attributeDetailsDTO) {
         AttributeDetails attributeDetails = mapToEntity(attributeDetailsDTO);
@@ -55,6 +56,20 @@ public class AttributeDetailsServiceImpl implements AttributeDetailsService {
     public AttributeDetailsDTO findAttributeDetails(AttributeDetailsDTO attributeDetailsDTO) {
         AttributeDetails attributeDetails = dao.findEntityById(AttributeDetails.class, attributeDetailsDTO.getId());
         return mapToDTO(attributeDetails);
+    }
+
+    @Override
+    public List<AttributeDetailsDTO> findAttributeDetailsForHeadByBranchId(AttributeDTO attributeDTO) {
+        Map<String, Object> params = new HashMap();
+        params.put("companyId", attributeDTO.getCompanyId());
+        params.put("branchId", attributeDTO.getBranchId());
+        params.put("headId", attributeDTO.getId());
+        List<AttributeDetails> attributeDetailses = dao.findListByQuery("SELECT a FROM AttributeDetails a WHERE a.companyId.id =:companyId AND a.branchId.id =:branchId AND a.headId.id =:headId AND a.itemId = null order by a.orderBy ", params);
+        if (attributeDetailses != null) {
+            return mapToDTOList(attributeDetailses);
+        } else {
+            return new ArrayList<>();
+        }
     }
 
     @Override

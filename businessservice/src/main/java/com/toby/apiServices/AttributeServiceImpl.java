@@ -27,6 +27,9 @@ public class AttributeServiceImpl implements AttributeService {
 
     @EJB
     private GenericDAO dao;
+    
+    @EJB
+    AttributeDetailsService attributeDetailsService ;
 
     @Override
     public AttributeDTO addAtrribute(AttributeDTO attribute) {
@@ -104,7 +107,7 @@ public class AttributeServiceImpl implements AttributeService {
         attributeDTO.setName(entity.getName());
         attributeDTO.setParent(entity.getParent());
         attributeDTO.setId(entity.getId());
-
+        attributeDTO.setTerms(attributeDetailsService.findAttributeDetailsForHeadByBranchId(attributeDTO));
         return attributeDTO;
     }
 
