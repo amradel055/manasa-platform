@@ -53,7 +53,7 @@ import javax.servlet.http.HttpServletResponse;
 public class LoginBean extends Basic implements Serializable {
 
     private UserData userData;
-    /**
+    /** 
      * Creates a new instance of LoginBean
      */
     @EJB
