@@ -15,14 +15,13 @@
 
 
     <ui:define name="content" >
-        <div class="new-dashboard" style="float: left;;margin-top: 5%;background-color: #ece7eb;">
-            <div class='searchBar' style='background-color: #fff; padding: 20px;margin: 1% 3% 1% 2%;'>
+        <div class="new-dashboard" style="float: left;;margin-top: 4%;background-color: #ece7eb;">
+            <div class='searchBar' style='background-color: #fff; padding: 0px;margin: 1% 3% 1% 2%;height: 65px;'>
                 <div style='display: inline-block;padding: 20px; background-color: #906bb0;font-size: 20px;color: #fff;'>
                     لوحة التحكم
                 </div> 
-                <h:form>
+                <h:form style="margin-top: -4%;">
                     <p:selectOneMenu  style="width: 15%!important;margin-right: 5%;margin-left:5%;margin-bottom: 5px;" id="master" value="#{dashboardMB.invType}"  >
-                        <f:selectItem   itemLabel="اختر نوع الفاتوره" itemValue=""/>
                         <f:selectItem   itemLabel="المبيعات" itemValue="0"/>
                         <f:selectItem   itemLabel="مردود المبيعات" itemValue="1"/>
                         <f:selectItem   itemLabel="المشتريات" itemValue="2"/>                                  
@@ -35,7 +34,7 @@
                     <p:commandButton icon="fa fa-plus" value="إنشاء فاتورة" 
                                      class="saddButton"
                                      action="#{dashboardMB.goToAdd()}" 
-                                     style="margin-right:15%;margin-left:5%;margin-bottom:5%;float: right;background-color: #6c4886;width: 10%;"
+                                     style="margin-right:15%;margin-left:5%;margin-bottom:5%;float: right;background-color: #6c4886;width: 12%;"
                                      update="master"/>
 
                     <p:inputText style="width: 13%!important " id="ad1"   value="#{dashboardMB.serial}" placeholder="بحث برقم الفاتوره" />
@@ -52,7 +51,7 @@
 
 
 
-            <div style='display: inline-block;float: left;'>
+            <!--<div style='display: inline-block;float: left;'>
                 <ul style='list-style: none;' class='navMenu'>
                     <p:outputLabel rendered="#{userData.userScreens['invsalesinvoice_1'].view or userData.isAdmin}" style='display: inline-block;font-size: 18px;font-weight: 600;padding-top: 7px;padding-right:15px;padding-left: 15px;'>المبيعات </p:outputLabel>
                     <p:outputLabel rendered="#{userData.userScreens['invreturnsales_1'].view or userData.isAdmin}" style='display:  inline-block;font-size: 18px;font-weight: 600;padding-top: 7px;padding-right:15px;padding-left: 15px;;'>مردود المبيعات </p:outputLabel>
@@ -67,92 +66,138 @@
                     <p:outputLabel rendered="#{userData.userScreens['gmsubscriptions'].view or userData.isAdmin}" style='display:  inline-block;font-size: 18px;font-weight: 600;padding-top: 7px;padding-right:15px;padding-left: 15px;'> الجيم </p:outputLabel>
 
                 </ul>
-            </div>
+            </div>-->
 
-            <div   class="ui-g-12 ui-g-nopad" style='padding: 1% 3% 1% 2%;'>
-                <div class="ui-g">
-                    <div class="ui-g-12 ui-md-4" style="background-color: #fff;width: 33%;margin-left: 1%;">
-                        <div style="display: inline-block;">
-                            1
+            <div class="tabs10" style="float: right; width: 100%;margin-top: -3%;">
+                <p:tabView style="height: 420px;">
+                    <p:tab title="المبيعات">
+                        
+                        
+                        
+                        <div   class="ui-g-12 ui-g-nopad" style='padding: 2% 3% 1% 2%; margin-top: -2%;'>
+                            <div class="ui-g">
+
+                                <div class="ui-g-12 ui-md-4" style="width: 100%;">
+                                    <div style="display: inline-block;width: 25%;">
+                                        <h:panelGroup>
+                                            <div style="padding: 20px 5px 20px 5px;
+                                                 background-color: #8f6cb0;
+                                                 text-align: center;
+                                                 color: #fff;
+                                                 font-weight: 600;
+                                                 font-size: 17px;">
+                                                <p:outputLabel value="حجم المبيعات اليومي" /></div>
+                                            <div style="text-align: center;padding: 25px;background-color: #ece7eb;border-radius: 0% 0% 20% 20%;">
+                                                <p:outputLabel  value="2500" />
+                                                <p:progressBar value="30" labelTemplate="{value}%" displayOnly="true" style="margin-top: 20%;"/>
+                                            </div>
+
+                                        </h:panelGroup>
+                                    </div>
+                                    <div style="display: inline-block;width: 23%;margin-right: 1%;">
+                                        <h:panelGroup>
+                                            <div style="padding: 20px 5px 20px 5px;
+                                                 background-color: #54724e;
+                                                 text-align: center;
+                                                 color: #fff;
+                                                 font-weight: 600;
+                                                 font-size: 17px;">
+                                                <p:outputLabel value="حجم المبيعات اليومي" /></div>
+                                            <div style="text-align: center;padding: 25px;background-color: #ece7eb;border-radius: 0% 0% 20% 20%;">
+                                                <p:outputLabel  value="2500" />
+                                                <p:progressBar value="10" labelTemplate="{value}%" displayOnly="true" style="margin-top: 20%;"/>
+                                            </div>
+
+                                        </h:panelGroup>
+                                    </div>
+                                    <div style="display: inline-block;width: 23%;margin-right: 1%;">
+                                        <h:panelGroup>
+                                            <div style="padding: 20px 5px 20px 5px;
+                                                 background-color: #3b50a1;
+                                                 text-align: center;
+                                                 color: #fff;
+                                                 font-weight: 600;
+                                                 font-size: 17px;">
+                                                <p:outputLabel value="حجم المبيعات اليومي" /></div>
+                                            <div style="text-align: center;padding: 25px;background-color: #ece7eb;border-radius: 0% 0% 20% 20%;">
+                                                <p:outputLabel  value="2500" />
+                                                <p:progressBar value="70" labelTemplate="{value}%" displayOnly="true" style="margin-top: 20%;"/>
+                                            </div>
+
+                                        </h:panelGroup>
+                                    </div>
+                                    <div style="display: inline-block;width: 23%;margin-right: 1%;">
+                                        <h:panelGroup>
+                                            <div style="padding: 20px 5px 20px 5px;
+                                                 background-color: #be2424;
+                                                 text-align: center;
+                                                 color: #fff;
+                                                 font-weight: 600;
+                                                 font-size: 17px;">
+                                                <p:outputLabel value="حجم المبيعات اليومي" /></div>
+                                            <div style="text-align: center;padding: 25px;background-color: #ece7eb;border-radius: 0% 0% 20% 20%;">
+                                                <p:outputLabel  value="2500" />
+                                                <p:progressBar value="50" labelTemplate="{value}%" displayOnly="true" style="margin-top: 20%;"/>
+                                            </div>
+
+                                        </h:panelGroup>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div style="display: inline-block;">
+
+                    </p:tab>
+                    <p:tab title="مردود المبيعات">
+                        <p class="p-m-0">
                             2
-                        </div>
-                    </div>
-                    <div class="ui-g-12 ui-md-4" style="background-color: #fff;width: 33%;margin-left: 1%;">
-                        DIV 2
-                    </div>
-                    <div class="ui-g-12 ui-md-4" style="width: 32%;">
-                        <div style="display: inline-block;width: 48%;">
-                            <h:panelGroup>
-                                <div style="padding: 20px 5px 20px 5px;
-                                     background-color: #8f6cb0;
-                                     border-radius: 20% 20% 0% 0%;
-                                     text-align: center;
-                                     color: #fff;
-                                     font-weight: 600;
-                                     font-size: 17px;">
-                                    <p:outputLabel value="حجم المبيعات اليومي" /></div>
-                                <div style="text-align: center;padding: 25px;background-color: #fff;border-radius: 0% 0% 20% 20%;">
-                                    <p:outputLabel  value="#{dashboardMB.totalNet}"     />
-                                    <p:progressBar value="30" labelTemplate="{value}%" displayOnly="true" style="margin-top: 20%;"/>
-                                </div>
-
-                            </h:panelGroup>
-                        </div>
-                        <div style="display: inline-block;width: 48%;margin-right: 2%;">
-                            <h:panelGroup>
-                                <div style="padding: 20px 5px 20px 5px;
-                                     background-color: #54724e;
-                                     border-radius: 20% 20% 0% 0%;
-                                     text-align: center;
-                                     color: #fff;
-                                     font-weight: 600;
-                                     font-size: 17px;">
-                                    <p:outputLabel value="حجم المبيعات اليومي" /></div>
-                                <div style="text-align: center;padding: 25px;background-color: #fff;border-radius: 0% 0% 20% 20%;">
-                                    <p:outputLabel  value="2500" />
-                                    <p:progressBar value="10" labelTemplate="{value}%" displayOnly="true" style="margin-top: 20%;"/>
-                                </div>
-
-                            </h:panelGroup>
-                        </div>
-                        <div style="display: inline-block;width: 48%;margin-top: 3%;">
-                            <h:panelGroup>
-                                <div style="padding: 20px 5px 20px 5px;
-                                     background-color: #3b50a1;
-                                     border-radius: 20% 20% 0% 0%;
-                                     text-align: center;
-                                     color: #fff;
-                                     font-weight: 600;
-                                     font-size: 17px;">
-                                    <p:outputLabel value="حجم المبيعات اليومي" /></div>
-                                <div style="text-align: center;padding: 25px;background-color: #fff;border-radius: 0% 0% 20% 20%;">
-                                    <p:outputLabel  value="2500" />
-                                    <p:progressBar value="70" labelTemplate="{value}%" displayOnly="true" style="margin-top: 20%;"/>
-                                </div>
-
-                            </h:panelGroup>
-                        </div>
-                        <div style="display: inline-block;width: 48%;margin-right: 2%;margin-top: 3%;">
-                            <h:panelGroup>
-                                <div style="padding: 20px 5px 20px 5px;
-                                     background-color: #be2424;
-                                     border-radius: 20% 20% 0% 0%;
-                                     text-align: center;
-                                     color: #fff;
-                                     font-weight: 600;
-                                     font-size: 17px;">
-                                    <p:outputLabel value="حجم المبيعات اليومي" /></div>
-                                <div style="text-align: center;padding: 25px;background-color: #fff;border-radius: 0% 0% 20% 20%;">
-                                    <p:outputLabel  value="2500" />
-                                    <p:progressBar value="50" labelTemplate="{value}%" displayOnly="true" style="margin-top: 20%;"/>
-                                </div>
-
-                            </h:panelGroup>
-                        </div>
-                    </div>
-                </div>
+                        </p>
+                    </p:tab>
+                    <p:tab title="المشتريات">
+                        <p class="p-m-0">
+                            3
+                        </p>
+                    </p:tab>
+                    <p:tab title="مردود المشتريات ">
+                        <p class="p-m-0">
+                            4
+                        </p>
+                    </p:tab>
+                    <p:tab title="الموردين">
+                        <p class="p-m-0">
+                            5
+                        </p>
+                    </p:tab>
+                    <p:tab title="العملاء">
+                        <p class="p-m-0">
+                            6
+                        </p>
+                    </p:tab>
+                    <p:tab title="المخزن">
+                        <p class="p-m-0">
+                            7
+                        </p>
+                    </p:tab>
+                    <p:tab title="الخزائن">
+                        <p class="p-m-0">
+                            8-0
+                        </p>
+                    </p:tab>
+                    <p:tab title="المصروفات">
+                        <p class="p-m-0">
+                            8
+                        </p>
+                    </p:tab>
+                    <p:tab title="التحويلات">
+                        <p class="p-m-0">
+                            9
+                        </p>
+                    </p:tab>
+                    <p:tab title="الجيم">
+                        <p class="p-m-0">
+                            10
+                        </p>
+                    </p:tab>
+                </p:tabView>
             </div>
 
         </div>
