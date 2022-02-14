@@ -5,11 +5,14 @@
  */
 package co.isag.dashboard;
 
+import com.isag.businessservice.GlBankService;
 import com.isag.businessservice.GlBankTransactionService;
 import com.isag.businessservice.GmSubscriptionsService;
 import com.isag.businessservice.InvPurchaseInvoiceDetailsService;
 import com.isag.businessservice.InvPurchaseInvoiceService_1;
 import com.isag.businessservice.IsagUserInventoryService;
+import com.isag.businessservice.reports.BankBalanceViewService;
+import com.isag.entity.GlBank;
 import com.isag.entity.InvInventory;
 import com.isag.isag.BaseListBean;
 import java.math.BigDecimal;
@@ -33,8 +36,29 @@ public class DashboardMB extends BaseListBean {
 
     private Integer invType;
     private Integer serial;
-    private BigDecimal TotalNet;
+    private BigDecimal TotalNetSalesByDay;
+    private BigDecimal TotalNetSalesByMonth;
+    private BigDecimal TotalNetReturbSalesByDay;
+    private BigDecimal TotalNetReturbSalesByMonth;
+    private BigDecimal TotalNetPurchaseByDate;
+    private BigDecimal TotalNetPurchaseByMonth;
+    private BigDecimal TotalNetReturnPurchaseByDate;
+    private BigDecimal TotalNetReturnPurchaseByMonth;
+    private Integer NetSalesNumberByDay;
+    private Integer NetSalesNumberByMonth;
+    private Integer NetReturbSalesNumberByDay;
+    private Integer NetReturbSalesNumberByMonth;
+    private Integer NetPurchaseNumberByDate;
+    private Integer NetPurchaseNumberByMonth;
+    private Integer NetReturnPurchaseNumberByDate;
+    private Integer NetReturnPurchaseNumberByMonth;
+    private BigDecimal TotalNetGmByDate;
+    private BigDecimal TotalNetGmByMonth;
+    private Integer invNumGmByDate;
+    private Integer invNumGmByMonth;
+
     private List<InvInventory> inventoryList;
+    private List<GlBank> glBanksList;
 
     @EJB
     InvPurchaseInvoiceService_1 invPurchaseInvoiceService_1;
@@ -46,6 +70,10 @@ public class DashboardMB extends BaseListBean {
     InvPurchaseInvoiceDetailsService invPurchaseInvoiceDetailsService;
     @EJB
     private IsagUserInventoryService isagUserInventoryService;
+    @EJB
+    GlBankService glBankService;
+    @EJB
+    BankBalanceViewService bankBalanceViewService ;
 
     @PostConstruct
     @Override
@@ -276,20 +304,20 @@ public class DashboardMB extends BaseListBean {
     }
 
     /**
-     * @return the TotalNet
+     * @return the TotalNetSalesByDay
      */
-    public BigDecimal getTotalNet() {
-        if (TotalNet == null) {
-            setTotalNet(invPurchaseInvoiceDetailsService.FindTotalvalueByDate(getInventoryList(), getUserData().getUserBranch().getId()));
+    public BigDecimal getTotalNetSalesByDay() {
+        if (TotalNetSalesByDay == null) {
+            setTotalNetSalesByDay(invPurchaseInvoiceDetailsService.FindTotalvalueByDate(getInventoryList(), getUserData().getUserBranch().getId(), 1));
         }
-        return TotalNet;
+        return TotalNetSalesByDay;
     }
 
     /**
-     * @param TotalNet the TotalNet to set
+     * @param TotalNetSalesByDay the TotalNetSalesByDay to set
      */
-    public void setTotalNet(BigDecimal TotalNet) {
-        this.TotalNet = TotalNet;
+    public void setTotalNetSalesByDay(BigDecimal TotalNetSalesByDay) {
+        this.TotalNetSalesByDay = TotalNetSalesByDay;
     }
 
     /**
@@ -309,5 +337,354 @@ public class DashboardMB extends BaseListBean {
      */
     public void setInventoryList(List<InvInventory> inventoryList) {
         this.inventoryList = inventoryList;
+    }
+
+    /**
+     * @return the TotalNetSalesByMonth
+     */
+    public BigDecimal getTotalNetSalesByMonth() {
+        if (TotalNetSalesByMonth == null) {
+            setTotalNetSalesByMonth(invPurchaseInvoiceDetailsService.FindTotalvalueByMonth(getInventoryList(), getUserData().getUserBranch().getId(), 1));
+        }
+
+        return TotalNetSalesByMonth;
+    }
+
+    /**
+     * @param TotalNetSalesByMonth the TotalNetSalesByMonth to set
+     */
+    public void setTotalNetSalesByMonth(BigDecimal TotalNetSalesByMonth) {
+        this.TotalNetSalesByMonth = TotalNetSalesByMonth;
+    }
+
+    /**
+     * @return the TotalNetReturbSalesByDay
+     */
+    public BigDecimal getTotalNetReturbSalesByDay() {
+        if (TotalNetReturbSalesByDay == null) {
+            setTotalNetReturbSalesByDay(invPurchaseInvoiceDetailsService.FindTotalvalueByDate(getInventoryList(), getUserData().getUserBranch().getId(), 3));
+        }
+        return TotalNetReturbSalesByDay;
+    }
+
+    /**
+     * @param TotalNetReturbSalesByDay the TotalNetReturbSalesByDay to set
+     */
+    public void setTotalNetReturbSalesByDay(BigDecimal TotalNetReturbSalesByDay) {
+        this.TotalNetReturbSalesByDay = TotalNetReturbSalesByDay;
+    }
+
+    /**
+     * @return the TotalNetReturbSalesByMonth
+     */
+    public BigDecimal getTotalNetReturbSalesByMonth() {
+        if (TotalNetReturbSalesByMonth == null) {
+            setTotalNetReturbSalesByMonth(invPurchaseInvoiceDetailsService.FindTotalvalueByMonth(getInventoryList(), getUserData().getUserBranch().getId(), 3));
+        }
+        return TotalNetReturbSalesByMonth;
+    }
+
+    /**
+     * @param TotalNetReturbSalesByMonth the TotalNetReturbSalesByMonth to set
+     */
+    public void setTotalNetReturbSalesByMonth(BigDecimal TotalNetReturbSalesByMonth) {
+        this.TotalNetReturbSalesByMonth = TotalNetReturbSalesByMonth;
+    }
+
+    /**
+     * @return the TotalNetPurchaseByDate
+     */
+    public BigDecimal getTotalNetPurchaseByDate() {
+        if (TotalNetPurchaseByDate == null) {
+            setTotalNetPurchaseByDate(invPurchaseInvoiceDetailsService.FindTotalvalueByDate(getInventoryList(), getUserData().getUserBranch().getId(), 0));
+        }
+        return TotalNetPurchaseByDate;
+    }
+
+    /**
+     * @param TotalNetPurchaseByDate the TotalNetPurchaseByDate to set
+     */
+    public void setTotalNetPurchaseByDate(BigDecimal TotalNetPurchaseByDate) {
+        this.TotalNetPurchaseByDate = TotalNetPurchaseByDate;
+    }
+
+    /**
+     * @return the TotalNetPurchaseByMonth
+     */
+    public BigDecimal getTotalNetPurchaseByMonth() {
+        if (TotalNetPurchaseByMonth == null) {
+            setTotalNetPurchaseByMonth(invPurchaseInvoiceDetailsService.FindTotalvalueByMonth(getInventoryList(), getUserData().getUserBranch().getId(), 0));
+        }
+        return TotalNetPurchaseByMonth;
+    }
+
+    /**
+     * @param TotalNetPurchaseByMonth the TotalNetPurchaseByMonth to set
+     */
+    public void setTotalNetPurchaseByMonth(BigDecimal TotalNetPurchaseByMonth) {
+        this.TotalNetPurchaseByMonth = TotalNetPurchaseByMonth;
+    }
+
+    /**
+     * @return the TotalNetReturnPurchaseByDate
+     */
+    public BigDecimal getTotalNetReturnPurchaseByDate() {
+        if (TotalNetReturnPurchaseByDate == null) {
+            setTotalNetReturnPurchaseByDate(invPurchaseInvoiceDetailsService.FindTotalvalueByDate(getInventoryList(), getUserData().getUserBranch().getId(), 2));
+        }
+        return TotalNetReturnPurchaseByDate;
+    }
+
+    /**
+     * @param TotalNetReturnPurchaseByDate the TotalNetReturnPurchaseByDate to
+     * set
+     */
+    public void setTotalNetReturnPurchaseByDate(BigDecimal TotalNetReturnPurchaseByDate) {
+        this.TotalNetReturnPurchaseByDate = TotalNetReturnPurchaseByDate;
+    }
+
+    /**
+     * @return the TotalNetReturnPurchaseByMonth
+     */
+    public BigDecimal getTotalNetReturnPurchaseByMonth() {
+        if (TotalNetReturnPurchaseByMonth == null) {
+            setTotalNetReturnPurchaseByMonth(invPurchaseInvoiceDetailsService.FindTotalvalueByMonth(getInventoryList(), getUserData().getUserBranch().getId(), 2));
+        }
+        return TotalNetReturnPurchaseByMonth;
+    }
+
+    /**
+     * @param TotalNetReturnPurchaseByMonth the TotalNetReturnPurchaseByMonth to
+     * set
+     */
+    public void setTotalNetReturnPurchaseByMonth(BigDecimal TotalNetReturnPurchaseByMonth) {
+        this.TotalNetReturnPurchaseByMonth = TotalNetReturnPurchaseByMonth;
+    }
+
+    /**
+     * @return the NetSalesNumberByDay
+     */
+    public Integer getNetSalesNumberByDay() {
+        if (NetSalesNumberByDay == null) {
+            setNetSalesNumberByDay(invPurchaseInvoiceDetailsService.FindInvoiceNumberByDate(getInventoryList(), getUserData().getUserBranch().getId(), 1));
+        }
+        return NetSalesNumberByDay;
+    }
+
+    /**
+     * @param NetSalesNumberByDay the NetSalesNumberByDay to set
+     */
+    public void setNetSalesNumberByDay(Integer NetSalesNumberByDay) {
+        this.NetSalesNumberByDay = NetSalesNumberByDay;
+    }
+
+    /**
+     * @return the NetSalesNumberByMonth
+     */
+    public Integer getNetSalesNumberByMonth() {
+        if (NetSalesNumberByMonth == null) {
+            setNetSalesNumberByMonth(invPurchaseInvoiceDetailsService.FindInvoiceNumberByMonth(getInventoryList(), getUserData().getUserBranch().getId(), 1));
+        }
+        return NetSalesNumberByMonth;
+    }
+
+    /**
+     * @param NetSalesNumberByMonth the NetSalesNumberByMonth to set
+     */
+    public void setNetSalesNumberByMonth(Integer NetSalesNumberByMonth) {
+        this.NetSalesNumberByMonth = NetSalesNumberByMonth;
+    }
+
+    /**
+     * @return the NetReturbSalesNumberByDay
+     */
+    public Integer getNetReturbSalesNumberByDay() {
+        if (NetReturbSalesNumberByDay == null) {
+            setNetReturbSalesNumberByDay(invPurchaseInvoiceDetailsService.FindInvoiceNumberByDate(getInventoryList(), getUserData().getUserBranch().getId(), 3));
+        }
+        return NetReturbSalesNumberByDay;
+    }
+
+    /**
+     * @param NetReturbSalesNumberByDay the NetReturbSalesNumberByDay to set
+     */
+    public void setNetReturbSalesNumberByDay(Integer NetReturbSalesNumberByDay) {
+        this.NetReturbSalesNumberByDay = NetReturbSalesNumberByDay;
+    }
+
+    /**
+     * @return the NetReturbSalesNumberByMonth
+     */
+    public Integer getNetReturbSalesNumberByMonth() {
+        if (NetReturbSalesNumberByMonth == null) {
+            setNetReturbSalesNumberByMonth(invPurchaseInvoiceDetailsService.FindInvoiceNumberByMonth(getInventoryList(), getUserData().getUserBranch().getId(), 3));
+        }
+        return NetReturbSalesNumberByMonth;
+    }
+
+    /**
+     * @param NetReturbSalesNumberByMonth the NetReturbSalesNumberByMonth to set
+     */
+    public void setNetReturbSalesNumberByMonth(Integer NetReturbSalesNumberByMonth) {
+        this.NetReturbSalesNumberByMonth = NetReturbSalesNumberByMonth;
+    }
+
+    /**
+     * @return the NetPurchaseNumberByDate
+     */
+    public Integer getNetPurchaseNumberByDate() {
+        if (NetPurchaseNumberByDate == null) {
+            setNetPurchaseNumberByDate(invPurchaseInvoiceDetailsService.FindInvoiceNumberByDate(getInventoryList(), getUserData().getUserBranch().getId(), 0));
+        }
+        return NetPurchaseNumberByDate;
+    }
+
+    /**
+     * @param NetPurchaseNumberByDate the NetPurchaseNumberByDate to set
+     */
+    public void setNetPurchaseNumberByDate(Integer NetPurchaseNumberByDate) {
+        this.NetPurchaseNumberByDate = NetPurchaseNumberByDate;
+    }
+
+    /**
+     * @return the NetPurchaseNumberByMonth
+     */
+    public Integer getNetPurchaseNumberByMonth() {
+        if (NetPurchaseNumberByMonth == null) {
+            setNetPurchaseNumberByMonth(invPurchaseInvoiceDetailsService.FindInvoiceNumberByMonth(getInventoryList(), getUserData().getUserBranch().getId(), 0));
+        }
+        return NetPurchaseNumberByMonth;
+    }
+
+    /**
+     * @param NetPurchaseNumberByMonth the NetPurchaseNumberByMonth to set
+     */
+    public void setNetPurchaseNumberByMonth(Integer NetPurchaseNumberByMonth) {
+        this.NetPurchaseNumberByMonth = NetPurchaseNumberByMonth;
+    }
+
+    /**
+     * @return the NetReturnPurchaseNumberByDate
+     */
+    public Integer getNetReturnPurchaseNumberByDate() {
+        if (NetReturnPurchaseNumberByDate == null) {
+            setNetReturnPurchaseNumberByDate(invPurchaseInvoiceDetailsService.FindInvoiceNumberByDate(getInventoryList(), getUserData().getUserBranch().getId(), 3));
+        }
+        return NetReturnPurchaseNumberByDate;
+    }
+
+    /**
+     * @param NetReturnPurchaseNumberByDate the NetReturnPurchaseNumberByDate to
+     * set
+     */
+    public void setNetReturnPurchaseNumberByDate(Integer NetReturnPurchaseNumberByDate) {
+        this.NetReturnPurchaseNumberByDate = NetReturnPurchaseNumberByDate;
+    }
+
+    /**
+     * @return the NetReturnPurchaseNumberByMonth
+     */
+    public Integer getNetReturnPurchaseNumberByMonth() {
+        if (NetReturnPurchaseNumberByMonth == null) {
+            setNetReturnPurchaseNumberByMonth(invPurchaseInvoiceDetailsService.FindInvoiceNumberByMonth(getInventoryList(), getUserData().getUserBranch().getId(), 3));
+        }
+        return NetReturnPurchaseNumberByMonth;
+    }
+
+    /**
+     * @param NetReturnPurchaseNumberByMonth the NetReturnPurchaseNumberByMonth
+     * to set
+     */
+    public void setNetReturnPurchaseNumberByMonth(Integer NetReturnPurchaseNumberByMonth) {
+        this.NetReturnPurchaseNumberByMonth = NetReturnPurchaseNumberByMonth;
+    }
+
+    /**
+     * @return the TotalNetGmByDate
+     */
+    public BigDecimal getTotalNetGmByDate() {
+        if (TotalNetGmByDate == null) {
+            setTotalNetGmByDate(gmSubscriptionsService.FindTotalvalueByDateGM(getGlBanksList(), getUserData().getUserBranch().getId()));
+        }
+        return TotalNetGmByDate;
+    }
+
+    /**
+     * @param TotalNetGmByDate the TotalNetGmByDate to set
+     */
+    public void setTotalNetGmByDate(BigDecimal TotalNetGmByDate) {
+        this.TotalNetGmByDate = TotalNetGmByDate;
+    }
+
+    /**
+     * @return the TotalNetGmByMonth
+     */
+    public BigDecimal getTotalNetGmByMonth() {
+        if (TotalNetGmByMonth == null) {
+            setTotalNetGmByMonth(gmSubscriptionsService.FindTotalvalueByMonthGM(getGlBanksList(), getUserData().getUserBranch().getId()));
+        }
+        return TotalNetGmByMonth;
+    }
+
+    /**
+     * @param TotalNetGmByMonth the TotalNetGmByMonth to set
+     */
+    public void setTotalNetGmByMonth(BigDecimal TotalNetGmByMonth) {
+        this.TotalNetGmByMonth = TotalNetGmByMonth;
+    }
+
+    /**
+     * @return the glBanksList
+     */
+    public List<GlBank> getGlBanksList() {
+        if (glBanksList == null) {
+            glBanksList = glBankService.getAllGlBankByBranchId(getUserData().getUserBranch().getId());
+             for(GlBank glBank :glBanksList ){
+             glBank.setOpeninngBalance(bankBalanceViewService.findBalanceForBankId(glBank.getId()));
+             }
+        }
+
+        return glBanksList;
+    }
+
+    /**
+     * @param glBanksList the glBanksList to set
+     */
+    public void setGlBanksList(List<GlBank> glBanksList) {
+        this.glBanksList = glBanksList;
+    }
+
+    /**
+     * @return the invNumGmByDate
+     */
+    public Integer getInvNumGmByDate() {
+        if (invNumGmByDate == null) {
+            setInvNumGmByDate(gmSubscriptionsService.FindInvoiceNumByDateGM(getGlBanksList(), getUserData().getUserBranch().getId()));
+        }
+        return invNumGmByDate;
+    }
+
+    /**
+     * @param invNumGmByDate the invNumGmByDate to set
+     */
+    public void setInvNumGmByDate(Integer invNumGmByDate) {
+        this.invNumGmByDate = invNumGmByDate;
+    }
+
+    /**
+     * @return the invNumGmByMonth
+     */
+    public Integer getInvNumGmByMonth() {
+        if (invNumGmByMonth == null) {
+            setInvNumGmByMonth(gmSubscriptionsService.FindInvoiceNumByMounthGM(getGlBanksList(), getUserData().getUserBranch().getId()));
+        }
+        return invNumGmByMonth;
+    }
+
+    /**
+     * @param invNumGmByMonth the invNumGmByMonth to set
+     */
+    public void setInvNumGmByMonth(Integer invNumGmByMonth) {
+        this.invNumGmByMonth = invNumGmByMonth;
     }
 }

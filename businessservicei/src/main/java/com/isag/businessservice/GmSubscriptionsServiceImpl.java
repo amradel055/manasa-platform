@@ -18,6 +18,7 @@ import com.isag.entity.Branch;
 import com.isag.entity.GlBank;
 import com.isag.entity.GmItem;
 import com.isag.entity.GmSubscriptions;
+import com.isag.entity.InvInventory;
 import com.isag.entity.InvOrganizationSite;
 import com.isag.entity.IsagCompany;
 import com.isag.entity.IsagUser;
@@ -73,6 +74,7 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
     
 
     InvPurchaseReturnSave invPurchaseReturnSave;
+    
 
     @Override
     public List<GmSubscriptionsDTO> getALLGmSubscriptionsDTOByCompanyId(Integer companyId) {
@@ -661,6 +663,69 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
             gmSubscriptions = dao.updateEntity(gmSubscriptions);
 
         }
+    }
+    @Override
+    public BigDecimal FindTotalvalueByDateGM(List<GlBank> glbankIdList, Integer branchId) {
+        Map<String, Object> params = new HashMap();
+        params.put("branchId", branchId);
+        String inv = updateinventoryIdList(glbankIdList);
+        String dateFrom = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(new Date());
+        String dateTo = new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(new Date());
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT SUM(ipid.finalNet) FROM GmSubscriptions ipid WHERE ipid.branchId.id = :branchId AND ipid.glBankId.id in (").append(inv).append(") AND ipid.date >= '").append(dateFrom).append("' AND ipid.date <= '").append(dateTo).append("'");
+        List<BigDecimal> list = dao.findListByQuery(query.toString(), params);
+        return list == null ? BigDecimal.ZERO : list.get(0);
+    }
+      @Override
+    public BigDecimal FindTotalvalueByMonthGM(List<GlBank> glbankIdList, Integer branchId) {
+        Map<String, Object> params = new HashMap();
+        params.put("branchId", branchId);
+        String inv = updateinventoryIdList(glbankIdList);
+        String dateFrom = new SimpleDateFormat("yyyy-MM-01 00:00:00").format(new Date());
+        String dateTo = new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(new Date());
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT SUM(ipid.finalNet) FROM GmSubscriptions ipid WHERE ipid.branchId.id = :branchId AND ipid.glBankId.id in (").append(inv).append(") AND ipid.date >= '").append(dateFrom).append("' AND ipid.date <= '").append(dateTo).append("'");
+        List<BigDecimal> list = dao.findListByQuery(query.toString(), params);
+        return list == null ? BigDecimal.ZERO : list.get(0);
+    }
+      @Override
+    public Integer FindInvoiceNumByDateGM(List<GlBank> glbankIdList, Integer branchId) {
+        Map<String, Object> params = new HashMap();
+        params.put("branchId", branchId);
+        String inv = updateinventoryIdList(glbankIdList);
+        String dateFrom = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(new Date());
+        String dateTo = new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(new Date());
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT COUNT(ipid.id) FROM GmSubscriptions ipid WHERE ipid.branchId.id = :branchId AND ipid.glBankId.id in (").append(inv).append(") AND ipid.date >= '").append(dateFrom).append("' AND ipid.date <= '").append(dateTo).append("'");
+        List<Long> list = dao.findListByQuery(query.toString(), params);
+        return list == null ? 0 : list.get(0).intValue();
+    }
+      @Override
+    public Integer FindInvoiceNumByMounthGM(List<GlBank> glbankIdList, Integer branchId) {
+        Map<String, Object> params = new HashMap();
+        params.put("branchId", branchId);
+        String inv = updateinventoryIdList(glbankIdList);
+        String dateFrom = new SimpleDateFormat("yyyy-MM-01 00:00:00").format(new Date());
+        String dateTo = new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(new Date());
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT COUNT(ipid.id) FROM GmSubscriptions ipid WHERE ipid.branchId.id = :branchId AND ipid.glBankId.id in (").append(inv).append(") AND ipid.date >= '").append(dateFrom).append("' AND ipid.date <= '").append(dateTo).append("'");
+        List<Long> list = dao.findListByQuery(query.toString(), params);
+        return list == null ? 0 : list.get(0).intValue();
+    }
+    public String updateinventoryIdList(List<GlBank> glBanksList) {
+        StringBuilder stringBuilder = null;
+        for (GlBank glBank : glBanksList) {
+            if (stringBuilder == null) {
+                stringBuilder = new StringBuilder();
+                stringBuilder.append(glBank.getId());
+            } else {
+                stringBuilder.append(",").append(glBank.getId());
+
+            }
+            return stringBuilder.toString();
+        }
+        return stringBuilder.toString();
+
     }
 
 }

@@ -426,18 +426,63 @@ public class InvPurchaseInvoiceDetailsServiceImpl implements InvPurchaseInvoiceD
     }
 
     @Override
-    public BigDecimal FindTotalvalueByDate(List<InvInventory> inventoryIdList, Integer branchId) {
-        
+    public BigDecimal FindTotalvalueByDate(List<InvInventory> inventoryIdList, Integer branchId, Integer type) {
+
         Map<String, Object> params = new HashMap();
         params.put("branchId", branchId);
+        params.put("type", type);
         String inv = updateinventoryIdList(inventoryIdList);
         String dateFrom = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(new Date());
         String dateTo = new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(new Date());
         StringBuilder query = new StringBuilder();
-        query.append("SELECT SUM(ipid.netAfterDiscountHead) FROM InvPurchaseInvoiceDetail ipid WHERE ipid.invPurchaseInvoiceId.branchId.id = :branchId AND ipid.invPurchaseInvoiceId.invInventoryId.id in (").append(inv).append(") AND ipid.invPurchaseInvoiceId.date >= '").append(dateFrom).append("' AND ipid.invPurchaseInvoiceId.date <= '").append(dateTo).append("'");
+        query.append("SELECT SUM(ipid.netAfterDiscountHead) FROM InvPurchaseInvoiceDetail ipid WHERE ipid.invPurchaseInvoiceId.branchId.id = :branchId AND ipid.invPurchaseInvoiceId.type = :type AND ipid.invPurchaseInvoiceId.invInventoryId.id in (").append(inv).append(") AND ipid.invPurchaseInvoiceId.date >= '").append(dateFrom).append("' AND ipid.invPurchaseInvoiceId.date <= '").append(dateTo).append("'");
         List<BigDecimal> list = dao.findListByQuery(query.toString(), params);
         return list == null ? BigDecimal.ZERO : list.get(0);
     }
+    
+    @Override
+    public BigDecimal FindTotalvalueByMonth(List<InvInventory> inventoryIdList, Integer branchId, Integer type) {
+        Map<String, Object> params = new HashMap();
+        params.put("branchId", branchId);
+        params.put("type", type);
+        String inv = updateinventoryIdList(inventoryIdList);
+        String dateFrom = new SimpleDateFormat("yyyy-MM-01 00:00:00").format(new Date());
+        String dateTo = new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(new Date());
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT SUM(ipid.netAfterDiscountHead) FROM InvPurchaseInvoiceDetail ipid WHERE ipid.invPurchaseInvoiceId.branchId.id = :branchId AND ipid.invPurchaseInvoiceId.type = :type AND ipid.invPurchaseInvoiceId.invInventoryId.id in (").append(inv).append(") AND ipid.invPurchaseInvoiceId.date >= '").append(dateFrom).append("' AND ipid.invPurchaseInvoiceId.date <= '").append(dateTo).append("'");
+        List<BigDecimal> list = dao.findListByQuery(query.toString(), params);
+        return list == null ? BigDecimal.ZERO : list.get(0);
+    }
+      @Override
+    public Integer FindInvoiceNumberByDate(List<InvInventory> inventoryIdList, Integer branchId, Integer type) {
+
+        Map<String, Object> params = new HashMap();
+        params.put("branchId", branchId);
+        params.put("type", type);
+        String inv = updateinventoryIdList(inventoryIdList);
+        String dateFrom = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(new Date());
+        String dateTo = new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(new Date());
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT COUNT(ipid.serial) FROM InvPurchaseInvoiceDetail ipid WHERE ipid.invPurchaseInvoiceId.branchId.id = :branchId AND ipid.invPurchaseInvoiceId.type = :type AND ipid.invPurchaseInvoiceId.invInventoryId.id in (").append(inv).append(") AND ipid.invPurchaseInvoiceId.date >= '").append(dateFrom).append("' AND ipid.invPurchaseInvoiceId.date <= '").append(dateTo).append("'");
+        List<Long> list = dao.findListByQuery(query.toString(), params);
+        return list == null ? 0 : list.get(0).intValue();
+    }
+       @Override
+    public Integer FindInvoiceNumberByMonth(List<InvInventory> inventoryIdList, Integer branchId, Integer type) {
+
+        Map<String, Object> params = new HashMap();
+        params.put("branchId", branchId);
+        params.put("type", type);
+        String inv = updateinventoryIdList(inventoryIdList);
+        String dateFrom = new SimpleDateFormat("yyyy-MM-01 00:00:00").format(new Date());
+        String dateTo = new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(new Date());
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT COUNT(ipid.serial) FROM InvPurchaseInvoiceDetail ipid WHERE ipid.invPurchaseInvoiceId.branchId.id = :branchId AND ipid.invPurchaseInvoiceId.type = :type AND ipid.invPurchaseInvoiceId.invInventoryId.id in (").append(inv).append(") AND ipid.invPurchaseInvoiceId.date >= '").append(dateFrom).append("' AND ipid.invPurchaseInvoiceId.date <= '").append(dateTo).append("'");
+        List<Long> list = dao.findListByQuery(query.toString(), params);
+        return list   == null ? 0 : list.get(0).intValue();
+    
+    }
+  
 
     public String updateinventoryIdList(List<InvInventory> inventoryIdList) {
         StringBuilder stringBuilder = null;

@@ -58,5 +58,12 @@ public interface InvPurchaseInvoiceDetailsService {
 
     public BigDecimal findLastCost(Integer itemId);
 
-    public BigDecimal FindTotalvalueByDate(List<InvInventory> inventoryIdList, Integer branchId);
-}
+    public BigDecimal FindTotalvalueByDate(List<InvInventory> inventoryIdList, Integer branchId, Integer type);
+
+    public BigDecimal FindTotalvalueByMonth(List<InvInventory> inventoryIdList, Integer branchId, Integer type);
+
+    public Integer FindInvoiceNumberByDate(List<InvInventory> inventoryIdList, Integer branchId, Integer type);
+
+    public Integer FindInvoiceNumberByMonth(List<InvInventory> inventoryIdList, Integer branchId, Integer type) ;
+
+    }

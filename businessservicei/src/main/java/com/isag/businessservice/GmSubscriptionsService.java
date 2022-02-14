@@ -7,6 +7,7 @@ package com.isag.businessservice;
 
 import com.isag.businessservice.reports.searchBean.SubAccountSummarySearchBean;
 import com.isag.dto.GmSubscriptionsDTO;
+import com.isag.entity.GlBank;
 import com.isag.entity.GmSubscriptions;
 import com.isag.entity.IsagUser;
 import java.math.BigDecimal;
@@ -53,5 +54,13 @@ public interface GmSubscriptionsService {
     public void updateDeleteGmSubscriptionsDTODTO(GmSubscriptionsDTO gmSubscriptionsDTO, IsagUser user);
 
     public Integer findGmSubscriptionsDTOBySerialNew(Integer serial, Integer branchId);
+
+    public BigDecimal FindTotalvalueByDateGM(List<GlBank> glbankIdList, Integer branchId);
+
+    public BigDecimal FindTotalvalueByMonthGM(List<GlBank> glbankIdList, Integer branchId);
+
+    public Integer FindInvoiceNumByDateGM(List<GlBank> glbankIdList, Integer branchId);
+
+    public Integer FindInvoiceNumByMounthGM(List<GlBank> glbankIdList, Integer branchId);
 
 }
