@@ -122,6 +122,8 @@ public class GlBankTransaction extends BaseEntity {
     private Integer documentSerial;
     @Transient
     private Boolean dublara = Boolean.FALSE;
+    @Transient
+    private Boolean isDebit = Boolean.FALSE;
   
     public GlBankTransaction() {
     }
@@ -446,6 +448,20 @@ public class GlBankTransaction extends BaseEntity {
      */
     public void setIsDone(Integer isDone) {
         this.isDone = isDone;
+    }
+
+    /**
+     * @return the isDebit
+     */
+    public Boolean getIsDebit() {
+        return isDebit;
+    }
+
+    /**
+     * @param isDebit the isDebit to set
+     */
+    public void setIsDebit(Boolean isDebit) {
+        this.isDebit = isDebit;
     }
 
 }

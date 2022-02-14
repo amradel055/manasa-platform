@@ -7,6 +7,25 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns="http://www.w3.org/1999/xhtml">
     <ui:define name="content">
+        <style>
+            @media (max-width: 640px) {
+                .ui-datatable-reflow .ui-datatable-data td[role="gridcell"] {
+                    text-align: right;
+                    display: block;
+                    border: 0 none;
+                    width: 100%;
+                    -webkit-box-sizing: border-box;
+                    -moz-box-sizing: border-box;
+                    box-sizing: border-box;
+                    float: right;
+                    clear: right;
+                }
+                .col-width {
+                    width: 100% !important;
+                    font-size: 14px !important;
+                }
+            }
+        </style>
         <f:event listener="#{userData.authorize}" type="preRenderView" />
         <h:form id="form"  dir="#{userData.dir}" class='formmargin'>
             <div style=" position: absolute;left: 20px"> 
@@ -29,7 +48,7 @@
             <p:fieldset   legend="#{userData.userDDs['SALES_INVOICES']}" >
 
 
-                <p:dataTable id="invInvoicePurchaseTable"
+                <p:dataTable id="invInvoicePurchaseTable" reflow="true"
                              var="invInvoicePurchaseTable" 
                              widgetVar="bTable" 
                              rowIndexVar="index" 
@@ -83,7 +102,7 @@
 
                     </f:facet>
 
-                    <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px;"  filterStyle="display:none" 
+                    <p:column class="col-width" style="width: 10vh;font-size: 1.6vh;border-radius: 0px;"  filterStyle="display:none" 
                                filterBy="#{invInvoicePurchaseTable.serial}" 
                                filterMatchMode="contains" 
                                headerText="#{userData.userDDs['INVOICE_NO']}"
@@ -94,7 +113,7 @@
 
 
 
-                    <p:column  style="width: 10vh;font-size: 1.6vh;border-radius: 0px;"  filterStyle="display:none" 
+                    <p:column class="col-width" style="width: 10vh;font-size: 1.6vh;border-radius: 0px;"  filterStyle="display:none" 
                                filterBy="#{invInvoicePurchaseTable.supplierInvoiceNumber}" 
                                filterMatchMode="contains" 
                                headerText="رقم الأذن"
@@ -103,7 +122,7 @@
                         <p:outputLabel value="#{invInvoicePurchaseTable.supplierInvoiceNumber}" />
                     </p:column>
 
-                    <p:column style="width: 9vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" filterStyle="display:none" 
+                    <p:column class="col-width" style="width: 9vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" filterStyle="display:none" 
                               filterBy="#{invInvoicePurchaseTable.date}" 
                               filterMatchMode="contains"
                               headerText="#{userData.userDDs['DATEE']}"
@@ -114,7 +133,7 @@
                         </p:outputLabel>                           
                     </p:column>
 
-                    <p:column style="width: 9vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
+                    <p:column class="col-width" style="width: 9vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
                               filterBy="#{invInvoicePurchaseTable.invInventoryId.name}"
                               filterMatchMode="contains" 
                               headerText="#{userData.userDDs['DEPOSITORY']}"
@@ -123,7 +142,7 @@
                         <p:outputLabel value="#{invInvoicePurchaseTable.invInventoryId.name}" />
                     </p:column>
 
-                    <p:column style="width: 8vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
+                    <p:column class="col-width" style="width: 8vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
                               filterBy="#{invInvoicePurchaseTable.organizationSiteName}"
                               filterMatchMode="contains" 
                               headerText="العميل"
@@ -132,7 +151,7 @@
                         <p:outputLabel value="#{invInvoicePurchaseTable.organizationSiteName}" />
                     </p:column>
 
-                    <p:column style="width: 9vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
+                    <p:column class="col-width" style="width: 9vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
                               filterBy="#{invInvoicePurchaseTable.invDelegatorName}"
                               filterMatchMode="contains" 
                               headerText="#{userData.userDDs['DELEGATOR']}"
@@ -140,35 +159,35 @@
                               >
                         <p:outputLabel value="#{invInvoicePurchaseTable.invDelegatorName}" />
                     </p:column>
-                    <p:column style="width: 10vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
+                    <p:column class="col-width" style="width: 10vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
                               filterBy="#{invInvoicePurchaseTable.paymentType}"
                               filterMatchMode="contains" 
                               headerText="#{userData.userDDs['INVO_TYP']}"
                               sortBy="#{invInvoicePurchaseTable.paymentType}" >
                         <p:outputLabel value="#{invInvoicePurchaseTable.paymentType == 0 ? userData.userDDs['CASH'] : invInvoicePurchaseTable.paymentType == 1 ? userData.userDDs['POSTPONE']  :  invInvoicePurchaseTable.paymentType == 2 ? userData.userDDs['CREDIT_DOCUMENT'] : invInvoicePurchaseTable.paymentType}" />
                     </p:column>
-                    <p:column style="width: 10vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
+                    <p:column class="col-width" style="width: 10vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
                               filterBy="#{invInvoicePurchaseTable.createdByName}"
                               filterMatchMode="contains" 
                               headerText="#{userData.userDDs['INVOI_ENTR']}"
                               sortBy="#{invInvoicePurchaseTable.createdByName}" >
                         <p:outputLabel value="#{invInvoicePurchaseTable.createdByName}" />
                     </p:column>
-                    <p:column style="width: 10vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
+                    <p:column class="col-width" style="width: 10vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
                               filterBy="#{invInvoicePurchaseTable.remarks}"
                               filterMatchMode="contains" 
                               headerText="#{userData.userDDs['NOTE']}"
                               sortBy="#{invInvoicePurchaseTable.remarks}" >
                         <p:outputLabel value="#{invInvoicePurchaseTable.remarks}" />
                     </p:column>
-                    <p:column style="width: 10vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
+                    <p:column class="col-width" style="width: 10vh;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
                               filterBy="#{invInvoicePurchaseTable.look}"
                               filterMatchMode="contains" 
                               headerText="الحالة"
                               sortBy="#{invInvoicePurchaseTable.look}" >
                         <p:outputLabel value="#{invInvoicePurchaseTable.look eq null ? '' : 'تمت المراجعه'}" />
                     </p:column>
-                    <p:column  style="width: 12vh;font-size: 1.8vh;text-align:center;border-radius: 0px;" headerText="#{userData.userDDs['TRANSACTION']}" >
+                    <p:column class="col-width"  style="width: 12vh;font-size: 1.8vh;text-align:center;border-radius: 0px;" headerText="#{userData.userDDs['TRANSACTION']}" >
                         <p:commandButton   onclick="form.target = '_blank'"  ajax="false"
                                            update="@form" 
                                            class="smsearchButtons"
