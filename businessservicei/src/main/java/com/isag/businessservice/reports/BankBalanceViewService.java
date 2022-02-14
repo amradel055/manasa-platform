@@ -26,7 +26,20 @@ public interface BankBalanceViewService {
     public List<BankBalanceView> getAllBankBalancesTransactionsByBankId(Integer branchId, GlYear glYear, Date dateTo, StringBuilder builder);
 
     public List<BankBalanceReportBeanNew> searchNative(BankBalanceReportSearchBean bankBalanceReportSearchBean);
-    
+
     public BigDecimal findBalanceForBankId(Integer bankId);
+    
+
+    public BigDecimal findCashBalanceByDate(Integer bankId);
+
+    public BigDecimal findSettelmentBalanceByDate(Integer bankId);
+
+    public BigDecimal findTransferBalanceByDate(Integer bankId);
+    
+    public BigDecimal findCashBalanceByMonth(Integer bankId);
+
+    public BigDecimal findSettelmentBalanceByMonth(Integer bankId);
+
+    public BigDecimal findTransferBalanceByMonth(Integer bankId);
 
 }

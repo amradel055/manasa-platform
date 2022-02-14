@@ -365,11 +365,11 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
             queryBuilder.append(" select   sum(s.value_local) from (");
             findOpenningBalance(queryBuilder, bankId);
             queryBuilder.append(" UNION ALL  ");
-            findCash(queryBuilder, bankId,null,null);
+            findCash(queryBuilder, bankId, null, null);
             queryBuilder.append(" UNION ALL  ");
-            findSettelment(queryBuilder, bankId,null,null);
+            findSettelment(queryBuilder, bankId, null, null);
             queryBuilder.append(" UNION ALL  ");
-            findTransfer(queryBuilder, bankId,null,null);
+            findTransfer(queryBuilder, bankId, null, null);
             queryBuilder.append(" UNION ALL  ");
             queryBuilder.append(" \n"
                     + "    SELECT \n"
@@ -408,13 +408,42 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
     }
 
     @Override
-    public BigDecimal findCashBalance(Integer bankId) {
+    public BigDecimal findCashBalanceByDate(Integer bankId) {
 
         if (bankId != null) {
             dao.executeNativeQuery("select sql_mode_function()");
             StringBuilder queryBuilder = new StringBuilder();
+            String dateFrom = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(new Date());
+            String dateTo = new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(new Date());
             queryBuilder.append(" select   sum(s.value_local) from (");
-            findCash(queryBuilder, bankId);
+            findCash(queryBuilder, bankId, dateFrom, dateTo);
+            queryBuilder.append(") s ");
+            List<BigDecimal> data = dao.executeNativeQuery(queryBuilder.toString());
+            if (data == null) {
+                return BigDecimal.ZERO;
+            } else {
+                if (data.get(0) == null) {
+                    return BigDecimal.ZERO;
+                } else {
+                    return data.get(0);
+                }
+            }
+
+        } else {
+            return BigDecimal.ZERO;
+        }
+    }
+
+    @Override
+    public BigDecimal findCashBalanceByMonth(Integer bankId) {
+
+        if (bankId != null) {
+            dao.executeNativeQuery("select sql_mode_function()");
+            StringBuilder queryBuilder = new StringBuilder();
+            String dateFrom = new SimpleDateFormat("yyyy-MM-01 00:00:00").format(new Date());
+            String dateTo = new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(new Date());
+            queryBuilder.append(" select   sum(s.value_local) from (");
+            findCash(queryBuilder, bankId, dateFrom, dateTo);
             queryBuilder.append(")s ");
             List<BigDecimal> data = dao.executeNativeQuery(queryBuilder.toString());
             if (data == null) {
@@ -433,13 +462,15 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
     }
 
     @Override
-    public BigDecimal findSettelmentBalance(Integer bankId) {
+    public BigDecimal findSettelmentBalanceByDate(Integer bankId) {
 
         if (bankId != null) {
             dao.executeNativeQuery("select sql_mode_function()");
             StringBuilder queryBuilder = new StringBuilder();
+            String dateFrom = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(new Date());
+            String dateTo = new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(new Date());
             queryBuilder.append(" select   sum(s.value_local) from (");
-            findSettelment(queryBuilder, bankId);
+            findSettelment(queryBuilder, bankId, dateFrom, dateTo);
             queryBuilder.append(")s ");
             List<BigDecimal> data = dao.executeNativeQuery(queryBuilder.toString());
             if (data == null) {
@@ -458,13 +489,15 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
     }
 
     @Override
-    public BigDecimal findTransferBalance(Integer bankId) {
+    public BigDecimal findSettelmentBalanceByMonth(Integer bankId) {
 
         if (bankId != null) {
             dao.executeNativeQuery("select sql_mode_function()");
             StringBuilder queryBuilder = new StringBuilder();
+            String dateFrom = new SimpleDateFormat("yyyy-MM-01 00:00:00").format(new Date());
+            String dateTo = new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(new Date());
             queryBuilder.append(" select   sum(s.value_local) from (");
-            findTransfer(queryBuilder, bankId);
+            findSettelment(queryBuilder, bankId, dateFrom, dateTo);
             queryBuilder.append(")s ");
             List<BigDecimal> data = dao.executeNativeQuery(queryBuilder.toString());
             if (data == null) {
@@ -482,15 +515,69 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
         }
     }
 
-    private void findTransfer(StringBuilder queryBuilder, Integer bankId,Date dateFrom ,Date dateTo) {
+    @Override
+    public BigDecimal findTransferBalanceByDate(Integer bankId) {
+
+        if (bankId != null) {
+            dao.executeNativeQuery("select sql_mode_function()");
+            StringBuilder queryBuilder = new StringBuilder();
+            String dateFrom = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(new Date());
+            String dateTo = new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(new Date());
+            queryBuilder.append(" select   sum(s.value_local) from (");
+            findTransfer(queryBuilder, bankId, dateFrom, dateTo);
+            queryBuilder.append(")s ");
+            List<BigDecimal> data = dao.executeNativeQuery(queryBuilder.toString());
+            if (data == null) {
+                return BigDecimal.ZERO;
+            } else {
+                if (data.get(0) == null) {
+                    return BigDecimal.ZERO;
+                } else {
+                    return data.get(0);
+                }
+            }
+
+        } else {
+            return BigDecimal.ZERO;
+        }
+    }
+
+    @Override
+    public BigDecimal findTransferBalanceByMonth(Integer bankId) {
+
+        if (bankId != null) {
+            dao.executeNativeQuery("select sql_mode_function()");
+            StringBuilder queryBuilder = new StringBuilder();
+            String dateFrom = new SimpleDateFormat("yyyy-MM-01 00:00:00").format(new Date());
+            String dateTo = new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(new Date());
+            queryBuilder.append(" select   sum(s.value_local) from (");
+            findTransfer(queryBuilder, bankId, dateFrom, dateTo);
+            queryBuilder.append(")s ");
+            List<BigDecimal> data = dao.executeNativeQuery(queryBuilder.toString());
+            if (data == null) {
+                return BigDecimal.ZERO;
+            } else {
+                if (data.get(0) == null) {
+                    return BigDecimal.ZERO;
+                } else {
+                    return data.get(0);
+                }
+            }
+
+        } else {
+            return BigDecimal.ZERO;
+        }
+    }
+
+    private void findTransfer(StringBuilder queryBuilder, Integer bankId, String dateFrom, String dateTo) {
         queryBuilder.append(" \n"
                 + "    SELECT sum(`glbt`.`value_local`) AS `value_local`\n"
                 + "         FROM `gl_bank_transaction` `glb` LEFT JOIN `gl_bank_transaction_detail` `glbt` ON `glb`.`id` = `glbt`.`gl_bank_transaction_id` \n"
                 + "    WHERE\n"
                 + "        (`glb`.`transaction_type` = 2)  AND  bank_id_to = ").append(bankId).append(
-                " And `gb`.`id` =  ").append(bankId);
-        if(dateFrom != null && dateTo != null ){
-            queryBuilder.append(" AND glb.date >= ").append(dateFrom).append(" AND glb.date <= ").append(dateTo) ;
+                " And `glb`.`gl_bank_id` =  ").append(bankId);
+        if (dateFrom != null && dateTo != null) {
+            queryBuilder.append(" AND glb.date >= '").append(dateFrom).append("' AND glb.date <= '").append(dateTo).append("'");
         }
         queryBuilder.append(" UNION ALL  ");
         queryBuilder.append(" \n"
@@ -498,33 +585,33 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
                 + "         FROM `gl_bank_transaction` `glb` LEFT JOIN `gl_bank_transaction_detail` `glbt` ON `glb`.`id` = `glbt`.`gl_bank_transaction_id` \n"
                 + "    WHERE\n"
                 + "        (`glb`.`transaction_type` = 2)  AND  bank_id_from = ").append(bankId).append(
-                " And `gb`.`id` =  ").append(bankId);
-        if(dateFrom != null && dateTo != null ){
-            queryBuilder.append(" AND glb.date >= ").append(dateFrom).append(" AND glb.date <= ").append(dateTo) ;
+                " And `glb`.`gl_bank_id` =  ").append(bankId);
+        if (dateFrom != null && dateTo != null) {
+            queryBuilder.append(" AND glb.date >= '").append(dateFrom).append("' AND glb.date <= '").append(dateTo).append("'");
         }
     }
 
-    private void findSettelment(StringBuilder queryBuilder, Integer bankId,Date dateFrom ,Date dateTo) {
+    private void findSettelment(StringBuilder queryBuilder, Integer bankId, String dateFrom, String dateTo) {
         queryBuilder.append(" \n"
                 + "     SELECT (sum(`glbt`.`value_local`) * -1 ) AS `value_local`\n"
                 + "         FROM `gl_bank_transaction` `glb` LEFT JOIN `gl_bank_transaction_detail` `glbt` ON `glb`.`id` = `glbt`.`gl_bank_transaction_id` \n"
                 + "    WHERE\n"
                 + "        (`glb`.`transaction_type` = 0)  AND  bank_id_to = ").append(bankId).append(
-                " And `gb`.`id` =  ").append(bankId);
-        if(dateFrom != null && dateTo != null ){
-            queryBuilder.append(" AND glb.date >= ").append(dateFrom).append(" AND glb.date <= ").append(dateTo) ;
+                " And `glb`.`gl_bank_id` =  ").append(bankId);
+        if (dateFrom != null && dateTo != null) {
+            queryBuilder.append(" AND glb.date >= '").append(dateFrom).append("' AND glb.date <= '").append(dateTo).append("'");
         }
     }
 
-    private void findCash(StringBuilder queryBuilder, Integer bankId,Date dateFrom ,Date dateTo) {
+    private void findCash(StringBuilder queryBuilder, Integer bankId, String dateFrom, String dateTo) {
         queryBuilder.append(
                 "      SELECT sum(`glbt`.`value_local`) AS `value_local`\n"
                 + "         FROM `gl_bank_transaction` `glb` LEFT JOIN `gl_bank_transaction_detail` `glbt` ON `glb`.`id` = `glbt`.`gl_bank_transaction_id` \n"
                 + "    WHERE\n"
                 + "        (`glb`.`transaction_type` = 1)  AND  bank_id_from = ").append(bankId).append(
-                " And `gb`.`id` =  ").append(bankId);
-        if(dateFrom != null && dateTo != null ){
-            queryBuilder.append(" AND glb.date >= ").append(dateFrom).append(" AND glb.date <= ").append(dateTo) ;
+                " And `glb`.`gl_bank_id` =  ").append(bankId);
+        if (dateFrom != null && dateTo != null) {
+            queryBuilder.append(" AND glb.date >= '").append(dateFrom).append("' AND glb.date <= '").append(dateTo).append("'");
         }
     }
 

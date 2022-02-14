@@ -633,7 +633,7 @@
                                                      font-size: 17px;">
                                                     <p:outputLabel value="اجمالي مقبوضات اليوم" /></div>
                                                 <div style="text-align: center;padding: 25px;background-color: #ece7eb;border-radius: 0% 0% 20% 20%;">
-                                                    <p:outputLabel  value="2500" />
+                                                    <p:outputLabel  value="#{dashboardMB.totalCashByDate}" />
                                                     <p:progressBar value="30" labelTemplate="{value}%" displayOnly="true" style="margin-top: 20%;"/>
                                                 </div>
 
@@ -649,7 +649,7 @@
                                                      font-size: 17px;">
                                                     <p:outputLabel value="اجمالي مقبوضات الشهر " /></div>
                                                 <div style="text-align: center;padding: 25px;background-color: #ece7eb;border-radius: 0% 0% 20% 20%;">
-                                                    <p:outputLabel  value="2500" />
+                                                    <p:outputLabel  value="#{dashboardMB.totalCashByMonth}"/>
                                                     <p:progressBar value="10" labelTemplate="{value}%" displayOnly="true" style="margin-top: 20%;"/>
                                                 </div>
 

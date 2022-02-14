@@ -56,6 +56,12 @@ public class DashboardMB extends BaseListBean {
     private BigDecimal TotalNetGmByMonth;
     private Integer invNumGmByDate;
     private Integer invNumGmByMonth;
+    private BigDecimal totalCashByDate;
+    private BigDecimal totalCashByMonth;
+    private BigDecimal totalSettlementByDate;
+    private BigDecimal totalSettlementByMonth;
+    private BigDecimal totalTransferByDate;
+    private BigDecimal totalTransferByMonth;
 
     private List<InvInventory> inventoryList;
     private List<GlBank> glBanksList;
@@ -73,7 +79,7 @@ public class DashboardMB extends BaseListBean {
     @EJB
     GlBankService glBankService;
     @EJB
-    BankBalanceViewService bankBalanceViewService ;
+    BankBalanceViewService bankBalanceViewService;
 
     @PostConstruct
     @Override
@@ -639,9 +645,9 @@ public class DashboardMB extends BaseListBean {
     public List<GlBank> getGlBanksList() {
         if (glBanksList == null) {
             glBanksList = glBankService.getAllGlBankByBranchId(getUserData().getUserBranch().getId());
-             for(GlBank glBank :glBanksList ){
-             glBank.setOpeninngBalance(bankBalanceViewService.findBalanceForBankId(glBank.getId()));
-             }
+            for (GlBank glBank : glBanksList) {
+                glBank.setOpeninngBalance(bankBalanceViewService.findBalanceForBankId(glBank.getId()));
+            }
         }
 
         return glBanksList;
@@ -686,5 +692,107 @@ public class DashboardMB extends BaseListBean {
      */
     public void setInvNumGmByMonth(Integer invNumGmByMonth) {
         this.invNumGmByMonth = invNumGmByMonth;
+    }
+
+    /**
+     * @return the totalCashByDate
+     */
+    public BigDecimal getTotalCashByDate() {
+      
+            for (GlBank glBank : getGlBanksList()) {
+                if (totalCashByDate == null) {
+                    setTotalCashByDate(bankBalanceViewService.findCashBalanceByDate(glBank.getId()));
+                } else {
+                    setTotalCashByDate(totalCashByDate.add(bankBalanceViewService.findCashBalanceByDate(glBank.getId())));
+
+                }
+            }
+        
+        return totalCashByDate;
+    }
+
+    /**
+     * @param totalCashByDate the totalCashByDate to set
+     */
+    public void setTotalCashByDate(BigDecimal totalCashByDate) {
+        this.totalCashByDate = totalCashByDate;
+    }
+
+    /**
+     * @return the totalCashByMonth
+     */
+    public BigDecimal getTotalCashByMonth() {
+         for (GlBank glBank : getGlBanksList()) {
+                if (totalCashByMonth== null) {
+                    setTotalCashByMonth(bankBalanceViewService.findCashBalanceByMonth(glBank.getId()));
+                } else {
+                    setTotalCashByMonth(totalCashByMonth.add(bankBalanceViewService.findCashBalanceByMonth(glBank.getId())));
+
+                }
+            }
+        return totalCashByMonth;
+    }
+
+    /**
+     * @param totalCashByMonth the totalCashByMonth to set
+     */
+    public void setTotalCashByMonth(BigDecimal totalCashByMonth) {
+        this.totalCashByMonth = totalCashByMonth;
+    }
+
+    /**
+     * @return the totalSettlementByDate
+     */
+    public BigDecimal getTotalSettlementByDate() {
+        return totalSettlementByDate;
+    }
+
+    /**
+     * @param totalSettlementByDate the totalSettlementByDate to set
+     */
+    public void setTotalSettlementByDate(BigDecimal totalSettlementByDate) {
+        this.totalSettlementByDate = totalSettlementByDate;
+    }
+
+    /**
+     * @return the totalSettlementByMonth
+     */
+    public BigDecimal getTotalSettlementByMonth() {
+        return totalSettlementByMonth;
+    }
+
+    /**
+     * @param totalSettlementByMonth the totalSettlementByMonth to set
+     */
+    public void setTotalSettlementByMonth(BigDecimal totalSettlementByMonth) {
+        this.totalSettlementByMonth = totalSettlementByMonth;
+    }
+
+    /**
+     * @return the totalTransferByDate
+     */
+    public BigDecimal getTotalTransferByDate() {
+        return totalTransferByDate;
+    }
+
+    /**
+     * @param totalTransferByDate the totalTransferByDate to set
+     */
+    public void setTotalTransferByDate(BigDecimal totalTransferByDate) {
+        this.totalTransferByDate = totalTransferByDate;
+    }
+
+    /**
+     * @return the totalTransferByMonth
+     */
+    public BigDecimal getTotalTransferByMonth() {
+        return totalTransferByMonth;
+    }
+
+    /**
+     * @param totalTransferByMonth the totalTransferByMonth to set
+     */
+    public void setTotalTransferByMonth(BigDecimal totalTransferByMonth) {
+        this.totalTransferByMonth = totalTransferByMonth;
     }
 }
