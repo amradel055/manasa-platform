@@ -16,7 +16,6 @@ import com.isag.dto.RscPriceTenderDTO;
 import com.isag.dto.RscQotationPriceTenderDTO;
 import com.isag.dto.RscRestrictionQuantitiesDTO;
 import com.isag.dto.RscTenderDTO;
-import com.isag.dto.resualtDTO;
 import com.isag.isag.UserData;
 import com.isag.report.entity.RscPriceTenderBean;
 import com.isag.report.entity.RscRestrictionQuantitiesBean;

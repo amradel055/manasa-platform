@@ -54,6 +54,7 @@ public class GlBankTransactionEntity extends BaseEntity {
     private String createdByName;
     private String modifiedByName;
     private Integer documentSerial;
+    private Boolean isDebit;
 
     public Date getDate() {
         return date;
@@ -406,6 +407,20 @@ public class GlBankTransactionEntity extends BaseEntity {
      */
     public void setDocumentSerial(Integer documentSerial) {
         this.documentSerial = documentSerial;
+    }
+
+    /**
+     * @return the isDebit
+     */
+    public Boolean getIsDebit() {
+        return isDebit;
+    }
+
+    /**
+     * @param isDebit the isDebit to set
+     */
+    public void setIsDebit(Boolean isDebit) {
+        this.isDebit = isDebit;
     }
 
 }

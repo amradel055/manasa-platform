@@ -354,6 +354,7 @@ public class IReportServiceImpl implements IReportService {
             hashMap.put("netValue", invPurchasegmSubscriptionsDTO.getFinalNet());
 
             hashMap.put("subscribtionName", invPurchasegmSubscriptionsDTO.getGmItemDTO().getName());
+            hashMap.put("startDate", invPurchasegmSubscriptionsDTO.getStartDate());
             hashMap.put("endDate", invPurchasegmSubscriptionsDTO.getEndDate());
             hashMap.put("nationId", invPurchasegmSubscriptionsDTO.getOrganizationSiteId().getNationId());
             hashMap.put("email", invPurchasegmSubscriptionsDTO.getOrganizationSiteId().getEmail());
