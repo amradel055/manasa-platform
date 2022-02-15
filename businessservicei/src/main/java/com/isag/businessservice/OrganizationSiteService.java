@@ -24,6 +24,7 @@ import javax.ejb.Remote;
  */
 @Remote
 public interface OrganizationSiteService {
+
     public void updateImage(Integer clientProfileId, String img);
 
     public InvOrganizationSite addOrganizationSite(InvOrganizationSite invOrganizationSite);
@@ -49,7 +50,7 @@ public interface OrganizationSiteService {
     public List<InvOrganizationSite> getInvOrganizationSiteByCompanyId(Integer companyId);
 
     public List<InvOrganizationSite> getInvOrganizationSiteByBranchId(Integer BranchId);
-    
+
     public List<InvOrganizationSite> getSupplierByBranchId(Integer BranchId);
 
     public List<InvOrganizationSite> getSupplierByBranchIdForSupplierAccountReportMB(Integer branchId, Integer type);
@@ -93,7 +94,7 @@ public interface OrganizationSiteService {
     public List<InvOrganizationSiteDTO> getCustomerByBranchIdForReportDTO(Integer branchId);
 
     public List<InvOrganizationSiteDTO> getorganizationSiteByBranchIdDTOSmall(Integer branchId, boolean active, Integer type);
-    
+
     public List<InvOrganizationSiteDTO> getorganizationSiteDTOByBranchIdForGlBankModule(IsagUser isagUser, boolean active, Integer type);
 
     public InvOrganizationSiteDTO saveLead(InvOrganizationSiteDTO invOrganizationSiteDTO, IsagUser isagUser);
@@ -145,26 +146,28 @@ public interface OrganizationSiteService {
     public InvOrganizationSiteDTO getorganizationSiteByBranchIdAndCodeDTOSmall(Integer branchId, boolean active, Integer type, String code);
 
     public InvOrganizationSite getorganizationSiteByBranchIdAndCodeSmall(Integer branchId, boolean active, Integer type, String code);
-    
+
     public InvOrganizationSiteDTO addNewCustomer(InvOrganizationSiteDTO invOrganizationSiteDTO, List<InvOrganizationSiteDTO> invOrganizationSiteDTOList, IsagUser isagUser);
-    
+
     public InvOrganizationSiteDTO addOrganizationSiteDTO(InvOrganizationSiteDTO invOrganizationSiteDTO, IsagUser isagUser);
-    
+
     public Boolean validateName(IsagUser isagUser, Integer invOrganizationSiteDTOid, String name, Integer type);
-    
-     public Boolean validateCode(IsagUser tobyUser, Integer invOrganizationSiteDTOid, String code) ;
-     
-     public Boolean validateCode(IsagUser tobyUser, Integer invOrganizationSiteDTOid, String code, Integer type);
-     
-     public List<InvOrganizationSiteDTO> getcontractorORSupplierByBranchIdDTO(Integer branchId, boolean active);
-     
-     public InvOrganizationSiteDTO mapToDTOSmall(InvOrganizationSite invOrganizationSite);
-     
-     public List<InvOrganizationSite> getInvOrganizationSiteByCustomerId(Integer customerId);
-     
-     public InvOrganizationSiteDTO getInvOrganizationSiteByQuery(String query,IsagUser isagUser);
-     
-     public InvOrganizationSiteDTO findOrganizationSiteDTOByIdSmall(Integer invOrganizationSiteId);
-     
-     public void updateGMCustomer(InvOrganizationSiteDTO invOrganizationSiteDTO);
+
+    public Boolean validateCode(IsagUser tobyUser, Integer invOrganizationSiteDTOid, String code);
+
+    public Boolean validateCode(IsagUser tobyUser, Integer invOrganizationSiteDTOid, String code, Integer type);
+
+    public List<InvOrganizationSiteDTO> getcontractorORSupplierByBranchIdDTO(Integer branchId, boolean active);
+
+    public InvOrganizationSiteDTO mapToDTOSmall(InvOrganizationSite invOrganizationSite);
+
+    public List<InvOrganizationSite> getInvOrganizationSiteByCustomerId(Integer customerId);
+
+    public InvOrganizationSiteDTO getInvOrganizationSiteByQuery(String query, IsagUser isagUser);
+
+    public InvOrganizationSiteDTO findOrganizationSiteDTOByIdSmall(Integer invOrganizationSiteId);
+
+    public void updateGMCustomer(InvOrganizationSiteDTO invOrganizationSiteDTO);
+
+    public Integer FindSupplier(Integer branchId, Integer type);
 }

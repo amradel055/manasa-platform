@@ -30,9 +30,9 @@
                         <f:selectItem   itemLabel="المقبوضات " itemValue="5" rendered="#{userData.userScreens['notesreceivables'].view or userData.isAdmin}"/>                                  
                         <f:selectItem   itemLabel="التحويلات" itemValue="6" rendered="#{userData.userScreens['glBankTransaction'].view or userData.isAdmin}"/>                                  
                         <f:selectItem   itemLabel="الجيم"  itemValue="7"  rendered="#{userData.userScreens['gmitemsymbol'].view 
-                                       or userData.userScreens['gmsubscriptions'].view 
-                                       or userData.userScreens['gmsubscriptionstatue'].view 
-                                       or userData.isAdmin}"/>                                  
+                                                                                      or userData.userScreens['gmsubscriptions'].view 
+                                                                                      or userData.userScreens['gmsubscriptionstatue'].view 
+                                                                                      or userData.isAdmin}"/>                                  
                     </p:selectOneMenu>
                     <p:commandButton icon="fa fa-plus" value="إنشاء فاتورة" 
                                      class="saddButton"
@@ -56,9 +56,9 @@
             <div class="tabs10" style="float: right; width: 100%;margin-top: -3%;">
                 <p:tabView style="height: 420px;">
                     <p:tab title="المبيعات" rendered="#{userData.userScreens['invsalesinvoice_1'].view or userData.isAdmin}">
-                        
-                        
-                        
+
+
+
                         <div   class="ui-g-12 ui-g-nopad" style='padding: 2% 3% 1% 2%; margin-top: -2%;'>
                             <div class="ui-g">
 
@@ -134,7 +134,7 @@
                     </p:tab>
                     <p:tab title="مردود المبيعات" rendered="#{userData.userScreens['invreturnsales_1'].view or userData.isAdmin}">
                         <p class="p-m-0">
-                             <div   class="ui-g-12 ui-g-nopad" style='padding: 2% 3% 1% 2%; margin-top: -2%;'>
+                            <div   class="ui-g-12 ui-g-nopad" style='padding: 2% 3% 1% 2%; margin-top: -2%;'>
                                 <div class="ui-g">
 
                                     <div class="ui-g-12 ui-md-4" style="width: 100%;">
@@ -210,82 +210,82 @@
                     </p:tab>
                     <p:tab title="المشتريات" rendered="#{userData.userScreens['invpurchaseinvoice_1'].view or userData.isAdmin}">
                         <p class="p-m-0">
-                             <div   class="ui-g-12 ui-g-nopad" style='padding: 2% 3% 1% 2%; margin-top: -2%;'>
-                                    <div class="ui-g">
+                            <div   class="ui-g-12 ui-g-nopad" style='padding: 2% 3% 1% 2%; margin-top: -2%;'>
+                                <div class="ui-g">
 
-                                        <div class="ui-g-12 ui-md-4" style="width: 100%;">
-                                            <div style="display: inline-block;width: 25%;">
-                                                <h:panelGroup>
-                                                    <div style="padding: 20px 5px 20px 5px;
-                                                         background-color: #8f6cb0;
-                                                         text-align: center;
-                                                         color: #fff;
-                                                         font-weight: 600;
-                                                         font-size: 17px;">
-                                                        <p:outputLabel value="حجم المشتريات اليومي" /></div>
-                                                    <div style="text-align: center;padding: 25px;background-color: #ece7eb;border-radius: 0% 0% 20% 20%;">
-                                                        <p:outputLabel  value="#{dashboardMB.totalNetPurchaseByDate}" />
-                                                        <p:progressBar value="30" labelTemplate="{value}%" displayOnly="true" style="margin-top: 20%;"/>
-                                                    </div>
+                                    <div class="ui-g-12 ui-md-4" style="width: 100%;">
+                                        <div style="display: inline-block;width: 25%;">
+                                            <h:panelGroup>
+                                                <div style="padding: 20px 5px 20px 5px;
+                                                     background-color: #8f6cb0;
+                                                     text-align: center;
+                                                     color: #fff;
+                                                     font-weight: 600;
+                                                     font-size: 17px;">
+                                                    <p:outputLabel value="حجم المشتريات اليومي" /></div>
+                                                <div style="text-align: center;padding: 25px;background-color: #ece7eb;border-radius: 0% 0% 20% 20%;">
+                                                    <p:outputLabel  value="#{dashboardMB.totalNetPurchaseByDate}" />
+                                                    <p:progressBar value="30" labelTemplate="{value}%" displayOnly="true" style="margin-top: 20%;"/>
+                                                </div>
 
-                                                </h:panelGroup>
-                                            </div>
-                                            <div style="display: inline-block;width: 23%;margin-right: 1%;">
-                                                <h:panelGroup>
-                                                    <div style="padding: 20px 5px 20px 5px;
-                                                         background-color: #54724e;
-                                                         text-align: center;
-                                                         color: #fff;
-                                                         font-weight: 600;
-                                                         font-size: 17px;">
-                                                        <p:outputLabel value="عدد فواتير المشتريات اليومي" /></div>
-                                                    <div style="text-align: center;padding: 25px;background-color: #ece7eb;border-radius: 0% 0% 20% 20%;">
-                                                        <p:outputLabel  value="#{dashboardMB.netPurchaseNumberByDate}" />
-                                                        <p:progressBar value="10" labelTemplate="{value}%" displayOnly="true" style="margin-top: 20%;"/>
-                                                    </div>
+                                            </h:panelGroup>
+                                        </div>
+                                        <div style="display: inline-block;width: 23%;margin-right: 1%;">
+                                            <h:panelGroup>
+                                                <div style="padding: 20px 5px 20px 5px;
+                                                     background-color: #54724e;
+                                                     text-align: center;
+                                                     color: #fff;
+                                                     font-weight: 600;
+                                                     font-size: 17px;">
+                                                    <p:outputLabel value="عدد فواتير المشتريات اليومي" /></div>
+                                                <div style="text-align: center;padding: 25px;background-color: #ece7eb;border-radius: 0% 0% 20% 20%;">
+                                                    <p:outputLabel  value="#{dashboardMB.netPurchaseNumberByDate}" />
+                                                    <p:progressBar value="10" labelTemplate="{value}%" displayOnly="true" style="margin-top: 20%;"/>
+                                                </div>
 
-                                                </h:panelGroup>
-                                            </div>
-                                            <div style="display: inline-block;width: 23%;margin-right: 1%;">
-                                                <h:panelGroup>
-                                                    <div style="padding: 20px 5px 20px 5px;
-                                                         background-color: #3b50a1;
-                                                         text-align: center;
-                                                         color: #fff;
-                                                         font-weight: 600;
-                                                         font-size: 17px;">
-                                                        <p:outputLabel value="حجم  المشتريات الشهري" /></div>
-                                                    <div style="text-align: center;padding: 25px;background-color: #ece7eb;border-radius: 0% 0% 20% 20%;">
-                                                        <p:outputLabel  value="#{dashboardMB.totalNetPurchaseByMonth}" />
-                                                        <p:progressBar value="70" labelTemplate="{value}%" displayOnly="true" style="margin-top: 20%;"/>
-                                                    </div>
+                                            </h:panelGroup>
+                                        </div>
+                                        <div style="display: inline-block;width: 23%;margin-right: 1%;">
+                                            <h:panelGroup>
+                                                <div style="padding: 20px 5px 20px 5px;
+                                                     background-color: #3b50a1;
+                                                     text-align: center;
+                                                     color: #fff;
+                                                     font-weight: 600;
+                                                     font-size: 17px;">
+                                                    <p:outputLabel value="حجم  المشتريات الشهري" /></div>
+                                                <div style="text-align: center;padding: 25px;background-color: #ece7eb;border-radius: 0% 0% 20% 20%;">
+                                                    <p:outputLabel  value="#{dashboardMB.totalNetPurchaseByMonth}" />
+                                                    <p:progressBar value="70" labelTemplate="{value}%" displayOnly="true" style="margin-top: 20%;"/>
+                                                </div>
 
-                                                </h:panelGroup>
-                                            </div>
-                                            <div style="display: inline-block;width: 23%;margin-right: 1%;">
-                                                <h:panelGroup>
-                                                    <div style="padding: 20px 5px 20px 5px;
-                                                         background-color: #be2424;
-                                                         text-align: center;
-                                                         color: #fff;
-                                                         font-weight: 600;
-                                                         font-size: 17px;">
-                                                        <p:outputLabel value="عدد فواتير المشتريات الشهري" /></div>
-                                                    <div style="text-align: center;padding: 25px;background-color: #ece7eb;border-radius: 0% 0% 20% 20%;">
-                                                        <p:outputLabel  value="#{dashboardMB.netPurchaseNumberByMonth}" />
-                                                        <p:progressBar value="50" labelTemplate="{value}%" displayOnly="true" style="margin-top: 20%;"/>
-                                                    </div>
+                                            </h:panelGroup>
+                                        </div>
+                                        <div style="display: inline-block;width: 23%;margin-right: 1%;">
+                                            <h:panelGroup>
+                                                <div style="padding: 20px 5px 20px 5px;
+                                                     background-color: #be2424;
+                                                     text-align: center;
+                                                     color: #fff;
+                                                     font-weight: 600;
+                                                     font-size: 17px;">
+                                                    <p:outputLabel value="عدد فواتير المشتريات الشهري" /></div>
+                                                <div style="text-align: center;padding: 25px;background-color: #ece7eb;border-radius: 0% 0% 20% 20%;">
+                                                    <p:outputLabel  value="#{dashboardMB.netPurchaseNumberByMonth}" />
+                                                    <p:progressBar value="50" labelTemplate="{value}%" displayOnly="true" style="margin-top: 20%;"/>
+                                                </div>
 
-                                                </h:panelGroup>
-                                            </div>
+                                            </h:panelGroup>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
                         </p>
                     </p:tab>
                     <p:tab title="مردود المشتريات " rendered="#{userData.userScreens['invreturnpurchase_1'].view or userData.isAdmin}">
                         <p class="p-m-0">
-                               <div   class="ui-g-12 ui-g-nopad" style='padding: 2% 3% 1% 2%; margin-top: -2%;'>
+                            <div   class="ui-g-12 ui-g-nopad" style='padding: 2% 3% 1% 2%; margin-top: -2%;'>
                                 <div class="ui-g">
 
                                     <div class="ui-g-12 ui-md-4" style="width: 100%;">
@@ -374,7 +374,7 @@
                                                      font-size: 17px;">
                                                     <p:outputLabel value="عدد الموردين" /></div>
                                                 <div style="text-align: center;padding: 25px;background-color: #ece7eb;border-radius: 0% 0% 20% 20%;">
-                                                    <p:outputLabel  value="2500" />
+                                                    <p:outputLabel  value="#{dashboardMB.supplierNum}" />
                                                     <p:progressBar value="30" labelTemplate="{value}%" displayOnly="true" style="margin-top: 20%;"/>
                                                 </div>
 
@@ -390,7 +390,7 @@
                                                      font-size: 17px;">
                                                     <p:outputLabel value="اجمالي فواتير الموردين اليومي " /></div>
                                                 <div style="text-align: center;padding: 25px;background-color: #ece7eb;border-radius: 0% 0% 20% 20%;">
-                                                    <p:outputLabel  value="2500" />
+                                                    <p:outputLabel  value="#{dashboardMB.invoiceNumsupplierByDate}" />
                                                     <p:progressBar value="10" labelTemplate="{value}%" displayOnly="true" style="margin-top: 20%;"/>
                                                 </div>
 
@@ -406,7 +406,7 @@
                                                      font-size: 17px;">
                                                     <p:outputLabel value="اجمالي فواتير الموردين الشهري" /></div>
                                                 <div style="text-align: center;padding: 25px;background-color: #ece7eb;border-radius: 0% 0% 20% 20%;">
-                                                    <p:outputLabel  value="2500" />
+                                                    <p:outputLabel  value="#{dashboardMB.invoiceNumsupplierByMonth}" />
                                                     <p:progressBar value="70" labelTemplate="{value}%" displayOnly="true" style="margin-top: 20%;"/>
                                                 </div>
 
@@ -420,30 +420,15 @@
                                                      color: #fff;
                                                      font-weight: 600;
                                                      font-size: 17px;">
-                                                    <p:outputLabel value="اجمالي رصيد الموردين اليومي " /></div>
+                                                    <p:outputLabel value="اجمالي رصيد الموردين  " /></div>
                                                 <div style="text-align: center;padding: 25px;background-color: #ece7eb;border-radius: 0% 0% 20% 20%;">
-                                                    <p:outputLabel  value="2500" />
+                                                    <p:outputLabel  value="#{dashboardMB.totalNetSuppliers}" />
                                                     <p:progressBar value="50" labelTemplate="{value}%" displayOnly="true" style="margin-top: 20%;"/>
                                                 </div>
 
                                             </h:panelGroup>
                                         </div>
-                                        <div style="display: inline-block;width: 23%;margin-right: 1%;">
-                                            <h:panelGroup>
-                                                <div style="padding: 20px 5px 20px 5px;
-                                                     background-color: #be2424;
-                                                     text-align: center;
-                                                     color: #fff;
-                                                     font-weight: 600;
-                                                     font-size: 17px;">
-                                                    <p:outputLabel value="اجمالي رصيد الموردين الشهري  " /></div>
-                                                <div style="text-align: center;padding: 25px;background-color: #ece7eb;border-radius: 0% 0% 20% 20%;">
-                                                    <p:outputLabel  value="2500" />
-                                                    <p:progressBar value="50" labelTemplate="{value}%" displayOnly="true" style="margin-top: 20%;"/>
-                                                </div>
-
-                                            </h:panelGroup>
-                                        </div>
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -463,9 +448,9 @@
                                                      color: #fff;
                                                      font-weight: 600;
                                                      font-size: 17px;">
-                                                    <p:outputLabel value="عدد الموردين" /></div>
+                                                    <p:outputLabel value="عدد العملاء" /></div>
                                                 <div style="text-align: center;padding: 25px;background-color: #ece7eb;border-radius: 0% 0% 20% 20%;">
-                                                    <p:outputLabel  value="2500" />
+                                                    <p:outputLabel  value="#{dashboardMB.customerNum}" />
                                                     <p:progressBar value="30" labelTemplate="{value}%" displayOnly="true" style="margin-top: 20%;"/>
                                                 </div>
 
@@ -481,7 +466,7 @@
                                                      font-size: 17px;">
                                                     <p:outputLabel value="اجمالي فواتير العملاء اليومي " /></div>
                                                 <div style="text-align: center;padding: 25px;background-color: #ece7eb;border-radius: 0% 0% 20% 20%;">
-                                                    <p:outputLabel  value="2500" />
+                                                    <p:outputLabel  value="#{dashboardMB.invoiceNumcustomerByDate}" />
                                                     <p:progressBar value="10" labelTemplate="{value}%" displayOnly="true" style="margin-top: 20%;"/>
                                                 </div>
 
@@ -497,7 +482,7 @@
                                                      font-size: 17px;">
                                                     <p:outputLabel value="اجمالي فواتير العملاء الشهري" /></div>
                                                 <div style="text-align: center;padding: 25px;background-color: #ece7eb;border-radius: 0% 0% 20% 20%;">
-                                                    <p:outputLabel  value="2500" />
+                                                    <p:outputLabel  value="#{dashboardMB.invoiceNumcustomerByMonth}" />
                                                     <p:progressBar value="70" labelTemplate="{value}%" displayOnly="true" style="margin-top: 20%;"/>
                                                 </div>
 
@@ -511,46 +496,15 @@
                                                      color: #fff;
                                                      font-weight: 600;
                                                      font-size: 17px;">
-                                                    <p:outputLabel value="اجمالي رصيد العملاء اليومي " /></div>
+                                                    <p:outputLabel value="اجمالي رصيد العملاء  " /></div>
                                                 <div style="text-align: center;padding: 25px;background-color: #ece7eb;border-radius: 0% 0% 20% 20%;">
-                                                    <p:outputLabel  value="2500" />
+                                                    <p:outputLabel  value="#{dashboardMB.totalNetCustomers}" />
                                                     <p:progressBar value="50" labelTemplate="{value}%" displayOnly="true" style="margin-top: 20%;"/>
                                                 </div>
 
                                             </h:panelGroup>
                                         </div>
-                                        <div style="display: inline-block;width: 23%;margin-right: 1%;">
-                                            <h:panelGroup>
-                                                <div style="padding: 20px 5px 20px 5px;
-                                                     background-color: #be2424;
-                                                     text-align: center;
-                                                     color: #fff;
-                                                     font-weight: 600;
-                                                     font-size: 17px;">
-                                                    <p:outputLabel value="اجمالي رصيد العملاء الشهري  " /></div>
-                                                <div style="text-align: center;padding: 25px;background-color: #ece7eb;border-radius: 0% 0% 20% 20%;">
-                                                    <p:outputLabel  value="2500" />
-                                                    <p:progressBar value="50" labelTemplate="{value}%" displayOnly="true" style="margin-top: 20%;"/>
-                                                </div>
-
-                                            </h:panelGroup>
-                                        </div>
-                                        <div style="display: inline-block;width: 23%;margin-right: 1%;">
-                                            <h:panelGroup>
-                                                <div style="padding: 20px 5px 20px 5px;
-                                                     background-color: #be2424;
-                                                     text-align: center;
-                                                     color: #fff;
-                                                     font-weight: 600;
-                                                     font-size: 17px;">
-                                                    <p:outputLabel value="عدد العملاء الجدد خلال شهر  " /></div>
-                                                <div style="text-align: center;padding: 25px;background-color: #ece7eb;border-radius: 0% 0% 20% 20%;">
-                                                    <p:outputLabel  value="2500" />
-                                                    <p:progressBar value="50" labelTemplate="{value}%" displayOnly="true" style="margin-top: 20%;"/>
-                                                </div>
-
-                                            </h:panelGroup>
-                                        </div>
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -632,10 +586,29 @@
                                                      font-weight: 600;
                                                      font-size: 17px;">
                                                     <p:outputLabel value="اجمالي مقبوضات اليوم" /></div>
-                                                <div style="text-align: center;padding: 25px;background-color: #ece7eb;border-radius: 0% 0% 20% 20%;">
-                                                    <p:outputLabel  value="#{dashboardMB.totalCashByDate}" />
-                                                    <p:progressBar value="30" labelTemplate="{value}%" displayOnly="true" style="margin-top: 20%;"/>
-                                                </div>
+                                                <p:dataTable  id="table2"
+                                                              style="margin-top: 0px"
+                                                              widgetVar="postRestrict" 
+                                                              var="table2" 
+                                                              rows="6"  
+                                                              value="#{dashboardMB.cashByDateList}"                    
+                                                              paginator="true" 
+                                                              rowIndexVar="index" 
+                                                              emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" >
+                                                    <p:column headerText="#" style="width: 2%;font-size: 15px;text-align: -webkit-auto;border-radius: 0px" >
+                                                        <h:outputText value="#{index + 1}" style="width: 2%;font-size: 12px;" />
+                                                    </p:column>               
+                                                    <p:column   style="font-size: 1.4vh;width: 8vh;text-align:center!important;border-radius: 0px"    headerText="اسم الخزنة " >
+                                                        <h:outputText      value="#{table2.name}"  > 
+                                                        </h:outputText>                        
+                                                    </p:column>
+                                                    <p:column   style="font-size: 1.4vh;width: 8vh;text-align:center!important;border-radius: 0px"    headerText="رصيد الخزنة" >
+                                                        <h:outputText      value="#{table2.value}"> 
+                                                        </h:outputText>                        
+                                                    </p:column>
+
+                                                </p:dataTable>
+
 
                                             </h:panelGroup>
                                         </div>
@@ -648,10 +621,28 @@
                                                      font-weight: 600;
                                                      font-size: 17px;">
                                                     <p:outputLabel value="اجمالي مقبوضات الشهر " /></div>
-                                                <div style="text-align: center;padding: 25px;background-color: #ece7eb;border-radius: 0% 0% 20% 20%;">
-                                                    <p:outputLabel  value="#{dashboardMB.totalCashByMonth}"/>
-                                                    <p:progressBar value="10" labelTemplate="{value}%" displayOnly="true" style="margin-top: 20%;"/>
-                                                </div>
+                                                <p:dataTable  id="table3"
+                                                              style="margin-top: 0px"
+                                                              widgetVar="postRestrict" 
+                                                              var="table3" 
+                                                              rows="6"  
+                                                              value="#{dashboardMB.cashByMonthList}"                    
+                                                              paginator="true" 
+                                                              rowIndexVar="index" 
+                                                              emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" >
+                                                    <p:column headerText="#" style="width: 2%;font-size: 15px;text-align: -webkit-auto;border-radius: 0px" >
+                                                        <h:outputText value="#{index + 1}" style="width: 2%;font-size: 12px;" />
+                                                    </p:column>               
+                                                    <p:column   style="font-size: 1.4vh;width: 8vh;text-align:center!important;border-radius: 0px"    headerText="اسم الخزنة " >
+                                                        <h:outputText      value="#{table3.name}"  > 
+                                                        </h:outputText>                        
+                                                    </p:column>
+                                                    <p:column   style="font-size: 1.4vh;width: 8vh;text-align:center!important;border-radius: 0px"    headerText="رصيد الخزنة" >
+                                                        <h:outputText      value="#{table3.value}"> 
+                                                        </h:outputText>                        
+                                                    </p:column>
+
+                                                </p:dataTable>
 
                                             </h:panelGroup>
                                         </div>
@@ -664,10 +655,28 @@
                                                      font-weight: 600;
                                                      font-size: 17px;">
                                                     <p:outputLabel value="عدد مقبوضات اليوم " /></div>
-                                                <div style="text-align: center;padding: 25px;background-color: #ece7eb;border-radius: 0% 0% 20% 20%;">
-                                                    <p:outputLabel  value="2500" />
-                                                    <p:progressBar value="70" labelTemplate="{value}%" displayOnly="true" style="margin-top: 20%;"/>
-                                                </div>
+                                                <p:dataTable  id="table4"
+                                                              style="margin-top: 0px"
+                                                              widgetVar="postRestrict" 
+                                                              var="table4" 
+                                                              rows="6"  
+                                                              value="#{dashboardMB.cashByDateNumberList}"                    
+                                                              paginator="true" 
+                                                              rowIndexVar="index" 
+                                                              emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" >
+                                                    <p:column headerText="#" style="width: 2%;font-size: 15px;text-align: -webkit-auto;border-radius: 0px" >
+                                                        <h:outputText value="#{index + 1}" style="width: 2%;font-size: 12px;" />
+                                                    </p:column>               
+                                                    <p:column   style="font-size: 1.4vh;width: 8vh;text-align:center!important;border-radius: 0px"    headerText="اسم الخزنة " >
+                                                        <h:outputText      value="#{table4.name}"  > 
+                                                        </h:outputText>                        
+                                                    </p:column>
+                                                    <p:column   style="font-size: 1.4vh;width: 8vh;text-align:center!important;border-radius: 0px"    headerText="رصيد الخزنة" >
+                                                        <h:outputText      value="#{table4.number}"> 
+                                                        </h:outputText>                        
+                                                    </p:column>
+
+                                                </p:dataTable>
 
                                             </h:panelGroup>
                                         </div>
@@ -680,10 +689,28 @@
                                                      font-weight: 600;
                                                      font-size: 17px;">
                                                     <p:outputLabel value="عدد مقبوضات الشهر " /></div>
-                                                <div style="text-align: center;padding: 25px;background-color: #ece7eb;border-radius: 0% 0% 20% 20%;">
-                                                    <p:outputLabel  value="2500" />
-                                                    <p:progressBar value="70" labelTemplate="{value}%" displayOnly="true" style="margin-top: 20%;"/>
-                                                </div>
+                                                <p:dataTable  id="table5"
+                                                              style="margin-top: 0px"
+                                                              widgetVar="postRestrict" 
+                                                              var="table5" 
+                                                              rows="6"  
+                                                              value="#{dashboardMB.cashByMonthNumberList}"                    
+                                                              paginator="true" 
+                                                              rowIndexVar="index" 
+                                                              emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" >
+                                                    <p:column headerText="#" style="width: 2%;font-size: 15px;text-align: -webkit-auto;border-radius: 0px" >
+                                                        <h:outputText value="#{index + 1}" style="width: 2%;font-size: 12px;" />
+                                                    </p:column>               
+                                                    <p:column   style="font-size: 1.4vh;width: 8vh;text-align:center!important;border-radius: 0px"    headerText="اسم الخزنة " >
+                                                        <h:outputText      value="#{table5.name}"  > 
+                                                        </h:outputText>                        
+                                                    </p:column>
+                                                    <p:column   style="font-size: 1.4vh;width: 8vh;text-align:center!important;border-radius: 0px"    headerText="رصيد الخزنة" >
+                                                        <h:outputText      value="#{table5.number}"> 
+                                                        </h:outputText>                        
+                                                    </p:column>
+
+                                                </p:dataTable>
 
                                             </h:panelGroup>
                                         </div>
@@ -695,35 +722,35 @@
                     </p:tab>
                     <p:tab title="الخزائن">
                         <p class="p-m-0">
-                   
-                <p:dataTable  id="table1"
-                    style="margin-top: 0px"
-                    widgetVar="postRestrict" 
-                    var="table1" 
-                    rows="6"  
-                    value="#{dashboardMB.glBanksList}"                    
-                    paginator="true" 
-                    rowIndexVar="index" 
-                    emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" >
-                    <p:column headerText="#" style="width: 2%;font-size: 15px;text-align: -webkit-auto;border-radius: 0px" >
-                        <h:outputText value="#{index + 1}" style="width: 2%;font-size: 12px;" />
-                    </p:column>               
-                    <p:column   style="font-size: 1.4vh;width: 8vh;text-align:center!important;border-radius: 0px"    headerText="اسم الخزنة " >
-                        <h:outputText      value="#{table1.name}"  > 
-                        </h:outputText>                        
-                    </p:column>
-                     <p:column   style="font-size: 1.4vh;width: 8vh;text-align:center!important;border-radius: 0px"    headerText="رصيد الخزنة" >
-                         <h:outputText      value="#{table1.openinngBalance}"> 
-                        </h:outputText>                        
-                    </p:column>
-            
-                </p:dataTable>
-                            
-                            
+
+                            <p:dataTable  id="table1"
+                                          style="margin-top: 0px"
+                                          widgetVar="postRestrict" 
+                                          var="table1" 
+                                          rows="6"  
+                                          value="#{dashboardMB.glBanksList}"                    
+                                          paginator="true" 
+                                          rowIndexVar="index" 
+                                          emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" >
+                                <p:column headerText="#" style="width: 2%;font-size: 15px;text-align: -webkit-auto;border-radius: 0px" >
+                                    <h:outputText value="#{index + 1}" style="width: 2%;font-size: 12px;" />
+                                </p:column>               
+                                <p:column   style="font-size: 1.4vh;width: 8vh;text-align:center!important;border-radius: 0px"    headerText="اسم الخزنة " >
+                                    <h:outputText      value="#{table1.name}"  > 
+                                    </h:outputText>                        
+                                </p:column>
+                                <p:column   style="font-size: 1.4vh;width: 8vh;text-align:center!important;border-radius: 0px"    headerText="رصيد الخزنة" >
+                                    <h:outputText      value="#{table1.openinngBalance}"> 
+                                    </h:outputText>                        
+                                </p:column>
+
+                            </p:dataTable>
+
+
                         </p>
                     </p:tab>
                     <p:tab title="المدفوعات" rendered="#{ userData.userScreens['settlementdeed'].view 
-                                        or userData.isAdmin}">
+                                                          or userData.isAdmin}">
                         <p class="p-m-0">
                             <div   class="ui-g-12 ui-g-nopad" style='padding: 2% 3% 1% 2%; margin-top: -2%;'>
                                 <div class="ui-g">
@@ -738,10 +765,28 @@
                                                      font-weight: 600;
                                                      font-size: 17px;">
                                                     <p:outputLabel value="اجمالي مدفوعات اليوم" /></div>
-                                                <div style="text-align: center;padding: 25px;background-color: #ece7eb;border-radius: 0% 0% 20% 20%;">
-                                                    <p:outputLabel  value="2500" />
-                                                    <p:progressBar value="30" labelTemplate="{value}%" displayOnly="true" style="margin-top: 20%;"/>
-                                                </div>
+                                                <p:dataTable  id="table6"
+                                                              style="margin-top: 0px"
+                                                              widgetVar="postRestrict" 
+                                                              var="table6" 
+                                                              rows="6"  
+                                                              value="#{dashboardMB.settlementByDateList}"                    
+                                                              paginator="true" 
+                                                              rowIndexVar="index" 
+                                                              emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" >
+                                                    <p:column headerText="#" style="width: 2%;font-size: 15px;text-align: -webkit-auto;border-radius: 0px" >
+                                                        <h:outputText value="#{index + 1}" style="width: 2%;font-size: 12px;" />
+                                                    </p:column>               
+                                                    <p:column   style="font-size: 1.4vh;width: 8vh;text-align:center!important;border-radius: 0px"    headerText="اسم الخزنة " >
+                                                        <h:outputText      value="#{table6.name}"  > 
+                                                        </h:outputText>                        
+                                                    </p:column>
+                                                    <p:column   style="font-size: 1.4vh;width: 8vh;text-align:center!important;border-radius: 0px"    headerText="رصيد الخزنة" >
+                                                        <h:outputText      value="#{table6.value}"> 
+                                                        </h:outputText>                        
+                                                    </p:column>
+
+                                                </p:dataTable>
 
                                             </h:panelGroup>
                                         </div>
@@ -754,10 +799,28 @@
                                                      font-weight: 600;
                                                      font-size: 17px;">
                                                     <p:outputLabel value="اجمالي مدفوعات الشهر " /></div>
-                                                <div style="text-align: center;padding: 25px;background-color: #ece7eb;border-radius: 0% 0% 20% 20%;">
-                                                    <p:outputLabel  value="2500" />
-                                                    <p:progressBar value="10" labelTemplate="{value}%" displayOnly="true" style="margin-top: 20%;"/>
-                                                </div>
+                                                <p:dataTable  id="table7"
+                                                              style="margin-top: 0px"
+                                                              widgetVar="postRestrict" 
+                                                              var="table7" 
+                                                              rows="6"  
+                                                              value="#{dashboardMB.settlementByMonthList}"                    
+                                                              paginator="true" 
+                                                              rowIndexVar="index" 
+                                                              emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" >
+                                                    <p:column headerText="#" style="width: 2%;font-size: 15px;text-align: -webkit-auto;border-radius: 0px" >
+                                                        <h:outputText value="#{index + 1}" style="width: 2%;font-size: 12px;" />
+                                                    </p:column>               
+                                                    <p:column   style="font-size: 1.4vh;width: 8vh;text-align:center!important;border-radius: 0px"    headerText="اسم الخزنة " >
+                                                        <h:outputText      value="#{table7.name}"  > 
+                                                        </h:outputText>                        
+                                                    </p:column>
+                                                    <p:column   style="font-size: 1.4vh;width: 8vh;text-align:center!important;border-radius: 0px"    headerText="رصيد الخزنة" >
+                                                        <h:outputText      value="#{table7.value}"> 
+                                                        </h:outputText>                        
+                                                    </p:column>
+
+                                                </p:dataTable>
 
                                             </h:panelGroup>
                                         </div>
@@ -770,10 +833,28 @@
                                                      font-weight: 600;
                                                      font-size: 17px;">
                                                     <p:outputLabel value="عدد مدفوعات اليوم " /></div>
-                                                <div style="text-align: center;padding: 25px;background-color: #ece7eb;border-radius: 0% 0% 20% 20%;">
-                                                    <p:outputLabel  value="2500" />
-                                                    <p:progressBar value="70" labelTemplate="{value}%" displayOnly="true" style="margin-top: 20%;"/>
-                                                </div>
+                                                <p:dataTable  id="table8"
+                                                              style="margin-top: 0px"
+                                                              widgetVar="postRestrict" 
+                                                              var="table8" 
+                                                              rows="6"  
+                                                              value="#{dashboardMB.settlementByDateNumberList}"                    
+                                                              paginator="true" 
+                                                              rowIndexVar="index" 
+                                                              emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" >
+                                                    <p:column headerText="#" style="width: 2%;font-size: 15px;text-align: -webkit-auto;border-radius: 0px" >
+                                                        <h:outputText value="#{index + 1}" style="width: 2%;font-size: 12px;" />
+                                                    </p:column>               
+                                                    <p:column   style="font-size: 1.4vh;width: 8vh;text-align:center!important;border-radius: 0px"    headerText="اسم الخزنة " >
+                                                        <h:outputText      value="#{table8.name}"  > 
+                                                        </h:outputText>                        
+                                                    </p:column>
+                                                    <p:column   style="font-size: 1.4vh;width: 8vh;text-align:center!important;border-radius: 0px"    headerText="رصيد الخزنة" >
+                                                        <h:outputText      value="#{table8.number}"> 
+                                                        </h:outputText>                        
+                                                    </p:column>
+
+                                                </p:dataTable>
 
                                             </h:panelGroup>
                                         </div>
@@ -786,10 +867,28 @@
                                                      font-weight: 600;
                                                      font-size: 17px;">
                                                     <p:outputLabel value="عدد مدفوعات الشهر " /></div>
-                                                <div style="text-align: center;padding: 25px;background-color: #ece7eb;border-radius: 0% 0% 20% 20%;">
-                                                    <p:outputLabel  value="2500" />
-                                                    <p:progressBar value="70" labelTemplate="{value}%" displayOnly="true" style="margin-top: 20%;"/>
-                                                </div>
+                                                <p:dataTable  id="table9"
+                                                              style="margin-top: 0px"
+                                                              widgetVar="postRestrict" 
+                                                              var="table9" 
+                                                              rows="6"  
+                                                              value="#{dashboardMB.settlementByMonthNumberList}"                    
+                                                              paginator="true" 
+                                                              rowIndexVar="index" 
+                                                              emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" >
+                                                    <p:column headerText="#" style="width: 2%;font-size: 15px;text-align: -webkit-auto;border-radius: 0px" >
+                                                        <h:outputText value="#{index + 1}" style="width: 2%;font-size: 12px;" />
+                                                    </p:column>               
+                                                    <p:column   style="font-size: 1.4vh;width: 8vh;text-align:center!important;border-radius: 0px"    headerText="اسم الخزنة " >
+                                                        <h:outputText      value="#{table9.name}"  > 
+                                                        </h:outputText>                        
+                                                    </p:column>
+                                                    <p:column   style="font-size: 1.4vh;width: 8vh;text-align:center!important;border-radius: 0px"    headerText="رصيد الخزنة" >
+                                                        <h:outputText      value="#{table9.number}"> 
+                                                        </h:outputText>                        
+                                                    </p:column>
+
+                                                </p:dataTable>
 
                                             </h:panelGroup>
                                         </div>
@@ -814,10 +913,28 @@
                                                      font-weight: 600;
                                                      font-size: 17px;">
                                                     <p:outputLabel value="اجمالي تحويلات اليوم" /></div>
-                                                <div style="text-align: center;padding: 25px;background-color: #ece7eb;border-radius: 0% 0% 20% 20%;">
-                                                    <p:outputLabel  value="2500" />
-                                                    <p:progressBar value="30" labelTemplate="{value}%" displayOnly="true" style="margin-top: 20%;"/>
-                                                </div>
+                                                <p:dataTable  id="table10"
+                                                              style="margin-top: 0px"
+                                                              widgetVar="postRestrict" 
+                                                              var="table10" 
+                                                              rows="6"  
+                                                              value="#{dashboardMB.transferByDateList}"                    
+                                                              paginator="true" 
+                                                              rowIndexVar="index" 
+                                                              emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" >
+                                                    <p:column headerText="#" style="width: 2%;font-size: 15px;text-align: -webkit-auto;border-radius: 0px" >
+                                                        <h:outputText value="#{index + 1}" style="width: 2%;font-size: 12px;" />
+                                                    </p:column>               
+                                                    <p:column   style="font-size: 1.4vh;width: 8vh;text-align:center!important;border-radius: 0px"    headerText="اسم الخزنة " >
+                                                        <h:outputText      value="#{table10.name}"  > 
+                                                        </h:outputText>                        
+                                                    </p:column>
+                                                    <p:column   style="font-size: 1.4vh;width: 8vh;text-align:center!important;border-radius: 0px"    headerText="رصيد الخزنة" >
+                                                        <h:outputText      value="#{table10.value}"> 
+                                                        </h:outputText>                        
+                                                    </p:column>
+
+                                                </p:dataTable>
 
                                             </h:panelGroup>
                                         </div>
@@ -830,10 +947,28 @@
                                                      font-weight: 600;
                                                      font-size: 17px;">
                                                     <p:outputLabel value="اجمالي تحويلات الشهر " /></div>
-                                                <div style="text-align: center;padding: 25px;background-color: #ece7eb;border-radius: 0% 0% 20% 20%;">
-                                                    <p:outputLabel  value="2500" />
-                                                    <p:progressBar value="10" labelTemplate="{value}%" displayOnly="true" style="margin-top: 20%;"/>
-                                                </div>
+                                                <p:dataTable  id="table11"
+                                                              style="margin-top: 0px"
+                                                              widgetVar="postRestrict" 
+                                                              var="table11" 
+                                                              rows="6"  
+                                                              value="#{dashboardMB.transferByMonthList}"                    
+                                                              paginator="true" 
+                                                              rowIndexVar="index" 
+                                                              emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" >
+                                                    <p:column headerText="#" style="width: 2%;font-size: 15px;text-align: -webkit-auto;border-radius: 0px" >
+                                                        <h:outputText value="#{index + 1}" style="width: 2%;font-size: 12px;" />
+                                                    </p:column>               
+                                                    <p:column   style="font-size: 1.4vh;width: 8vh;text-align:center!important;border-radius: 0px"    headerText="اسم الخزنة " >
+                                                        <h:outputText      value="#{table11.name}"  > 
+                                                        </h:outputText>                        
+                                                    </p:column>
+                                                    <p:column   style="font-size: 1.4vh;width: 8vh;text-align:center!important;border-radius: 0px"    headerText="رصيد الخزنة" >
+                                                        <h:outputText      value="#{table11.value}"> 
+                                                        </h:outputText>                        
+                                                    </p:column>
+
+                                                </p:dataTable>
 
                                             </h:panelGroup>
                                         </div>
@@ -846,10 +981,28 @@
                                                      font-weight: 600;
                                                      font-size: 17px;">
                                                     <p:outputLabel value="عدد تحويلات اليوم " /></div>
-                                                <div style="text-align: center;padding: 25px;background-color: #ece7eb;border-radius: 0% 0% 20% 20%;">
-                                                    <p:outputLabel  value="2500" />
-                                                    <p:progressBar value="70" labelTemplate="{value}%" displayOnly="true" style="margin-top: 20%;"/>
-                                                </div>
+                                                <p:dataTable  id="table12"
+                                                              style="margin-top: 0px"
+                                                              widgetVar="postRestrict" 
+                                                              var="table12" 
+                                                              rows="6"  
+                                                              value="#{dashboardMB.transferByDateNumberList}"                    
+                                                              paginator="true" 
+                                                              rowIndexVar="index" 
+                                                              emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" >
+                                                    <p:column headerText="#" style="width: 2%;font-size: 15px;text-align: -webkit-auto;border-radius: 0px" >
+                                                        <h:outputText value="#{index + 1}" style="width: 2%;font-size: 12px;" />
+                                                    </p:column>               
+                                                    <p:column   style="font-size: 1.4vh;width: 8vh;text-align:center!important;border-radius: 0px"    headerText="اسم الخزنة " >
+                                                        <h:outputText      value="#{table12.name}"  > 
+                                                        </h:outputText>                        
+                                                    </p:column>
+                                                    <p:column   style="font-size: 1.4vh;width: 8vh;text-align:center!important;border-radius: 0px"    headerText="رصيد الخزنة" >
+                                                        <h:outputText      value="#{table12.number}"> 
+                                                        </h:outputText>                        
+                                                    </p:column>
+
+                                                </p:dataTable>
 
                                             </h:panelGroup>
                                         </div>
@@ -862,10 +1015,28 @@
                                                      font-weight: 600;
                                                      font-size: 17px;">
                                                     <p:outputLabel value="عدد تحويلات الشهر " /></div>
-                                                <div style="text-align: center;padding: 25px;background-color: #ece7eb;border-radius: 0% 0% 20% 20%;">
-                                                    <p:outputLabel  value="2500" />
-                                                    <p:progressBar value="70" labelTemplate="{value}%" displayOnly="true" style="margin-top: 20%;"/>
-                                                </div>
+                                                <p:dataTable  id="table13"
+                                                              style="margin-top: 0px"
+                                                              widgetVar="postRestrict" 
+                                                              var="table13" 
+                                                              rows="6"  
+                                                              value="#{dashboardMB.transferByMonthNumberList}"                    
+                                                              paginator="true" 
+                                                              rowIndexVar="index" 
+                                                              emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" >
+                                                    <p:column headerText="#" style="width: 2%;font-size: 15px;text-align: -webkit-auto;border-radius: 0px" >
+                                                        <h:outputText value="#{index + 1}" style="width: 2%;font-size: 12px;" />
+                                                    </p:column>               
+                                                    <p:column   style="font-size: 1.4vh;width: 8vh;text-align:center!important;border-radius: 0px"    headerText="اسم الخزنة " >
+                                                        <h:outputText      value="#{table13.name}"  > 
+                                                        </h:outputText>                        
+                                                    </p:column>
+                                                    <p:column   style="font-size: 1.4vh;width: 8vh;text-align:center!important;border-radius: 0px"    headerText="رصيد الخزنة" >
+                                                        <h:outputText      value="#{table13.number}"> 
+                                                        </h:outputText>                        
+                                                    </p:column>
+
+                                                </p:dataTable>
 
                                             </h:panelGroup>
                                         </div>
@@ -876,9 +1047,9 @@
                         </p>
                     </p:tab>
                     <p:tab title="الجيم"  rendered="#{userData.userScreens['gmitemsymbol'].view 
-                                       or userData.userScreens['gmsubscriptions'].view 
-                                       or userData.userScreens['gmsubscriptionstatue'].view 
-                                       or userData.isAdmin}">
+                                                      or userData.userScreens['gmsubscriptions'].view 
+                                                      or userData.userScreens['gmsubscriptionstatue'].view 
+                                                      or userData.isAdmin}">
                         <p class="p-m-0">
                             <div   class="ui-g-12 ui-g-nopad" style='padding: 2% 3% 1% 2%; margin-top: -2%;'>
                                 <div class="ui-g">

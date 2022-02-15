@@ -9,12 +9,17 @@ import com.isag.businessservice.GlBankService;
 import com.isag.businessservice.GlBankTransactionService;
 import com.isag.businessservice.GmSubscriptionsService;
 import com.isag.businessservice.InvPurchaseInvoiceDetailsService;
+import com.isag.businessservice.InvPurchaseInvoiceService;
 import com.isag.businessservice.InvPurchaseInvoiceService_1;
 import com.isag.businessservice.IsagUserInventoryService;
+import com.isag.businessservice.OrganizationSiteService;
 import com.isag.businessservice.reports.BankBalanceViewService;
+import com.isag.businessservice.reports.SupplierAccountService;
+import com.isag.dto.GlBankDTO;
 import com.isag.entity.GlBank;
 import com.isag.entity.InvInventory;
 import com.isag.isag.BaseListBean;
+import com.isag.views.BankBalanceView;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -56,15 +61,28 @@ public class DashboardMB extends BaseListBean {
     private BigDecimal TotalNetGmByMonth;
     private Integer invNumGmByDate;
     private Integer invNumGmByMonth;
-    private BigDecimal totalCashByDate;
-    private BigDecimal totalCashByMonth;
-    private BigDecimal totalSettlementByDate;
-    private BigDecimal totalSettlementByMonth;
-    private BigDecimal totalTransferByDate;
-    private BigDecimal totalTransferByMonth;
-
     private List<InvInventory> inventoryList;
     private List<GlBank> glBanksList;
+    private List<GlBankDTO> cashByDateList;
+    private List<GlBankDTO> cashByMonthList;
+    private List<GlBankDTO> cashByDateNumberList;
+    private List<GlBankDTO> cashByMonthNumberList;
+    private List<GlBankDTO> settlementByDateList;
+    private List<GlBankDTO> settlementByMonthList;
+    private List<GlBankDTO> settlementByDateNumberList;
+    private List<GlBankDTO> settlementByMonthNumberList;
+    private List<GlBankDTO> transferByDateList;
+    private List<GlBankDTO> transferByMonthList;
+    private List<GlBankDTO> transferByDateNumberList;
+    private List<GlBankDTO> transferByMonthNumberList;
+    private Integer supplierNum;
+    private Integer invoiceNumsupplierByDate;
+    private Integer invoiceNumsupplierByMonth;
+    private BigDecimal totalNetSuppliers;
+    private Integer customerNum;
+    private Integer invoiceNumcustomerByDate;
+    private Integer invoiceNumcustomerByMonth;
+    private BigDecimal totalNetCustomers;
 
     @EJB
     InvPurchaseInvoiceService_1 invPurchaseInvoiceService_1;
@@ -80,6 +98,12 @@ public class DashboardMB extends BaseListBean {
     GlBankService glBankService;
     @EJB
     BankBalanceViewService bankBalanceViewService;
+    @EJB
+    OrganizationSiteService organizationSiteService;
+    @EJB
+    InvPurchaseInvoiceService invPurchaseInvoiceService;
+    @EJB
+    SupplierAccountService supplierAccountService;
 
     @PostConstruct
     @Override
@@ -647,6 +671,7 @@ public class DashboardMB extends BaseListBean {
             glBanksList = glBankService.getAllGlBankByBranchId(getUserData().getUserBranch().getId());
             for (GlBank glBank : glBanksList) {
                 glBank.setOpeninngBalance(bankBalanceViewService.findBalanceForBankId(glBank.getId()));
+
             }
         }
 
@@ -695,104 +720,384 @@ public class DashboardMB extends BaseListBean {
     }
 
     /**
-     * @return the totalCashByDate
+     * @return the cashByDateList
      */
-    public BigDecimal getTotalCashByDate() {
-      
-            for (GlBank glBank : getGlBanksList()) {
-                if (totalCashByDate == null) {
-                    setTotalCashByDate(bankBalanceViewService.findCashBalanceByDate(glBank.getId()));
-                } else {
-                    setTotalCashByDate(totalCashByDate.add(bankBalanceViewService.findCashBalanceByDate(glBank.getId())));
-
-                }
+    public List<GlBankDTO> getCashByDateList() {
+        if (cashByDateList == null) {
+            setCashByDateList(glBankService.getAllGlBankDTOByBranchId(getUserData().getUserBranch().getId()));
+            for (GlBankDTO glBankDTO : cashByDateList) {
+                glBankDTO.setValue(bankBalanceViewService.findCashBalanceByDate(glBankDTO.getId()));
             }
-        
-        return totalCashByDate;
+        }
+        return cashByDateList;
     }
 
     /**
-     * @param totalCashByDate the totalCashByDate to set
+     * @param cashByDateList the cashByDateList to set
      */
-    public void setTotalCashByDate(BigDecimal totalCashByDate) {
-        this.totalCashByDate = totalCashByDate;
+    public void setCashByDateList(List<GlBankDTO> cashByDateList) {
+        this.cashByDateList = cashByDateList;
     }
 
     /**
-     * @return the totalCashByMonth
+     * @return the cashByMonthList
      */
-    public BigDecimal getTotalCashByMonth() {
-         for (GlBank glBank : getGlBanksList()) {
-                if (totalCashByMonth== null) {
-                    setTotalCashByMonth(bankBalanceViewService.findCashBalanceByMonth(glBank.getId()));
-                } else {
-                    setTotalCashByMonth(totalCashByMonth.add(bankBalanceViewService.findCashBalanceByMonth(glBank.getId())));
-
-                }
+    public List<GlBankDTO> getCashByMonthList() {
+        if (cashByMonthList == null) {
+            setCashByMonthList(glBankService.getAllGlBankDTOByBranchId(getUserData().getUserBranch().getId()));
+            for (GlBankDTO glBankDTO : cashByMonthList) {
+                glBankDTO.setValue(bankBalanceViewService.findCashBalanceByMonth(glBankDTO.getId()));
             }
-        return totalCashByMonth;
+        }
+
+        return cashByMonthList;
     }
 
     /**
-     * @param totalCashByMonth the totalCashByMonth to set
+     * @param cashByMonthList the cashByMonthList to set
      */
-    public void setTotalCashByMonth(BigDecimal totalCashByMonth) {
-        this.totalCashByMonth = totalCashByMonth;
+    public void setCashByMonthList(List<GlBankDTO> cashByMonthList) {
+        this.cashByMonthList = cashByMonthList;
     }
 
     /**
-     * @return the totalSettlementByDate
+     * @return the cashByDateNumberList
      */
-    public BigDecimal getTotalSettlementByDate() {
-        return totalSettlementByDate;
+    public List<GlBankDTO> getCashByDateNumberList() {
+        if (cashByDateNumberList == null) {
+            setCashByDateNumberList(glBankService.getAllGlBankDTOByBranchId(getUserData().getUserBranch().getId()));
+            for (GlBankDTO glBankDTO : cashByDateNumberList) {
+                glBankDTO.setNumber(bankBalanceViewService.FindInvoiceNumCashSettTranByTypeByDate(getGlBanksList(), getUserData().getUserBranch().getId(), 1));
+
+            }
+        }
+
+        return cashByDateNumberList;
     }
 
     /**
-     * @param totalSettlementByDate the totalSettlementByDate to set
+     * @param cashByDateNumberList the cashByDateNumberList to set
      */
-    public void setTotalSettlementByDate(BigDecimal totalSettlementByDate) {
-        this.totalSettlementByDate = totalSettlementByDate;
+    public void setCashByDateNumberList(List<GlBankDTO> cashByDateNumberList) {
+        this.cashByDateNumberList = cashByDateNumberList;
     }
 
     /**
-     * @return the totalSettlementByMonth
+     * @return the cashByMonthNumberList
      */
-    public BigDecimal getTotalSettlementByMonth() {
-        return totalSettlementByMonth;
+    public List<GlBankDTO> getCashByMonthNumberList() {
+        if (cashByMonthNumberList == null) {
+            setCashByMonthNumberList(glBankService.getAllGlBankDTOByBranchId(getUserData().getUserBranch().getId()));
+            for (GlBankDTO glBankDTO : cashByMonthNumberList) {
+                glBankDTO.setNumber(bankBalanceViewService.FindInvoiceNumCashSettTranByTypeByMonth(getGlBanksList(), getUserData().getUserBranch().getId(), 1));
+
+            }
+        }
+        return cashByMonthNumberList;
     }
 
     /**
-     * @param totalSettlementByMonth the totalSettlementByMonth to set
+     * @param cashByMonthNumberList the cashByMonthNumberList to set
      */
-    public void setTotalSettlementByMonth(BigDecimal totalSettlementByMonth) {
-        this.totalSettlementByMonth = totalSettlementByMonth;
+    public void setCashByMonthNumberList(List<GlBankDTO> cashByMonthNumberList) {
+        this.cashByMonthNumberList = cashByMonthNumberList;
     }
 
     /**
-     * @return the totalTransferByDate
+     * @return the settlementByDateList
      */
-    public BigDecimal getTotalTransferByDate() {
-        return totalTransferByDate;
+    public List<GlBankDTO> getSettlementByDateList() {
+        if (settlementByDateList == null) {
+            setSettlementByDateList(glBankService.getAllGlBankDTOByBranchId(getUserData().getUserBranch().getId()));
+            for (GlBankDTO glBankDTO : settlementByDateList) {
+                glBankDTO.setValue(bankBalanceViewService.findSettelmentBalanceByDate(glBankDTO.getId()));
+            }
+        }
+        return settlementByDateList;
     }
 
     /**
-     * @param totalTransferByDate the totalTransferByDate to set
+     * @param settlementByDateList the settlementByDateList to set
      */
-    public void setTotalTransferByDate(BigDecimal totalTransferByDate) {
-        this.totalTransferByDate = totalTransferByDate;
+    public void setSettlementByDateList(List<GlBankDTO> settlementByDateList) {
+        this.settlementByDateList = settlementByDateList;
     }
 
     /**
-     * @return the totalTransferByMonth
+     * @return the settlementByMonthList
      */
-    public BigDecimal getTotalTransferByMonth() {
-        return totalTransferByMonth;
+    public List<GlBankDTO> getSettlementByMonthList() {
+        if (settlementByMonthList == null) {
+            setSettlementByMonthList(glBankService.getAllGlBankDTOByBranchId(getUserData().getUserBranch().getId()));
+            for (GlBankDTO glBankDTO : settlementByMonthList) {
+                glBankDTO.setValue(bankBalanceViewService.findSettelmentBalanceByMonth(glBankDTO.getId()));
+            }
+        }
+        return settlementByMonthList;
     }
 
     /**
-     * @param totalTransferByMonth the totalTransferByMonth to set
+     * @param settlementByMonthList the settlementByMonthList to set
      */
-    public void setTotalTransferByMonth(BigDecimal totalTransferByMonth) {
-        this.totalTransferByMonth = totalTransferByMonth;
+    public void setSettlementByMonthList(List<GlBankDTO> settlementByMonthList) {
+        this.settlementByMonthList = settlementByMonthList;
+    }
+
+    /**
+     * @return the settlementByDateNumberList
+     */
+    public List<GlBankDTO> getSettlementByDateNumberList() {
+        if (settlementByDateNumberList == null) {
+            setSettlementByDateNumberList(glBankService.getAllGlBankDTOByBranchId(getUserData().getUserBranch().getId()));
+            for (GlBankDTO glBankDTO : settlementByDateNumberList) {
+                glBankDTO.setNumber(bankBalanceViewService.FindInvoiceNumCashSettTranByTypeByDate(getGlBanksList(), getUserData().getUserBranch().getId(), 0));
+            }
+        }
+        return settlementByDateNumberList;
+    }
+
+    /**
+     * @param settlementByDateNumberList the settlementByDateNumberList to set
+     */
+    public void setSettlementByDateNumberList(List<GlBankDTO> settlementByDateNumberList) {
+        this.settlementByDateNumberList = settlementByDateNumberList;
+    }
+
+    /**
+     * @return the settlementByMonthNumberList
+     */
+    public List<GlBankDTO> getSettlementByMonthNumberList() {
+        if (settlementByMonthNumberList == null) {
+            setSettlementByMonthNumberList(glBankService.getAllGlBankDTOByBranchId(getUserData().getUserBranch().getId()));
+            for (GlBankDTO glBankDTO : settlementByMonthNumberList) {
+                glBankDTO.setNumber(bankBalanceViewService.FindInvoiceNumCashSettTranByTypeByMonth(getGlBanksList(), getUserData().getUserBranch().getId(), 0));
+            }
+        }
+        return settlementByMonthNumberList;
+    }
+
+    /**
+     * @param settlementByMonthNumberList the settlementByMonthNumberList to set
+     */
+    public void setSettlementByMonthNumberList(List<GlBankDTO> settlementByMonthNumberList) {
+        this.settlementByMonthNumberList = settlementByMonthNumberList;
+    }
+
+    /**
+     * @return the transferByDateList
+     */
+    public List<GlBankDTO> getTransferByDateList() {
+        if (transferByDateList == null) {
+            setTransferByDateList(glBankService.getAllGlBankDTOByBranchId(getUserData().getUserBranch().getId()));
+            for (GlBankDTO glBankDTO : transferByDateList) {
+                glBankDTO.setValue(bankBalanceViewService.findTransferBalanceByDate(glBankDTO.getId()));
+            }
+        }
+
+        return transferByDateList;
+    }
+
+    /**
+     * @param transferByDateList the transferByDateList to set
+     */
+    public void setTransferByDateList(List<GlBankDTO> transferByDateList) {
+        this.transferByDateList = transferByDateList;
+    }
+
+    /**
+     * @return the transferByMonthList
+     */
+    public List<GlBankDTO> getTransferByMonthList() {
+        if (transferByMonthList == null) {
+            setTransferByMonthList(glBankService.getAllGlBankDTOByBranchId(getUserData().getUserBranch().getId()));
+            for (GlBankDTO glBankDTO : transferByMonthList) {
+                glBankDTO.setValue(bankBalanceViewService.findTransferBalanceByMonth(glBankDTO.getId()));
+            }
+        }
+        return transferByMonthList;
+    }
+
+    /**
+     * @param transferByMonthList the transferByMonthList to set
+     */
+    public void setTransferByMonthList(List<GlBankDTO> transferByMonthList) {
+        this.transferByMonthList = transferByMonthList;
+    }
+
+    /**
+     * @return the transferByDateNumberList
+     */
+    public List<GlBankDTO> getTransferByDateNumberList() {
+        if (transferByDateNumberList == null) {
+            setTransferByDateNumberList(glBankService.getAllGlBankDTOByBranchId(getUserData().getUserBranch().getId()));
+            for (GlBankDTO glBankDTO : transferByDateNumberList) {
+                glBankDTO.setNumber(bankBalanceViewService.FindInvoiceNumCashSettTranByTypeByDate(getGlBanksList(), getUserData().getUserBranch().getId(), 2));
+            }
+        }
+        return transferByDateNumberList;
+    }
+
+    /**
+     * @param transferByDateNumberList the transferByDateNumberList to set
+     */
+    public void setTransferByDateNumberList(List<GlBankDTO> transferByDateNumberList) {
+        this.transferByDateNumberList = transferByDateNumberList;
+    }
+
+    /**
+     * @return the transferByMonthNumberList
+     */
+    public List<GlBankDTO> getTransferByMonthNumberList() {
+        if (transferByMonthNumberList == null) {
+            setTransferByMonthNumberList(glBankService.getAllGlBankDTOByBranchId(getUserData().getUserBranch().getId()));
+            for (GlBankDTO glBankDTO : transferByMonthNumberList) {
+                glBankDTO.setNumber(bankBalanceViewService.FindInvoiceNumCashSettTranByTypeByMonth(getGlBanksList(), getUserData().getUserBranch().getId(), 2));
+            }
+        }
+        return transferByMonthNumberList;
+    }
+
+    /**
+     * @param transferByMonthNumberList the transferByMonthNumberList to set
+     */
+    public void setTransferByMonthNumberList(List<GlBankDTO> transferByMonthNumberList) {
+        this.transferByMonthNumberList = transferByMonthNumberList;
+    }
+
+    /**
+     * @return the supplierNum
+     */
+    public Integer getSupplierNum() {
+        if (supplierNum == null) {
+            setSupplierNum(organizationSiteService.FindSupplier(getUserData().getUserBranch().getId(), null));
+        }
+        return supplierNum;
+    }
+
+    /**
+     * @param supplierNum the supplierNum to set
+     */
+    public void setSupplierNum(Integer supplierNum) {
+        this.supplierNum = supplierNum;
+    }
+
+    /**
+     * @return the invoiceNumsupplierByDate
+     */
+    public Integer getInvoiceNumsupplierByDate() {
+        if (invoiceNumsupplierByDate == null) {
+            setInvoiceNumsupplierByDate(invPurchaseInvoiceService.FindSupplierInvoiceNumberByDate(getUserData().getUserBranch().getId(), null));
+        }
+        return invoiceNumsupplierByDate;
+    }
+
+    /**
+     * @param invoiceNumsupplierByDate the invoiceNumsupplierByDate to set
+     */
+    public void setInvoiceNumsupplierByDate(Integer invoiceNumsupplierByDate) {
+        this.invoiceNumsupplierByDate = invoiceNumsupplierByDate;
+    }
+
+    /**
+     * @return the invoiceNumsupplierByMonth
+     */
+    public Integer getInvoiceNumsupplierByMonth() {
+        if (invoiceNumsupplierByMonth == null) {
+            setInvoiceNumsupplierByMonth(invPurchaseInvoiceService.FindSupplierInvoiceNumberByMonth(getUserData().getUserBranch().getId(), null));
+        }
+        return invoiceNumsupplierByMonth;
+    }
+
+    /**
+     * @param invoiceNumsupplierByMonth the invoiceNumsupplierByMonth to set
+     */
+    public void setInvoiceNumsupplierByMonth(Integer invoiceNumsupplierByMonth) {
+        this.invoiceNumsupplierByMonth = invoiceNumsupplierByMonth;
+    }
+
+    /**
+     * @return the totalNetSuppliers
+     */
+    public BigDecimal getTotalNetSuppliers() {
+        if (totalNetSuppliers == null) {
+            setTotalNetSuppliers(supplierAccountService.getAccountForAllOrganizationSiteNew(getUserData().getUserBranch().getId(), null));
+        }
+
+        return totalNetSuppliers;
+    }
+
+    /**
+     * @param totalNetSuppliers the totalNetSuppliers to set
+     */
+    public void setTotalNetSuppliers(BigDecimal totalNetSuppliers) {
+        this.totalNetSuppliers = totalNetSuppliers;
+    }
+
+    /**
+     * @return the customerNum
+     */
+    public Integer getCustomerNum() {
+        if (customerNum == null) {
+            setCustomerNum(organizationSiteService.FindSupplier(getUserData().getUserBranch().getId(), 0));
+        }
+        return customerNum;
+    }
+
+    /**
+     * @param customerNum the customerNum to set
+     */
+    public void setCustomerNum(Integer customerNum) {
+        this.customerNum = customerNum;
+    }
+
+    /**
+     * @return the invoiceNumcustomerByDate
+     */
+    public Integer getInvoiceNumcustomerByDate() {
+        if (invoiceNumcustomerByDate == null) {
+            setInvoiceNumcustomerByDate(invPurchaseInvoiceService.FindSupplierInvoiceNumberByDate(getUserData().getUserBranch().getId(), 0));
+        }
+        return invoiceNumcustomerByDate;
+    }
+
+    /**
+     * @param invoiceNumcustomerByDate the invoiceNumcustomerByDate to set
+     */
+    public void setInvoiceNumcustomerByDate(Integer invoiceNumcustomerByDate) {
+        this.invoiceNumcustomerByDate = invoiceNumcustomerByDate;
+    }
+
+    /**
+     * @return the invoiceNumcustomerByMonth
+     */
+    public Integer getInvoiceNumcustomerByMonth() {
+        if (invoiceNumcustomerByMonth == null) {
+            setInvoiceNumcustomerByMonth(invPurchaseInvoiceService.FindSupplierInvoiceNumberByMonth(getUserData().getUserBranch().getId(), 0));
+        }
+        return invoiceNumcustomerByMonth;
+    }
+
+    /**
+     * @param invoiceNumcustomerByMonth the invoiceNumcustomerByMonth to set
+     */
+    public void setInvoiceNumcustomerByMonth(Integer invoiceNumcustomerByMonth) {
+        this.invoiceNumcustomerByMonth = invoiceNumcustomerByMonth;
+    }
+
+    /**
+     * @return the totalNetCustomers
+     */
+    public BigDecimal getTotalNetCustomers() {
+        if (totalNetCustomers == null) {
+            setTotalNetCustomers(supplierAccountService.getAccountForAllOrganizationSiteNew(getUserData().getUserBranch().getId(), 0));
+        }
+        return totalNetCustomers;
+    }
+
+    /**
+     * @param totalNetCustomers the totalNetCustomers to set
+     */
+    public void setTotalNetCustomers(BigDecimal totalNetCustomers) {
+        this.totalNetCustomers = totalNetCustomers;
     }
 }

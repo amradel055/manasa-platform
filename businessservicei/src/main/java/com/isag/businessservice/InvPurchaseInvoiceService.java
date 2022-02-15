@@ -62,8 +62,8 @@ public interface InvPurchaseInvoiceService {
     public void reCalcCostAvarage(Integer branchId);
 
     public BigDecimal findQuantityItemByDate(InvPurchaseInvoice invPurchaseInvoice, InvPurchaseInvoiceDetail invPurchaseInvoiceDetail);
-    
-    public BigDecimal findQuantityItemByDateWithOutInventory(InvPurchaseInvoice invPurchaseInvoice, Boolean sellBuy,InvPurchaseInvoiceDetail invPurchaseInvoiceDetail);
+
+    public BigDecimal findQuantityItemByDateWithOutInventory(InvPurchaseInvoice invPurchaseInvoice, Boolean sellBuy, InvPurchaseInvoiceDetail invPurchaseInvoiceDetail);
 
     public void saveDetail(InvPurchaseInvoiceDetail invPurchaseInvoiceDetail, InvPurchaseInvoice invPurchaseInvoice,
             Integer isPurchaseOrSales, BigDecimal quantityItemsStoreByDate, InventorySetup invSetup);
@@ -73,4 +73,8 @@ public interface InvPurchaseInvoiceService {
     public List<InvInvoiceDTO> getALLInvPurchaseInvoiceDTOByTypeAndBranchId(Integer type, Integer inventoryId, int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters);
 
     public InvPurchaseInvoice getALLInvPurchaseInvoiceByBranchIdAndTypeAndSerial(Integer branchId, Integer type, Integer serial);
+
+    public Integer FindSupplierInvoiceNumberByDate(Integer branchId, Integer type);
+
+    public Integer FindSupplierInvoiceNumberByMonth(Integer branchId, Integer type);
 }

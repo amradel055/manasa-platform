@@ -1891,5 +1891,6 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         }
         return result;
     }
+  
 
 }

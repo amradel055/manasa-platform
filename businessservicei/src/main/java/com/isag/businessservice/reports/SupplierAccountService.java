@@ -23,14 +23,16 @@ public interface SupplierAccountService {
     public List<OrganizationSiteStatementView> getAllOrganizationSiteStatementSearchBean(SupplierAccountSearchBean supplierAccountSearchBean);
 
     public List<OrganizationSiteStatementView> getAllOpeningBalanceBeforeBalanceBySearchBean(SupplierAccountSearchBean supplierAccountSearchBean);
-    
+
     public List<OrganizationSiteStatementView> getAllOrganizationSiteStatementSearchBeanById(SupplierAccountSearchBean supplierAccountSearchBean);
 
     public BigDecimal getAccountForOrganizationSite(Integer organizationSiteId);
-    
+
     public BigDecimal getAccountForOrganizationSiteNew(Integer organizationSiteId);
-    
+
     public List<OrganizationSiteStatementView> getAllOrganizationSiteStatementSearchBeanNew(Integer organizationSiteId, Date dateFrom, Date dateTo);
+
+    public BigDecimal getAccountForAllOrganizationSiteNew(Integer branchId, Integer type);
 
 
 }

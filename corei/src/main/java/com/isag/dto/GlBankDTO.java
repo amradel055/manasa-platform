@@ -25,6 +25,8 @@ public class GlBankDTO extends BaseEntityDTO {
     private Integer type;
     private Integer currencyId;
     private CurrencyDTO currency;
+    private BigDecimal value;
+    private  Integer number;
 
 
     public GlBankDTO() {
@@ -155,6 +157,34 @@ public class GlBankDTO extends BaseEntityDTO {
      */
     public void setGlAccountId(GlAccountDTO glAccountId) {
         this.glAccountId = glAccountId;
+    }
+
+    /**
+     * @return the value
+     */
+    public BigDecimal getValue() {
+        return value;
+    }
+
+    /**
+     * @param value the value to set
+     */
+    public void setValue(BigDecimal value) {
+        this.value = value;
+    }
+
+    /**
+     * @return the number
+     */
+    public Integer getNumber() {
+        return number;
+    }
+
+    /**
+     * @param number the number to set
+     */
+    public void setNumber(Integer number) {
+        this.number = number;
     }
 
   

@@ -30,6 +30,7 @@ import com.isag.entity.InventorySetup;
 import com.isag.views.QuantityItemsStore;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -981,5 +982,44 @@ public class InvPurchaseInvoiceServiceImpl implements InvPurchaseInvoiceService 
         if (entity.getCreatedBy() != null) {
             invPurchaseInvoiceDTO.setCreatedByName(entity.getCreatedBy().getName());
         }
+    }
+
+    @Override
+    public Integer FindSupplierInvoiceNumberByDate(Integer branchId, Integer type) {
+
+        Map<String, Object> params = new HashMap();
+        String typeString = "1,2";
+
+        if (type != null && type == 0) {
+            typeString = "0,2";
+
+        }
+        params.put("branchId", branchId);
+//        params.put("type", type);
+        String dateFrom = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(new Date());
+        String dateTo = new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(new Date());
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT COUNT(ipid.id) FROM InvPurchaseInvoice ipid WHERE ipid.branchId.id = :branchId AND ipid.organizationSiteId.type in (").append(typeString).append(") AND ipid.date >= '").append(dateFrom).append("' AND ipid.date <= '").append(dateTo).append("'");
+        List<Long> list = dao.findListByQuery(query.toString(), params);
+        return list == null ? 0 : list.get(0).intValue();
+    }
+        @Override
+    public Integer FindSupplierInvoiceNumberByMonth(Integer branchId, Integer type) {
+
+        Map<String, Object> params = new HashMap();
+        String typeString = "1,2";
+
+        if (type != null && type == 0) {
+            typeString = "0,2";
+
+        }
+        params.put("branchId", branchId);
+//        params.put("type", type);
+        String dateFrom = new SimpleDateFormat("yyyy-MM-01 00:00:00").format(new Date());
+        String dateTo = new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(new Date());
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT COUNT(ipid.id) FROM InvPurchaseInvoice ipid WHERE ipid.branchId.id = :branchId AND ipid.organizationSiteId.type in (").append(typeString).append(") AND ipid.date >= '").append(dateFrom).append("' AND ipid.date <= '").append(dateTo).append("'");
+        List<Long> list = dao.findListByQuery(query.toString(), params);
+        return list == null ? 0 : list.get(0).intValue();
     }
 }

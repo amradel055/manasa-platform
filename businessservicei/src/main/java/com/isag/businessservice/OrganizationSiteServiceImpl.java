@@ -2134,4 +2134,19 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
         return invOrganizationSiteDTO;
     }
 
+    @Override
+    public Integer FindSupplier(Integer branchId, Integer type) {
+        Map<String, Object> params = new HashMap();
+        String typeString = "1,2";
+        if (type != null && type == 0) {
+            typeString = "0,2";
+        }
+        params.put("branchId", branchId);
+//        params.put("type", type);
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT COUNT(ipid.id) FROM InvOrganizationSite ipid WHERE ipid.branchId.id = :branchId AND ipid.type  in (").append(typeString).append(") ");
+        List<Long> list = dao.findListByQuery(query.toString(), params);
+        return list == null ? 0 : list.get(0).intValue();
+    }
+
 }

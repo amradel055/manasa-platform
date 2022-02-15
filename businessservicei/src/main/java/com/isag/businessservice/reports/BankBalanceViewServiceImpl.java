@@ -10,6 +10,7 @@ import com.isag.dto.BankBalanceReportBeanNew;
 import com.isag.dto.BankBalanceReportSearchBean;
 import com.isag.dto.BankBalanceViewNew;
 import com.isag.dto.GlBankDTO;
+import com.isag.entity.GlBank;
 import com.isag.entity.GlYear;
 import com.isag.views.BankBalanceView;
 import java.math.BigDecimal;
@@ -622,6 +623,53 @@ public class BankBalanceViewServiceImpl implements BankBalanceViewService {
                 + "        ((`gb`.`date_openinng_balance` IS NOT NULL)\n"
                 + "            AND (`gb`.`openinng_balance` > 0)) ").append(
                         " And `gb`.`id` =  ").append(bankId);
+    }
+
+    @Override
+    public Integer FindInvoiceNumCashSettTranByTypeByDate(List<GlBank> glbankIdList, Integer branchId, Integer transactionType) {
+        Map<String, Object> params = new HashMap();
+        params.put("branchId", branchId);
+        params.put("transactionType", transactionType);
+
+        String inv = updateinventoryIdList(glbankIdList);
+        String dateFrom = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(new Date());
+        String dateTo = new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(new Date());
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT COUNT(ipid.id) FROM GlBankTransaction ipid WHERE ipid.branchId.id = :branchId AND ipid.transactionType = :transactionType AND ipid.glBankId.id in (").append(inv).append(") AND ipid.date >= '").append(dateFrom).append("' AND ipid.date <= '").append(dateTo).append("'");
+        List<Long> list = dao.findListByQuery(query.toString(), params);
+        return list == null ? 0 : list.get(0).intValue();
+    }
+    
+    @Override
+    public Integer FindInvoiceNumCashSettTranByTypeByMonth(List<GlBank> glbankIdList, Integer branchId, Integer transactionType) {
+        Map<String, Object> params = new HashMap();
+        params.put("branchId", branchId);
+        params.put("transactionType", transactionType);
+
+        String inv = updateinventoryIdList(glbankIdList);
+        String dateFrom = new SimpleDateFormat("yyyy-MM-01 00:00:00").format(new Date());
+        String dateTo = new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(new Date());
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT COUNT(ipid.id) FROM GlBankTransaction ipid WHERE ipid.branchId.id = :branchId AND ipid.transactionType = :transactionType AND ipid.glBankId.id in (").append(inv).append(") AND ipid.date >= '").append(dateFrom).append("' AND ipid.date <= '").append(dateTo).append("'");
+        List<Long> list = dao.findListByQuery(query.toString(), params);
+        return list == null ? 0 : list.get(0).intValue();
+    }
+    
+
+    public String updateinventoryIdList(List<GlBank> glBanksList) {
+        StringBuilder stringBuilder = null;
+        for (GlBank glBank : glBanksList) {
+            if (stringBuilder == null) {
+                stringBuilder = new StringBuilder();
+                stringBuilder.append(glBank.getId());
+            } else {
+                stringBuilder.append(",").append(glBank.getId());
+
+            }
+            return stringBuilder.toString();
+        }
+        return stringBuilder.toString();
+
     }
 
 }

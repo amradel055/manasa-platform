@@ -268,17 +268,16 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
         dao.executeNativeQuery("select sql_mode_function()");
         String dateStrFrom = null;
         String dateStrTo = null;
-            if (dateFrom != null) {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                dateStrFrom = dateFormat.format(dateFrom);
+        if (dateFrom != null) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            dateStrFrom = dateFormat.format(dateFrom);
 
-            }
-            if (dateTo != null) {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                dateStrTo = dateFormat.format(dateTo);
+        }
+        if (dateTo != null) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            dateStrTo = dateFormat.format(dateTo);
 
-            }
-        
+        }
 
         StringBuilder query = new StringBuilder();
 
@@ -300,14 +299,14 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "        NULL AS `is_done`,\n"
                 + "        IFNULL(`ios`.`open_balance_debit`, 0) AS `exitt`, IFNULL(`ios`.`open_balance_credit`, 0) AS `adding` ,`ios`.`id` AS `idNumber`\n"
                 + "                    FROM  `inv_organization_site` `ios` WHERE  \n"
-                + "                    `ios`.id =   \n"+ organizationSiteId + "\n");
-                if (dateStrFrom != null) {
-                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `ios`.open_balance_date >= '" ).append(dateStrFrom).append(  "' ,true)");
-                }
-                if (dateStrTo != null) {
-                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL , `ios`.open_balance_date <= '" ).append(dateStrTo).append(  "' ,true)");
-                }
-                query.append( "            UNION ALL     SELECT `ic`.`serial` AS `serial`,\n"
+                + "                    `ios`.id =   \n" + organizationSiteId + "\n");
+        if (dateStrFrom != null) {
+            query.append(" AND IF ( '").append(dateStrFrom).append("' IS NOT NULL , `ios`.open_balance_date >= '").append(dateStrFrom).append("' ,true)");
+        }
+        if (dateStrTo != null) {
+            query.append(" AND IF ( '").append(dateStrTo).append("' IS NOT NULL , `ios`.open_balance_date <= '").append(dateStrTo).append("' ,true)");
+        }
+        query.append("            UNION ALL     SELECT `ic`.`serial` AS `serial`,\n"
                 + "        `ic`.`date` AS `date`,\n"
                 + "        'عقد تقسيط' AS `ScreenName`,\n"
                 + "        `gb`.`name` AS `gl_bank_name`,\n"
@@ -324,18 +323,18 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "        NULL AS `look`,\n"
                 + "        NULL AS `is_done`,\n"
                 + "        IFNULL(`ic`.`total_value`, 0) AS `exitt`,\n"
-                + "        0 AS `adding`  , `ios`.id AS idNumber \n" 
+                + "        0 AS `adding`  , `ios`.id AS idNumber \n"
                 + "       FROM ((`inst_contract` `ic`\n"
                 + "        LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `ic`.`organization_site_id`)))\n"
                 + "        LEFT JOIN `gl_bank` `gb` ON ((`gb`.`id` = `ic`.`bank_id`)))\n"
-                + "         WHERE  `ic`.`organization_site_id` =   \n"+ organizationSiteId + "\n");
-                if (dateStrFrom != null) {
-                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `ic`.`date` >= '" ).append(dateStrFrom).append(  "' ,true)");
-                }
-                if (dateStrTo != null) {
-                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL , `ic`.`date` <= '" ).append(dateStrTo).append(  "' ,true)");
-                }
-                query.append( "                UNION ALL\n"
+                + "         WHERE  `ic`.`organization_site_id` =   \n" + organizationSiteId + "\n");
+        if (dateStrFrom != null) {
+            query.append(" AND IF ( '").append(dateStrFrom).append("' IS NOT NULL , `ic`.`date` >= '").append(dateStrFrom).append("' ,true)");
+        }
+        if (dateStrTo != null) {
+            query.append(" AND IF ( '").append(dateStrTo).append("' IS NOT NULL , `ic`.`date` <= '").append(dateStrTo).append("' ,true)");
+        }
+        query.append("                UNION ALL\n"
                 + "SELECT  `ic`.`serial` AS `serial`,\n"
                 + "        `ic`.`date` AS `date`,\n"
                 + "        'دفعة مقدمة من عقد تقسيط' AS `ScreenName`,\n"
@@ -357,14 +356,14 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "       FROM ((`inst_contract` `ic`\n"
                 + "        LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `ic`.`organization_site_id`)))\n"
                 + "        LEFT JOIN `gl_bank` `gb` ON ((`gb`.`id` = `ic`.`bank_id`)))\n"
-                + "         WHERE  `ic`.`organization_site_id` =   \n"+ organizationSiteId + "\n");
-                if (dateStrFrom != null) {
-                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `ic`.`date` >= '" ).append(dateStrFrom).append(  "' ,true)");
-                }
-                if (dateStrTo != null) {
-                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL , `ic`.`date` <= '" ).append(dateStrTo).append(  "' ,true)");
-                }
-                query.append(  "                UNION ALL\n"
+                + "         WHERE  `ic`.`organization_site_id` =   \n" + organizationSiteId + "\n");
+        if (dateStrFrom != null) {
+            query.append(" AND IF ( '").append(dateStrFrom).append("' IS NOT NULL , `ic`.`date` >= '").append(dateStrFrom).append("' ,true)");
+        }
+        if (dateStrTo != null) {
+            query.append(" AND IF ( '").append(dateStrTo).append("' IS NOT NULL , `ic`.`date` <= '").append(dateStrTo).append("' ,true)");
+        }
+        query.append("                UNION ALL\n"
                 + "SELECT `rer`.`serial` AS `serial`,\n"
                 + "		`rer`.`date` AS `date`,\n"
                 + "        'مستخلص مورد' AS `ScreenName`,\n"
@@ -386,14 +385,14 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "                	FROM (`rsc_extract_register` `rer`\n"
                 + "        LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `rer`.`site_id`))) WHERE\n"
                 + "        ((`rer`.`serial` IS NOT NULL)\n"
-                + "            AND (`rer`.`site_id` IS NOT NULL)) AND `rer`.`site_id` =   \n"+ organizationSiteId + "\n");
-                if (dateStrFrom != null) {
-                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `rer`.`date` >= '" ).append(dateStrFrom).append(  "' ,true)");
-                }
-                if (dateStrTo != null) {
-                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL , `rer`.`date` <= '" ).append(dateStrTo).append(  "' ,true)");
-                }
-                query.append(  "                UNION ALL\n"
+                + "            AND (`rer`.`site_id` IS NOT NULL)) AND `rer`.`site_id` =   \n" + organizationSiteId + "\n");
+        if (dateStrFrom != null) {
+            query.append(" AND IF ( '").append(dateStrFrom).append("' IS NOT NULL , `rer`.`date` >= '").append(dateStrFrom).append("' ,true)");
+        }
+        if (dateStrTo != null) {
+            query.append(" AND IF ( '").append(dateStrTo).append("' IS NOT NULL , `rer`.`date` <= '").append(dateStrTo).append("' ,true)");
+        }
+        query.append("                UNION ALL\n"
                 + "SELECT `rer`.`serial` AS `serial`,\n"
                 + "		`rer`.`date` AS `date`,\n"
                 + "        'مستخلص عميل' AS `ScreenName`,\n"
@@ -416,14 +415,14 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "        LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `rer`.`customer_id`)))\n"
                 + "         WHERE\n"
                 + "        ((`rer`.`serial` IS NOT NULL)\n"
-                + "            AND (`rer`.`customer_id` IS NOT NULL)) AND `rer`.`customer_id` =   \n"+ organizationSiteId + "\n");
-                if (dateStrFrom != null) {
-                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `rer`.`date` >= '" ).append(dateStrFrom).append(  "' ,true)");
-                }
-                if (dateStrTo != null) {
-                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL , `rer`.`date` <= '" ).append(dateStrTo).append(  "' ,true)");
-                }
-                query.append(  "                UNION ALL\n"
+                + "            AND (`rer`.`customer_id` IS NOT NULL)) AND `rer`.`customer_id` =   \n" + organizationSiteId + "\n");
+        if (dateStrFrom != null) {
+            query.append(" AND IF ( '").append(dateStrFrom).append("' IS NOT NULL , `rer`.`date` >= '").append(dateStrFrom).append("' ,true)");
+        }
+        if (dateStrTo != null) {
+            query.append(" AND IF ( '").append(dateStrTo).append("' IS NOT NULL , `rer`.`date` <= '").append(dateStrTo).append("' ,true)");
+        }
+        query.append("                UNION ALL\n"
                 + "SELECT `ipi`.`serial` AS `serial`,\n"
                 + "        `ipi`.`date` AS `date`,\n"
                 + "        'فاتورة اشتراك' AS `ScreenName`,\n"
@@ -445,16 +444,16 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "                	FROM `gm_subscriptions` `ipi` LEFT JOIN `gm_subscriptions_detail` `ipid` ON `ipi`.`id` = `ipid`.`gm_subscriptions_id`\n"
                 + "                    LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `ipi`.`organization_site_id`))\n"
                 + "                	WHERE ((`ipi`.`type` = 0) AND (`ipi`.`date` IS NOT NULL)) \n"
-                + "                     AND ipi.organization_site_id =   \n"+ organizationSiteId + "\n");
-                if (dateStrFrom != null) {
-                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `ipi`.`date` >= '" ).append(dateStrFrom).append(  "' ,true)");
-                }
-                if (dateStrTo != null) {
-                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL , `ipi`.`date` <= '" ).append(dateStrTo).append(  "' ,true)");
-                }
-                query.append(  "                    group by ipi.id\n"
+                + "                     AND ipi.organization_site_id =   \n" + organizationSiteId + "\n");
+        if (dateStrFrom != null) {
+            query.append(" AND IF ( '").append(dateStrFrom).append("' IS NOT NULL , `ipi`.`date` >= '").append(dateStrFrom).append("' ,true)");
+        }
+        if (dateStrTo != null) {
+            query.append(" AND IF ( '").append(dateStrTo).append("' IS NOT NULL , `ipi`.`date` <= '").append(dateStrTo).append("' ,true)");
+        }
+        query.append("                    group by ipi.id\n"
                 + "                    \n");
-                query.append(  "                UNION ALL\n"
+        query.append("                UNION ALL\n"
                 + "SELECT `ipi`.`serial` AS `serial`,\n"
                 + "        `ipi`.`date` AS `date`,\n"
                 + "        'فاتورة مشتريات' AS `ScreenName`,\n"
@@ -475,14 +474,14 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "                	FROM `inv_purchase_invoice` `ipi` LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
                 + "                    LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `ipi`.`organization_site_id`))\n"
                 + "                	WHERE ((`ipi`.`type` = 0) AND (`ipi`.`payment_type` = 1) AND (`ipi`.`date` IS NOT NULL)) \n"
-                + "                     AND ipi.organization_site_id =   \n"+ organizationSiteId + "\n");
-                if (dateStrFrom != null) {
-                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `ipi`.`date` >= '" ).append(dateStrFrom).append(  "' ,true)");
-                }
-                if (dateStrTo != null) {
-                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL , `ipi`.`date` <= '" ).append(dateStrTo).append(  "' ,true)");
-                }
-                query.append(  "                    group by ipi.id\n"
+                + "                     AND ipi.organization_site_id =   \n" + organizationSiteId + "\n");
+        if (dateStrFrom != null) {
+            query.append(" AND IF ( '").append(dateStrFrom).append("' IS NOT NULL , `ipi`.`date` >= '").append(dateStrFrom).append("' ,true)");
+        }
+        if (dateStrTo != null) {
+            query.append(" AND IF ( '").append(dateStrTo).append("' IS NOT NULL , `ipi`.`date` <= '").append(dateStrTo).append("' ,true)");
+        }
+        query.append("                    group by ipi.id\n"
                 + "                    \n"
                 + "                UNION ALL SELECT `ipi`.`serial` AS `serial`,\n"
                 + "        `ipi`.`date` AS `date`,\n"
@@ -504,14 +503,14 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "                    FROM `inv_purchase_invoice` `ipi` LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
                 + "                    LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `ipi`.`organization_site_id`))\n"
                 + "                    WHERE ((`ipi`.`type` = 1) AND (`ipi`.`payment_type` = 1)  AND (`ipi`.`date` IS NOT NULL)) \n"
-                + "                     AND ipi.organization_site_id =   \n"+ organizationSiteId + "\n");
-                if (dateStrFrom != null) {
-                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `ipi`.`date` >= '" ).append(dateStrFrom).append(  "' ,true)");
-                }
-                if (dateStrTo != null) {
-                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL , `ipi`.`date` <= '" ).append(dateStrTo).append(  "' ,true)");
-                }
-                query.append(  "                    group by ipi.id\n"
+                + "                     AND ipi.organization_site_id =   \n" + organizationSiteId + "\n");
+        if (dateStrFrom != null) {
+            query.append(" AND IF ( '").append(dateStrFrom).append("' IS NOT NULL , `ipi`.`date` >= '").append(dateStrFrom).append("' ,true)");
+        }
+        if (dateStrTo != null) {
+            query.append(" AND IF ( '").append(dateStrTo).append("' IS NOT NULL , `ipi`.`date` <= '").append(dateStrTo).append("' ,true)");
+        }
+        query.append("                    group by ipi.id\n"
                 + "                UNION ALL SELECT `ipi`.`serial` AS `serial`,\n"
                 + "        `ipi`.`date` AS `date`,\n"
                 + "        'مردود مشتريات' AS `ScreenName`,\n"
@@ -532,14 +531,14 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "                    FROM  `inv_purchase_invoice` `ipi` LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
                 + "                    LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `ipi`.`organization_site_id`))\n"
                 + "                    WHERE ((`ipi`.`type` = 2)  AND (`ipi`.`payment_type` = 1)  AND (`ipi`.`date` IS NOT NULL)) \n"
-                + "                     AND ipi.organization_site_id =   \n"+ organizationSiteId + "\n");
-                if (dateStrFrom != null) {
-                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `ipi`.`date` >= '" ).append(dateStrFrom).append(  "' ,true)");
-                }
-                if (dateStrTo != null) {
-                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL , `ipi`.`date` <= '" ).append(dateStrTo).append(  "' ,true)");
-                }
-                query.append(  "                    group by ipi.id\n"
+                + "                     AND ipi.organization_site_id =   \n" + organizationSiteId + "\n");
+        if (dateStrFrom != null) {
+            query.append(" AND IF ( '").append(dateStrFrom).append("' IS NOT NULL , `ipi`.`date` >= '").append(dateStrFrom).append("' ,true)");
+        }
+        if (dateStrTo != null) {
+            query.append(" AND IF ( '").append(dateStrTo).append("' IS NOT NULL , `ipi`.`date` <= '").append(dateStrTo).append("' ,true)");
+        }
+        query.append("                    group by ipi.id\n"
                 + "                UNION ALL SELECT `ipi`.`serial` AS `serial`,\n"
                 + "        `ipi`.`date` AS `date`,\n"
                 + "        'مردود مبيعات' AS `ScreenName`,\n"
@@ -560,14 +559,14 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "                    FROM `inv_purchase_invoice` `ipi` LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
                 + "                    LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `ipi`.`organization_site_id`))\n"
                 + "                    WHERE ((`ipi`.`type` = 3) AND (`ipi`.`payment_type` = 1) AND (`ipi`.`date` IS NOT NULL)) \n"
-                + "                     AND ipi.organization_site_id =   \n"+ organizationSiteId + "\n");
-                if (dateStrFrom != null) {
-                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `ipi`.`date` >= '" ).append(dateStrFrom).append(  "' ,true)");
-                }
-                if (dateStrTo != null) {
-                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL , `ipi`.`date` <= '" ).append(dateStrTo).append(  "' ,true)");
-                }
-                query.append(  "                    group by ipi.id\n"
+                + "                     AND ipi.organization_site_id =   \n" + organizationSiteId + "\n");
+        if (dateStrFrom != null) {
+            query.append(" AND IF ( '").append(dateStrFrom).append("' IS NOT NULL , `ipi`.`date` >= '").append(dateStrFrom).append("' ,true)");
+        }
+        if (dateStrTo != null) {
+            query.append(" AND IF ( '").append(dateStrTo).append("' IS NOT NULL , `ipi`.`date` <= '").append(dateStrTo).append("' ,true)");
+        }
+        query.append("                    group by ipi.id\n"
                 + "                UNION ALL SELECT \n"
                 + "               `gbt`.`serial` AS `serial`,\n"
                 + "        `gbt`.`date` AS `date`,\n"
@@ -593,14 +592,14 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "        LEFT JOIN `inst_contract_detail` `icd` ON ((`icd`.`id` = `gbt`.`installment_id`)))\n"
                 + "        LEFT JOIN `inst_contract` `ic` ON ((`ic`.`id` = `icd`.`inst_contract_id`)))\n"
                 + "                    WHERE ((`gbt`.`payment_type` = 0) \n"
-                + "                     AND gbtd.organization_site_id =   \n"+ organizationSiteId + "\n");
-                if (dateStrFrom != null) {
-                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `gbt`.`date` >= '" ).append(dateStrFrom).append(  "' ,true)");
-                }
-                if (dateStrTo != null) {
-                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL , `gbt`.`date` <= '" ).append(dateStrTo).append(  "' ,true)");
-                }
-                query.append(  "                AND (`gbt`.`transaction_type` = 1)) \n"
+                + "                     AND gbtd.organization_site_id =   \n" + organizationSiteId + "\n");
+        if (dateStrFrom != null) {
+            query.append(" AND IF ( '").append(dateStrFrom).append("' IS NOT NULL , `gbt`.`date` >= '").append(dateStrFrom).append("' ,true)");
+        }
+        if (dateStrTo != null) {
+            query.append(" AND IF ( '").append(dateStrTo).append("' IS NOT NULL , `gbt`.`date` <= '").append(dateStrTo).append("' ,true)");
+        }
+        query.append("                AND (`gbt`.`transaction_type` = 1)) \n"
                 + "                    GROUP BY  `gbt`.`id`\n"
                 + "                UNION ALL SELECT  `gbt`.`serial` AS `serial`,\n"
                 + "        `gbt`.`date` AS `date`,\n"
@@ -626,14 +625,14 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "        LEFT JOIN `inst_contract_detail` `icd` ON ((`icd`.`id` = `gbt`.`installment_id`)))\n"
                 + "        LEFT JOIN `inst_contract` `ic` ON ((`ic`.`id` = `icd`.`inst_contract_id`)))\n"
                 + "                    WHERE (`gbt`.`payment_type` = 1) \n"
-                + "                     AND gbtd.organization_site_id =     \n"+ organizationSiteId + "\n");
-                if (dateStrFrom != null) {
-                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `gbt`.`date` >= '" ).append(dateStrFrom).append(  "' ,true)");
-                }
-                if (dateStrTo != null) {
-                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL , `gbt`.`date` <= '" ).append(dateStrTo).append(  "' ,true)");
-                }
-                query.append(  "                AND (`gbt`.`transaction_type` = 1)\n"
+                + "                     AND gbtd.organization_site_id =     \n" + organizationSiteId + "\n");
+        if (dateStrFrom != null) {
+            query.append(" AND IF ( '").append(dateStrFrom).append("' IS NOT NULL , `gbt`.`date` >= '").append(dateStrFrom).append("' ,true)");
+        }
+        if (dateStrTo != null) {
+            query.append(" AND IF ( '").append(dateStrTo).append("' IS NOT NULL , `gbt`.`date` <= '").append(dateStrTo).append("' ,true)");
+        }
+        query.append("                AND (`gbt`.`transaction_type` = 1)\n"
                 + "                    GROUP BY  `gbt`.`id`\n"
                 + "                UNION ALL SELECT `gbt`.`serial` AS `serial`,\n"
                 + "        `gbt`.`date` AS `date`,\n"
@@ -658,14 +657,14 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "        LEFT JOIN `inst_contract_detail` `icd` ON ((`icd`.`id` = `gbt`.`installment_id`)))\n"
                 + "        LEFT JOIN `inst_contract` `ic` ON ((`ic`.`id` = `icd`.`inst_contract_id`)))\n"
                 + "                    WHERE (`gbt`.`payment_type` = 2)  \n"
-                + "                     AND gbtd.organization_site_id =     \n"+ organizationSiteId + "\n");
-                if (dateStrFrom != null) {
-                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `gbt`.`date` >= '" ).append(dateStrFrom).append(  "' ,true)");
-                }
-                if (dateStrTo != null) {
-                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL , `gbt`.`date` <= '" ).append(dateStrTo).append(  "' ,true)");
-                }
-                query.append(  "                AND (`gbt`.`transaction_type` = 1)\n"
+                + "                     AND gbtd.organization_site_id =     \n" + organizationSiteId + "\n");
+        if (dateStrFrom != null) {
+            query.append(" AND IF ( '").append(dateStrFrom).append("' IS NOT NULL , `gbt`.`date` >= '").append(dateStrFrom).append("' ,true)");
+        }
+        if (dateStrTo != null) {
+            query.append(" AND IF ( '").append(dateStrTo).append("' IS NOT NULL , `gbt`.`date` <= '").append(dateStrTo).append("' ,true)");
+        }
+        query.append("                AND (`gbt`.`transaction_type` = 1)\n"
                 + "                    GROUP BY  `gbt`.`id`\n"
                 + "                UNION ALL SELECT   `gbt`.`serial` AS `serial`,\n"
                 + "        `gbt`.`date` AS `date`,\n"
@@ -691,14 +690,14 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "        LEFT JOIN `inst_contract_detail` `icd` ON ((`icd`.`id` = `gbt`.`installment_id`)))\n"
                 + "        LEFT JOIN `inst_contract` `ic` ON ((`ic`.`id` = `icd`.`inst_contract_id`)))\n"
                 + "                    WHERE (`gbt`.`payment_type` = 0)  \n"
-                + "                     AND gbtd.organization_site_id =     \n"+ organizationSiteId + "\n");
-                if (dateStrFrom != null) {
-                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `gbt`.`date` >= '" ).append(dateStrFrom).append(  "' ,true)");
-                }
-                if (dateStrTo != null) {
-                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL , `gbt`.`date` <= '" ).append(dateStrTo).append(  "' ,true)");
-                }
-                query.append( "                AND (`gbt`.`transaction_type` = 0)\n"
+                + "                     AND gbtd.organization_site_id =     \n" + organizationSiteId + "\n");
+        if (dateStrFrom != null) {
+            query.append(" AND IF ( '").append(dateStrFrom).append("' IS NOT NULL , `gbt`.`date` >= '").append(dateStrFrom).append("' ,true)");
+        }
+        if (dateStrTo != null) {
+            query.append(" AND IF ( '").append(dateStrTo).append("' IS NOT NULL , `gbt`.`date` <= '").append(dateStrTo).append("' ,true)");
+        }
+        query.append("                AND (`gbt`.`transaction_type` = 0)\n"
                 + "                    GROUP BY  `gbt`.`id`\n"
                 + "                UNION ALL SELECT     `gbt`.`serial` AS `serial`,\n"
                 + "        `gbt`.`date` AS `date`,\n"
@@ -724,14 +723,14 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "        LEFT JOIN `inst_contract_detail` `icd` ON ((`icd`.`id` = `gbt`.`installment_id`)))\n"
                 + "        LEFT JOIN `inst_contract` `ic` ON ((`ic`.`id` = `icd`.`inst_contract_id`)))\n"
                 + "                    WHERE (`gbt`.`payment_type` = 1) \n"
-                + "                     AND gbtd.organization_site_id =     \n"+ organizationSiteId + "\n");
-                if (dateStrFrom != null) {
-                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `gbt`.`date` >= '" ).append(dateStrFrom).append(  "' ,true)");
-                }
-                if (dateStrTo != null) {
-                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL , `gbt`.`date` <= '" ).append(dateStrTo).append(  "' ,true)");
-                }
-                query.append(  "                AND (`gbt`.`transaction_type` = 0)\n"
+                + "                     AND gbtd.organization_site_id =     \n" + organizationSiteId + "\n");
+        if (dateStrFrom != null) {
+            query.append(" AND IF ( '").append(dateStrFrom).append("' IS NOT NULL , `gbt`.`date` >= '").append(dateStrFrom).append("' ,true)");
+        }
+        if (dateStrTo != null) {
+            query.append(" AND IF ( '").append(dateStrTo).append("' IS NOT NULL , `gbt`.`date` <= '").append(dateStrTo).append("' ,true)");
+        }
+        query.append("                AND (`gbt`.`transaction_type` = 0)\n"
                 + "                    GROUP BY  `gbt`.`id` \n"
                 + "                UNION ALL SELECT  `gbt`.`serial` AS `serial`,\n"
                 + "        `gbt`.`date` AS `date`,\n"
@@ -757,14 +756,14 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "        LEFT JOIN `inst_contract_detail` `icd` ON ((`icd`.`id` = `gbt`.`installment_id`)))\n"
                 + "        LEFT JOIN `inst_contract` `ic` ON ((`ic`.`id` = `icd`.`inst_contract_id`)))\n"
                 + "                    WHERE  (`gbt`.`payment_type` = 2) \n"
-                + "                     AND gbtd.organization_site_id =     \n"+ organizationSiteId + "\n");
-                if (dateStrFrom != null) {
-                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `gbt`.`date` >= '" ).append(dateStrFrom).append(  "' ,true)");
-                }
-                if (dateStrTo != null) {
-                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL , `gbt`.`date` <= '" ).append(dateStrTo).append(  "' ,true)");
-                }
-                query.append(  "                AND (`gbt`.`transaction_type` = 0)\n"
+                + "                     AND gbtd.organization_site_id =     \n" + organizationSiteId + "\n");
+        if (dateStrFrom != null) {
+            query.append(" AND IF ( '").append(dateStrFrom).append("' IS NOT NULL , `gbt`.`date` >= '").append(dateStrFrom).append("' ,true)");
+        }
+        if (dateStrTo != null) {
+            query.append(" AND IF ( '").append(dateStrTo).append("' IS NOT NULL , `gbt`.`date` <= '").append(dateStrTo).append("' ,true)");
+        }
+        query.append("                AND (`gbt`.`transaction_type` = 0)\n"
                 + "                    GROUP BY `gbt`.`id`\n"
                 + "                UNION ALL  SELECT `in`.`serial` AS `serial`,\n"
                 + "        `in`.`date` AS `date`,\n"
@@ -785,14 +784,14 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "         IFNULL(`in`.`value`, 0) AS `exitt`,  0 AS `adding` , `in`.id AS idNumber \n"
                 + "                    FROM (`inv_notice` `in`\n"
                 + "        LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `in`.`organization_site_id`)))   WHERE (`in`.`type` = 0)  \n"
-                + "                and `in`.organization_site_id =      \n"+ organizationSiteId + "\n");
-                if (dateStrFrom != null) {
-                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL ,  `date` >= '" ).append(dateStrFrom).append(  "' ,true)");
-                }
-                if (dateStrTo != null) {
-                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL ,  `date` <= '" ).append(dateStrTo).append(  "' ,true)");
-                }
-                query.append(  "                UNION ALL SELECT  `in`.`serial` AS `serial`,\n"
+                + "                and `in`.organization_site_id =      \n" + organizationSiteId + "\n");
+        if (dateStrFrom != null) {
+            query.append(" AND IF ( '").append(dateStrFrom).append("' IS NOT NULL ,  `date` >= '").append(dateStrFrom).append("' ,true)");
+        }
+        if (dateStrTo != null) {
+            query.append(" AND IF ( '").append(dateStrTo).append("' IS NOT NULL ,  `date` <= '").append(dateStrTo).append("' ,true)");
+        }
+        query.append("                UNION ALL SELECT  `in`.`serial` AS `serial`,\n"
                 + "        `in`.`date` AS `date`,\n"
                 + "         'اشعار خصم عملاء' AS `ScreenName`,\n"
                 + "        '' AS `gl_bank_name`,\n"
@@ -811,14 +810,14 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "        0 AS `exitt`, IFNULL(`in`.`value`, 0) AS `adding`, `in`.id AS idNumber\n"
                 + "                    FROM (`inv_notice` `in`\n"
                 + "        LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `in`.`organization_site_id`))) WHERE  (`in`.`type` = 1 or `in`.`type` = 4 )  \n"
-                + "                and `in`.organization_site_id =      \n"+ organizationSiteId + "\n");
-                if (dateStrFrom != null) {
-                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL ,  `date` >= '" ).append(dateStrFrom).append(  "' ,true)");
-                }
-                if (dateStrTo != null) {
-                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL ,  `date` <= '" ).append(dateStrTo).append(  "' ,true)");
-                }
-                query.append(  "                UNION ALL SELECT  `in`.`serial` AS `serial`,\n"
+                + "                and `in`.organization_site_id =      \n" + organizationSiteId + "\n");
+        if (dateStrFrom != null) {
+            query.append(" AND IF ( '").append(dateStrFrom).append("' IS NOT NULL ,  `date` >= '").append(dateStrFrom).append("' ,true)");
+        }
+        if (dateStrTo != null) {
+            query.append(" AND IF ( '").append(dateStrTo).append("' IS NOT NULL ,  `date` <= '").append(dateStrTo).append("' ,true)");
+        }
+        query.append("                UNION ALL SELECT  `in`.`serial` AS `serial`,\n"
                 + "        `in`.`date` AS `date`,\n"
                 + "       'اشعار اضافة موردين' AS `ScreenName`,\n"
                 + "        '' AS `gl_bank_name`,\n"
@@ -837,14 +836,14 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "        0 AS `exitt`,IFNULL(`in`.`value`, 0) AS `adding`, `in`.id AS idNumber\n"
                 + "                    FROM (`inv_notice` `in`\n"
                 + "        LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `in`.`organization_site_id`))) WHERE  (`in`.`type` = 2) \n"
-                + "                and `in`.organization_site_id =   \n"+ organizationSiteId + "\n");
-                if (dateStrFrom != null) {
-                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL ,  `date` >= '" ).append(dateStrFrom).append(  "' ,true)");
-                }
-                if (dateStrTo != null) {
-                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL ,  `date` <= '" ).append(dateStrTo).append(  "' ,true)");
-                }
-                query.append(  "                UNION ALL SELECT  `in`.`serial` AS `serial`,\n"
+                + "                and `in`.organization_site_id =   \n" + organizationSiteId + "\n");
+        if (dateStrFrom != null) {
+            query.append(" AND IF ( '").append(dateStrFrom).append("' IS NOT NULL ,  `date` >= '").append(dateStrFrom).append("' ,true)");
+        }
+        if (dateStrTo != null) {
+            query.append(" AND IF ( '").append(dateStrTo).append("' IS NOT NULL ,  `date` <= '").append(dateStrTo).append("' ,true)");
+        }
+        query.append("                UNION ALL SELECT  `in`.`serial` AS `serial`,\n"
                 + "        `in`.`date` AS `date`,\n"
                 + "        'اشعار خصم موردين' AS `ScreenName`,\n"
                 + "        '' AS `gl_bank_name`,\n"
@@ -863,20 +862,20 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
                 + "        IFNULL(`in`.`value`, 0) AS `exitt`,  0 AS `adding`, `in`.id AS idNumber\n"
                 + "                    FROM  (`inv_notice` `in`\n"
                 + "        LEFT JOIN `inv_organization_site` `ios` ON ((`ios`.`id` = `in`.`organization_site_id`)))   WHERE   (`in`.`type` = 3) \n"
-                + "                and `in`.organization_site_id =      \n"+ organizationSiteId + "\n");
-                if (dateStrFrom != null) {
-                    query.append(" AND IF ( '" ).append(dateStrFrom).append(  "' IS NOT NULL , `date` >= '" ).append(dateStrFrom).append(  "' ,true)");
-                }
-                if (dateStrTo != null) {
-                    query.append(" AND IF ( '" ).append(dateStrTo).append(  "' IS NOT NULL ,  `date` <= '" ).append(dateStrTo).append(  "' ,true)");
-                }
-                query.append( ")  as s order by date");
+                + "                and `in`.organization_site_id =      \n" + organizationSiteId + "\n");
+        if (dateStrFrom != null) {
+            query.append(" AND IF ( '").append(dateStrFrom).append("' IS NOT NULL , `date` >= '").append(dateStrFrom).append("' ,true)");
+        }
+        if (dateStrTo != null) {
+            query.append(" AND IF ( '").append(dateStrTo).append("' IS NOT NULL ,  `date` <= '").append(dateStrTo).append("' ,true)");
+        }
+        query.append(")  as s order by date");
 
         List<Object[]> res = dao.executeNativeQuery(query.toString());
         return findAllOrganizationSiteStatementSearchBeanNew(res);
     }
-    
-    public  List<OrganizationSiteStatementView> findAllOrganizationSiteStatementSearchBeanNew(List<Object[]> res) {
+
+    public List<OrganizationSiteStatementView> findAllOrganizationSiteStatementSearchBeanNew(List<Object[]> res) {
 
         List<OrganizationSiteStatementView> organizationSiteStatementViewList = new ArrayList<>();
 
@@ -884,29 +883,139 @@ public class SupplierAccountServiceImpl implements SupplierAccountService {
         while (it.hasNext()) {
             Object[] line = (Object[]) it.next();
             OrganizationSiteStatementView view = new OrganizationSiteStatementView();
-            view.setSerial( line[0] != null ? ((Long) line[0]).intValue() : null);
-            view.setDate(line[1] != null ?(Date) line[1] : null);
-            view.setScreenName(line[2] != null ?(String) line[2] : null);
-            view.setGlBankName(line[3] != null ?(String) line[3]: null);
-            view.setOrganizationSiteId(line[4] != null ?(Integer) line[4]: null);
-            view.setOrganizationCode(line[5] != null ?(String) line[5]: null);
-            view.setOrganizationName(line[6] != null ?(String) line[6]: null);
-            view.setOrganizationType(line[7] != null ?(Integer) line[7]: null);
-            view.setInstContractSerial(line[8] != null ?(Integer) line[8]: null);
-            view.setRemarks(line[9] != null ?(String) line[9]: null);
-            view.setSupplierInvoiceNumber(line[10] != null ?(String) line[10]: null);
-            view.setTotalBeforeFracture(line[11] != null ?(BigDecimal) line[11]: null);
-            view.setFractureNumber(line[12] != null ?(BigDecimal) line[12]: null);
-            view.setValueFracture(line[13] != null ?(BigDecimal) line[13]: null);
-            view.setLook(line[14] != null ?(Integer) line[14]: null);
-            view.setIsDone(line[15] != null ?(Integer) line[15]: null);
-            view.setExitt(line[16] != null ?(BigDecimal) line[16]: null);
-            view.setAdding(line[17] != null ?(BigDecimal) line[17]: null);
-            view.setIdNumber(line[18] != null ?(Integer) line[18]: null);
-                    
+            view.setSerial(line[0] != null ? ((Long) line[0]).intValue() : null);
+            view.setDate(line[1] != null ? (Date) line[1] : null);
+            view.setScreenName(line[2] != null ? (String) line[2] : null);
+            view.setGlBankName(line[3] != null ? (String) line[3] : null);
+            view.setOrganizationSiteId(line[4] != null ? (Integer) line[4] : null);
+            view.setOrganizationCode(line[5] != null ? (String) line[5] : null);
+            view.setOrganizationName(line[6] != null ? (String) line[6] : null);
+            view.setOrganizationType(line[7] != null ? (Integer) line[7] : null);
+            view.setInstContractSerial(line[8] != null ? (Integer) line[8] : null);
+            view.setRemarks(line[9] != null ? (String) line[9] : null);
+            view.setSupplierInvoiceNumber(line[10] != null ? (String) line[10] : null);
+            view.setTotalBeforeFracture(line[11] != null ? (BigDecimal) line[11] : null);
+            view.setFractureNumber(line[12] != null ? (BigDecimal) line[12] : null);
+            view.setValueFracture(line[13] != null ? (BigDecimal) line[13] : null);
+            view.setLook(line[14] != null ? (Integer) line[14] : null);
+            view.setIsDone(line[15] != null ? (Integer) line[15] : null);
+            view.setExitt(line[16] != null ? (BigDecimal) line[16] : null);
+            view.setAdding(line[17] != null ? (BigDecimal) line[17] : null);
+            view.setIdNumber(line[18] != null ? (Integer) line[18] : null);
+
             organizationSiteStatementViewList.add(view);
         }
         return organizationSiteStatementViewList;
+    }
+
+    @Override
+    public BigDecimal getAccountForAllOrganizationSiteNew(Integer branchId, Integer type) {
+        Map<String, Object> params = new HashMap<>();
+        String typeString = "1,2";
+
+        if (type != null && type == 0) {
+            typeString = "0,2";
+
+        }
+        params.put("branchId", branchId);
+//        params.put("type", supplierAccountSearchBean.getOrganizationType());
+
+        StringBuilder stringBuilder = new StringBuilder();
+//        stringBuilder.append("SELECT sum(RIV.exitt) - sum(RIV.adding) FROM OrganizationSiteStatementView RIV WHERE RIV.organizationSiteId = :organizationSiteId  ");
+        stringBuilder.append("SELECT (sum(s.exitt) - sum(s.adding)) as balance from (SELECT 0 AS `exitt`, IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`, 15,0,0,0),0) AS `adding`\n"
+                + "	FROM `inv_purchase_invoice` `ipi` "
+                + " LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id` "
+                + "  left join inv_organization_site ios on ios.id = ipi.organization_site_id \n"
+                + "	WHERE ((`ipi`.`type` = 0) AND (`ipi`.`date` IS NOT NULL)) "
+                + "     AND ios.type in (" + typeString + ") and ipi.branch_id = " + branchId + "\n"
+                + "    group by ipi.id\n"
+                + "UNION ALL SELECT IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`,  15,0,0,0),0)  AS `exitt`, 0 AS `adding`\n"
+                + "    FROM `inv_purchase_invoice` `ipi` LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
+                + "  left join inv_organization_site ios on ios.id = ipi.organization_site_id \n"
+                + "    WHERE ((`ipi`.`type` = 1)  AND (`ipi`.`date` IS NOT NULL)) "
+                + "     AND ios.type in (" + typeString + ") and ipi.branch_id = " + branchId + "\n"
+                + "    group by ipi.id\n"
+                + "UNION ALL SELECT IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`,  15,0,0,0),0)  AS `exitt`, 0 AS `adding`\n"
+                + "    FROM  `inv_purchase_invoice` `ipi` LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
+                + "  left join inv_organization_site ios on ios.id = ipi.organization_site_id \n"
+                + "    WHERE ((`ipi`.`type` = 2)  AND (`ipi`.`date` IS NOT NULL)) "
+                + "     AND ios.type in (" + typeString + ") and ipi.branch_id = " + branchId + "\n"
+                + "    group by ipi.id\n"
+                + "UNION ALL SELECT 0 AS `exitt`, IFNULL(NET(TRUNCATE(SUM(IFNULL(`net`, 0)), 2), ipi.`discount_type`, ipi.`discount`, `tax_flag`,  15,0,0,0),0) AS `adding`\n"
+                + "    FROM `inv_purchase_invoice` `ipi` LEFT JOIN `inv_purchase_invoice_detail` `ipid` ON `ipi`.`id` = `ipid`.`inv_purchase_invoice_id`\n"
+                + "  left join inv_organization_site ios on ios.id = ipi.organization_site_id \n"
+                + "    WHERE ((`ipi`.`type` = 3) AND (`ipi`.`date` IS NOT NULL)) "
+                + "     AND ios.type in (" + typeString + ") and ipi.branch_id = " + branchId + "\n"
+                + "    group by ipi.id\n"
+                + "UNION ALL SELECT 0 AS `exitt`, IFNULL(`gbtd`.`value_local`, 0) AS `adding`\n"
+                + "    FROM `gl_bank_transaction` `gbt`  LEFT JOIN `gl_bank_transaction_detail` `gbtd` ON `gbt`.`id` = `gbtd`.`gl_bank_transaction_id`\n"
+                + "  left join inv_organization_site ios on ios.id = gbtd.organization_site_id \n"
+                + "    WHERE ((`gbt`.`payment_type` = 0) "
+                + "     AND ios.type in (" + typeString + ") and  gbt.branch_id = " + branchId + "\n"
+                + "AND (`gbt`.`transaction_type` = 1)) \n"
+                + "    GROUP BY  `gbt`.`id`\n"
+                + "UNION ALL SELECT 0 AS `exitt`, IFNULL(`gbtd`.`value_local`, 0) AS `adding`\n"
+                + "	FROM `gl_bank_transaction` `gbt` LEFT JOIN `gl_bank_transaction_detail` `gbtd` ON `gbt`.`id` = `gbtd`.`gl_bank_transaction_id`\n"
+                + "  left join inv_organization_site ios on ios.id = gbtd.organization_site_id \n"
+                + "    WHERE (`gbt`.`payment_type` = 1) "
+                + "     AND ios.type in (" + typeString + ") and  gbt.branch_id = " + branchId + "\n"
+                + "AND (`gbt`.`transaction_type` = 1)\n"
+                + "    GROUP BY  `gbt`.`id`\n"
+                + "UNION ALL SELECT 0 AS `exitt`, IFNULL(`gbtd`.`value_local`, 0) AS `adding`\n"
+                + "    FROM `gl_bank_transaction` `gbt`  LEFT JOIN `gl_bank_transaction_detail` `gbtd` ON `gbt`.`id` = `gbtd`.`gl_bank_transaction_id`\n"
+                + "  left join inv_organization_site ios on ios.id = gbtd.organization_site_id \n"
+                + "    WHERE (`gbt`.`payment_type` = 2)  "
+                + "     AND ios.type in (" + typeString + ") and  gbt.branch_id = " + branchId + "\n"
+                + "AND (`gbt`.`transaction_type` = 1)\n"
+                + "    GROUP BY  `gbt`.`id`\n"
+                + "UNION ALL SELECT   SUM(IFNULL(`gbtd`.`value_local`, 0)) AS `exitt`, 0 AS `adding`\n"
+                + "    FROM `gl_bank_transaction` `gbt`  LEFT JOIN `gl_bank_transaction_detail` `gbtd` ON `gbt`.`id` = `gbtd`.`gl_bank_transaction_id`\n"
+                + "  left join inv_organization_site ios on ios.id = gbtd.organization_site_id \n"
+                + "    WHERE (`gbt`.`payment_type` = 0)  "
+                + "     AND ios.type in (" + typeString + ") and  gbt.branch_id = " + branchId + "\n"
+                + "AND (`gbt`.`transaction_type` = 0)\n"
+                + "    GROUP BY  `gbt`.`id`\n"
+                + "UNION ALL SELECT     SUM(IFNULL(`gbtd`.`value_local`, 0)) AS `exitt`, 0 AS `adding`\n"
+                + "    FROM `gl_bank_transaction` `gbt` LEFT JOIN `gl_bank_transaction_detail` `gbtd` ON `gbt`.`id` = `gbtd`.`gl_bank_transaction_id`\n"
+                + "  left join inv_organization_site ios on ios.id = gbtd.organization_site_id \n"
+                + "    WHERE (`gbt`.`payment_type` = 1) "
+                + "     AND ios.type in (" + typeString + ") and  gbt.branch_id = " + branchId + "\n"
+                + "AND (`gbt`.`transaction_type` = 0)\n"
+                + "    GROUP BY  `gbt`.`id` \n"
+                + "UNION ALL SELECT  SUM(IFNULL(`gbtd`.`value_local`, 0)) AS `exitt`,  0 AS `adding` \n"
+                + "    FROM `gl_bank_transaction` `gbt` LEFT JOIN `gl_bank_transaction_detail` `gbtd` ON `gbt`.`id` = `gbtd`.`gl_bank_transaction_id`\n"
+                + "  left join inv_organization_site ios on ios.id = gbtd.organization_site_id \n"
+                + "    WHERE  (`gbt`.`payment_type` = 2) "
+                + "     AND ios.type in (" + typeString + ") and  gbt.branch_id = " + branchId + "\n"
+                + "AND (`gbt`.`transaction_type` = 0)\n"
+                + "    GROUP BY `gbt`.`id`\n"
+                + "UNION ALL SELECT IFNULL(`ios`.`open_balance_debit`, 0) AS `exitt`, IFNULL(`ios`.`open_balance_credit`, 0) AS `adding`\n"
+                + "    FROM  `inv_organization_site` `ios` WHERE   type in (" + typeString + ") and "
+                + " `ios`.branch_id = " + branchId + "\n"
+                + "UNION ALL SELECT  IFNULL(`in`.`value`, 0) AS `exitt`,  0 AS `adding`\n"
+                + "    FROM `inv_notice` `in`   "
+                + "  left join inv_organization_site ios on ios.id = `in`.organization_site_id \n"
+                + "WHERE (`in`.`type` = 0)  "
+                + "and ios.type in (" + typeString + ") and  `in`.branch_id =  " + branchId + "\n"
+                + "UNION ALL SELECT   0 AS `exitt`, IFNULL(`in`.`value`, 0) AS `adding`\n"
+                + "    FROM `inv_notice` `in` "
+                + "  left join inv_organization_site ios on ios.id = `in`.organization_site_id \n"
+                + "WHERE  (`in`.`type` = 1 or `in`.`type` = 4 )  "
+                + "and ios.type in (" + typeString + ") and  `in`.branch_id =  " + branchId + "\n"
+                + "UNION ALL SELECT  0 AS `exitt`,IFNULL(`in`.`value`, 0) AS `adding`\n"
+                + "    FROM `inv_notice` `in` "
+                + "  left join inv_organization_site ios on ios.id = `in`.organization_site_id \n"
+                + "WHERE  (`in`.`type` = 2) "
+                + "and ios.type in (" + typeString + ") and  `in`.branch_id =  " + branchId + "\n"
+                + "UNION ALL SELECT  IFNULL(`in`.`value`, 0) AS `exitt`,  0 AS `adding`\n"
+                + "    FROM  `inv_notice` `in`  "
+                + "  left join inv_organization_site ios on ios.id = `in`.organization_site_id \n"
+                + " WHERE   (`in`.`type` = 3) "
+                + "and ios.type in (" + typeString + ") and  `in`.branch_id =  " + branchId + "\n"
+                + "    ) s ");
+
+        List<BigDecimal> details = dao.executeNativeQuery(stringBuilder.toString());
+        return (details != null && !details.isEmpty()) ? (details.get(0) == null ? BigDecimal.ZERO : details.get(0).setScale(3, BigDecimal.ROUND_UP)) : BigDecimal.ZERO;
     }
 
 }

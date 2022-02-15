@@ -7,6 +7,7 @@ package com.isag.businessservice.reports;
 
 import com.isag.dto.BankBalanceReportBeanNew;
 import com.isag.dto.BankBalanceReportSearchBean;
+import com.isag.entity.GlBank;
 import com.isag.entity.GlYear;
 import com.isag.views.BankBalanceView;
 import java.math.BigDecimal;
@@ -28,18 +29,21 @@ public interface BankBalanceViewService {
     public List<BankBalanceReportBeanNew> searchNative(BankBalanceReportSearchBean bankBalanceReportSearchBean);
 
     public BigDecimal findBalanceForBankId(Integer bankId);
-    
 
     public BigDecimal findCashBalanceByDate(Integer bankId);
 
     public BigDecimal findSettelmentBalanceByDate(Integer bankId);
 
     public BigDecimal findTransferBalanceByDate(Integer bankId);
-    
+
     public BigDecimal findCashBalanceByMonth(Integer bankId);
 
     public BigDecimal findSettelmentBalanceByMonth(Integer bankId);
 
     public BigDecimal findTransferBalanceByMonth(Integer bankId);
+
+    public Integer FindInvoiceNumCashSettTranByTypeByDate(List<GlBank> glbankIdList, Integer branchId, Integer transactionType);
+
+    public Integer FindInvoiceNumCashSettTranByTypeByMonth(List<GlBank> glbankIdList, Integer branchId, Integer transactionType);
 
 }
