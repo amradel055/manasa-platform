@@ -6,12 +6,13 @@
 package com.toby.apiServices;
 
 import com.toby.core.GenericDAO;
+import com.toby.dto.VariationDTO;
 import com.toby.dto.VariationDetailsDTO;
 import com.toby.entity.AttributeDetails;
 import com.toby.entity.Branch;
 import com.toby.entity.TobyCompany;
 import com.toby.entity.TobyUser;
-import com.toby.entity.Variation;
+import com.toby.entity.VariationProduct;
 import com.toby.entity.VariationDetails;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,6 +53,13 @@ public class VariationProductDatailsServiceImpl implements VariationProductDetai
     }
 
     @Override
+    public void deleteVariationDetailsByVariationId(VariationDTO variationDTO) {
+        if (variationDTO.getId() != null && variationDTO.getBranchId() != null && variationDTO.getCompanyId() != null) {
+            dao.executeDeleteQuery("DELETE FROM VariationDetails a WHERE a.companyId.id = " + variationDTO.getCompanyId() + " AND a.branchId.id =" + variationDTO.getBranchId() + " AND a.variationId.id = " + variationDTO.getId() + " ");
+        }
+    }
+
+    @Override
     public VariationDetailsDTO findVariationDetails(VariationDetailsDTO variationDetailsDTO) {
         VariationDetails variationDetails = dao.findEntityById(VariationDetails.class, variationDetailsDTO.getId());
         return mapToDTO(variationDetails);
@@ -72,6 +80,21 @@ public class VariationProductDatailsServiceImpl implements VariationProductDetai
         params.put("branchId", variationDetailsDTO.getBranchId());
         List<VariationDetails> detailses = dao.findListByQuery("SELECT a FROM VariationDetails a WHERE a.companyId.id =:companyId AND a.branchId.id =:branchId", params);
         return mapToDTOList(detailses);
+    }
+
+    @Override
+    public List<VariationDetailsDTO> getAllVariationDetailsByCompanyIdAndBranchIdAndVariationID(VariationDTO variationDTO) {
+        Map<String, Object> params = new HashMap();
+        params.put("companyId", variationDTO.getCompanyId());
+        params.put("branchId", variationDTO.getBranchId());
+        params.put("varId", variationDTO.getId());
+        List<VariationDetails> detailses;
+        detailses = dao.findListByQuery("SELECT a FROM VariationDetails a WHERE a.companyId.id =:companyId AND a.branchId.id =:branchId AND a.variationId.id =:varId ", params);
+        if (detailses != null) {
+            return mapToDTOList(detailses);
+        } else {
+            return new ArrayList<>();
+        }
     }
 
     @Override
@@ -136,7 +159,7 @@ public class VariationProductDatailsServiceImpl implements VariationProductDetai
         }
 
         if (dTO.getVariationId() != null) {
-            Variation variation = new Variation();
+            VariationProduct variation = new VariationProduct();
             variation.setId(dTO.getVariationId());
             variationDetails.setVariationId(variation);
         }

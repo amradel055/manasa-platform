@@ -14,6 +14,9 @@ public class AttributeDTO extends BaseEntityDTO  {
     private Integer parent;
     
     private List<AttributeDetailsDTO> terms;
+    
+    private Integer itemId ;
+    
 
     /**
      * @return the name
@@ -55,6 +58,20 @@ public class AttributeDTO extends BaseEntityDTO  {
      */
     public void setTerms(List<AttributeDetailsDTO> terms) {
         this.terms = terms;
+    }
+
+    /**
+     * @return the itemId
+     */
+    public Integer getItemId() {
+        return itemId;
+    }
+
+    /**
+     * @param itemId the itemId to set
+     */
+    public void setItemId(Integer itemId) {
+        this.itemId = itemId;
     }
 
 }

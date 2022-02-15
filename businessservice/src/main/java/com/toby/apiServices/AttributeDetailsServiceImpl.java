@@ -64,12 +64,34 @@ public class AttributeDetailsServiceImpl implements AttributeDetailsService {
         params.put("companyId", attributeDTO.getCompanyId());
         params.put("branchId", attributeDTO.getBranchId());
         params.put("headId", attributeDTO.getId());
-        List<AttributeDetails> attributeDetailses = dao.findListByQuery("SELECT a FROM AttributeDetails a WHERE a.companyId.id =:companyId AND a.branchId.id =:branchId AND a.headId.id =:headId AND a.itemId = null order by a.orderBy ", params);
+        List<AttributeDetails> attributeDetailses;
+        if (attributeDTO.getItemId() == null) {
+            attributeDetailses = dao.findListByQuery("SELECT a FROM AttributeDetails a WHERE a.companyId.id =:companyId AND a.branchId.id =:branchId AND a.headId.id =:headId AND a.itemId is null order by a.orderBy ", params);
+        } else {
+            params.put("itemId", attributeDTO.getItemId());
+            attributeDetailses = dao.findListByQuery("SELECT a FROM AttributeDetails a WHERE a.companyId.id =:companyId AND a.branchId.id =:branchId AND a.headId.id =:headId AND a.itemId.id = :itemId order by a.orderBy ", params);
+        }
         if (attributeDetailses != null) {
             return mapToDTOList(attributeDetailses);
         } else {
             return new ArrayList<>();
         }
+    }
+
+    @Override
+    public void DeleteAttributeDetailsForHeadByBranchId(AttributeDTO attributeDTO) {
+        Map<String, Object> params = new HashMap();
+        params.put("companyId", attributeDTO.getCompanyId());
+        params.put("branchId", attributeDTO.getBranchId());
+        params.put("headId", attributeDTO.getId());
+        StringBuilder builder = new StringBuilder();
+        builder.append("Delete FROM AttributeDetails a WHERE a.companyId.id = ").append(attributeDTO.getCompanyId()).append(" AND a.branchId.id = ").append(attributeDTO.getBranchId()).append(" AND a.headId.id = ").append(attributeDTO.getId());
+        if (attributeDTO.getItemId() != null) {
+            builder.append(" AND a.itemId.id = ").append(attributeDTO.getItemId());
+        } else {
+            builder.append(" AND a.itemId is  null ");
+        }
+        dao.executeDeleteQuery(builder.toString());
     }
 
     @Override
@@ -117,10 +139,15 @@ public class AttributeDetailsServiceImpl implements AttributeDetailsService {
         if (entity.getItemId() != null) {
             attributeDetailsDTO.setItemId(entity.getItemId().getId());
         }
+        if (entity.getCreatedBy() != null) {
+            attributeDetailsDTO.setCreatedBy(entity.getCreatedBy().getId());
+        }
+
         attributeDetailsDTO.setMsg(entity.getMsg());
         attributeDetailsDTO.setValue(entity.getValue());
         attributeDetailsDTO.setId(entity.getId());
         attributeDetailsDTO.setOrderBy(entity.getOrderBy());
+        attributeDetailsDTO.setCreatedDate(entity.getCreationDate());
 
         return attributeDetailsDTO;
     }
@@ -146,13 +173,13 @@ public class AttributeDetailsServiceImpl implements AttributeDetailsService {
 
         if (dTO.getHeadId() != null) {
             Attribute attribute = new Attribute();
-            attribute.setId(dTO.getCreatedBy());
+            attribute.setId(dTO.getHeadId());
             attributeDetails.setHeadId(attribute);
         }
 
         if (dTO.getItemId() != null) {
             InvItem invItem = new InvItem();
-            invItem.setId(dTO.getCreatedBy());
+            invItem.setId(dTO.getItemId());
             attributeDetails.setItemId(invItem);
         }
 

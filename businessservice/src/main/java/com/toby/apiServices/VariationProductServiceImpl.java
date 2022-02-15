@@ -7,11 +7,12 @@ package com.toby.apiServices;
 
 import com.toby.core.GenericDAO;
 import com.toby.dto.VariationDTO;
+import com.toby.dto.VariationDetailsDTO;
 import com.toby.entity.Branch;
 import com.toby.entity.InvItem;
 import com.toby.entity.TobyCompany;
 import com.toby.entity.TobyUser;
-import com.toby.entity.Variation;
+import com.toby.entity.VariationProduct;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,30 +30,41 @@ public class VariationProductServiceImpl implements VariationProductService {
     @EJB
     private GenericDAO dao;
 
+    @EJB
+    VariationProductDetailsService variationProductDetailsService;
+
     @Override
     public VariationDTO addVariation(VariationDTO variationDTO) {
-        Variation variation = mapToEntity(variationDTO);
+
+        VariationProduct variation = mapToEntity(variationDTO);
         variation = dao.updateEntity(variation);
+
+        if (variationDTO.getVariationDetails() != null) {
+            for (VariationDetailsDTO dTO : variationDTO.getVariationDetails()) {
+                dTO.setVariationId(variation.getId());
+                variationProductDetailsService.addVariationDetails(dTO);
+            }
+        }
         return mapToDTO(variation);
     }
 
     @Override
     public VariationDTO updateVariation(VariationDTO variationDTO) {
-        Variation variation = mapToEntity(variationDTO);
+        VariationProduct variation = mapToEntity(variationDTO);
         variation = dao.updateEntity(variation);
         return mapToDTO(variation);
     }
 
     @Override
     public VariationDTO deleteVariation(VariationDTO variationDTO) {
-        Variation variation = mapToEntity(variationDTO);
+        VariationProduct variation = mapToEntity(variationDTO);
         dao.deleteEntity(variation);
         return mapToDTO(variation);
     }
 
     @Override
     public VariationDTO findVariation(VariationDTO variationDTO) {
-        Variation variation = dao.findEntityById(Variation.class, variationDTO.getId());
+        VariationProduct variation = dao.findEntityById(VariationProduct.class, variationDTO.getId());
         return mapToDTO(variation);
     }
 
@@ -60,7 +72,7 @@ public class VariationProductServiceImpl implements VariationProductService {
     public List<VariationDTO> getAllVariationsByCompanyId(VariationDTO variationDTO) {
         Map<String, Object> params = new HashMap();
         params.put("companyId", variationDTO.getCompanyId());
-        List<Variation> variations = dao.findListByQuery("SELECT a FROM Variation a WHERE a.companyId.id =:companyId", params);
+        List<VariationProduct> variations = dao.findListByQuery("SELECT a FROM VariationProduct a WHERE a.companyId.id =:companyId", params);
         return mapToDTOList(variations);
     }
 
@@ -69,7 +81,14 @@ public class VariationProductServiceImpl implements VariationProductService {
         Map<String, Object> params = new HashMap();
         params.put("companyId", variationDTO.getCompanyId());
         params.put("branchId", variationDTO.getBranchId());
-        List<Variation> variations = dao.findListByQuery("SELECT a FROM Variation a WHERE a.companyId.id =:companyId AND a.branchId.id =:branchId", params);
+        
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT a FROM VariationProduct a WHERE a.companyId.id =:companyId AND a.branchId.id =:branchId ");
+        if (variationDTO.getItemId() != null) {
+            params.put("itemId", variationDTO.getItemId());
+            builder.append("AND a.itemId.id =:itemId ");
+        }
+        List<VariationProduct> variations = dao.findListByQuery(builder.toString(), params);
         return mapToDTOList(variations);
     }
 
@@ -79,16 +98,16 @@ public class VariationProductServiceImpl implements VariationProductService {
         return maxId;
     }
 
-    public List<VariationDTO> mapToDTOList(List<Variation> entityList) {
+    public List<VariationDTO> mapToDTOList(List<VariationProduct> entityList) {
         List<VariationDTO> dTOsList = new ArrayList<>();
-        for (Variation entity : entityList) {
+        for (VariationProduct entity : entityList) {
             VariationDTO dTO = mapToDTO(entity);
             dTOsList.add(dTO);
         }
         return dTOsList;
     }
 
-    public VariationDTO mapToDTO(Variation entity) {
+    public VariationDTO mapToDTO(VariationProduct entity) {
         VariationDTO variationDTO = new VariationDTO();
         if (entity.getBranchId() != null) {
             variationDTO.setBranchId(entity.getBranchId().getId());
@@ -109,16 +128,19 @@ public class VariationProductServiceImpl implements VariationProductService {
         variationDTO.setCreatedDate(entity.getCreationDate());
         variationDTO.setId(entity.getId());
         variationDTO.setDescribtion(entity.getDescribtion());
-        variationDTO.setDefaultVariation(entity.getDefaultVariation());
+//        variationDTO.setDefaultVariation(entity.getDefaultVariation());
         variationDTO.setSalePrice(entity.getSalePrice());
         variationDTO.setPrice(entity.getPrice());
         variationDTO.setImage(entity.getImage());
+        if (variationDTO.getItemId() != null) {
+            variationDTO.setVariationDetails(variationProductDetailsService.getAllVariationDetailsByCompanyIdAndBranchIdAndVariationID(variationDTO));
+        }
 
         return variationDTO;
     }
 
-    public Variation mapToEntity(VariationDTO dTO) {
-        Variation variation = new Variation();
+    public VariationProduct mapToEntity(VariationDTO dTO) {
+        VariationProduct variation = new VariationProduct();
         variation.setId(dTO.getId());
         if (dTO.getBranchId() != null) {
             Branch branch = new Branch();
@@ -145,9 +167,8 @@ public class VariationProductServiceImpl implements VariationProductService {
         variation.setMsg(dTO.getMsg());
         variation.setCreationDate(dTO.getCreatedDate());
         variation.setImage(dTO.getImage());
-        variation.setId(dTO.getId());
         variation.setDescribtion(dTO.getDescribtion());
-        variation.setDefaultVariation(dTO.getDefaultVariation());
+//        variation.setDefaultVariation(dTO.getDefaultVariation());
         variation.setSalePrice(dTO.getSalePrice());
         variation.setPrice(dTO.getPrice());
 

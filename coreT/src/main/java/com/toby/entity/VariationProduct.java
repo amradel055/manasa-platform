@@ -14,7 +14,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "variation_product")
-public class Variation extends BaseEntity {
+public class VariationProduct extends BaseEntity {
 
     @JoinColumn(name = "item_id", referencedColumnName = "id")
     @ManyToOne()
@@ -32,20 +32,30 @@ public class Variation extends BaseEntity {
     @Column(name = "sale_price")
     private BigDecimal salePrice;
 
-    @Column(name = "default")
-    private Integer defaultVariation;
+//    @Column(name = "default")
+//    private Integer defaultVariation;
 
     @JoinColumn(name = "branch_id", referencedColumnName = "id")
     @ManyToOne()
     private Branch branchId;
 
+    
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
+    }
+    
+    
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Variation)) {
+        if (!(object instanceof VariationProduct)) {
             return false;
         }
-        Variation other = (Variation) object;
+        VariationProduct other = (VariationProduct) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -142,18 +152,18 @@ public class Variation extends BaseEntity {
         this.salePrice = salePrice;
     }
 
-    /**
-     * @return the defaultVariation
-     */
-    public Integer getDefaultVariation() {
-        return defaultVariation;
-    }
-
-    /**
-     * @param defaultVariation the defaultVariation to set
-     */
-    public void setDefaultVariation(Integer defaultVariation) {
-        this.defaultVariation = defaultVariation;
-    }
+//    /**
+//     * @return the defaultVariation
+//     */
+//    public Integer getDefaultVariation() {
+//        return defaultVariation;
+//    }
+//
+//    /**
+//     * @param defaultVariation the defaultVariation to set
+//     */
+//    public void setDefaultVariation(Integer defaultVariation) {
+//        this.defaultVariation = defaultVariation;
+//    }
 
 }

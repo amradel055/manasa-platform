@@ -16,7 +16,7 @@ public class VariationDetails extends BaseEntity {
 
     @JoinColumn(name = "variation_product_id", referencedColumnName = "id")
     @ManyToOne()
-    private Variation variationId;
+    private VariationProduct variationId;
 
     @JoinColumn(name = "attribute_detail_id", referencedColumnName = "id")
     @ManyToOne()
@@ -64,14 +64,14 @@ public class VariationDetails extends BaseEntity {
     /**
      * @return the variationId
      */
-    public Variation getVariationId() {
+    public VariationProduct getVariationId() {
         return variationId;
     }
 
     /**
      * @param variationId the variationId to set
      */
-    public void setVariationId(Variation variationId) {
+    public void setVariationId(VariationProduct variationId) {
         this.variationId = variationId;
     }
 

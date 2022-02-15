@@ -14,6 +14,8 @@ public class AttributeDetailsDTO extends BaseEntityDTO  {
     private Integer orderBy;
    
     private String value;
+    
+    private boolean selected;
 
     /**
      * @return the headId
@@ -69,6 +71,20 @@ public class AttributeDetailsDTO extends BaseEntityDTO  {
      */
     public void setValue(String value) {
         this.value = value;
+    }
+
+    /**
+     * @return the selected
+     */
+    public boolean isSelected() {
+        return selected;
+    }
+
+    /**
+     * @param selected the selected to set
+     */
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 
 

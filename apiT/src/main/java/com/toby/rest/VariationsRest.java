@@ -5,6 +5,7 @@
  */
 package com.toby.rest;
 
+import com.toby.apiServices.VariationProductDetailsService;
 import com.toby.apiServices.VariationProductService;
 import com.toby.dto.AttributeDTO;
 import com.toby.dto.VariationDTO;
@@ -28,6 +29,9 @@ public class VariationsRest {
 
     @EJB
     VariationProductService variationProductService;
+
+    @EJB
+    VariationProductDetailsService variationProductDetailsService;
 
     @Transactional
     @Path("/addVariations")
@@ -78,7 +82,13 @@ public class VariationsRest {
     public Response deleteAttributehead(VariationDTO variationDTO) {
         try {
             if (variationDTO.getId() != null) {
-                variationDTO = variationProductService.deleteVariation(variationDTO);
+                if (variationDTO.getCompanyId() != null && variationDTO.getBranchId() != null) {
+                    variationProductDetailsService.deleteVariationDetailsByVariationId(variationDTO);
+                    variationDTO = variationProductService.deleteVariation(variationDTO);
+                }else {
+                variationDTO.setMsg("يجب تسجيل الدخول");
+                } 
+                
             } else {
                 variationDTO.setMsg("يجب اختيار عنصر");
             }

@@ -36,7 +36,7 @@ public class AttributeServiceImpl implements AttributeService {
 
         Attribute entity = mapToEntity(attribute);
         entity = dao.updateEntity(entity);
-        return mapToDTO(entity);
+        return mapToDTO(entity , attribute);
 
     }
 
@@ -45,7 +45,7 @@ public class AttributeServiceImpl implements AttributeService {
 
         Attribute entity = mapToEntity(attribute);
         entity = dao.updateEntity(entity);
-        return mapToDTO(entity);
+        return mapToDTO(entity , attribute);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class AttributeServiceImpl implements AttributeService {
     public AttributeDTO findAttribute(AttributeDTO dTO) {
 
         Attribute entity = dao.findEntityById(Attribute.class, dTO.getId());
-        return mapToDTO(entity);
+        return mapToDTO(entity , dTO);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class AttributeServiceImpl implements AttributeService {
         params.put("companyId", attributeDTO.getCompanyId());
         List<Attribute> entityList = dao.findListByQuery("SELECT a FROM Attribute a WHERE a.companyId.id =:companyId", params);
         //return dao.findEntityListByCompanyId(Branch.class, companyId);
-        return mapToDTOList(entityList);
+        return mapToDTOList(entityList , attributeDTO);
     }
 
     @Override
@@ -76,7 +76,7 @@ public class AttributeServiceImpl implements AttributeService {
         params.put("companyId", attributeDTO.getCompanyId());
         params.put("branchId", attributeDTO.getBranchId());
         List<Attribute> entityList = dao.findListByQuery("SELECT a FROM Attribute a WHERE a.companyId.id =:companyId AND a.branchId.id =:branchId", params);
-        List<AttributeDTO> list = mapToDTOList(entityList);
+        List<AttributeDTO> list = mapToDTOList(entityList , attributeDTO);
         return list;
     }
 
@@ -86,16 +86,16 @@ public class AttributeServiceImpl implements AttributeService {
         return maxId;
     }
 
-    public List<AttributeDTO> mapToDTOList(List<Attribute> entityList) {
+    public List<AttributeDTO> mapToDTOList(List<Attribute> entityList , AttributeDTO attributeDTO) {
         List<AttributeDTO> dTOsList = new ArrayList<>();
         for (Attribute entity : entityList) {
-            AttributeDTO dTO = mapToDTO(entity);
+            AttributeDTO dTO = mapToDTO(entity , attributeDTO );
             dTOsList.add(dTO);
         }
         return dTOsList;
     }
 
-    public AttributeDTO mapToDTO(Attribute entity) {
+    public AttributeDTO mapToDTO(Attribute entity , AttributeDTO dTO) {
         AttributeDTO attributeDTO = new AttributeDTO();
         if (entity.getBranchId() != null) {
             attributeDTO.setBranchId(entity.getBranchId().getId());
@@ -103,10 +103,18 @@ public class AttributeServiceImpl implements AttributeService {
         if (entity.getCompanyId() != null) {
             attributeDTO.setCompanyId(entity.getCompanyId().getId());
         }
+         if (entity.getCreatedBy() != null) {
+            attributeDTO.setCreatedBy(entity.getCreatedBy().getId());
+        }
         attributeDTO.setMsg(entity.getMsg());
         attributeDTO.setName(entity.getName());
         attributeDTO.setParent(entity.getParent());
         attributeDTO.setId(entity.getId());
+        if(dTO.getItemId()!= null){
+             attributeDTO.setItemId(dTO.getItemId());
+        }else {
+        attributeDTO.setItemId(null);
+        }
         attributeDTO.setTerms(attributeDetailsService.findAttributeDetailsForHeadByBranchId(attributeDTO));
         return attributeDTO;
     }

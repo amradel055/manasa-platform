@@ -6,6 +6,8 @@
 package com.toby.dto;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class VariationDTO extends BaseEntityDTO{
@@ -26,16 +28,16 @@ public class VariationDTO extends BaseEntityDTO{
     private BigDecimal salePrice;
 
  
-    private Integer defaultVariation;
+//    private Integer defaultVariation;
 
-   
+   private List <VariationDetailsDTO> variationDetails ;
 
 
 
 
 
     /**
-     * @return the itemId
+     * @return the itemIdF
      */
     public Integer getItemId() {
         return itemId;
@@ -104,18 +106,35 @@ public class VariationDTO extends BaseEntityDTO{
         this.salePrice = salePrice;
     }
 
+//    /**
+//     * @return the defaultVariation
+//     */
+//    public Integer getDefaultVariation() {
+//        return defaultVariation;
+//    }
+//
+//    /**
+//     * @param defaultVariation the defaultVariation to set
+//     */
+//    public void setDefaultVariation(Integer defaultVariation) {
+//        this.defaultVariation = defaultVariation;
+//    }
+
     /**
-     * @return the defaultVariation
+     * @return the variationDetails
      */
-    public Integer getDefaultVariation() {
-        return defaultVariation;
+    public List <VariationDetailsDTO> getVariationDetails() {
+        if(variationDetails == null){
+        variationDetails = new ArrayList<>();
+        }
+        return variationDetails;
     }
 
     /**
-     * @param defaultVariation the defaultVariation to set
+     * @param variationDetails the variationDetails to set
      */
-    public void setDefaultVariation(Integer defaultVariation) {
-        this.defaultVariation = defaultVariation;
+    public void setVariationDetails(List <VariationDetailsDTO> variationDetails) {
+        this.variationDetails = variationDetails;
     }
 
 }

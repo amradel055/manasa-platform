@@ -5,6 +5,7 @@
  */
 package com.toby.rest;
 
+import com.toby.apiServices.AttributeDetailsService;
 import com.toby.apiServices.AttributeService;
 import com.toby.dto.AttributeDTO;
 import java.util.List;
@@ -27,6 +28,9 @@ public class AttributeRest {
 
     @EJB
     AttributeService attributeService;
+    
+      @EJB
+      AttributeDetailsService attributeDetailsService;
 
     @Transactional
     @Path("/addAttribute")
@@ -77,7 +81,12 @@ public class AttributeRest {
     public Response deleteAttributehead(AttributeDTO attribute) {
         try {
             if (attribute.getId() != null) {
-                attributeService.deleteAttribute(attribute);
+                attribute = valitade(attribute);
+                if(attribute.getMsg() == null){
+                 attributeDetailsService.DeleteAttributeDetailsForHeadByBranchId(attribute);
+                 attributeService.deleteAttribute(attribute);
+                }
+                
             } else {
                 attribute.setMsg("يجب اختيار عنصر");
             }
@@ -93,7 +102,7 @@ public class AttributeRest {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response findAttributeheadByBranch(AttributeDTO attributeDTO) {
+    public Response findAttributeheadByBranch(AttributeDTO attributeDTO){
         try {
             if (attributeDTO.getBranchId() != null && attributeDTO.getCompanyId() != null) {
                 List<AttributeDTO> attributesList = attributeService.getAllAttributesByCompanyIdAndBranchId(attributeDTO);
