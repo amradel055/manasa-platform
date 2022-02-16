@@ -1327,6 +1327,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                     invInvoiceDTO.setMsg(error);
                     dao.rollbackQuery();
                 } else {
+                    dao.executeNativeQuery("update inv_purchase_invoice_detail set net_after_discount_head = test(inv_purchase_invoice_id , net) where inv_purchase_invoice_id = "+invPurchaseInvoice.getId());
                     invInvoiceDTO = mapToDTO(invPurchaseInvoice, invInvoiceDTO, false);
                     invInvoiceDTO = invGlobalService.updateSummition(invInvoiceDTO);
                 }
