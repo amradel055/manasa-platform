@@ -11,6 +11,7 @@ import com.isag.businessservice.GmSubscriptionsService;
 import com.isag.businessservice.InvPurchaseInvoiceDetailsService;
 import com.isag.businessservice.InvPurchaseInvoiceService;
 import com.isag.businessservice.InvPurchaseInvoiceService_1;
+import com.isag.businessservice.InvStripService;
 import com.isag.businessservice.IsagUserInventoryService;
 import com.isag.businessservice.OrganizationSiteService;
 import com.isag.businessservice.reports.BankBalanceViewService;
@@ -83,6 +84,7 @@ public class DashboardMB extends BaseListBean {
     private Integer invoiceNumcustomerByDate;
     private Integer invoiceNumcustomerByMonth;
     private BigDecimal totalNetCustomers;
+    private Integer itemNumbers;
 
     @EJB
     InvPurchaseInvoiceService_1 invPurchaseInvoiceService_1;
@@ -104,6 +106,8 @@ public class DashboardMB extends BaseListBean {
     InvPurchaseInvoiceService invPurchaseInvoiceService;
     @EJB
     SupplierAccountService supplierAccountService;
+    @EJB
+    InvStripService invStripService;
 
     @PostConstruct
     @Override
@@ -1099,5 +1103,22 @@ public class DashboardMB extends BaseListBean {
      */
     public void setTotalNetCustomers(BigDecimal totalNetCustomers) {
         this.totalNetCustomers = totalNetCustomers;
+    }
+
+    /**
+     * @return the itemNumbers
+     */
+    public Integer getItemNumbers() {
+        if(itemNumbers == null){
+        setItemNumbers(invStripService.FindItemsNumber(getUserData().getUserBranch().getId()));
+        }
+        return itemNumbers;
+    }
+
+    /**
+     * @param itemNumbers the itemNumbers to set
+     */
+    public void setItemNumbers(Integer itemNumbers) {
+        this.itemNumbers = itemNumbers;
     }
 }

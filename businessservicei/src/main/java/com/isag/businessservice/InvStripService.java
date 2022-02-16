@@ -14,6 +14,7 @@ import java.util.List;
  */
 @Remote
 public interface InvStripService {
+
     InvPurchaseReturnSave addInvStrip(InvStrip invStrip, List<InvStripDetail> invStripDetailDetailList, List<InvStripDetail> StripDetailDeleted);
 
     void deleteInvStrip(InvStrip invStrip, Integer invStripIdToPass);
@@ -29,10 +30,12 @@ public interface InvStripService {
     InvStrip findInvStripByInvStripId(Integer invStripId);
 
     Integer getMaxSerialForInvoiceDetail(InvStrip invStrip);
-    
+
     public InvInvoiceDTO findInvStripById(InvInvoiceDTO invInvoiceDTO);
-    
+
     public InvInvoiceDTO save(InvInvoiceDTO invInvoiceDTO, IsagUser isagUser);
-    
+
     public InvInvoiceDTO convertInvStripListToInvInvoice(InvInvoiceDTO invInvoiceDTO);
+
+    public Integer FindItemsNumber(Integer branchId);
 }
