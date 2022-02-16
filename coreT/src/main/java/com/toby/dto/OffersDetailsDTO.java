@@ -21,12 +21,8 @@ public class OffersDetailsDTO extends BaseEntityDTO {
     private Integer status;
 
 
-
-
-
-
-  
-
+    
+    
     /**
      * @return the categoryId
      */

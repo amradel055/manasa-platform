@@ -35,7 +35,7 @@ public class OffersRest {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addAttributehead(OffersDTO offersDTO) {
+    public Response addOfferhead(OffersDTO offersDTO) {
         try {
             offersDTO = valitade(offersDTO);
             if (offersDTO.getMsg() == null) {
@@ -52,7 +52,7 @@ public class OffersRest {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateAttributehead(OffersDTO offersDTO) {
+    public Response updateOfferhead(OffersDTO offersDTO) {
         try {
 
             if (offersDTO.getId() != null) {
@@ -76,7 +76,7 @@ public class OffersRest {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response deleteAttributehead(OffersDTO offersDTO) {
+    public Response deleteOfferhead(OffersDTO offersDTO) {
         try {
             if (offersDTO.getId() != null) {
                 offersService.deleteOffers(offersDTO);
@@ -95,7 +95,7 @@ public class OffersRest {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response findAttributeheadByBranch(OffersDTO offersDTO) {
+    public Response findOfferByBranch(OffersDTO offersDTO) {
         try {
             if (offersDTO.getBranchId() != null && offersDTO.getCompanyId() != null) {
                 List<OffersDTO> offersDTOsList = offersService.getAllOffersByCompanyIdAndBranchId(offersDTO);
@@ -118,10 +118,10 @@ public class OffersRest {
         if (dTO.getName() == null || dTO.getName().isEmpty()) {
             dTO.setMsg("يجب ادخال الاسم");
         }
-        if (dTO.getValue() == null) {
+        if (dTO.getOfferValue()== null) {
             dTO.setMsg("يجب ادخال قيمة العرض");
         }
-        if (dTO.getType() == null) {
+        if (dTO.getOfferType()== null) {
             dTO.setMsg("يجب ادخال نوع العرض");
         }
 

@@ -7,6 +7,7 @@ package com.toby.dto;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * @author hq004
@@ -77,6 +78,13 @@ public class BaseEntityDTO implements Serializable, Cloneable {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 59 * hash + Objects.hashCode(this.id);
+        return hash;
     }
 
     @Override

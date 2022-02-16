@@ -9,25 +9,23 @@ import java.util.Date;
 
 public class OffersDTO extends BaseEntityDTO {
 
-    private Integer id;
-    
     private String name;
-    
+
     private String describtion;
 
     private Date dateFrom;
 
     private Date dateTo;
 
-    private Integer type;
+    private Integer offerType;
 
-    private Integer min;
+    private Integer offerMin;
 
-    private Integer max;
+    private Integer offerMax;
 
-    private Integer value;
+    private Integer offerValue;
 
-    private Integer limit;
+    private Integer offerLimit;
 
     public String getName() {
         return name;
@@ -83,87 +81,73 @@ public class OffersDTO extends BaseEntityDTO {
     }
 
     /**
-     * @return the type
+     * @return the offerMax
      */
-    public Integer getType() {
-        return type;
+    public Integer getOfferMax() {
+        return offerMax;
     }
 
     /**
-     * @param type the type to set
+     * @param offerMax the offerMax to set
      */
-    public void setType(Integer type) {
-        this.type = type;
+    public void setOfferMax(Integer offerMax) {
+        this.offerMax = offerMax;
     }
 
     /**
-     * @return the min
+     * @return the offerLimit
      */
-    public Integer getMin() {
-        return min;
+    public Integer getOfferLimit() {
+        return offerLimit;
     }
 
     /**
-     * @param min the min to set
+     * @param offerLimit the offerLimit to set
      */
-    public void setMin(Integer min) {
-        this.min = min;
+    public void setOfferLimit(Integer offerLimit) {
+        this.offerLimit = offerLimit;
     }
 
     /**
-     * @return the max
+     * @return the offerType
      */
-    public Integer getMax() {
-        return max;
+    public Integer getOfferType() {
+        return offerType;
     }
 
     /**
-     * @param max the max to set
+     * @param offerType the offerType to set
      */
-    public void setMax(Integer max) {
-        this.max = max;
+    public void setOfferType(Integer offerType) {
+        this.offerType = offerType;
     }
 
     /**
-     * @return the value
+     * @return the offerMin
      */
-    public Integer getValue() {
-        return value;
+    public Integer getOfferMin() {
+        return offerMin;
     }
 
     /**
-     * @param value the value to set
+     * @param offerMin the offerMin to set
      */
-    public void setValue(Integer value) {
-        this.value = value;
+    public void setOfferMin(Integer offerMin) {
+        this.offerMin = offerMin;
     }
 
     /**
-     * @return the limit
+     * @return the offerValue
      */
-    public Integer getLimit() {
-        return limit;
+    public Integer getOfferValue() {
+        return offerValue;
     }
 
     /**
-     * @param limit the limit to set
+     * @param offerValue the offerValue to set
      */
-    public void setLimit(Integer limit) {
-        this.limit = limit;
-    }
-
-    /**
-     * @return the id
-     */
-    public Integer getId() {
-        return id;
-    }
-
-    /**
-     * @param id the id to set
-     */
-    public void setId(Integer id) {
-        this.id = id;
+    public void setOfferValue(Integer offerValue) {
+        this.offerValue = offerValue;
     }
 
 }

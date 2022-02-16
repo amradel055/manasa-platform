@@ -32,20 +32,20 @@ public class Offers extends BaseEntity {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateTo;
 
-    @Column(name = "type")
-    private Integer type;
+    @Column(name = "offer_type")
+    private Integer offerType;
 
-    @Column(name = "min")
-    private Integer min;
+    @Column(name = "min_value")
+    private Integer minValue;
 
-    @Column(name = "max")
-    private Integer max;
+    @Column(name = "max_value")
+    private Integer maxValue;
 
-    @Column(name = "value")
-    private Integer value;
+    @Column(name = "offer_value")
+    private Integer offerValue;
 
-    @Column(name = "limit")
-    private Integer limit;
+    @Column(name = "offer_limit")
+    private Integer offerLimit;
 
     @JoinColumn(name = "branch_id", referencedColumnName = "id")
     @ManyToOne()
@@ -143,73 +143,73 @@ public class Offers extends BaseEntity {
     }
 
     /**
-     * @return the type
+     * @return the offerType
      */
-    public Integer getType() {
-        return type;
+    public Integer getOfferType() {
+        return offerType;
     }
 
     /**
-     * @param type the type to set
+     * @param offerType the offerType to set
      */
-    public void setType(Integer type) {
-        this.type = type;
+    public void setOfferType(Integer offerType) {
+        this.offerType = offerType;
     }
 
     /**
-     * @return the min
+     * @return the minValue
      */
-    public Integer getMin() {
-        return min;
+    public Integer getMinValue() {
+        return minValue;
     }
 
     /**
-     * @param min the min to set
+     * @param minValue the minValue to set
      */
-    public void setMin(Integer min) {
-        this.min = min;
+    public void setMinValue(Integer minValue) {
+        this.minValue = minValue;
     }
 
     /**
-     * @return the max
+     * @return the maxValue
      */
-    public Integer getMax() {
-        return max;
+    public Integer getMaxValue() {
+        return maxValue;
     }
 
     /**
-     * @param max the max to set
+     * @param maxValue the maxValue to set
      */
-    public void setMax(Integer max) {
-        this.max = max;
+    public void setMaxValue(Integer maxValue) {
+        this.maxValue = maxValue;
     }
 
     /**
-     * @return the value
+     * @return the offerValue
      */
-    public Integer getValue() {
-        return value;
+    public Integer getOfferValue() {
+        return offerValue;
     }
 
     /**
-     * @param value the value to set
+     * @param offerValue the offerValue to set
      */
-    public void setValue(Integer value) {
-        this.value = value;
+    public void setOfferValue(Integer offerValue) {
+        this.offerValue = offerValue;
     }
 
     /**
-     * @return the limit
+     * @return the offerLimit
      */
     public Integer getLimit() {
-        return limit;
+        return offerLimit;
     }
 
     /**
-     * @param limit the limit to set
+     * @param limit the offerLimit to set
      */
     public void setLimit(Integer limit) {
-        this.limit = limit;
+        this.offerLimit = limit;
     }
 
 

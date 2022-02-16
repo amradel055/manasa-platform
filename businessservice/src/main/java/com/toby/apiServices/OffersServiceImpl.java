@@ -16,11 +16,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.EJB;
+import javax.ejb.Stateless;
 
 /**
  *
  * @author Lenovo
  */
+@Stateless
 public class OffersServiceImpl implements OffersService {
 
     @EJB
@@ -39,11 +41,11 @@ public class OffersServiceImpl implements OffersService {
         offers = dao.updateEntity(offers);
         return mapToDTO(offers);
     }
-    
+
     @Override
     public OffersDTO deleteOffers(OffersDTO offersDTO) {
         Offers offers = mapToEntity(offersDTO);
-         dao.deleteEntity(offers);
+        dao.deleteEntity(offers);
         return mapToDTO(offers);
     }
 
@@ -100,15 +102,15 @@ public class OffersServiceImpl implements OffersService {
         offersDTO.setMsg(entity.getMsg());
         offersDTO.setCreatedDate(entity.getCreationDate());
         offersDTO.setName(entity.getName());
-        offersDTO.setLimit(entity.getLimit());
-        offersDTO.setMin(entity.getMin());
-        offersDTO.setMax(entity.getMax());
+        offersDTO.setOfferLimit(entity.getLimit());
+        offersDTO.setOfferMin(entity.getMinValue());
+        offersDTO.setOfferMax(entity.getMaxValue());
         offersDTO.setId(entity.getId());
         offersDTO.setDateFrom(entity.getDateFrom());
         offersDTO.setDateTo(entity.getDateTo());
         offersDTO.setDescribtion(entity.getDescribtion());
-        offersDTO.setType(entity.getType());
-        offersDTO.setValue(entity.getValue());
+        offersDTO.setOfferType(entity.getOfferType());
+        offersDTO.setOfferValue(entity.getOfferValue());
         return offersDTO;
     }
 
@@ -134,15 +136,15 @@ public class OffersServiceImpl implements OffersService {
         offers.setMsg(dTO.getMsg());
         offers.setCreationDate(dTO.getCreatedDate());
         offers.setName(dTO.getName());
-        offers.setLimit(dTO.getLimit());
-        offers.setMin(dTO.getMin());
-        offers.setMax(dTO.getMax());
+        offers.setLimit(dTO.getOfferLimit());
+        offers.setMinValue(dTO.getOfferMin());
+        offers.setMaxValue(dTO.getOfferMax());
         offers.setId(dTO.getId());
         offers.setDateFrom(dTO.getDateFrom());
         offers.setDateTo(dTO.getDateTo());
         offers.setDescribtion(dTO.getDescribtion());
-        offers.setType(dTO.getType());
-        offers.setValue(dTO.getValue());
+        offers.setOfferType(dTO.getOfferType());
+        offers.setOfferValue(dTO.getOfferValue());
 
         return offers;
     }
