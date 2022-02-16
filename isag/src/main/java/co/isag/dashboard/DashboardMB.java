@@ -19,9 +19,7 @@ import com.isag.dto.GlBankDTO;
 import com.isag.entity.GlBank;
 import com.isag.entity.InvInventory;
 import com.isag.isag.BaseListBean;
-import com.isag.views.BankBalanceView;
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -30,6 +28,7 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
+import org.primefaces.event.TabChangeEvent;
 
 /**
  *
@@ -333,13 +332,48 @@ public class DashboardMB extends BaseListBean {
         this.serial = serial;
     }
 
+    public void onTabChange(TabChangeEvent event) {
+        switch (event.getTab().getId()) {
+            case "10001":
+                fillSales();
+                break;
+            case "10002":
+                break;
+            case "10003":
+                break;
+            case "10004":
+                break;
+            case "10005":
+                break;
+            case "10006":
+                break;
+            case "10007":
+                break;
+            case "10008":
+                break;
+            case "10009":
+                break;
+            case "10010":
+                break;
+            case "10011":
+                break;
+            case "10012":
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void fillSales() {
+        setTotalNetSalesByDay(invPurchaseInvoiceDetailsService.FindTotalvalueByDate(getInventoryList(), getUserData().getUserBranch().getId(), 1));
+        setNetSalesNumberByDay(invPurchaseInvoiceDetailsService.FindInvoiceNumberByDate(getInventoryList(), getUserData().getUserBranch().getId(), 1));
+        
+    }
+
     /**
      * @return the TotalNetSalesByDay
      */
     public BigDecimal getTotalNetSalesByDay() {
-        if (TotalNetSalesByDay == null) {
-            setTotalNetSalesByDay(invPurchaseInvoiceDetailsService.FindTotalvalueByDate(getInventoryList(), getUserData().getUserBranch().getId(), 1));
-        }
         return TotalNetSalesByDay;
     }
 
@@ -495,9 +529,6 @@ public class DashboardMB extends BaseListBean {
      * @return the NetSalesNumberByDay
      */
     public Integer getNetSalesNumberByDay() {
-        if (NetSalesNumberByDay == null) {
-            setNetSalesNumberByDay(invPurchaseInvoiceDetailsService.FindInvoiceNumberByDate(getInventoryList(), getUserData().getUserBranch().getId(), 1));
-        }
         return NetSalesNumberByDay;
     }
 

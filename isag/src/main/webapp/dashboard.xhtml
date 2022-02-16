@@ -55,7 +55,10 @@
 
             <div class="tabs10" style="float: right; width: 100%;margin-top: -3%;">
                 <p:tabView style="height: 420px;">
-                    <p:tab title="المبيعات" rendered="#{userData.userScreens['invsalesinvoice_1'].view or userData.isAdmin}">
+                    
+                    <p:ajax event="tabChange" listener="#{dashboardMB.onTabChange(event)}" update="@form"/>
+
+                    <p:tab id="10001" title="المبيعات" rendered="#{userData.userScreens['invsalesinvoice_1'].view or userData.isAdmin}">
 
 
 
@@ -132,7 +135,7 @@
                         </div>
 
                     </p:tab>
-                    <p:tab title="مردود المبيعات" rendered="#{userData.userScreens['invreturnsales_1'].view or userData.isAdmin}">
+                    <p:tab id="10002" title="مردود المبيعات" rendered="#{userData.userScreens['invreturnsales_1'].view or userData.isAdmin}">
                         <p class="p-m-0">
                             <div   class="ui-g-12 ui-g-nopad" style='padding: 2% 3% 1% 2%; margin-top: -2%;'>
                                 <div class="ui-g">
@@ -208,7 +211,7 @@
 
                         </p>
                     </p:tab>
-                    <p:tab title="المشتريات" rendered="#{userData.userScreens['invpurchaseinvoice_1'].view or userData.isAdmin}">
+                    <p:tab id="10003" title="المشتريات" rendered="#{userData.userScreens['invpurchaseinvoice_1'].view or userData.isAdmin}">
                         <p class="p-m-0">
                             <div   class="ui-g-12 ui-g-nopad" style='padding: 2% 3% 1% 2%; margin-top: -2%;'>
                                 <div class="ui-g">
@@ -283,7 +286,7 @@
                             </div>
                         </p>
                     </p:tab>
-                    <p:tab title="مردود المشتريات " rendered="#{userData.userScreens['invreturnpurchase_1'].view or userData.isAdmin}">
+                    <p:tab id="10004" title="مردود المشتريات " rendered="#{userData.userScreens['invreturnpurchase_1'].view or userData.isAdmin}">
                         <p class="p-m-0">
                             <div   class="ui-g-12 ui-g-nopad" style='padding: 2% 3% 1% 2%; margin-top: -2%;'>
                                 <div class="ui-g">
@@ -358,7 +361,7 @@
                             </div>
                         </p>
                     </p:tab>
-                    <p:tab title="الموردين" rendered="#{userData.userScreens['supplier'].view  or userData.isAdmin}">
+                    <p:tab id="10005" title="الموردين" rendered="#{userData.userScreens['supplier'].view  or userData.isAdmin}">
                         <p class="p-m-0">
                             <div   class="ui-g-12 ui-g-nopad" style='padding: 2% 3% 1% 2%; margin-top: -2%;'>
                                 <div class="ui-g">
@@ -434,7 +437,7 @@
                             </div>
                         </p>
                     </p:tab>
-                    <p:tab title="العملاء"  rendered="#{ userData.userScreens['customer'].view  or userData.isAdmin}">
+                    <p:tab id="10006" title="العملاء"  rendered="#{ userData.userScreens['customer'].view  or userData.isAdmin}">
                         <p class="p-m-0">
                             <div   class="ui-g-12 ui-g-nopad" style='padding: 2% 3% 1% 2%; margin-top: -2%;'>
                                 <div class="ui-g">
@@ -510,7 +513,7 @@
                             </div>
                         </p>
                     </p:tab>
-                    <p:tab title="المخزن">
+                    <p:tab id="10007" title="المخزن">
                         <p class="p-m-0">
                             <div   class="ui-g-12 ui-g-nopad" style='padding: 2% 3% 1% 2%; margin-top: -2%;'>
                                 <div class="ui-g">
@@ -571,7 +574,7 @@
                             </div>
                         </p>
                     </p:tab>
-                    <p:tab title="المقبوضات" rendered="#{userData.userScreens['notesreceivables'].view or userData.isAdmin}">
+                    <p:tab id="10008" title="المقبوضات" rendered="#{userData.userScreens['notesreceivables'].view or userData.isAdmin}">
                         <p class="p-m-0">
                             <div   class="ui-g-12 ui-g-nopad" style='padding: 2% 3% 1% 2%; margin-top: -2%;'>
                                 <div class="ui-g">
@@ -720,7 +723,7 @@
                             </div>
                         </p>
                     </p:tab>
-                    <p:tab title="الخزائن">
+                    <p:tab id="10009" title="الخزائن">
                         <p class="p-m-0">
 
                             <p:dataTable  id="table1"
@@ -749,7 +752,7 @@
 
                         </p>
                     </p:tab>
-                    <p:tab title="المدفوعات" rendered="#{ userData.userScreens['settlementdeed'].view 
+                    <p:tab id="10010" title="المدفوعات" rendered="#{ userData.userScreens['settlementdeed'].view 
                                                           or userData.isAdmin}">
                         <p class="p-m-0">
                             <div   class="ui-g-12 ui-g-nopad" style='padding: 2% 3% 1% 2%; margin-top: -2%;'>
@@ -898,7 +901,7 @@
                             </div>
                         </p>
                     </p:tab>
-                    <p:tab title="التحويلات" rendered="#{userData.userScreens['glBankTransaction'].view or userData.isAdmin }">
+                    <p:tab id="10011" title="التحويلات" rendered="#{userData.userScreens['glBankTransaction'].view or userData.isAdmin }">
                         <p class="p-m-0">
                             <div   class="ui-g-12 ui-g-nopad" style='padding: 2% 3% 1% 2%; margin-top: -2%;'>
                                 <div class="ui-g">
@@ -1046,7 +1049,7 @@
                             </div>
                         </p>
                     </p:tab>
-                    <p:tab title="الجيم"  rendered="#{userData.userScreens['gmitemsymbol'].view 
+                    <p:tab id="10012" title="الجيم"  rendered="#{userData.userScreens['gmitemsymbol'].view 
                                                       or userData.userScreens['gmsubscriptions'].view 
                                                       or userData.userScreens['gmsubscriptionstatue'].view 
                                                       or userData.isAdmin}">
