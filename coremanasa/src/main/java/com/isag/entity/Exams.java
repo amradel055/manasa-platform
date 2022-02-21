@@ -66,6 +66,8 @@ public class Exams extends BaseEntity {
     private Integer monthId;
     @Column(name = "exam_type")
     private Integer examType;
+    @Column(name = "solution_time")
+    private Integer solutionTime;
     @JoinColumn(name = "material_id", referencedColumnName = "id")
     @ManyToOne
     private Materials materialId;
@@ -289,6 +291,20 @@ public class Exams extends BaseEntity {
      */
     public void setMaterialId(Materials materialId) {
         this.materialId = materialId;
+    }
+
+    /**
+     * @return the solutionTime
+     */
+    public Integer getSolutionTime() {
+        return solutionTime;
+    }
+
+    /**
+     * @param solutionTime the solutionTime to set
+     */
+    public void setSolutionTime(Integer solutionTime) {
+        this.solutionTime = solutionTime;
     }
     /**
      * @return the timer

@@ -497,7 +497,8 @@ public class StudentServiceImpl implements StudentService {
         List<Student> list = dao.findListByQuery("SELECT e FROM Student e WHERE  e.companyId.id=:companyId", params);
         return list;
     }
-
+   
+    @Override
     public StudentDTO mapTODTO(Student entity, StudentDTO dTO) {
         if (dTO == null) {
             dTO = new StudentDTO();
@@ -634,7 +635,7 @@ public class StudentServiceImpl implements StudentService {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    private List<APIStudentDataDTO> returnListDTOAPI(List<Student> studentList) {
+    public List<APIStudentDataDTO> returnListDTOAPI(List<Student> studentList) {
         List<APIStudentDataDTO> list = new ArrayList<>();
         for (Student entity : studentList) {
             list.add(initMapToAPIDTO(null, entity));
@@ -693,7 +694,7 @@ public class StudentServiceImpl implements StudentService {
         return entity;
     }
 
-    private void returnListDTO(List<Student> students, List<StudentDTO> dTOList) {
+    public void returnListDTO(List<Student> students, List<StudentDTO> dTOList) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

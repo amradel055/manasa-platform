@@ -17,7 +17,7 @@ import javax.ejb.Remote;
 @Remote
 public interface LessonLocationService {
 
-    public List<LessonLocationDTO> findAllLessonLocation(Integer lessonId);
+    public List<LessonLocationDTO> findAllLessonLocation();
 
     public void deleteLessonLocation(Integer lessonId);
     

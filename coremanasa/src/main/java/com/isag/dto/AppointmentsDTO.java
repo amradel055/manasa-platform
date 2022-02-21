@@ -5,6 +5,7 @@
  */
 package com.isag.dto;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,10 @@ public class AppointmentsDTO extends BaseEntityDTO {
 
     private Integer appointmentsType;
     private Integer day;
-    private String time;
+    private Date time;
+    private Date time2;
+    private Date time3;
+    private Date time4;
     private Integer schoolStageId;
     private Integer teacherId;
     private Integer studentId;
@@ -27,8 +31,11 @@ public class AppointmentsDTO extends BaseEntityDTO {
     private String dayText;
     private String teacherName;
     private LessonLocationDTO lessonLocation;
+    private Integer lessonLocationId;
     private String remarks;
     private Map<String, List<AppointmentsDTO>> map ; 
+    private Calendar c ;
+    private Date d ;
 
     public AppointmentsDTO() {
     }
@@ -45,13 +52,6 @@ public class AppointmentsDTO extends BaseEntityDTO {
         this.day = day;
     }
 
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
-    }
 
     @Override
     public int hashCode() {
@@ -246,4 +246,73 @@ public class AppointmentsDTO extends BaseEntityDTO {
         this.map = map;
     }
 
+    /**
+     * @return the lessonLocationId
+     */
+    public Integer getLessonLocationId() {
+        return lessonLocationId;
+    }
+
+    /**
+     * @param lessonLocationId the lessonLocationId to set
+     */
+    public void setLessonLocationId(Integer lessonLocationId) {
+        this.lessonLocationId = lessonLocationId;
+    }
+
+    /**
+     * @return the time
+     */
+    public Date getTime() {
+        return time;
+    }
+
+    /**
+     * @param time the time to set
+     */
+    public void setTime(Date time) {
+        this.time = time;
+    }
+
+    /**
+     * @return the time2
+     */
+    public Date getTime2() {
+        return time2;
+    }
+
+    /**
+     * @param time2 the time2 to set
+     */
+    public void setTime2(Date time2) {
+        this.time2 = time2;
+    }
+
+    /**
+     * @return the time3
+     */
+    public Date getTime3() {
+        return time3;
+    }
+
+    /**
+     * @param time3 the time3 to set
+     */
+    public void setTime3(Date time3) {
+        this.time3 = time3;
+    }
+
+    /**
+     * @return the time4
+     */
+    public Date getTime4() {
+        return time4;
+    }
+
+    /**
+     * @param time4 the time4 to set
+     */
+    public void setTime4(Date time4) {
+        this.time4 = time4;
+    }
 }

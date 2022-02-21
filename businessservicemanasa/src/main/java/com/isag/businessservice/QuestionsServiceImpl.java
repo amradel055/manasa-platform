@@ -210,7 +210,7 @@ public class QuestionsServiceImpl implements QuestionsService {
         deleteListQuestionsDTO(questionsDTOsList);
     }
 
-    private List<QuestionsDTO> returnListDTO(List<Questions> list) {
+    public List<QuestionsDTO> returnListDTO(List<Questions> list) {
         List<QuestionsDTO> dTOList = new ArrayList<>();
         for (Questions entity : list) {
             dTOList.add(mapTODTO(entity));
