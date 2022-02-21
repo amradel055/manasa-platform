@@ -5,6 +5,8 @@
  */
 package com.toby.entity;
 
+import com.toby.dto.CostCenterDTO;
+import com.toby.dto.GlAccountDTO;
 import java.math.BigDecimal;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -84,6 +86,11 @@ public class GlBankTransactionDetail extends BaseEntity {
     @JoinColumn(name = "invoice_id", referencedColumnName = "id")
     @ManyToOne
     private InvPurchaseInvoice invoiceId;
+    
+    @Transient
+    private GlAccountDTO glAccountCredit;
+    @Transient
+    private CostCenterDTO costCenterCredit;
 
     public GlBankTransactionDetail() {
     }
@@ -275,6 +282,34 @@ public class GlBankTransactionDetail extends BaseEntity {
      */
     public void setBankCommition(BigDecimal bankCommition) {
         this.bankCommition = bankCommition;
+    }
+
+    /**
+     * @return the glAccountCredit
+     */
+    public GlAccountDTO getGlAccountCredit() {
+        return glAccountCredit;
+    }
+
+    /**
+     * @param glAccountCredit the glAccountCredit to set
+     */
+    public void setGlAccountCredit(GlAccountDTO glAccountCredit) {
+        this.glAccountCredit = glAccountCredit;
+    }
+
+    /**
+     * @return the costCenterCredit
+     */
+    public CostCenterDTO getCostCenterCredit() {
+        return costCenterCredit;
+    }
+
+    /**
+     * @param costCenterCredit the costCenterCredit to set
+     */
+    public void setCostCenterCredit(CostCenterDTO costCenterCredit) {
+        this.costCenterCredit = costCenterCredit;
     }
     
 }

@@ -6,21 +6,16 @@
 package com.toby.businessservice;
 
 import com.toby.core.GenericDAO;
-import com.toby.define.ScreenNameClassEnum;
 import com.toby.dto.GeneralJournalDTO;
 import com.toby.dto.GlAccountDTO;
-import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.InvNoticeDTO;
-import com.toby.dto.TarhilInvoiceDetail;
 import com.toby.entity.GeneralJournal;
 import com.toby.entity.InvNotice;
 import com.toby.entity.TobyUser;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.EJB;
@@ -274,6 +269,7 @@ public class InvNoticeServiceImpl implements InvNoticeService {
         return returnDTOList(invNoticeList);
     }
 
+    @Override
     public GeneralJournal tarhil(InvNotice dto, TobyUser tobyUser, Integer yearSelection) throws CloneNotSupportedException {
         dao.executeNativeQuery("select toby.sql_mode_function()");
         Map<String, Object> params = new HashMap<>();
@@ -304,6 +300,21 @@ public class InvNoticeServiceImpl implements InvNoticeService {
 
         }
         return journal == null ? null : journal;
+    }
+
+    @Override
+    public void getALLInvNoticeForToby(TobyUser tobyUser) throws CloneNotSupportedException {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", 182);
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT i FROM InvNotice i WHERE i.branchId.id = :branchId ");
+
+        query.append(" AND i.type in (1,4) ");
+
+        List<InvNotice> invNoticeList = dao.findListByQuery(query.toString(), params);int i = 0 ;
+        for (InvNotice dto : invNoticeList) { System.err.println(i++);
+            tarhil(dto, tobyUser, 73);
+        }
     }
 
 }

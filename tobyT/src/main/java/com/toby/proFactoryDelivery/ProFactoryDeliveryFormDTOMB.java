@@ -73,11 +73,11 @@ public class ProFactoryDeliveryFormDTOMB extends ProductionBasicDataForm {
                 StringBuilder message = new StringBuilder();
                 if (getInvInvoiceDTO().getInvnameType() != null && getInvInvoiceDTO().getInvnameType() == 0) {
                     message.append("برنس للخياطة يبلغكم بأن الثياب جاهزة للتسليم  للاستفسار الاتصال على الرقم");
-                    message.append("92007070");
+                    message.append("920027070");
                     sendSms(getInvInvoiceDTO().getCustomerMobile(), "التوبى العالمى", message.toString(), "20099319", "0564933202");
                 } else if (getInvInvoiceDTO().getInvnameType() != null && getInvInvoiceDTO().getInvnameType() == 1) {
                     message.append("لي رويال للخياطة الرجالية يبلغكم بان الثياب جاهزة للاستلام ت ");
-                    message.append("92007070");
+                    message.append("920027711");
                     sendSms(getInvInvoiceDTO().getCustomerMobile(), "التوبى العالمى", message.toString(), "20099320", "Royal@e12z");
                 }
             }

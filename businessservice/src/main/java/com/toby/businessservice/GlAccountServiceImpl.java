@@ -11,7 +11,6 @@ import com.toby.businessservice.reports.searchBean.GlAccountReportSearchBean;
 import com.toby.core.GenericDAO;
 import com.toby.define.AccountGroupEnum;
 import com.toby.dto.GlAccountDTO;
-import com.toby.dto.GlAdminUnitDTO;
 import com.toby.entity.Branch;
 import com.toby.entity.GlAccount;
 import com.toby.entity.TobyCompany;
@@ -641,9 +640,24 @@ public class GlAccountServiceImpl implements GlAccountService {
         Map<Integer, GlAccount> map = new HashMap<>();
         if (accounts != null && !accounts.isEmpty()) {
             for (GlAccount entity : accounts) {
-                map.put(entity.getAccNumber(), entity);
+                map.put(entity.getId(), entity);
             }
             return map;
+        }
+        return null;
+    }
+    
+    @Override
+    public Integer findNewAccNumber(GlAccount parentId) {
+        Map<String, Object> params = new HashMap();
+        params.put("parentId", parentId.getId());
+        if (parentId != null &&  parentId.getId() != null) {
+            List<Integer> accounts = dao.findListByQuery("SELECT max(g.accNumber) FROM GlAccount g  WHERE g.parentAcc.id = :parentId",params);
+            if (!accounts.isEmpty()) {
+                return accounts.get(0) + 1;
+            } else {
+                return parentId.getAccNumber() + 1;
+            }
         }
         return null;
     }

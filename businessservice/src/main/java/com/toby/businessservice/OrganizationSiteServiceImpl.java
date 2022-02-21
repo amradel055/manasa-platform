@@ -11,6 +11,7 @@ import com.toby.businessservice.reports.searchBean.invOrganizationSiteSearchBean
 import com.toby.core.GenericDAO;
 import com.toby.dto.ChartDTO;
 import com.toby.dto.ChartDataDTO;
+import com.toby.dto.CostCenterDTO;
 import com.toby.dto.CrmCustomerInterestedProductsDTO;
 import com.toby.dto.CrmEventDTO;
 import com.toby.dto.CurrencyDTO;
@@ -1675,6 +1676,12 @@ public class OrganizationSiteServiceImpl implements OrganizationSiteService {
             gallary.setId(invOrganizationSite.getGallaryId().getId());
             gallary.setName(invOrganizationSite.getGallaryId().getName());
             gallary.setCode(invOrganizationSite.getGallaryId().getCode());
+            if(invOrganizationSite.getGallaryId().getCostCenterId() != null){
+                CostCenterDTO costCenterDTO = new CostCenterDTO();
+                costCenterDTO.setId(invOrganizationSite.getGallaryId().getCostCenterId().getId());
+                gallary.setCostCenterId(costCenterDTO);
+            }
+            
             invOrganizationSiteDTO.setGallaryIdDTO(gallary);
         }
 

@@ -265,6 +265,7 @@ public class GlAccountBean extends BaseTreeBean {
             newelectedAcc.setStatus(true);
             selectedParentId = parentAccount.getId();
             newelectedAcc.setCreatedBy(getUserData().getUser());
+            newelectedAcc.setAccNumber(accountService.findNewAccNumber(parentAccount));
             if (parentAccount.getId() == null) {
                 newelectedAcc.setLevelAcc((1));
             } else {

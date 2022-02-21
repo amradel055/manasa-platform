@@ -124,12 +124,14 @@ public class GlBankTransaction extends BaseEntity {
     private GlAccount glAccountId;
     @Column(name = "bank_commetion")
     private BigDecimal bankCommetion;
-     @JoinColumn(name = "cost_center_id", referencedColumnName = "id")
+    @JoinColumn(name = "cost_center_id", referencedColumnName = "id")
     @ManyToOne
     private CostCenter costCenter;
+    @Transient
+    private Boolean isDebit = Boolean.FALSE;
 
     public GlBankTransaction() {
-        
+
     }
 
     public GlBankTransaction(Integer id) {
@@ -177,7 +179,7 @@ public class GlBankTransaction extends BaseEntity {
     }
 
     public BigDecimal getValueLocal() {
-        if(valueLocal == null){
+        if (valueLocal == null) {
             valueLocal = BigDecimal.ZERO;
         }
         return valueLocal;
@@ -447,7 +449,7 @@ public class GlBankTransaction extends BaseEntity {
      * @return the bankCommetion
      */
     public BigDecimal getBankCommetion() {
-        if(bankCommetion == null){
+        if (bankCommetion == null) {
             bankCommetion = BigDecimal.ZERO;
         }
         return bankCommetion;
@@ -474,6 +476,18 @@ public class GlBankTransaction extends BaseEntity {
         this.costCenter = costCenter;
     }
 
-  
+    /**
+     * @return the isDebit
+     */
+    public Boolean getIsDebit() {
+        return isDebit;
+    }
+
+    /**
+     * @param isDebit the isDebit to set
+     */
+    public void setIsDebit(Boolean isDebit) {
+        this.isDebit = isDebit;
+    }
 
 }

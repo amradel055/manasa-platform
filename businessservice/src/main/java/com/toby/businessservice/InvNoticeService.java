@@ -6,6 +6,7 @@
 package com.toby.businessservice;
 
 import com.toby.dto.InvNoticeDTO;
+import com.toby.entity.GeneralJournal;
 import com.toby.entity.InvNotice;
 import com.toby.entity.TobyUser;
 import java.util.Date;
@@ -41,5 +42,9 @@ public interface InvNoticeService {
     
     public List<InvNoticeDTO> getInvNoticeListDTO(Integer branchId, Integer type,Date dateFrom,
             Date dateTo,Integer noticeFrom,Integer noticeTo);
+         
+     public GeneralJournal tarhil(InvNotice dto, TobyUser tobyUser, Integer yearSelection) throws CloneNotSupportedException;
+     
+      public void getALLInvNoticeForToby(TobyUser tobyUser) throws CloneNotSupportedException ;
 
 }

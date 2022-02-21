@@ -53,7 +53,7 @@
                         </div>
                     </div>
 
-                   
+
                     <div class="ui-g-12 ui-xl-12">
 
                         <div class="ui-g-6 ui-xl-6">
@@ -68,22 +68,36 @@
                         </div>
                     </div>
 
+                    
                     <div class="ui-g-12 ui-xl-12">
                         <div class="ui-g-6 ui-xl-6">
-                            <p:autoComplete style="width: 85%" id="running_GlAccount_ID" 
-                    
-                                            dropdown="true"
-                                            converter="#{SettlementDeedFormMB.runningAccountDTOConverter}"
-                                            value="#{SettlementDeedFormMB.glBankTransactionEntity.costAccount}"
-                                            var="p"
-                                            itemLabel="#{p}" 
-                                            itemValue="#{p}" 
-                                            forceSelection="false" 
-                                            completeMethod="#{SettlementDeedFormMB.completeRunningGlAccount}" >
-                            </p:autoComplete>
-                </div>
-                <div class="ui-g-6 ui-xl-6">
-                            <p:outputLabel style="width: 65px" value="رقم الحساب الدائن" rendered="#{not SettlementDeedFormMB.organizationSiteView}"/>
+
+                            <p:selectOneMenu style="width: 85%" id="running_GlAccount_ID" 
+                                             filter="true" filterMatchMode="contains"   
+                                             value="#{SettlementDeedFormMB.glBankTransactionEntity.costAccount}" 
+                                             converter="#{SettlementDeedFormMB.runningAccountDTOConverter}"   >
+                                <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"  itemValue="" />
+                                <f:selectItems value="#{SettlementDeedFormMB.glAccountList}"  var="account" itemLabel="#{account}" itemValue="#{account}"/>
+                                <p:ajax event="itemSelect" listener="#{SettlementDeedFormMB.updateCostCenter()}" update="costCenter" />
+                            </p:selectOneMenu>
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel style="width: 65px" value="رقم الحساب الدائن"/>
+
+                        </div>
+                    </div>
+
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:selectOneMenu style="width:55%" id="costCenter" filter="true" filterMatchMode="contains"   
+                                             value="#{SettlementDeedFormMB.glBankTransactionEntity.costCenterDTO}" 
+                                             converter="#{SettlementDeedFormMB.costCenterHeadConverter}"   >
+                                <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"  itemValue="" />
+                                <f:selectItems value="#{SettlementDeedFormMB.costCenterHeadList}"  var="cost" itemLabel="#{cost}" itemValue="#{cost}"/>
+                            </p:selectOneMenu>
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel style="width:64px;" value="مركز التكلفة"/>
 
                         </div>
                     </div>
@@ -134,7 +148,6 @@
                             <p:selectOneRadio id="console" 
                                               value ="#{SettlementDeedFormMB.glBankTransactionEntity.organizationType}">
 
-                                <f:selectItem itemLabel="#{userData.userDDs['ACCOUNTS']}" itemValue="2" itemDisabled="#{not SettlementDeedFormMB.printButton}" />
                                 <f:selectItem itemLabel="#{userData.userDDs['CUSTOMER']}"  itemValue="0" itemDisabled="#{not SettlementDeedFormMB.printButton}" />                            
                                 <f:selectItem itemLabel="#{userData.userDDs['SUPPLIER']}" itemValue="1" itemDisabled="#{not SettlementDeedFormMB.printButton}"/>
                                 <p:ajax event="click" listener="#{SettlementDeedFormMB.showOrHideDialog}" update="form"/> 
@@ -347,7 +360,7 @@
                                         itemValue="#{supplier}" 
                                         forceSelection="true" 
                                         completeMethod="#{SettlementDeedFormMB.completeCustomerFrom}"
-                                        rendered="#{glBankTransactionDetailsTable.markEdit}"
+                                        rendered="#{glBankTransactionDetailsTable.markEdit  and SettlementDeedFormMB.glBankTransactionEntity.id eq null}"
                                         widgetVar="supplier"
                                         >
 
@@ -410,7 +423,7 @@
                                         itemValue="#{p}" 
                                         forceSelection="true" 
                                         completeMethod="#{SettlementDeedFormMB.completeGlAccount}" 
-                                        rendered="#{glBankTransactionDetailsTable.markEdit}"
+                                        rendered="#{glBankTransactionDetailsTable.markEdit and SettlementDeedFormMB.glBankTransactionEntity.id eq null}"
                                         widgetVar="p"
                                         >
                             <f:attribute name="varValue" value="#{glBankTransactionDetailsTable}" />
@@ -419,7 +432,7 @@
                                 event="itemSelect"
                                 listener="#{SettlementDeedFormMB.notLoseData}" />
                         </p:autoComplete>  
-                        <h:outputText value="#{glBankTransactionDetailsTable.glAccount.name}"  rendered="#{not glBankTransactionDetailsTable.markEdit}" style="width: auto"/>
+                        <h:outputText value="#{glBankTransactionDetailsTable.glAccount.name}"  rendered="#{not glBankTransactionDetailsTable.markEdit or SettlementDeedFormMB.glBankTransactionEntity.id ne null}" style="width: auto"/>
                     </p:column>
 
                     <p:column  style="width: 18vh;font-size: 1.8vh;text-align: right;border-radius: 0px" 
@@ -551,7 +564,6 @@
                             title="#{userData.userDDs['ADD']}" 
 
                             actionListener="#{SettlementDeedFormMB.addGlBankTransactionDetail()}"  
-                            disabled="#{SettlementDeedFormMB.glBankTransactionEntity.postFlag == 1}"
                             update=":form:curmsg glBankTransactionDetailsTable" 
                             ajax="true" />
 
@@ -560,7 +572,6 @@
                                           title="#{userData.userDDs['DELETE']}" 
                                           style=""
                                           action="#{SettlementDeedFormMB.deleteGlBankTransactionDetail()}"
-                                          disabled="#{SettlementDeedFormMB.glBankTransactionEntity.postFlag == 1}"
                                           icon="fa fa-remove" >
 
                             <f:setPropertyActionListener value="#{glBankTransactionDetailsTable}"
@@ -596,8 +607,8 @@
                                           value="#{userData.userDDs['NEW']}"
                                           actionListener="#{SettlementDeedFormMB.reset()}"   />
 
-                    
-                        
+
+
                         <p:commandButton class="printButtons"
                                          ajax="false" 
                                          onclick="form.target = '_blank'" 
@@ -605,7 +616,7 @@
                                          value="#{userData.userDDs['PRINT']}" 
                                          actionListener="#{SettlementDeedFormMB.exportPDFVoutcher}" 
                                          rendered="#{ SettlementDeedFormMB.glBankTransactionEntity.id gt 0}"/>
-                        
+
 
                         <p:commandButton  class="closeButton" title="#{userData.userDDs['BACK']}" 
                                           immediate="true"

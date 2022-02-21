@@ -5,7 +5,6 @@
  */
 package com.toby.businessservice;
 
-
 import com.toby.bean.JournalDocumentArrangedReportBean;
 import com.toby.dto.TobyUserDTO;
 import com.toby.entity.TobyUser;
@@ -31,8 +30,6 @@ import javax.ejb.Stateless;
  *
  * @author AhmedEssam
  */
-
-
 @Stateless
 public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
 
@@ -49,8 +46,12 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
         filters.put("branchId", branchId);
         filters.put("dateFrom", year.getDateFrom());
         filters.put("dateTo", year.getDateTo());
+        Object globalFilter = filters.get("globalFilter");
+        if (globalFilter != null && !globalFilter.toString().isEmpty()) {
+            filters.put("globalFilter", Integer.parseInt(globalFilter.toString()));
+        }
         builder.append("SELECT count(e) FROM GeneralJournal e WHERE e.branchId.id = :branchId AND e.generalData >= :dateFrom AND e.generalData <= :dateTo ");
-        appendFilter(filters, branchId, builder);
+        appendFilter2(filters, branchId, builder);
         Long details = dao.findEntityByQuery(builder.toString(), filters);
         return details;
     }
@@ -132,14 +133,27 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
         }
     }
 
+    public void appendFilter2(Map<String, Object> filters, Integer branchId, StringBuilder builder) {
+        if (filters.get("globalFilter") != null && !filters.get("globalFilter").toString().isEmpty()) {
+            String filter = " and (e.serial = :globalFilter  OR  e.generalDecument = :globalFilter   ) ";
+            builder.append(filter);
+        } else {
+            filters.remove("globalFilter");
+        }
+    }
+
     @Override
     public List<GeneralJournalDTO> getGeneralJournalDTOByBranchId(GlYearDTO year, Integer branchId, int first, int pageSize, Map<String, Object> filters) {
         filters.put("branchId", branchId);
         filters.put("dateFrom", year.getDateFrom());
         filters.put("dateTo", year.getDateTo());
+        Object globalFilter = filters.get("globalFilter");
+        if (globalFilter != null && !globalFilter.toString().isEmpty()) {
+            filters.put("globalFilter", Integer.parseInt(globalFilter.toString()));
+        }
         StringBuilder builder = new StringBuilder();
         builder.append("SELECT e FROM GeneralJournal e WHERE e.branchId.id = :branchId AND e.generalData >= :dateFrom AND e.generalData <= :dateTo  ");
-        appendFilter(filters, branchId, builder);
+        appendFilter2(filters, branchId, builder);
         builder.append(" order by e.serial DESC");
         List<GeneralJournal> details = dao.findListByQuery(builder.toString(), filters, first, pageSize);
         return returnListDTO(details);
@@ -470,7 +484,7 @@ public class GeneraljournalServiceImplDTO implements GeneraljournalServiceDTO {
                 journalDocumentArrangedReportBean.setUser(entity.getCreatedBy().getName());
                 journalDocumentArrangedReportBean.setGeneralType(entity.getGeneralType() != null ? entity.getGeneralType().getName() : null);
 //                if (summaryDebit.compareTo(summaryCredit) == 0) {
-//                    journalDocumentArrangedReportBean.setPosting("موزون");
+                    journalDocumentArrangedReportBean.setPosting("موزون");
 //                } else {
 //                    journalDocumentArrangedReportBean.setPosting("غير موزون");
 //                }

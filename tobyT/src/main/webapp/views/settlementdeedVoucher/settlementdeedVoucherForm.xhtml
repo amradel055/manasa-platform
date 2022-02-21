@@ -64,47 +64,38 @@
                             <p:outputLabel style="width:85px" value="#{userData.userDDs['HANDLING']}"/>
                         </div>
                     </div>
-                    
+
 
                     <div class="ui-g-12 ui-xl-12">
                         <div class="ui-g-6 ui-xl-6">
-                            <p:autoComplete style="width: 85%" id="running_GlAccount_ID" 
-                                            immediate="true"
-                                            dropdown="true"
-                                            converter="#{settlementDeedVoucherFormMB.runningAccountDTOConverter}"
-                                            value="#{settlementDeedVoucherFormMB.glBankTransactionEntity.costAccount}"
-                                            var="p"
-                                            itemLabel="#{p}" 
-                                            itemValue="#{p}" 
-                                            forceSelection="true" 
-                                            completeMethod="#{settlementDeedVoucherFormMB.completeRunningGlAccount}" >
-                                <p:ajax 
-                                    event="itemSelect"
-                                    listener="#{SettlementDeedFormMB.fillCostCenter()}" update="form" />
-                            </p:autoComplete>
+
+                            <p:selectOneMenu style="width: 85%" id="running_GlAccount_ID" 
+                                             filter="true" filterMatchMode="contains"   
+                                             value="#{settlementDeedVoucherFormMB.glBankTransactionEntity.costAccount}" 
+                                             converter="#{settlementDeedVoucherFormMB.runningAccountDTOConverter}"   >
+                                <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"  itemValue="" />
+                                <f:selectItems value="#{settlementDeedVoucherFormMB.glAccountList}"  var="account" itemLabel="#{account}" itemValue="#{account}"/>
+                                <p:ajax event="itemSelect" listener="#{settlementDeedVoucherFormMB.updateCostCenter()}" update="costCenter" />
+                            </p:selectOneMenu>
                         </div>
                         <div class="ui-g-6 ui-xl-6">
-                            <p:outputLabel style="width: 65px" value="رقم الحساب الدائن" rendered="#{not settlementDeedVoucherFormMB.organizationSiteView}"/>
+                            <p:outputLabel style="width: 65px" value="رقم الحساب مدين" rendered="#{settlementDeedVoucherFormMB.isDebit}" />
+
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel style="width: 65px" value="رقم الحساب الدائن"  rendered="#{not settlementDeedVoucherFormMB.isDebit}" />
 
                         </div>
                     </div>
-                    
+
                     <div class="ui-g-12 ui-xl-12">
                         <div class="ui-g-6 ui-xl-6">
-                            <p:autoComplete style="width: 110%;font-size: 1.8vh;text-align: right;border-radius: 0px; " id="Cost_Center_From" 
-
-                                            converter="#{settlementDeedVoucherFormMB.costCenterConverter}"
-                                            value="#{settlementDeedVoucherFormMB.glBankTransactionEntity.costCenterDTO}"
-                                            var="cost"
-                                            itemLabel="#{cost}" 
-                                            itemValue="#{cost}" 
-                                            forceSelection="true" 
-                                            completeMethod="#{settlementDeedVoucherFormMB.completeCostCenter}"
-                                            widgetVar="cost">
-                                <p:ajax 
-                                    event="itemSelect"
-                                    listener="#{SettlementDeedFormMB.forHashasa()}" />
-                            </p:autoComplete>
+                            <p:selectOneMenu style="width:55%" id="costCenter" filter="true" filterMatchMode="contains"   
+                                             value="#{settlementDeedVoucherFormMB.glBankTransactionEntity.costCenterDTO}" 
+                                             converter="#{settlementDeedVoucherFormMB.costCenterHeadConverter}"   >
+                                <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"  itemValue="" />
+                                <f:selectItems value="#{settlementDeedVoucherFormMB.costCenterHeadList}"  var="cost" itemLabel="#{cost}" itemValue="#{cost}"/>
+                            </p:selectOneMenu>
                         </div>
                         <div class="ui-g-6 ui-xl-6">
                             <p:outputLabel style="width:64px;" value="مركز التكلفة"/>
@@ -135,7 +126,11 @@
                             <p:outputLabel style="width:64px;margin-right: 6%;" value="#{userData.userDDs['STATEMENT']}"/>
                         </div>
                     </div>
-                    
+                    <div class="ui-g-12 ui-xl-12">
+                        <p:selectBooleanCheckbox value="#{settlementDeedVoucherFormMB.isDebit}" itemLabel="هل الحساب مدين" >
+                            <p:ajax listener="#{SettlementDeedFormMB.hishis()}" update="@form" />
+                        </p:selectBooleanCheckbox>
+                    </div>
                 </div>
             </p:fieldset>
 
@@ -170,9 +165,7 @@
                                          title="#{userData.userDDs['ADD']}" 
                                          actionListener="#{settlementDeedVoucherFormMB.addGlBankTransactionDetail()}" 
                                          update=":form:curmsg glBankTransactionDetailsTable" 
-                                         disabled="#{settlementDeedVoucherFormMB.glBankTransactionEntity.postFlag == 1}"
                                          oncomplete="PrimeFaces.focus('form:glBankTransactionDetailsTable:'+#{settlementDeedVoucherFormMB.glBankTransactionDetailEntityList.size()}+':GlAccount_ID_from')"
-
                                          ajax="true"
                                          style="float:right"/>
                         <p:outputPanel>
@@ -320,6 +313,20 @@
                         <h:outputText value="#{glBankTransactionDetailsTable.remarks}"
                                       rendered="#{not glBankTransactionDetailsTable.markEdit}"/>
 
+                    </p:column>
+
+                    <p:column  style="width: 17vh;font-size: 1.8vh;text-align: right;border-radius: 0px" 
+                               filterBy="#{glBankTransactionDetailsTable.glAccountCredit.name}"  
+                               filterMatchMode="contains" sortBy="#{glBankTransactionDetailsTable.glAccountCredit.name}" filterable="false"
+                               headerText="الحساب الدائن" > 
+                        <h:outputText value="#{glBankTransactionDetailsTable.glAccountCredit.name}"  style="width: auto"/>
+                    </p:column>
+
+                    <p:column  style="width: 17vh;font-size: 1.8vh;text-align: right;border-radius: 0px"   
+                               filterBy="#{glBankTransactionDetailsTable.costCenterCredit.name}"  
+                               filterMatchMode="contains" sortBy="#{glBankTransactionDetailsTable.costCenterCredit.name}" filterable="false"
+                               headerText="مركز تكلفة الحساب الدائن" >
+                        <h:outputText value="#{glBankTransactionDetailsTable.costCenterCredit.name}" />
                     </p:column>
 
 

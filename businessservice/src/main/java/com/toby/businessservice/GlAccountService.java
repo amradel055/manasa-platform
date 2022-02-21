@@ -10,14 +10,11 @@ import com.toby.businessservice.reports.searchBean.ComplexRevisionBalanceSearchB
 import com.toby.businessservice.reports.searchBean.GlAccountReportSearchBean;
 import com.toby.define.AccountGroupEnum;
 import com.toby.dto.GlAccountDTO;
-import com.toby.entity.Branch;
-import com.toby.entity.CloseAndSaveMonth;
 import com.toby.entity.GlAccount;
 import com.toby.entity.TobyUser;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.Remote;
-import javax.persistence.metamodel.SingularAttribute;
 
 /**
  *
@@ -125,4 +122,6 @@ public interface GlAccountService {
     public List<GlAccountDTO> getBranchGLAccountsActiveDTO(Integer branchId);
 
     public Map<Integer, GlAccount> getAllGlAccountMap();
+    
+    public Integer findNewAccNumber(GlAccount parentId);
 }

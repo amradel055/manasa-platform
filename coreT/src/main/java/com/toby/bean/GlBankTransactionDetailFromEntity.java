@@ -55,6 +55,11 @@ public class GlBankTransactionDetailFromEntity extends  BaseEntityDTO{
     private List<GlBankTransactionInvoiceView> glBankTransactionInvoiceViewList;
     private Integer invoiceId;
     private BigDecimal bankCommition;
+    
+    private GlAccountDTO glAccountCredit;
+    private GlAccountDTO glAccountBakCredit;
+    private CostCenterDTO costCenterCredit;
+    private CostCenterDTO costCenterBakCredit;
 
     public GlBankTransactionDetailFromEntity() {
     }
@@ -451,6 +456,87 @@ public class GlBankTransactionDetailFromEntity extends  BaseEntityDTO{
      */
     public void setBankCommition(BigDecimal bankCommition) {
         this.bankCommition = bankCommition;
+    }
+    
+     @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (index != null ? index.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof GlBankTransactionDetailFromEntity)) {
+            return false;
+        }
+        GlBankTransactionDetailFromEntity other = (GlBankTransactionDetailFromEntity) object;
+        if ((this.index == null && other.index != null) || (this.index != null && !this.index.equals(other.index))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "toby.com.entity.GlBankTransactionDetail[ id=" + id + " ]";
+    }
+
+    /**
+     * @return the glAccountCredit
+     */
+    public GlAccountDTO getGlAccountCredit() {
+        return glAccountCredit;
+    }
+
+    /**
+     * @param glAccountCredit the glAccountCredit to set
+     */
+    public void setGlAccountCredit(GlAccountDTO glAccountCredit) {
+        this.glAccountCredit = glAccountCredit;
+    }
+
+    /**
+     * @return the glAccountBakCredit
+     */
+    public GlAccountDTO getGlAccountBakCredit() {
+        return glAccountBakCredit;
+    }
+
+    /**
+     * @param glAccountBakCredit the glAccountBakCredit to set
+     */
+    public void setGlAccountBakCredit(GlAccountDTO glAccountBakCredit) {
+        this.glAccountBakCredit = glAccountBakCredit;
+    }
+
+    /**
+     * @return the costCenterCredit
+     */
+    public CostCenterDTO getCostCenterCredit() {
+        return costCenterCredit;
+    }
+
+    /**
+     * @param costCenterCredit the costCenterCredit to set
+     */
+    public void setCostCenterCredit(CostCenterDTO costCenterCredit) {
+        this.costCenterCredit = costCenterCredit;
+    }
+
+    /**
+     * @return the costCenterBakCredit
+     */
+    public CostCenterDTO getCostCenterBakCredit() {
+        return costCenterBakCredit;
+    }
+
+    /**
+     * @param costCenterBakCredit the costCenterBakCredit to set
+     */
+    public void setCostCenterBakCredit(CostCenterDTO costCenterBakCredit) {
+        this.costCenterBakCredit = costCenterBakCredit;
     }
 
 

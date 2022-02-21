@@ -141,5 +141,7 @@ public interface InvPurchaseInvoiceService_1 {
             List<InvInventoryDTO> invInventoryDTOs, List<ProGroupDTO> proGroupListSelected, Integer invoiceType, Boolean update);
     
     public Boolean chechIfinvoiceIsReturn(Integer serial);
+    
+    public void updateDetailInvoiceValues(Integer invPurchaseInvoiceId);
 
 }

@@ -194,6 +194,9 @@ public class SummitionItemReportMB2 extends Basic {
                 }
                 if (itemsViewForGallaryinner != null && !itemsViewForGallaryinner.isEmpty()) {
                     for (SummitionItemsView view : itemsViewForGallaryinner) {
+                        if (totalPersentageNotice == null) {
+                            totalPersentageNotice = BigDecimal.ZERO;
+                        }
                         view.setAllCost(new BigDecimal((view.getAllCost().subtract(view.getAllCost().multiply(totalPersentageNotice))).setScale(3, RoundingMode.HALF_UP).toPlainString()));
                         if (tobAndKhiata) {
                             if (view.getCode() == 1 || view.getCode() == 2) {
@@ -225,6 +228,9 @@ public class SummitionItemReportMB2 extends Basic {
                 summitionItemsView.setName("إجماليات المعارض");
                 summitionItemsView.setRowType(1);
                 for (SummitionItemsView view : itemsViewForGallaryinnerForAll) {
+                    if (totalPersentageNotice == null) {
+                        totalPersentageNotice = BigDecimal.ZERO;
+                    }
                     view.setAllCost(new BigDecimal((view.getAllCost().subtract(view.getAllCost().multiply(totalPersentageNotice))).setScale(3, RoundingMode.HALF_UP).toPlainString()));
                     if (tobAndKhiata) {
                         if (view.getCode() == 1 || view.getCode() == 2) {

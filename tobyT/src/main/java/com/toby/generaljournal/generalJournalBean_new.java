@@ -546,7 +546,8 @@ public class generalJournalBean_new extends BaseFormBean implements Serializable
                 selectedCompany = getUserData().getCompany().getId();
                 // glAccounts = accountService.getBranchGLAccountsActive(getUserData().getUserBranch().getId());
 //                glAccounts = accountService.getBranchGLAccountsActiveWithException(getUserData().getUserBranch().getId());
-                glAccounts = accountServiceDTO.getBranchGLAccountsActiveWithException(getUserData().getUserBranch().getId());
+//                glAccounts = accountServiceDTO.getBranchGLAccountsActiveWithException(getUserData().getUserBranch().getId());
+                glAccounts = accountServiceDTO.getBranchGLAccountsActive(getUserData().getUserBranch().getId());
 //                costCenterList = costCenterService.getAllSubCostCenterByBranchIdActive(getUserData().getUserBranch().getId());
                 costCenterList = costCenterServiceDTO.getAllSubCostCenterByBranchIdActive(getUserData().getUserBranch().getId());
 //                glAdminunitlist = adminUnitService.getAllSubAdminUnitByBranchIdActive(getUserData().getUserBranch().getId());
@@ -1168,7 +1169,8 @@ public class generalJournalBean_new extends BaseFormBean implements Serializable
             glAccounts = accountServiceDTO.getBranchGLAccountsActive(getUserData().getUserBranch().getId());
             glAccountLoad = 0;
         } else if (symbol != null && symbol.getSerial() != 0 && glAccountLoad != null && glAccountLoad.compareTo(2) != 0) {
-            glAccounts = accountServiceDTO.getBranchGLAccountsActiveWithException(getUserData().getUserBranch().getId());
+//            glAccounts = accountServiceDTO.getBranchGLAccountsActiveWithException(getUserData().getUserBranch().getId());
+            glAccounts = accountServiceDTO.getBranchGLAccountsActive(getUserData().getUserBranch().getId());
             glAccountLoad = 2;
         }
     }

@@ -54,6 +54,7 @@ public class GlBankTransactionEntity extends BaseEntity {
     private String createdByName;
     private GlAccountDTO costAccount;
     private CostCenterDTO costCenterDTO;
+    
 
     public Date getDate() {
         return date;

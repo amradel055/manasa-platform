@@ -74,7 +74,7 @@ public class GeneraljournalServiceImpl implements GeneraljournalService {
         if (type != null && type == 0) {
             synchronized (max) {
                 try {
-                    max = dao.findEntityByQuery("SELECT MAX(g.serial) FROM GeneralJournal g  WHERE g.branchId.id =182 AND g.companyId.id =125 and g.glYear.id =:glYear AND g.id < 100000 ", params);
+                    max = dao.findEntityByQuery("SELECT MAX(g.serial) FROM GeneralJournal g  WHERE g.branchId.id =182 AND g.companyId.id =125 and g.glYear.id =:glYear AND g.serial < 100000 ", params);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -82,7 +82,7 @@ public class GeneraljournalServiceImpl implements GeneraljournalService {
         } else {
             synchronized (max) {
                 try {
-                    max = dao.findEntityByQuery("SELECT MAX(g.serial) FROM GeneralJournal g  WHERE g.branchId.id =182 AND g.companyId.id =125 and g.glYear.id =:glYear AND g.id > 100000  ", params);
+                    max = dao.findEntityByQuery("SELECT MAX(g.serial) FROM GeneralJournal g  WHERE g.branchId.id =182 AND g.companyId.id =125 and g.glYear.id =:glYear AND g.serial > 100000  ", params);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

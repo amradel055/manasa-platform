@@ -131,6 +131,7 @@ public class SettlementDeedVoucherFormMB extends GlBankBasicDataForm {
     // Lists
     private List<GlAccountDTO> glAccountList;
     private List<CostCenterDTO> costCenterList;
+    private List<CostCenterDTO> costCenterHeadList;
     private List<GlBank> glBankList;
     private List<GlAdminUnit> adminUnitList;
 
@@ -151,6 +152,7 @@ public class SettlementDeedVoucherFormMB extends GlBankBasicDataForm {
     private Integer organizeType;
 
     private CostCenterDTOConverter costCenterConverter;
+    private CostCenterDTOConverter costCenterHeadConverter;
     private GlAdminUnitConverter glAdminUnitConverter;
     private GlAccount glAccountSelected;
     private CostCenterDTO costCenterSelected;
@@ -163,6 +165,8 @@ public class SettlementDeedVoucherFormMB extends GlBankBasicDataForm {
 
     private List<GlAccountDTO> glRunningAccountDTOList;
     private GlAccountDTOConverter runningAccountDTOConverter;
+    
+    private Boolean isDebit;
 
     @EJB
     AccountsSystemSettingsService accountsSystemSettingsService;
@@ -576,6 +580,10 @@ public class SettlementDeedVoucherFormMB extends GlBankBasicDataForm {
             glBankTransactionDetailsEntityNew.setMarkEdit(Boolean.TRUE);
             glBankTransactionDetailsEntityNew.setIndex(++index);
             glBankTransactionDetailsEntityNew.setRemarks(glBankTransactionEntity.getRemark());
+            glBankTransactionDetailsEntityNew.setGlAccountCredit(getGlBankTransactionEntity().getCostAccount());
+            glBankTransactionDetailsEntityNew.setGlAccountBakCredit(getGlBankTransactionEntity().getCostAccount());
+            glBankTransactionDetailsEntityNew.setCostCenterCredit(getGlBankTransactionEntity().getCostCenterDTO());
+            glBankTransactionDetailsEntityNew.setCostCenterBakCredit(getGlBankTransactionEntity().getCostCenterDTO());
 
             if (glBankTransactionDetailEntityUnSelected != null && glBankTransactionDetailEntityUnSelected.getMarkEdit()) {
                 glBankTransactionDetailEntityUnSelected.setMarkEdit(false);
@@ -713,14 +721,15 @@ public class SettlementDeedVoucherFormMB extends GlBankBasicDataForm {
                     glBankTransaction.setRemark2(glBankTransactionEntity.getRemark2());
                     glBankTransaction.setOrganizationType(glBankTransactionExist != null ? glBankTransactionExist.getOrganizationType() : glBankTransactionEntity.getOrganizationType());
                     glBankTransaction.setBankCommetion(glBankTransactionEntity.getBankCommition());
+                    glBankTransaction.setIsDebit(getIsDebit());
                     if (glBankTransactionEntity.getCostAccount() != null) {
                         GlAccount glAccount = new GlAccount();
                         glAccount.setId(glBankTransactionEntity.getCostAccount().getId());
-                        if (glBankTransactionEntity.getCostAccount().getCostCenterId() != null) {
-                            CostCenter costCenterId = new CostCenter();
-                            costCenterId.setId(glBankTransactionEntity.getCostAccount().getCostCenterId());
-                            glAccount.setCostCenterId(costCenterId);
-                        }
+//                        if (glBankTransactionEntity.getCostAccount().getCostCenterId() != null) {
+//                            CostCenter costCenterId = new CostCenter();
+//                            costCenterId.setId(glBankTransactionEntity.getCostAccount().getCostCenterId());
+//                            glAccount.setCostCenterId(costCenterId);
+//                        }
                         glBankTransaction.setGlAccountId(glAccount);
                     }
 
@@ -834,6 +843,8 @@ public class SettlementDeedVoucherFormMB extends GlBankBasicDataForm {
                         bankTransactionDetail.setValue(detailsEntity.getValue() != null ? detailsEntity.getValue() : BigDecimal.ZERO);
                         bankTransactionDetail.setValueLocal(detailsEntity.getValue() != null ? detailsEntity.getValue() : BigDecimal.ZERO);
                         bankTransactionDetail.setBankCommition(detailsEntity.getBankCommition());
+                        bankTransactionDetail.setGlAccountCredit(detailsEntity.getGlAccountCredit() == null ? detailsEntity.getGlAccountBakCredit() : detailsEntity.getGlAccountCredit());
+                        bankTransactionDetail.setCostCenterCredit(detailsEntity.getCostCenterCredit() == null ? detailsEntity.getCostCenterBakCredit() : detailsEntity.getCostCenterCredit());
 
                         bankTransactionDetail.setSymbolId(detailsEntity.getGlItems());
                         bankTransactionDetail.setGlBankTransactionId(glBankTransaction);
@@ -843,7 +854,7 @@ public class SettlementDeedVoucherFormMB extends GlBankBasicDataForm {
 
                     if (saveValidation != false) {
                         GeneralJournal generalJournal = new GeneralJournal();
-                        generalJournal.setId(glBankTransactionDetailsService.tarhilSettlement(glBankTransactionDetailsUpdatedList, glBankTransaction, getUserData().getUser(), 3, false));
+                        generalJournal.setId(glBankTransactionDetailsService.tarhilSettlementVoucher(glBankTransactionDetailsUpdatedList, glBankTransaction, getUserData().getUser(), 3, false));
                         generalJournal = dao.findEntityById(GeneralJournal.class, generalJournal.getId());
                         glBankTransactionEntity.setSerial(generalJournal.getSerial());
                         glBankTransaction.setId(generalJournal.getId());
@@ -942,6 +953,20 @@ public class SettlementDeedVoucherFormMB extends GlBankBasicDataForm {
                 organizationType = glBankTransactionEntity.getOrganizationType();
             } else if (glBankTransactionExist != null && glBankTransactionExist.getOrganizationType() != null) {
                 organizationType = glBankTransactionExist.getOrganizationType();
+            }
+
+            if (getUri().contains("settlementdeedVoucherForm")) {
+                if (bankTransactionDetail.getGlAccountCredit() == null) {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب اختيار حساب دائن"));
+                    setShowMessageDetails(true);
+                    saveValidation = false;
+                }
+
+                if (bankTransactionDetail.getCostCenterCredit() == null) {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "يجب اختيار مركز تكلفة للحساب الدائن"));
+                    setShowMessageDetails(true);
+                    saveValidation = false;
+                }
             }
 
             if (glBankTransactionEntity != null && glBankTransactionEntity.getPostFlag() != null && glBankTransactionEntity.getPostFlag() == 1) {
@@ -1068,8 +1093,7 @@ public class SettlementDeedVoucherFormMB extends GlBankBasicDataForm {
         } catch (Exception e) {
             saveError(e, "SettlementDeedFormMB", "notLoseData");
         }
-        
-       
+
     }
 
     public void forHashasa() {
@@ -1608,6 +1632,9 @@ public class SettlementDeedVoucherFormMB extends GlBankBasicDataForm {
     }
 
     public GlBankTransactionEntity getGlBankTransactionEntity() {
+        if (glBankTransactionEntity == null) {
+            glBankTransactionEntity = new GlBankTransactionEntity();
+        }
         return glBankTransactionEntity;
     }
 
@@ -2334,7 +2361,12 @@ public class SettlementDeedVoucherFormMB extends GlBankBasicDataForm {
                 hashMap.put("param2", prepareReport());
                 hashMap.put("report1path", getUserData().getReportPath() + "generalJournalReportTotal.jasper");
                 hashMap.put("report2path", getUserData().getReportPath() + "settlementdeed.jasper");
-                fillReport(hashMap, getUserData().getReportPath() + "constraintWithsettlementd.jasper", listAll, "pdf");
+                if(getUri().contains("settlementdeedVoucherForm")){
+                    fillReport(hashMap, getUserData().getReportPath() + "constraintWithsettlementdone.jasper", listAll, "pdf");
+                }else{
+                    fillReport(hashMap, getUserData().getReportPath() + "constraintWithsettlementd.jasper", listAll, "pdf");
+                }
+                
 
             }
         } else {
@@ -2405,6 +2437,62 @@ public class SettlementDeedVoucherFormMB extends GlBankBasicDataForm {
             hashMap.put("companyImage", null);
         }
         return hashMap;
+    }
+
+    /**
+     * @return the costCenterHeadList
+     */
+    public List<CostCenterDTO> getCostCenterHeadList() {
+        if (costCenterHeadList == null || costCenterHeadList.isEmpty()) {
+            getCostCenterList();
+            costCenterHeadList = costCenterList;
+            setCostCenterHeadConverter(new CostCenterDTOConverter(costCenterHeadList));
+        }
+        return costCenterHeadList;
+    }
+
+    /**
+     * @param costCenterHeadList the costCenterHeadList to set
+     */
+    public void setCostCenterHeadList(List<CostCenterDTO> costCenterHeadList) {
+        this.costCenterHeadList = costCenterHeadList;
+    }
+
+    /**
+     * @return the costCenterHeadConverter
+     */
+    public CostCenterDTOConverter getCostCenterHeadConverter() {
+        return costCenterHeadConverter;
+    }
+
+    /**
+     * @param costCenterHeadConverter the costCenterHeadConverter to set
+     */
+    public void setCostCenterHeadConverter(CostCenterDTOConverter costCenterHeadConverter) {
+        this.costCenterHeadConverter = costCenterHeadConverter;
+    }
+
+    /**
+     * @return the isDebit
+     */
+    public Boolean getIsDebit() {
+        return isDebit;
+    }
+
+    /**
+     * @param isDebit the isDebit to set
+     */
+    public void setIsDebit(Boolean isDebit) {
+        this.isDebit = isDebit;
+    }
+    
+    
+    public void updateCostCenter() {
+        if (getGlBankTransactionEntity().getCostAccount() != null && getGlBankTransactionEntity().getCostAccount().getCostCenterId() != null) {
+            CostCenterDTO costCenterDTO = new CostCenterDTO();
+            costCenterDTO.setId(getGlBankTransactionEntity().getCostAccount().getCostCenterId());
+            getGlBankTransactionEntity().setCostCenterDTO(costCenterDTO);
+        }
     }
 
 }

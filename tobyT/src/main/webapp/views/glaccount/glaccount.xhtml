@@ -19,7 +19,7 @@
                 <p:messages autoUpdate="true"  id="messages" showDetail="true" closable="true" rendered="#{glAccountBean.showMessage}"/>
                 <div class="ui-g-12 ui-g-nopad">
                     <div class="ui-g">
-                        <div class="ui-g-12 ui-md-4">
+                        <div class="ui-g-4 ui-md-4">
                             <h:panelGroup style="width: 25%">
                                 <p:tree value="#{glAccountBean.accountHierarchy}" var="acc" dir="#{userData.dir}"
                                         selectionMode="single" selection="#{glAccountBean.selectedAccount}"
@@ -35,7 +35,7 @@
 
 
 
-                        <div class="ui-g-12 ui-md-8">
+                        <div class="ui-g-8 ui-md-8">
                             <h:panelGroup>
                                 <p:fieldset legend="#{userData.userDDs['CHART_OF_ACCOUNT']}" 
                                             style="margin-bottom:2px;text-align: right" 

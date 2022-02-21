@@ -186,11 +186,11 @@
 
                                 </div>
                             </div>
-                                 <div class="ui-g-12 ui-xl-12">
-                                         
+                            <div class="ui-g-12 ui-xl-12">
+
                                 <div class="ui-g-6 ui-xl-6">
 
-                                  
+
                                     <p:autoComplete id="organization1" rendered="#{notesReceivablesFormMB.isEdit}"
                                                     style="width:37%!important" 
                                                     dropdown="true"
@@ -202,12 +202,12 @@
                                                     forceSelection="true" 
                                                     completeMethod="#{notesReceivablesFormMB.completeCustomerFrom}" 
                                                     >
-                                   
+
 
                                     </p:autoComplete>
 
                                 </div>
-                                    
+
                                 <div class="ui-g-6 ui-xl-6">
 
                                     <p:outputLabel style="width: 65px;font-size: 14px!important;" value="رقم العميل /رقم المورد"  rendered="#{notesReceivablesFormMB.isEdit}"/>
@@ -216,15 +216,29 @@
 
 
                                 </div>
-                                       <p:commandButton  class="saveButton" id="editCustomer" 
-                                          title="تعديل" 
-                                          value="تعديل" 
-                                          icon="fa fa-fw fa-save"
-                                          action="#{notesReceivablesFormMB.editCustomer}"
-                                          rendered="#{notesReceivablesFormMB.isEdit}"
-                                          update="@form"/>
+                                <p:commandButton  class="saveButton" id="editCustomer" 
+                                                  title="تعديل" 
+                                                  value="تعديل" 
+                                                  icon="fa fa-fw fa-save"
+                                                  action="#{notesReceivablesFormMB.editCustomer}"
+                                                  rendered="#{notesReceivablesFormMB.isEdit}"
+                                                  update="@form"/>
                             </div>
 
+
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+
+                                    <p:selectBooleanCheckbox value="#{notesReceivablesFormMB.isPreviosBalance}" label="رصيد سابق"/>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+
+
+                                    <p:outputLabel style="width: 65px;font-size: 16px!important;" value="رصيد سابق"  />
+
+
+                                </div>
+                            </div>
                         </div>
                         <div class="ui-g-4 ui-xl-4">
                             <div class="ui-g-12 ui-xl-12">

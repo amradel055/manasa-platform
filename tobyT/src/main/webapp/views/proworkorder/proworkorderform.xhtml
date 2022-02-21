@@ -282,9 +282,9 @@
                             </p:commandButton>
                             <p:commandButton     class="saveButton"  
                                                  title="العرض"
-                                                 value="عرض الخصم 25 %" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 0 and false}"
+                                                 value="عرض الخصم 25 %" rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 0}"
                                                  icon="fa fa-fw fa-save" 
-                                                 action="#{invPurchaseInvoiceFormDTOMB.discountOfferForALLQomash(25)}"
+                                                 action="#{invPurchaseInvoiceFormDTOMB.discount25ForAll(25)}"
                                                  update="@form"
                                                  >
                             </p:commandButton>
@@ -292,6 +292,14 @@
                                                  title="العرض"
                                                  value="عرض الخصم 999" 
                                                  icon="fa fa-fw fa-save"  rendered="#{userData.user.id eq 750 or userData.user.id eq 751}"
+                                                 action="#{invPurchaseInvoiceFormDTOMB.offer999Les16Les20Only}"
+                                                 update="@form"
+                                                 >
+                            </p:commandButton>
+                            <p:commandButton     class="saveButton"  
+                                                 title="العرض"
+                                                 value="عرض الخصم 850" 
+                                                 icon="fa fa-fw fa-save"  rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.gallaryId.invName eq 1 and false}"
                                                  action="#{invPurchaseInvoiceFormDTOMB.offer999Les16Les20Only}"
                                                  update="@form"
                                                  >
@@ -431,9 +439,9 @@
                 </p:fieldset>
                 <p:fieldset class="last-part" style=" position: static; max-height: available ;background-color: #e6e4e4;width: 25%;" >
                     <div class="ui-g-12 ui-xl-12">
-                          
+
                         <div class="ui-g-12 ui-xl-6">
-                             العميل
+                            العميل
                             <div class="ui-g-6 ui-xl-12">
                                 <p:autoComplete style="width:37%!important"
                                                 dropdown="true"
@@ -448,7 +456,7 @@
                                     <p:ajax event="itemSelect" listener="#{invPurchaseInvoiceFormDTOMB.search()}" update="inventory1"  />
                                 </p:autoComplete>
                             </div>
-                         
+
 
                         </div>
                         <div class="ui-g-12 ui-xl-12">
@@ -746,8 +754,9 @@
                         <div class="ui-g-12 ui-xl-12">
                             <div class="ui-g-6 ui-xl-6">
 
-                                <p:inputText style="width:69%"  value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.remarks}"
-                                             />
+                                <p:inputText style="width:69%"  value="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.remarks}">
+                                    <p:ajax update="notice" listener="#{invPurchaseInvoiceFormDTOMB.hishis()}" />
+                                </p:inputText>
                             </div>
                             <div class="ui-g-6 ui-xl-6">
 

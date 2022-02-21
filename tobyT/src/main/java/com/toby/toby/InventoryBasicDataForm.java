@@ -482,40 +482,49 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     private void afterValidation(InvDetailDTO invPurchaseInvoiceDetailsValidate, Boolean findCost) {
         replacedetail(invPurchaseInvoiceDetailsValidate);
         checkProof(invPurchaseInvoiceDetailsValidate);
-        updateSummition(findCost);
+//        updateSummition(findCost);
+        afterUpdate(invPurchaseInvoiceDetailsValidate);
         errorMsg(invPurchaseInvoiceDetailsValidate.getMsg());
     }
 
-    public void validatePriceColumn(InvDetailDTO invPurchaseInvoiceDetailsValidate) {
+    public void validatePriceColumn(InvDetailDTO detailDTO) {
         try {
             if (getInvInvoiceDTO().getPricetype() != null && getInvInvoiceDTO().getPricetype() == 0 && getInvInvoiceDTO().getId() == null) {
-                if (invPurchaseInvoiceDetailsValidate.getCost().compareTo(invPurchaseInvoiceDetailsValidate.getItemsBarcodesDetail().getMinPriceYoung()) == -1) {
-                    invPurchaseInvoiceDetailsValidate.setCost(invPurchaseInvoiceDetailsValidate.getItemsBarcodesDetail().getMinPriceYoung());
-                    invPurchaseInvoiceDetailsValidate.setIndexSerial(1);
-                    afterValidation(invPurchaseInvoiceDetailsValidate, false);
+                if (detailDTO.getCost().compareTo(detailDTO.getItemsBarcodesDetail().getMinPriceYoung()) == -1) {
+                    detailDTO.setCost(detailDTO.getItemsBarcodesDetail().getMinPriceYoung());
+                    detailDTO.setIndexSerial(1);
+                    afterValidation(detailDTO, false);
 //                    invPurchaseInvoiceDetailsValidate.setIndexSerial(null);
                     errorMsg("يجب ادخال سعر اعلى من الحد الأدنى");
                     return;
                 }
 
             } else if (getInvInvoiceDTO().getPricetype() != null && getInvInvoiceDTO().getPricetype() == 1 && getInvInvoiceDTO().getId() == null) {
-                if (invPurchaseInvoiceDetailsValidate.getCost().compareTo(invPurchaseInvoiceDetailsValidate.getItemsBarcodesDetail().getMinPriceMen()) == -1) {
-                    invPurchaseInvoiceDetailsValidate.setCost(invPurchaseInvoiceDetailsValidate.getItemsBarcodesDetail().getMinPriceMen());
-                    invPurchaseInvoiceDetailsValidate.setIndexSerial(1);
-                    afterValidation(invPurchaseInvoiceDetailsValidate, false);
+                if (detailDTO.getCost().compareTo(detailDTO.getItemsBarcodesDetail().getMinPriceMen()) == -1) {
+                    detailDTO.setCost(detailDTO.getItemsBarcodesDetail().getMinPriceMen());
+                    detailDTO.setIndexSerial(1);
+                    afterValidation(detailDTO, false);
 //                    invPurchaseInvoiceDetailsValidate.setIndexSerial(null);
                     errorMsg("يجب ادخال سعر اعلى من الحد الأدنى");
                     return;
                 }
             }
-            invPurchaseInvoiceDetailsValidate.setMsg(null);
-            invPurchaseInvoiceDetailsValidate = invGlobalService.validatePriceColumn(invPurchaseInvoiceDetailsValidate);
-            invPurchaseInvoiceDetailsValidate.setIndexSerial(1);
-            afterValidation(invPurchaseInvoiceDetailsValidate, false);
+            detailDTO.setMsg(null);
+            detailDTO = invGlobalService.validatePriceColumn(detailDTO);
+            //            afterValidation(invPurchaseInvoiceDetailsValidate, false);
 //            invPurchaseInvoiceDetailsValidate.setIndexSerial(null);
+            afterUpdate(detailDTO);
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceFormMB", "validatePriceColumn");
         }
+    }
+
+    private void afterUpdate(InvDetailDTO detailDTO) {
+        detailDTO.setIndexSerial(1);
+        detailDTO.setCostBak(detailDTO.getCost());
+        InvDetailDTO detailDTONew = invGlobalService.calcRowAfterCalcTotal(invGlobalService.calcRowTotal(getInvInvoiceDTO().getScreenName(), detailDTO.getNumber(), detailDTO.getCost(), null), detailDTO.getDiscount(), detailDTO);
+        replacedetail(detailDTONew);
+        updateSummitionSmall();
     }
 
     public void validateQuantityInchColum(InvDetailDTO invPurchaseInvoiceDetailsValidate) {
@@ -709,17 +718,17 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                         || detailDTO.getItemId().getProGroupId().getId() == 9
                         || detailDTO.getItemId().getProGroupId().getId() == 21
                         || detailDTO.getItemId().getProGroupId().getId() == 29) {
-                    detailDTO.setDiscount(new BigDecimal(20));
+                    detailDTO.setDiscount(new BigDecimal(50));
                 } else if (detailDTO.getItemId().getProGroupId().getId() == 1) {
                     if (detailDTO.getItemsBarcodesDetail().getTypeShow() == 1) {
                         if (detailDTO.getItemsBarcodesDetail().getSellPrice().compareTo(BigDecimal.valueOf(16.67)) != 1) {
-                            detailDTO.setCost(new BigDecimal(289.565));
+                            detailDTO.setCost(new BigDecimal(246.38));
                             detailDTO.setDiscount(BigDecimal.ZERO);
                             zeroDiscount();
                         }
                     } else if (detailDTO.getItemsBarcodesDetail().getTypeShow() == 2) {
                         if (detailDTO.getItemsBarcodesDetail().getSellPrice().compareTo(BigDecimal.valueOf(20)) != 1) {
-                            detailDTO.setCost(new BigDecimal(289.565).setScale(3, RoundingMode.UP));
+                            detailDTO.setCost(new BigDecimal(246.38).setScale(3, RoundingMode.UP));
                             detailDTO.setDiscount(BigDecimal.ZERO);
                             zeroDiscount();
                         }
@@ -728,7 +737,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                 }
             }
             detailDTO.setCostBak(detailDTO.getCost());
-            InvDetailDTO detailDTONew = invGlobalService.calcRowAfterCalcTotal(invGlobalService.calcRowTotal(getInvInvoiceDTO().getScreenName(), detailDTO.getNumber(), detailDTO.getCost(), null), BigDecimal.ZERO, detailDTO);
+            InvDetailDTO detailDTONew = invGlobalService.calcRowAfterCalcTotal(invGlobalService.calcRowTotal(getInvInvoiceDTO().getScreenName(), detailDTO.getNumber(), detailDTO.getCost(), null), detailDTO.getDiscount(), detailDTO);
             replacedetail(detailDTONew);
         }
         updateSummitionSmall();
@@ -982,11 +991,11 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     }
 
     public void discount25ForAll(Integer number) {
+        checkDetailData();
         for (InvDetailDTO detailDTO : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
             if (detailDTO.getItemsBarcodesDetail() == null && detailDTO.getItemsBarcodesDetailTrans() != null) {
                 detailDTO.setItemsBarcodesDetail(detailDTO.getItemsBarcodesDetailTrans());
             }
-
             if (detailDTO.getItemId() != null
                     && detailDTO.getItemId().getProGroupId() != null
                     && detailDTO.getItemId().getProGroupId().getId() != null
@@ -998,12 +1007,18 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                     && detailDTO.getItemId().getId() != 22634
                     && detailDTO.getItemId().getId() != 22655
                     && detailDTO.getItemId().getId() != 22656
+                    && detailDTO.getItemId().getId() != 17306
                     && detailDTO.getItemId().getId() != 22657
                     && detailDTO.getItemId().getId() != 22194) {
                 detailDTO.setDiscount(new BigDecimal(number));
             }
+            detailDTO.setIndexSerial(1);
+            detailDTO.setCostBak(detailDTO.getCost());
+            InvDetailDTO detailDTONew = invGlobalService.calcRowAfterCalcTotal(invGlobalService.calcRowTotal(getInvInvoiceDTO().getScreenName(), detailDTO.getNumber(), detailDTO.getCost(), null), detailDTO.getDiscount(), detailDTO);
+            replacedetail(detailDTONew);
         }
-        updateSummition(false);
+        updateSummitionSmall();
+//        updateSummition(false);
     }
 
     public void twoPieceAndThirdFreeOffer() {
@@ -1346,7 +1361,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
             }
 
             getInvInvoiceDTO().getInvPurchaseInvoiceDetailList().remove(invPurchaseInvoiceDetailsValidate);
-            updateSummition(false);
+//            updateSummition(false);
+            updateSummitionSmall();
 //            checkDetailData();
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceFormMB", "deleteInvPurchaseInvoiceDetail");
@@ -1362,7 +1378,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
             Integer maxClothNumber = 1;
             invDetailDTO.setClothNumber(maxClothNumber + 1);
             getInvInvoiceDTO().getInvPurchaseInvoiceDetailList().add(invDetailDTO);
-            updateSummition(false);
+//            updateSummition(false);
+            afterUpdate(invPurchaseInvoiceDetailsValidate);
             for (InvDetailDTO detailEntity : getInvInvoiceDTO().getInvPurchaseInvoiceDetailList()) {
                 if (detailEntity.getItemsBarcodesDetail() == null && detailEntity.getItemsBarcodesDetailTrans() != null) {
                     detailEntity.setItemsBarcodesDetail(detailEntity.getItemsBarcodesDetailTrans());
@@ -1384,7 +1401,8 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
                 }
                 getInvInvoiceDTO().getInvPurchaseInvoiceDetailList().remove(detailEntity);
             }
-            updateSummition(false);
+//            updateSummition(false);
+            updateSummitionSmall();
         } else {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "لا يوجد تفاصيل للفاتورة"));

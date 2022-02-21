@@ -83,5 +83,7 @@ public interface GenericDAO {
     public void executeUpdateQuery(String jpqlQuery, Map<String, Object> params);
     
     public void sendSms(String mobile, String sender, String message, String username, String password);
+    
+    public void creteQueryInvItemView(Integer invoice_id);
 
 }

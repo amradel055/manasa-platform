@@ -2624,10 +2624,12 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                     "فاتورة المورد " + dto.getOrganizationSiteId() == null ? "" : dto.getOrganizationSiteId().getName() + " رقم " + dto.getSupplierInvoiceNumber(), tobyUser);
             generaljournalDetailsService.addGenDetalil(false, dto.getFinalNet(), journal.getId(),
                     (dto.getOrganizationSiteId() == null || dto.getOrganizationSiteId().getAccountId() == null || dto.getOrganizationSiteId().getAccountId().getId() == null) ? null : dto.getOrganizationSiteId().getAccountId().getId(),
-                    (dto.getGallaryId() == null || dto.getGallaryId().getCostCenterId() == null || dto.getGallaryId().getCostCenterId().getId() == null) ? null : dto.getGallaryId().getCostCenterId().getId(),
+                    835,
+                    //                    (dto.getGallaryId() == null || dto.getGallaryId().getCostCenterId() == null || dto.getGallaryId().getCostCenterId().getId() == null) ? null : dto.getGallaryId().getCostCenterId().getId(),
                     "فاتورة مشتريات" + " رقم " + dto.getSupplierInvoiceNumber(), tobyUser);
             generaljournalDetailsService.addGenDetalil(true, dto.getTaxvalue(), journal.getId(), purchseTaxAccount,
-                    (dto.getGallaryId() == null || dto.getGallaryId().getCostCenterId() == null || dto.getGallaryId().getCostCenterId().getId() == null) ? null : dto.getGallaryId().getCostCenterId().getId(),
+                    835,
+                    //                    (dto.getGallaryId() == null || dto.getGallaryId().getCostCenterId() == null || dto.getGallaryId().getCostCenterId().getId() == null) ? null : dto.getGallaryId().getCostCenterId().getId(),
                     "فاتورة مشتريات" + " رقم " + dto.getSupplierInvoiceNumber(), tobyUser);
 
         } else if (dto.getScreenName().equals(ScreenNameClassEnum.INVRETURNPURCHASEFORM)) {
@@ -2641,10 +2643,12 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                     "فاتورة المورد " + dto.getOrganizationSiteId() == null ? "" : dto.getOrganizationSiteId().getName() + " رقم " + dto.getSupplierInvoiceNumber(), tobyUser);
             generaljournalDetailsService.addGenDetalil(true, dto.getFinalNet(), journal.getId(),
                     (dto.getOrganizationSiteId() == null || dto.getOrganizationSiteId().getAccountId() == null || dto.getOrganizationSiteId().getAccountId().getId() == null) ? null : dto.getOrganizationSiteId().getAccountId().getId(),
-                    (dto.getGallaryId() == null || dto.getGallaryId().getCostCenterId() == null || dto.getGallaryId().getCostCenterId().getId() == null) ? null : dto.getGallaryId().getCostCenterId().getId(),
+                    835,
+                    //                    (dto.getGallaryId() == null || dto.getGallaryId().getCostCenterId() == null || dto.getGallaryId().getCostCenterId().getId() == null) ? null : dto.getGallaryId().getCostCenterId().getId(),
                     "مردود مشتريات" + " رقم " + dto.getSupplierInvoiceNumber(), tobyUser);
             generaljournalDetailsService.addGenDetalil(false, dto.getTaxvalue(), journal.getId(), purchseTaxAccount,
-                    (dto.getGallaryId() == null || dto.getGallaryId().getCostCenterId() == null || dto.getGallaryId().getCostCenterId().getId() == null) ? null : dto.getGallaryId().getCostCenterId().getId(),
+                    835,
+                    //                    (dto.getGallaryId() == null || dto.getGallaryId().getCostCenterId() == null || dto.getGallaryId().getCostCenterId().getId() == null) ? null : dto.getGallaryId().getCostCenterId().getId(),
                     "مردود مشتريات" + " رقم " + dto.getSupplierInvoiceNumber(), tobyUser);
 
         }
@@ -2767,8 +2771,9 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
 //        for (InvPurchaseInvoice entity : details) {
 //                    System.out.println(new Date());
 //            InvInvoiceDTO dto = mapToDTO(entity, null, false);
-                    if (res != null) {
-                        journal = addGeneralJournalGlobal(73, 1013, index1++, new Date(), "قيد مبيعات الفترة", tobyUser, headId++);
+                    if (res != null && !res.isEmpty()) {
+                        headId++;
+                        journal = addGeneralJournalGlobal(73, 1013, headId, dateFromNew, "قيد مبيعات الفترة", tobyUser, headId);
 
                         if (gallary.getCostCenterId() != null && gallary.getCostCenterId().getId() != null) {
                             // حساب العملاء
@@ -2789,7 +2794,7 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                             if (tarhilInvoiceDetailList != null && tarhilInvoiceDetailList.size() == 1) {
                                 if (835 == tarhilInvoiceDetailList.get(0).getCostCenterId()) {
                                     journal.getDetailList().add(addGenDetalil(true, tarhilInvoiceDetailList.get(0).getTotalCost(), journal.getId(),
-                                            gallary.getCostAccount().getId(),
+                                            gallary.getRunningAccount().getId(),
                                             835, "", tobyUser, ++DetailSerial, ++DetailId));
 
                                     journal.getDetailList().add(addGenDetalil(false, tarhilInvoiceDetailList.get(0).getTotalCost(), journal.getId(),
@@ -3197,8 +3202,6 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         summitionItemsViews = new ArrayList<SummitionItemsView>(params.values());
         return summitionItemsViews;
     }
-    
-    
 
     @Override
     public Boolean chechIfinvoiceIsReturn(Integer serial) {
@@ -3211,6 +3214,13 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
             return true;
         }
         return false;
+    }
+    
+    @Override
+    public void updateDetailInvoiceValues(Integer invPurchaseInvoiceId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("invPurchaseInvoiceId", invPurchaseInvoiceId);
+        dao.creteQueryInvItemView(invPurchaseInvoiceId);
     }
 
 }

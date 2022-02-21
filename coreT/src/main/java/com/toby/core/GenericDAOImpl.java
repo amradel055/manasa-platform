@@ -16,6 +16,7 @@ import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -287,6 +288,7 @@ public class GenericDAOImpl implements GenericDAO {
         ctx.setRollbackOnly();
     }
 
+    @Override
     public List<InvItem> creteQueryInvItemView(int first, int pageSize, String sortField, Boolean asc, Integer branchId, Map<String, Object> filters) {
         String filter = " and (s.code like CONCAT('%',:filterName ,'%')  OR s.name  like CONCAT('%',:filterName ,'%')  OR s.nickname like CONCAT('%',:filterName ,'%') OR s.unitId.name like CONCAT('%',:filterName ,'%') OR s.groupId.name like CONCAT('%',:filterName ,'%') ) ";
         StringBuilder builder = new StringBuilder();
@@ -308,6 +310,7 @@ public class GenericDAOImpl implements GenericDAO {
         return x;
     }
 
+    @Override
     public void StoredProcedure(String storedName, List<storedProcedureParameter> procedureParameters, Map<String, Object> parm) {
         StoredProcedureQuery query = em
                 .createStoredProcedureQuery(storedName);
@@ -480,6 +483,18 @@ public class GenericDAOImpl implements GenericDAO {
             Logger.getLogger(GenericDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
+    }
+    
+    
+
+    @Override
+    public void creteQueryInvItemView(Integer invoice_id) {
+        
+        List<storedProcedureParameter> procedureParameter = new ArrayList<>();
+        procedureParameter.add(new storedProcedureParameter("invoice_id", Integer.class, 'i'));
+        Map<String, Object> params2 = new HashMap<>();
+        params2.put("invoice_id", invoice_id);
+        StoredProcedure("update_net_after_discount_head", procedureParameter, params2);
     }
 
 

@@ -158,7 +158,7 @@ public class invItemDataListMB extends BaseListBean implements Serializable {
     public HashMap prepareReport() {
         try {
             HashMap hashMap = new HashMap();
-            hashMap.put("companyName","البرنس");
+            hashMap.put("companyName","برنس");
             return hashMap;
         } catch (Exception e) {
             saveError(e, "invItemDataListMB", "prepareReport");

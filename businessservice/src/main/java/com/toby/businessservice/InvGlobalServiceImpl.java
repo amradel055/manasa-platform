@@ -804,7 +804,8 @@ public class InvGlobalServiceImpl implements InvGlobalService {
 
                 if (detailDTO.getItemsBarcodesDetail().getUnitName() != null
                         && !"".equals(detailDTO.getItemsBarcodesDetail().getUnitName())) {
-                    if (ScreenNameClassEnum.INVPURCHASEINVOICEFORM.equals(invInvoiceDTO.getScreenName())) {
+                    if (ScreenNameClassEnum.INVPURCHASEINVOICEFORM.equals(invInvoiceDTO.getScreenName())
+                            || ScreenNameClassEnum.INVRETURNPURCHASEFORM.equals(invInvoiceDTO.getScreenName())) {
                         detailDTO.setCost(invPurchaseInvoiceDetailsService.findLastCost(detailDTO.getItemsBarcodesDetail().getItemId()));
                         detailDTO.setCostBak(detailDTO.getCost());
                     }

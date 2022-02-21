@@ -121,6 +121,7 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
             getInvInvoiceDTO().setMsg(null);
             checkDetailData();
             setInvInvoiceDTO(invPurchaseInvoiceService.save(getInvInvoiceDTO(), getUserData().getUser()));
+            invPurchaseInvoiceService.updateDetailInvoiceValues(getInvInvoiceDTO().getId());
             checkDetailData();
             setOrganizationSiteId(getInvInvoiceDTO().getOrganizationSiteId());
             msgSave(getInvInvoiceDTO().getMsg());
@@ -139,7 +140,7 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
                 } else if (getInvInvoiceDTO().getGallaryId().getInvName() != null && getInvInvoiceDTO().getGallaryId().getInvName() == 1) {
                     message.append("\n");
                     message.append("نسعد بتلقي تقييمكم عن الخدمة المقدمة لكم من لي رويال  \n");
-                    message.append(" https://forms.gle/qS56hBNPw6T1rUkm6 ");
+                    message.append(" https://forms.gle/Jcti3uYixoUX8P9D6 ");
                     sendSms(getInvInvoiceDTO().getOrganizationSiteId().getMobile(), "التوبى العالمى", message.toString(), "20099320", "Royal@e12z");
                 }
             }

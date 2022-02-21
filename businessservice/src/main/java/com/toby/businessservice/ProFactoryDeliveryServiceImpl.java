@@ -226,6 +226,7 @@ public class ProFactoryDeliveryServiceImpl implements ProFactoryDeliveryService 
                 invInvoiceDTO.setInvPurchaseInvoiceId(proFactoryDelivery.getInvPurchaseInvoiceId().getId());
 //                invInvoiceDTO.setRemain(invPurchaseInvoiceService_1.remainForInvPurchaseInvoice(proFactoryDelivery.getInvPurchaseInvoiceId().getId()));
 //                invInvoiceDTO.setRemain(invPurchaseInvoiceService_1.remainForInvPurchaseInvoice(proFactoryDelivery.getInvPurchaseInvoiceId().getId()));
+                invInvoiceDTO.setOrganizationSiteName((proFactoryDelivery.getInvPurchaseInvoiceId() != null && proFactoryDelivery.getInvPurchaseInvoiceId().getOrganizationSiteId() != null) ? proFactoryDelivery.getInvPurchaseInvoiceId().getOrganizationSiteId().getName() : null);
                 invInvoiceDTO.setInvnameType(proFactoryDelivery.getInvPurchaseInvoiceId().getGalaryId().getInvName());
                 invInvoiceDTO.setGallaryPhone(proFactoryDelivery.getInvPurchaseInvoiceId().getGalaryId().getPhone());
             } else {

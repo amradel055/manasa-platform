@@ -18,6 +18,7 @@ import com.toby.businessservice.GlBankTransactionDetailsService;
 import com.toby.businessservice.GlBankTransactionService;
 import com.toby.businessservice.InvDelegatorService;
 import com.toby.businessservice.InvItemService;
+import com.toby.businessservice.InvNoticeService;
 import com.toby.businessservice.InvOpeningBalanceItemDetailService;
 import com.toby.businessservice.InvOpeningBalanceItemService;
 import com.toby.businessservice.InvPurchaseInvoiceDetailsService;
@@ -46,6 +47,7 @@ import com.toby.entity.GeneralJournalDetails;
 import com.toby.entity.GlAccount;
 import com.toby.entity.GlYear;
 import com.toby.entity.InvItem;
+import com.toby.entity.InvNotice;
 import com.toby.entity.InvOpenningBalanceItem;
 import com.toby.entity.InvOpenningBalanceItemDetail;
 import com.toby.entity.InvOrganizationSite;
@@ -65,6 +67,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.context.ExternalContext;
@@ -180,6 +184,8 @@ public class ImportMB extends Basic implements Serializable {
     private GlBankTransactionDetailsService bankTransactionDetailsService;
     @EJB
     private GlAccountServiceDTO glAccountServiceDTO;
+    @EJB
+    private InvNoticeService invNoticeService;
 
     public void tarhilInvoiceOne() throws CloneNotSupportedException {
         List<GeneralJournalDTO> list = invPurchaseInvoiceService_1.tarhilOne(getUserData().getUser());
@@ -211,6 +217,14 @@ public class ImportMB extends Basic implements Serializable {
         tarhilCashOne();
         tarhilInvoiceOne();
         tarhilExitOne();
+    }
+
+    public void tarhilInvNoticeOne() {
+        try {
+            invNoticeService.getALLInvNoticeForToby(getUserData().getUser());
+        } catch (CloneNotSupportedException ex) {
+            Logger.getLogger(ImportMB.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @PostConstruct
@@ -706,7 +720,7 @@ public class ImportMB extends Basic implements Serializable {
             e.printStackTrace();
         }
         Sheet sheet = workbook.getSheet(0);
-        importGlAccount(sheet);
+        importGlAccountNew(sheet);
         workbook.close();
     }
 
@@ -1457,17 +1471,36 @@ public class ImportMB extends Basic implements Serializable {
     }
 
     public void importGlAccountNew(Sheet sheet) throws NumberFormatException {
+        Map<Integer, GlAccount> map = glAccountService.getAllGlAccountMap();
         for (int i = 1; i < sheet.getRows(); i++) {
             if (!sheet.getCell(0, i).getContents().isEmpty()) {
-                String accunt = sheet.getCell(0, i).getContents();
-                String accuntCode = sheet.getCell(1, i).getContents();
-                String accuntLevel = sheet.getCell(2, i).getContents();
-                Integer accNumber = Integer.parseInt(accunt);
-                GlAccount glaccount = glAccountService.findGlAccount(accNumber);
-                glaccount.setAccNumber(Integer.parseInt(accuntCode));
-                glaccount.setShotCode(Integer.parseInt(accuntCode));
-                glaccount.setLevelAcc(Integer.parseInt(accuntLevel));
-                glAccountService.addGlAccount(glaccount);
+                System.out.println(i);
+                String accuntid = sheet.getCell(0, i).getContents();
+                String accuntlevel = sheet.getCell(1, i).getContents();
+                String accuntcode = sheet.getCell(2, i).getContents();
+
+                Integer accNumber = Integer.parseInt(accuntid);
+                GlAccount glaccount = map.get(accNumber);
+                if (glaccount != null) {
+                    if (!accuntcode.isEmpty()) {
+                        glaccount.setAccNumber(Integer.parseInt(accuntcode));
+                        glaccount.setShotCode(Integer.parseInt(accuntcode));
+                    }
+
+                    if (!accuntlevel.isEmpty()) {
+                        glaccount.setLevelAcc(Integer.parseInt(accuntlevel));
+                    }
+
+                    String accuntparent = sheet.getCell(3, i).getContents();
+                    if (!accuntparent.isEmpty()) {
+                        GlAccount glAccount = new GlAccount();
+                        glAccount.setId(Integer.parseInt(accuntparent));
+                        glaccount.setParentAcc(glAccount);
+                    } else {
+                        glaccount.setParentAcc(null);
+                    }
+                    glAccountService.addGlAccount(glaccount);
+                }
             }
         }
         OpenDlg("sucesses");

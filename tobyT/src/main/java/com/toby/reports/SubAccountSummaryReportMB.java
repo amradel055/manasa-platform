@@ -219,8 +219,8 @@ public class SubAccountSummaryReportMB extends BaseGlAccountReportBean {
         totalCreditString = new String();
         if (glAccountSelected != null) {
             subAccountSummarySearchBean.setBranchId(getUserData().getUserBranch().getId());
-            subAccountSummarySearchBean.setAccountId(glAccountSelected != null ? glAccountSelected.getId() : null);
-            subAccountSummarySearchBean.setAccClass(glAccountSelected != null ? glAccountSelected.getAccClass().toString() : null);
+            subAccountSummarySearchBean.setAccountId(glAccountSelected.getId() != null ? glAccountSelected.getId() : null);
+            subAccountSummarySearchBean.setAccClass(glAccountSelected.getAccClass() != null ? glAccountSelected.getAccClass().toString() : null);
             subAccountSummarySearchBean.setCostCenterTo(costCenterToSelected != null ? costCenterToSelected.getId() : null);
             subAccountSummarySearchBean.setCostCenterFrom(costCenterFromSelected != null ? costCenterFromSelected.getId() : null);
             subAccountSummarySearchBean.setAdminUnitFrom(glAdminUnitFromSelected != null ? glAdminUnitFromSelected.getId() : null);

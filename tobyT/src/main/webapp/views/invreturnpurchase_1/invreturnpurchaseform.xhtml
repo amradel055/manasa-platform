@@ -350,28 +350,30 @@
                         <h:outputText value="#{index + 1}"  />
                     </p:column>
 
-                    <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="itemName" headerText="#{userData.userDDs['ITEM']}" 
+                   <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="itemName" headerText="#{userData.userDDs['ITEM']}" 
                               filterBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}" 
                               filterMatchMode="contains" 
                               sortBy="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}"
                               filterable="false">
-
                         <p:outputLabel value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}" 
-                                       rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.loadedSerial  ne null}" />
-
+                                       rendered="#{invPurchaseInvoiceDetailsTable.isEdit}" />
                         <p:autoComplete id="invItemNameIn"  
-                                        rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.loadedSerial  eq null}"
-                                        style="width:100%"
-                                        converter="#{invPurchaseInvoiceFormDTOMB.itemsBarcodesDetailsViewConverter}"
-                                        value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}"
-                                        maxResults="10"
-                                        var="item"
-                                        itemLabel="#{item}" 
-                                        itemValue="#{item}" 
-                                        forceSelection="true" 
-                                        completeMethod="#{invPurchaseInvoiceFormDTOMB.completeItemsDatas}" >
+                                            style="width:100%"
+                                            rendered="#{not invPurchaseInvoiceDetailsTable.isEdit}"
+                                            converter="#{autoComplete.itemsBarcodesDetailsViewConverter}"
+                                            value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail}"
+                                            maxResults="30"
+
+                                            var="item"
+                                            itemLabel="#{item}" 
+                                            itemValue="#{item}" 
+                                            forceSelection="true" 
+                                            completeMethod="#{autoComplete.completeItemsBarcodesDetailsView}" 
+                                            >
                             <p:ajax update=" unitvalue length paintColor QuantityT WeightT costTt discountT netId totalQuantity totalWeight  totalNet  form:totalActualWeight form:totalNetAfterDiscount   form:totalWithTaxValue form:taxvalue"
                                     event="itemSelect" listener="#{invPurchaseInvoiceFormDTOMB.validateItems(invPurchaseInvoiceDetailsTable)}" />
+
+
 
                         </p:autoComplete>            
                     </p:column>
@@ -409,6 +411,26 @@
                                        id="paintColor"  
                                        value="#{invPurchaseInvoiceDetailsTable.itemsBarcodesDetail.paintColorName}"/>
                     </p:column>
+                    
+                    
+                    <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px"
+                              id="QuantityInch"
+                              headerText="#{userData.userDDs['NUMBER']} يارده"
+                              filterBy="#{invPurchaseInvoiceDetailsTable.quantityInch}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{invPurchaseInvoiceDetailsTable.quantityInch}"
+                              filterable="false">
+
+                        <p:inputText id="QuantityTInch"  
+                                     value="#{invPurchaseInvoiceDetailsTable.quantityInch}" 
+
+                                     style="width:95%">
+                            <p:ajax listener="#{invPurchaseInvoiceFormDTOMB.validateQuantityInchColum(invPurchaseInvoiceDetailsTable)}" 
+                                    update="QuantityT netId totalQuantity totalWeight  totalNet form:totalNetAfterDiscount form:totalActualWeight form:totalWithTaxValue form:taxvalue  "/>
+                        </p:inputText>        
+
+                    </p:column>
+                    
 
 
                     <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px"
@@ -675,7 +697,6 @@
                                           class="saveButtons"
                                           title="#{userData.userDDs['SAVE']}"
                                           value="#{userData.userDDs['SAVE']}" 
-                                          rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id == null}"
                                           action="#{invPurchaseInvoiceFormDTOMB.save()}"
                                           update="@form"/>
 
@@ -695,6 +716,14 @@
                             rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id == null}"
                             action="#{invPurchaseInvoiceFormDTOMB.loadDailogue()}"
                             update="loaddlg"/>
+                        
+                        <p:commandButton  class="printButtons"
+                                          ajax="false"
+                                          onclick="form.target = '_blank'"  
+                                          rendered="#{invPurchaseInvoiceFormDTOMB.invInvoiceDTO.id != null}"
+                                          value="#{userData.userDDs['PRINT']}" 
+                                          title="#{userData.userDDs['PRINT']}" 
+                                          actionListener="#{invPurchaseInvoiceFormDTOMB.print}"/>
 
                         <p:commandButton  class="deleteButtons" 
                                           id="cancel" 
