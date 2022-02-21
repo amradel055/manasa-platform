@@ -49,7 +49,7 @@ public class InvPurchaseInvoiceListDTOMB extends InventoryBasicDataForm {
             setUserData((UserData) context.getSessionMap().get("userLogInData"));
             this.setDataModel(new LazyDataModel<InvInvoiceDTO>() {
                 private static final long serialVersionUID = 1L;
-
+                 
                 @Override
                 public List<InvInvoiceDTO> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
                     Integer type = 0;
