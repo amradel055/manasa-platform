@@ -5,7 +5,11 @@
  */
 package com.toby.general;
 
-
+import com.toby.businessservice.TobyUserService;
+import com.toby.dto.APIDataDTO;
+import com.toby.dto.ApiLoginDTO;
+import com.toby.entity.TobyUser;
+import com.toby.root.LoginRoot;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -15,12 +19,8 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import java.util.List;
-
 
 /**
  *
@@ -32,7 +32,43 @@ public class GeneralImp implements GeneralService {
     private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     private static final String secret = "remas@2019@Secret";
 
+    @EJB
+    TobyUserService tobyUserService;
 
+    @Override
+    public ApiLoginDTO authAdmin(LoginRoot loginRoot) {
+        String userName = loginRoot.userName;
+        String password = loginRoot.password;
+
+        TobyUser tobyUser = tobyUserService.authenticateUser(userName, password);
+
+        if (tobyUser != null) {
+            return getUserData(Boolean.TRUE, null, tobyUser);
+        } else {
+            return getUserData(Boolean.FALSE, "اسم المستخدم او كلمة المرور خاطئة", null);
+
+        }
+    }
+
+    private ApiLoginDTO getUserData(Boolean success, String msg, TobyUser tobyUser) {
+        ApiLoginDTO apiLoginDTO = new ApiLoginDTO();
+        apiLoginDTO.setSuccess(success);
+        apiLoginDTO.setMsg(msg);
+        if (success.equals(Boolean.TRUE)) {
+            APIDataDTO aPIDataDTO = new APIDataDTO();
+            if (tobyUser.getBranchId() != null) {
+                aPIDataDTO.setBranchSelected(tobyUser.getBranchId().getId());
+            }
+            if (tobyUser.getCompanyId() != null) {
+                aPIDataDTO.setCompanySelected(tobyUser.getCompanyId().getId());
+            }
+            aPIDataDTO.setName(tobyUser.getName());
+            aPIDataDTO.setId(tobyUser.getId());
+            apiLoginDTO.setData(aPIDataDTO);
+        }
+
+        return apiLoginDTO;
+    }
 
     private String createJWT() throws UnsupportedEncodingException {
         LocalDateTime dateTime = LocalDateTime.ofEpochSecond(1593872976, 0, ZoneOffset.UTC);

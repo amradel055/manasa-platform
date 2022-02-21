@@ -28,9 +28,9 @@ public class AttributeRest {
 
     @EJB
     AttributeService attributeService;
-    
-      @EJB
-      AttributeDetailsService attributeDetailsService;
+
+    @EJB
+    AttributeDetailsService attributeDetailsService;
 
     @Transactional
     @Path("/addAttribute")
@@ -82,11 +82,11 @@ public class AttributeRest {
         try {
             if (attribute.getId() != null) {
                 attribute = valitade(attribute);
-                if(attribute.getMsg() == null){
-                 attributeDetailsService.DeleteAttributeDetailsForHeadByBranchId(attribute);
-                 attributeService.deleteAttribute(attribute);
+                if (attribute.getMsg() == null) {
+                    attributeDetailsService.DeleteAttributeDetailsForHeadByBranchId(attribute);
+                    attributeService.deleteAttribute(attribute);
                 }
-                
+
             } else {
                 attribute.setMsg("يجب اختيار عنصر");
             }
@@ -102,7 +102,7 @@ public class AttributeRest {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response findAttributeheadByBranch(AttributeDTO attributeDTO){
+    public Response findAttributeheadByBranch(AttributeDTO attributeDTO) {
         try {
             if (attributeDTO.getBranchId() != null && attributeDTO.getCompanyId() != null) {
                 List<AttributeDTO> attributesList = attributeService.getAllAttributesByCompanyIdAndBranchId(attributeDTO);
@@ -122,7 +122,7 @@ public class AttributeRest {
 
     public AttributeDTO valitade(AttributeDTO dTO) {
 
-        if (dTO.getName() == null || dTO.getName().isEmpty() ){
+        if (dTO.getName() == null || dTO.getName().isEmpty()) {
             dTO.setMsg("يجب ادخال الاسم");
         }
         if (dTO.getCreatedBy() == null || dTO.getCompanyId() == null || dTO.getBranchId() == null) {

@@ -79,12 +79,13 @@ public class InvItemDTO extends BaseEntityDTO {
     private ProGroupDTO proGroupId;
     private Integer type;
     private Integer priceType;
-
+    
+    
     //barcode    
     private List<InvBarcodeDTO> invBarcodeEntity;
     private List<InvBarcodeDTO> invBarcodeDeletedList;
 
-   
+
 
     /**
      * @return the id

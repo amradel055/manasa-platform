@@ -35,6 +35,8 @@ public interface InvItemService {
     public InvItem addInvItem(InvItem invItem, List<InvBarcode> invBarcodeList, List<InvBarcode> invBarcodeDeletedList);
 
     public InvItem updateInvItem(InvItem invItem);
+    
+    public InvItem updateInvItemWebSite(InvItem invItem);
 
     public void deleteInvItem(InvItem invItem);
 
@@ -53,6 +55,8 @@ public interface InvItemService {
     public List<InvItem> getInvItemByBranchIdForInvItemMainDataByGroupReportMB(Integer branchId);
 
     public List<InvItem> getInvItemByBranchIdAndGroupId(Integer branchId, Integer groupId);
+    
+     public List<InvItemDTO> getInvItemByBranchIdAndGroupIdDTO(Integer branchId, Integer groupId);
 
     public List<InvItem> getImageByCompanyId(String imageName, Integer companyId);
 

@@ -315,7 +315,7 @@ public class InvItemServiceImpl implements InvItemService {
     }
 
     @Override
-    public List<InvItemDTO> invItemsReport( InvItemDTO invItemDTO ,Integer branchId) {
+    public List<InvItemDTO> invItemsReport(InvItemDTO invItemDTO, Integer branchId) {
         StringBuilder sql = new StringBuilder();
         List<InvItemDTO> list = new ArrayList<>();
         sql.append("select i.id ,i.name,i.last_cost,i.max_price_men,i.max_price_young,i.min_price_men,i.min_price_young\n"
@@ -344,12 +344,12 @@ public class InvItemServiceImpl implements InvItemService {
         return list;
 
     }
-     private void appendProGroup(InvItemDTO invItemDTO, StringBuilder sql) {
+
+    private void appendProGroup(InvItemDTO invItemDTO, StringBuilder sql) {
         if (invItemDTO.getProGroupId() != null) {
             sql.append(" and i.pro_group_id =  ").append(invItemDTO.getProGroupId().getId());
         }
     }
-    
 
     @Override
     public List<InvItemDTO> findInvItemDTOList(TobyUser tobyUser) {
@@ -391,9 +391,9 @@ public class InvItemServiceImpl implements InvItemService {
             }
         }
     }
-    
+
     @Override
-    public void updateInvItemType(Integer branchId, List<InvItemDTO> invItemDTOList,Integer type) {
+    public void updateInvItemType(Integer branchId, List<InvItemDTO> invItemDTOList, Integer type) {
         Map<String, Object> params = new HashMap<>();
         Map<String, InvItem> mapItems = new HashMap<>();
         params.put("branchId", branchId);
@@ -445,26 +445,42 @@ public class InvItemServiceImpl implements InvItemService {
     }
 
     @Override
-    public void deleteInvItem(InvItem invItem) {
+    public InvItem updateInvItemWebSite(InvItem invItem) {
+        InvItem item = new InvItem();
+        if (invItem.getId() != null) {
+            item = dao.findEntityById(InvItem.class, invItem.getId());
+            item.setImage(invItem.getImage());
+            return dao.updateEntity(item);
+        } else {
+            return invItem;
+        }
+    }
+
+    @Override
+    public void deleteInvItem(InvItem invItem
+    ) {
         dao.deleteEntity(invItem);
     }
 
     @Override
-    public void deleteInvItemDTO(InvItemDTO invItem) {
+    public void deleteInvItemDTO(InvItemDTO invItem
+    ) {
         InvItem item = new InvItem();
         item.setId(invItem.getId());
         dao.deleteEntity(item);
     }
 
     @Override
-    public InvItem findInvItem(Integer invItemById) {
+    public InvItem findInvItem(Integer invItemById
+    ) {
         InvItem invItem = new InvItem();
         invItem = dao.findEntityById(InvItem.class, invItemById);
         return invItem;
     }
 
     @Override
-    public InvItemDTO findInvItemDTO(Integer invItemById) {
+    public InvItemDTO findInvItemDTO(Integer invItemById
+    ) {
         InvItem invItem = dao.findEntityById(InvItem.class, invItemById);
         InvItemDTO invItemDTO = new InvItemDTO();
         invItemDTO = mapToDTOSmall(invItemDTO, invItem);
@@ -472,12 +488,14 @@ public class InvItemServiceImpl implements InvItemService {
     }
 
     @Override
-    public List<InvItem> getInvItemByCompanyId(Integer companyId) {
+    public List<InvItem> getInvItemByCompanyId(Integer companyId
+    ) {
         return dao.findEntityListByCompanyId(InvItem.class, companyId);
     }
 
     @Override
-    public List<InvItem> getInvItemByBranchId(Integer branchId) {
+    public List<InvItem> getInvItemByBranchId(Integer branchId
+    ) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         List<InvItem> details = dao.findListByQuery("SELECT e FROM InvItem e WHERE e.branchId.id = :branchId  ORDER BY e.code", params);
@@ -485,7 +503,8 @@ public class InvItemServiceImpl implements InvItemService {
     }
 
     @Override
-    public List<InvItemDTO> getInvItemDTOByBranchId(Integer branchId, TobyUser tobyUser) {
+    public List<InvItemDTO> getInvItemDTOByBranchId(Integer branchId, TobyUser tobyUser
+    ) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         List<InvItem> details = dao.findListByQuery("SELECT e FROM InvItem e WHERE e.branchId.id = :branchId  ORDER BY e.code", params);
@@ -493,7 +512,8 @@ public class InvItemServiceImpl implements InvItemService {
     }
 
     @Override
-    public List<InvItem> getInvItemByBranchIdForInvItemMainDataByGroupReportMB(Integer branchId) {
+    public List<InvItem> getInvItemByBranchIdForInvItemMainDataByGroupReportMB(Integer branchId
+    ) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         List<InvItem> details = dao.findListByQuery("SELECT e FROM InvItem e WHERE e.branchId.id = :branchId  ORDER BY e.code", params);
@@ -509,7 +529,8 @@ public class InvItemServiceImpl implements InvItemService {
     }
 
     @Override
-    public List<InvItem> getInvItemByBranchIdAndGroupId(Integer branchId, Integer groupId) {
+    public List<InvItem> getInvItemByBranchIdAndGroupId(Integer branchId, Integer groupId
+    ) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         params.put("groupId", groupId);
@@ -519,7 +540,19 @@ public class InvItemServiceImpl implements InvItemService {
     }
 
     @Override
-    public List<InvItem> getImageByCompanyId(String imageName, Integer companyId) {
+    public List<InvItemDTO> getInvItemByBranchIdAndGroupIdDTO(Integer branchId, Integer groupId
+    ) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        params.put("groupId", groupId);
+        List<InvItem> details = dao.findListByQuery("SELECT e FROM InvItem e WHERE e.branchId.id = :branchId AND e.groupId.id = :groupId  ORDER BY e.code", params);
+        List<InvItemDTO> detailsReturn = retriveItemDTOData(details, ScreenNameClassEnum.ITEMCARDREPORT);
+        return detailsReturn;
+    }
+
+    @Override
+    public List<InvItem> getImageByCompanyId(String imageName, Integer companyId
+    ) {
         Map<String, Object> params = new HashMap<>();
         params.put("imageName", imageName);
         params.put("companyId", companyId);
@@ -529,7 +562,8 @@ public class InvItemServiceImpl implements InvItemService {
     }
 
     @Override
-    public List<InvItem> getImageByBranchId(String imageName, Integer branchId) {
+    public List<InvItem> getImageByBranchId(String imageName, Integer branchId
+    ) {
         Map<String, Object> params = new HashMap<>();
         params.put("imageName", imageName);
         params.put("branchId", branchId);
@@ -539,7 +573,8 @@ public class InvItemServiceImpl implements InvItemService {
     }
 
     @Override
-    public List<InvItem> findImageOfBranchId(String imageName, Integer branchId) {
+    public List<InvItem> findImageOfBranchId(String imageName, Integer branchId
+    ) {
         Map<String, Object> params = new HashMap<>();
         params.put("imageName", imageName);
         params.put("branchId", branchId);
@@ -549,7 +584,8 @@ public class InvItemServiceImpl implements InvItemService {
     }
 
     @Override
-    public Boolean validateCode(InvItem invItem) {
+    public Boolean validateCode(InvItem invItem
+    ) {
         Boolean result = true;
         Map<String, Object> params = new HashMap<>();
         StringBuilder query = new StringBuilder();
@@ -579,7 +615,8 @@ public class InvItemServiceImpl implements InvItemService {
     }
 
     @Override
-    public Boolean validateNickName(InvItem invItem) {
+    public Boolean validateNickName(InvItem invItem
+    ) {
         Boolean result = true;
         Map<String, Object> params = new HashMap<>();
         StringBuilder query = new StringBuilder();
@@ -609,7 +646,8 @@ public class InvItemServiceImpl implements InvItemService {
     }
 
     @Override
-    public Boolean validateCodeFromView(InvItem invItem) {
+    public Boolean validateCodeFromView(InvItem invItem
+    ) {
         Boolean result = true;
         Map<String, Object> params = new HashMap<>();
         StringBuilder query = new StringBuilder();
@@ -638,14 +676,16 @@ public class InvItemServiceImpl implements InvItemService {
     }
 
     @Override
-    public synchronized void updateAllInvItems(List<InvItem> invItemList) {
+    public synchronized void updateAllInvItems(List<InvItem> invItemList
+    ) {
         for (InvItem invItem : invItemList) {
             updateInvItem(invItem);
         }
     }
 
     @Override
-    public List<InvItem> findInventoryItem(Integer inventoryId) {
+    public List<InvItem> findInventoryItem(Integer inventoryId
+    ) {
         Map<String, Object> params = new HashMap<>();
         params.put("inventoryId", inventoryId);
         List<InvItem> invItems = dao.findListByQuery("SELECT i FROM InvItem i WHERE i.id in ("
@@ -656,7 +696,8 @@ public class InvItemServiceImpl implements InvItemService {
     }
 
     @Override
-    public List<InvItemDTO> findInventoryDTOItem(Integer inventoryId, TobyUser tobyUser) {
+    public List<InvItemDTO> findInventoryDTOItem(Integer inventoryId, TobyUser tobyUser
+    ) {
         Map<String, Object> params = new HashMap<>();
         params.put("inventoryId", inventoryId);
         List<InvItem> invItems = dao.findListByQuery("SELECT i FROM InvItem i WHERE i.id in ("
@@ -667,7 +708,8 @@ public class InvItemServiceImpl implements InvItemService {
     }
 
     @Override
-    public List<InvItemDTO> getInvItemListByBranchId(Integer branchId, ScreenNameClassEnum screenNameClassEnum) {
+    public List<InvItemDTO> getInvItemListByBranchId(Integer branchId, ScreenNameClassEnum screenNameClassEnum
+    ) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         List<InvItem> detailses = dao.findListByQuery("SELECT i FROM InvItem i WHERE i.branchId.id = :branchId   ORDER BY i.code", params);
@@ -679,6 +721,7 @@ public class InvItemServiceImpl implements InvItemService {
         List<InvItemDTO> detailsesReturn = new ArrayList<>();
         for (InvItem detail : detailses) {
             InvItemDTO dest = new InvItemDTO();
+            dest.setImage(detail.getImage());
             if (ScreenNameClassEnum.ITEMCARDREPORT.equals(screenNameClassEnum)) {
                 dest.setId(detail.getId());
                 dest.setName(detail.getName());
@@ -814,7 +857,7 @@ public class InvItemServiceImpl implements InvItemService {
     }
 
     @Override
-    public List<InvItem> getInvItemListByBranchIdForOpeningBalanceItemForm (Integer branchId) {
+    public List<InvItem> getInvItemListByBranchIdForOpeningBalanceItemForm(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
         List<InvItem> detailses = dao.findListByQuery("SELECT i FROM InvItem i WHERE i.branchId.id = :branchId  ORDER BY i.code", params);

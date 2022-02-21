@@ -18,6 +18,24 @@
                 <div class="ui-g-6 ui-xl-6">
                     <div class="ui-g-12 ui-xl-12">
                         <div class="ui-g-6 ui-xl-6">
+                            <p:autoComplete style="width:40%" 
+                                            dropdown="true"
+                                            converter="#{itemDataFormMB.invGroupDTOConverter}"
+                                            value="#{itemDataFormMB.itemDataEntity.groupId}"
+                                            var="group"
+                                            itemLabel="#{group}" 
+                                            itemValue="#{group}" 
+                                            forceSelection="true" 
+                                            completeMethod="#{itemDataFormMB.completeInvGroups}" >
+                            </p:autoComplete>
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel style="width: 75px;" value="#{userData.userDDs['GROUP']}"/>
+
+                        </div>
+                    </div>
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
 
                             <p:inputText style="width:48%" value="#{itemDataFormMB.itemDataEntity.discountrate}" >
                                 <p:ajax event="blur" listener="#{itemDataFormMB.calcDiscountValue}" update="discountvalue"/>
@@ -36,8 +54,8 @@
                         <div class="ui-g-6 ui-xl-6">
 
                             <p:inputText style="width:48%" value="#{itemDataFormMB.itemDataEntity.discountvalue}" id="discountvalue" />
-                                
-                           
+
+
 
                         </div>
                         <div class="ui-g-6 ui-xl-6">
@@ -238,7 +256,7 @@
                             <p:outputLabel style="width:70px" value="  نوع العرض"/>
                         </div>
                     </div>
-                      <div class="ui-g-12 ui-xl-12">
+                    <div class="ui-g-12 ui-xl-12">
                         <div class="ui-g-6 ui-xl-6">
                             <p:selectOneMenu value="#{itemDataFormMB.itemDataEntity.type}" >
                                 <f:selectItem itemLabel="اختر" itemValue="" />

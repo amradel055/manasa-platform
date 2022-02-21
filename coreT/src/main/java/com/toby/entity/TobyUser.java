@@ -18,7 +18,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "toby_user")
 @NamedQueries({
-    @NamedQuery(name = "TobyUser.authenticate", query = "SELECT i FROM TobyUser i WHERE i.userCode = :userCode")})
+    @NamedQuery(name = "TobyUser.authenticate", query = "SELECT i FROM TobyUser i WHERE i.userCode = :userCode") , 
+})
 public class TobyUser extends BaseEntity {
 
     @Basic(optional = false)

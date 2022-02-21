@@ -5,6 +5,8 @@
  */
 package com.toby.general;
 
+import com.toby.dto.ApiLoginDTO;
+import com.toby.root.LoginRoot;
 import java.io.UnsupportedEncodingException;
 import javax.ejb.Remote;
 
@@ -15,10 +17,10 @@ import javax.ejb.Remote;
 @Remote
 public interface GeneralService {
 
-
+    public ApiLoginDTO authAdmin(LoginRoot loginRoot);
 
     public Boolean verifyToken(String token);
 
     public String DecodeJWT(String token) throws UnsupportedEncodingException;
-    
+
 }
