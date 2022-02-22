@@ -1,0 +1,151 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="../../template/template.xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="content">
+
+
+
+
+        <h:panelGroup rendered="#{userData.userBranch.id eq 81}">
+            <p:graphicImage library="img" name="home-isag-background.jpg" 
+                            style="width: 100%;height:1300px;margin-right:10px;">
+
+            </p:graphicImage>
+
+
+        </h:panelGroup>
+
+
+        <h:form  dir="#{userData.dir}">
+            <p:dialog class="maindataCRM" style="margin: 0 auto;" visible="#{userData.employeeDTODefault ne null and userData.crmSettingDTO ne null ?  userData.crmSettingDTO.showEvent : false}" header="المهام" onHide="PF('dlgCRM').hide()"  id="dlgCRM" widgetVar="dlgCRM" minHeight="40">
+                <p:dataTable 
+                    id="eventListFormtable"
+                    var="eventListForm" 
+                    widgetVar="eventListForm"  
+                    rowIndexVar="index" 
+                    value="#{crmEventListDTOMB.listEveentMainScrren}"
+                    rows="10" 
+                    paginator="true"  
+                    paginatorTemplate="{CurrentPageReport} {FirstPageLink}
+                    {PreviousPageLink} {PageLinks} {NextPageLink}
+                    {LastPageLink} {RowsPerPageDropdown}"
+                    emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"  >
+
+                    <f:facet name="header" class="col-md-12">
+                        <p:selectOneRadio class="mainbuttonsTop" id="console" value="#{crmEventListDTOMB.dateType}" >
+                            <f:selectItem class="daily" itemLabel="يومي" itemValue="0" />
+                            <f:selectItem class="weekly" itemLabel="اسبوعي" itemValue="1" />
+                            <p:ajax  update="eventListFormtable" />
+                        </p:selectOneRadio>
+                        <p:outputPanel  style="margin-top: -2% !important">
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('eventListForm').filter()" style="width:30%;" />
+                        </p:outputPanel>
+                    </f:facet>
+                    <p:column headerText="#" style="width: 0.5%;;font-size: 1.8vh;text-align:right;border-radius: 0px;border-radius: 0px;">
+                        <h:outputText value="#{index + 1}"  style="font-size: 1.5vh" />
+                    </p:column>
+
+                    <p:column   headerText="اسم العميل"
+                                style="width: 5vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                                filterStyle="display:none" 
+                                filterBy="#{eventListForm.customerId.name}"
+                                filterMatchMode="contains"  
+                                sortBy="#{eventListForm.customerId.name}" >
+                        <p:outputLabel value="#{eventListForm.customerId.name}"  style="font-size: 1.5vh"/>
+                    </p:column>
+                    <p:column   headerText="الهاتف"
+                                style="width: 5vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                                filterStyle="display:none" 
+                                filterBy="#{eventListForm.customerId.phone}"
+                                filterMatchMode="contains"  
+                                sortBy="#{eventListForm.customerId.phone}" >
+                        <p:outputLabel value="#{eventListForm.customerId.phone}"  style="font-size: 1.5vh"/>
+                    </p:column>
+<!--                    <p:column   headerText="البريد الالكتروني"
+                                style="width: 5vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                                filterStyle="display:none" 
+                                filterBy="#/{eventListForm.customerId.email}"
+                                filterMatchMode="contains"  
+                                sortBy="#/{eventListForm.customerId.email}" >
+                        <p:outputLabel value="#/{eventListForm.customerId.email}"  style="font-size: 1.5vh"/>
+                    </p:column>-->
+                    <p:column   headerText="الموضوع"
+                                style="width: 5vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                                filterStyle="display:none" 
+                                filterBy="#{eventListForm.subject}"
+                                filterMatchMode="contains"  
+                                sortBy="#{eventListForm.subject}" >
+                        <p:outputLabel value="#{eventListForm.subject}"  style="font-size: 1.5vh"/>
+                    </p:column>
+                    <p:column   headerText="تاريخ وتوقيت البدايه"
+                                style="width: 5vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                                filterStyle="display:none" 
+                                filterBy="#{eventListForm.startDate}"
+                                filterMatchMode="contains"
+                                sortBy="#{eventListForm.startDate}" >
+                        <p:outputLabel value="#{eventListForm.startDate}"  style="font-size: 1.5vh">
+                            <f:convertDateTime type="date" pattern="dd-MM-yyyy hh:mm:ss"/>
+                        </p:outputLabel>
+                    </p:column>
+                    <p:column   headerText="الوصف"
+                                style="width: 20vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                                filterStyle="display:none" 
+                                filterBy="#{eventListForm.discription}"
+                                filterMatchMode="contains"  
+                                sortBy="#{eventListForm.discription}" >
+                        <p:outputLabel value="#{eventListForm.discription}"  style="font-size: 1.5vh"/>
+                    </p:column>
+                    <p:column   headerText="الحاله"
+                                style="width: 5vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                                filterStyle="display:none" 
+                                filterBy="#{eventListForm.status}"
+                                filterMatchMode="contains"  
+                                sortBy="#{eventListForm.status}" >
+                        <p:outputLabel value="#{eventListForm.status}"  style="font-size: 1.5vh"/>
+                    </p:column>
+
+                    <p:column   headerText="نوع المهمه"
+                                style="width: 5vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                                filterStyle="display:none" 
+                                filterBy="#{eventListForm.activityType}"
+                                filterMatchMode="contains"  
+                                sortBy="#{eventListForm.activityType}" >
+                        <p:outputLabel value="#{eventListForm.activityType}"  style="font-size: 1.5vh"/>
+                    </p:column>
+                    <p:column   headerText="المتابع"
+                                style="width: 5vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                                filterStyle="display:none" 
+                                filterBy="#{eventListForm.assignedTo.name}"
+                                filterMatchMode="contains"  
+                                sortBy="#{eventListForm.assignedTo.name}" >
+                        <p:outputLabel value="#{eventListForm.assignedTo.name}"  style="font-size: 1.5vh"/>
+                    </p:column>
+
+                </p:dataTable>  
+            </p:dialog>
+        </h:form>
+        <h:form class='formmargin' id="form" dir="#{userData.dir}">
+
+            <p:inputText style="display: none;" value="#{notificationFormMB.notificationDTO.token}"  id="token"/>
+            <p:commandButton style="display: none;" actionListener="#{notificationFormMB.updateToken()}" id="notification" />
+            <script  >
+                $(document).ready(function () {
+                    if (sessionStorage.getItem("token") !== null) {
+                        document.getElementById("form:token").value = sessionStorage.getItem("token");
+                        document.getElementById("form:notification").click();
+                    }
+
+                });
+
+
+            </script>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

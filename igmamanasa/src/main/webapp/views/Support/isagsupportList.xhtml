@@ -1,0 +1,147 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <h:form id="branchListForm" dir="#{userData.dir}" class='formmargin' >
+
+            <div style=" position: absolute;left: 20px">
+                <p:commandButton  icon="fa fa-fw fa-home"
+                                  title="#{userData.userDDs['HOME']}"
+                                  class="smhomeButton"  
+                                  style="z-index: 2;
+
+                                  color: #035c70!important; 
+                                  background-color: #223238!important;
+                                  border: 1px solid #22323a!important;
+
+                                  background: #22323a 50% 50% repeat-x!important;" 
+                                  action="exit" />
+
+            </div>
+            <p:fieldset legend="إدارة التذاكر" style="margin-bottom:20px">
+                <div >
+                    <p:messages autoUpdate="true"  id="messages" showDetail="true" closable="true"/>   
+                </div>
+
+                <div >
+
+                    <p:dataTable 
+                        var="isagsupport" 
+                        widgetVar="isagsupport"  
+                        rowIndexVar="index" 
+                        value="#{isagSupportListMB.isagsupportList}" rows="15" 
+                        paginator="true" emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                        id="isagsupport">
+                        <f:facet name="header" class="col-md-12">
+                            <p:commandButton icon="fa fa-plus" title="#{userData.userDDs['ADD']}" 
+                                             class="saddButton"
+                                             action="#{isagSupportListMB.goToAdd()}" 
+                                             style="float:right;margin: 0" />
+                            <p:outputPanel  >
+                                <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large;" />
+                                <p:inputText id="globalFilter" a:autofocus="true" onkeyup="PF('isagsupport').filter()" style="width: 50%important" />
+                            </p:outputPanel>
+                            <p:commandButton 
+                                class="smsearchButtons"
+                                icon="fa fa-fw fa-search-plus"  
+                                style="background-color: rgba(63, 81, 181, 0.88);border-radius: 3px; margin-right: 26%; margin-top: -2.7%;"
+                                title="#{userData.userDDs['VIEW']}"
+                                onclick="PF('pass').show();" />
+                        </f:facet>
+                        <p:column headerText="#" style="width: 2vh;font-size: 1.8vh;text-align:right;border-radius: 0px;border-radius: 0px;">
+                            <h:outputText value="#{index + 1}"  style="font-size: 1.5vh" />
+                        </p:column>
+                        <p:column   headerText="الرقم"  style="width: 3vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;">
+                            <p:outputLabel value="#{isagsupport.serial}"  style="font-size: 1.5vh"/>
+                        </p:column>
+                        <p:column filterStyle="display:none" style="width: 15vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" filterBy="#{isagsupport.title}"
+                                  filterMatchMode="contains" headerText="العنوان" sortBy="#{isagsupport.title}" >
+                            <p:outputLabel value="#{isagsupport.title}"  style="font-size: 1.5vh" />
+                        </p:column>
+                        <p:column filterStyle="display:none" style="width: 5vh;font-size: 1.8vh;border-radius: 0px;" filterBy="#{isagsupport.statusName}"  
+                                  filterMatchMode="contains" sortBy="#{isagsupport.statusName}" >
+                               <f:facet name="filter">
+                                <p:selectCheckboxMenu  label="الحالة" id="status" style="width:100%;" 
+                                                       value="#{isagSupportListMB.isagSupportDTOSearch.statusSelected}"  converter="javax.faces.Integer" >
+                                    <f:selectItem itemLabel="تحت التنفيذ"  itemValue="0" />
+                                    <f:selectItem itemLabel="تم التنفيذ"  itemValue="1" />
+                                    <f:selectItem itemLabel="مغلقة"  itemValue="2" />
+                                    <p:ajax update="isagsupport"
+                                            event="change"
+                                            listener="#{isagSupportListMB.searchByBranch()}" />
+                                </p:selectCheckboxMenu>
+                            </f:facet>
+                            <p:outputLabel value="#{isagsupport.statusName}" style="font-size: 1.5vh" />
+                        </p:column>
+                        <p:column filterStyle="display:none" style="width: 30vh;font-size: 1.8vh;border-radius: 0px;" filterBy="#{isagsupport.description}"  
+                                  filterMatchMode="contains" headerText="الوصف" sortBy="#{isagsupport.description}" >
+                            <p:outputLabel value="#{isagsupport.description}" style="font-size: 1.5vh" />
+                        </p:column>
+                        <p:column   headerText="التاريخ"
+                                    style="width: 10vh; font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;"
+                                    filterStyle="display:none" 
+                                    filterBy="#{isagsupport.date}"
+                                    filterMatchMode="contains"
+                                    sortBy="#{isagsupport.date}" >
+                            <p:outputLabel value="#{isagsupport.date}"  style="font-size: 1.5vh; border: solid 2px #007d9b !important; 
+                                           text-align: center;
+                                           border-radius: 10%;
+                                           background-color: #8dcade;">
+                                <f:convertDateTime type="date" pattern="dd-MM-yyyy hh:mm:ss"/>
+                            </p:outputLabel>
+                        </p:column>
+
+                        <p:column headerText="#{userData.userDDs['TRANSACTION']}"  style="width: 7vh;font-size: 1.8vh;text-align: center;border-radius: 0px;">
+
+<!--                            <p:commandButton class="seditButtons"
+                                             update="@form"
+                                             icon="fa fa-fw fa-edit" 
+                                             title="#/{userData.userDDs['EDIT']}" style="background-color: #6a6967;border-radius: 3px;margin-bottom:3px"
+                                             action="#/{isagSupportListMB.goToEdit()}">
+                                <f:setPropertyActionListener value="#/{isagsupport.id}"  target="#/{isagSupportListMB.isagSupportSelect}" />
+                            </p:commandButton>-->
+                            <p:commandButton 
+                                class="smsearchButtons"
+                                icon="fa fa-fw fa-search-plus"  
+                                style="background-color: rgba(63, 81, 181, 0.88);border-radius: 3px;"
+                                title="#{userData.userDDs['VIEW']}"
+                                onclick="PF('pass').show();" />
+                        </p:column>
+                    </p:dataTable>
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                        <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog>
+                </div>
+            </p:fieldset>
+
+            <p:dialog header="Basic Dialog" widgetVar="pass" minHeight="40">
+                <div class="col-xs-9">
+                    <h:inputHidden  id="passwordEncrypted" />
+                    <p:password class="login-input" placeholder="كلمة المرور" id="password"  value="#{isagSupportListMB.password}"
+                                autocomplete="off" />
+                </div>
+                <div class="col-xs-12">
+                    <p:commandButton   style="color:#b0b91b;
+                                       background-color: #1c292e;
+                                       width: inherit;
+                                       border: 1px solid #b0b91b;
+                                       font-family: 'Lato',sans-serif!important;
+                                       font-size: 16px;
+                                       margin-bottom: 17px;" 
+                                       ajax="false"
+                                       action="#{isagSupportListMB.checkAdmin()}"
+                                       id="go" value="دخول" update="@form" />
+                </div>
+            </p:dialog>
+        </h:form>
+    </ui:define>
+</ui:composition>
+
+

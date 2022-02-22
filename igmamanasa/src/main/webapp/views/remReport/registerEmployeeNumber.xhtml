@@ -1,0 +1,192 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+
+        <h:form id="form" dir="#{userData.dir}}" class='formmargin'>
+
+            <p:fieldset  legend="تقرير الركاب "
+
+                         style=" position: relative; text-align: right; font-size: 2.4vh;">
+
+                <div class="ui-g">
+                    <div class="ui-g-6 ui-xl-6">
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:autoComplete 
+                                    dropdown="true" maxResults="10"
+                                    converter="#{autoComplete.remTrafficDTOConverter}"
+                                    value="#{remBusesFollowReportMB.remRegisterEmployeeDTO.trafficId}"
+                                    var="remTrafficDTO"
+                                    itemLabel="#{remTrafficDTO}" 
+                                    itemValue="#{remTrafficDTO}"
+                                    forceSelection="true" 
+                                    completeMethod="#{autoComplete.completeRemTraffic2}"
+                                    >
+                                </p:autoComplete>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 111px;" value="خط السير"/>
+                            </div>
+                        </div>
+
+
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:autoComplete 
+                                    dropdown="true" maxResults="10"
+                                    converter="#{autoComplete.remBusesDTOConverter}"
+                                    value="#{remBusesFollowReportMB.remRegisterEmployeeDTO.busIdFrom}"
+                                    var="busesFrom"
+                                    itemLabel="#{busesFrom}" 
+                                    itemValue="#{busesFrom}"
+                                    forceSelection="true" 
+                                    completeMethod="#{autoComplete.completeRemBuses}"
+                                    >
+
+                                </p:autoComplete>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 75px;font-size: 2.4vh;" value="من اتوبيس" />
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:autoComplete 
+                                    dropdown="true" maxResults="10"
+                                    converter="#{autoComplete.remBusesDTOConverter}"
+                                    value="#{remBusesFollowReportMB.remRegisterEmployeeDTO.busIdTo}"
+                                    var="busesTo"
+                                    itemLabel="#{busesTo}" 
+                                    itemValue="#{busesTo}"
+                                    forceSelection="true" 
+                                    completeMethod="#{autoComplete.completeRemBuses}"
+                                    >
+
+                                </p:autoComplete>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 75px;font-size: 2.4vh;" value="إلى اتوبيس" />
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:selectOneMenu id="console" value="#{remBusesFollowReportMB.remRegisterEmployeeDTO.type}" style="width:125px">
+                                    <f:selectItem itemLabel="اختر" itemValue="" />
+                                    <f:selectItem itemLabel="ذهاب" itemValue="0" />
+                                    <f:selectItem itemLabel="عوده" itemValue="1" />
+                                </p:selectOneMenu> 
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 75px;font-size: 2.4vh;" value="نوع المسار "/>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="ui-g-6 ui-xl-6">
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:autoComplete 
+                                    dropdown="true" maxResults="10"
+                                    converter="#{autoComplete.remCompanyDTOConverter}"
+                                    value="#{remBusesFollowReportMB.remRegisterEmployeeDTO.remCompanyDTO}"
+                                    var="remCompany"
+                                    itemLabel="#{remCompany}" 
+                                    itemValue="#{remCompany}"
+                                    forceSelection="true" 
+                                    completeMethod="#{autoComplete.completeRemCompany}"
+                                    >
+                                </p:autoComplete>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 111px;" value="اسم المؤسسة"/>
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:calendar id="dateFrom"  
+                                            pattern="dd/MM/yyyy" value="#{remBusesFollowReportMB.remRegisterEmployeeDTO.dateFrom}"
+                                            style=""/>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 75px;font-size: 2.4vh;" value="من تاريخ " />
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:calendar id="dateTo"  
+                                            pattern="dd/MM/yyyy" value="#{remBusesFollowReportMB.remRegisterEmployeeDTO.dateTo}"
+                                            style=""/>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 75px;font-size: 2.4vh;" value="إلى تاريخ" />
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel value="#{remBusesFollowReportMB.remRegisterEmployeeDTO.employeeNumber}" />
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 75px;font-size: 2.4vh;" value="عدد الركاب" />
+
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+            </p:fieldset>
+
+            <div align="center">
+
+
+                <p:commandButton  class="newButton" 
+                                  id="newN"
+                                  ajax="false"
+                                  style=""
+                                  value="#{userData.userDDs['NEW']}" 
+                                  title="#{userData.userDDs['NEW']}"
+                                  onclick="form.target = ''" 
+                                  actionListener="#{remBusesFollowReportMB.reset()}"/>
+
+
+                <p:commandButton     class="searchButtons"
+                                     title="#{userData.userDDs['SEARCH']}"
+                                     action="#{remBusesFollowReportMB.findEmployee()}"
+                                     id="searchS"
+                                     value="#{userData.userDDs['SEARCH']}"
+                                     update="@form"
+                                     style="color: #fff!important;background-color: #F9A825;margin-left: 5px;"   />
+
+
+
+
+
+                <p:blockUI block="form" trigger="searchS" animate="true" >
+
+                    <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                </p:blockUI> 
+
+            </div>
+
+
+
+
+        </h:form>
+    </ui:define>
+</ui:composition>

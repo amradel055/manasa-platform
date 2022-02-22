@@ -1,0 +1,169 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <h:form id="ScreenAddEditForm" dir="#{userData.dir}" class='formmargin'>
+
+
+            <p:fieldset legend="1. المعلومات الأساسية للموظف" style="margin-bottom:20px">
+                <div   class="ui-g-12 ui-g-nopad" style="padding: 0px;">
+                    <div class="ui-g">
+
+
+
+                        <div class="ui-g-6 ui-xl-6">
+
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText  style="width: 35%!important"  id="employeeName" a:autofocus="true" value="#{employeeFormMB.employeeDTO.name}">
+                                    </p:inputText>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width:95px;"  value="الإسم بالعربية " />
+
+                                </div>
+                            </div>
+
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText  style="width: 35%!important"  id="employeeNameEn" value="#{employeeFormMB.employeeDTO.nameEn}">
+                                    </p:inputText>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width:95px"  value="الإسم بالإنجليزية" />
+
+                                </div>
+                            </div>
+
+
+
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText  style="width: 35%!important"  id="employeeEmail" value="#{employeeFormMB.employeeDTO.email}" >
+                                    </p:inputText>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width:95px;"  value="البريد الإلكتروني" />
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                        <div class="ui-g-6 ui-xl-6">
+
+
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText  style="width: 35%!important"  id="employeeCode" value="#{employeeFormMB.employeeDTO.code}">
+                                    </p:inputText>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width:95px;"  value="كود السائق" />
+
+                                </div>
+                            </div>
+
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText  style="width: 35%!important"  id="employeeMobile" value="#{employeeFormMB.employeeDTO.mobile}">
+                                    </p:inputText>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width:95px;"  value="موبايل السائق" />
+
+                                </div>
+                            </div>
+
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText  style="width: 35%!important"  id="userName" value="#{employeeFormMB.employeeDTO.userName}">
+                                    </p:inputText>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width:95px;"  value=" اسم الدخول" />
+
+                                </div>
+                            </div>
+
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText  style="width: 35%!important"  id="password"  value="#{employeeFormMB.employeeDTO.password}">
+                                    </p:inputText>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width:95px;"  value="الباسورد" />
+
+                                </div>
+                            </div>
+
+                        </div>
+
+
+
+
+
+                    </div>
+                </div>
+            </p:fieldset>
+
+
+
+            <h:panelGrid id="pn1"   class="centerButtons col-md-12" columns="1"  style="margin-top: 2%">
+
+
+                <h:panelGroup>
+
+
+                    <p:commandButton   class="saveButton"  
+                                       id="saveB" 
+                                       title="#{userData.userDDs['SAVE']}"
+                                       value="#{userData.userDDs['SAVE']}" 
+                                       style="color: #fff;"
+                                       action="#{employeeFormMB.save()}" 
+                                       update="@form" />
+                    <p:commandButton  class="newButton" 
+                                      id="newN"
+                                      update="@form"
+                                      style="color: #fff;"
+                                      value="#{userData.userDDs['NEW']}" 
+                                      title="#{userData.userDDs['NEW']}"
+                                      actionListener="#{employeeFormMB.reset()}"/>
+
+                    <p:commandButton class="closeButton" 
+                                     title="#{userData.userDDs['BACK']}" 
+                                     immediate="true" 
+                                     value="#{userData.userDDs['BACK']}" 
+                                     style=""
+                                     action="#{employeeFormMB.exit()}"   />
+
+
+
+
+                </h:panelGroup>
+            </h:panelGrid>
+            <p:blockUI block="ScreenAddEditForm" trigger="saveB " animate="true" >
+
+                <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+            </p:blockUI>
+
+
+        </h:form>
+    </ui:define>
+
+</ui:composition>

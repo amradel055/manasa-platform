@@ -1,0 +1,32 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.isag.businessservice;
+
+import com.isag.dto.AppointmentsDTO;
+import com.isag.entity.IgmaUser;
+import java.util.List;
+import java.util.Map;
+import javax.ejb.Remote;
+
+/**
+ *
+ * @author hq003
+ */
+@Remote
+public interface AppointmentsService {
+
+    public List<AppointmentsDTO> findAppointments(Integer branchId);
+    
+    public List<AppointmentsDTO> findAppointmentsgroup(Integer branchId,Integer schoolStageId );
+
+    public AppointmentsDTO save(AppointmentsDTO appointmentsDTO, IgmaUser isagUser);
+
+    public List<AppointmentsDTO> findAppointmentsByTeacherAndSchoolStageAndMaterialId(Integer teacherId , Integer schoolStageId ,  Integer materialId);
+    
+    public List<AppointmentsDTO> findAppointmentsByStudentId(Integer studentId) ;
+
+    public void deleteAppointments(Integer appointmentsDTO);
+}
