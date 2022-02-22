@@ -80,5 +80,9 @@ public interface StudentService {
     public List<StudentDTO> getAllStudentsListByRemCompanyId(Integer remCompany);
 
     public List<StudentDTO> getAllStudentsListByRemPointsId(Integer remPoints, Integer remTrafficId);
+    
+     public StudentDTO mapTODTO(Student entity, StudentDTO dTO);
+     
+    public List<APIStudentDataDTO> returnListDTOAPI(List<Student> studentList);
 
 }

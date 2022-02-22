@@ -12,6 +12,7 @@ import com.isag.entity.Branch;
 import com.isag.entity.IgmaCompany;
 import com.isag.entity.IgmaUser;
 import com.isag.entity.Appointments;
+import com.isag.entity.LessonLocation;
 import com.isag.entity.Materials;
 import com.isag.entity.SchoolStagesGuide;
 import java.util.ArrayList;
@@ -33,11 +34,11 @@ public class AppointmentsServiceImpl implements AppointmentsService {
     private GenericDAO dao;
 
     @Override
-    public List<AppointmentsDTO> findAppointments(Integer branchId) {
+    public List<AppointmentsDTO> findAppointments(Integer teacherId) {
         Map<String, Object> params = new HashMap<>();
-        params.put("branchId", branchId);
+        params.put("teacherId", teacherId);
         StringBuilder builder = new StringBuilder();
-        builder.append("SELECT d FROM Appointments d WHERE d.branchId.id = :branchId  ");
+        builder.append("SELECT d FROM Appointments d WHERE d.teacherId.id = :teacherId  ");
         List<Appointments> list = dao.findListByQuery(builder.toString(), params);
         return returnListDTO(list);
     }
@@ -52,22 +53,22 @@ public class AppointmentsServiceImpl implements AppointmentsService {
         builder.append("SELECT d FROM Appointments d WHERE d.branchId.id = :branchId AND d.schoolStageId.id = :schoolStageId  ");
         List<Appointments> list = dao.findListByQuery(builder.toString(), params);
         List<AppointmentsDTO> listDTO = returnListDTO(list);
-        Map<String, List<AppointmentsDTO>> mapGroup = new HashMap<>();
-        for(AppointmentsDTO dTO : listDTO){
-            if(mapGroup.containsKey(dTO.getLessonLocation().getName())){
-                List<AppointmentsDTO> appointmentsDTOs = mapGroup.get(dTO.getLessonLocation().getName());
-                appointmentsDTOs.add(dTO);
-                mapGroup.put(dTO.getLessonLocation().getName(), appointmentsDTOs);
-            }else{
-                List<AppointmentsDTO> appointmentsDTOs = new ArrayList<>();
-                appointmentsDTOs.add(dTO);
-                mapGroup.put(dTO.getLessonLocation().getName(), appointmentsDTOs);
-            }
-        }
-        AppointmentsDTO dTO = new AppointmentsDTO();
-        dTO.setMap(mapGroup);
-        listNew.add(dTO);
-        return listNew;
+//        Map<String, List<AppointmentsDTO>> mapGroup = new HashMap<>();
+//        for(AppointmentsDTO dTO : listDTO){
+//            if(mapGroup.containsKey(dTO.getLessonLocation().getName())){
+//                List<AppointmentsDTO> appointmentsDTOs = mapGroup.get(dTO.getLessonLocation().getName());
+//                appointmentsDTOs.add(dTO);
+//                mapGroup.put(dTO.getLessonLocation().getName(), appointmentsDTOs);
+//            }else{
+//                List<AppointmentsDTO> appointmentsDTOs = new ArrayList<>();
+//                appointmentsDTOs.add(dTO);
+//                mapGroup.put(dTO.getLessonLocation().getName(), appointmentsDTOs);
+//            }
+//        }
+//        AppointmentsDTO dTO = new AppointmentsDTO();
+//        dTO.setMap(mapGroup);
+//        listNew.add(dTO);
+        return listDTO;
     }
 
     @Override
@@ -164,6 +165,9 @@ public class AppointmentsServiceImpl implements AppointmentsService {
         dTO.setId(entity.getId());
         dTO.setDay(entity.getDay());
         dTO.setTime(entity.getTime());
+        dTO.setTime2(entity.getTime2());
+        dTO.setTime3(entity.getTime3());
+        dTO.setTime4(entity.getTime4());
         dTO.setAppointmentsType(entity.getAppointmentsType());
         dTO.setRemarks(entity.getRemarks());
         
@@ -227,7 +231,11 @@ public class AppointmentsServiceImpl implements AppointmentsService {
         entity.setId(dTO.getId());
         entity.setDay(dTO.getDay());
         entity.setTime(dTO.getTime());
+        entity.setTime2(dTO.getTime2());
+        entity.setTime3(dTO.getTime3());
+        entity.setTime4(dTO.getTime4());
         entity.setAppointmentsType(dTO.getAppointmentsType());
+        entity.setRemarks(dTO.getRemarks());
 
         if (dTO.getTeacherId() != null) {
             IgmaUser teachers = new IgmaUser();
@@ -243,6 +251,11 @@ public class AppointmentsServiceImpl implements AppointmentsService {
             Materials materials = new Materials();
             materials.setId(dTO.getMaterialId());
             entity.setMaterialId(materials);
+        }
+        if (dTO.getLessonLocationId() != null) {
+            LessonLocation lessonLocation = new LessonLocation();
+            lessonLocation.setId(dTO.getLessonLocationId());
+            entity.setLessonLocation(lessonLocation);
         }
 
         if (dTO.getId() == null) {

@@ -213,9 +213,9 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
 
     private void fillLists() {
         try {
-//             invGroupList = invGroupService.getallInvGroupByBranchId(branchId); // groups
+          invGroupList = invGroupService.getallInvGroupByBranchIdDTO(getUserData().getUserlogin()); // groups
 //            invGroupList = invGroupService.getAllSubInvGroupByBranchId(null, branchId);
-//            invGroupConverter = new InvGroupConverter(invGroupList);
+            invGroupDTOConverter = new InvGroupDTOConverter(invGroupList);
 
             unitList = symbolService.getUnitCompanyId(companyId); //units
             unitDTOConverter = new SymbolDTOConverter(unitList);

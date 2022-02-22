@@ -42,6 +42,8 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
     @EJB
     private InvBarcodeSevice invBarcodeSevice;
 
+ 
+
     @Override
     public List<ItemsDataView> findItemsDataViewByBranchIdAndItemIdAndInventoryId(Integer branchId, Integer itemId) {
         Map<String, Object> params = new HashMap<>();
@@ -522,9 +524,15 @@ public class ItemsDataViewServiceImpl implements ItemsDataViewService {
             invItem.setAddon2(symbol);
         }
 
-        InvGroup invGroup = new InvGroup();
-        invGroup.setId(56);
-        invItem.setGroupId(invGroup);
+        if (invItemDTO.getGroupId() != null) {
+            InvGroup invGroup = new InvGroup();
+            invGroup.setId(invItemDTO.getGroupId().getId());
+            invItem.setGroupId(invGroup);
+        } else {
+            InvGroup invGroup = new InvGroup();
+            invGroup.setId(56);
+            invItem.setGroupId(invGroup);
+        }
 
         if (invItemDTO.getProGroupId() != null) {
             ProGroup proGroup = new ProGroup();

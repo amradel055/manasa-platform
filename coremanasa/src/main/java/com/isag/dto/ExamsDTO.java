@@ -15,6 +15,20 @@ import java.util.List;
 public class ExamsDTO extends BaseEntityDTO {
 
     /**
+     * @return the studentName
+     */
+    public String getStudentName() {
+        return studentName;
+    }
+
+    /**
+     * @param studentName the studentName to set
+     */
+    public void setStudentName(String studentName) {
+        this.studentName = studentName;
+    }
+
+    /**
      * @return the lessonId
      */
     private LessonDTO lessonDTO;
@@ -39,7 +53,8 @@ public class ExamsDTO extends BaseEntityDTO {
     private Integer materialId;
     private List<Integer> materialList;
     private List<Integer> periodList;
-
+    private String studentName;
+    private Integer solutionTime ;
     public ExamsDTO() {
     }
 
@@ -378,6 +393,20 @@ public class ExamsDTO extends BaseEntityDTO {
      */
     public void setPeriodList(List<Integer> periodList) {
         this.periodList = periodList;
+    }
+
+    /**
+     * @return the solutionTime
+     */
+    public Integer getSolutionTime() {
+        return solutionTime;
+    }
+
+    /**
+     * @param solutionTime the solutionTime to set
+     */
+    public void setSolutionTime(Integer solutionTime) {
+        this.solutionTime = solutionTime;
     }
 
 }

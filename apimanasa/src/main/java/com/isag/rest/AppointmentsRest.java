@@ -40,7 +40,7 @@ public class AppointmentsRest {
     public Response allAppointments(AppointmentsDTO appointmentsDTO) {
         if (appointmentsDTO != null) {
             try {
-                List<AppointmentsDTO> dTOs = appointmentsService.findAppointments(appointmentsDTO.getBranchId());
+                List<AppointmentsDTO> dTOs = appointmentsService.findAppointments(appointmentsDTO.getTeacherId());
                 GenericEntity<List<AppointmentsDTO>> list = new GenericEntity<List<AppointmentsDTO>>(dTOs) {
                 };
                 return Response.ok(list).build();
@@ -94,7 +94,7 @@ public class AppointmentsRest {
         if (appointmentsDTO != null) {
             try {
                 List<AppointmentsDTO> dTOs = appointmentsService.findAppointmentsgroup(
-                        appointmentsDTO.getStudentId(),appointmentsDTO.getSchoolStageId()
+                        appointmentsDTO.getBranchId(),appointmentsDTO.getSchoolStageId()
                 );
                 GenericEntity<List<AppointmentsDTO>> list = new GenericEntity<List<AppointmentsDTO>>(dTOs) {
                 };

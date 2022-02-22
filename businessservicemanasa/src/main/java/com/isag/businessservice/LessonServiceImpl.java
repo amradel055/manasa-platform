@@ -103,7 +103,7 @@ public class LessonServiceImpl implements LessonService {
             params.put("materialId", materialId);
             builder.append(" AND d.materialId.id = :materialId");
         }
-        if (materialId != null) {
+        if (schoolStageId != null) {
             params.put("schoolStageId", schoolStageId);
             builder.append(" AND d.schoolStagesGuideId.id = :schoolStageId");
         }
@@ -178,11 +178,13 @@ public class LessonServiceImpl implements LessonService {
                 isagCompany.setId(lessonDTO.getCompanyId());
                 isagUser.setCompanyId(isagCompany);
             }
-            List<String> documents = lessonDTO.getDocuments();
+            List<String> documents = lessonDTO.getDocuments();            
+            List<String> lessonImg = lessonDTO.getImages();
             lesson = mapToEntity(lessonDTO, isagUser, lesson);
             lesson = dao.updateEntity(lesson);
             lessonDTO = mapTODTO(lesson);
             DocumentsDTO documentsDTO = documentsService.saveList(documents, lesson.getId(), lesson.getBranchId().getId(), lesson.getCompanyId().getId());
+            lessonImgService.saveList(lessonImg, lesson.getId(), lesson.getBranchId().getId(), lesson.getCompanyId().getId());
             if (documentsDTO.getMsg() != null && !documentsDTO.getMsg().isEmpty()) {
                 msg.setMsg("يوجد خطأ فى بيانات المذكرات");
                 msg.setMsgType("fail");
@@ -191,7 +193,6 @@ public class LessonServiceImpl implements LessonService {
                 msg.setMsg("تم الحفظ بنجاح");
                 msg.setMsgType("success");
             }
-            lessonImgService.save(lessonDTO.getLessonList(),isagUser,lesson.getId());
            
             return msg;
         } else {
@@ -232,7 +233,7 @@ public class LessonServiceImpl implements LessonService {
         dTO.setVoiceLink(entity.getVoiceLink());
 
         dTO.setDocuments(documentsService.findDocumentsByLessonIdLinks(entity.getId()));
-        dTO.setLessonList(lessonImgService.findAllLessons(entity.getId()));
+        dTO.setImages(lessonImgService.findAllLessons(entity.getId()));
 
         if (entity.getSchoolStagesGuideId() != null) {
             SchoolStagesGuideDTO schoolStagesGuideDTO = new SchoolStagesGuideDTO();
