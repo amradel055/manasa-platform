@@ -241,6 +241,7 @@ public class AutoComplateImpl implements AutoCompleteService {
         invOrganizationSiteDTO.setName(invOrganizationSite.getName());
         invOrganizationSiteDTO.setCode(invOrganizationSite.getCode());
         invOrganizationSiteDTO.setMobile(invOrganizationSite.getMobile());
+        invOrganizationSiteDTO.setPostBox(invOrganizationSite.getPostBox());
         invOrganizationSiteDTO.setLength(invOrganizationSite.getLength());
         invOrganizationSiteDTO.setShoulder(invOrganizationSite.getShoulder());
         invOrganizationSiteDTO.setStep(invOrganizationSite.getStep());

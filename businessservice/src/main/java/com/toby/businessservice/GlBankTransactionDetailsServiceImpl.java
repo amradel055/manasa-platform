@@ -615,13 +615,13 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
     }
 
     @Override
-    public Integer tarhilSettlementVoucher(List<GlBankTransactionDetail> list1, GlBankTransaction glBankTransaction, TobyUser tobyUser, 
+    public Integer tarhilSettlementVoucher(List<GlBankTransactionDetail> list1, GlBankTransaction glBankTransaction, TobyUser tobyUser,
             Integer specialDocumentsTypes, boolean postFlag) {
-        Boolean debit = true ;
-        Boolean credit = false ;
-        if(glBankTransaction.getIsDebit() != null && glBankTransaction.getIsDebit()){
-            debit = false ;
-            credit = true ;
+        Boolean debit = true;
+        Boolean credit = false;
+        if (glBankTransaction.getIsDebit() != null && glBankTransaction.getIsDebit()) {
+            debit = false;
+            credit = true;
         }
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", tobyUser.getBranchId().getId());
@@ -652,7 +652,8 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
 //        ArrayList<Integer> keyList = new ArrayList<Integer>(map.keySet());
 //      ArrayList<String> valueList = new ArrayList<String>(map.values());
         for (Integer accountId : keyList) {
-
+            BigDecimal valueTotal = BigDecimal.ZERO;
+            String  remarkAshreaf = "";
             List<GlBankTransactionDetail> detailList = map.get(accountId);
 //            Integer currentAccountId = null;
 //            Integer accountId = null;
@@ -719,10 +720,12 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
                                 dto.getRemarks(), tobyUser);
                     }
                 }
-                generaljournalDetailsService.addGenDetalil(credit, dto.getValue(), journal.getId(), accountId,
-                        costCenterIdMain,
-                        dto.getRemarks(), tobyUser);
+                valueTotal = valueTotal.add(dto.getValue());
+                remarkAshreaf = dto.getRemarks();
             }
+            generaljournalDetailsService.addGenDetalil(credit,valueTotal , journal.getId(), accountId,
+                    costCenterIdMain,
+                    remarkAshreaf, tobyUser);
         }
 
         return journal == null ? null : journal.getId();
