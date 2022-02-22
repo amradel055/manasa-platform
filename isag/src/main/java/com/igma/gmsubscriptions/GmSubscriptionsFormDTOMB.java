@@ -11,6 +11,7 @@ import com.isag.businessservice.GmGlobalService;
 import com.isag.businessservice.GmItemService;
 import com.isag.businessservice.GmMovementService;
 import com.isag.businessservice.GmSubscriptionsService;
+import com.isag.businessservice.OrganizationSiteService;
 import com.isag.businessservice.ReportManagementService;
 import com.isag.converter.GlBankDTOConverter;
 import com.isag.dto.ActionsDTO;
@@ -72,7 +73,8 @@ public class GmSubscriptionsFormDTOMB extends GMBasicData {
     private GmGlobalService gmGlobalService;
     @EJB
     private ReportManagementService reportManagementService;
-
+    @EJB
+    private OrganizationSiteService organizationSiteService;
     @EJB
     private GmMovementService gmMovementService;
     @EJB
@@ -117,8 +119,12 @@ public class GmSubscriptionsFormDTOMB extends GMBasicData {
                 getGmSubscriptionsDTO().setIsEdit(Boolean.FALSE);
                 fillGmSubscribtionOld();
                 fillResumeClientDTO();
-
-            }else {
+            } else if (getScreenMode() != null && getScreenMode().equalsIgnoreCase("TamdedNewCustomer")) {
+                getGmSubscriptionsDTO().setShowCustomerDate(Boolean.FALSE);
+                getGmSubscriptionsDTO().setIsEdit(Boolean.FALSE);
+                Integer TamdedIdCustomer = (Integer) getContext().getSessionMap().get("TamdedIdCustomer");
+                getGmSubscriptionsDTO().setOrganizationSiteId(organizationSiteService.findOrganizationSiteDTOById(TamdedIdCustomer));
+            } else {
                 exit("../gmsubscriptions/gmsubscriptionslist.xhtml");
             }
         } catch (Exception e) {
@@ -193,12 +199,15 @@ public class GmSubscriptionsFormDTOMB extends GMBasicData {
         setGmSubscriptionsDTO(gmSubscriptionsService.findGmSubscriptionsDTOById(getGmSubscriptionsDTO()));
         setGmItemDTOSelected(getGmSubscriptionsDTO().getGmItemDTO());
     }
-    
 
     public void fillGmSubscribtionOld() {
         setGmSubscriptionsDTOold(new GmSubscriptionsDTO());
-        getGmSubscriptionsDTOold().setId((Integer) getContext().getSessionMap().get("TamdedId"));
-        setGmSubscriptionsDTOold(gmSubscriptionsService.findGmSubscriptionsDTOById(getGmSubscriptionsDTOold()));
+        Integer TamdedId = (Integer) getContext().getSessionMap().get("TamdedId");
+        if (TamdedId != null) {
+            getGmSubscriptionsDTOold().setId(TamdedId);
+            setGmSubscriptionsDTOold(gmSubscriptionsService.findGmSubscriptionsDTOById(getGmSubscriptionsDTOold()));
+
+        }
     }
 
     public void fillResumeClientDTO() {

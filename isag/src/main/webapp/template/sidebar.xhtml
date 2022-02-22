@@ -111,12 +111,15 @@
                                 </p:submenu>
                                 <p:submenu id="sr_sm22" label="#{userData.userDDs['USERS_REPORT']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['userreport'].view 
-                                                       or userData.userScreens[''].view 
+                                                       or userData.userScreens['actionReport'].view 
                                                        or userData.userScreens[''].view 
                                                        or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk221" value="#{userData.userDDs['USERS_REPORT']}" icon="&#xE8D2;" url="/faces/views/accountreport/userreport.xhtml" 
                                                 rendered="#{userData.userScreens['userreport'].view or userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="sr_lnk22198" value="تقرير الاحداث" icon="&#xE8D2;" url="/faces/views/accountreport/actionReport.xhtml" 
+                                                rendered="#{userData.userScreens['actionReport'].view or userData.isAdmin}"
                                                 />
                                 </p:submenu>
                             </p:submenu>

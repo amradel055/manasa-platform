@@ -37,7 +37,7 @@ public class GmSubscriptionsListDTOMB extends GMBasicData {
 
     private String nameClient;
     private LazyDataModel<GmSubscriptionsDTO> dataModel;
-    private Integer color  ;
+    private Integer color;
     private List<GmSubscriptionsDTO> subscribtionList;
     private List<InvOrganizationSiteDTO> invOrganizationSiteDTOList;
     private InvOrganizationSiteDTOConverter organizationSiteDTOConvertor;
@@ -87,8 +87,6 @@ public class GmSubscriptionsListDTOMB extends GMBasicData {
         c.add(Calendar.DAY_OF_MONTH, getGmFreezeDto().getNumber());
         getGmFreezeDto().setDateto(c.getTime());
     }
-
-   
 
     public List<GmSubscriptionsDTO> search() {
 
@@ -216,8 +214,19 @@ public class GmSubscriptionsListDTOMB extends GMBasicData {
             } else if (getGmSubscriptionsDTOSelected() == null && getInvOrganizationSiteDTOSelected() != null) {
                 setGmSubscriptionsDTOSelected(gmSubscriptionsService.getValidGmSubscriptionsDTOByCustomerId(getInvOrganizationSiteDTOSelected().getId()));
                 ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-                context.getSessionMap().put("TamdedId", getGmSubscriptionsDTOSelected().getId());
-                context.getSessionMap().put("ScreenMode", "Tamded");
+                if (getGmSubscriptionsDTOSelected() != null && getGmSubscriptionsDTOSelected().getId() != null) {
+
+                    context.getSessionMap().put("TamdedId", getGmSubscriptionsDTOSelected().getId());
+                    context.getSessionMap().put("ScreenMode", "Tamded");
+                } else {
+                    if (getInvOrganizationSiteDTOSelected() != null && getInvOrganizationSiteDTOSelected().getId() != null) {
+                        context.getSessionMap().put("TamdedIdCustomer", getInvOrganizationSiteDTOSelected().getId());
+                        context.getSessionMap().put("ScreenMode", "TamdedNewCustomer");
+                    }else{
+                        errorMsg("يجب اختيار عميل");
+                    }
+                }
+                
                 goToScreen();
                 return "";
             } else {
@@ -409,14 +418,13 @@ public class GmSubscriptionsListDTOMB extends GMBasicData {
      * @return the access
      */
     public String getAccess() {
-        if (getGmSubscriptionsDTOSelected() != null && getGmSubscriptionsDTOSelected().getStatus() != true ) {
-            if(getGmSubscriptionsDTOSelected().isFreezeStatus() != true){
-             access = "يسمح له بدخول الجيم ";
-            setColor(0);
-            }
-            else if(getGmSubscriptionsDTOSelected().isFreezeStatus() != false){
-            access = "لا يسمح له بدخول الجيم كونه مجمد ";
-            setColor(1);
+        if (getGmSubscriptionsDTOSelected() != null && getGmSubscriptionsDTOSelected().getStatus() != true) {
+            if (getGmSubscriptionsDTOSelected().isFreezeStatus() != true) {
+                access = "يسمح له بدخول الجيم ";
+                setColor(0);
+            } else if (getGmSubscriptionsDTOSelected().isFreezeStatus() != false) {
+                access = "لا يسمح له بدخول الجيم كونه مجمد ";
+                setColor(1);
             }
         } else {
             access = "لا يسمح له بدخول الجيم";
@@ -431,6 +439,7 @@ public class GmSubscriptionsListDTOMB extends GMBasicData {
     public void setAccess(String access) {
         this.access = access;
     }
+
     /**
      * @return the color
      */
