@@ -563,8 +563,8 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         params.put("serial", serial);
         params.put("type", type);
         List<Integer> invPurchaseInvoiceList = dao.findListByQuery("SELECT e.id FROM InvPurchaseInvoice e WHERE  e.branchId.id = :branchId AND e.type = :type AND e.serial = :serial ", params);
-        if (invPurchaseInvoiceList != null && !invPurchaseInvoiceList.isEmpty()&& invPurchaseInvoiceList.get(0)!= null) {
-          Integer invPurchaseInvoiceId = invPurchaseInvoiceList.get(0);
+        if (invPurchaseInvoiceList != null && !invPurchaseInvoiceList.isEmpty() && invPurchaseInvoiceList.get(0) != null) {
+            Integer invPurchaseInvoiceId = invPurchaseInvoiceList.get(0);
             return invPurchaseInvoiceId;
         }
         return null;
@@ -1327,7 +1327,6 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
                     invInvoiceDTO.setMsg(error);
                     dao.rollbackQuery();
                 } else {
-                    dao.executeNativeQuery("update inv_purchase_invoice_detail set net_after_discount_head = test(inv_purchase_invoice_id , net) where inv_purchase_invoice_id = "+invPurchaseInvoice.getId());
                     invInvoiceDTO = mapToDTO(invPurchaseInvoice, invInvoiceDTO, false);
                     invInvoiceDTO = invGlobalService.updateSummition(invInvoiceDTO);
                 }
@@ -1339,6 +1338,13 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         }
 
         return invInvoiceDTO;
+    }
+
+    @Override
+    public void updateDetailInvoiceValues(Integer invPurchaseInvoiceId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("invPurchaseInvoiceId", invPurchaseInvoiceId);
+        dao.creteQueryInvItemView(invPurchaseInvoiceId);
     }
 
 //    @Override
@@ -1892,6 +1898,5 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         }
         return result;
     }
-  
 
 }

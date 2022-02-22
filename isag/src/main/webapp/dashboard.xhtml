@@ -72,11 +72,11 @@
 
             <div class="new-dashboard" style="float: left;;margin-top: 4%;background-color: #ece7eb;">
                 <div class='searchBar' style='padding: 0px;margin: 1% 3% 1% 2%;height: 80px;'>
-      
+
                     <div class="topp" style='display: inline-block;padding: 20px; background-color: #906bb0;font-size: 20px;color: #fff;margin-top: -1%;margin-right: -3%;'>
                         لوحة التحكم
                     </div>
-                    
+
                     <p:commandButton icon="fa fa-plus" value="إنشاء فاتورة" 
                                      class="saddButton"
                                      action="#{dashboardMB.goToAdd()}" 
@@ -96,8 +96,8 @@
                                                                                       or userData.userScreens['gmsubscriptionstatue'].view 
                                                                                       or userData.isAdmin}"/>                                  
                     </p:selectOneMenu>
-                    
-                    
+
+
 
                     <p:inputText class="topp4" style="width: 13% " id="ad1"   value="#{dashboardMB.serial}" placeholder="بحث برقم الفاتوره" />
 
@@ -108,14 +108,15 @@
                         title="#{userData.userDDs['VIEW']}"
                         action="#{dashboardMB.goToEdit()}" 
                         />
-                    
-                    
+
+
 
                 </div>
 
 
                 <div class="tabs10" style="float: right; width: 100%;margin-top: -3%;">
                     <p:tabView style="height: 420px;">
+                        <p:ajax event="tabChange" listener="#{dashboardMB.onTabChange}" update="@form" />
                         <p:tab title="المبيعات" rendered="#{userData.userScreens['invsalesinvoice_1'].view or userData.isAdmin}">
 
 
@@ -783,7 +784,7 @@
                         </p:tab>
                         <p:tab title="الخزائن">
                             <p class="p-m-0">
-                                
+
                                 <div   class="ui-g-12 ui-g-nopad" style='padding: 2% 3% 1% 2%; margin-top: -2%;'>
                                     <div class="ui-g">
                                         <div class="ui-g-12 ui-md-4" style="width: 100%;">

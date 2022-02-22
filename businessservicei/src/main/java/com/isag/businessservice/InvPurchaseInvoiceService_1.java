@@ -109,5 +109,7 @@ public interface InvPurchaseInvoiceService_1 {
     public DistributionApiData distributionApiData(DistributionApiSearch distributionApiSearch);
 
     public Integer findInvPurchaseInvoiceBySerialNew(Integer serial, Integer branchId, Integer type)  ;
+    
+    public void updateDetailInvoiceValues(Integer invPurchaseInvoiceId) ;
 
     }

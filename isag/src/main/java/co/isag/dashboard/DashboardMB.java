@@ -11,6 +11,7 @@ import com.isag.businessservice.GmSubscriptionsService;
 import com.isag.businessservice.InvPurchaseInvoiceDetailsService;
 import com.isag.businessservice.InvPurchaseInvoiceService;
 import com.isag.businessservice.InvPurchaseInvoiceService_1;
+import com.isag.businessservice.InvStripService;
 import com.isag.businessservice.IsagUserInventoryService;
 import com.isag.businessservice.OrganizationSiteService;
 import com.isag.businessservice.reports.BankBalanceViewService;
@@ -20,6 +21,7 @@ import com.isag.entity.GlBank;
 import com.isag.entity.InvInventory;
 import com.isag.isag.BaseListBean;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -82,6 +84,7 @@ public class DashboardMB extends BaseListBean {
     private Integer invoiceNumcustomerByDate;
     private Integer invoiceNumcustomerByMonth;
     private BigDecimal totalNetCustomers;
+    private Integer itemNumbers;
 
     @EJB
     InvPurchaseInvoiceService_1 invPurchaseInvoiceService_1;
@@ -103,6 +106,8 @@ public class DashboardMB extends BaseListBean {
     InvPurchaseInvoiceService invPurchaseInvoiceService;
     @EJB
     SupplierAccountService supplierAccountService;
+    @EJB
+    InvStripService invStripService;
 
     @PostConstruct
     @Override
@@ -117,7 +122,7 @@ public class DashboardMB extends BaseListBean {
     }
 
     public void loadPer() {
-
+        fillSales();
     }
 
     @Override
@@ -129,38 +134,38 @@ public class DashboardMB extends BaseListBean {
                     case 0:
                         context.getSessionMap().put("ScreenMode", "addInvoice");
                         context.getSessionMap().put("typeActivity", 0);
-                        exit("/igma/faces/views/invsalesinvoice_1/invsalesinvoiceform.xhtml");
+                        exit("/faces/views/invsalesinvoice_1/invsalesinvoiceform.xhtml");
                         return "";
                     case 1:
                         context.getSessionMap().put("ScreenMode", "addInvoice");
                         context.getSessionMap().put("typeActivity", 0);
-                        exit("/igma/faces/views/invreturnsales_1/invreturnsalesform.xhtml");
+                        exit("/faces/views/invreturnsales_1/invreturnsalesform.xhtml");
                         return "";
                     case 2:
                         context.getSessionMap().put("ScreenMode", "addInvoice");
-                        exit("/igma/faces/views/invpurchaseinvoice_1/invpurchaseinvoiceform.xhtml");
+                        exit("/faces/views/invpurchaseinvoice_1/invpurchaseinvoiceform.xhtml");
                         context.getSessionMap().put("typeActivity", 0);
                         return "";
                     case 3:
                         context.getSessionMap().put("ScreenMode", "addInvoice");
-                        exit("/igma/faces/views/invreturnpurchase_1/invreturnpurchaseform.xhtml");
+                        exit("/faces/views/invreturnpurchase_1/invreturnpurchaseform.xhtml");
                         context.getSessionMap().put("typeActivity", 0);
                         return "";
                     case 4:
                         context.getSessionMap().put("ScreenMode", "Add");
-                        exit("/igma/faces/views/settlementdeed/settlementdeedForm.xhtml");
+                        exit("/faces/views/settlementdeed/settlementdeedForm.xhtml");
                         return "";
                     case 5:
                         context.getSessionMap().put("ScreenMode", "Add");
-                        exit("/igma/faces/views/notesreceivables/notesreceivablesForm.xhtml");
+                        exit("/faces/views/notesreceivables/notesreceivablesForm.xhtml");
                         return "";
                     case 6:
                         context.getSessionMap().put("ScreenMode", "Add");
-                        exit("/igma/faces/views/glBankTransaction/glBankTransactionForm.xhtml");
+                        exit("/faces/views/glBankTransaction/glBankTransactionForm.xhtml");
                         return "";
                     case 7:
                         context.getSessionMap().put("ScreenMode", "addGmSubscriptions");
-                        exit("/igma/faces/views/gmsubscriptions/gmsubscriptionsform.xhtml");
+                        exit("/faces/views/gmsubscriptions/gmsubscriptionsform.xhtml");
                         return "";
                     default:
                         break;
@@ -220,7 +225,7 @@ public class DashboardMB extends BaseListBean {
                         Integer id = invPurchaseInvoiceService_1.findInvPurchaseInvoiceBySerialNew(serial, getUserlogin().getBranchId().getId(), 1);
                         if (id != null) {
                             context.getSessionMap().put("invPurchaseInvoiceIdSeclected", id);
-                            exit("/igma/faces/views/invsalesinvoice_1/invsalesinvoiceform.xhtml");
+                            exit("/faces/views/invsalesinvoice_1/invsalesinvoiceform.xhtml");
                         } else {
                             FacesContext.getCurrentInstance().addMessage(null,
                                     new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "غير موجوده"));
@@ -231,7 +236,7 @@ public class DashboardMB extends BaseListBean {
                         Integer id1 = invPurchaseInvoiceService_1.findInvPurchaseInvoiceBySerialNew(serial, getUserlogin().getBranchId().getId(), 3);
                         if (id1 != null) {
                             context.getSessionMap().put("invPurchaseInvoiceIdSeclected", id1);
-                            exit("/igma/faces/views/invreturnsales_1/invreturnsalesform.xhtml");
+                            exit("/faces/views/invreturnsales_1/invreturnsalesform.xhtml");
                         } else {
                             FacesContext.getCurrentInstance().addMessage(null,
                                     new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "غير موجوده"));
@@ -242,7 +247,7 @@ public class DashboardMB extends BaseListBean {
                         Integer id2 = invPurchaseInvoiceService_1.findInvPurchaseInvoiceBySerialNew(serial, getUserlogin().getBranchId().getId(), 0);
                         if (id2 != null) {
                             context.getSessionMap().put("invPurchaseInvoiceIdSeclected", id2);
-                            exit("/igma/faces/views/invpurchaseinvoice_1/invpurchaseinvoiceform.xhtml");
+                            exit("/faces/views/invpurchaseinvoice_1/invpurchaseinvoiceform.xhtml");
                         } else {
                             FacesContext.getCurrentInstance().addMessage(null,
                                     new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "غير موجوده"));
@@ -254,7 +259,7 @@ public class DashboardMB extends BaseListBean {
                         Integer id3 = invPurchaseInvoiceService_1.findInvPurchaseInvoiceBySerialNew(serial, getUserlogin().getBranchId().getId(), 2);
                         if (id3 != null) {
                             context.getSessionMap().put("invPurchaseInvoiceIdSeclected", id3);
-                            exit("/igma/faces/views/invreturnpurchase_1/invreturnpurchaseform.xhtml");
+                            exit("/faces/views/invreturnpurchase_1/invreturnpurchaseform.xhtml");
                         } else {
                             FacesContext.getCurrentInstance().addMessage(null,
                                     new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "غير موجوده"));
@@ -265,7 +270,7 @@ public class DashboardMB extends BaseListBean {
                         Integer id4 = glBankTransactionService.findGlBankTransactionBySerial(serial, getUserlogin().getBranchId().getId(), 0);
                         if (id4 != null) {
                             context.getSessionMap().put("glBankTransactionIdSeclected", id4);
-                            exit("/igma/faces/views/settlementdeed/settlementdeedForm.xhtml");
+                            exit("/faces/views/settlementdeed/settlementdeedForm.xhtml");
                         } else {
                             FacesContext.getCurrentInstance().addMessage(null,
                                     new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "غير موجوده"));
@@ -276,7 +281,7 @@ public class DashboardMB extends BaseListBean {
                         Integer id5 = glBankTransactionService.findGlBankTransactionBySerial(serial, getUserlogin().getBranchId().getId(), 1);
                         if (id5 != null) {
                             context.getSessionMap().put("glBankTransactionIdSeclected", id5);
-                            exit("/igma/faces/views/notesreceivables/notesreceivablesForm.xhtml");
+                            exit("/faces/views/notesreceivables/notesreceivablesForm.xhtml");
                         } else {
                             FacesContext.getCurrentInstance().addMessage(null,
                                     new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "غير موجوده"));
@@ -288,7 +293,7 @@ public class DashboardMB extends BaseListBean {
                         Integer id6 = glBankTransactionService.findGlBankTransactionBySerial(serial, getUserlogin().getBranchId().getId(), 2);
                         if (id6 != null) {
                             context.getSessionMap().put("glBankTransactionIdSeclected", id6);
-                            exit("/igma/faces/views/glBankTransaction/glBankTransactionForm.xhtml");
+                            exit("/faces/views/glBankTransaction/glBankTransactionForm.xhtml");
                         } else {
                             FacesContext.getCurrentInstance().addMessage(null,
                                     new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "غير موجوده"));
@@ -300,7 +305,7 @@ public class DashboardMB extends BaseListBean {
                         Integer id7 = gmSubscriptionsService.findGmSubscriptionsDTOBySerialNew(serial, getUserlogin().getBranchId().getId());
                         if (id7 != null) {
                             context.getSessionMap().put("gmSubscriptionsIdSelected", id7);
-                            exit("/igma/faces/views/gmsubscriptions/gmsubscriptionsform.xhtml");
+                            exit("/faces/views/gmsubscriptions/gmsubscriptionsform.xhtml");
                         } else {
                             FacesContext.getCurrentInstance().addMessage(null,
                                     new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "غير موجوده"));
@@ -333,31 +338,42 @@ public class DashboardMB extends BaseListBean {
     }
 
     public void onTabChange(TabChangeEvent event) {
-        switch (event.getTab().getId()) {
-            case "10001":
+        switch (event.getTab().getTitle()) {
+            case "المبيعات":
                 fillSales();
                 break;
-            case "10002":
+            case "مردود المبيعات":
+                fillSalesReturn();
                 break;
-            case "10003":
+            case "المشتريات":
+                fillPurchase();
                 break;
-            case "10004":
+            case "مردود المشتريات ":
+                fillPurchaseReturn();
                 break;
-            case "10005":
+            case "الموردين":
+                fillSuppliers();
                 break;
-            case "10006":
+            case "العملاء":
+                fillCustomers();
                 break;
-            case "10007":
+            case "المخزن":
+                fillventory();
                 break;
-            case "10008":
+            case "المقبوضات":
+                fillCach();
                 break;
-            case "10009":
+            case "الخزائن":
+                fillInventory();
                 break;
-            case "10010":
+            case "المدفوعات":
+                fillSettlement();
                 break;
-            case "10011":
+            case "التحويلات":
+                fillTransfer();
                 break;
-            case "10012":
+            case "الجيم":
+                fillElGem();
                 break;
             default:
                 break;
@@ -367,7 +383,131 @@ public class DashboardMB extends BaseListBean {
     public void fillSales() {
         setTotalNetSalesByDay(invPurchaseInvoiceDetailsService.FindTotalvalueByDate(getInventoryList(), getUserData().getUserBranch().getId(), 1));
         setNetSalesNumberByDay(invPurchaseInvoiceDetailsService.FindInvoiceNumberByDate(getInventoryList(), getUserData().getUserBranch().getId(), 1));
-        
+        setNetSalesNumberByMonth(invPurchaseInvoiceDetailsService.FindInvoiceNumberByMonth(getInventoryList(), getUserData().getUserBranch().getId(), 1));
+        setTotalNetSalesByMonth(invPurchaseInvoiceDetailsService.FindTotalvalueByMonth(getInventoryList(), getUserData().getUserBranch().getId(), 1));
+    }
+
+    public void fillSalesReturn() {
+        setTotalNetReturbSalesByMonth(invPurchaseInvoiceDetailsService.FindTotalvalueByMonth(getInventoryList(), getUserData().getUserBranch().getId(), 3));
+        setTotalNetReturbSalesByDay(invPurchaseInvoiceDetailsService.FindTotalvalueByDate(getInventoryList(), getUserData().getUserBranch().getId(), 3));
+        setNetReturbSalesNumberByDay(invPurchaseInvoiceDetailsService.FindInvoiceNumberByDate(getInventoryList(), getUserData().getUserBranch().getId(), 3));
+        setNetReturbSalesNumberByMonth(invPurchaseInvoiceDetailsService.FindInvoiceNumberByMonth(getInventoryList(), getUserData().getUserBranch().getId(), 3));
+
+    }
+
+    public void fillPurchase() {
+
+        setTotalNetPurchaseByDate(invPurchaseInvoiceDetailsService.FindTotalvalueByDate(getInventoryList(), getUserData().getUserBranch().getId(), 0));
+        setTotalNetPurchaseByMonth(invPurchaseInvoiceDetailsService.FindTotalvalueByMonth(getInventoryList(), getUserData().getUserBranch().getId(), 0));
+        setNetPurchaseNumberByDate(invPurchaseInvoiceDetailsService.FindInvoiceNumberByDate(getInventoryList(), getUserData().getUserBranch().getId(), 0));
+        setNetPurchaseNumberByMonth(invPurchaseInvoiceDetailsService.FindInvoiceNumberByMonth(getInventoryList(), getUserData().getUserBranch().getId(), 0));
+    }
+
+    public void fillPurchaseReturn() {
+
+        setTotalNetReturnPurchaseByDate(invPurchaseInvoiceDetailsService.FindTotalvalueByDate(getInventoryList(), getUserData().getUserBranch().getId(), 2));
+        setTotalNetReturnPurchaseByMonth(invPurchaseInvoiceDetailsService.FindTotalvalueByMonth(getInventoryList(), getUserData().getUserBranch().getId(), 2));
+        setNetReturnPurchaseNumberByDate(invPurchaseInvoiceDetailsService.FindInvoiceNumberByDate(getInventoryList(), getUserData().getUserBranch().getId(), 2));
+        setNetReturnPurchaseNumberByMonth(invPurchaseInvoiceDetailsService.FindInvoiceNumberByMonth(getInventoryList(), getUserData().getUserBranch().getId(), 2));
+    }
+
+    public void fillSuppliers() {
+        setSupplierNum(organizationSiteService.FindSupplier(getUserData().getUserBranch().getId(), null));
+        setInvoiceNumsupplierByDate(invPurchaseInvoiceService.FindSupplierInvoiceNumberByDate(getUserData().getUserBranch().getId(), null));
+        setInvoiceNumsupplierByMonth(invPurchaseInvoiceService.FindSupplierInvoiceNumberByMonth(getUserData().getUserBranch().getId(), null));
+        setTotalNetSuppliers(supplierAccountService.getAccountForAllOrganizationSiteNew(getUserData().getUserBranch().getId(), null));
+
+    }
+
+    public void fillCustomers() {
+        setCustomerNum(organizationSiteService.FindSupplier(getUserData().getUserBranch().getId(), 0));
+        setInvoiceNumcustomerByDate(invPurchaseInvoiceService.FindSupplierInvoiceNumberByDate(getUserData().getUserBranch().getId(), 0));
+        setInvoiceNumsupplierByMonth(invPurchaseInvoiceService.FindSupplierInvoiceNumberByMonth(getUserData().getUserBranch().getId(), 0));
+        setTotalNetCustomers(supplierAccountService.getAccountForAllOrganizationSiteNew(getUserData().getUserBranch().getId(), 0));
+    }
+
+    public void fillventory() {
+        setItemNumbers(invStripService.FindItemsNumber(getUserData().getUserBranch().getId()));
+
+    }
+
+    public void fillElGem() {
+        setTotalNetGmByDate(gmSubscriptionsService.FindTotalvalueByDateGM(getGlBanksList(), getUserData().getUserBranch().getId()));
+        setTotalNetGmByMonth(gmSubscriptionsService.FindTotalvalueByMonthGM(getGlBanksList(), getUserData().getUserBranch().getId()));
+        setInvNumGmByMonth(gmSubscriptionsService.FindInvoiceNumByMounthGM(getGlBanksList(), getUserData().getUserBranch().getId()));
+        setInvNumGmByDate(gmSubscriptionsService.FindInvoiceNumByDateGM(getGlBanksList(), getUserData().getUserBranch().getId()));
+        for (GlBank glBank : getGlBanksList()) {
+            glBank.setOpeninngBalance(bankBalanceViewService.findBalanceForBankId(glBank.getId()));
+        }
+
+    }
+
+    public void fillInventory() {
+        for (GlBank glBank : getGlBanksList()) {
+            glBank.setOpeninngBalance(bankBalanceViewService.findBalanceForBankId(glBank.getId()));
+        }
+    }
+
+    public void fillCach() {
+        setCashByDateList(glBankService.getAllGlBankDTOByBranchId(getUserData().getUserBranch().getId()));
+        for (GlBankDTO glBankDTO : cashByDateList) {
+            glBankDTO.setValue(bankBalanceViewService.findCashBalanceByDate(glBankDTO.getId()));
+        }
+        setCashByMonthList(glBankService.getAllGlBankDTOByBranchId(getUserData().getUserBranch().getId()));
+        for (GlBankDTO glBankDTO : cashByMonthList) {
+            glBankDTO.setValue(bankBalanceViewService.findCashBalanceByMonth(glBankDTO.getId()));
+        }
+        setCashByDateNumberList(glBankService.getAllGlBankDTOByBranchId(getUserData().getUserBranch().getId()));
+        for (GlBankDTO glBankDTO : cashByDateNumberList) {
+            glBankDTO.setNumber(bankBalanceViewService.FindInvoiceNumCashSettTranByTypeByDate(getGlBanksList(), getUserData().getUserBranch().getId(), 1));
+
+        }
+        setCashByMonthNumberList(glBankService.getAllGlBankDTOByBranchId(getUserData().getUserBranch().getId()));
+        for (GlBankDTO glBankDTO : cashByMonthNumberList) {
+            glBankDTO.setNumber(bankBalanceViewService.FindInvoiceNumCashSettTranByTypeByMonth(getGlBanksList(), getUserData().getUserBranch().getId(), 1));
+
+        }
+
+    }
+
+    public void fillSettlement() {
+        setSettlementByDateList(glBankService.getAllGlBankDTOByBranchId(getUserData().getUserBranch().getId()));
+        for (GlBankDTO glBankDTO : settlementByDateList) {
+            glBankDTO.setValue(bankBalanceViewService.findSettelmentBalanceByDate(glBankDTO.getId()));
+        }
+        setSettlementByMonthList(glBankService.getAllGlBankDTOByBranchId(getUserData().getUserBranch().getId()));
+        for (GlBankDTO glBankDTO : settlementByMonthList) {
+            glBankDTO.setValue(bankBalanceViewService.findSettelmentBalanceByMonth(glBankDTO.getId()));
+        }
+        setSettlementByDateNumberList(glBankService.getAllGlBankDTOByBranchId(getUserData().getUserBranch().getId()));
+        for (GlBankDTO glBankDTO : settlementByDateNumberList) {
+            glBankDTO.setNumber(bankBalanceViewService.FindInvoiceNumCashSettTranByTypeByDate(getGlBanksList(), getUserData().getUserBranch().getId(), 0));
+        }
+        setSettlementByMonthNumberList(glBankService.getAllGlBankDTOByBranchId(getUserData().getUserBranch().getId()));
+        for (GlBankDTO glBankDTO : settlementByMonthNumberList) {
+            glBankDTO.setNumber(bankBalanceViewService.FindInvoiceNumCashSettTranByTypeByMonth(getGlBanksList(), getUserData().getUserBranch().getId(), 0));
+        }
+
+    }
+
+    public void fillTransfer() {
+        setTransferByDateList(glBankService.getAllGlBankDTOByBranchId(getUserData().getUserBranch().getId()));
+        for (GlBankDTO glBankDTO : transferByDateList) {
+            glBankDTO.setValue(bankBalanceViewService.findTransferBalanceByDate(glBankDTO.getId()));
+        }
+        setTransferByMonthList(glBankService.getAllGlBankDTOByBranchId(getUserData().getUserBranch().getId()));
+        for (GlBankDTO glBankDTO : transferByMonthList) {
+            glBankDTO.setValue(bankBalanceViewService.findTransferBalanceByMonth(glBankDTO.getId()));
+        }
+        setTransferByDateNumberList(glBankService.getAllGlBankDTOByBranchId(getUserData().getUserBranch().getId()));
+        for (GlBankDTO glBankDTO : transferByDateNumberList) {
+            glBankDTO.setNumber(bankBalanceViewService.FindInvoiceNumCashSettTranByTypeByDate(getGlBanksList(), getUserData().getUserBranch().getId(), 2));
+        }
+        setTransferByMonthNumberList(glBankService.getAllGlBankDTOByBranchId(getUserData().getUserBranch().getId()));
+        for (GlBankDTO glBankDTO : transferByMonthNumberList) {
+            glBankDTO.setNumber(bankBalanceViewService.FindInvoiceNumCashSettTranByTypeByMonth(getGlBanksList(), getUserData().getUserBranch().getId(), 2));
+        }
+
     }
 
     /**
@@ -407,9 +547,6 @@ public class DashboardMB extends BaseListBean {
      * @return the TotalNetSalesByMonth
      */
     public BigDecimal getTotalNetSalesByMonth() {
-        if (TotalNetSalesByMonth == null) {
-            setTotalNetSalesByMonth(invPurchaseInvoiceDetailsService.FindTotalvalueByMonth(getInventoryList(), getUserData().getUserBranch().getId(), 1));
-        }
 
         return TotalNetSalesByMonth;
     }
@@ -425,9 +562,7 @@ public class DashboardMB extends BaseListBean {
      * @return the TotalNetReturbSalesByDay
      */
     public BigDecimal getTotalNetReturbSalesByDay() {
-        if (TotalNetReturbSalesByDay == null) {
-            setTotalNetReturbSalesByDay(invPurchaseInvoiceDetailsService.FindTotalvalueByDate(getInventoryList(), getUserData().getUserBranch().getId(), 3));
-        }
+
         return TotalNetReturbSalesByDay;
     }
 
@@ -442,9 +577,7 @@ public class DashboardMB extends BaseListBean {
      * @return the TotalNetReturbSalesByMonth
      */
     public BigDecimal getTotalNetReturbSalesByMonth() {
-        if (TotalNetReturbSalesByMonth == null) {
-            setTotalNetReturbSalesByMonth(invPurchaseInvoiceDetailsService.FindTotalvalueByMonth(getInventoryList(), getUserData().getUserBranch().getId(), 3));
-        }
+
         return TotalNetReturbSalesByMonth;
     }
 
@@ -459,9 +592,7 @@ public class DashboardMB extends BaseListBean {
      * @return the TotalNetPurchaseByDate
      */
     public BigDecimal getTotalNetPurchaseByDate() {
-        if (TotalNetPurchaseByDate == null) {
-            setTotalNetPurchaseByDate(invPurchaseInvoiceDetailsService.FindTotalvalueByDate(getInventoryList(), getUserData().getUserBranch().getId(), 0));
-        }
+
         return TotalNetPurchaseByDate;
     }
 
@@ -476,9 +607,7 @@ public class DashboardMB extends BaseListBean {
      * @return the TotalNetPurchaseByMonth
      */
     public BigDecimal getTotalNetPurchaseByMonth() {
-        if (TotalNetPurchaseByMonth == null) {
-            setTotalNetPurchaseByMonth(invPurchaseInvoiceDetailsService.FindTotalvalueByMonth(getInventoryList(), getUserData().getUserBranch().getId(), 0));
-        }
+
         return TotalNetPurchaseByMonth;
     }
 
@@ -493,9 +622,7 @@ public class DashboardMB extends BaseListBean {
      * @return the TotalNetReturnPurchaseByDate
      */
     public BigDecimal getTotalNetReturnPurchaseByDate() {
-        if (TotalNetReturnPurchaseByDate == null) {
-            setTotalNetReturnPurchaseByDate(invPurchaseInvoiceDetailsService.FindTotalvalueByDate(getInventoryList(), getUserData().getUserBranch().getId(), 2));
-        }
+
         return TotalNetReturnPurchaseByDate;
     }
 
@@ -511,9 +638,7 @@ public class DashboardMB extends BaseListBean {
      * @return the TotalNetReturnPurchaseByMonth
      */
     public BigDecimal getTotalNetReturnPurchaseByMonth() {
-        if (TotalNetReturnPurchaseByMonth == null) {
-            setTotalNetReturnPurchaseByMonth(invPurchaseInvoiceDetailsService.FindTotalvalueByMonth(getInventoryList(), getUserData().getUserBranch().getId(), 2));
-        }
+
         return TotalNetReturnPurchaseByMonth;
     }
 
@@ -543,9 +668,7 @@ public class DashboardMB extends BaseListBean {
      * @return the NetSalesNumberByMonth
      */
     public Integer getNetSalesNumberByMonth() {
-        if (NetSalesNumberByMonth == null) {
-            setNetSalesNumberByMonth(invPurchaseInvoiceDetailsService.FindInvoiceNumberByMonth(getInventoryList(), getUserData().getUserBranch().getId(), 1));
-        }
+
         return NetSalesNumberByMonth;
     }
 
@@ -560,9 +683,7 @@ public class DashboardMB extends BaseListBean {
      * @return the NetReturbSalesNumberByDay
      */
     public Integer getNetReturbSalesNumberByDay() {
-        if (NetReturbSalesNumberByDay == null) {
-            setNetReturbSalesNumberByDay(invPurchaseInvoiceDetailsService.FindInvoiceNumberByDate(getInventoryList(), getUserData().getUserBranch().getId(), 3));
-        }
+
         return NetReturbSalesNumberByDay;
     }
 
@@ -577,9 +698,7 @@ public class DashboardMB extends BaseListBean {
      * @return the NetReturbSalesNumberByMonth
      */
     public Integer getNetReturbSalesNumberByMonth() {
-        if (NetReturbSalesNumberByMonth == null) {
-            setNetReturbSalesNumberByMonth(invPurchaseInvoiceDetailsService.FindInvoiceNumberByMonth(getInventoryList(), getUserData().getUserBranch().getId(), 3));
-        }
+
         return NetReturbSalesNumberByMonth;
     }
 
@@ -594,9 +713,7 @@ public class DashboardMB extends BaseListBean {
      * @return the NetPurchaseNumberByDate
      */
     public Integer getNetPurchaseNumberByDate() {
-        if (NetPurchaseNumberByDate == null) {
-            setNetPurchaseNumberByDate(invPurchaseInvoiceDetailsService.FindInvoiceNumberByDate(getInventoryList(), getUserData().getUserBranch().getId(), 0));
-        }
+
         return NetPurchaseNumberByDate;
     }
 
@@ -611,9 +728,7 @@ public class DashboardMB extends BaseListBean {
      * @return the NetPurchaseNumberByMonth
      */
     public Integer getNetPurchaseNumberByMonth() {
-        if (NetPurchaseNumberByMonth == null) {
-            setNetPurchaseNumberByMonth(invPurchaseInvoiceDetailsService.FindInvoiceNumberByMonth(getInventoryList(), getUserData().getUserBranch().getId(), 0));
-        }
+
         return NetPurchaseNumberByMonth;
     }
 
@@ -628,9 +743,7 @@ public class DashboardMB extends BaseListBean {
      * @return the NetReturnPurchaseNumberByDate
      */
     public Integer getNetReturnPurchaseNumberByDate() {
-        if (NetReturnPurchaseNumberByDate == null) {
-            setNetReturnPurchaseNumberByDate(invPurchaseInvoiceDetailsService.FindInvoiceNumberByDate(getInventoryList(), getUserData().getUserBranch().getId(), 3));
-        }
+
         return NetReturnPurchaseNumberByDate;
     }
 
@@ -646,9 +759,7 @@ public class DashboardMB extends BaseListBean {
      * @return the NetReturnPurchaseNumberByMonth
      */
     public Integer getNetReturnPurchaseNumberByMonth() {
-        if (NetReturnPurchaseNumberByMonth == null) {
-            setNetReturnPurchaseNumberByMonth(invPurchaseInvoiceDetailsService.FindInvoiceNumberByMonth(getInventoryList(), getUserData().getUserBranch().getId(), 3));
-        }
+
         return NetReturnPurchaseNumberByMonth;
     }
 
@@ -664,9 +775,7 @@ public class DashboardMB extends BaseListBean {
      * @return the TotalNetGmByDate
      */
     public BigDecimal getTotalNetGmByDate() {
-        if (TotalNetGmByDate == null) {
-            setTotalNetGmByDate(gmSubscriptionsService.FindTotalvalueByDateGM(getGlBanksList(), getUserData().getUserBranch().getId()));
-        }
+
         return TotalNetGmByDate;
     }
 
@@ -681,9 +790,7 @@ public class DashboardMB extends BaseListBean {
      * @return the TotalNetGmByMonth
      */
     public BigDecimal getTotalNetGmByMonth() {
-        if (TotalNetGmByMonth == null) {
-            setTotalNetGmByMonth(gmSubscriptionsService.FindTotalvalueByMonthGM(getGlBanksList(), getUserData().getUserBranch().getId()));
-        }
+
         return TotalNetGmByMonth;
     }
 
@@ -700,10 +807,6 @@ public class DashboardMB extends BaseListBean {
     public List<GlBank> getGlBanksList() {
         if (glBanksList == null) {
             glBanksList = glBankService.getAllGlBankByBranchId(getUserData().getUserBranch().getId());
-            for (GlBank glBank : glBanksList) {
-                glBank.setOpeninngBalance(bankBalanceViewService.findBalanceForBankId(glBank.getId()));
-
-            }
         }
 
         return glBanksList;
@@ -720,9 +823,7 @@ public class DashboardMB extends BaseListBean {
      * @return the invNumGmByDate
      */
     public Integer getInvNumGmByDate() {
-        if (invNumGmByDate == null) {
-            setInvNumGmByDate(gmSubscriptionsService.FindInvoiceNumByDateGM(getGlBanksList(), getUserData().getUserBranch().getId()));
-        }
+
         return invNumGmByDate;
     }
 
@@ -737,9 +838,7 @@ public class DashboardMB extends BaseListBean {
      * @return the invNumGmByMonth
      */
     public Integer getInvNumGmByMonth() {
-        if (invNumGmByMonth == null) {
-            setInvNumGmByMonth(gmSubscriptionsService.FindInvoiceNumByMounthGM(getGlBanksList(), getUserData().getUserBranch().getId()));
-        }
+
         return invNumGmByMonth;
     }
 
@@ -755,10 +854,7 @@ public class DashboardMB extends BaseListBean {
      */
     public List<GlBankDTO> getCashByDateList() {
         if (cashByDateList == null) {
-            setCashByDateList(glBankService.getAllGlBankDTOByBranchId(getUserData().getUserBranch().getId()));
-            for (GlBankDTO glBankDTO : cashByDateList) {
-                glBankDTO.setValue(bankBalanceViewService.findCashBalanceByDate(glBankDTO.getId()));
-            }
+            cashByDateList = new ArrayList<>();
         }
         return cashByDateList;
     }
@@ -775,10 +871,7 @@ public class DashboardMB extends BaseListBean {
      */
     public List<GlBankDTO> getCashByMonthList() {
         if (cashByMonthList == null) {
-            setCashByMonthList(glBankService.getAllGlBankDTOByBranchId(getUserData().getUserBranch().getId()));
-            for (GlBankDTO glBankDTO : cashByMonthList) {
-                glBankDTO.setValue(bankBalanceViewService.findCashBalanceByMonth(glBankDTO.getId()));
-            }
+            cashByMonthList = new ArrayList<>();
         }
 
         return cashByMonthList;
@@ -796,11 +889,7 @@ public class DashboardMB extends BaseListBean {
      */
     public List<GlBankDTO> getCashByDateNumberList() {
         if (cashByDateNumberList == null) {
-            setCashByDateNumberList(glBankService.getAllGlBankDTOByBranchId(getUserData().getUserBranch().getId()));
-            for (GlBankDTO glBankDTO : cashByDateNumberList) {
-                glBankDTO.setNumber(bankBalanceViewService.FindInvoiceNumCashSettTranByTypeByDate(getGlBanksList(), getUserData().getUserBranch().getId(), 1));
-
-            }
+            cashByDateNumberList = new ArrayList<>();
         }
 
         return cashByDateNumberList;
@@ -818,12 +907,9 @@ public class DashboardMB extends BaseListBean {
      */
     public List<GlBankDTO> getCashByMonthNumberList() {
         if (cashByMonthNumberList == null) {
-            setCashByMonthNumberList(glBankService.getAllGlBankDTOByBranchId(getUserData().getUserBranch().getId()));
-            for (GlBankDTO glBankDTO : cashByMonthNumberList) {
-                glBankDTO.setNumber(bankBalanceViewService.FindInvoiceNumCashSettTranByTypeByMonth(getGlBanksList(), getUserData().getUserBranch().getId(), 1));
-
-            }
+            cashByMonthNumberList = new ArrayList<>();
         }
+
         return cashByMonthNumberList;
     }
 
@@ -839,11 +925,9 @@ public class DashboardMB extends BaseListBean {
      */
     public List<GlBankDTO> getSettlementByDateList() {
         if (settlementByDateList == null) {
-            setSettlementByDateList(glBankService.getAllGlBankDTOByBranchId(getUserData().getUserBranch().getId()));
-            for (GlBankDTO glBankDTO : settlementByDateList) {
-                glBankDTO.setValue(bankBalanceViewService.findSettelmentBalanceByDate(glBankDTO.getId()));
-            }
+            settlementByDateList = new ArrayList<>();
         }
+
         return settlementByDateList;
     }
 
@@ -859,11 +943,9 @@ public class DashboardMB extends BaseListBean {
      */
     public List<GlBankDTO> getSettlementByMonthList() {
         if (settlementByMonthList == null) {
-            setSettlementByMonthList(glBankService.getAllGlBankDTOByBranchId(getUserData().getUserBranch().getId()));
-            for (GlBankDTO glBankDTO : settlementByMonthList) {
-                glBankDTO.setValue(bankBalanceViewService.findSettelmentBalanceByMonth(glBankDTO.getId()));
-            }
+            settlementByMonthList = new ArrayList<>();
         }
+
         return settlementByMonthList;
     }
 
@@ -879,11 +961,9 @@ public class DashboardMB extends BaseListBean {
      */
     public List<GlBankDTO> getSettlementByDateNumberList() {
         if (settlementByDateNumberList == null) {
-            setSettlementByDateNumberList(glBankService.getAllGlBankDTOByBranchId(getUserData().getUserBranch().getId()));
-            for (GlBankDTO glBankDTO : settlementByDateNumberList) {
-                glBankDTO.setNumber(bankBalanceViewService.FindInvoiceNumCashSettTranByTypeByDate(getGlBanksList(), getUserData().getUserBranch().getId(), 0));
-            }
+            settlementByDateNumberList = new ArrayList<>();
         }
+
         return settlementByDateNumberList;
     }
 
@@ -899,11 +979,9 @@ public class DashboardMB extends BaseListBean {
      */
     public List<GlBankDTO> getSettlementByMonthNumberList() {
         if (settlementByMonthNumberList == null) {
-            setSettlementByMonthNumberList(glBankService.getAllGlBankDTOByBranchId(getUserData().getUserBranch().getId()));
-            for (GlBankDTO glBankDTO : settlementByMonthNumberList) {
-                glBankDTO.setNumber(bankBalanceViewService.FindInvoiceNumCashSettTranByTypeByMonth(getGlBanksList(), getUserData().getUserBranch().getId(), 0));
-            }
+            settlementByMonthNumberList = new ArrayList<>();
         }
+
         return settlementByMonthNumberList;
     }
 
@@ -919,10 +997,7 @@ public class DashboardMB extends BaseListBean {
      */
     public List<GlBankDTO> getTransferByDateList() {
         if (transferByDateList == null) {
-            setTransferByDateList(glBankService.getAllGlBankDTOByBranchId(getUserData().getUserBranch().getId()));
-            for (GlBankDTO glBankDTO : transferByDateList) {
-                glBankDTO.setValue(bankBalanceViewService.findTransferBalanceByDate(glBankDTO.getId()));
-            }
+            transferByDateList = new ArrayList<>();
         }
 
         return transferByDateList;
@@ -940,10 +1015,7 @@ public class DashboardMB extends BaseListBean {
      */
     public List<GlBankDTO> getTransferByMonthList() {
         if (transferByMonthList == null) {
-            setTransferByMonthList(glBankService.getAllGlBankDTOByBranchId(getUserData().getUserBranch().getId()));
-            for (GlBankDTO glBankDTO : transferByMonthList) {
-                glBankDTO.setValue(bankBalanceViewService.findTransferBalanceByMonth(glBankDTO.getId()));
-            }
+            transferByMonthList = new ArrayList<>();
         }
         return transferByMonthList;
     }
@@ -960,11 +1032,9 @@ public class DashboardMB extends BaseListBean {
      */
     public List<GlBankDTO> getTransferByDateNumberList() {
         if (transferByDateNumberList == null) {
-            setTransferByDateNumberList(glBankService.getAllGlBankDTOByBranchId(getUserData().getUserBranch().getId()));
-            for (GlBankDTO glBankDTO : transferByDateNumberList) {
-                glBankDTO.setNumber(bankBalanceViewService.FindInvoiceNumCashSettTranByTypeByDate(getGlBanksList(), getUserData().getUserBranch().getId(), 2));
-            }
+            transferByDateNumberList = new ArrayList<>();
         }
+
         return transferByDateNumberList;
     }
 
@@ -980,11 +1050,9 @@ public class DashboardMB extends BaseListBean {
      */
     public List<GlBankDTO> getTransferByMonthNumberList() {
         if (transferByMonthNumberList == null) {
-            setTransferByMonthNumberList(glBankService.getAllGlBankDTOByBranchId(getUserData().getUserBranch().getId()));
-            for (GlBankDTO glBankDTO : transferByMonthNumberList) {
-                glBankDTO.setNumber(bankBalanceViewService.FindInvoiceNumCashSettTranByTypeByMonth(getGlBanksList(), getUserData().getUserBranch().getId(), 2));
-            }
+            transferByMonthNumberList = new ArrayList<>();
         }
+
         return transferByMonthNumberList;
     }
 
@@ -999,9 +1067,7 @@ public class DashboardMB extends BaseListBean {
      * @return the supplierNum
      */
     public Integer getSupplierNum() {
-        if (supplierNum == null) {
-            setSupplierNum(organizationSiteService.FindSupplier(getUserData().getUserBranch().getId(), null));
-        }
+
         return supplierNum;
     }
 
@@ -1016,9 +1082,7 @@ public class DashboardMB extends BaseListBean {
      * @return the invoiceNumsupplierByDate
      */
     public Integer getInvoiceNumsupplierByDate() {
-        if (invoiceNumsupplierByDate == null) {
-            setInvoiceNumsupplierByDate(invPurchaseInvoiceService.FindSupplierInvoiceNumberByDate(getUserData().getUserBranch().getId(), null));
-        }
+
         return invoiceNumsupplierByDate;
     }
 
@@ -1033,9 +1097,7 @@ public class DashboardMB extends BaseListBean {
      * @return the invoiceNumsupplierByMonth
      */
     public Integer getInvoiceNumsupplierByMonth() {
-        if (invoiceNumsupplierByMonth == null) {
-            setInvoiceNumsupplierByMonth(invPurchaseInvoiceService.FindSupplierInvoiceNumberByMonth(getUserData().getUserBranch().getId(), null));
-        }
+
         return invoiceNumsupplierByMonth;
     }
 
@@ -1050,9 +1112,6 @@ public class DashboardMB extends BaseListBean {
      * @return the totalNetSuppliers
      */
     public BigDecimal getTotalNetSuppliers() {
-        if (totalNetSuppliers == null) {
-            setTotalNetSuppliers(supplierAccountService.getAccountForAllOrganizationSiteNew(getUserData().getUserBranch().getId(), null));
-        }
 
         return totalNetSuppliers;
     }
@@ -1068,9 +1127,7 @@ public class DashboardMB extends BaseListBean {
      * @return the customerNum
      */
     public Integer getCustomerNum() {
-        if (customerNum == null) {
-            setCustomerNum(organizationSiteService.FindSupplier(getUserData().getUserBranch().getId(), 0));
-        }
+
         return customerNum;
     }
 
@@ -1085,9 +1142,7 @@ public class DashboardMB extends BaseListBean {
      * @return the invoiceNumcustomerByDate
      */
     public Integer getInvoiceNumcustomerByDate() {
-        if (invoiceNumcustomerByDate == null) {
-            setInvoiceNumcustomerByDate(invPurchaseInvoiceService.FindSupplierInvoiceNumberByDate(getUserData().getUserBranch().getId(), 0));
-        }
+
         return invoiceNumcustomerByDate;
     }
 
@@ -1102,9 +1157,7 @@ public class DashboardMB extends BaseListBean {
      * @return the invoiceNumcustomerByMonth
      */
     public Integer getInvoiceNumcustomerByMonth() {
-        if (invoiceNumcustomerByMonth == null) {
-            setInvoiceNumcustomerByMonth(invPurchaseInvoiceService.FindSupplierInvoiceNumberByMonth(getUserData().getUserBranch().getId(), 0));
-        }
+
         return invoiceNumcustomerByMonth;
     }
 
@@ -1119,9 +1172,7 @@ public class DashboardMB extends BaseListBean {
      * @return the totalNetCustomers
      */
     public BigDecimal getTotalNetCustomers() {
-        if (totalNetCustomers == null) {
-            setTotalNetCustomers(supplierAccountService.getAccountForAllOrganizationSiteNew(getUserData().getUserBranch().getId(), 0));
-        }
+
         return totalNetCustomers;
     }
 
@@ -1130,5 +1181,19 @@ public class DashboardMB extends BaseListBean {
      */
     public void setTotalNetCustomers(BigDecimal totalNetCustomers) {
         this.totalNetCustomers = totalNetCustomers;
+    }
+
+    /**
+     * @return the itemNumbers
+     */
+    public Integer getItemNumbers() {
+        return itemNumbers;
+    }
+
+    /**
+     * @param itemNumbers the itemNumbers to set
+     */
+    public void setItemNumbers(Integer itemNumbers) {
+        this.itemNumbers = itemNumbers;
     }
 }

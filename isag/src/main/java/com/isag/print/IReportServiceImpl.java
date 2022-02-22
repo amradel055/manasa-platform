@@ -188,6 +188,8 @@ public class IReportServiceImpl implements IReportService {
                         fillReport(prepareInvSalesReport(invInvoiceDTO, userData), userData.getReportPath() + "InvReceiptCashPerfun.jasper", invInvoiceDTO.getInvPurchaseInvoiceDetailList(), "pdf");
                     } else if (invInvoiceDTO.getPrintType() != null && invInvoiceDTO.getPrintType() == 4) {
                         fillReport(prepareInvSalesReport(invInvoiceDTO, userData), userData.getReportPath() + "InvReceiptCashJoomla.jasper", invInvoiceDTO.getInvPurchaseInvoiceDetailList(), "pdf");
+                    } else if (invInvoiceDTO.getPrintType() != null && invInvoiceDTO.getPrintType() == 5) {
+                        fillReport(prepareInvSalesReport(invInvoiceDTO, userData), userData.getReportPath() + "InvReceiptCashJoomlaNew.jasper", invInvoiceDTO.getInvPurchaseInvoiceDetailList(), "pdf");
                     } else {
                         fillReport(prepareInvSalesReport(invInvoiceDTO, userData), userData.getReportPath() + "InvReceiptCash.jasper", invInvoiceDTO.getInvPurchaseInvoiceDetailList(), "pdf");
                     }

@@ -53,7 +53,7 @@ import javax.servlet.http.HttpServletResponse;
 public class LoginBean extends Basic implements Serializable {
 
     private UserData userData;
-    /** 
+    /**
      * Creates a new instance of LoginBean
      */
     @EJB
@@ -116,7 +116,7 @@ public class LoginBean extends Basic implements Serializable {
         HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
         if (session.getAttribute("userLogInData") != null) {
 //            FacesContext.getCurrentInstance().getExternalContext().redirect("/igma/faces/dashboard.xhtml");
-            FacesContext.getCurrentInstance().getExternalContext().redirect("/faces/dashboard.xhtml");
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/");
         }
     }
 
@@ -208,45 +208,69 @@ public class LoginBean extends Basic implements Serializable {
         userDataDTO.setCompanyId(userData.getCompany() == null ? null : userData.getCompany().getId());
     }
 
-//    @PreDestroy
-    public void logout(Integer test) {
-        if (test != null) {
-            ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-            HttpServletResponse response = (HttpServletResponse) context.getResponse();
-            HttpServletRequest request = (HttpServletRequest) context.getRequest();
-            HttpSession session = (HttpSession) context.getSession(false);
+    public void logout() {
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        HttpServletResponse response = (HttpServletResponse) context.getResponse();
+        HttpServletRequest request = (HttpServletRequest) context.getRequest();
+        HttpSession session = (HttpSession) context.getSession(false);
 
-            try {
-                userData = (UserData) context.getSessionMap().get("userLogInData");
-                if (userData == null) {
-                    FacesContext.getCurrentInstance().getExternalContext().redirect("/");
-//                    FacesContext.getCurrentInstance().getExternalContext().redirect("/igma/faces/login.xhtml");
-                }
-
-                String scheme = context.getRequestScheme() + "://";
-                String serverName = context.getRequestServerName();
-                String serverPort = (context.getRequestServerPort() == 80) ? "" : ":" + context.getRequestServerPort();
-//            String contextPath = context.getApplicationContextPath();
-//            String finalPath = scheme + serverName + serverPort + contextPath;
-                saveUserData(userData, false);
-
-//            FacesContext.getCurrentInstance().getExternalContext().redirect(finalPath);
-                //  FacesContext.getCurrentInstance().getExternalContext().redirect("/isag");
-                //      context.redirect("/isag");
-                if (session != null && request.isRequestedSessionIdValid()) {
-                    session.invalidate();
-                }
-                if (!response.isCommitted()) {
-//                    context.redirect("/igma?faces-redirect=true");
-                    context.redirect("/igma?faces-redirect=true");
-                }
-//        } catch (IOException ex) {
-            } catch (Exception ex) {
-                ex.printStackTrace();
-//            saveError(ex, "LoginBean", "logout");
+        try {
+            userData = (UserData) context.getSessionMap().get("userLogInData");
+            if (userData == null) {
+                FacesContext.getCurrentInstance().getExternalContext().redirect("/");
             }
+            saveUserData(userData, false);
+//            if (session != null && request.isRequestedSessionIdValid()) {
+                session.invalidate();
+//            }
+            if (!response.isCommitted()) {
+                context.redirect("/igma?faces-redirect=true");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
+        //    @PreDestroy
+        //    public void logout(Integer test) {
+        //        if (test != null) {
+        //            ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        //            HttpServletResponse response = (HttpServletResponse) context.getResponse();
+        //            HttpServletRequest request = (HttpServletRequest) context.getRequest();
+        //            HttpSession session = (HttpSession) context.getSession(false);
+        //
+        //            try {
+        //                userData = (UserData) context.getSessionMap().get("userLogInData");
+        //                if (userData == null) {
+        //                    FacesContext.getCurrentInstance().getExternalContext().redirect("/");
+        ////                    FacesContext.getCurrentInstance().getExternalContext().redirect("/igma/faces/login.xhtml");
+        //                }
+        //
+        //                String scheme = context.getRequestScheme() + "://";
+        //                String serverName = context.getRequestServerName();
+        //                String serverPort = (context.getRequestServerPort() == 80) ? "" : ":" + context.getRequestServerPort();
+        ////            String contextPath = context.getApplicationContextPath();
+        ////            String finalPath = scheme + serverName + serverPort + contextPath;
+        //                saveUserData(userData, false);
+        //
+        ////            FacesContext.getCurrentInstance().getExternalContext().redirect(finalPath);
+        //                //  FacesContext.getCurrentInstance().getExternalContext().redirect("/isag");
+        //                //      context.redirect("/isag");
+        ////                if (session != null && request.isRequestedSessionIdValid()) {
+        ////                    session.invalidate();
+        ////                }
+        ////                if (!response.isCommitted()) {
+        //////                    context.redirect("/igma?faces-redirect=true");
+        ////                    context.redirect("/igma?faces-redirect=true");
+        ////                }
+        //                session.invalidate();
+        //                context.redirect("/");
+        ////        } catch (IOException ex) {
+        //            } catch (Exception ex) {
+        //                ex.printStackTrace();
+        ////            saveError(ex, "LoginBean", "logout");
+        //            }
+        //        }
+        //    }
 
     public void adminValues(IsagUser loggedInUser) {
         List<GlYear> years = yearService.getALLGlyearByCompanyId(selectedCompanyId);

@@ -92,6 +92,7 @@ public class InvPurchaseInvoiceFormDTOMB extends InventoryBasicDataForm {
         if (getInvInvoiceDTO() != null && getInvInvoiceDTO().getInvPurchaseInvoiceDetailList() != null && !getInvInvoiceDTO().getInvPurchaseInvoiceDetailList().isEmpty()) {
             getInvInvoiceDTO().setMsg(null);
             setInvInvoiceDTO(invPurchaseInvoiceService.save(getInvInvoiceDTO(), getUserData().getUser()));
+            invPurchaseInvoiceService.updateDetailInvoiceValues(getInvInvoiceDTO().getId());
             msgSave(getInvInvoiceDTO().getMsg());
 //            reset();
 //            exit("../invsalesinvoice_1/invsalesinvoiceformCeramic.xhtml");

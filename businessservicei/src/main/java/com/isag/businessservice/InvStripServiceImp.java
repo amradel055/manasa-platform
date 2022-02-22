@@ -277,7 +277,7 @@ public class InvStripServiceImp implements InvStripService {
     public InvInvoiceDTO convertInvStripListToInvInvoice(InvInvoiceDTO invInvoiceDTO) {
 
         List<InvDetailDTO> detailList = new ArrayList<>();
-        
+
         if (invInvoiceDTO.getInvDailogueDataListSelected() != null && !invInvoiceDTO.getInvDailogueDataListSelected().isEmpty()) {
             Map<String, InvDetailDTO> mapInvDetailDTO = new HashMap<>();
             for (InvDailogueData invDailogueData : invInvoiceDTO.getInvDailogueDataListSelected()) {
@@ -301,10 +301,10 @@ public class InvStripServiceImp implements InvStripService {
             List<InvDetailDTO> detailDTOList = new ArrayList(mapInvDetailDTO.values());
 
             invInvoiceDTO.setInvStripDetailList(detailDTOList);
-            
-            for(InvDetailDTO dTO : detailDTOList){
+
+            for (InvDetailDTO dTO : detailDTOList) {
                 dTO.setAvailableQuantityRow(quantityItemsStoreByDateService.getQuantatyItemByinventory(invInvoiceDTO.getInvInventoryId().getId(), dTO.getItemsBarcodesDetail().getItemId(), invInvoiceDTO.getInventorySetupDTO().getSellBuy(), invInvoiceDTO.getDate()));
-                if(dTO.getActualQuantity().compareTo(dTO.getAvailableQuantityRow()) != 0){
+                if (dTO.getActualQuantity().compareTo(dTO.getAvailableQuantityRow()) != 0) {
                     detailList.add(dTO);
                 }
             }
@@ -313,5 +313,17 @@ public class InvStripServiceImp implements InvStripService {
         invInvoiceDTO.setInvPurchaseInvoiceDetailList(detailList);
         return invInvoiceDTO;
     }
+
+    @Override
+    public Integer FindItemsNumber(Integer branchId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT COUNT(ipid.id) FROM InvItem ipid WHERE ipid.branchId.id = :branchId ");
+        List<Long> itemsList = dao.findListByQuery(query.toString(), params);
+        return itemsList == null ? 0 : itemsList.get(0).intValue();
+
+    }
+   
 
 }
