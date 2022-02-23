@@ -1,0 +1,169 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form  class='formmargin' dir="#{userData.dir}"  id="form">
+            <div style=" position: absolute;left: 20px"> 
+
+                    <p:commandButton  style="z-index: 2;
+                                      margin-top: 24%;
+                                      color: #035c70!important; 
+                                      background-color: #223238!important;
+                                      border: 1px solid #22323a!important;
+                                      background: #22323a 50% 50% repeat-x!important;"
+                                      icon="fa fa-fw fa-home"
+                                      title="#{userData.userDDs['HOME']}"
+                                      class="smhomeButton" 
+                                      action="exit" />
+                       
+                </div>
+            <p:fieldset   legend="#{userData.userDDs['RECEIPT_GOOD_REQ']}" >
+                
+                <div>
+                    <p:dataTable id="invAddingOrderTable"
+                                 draggableColumns="true"
+                                 draggableRows="true"
+                                 var="invAddingOrderTable" 
+                                 widgetVar="bTable" 
+                                 rowIndexVar="index" 
+                                 value="#{invAddingOrderListMB.invAddingOrderEntityList}"
+                                 rows="15" 
+                                 paginator="true"
+                                 emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" >
+
+                        <f:facet name="header" >
+                            <p:commandButton  icon="fa fa-plus" 
+                                              id="addA"
+                                              class="saddButton"
+                                              title="#{userData.userDDs['ADD']}" 
+                                              action="#{invAddingOrderListMB.goToAdd()}" 
+                                              style="float:right" 
+                                              rendered="#{userData.userScreens['invaddingorder1'].add or userData.isAdmin}"/>
+
+                            <p:blockUI block="form" trigger="addA" animate="true" >
+
+                                <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                            </p:blockUI> 
+
+                            <p:outputPanel  >
+                                <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                                <p:inputText id="globalFilter" onkeyup="PF('bTable').filter()" style="width:150px" />
+                            </p:outputPanel>
+                        </f:facet>
+
+                        <p:column style="width:12vh;font-size:1.6vh;text-align: -webkit-auto;border-radius: 0px;" filterStyle="display:none" 
+                                  filterBy="#{invAddingOrderTable.serial}" 
+                                  filterMatchMode="contains" 
+                                  headerText="#{userData.userDDs['RECEI_NO']}"
+                                  sortBy="#{invAddingOrderTable.serial}">
+                            <p:outputLabel value="#{invAddingOrderTable.serial}" />
+                        </p:column>
+
+                        <p:column style="width:10vh;font-size:1.6vh;text-align: -webkit-auto;border-radius: 0px;" 
+                                  filterStyle="display:none"
+                                  filterBy="#{invAddingOrderTable.supplierId}"
+                                  filterMatchMode="contains" 
+                                  headerText="#{userData.userDDs['SUPPLIER']}"
+                                  sortBy="#{invAddingOrderTable.supplierId}" 
+                                  >
+                            <p:outputLabel value="#{invAddingOrderTable.supplierId}" />
+                        </p:column>
+
+                        <p:column style="width:10vh;font-size:1.6vh;text-align: -webkit-auto;border-radius: 0px;" filterStyle="display:none" 
+                                  filterBy="#{invAddingOrderTable.date}" 
+                                  filterMatchMode="contains"
+                                  headerText="#{userData.userDDs['DATEE']}"
+                                  sortBy="#{invAddingOrderTable.date}" 
+                                  >
+                            <p:outputLabel value="#{invAddingOrderTable.date}" >
+                                <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                            </p:outputLabel>                           
+                        </p:column>
+
+                        <p:column style="width:12vh;font-size:1.6vh;text-align: -webkit-auto;border-radius: 0px;" filterStyle="display:none"
+                                  filterBy="#{invAddingOrderTable.supplierInvoice}"
+                                  filterMatchMode="contains" 
+                                  headerText="#{userData.userDDs['SUPPLIER_BILL']}"
+                                  sortBy="#{invAddingOrderTable.supplierInvoice}"
+                                  >
+                            <p:outputLabel value="#{invAddingOrderTable.supplierInvoice}" />
+                        </p:column>
+
+
+                        <p:column style="width:13vh;font-size:1.6vh;text-align: -webkit-auto;border-radius: 0px;" filterStyle="display:none"
+                                  filterBy="#{invAddingOrderTable.purchaseOrderId}" 
+                                  filterMatchMode="contains"
+                                  headerText="#{userData.userDDs['PURCHASE_OR_NO']}"
+                                  sortBy="#{invAddingOrderTable.purchaseOrderId}"
+                                  >
+                            <p:outputLabel value="#{invAddingOrderTable.purchaseOrderId}" />
+                        </p:column> 
+
+
+                        <p:column   style="width:16vh;font-size:1.6vh;text-align: -webkit-auto;border-radius: 0px;"
+                                    filterStyle="display:none"
+                                    filterBy="#{invAddingOrderTable.supplierDate}" 
+                                    filterMatchMode="contains"
+                                    headerText="#{userData.userDDs['PURCHASE_ORDER_DATE']}"
+                                    sortBy="#{invAddingOrderTable.supplierDate}"
+                                    >
+                            <p:outputLabel value="#{invAddingOrderTable.supplierDate}" >
+                                <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                            </p:outputLabel>
+                        </p:column> 
+
+                        
+                        <p:column style="width:11vh;font-size:1.6vh;text-align: center;border-radius: 0px;" headerText="#{userData.userDDs['TRANSACTION']}" >
+                            <p:commandButton update="@form" 
+                                             icon="fa fa-fw fa-edit" 
+                                             style="background-color: #6a6967;border-radius: 3px;"
+                                             class="seditButtons"
+                                             title="#{userData.userDDs['EDIT']}" 
+                                             action="#{invAddingOrderListMB.goToEdit()}" 
+                                             rendered="#{userData.userScreens['invaddingorder1'].edit or userData.isAdmin}" >
+
+                                <f:setPropertyActionListener value="#{invAddingOrderTable.id}" 
+                                                             target="#{invAddingOrderListMB.invAddingOrderSelected}" />
+                            </p:commandButton>
+
+                            <p:commandButton update="@form" 
+                                             icon="fa fa-remove" 
+                                             class="sdeleteButtons"
+                                             style="background-color: red;border-radius: 3px;"
+                                             title="#{userData.userDDs['DELETE']}" 
+                                             action="#{invAddingOrderListMB.delete}" 
+                                             rendered="#{userData.userScreens['invaddingorder1'].delete or userData.isAdmin}">
+                                <f:setPropertyActionListener value="#{invAddingOrderTable}" target="#{invAddingOrderListMB.invAddingOrderEntitySelected}" />
+                                <p:confirm header="Confirmation" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                            </p:commandButton>
+
+                            <p:commandButton   class="sprintButtons"  onclick="form.target = '_blank'"  ajax="false"
+                                               icon="fa fa-fw fa-print" style="background-color: rgb(0, 74, 128);border-radius: 3px;"
+                                               title="print" 
+                                               action="#{invAddingOrderListMB.print()}" 
+                                               rendered="#{userData.userScreens['invaddingorder1'].edit or userData.isAdmin}" >
+
+                                <f:setPropertyActionListener value="#{invAddingOrderTable.id}" 
+                                                             target="#{invAddingOrderListMB.invAddingOrderSelected}" />
+                            </p:commandButton>
+                        </p:column>
+
+                    </p:dataTable> 
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                        <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog>
+                </div>
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>
+
+

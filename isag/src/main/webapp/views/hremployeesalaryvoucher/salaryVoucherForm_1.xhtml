@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <h:form id="form" dir="#{userData.dir}" class='formmargin'>
+            <div style=" position: absolute;left: 20px"> 
+
+                <p:commandButton  style="z-index: 2;
+                                      margin-top: 12%;
+                                      color: #035c70!important; 
+                                      background-color: #223238!important;
+                                      border: 1px solid #22323a!important;
+                                      background: #22323a 50% 50% repeat-x!important;"
+                                      icon="fa fa-fw fa-home"
+                                      title="#{userData.userDDs['HOME']}"
+                                      class="smhomeButton" 
+                                      action="exit" />  
+            </div>
+            
+
+            <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:95px"  value="ملاحظات" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText  value="#{salaryStructureFormMB.salaryStructureDTO.remark}">
+                                      
+                                    </p:inputText>
+                                   
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+            
+            <h:panelGroup>
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width:100px;margin-right: 5%"  value="الموظف " />
+                                    </h:panelGroup>
+
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+
+                            <h:panelGroup>
+                                <p:autoComplete style="width:34%!important" 
+                                                dropdown="true" 
+                                                value="#{salaryStructureFormMB.salaryStructureDTO.employeeId}" 
+                                                converter="#{salaryStructureFormMB.employeeDTOConverter}"
+                                                completeMethod="#{salaryStructureFormMB.completeEmployee}"
+                                                var="parent"
+                                                itemLabel="#{parent.name}" 
+                                                itemValue="#{parent}" 
+                                                forceSelection="true" 
+                                                >
+                                    <p:ajax 
+                                        event="itemSelect" process="@form"
+                                            listener="#{salaryStructureFormMB.findEmployeeData()}"
+                                            />
+
+                                </p:autoComplete>
+
+                            </h:panelGroup>
+            
+             <p:commandButton   class="newButton"  
+                                       id="newN"
+                                       ajax="false"
+                                       style=""
+                                       value="#{userData.userDDs['NEW']}" 
+                                       title="#{userData.userDDs['NEW']}"
+                                       action="#{salaryStructureFormMB.reset()}" 
+                                       update="@form" />
+        </h:form>
+    </ui:define>
+
+</ui:composition>

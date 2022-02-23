@@ -1,0 +1,157 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form id="form" dir="#{userData.dir}" class='formmargin'>
+
+            <p:fieldset id="AccuralDeduction" legend="الاستحقاقات والاستقطاعات" style="font-size: 17px !important;">
+                <div class="col-xs-12">
+                    <p:messages id="curmsg" showDetail="true" rendered="true" closable="true"/>   
+                </div>
+                <div class="ui-g-12 ui-g-nopad">
+
+                    <div class="ui-g">
+
+                        <div class="ui-g-6 ui-xl-6">
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:selectOneMenu id="status" value="#{rscAccrualDeductionFormMB.rscAccrualDeductionDTO.rscAccrualDeductionType}" style="width:55%">
+
+                                        <f:selectItem itemLabel="اختر" itemValue="" noSelectionOption="true" /> 
+                                        <f:selectItem itemLabel="استحقاق" itemValue="2" noSelectionOption="true" />
+                                        <f:selectItem itemLabel="استقطاع" itemValue="3" noSelectionOption="true" />
+                                        <f:selectItems  />
+                                    </p:selectOneMenu>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 70px" value="النوع/"/>
+                                    <p:outputLabel style="width: 70px" value="#{rscAccrualDeductionFormMB.rscAccrualDeductionDTO.rscAccrualDeductionType eq 2 ? 'استحقاق' : 'استقطاع'}"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText   style="width: 50%" value="#{rscAccrualDeductionFormMB.rscAccrualDeductionDTO.rscAccrualDeductionName}"/>
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 150px;" value="الاسم"/>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="ui-g-6 ui-xl-6">
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText    style="width: 55%" value="#{rscAccrualDeductionFormMB.rscAccrualDeductionDTO.rscAccrualDeductionCode}"/>
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 66px" value="الكود"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText  style="width: 50%" value="#{rscAccrualDeductionFormMB.rscAccrualDeductionDTO.serial}"/>
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel  style="width: 150px;" value="رقم الاستحقاق/الاستقطاع"/>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+
+                    </div>
+                </div>
+
+                              <div id="buttunss" class="asmaa">
+
+                            <p:commandButton class="saveButton" 
+                                             title="#{userData.userDDs['SAVE']}"
+                                             value="#{userData.userDDs['SAVE']}"
+
+                                            
+                                             action="#{rscAccrualDeductionFormMB.save()}" update="@form" 
+                                             id="saveB"/>
+
+                        <p:commandButton class="closeButton"
+                                         title="#{userData.userDDs['BACK']}" 
+                                         immediate="true" 
+                                          style=""
+                                         value="#{userData.userDDs['BACK']}" 
+                                          
+                                         action="#{rscAccrualDeductionFormMB.exit()}"   />`
+
+                            <p:commandButton class="newButton" 
+                                             value="#{userData.userDDs['NEW']}"
+                                             title="#{userData.userDDs['NEW']}"
+
+                                            
+                                             action="#{rscAccrualDeductionFormMB.reset}" 
+                                             update="form" id="undo"/>
+
+
+
+                            <p:commandButton class="cancelButton"
+                                             title="#{userData.userDDs['CANCEL']}" 
+                                             immediate="true" 
+                                             
+                                             value="#{userData.userDDs['CANCEL']}" 
+
+                                             action="#{rscAccrualDeductionFormMB.exit()}"   />`
+
+                            <p:commandButton  class="PrintButton"
+                                              id="PrintB"
+                                              ajax="false"
+                                              onclick="form.target = '_blank'"  
+
+                                             
+                                              value="#{userData.userDDs['PRINT']}" 
+                                              actionListener="#{rscAccrualDeductionFormMB.print()}"
+                                              title="#{userData.userDDs['PRINT']}"
+                                              immediate="true" />
+
+
+
+
+                            <p:blockUI block="form" trigger="saveB  undo" animate="true" >
+
+                                <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                            </p:blockUI>
+
+                        </div>
+
+
+            </p:fieldset>
+
+
+
+
+        </h:form>
+
+    </ui:define>
+
+
+</ui:composition>

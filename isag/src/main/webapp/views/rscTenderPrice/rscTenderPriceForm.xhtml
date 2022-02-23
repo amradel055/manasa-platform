@@ -1,0 +1,406 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+
+     
+            <h:form  class='formmargin' dir="#{userData.dir}"  id="form">
+            <div class="col-xs-12">
+                <p:messages id="curmsg" showDetail="true" rendered="true" closable="true">
+
+                </p:messages>   
+            </div>
+            <div class="ui-g-12 ui-g-nopad">
+
+                <div class="ui-g">
+
+<div class="ui-g-6 ui-xl-6">
+                    <p:fieldset legend="#{userData.userDDs['TENDER_PRICING']}"  id="price">
+
+
+
+                            
+                                <div class="ui-g-12 ui-xl-12">
+
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:selectOneMenu  style="width:41%" value="#{rscPriceTenderFormMB.priceTenderDTO.status}">
+
+                                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" itemValue="" noSelectionOption="true" /> 
+                                            <f:selectItem itemLabel="#{userData.userDDs['NOT_DONE']}" itemValue="0" noSelectionOption="true" />
+                                            <f:selectItem itemLabel="#{userData.userDDs['DONE']}" itemValue="1" noSelectionOption="true" />
+                                            <f:selectItems  />
+                                        </p:selectOneMenu>
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel class="pricing-status" value="#{userData.userDDs['PRICING_STATUE']}"/>
+
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-xl-12">
+
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:calendar pattern="dd/MM/yyyy"  style="width: 40%" value="#{rscPriceTenderFormMB.priceTenderDTO.date}"/>
+
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel class="tender-pricing-title" value="#{userData.userDDs['TEXT_DATE']}"/>
+
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-xl-12">
+
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:inputText   style="width: 41%!important" value="#{rscPriceTenderFormMB.priceTenderDTO.docNumber}"/>
+
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel class="tender-pricing-title" value="#{userData.userDDs['DOCUM_NO']}"/>
+
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-xl-12">
+
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:inputText style="width: 41%!important" readonly="true" value="#{rscPriceTenderFormMB.priceTenderDTO.serial}" />
+
+                                    </div>
+                                    <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel class="tender-pricing-title" value="#{userData.userDDs['PRICING_NO']}"/>
+
+                                    </div>
+                                </div>
+
+
+
+
+
+
+                    </p:fieldset> 
+                            </div>
+
+
+                    <div class="ui-g-12 ui-md-6">
+
+                        <p:fieldset legend="#{userData.userDDs['TENDER_DATA']}" id="data">
+
+                                  
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                            <p:inputText   readonly="true" style="width: 40%!important;" value="#{rscPriceTenderFormMB.priceTenderDTO.rscTenderDTO.remark}"/>
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel  style="width: 60px;" value="#{userData.userDDs['DESCRIPTION']}"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                        <p:inputText   readonly="true" style="width: 40%!important;" value="#{rscPriceTenderFormMB.priceTenderDTO.rscTenderDTO.customerId.name}"/>
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 60px;" value="#{userData.userDDs['OWNER']}"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                            <p:inputText   readonly="true" style="width: 40%!important;" value="#{rscPriceTenderFormMB.priceTenderDTO.rscTenderDTO.serial}"/>
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width:60px;" value="#{userData.userDDs['NUMB']}"/>
+
+                                </div>
+                            </div>
+                                       
+                            
+                            
+                            
+                        
+                           
+                            
+                        </p:fieldset> 
+  </div>
+                    </div>
+                </div>  
+            
+
+
+
+            <p:fieldset id="fieldSetId" legend="#{userData.userDDs['ITEMS']}"  style="margin-bottom:20px">
+                <p:dataTable class="datatable-dir-en" id="rscTenderPriceDetail"
+                             var="rscTenderPriceDetail"
+                             rowIndexVar="index" 
+                             dir="rtl" 
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                             editable="true"
+                             editMode="cell"
+                             sortBy="#{1}"
+                             widgetVar="rscTenderPriceDetail"
+                             rowKey="#{rscTenderPriceDetail.index}"
+                             value="#{rscPriceTenderFormMB.priceTenderDTO.rscPriceTenderDetailWorkUnitDTOList}">
+
+
+                    <f:facet name="header" class="col-md-12">
+
+                        <p:commandButton icon="fa fa-plus" 
+                                         title="#{userData.userDDs['ADD']}" 
+                                         class="saddButton" update="rscTenderPriceDetail"
+                                         action="#{rscPriceTenderFormMB.addChild}" 
+                                         rendered="#{rscPriceTenderFormMB.add }"
+                                         disabled="#{rscPriceTenderFormMB.priceTenderDTO.active}"/>
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : " 
+                                          style="font-size: large" />
+                            <p:inputText id="globalFilter" 
+                                         onkeyup="PF('bTable').filter()" 
+                                         style="width:150px" />
+
+                        </p:outputPanel>
+
+
+                    </f:facet>
+                    <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px;" id="itemName" headerText="#{userData.userDDs['ITEM']}" 
+                              filterBy="#{rscTenderPriceDetail.guideDTO}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{rscTenderPriceDetail.guideDTO}"
+                              filterable="false">
+                        <p:autoComplete id="itemNameIn"  
+                                        style="width:190%"
+                                        converter="#{rscPriceTenderFormMB.rscWorkUnitsGuideDTOConverter}"
+                                        value="#{rscTenderPriceDetail.guideDTO}"
+                                        var="item"
+                                        itemLabel="#{item}" 
+                                        itemValue="#{item}" 
+                                        forceSelection="true"  
+                                        completeMethod="#{rscPriceTenderFormMB.completeWorkUnitsGuideDTO}" >
+                            <p:ajax update=" nameText  priceUnitt" listener="#{rscPriceTenderFormMB.validateUnitGuide()}"
+                                    event="itemSelect"  />
+                            <p:ajax update=" nameText  priceUnitt" listener="#{rscPriceTenderFormMB.validateUnitGuide()}"
+                                    event="change"  />
+
+                        </p:autoComplete>            
+                    </p:column>
+
+                    <p:column headerText="#{userData.userDDs['UNIT']}" style=" width: 10vh;border-radius: 0px;">
+                        <h:outputText  id="nameText" value="#{rscTenderPriceDetail.guideDTO.unitName.name}"  />
+                    </p:column>
+
+
+                    <p:column headerText="#{userData.userDDs['CORE_VALUE']}" style=" width: 20vh;border-radius: 0px;">
+                        <p:inputNumber id="priceUnitt" value="#{rscTenderPriceDetail.guideDTO.value}">
+                            <p:ajax  event="blur" listener="#{rscPriceTenderFormMB.calculateTotalUnits()}"
+                                     update=" " />
+                            <p:ajax  event="blur" listener="#{rscPriceTenderFormMB.calprofitValue()}"
+                                     update="  priceUnitSell totalProfit totalSell proftpercntage proftValue" />
+                        </p:inputNumber> 
+                    </p:column>
+
+
+                    <p:column headerText="#{userData.userDDs['TEND_ITEM_QUA']}" style=" width: 20vh;border-radius: 0px;">
+                        <p:inputNumber id="qtyIn" value="#{rscTenderPriceDetail.quantityIn}" >
+                            <p:ajax  event="blur" listener="#{rscPriceTenderFormMB.calpercentage()}"
+                                     update="  priceUnitSell totalProfit totalSell proftpercntage proftValue" />
+                        </p:inputNumber> 
+                    </p:column>
+
+
+                    <p:column headerText="#{userData.userDDs['PROFIT_RATIO']}" style=" width: 14vh;border-radius: 0px;">
+                        <p:inputNumber id="proftpercntage" value="#{rscTenderPriceDetail.profitPercentage}" >
+                            <p:ajax  event="blur" listener="#{rscPriceTenderFormMB.calpercentage()}"
+                                     update="priceUnitSell totalProfit totalSell proftValue" />
+                        </p:inputNumber> 
+                    </p:column>
+                    <p:column headerText="#{userData.userDDs['PROFIT_VALUE']}" style=" width: 13vh;border-radius: 0px;">
+                        <p:inputNumber id="proftValue" value="#{rscTenderPriceDetail.profitValue}">
+                            <p:ajax  event="blur" listener="#{rscPriceTenderFormMB.calprofitValue()}"
+                                     update="priceUnitSell totalProfit totalSell proftpercntage" />
+                        </p:inputNumber> 
+                    </p:column>
+
+                    <p:column headerText="#{userData.userDDs['SELLING_PRICE']}" style=" width: 13vh;border-radius: 0px;">
+                        <h:outputText  id="priceUnitSell" value="#{rscTenderPriceDetail.priceUnitSell}" />
+                    </p:column>
+                    <p:column headerText="#{userData.userDDs['TOTAL_PROFIT']}" style=" width: 16vh;border-radius: 0px;">
+                        <h:outputText id="totalProfit" value="#{rscTenderPriceDetail.totalProfit}" />
+                    </p:column>
+                    <p:column headerText="#{userData.userDDs['TOTAL_SALE']}" style=" width: 14vh;border-radius: 0px;">
+                        <h:outputText id="totalSell" value="#{rscTenderPriceDetail.totalSell}" />
+                    </p:column>
+
+                    <p:column headerText="#{userData.userDDs['NOTE']}" style=" width: 20vh;border-radius: 0px;">
+                        <p:inputText id="remarks" value="#{rscTenderPriceDetail.remark}" />
+                    </p:column>
+
+                    <p:column headerText="#{userData.userDDs['TRANSACTION']}" style=" width: 12vh;border-radius: 0px;" rendered="#{!rscPriceTenderFormMB.priceTenderDTO.active}">
+                        <p:commandButton class="saddbuttonins" update="rscTenderPriceDetail"
+                                         icon="fa fa-fw fa-plus" style="background-color: rgb(42, 163, 218);border-radius: 3px;"
+                                         title="#{userData.userDDs['ADD']}" 
+                                         action="#{rscPriceTenderFormMB.addChild()}"
+                                         />
+
+                        <p:commandButton  class="sdeleteButtons" update="rscTenderPriceDetail"
+                                          title="#{userData.userDDs['DELETE']}" style="background-color: red;border-radius: 3px;"
+                                          action="#{rscPriceTenderFormMB.deleteRscTenderDetail()}"
+                                          icon="fa fa-remove" >
+
+                            <f:setPropertyActionListener value="#{rscTenderPriceDetail}"
+                                                         target="#{rscPriceTenderFormMB.rscPriceTenderDetailWorkUnitDTOSelected}"/>
+                            <p:confirm header="#{userData.userDDs['COFIGRATION']}" 
+                                       message="#{userData.userDDs['ARE_YOU_SURE']}"
+                                       icon="ui-icon-alert" />
+                        </p:commandButton>
+
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+
+
+
+                    </p:column>
+
+
+                </p:dataTable>     
+                         <div id="buttunss" class="asmaa">
+
+                        <p:commandButton class="saveButton" 
+                                         title="#{userData.userDDs['SAVE']}"
+                                         value="#{userData.userDDs['SAVE']}"
+                                       
+                                         action="#{rscPriceTenderFormMB.save()}" update="@form" 
+                                         id="saveB"
+                                         disabled="#{rscPriceTenderFormMB.priceTenderDTO.active}"/>
+
+
+
+                        <p:commandButton class="newButton" 
+                                         value="#{userData.userDDs['NEW']}"
+                                         title="#{userData.userDDs['NEW']}"
+                                      
+                                         action="#{rscPriceTenderFormMB.reset}" 
+                                         update="form" id="undo"/>
+
+
+                        <p:commandButton   class="reloadButton"
+                                           id="loadL"  title="#{userData.userDDs['UPLOAD']}"
+                                           value="#{userData.userDDs['UPLOAD']}" 
+                                         
+                                           action="#{rscPriceTenderFormMB.OpenDlg('dlg2')}"
+                                           update="@form"
+                                           disabled="#{rscPriceTenderFormMB.priceTenderDTO.active}"/>
+
+                        <p:commandButton 
+                            class="printButton"
+                            update="@form" onclick="form.target = '_blank'"  ajax="false"
+                            
+                            value="#{userData.userDDs['PRINT']}"
+                            title="#{userData.userDDs['PRINT']}"
+                            action="#{rscPriceTenderFormMB.print()}" 
+                            />
+
+                        <p:commandButton  class="deleteButton" id="cancel" title="#{userData.userDDs['CANCEL']}"
+                                          value="#{userData.userDDs['CANCEL']}" 
+                                          action="#{rscPriceTenderFormMB.exit()}"
+                                          update="form"/>
+
+
+                    </div>
+
+
+            </p:fieldset>
+
+            <h:panelGrid columns="1" cellpadding="5">
+
+                <h:panelGroup>
+
+
+
+
+                    <p:dialog id="dlg" header="#{userData.userDDs['UPLOAD_TENDERS']}" widgetVar="dlg2" modal="true" style="height: fit-content;width: fit-content">
+
+                        <p:tabView id="tabsBar">
+                            <p:tab id="tab1" title="#{userData.userDDs['TENDER']}"  >
+
+                                <p:dataTable id="tenderList"
+                                             draggableColumns="true" 
+                                             var="tender"
+                                             widgetVar="tender"  
+                                             rowIndexVar="index" 
+                                             dir="rtl"  selectionMode="single"
+                                             selection="#{rscPriceTenderFormMB.priceTenderDTO.rscTenderDTO}"
+                                             value="#{rscPriceTenderFormMB.tenderList}" 
+                                             rowKey="#{tender}"
+                                             rows="#{userData.rowListCount}" 
+                                             paginator="true" 
+                                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" >
+
+                                    <p:column style="width: 12vh;font-size: 1.5vh;text-align: -webkit-auto;border-radius: 0px" 
+                                              filterStyle="display:none" filterBy="#{tender.serial}"
+                                              filterMatchMode="contains" 
+                                              headerText="#{userData.userDDs['TENDER_NO']}"
+                                              sortBy="#{tender.serial}">
+                                        <p:outputLabel value="#{tender.serial}" />
+                                    </p:column>
+
+
+                                    <p:column style="width: 14vh;text-align:right;font-size: 1.8vh;border-radius: 0px" 
+                                              filterStyle="display:none"
+                                              filterBy="#{tender.customerId.name}" 
+                                              filterMatchMode="contains"
+                                              headerText="#{userData.userDDs['CUSTOM_NAME']}" 
+                                              sortBy="#{tender.customerId.name}">
+                                        <p:outputLabel value="#{tender.customerId.name}" />
+                                    </p:column>
+                                </p:dataTable> 
+                            </p:tab>
+                        </p:tabView>
+
+                        <p:commandButton class="reloadButtons" update="fieldSetId price data" 
+                                         style="color: #ecf0f1!important;border-radius: 5px;
+                                         background-color: #2d21b5e6 !important;margin-left: 5px;width: 20%;"
+                                         action="#{rscPriceTenderFormMB.loadTender()}"
+                                         title="#{userData.userDDs['UPLOAD']}"  >
+
+                        </p:commandButton>
+
+                    </p:dialog>
+
+                </h:panelGroup>
+
+
+
+            </h:panelGrid>
+
+
+
+
+
+
+
+            <p:blockUI block="form" trigger="saveB  undo" animate="true" >
+
+                <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+            </p:blockUI>
+
+
+
+        </h:form>
+
+
+
+    </ui:define>
+
+
+</ui:composition>

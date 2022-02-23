@@ -1,0 +1,172 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+
+        <h:form class='formmargin' id="form"  enctype="multipart/form-data"  dir="#{userData.dir}">
+
+            <p:fieldset legend="انشاء أمر الشغل"  style="margin-bottom:20px">
+
+
+                <div class="col-xs-12">
+                    <p:messages autoUpdate="true"  id="msgopp" showDetail="true" closable="true" />
+                </div>
+                <div  id="firstLine" class="ui-g-12 ui-g-nopad">
+                    <div class="ui-g">
+
+                        <div class="ui-g-6 ui-xl-6">
+
+
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:calendar id="dateFrom" 
+                                                value="#{workOrderFormMB.remWorkOrderDTO.date}"
+                                                pattern="dd/MM/yyyy"
+                                                style="width:50%!important"/>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 95px;" value="#{userData.userDDs['DATEE']}*"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width: 111px;margin-right: 5%;" value="اسم السائق"/>
+                                    </h:panelGroup> 
+
+                                    <h:panelGroup>
+                                        <p:autoComplete style="width:36%!important"
+                                                        dropdown="true" maxResults="10"
+                                                        converter="#{autoComplete.employeeDTOConverter}"
+                                                        value="#{workOrderFormMB.remWorkOrderDTO.driverId}"
+                                                        var="employee"
+                                                        itemLabel="#{employee}" 
+                                                        itemValue="#{employee}"
+                                                        forceSelection="true" 
+                                                        completeMethod="#{autoComplete.completeDrivers}"
+                                                        >
+
+                                        </p:autoComplete>
+                                    </h:panelGroup> 
+                                </h:panelGroup>
+                            </div>
+                            
+                            
+
+                        </div>                        
+                    </div>
+                </div>
+
+            </p:fieldset>
+
+            <div class="asmaa">
+                <p:commandButton  class="saveButton"  
+                                  id="saveB" 
+                                  title="#{userData.userDDs['SAVE']}"
+                                  value="#{userData.userDDs['SAVE']}" 
+                                  style=""
+                                  action="#{workOrderFormMB.save()}" 
+                                  update="@form"/>
+
+                <p:commandButton  class="newButton" 
+                                  id="newN"
+                                  ajax="false"
+                                  style=""
+                                  value="#{userData.userDDs['NEW']}" 
+                                  title="#{userData.userDDs['NEW']}"
+                                  onclick="form.target = ''" 
+                                  actionListener="#{workOrderFormMB.reset()}"/>
+
+                <p:commandButton class="closeButton" 
+                                 title="#{userData.userDDs['BACK']}" 
+                                 immediate="true" 
+                                 value="#{userData.userDDs['BACK']}" 
+                                 style="" 
+                                 action="exit"   />
+
+
+
+                <p:blockUI block="form" trigger="saveB" animate="true" >
+
+                    <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                </p:blockUI> 
+
+            </div>
+
+            <div class="ui-g-12 ui-xl-12">
+
+
+                <p:dataTable id="workOrderDetailsTable"
+                             reflow="true"
+                             var="workOrderDetailsTable"
+                             rowIndexVar="index" 
+                             dir="rtl" 
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                             sortBy="#{1}"
+                             selectionMode="single"
+                             selection="#{workOrderFormMB.remWorkOrderDTO.remWorkOrderDetailDTOSelected}"
+                             widgetVar="workOrderDetailsTable"
+                             rowKey="#{workOrderDetailsTable.index}"
+                             value="#{workOrderFormMB.remWorkOrderDTO.remWorkOrderDetailDTOList}" >
+
+                    <f:facet name="header" class="col-md-12">
+                        <p:commandButton   class="saddButton" id="addnew"
+                                           icon="fa fa-plus"
+                                           title="#{userData.userDDs['ADD']}" 
+                                           actionListener="#{workOrderFormMB.addNewDetail()}" 
+                                           update=":form:msgopp workOrderDetailsTable"                                         
+                                           ajax="true"
+                                           style="float:right" />
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('workOrderDetailsTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+                    </f:facet>
+
+
+
+                    <p:column style="width: 17vh;font-size: 1.8vh;text-align: right;border-radius: 0px;" headerText="المسار" >
+
+                        <p:autoComplete id="point"  
+                                        style="width:100%"
+                                        converter="#{autoComplete.remTrafficDTOConverter}"
+                                        value="#{workOrderDetailsTable.trafficId}"
+                                        maxResults="10"
+                                        var="traffic"
+                                        itemLabel="#{traffic}" 
+                                        itemValue="#{traffic}" 
+                                        forceSelection="true" 
+                                        completeMethod="#{autoComplete.completeRemTraffic}" >
+                        </p:autoComplete>   
+
+                    </p:column>
+
+
+
+                    <p:column  >
+                        <p:commandButton  id="b7" icon="fa fa-remove" 
+                                          class="sdeleteButtons" style="color: #fff!important;background-color: red"
+                                          title="#{userData.userDDs['DELETE']}" 
+                                          actionListener="#{workOrderFormMB.deleteDetail(remWorkOrderDetailDTO)}" 
+                                          update="@form"  
+                                          immediate="true"
+                                          ajax="true" />
+                    </p:column>
+
+
+                </p:dataTable>
+            </div>
+
+        </h:form>
+    </ui:define>
+</ui:composition>

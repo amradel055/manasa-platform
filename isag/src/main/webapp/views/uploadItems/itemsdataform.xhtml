@@ -1,0 +1,450 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+
+<!--        <f:event listener="#/{userData.authorize}" type="preRenderView" />-->
+        <h:form id="form" dir="#{userData.dir}" class='formmargin'>
+            <div style=" position: absolute;left: 20px"> 
+
+                <p:commandButton  style="z-index: 2;
+                                  margin-top: 24%;
+                                  color: #035c70!important; 
+                                  background-color: #223238!important;
+                                  border: 1px solid #22323a!important;
+                                  background: #22323a 50% 50% repeat-x!important;"
+                                  icon="fa fa-fw fa-home"
+                                  title="#{userData.userDDs['HOME']}"
+                                  class="smhomeButton" 
+                                  action="exit" />
+
+            </div>
+            <p:fieldset legend="#{userData.userDDs['ITEMS_DATA']}">
+
+                <div class="col-xs-12">
+                    <p:messages autoUpdate="true"  id="msg" showDetail="true" closable="true" />
+                </div>
+                <!--First Segment-->
+                <div  id="firstLine" class="ui-g-12 ui-g-nopad">
+                    <div class="ui-g">
+                    
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup> 
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:70px;margin-right: 6%;" value="#{userData.userDDs['LENGHT']}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:inputNumber style="width:36%!important" id="length"
+                                                   value="#{itemDataFormMB.itemDataEntity.length}"/>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup> 
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:70px;margin-right: 6%;" value="#{userData.userDDs['WIDTH']}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:inputNumber style="width:36%!important" id="width"
+                                                   value="#{itemDataFormMB.itemDataEntity.width}"/>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup> 
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:70px;margin-right: 6%;" value="#{userData.userDDs['HEIGHT']}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:inputNumber style="width:36%!important" id="height"
+                                                   value="#{itemDataFormMB.itemDataEntity.height}"/>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup> 
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:70px;margin-right: 6%;" value="#{userData.userDDs['WEIGHT']}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup >
+                                    <p:inputNumber style="width:55%!important" id="weight"
+                                                   value="#{itemDataFormMB.itemDataEntity.weight}"/>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 75px;margin-right: 6%;" value="#{userData.userDDs['ADDON1']}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:35%" id="addon1_From" 
+                                                    dropdown="true"
+                                                    converter="#{itemDataFormMB.unitConverter}"
+                                                    value="#{itemDataFormMB.itemDataEntity.addon1}"
+
+                                                    var="addon1"
+                                                    itemLabel="#{addon1}" 
+                                                    itemValue="#{addon1}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{itemDataFormMB.completeAddon1}" >
+
+                                    </p:autoComplete>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 75px;margin-right: 6%;" value="#{userData.userDDs['ADDON2']}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:35%" id="addon2_From" 
+                                                    dropdown="true"
+                                                    converter="#{itemDataFormMB.unitConverter}"
+                                                    value="#{itemDataFormMB.itemDataEntity.addon2}"
+
+                                                    var="addon2"
+                                                    itemLabel="#{addon2}" 
+                                                    itemValue="#{addon2}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{itemDataFormMB.completeAddon2}" >
+
+                                    </p:autoComplete>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup> 
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:70px;margin-right: 6%;" value="#{userData.userDDs['CREATED_DATE']}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:50%" id="dateFrom" value="#{itemDataFormMB.itemDataEntity.dateCreateCat}">
+                                        <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                                    </p:outputLabel>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                    </div>
+                </div>
+
+            </p:fieldset>   
+            <p:fieldset>
+                <p:growl id="msgs" showDetail="true"  />
+
+                <p:tabView>
+                    <p:tab title="#{userData.userDDs['BARCODE']}" >
+                        <p:fieldset id="barcodeFeildSet" legend="#{userData.userDDs['BARCODE']}">
+                            <div class="col-xs-12">
+                                <p:messages autoUpdate="true"  id="msgopp"
+                                            showDetail="true" closable="true"
+                                            rendered="#{itemDataFormMB.showMessageDetails}"/>
+                            </div>
+                            <p:dataTable widgetVar="barcodeTable" 
+                                         id="barcodeTable"    
+                                         style="margin-bottom:20px" 
+                                         rows="#{userData.rowListMasterDetails}" 
+                                         var="barcodeTable" 
+                                         dir="rtl" 
+                                         selection="#{itemDataFormMB.invBarcodeEntitySelection}" 
+                                         selectionMode="single"   
+                                         rowKey="#{barcodeTable}" 
+                                         value="#{itemDataFormMB.itemDataEntity.invBarcodeEntity}" 
+                                         reflow="true"  
+                                         paginator="true"
+                                         editable="true"
+                                         editMode="cell">
+
+                                <f:facet name="header">
+                                    <p:commandButton class="saddButton" id="b2" icon="fa fa-plus" 
+                                                     title="#{userData.userDDs['ADD']}"
+                                                     actionListener="#{itemDataFormMB.adddetails}" 
+                                                     update="barcodeTable"
+                                                     oncomplete="PrimeFaces.focus('form:barcodeTable:'+#{itemDataFormMB.itemDataEntity.invBarcodeEntity.size()}+':invItemNameIn')"
+                                                     ajax="true" 
+                                                     style="float:right" />
+                                    <p:outputPanel>
+                                        <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large;" />
+                                        <p:inputText   id="globalFilter"   onkeyup="PF('barcodeTable').filter()" style='width: 30%!important;' />
+                                    </p:outputPanel>
+                                </f:facet>
+
+                                <p:column style="width:12vh;text-align: right;font-size: 2vh;border-radius: 0px" id="code" headerText="#{userData.userDDs['BARCODE']}">
+                                    <p:inputText disabled="#{barcodeTable.id ne null}" id="invItemNameIn" value="#{barcodeTable.code}" >
+                                        <p:ajax event="blur" listener="#{itemDataFormMB.validateBarcodeBlur(barcodeTable)}" />
+                                    </p:inputText>
+                                </p:column>
+
+                                <p:column  style="width:9vh;text-align: right;font-size: 2vh;border-radius: 0px" id="price1" headerText="#{userData.userDDs['PRICE1']}">
+                                    <p:inputText id="price" value="#{barcodeTable.price1}"  style="width:80%"/>
+                                </p:column>
+
+                                <p:column  style="width:12vh;text-align: right;font-size: 2vh;border-radius: 0px" id="unitid" headerText="#{userData.userDDs['UNIT_ICON']}" >
+                                    <p:autoComplete style="width:100%" id="Cost_Center_From" 
+                                                    converter="#{itemDataFormMB.unitConverter}"
+                                                    value="#{barcodeTable.unitId}"
+
+                                                    var="unitId"
+                                                    itemLabel="#{unitId}" 
+                                                    itemValue="#{unitId}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{itemDataFormMB.completeUnits}" >
+
+                                    </p:autoComplete>
+                                </p:column>
+                                <p:column  style="width:12vh;text-align: right;font-size: 2vh;border-radius: 0px" id="paintColorDetail" headerText="#{userData.userDDs['color']}" >
+                                    <p:autoComplete style="width:100%" id="paintColorDetail1" 
+                                                    converter="#{itemDataFormMB.paintColorConverter}"
+                                                    value="#{barcodeTable.paintColorId}"
+                                                    var="paintColorId1"
+                                                    itemLabel="#{paintColorId1}" 
+                                                    itemValue="#{paintColorId1}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{itemDataFormMB.completePaintColor}" >
+
+                                    </p:autoComplete>
+                                </p:column>
+
+                                <p:column  style="width:9vh;text-align: right;font-size: 2vh;border-radius: 0px" headerText="#{userData.userDDs['LENGHT']}">
+                                    <p:inputText value="#{barcodeTable.length}" 
+                                                 style="width:95%;font-size: 1.6vh"/>
+                                </p:column>
+
+                                <p:column  style="width:9vh;text-align: right;font-size: 2vh;border-radius: 0px" headerText="#{userData.userDDs['WIDTH']}">
+                                    <p:inputText value="#{barcodeTable.width}" 
+                                                 style="width:95%;font-size: 1.6vh"/>
+                                </p:column>
+
+                                <p:column  style="width:10vh;text-align: right;font-size: 2vh;border-radius: 0px" headerText="#{userData.userDDs['HEIGHT']}">
+                                    <p:inputText value="#{barcodeTable.height}" 
+                                                 style="width:95%;font-size: 1.6vh"/>
+                                </p:column>
+
+                                <p:column  style="width:10vh;text-align: right;font-size: 2vh;border-radius: 0px"  headerText="#{userData.userDDs['WEIGHT']}">
+                                    <p:inputText value="#{barcodeTable.weight}" 
+                                                 style="width:95%;font-size: 1.6vh"/>
+                                </p:column>
+
+
+                                <p:column  style="width:10vh;text-align: right;font-size: 2vh;border-radius: 0px" id="screwing" headerText="#{userData.userDDs['SCREWING']}">
+                                    <p:inputText id="screw" value="#{barcodeTable.screwing}" 
+                                                 style="width:95%;font-size: 1.6vh"/>
+                                </p:column>
+
+                                <p:column id="typeBarCode" headerText="#{userData.userDDs['BARCODE_TYP']}" style="border-radius: 0px">
+                                    <p:autoComplete style="width:85%" 
+                                                    converter="#{itemDataFormMB.typeCatConverter}"
+                                                    value="#{barcodeTable.typeBarcode}"
+
+                                                    var="typeBarcode"
+                                                    itemLabel="#{typeBarcode}" 
+                                                    itemValue="#{typeBarcode}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{itemDataFormMB.completeTypeCat}" >
+
+                                    </p:autoComplete>
+                                </p:column>
+
+
+                                <p:column style="width: 10%;border-radius: 0px">
+                                    <p:commandButton  class="saddButton" id="b7" icon="fa fa-plus" title="#{userData.userDDs['ADD']}" 
+                                                      actionListener="#{itemDataFormMB.adddetails}" update="barcodeTable" 
+                                                      ajax="true" />
+
+                                    <p:commandButton class="sdeleteButton" update="barcodeTable" title="#{userData.userDDs['DELETE']}" style="background-color: red;border-radius: 3px;margin-top: 4px;"
+                                                     action="#{itemDataFormMB.deleteBarcode()}" icon="fa fa-remove" >
+                                        <f:setPropertyActionListener value="#{barcodeTable}"
+                                                                     target="#{itemDataFormMB.invBarcodeEntitySelection}"/>
+                                        <p:confirm header="#{userData.userDDs['COFIGRATION']}"
+                                                   message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                                    </p:commandButton>
+                                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                        <p:commandButton title="#{userData.userDDs['YES']}" type="button"
+                                                         styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                        <p:commandButton title="#{userData.userDDs['NO']}" type="button" 
+                                                         styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                                    </p:confirmDialog>
+                                </p:column >
+
+                            </p:dataTable>
+                        </p:fieldset>
+
+
+
+                    </p:tab>
+                    <p:tab title="#{userData.userDDs['ITEM_ON_REPOS']}">
+                        <p:dataTable widgetVar="inventoryItem" 
+                                     id="inventoryItem"    
+                                     style="margin-bottom:20px" 
+                                     rows="#{userData.rowListMasterDetails}" 
+                                     var="inventoryItem" 
+                                     dir="rtl" 
+                                     rowKey="#{inventoryItem}" 
+                                     value="#{itemDataFormMB.quantityItemsStoreList}" 
+                                     reflow="true"  
+                                     paginator="true" >
+                            <f:facet name="header" class="col-md-12">
+
+                                <p:outputPanel>
+                                    <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large;" />
+                                    <p:inputText   id="globalFilter"   onkeyup="PF('inventoryItem').filter()" style='width: 30%!important;' />
+                                </p:outputPanel>
+
+                            </f:facet>
+
+                            <p:column style="width: 15vh;text-align: -webkit-auto;font-size: 1.5vh;;border-radius: 0px "  headerText="#{userData.userDDs['NUMB']}"
+                                      filterBy="#{inventoryItem.inventoryId}"  filterMatchMode="contains" sortBy="#{inventoryItem.inventoryId}" filterable="false">
+                                <h:outputText value="#{inventoryItem.inventoryId}" />
+                            </p:column>
+
+                            <p:column style="text-align: -webkit-auto;font-size: 1.5vh;border-radius: 0px" headerText="#{userData.userDDs['REPOSITORY_NAME']}"
+                                      filterBy="#{inventoryItem.inventoryName}"  filterMatchMode="contains" sortBy="#{inventoryItem.inventoryName}" 
+                                      filterable="false">
+                                <h:outputText value="#{inventoryItem.inventoryName}" />
+                            </p:column>
+
+                            <p:column style="width: 15vh;text-align: -webkit-auto;font-size: 1.5vh;border-radius: 0px" headerText="#{userData.userDDs['QUANTITY']}" 
+                                      filterBy="#{inventoryItem.qty}"  filterMatchMode="contains" sortBy="#{inventoryItem.qty}" 
+                                      filterable="false">
+                                <h:outputText value="#{inventoryItem.qty}"  style="font-size: 1.5vh"/>
+                            </p:column>
+
+                            <p:columnGroup type="footer">
+                                <p:row>
+                                    <p:column colspan="2" style="text-align:right;border-radius: 0px" footerText="#{userData.userDDs['TOTAL']}" />
+                                    <p:column  style="border-radius: 0px" footerText="#{itemDataFormMB.qtySummition}" />
+                                </p:row>
+                            </p:columnGroup>
+
+
+                            <p:summaryRow>
+                                <p:column colspan="3" style="text-align:right">
+                                    <h:outputText value="Total:" />
+                                </p:column>
+                                <p:column>
+                                    <h:outputText>
+                                        <f:convertNumber type="currency" currencySymbol="$" />
+                                    </h:outputText>
+                                </p:column>
+                            </p:summaryRow>
+
+
+                        </p:dataTable>
+                    </p:tab>
+                    <p:tab title="#{userData.userDDs['PHOTOS']}" id="tabimg">
+                        <h:panelGrid columns="1" cellpadding="10">
+
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:70px;display: inline" value="#{userData.userDDs['LOGO']}"  />
+                                </h:panelGroup>
+
+
+                                <h:panelGroup>
+                                    <p:fileUpload   style="width:24%"   id="logo" 
+                                                    label="#{userData.userDDs['CHOOSE']}"
+                                                    dragDropSupport="true"  
+                                                    cancelLabel="#{userData.userDDs['CANCEL']}" 
+                                                    uploadLabel="#{userData.userDDs['UPLOAD']}"
+                                                    fileUploadListener="#{itemDataFormMB.upload}"
+                                                    mode="advanced" 
+                                                    update="tabimg"
+                                                    allowTypes="/(\.|\/)(gif|jpe?g|png)$/" 
+                                                    />
+                                    <p:message for="logo"/>
+                                </h:panelGroup>
+
+
+
+                            </h:panelGroup>
+
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:message for="logo"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:graphicImage  style="margin-right:2%;" url="#{itemDataFormMB.showImage}" />
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:graphicImage library="img" width="250px" height="100" id="img" name="/items/#{itemDataFormMB.fileName}" />
+
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+
+
+                        </h:panelGrid>
+                    </p:tab>
+                </p:tabView>
+
+                <h:panelGrid  class="centerButtons col-md-12" columns="1" style="margin-top: 1%">
+
+                    <h:panelGroup>
+                        <p:commandButton class="saveButton"  
+                                         id="saveB" 
+                                         title="#{userData.userDDs['SAVE']}" 
+                                         value="#{userData.userDDs['SAVE']}" 
+                                         style=""
+                                         action="#{itemStoreMB.load()}" update="@form"/>
+                        
+                        <p:commandButton  class="newButton" 
+                                          id="newN"
+                                          ajax="false"
+                                          style=""
+                                          value="#{userData.userDDs['NEW']}" 
+                                          onclick="form.target = ''" 
+                                          actionListener="#{itemDataFormMB.reset()}"/>
+
+                        
+
+                        <p:commandButton class="closeButton" id="cancel" 
+                                         immediate="true" title="#{userData.userDDs['BACK']}" 
+                                         value="#{userData.userDDs['BACK']}" 
+                                         style="" action="#{itemDataFormMB.cancel()}" update="@form"/>
+          <p:commandButton  class="printButtons"
+                                      ajax="false"
+                                      onclick="form.target = '_blank'"  
+                                      style="color: #fff!important;background-color:#0700D4CF;margin-left: 5px;" 
+                                      title="#{userData.userDDs['PRINT']}"
+                                      value="#{userData.userDDs['PRINT']}" 
+                                      actionListener="#{itemDataFormMB.print}"/>
+                    </h:panelGroup>
+
+                    <p:blockUI block="form" trigger="saveB" animate="true" >
+
+                        <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                    </p:blockUI> 
+
+                </h:panelGrid>
+            </p:fieldset> 
+
+
+            <!-- Begin of tap 3 -->
+
+            <!-- Ten Segment -->
+
+
+
+
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,188 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+
+       
+
+
+        <h:form class='formmargin' id="form" dir="#{userData.dir}">
+
+            <p:fieldset id="head" legend="#{userData.userDDs['MONTH_PAY_REP']}">
+
+                <div class="col-xs-12">
+                    <p:messages id="curmsg" showDetail="true" rendered="false" closable="true"/>   
+                </div>
+                <div class="ui-g-12 ui-g-nopad firstset" id="firstSegment">
+                    <div class="ui-g">
+
+                        <div class="ui-g-6 ui-xl-6">
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:calendar pattern="dd/MM/yyyy" 
+                                                value="#{instMonthlyPaymentsMB.collectionAndPaymentReportSearchBean.toDate}"
+                                                style="width: 50%">
+
+                                    </p:calendar>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel  style="width: 55px" value="#{userData.userDDs['TO_DATE']}"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:calendar pattern="dd/MM/yyyy" 
+                                                value="#{instMonthlyPaymentsMB.collectionAndPaymentReportSearchBean.fromDate}"
+                                                style="width: 50%">
+
+                                    </p:calendar>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel  style="width: 55px;" value="#{userData.userDDs['FROM_DATE']}"/>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:autoComplete style="width:40%!important"
+                                                    dropdown="true"
+                                                    converter="#{instMonthlyPaymentsMB.invOrgSiteConverter}"
+                                                    value="#{instMonthlyPaymentsMB.collectionAndPaymentReportSearchBean.orgNameTo}"
+                                                    var="organization"
+                                                    itemLabel="#{organization}" 
+                                                    itemValue="#{organization}"
+                                                    forceSelection="true" 
+                                                    completeMethod="#{instMonthlyPaymentsMB.completOrgSite}"
+                                                    >
+
+                                    </p:autoComplete>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 60px" value="#{userData.userDDs['TO_CUSTOM']}"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:autoComplete style="width:40%!important"
+                                                    dropdown="true"
+                                                    converter="#{instMonthlyPaymentsMB.invOrgSiteConverter}"
+                                                    value="#{instMonthlyPaymentsMB.collectionAndPaymentReportSearchBean.orgNameFrom}"
+                                                    var="organization"
+                                                    itemLabel="#{organization}" 
+                                                    itemValue="#{organization}"
+                                                    forceSelection="true" 
+                                                    completeMethod="#{instMonthlyPaymentsMB.completOrgSite}"
+                                                    >
+
+                                    </p:autoComplete>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 60px;" value="#{userData.userDDs['FROM_CUSTOM']}"/>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+
+                    </div>
+                </div>
+
+                             <div id="buttunss" class="asmaa">
+
+
+
+                        <p:commandButton   
+                            id="search"
+                            class="searchButtons"
+                            title="#{userData.userDDs['SEARCH']}"
+                            action="#{instMonthlyPaymentsMB.search()}"
+                            value="#{userData.userDDs['SEARCH']}"
+                            update="form" 
+                            oncomplete="PF('generaltable').clearFilters()"/>
+                        <p:commandButton    class="newButtons"
+                                            title="#{userData.userDDs['NEW']}" 
+                                            immediate="true" 
+                                            action="#{instMonthlyPaymentsMB.reset()}"
+                                            update="form"
+                                            value="#{userData.userDDs['NEW']}"
+                                            resetValues="true"/>
+
+                        <p:commandButton  class="printButtons" ajax="false" onclick="form.target = '_blank'" 
+                                          value="#{userData.userDDs['PRINT']}"
+                                          title="#{userData.userDDs['PRINT']}"
+                                          actionListener="#{instMonthlyPaymentsMB.exportPDF}"/>
+
+                        <p:commandButton  class="closeButtons"
+                                          title="#{userData.userDDs['EXIT']}"
+                                          action="exit"
+                                          value="#{userData.userDDs['EXIT']}"/>
+                        <h:commandLink  class="sdcreenimg" style="margin-right: 4px;">   
+                            <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                            <p:dataExporter type="xls"
+                                            target="table" 
+                                            fileName="تقرير الدفعات الشهرية"
+                                            postProcessor="#{instMonthlyPaymentsMB.postProcessXLS}" />  
+                        </h:commandLink>
+
+
+
+                        </div>
+                <p:blockUI block="head" trigger="search" animate="true" >
+
+                    <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                </p:blockUI> 
+
+            </p:fieldset>
+            <p:fieldset >
+                <p:dataTable 
+                    widgetVar="generaltable" id="table" var="generaltable" style="margin-bottom:20px"  
+                    rowIndexVar="index" paginator="true" 
+                    value="#{instMonthlyPaymentsMB.purchaseByCategoriesOfItemsBeanList}" >
+
+                    <f:facet name="header" class="col-md-12">
+
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('bTable').filter()" style="width:150px" />
+
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:columns value="#{instMonthlyPaymentsMB.columns}" var="column" columnIndexVar="colIndex" 
+                               style="width: 9vh;font-size: 1.2vh;font-weight: bold;border-radius: 0px;"
+                               sortBy="#{generaltable[column.property]}"
+                               filterBy="#{generaltable[column.property]}" 
+                               filterMatchMode="contains"
+                               filterable="false" >
+
+                        <f:facet name="header">
+                            <h:outputText value="#{column.header}" />
+                        </f:facet>
+                        <h:outputText value="#{generaltable[column.property]}" />
+                    </p:columns>
+
+                </p:dataTable>
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>

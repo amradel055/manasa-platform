@@ -1,0 +1,382 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+
+
+
+        <h:form  class='formmargin' dir="#{userData.dir}"  id="form">
+
+            <p:fieldset id="extract" legend="حصر الكميات" style="font-size: 19px !important;">
+                <div class="col-xs-12">
+                    <p:messages id="curmsg" showDetail="true" rendered="true" closable="true"/>   
+                </div>
+                <div class="ui-g-12 ui-g-nopad">
+
+                    <div class="ui-g">
+
+
+
+
+                        <div class="ui-g-6 ui-xl-6">
+
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:calendar  pattern="dd/MM/yyyy" style="width: 38%"  id="date" value="#{rscRestrictionQuantitiesFormMB.restrictionQuantitiesDTO.date}"   
+                                                 />
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 95px; font-size: 17px !important;" value="التاريخ"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText readonly="true" style="width: 38%" value="#{rscRestrictionQuantitiesFormMB.restrictionQuantitiesDTO.serial}"/>
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel   style="width: 95px; font-size: 17px !important;" value="الرقم"/>
+
+                                </div>
+                            </div>
+
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText readonly="true" style="width: 38%; font-size: 15px !important;" value="#{rscRestrictionQuantitiesFormMB.restrictionQuantitiesDTO.contractId.siteId.name}"/>
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel  style="width: 95px; font-size: 17px !important;" value=" المقاول"/>
+                                    <p:outputLabel style="width: 25%" value="#{rscRestrictionQuantitiesFormMB.restrictionQuantitiesDTO.contractId.siteId.code}"/>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+
+
+
+
+
+
+                        <!--
+                                                <div class="ui-g-12 ui-md-6">
+                        
+                                                    <h:panelGroup>
+                                                        <h:panelGroup>
+                                                            <p:outputLabel  style="width: 95px; font-size: 17px !important;" value=" المقاول"/>
+                                                        </h:panelGroup> 
+                        
+                                                        <h:panelGroup>
+                        
+                                                                                                <h:panelGroup>
+                                                                                                    <p:outputLabel style="width: 25%" value="#{rscRestrictionQuantitiesFormMB.restrictionQuantitiesDTO.contractId.siteId.code}"/>
+                                                                                                </h:panelGroup> 
+                        
+                                                            <h:panelGroup>
+                                                                <p:inputText readonly="true" style="width: 38%; font-size: 15px !important;" value="#{rscRestrictionQuantitiesFormMB.restrictionQuantitiesDTO.contractId.siteId.name}"/>
+                                                            </h:panelGroup> 
+                        
+                                                        </h:panelGroup> 
+                                                    </h:panelGroup>
+                        
+                                                </div>-->
+
+
+
+                    </div>
+                </div>
+
+            </p:fieldset>
+
+
+            <p:fieldset id="contract" legend="العقد" style="font-size: 19px !important; margin-top: 2%;">
+                <div class="ui-g-6 ui-xl-6">
+                    <div class="ui-g-12 ui-xl-12">
+
+                        <div class="ui-g-6 ui-xl-6">
+
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+
+                        </div>
+                    </div>
+                    <div class="ui-g-12 ui-xl-12">
+
+                        <div class="ui-g-6 ui-xl-6">
+
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="ui-g-6 ui-xl-6">
+                    <div class="ui-g-12 ui-xl-12">
+
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:inputText readonly="true"  id="contractdocnum" style="width: 40%; font-size: 15px !important;" value="#{rscRestrictionQuantitiesFormMB.restrictionQuantitiesDTO.tenderId.docNumber}"/>
+
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel  style="width: 170px; font-size: 17px !important; " value="الرقم الدفترى للمناقصه"/>
+
+                        </div>
+                    </div>
+                    <div class="ui-g-12 ui-xl-12">
+
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:inputText readonly="true" id="contractnum" style="width: 40%; font-size: 15px !important;" value="#{rscRestrictionQuantitiesFormMB.restrictionQuantitiesDTO.tenderId.serial}"/>
+
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel  style="width: 130px; font-size: 17px !important; " value="رقم المناقصه"/>
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+            </p:fieldset>
+
+
+
+            <p:fieldset id="data" style=" margin-top: 2%">
+                <p:dataTable id="detail"
+                             var="detail"
+                             dir="rtl" 
+                             sortBy="#{1}"
+                             rowKey="#{detail.index}"
+                             rowIndexVar="index" 
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                             widgetVar="detail"
+                             value="#{rscRestrictionQuantitiesFormMB.restrictionQuantitiesDTO.rscRestrictionQuantitiesDetailDTOList}" >
+
+                    <f:facet name="header" class="col-md-12">
+                        <p:commandButton   class="saddButton" id="addnew"
+                                           icon="fa fa-plus"
+                                           title="#{userData.userDDs['ADD']}" 
+                                           actionListener="#{rscRestrictionQuantitiesFormMB.addChild()}" 
+                                           update="form"                                         
+                                           ajax="true"
+                                           style="float:right"
+                                           rendered="#{!rscRestrictionQuantitiesFormMB.restrictionQuantitiesDTO.active}"/>
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('detail').filter()" style="width:150px" />
+                        </p:outputPanel>
+                    </f:facet>
+                    <p:column style="width: 17vh;text-align: -webkit-auto;border-radius: 0px" id="itemName" headerText="البند" 
+                              filterBy="#{detail.guideDTO}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{detail.guideDTO}"
+                              filterable="false">
+                        <p:autoComplete id="itemNameIn"  
+                                        style="width:95%"
+                                        converter="#{rscRestrictionQuantitiesFormMB.rscWorkUnitsGuideDTOConverter}"
+                                        value="#{detail.guideDTO}"
+                                        var="item"
+                                        itemLabel="#{item}" 
+                                        itemValue="#{item}" 
+                                        forceSelection="true"  
+                                        completeMethod="#{rscRestrictionQuantitiesFormMB.completeWorkUnitsGuideDTO}" 
+                                        readonly="#{rscRestrictionQuantitiesFormMB.restrictionQuantitiesDTO.active}">
+                            <p:ajax update="unitName " listener="#{rscRestrictionQuantitiesFormMB.validateUnitGuide()}"
+                                    event="itemSelect"  />
+                            <p:ajax update="unitName " listener="#{rscRestrictionQuantitiesFormMB.validateUnitGuide()}"
+                                    event="change"  />
+
+                        </p:autoComplete>            
+                    </p:column>
+
+                    <p:column style="width: 17vh;font-size: 1.8vh;text-align: right;border-radius: 0px" headerText="#{userData.userDDs['UNIT']}" >
+                        <p:outputLabel  id="unitName" value="#{detail.guideDTO.unitName.name}" />
+                    </p:column>
+                    <p:column style="width: 17vh;font-size: 1.8vh;text-align: right" headerText="الكمية المنفذه" >
+                        <p:inputNumber  id="excuteQuantity" value="#{detail.excuteQty}" readonly="#{rscRestrictionQuantitiesFormMB.restrictionQuantitiesDTO.active}"/>
+                    </p:column>
+
+                    <p:column style="width: 10vh;font-size: 1.8vh;text-align: center;border-radius: 0px"  headerText="#{userData.userDDs['TRANSACTION']}" rendered="#{!rscRestrictionQuantitiesFormMB.restrictionQuantitiesDTO.active}">
+
+                        <p:commandButton  class="saddButtons" id="addnew2"
+                                          icon="fa fa-plus" style="background-color: #6a6967;border-radius: 3px;float:right"
+                                          title="#{userData.userDDs['ADD']}" 
+                                          actionListener="#{rscRestrictionQuantitiesFormMB.addChild()}" 
+                                          update="detail"                                         
+                                          ajax="true"
+                                          />
+
+                        <p:commandButton  class="sdeleteButtons" update="detail"
+                                          title="#{userData.userDDs['DELETE']}" style="background-color: red;border-radius: 3px;"
+                                          action="#{rscRestrictionQuantitiesFormMB.deleteRscExtractDetail()}"
+                                          icon="fa fa-remove" >
+
+                            <f:setPropertyActionListener value="#{detail}"
+                                                         target="#{rscRestrictionQuantitiesFormMB.rscRestrictionQuantitiesDetailDTOSelected}"/>
+                            <p:confirm header="#{userData.userDDs['COFIGRATION']}" 
+                                       message="#{userData.userDDs['ARE_YOU_SURE']}"
+                                       icon="ui-icon-alert" />
+                        </p:commandButton>
+
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column >
+
+
+
+
+
+                </p:dataTable>
+
+                <div id="buttunss" class="asmaa">
+
+                    <p:commandButton class="saveButton" 
+                                     title="#{userData.userDDs['SAVE']}"
+                                     value="#{userData.userDDs['SAVE']}"
+
+                                     action="#{rscRestrictionQuantitiesFormMB.save()}" 
+                                     id="saveB"
+                                     update="@form"
+                                     disabled="#{rscRestrictionQuantitiesFormMB.restrictionQuantitiesDTO.active}"/>
+
+
+
+                    <p:commandButton class="newButton" 
+                                     value="#{userData.userDDs['NEW']}"
+                                     title="#{userData.userDDs['NEW']}"
+
+                                     action="#{rscRestrictionQuantitiesFormMB.reset}" 
+                                     update="form" id="undo"/>
+                    <p:commandButton   class="reloadButton"
+                                       id="loadL"  title="#{userData.userDDs['UPLOAD']}"
+                                       value="#{userData.userDDs['UPLOAD']}" 
+
+                                       action="#{rscRestrictionQuantitiesFormMB.OpenDlg('dlg2')}"
+                                       update="@form"
+                                       disabled="#{rscRestrictionQuantitiesFormMB.restrictionQuantitiesDTO.active}"/>
+                    <p:commandButton  class="deleteButton" id="cancel" title="#{userData.userDDs['CANCEL']}"
+                                      value="#{userData.userDDs['CANCEL']}" 
+                                      action="#{rscRestrictionQuantitiesFormMB.exit()}"
+                                      update="form"/>
+                    <p:commandButton  class="PrintButton"
+                                      id="PrintB"
+                                      ajax="false"
+                                      onclick="form.target = '_blank'"  
+
+                                      value="#{userData.userDDs['PRINT']}" 
+                                      actionListener="#{rscRestrictionQuantitiesFormMB.print()}"
+                                      title="#{userData.userDDs['PRINT']}"
+                                      immediate="true" />
+                    <p:commandButton  class="closeButton" id="back" title="#{userData.userDDs['BACK']}"
+                                      value="#{userData.userDDs['BACK']}"  style=""
+                                      action="#{rscRestrictionQuantitiesFormMB.exit()}"
+                                      update="form"/>
+
+
+                    <p:blockUI block="form" trigger="saveB  undo" animate="true" >
+
+                        <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                    </p:blockUI>
+
+
+                </div>
+
+            </p:fieldset>
+            <h:panelGrid columns="1" cellpadding="5">
+
+                <h:panelGroup>
+
+
+
+
+                    <p:dialog id="dlg2" header="#{userData.userDDs['Download_Tenders']}" widgetVar="dlg2" modal="true" style="height: fit-content;width: fit-content">
+
+                        <p:tabView id="tabsBar">
+
+                            <p:tab id="tab2" title="المناقصه"  >
+
+                                <p:dataTable id="tenderList"
+                                             draggableColumns="true" 
+                                             var="tender"
+                                             widgetVar="tender"  
+                                             rowIndexVar="index" 
+                                             dir="rtl"  selectionMode="single"
+                                             selection="#{rscRestrictionQuantitiesFormMB.restrictionQuantitiesDTO.tenderId}"
+                                             value="#{rscRestrictionQuantitiesFormMB.rscTenderList}" 
+                                             rowKey="#{tender}"
+                                             rows="#{userData.rowListCount}" 
+                                             paginator="true" 
+                                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}" >
+
+                                    <p:column style="width: 12vh;font-size: 1.5vh;text-align: -webkit-auto;border-radius: 0px" 
+                                              filterStyle="display:none" filterBy="#{contract.serial}"
+                                              filterMatchMode="contains" 
+                                              headerText="رقم المناقصه"
+                                              sortBy="#{tender.serial}">
+                                        <p:outputLabel value="#{tender.serial}" />
+                                    </p:column>
+
+
+                                    <p:column style="width: 14vh;text-align:right;font-size: 1.8vh;border-radius: 0px" 
+                                              filterStyle="display:none"
+                                              filterBy="#{tender.customerId.name}" 
+                                              filterMatchMode="contains"
+                                              headerText="المقاول" 
+                                              sortBy="#{tender.customerId.name}">
+                                        <p:outputLabel value="#{tender.customerId.name}" />
+                                    </p:column>
+                                    <p:column style="width: 14vh;text-align:right;font-size: 1.8vh;border-radius: 0px" 
+                                              filterStyle="display:none"
+                                              filterBy="#{tender.docNumber}" 
+                                              filterMatchMode="contains"
+                                              headerText="رقم المناقصه  " 
+                                              sortBy="#{tender.docNumber}">
+                                        <p:outputLabel value="#{tender.docNumber}" />
+                                    </p:column>
+                                </p:dataTable> 
+                            </p:tab>
+                        </p:tabView>
+
+                        <p:commandButton class="reloadButtons" update="contract extract data" 
+
+                                         action="#{rscRestrictionQuantitiesFormMB.loadTender()}"
+                                         title="#{userData.userDDs['UPLOAD']}"  >
+
+                        </p:commandButton>
+
+
+                    </p:dialog>
+
+                </h:panelGroup>
+
+
+            </h:panelGrid>
+
+        </h:form>
+
+    </ui:define>
+
+
+</ui:composition>

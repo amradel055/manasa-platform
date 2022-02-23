@@ -1,0 +1,487 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form  class='formmargin' id="form"  enctype="multipart/form-data"  dir="#{userData.dir}">
+            <div style=" position: absolute;left: 20px"> 
+
+                    <p:commandButton  style="z-index: 2;
+                                      margin-top: 24%;
+                                      color: #035c70!important; 
+                                      background-color: #223238!important;
+                                      border: 1px solid #22323a!important;
+                                      background: #22323a 50% 50% repeat-x!important;"
+                                      icon="fa fa-fw fa-home"
+                                      title="#{userData.userDDs['HOME']}"
+                                      class="smhomeButton" 
+                                      action="exit" />
+                       
+                </div>
+            <p:fieldset legend="#{userData.userDDs['RESERVATION_GOODS']}" >
+
+                <div >
+                    <p:messages id="dilgMsg"
+                                autoUpdate="true" 
+                                showDetail="true" 
+                                closable="true"/>   
+                </div>
+
+                <div  id="firstLine" class="ui-g-12 ui-g-nopad">
+
+                    <div class="ui-g">
+
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 70px;margin-right: 6%;" value="#{userData.userDDs['RESERVA_NO']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel id="serialNo" value="#{invReservationFormMB.invReservationEntity.serial}"/>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 95px" value="#{userData.userDDs['SEL_REPRES']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup >
+
+                                    <p:autoComplete style="width:40%" 
+                                                    dropdown="true"
+                                                    converter="#{invReservationFormMB.delegatorConvertor}"
+                                                    value="#{invReservationFormMB.invReservationEntity.delegator}"
+
+                                                    var="delegator"
+                                                    itemLabel="#{delegator}" 
+                                                    itemValue="#{delegator}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{invReservationFormMB.completeDelegators}" >
+
+                                    </p:autoComplete>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 65px;margin-right: 6%;" value="#{userData.userDDs['DATEE']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:calendar  style="width: 50%!important"  
+                                                 value="#{invReservationFormMB.invReservationEntity.reservationDate}"
+                                                 pattern="dd/MM/yyyy" />
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 95px" value="#{userData.userDDs['REPOSITORY']}" />
+                                </h:panelGroup>
+                                <h:panelGroup >
+
+                                    <p:autoComplete style="width:40%" 
+                                                    dropdown="true"
+                                                    converter="#{invReservationFormMB.invInventoryConverter}"
+                                                    value="#{invReservationFormMB.invReservationEntity.inventory}"
+                                                    var="inventory"
+                                                    required="true"
+                                                    itemLabel="#{inventory}" 
+                                                    itemValue="#{inventory}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{invReservationFormMB.completeInventory}" >
+
+                                        <p:ajax 
+                                            event="change"
+                                            listener="#{invReservationFormMB.fillItemMap()}" />
+                                        <p:ajax 
+                                            event="itemSelect"
+                                            listener="#{invReservationFormMB.fillItemMap()}" />
+
+                                    </p:autoComplete>
+
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 65px;margin-right: 6%;" value="#{userData.userDDs['END_DATE']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:calendar  style="width: 50%!important" 
+                                                 id="ad10"
+                                                 value="#{invReservationFormMB.invReservationEntity.endDate}"
+                                                 pattern="dd/MM/yyyy" />
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 95px" value="#{userData.userDDs['CUST_NAM_NO']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup >
+
+                                    <p:autoComplete style="width:40%" 
+                                                    dropdown="true"
+                                                    converter="#{invReservationFormMB.customerConvertor}"
+                                                    value="#{invReservationFormMB.invReservationEntity.site}"
+
+                                                    var="customerVar"
+                                                    itemLabel="#{customerVar}" 
+                                                    itemValue="#{customerVar}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{invReservationFormMB.completeCustomers}" >
+
+                                    </p:autoComplete>
+
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 65px;margin-right: 6%;" value="#{userData.userDDs['ADDRESS']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width: 50%!important"
+                                                 id="address" 
+                                                 value="#{invReservationFormMB.invReservationEntity.address}" />
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 95px" value="#{userData.userDDs['MAIN_CUSTOMER']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:40%" 
+                                                    dropdown="true"
+                                                    converter="#{invReservationFormMB.customerConvertor}"
+                                                    value="#{invReservationFormMB.invReservationEntity.mainSite}"
+
+                                                    var="customerVar"
+                                                    itemLabel="#{customerVar}" 
+                                                    itemValue="#{customerVar}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{invReservationFormMB.completeCustomers}" >
+
+                                    </p:autoComplete>
+
+
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 65px;margin-right: 6%;" value="#{userData.userDDs['NOTE']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width: 50%!important" id="ad11" value="#{invReservationFormMB.invReservationEntity.remark}" />
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+
+                        </div>
+                    </div>
+                </div>
+            </p:fieldset>
+
+            <p:fieldset id="fieldSetId" legend="#{userData.userDDs['DET_RESERV_GO']}" style="margin-bottom:20px">
+                <p:dataTable var="invReservationTable"
+                             widgetVar="invReservationTable"
+                             rowIndexVar="index"
+                             rowKey="#{invReservationTable}"
+                             selectionMode="single"
+                             selection="#{invReservationFormMB.invReservationDetailEntitySelection}"
+                             dir="rtl"
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                             editable="true"
+                             editMode="cell"
+                             sortBy="#{1}"
+                             value="#{invReservationFormMB.invReservationDetailsEntityList}"
+                             id="invReservationTable">
+
+                    <f:facet name="header" >
+                        <p:commandButton style="float: right" id="addnew" 
+                                         icon="fa fa-plus" 
+                                         class="saddButton"
+                                         title="#{userData.userDDs['ADD']}"
+                                         update=":form:fieldSetId"  
+                                         oncomplete="PrimeFaces.focus('form:invReservationTable:'+#{invReservationFormMB.invReservationDetailsEntityList.size()}+':invItemNameIn')"
+                                         immediate="true"
+                                         actionListener="#{invReservationFormMB.adddetails}"
+                                         ajax="true"/>
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('invReservationTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+                    </f:facet>
+
+
+                    <p:column style="width: 3vh;font-size: 1.6vh;text-align: -webkit-auto;border-radius: 0px" 
+                              id="serail"
+                              headerText="#">
+                        <h:outputText value="#{invReservationTable.serial}"  />
+                    </p:column>
+
+                    <p:column style="width: 10vh;font-size: 1.6vh;text-align: -webkit-auto;border-radius: 0px" 
+                              id="itemName"
+                              headerText="#{userData.userDDs['ITEM_NAME']}"
+
+                              filterBy="#{invReservationTable.itemsBarcodesDetail}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{invReservationTable.itemsBarcodesDetail}"
+                              filterable="false">
+                        <p:autoComplete id="invItemNameIn"  
+
+                                        style="width:175%"
+                                        converter="#{invReservationFormMB.itemsBarcodesDetailsViewConverter}"
+                                        value="#{invReservationTable.itemsBarcodesDetail}"
+
+                                        var="item"
+                                        itemLabel="#{item}" 
+                                        itemValue="#{item}" 
+                                        forceSelection="true" 
+                                        completeMethod="#{invReservationFormMB.completeItemsData}" >
+                            <p:ajax update="unitvalue QuantityT costTt AddingT discountT netId totalQuantity  
+                                    totalNet "
+                                    event="itemSelect" listener="#{invReservationFormMB.validateItems(invReservationTable)}" />
+                            <p:ajax update="unitvalue QuantityT costTt AddingT discountT netId totalQuantity  
+                                    totalNet "
+                                    event="change" listener="#{invReservationFormMB.validateItems(invReservationTable)}" />
+                        </p:autoComplete> 
+
+                    </p:column>
+
+                    <p:column  style="width: 12vh;text-align: -webkit-auto;border-radius: 0px" id="Unit"
+                               headerText="#{userData.userDDs['UNIT_NUMBER']}"
+
+                               filterBy="#{invReservationTable.itemsBarcodesDetail.unitName}" 
+                               filterMatchMode="contains" 
+                               sortBy="#{invReservationTable.itemsBarcodesDetail.unitName}"
+                               filterable="false">
+
+                        <p:inputText  disabled="true" id="unitvalue" readonly="true"
+                                      value="#{invReservationTable.itemsBarcodesDetail.unitName}"
+                                      style="width: 95%" />                               
+                    </p:column>
+
+
+                    <p:column  style="width: 8vh;font-size: 1.6vh;text-align: -webkit-auto;border-radius: 0px" 
+                               id="Quantity"
+                               headerText="#{userData.userDDs['QUANTITY']}"
+
+                               filterBy="#{invReservationTable.amount}" 
+                               filterMatchMode="contains" 
+                               sortBy="#{invReservationTable.amount}"
+                               filterable="false">
+
+                        <p:inputText id="QuantityT"  
+                                     value="#{invReservationTable.amount}" 
+                                     disabled="#{invReservationTable.itemsBarcodesDetail == null}"
+                                     style="width:95%">
+                            <p:ajax listener="#{invReservationFormMB.validateQuantityColum(invReservationTable)}" 
+                                    update="netId totalQuantity  totalNet  "/>
+                        </p:inputText>  
+                    </p:column>
+
+                    <p:column  style="width: 8vh;font-size: 1.6vh;text-align: -webkit-auto;border-radius: 0px"
+                               id="Price" 
+                               headerText="#{userData.userDDs['PRICE']}"
+
+                               filterBy="#{invReservationTable.price}" 
+                               filterMatchMode="contains" 
+                               sortBy="#{invReservationTable.price}"
+                               filterable="false">
+
+                        <p:inputText id="costTt" 
+                                     value="#{invReservationTable.price}"
+                                     disabled="#{invReservationTable.itemsBarcodesDetail == null}"
+                                     style="width:95%">
+                            <p:ajax listener="#{invReservationFormMB.validatePriceColumn(invReservationTable)}" 
+                                    update="invReservationTable"/>
+                        </p:inputText>    
+                    </p:column>
+
+                    <p:column  style="width: 8vh;font-size: 1.6vh;text-align: -webkit-auto;border-radius: 0px" 
+                               id="adding"
+                               headerText="#{userData.userDDs['ADD']}"
+
+                               filterBy="#{invReservationTable.adding}" 
+                               filterMatchMode="contains" 
+                               sortBy="#{invReservationTable.adding}"
+                               filterable="false">
+
+                        <p:inputText id="AddingT"  
+                                     value="#{invReservationTable.adding}" 
+                                     disabled="#{invReservationTable.itemsBarcodesDetail == null}"
+                                     style="width:95%">
+                            <p:ajax listener="#{invReservationFormMB.validateAddingColum(invReservationTable)}" 
+                                    update="netId totalQuantity totalNet"/>
+                        </p:inputText>  
+                    </p:column>
+
+                    <p:column  style="width: 11vh;font-size: 1.6vh;text-align: -webkit-auto;border-radius: 0px" 
+                               id="Discount"
+                               headerText="#{userData.userDDs['DISCOUNT']}"
+
+                               filterBy="#{invReservationTable.discount}" 
+                               filterMatchMode="contains" 
+                               sortBy="#{invReservationTable.discount}"
+                               filterable="false">
+
+                        <p:inputText id="discountT" 
+                                     value="#{invReservationTable.discount}" 
+                                     disabled="#{invReservationTable.itemsBarcodesDetail == null}"
+                                     style="width:80%!important;display: inline!important">
+                            <p:ajax listener="#{invReservationFormMB.validateDiscountColumn(invReservationTable)}"
+                                    update="invReservationTable netId totalQuantity totalNet"/>
+                        </p:inputText>  
+                        <p:outputLabel value="%"  style="display: inline!important"  />
+                    </p:column>
+
+                    <p:column  style="width: 8vh;font-size: 1.6vh;text-align: -webkit-auto;border-radius: 0px"   
+                               id="Total"
+                               headerText="#{userData.userDDs['TOTAL']}"
+
+                               filterBy="#{userData.userDDs['TOTAL']}" 
+                               filterMatchMode="contains" 
+                               sortBy="#{userData.userDDs['TOTAL']}"
+                               filterable="false">
+                        <p:outputLabel id="netId" value="#{invReservationTable.net}" />
+                    </p:column>
+
+                    <p:summaryRow>
+                        <p:column colspan="3" style="text-align:right">
+                            <h:outputText style="text-align:right" value="#{userData.userDDs['TOTAL']}  :" />
+                        </p:column>
+                        <p:column>
+                            <h:outputText id="totalQuantity" value="#{invReservationFormMB.totalQuatity}"/>
+                        </p:column>
+
+                        <p:column />
+                        <p:column />
+                        <p:column />
+                        <p:column>
+                            <h:outputText id="totalNet" value="#{invReservationFormMB.totalNet}"/>
+                        </p:column>
+                        <p:column />
+                    </p:summaryRow>
+
+                    <p:column  style="width: 7vh;font-size: 1.6vh;text-align: center;border-radius: 0px" headerText="#{userData.userDDs['TRANSACTION']}"  >
+                        <p:commandButton class="saddbuttonins" id="b7" icon="fa fa-plus" style="background-color: rgb(42, 163, 218);border-radius: 3px;" title="#{userData.userDDs['ADD']}"
+                                         actionListener="#{invReservationFormMB.adddetails}"
+                                         update=":form:fieldSetId"  
+                                         oncomplete="PrimeFaces.focus('form:invReservationTable:'+#{invReservationFormMB.invReservationDetailsEntityList.size()}+':invItemNameIn')"
+                                         immediate="true"
+                                         ajax="true" />
+
+                        <p:commandButton class="sdeleteButtons" update="invReservationTable" title="#{userData.userDDs['DELETE']}"
+                                         action="#{invReservationFormMB.deleteInvReservationDetail}" style="background-color: red;border-radius: 3px;" icon="fa fa-remove" >
+                            <f:setPropertyActionListener value="#{invReservationTable}" 
+                                                         target="#{invReservationFormMB.invReservationDetailEntitySelection}"/>
+                            <p:confirm header="#{userData.userDDs['COFIGRATION']}"
+                                       message="#{userData.userDDs['ARE_YOU_SURE']}" 
+                                       icon="ui-icon-alert" />
+                        </p:commandButton>
+
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton title="#{userData.userDDs['YES']}" 
+                                             type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton title="#{userData.userDDs['NO']}" 
+                                             type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column >
+
+                </p:dataTable>
+
+                <h:panelGroup class="centerButtons" style="margin-top: 2%" >
+                    
+                     <p:commandButton  class="saveButtons" 
+                                      id="saveB" 
+                                      title="#{userData.userDDs['SAVE']}" 
+                                      value="#{userData.userDDs['SAVE']}" 
+                                      style="color: #fff!important;background-color: #2196F3;margin-left: 5px;"
+                                      action="#{invReservationFormMB.save()}" 
+                                      update="@form"/>
+                    
+                    <p:commandButton  class="newButtons" 
+                                      id="newN"
+                                      ajax="false"
+                                      style="color: #fff!important;background-color: #9c27b0d1;margin-left: 5px;"
+                                      value="#{userData.userDDs['NEW']}" 
+                                      title="#{userData.userDDs['NEW']}"
+                                      onclick="form.target = ''" 
+                                      actionListener="#{invReservationFormMB.reset()}"/>
+                    
+                    <p:commandButton  class="closeButtons" 
+                                      id="cancel" 
+                                      title="#{userData.userDDs['CANCEL']}"
+                                      value="#{userData.userDDs['CANCEL']}"
+                                     style="color: #fff!important;background-color: #035C70;margin-left: 5px;" 
+                                      action="#{invReservationFormMB.exit()}"
+                                      update="@form"/>
+
+                    <p:blockUI block="form" trigger="saveB" animate="true" >
+
+                        <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                    </p:blockUI> 
+
+                </h:panelGroup>
+            </p:fieldset>
+
+
+
+
+        </h:form>
+
+        <script>
+
+            document.addEventListener("keydown", function (e) {
+                console.log(e.which);
+                if (e.which === 13) {
+                    e.preventDefault();
+                    return false;
+                }
+                ;
+            });
+
+        </script>
+    </ui:define>
+</ui:composition>

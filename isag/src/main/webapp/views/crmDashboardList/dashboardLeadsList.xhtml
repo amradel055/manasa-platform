@@ -1,0 +1,293 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+      <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form  class='formmargin' enctype="multipart/form-data" id="form" dir="#{userData.dir}">
+            <div style=" position: absolute;left: 20px"> 
+
+                <p:commandButton  style="z-index: 2;
+                                  margin-top: 24%;
+                                  color: #035c70!important; 
+                                  background-color: #223238!important;
+                                  border: 1px solid #22323a!important;
+                                  background: #22323a 50% 50% repeat-x!important;"
+                                  icon="fa fa-fw fa-home"
+                                  title="#{userData.userDDs['HOME']}"
+                                  class="smhomeButton" 
+                                  action="exit" />
+
+            </div>
+            <p:fieldset legend="بيانات العملاء المحتملين" >
+                <div>
+                    <p:dataTable 
+                        id="organizationSiteTable"
+                        draggableColumns="true"
+                        var="organizationSiteTable" 
+                        widgetVar="organizationSiteTable" 
+                        rowIndexVar="index" 
+                        value="#{crmLeadsListMB.dataModelInvOrganization}"    
+                        rows="10"
+                        lazy="true"
+                        paginator="true"
+                        paginatorTemplate="{CurrentPageReport} {FirstPageLink}
+                        {PreviousPageLink} {PageLinks} {NextPageLink}
+                        {LastPageLink} {RowsPerPageDropdown}" 
+                        emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                        >
+
+                        <f:facet name="header" > 
+                            <p:outputPanel  style="margin-top: 0%;">
+                                <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                                <p:inputText id="globalFilter" a:autofocus="true" onkeyup="PF('organizationSiteTable').filter()" style="width:150px" />
+                            </p:outputPanel>  
+                            <p:fileUpload style="margin-left: 5%; margin-top: -2.5%; float: left;" value="#{importMB.customerFile}" mode="simple" onstart="disableChoosing()" 
+                                          oncomplete="enableChoosing()" /> 
+
+                            <p:commandButton id="btncustomer"  actionListener="#{importMB.readCustomer()}" onclick="PF('btncustomer').disable();" ajax="false" value="تحميل">
+                                <f:ajax execute="@all" render="@form"/>
+                                <p:ajax/>
+                            </p:commandButton> 
+                        </f:facet>
+                         <p:column headerText="#" style="width: 2%;font-size: 15px;text-align: -webkit-auto;" > 
+                            <h:outputText value="#{index + 1}" style="width: 5%;font-size: 12px;" /> 
+                       </p:column>
+                        <p:column style="width:5vh;font-size:1.8vh;text-align: right;border-radius: 0px "
+                                  filterStyle="display:none"
+                                  filterBy="#{organizationSiteTable.code}"
+                                  filterMatchMode="contains" 
+                                  headerText="#{userData.userDDs['CUSTOM_CODE']}"
+                                  sortBy="#{organizationSiteTable.code}"  
+                                  >
+                            <p:outputLabel value="#{organizationSiteTable.code}" />
+                        </p:column>
+
+                        <p:column style="width:15vh;font-size:1.8vh;text-align: right;border-radius: 0px "
+                                  filterStyle="display:none"
+                                  filterBy="#{organizationSiteTable.name}"
+                                  filterMatchMode="contains" 
+                                  headerText="#{userData.userDDs['CUSTOM_NAME']}" sortBy="#{organizationSiteTable.name}" >
+                            <p:outputLabel value="#{organizationSiteTable.name}" />
+                        </p:column>
+
+                        <p:column style="width:10vh;font-size: 1.8vh;text-align: right;border-radius: 0px "
+                                  filterStyle="display:none" 
+                                  filterBy="#{organizationSiteTable.mobile}"
+                                  filterMatchMode="contains" 
+                                  headerText="الجوال"
+                                  sortBy="#{organizationSiteTable.mobile}" 
+                                  >
+                            <p:outputLabel value="#{organizationSiteTable.mobile}" />
+                        </p:column>
+                           <p:column style="width:10vh;font-size: 1.8vh;text-align: right;border-radius: 0px "
+                                  filterStyle="display:none" 
+                                  filterBy="#{organizationSiteTable.phone}"
+                                  filterMatchMode="contains" 
+                                  headerText="الهات�?"
+                                  sortBy="#{organizationSiteTable.phone}" 
+                                  >
+                               <p:outputLabel value="#{organizationSiteTable.phone}" />
+                        </p:column>
+                         <p:column style="width:15vh;font-size:1.8vh;text-align: right;border-radius: 0px "
+                                  filterStyle="display:none"
+                                  filterBy="#{organizationSiteTable.globalFilter}"
+                                  filterMatchMode="contains" 
+                                  headerText="" 
+                                  sortBy="#{organizationSiteTable.learnAboutCompanyFrom.name}" 
+                                  >
+                            <f:facet name="filter">
+                                <p:selectOneMenu  label="المصدر" id="learnAbout" style="width:100%"
+                                                  converter="#{crmLeadsListMB.learnAboutCompanyfromconverter}"
+                                                  value="#{crmLeadsListMB.leadSearch.learnAboutCompanyFrom}"  > 
+                                    <f:selectItem itemLabel="مصدر العميل"  itemValue="" />
+                                    <f:selectItems  value="#{crmLeadsListMB.learnAboutCompanyfromDTOList}" 
+                                                    var="learnAbout" itemLabel="#{learnAbout}" itemValue="#{learnAbout}" />
+
+                                    <p:ajax update="organizationSiteTable"
+                                            event="change"
+                                            listener="#{crmLeadsListMB.searchFromAllLeads()}" />
+                                </p:selectOneMenu>
+                            </f:facet>
+                            <p:outputLabel value="#{organizationSiteTable.learnAboutCompanyFrom.name}" />
+                        </p:column>
+                             <p:column style="width:13vh;font-size:1.8vh;text-align: right;border-radius: 0px "
+                                  filterStyle="display:none"
+                                   filterBy="#{organizationSiteTable.globalFilter}"
+                                  filterMatchMode="contains" 
+                                  headerText="" sortBy="#{organizationSiteTable.assignedTo.name}" >
+                            <f:facet name="filter">
+                                <p:selectOneMenu  label="المتابع له" id="employee" style="width:100%"
+                                                  converter="#{crmLeadsListMB.employeeDTOConverter}"
+                                                  value="#{crmLeadsListMB.leadSearch.assignedTo}"  > 
+                                    <f:selectItem itemLabel="المتابع له"  itemValue="" />
+                                    <f:selectItems  value="#{crmLeadsListMB.employeeDTOList}" 
+                                                    var="employee" itemLabel="#{employee}" itemValue="#{employee}" />
+
+                                    <p:ajax update="organizationSiteTable"
+                                            event="change"
+                                            listener="#{crmLeadsListMB.load()}" />
+                                </p:selectOneMenu>
+                            </f:facet>
+                            <p:outputLabel value="#{organizationSiteTable.assignedTo.name}" />
+                        </p:column>
+               <p:column style="width:16vh;font-size:1.8vh;text-align: right;border-radius: 0px "
+                                  filterStyle="display:none"
+                                    filterBy="#{organizationSiteTable.globalFilter}"
+                                  filterMatchMode="contains" 
+                                  headerText="" sortBy="#{organizationSiteTable.projectName.name}" >
+                            <f:facet name="filter">
+                                <p:selectOneMenu  label="اسم المشروع" id="projectName" style="width:100%"
+                                                  converter="#{crmLeadsListMB.projectNameConverter}"
+                                                  value="#{crmLeadsListMB.leadSearch.projectName}"  > 
+                                    <f:selectItem itemLabel="اسم المشروع"  itemValue="" />
+                                    <f:selectItems  value="#{crmLeadsListMB.projectNameDTOList}" 
+                                                    var="projectName" itemLabel="#{projectName}" itemValue="#{projectName}" />
+
+                                    <p:ajax update="organizationSiteTable"
+                                            event="change"
+                                            listener="#{crmLeadsListMB.searchFromAllLeads()}" />
+                                </p:selectOneMenu>
+                            </f:facet>
+                            <p:outputLabel value="#{organizationSiteTable.projectName.name}" />
+                        </p:column>
+                         <p:column style="width:13vh;font-size:1.8vh;text-align: right;border-radius: 0px "
+                                  filterStyle="display:none"
+                                  filterMatchMode="contains" 
+                                  headerText="" sortBy="#{organizationSiteTable.leadStatus.name}"
+                                  filterBy="#{organizationSiteTable.globalFilter}">
+ 
+                            <f:facet name="filter">
+                                <p:selectOneMenu  label="الحالة" id="leadStatus" style="width:100%"
+                                                  converter="#{crmLeadsListMB.leadStatusDTOconverter}"
+                                                  value="#{crmLeadsListMB.leadSearch.leadStatus}"  > 
+                                    <f:selectItem itemLabel="الحالة"  itemValue="" />
+                                    <f:selectItems  value="#{crmLeadsListMB.leadStatusDTOList}" 
+                                                    var="leadStatus" itemLabel="#{leadStatus}" itemValue="#{leadStatus}" />
+
+                                    <p:ajax update="organizationSiteTable"
+                                            event="change"
+                                            listener="#{crmLeadsListMB.searchFromAllLeads()}" />
+                                </p:selectOneMenu>
+                            </f:facet>
+                            <p:outputLabel value="#{organizationSiteTable.leadStatus.name}" />
+                        </p:column>
+                          <p:column style="width:10vh;font-size: 1.8vh;text-align: right;border-radius: 0px "
+                                  filterStyle="display:none" 
+                                   filterBy="#{organizationSiteTable.createdDate}"
+                                  filterMatchMode="contains" 
+                                  headerText="تاريخ الادخال"
+                                  sortBy="#{organizationSiteTable.createdDate}" 
+                                  >
+                            <p:outputLabel value="#{organizationSiteTable.createdDate}" >
+                            <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                            </p:outputLabel>
+                        </p:column>
+                        <p:column style="width:15vh;font-size: 1.8vh;text-align: center;border-radius: 0px " headerText="#{userData.userDDs['TRANSACTION']}" >
+                            <p:commandButton class="seditButtons" update="@form" icon="fa fa-fw fa-edit" style="background-color: #8E6D6F; border-radius: 3px;" 
+                                             title="#{userData.userDDs['EDIT']}" action="#{crmLeadsListMB.goToEdit()}" rendered="#{userData.userScreens['crmLeads'].edit or userData.isAdmin}">
+                                <f:setPropertyActionListener value="#{organizationSiteTable.id}"  target="#{crmLeadsListMB.leadSelected}" />
+                            </p:commandButton>
+                            <p:commandButton  class="seditButtons"    
+                                              update="form:activities" 
+                                              icon="fa fa-fw fa-eye" style="background-color: #1a95bb;border-radius: 3px;" 
+                                              title="نشاطات العميل" 
+                                              rendered="#{userData.userScreens['crmLeads'].view or userData.isAdmin}"
+                                              onclick="PF('dlg12').show();" 
+                                              action="#{crmLeadsListMB.goToLeadsEventFromList}"
+                                              >
+                                <f:setPropertyActionListener value="#{organizationSiteTable.id}"  target="#{crmLeadsListMB.leadSelected}" />
+
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable> 
+
+
+                    <p:dialog id="dialog1"  widgetVar="dlg12" >
+                        <p:fieldset legend="ت�?اصيل النشاطات" style="margin-bottom:20px">
+
+                            <p:dataTable id="activities"
+                                         widgetVar="activities"
+                                         style="margin-bottom:20px"
+                                         var="activities"
+                                         rowIndexVar="index" 
+                                         dir="rtl" 
+                                         emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                                         selectionMode="single"
+                                         sortBy="#{1}"
+                                         rowKey="#{activities.index}"
+                                         selection="#{crmLeadsListMB.invOrganizationSiteDTO.crmEventDTOSelected}"
+                                         value="#{crmLeadsListMB.invOrganizationSiteDTO.crmEventDTOList}" >
+
+                                <p:column headerText="#" style="width: 4vh;text-align:center;border-radius: 0px" >
+                                    <h:outputText value="#{index + 1}"  />
+                                </p:column>
+
+                                <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="subject" headerText="الموضوع" 
+                                          filterBy="#{activities.subject}" 
+                                          filterMatchMode="contains" 
+                                          sortBy="#{activities.subject}"
+                                          filterable="false">
+                                    <p:outputLabel value="#{activities.subject}" />            
+                                </p:column>
+                                <p:column style="width: 8vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" filterStyle="display:none" 
+                                          filterBy="#{activities.startDate}" 
+                                          filterMatchMode="contains"
+                                          headerText="تاريخ البداية"
+                                          sortBy="#{activities.startDate}" 
+                                          >
+                                    <p:outputLabel value="#{activities.startDate}" >
+                                        <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                                    </p:outputLabel>                           
+                                </p:column>
+                                <p:column style="width: 8vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" filterStyle="display:none" 
+                                          filterBy="#{activities.startDate}" 
+                                          filterMatchMode="contains"
+                                          headerText="توقيت البداية"
+                                          sortBy="#{activities.startDate}" 
+                                          >
+                                    <p:outputLabel value="#{activities.startDate}" >
+                                        <f:convertDateTime type="date" pattern="hh:mm:ss"/>
+                                    </p:outputLabel>                           
+                                </p:column>
+                                <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="activityType" headerText="نوع النشاط" 
+                                          filterBy="#{activities.activityType.name}" 
+                                          filterMatchMode="contains" 
+                                          sortBy="#{activities.activityType.name}"
+                                          filterable="false">
+                                    <p:outputLabel value="#{activities.activityType.name}" />            
+                                </p:column>
+                                <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="symbolPriority" headerText="الوص�?" 
+                                          filterBy="#{activities.discription}" 
+                                          filterMatchMode="contains" 
+                                          sortBy="#{activities.discription}"
+                                          filterable="false">
+                                    <p:outputLabel value="#{activities.discription}" />            
+                                </p:column>
+
+                                <p:column style="width: 13vh;text-align: center;border-radius: 0px" headerText="#{userData.userDDs['TRANSACTION']}">
+                                    <p:commandButton  
+                                        update="@form" 
+                                        class="smsearchButtons" onclick="form.target = '_blank'"  ajax="false"
+                                        icon="fa fa-fw fa-search-plus"  style="background-color: rgba(63, 81, 181, 0.88);border-radius: 3px;"
+                                        title="#{userData.userDDs['VIEW']}" 
+                                        action="#{crmLeadsEventFormDTOMB.goToEventEdit(activities.id)}"  >
+                                    </p:commandButton>
+                                </p:column >
+
+                            </p:dataTable>
+
+                        </p:fieldset>
+                    </p:dialog>
+                </div>
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>
+
+

@@ -1,0 +1,328 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                >
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form  class='formmargin' id="form"  enctype="multipart/form-data"  dir="#{userData.dir}">
+            <div style=" position: absolute;left: 20px"> 
+
+                    <p:commandButton  style="z-index: 2;
+                                      margin-top: 24%;
+                                      color: #035c70!important; 
+                                      background-color: #223238!important;
+                                      border: 1px solid #22323a!important;
+                                      background: #22323a 50% 50% repeat-x!important;"
+                                      icon="fa fa-fw fa-home"
+                                      title="#{userData.userDDs['HOME']}"
+                                      class="smhomeButton" 
+                                      action="exit" />
+                       
+                </div>
+            <p:fieldset legend="#{userData.userDDs['STORE_INIT_BALAN']}" >
+
+                <div>
+                    <p:messages autoUpdate="true"  id="msg2" showDetail="true" closable="true" rendered="true" />
+                </div>
+
+
+                <div  id="firstLine" class="ui-g-12 ui-g-nopad">
+
+                    <div class="ui-g">
+
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 75px;margin-right: 6%;" value="#{userData.userDDs['TRANSACTION_NO']}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:inputText id="DiscountOrder" readonly="true" style="width: 35%;"
+                                                   value="#{InvOpeningBalanceItemFormMB.invOpeningBalanceItemEntity.serial}" />
+                                </h:panelGroup>      
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 45px" value="#{userData.userDDs['DATEE']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+
+
+                                    <p:calendar id="dateId"
+                                                style="width:  35%!important" 
+                                                value="#{InvOpeningBalanceItemFormMB.invOpeningBalanceItemEntity.date}" 
+                                                required="true"
+                                                requiredMessage="#{userData.userDDs['REQUIRED']}"
+                                                pattern="dd/MM/yyyy">
+                                        <p:ajax event="dateSelect" update="dateMsg"/>
+                                    </p:calendar>
+                                    <p:message id="dateMsg" for="dateId"/>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 75px;margin-right: 6%;" value="#{userData.userDDs['INVEN_DOC']}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:inputText style="width: 35%" 
+                                                 value="#{InvOpeningBalanceItemFormMB.invOpeningBalanceItemEntity.documentStrip}" />
+                                </h:panelGroup>
+                            </h:panelGroup>
+
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 50px" value="#{userData.userDDs['INVENTORY']}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:34%" 
+                                                    dropdown="true"
+                                                    converter="#{InvOpeningBalanceItemFormMB.invInventoryConverter}"
+                                                    value="#{InvOpeningBalanceItemFormMB.invOpeningBalanceItemEntity.invInventoryId}"
+                                                    required="true"
+                                                    var="inventory"
+                                                    itemLabel="#{inventory}" 
+                                                    itemValue="#{inventory}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{InvOpeningBalanceItemFormMB.completeInventory}" >
+                                        <p:ajax 
+                                            event="change"
+                                            listener="#{InvOpeningBalanceItemFormMB.fillItemList()}" />
+                                        <p:ajax 
+                                            event="itemSelect"
+                                            listener="#{InvOpeningBalanceItemFormMB.fillItemList()}" />
+                                    </p:autoComplete>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-12">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 75px;margin-right: 3%;" value="#{userData.userDDs['NOTE']}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:inputText style="width: 62%" 
+                                                 value="#{InvOpeningBalanceItemFormMB.invOpeningBalanceItemEntity.remark}" />
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                    </div>
+                </div>
+
+            </p:fieldset>
+            <p:fieldset id="fieldSetId" legend="#{userData.userDDs['BALA_DATA']}"  style="margin-bottom:20px">
+                <p:dataTable id="invOpenningBalanceTable"
+                             var="invOpenningBalanceTable"
+                             rowIndexVar="index" 
+                             dir="rtl" 
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                             editable="true"
+                             editMode="cell"
+                             sortBy="#{1}"
+                             selectionMode="single"
+                             selection="#{InvOpeningBalanceItemFormMB.invOpenningBalanceItemDetailEntitySelection}"
+                             widgetVar="invOpenningBalanceTable"
+                             rowKey="#{invOpenningBalanceTable}"
+                             value="#{InvOpeningBalanceItemFormMB.invOpenningBalanceItemDetailEntityList}">
+
+                    <f:facet name="header" class="col-md-12">
+                        <p:commandButton  class="saddButton" id="addnew" icon="fa fa-plus"
+                                          style="float: right"
+                                          title="#{userData.userDDs['ADD']}" 
+                                          actionListener="#{InvOpeningBalanceItemFormMB.adddetails}"
+                                          update=":form:fieldSetId"  
+                                          oncomplete="PrimeFaces.focus('form:invOpenningBalanceTable:'+#{InvOpeningBalanceItemFormMB.invOpenningBalanceItemDetailEntityList.size()}+':invItemNameIn')"
+                                          ajax="true" 
+                                          />
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('invOpenningBalanceTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:column id="serail" style="width: 6vh;text-align: right;font-size: 1.8vh;border-radius: 0px" 
+                              headerText="#" filterStyle="display:none" filterBy="#{invOpenningBalanceTable.serial}"
+                              filterMatchMode="contains"  sortBy="#{invOpenningBalanceTable.serial}">
+                        <h:outputText value="#{invOpenningBalanceTable.serial}"  />
+                    </p:column>           
+
+
+                    <p:column style="width: 14vh;text-align: right;font-size: 1.8vh;border-radius: 0px" id="itemName" 
+                              filterStyle="display:none" filterBy="#{invOpenningBalanceTable.itemId}"
+                              filterMatchMode="contains" sortBy="#{invOpenningBalanceTable.itemId}"
+                              headerText="#{userData.userDDs['ITEM_NUMBER']}">
+                        <p:autoComplete id="invItemNameIn"  
+
+                                        style="width:95%"
+                                        converter="#{InvOpeningBalanceItemFormMB.itemConverter}"
+                                        value="#{invOpenningBalanceTable.itemId}"
+
+                                        var="item"
+                                        itemLabel="#{item}" 
+                                        itemValue="#{item}" 
+                                        forceSelection="true" 
+                                        completeMethod="#{InvOpeningBalanceItemFormMB.completeInvItemData}" >
+                            <p:ajax update="unitvalue QuantityT costTt  netId totalQuantity totalNet"
+                                    event="itemSelect" listener="#{InvOpeningBalanceItemFormMB.validateItems(invOpenningBalanceTable)}" />
+                            <p:ajax update="unitvalue QuantityT costTt  netId totalQuantity totalNet"
+                                    event="change" listener="#{InvOpeningBalanceItemFormMB.validateItems(invOpenningBalanceTable)}" />
+                        </p:autoComplete>    
+                    </p:column>
+
+
+                    <p:column  style="width: 12vh;text-align: -webkit-auto;border-radius: 0px" id="Unit" 
+                               filterStyle="display:none" filterBy="#{invOpenningBalanceTable.itemId.unitId.name}"
+                               filterMatchMode="contains"  sortBy="#{invTransferTable.invOpenningBalanceTable.itemId.unitId.name}"
+                               headerText="#{userData.userDDs['UNIT_NUMBER']}">
+                        <p:inputText id="unitvalue"
+                                     readonly="true" 
+                                     value="#{invOpenningBalanceTable.itemId.unitId.name}"
+                                     style="width: 95%" />                               
+                    </p:column>
+
+                    <p:column style="width: 14vh;text-align: right;font-size: 1.8vh;border-radius: 0px" 
+                              filterStyle="display:none" filterBy="#{invOpenningBalanceTable.quantity}"
+                              filterMatchMode="contains"  sortBy="#{invOpenningBalanceTable.quantity}"
+                              id="Quantity"
+                              headerText="#{userData.userDDs['QUANTITY']}">
+                        <p:inputText id="QuantityT"  
+                                     value="#{invOpenningBalanceTable.quantity}" 
+                                     disabled="#{invOpenningBalanceTable.itemId == null}"
+                                     style="width:95%">
+                            <p:ajax listener="#{InvOpeningBalanceItemFormMB.validateQuantityColum(invOpenningBalanceTable)}" 
+                                    update="invOpenningBalanceTable netId totalQuantity totalNet "/>
+                        </p:inputText>   
+                    </p:column>
+
+                    <p:column style="width: 8vh;text-align: right;font-size: 1.8vh;border-radius: 0px" id="Price" filterStyle="display:none" 
+                              filterBy="#{invOpenningBalanceTable.cost}"
+                              filterMatchMode="contains"  sortBy="#{invOpenningBalanceTable.cost}"
+                              headerText="#{userData.userDDs['PRICE']}">
+                        <p:inputText id="costTt" 
+                                     value="#{invOpenningBalanceTable.cost}"
+                                     disabled="#{invOpenningBalanceTable.itemId == null}"
+                                     style="width:95%">
+                            <p:ajax listener="#{InvOpeningBalanceItemFormMB.validatePriceColumn(invOpenningBalanceTable)}" 
+                                    update="invOpenningBalanceTable "/>
+                        </p:inputText>  
+                    </p:column>
+
+
+
+                    <p:column style="width: 12vh;text-align: right;font-size: 1.8vh;border-radius: 0px" id="Total"  
+                              filterStyle="display:none" filterBy="#{invOpenningBalanceTable.net}"
+                              filterMatchMode="contains"  sortBy="#{invOpenningBalanceTable.net}"
+                              headerText="#{userData.userDDs['TOTAL']}">
+                        <p:outputLabel id="netId" value="#{invOpenningBalanceTable.net}"   />
+                    </p:column>
+
+                    <p:summaryRow>
+                        <p:column colspan="3" style="text-align:right">
+                            <h:outputText style="text-align:right" value="#{userData.userDDs['TOTAL']}  :" />
+                        </p:column>
+                        <p:column>
+                            <h:outputText id="totalQuantity" value="#{InvOpeningBalanceItemFormMB.totalQuatity}"/>
+                        </p:column>
+
+                        <p:column />
+
+                        <p:column>
+                            <h:outputText id="totalNet" value="#{InvOpeningBalanceItemFormMB.totalNet}"/>
+                        </p:column>
+                        <p:column/>
+                    </p:summaryRow>
+
+
+                    <p:column style="width: 7vh;text-align: center;font-size: 1.8vh;border-radius: 0px" headerText="#{userData.userDDs['TRANSACTION']}">
+                        <p:commandButton  class="saddbuttonin" id="b7" icon="fa fa-plus" style="background-color: rgb(42, 163, 218);border-radius: 3px;"
+                                          title="#{userData.userDDs['ADD']}" 
+                                          actionListener="#{InvOpeningBalanceItemFormMB.adddetails}"
+                                          oncomplete="PrimeFaces.focus('form:invOpenningBalanceTable:'+#{InvOpeningBalanceItemFormMB.invOpenningBalanceItemDetailEntityList.size()}+':invItemNameIn')"
+                                          update=":form:fieldSetId" 
+                                          ajax="true" />
+
+                        <p:commandButton class="sdeleteButton" update="invOpenningBalanceTable" title="#{userData.userDDs['DELETE']}" 
+                                         action="#{InvOpeningBalanceItemFormMB.deleteInvQuotationDetail}" style="background-color: red;border-radius: 3px;" icon="fa fa-remove" >
+                            <f:setPropertyActionListener value="#{invOpenningBalanceTable}" 
+                                                         target="#{InvOpeningBalanceItemFormMB.invOpenningBalanceItemDetailEntitySelection}"/>
+                            <p:confirm header="#{userData.userDDs['COFIGRATION']}"
+                                       message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                        </p:commandButton>
+
+                        <p:blockUI block="form" trigger="b7" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI> 
+
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column >
+
+                </p:dataTable>
+
+
+
+                <h:panelGrid  columns="1" class="col-md-12">
+
+                    <h:panelGroup   class="centerButtons" style="margin-top: 2%">
+                        
+                        <p:commandButton   class="saveButton" 
+                                           id="saveB" 
+                                           title="#{userData.userDDs['SAVE']}" 
+                                           value="#{userData.userDDs['SAVE']}" 
+                                           style="c"
+                                           action="#{InvOpeningBalanceItemFormMB.save()}" 
+                                           update="@form"/>
+                        
+                        <p:commandButton  class="newButton"
+                                          id="newN"
+                                          ajax="false"
+                                         style=""
+                                          value="#{userData.userDDs['NEW']}" 
+                                          onclick="form.target = ''" 
+                                          actionListener="#{InvOpeningBalanceItemFormMB.reset()}"/>
+                        
+                        <p:commandButton class="closeButton" 
+                                         id="cancel" 
+                                         title="#{userData.userDDs['BACK']}" 
+                                         value="#{userData.userDDs['BACK']}" 
+                                        style=""
+                                         action="#{InvOpeningBalanceItemFormMB.exit()}" 
+                                         update="@form"/>
+
+                        <p:blockUI block="form" trigger="saveB" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI> 
+
+                    </h:panelGroup>
+
+                </h:panelGrid>
+
+            </p:fieldset>
+
+
+
+
+        </h:form>
+    </ui:define>
+</ui:composition>

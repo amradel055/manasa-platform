@@ -1,0 +1,359 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form  id="form" dir="#{userData.dir}"  class='formmargin'>
+
+            <p:fieldset style=" position: relative" legend="#{userData.userDDs['ITEM_CARD_REP']}"> 
+
+                <div class="row firstset">
+
+                    <div class="ui-g-6 ui-xl-6">
+       	                <div class="ui-g-12 ui-xl-12">
+
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:calendar pattern="dd/MM/yyyy" 
+                                            value="#{ItemCardReportMB.itemCardReportSerachBean.dateFrom}"
+                                            style="width: 50%">
+
+                                </p:calendar>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel  style="width: 100px;" value="#{userData.userDDs['FROM_DATE']}"/>
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:autoComplete style="width: 40%!important " 
+                                                dropdown="true"
+                                                converter="#{ItemCardReportMB.itemConverter}"
+                                                value="#{ItemCardReportMB.itemCardReportSerachBean.invItemForm}"
+                                                var="item"
+                                                itemLabel="#{item}" 
+                                                itemValue="#{item}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{ItemCardReportMB.completInvItem}" >
+                                </p:autoComplete>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 105px;" value="#{userData.userDDs['FROM_ITEM']}"/>
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:autoComplete style="width: 40%!important " 
+                                                dropdown="true"
+                                                converter="#{ItemCardReportMB.invInventoryConverter}"
+                                                value="#{ItemCardReportMB.itemCardReportSerachBean.inventoryFrom}"
+                                                var="inventory"
+                                                itemLabel="#{inventory}" 
+                                                itemValue="#{inventory}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{ItemCardReportMB.completInventory}" >
+                                </p:autoComplete>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 105px;" value="#{userData.userDDs['FROM_REPOS_NO']}"/>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ui-g-6 ui-xl-6">
+
+
+       	                <div class="ui-g-12 ui-xl-12">
+
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:calendar pattern="dd/MM/yyyy" 
+                                            value="#{ItemCardReportMB.itemCardReportSerachBean.dateTo}"
+                                            style="width: 50%">
+
+                                </p:calendar>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel  style="width: 100px" value="#{userData.userDDs['YEAR_TO']}"/>
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:autoComplete style="width: 40%!important " 
+                                                dropdown="true"
+                                                converter="#{ItemCardReportMB.itemConverter}"
+                                                value="#{ItemCardReportMB.itemCardReportSerachBean.invItemTo}"
+                                                var="item"
+                                                itemLabel="#{item}" 
+                                                itemValue="#{item}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{ItemCardReportMB.completInvItem}" >
+                                </p:autoComplete>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 105px" value="#{userData.userDDs['TO_ITEM']}"/>
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:autoComplete style="width: 40%!important " 
+                                                dropdown="true"
+                                                converter="#{ItemCardReportMB.invInventoryConverter}"
+                                                value="#{ItemCardReportMB.itemCardReportSerachBean.inventoryTo}"
+                                                var="inventory"
+                                                itemLabel="#{inventory}" 
+                                                itemValue="#{inventory}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{ItemCardReportMB.completInventory}" >
+                                </p:autoComplete>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 105px" value="#{userData.userDDs['TO_REPOS_NO']}"/>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+
+                </div>
+
+            </p:fieldset>
+
+            <div id="buttunss" class="asmaa">
+
+                <p:commandButton   class="searchButtons"
+                                   title="#{userData.userDDs['SEARCH']}"
+                                   action="#{ItemCardReportMB.search()}"
+                                   id="search"
+                                   value="#{userData.userDDs['SEARCH']}"
+                                   update="itemCardTable" 
+                                   />
+
+                <p:commandButton     class="newButton"
+                                     id="NewB"
+                                     title="#{userData.userDDs['NEW']}" 
+                                     immediate="true" 
+                                     action="#{ItemCardReportMB.reset()}"
+                                     update="form"
+                                     value="#{userData.userDDs['NEW']}"
+                                     />
+
+                <p:commandButton     class="printButtons"
+                                     id="PrintB"
+                                     ajax="false"
+                                     onclick="form.target = '_blank'"  
+                                     value="#{userData.userDDs['PRINT']}" 
+                                     actionListener="#{ItemCardReportMB.exportPDF}"
+                                     title="#{userData.userDDs['PRINT']}"
+                                     immediate="true" />
+
+                <p:commandButton     class="closeButton"
+                                     id="CloseB"
+                                     title="#{userData.userDDs['CANCEL']}"
+                                     action="exit"
+                                     value="#{userData.userDDs['CANCEL']}"/>
+
+                <h:commandLink  class="sdcreenimg" style="margin-right: 4px;">  
+                    <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                    <p:dataExporter type="xls"
+                                    target="itemCardTable" 
+                                    fileName="بطاقة صنف"
+                                    postProcessor="#{ItemCardReportMB.postProcessXLS}" />  
+                </h:commandLink>
+
+                <p:blockUI block="form" trigger="search NewB PrintB CloseB" animate="true" >
+
+                    <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                </p:blockUI> 
+
+            </div>
+            <p:fieldset style="margin-top: 2%">
+                <p:dataTable style="margin-top: 0%; margin-bottom: 15px"
+                             var="itemCardTable"
+                             widgetVar="itemCardTable"  
+                             rowIndexVar="index" 
+                             value="#{ItemCardReportMB.itemCardReportEntityList}"
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                             id="itemCardTable"
+                             sortBy="#{itemCardTable.itemId}" 
+                             rows="20"
+                             paginator="true"
+                             expandableRowGroups="true" >
+
+
+                    <f:facet name="header">
+
+
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('itemCardTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+
+                    </f:facet>
+                    <p:headerRow>
+                        <p:column  style="width: 15vh;font-size: 1.8vh;border-radius: 0px;" >
+                            <h:outputText value="#{itemCardTable.itemName}" />
+                        </p:column>
+                        <p:column  style="width: 15vh;font-size: 1.8vh;border-radius: 0px;" >
+                            <h:outputText value="#{userData.userDDs['PRE-BALANCE']}" />
+                        </p:column>
+                        <p:column  style="width: 15vh;font-size: 1.8vh;border-radius: 0px;" >
+                            <h:outputText value="#{itemCardTable.openingBalance}" />
+                        </p:column>
+
+                        <p:column colspan="7"/>
+
+                    </p:headerRow>
+                    <p:column style="width: 8vh;text-align: right;font-size: 1.8vh;border-radius: 0px;" headerText="#{userData.userDDs['TRANSACTION_NO']}" 
+
+                              filterBy="#{itemCardTable.serial}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{itemCardTable.serial}"
+                              filterable="false">
+
+                        <p:outputLabel value="#{itemCardTable.serial}" />
+                    </p:column>
+
+                    <p:column style="width: 7vh;text-align: right;font-size: 1.8vh;border-radius: 0px;"    headerText="#{userData.userDDs['TRANSACTION_DATE']}" 
+
+                              filterBy="#{itemCardTable.date}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{itemCardTable.date}"
+                              filterable="false">
+
+                        <p:outputLabel value="#{itemCardTable.date}" >
+                            <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                        </p:outputLabel>
+                    </p:column>
+
+                    <p:column style="width: 12vh;text-align: right;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
+                              headerText="#{userData.userDDs['TRANSACTION_TYPE']}"     
+
+                              filterBy="#{itemCardTable.transType}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{itemCardTable.transType}"
+                              filterable="false">
+
+                        <p:outputLabel value="#{itemCardTable.transType}" />
+                    </p:column>
+
+                    <p:column style="width: 12vh;text-align: right;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
+                              headerText="#{userData.userDDs['DEPOSITORY']}"  
+
+                              filterBy="#{itemCardTable.inventoryName}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{itemCardTable.inventoryName}"
+                              filterable="false">
+
+                        <p:outputLabel value="#{itemCardTable.inventoryName}" />
+                    </p:column>
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh;border-radius: 0px;" 
+                              headerText="#{userData.userDDs['IMPORT']}" 
+
+                              filterBy="#{itemCardTable.qtyin}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{itemCardTable.qtyin}"
+                              filterable="false">
+
+                        <p:outputLabel value="#{itemCardTable.qtyin}" />
+                    </p:column>
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh;border-radius: 0px;" 
+                              headerText="#{userData.userDDs['IMPORT']}" 
+
+                              filterBy="#{itemCardTable.qtyinCarton}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{itemCardTable.qtyinCarton}"
+                              filterable="false">
+
+                        <p:outputLabel value="#{itemCardTable.qtyinCarton}" />
+                    </p:column>
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh;border-radius: 0px;" 
+                              headerText="#{userData.userDDs['EXPORT']}" 
+
+                              filterBy="#{itemCardTable.qtyout}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{itemCardTable.qtyout}"
+                              filterable="false">
+
+                        <p:outputLabel value="#{itemCardTable.qtyout}" />
+                    </p:column>  
+                    
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh;border-radius: 0px;" 
+                              headerText="#{userData.userDDs['EXPORT']}" 
+
+                              filterBy="#{itemCardTable.qtyoutCarton}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{itemCardTable.qtyoutCarton}"
+                              filterable="false">
+
+                        <p:outputLabel value="#{itemCardTable.qtyoutCarton}" />
+                    </p:column> 
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh;border-radius: 0px;" 
+                              headerText="#{userData.userDDs['BALANCE']}"
+
+                              filterBy="#{itemCardTable.balance}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{itemCardTable.balance}"
+                              filterable="false">
+
+                        <p:outputLabel value="#{itemCardTable.balance}" />                      
+                    </p:column>
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh;border-radius: 0px;" 
+                              headerText="#{userData.userDDs['BALANCE']}"
+
+                              filterBy="#{itemCardTable.balanceCarton}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{itemCardTable.balanceCarton}"
+                              filterable="false">
+
+                        <p:outputLabel value="#{itemCardTable.balanceCarton}" />                      
+                    </p:column>
+                    <p:summaryRow>
+                        <p:column colspan="4" >
+                            <h:outputText value="#{userData.userDDs['TOTAL']}"/>
+                        </p:column>   
+
+                        <p:column  >
+                            <h:outputText value="#{itemCardTable.totalQtyin}"/>
+                        </p:column>    
+                        <p:column  >
+                            <h:outputText value="#{itemCardTable.totalQtyinCarton}"/>
+                        </p:column>   
+                        <p:column  >
+                            <h:outputText value="#{itemCardTable.totalQtyout}"/>
+                        </p:column>         
+                        <p:column  >
+                            <h:outputText value="#{itemCardTable.totalQtyoutCarton}"/>
+                        </p:column> 
+                        <p:column  >
+                        </p:column>                   
+                    </p:summaryRow>
+                </p:dataTable>
+
+            </p:fieldset>
+
+
+        </h:form>
+    </ui:define>
+</ui:composition>

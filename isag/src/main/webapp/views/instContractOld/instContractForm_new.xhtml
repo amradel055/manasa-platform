@@ -1,0 +1,450 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+         
+            <h:form class='formmargin' id="form" dir="#{userData.dir}">
+            <div style=" position: absolute;left: 20px"> 
+
+                <p:commandButton  style="z-index: 2;
+                                      margin-top: 12%;
+                                      color: #035c70!important; 
+                                      background-color: #223238!important;
+                                      border: 1px solid #22323a!important;
+                                      background: #22323a 50% 50% repeat-x!important;"
+                                      icon="fa fa-fw fa-home"
+                                      title="#{userData.userDDs['HOME']}"
+                                      class="smhomeButton" 
+                                      action="exit" />  
+        </div>
+            <p:fieldset legend="شاشة التقسيط" id="whole" style="margin-bottom:20px">
+
+                <div class="col-xs-12">
+                    <p:messages id="curmsg" showDetail="true" rendered="true" closable="true"/>   
+                </div>
+
+
+                <div  id="firstSegment" class="ui-g-12 ui-g-nopad">
+                    <div class="ui-g">
+
+                        <div class="ui-g-12 ui-md-12" style="margin-bottom: -1%;">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 103px;margin-right: 2.5%;" value="رقم العقد"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:inputText style="width: 18.5%;" value="#{instContractFormMBnew.instContractEntity.serial}">
+                                        <p:ajax listener="#{instContractFormMBnew.checkSerial()}" update="curmsg" event="blur"/>
+                                    </p:inputText>
+                                </h:panelGroup>  
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 111px;margin-right: 5%;" value="اسم العميل"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:36%!important"
+                                                    dropdown="true" maxResults="10"
+                                                    converter="#{instContractFormMBnew.invOrgSiteConverter}"
+                                                    value="#{instContractFormMBnew.instContractEntity.invOrganizationSite}"
+                                                    var="organization"
+                                                    itemLabel="#{organization}" 
+                                                    itemValue="#{organization}"
+                                                    forceSelection="true" 
+                                                    completeMethod="#{instContractFormMBnew.completOrgSite}"
+                                                    >
+
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 104px" value="المشروع"/>
+                                </h:panelGroup> 
+
+                                <h:panelGroup > 
+                                    <p:autoComplete style="width:36%!important"
+                                                    dropdown="true"
+                                                    converter="#{instContractFormMBnew.instPurchaseInvoiceContractDifrranceViewConverter}"
+                                                    value="#{instContractFormMBnew.instContractEntity.invItemId}"
+                                                    var="item"
+                                                    itemLabel="#{item}" 
+                                                    itemValue="#{item}"
+                                                    forceSelection="true" 
+                                                    completeMethod="#{instContractFormMBnew.completeInstPurchaseInvoiceContractDifrrance}"
+                                                    rendered="true" 
+                                                    >
+                                        <p:ajax update="totalValue curmsg orignelAmount"
+                                                event="change"
+                                                listener="#{instContractFormMBnew.updateTotalValue}" />
+                                        <p:ajax update="totalValue curmsg orignelAmount"
+                                                event="itemSelect"
+                                                listener="#{instContractFormMBnew.updateTotalValue}" />
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 105px;margin-right: 5%;" value="تاريخ بداية الاقساط"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:calendar  style="width:42%!important"  id="date" 
+                                                 value="#{instContractFormMBnew.instContractEntity.startInstallment}"
+                                                 pattern="dd/MM/yyyy" >
+                                    </p:calendar>
+                                </h:panelGroup>
+
+
+                            </h:panelGroup>      
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 100px" value="تاريخ العقد"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:calendar  style="width:45%!important"  id="contractDate" 
+                                                 value="#{instContractFormMBnew.instContractEntity.date}"
+                                                 pattern="dd/MM/yyyy" >
+                                    </p:calendar>
+                                </h:panelGroup>
+
+
+                            </h:panelGroup>      
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 105px;margin-right: 5%;" value="دفعة مقدمة"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:inputNumber id="downPay" style="width:49%!important"  value="#{instContractFormMBnew.instContractEntity.advancePayment}">
+                                        <p:ajax listener="#{instContractFormMBnew.calcInstallmentValue}" update="installmentValue"/>
+                                    </p:inputNumber>
+                                </h:panelGroup>
+
+
+                            </h:panelGroup>  
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 100px" value="دفعة عند الاستلام"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:inputNumber id="downCashPay" style="width:49%!important"  value="#{instContractFormMBnew.instContractEntity.deliveryPayment}">
+                                        <p:ajax listener="#{instContractFormMBnew.calcInstallmentValue}" update="installmentValue"/>
+                                    </p:inputNumber>
+                                </h:panelGroup>
+
+
+                            </h:panelGroup>      
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 105px;margin-right: 5%;" value="العدد"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:inputNumber id="number" style="width:49%!important"  value="#{instContractFormMBnew.instContractEntity.amount}">
+                                        <p:ajax listener="#{instContractFormMBnew.updateTotalValue}" update="installmentValue totalValue curmsg orignelAmount"/>
+                                    </p:inputNumber>
+                                </h:panelGroup>
+
+
+                            </h:panelGroup>      
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 100px" value="نسبة الربح"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:inputNumber id="murabahaRate" style="width:49%!important"  value="#{instContractFormMBnew.instContractEntity.murabahaRate}">
+                                        <p:ajax listener="#{instContractFormMBnew.updateTotalValue}" update="installmentValue totalValue"/>
+                                    </p:inputNumber>
+                                </h:panelGroup>
+
+
+                            </h:panelGroup>      
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 105px;margin-right: 5%;" value="مبلغ التقسيط"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:inputText id="installmentValue" readonly="true" style="width:37%!important"  value="#{instContractFormMBnew.instContractEntity.installmentValue}"/>
+                                </h:panelGroup>
+
+
+                            </h:panelGroup>  
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 100px" value="عدد الاقساط"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:inputNumber id="installmentNumber" style="width:49%!important"   value="#{instContractFormMBnew.instContractEntity.installmentNumber}">
+                                        <p:ajax listener="#{instContractFormMBnew.monthRate()}" update="installmentValue totalValue murabahaRate daysNumber curmsg"/>
+                                    </p:inputNumber>
+                                </h:panelGroup>
+
+
+                            </h:panelGroup>    
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 105px;margin-right: 5%;" value="اجمالي المبلغ"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:inputNumber id="totalValue" style="width:49%!important"  value="#{instContractFormMBnew.instContractEntity.totalValue}">
+                                        <p:ajax listener="#{instContractFormMBnew.calcInstallmentValue}" update="installmentValue"/>
+                                    </p:inputNumber>
+                                </h:panelGroup>
+                                
+                            </h:panelGroup> 
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 100px" value="عدد الشهور"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:inputNumber id="daysNumber" style="width:49%!important"  value="#{instContractFormMBnew.instContractEntity.daysNumber}">
+                                        <p:ajax listener="#{instContractFormMBnew.monthRate()}" update="installmentValue totalValue murabahaRate installmentNumber curmsg"/>
+                                    </p:inputNumber>
+                                </h:panelGroup>
+
+
+                            </h:panelGroup>    
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 105px;margin-right: 5%;" value="ملاحظات"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:inputText id="remarks" style="width:37%!important"  value="#{instContractFormMBnew.instContractEntity.remark}">
+
+                                    </p:inputText>
+                                </h:panelGroup>
+
+
+                            </h:panelGroup> 
+                        </div>
+                            <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 100px" value="المبلغ الاصلي"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel id="orignelAmount" style="width:49%!important"  value="#{instContractFormMBnew.instContractEntity.orignelAmount}"/>
+                                </h:panelGroup>
+
+
+                            </h:panelGroup>  
+                        </div>
+                    </div>
+                </div>
+
+                <h:panelGrid columns="1" class="col-md-12">
+
+                    <h:panelGroup  class="centerButtons">
+                        
+                        
+                        <p:commandButton  class="saveButton" id="save" 
+                                          title="#{userData.userDDs['SAVE']}" 
+                                          value="#{userData.userDDs['SAVE']}" 
+                                           style=""
+                                          action="#{instContractFormMBnew.save()}"
+                                          update="form" disabled="#{instContractFormMBnew.instContractEntity.postFlag == 1 or instContractFormMBnew.instContractEntity.disabled}"/>
+
+                        <p:commandButton   class="newButton"
+                                           id="newN"
+                                          style=""
+                                           value="#{userData.userDDs['NEW']}" action="#{instContractFormMBnew.reset()}" update="form" />
+                        
+                        <p:commandButton  class="closeButton" title="#{userData.userDDs['BACK']}" 
+                                          immediate="true"
+                                          value="#{userData.userDDs['BACK']}" 
+                                          style=""
+                                          action="#{instContractFormMBnew.exit()}"   />
+
+                        <p:commandButton    class="printButtons"  
+                                             
+                                            ajax="false" onclick="form.target = '_blank'" 
+                                            actionListener="#{instContractFormMBnew.exportPDF3}" 
+                                            style="width: 95px;color: #fff!important;background-color: rgb(1, 76, 134);margin-left: 5px;"
+                                            value="طباعة العقد"
+                                            />
+                        <p:commandButton    class="printButtons"  
+                                             
+                                            ajax="false" onclick="form.target = '_blank'" 
+                                            actionListener="#{instContractFormMBnew.exportPDFCustomerAccountStatment}" 
+                                            style="width: 95px;color: #fff!important;background-color: rgb(1, 76, 134);margin-left: 5px;"
+                                            value="طباعة كشف حساب"
+                                            />
+
+                        <p:commandButton  class="sureButtons"  id="process" 
+                                          title="تأكيد" 
+                                          value="تأكيد" 
+                                          style="color: #fff!important;background-color: #b5212cdb;margin-left: 5px;"
+                                          action="#{instContractFormMBnew.calculateInstallment()}"
+                                          update="form" disabled="#{instContractFormMBnew.instContractEntity.disabled}"/> 
+
+
+
+                        <h:commandLink class="sdcreenimg" style="margin-right: 1%;">  
+                            <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                            <p:dataExporter type="xls"
+                                            target="instContractDetailsTable" 
+                                            fileName="الاقساط"
+                                            postProcessor="#{instContractFormMBnew.postProcessXLS}" />  
+                        </h:commandLink> 
+                              
+
+                    </h:panelGroup>
+                </h:panelGrid>
+
+            </p:fieldset>
+            <p:fieldset>
+                <p:dataTable id="instContractDetailsTable"
+                             reflow="true"
+                             var="instContractDetailsTable"
+                             rowIndexVar="index" 
+                             dir="rtl" 
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                             sortBy="#{1}"
+                             selectionMode="single"
+                             selection="#{instContractFormMBnew.instContractDetailsEntitySelected}"
+                             widgetVar="instContractDetailsTable"
+                             rowKey="#{instContractDetailsTable.index}"
+                             value="#{instContractFormMBnew.instContractDetailsEntityList}" >
+
+                    <f:facet name="header" class="col-md-12">
+                        <p:commandButton   class="saddButton" id="addnew"
+                                           icon="fa fa-plus"
+                                           title="#{userData.userDDs['ADD']}" 
+                                           actionListener="#{instContractFormMBnew.addNewDetail()}" 
+                                           update=":form:curmsg instContractDetailsTable"                                         
+                                           ajax="true"
+                                           style="float:right"
+                                           rendered="#{!instContractFormMBnew.instContractEntity.disabled}" />
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('instContractDetailsTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:ajax  event="rowSelect" 
+                             listener="#{instContractFormMBnew.onRowSelectDetails}"                                
+                             update="instContractDetailsTable"/>
+
+                    <p:column headerText="#{userData.userDDs['SERIES1']}"  style="width: 8vh;font-size: 1.8vh;text-align: right;border-radius: 0px;">
+                        <h:outputText value="#{instContractDetailsTable.index}"  />
+                    </p:column>
+                    <p:column  style="width: 17vh;font-size: 1.8vh;text-align: right;border-radius: 0px;" headerText="تاريخ القسط" >
+                        <p:calendar  style="width:50%!important"  id="dueDate" 
+                                     value="#{instContractDetailsTable.dueDate}"
+                                     rendered="#{instContractDetailsTable.markEdit}"
+                                     pattern="dd/MM/yyyy" >
+                            <p:ajax event="dateSelect" update="form" listener="#{instContractFormMBnew.updateListDetailsOrder}" />
+                        </p:calendar>
+                        <p:outputLabel value="#{instContractDetailsTable.dueDate}" rendered="#{not instContractDetailsTable.markEdit}">
+                            <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                        </p:outputLabel>
+                    </p:column>
+                    <p:column style="width: 17vh;font-size: 1.8vh;text-align: right;border-radius: 0px;" headerText="القيمة" >
+                        <h:outputText value="#{instContractDetailsTable.value}" rendered="#{not instContractDetailsTable.markEdit}"  />
+                        <p:inputNumber value="#{instContractDetailsTable.value}" rendered="#{instContractDetailsTable.markEdit}" >
+                            <p:ajax event="blur" update="form" listener="#{instContractFormMBnew.updateValueTotal}" />
+                        </p:inputNumber>
+                    </p:column>
+                    <p:column style="width: 17vh;font-size: 1.8vh;text-align: right;border-radius: 0px;" headerText="الملاحظات" >
+                        <h:inputText value="#{instContractDetailsTable.remark}"  />
+                    </p:column>
+ 
+
+                    <p:columnGroup type="footer">
+                        <p:row>
+                            <p:column  style="border-radius: 0px;" colspan="2" footerText="#{userData.userDDs['TOTAL']} " />
+                            <p:column  style="border-radius: 0px;" footerText="#{instContractFormMBnew.totalDetailValue}"/>
+                            <p:column  style="border-radius: 0px;" rendered="#{!instContractFormMBnew.instContractEntity.disabled}" footerText=""/>
+                        </p:row>
+                    </p:columnGroup>
+                    <p:column style="width: 10vh;font-size: 1.8vh;text-align: right;border-radius: 0px;"  headerText="#{userData.userDDs['TRANSACTION']}" rendered="#{!instContractFormMBnew.instContractEntity.disabled}">
+
+                        <p:commandButton  class="saddButtons" id="addnew2"
+                                          icon="fa fa-plus"
+                                          title="#{userData.userDDs['ADD']}" 
+                                          actionListener="#{instContractFormMBnew.addNewDetail()}" 
+                                          update=":form:curmsg instContractDetailsTable"                                         
+                                          ajax="true" style="float:right;background-color: rgb(42, 163, 218);border-radius: 3px;"
+                                         />
+
+                        <p:commandButton  class="sdeleteButtons" update="instContractDetailsTable"
+                                          title="#{userData.userDDs['DELETE']}" style="background-color: red;border-radius: 3px;"
+                                          action="#{instContractFormMBnew.deleteDetail}"
+                                          icon="fa fa-remove" >
+
+                            <f:setPropertyActionListener value="#{instContractDetailsTable}"
+                                                         target="#{instContractFormMBnew.instContractDetailsEntitySelected}"/>
+                            <p:confirm header="#{userData.userDDs['COFIGRATION']}" 
+                                       message="#{userData.userDDs['ARE_YOU_SURE']}"
+                                       icon="ui-icon-alert" />
+                        </p:commandButton>
+
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column >
+                </p:dataTable>
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,107 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+
+        <h:form class='formmargin' id="form"  enctype="multipart/form-data"  dir="#{userData.dir}">
+
+            <p:fieldset legend="انشاء مصروفات"  style="margin-bottom:20px">
+
+
+                <div class="col-xs-12">
+                    <p:messages autoUpdate="true"  id="msgopp" showDetail="true" closable="true" />
+                </div>
+                <div  id="firstLine" class="ui-g-12 ui-g-nopad">
+                    <div class="ui-g">
+
+                        <div class="ui-g-6 ui-xl-6">
+
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 35%!important" id="ad1" a:autofocus="true" value="#{glItemsFormMB.symbolDTO.serial}"/>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 85px;margin-right: 3%;" value="#{userData.userDDs['CODE']}"/>
+
+                                </div>
+                            </div>
+                            
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 35%!important" id="ad2" value="#{glItemsFormMB.symbolDTO.name}"/>
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 85px;" value="اسم "/>
+
+                                </div>
+                            </div>
+                             <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 35%!important" id="ad3"  value="#{glItemsFormMB.symbolDTO.cost}"/>
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 85px;" value="السعر "/>
+
+                                </div>
+                            </div>
+                              <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:selectBooleanCheckbox 
+                                        value="#{glItemsFormMB.symbolDTO.symbolType}"
+
+                                        >
+                                    </p:selectBooleanCheckbox>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 85px;" value="خدمة "/>
+
+                                </div>
+                            </div>
+                        </div>                        
+                    </div>
+                </div>
+
+            </p:fieldset>
+            
+          <div class="asmaa">
+                        <p:commandButton  class="saveButton"  
+                                          id="saveB" 
+                                          title="#{userData.userDDs['SAVE']}"
+                                          value="#{userData.userDDs['SAVE']}" 
+                                          style=""
+                                          action="#{glItemsFormMB.save()}" 
+                                          update="@form"/>
+
+                        <p:commandButton  class="newButton" 
+                                          id="newN"
+                                          ajax="false"
+                                          style=""
+                                          value="#{userData.userDDs['NEW']}" 
+                                          title="#{userData.userDDs['NEW']}"
+                                          onclick="form.target = ''" 
+                                          actionListener="#{glItemsFormMB.reset()}"/>
+
+              
+
+                    <p:blockUI block="form" trigger="saveB" animate="true" >
+
+                        <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                    </p:blockUI> 
+
+          </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

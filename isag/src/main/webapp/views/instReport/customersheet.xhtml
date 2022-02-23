@@ -1,0 +1,142 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+
+        <h:form class='formmargin'  id="form" dir="#{userData.dir}">
+
+            <p:fieldset legend="#{userData.userDDs['OVERDUE_AMOUNT']}">
+
+
+                <div class="col-xs-12">
+                    <p:messages id="curmsg" showDetail="true" rendered="false" closable="true"/>   
+                </div>
+
+                <div class="ui-g-12 ui-g-nopad firstset" id="firstSegment" >
+                    <div class="ui-g">    
+                        <div class="ui-g-6 ui-xl-6">
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:autoComplete style="width:40%!important"
+                                                    dropdown="true"
+                                                    converter="#{customerSheetReportBean.invOrgSiteFromConverter}"
+                                                    value="#{customerSheetReportBean.customer}"
+                                                    var="organization"
+                                                    itemLabel="#{organization}" 
+                                                    itemValue="#{organization}"
+                                                    forceSelection="true" 
+                                                    completeMethod="#{customerSheetReportBean.completOrgSiteFrom}"
+                                                    >
+                                        <p:ajax update="customer"
+                                                event="itemSelect" listener="#{customerSheetReportBean.searchContract()}" />
+                                    </p:autoComplete>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 75px" value="#{userData.userDDs['TO_CUSTOM']}"/>
+
+                                </div>
+                            </div>
+                        </div>     
+
+                        <div class="ui-g-6 ui-xl-6">
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-10 ui-xl-10">
+
+                                    <p:selectOneMenu id="customer" value="#{customerSheetReportBean.contractId}"
+                                                     style="float:right;width: 100%!important;color:#fff;height: 30px!important;margin-right: 0.5%;">
+
+                                        <f:selectItems value="#{customerSheetReportBean.contractDTOList}" 
+                                                       var="contract" itemLabel="#{contract.serial}"
+                                                       itemValue="#{contract.id}"/> 
+                                        <p:ajax event="itemSelect" listener="#{customerSheetReportBean.hishis()}" />
+                                    </p:selectOneMenu>
+
+
+                                </div>
+                                <div class="ui-g-2 ui-xl-2">
+                                    <p:outputLabel style="width: 75px" value="العقد"/>
+
+                                </div>
+                            </div>
+                        </div>     
+
+
+
+                    </div>
+                </div>
+
+
+            </p:fieldset>
+            <div id="buttunss" class="asmaa">
+
+                <p:commandButton  class="searchButtons"
+                                  value="#{userData.userDDs['SEARCH']}" action="#{customerSheetReportBean.search}"
+                                  id="searchS"
+                                  update="form" />
+                <p:commandButton  class="newButtons"
+                                  value="#{userData.userDDs['NEW']}" action="#{customerSheetReportBean.reset}"
+                                  id="reset"
+                                  update="@form" />
+                <p:commandButton  class="printButtons"
+                                  ajax="false" onclick="form.target = '_blank'"  value="#{userData.userDDs['PRINT']} "
+                                  actionListener="#{customerSheetReportBean.exportPDF}" id="printButtons"/>
+
+                <p:blockUI block="form" trigger="searchS reset printButtons" animate="true" >
+
+                    <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                </p:blockUI> 
+            </div>
+
+            <p:fieldset>
+
+                <p:dataTable id="accc"
+                             rows="20"
+                             paginator="true"
+                             draggableColumns="true" 
+                             value="#{customerSheetReportBean.contractDTO.instProjectGuideDTOList}" 
+                             var="project"
+                             sortBy="#{project.parentId}" expandableRowGroups="true">
+
+                    <f:facet name="header" >
+
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('bTable').filter()" style="width:150px" />
+
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:headerRow>
+                        <p:column colspan="1" style="width: 5vh;font-size: 2vh;border-radius: 0px;" >
+                            <h:outputText value="#{project.parent.name}" />
+                        </p:column>
+                    </p:headerRow>
+
+                    <p:column style="width: 10vh;font-size: 1.8vh;
+                              text-align: -webkit-auto;
+                              border-radius: 0px;" headerText="اسم البنود"
+                              sortBy="#{project.name}"
+                              filterBy="#{project.name}" 
+                              filterMatchMode="contains"
+                              filterable="false" >
+                        <h:outputText value="#{project.name}" style="font-size: 1.5vh"/>
+                    </p:column>
+
+                </p:dataTable>
+
+
+            </p:fieldset>
+
+
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,272 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <link rel="stylesheet" type="text/css" href="../../resources/css/main.css" /> 
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:head>
+            <title>#{userData.userDDs['ACCOUNT_REPORT']}</title>
+        </h:head>
+        <h:body> 
+            <h:form id="form" class='formmargin'>   
+                <div style=" position: absolute;left: 20px"> 
+
+                    <p:commandButton  style="z-index: 2;
+                                      margin-top: 12%;
+                                      color: #035c70!important; 
+                                      background-color: #223238!important;
+                                      border: 1px solid #22323a!important;
+                                      background: #22323a 50% 50% repeat-x!important;"
+                                      icon="fa fa-fw fa-home"
+                                      title="#{userData.userDDs['HOME']}"
+                                      class="smhomeButton" 
+                                      action="exit" />
+                    <p:commandButton  style="z-index: 2;
+                                      margin-top: 9%!important;
+                                      color: #035c70!important; 
+                                      background-color: #223238!important;
+                                      border: 1px solid #22323a!important;
+                                      background: #22323a 50% 50% repeat-x!important;" 
+                                      class="viewButton sminimize"
+                                      icon="fa fa-window-minimize"
+                                      title="إظهار/إخفاء"/>  
+                </div>
+
+                <p:fieldset legend="كشف حساب فتره" id="whole" 
+                            style=" position: relative">
+
+                    <div class="col-xs-12">
+                        <p:messages autoUpdate="true" id="msg" showDetail="true" closable="true" 
+                                    rendered="true"/>
+                    </div>
+
+                    <div  id="firstLine" class="ui-g-12 ui-g-nopad">
+
+                        <div class="ui-g firstset">
+                          
+                            <div class="ui-g-12 ui-md-12 " > 
+                                <h:panelGroup> 
+                                    <h:panelGroup > 
+                                        <p:outputLabel style="width: 65px;" value=" خزنه" />
+                                    </h:panelGroup> 
+                                    <h:panelGroup> 
+                                        <p:autoComplete style="width: 18%!important" id="Cost_Center_From" 
+                                                    dropdown="true"
+                                                    converter="#{autoComplete.glBankDTOConverter}"
+                                                    value="#{periodAccountStatementMB.accountSummarySearchBean.bankDTO}"
+                                                    required="true"
+                                                    requiredMessage="يجب اختيار خزنه"
+                                                    var="bank"
+                                                    itemLabel="#{bank}" 
+                                                    itemValue="#{bank}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{autoComplete.completeGlbankByUser}" >
+                                    </p:autoComplete>
+                                    </h:panelGroup>   
+                                </h:panelGroup>
+                            </div>
+                    
+                       
+                          
+                            <div class="ui-g-12 ui-md-6"> 
+                                <h:panelGroup> 
+                                    <h:panelGroup > 
+                                        <p:outputLabel style="width: 65px;" value="من تاريخ" />
+                                    </h:panelGroup> 
+                                    <h:panelGroup> 
+                                        <p:calendar  style="width: 50%"  id="dateFrom" autocomplete="false"
+                                                     value="#{periodAccountStatementMB.accountSummarySearchBean.dateFrom}"  pattern="dd/MM/yyyy">
+                                        </p:calendar> 
+                                    </h:panelGroup>   
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup> 
+                                    <h:panelGroup > 
+                                        <p:outputLabel style="width: 65px;" value="الي تاريخ" />
+                                    </h:panelGroup> 
+                                    <h:panelGroup> 
+                                        <p:calendar  style="width: 50%"  id="dateTo" autocomplete="false"
+                                                     value="#{periodAccountStatementMB.accountSummarySearchBean.dateTo}"  pattern="dd/MM/yyyy">
+                                        </p:calendar> 
+                                    </h:panelGroup>   
+                                </h:panelGroup>
+                            </div>
+
+
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup> 
+                                    <h:panelGroup> 
+                                        <p:outputLabel style="width: 65px;" value="من كشف" />
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:inputNumber id="fromDoc" value="#{periodAccountStatementMB.accountSummarySearchBean.fromDocumentSerial}" padControl="false" /> 
+                                    </h:panelGroup>   
+                                </h:panelGroup>
+
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+
+                                <h:panelGroup> 
+                                    <h:panelGroup> 
+                                        <p:outputLabel style="width: 65px;" value="الى كشف" />
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:inputNumber id="ToDoc" value="#{periodAccountStatementMB.accountSummarySearchBean.toDocumentSerial}"  padControl="false" /> 
+                                    </h:panelGroup>   
+                                </h:panelGroup>
+                            </div>
+
+                        </div>
+                    </div>
+                
+                
+                    <h:panelGrid class="col-md-12 centerButtons" columns="12">
+
+                        <h:panelGroup>
+                            <p:commandButton class="searchButtons"
+                                             style="color: #fff!important;background-color: #9813e4e6;margin-left: 5px" 
+                                             id="searchS"
+                                             value="#{userData.userDDs['SEARCH']}"
+                                             action="#{periodAccountStatementMB.search()}" 
+                                             update="@form"
+                                             />
+                            <p:commandButton  class="newButtons"  style="color: #fff!important;background-color:#035C70 !important;margin-left: 5px"
+                                              value="#{userData.userDDs['NEW']}" 
+                                              action="#{periodAccountStatementMB.reset}"
+                                              id="newN"
+                                              update="form" />
+                            <p:commandButton   class="printButtons" 
+                                               style="color: #fff!important;background-color: #3800ffd6;margin-left: 5px" 
+                                               ajax="false" 
+                                               onclick="form.target = '_blank'" 
+                                               value="#{userData.userDDs['PRINT']}"
+                                               actionListener="#{periodAccountStatementMB.exportPDF}"/>
+
+                            <h:commandLink class="sdcreenimg">  
+                                <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                                <p:dataExporter type="xls"
+                                                target="bank" 
+                                                fileName="كشف حساب فتره"
+                                                postProcessor="#{periodAccountStatementMB.postProcessXLS}" />  
+                            </h:commandLink>
+                            <p:blockUI block="form" trigger="searchS  newN" animate="true" >
+                                <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+                            </p:blockUI> 
+
+                        </h:panelGroup>
+                    </h:panelGrid>
+               </p:fieldset>
+
+                <p:fieldset>
+                    <p:dataTable id="bank" 
+                                 draggableColumns="true"
+
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                                 value="#{periodAccountStatementMB.glBankTransactionDTOList}"
+                                 var="subaccReport"
+                                 widgetVar="bank"
+                                 sortBy="#{subaccReport.documentSerial}" expandableRowGroups="true"
+                                 sortOrder="DESCENDING"
+                                 paginator="true"
+                                 rows="20">
+
+                        <f:facet name="header" class="col-md-12">
+
+                            <p:outputPanel>
+                                <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large;" />
+                                <p:inputText   id="globalFilter"   onkeyup="PF('bank').filter()" style='width:16%!important;' />
+                            </p:outputPanel>
+
+                        </f:facet>
+
+                        <p:headerRow>
+                            <p:column colspan="2" style="width: 15vh;font-size: 2vh;text-align: center;border-radius: 0px"  >
+                                <h:outputText value="رقم الكشف" />
+                            </p:column>
+                            <p:column colspan="2" style="width: 15vh;font-size: 2vh;text-align: center;border-radius: 0px" >
+                                <h:outputText value="#{subaccReport.documentSerial}" />
+                            </p:column>
+                            <p:column colspan="2" style="width: 15vh;font-size: 2vh;text-align: center;border-radius: 0px"  >
+                                <h:outputText value="رصيد البدايه" />
+                            </p:column>
+                            <p:column colspan="3" style="width: 15vh;font-size: 2vh;text-align: center;border-radius: 0px" >
+                                <h:outputText value="#{subaccReport.openingBalance}" />
+                            </p:column>
+                        </p:headerRow>
+                        <p:column  visible="false"  headerText="رقم المستند" filterable="false" >
+                            <h:outputText value="#{subaccReport.documentSerial}" />
+                        </p:column>
+                        <p:column style="width: 10vh;text-align: center;font-size:1.8vh;border-radius: 0px" 
+                                  filterBy="#{subaccReport.glBankId.name}"  filterMatchMode="contains" sortBy="#{subaccReport.glBankId.name}" filterable="false"
+                                  headerText="الخزينه">
+                            <h:outputText value="#{subaccReport.glBankId.name}" style="font-size: 12px"/>
+                        </p:column>   
+                        <p:column style="width:10vh ;text-align: center;font-size:1.8vh;border-radius: 0px"
+                                  filterBy="#{subaccReport.date}"  filterMatchMode="contains" sortBy="#{subaccReport.date}" filterable="false"
+                                  headerText="#{userData.userDDs['DATEE']}">
+                            <h:outputText value="#{subaccReport.date}">
+                                <f:convertDateTime id="datee"  pattern="dd-MM-yyyy"  />
+                            </h:outputText>
+                        </p:column>
+                        <p:column style="width: 10vh;text-align: center;font-size:1.8vh;border-radius: 0px" 
+                                  filterBy="#{subaccReport.serial}"  filterMatchMode="contains" sortBy="#{subaccReport.serial}" filterable="false"
+                                  headerText="#{userData.userDDs['DOCUMENT_NUMBER']}">
+                            <h:outputText value="#{subaccReport.serial}" style="font-size: 12px"/>
+                        </p:column>                     
+
+
+                        <p:column style="width: 10vh;text-align: center;font-size:1.8vh;border-radius: 0px" 
+                                  filterBy="#{subaccReport.transactionType}"  filterMatchMode="contains" sortBy="#{subaccReport.transactionType}" filterable="false"
+                                  headerText="#{userData.userDDs['MOVMENT_TYPE']}">
+                            <h:outputText value="#{subaccReport.transactionTypeName}" style="font-size: 12px"/>
+                        </p:column>    
+                        <p:column style="width:11vh; text-align: center;font-size:15px;border-radius: 0px"
+                                  filterBy="#{subaccReport.remark2}"  filterMatchMode="contains" sortBy="#{subaccReport.remark2}" filterable="false"
+                                  headerText="#{userData.userDDs['HANDLING']}">
+                            <h:outputText value="#{subaccReport.remark2}" style="font-size: 12px"/>
+                        </p:column>
+
+                        <p:column style="width:14vh; text-align: center;font-size:15px;border-radius: 0px"
+                                  filterBy="#{subaccReport.remark}"  filterMatchMode="contains" sortBy="#{subaccReport.remark}" filterable="false"
+                                  headerText="#{userData.userDDs['STATEMENT']}">
+                            <h:outputText value="#{subaccReport.remark}" style="font-size: 12px"/>
+                        </p:column>
+
+
+                        <p:column style="width: 10vh;text-align: center;font-size:1.8vh;border-radius: 0px" 
+                                  filterBy="#{subaccReport.debit}"  filterMatchMode="contains" sortBy="#{subaccReport.debit}" filterable="false"
+                                  headerText="#{userData.userDDs['DEBIT']}">
+                            <h:outputText value="#{subaccReport.debit}" style="font-size: 12px"/>
+                        </p:column>
+
+                        <p:column style="width: 10vh;text-align: center;font-size:1.8vh;border-radius: 0px" 
+                                  filterBy="#{subaccReport.credit}"  filterMatchMode="contains" sortBy="#{subaccReport.credit}" filterable="false"
+                                  headerText="#{userData.userDDs['CREDIT']}">
+                            <h:outputText value="#{subaccReport.credit}" style="font-size: 12px"/>
+                        </p:column>
+
+                        <p:column style="width: 10vh;text-align: center;font-size:1.8vh;border-radius: 0px"
+                                  filterBy="#{subaccReport.balance}"  filterMatchMode="contains" sortBy="#{subaccReport.balance}" filterable="false"
+                                  headerText="رصيد الفتره ">
+                            <h:outputText value="#{subaccReport.balance}" style="font-size: 12px"/>
+                        </p:column> 
+                        <p:summaryRow>
+                            <p:column colspan="9" >
+                                <h:outputText  style="text-align: center" value="#{userData.userDDs['TOTAL']}"/>
+                            </p:column>   
+
+                        </p:summaryRow>                    
+
+                    </p:dataTable>
+                </p:fieldset>
+            </h:form>
+        </h:body>
+    </ui:define>
+</ui:composition>
+

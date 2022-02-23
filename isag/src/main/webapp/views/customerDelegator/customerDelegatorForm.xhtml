@@ -1,0 +1,242 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form style="margin-right: 20px"  id="form" dir="#{userData.dir}">
+            <p:fieldset legend="اعطاء مندوب" id="whole" style="margin-bottom:20px">
+                <div class="col-xs-12">
+                    <p:messages autoUpdate="true"  id="msg" showDetail="true" closable="true" />
+                </div>
+
+                <div  id="firstSegment" class="ui-g-12 ui-g-nopad">
+                    <div class="ui-g"> 
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup> 
+                                    <p:outputLabel style="width: 85px" value="من عميل"  />
+                                </h:panelGroup>
+                                <p:autoComplete style="width:40%" 
+                                                dropdown="true" 
+                                                value="#{customerDelegatorFormMB.organizationSiteSearchBean.frominvOrganizationSiteDTO}"
+                                                converter="#{customerDelegatorFormMB.customerConvertor}"
+                                                var="customerVar"
+                                                itemLabel="#{customerVar}" 
+                                                itemValue="#{customerVar}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{customerDelegatorFormMB.completeFromCustomer}" >
+                                </p:autoComplete>
+                            </h:panelGroup>    
+                        </div>
+
+
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup> 
+                                    <p:outputLabel style="width: 85px" value="الي عميل" />
+                                </h:panelGroup>
+                                <p:autoComplete style="width:40%" 
+                                                dropdown="true"
+
+                                                value="#{customerDelegatorFormMB.organizationSiteSearchBean.toinvOrganizationSiteDTO}"
+                                                converter="#{customerDelegatorFormMB.customerConvertor}"
+                                                var="customerFrom"
+                                                itemLabel="#{customerFrom}" 
+                                                itemValue="#{customerFrom}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{customerDelegatorFormMB.completeToCustomer}" >
+
+                                </p:autoComplete>
+                            </h:panelGroup>    
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 85px" value="من فرع"/>
+                                </h:panelGroup>
+                                <p:autoComplete style="width:40%" 
+                                                dropdown="true" 
+                                                value="#{customerDelegatorFormMB.organizationSiteSearchBean.fromRegion}"
+                                                converter="#{customerDelegatorFormMB.regionConverter}"
+                                                var="regionFrom"
+                                                itemLabel="#{regionFrom}" 
+                                                itemValue="#{regionFrom}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{customerDelegatorFormMB.completeFromRegion}" >
+                                </p:autoComplete>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 85px" value="الي فرع"/>
+                                </h:panelGroup>
+                                <p:autoComplete style="width:40%" 
+                                                dropdown="true" 
+                                                value="#{customerDelegatorFormMB.organizationSiteSearchBean.toRegion}"
+                                                converter="#{customerDelegatorFormMB.regionConverter}"
+                                                var="regionTo"
+                                                itemLabel="#{regionTo}" 
+                                                itemValue="#{regionTo}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{customerDelegatorFormMB.completeToRegion}" >
+                                </p:autoComplete>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:85px " value="مندوب" />
+                                </h:panelGroup> 
+                                <h:panelGroup >
+                                    <p:autoComplete style="width: 40%" 
+
+                                                    dropdown="true"
+                                                    converter="#{customerDelegatorFormMB.salesConverter}"
+                                                    value="#{customerDelegatorFormMB.inventoryDelegatorDTO}" 
+
+                                                    var="person"
+                                                    itemLabel="#{person}" 
+                                                    itemValue="#{person}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{customerDelegatorFormMB.completeFromSalesPerson}" >
+                                        <p:ajax update="@form"
+                                                event="change"
+                                                process="@this"
+                                                listener="#{customerDelegatorFormMB.addDelegator()}" />
+                                        <p:ajax update="@form"
+                                                event="itemSelect"
+                                                process="@this"
+                                                listener="#{customerDelegatorFormMB.addDelegator}" />
+
+                                    </p:autoComplete>
+                                </h:panelGroup>    
+                            </h:panelGroup>
+                        </div>
+                    </div>
+                </div>
+
+                <h:panelGrid columns="1" class="col-md-12"> 
+                    <h:panelGroup class="centerButtons" style="margin-top: 2%">
+                        <p:commandButton   class="searchButton" 
+                                           id="searchA" 
+                                           title="#{userData.userDDs['SEARCH']}" 
+                                           value="#{userData.userDDs['SEARCH']}" 
+                                           
+                                           action="#{customerDelegatorFormMB.search()}" 
+                                           update="customerTable"/>
+
+                        <p:commandButton   class="saveButton" 
+                                           id="saveB" 
+                                           title="#{userData.userDDs['SAVE']}" 
+                                           value="#{userData.userDDs['SAVE']}" 
+                                       
+                                          
+                                           action="#{customerDelegatorFormMB.save()}" 
+                                           update="@form"/>
+
+                        <p:commandButton  class="newButton" 
+                                          id="newN"
+                                          ajax="false"
+                                          
+                                       
+                                          value="#{userData.userDDs['NEW']}" 
+                                          title="#{userData.userDDs['NEW']}"
+                                          onclick="form.target = ''" 
+                                          actionListener="#{customerDelegatorFormMB.reset()}"/>
+
+
+                        <p:commandButton  class="closeButton" 
+                                          title="#{userData.userDDs['CANCEL']}"
+                                          immediate="true"
+                                          value="#{userData.userDDs['CANCEL']}"
+                                       
+                                          action="#{customerDelegatorFormMB.exit()}"   />`
+
+                        <p:blockUI block="form" trigger="searchA" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI> 
+
+                    </h:panelGroup>
+
+
+                </h:panelGrid>
+            </p:fieldset>
+            <p:fieldset>
+                <p:dataTable id="customerTable"
+                             widgetVar="customerTable"
+                             var="customerTable"
+                             rowIndexVar="index" 
+                             dir="rtl" 
+                             selection="#{customerDelegatorFormMB.invOrganizationSiteDTOSelected}"
+                             sortBy="#{1}"
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                             value="#{customerDelegatorFormMB.invOrganizationSiteDTOList}" 
+                             selectionMode="single" 
+                             rowKey="#{customerTable.index}"
+                             >
+
+                    <f:facet name="header" >  
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('customerTable').filter()" style="width:175px" />
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:column headerText="#" style="width: 6vh;font-size: 1.8vh;text-align:center;border-radius: 0px;" >
+                        <h:outputText value="#{index + 1}" style="font-size: 1.5vh;"  />
+                    </p:column>
+                    <p:column filterStyle="display:none" style="width: 40vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" sortBy="#{customerTable.name}" filterBy="#{customerTable.name}"  filterMatchMode="contains" headerText="العميل" >
+                        <h:outputText value="#{customerTable.name}"    style="font-size: 1.5vh; text-align: center;"  />
+                    </p:column>
+                    <p:column filterStyle="display:none" style="width: 40vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" sortBy="#{customerTable.delegatorId.name}" filterBy="#{customerTable.delegatorId.name}"  filterMatchMode="contains" headerText="المندوب" >
+                        <p:autoComplete style="width: 80%"  
+                                        dropdown="true"
+                                        converter="#{customerDelegatorFormMB.salesConverter}"
+                                        value="#{customerTable.delegatorId}"  
+                                        var="person"
+                                        itemLabel="#{person}" 
+                                        itemValue="#{person}" 
+                                        forceSelection="true" 
+                                        completeMethod="#{customerDelegatorFormMB.completeSalesPerson}" >  
+                        </p:autoComplete>
+                    </p:column>
+                 
+
+                    <p:column style="width:12vh;font-size:1.6vh;text-align: center;border-radius: 0px;" headerText="#{userData.userDDs['TRANSACTION']}">
+
+
+
+                        <p:commandButton class="sdeleteButtons" update="customerTable"
+                                         title="#{userData.userDDs['DELETE']}" style="background-color: red;border-radius: 3px;"
+                                         action="#{customerDelegatorFormMB.deleteDetail()}"
+                                         icon="fa fa-remove" >
+
+                            <f:setPropertyActionListener value="#{customerTable}"
+                                                         target="#{customerDelegatorFormMB.invOrganizationSiteDTOSelected}"/>
+                            <p:confirm header="#{userData.userDDs['COFIGRATION']}" 
+                                       message="#{userData.userDDs['ARE_YOU_SURE']}"
+                                       icon="ui-icon-alert" />
+                        </p:commandButton>
+
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column >
+                </p:dataTable>
+
+            </p:fieldset>          
+        </h:form>
+    </ui:define>
+</ui:composition>

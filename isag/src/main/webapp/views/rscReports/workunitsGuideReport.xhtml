@@ -1,0 +1,215 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+<f:event listener="#{userData.authorize}" type="preRenderView" />
+          
+        <div class="col-xs-12">
+            <p:messages id="curmsg" showDetail="true" rendered="false" closable="true"/>   
+        </div>
+
+        <h:head>
+            <title>#{userData.userDDs['PROJ_GUID_REP']}</title>
+        </h:head>
+        <h:body>
+ 
+              
+	
+           <h:form  class='formmargin' dir="#{userData.dir}"  id="form">
+                <p:fieldset legend="#{userData.userDDs['PROJ_GUID_REP']}" 
+                            style=" position: relative; margin-bottom: 10px">
+
+
+                    <div class="ui-g-12 ui-g-nopad firstset" id="firstSegment">
+                        <div class="ui-g">
+
+                              <div class="ui-g-6 ui-xl-6">
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+   <p:autoComplete  style="width: 50%!important" id="projectGuideTO" 
+                                                         dropdown="true"
+                                                         converter="#{rscWorkUnitsGuideReportMB.rscWorkUnitDTOConverter2}"
+                                                         value="#{rscWorkUnitsGuideReportMB.rscWorkUnitsGuideSearchBean.rscWorkUnitsGuideDTOTo}" 
+                                                         var="project"
+                                                         itemLabel="#{project}" 
+                                                         itemValue="#{project}" 
+                                                         forceSelection="true" 
+                                                         completeMethod="#{rscWorkUnitsGuideReportMB.completeWorkUnitsGuideAsUnitTo}" >
+                                        </p:autoComplete>
+                                   
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 80px" value="#{userData.userDDs['To_Job_Item']}"/>
+
+                                </div>
+                            </div>
+                              </div>
+                            
+                              <div class="ui-g-6 ui-xl-6">
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+ <p:autoComplete  id="projectGuideFrom" 
+                                                         dropdown="true"
+                                                         converter="#{rscWorkUnitsGuideReportMB.rscWorkUnitDTOConverter}"
+                                                         value="#{rscWorkUnitsGuideReportMB.rscWorkUnitsGuideSearchBean.rscWorkUnitsGuideDTOFrom}"
+                                                         style="width: 34%!important"
+                                                         var="guide"
+                                                         itemLabel="#{guide}" 
+                                                         itemValue="#{guide}" 
+                                                         forceSelection="true" 
+                                                         completeMethod="#{rscWorkUnitsGuideReportMB.completeWorkUnitsGuideAsUnitFrom}" >
+                                        </p:autoComplete>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                        <p:outputLabel style="width: 80px" value="#{userData.userDDs['From_Job_Item']}" />
+
+                                </div>
+                            </div>
+                              </div>
+                            
+                            
+                            
+                        </div> 
+                    </div>
+                  <div id="buttunss" class="asmaa">
+
+
+                        
+                        <p:commandButton    class="searchButton"
+                                            title="#{userData.userDDs['SEARCH']}"
+                                            action="#{rscWorkUnitsGuideReportMB.search()}"
+                                            id="saveB"
+                                            value="#{userData.userDDs['SEARCH']}"
+                                            update="guideDataTable" 
+                                             />
+
+                        <p:commandButton  class="newButton"
+                                          id="NewB"
+                                          title="#{userData.userDDs['NEW']}" 
+                                          immediate="true" 
+                                          action="#{rscWorkUnitsGuideReportMB.reset()}"
+                                          update="@form"
+                                          
+                                          value="#{userData.userDDs['NEW']}"
+                                          process="@this"
+                                          />
+
+                        <p:commandButton  class="PrintButton"
+                                          id="PrintB"
+                                          ajax="false"
+                                           
+                                          onclick="form.target = '_blank'"  
+                                           
+                                          value="#{userData.userDDs['PRINT']}"  
+                                          actionListener="#{rscWorkUnitsGuideReportMB.exportPDF}"
+                                          title="#{userData.userDDs['PRINT']}"
+                                          />
+
+                        <p:commandButton  class="closeButton"
+                                          id="CloseB"
+                                         
+                                             
+                                          title="#{userData.userDDs['BACK']}"
+                                          action="exit" immediate="true"
+                                          value="#{userData.userDDs['BACK']}"/>
+                        <h:commandLink>  
+                            <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                            <p:dataExporter type="xls"
+                                            target="guideDataTable" 
+                                            fileName=" تقرير  بنود اعمال"
+                                            postProcessor="#{rscWorkUnitsGuideReportMB.postProcessXLS}" />  
+                        </h:commandLink>
+
+                        <p:blockUI block="form" trigger="saveB NewB PrintB CloseB" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI> 
+
+
+                  </div>
+            </p:fieldset>
+                
+                
+                <p:fieldset id="reportDB">
+                    <p:dataTable 
+                        draggableColumns="true" draggableRows="true"
+                        id="guideDataTable"  
+                        value="#{rscWorkUnitsGuideReportMB.rscWorkUnitsGuideBeans}" 
+                        var="WorkUnitsGuide" 
+                        rows="15" 
+                        paginator="true"
+                        paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" 
+                        rowsPerPageTemplate="5, 10, 15">
+
+                        <f:facet name="header" class="col-md-12">
+
+                            <p:outputPanel>
+                                <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                                <p:inputText id="globalFilter" 
+                                             onkeyup="PF('bTable').filter()" 
+                                             style="width:150px" />
+
+                            </p:outputPanel>
+                        </f:facet>
+
+                        <p:column style="width: 7vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px" headerText="#{userData.userDDs['CS_COD']}" 
+
+                                  sortBy="#{WorkUnitsGuide.code}"
+                                  filterBy="#{WorkUnitsGuide.code}" 
+                                  filterMatchMode="contains"
+                                  filterable="false" >
+                            <h:outputText style="font-size: 1.5vh;" value="#{WorkUnitsGuide.code}"/>
+                        </p:column>
+
+                        <p:column style="width: 30vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px" headerText="#{userData.userDDs['NAME']}"
+
+                                  sortBy="#{WorkUnitsGuide.name}"
+                                  filterBy="#{WorkUnitsGuide.name}" 
+                                  filterMatchMode="contains"
+                                  filterable="false">
+                            <h:outputText style="font-size: 1.5vh;"  value="#{WorkUnitsGuide.name}"/>
+                        </p:column>
+
+                        <p:column style="width: 30vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px"  headerText="#{userData.userDDs['Item_Type']}"
+
+                                  sortBy="#{WorkUnitsGuide.type}"
+                                  filterBy="#{WorkUnitsGuide.type}" 
+                                  filterMatchMode="contains"
+                                  filterable="false">
+                            <h:outputText style="font-size: 1.5vh;"  value="#{WorkUnitsGuide.type}"/>
+                        </p:column>
+
+                        <p:column style="width: 8vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px" headerText="#{userData.userDDs['LEVEL']}"
+
+                                  sortBy="#{WorkUnitsGuide.level}"
+                                  filterBy="#{WorkUnitsGuide.level}" 
+                                  filterMatchMode="contains"
+                                  filterable="false">
+
+                            <h:outputText style="font-size: 1.5vh;" value="#{WorkUnitsGuide.level}"/>
+                        </p:column>
+
+                        <p:column style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px" headerText="#{userData.userDDs['ACCOUNT_STATUS']}"
+
+                                  sortBy="#{WorkUnitsGuide.active}"
+                                  filterBy="#{WorkUnitsGuide.active}" 
+                                  filterMatchMode="contains"
+                                  filterable="false">
+                            <h:outputText style="font-size: 1.5vh;"  value="#{WorkUnitsGuide.active}"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:fieldset>
+            </h:form>
+        </h:body>
+    </ui:define>
+</ui:composition>
+
