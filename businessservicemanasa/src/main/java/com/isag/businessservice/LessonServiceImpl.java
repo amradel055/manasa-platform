@@ -59,7 +59,7 @@ public class LessonServiceImpl implements LessonService {
         }
         if (id != null) {
             params.put("id", id);
-            builder.append(" AND d.id = :id ");
+            builder.append(" AND d.id = :id ") ;    
         }
         if (schoolStagesGuideId != null) {
             params.put("schoolStagesGuideId", schoolStagesGuideId);
