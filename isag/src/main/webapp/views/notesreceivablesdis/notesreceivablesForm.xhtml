@@ -134,18 +134,18 @@
                         </div>
 
                         <div class="ui-g-6 ui-xl-6">
-                      
-                             <div class="ui-g-12 ui-xl-12">
-                            <p:inputText style="width:69%!important;margin-top: 0% !important;" id="notes22" 
-                                         value="#{notesReceivablesFormMB.number}">
-                                <p:ajax event="blur" listener="#{notesReceivablesFormMB.updateValue()}" update="value" />
 
-                                    </p:inputText>
-                            <div class="ui-g-6 ui-xl-6">
-                               <p:outputLabel style="width: 105px;font-size: 16px!important;" value="العدد"/>
+                            <div class="ui-g-12 ui-xl-12">
+                                <p:inputText style="width:69%!important;margin-top: 0% !important;" id="notes22" 
+                                             value="#{notesReceivablesFormMB.number}">
+                                    <p:ajax event="blur" listener="#{notesReceivablesFormMB.updateValue()}" update="value" />
+
+                                </p:inputText>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 105px;font-size: 16px!important;" value="العدد"/>
 
                                 </div>
-                                </div>
+                            </div>
 
                             <div class="ui-g-12 ui-xl-12">
                                 <div class="ui-g-6 ui-xl-6">
@@ -215,7 +215,7 @@
                                           action="#{notesReceivablesFormMB.save()}"
                                           disabled="#{notesReceivablesFormMB.glBankTransactionEntity.postFlag == 1 or  (not userData.isagUserRole.bankUpdate and notesReceivablesFormMB.glBankTransactionEntity.documentSerial ne null)}"
                                           update="@form"
-                                          rendered="#{(userData.userScreens['notesreceivables'].add or userData.userScreens['notesreceivables'].edit) or userData.isAdmin}"/>
+                                          rendered="#{(userData.userScreens['notesreceivablesdis'].edit) or notesReceivablesFormMB.glBankTransactionEntity.id eq null or userData.isAdmin}"/>
 
                         <p:commandButton class="newButton" 
                                          title="#{userData.userDDs['NEW']}" 
@@ -224,7 +224,7 @@
                                          id="newA"
                                          style=""                                         update="@form"
                                          actionListener="#{notesReceivablesFormMB.loadThePageAgain}" 
-                                         rendered="#{userData.userScreens['notesreceivables'].add or userData.isAdmin}"/>  
+                                         rendered="#{userData.userScreens['notesreceivablesdis'].add or userData.isAdmin}"/>  
 
 
 
@@ -235,7 +235,7 @@
                                           title="#{userData.userDDs['PRINT']}"
                                           actionListener="#{notesReceivablesFormMB.exportPDF}"
                                           style=""
-                                          rendered="#{ notesReceivablesFormMB.glBankTransactionEntity.id gt 0 or userData.userScreens['notesreceivables'].view or userData.isAdmin}" />
+                                          rendered="#{ notesReceivablesFormMB.glBankTransactionEntity.id gt 0 or userData.userScreens['notesreceivablesdis'].view or userData.isAdmin}" />
 
 
                         <p:commandButton class="closeButton" 
