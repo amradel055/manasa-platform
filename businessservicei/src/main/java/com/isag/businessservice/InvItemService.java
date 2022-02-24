@@ -39,6 +39,8 @@ public interface InvItemService {
 
     public List<InvItem> getInvItemByBranchId(Integer branchId);
 
+    public List<InvItemDTO> getInvItemByBranchIdDTO(Integer branchId);
+
     public List<InvItem> getInvItemByBranchIdForInvItemMainDataByGroupReportMB(Integer branchId);
 
     public List<InvItem> getInvItemByBranchIdAndGroupId(Integer branchId, Integer groupId);

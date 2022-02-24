@@ -563,8 +563,8 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         params.put("serial", serial);
         params.put("type", type);
         List<Integer> invPurchaseInvoiceList = dao.findListByQuery("SELECT e.id FROM InvPurchaseInvoice e WHERE  e.branchId.id = :branchId AND e.type = :type AND e.serial = :serial ", params);
-        if (invPurchaseInvoiceList != null && !invPurchaseInvoiceList.isEmpty()&& invPurchaseInvoiceList.get(0)!= null) {
-          Integer invPurchaseInvoiceId = invPurchaseInvoiceList.get(0);
+        if (invPurchaseInvoiceList != null && !invPurchaseInvoiceList.isEmpty() && invPurchaseInvoiceList.get(0) != null) {
+            Integer invPurchaseInvoiceId = invPurchaseInvoiceList.get(0);
             return invPurchaseInvoiceId;
         }
         return null;
@@ -1340,6 +1340,13 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         return invInvoiceDTO;
     }
 
+    @Override
+    public void updateDetailInvoiceValues(Integer invPurchaseInvoiceId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("invPurchaseInvoiceId", invPurchaseInvoiceId);
+        dao.creteQueryInvItemView(invPurchaseInvoiceId);
+    }
+
 //    @Override
 //    public InvInvoiceDTO convertInvPurchaseInvoiceToPurchaseInvoice(InvInvoiceDTO invPurchaseInvoiceDTO) {
 //        InvPurchaseInvoice invPurchaseInvoice = dao.findEntityById(InvPurchaseInvoice.class, invPurchaseInvoiceDTO.getInvDailogeDataSelected().getId());
@@ -1891,6 +1898,5 @@ public class InvPurchaseInvoiceServiceImpl_1 implements InvPurchaseInvoiceServic
         }
         return result;
     }
-  
 
 }

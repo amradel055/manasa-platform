@@ -84,6 +84,7 @@ public class InvDetailDTO extends BaseEntityDTO {
     private BigDecimal profitVlaue;
     private BigDecimal profitPercent;
     private BigDecimal tax15;
+   
 
     public InvDetailDTO() {
     }
@@ -1058,5 +1059,7 @@ public class InvDetailDTO extends BaseEntityDTO {
     public void setTax15(BigDecimal tax15) {
         this.tax15 = tax15;
     }
+
+
 
 }

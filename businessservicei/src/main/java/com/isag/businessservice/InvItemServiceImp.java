@@ -13,6 +13,7 @@ import com.isag.dto.InstPurchaseInvoiceDTO;
 import com.isag.dto.InstPurchaseInvoiceDetailDTO;
 import com.isag.dto.InvItemDTO;
 import com.isag.dto.InventorySetupDTO;
+import com.isag.dto.MissingReport;
 import com.isag.entity.Branch;
 import com.isag.entity.InvBarcode;
 import com.isag.entity.InvGroup;
@@ -164,6 +165,15 @@ public class InvItemServiceImp implements InvItemService {
     }
 
     @Override
+    public List<InvItemDTO> getInvItemByBranchIdDTO(Integer branchId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("branchId", branchId);
+        List<InvItem> details = dao.findListByQuery("SELECT e FROM InvItem e WHERE e.branchId.id = :branchId  ORDER BY e.code", params);
+        List<InvItemDTO> detailsdto = retriveItemDataDTO(details);
+        return detailsdto;
+    }
+
+    @Override
     public List<InvItem> getInvItemByBranchIdForInvItemMainDataByGroupReportMB(Integer branchId) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
@@ -188,16 +198,16 @@ public class InvItemServiceImp implements InvItemService {
         List<InvItem> detailsReturn = retriveItemData(details);
         return detailsReturn;
     }
-      @Override
+
+    @Override
     public List<InvItem> getInvItemByBranchIdAndGroupIdUpdate(Integer branchId, String groupId) {
         Map<String, Object> params = new HashMap<>();
         params.put("branchId", branchId);
-        List<InvItem> details = dao.findListByQuery("SELECT e FROM InvItem e WHERE e.branchId.id = :branchId AND e.groupId.id in( " +groupId+ "  ) ORDER BY e.code", params);
+        List<InvItem> details = dao.findListByQuery("SELECT e FROM InvItem e WHERE e.branchId.id = :branchId AND e.groupId.id in( " + groupId + "  ) ORDER BY e.code", params);
         List<InvItem> detailsReturn = retriveItemData(details);
         return detailsReturn;
     }
-    
-    
+
     @Override
     public List<InvItemDTO> getInvItemByBranchIdAndGroupIdDTO(Integer branchId, Integer groupId) {
         Map<String, Object> params = new HashMap<>();
@@ -698,6 +708,8 @@ public class InvItemServiceImp implements InvItemService {
         invItem.setName(detail.getName());
         invItem.setCostAverage(detail.getCostAverage());
         invItem.setPrintShow(detail.getPrintShow());
+        invItem.setMinimum(detail.getMinimum());
+        invItem.setMaximum(detail.getMaximum());
         Symbol sorting = null;
         if (detail.getSorting() != null) {//invItem.getUnitId() != null
             sorting = new Symbol();
@@ -724,7 +736,7 @@ public class InvItemServiceImp implements InvItemService {
                 invGroup2.setId(detail.getGroupId().getParent().getId());
                 invGroup2.setName(detail.getGroupId().getParent().getName());
                 invGroup2.setCode(detail.getGroupId().getParent().getCode());
-                
+
                 invGroup.setParent(invGroup2);
             }
             invItem.setGroupId(invGroup);
@@ -753,7 +765,6 @@ public class InvItemServiceImp implements InvItemService {
         return invItem;
     }
 
-    
     private String appendGroup(ItemMainDataByGroupSearchBean ItemMainDataByGroupSearchBean, Map<String, Object> params) {
         appendQuery = new StringBuilder();
 
@@ -793,14 +804,13 @@ public class InvItemServiceImp implements InvItemService {
         return appendQuery.toString();
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-     private String appendItem2(ItemMainDataByGroupSearchBean ItemMainDataByGroupSearchBean, Map<String, Object> params) {
+
+    private String appendItem2(ItemMainDataByGroupSearchBean ItemMainDataByGroupSearchBean, Map<String, Object> params) {
         appendQuery = new StringBuilder();
 
-        if (ItemMainDataByGroupSearchBean.getItemSelected() != null && !ItemMainDataByGroupSearchBean.getItemSelected().isEmpty() ) {
-            appendQuery.append(" AND e.id in (").append(ItemMainDataByGroupSearchBean.getItemSelected()).append(")"); 
+        if (ItemMainDataByGroupSearchBean.getItemSelected() != null && !ItemMainDataByGroupSearchBean.getItemSelected().isEmpty()) {
+            appendQuery.append(" AND e.id in (").append(ItemMainDataByGroupSearchBean.getItemSelected()).append(")");
         }
-
-      
 
         return appendQuery.toString();
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -990,5 +1000,14 @@ public class InvItemServiceImp implements InvItemService {
         Long total = Long.sum(details, details2);
 
         return total;
+    }
+
+    public List<MissingReport> FindinvItemsList(List<InvItem> invItemsList) {
+        MissingReport missingReport = new MissingReport();
+        for (InvItem invItem : invItemsList) {
+//            missingReport.setQuantity(quantityItemsStoreAddExitService.getQuantatyItemByinventory(null, invItem.getId(), getInventorySetupDTO().getSellBuy(), null));
+
+        }
+        return null ;
     }
 }

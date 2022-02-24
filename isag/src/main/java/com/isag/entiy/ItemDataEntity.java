@@ -79,8 +79,7 @@ public class ItemDataEntity implements Serializable {
     private Integer isinventoryitem;
 
     private Boolean markEdit = Boolean.FALSE;
-    
-    
+
     private Symbol sorting;
     private String size;
     private BigDecimal cartonsCapacity;
@@ -90,7 +89,9 @@ public class ItemDataEntity implements Serializable {
     private BigDecimal disc1;
     private BigDecimal disc2;
     private BigDecimal disc3;
-    
+    private Integer maximum;
+    private Integer minimum;
+
     private BigDecimal storeQuantity;
     private Integer printShow;
     private InvInventory invInventoryId;
@@ -698,5 +699,33 @@ public class ItemDataEntity implements Serializable {
      */
     public void setInvInventoryId(InvInventory invInventoryId) {
         this.invInventoryId = invInventoryId;
+    }
+
+    /**
+     * @return the maximum
+     */
+    public Integer getMaximum() {
+        return maximum;
+    }
+
+    /**
+     * @param maximum the maximum to set
+     */
+    public void setMaximum(Integer maximum) {
+        this.maximum = maximum;
+    }
+
+    /**
+     * @return the minimum
+     */
+    public Integer getMinimum() {
+        return minimum;
+    }
+
+    /**
+     * @param minimum the minimum to set
+     */
+    public void setMinimum(Integer minimum) {
+        this.minimum = minimum;
     }
 }

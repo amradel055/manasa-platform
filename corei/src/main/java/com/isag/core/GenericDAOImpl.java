@@ -10,6 +10,7 @@ import com.isag.entity.InvItem;
 import com.isag.views.InvItemView;
 import javax.ejb.Stateless;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -315,6 +316,7 @@ public class GenericDAOImpl implements GenericDAO {
         return x;
     }
 
+    @Override
     public void StoredProcedure(String storedName, List<storedProcedureParameter> procedureParameters, Map<String, Object> parm) {
         StoredProcedureQuery query = em
                 .createStoredProcedureQuery(storedName);
@@ -389,4 +391,13 @@ public class GenericDAOImpl implements GenericDAO {
         query.execute();
     }
 
+    @Override
+    public void creteQueryInvItemView(Integer invoice_id) {
+        
+        List<storedProcedureParameter> procedureParameter = new ArrayList<>();
+        procedureParameter.add(new storedProcedureParameter("invoice_id", Integer.class, 'i'));
+        Map<String, Object> params2 = new HashMap<>();
+        params2.put("invoice_id", invoice_id);
+        StoredProcedure("update_net_after_discount_head", procedureParameter, params2);
+    }
 }
