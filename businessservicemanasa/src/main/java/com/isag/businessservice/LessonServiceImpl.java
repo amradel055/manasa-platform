@@ -166,8 +166,9 @@ public class LessonServiceImpl implements LessonService {
                 && lessonDTO.getLessonType() != null
                 && lessonDTO.getMaterialId() != null
                 && lessonDTO.getTeacherId() != null
-                && lessonDTO.getVoiceLink() != null
-                && lessonDTO.getPeriodId() != null) {
+//                && lessonDTO.getVoiceLink() != null
+                && lessonDTO.getPeriodId() != null
+                ) {
             if (isagUser == null) {
                 isagUser = new IgmaUser();
                 isagUser.setId(61);

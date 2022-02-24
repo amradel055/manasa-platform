@@ -12,6 +12,7 @@ package com.isag.dto;
 public class MaterialsDTO extends BaseEntityDTO {
 
     private String name;
+    private Integer teacherId;
 
     public MaterialsDTO() {
     }
@@ -51,6 +52,20 @@ public class MaterialsDTO extends BaseEntityDTO {
     @Override
     public String toString() {
         return "com.mycompany.mavenproject1.Materials[ id=" + id + " ]";
+    }
+
+    /**
+     * @return the teacherId
+     */
+    public Integer getTeacherId() {
+        return teacherId;
+    }
+
+    /**
+     * @param teacherId the teacherId to set
+     */
+    public void setTeacherId(Integer teacherId) {
+        this.teacherId = teacherId;
     }
 
 }
