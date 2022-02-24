@@ -14,6 +14,7 @@ import com.isag.businessservice.InvPurchaseInvoiceService_1;
 import com.isag.businessservice.InvStripService;
 import com.isag.businessservice.IsagUserInventoryService;
 import com.isag.businessservice.OrganizationSiteService;
+import com.isag.businessservice.QuantityItemsStoreByDateService;
 import com.isag.businessservice.reports.BankBalanceViewService;
 import com.isag.businessservice.reports.SupplierAccountService;
 import com.isag.dto.GlBankDTO;
@@ -108,7 +109,7 @@ public class DashboardMB extends BaseListBean {
     SupplierAccountService supplierAccountService;
     @EJB
     InvStripService invStripService;
-
+  
     @PostConstruct
     @Override
 
@@ -790,7 +791,7 @@ public class DashboardMB extends BaseListBean {
      * @return the TotalNetGmByMonth
      */
     public BigDecimal getTotalNetGmByMonth() {
-      
+
         return TotalNetGmByMonth;
     }
 
@@ -853,7 +854,7 @@ public class DashboardMB extends BaseListBean {
      * @return the cashByDateList
      */
     public List<GlBankDTO> getCashByDateList() {
-               if (cashByDateList == null) {
+        if (cashByDateList == null) {
             cashByDateList = new ArrayList<>();
         }
         return cashByDateList;
