@@ -1,0 +1,87 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <link rel="stylesheet" type="text/css" href="../../resources/css/main.css" /> 
+    <link rel="stylesheet" type="text/css" href="./../../resources/css/custom.css" /> 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css"/>
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form  style="margin-right: 15px"  id="form" dir="#{userData.dir}">
+            <div>
+
+                <p:messages autoUpdate="true"  id="cupmsg" showDetail="true" closable="true" rendered="true" />   
+            </div>
+            <p:fieldset legend="#{userData.userDDs['MONITOR_SETTINGS']}" style="margin-bottom:20px">
+
+                <p:dataTable id="subaccc" 
+                             value="#{monitoringSettingMB.glAnalyticsList}"
+                             var="glAnalytic"
+                             selection="#{monitoringSettingMB.glAnalyticsAccounts}" 
+                             selectionMode="single"
+                             rowKey="#{glAnalytic}"
+                             widgetVar="glAnalytic">
+                    <f:facet name="header" class="col-md-12">
+
+                    </f:facet>
+                    <p:column style="width:40vh;font-size: 1.5vh;text-align: -webkit-auto "  >
+                        <h:outputLabel value="#{userData.userDDs[''+= glAnalytic.code]}"   style="font-size: 1.2vh"/>
+                    </p:column>
+                    
+                    <p:column style="width:40vh;font-size: 1.8vh;text-align: -webkit-auto"  headerText="#{userData.userDDs['ACCOUNT']}">
+
+                        <p:autoComplete id="GlAccount_ID" 
+                                        style="width: 95%" 
+                                        dropdown="true"
+                                        converter="#{monitoringSettingMB.glaccountConverter}"
+                                        value="#{glAnalytic.accountId}"
+                                        var="p"
+                                        itemLabel="#{p}" 
+                                        itemValue="#{p}" 
+                                        forceSelection="true" 
+                                        completeMethod="#{monitoringSettingMB.completeGlAccount}" >
+                            <f:attribute name="varValue" value="#{glAnalytic}" />
+                            <p:ajax event="itemSelect" listener="#{monitoringSettingMB.selectAccountNumber}" /> 
+
+
+                        </p:autoComplete>
+                    </p:column>
+
+                </p:dataTable>
+
+                <h:panelGroup  class="centerButtons" style="margin-top: 1%">
+
+
+                    <p:commandButton class="saveButton"
+                                     style="width: 90px" id="b3" 
+                                     title="#{userData.userDDs['SAVE_ALL']}"
+                                     rendered="#{userData.userScreens['monitoringSetting'].add 
+                                                 or userData.isAdmin}"
+                                     value="#{userData.userDDs['SAVE_ALL']}" 
+                                     icon="fa fa-fw fa-save" 
+                                     actionListener="#{monitoringSettingMB.saveAll}" >
+                    </p:commandButton>
+                    
+                    <p:commandButton class="closeButton" 
+                                         title="#{userData.userDDs['CANCEL']}" 
+                                         immediate="true" 
+                                         value="#{userData.userDDs['CANCEL']}" 
+                                         icon="fa fa-fw fa-backward" 
+                                         action="exit"   />
+
+                    <p:blockUI block="form" trigger="b3" animate="true" >
+
+                        <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                    </p:blockUI> 
+                    
+                </h:panelGroup>
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>
+

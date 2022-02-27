@@ -1,0 +1,97 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <div class="col-xs-12">
+            <p:messages id="curmsg" showDetail="true" rendered="true" closable="true"/>   
+        </div>
+        <h:form style="margin-right: 20px" id="form"  enctype="multipart/form-data"  dir="#{userData.dir}">
+
+            <p:fieldset  style="margin-bottom:20px">
+                <h:panelGrid id="firstLine" columns="2" cellspacing="10" cellpadding="0" >
+                        
+                    <h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 50px" value="#{userData.userDDs['DATE']}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:calendar  value="#{invNoticeFormMB.invNoticeEntity.date}" pattern="dd/MM/yyyy" style="width:100%"/>
+                        </h:panelGroup>
+
+                    </h:panelGroup>
+                    
+                    
+                    <h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 50px" value="#{userData.userDDs['AMOUNT']}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:inputText  value="#{invNoticeFormMB.invNoticeEntity.amount}" />
+                        </h:panelGroup>
+
+                    </h:panelGroup>
+                    
+                    
+                        
+                    <h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 50px" value="العميل المقابل"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:selectOneMenu style="width: 51%" id="MACUName" filter="true" filterMatchMode="startsWith"  value="#{invNoticeFormMB.invNoticeEntity.customerId}"   >                        
+                                <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"    />
+                                <f:selectItems value="#{invNoticeFormMB.customerList}"  var="customer" itemLabel="#{customer.id} #{customer.name} " itemValue="#{customer.id}"/>
+                            </p:selectOneMenu> 
+                        </h:panelGroup>
+
+                    </h:panelGroup>       
+                    
+                    <h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 50px" value="كود الحساب" />
+                        </h:panelGroup>
+                        <h:panelGroup >
+                            <p:selectOneMenu style="width: 51%" id="accNumCode" filter="true" filterMatchMode="startsWith"  value="#{invNoticeFormMB.invNoticeEntity.accountId}"   >                        
+                                <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"    />
+                                <f:selectItems value="#{invNoticeFormMB.glAccountList}"  var="accList" itemLabel="#{accList.accNumber}#{accList.name}" itemValue="#{accList.id}"/>
+                            </p:selectOneMenu> 
+                        </h:panelGroup>
+
+                    </h:panelGroup>       
+                    
+                    <h:panelGroup>
+                        
+                        <h:panelGroup>
+                        <p:outputLabel style="width: 50px" value="#{userData.userDDs['REMARK']}"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:inputText  value="#{invNoticeFormMB.invNoticeEntity.remarks}" />
+                    </h:panelGroup>
+                        
+                    </h:panelGroup>   
+                    
+                   
+                </h:panelGrid>       
+               
+            </p:fieldset>
+            
+             <h:panelGroup> 
+             
+                 <p:commandButton style="margin-right: 40%" id="saveB" title="#{userData.userDDs['SAVE']}" value="#{userData.userDDs['SAVE']}" icon="fa fa-fw fa-save" action="#{invNoticeFormMB.save()}" update="@form"/>
+            <p:commandButton id="cancel" title="#{userData.userDDs['CANCEL']}" value="#{userData.userDDs['CANCEL']}" icon="fa fa-fw fa-save" action="#{invNoticeFormMB.exit()}" update="@form"/>
+             </h:panelGroup>
+            
+            
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,249 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <h:form id="form"  enctype="multipart/form-data"  dir="#{userData.dir}" style="margin-right: 15px">
+            <p:fieldset legend="ضبط المخزن" style="margin-bottom:20px">
+                <div >
+                    <p:messages id="curmsg" 
+                                autoUpdate="true"
+                                showDetail="true" 
+                                rendered="true" closable="true"/>   
+                </div>
+
+                <h:panelGrid id="firstLine" columns="2" cellspacing="10" cellpadding="0" >
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel  style="width: 45px" value="رقم الحجز"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel  style="width: 50%!important" id="serialNo"
+                                            value="#{adjustInventoryFormMB.invStripEntity.serial}"/>
+                        </h:panelGroup>
+
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel  style="width: 45px" value="#{userData.userDDs['DATE']}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:calendar  style="width: 50%!important"  value="#{adjustInventoryFormMB.invStripEntity.stripDate}" pattern="dd/MM/yyyy" />
+                        </h:panelGroup>
+
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 45px" value="المخزن"/>
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:autoComplete style="width:80%" 
+                                            dropdown="true"
+                                            readonly="#{adjustInventoryFormMB.invStripEntity.id != null}"
+                                            converter="#{adjustInventoryFormMB.invInventoryConverter}"
+                                            value="#{adjustInventoryFormMB.invStripEntity.invInventory}"
+                                            required="true"
+                                            requiredMessage="يجب اختيار مخزن"
+                                            var="inventory"
+                                            itemLabel="#{inventory}" 
+                                            itemValue="#{inventory}" 
+                                            forceSelection="true" 
+                                            completeMethod="#{adjustInventoryFormMB.completInventory}" >
+
+                                <p:ajax update="form curmsg"
+                                        event="change"
+                                        listener="#{adjustInventoryFormMB.fillItemMap()}" />
+                                <p:ajax update="form curmsg"
+                                        event="itemSelect"
+                                        listener="#{adjustInventoryFormMB.fillItemMap()}" />
+
+                            </p:autoComplete>
+                        </h:panelGroup>
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 45px" value="مستند الجرد"/>
+                        </h:panelGroup>
+                        <h:panelGroup >
+                            <h:panelGroup>
+                                <p:inputText style="width: 50%!important"  id="stripDocument" value="#{adjustInventoryFormMB.invStripEntity.stripDocument}" />
+                            </h:panelGroup>
+                        </h:panelGroup>
+
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel  style="width: 45px"  value="#{userData.userDDs['NOTE']}"/>
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:inputText style="width: 50%!important"  id="ad11" value="#{adjustInventoryFormMB.invStripEntity.remark}" />
+                        </h:panelGroup>
+                    </h:panelGroup>
+                </h:panelGrid>
+
+
+            </p:fieldset>
+            <p:fieldset id="fieldSetId" legend="تفاصيل ضبط المخزن" style="margin-bottom:20px">
+                <p:dataTable var="invStripTable"
+                             widgetVar="invStripTable"
+                             rowIndexVar="index"
+                             rowKey="#{invStripTable}"
+                             selectionMode="single"
+                             selection="#{adjustInventoryFormMB.invStripDetailEntitySelection}"
+                             dir="rtl"
+                             sortBy="#{1}"
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                             editable="true"
+                             editMode="cell"
+                             value="#{adjustInventoryFormMB.invStripDetailEntityList}"
+                             id="invStripTable">
+
+                    <f:facet name="header" class="col-md-12">
+                        <p:commandButton id="addnew" 
+                                         update=":form:fieldSetId invStripTable"
+                                         oncomplete="PrimeFaces.focus('form:invStripTable:'+#{adjustInventoryFormMB.invStripDetailEntityList.size()}+':invItemNameIn')"
+                                         style="float: right"
+                                         icon="fa fa-plus" title="#{userData.userDDs['ADD']}"
+                                         actionListener="#{adjustInventoryFormMB.adddetails}" 
+                                         ajax="true"/>
+
+                        <p:blockUI block="form" trigger="addnew" animate="true" >
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+                        </p:blockUI> 
+
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('invStripTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+                    </f:facet>
+
+
+                    <p:column style="width: 8vh;text-align: -webkit-auto;font-size: 1.8vh"   id="serail" 
+                              headerText="#{userData.userDDs['SERIAL']}">
+                        <h:outputText value="#{invStripTable.serial}"  />
+                    </p:column>
+
+                    <p:column style="width: 12vh;text-align: -webkit-auto;font-size: 1.8vh" 
+                              id="itemNumber" headerText="#{userData.userDDs['ITEM_NUMBER']}">
+                        <p:autoComplete id="invItemNameIn" 
+
+                                        style="width:95%"
+                                        converter="#{adjustInventoryFormMB.quantityItemsStoreConverter}" 
+                                        value="#{invStripTable.itemsInStore}"
+
+                                        var="item"
+                                        itemLabel="#{item}" 
+                                        itemValue="#{item}" 
+                                        forceSelection="true" 
+                                        completeMethod="#{adjustInventoryFormMB.completItemsInStore}" >
+                            <p:ajax update=" balanceT QuantityT difference totalQuantity totalNet"
+                                    event="itemSelect"
+                                    listener="#{adjustInventoryFormMB.validateItems(invStripTable)}" />
+                            <p:ajax update=" balanceT QuantityT difference totalQuantity totalNet"
+                                    event="change"     
+                                    listener="#{adjustInventoryFormMB.validateItems(invStripTable)}" />
+
+                        </p:autoComplete>
+                    </p:column>
+
+                    <p:column  style="width: 12vh;text-align: -webkit-auto;font-size: 1.8vh"
+                               id="Quantity" headerText="جرد فعلى">
+                        <p:inputText id="QuantityT" value="#{invStripTable.actualAmount}"
+                                     disabled="#{adjustInventoryFormMB.invStripEntity.id != null}"
+                                     style="width:95%">
+                            <p:ajax listener="#{adjustInventoryFormMB.validateActualAmmount(invStripTable)}" 
+                                    event="blur"
+                                    update="difference totalQuantity totalNet"/>
+                        </p:inputText>
+                    </p:column>
+
+
+                    <p:column style="width: 12vh;text-align: -webkit-auto;font-size: 1.8vh" id="balance" headerText="رصيد دفترى">
+                        <p:outputLabel id="balanceT" 
+                                       value="#{invStripTable.bookBalance}"  style="width:95%"/>
+                    </p:column>
+
+                    <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.8vh" id="Total" headerText="الفرق">
+                        <p:outputLabel id="difference" value="#{invStripTable.difference}" />
+                    </p:column>
+
+                    <p:summaryRow>
+                        <p:column colspan="1" style="text-align:right">
+                            <h:outputText style="text-align:right" value="#{userData.userDDs['TOTAL']}  :" />
+                        </p:column>
+                        <p:column />
+                        <p:column>
+                            <h:outputText id="totalQuantity" value="#{adjustInventoryFormMB.totalQuantity}"/>
+                        </p:column>
+                        <p:column>
+                            <h:outputText id="totalNet" value="#{adjustInventoryFormMB.totalBalance}"/>
+                        </p:column>
+
+                        <p:column />
+                        <p:column />
+                    </p:summaryRow>
+
+                    <p:column style="width: 14vh;text-align: -webkit-auto;font-size: 1.8vh" >
+
+                        <p:commandButton update=":form:fieldSetId invStripTable"
+                                         oncomplete="PrimeFaces.focus('form:invStripTable:'+#{adjustInventoryFormMB.invStripDetailEntityList.size()}+':invItemNameIn')"
+                                         style="float: right"
+                                         disabled="#{adjustInventoryFormMB.invStripEntity.id != null}"
+                                         icon="fa fa-plus" title="#{userData.userDDs['ADD']}"
+                                         actionListener="#{adjustInventoryFormMB.adddetails}" 
+                                         ajax="true"/>
+
+                        <p:commandButton update="invStripTable" title="#{userData.userDDs['DELETE']}"
+                                         disabled="#{adjustInventoryFormMB.invStripEntity.id != null}"
+                                         action="#{adjustInventoryFormMB.deleteInvStripDetail}" icon="fa fa-remove" >
+                            <f:setPropertyActionListener value="#{invStripTable}"
+                                                         target="#{adjustInventoryFormMB.invStripDetailEntitySelection}"/>
+                            <p:confirm header="#{userData.userDDs['COFIGRATION']}"
+                                       message="#{userData.userDDs['ARE_YOU_SURE']}"
+                                       icon="ui-icon-alert" />
+                        </p:commandButton>
+
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton title="#{userData.userDDs['YES']}" type="button"
+                                             styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton title="#{userData.userDDs['NO']}" type="button" 
+                                             styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column >
+
+                </p:dataTable>
+            </p:fieldset>
+            <p:commandButton style="margin-right: 45%" id="saveB" 
+                             title="#{userData.userDDs['SAVE']}"
+                             disabled="#{adjustInventoryFormMB.invStripEntity.id != null}"
+                             value="#{userData.userDDs['SAVE']}"
+                             icon="fa fa-fw fa-save" 
+                             action="#{adjustInventoryFormMB.save()}" 
+                             update="@form"/>
+
+            <p:commandButton id="cancel" title="#{userData.userDDs['CANCEL']}" 
+                             value="#{userData.userDDs['CANCEL']}"
+                             icon="fa fa-fw fa-save"
+                             action="#{adjustInventoryFormMB.exit()}" update="@form"/>
+
+            <p:blockUI block="form" trigger="saveB" animate="true" >
+
+                <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+            </p:blockUI> 
+
+        </h:form>
+    </ui:define>
+</ui:composition>

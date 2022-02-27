@@ -1,0 +1,162 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <link rel="stylesheet" type="text/css" href="../../resources/css/main.css" /> 
+    <ui:define name="content">
+        <h:body> 
+            <f:event listener="#{userData.authorize}" type="preRenderView" />
+            <h:form id="form" target="_blank" style="margin-right: 15px">
+                <p:fieldset legend="تقرير حركة دخول المستخدمين" style="margin-bottom:20px">
+
+<h:panelGrid  columns="2"  columnClasses="ui-grid-col-6,ui-grid-col-6">                     
+    
+    
+           
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:40px" value="من كود"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+
+                                    <p:selectOneMenu style="width:50%;margin-right: 1.5%" id="codeFrom" 
+                                                     filter="true"
+                                                     a:autofocus="true" 
+                                                     filterMatchMode="contains"
+                                                     value="#{reportTObyUserLogin.tobyUserLoginBeanSearch.userCodeFrom}">
+
+                                        <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"/>
+                                        <f:selectItems value="#{reportTObyUserLogin.tobyUsersList}"
+                                                       var="tobyUser" 
+                                                       itemLabel="#{tobyUser}"
+                                                       itemValue="#{tobyUser.id}" />
+                                    </p:selectOneMenu>
+
+                                </h:panelGroup>
+                            </h:panelGroup>
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:40px" value="الى كود"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:selectOneMenu style="width:50%;margin-right: 1.5%" id="codeTo" 
+                                                     filter="true"
+                                                     filterMatchMode="contains"
+                                                     value="#{reportTObyUserLogin.tobyUserLoginBeanSearch.userCodeTo}">
+
+                                        <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"/>
+                                        <f:selectItems value="#{reportTObyUserLogin.tobyUsersList}"
+                                                       var="tobyUser" 
+                                                       itemLabel="#{tobyUser}"
+                                                       itemValue="#{tobyUser.id}" />
+                                    </p:selectOneMenu>
+                                </h:panelGroup>
+                            </h:panelGroup>
+
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 45px" 
+                                                   value="#{userData.userDDs['YEAR_FROM']}" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:calendar style="width: 50%"  
+                                                id="dateFrom"
+                                                value="#{reportTObyUserLogin.tobyUserLoginBeanSearch.dateFrom}"
+                                                pattern="dd/MM/yyyy"
+                                                showButtonPanel="true" >
+                                    </p:calendar>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 45px"  value="#{userData.userDDs['YEAR_TO']}" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:calendar style="width: 50%"
+                                                id="dateTo"
+                                                value="#{reportTObyUserLogin.tobyUserLoginBeanSearch.dateTo}"
+                                                pattern="dd/MM/yyyy" 
+                                                showButtonPanel="true" >
+                                    </p:calendar>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+
+                       
+
+
+
+                        <h:panelGroup>
+                            <p:commandButton  
+                                value="#{userData.userDDs['SEARCH']}" 
+                                action="#{reportTObyUserLogin.search()}" 
+                                update="users" />
+
+                            <p:commandButton value="جديد" 
+
+                                             action="#{reportTObyUserLogin.reset()}" 
+                                             update="form"/>
+
+                            <p:commandButton 
+                                ajax="false" 
+                                value='طباعة' 
+                                actionListener="#{reportTObyUserLogin.exportPDF}"/>
+                        </h:panelGroup>
+
+
+                    </h:panelGrid>
+
+
+                    <p:dataTable  id="users" 
+                                  value="#{reportTObyUserLogin.tobyUserLoginBeanSearchList}"
+                                  rowIndexVar="index"
+                                  var="user" >
+
+                        <p:column  style="width:4vh;font-size:1.8vh;text-align: -webkit-auto"  headerText="#" >
+                            <h:outputText value="#{index + 1}" style="font-size: 1.5vh" />
+                        </p:column>
+
+                        <p:column style="width:15vh;font-size:1.8vh;text-align: -webkit-auto"  headerText="#{userData.userDDs['USER_CODE']}">
+                            <h:outputText  value="#{user.tobyUserCode}"/>
+                        </p:column>
+
+                        <p:column style="width:15vh;font-size:1.8vh;text-align: -webkit-auto" headerText="#{userData.userDDs['USER_NAME']}">
+                            <h:outputText value="#{user.userName}"/>
+                        </p:column>
+
+                        <p:column  style="width:15vh;font-size:1.8vh;text-align: -webkit-auto"  headerText="#{userData.userDDs['DATE']}">
+                            <h:outputText  value="#{user.dateLogin}">
+                                <f:convertDateTime pattern="dd-MM-yyyy"></f:convertDateTime>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column  style="width:15vh;font-size:1.8vh;text-align: -webkit-auto" headerText="الوقت">
+                            <h:outputText  value="#{user.time}">
+                                <f:convertDateTime pattern="HH:mm:ss"></f:convertDateTime>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column style="width:20vh;font-size:1.8vh;text-align: -webkit-auto"  headerText="الجهاز المستخدم">
+                            <h:outputText  value="#{user.macId}"/>
+                        </p:column>
+
+                    </p:dataTable>
+
+                </p:fieldset>
+            </h:form>
+        </h:body>
+    </ui:define>
+</ui:composition>
+

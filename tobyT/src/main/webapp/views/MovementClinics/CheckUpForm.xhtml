@@ -1,0 +1,401 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+
+
+        <h:form style="margin-right: 20px"  id="form" dir="#{userData.dir}">
+            <p:fieldset legend="شاشة الحجز" id="whole" style="margin-bottom:20px">
+
+                <div class="col-xs-12">
+                    <p:messages id="curmsg" showDetail="true" rendered="#{checkUpFormMB.showMessageDetails}" closable="true"/>   
+                </div>
+
+                <h:panelGrid id="firstSegment" columns="2" cellspacing="10" cellpadding="0"  columnClasses="ui-grid-col-6,ui-grid-col-6">
+
+                    <h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 50px" value="الرقـــم"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel id="settelmentId" value="#{checkUpFormMB.hosCheckUpEntity.serial}"/>
+                        </h:panelGroup>
+
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 50px" value="#{userData.userDDs['DATE']}"/>
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:calendar  style="width:50%!important"  id="date" 
+                                         value="#{checkUpFormMB.hosCheckUpEntity.date}"
+                                         pattern="dd/MM/yyyy"
+                                         >
+
+                                <p:ajax event="dateSelect" update="form" listener="#{checkUpFormMB.updateTransactionRate}" />
+                            </p:calendar>
+
+                        </h:panelGroup>
+
+
+                    </h:panelGroup>
+
+
+
+
+                    <h:panelGroup>
+
+                        <h:panelGroup> 
+                            <p:outputLabel style="width: 50px" value="رقم الخزينة" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:selectOneMenu style="width: 50%" id="MACUCode" 
+                                             filter="true" 
+                                             filterMatchMode="contains"
+                                             converter="#{checkUpFormMB.bankConverter}"
+                                             value="#{checkUpFormMB.hosCheckUpEntity.glBank}"  
+                                             > 
+
+                                <p:ajax listener="#{checkUpFormMB.updateTransactionRate}" />
+
+                                <f:selectItems value="#{checkUpFormMB.glBankList}"  
+                                               var="bank"
+                                               itemLabel="#{bank}"
+                                               itemValue="#{bank}"/>
+                            </p:selectOneMenu> 
+
+                        </h:panelGroup>   
+
+                    </h:panelGroup>
+                    
+                    
+
+                    <h:panelGroup>
+
+                        <h:panelGroup > 
+                            <p:outputLabel style="width: 50px" value=" الطبيب المعالج"  />
+                        </h:panelGroup>
+                        <h:panelGroup  >
+                            <p:selectOneMenu style="width:50%" id="doctor"
+                                             filter="true" 
+                                             filterMatchMode="contains"
+                                             value="#{checkUpFormMB.hosCheckUpDetailEntity.costCenterId}"
+                                             >
+                                <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" />
+                                <f:selectItems value="#{checkUpFormMB.costCenterList}"
+                                               var="cost" 
+                                               itemLabel="#{cost}"
+                                               itemValue="#{cost.id}"/>
+                            </p:selectOneMenu> 
+
+                        </h:panelGroup>
+
+                    </h:panelGroup>  
+
+                    <h:panelGroup>
+
+                        <h:panelGroup > 
+                            <p:outputLabel style="width: 50px" value="الخدمة"  />
+                        </h:panelGroup>
+                        <h:panelGroup  >
+                            <p:selectOneMenu style="width:50%" id="service"
+                                             filter="true" 
+                                             filterMatchMode="contains"
+                                             value="#{checkUpFormMB.hosCheckUpDetailEntity.costCenterId}"
+                                             >
+                                <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" />
+                                <f:selectItems value="#{checkUpFormMB.costCenterList}"
+                                               var="cost" 
+                                               itemLabel="#{cost}"
+                                               itemValue="#{cost.id}"/>
+                            </p:selectOneMenu> 
+
+                        </h:panelGroup>
+
+                    </h:panelGroup>  
+
+
+
+                    <h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 50px" value="المبلــــغ"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:inputNumber style="width: 50%" id="value"
+                                           value="#{checkUpFormMB.hosCheckUpEntity.value}">
+
+                                <p:ajax event="blur" update="valueLocal" listener="#{checkUpFormMB.updateTransactionRate()}" />
+                            </p:inputNumber>
+
+
+                        </h:panelGroup>
+
+                    </h:panelGroup>
+
+
+
+
+                    <h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 55px" value="المبلغ * المعدل"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:inputNumber style="width: 50%" id="valueLocal" readonly="true"
+                                           value="#{checkUpFormMB.hosCheckUpEntity.valueLocal}"/>
+                        </h:panelGroup>
+
+                    </h:panelGroup>    
+
+                    <h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 50px" value="المعــــــدل%"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:inputNumber id="rate"
+                                           value="#{checkUpFormMB.hosCheckUpEntity.rate}" >
+
+                                <p:ajax event="blur" update="valueLocal" listener="#{checkUpFormMB.changeRate()}" />
+                            </p:inputNumber>
+                        </h:panelGroup>
+
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 50px" value="المبلغ المدفوع" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:inputNumber id="pay"
+                                           value="#{checkUpFormMB.hosCheckUpEntity.rate}" >
+
+                            </p:inputNumber>
+                        </h:panelGroup>
+
+                    </h:panelGroup>
+
+
+                </h:panelGrid>
+
+                <h:panelGrid id="fourthSegment" columns="2" rendered="#{checkUpFormMB.checkView}" cellspacing="10" cellpadding="0" >
+
+                    <h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel style="width:50px;" value=" رقـــــم الشيـــك"/>
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:inputText style="width: 50%;margin-right: 40px" value="#{checkUpFormMB.hosCheckUpEntity.chequeNumber}"/>
+                        </h:panelGroup>
+
+                    </h:panelGroup>
+
+
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel style="width:50px" value="تاريخ الشيك"/>
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:calendar style="width: 50.5%" value="#{checkUpFormMB.hosCheckUpEntity.chequeDate}"
+                                        pattern="MM/dd/yyyy"
+                                        >
+
+                            </p:calendar>
+                        </h:panelGroup>
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel style="width:50px" value="تاريخ الاستحقاق"/>
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:calendar style="width: 55.5%" value="#{checkUpFormMB.hosCheckUpEntity.chequeDueDate}"
+                                        pattern="MM/dd/yyyy">
+
+                            </p:calendar>
+                        </h:panelGroup>
+
+                    </h:panelGroup>
+
+                </h:panelGrid>
+
+
+                <h:panelGrid id="fifthSegment" rendered="#{checkUpFormMB.checkView || checkUpFormMB.lineCheckView}" columns="2" cellspacing="2" cellpadding="0" >
+                    <h:panelGroup>
+                        <p:fieldset legend="حالة الشيك" id="radioLinks3" style="margin-bottom:20px">
+                            <p:selectOneRadio id="console3" 
+                                              disabled="#{not checkUpFormMB.payed}"
+                                              value ="#{checkUpFormMB.hosCheckUpEntity.chequeStatus}" >
+
+                                <f:selectItem itemLabel="لم يسدد"  itemValue="0"  />                            
+                                <f:selectItem itemLabel="تم السداد" itemValue="1" />
+                                <f:selectItem itemLabel="مرتد.ألغي" itemValue="2" />
+                                <f:selectItem itemLabel="جزئي" itemValue="3" />
+
+                            </p:selectOneRadio>
+                        </p:fieldset>
+                    </h:panelGroup>
+                </h:panelGrid>
+
+
+                <h:panelGrid id="thirdSegment" columns="2" cellspacing="2" cellpadding="0" columnClasses="ui-grid-col-6,ui-grid-col-6">
+
+                    <h:panelGroup>
+                        <h:panelGroup > 
+                            <p:outputLabel style="width: 50px" value="رقم العميل"  />
+                        </h:panelGroup>
+
+                        <h:panelGroup >
+                            <p:selectOneMenu id="organization"
+                                             filter="true" 
+                                             filterMatchMode="contains"
+                                             converter="#{checkUpFormMB.invOrganizationSiteConverter}"
+                                             value="#{checkUpFormMB.hosCheckUpDetailEntity.invOrganizationSite}"
+                                             style="width:50%">
+                                <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" />
+                                <f:selectItems value="#{checkUpFormMB.organizationList}"
+                                               var="sss" 
+                                               itemLabel="#{sss}"
+                                               itemValue="#{sss}"/>
+
+                            </p:selectOneMenu> 
+
+                        </h:panelGroup>
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel style="width:50px" value="البيـــــان"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:inputText style="width:99%" id="notes" 
+                                         value="#{checkUpFormMB.hosCheckUpEntity.remark}"/>
+                        </h:panelGroup>
+
+                    </h:panelGroup>
+
+
+
+                </h:panelGrid>
+
+
+                <p:commandButton  style="margin-right: 40%;margin-top: 2%" id="saveB" 
+                                  title="#{userData.userDDs['SAVE']}" 
+                                  value="#{userData.userDDs['SAVE']}" 
+                                  icon="fa fa-fw fa-save"
+                                  action="#{checkUpFormMB.save()}"
+                                  disabled="#{checkUpFormMB.hosCheckUpEntity.postFlag == 1}"
+                                  update="@form"/>
+
+                <p:commandButton title="#{userData.userDDs['CANCEL']}" 
+                                 immediate="true"
+                                 value="#{userData.userDDs['CANCEL']}" 
+                                 icon="fa fa-fw fa-close"
+                                 action="#{checkUpFormMB.exit()}"   />
+
+                <p:commandButton style="margin-left:.1%;margin-right: .1%;width: 60px;" 
+                                 ajax="false" onclick="form.target = '_blank'"  
+                                 value="#{userData.userDDs['PRINT']}" actionListener="#{checkUpFormMB.exportPDF}"
+                                 icon="fa fa-fw fa-print"
+
+                                 rendered="#{ checkUpFormMB.hosCheckUpEntity.id gt 0}"
+                                 />
+
+                <p:commandButton title="#{userData.userDDs['RESET']}" 
+                                 immediate="true"
+                                 value="جديد" 
+                                 id="newA"
+                                 icon="fa fa-plus"
+                                 update="@form"
+                                 actionListener="#{checkUpFormMB.loadThePageAgain}"   />
+
+                <p:commandButton style="margin-left:.2%;margin-right: .1%;width: 90px;" 
+                                 ajax="false" update="@form"
+                                 onclick="form.target = '_blank'"  
+                                 icon="fa fa-fw fa-print"
+                                 rendered="#{checkUpFormMB.hosCheckUpEntity.id eq null}"
+                                 value="حفظ وطباعة" 
+                                 actionListener="#{checkUpFormMB.exportPDF}"/>
+
+            </p:fieldset>   
+
+            <p:dataTable id="hosCheckUpDetailsTable"
+
+                         var="hosCheckUpDetailsTable"
+                         rowIndexVar="index" 
+                         dir="rtl" 
+                         emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                         sortBy="#{1}"
+                         selectionMode="single"
+                         selection="#{checkUpFormMB.hosCheckUpDetailEntitySelected}"
+                         widgetVar="hosCheckUpDetailsTable"
+                         rowKey="#{hosCheckUpDetailsTable.index}"
+                         value="#{checkUpFormMB.hosCheckUpDetailEntityList}" >
+
+                <f:facet name="header" class="col-md-12">
+                    <p:commandButton id="addnew"
+                                     icon="fa fa-plus"
+                                     title="#{userData.userDDs['ADD']}" 
+                                     actionListener="#{checkUpFormMB.addGlBankTransactionDetail()}" 
+                                     update=":form:curmsg hosCheckUpDetailsTable" 
+
+                                     ajax="true"
+                                     style="float:right"/>
+                    <p:outputPanel>
+                        <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                        <p:inputText id="globalFilter" onkeyup="PF('hosCheckUpDetailsTable').filter()" style="width:150px" />
+                    </p:outputPanel>
+                </f:facet>
+                <p:column style="width: 14vh;font-size: 1.8vh;text-align: right"  headerText="الخدمة"  >
+                    <h:panelGroup  >
+                        <p:selectOneMenu style="width:50%" id="service"
+                                         filter="true" 
+                                         filterMatchMode="contains"
+                                         value="#{checkUpFormMB.hosCheckUpDetailEntity.costCenterId}"
+                                         >
+                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" />
+                            <f:selectItems value="#{checkUpFormMB.costCenterList}"
+                                           var="cost" 
+                                           itemLabel="#{cost}"
+                                           itemValue="#{cost.id}"/>
+                        </p:selectOneMenu> 
+
+                    </h:panelGroup>
+                </p:column>
+                <p:column style="width: 14vh;font-size: 1.8vh;text-align: right"  headerText="#{userData.userDDs['ACCOUNT_NUMBER']}" >
+                    <h:outputText value="#{hosCheckUpDetailsTable.id}"  />
+                </p:column>
+                <p:column style="width: 14vh;font-size: 1.8vh;text-align: right"  headerText="#{userData.userDDs['ACCOUNT_NUMBER']}">
+                    <h:outputText value="#{hosCheckUpDetailsTable.index}"  />
+                </p:column>
+
+            </p:dataTable>
+            <p:blockUI block="form" trigger="saveB newA" animate="true" >
+
+                <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+            </p:blockUI> 
+
+        </h:form>
+
+
+
+    </ui:define>
+</ui:composition>

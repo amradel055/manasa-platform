@@ -1,0 +1,105 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+
+        <h:form class='formmargin' id="form"  enctype="multipart/form-data"  dir="#{userData.dir}">
+
+            <p:fieldset legend="انشاء كود خصم"  style="margin-bottom:20px">
+
+
+                <div class="col-xs-12">
+                    <p:messages autoUpdate="true"  id="msgopp" showDetail="true" closable="true" />
+                </div>
+                <div  id="firstLine" class="ui-g-12 ui-g-nopad">
+                    <div class="ui-g">
+
+                        <div class="ui-g-6 ui-xl-6">
+
+
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:inputText style="width: 35%!important" id="ad1" value="#{discountCodesFormBean.discountCodesDTO.bankName}"/>
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 85px;" value="اسم البنك"/>
+
+                                </div>
+                            </div>
+
+                          
+                            <div class="ui-g-12 ui-xl-12">
+
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:selectOneMenu id="console1" value="#{discountCodesFormBean.discountCodesDTO.discountValue}" style="margin-bottom:10px;">
+                                        <f:selectItem itemLabel="قيمة الخصم " itemValue="" />
+                                        <f:selectItem itemLabel="100 SAR" itemValue="100" />
+                                        <f:selectItem itemLabel="200 SAR" itemValue="200" />
+                                        <f:selectItem itemLabel="300 SAR" itemValue="300" />
+                                    </p:selectOneMenu>
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 85px;" value="قيمة الخصم"/>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>                        
+                </div>
+                
+                 <div id="discountCode" class="form-group col-md-12">
+
+                    <p:fileUpload value="#{discountCodesFormBean.discountCodeFile}" mode="simple" onstart="disableChoosing()" 
+                                  oncomplete="enableChoosing()"  />
+                </div>
+
+                <div class="form-group col-md-12">
+                    <p:commandButton id="btndiscountCode"  actionListener="#{discountCodesFormBean.readDiscountCode()}" ajax="false" value="تحميل">
+                        <f:ajax execute="@all" render="@form"/>
+                        <p:ajax/>
+                    </p:commandButton>
+                </div>
+
+
+            </p:fieldset>
+
+            <div class="asmaa" style="text-align: center">
+
+                <p:commandButton  class="newButton" 
+                                  id="newN"
+                                  ajax="false"
+                                  style=""
+                                  value="#{userData.userDDs['NEW']}" 
+                                  title="#{userData.userDDs['NEW']}"
+                                  onclick="form.target = ''" 
+                                  actionListener="#{discountCodesFormBean.reset()}"/>
+
+                <p:commandButton class="closeButton" 
+                                 title="#{userData.userDDs['BACK']}" 
+                                 immediate="true" 
+                                 value="#{userData.userDDs['BACK']}" 
+                                 style="" 
+                                 action="#{discountCodesFormBean.exit()}"   />
+
+
+
+                <p:blockUI block="form" trigger="saveB" animate="true" >
+
+                    <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                </p:blockUI> 
+
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

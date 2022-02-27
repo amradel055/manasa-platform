@@ -1,0 +1,201 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <h:form id="form" enctype="multipart/form-data" dir="#{userData.dir}" style="margin-right: 20px">
+
+            <p:commandButton id="btninvitem5999"  actionListener="#{importMB.tarhilInvoiceOne()}" ajax="false" value="ترحيل الفواتير">
+                <f:ajax execute="@all" render="@form"/>
+                <p:ajax/>
+            </p:commandButton>
+
+            <p:commandButton id="btninvitem58888"  actionListener="#{importMB.tarhilCashOne()}" ajax="false" value="ترحيل سندات القبض">
+                <f:ajax execute="@all" render="@form"/>
+                <p:ajax/>
+            </p:commandButton>
+            <p:commandButton id="btninvitem588888"  actionListener="#{importMB.tarhilExitOne()}" ajax="false" value="ترحيل سندات الصرف">
+                <f:ajax execute="@all" render="@form"/>
+                <p:ajax/>
+            </p:commandButton>
+            <p:commandButton id="btninvitem58888899"  actionListener="#{importMB.tarhilInvNoticeOne()}" ajax="false" value="ترحيل  الاشعارات">
+                <f:ajax execute="@all" render="@form"/>
+                <p:ajax/>
+            </p:commandButton>
+            <p:commandButton id="btninvitem58888555"  actionListener="#{importMB.tarhilAll()}" ajax="false" value="ترحيل الكل">
+                <f:ajax execute="@all" render="@form"/>
+                <p:ajax/>
+            </p:commandButton>
+            <p:fieldset  legend="ادخال نوعية الاصناف" id="invitem5"  style="margin-bottom:20px">
+                <div id="invitemloader5" class="form-group col-md-12">
+
+                    <p:fileUpload value="#{importMB.invItemFile2}" mode="simple" onstart="disableChoosing()" 
+                                  oncomplete="enableChoosing()" />
+                </div>
+
+                <div class="form-group col-md-12">
+                    <p:commandButton id="btninvitem5"  actionListener="#{importMB.readInvItemCode()}" ajax="false" value="تحميل">
+                        <f:ajax execute="@all" render="@form"/>
+                        <p:ajax/>
+                    </p:commandButton>
+                </div>
+
+
+            </p:fieldset>
+
+            <p:fieldset  legend="ادخال دليل الاصناف" id="invitem"  style="margin-bottom:20px">
+                <div id="invitemloader" class="form-group col-md-12">
+
+                    <p:fileUpload value="#{importMB.invItemFile}" mode="simple" onstart="disableChoosing()" 
+                                  oncomplete="enableChoosing()" />
+                </div>
+
+                <div class="form-group col-md-12">
+                    <p:commandButton id="btninvitem"  actionListener="#{importMB.updateInvItem()}" ajax="false" value="تحميل">
+                        <f:ajax execute="@all" render="@form"/>
+                        <p:ajax/>
+                    </p:commandButton>
+                </div>
+
+
+            </p:fieldset>
+
+            <p:fieldset  legend="ادخال الموظفين" id="employee"  style="margin-bottom:20px">
+                <div id="employeeloader" class="form-group col-md-12">
+
+                    <p:fileUpload value="#{importMB.invItemFile}" mode="simple" onstart="disableChoosing()" 
+                                  oncomplete="enableChoosing()" />
+                </div>
+
+                <div class="form-group col-md-12">
+                    <p:commandButton id="btnemployee"  actionListener="#{importMB.updateEmployee()}" ajax="false" value="تحميل">
+                        <f:ajax execute="@all" render="@form"/>
+                        <p:ajax/>
+                    </p:commandButton>
+                </div>
+
+
+            </p:fieldset>
+
+            <p:fieldset  legend="ادخل اصناف جديده" id="newItemm"  style="margin-bottom:20px">
+                <div id="newItem" class="form-group col-md-12">
+
+                    <p:fileUpload value="#{importMB.invItemFile}" mode="simple" onstart="disableChoosing()" 
+                                  oncomplete="enableChoosing()" />
+                </div>
+
+                <div class="form-group col-md-12">
+                    <p:commandButton id="btnnewItem"  actionListener="#{importMB.readInvItem()}" ajax="false" value="تحميل">
+                        <f:ajax execute="@all" render="@form"/>
+                        <p:ajax/>
+                    </p:commandButton>
+                </div>
+
+
+            </p:fieldset>
+
+            <p:fieldset  legend="ادخل شركات جديده" id="newOfferCompany"  style="margin-bottom:20px">
+                <div id="newOferCompany" class="form-group col-md-12">
+
+                    <p:fileUpload value="#{importMB.offerCompanyFile}" mode="simple" onstart="disableChoosing()" 
+                                  oncomplete="enableChoosing()" />
+                </div>
+
+                <div class="form-group col-md-12">
+                    <p:commandButton id="btnnewOOferCompany"  actionListener="#{importMB.readOfferCompany()}" ajax="false" value="تحميل">
+                        <f:ajax execute="@all" render="@form"/>
+                        <p:ajax/>
+                    </p:commandButton>
+                </div>
+
+
+            </p:fieldset>
+
+            <p:fieldset  legend="ادخال العملاء" id="customer"  style="margin-bottom:20px">
+                <div id="customerloader" class="form-group col-md-12">
+
+                    <p:fileUpload value="#{importMB.customerFile}" mode="simple" onstart="disableChoosing()" 
+                                  oncomplete="enableChoosing()" />
+                </div>
+
+                <div class="form-group col-md-12">
+                    <p:commandButton id="btncustomer"  actionListener="#{importMB.readCustomer()}" ajax="false" value="تحميل">
+                        <f:ajax execute="@all" render="@form"/>
+                        <p:ajax/>
+                    </p:commandButton>
+                </div>
+
+
+            </p:fieldset>
+
+
+
+            <p:fieldset  legend="ادخال دليل الحسابات" id="glaccount"  style="margin-bottom:20px">
+                <div id="glaccountloader" class="form-group col-md-12">
+
+                    <p:fileUpload value="#{importMB.glAccountFile}" mode="simple" onstart="disableChoosing()" 
+                                  oncomplete="enableChoosing()" />
+                </div>
+
+                <div class="form-group col-md-12">
+                    <p:commandButton id="btnglaccount"  actionListener="#{importMB.readGlAccount()}" ajax="false" value="تحميل">
+                        <f:ajax execute="@all" render="@form"/>
+                        <p:ajax/>
+                    </p:commandButton>
+                </div>
+
+
+            </p:fieldset>
+
+            <p:fieldset  legend="ادخال الرصيد الافتتاحي الجديده للأصناف بالمخازن" id="invOpeiningBalance"  style="margin-bottom:20px">
+                <div id="invOpeiningBalanceloader" class="form-group col-md-12">
+
+                    <p:fileUpload value="#{importMB.invOpeningBalanceFile}" mode="simple" onstart="disableChoosing()" 
+                                  oncomplete="enableChoosing()" />
+                </div>
+
+                <div class="form-group col-md-12">
+                    <p:commandButton id="btninvOpeiningBalance"  actionListener="#{importMB.readInvOpeiningBalance()}" ajax="false" value="تحميل">
+                        <f:ajax execute="@all" render="@form"/>
+                        <p:ajax/>
+                    </p:commandButton>
+                </div>
+
+
+            </p:fieldset>
+            
+            <p:fieldset  legend="ادخال  قيود اليومية" id="generalJournalID"  style="margin-bottom:20px">
+                <div id="generalJournalloader" class="form-group col-md-12">
+
+                    <p:fileUpload value="#{importMB.generalJournalHeadFile}" mode="simple" onstart="disableChoosing()" 
+                                  oncomplete="enableChoosing()" />
+                </div>
+
+                <div class="form-group col-md-12">
+                    <p:commandButton id="generalJournalBTN"  actionListener="#{importMB.readGeneralJournalHead()}" ajax="false" value="تحميل">
+                        <f:ajax execute="@all" render="@form"/>
+                        <p:ajax/>
+                    </p:commandButton>
+                </div>
+
+
+
+            </p:fieldset>
+
+
+
+            <p:blockUI block="form" trigger=" " animate="true" >
+
+                <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+            </p:blockUI>
+
+            <p:dialog header="رسالة" widgetVar="sucesses" minHeight="40">
+                <h:outputText value="تم الحفظ بنجاح" />
+            </p:dialog>
+        </h:form>
+    </ui:define>
+</ui:composition>

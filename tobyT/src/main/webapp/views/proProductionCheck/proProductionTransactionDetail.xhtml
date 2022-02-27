@@ -1,0 +1,151 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:body>
+
+            <h:form dir="RTL" style="margin-right: 20px" id="form" >
+                <p:fieldset  legend="تفاصيل الفاتورة" id="whole"  style="margin-bottom:20px">
+
+                    <div class="ui-g-6 ui-xl-6">
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:outputLabel id="name" style="width:48%" value="#{proProductionTransactionDetailMB.invInvoiceDTO.serial}" />
+
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:outputLabel style="width: 65px" value="رقم الفاتورة :"/>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui-g-6 ui-xl-6">
+
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <h:outputText value="#{proProductionTransactionDetailMB.invInvoiceDTO.dueDate}">
+                                    <f:convertDateTime pattern="MM/dd/yyyy" />
+                                </h:outputText>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:outputLabel style="width: 65px" value="تاريخ الاستحقاق  :"/>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                   
+
+                </p:fieldset>
+
+                <p:fieldset  legend="التفاصيل ">
+                    <p:dataTable var="detail" id="detail"
+                                 widgetVar="detail" 
+                                 value="#{proProductionTransactionDetailMB.invInvoiceDTO.invPurchaseInvoiceDetailList}"
+                                 draggableColumns="true" selectionMode="single" 
+                                 selection="#{proProductionTransactionDetailMB.invInvoiceDTO.invDetailDTOSelected}"
+                                 paginator="true"
+                                 rowIndexVar="index" 
+                                 sortBy="#{detail.clothNumber}"
+                                 rowKey="#{detail.index}"
+                                 emptyMessage="EMPTY_TABLE"
+                                 >
+
+                        <p:ajax event="rowSelect" update="@form" />
+
+                        <p:headerRow>
+                            <p:column colspan="1" style="width: 15vh;font-size: 2vh;border-radius: 0px;" >
+                                <h:outputText value="رقم الثوب" />
+                            </p:column>
+                            <p:column colspan="1" style="width: 15vh;font-size: 2vh;border-radius: 0px;" >
+                                <h:outputText value="#{detail.clothNumber}" />
+                            </p:column>
+                            <p:column headerText="" style="width: 5vh;text-align: center!important;font-size: 1.8vh">
+                                <p:commandButton    value="تم التشيك"  rendered="#{detail.statusName eq null}"
+                                                    action="#{proProductionTransactionDetailMB.save()}" 
+                                                    update="@form"
+                                                    > 
+                                    <f:setPropertyActionListener value="#{detail}"
+                                                                 target="#{proProductionTransactionDetailMB.invDetailDTOSelected}" />
+                                </p:commandButton>
+                                <h:outputText value="#{detail.statusName}" rendered="#{detail.statusName ne null}" />
+                            </p:column>
+                        </p:headerRow>
+
+                        <p:column headerText="اسم الصنف" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <p:outputLabel value="#{detail.itemName}" />
+                        </p:column>
+
+
+                        <p:column headerText="العدد " style="width: 10vh;text-align: center!important;font-size: 1.8vh"
+
+                                  >
+                            <p:outputLabel value="#{detail.number}" />
+                        </p:column>
+                        <p:column headerText="المنتج التام" style="width: 10vh;text-align: center!important;font-size: 1.8vh"
+
+                                  >
+                            <p:outputLabel value="#{detail.invItemParentId.name}" />
+
+                        </p:column>
+
+
+
+
+
+                    </p:dataTable>
+
+                </p:fieldset>
+
+                <p:fieldset  legend="أنواع التفصيل ">
+                    <p:dataTable var="detailDetail" id="detailDetail"
+                                 widgetVar="detailDetail" 
+                                 value="#{proProductionTransactionDetailMB.invInvoiceDTO.invDetailDTOSelected.proDetailTypeDTOList}"
+                                 draggableColumns="true"
+                                 editable="true"
+                                 editMode="cell"
+                                 paginator="true"
+                                 rowIndexVar="index" 
+                                 sortBy="#{1}"
+                                 rowKey="#{detail.index}"
+                                 emptyMessage="EMPTY_TABLE"
+                                 >
+
+                        <p:column headerText="الكود" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <p:outputLabel value="#{detailDetail.code}" />
+                        </p:column>
+
+
+                        <p:column headerText="الاسم" style="width: 10vh;text-align: center!important;font-size: 1.8vh"
+
+                                  >
+                            <p:outputLabel value="#{detailDetail.name}" />
+                        </p:column>
+
+                    </p:dataTable>
+
+                </p:fieldset>
+
+            </h:form>
+        </h:body>
+    </ui:define>
+</ui:composition>
+
+
+

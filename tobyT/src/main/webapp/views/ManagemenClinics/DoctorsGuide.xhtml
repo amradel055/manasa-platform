@@ -1,0 +1,231 @@
+﻿<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml" >
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:head>
+            <title>#{userData.userDDs['SERVICES_DIRECT']}</title>
+        </h:head>
+        <style>
+
+            .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+                border: 1px solid #c5dbec;
+                background:none;
+            }
+
+        </style>
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <p:fieldset styleClass="panelColumns" legend="#{userData.userDDs['SERVICES_DIRECT']}" style="margin-right: 25px" >
+            <h:form id="form"  >
+                <p:messages autoUpdate="true"  id="messages" showDetail="true" closable="true" rendered="#{hosDoctorBean.showMessage}"/>   
+                <div class="ui-g-12 ui-g-nopad"  >
+                        <div class="ui-g">
+                            <div class="ui-g-12 ui-md-4">
+
+                                <h:panelGroup style="font-size: 35px">
+                                    <p:tree  value="#{hosDoctorBean.hosDoctorHierarchy}" var="doc" dir="#{userData.dir}"
+                                             selectionMode="single" selection="#{hosDoctorBean.selectedHosDoctor}"
+                                             dynamic="false" id="csTree">
+                                        <p:ajax  event="select" update=":form:hosDoctorDetails" listener="#{hosDoctorBean.onNodeSelect}" />
+                                        <p:treeNode expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed" >
+                                            <h:outputText value="#{doc.name}"/>
+                                        </p:treeNode>
+                                    </p:tree>  
+                                </h:panelGroup>
+                                </div>
+                            <div class="ui-g-12 ui-md-8">
+                                <h:panelGroup>
+                                    <p:fieldset legend="#{userData.userDDs['SERVICES_DIRECT']}" style="margin-bottom:20px">
+                                        <h:panelGrid id="hosDoctorDetails" columns="1"  class="col-md-12" rendered="#{userData.userScreens['ManagemenClinics'].add or userData.userScreens['ManagemenClinics'].edit or userData.isAdmin}">
+
+
+                                            <h:panelGroup>
+                                                <h:panelGroup>
+                                                    <p:outputLabel value="#{userData.userDDs['SERVICE_CODE']}"  style="width: 60px" />  
+                                                </h:panelGroup>
+                                                <h:panelGroup>
+                                                    <p:inputText style="width: 50%!important"  id="costCode" value="#{hosDoctorBean.selectedCS.code}" >
+                                                    </p:inputText>
+
+                                                </h:panelGroup>
+                                            </h:panelGroup>
+
+
+                                            <h:panelGroup>
+
+                                                <h:panelGroup>
+                                                    <p:outputLabel style="width: 60px" value="#{userData.userDDs['SERVICE_NAME']}" />  
+                                                </h:panelGroup>
+                                                <h:panelGroup>
+                                                    <p:inputText style="width: 50%!important"  id="costName" value="#{hosDoctorBean.selectedCS.name}" >
+                                                    </p:inputText>  
+                                                </h:panelGroup>
+
+
+                                            </h:panelGroup>
+
+                                            <h:panelGroup>
+
+                                                <h:panelGroup>
+                                                    <p:outputLabel style="width: 60px" id="parentAcc" value="#{userData.userDDs['MAIN_SERVICE']}" />  
+                                                </h:panelGroup>
+                                                <h:panelGroup>
+                                                    <p:selectOneMenu style="width: 49.8%!important;margin: 1%" id="parentCenter" value="#{hosDoctorBean.selectedParentId}"               
+                                                                     required="false"  filterMatchMode="contains" filter="true" >
+                                                        <p:ajax listener="#{hosDoctorBean.selectParent}" update="level"  />
+                                                        <f:selectItem itemLabel="#{userData.userDDs['ROOT']}" />
+                                                        <f:selectItems value="#{hosDoctorBean.allHosDoctors}" var="cs" itemLabel="#{cs.name}" itemValue="#{cs.id}" />
+                                                    </p:selectOneMenu>
+                                                </h:panelGroup>
+
+                                            </h:panelGroup>
+
+
+
+                                            <h:panelGroup>
+
+                                                <h:panelGroup>
+                                                    <p:outputLabel style="width: 60px;margin-left: 1.5%" value="#{userData.userDDs['STATUS']}"/>
+                                                </h:panelGroup>
+                                                <h:panelGroup>
+                                                    <h:selectBooleanCheckbox style="margin-top: 2%"  id="active" value="#{hosDoctorBean.selectedCS.active}" />
+                                                </h:panelGroup> 
+                                                <h:panelGroup>
+                                                    <p:message for="active"/>
+                                                </h:panelGroup>
+
+
+                                            </h:panelGroup>
+
+
+                                            <h:panelGroup>
+
+                                                <h:panelGroup>
+                                                    <p:outputLabel  style="width: 60px;margin:1% 0" value="#{userData.userDDs['LEVEL']}"/>
+                                                </h:panelGroup>
+
+                                                <h:panelGroup>
+                                                    <p:outputLabel id="level"  value="#{hosDoctorBean.selectedCS.level}" style="margin: 0 2%"/>
+                                                </h:panelGroup>
+
+                                            </h:panelGroup>
+
+
+
+
+                                            <h:panelGroup>
+                                                <h:panelGroup>
+                                                    <p:outputLabel  value="#{userData.userDDs['BRANCH']}"  style="width: 60px;;margin:1.5% 0"/>
+                                                </h:panelGroup>
+                                                <h:panelGroup>  
+                                                    <p:outputLabel style="margin: 0 2%" id="branc" value="#{hosDoctorBean.selectedCS.branchId.nameAr}"  />
+                                                </h:panelGroup>
+
+                                            </h:panelGroup>
+
+                                            <h:panelGroup  rendered="#{hosDoctorBean.showCommissionAndPrice}">
+                                                <h:panelGroup>
+                                                    <p:outputLabel  value="#{userData.userDDs['COMMISSION']}"  style="width: 60px;margin:1.5% 0"/>
+                                                </h:panelGroup>
+                                                <h:panelGroup>  
+                                                    <p:inputNumber style="margin: 0 2%" id="commi" value="#{hosDoctorBean.selectedCS.commission}"
+                                                                   />%
+                                                </h:panelGroup>
+
+                                            </h:panelGroup>
+
+                                            <h:panelGroup  rendered="#{hosDoctorBean.showCommissionAndPrice}">
+                                                <h:panelGroup>
+                                                    <p:outputLabel  value="#{userData.userDDs['SERVICE_PRICE']}"  style="width: 60px;;margin:1.5% 0"/>
+                                                </h:panelGroup>
+                                                <h:panelGroup >  
+                                                    <p:inputNumber style="margin: 0 2%" id="serPri" value="#{hosDoctorBean.selectedCS.servicePrice}" 
+                                                                   />
+                                                </h:panelGroup>
+
+                                            </h:panelGroup>
+
+                                            <h:panelGroup>
+
+                                                <h:panelGroup rendered="#{userData.isAdmin}">                       
+                                                    <p:outputLabel  value="#{userData.userDDs['COMPANY_NAME']} " rendered="#{userData.isAdmin}" />
+                                                </h:panelGroup>
+                                                <h:panelGroup rendered="#{userData.isAdmin}" >
+                                                    <p:outputLabel style="width: 100%" id="com" value="#{hosDoctorBean.selectedCS.companyId.name}"  />
+                                                    <p:message for="com"/>
+                                                </h:panelGroup>
+
+
+                                            </h:panelGroup>
+
+                                            <h:panelGroup class="centerButtons"> 
+
+
+                                                <p:commandButton  class="newButton"  title="#{userData.userDDs['ADD']}"
+                                                                  value="#{userData.userDDs['ADD']}"
+                                                                  update=":form:hosDoctorDetails" actionListener="#{hosDoctorBean.add()}" 
+                                                                  icon="fa fa-fw fa-plus"  id="plus"
+                                                                  />
+                                                <p:commandButton  class="saveButton"   value="#{userData.userDDs['SAVE']}" id="saveB" 
+                                                                  title="#{userData.userDDs['SAVE']}"   icon="fa fa-fw fa-save" 
+                                                                  action="#{hosDoctorBean.save()}" update="@form"  validateClient="true"/>
+                                                <p:blockUI block="form" trigger="saveB plus" animate="true" >
+
+                                                    <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                                                </p:blockUI>
+                                                <p:commandButton class="deleteButton" value="#{userData.userDDs['DELETE']}" title="#{userData.userDDs['DELETE']}"  
+                                                                 update="@form"  action="#{hosDoctorBean.delete()}" icon="fa fa-fw fa-remove" >
+                                                    <p:confirm header="#{userData.userDDs['COFIGRATION']}" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                                                </p:commandButton>
+                                                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                                    <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                                    <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                                                </p:confirmDialog>
+
+                                            </h:panelGroup>
+                                            <p:blockUI block="saveB" trigger="saveB"/>
+                                        </h:panelGrid>
+                                        <h:panelGrid  columns="2" cellspacing="2" cellpadding="0" rendered="#{not (userData.userScreens['ManagemenClinics'].add or userData.userScreens['ManagemenClinics'].edit or userData.isAdmin)}">
+                                            <h:panelGroup>
+                                                <p:outputLabel value="#{userData.userDDs['CS_COD']}" />  
+                                            </h:panelGroup>
+                                            <h:panelGroup>
+                                                <p:inputText value="#{hosDoctorBean.selectedCS.code}" readonly="true" />
+                                            </h:panelGroup>
+                                            <h:panelGroup>
+                                                <p:outputLabel value="#{userData.userDDs['NAME']}" />  
+                                            </h:panelGroup>
+                                            <h:panelGroup>
+                                                <p:inputText value="#{hosDoctorBean.selectedCS.name}" readonly="true" />  
+                                            </h:panelGroup>
+                                            <h:panelGroup>
+                                                <p:outputLabel value="#{userData.userDDs['MAIN_SERVICE']}" />  
+                                            </h:panelGroup>
+                                            <h:panelGroup>
+                                                <p:inputText value="#{hosDoctorBean.selectedCS.parent.name}" readonly="true" />  
+                                            </h:panelGroup>
+                                            <h:panelGroup>
+                                                <p:outputLabel for="bname" value="#{userData.userDDs['BRANCH']}"/>
+                                            </h:panelGroup>
+                                            <h:panelGroup>
+                                                <p:inputText id="bname"  value="#{hosDoctorBean.selectedCS.branchId.nameAr}" readonly="true" />
+                                            </h:panelGroup>     
+
+                                        </h:panelGrid>
+
+                                    </p:fieldset>
+                                </h:panelGroup>
+                                </div>
+                            </div>
+                        </div>
+                        </h:form>
+                        </p:fieldset>
+                        </ui:define>
+                        </ui:composition>

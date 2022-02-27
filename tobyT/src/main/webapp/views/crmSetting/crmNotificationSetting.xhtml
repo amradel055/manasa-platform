@@ -1,0 +1,131 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+
+        <h:form id="ScreenAddEditForm" dir="#{userData.dir}" class='formmargin'>
+            <div style=" position: absolute;left: 20px"> 
+
+                <p:commandButton  style="z-index: 2;
+                                  margin-top: 12%;
+                                  color: #035c70!important; 
+                                  background-color: #223238!important;
+                                  border: 1px solid #22323a!important;
+                                  background: #22323a 50% 50% repeat-x!important;"
+                                  icon="fa fa-fw fa-home"
+                                  title="#{userData.userDDs['HOME']}"
+                                  class="smhomeButton" 
+                                  action="exit" />  
+            </div>
+            <p:messages autoUpdate="true"  id="messages" showDetail="true" closable="true" /> 
+   <p:fieldset legend="اعدادات " style="margin-bottom:20px">
+             
+                <div   class="ui-g-12 ui-g-nopad" style="padding: 0px;">
+                    <div class="ui-g">
+                         
+                        <div class="ui-g-12 ui-md-3" style="padding: 0px; margin-right: 2.5%; width: 7%">
+                            <h:panelGroup>
+                                <p:outputLabel for="console" value="اظهار المهام" />
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-3" style="padding: 0px; margin-right: 2.5%; width: 24%">
+                            <h:panelGroup>
+                                <p:selectOneRadio  value="#{crmSettingFormDTOMB.crmSettingDTO.showEvent}" >                                    
+                                    <f:selectItem itemLabel="#{userData.userDDs['NO']}" itemValue="false" />
+                                    <f:selectItem itemLabel="#{userData.userDDs['YES']}" itemValue="true" />
+                                </p:selectOneRadio>
+                            </h:panelGroup>
+                        </div>
+                    </div>
+                </div>
+            </p:fieldset>
+            <p:fieldset legend="اعدادات الاشعارات" style="margin-bottom:20px">
+                
+                <div   class="ui-g-12 ui-g-nopad" style="padding: 0px;">
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-3" style="padding: 0px; margin-right: 2.5%; width: 7%">
+                            <h:panelGroup>
+                                <p:outputLabel for="console" value="الصوت" />
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-3" style="padding: 0px; margin-right: 2.5%; width: 24%">
+                            <h:panelGroup>
+                                <p:selectOneRadio id="console" value="#{crmSettingFormDTOMB.isagNotificationSettingDTO.sound}" >                                    
+                                    <f:selectItem itemLabel="غلق" itemValue="false" />
+                                    <f:selectItem itemLabel="فتح" itemValue="true" />
+                                </p:selectOneRadio>
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 105px;margin-right: 33%;" value="مكان الاشعار"/>
+                                </h:panelGroup>
+                                <p:selectOneMenu  style="width: 35%" id="com" value="#{crmSettingFormDTOMB.isagNotificationSettingDTO.position}"   >
+                                    <f:selectItem itemLabel="اعلي الشاشه يمين" itemValue="nfc-top-right"  />
+                                    <f:selectItem itemLabel="اعلي الشاشه يسار" itemValue="nfc-top-left"  />
+                                    <f:selectItem itemLabel="اسفل الشاشه يمين" itemValue="nfc-bottom-right" />
+                                    <f:selectItem itemLabel="اسفل الشاشه يسار" itemValue="nfc-bottom-left" />
+                                </p:selectOneMenu>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 105px;margin-right: 5%; margin-top: 3%; padding-bottom: 3%;" value="مده الاشعار"/>
+                                </h:panelGroup>
+                                <p:selectOneMenu  style="width: 35%"  id="timout" value="#{crmSettingFormDTOMB.isagNotificationSettingDTO.timeout}"   >
+                                    <f:selectItem itemLabel="5 دقائق" itemValue="300000"  />
+                                    <f:selectItem itemLabel="10 دقيقه" itemValue="600000"  />
+                                    <f:selectItem itemLabel="15 دقيقه" itemValue="900000"  />
+                                    <f:selectItem itemLabel="20 دقيقه" itemValue="1200000" />
+                                    <f:selectItem itemLabel="25 دقيقه" itemValue="1500000" />
+                                    <f:selectItem itemLabel="30 دقيقه" itemValue="1800000" />
+                                    <f:selectItem itemLabel="35 دقيقه" itemValue="2100000" />
+                                    <f:selectItem itemLabel="40 دقيقه" itemValue="2400000"  />
+                                    <f:selectItem itemLabel="45 دقيقه" itemValue="2700000" />
+                                    <f:selectItem itemLabel="50 دقيقه" itemValue="3000000" />
+                                    <f:selectItem itemLabel="55 دقيقه" itemValue="3300000" />
+                                    <f:selectItem itemLabel="60 دقيقه" itemValue="3600000" />
+                                    <f:converter converterId="javax.faces.BigDecimal" /> 
+                                </p:selectOneMenu>
+                            </h:panelGroup>
+                        </div>
+                    </div>
+                </div>
+            </p:fieldset>
+            <h:panelGrid id="pn1"   class="centerButtons col-md-12" columns="1"  style="margin-top: 2%">
+
+
+                <h:panelGroup>
+                    <p:commandButton   class="saveButton"  
+                                       id="saveB"  
+                                       title="#{userData.userDDs['SAVE']}"
+                                       value="#{userData.userDDs['SAVE']}" 
+                                       style="color: #fff;"
+                                       action="#{crmSettingFormDTOMB.save()}" 
+                                       update="@form" />
+                    <p:commandButton   class="closeButton"  
+                                       id="closeB"  
+                                       title="#{userData.userDDs['BACK']}"
+                                       value="#{userData.userDDs['BACK']}" 
+                                       style="color: #fff;"
+                                       action="#{crmSettingFormDTOMB.exit()}" 
+                                       update="@form" />
+                </h:panelGroup>
+            </h:panelGrid>
+            <p:blockUI block="ScreenAddEditForm" trigger="saveB  " animate="true" >
+                <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+            </p:blockUI>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

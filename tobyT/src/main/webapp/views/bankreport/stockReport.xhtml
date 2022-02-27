@@ -1,0 +1,243 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <link rel="stylesheet" type="text/css" href="../../resources/css/main.css" /> 
+    <ui:define name="content">
+        <h:head>
+            <title>#{userData.userDDs['ACCOUNT_REPORT']}</title>
+        </h:head>
+        <h:body> 
+            <h:form id="form" style="margin-right: 20px">     
+                <div class="col-xs-12">
+                    <p:messages autoUpdate="true" id="msg" showDetail="true" closable="true" 
+                                rendered="#{stockMB.showMessageGeneral}"/>
+                </div>
+                <h:panelGrid  columns="2"  columnClasses="ui-grid-col-6,ui-grid-col-6">
+
+                    <h:panelGroup> 
+                        <h:panelGroup> 
+                            <p:outputLabel style="width: 45px" value="من خزنة" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:selectOneMenu  style="width: 51%" id="MACUCode" 
+                                             filter="true" 
+                                             filterMatchMode="startsWith"
+                                             converter="#{stockMB.glBankConverter}"
+                                             value="#{stockMB.cashAccountSettlementSearchBean.glBankFrom}"> 
+
+                                <f:selectItems value="#{stockMB.glBankList}"  
+                                               var="bank"
+                                               itemLabel="#{bank}"
+                                               itemValue="#{bank}"/>
+                            </p:selectOneMenu> 
+
+                        </h:panelGroup>   
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+
+                        <h:panelGroup> 
+                            <p:outputLabel style="width: 45px"  value="الى خزنة" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:selectOneMenu style="width: 51%" 
+                                filter="true" 
+                                filterMatchMode="startsWith"
+                                converter="#{stockMB.glBankConverter}"
+                                value="#{stockMB.cashAccountSettlementSearchBean.glBankTo}" > 
+
+                                <f:selectItems value="#{stockMB.glBankList}"  
+                                               var="bank"
+                                               itemLabel="#{bank}"
+                                               itemValue="#{bank}"/>
+                            </p:selectOneMenu> 
+
+                        </h:panelGroup>   
+
+                    </h:panelGroup>
+
+
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel  style="width:45px" value="#{userData.userDDs['YEAR_FROM']}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:calendar id="dateFrom" 
+                                        value="#{stockMB.cashAccountSettlementSearchBean.dateFrom}" 
+                                        pattern="dd/MM/yyyy" 
+                                        style="width:50%" showButtonPanel="true"
+                                        >
+                                <p:ajax listener="#{stockMB.checkDate(true)}" event="dateSelect" update="dateFrom"/>
+                            </p:calendar>
+                        </h:panelGroup>
+                    </h:panelGroup>
+
+                    
+
+                  
+
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel  style="width:45px" value="#{userData.userDDs['YEAR_TO']}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:calendar  style="width: 50%"  id="dateTo" 
+                                        value="#{stockMB.cashAccountSettlementSearchBean.dateTo}" 
+
+                                        pattern="dd/MM/yyyy">
+                                <p:ajax   listener="#{stockMB.checkDate(false)}" event="dateSelect" update="dateTo" />
+                            </p:calendar>
+                            <h:outputText value="">
+                                <f:convertDateTime pattern="MM/dd/yyyy" />
+                            </h:outputText>
+                        </h:panelGroup>      
+                    </h:panelGroup>
+
+                    
+
+
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel style="width:45px;" value="العملة"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:selectOneMenu style="width:50%;" id="paymentType" 
+                                             value="#{stockMB.cashAccountSettlementSearchBean.currencyType}">                                                             
+                                <f:selectItem itemLabel="عمة محلية"  itemValue="0"  />
+                                <f:selectItem itemLabel="عملة اجنبية"  itemValue="1"  />
+
+                                <p:ajax update="cashAccount" listener="#{stockMB.search()}" />
+                            </p:selectOneMenu>                  
+                        </h:panelGroup>
+
+                    </h:panelGroup>
+
+
+                    
+
+                    <h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 45px;" value="السنة الماليه"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:selectOneMenu style="width:50%;margin-right: 1%" id="year" filter="true" filterMatchMode="startsWith" 
+                                             value="#{stockMB.glYearSelection}" converter="#{stockMB.glYearConverter}"  >
+                                <p:ajax update="dateFrom dateTo" listener="#{stockMB.pushGlYearSelection()}" />
+                                <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"  itemValue="" />
+                                <f:selectItems value="#{stockMB.glYearList}"  var="year" itemLabel="#{year.name}" itemValue="#{year}"/>
+                            </p:selectOneMenu>
+                        </h:panelGroup>
+
+                    </h:panelGroup>
+
+
+                   
+                    <h:panelGroup>
+                        <p:fieldset legend="ترتيب حسب" style="margin:10px 0;width: 60%;font-size: 2vh;">
+                            <p:selectOneRadio  value="#{stockMB.cashAccountSettlementSearchBean.orderBy}" >                                                             
+                                <f:selectItem    itemLabel="التاريخ"  itemValue="0"  />
+                                <f:selectItem itemLabel="المبلغ"  itemValue="1"  />
+
+                                <p:ajax update="cashAccount" listener="#{stockMB.search()}" />
+                            </p:selectOneRadio>  
+                        </p:fieldset>
+                    </h:panelGroup>
+
+                   
+
+                    <h:panelGroup>
+                        <p:fieldset legend="عرض البيانات" style="margin:10px 0;width: 60%;font-size: 2vh;">
+                            <p:selectOneRadio value="#{stockMB.cashAccountSettlementSearchBean.type}" >                                                             
+                                <f:selectItem itemLabel="الكل"  itemValue="3"  />
+                                <f:selectItem itemLabel="الوارد"  itemValue="0"  />
+                                <f:selectItem itemLabel="الصادر"  itemValue="1"  />
+
+                                <p:ajax update="cashAccount" listener="#{stockMB.search()}" />
+
+                            </p:selectOneRadio>  
+                        </p:fieldset>
+                    </h:panelGroup>
+                </h:panelGrid>
+
+
+                <h:panelGroup>
+                    <h:commandLink>  
+                        <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                        <p:dataExporter type="xls"
+                                        target="cashAccount" 
+                                        fileName="تقرير الخزينة"
+                                        postProcessor="#{stockMB.postProcessXLS}" />  
+                    </h:commandLink>
+
+                    <p:commandButton style="margin-left:.1%;margin-right: .1%;width: 50px;"
+                                     value="#{userData.userDDs['SEARCH']}"
+                                     action="#{stockMB.search()}" 
+                                     update="form" />
+
+                    <p:commandButton style="margin-left:.1%;margin-right: .1%;width: 50px;"
+                                     value="جديد" action="#{stockMB.reset}"
+                                     update="form" />
+                    <p:commandButton  style="margin-left:.1%;margin-right: .1%;width: 50px;" 
+                                      ajax="false" 
+                                      onclick="form.target = '_blank'" 
+                                      value="#{userData.userDDs['PRINT']}"
+                                      actionListener="#{stockMB.exportPDF}"/>
+
+
+                </h:panelGroup>
+                <p:dataTable id="cashAccount" 
+                             draggableColumns="true"
+                             draggableRows="true" 
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                             value="#{stockMB.cashAccountSettlementReports}"
+                             var="subaccReport">
+                    <p:column style="width:10vh ;text-align: right;font-size:1.8vh" headerText="#{userData.userDDs['DATE']}">
+                        <h:outputText value="#{subaccReport.date}">
+                            <f:convertDateTime id="datee"  pattern="dd-MM-yyyy"  />
+                        </h:outputText>
+                    </p:column>
+
+
+                    <p:column style="width: 10vh;text-align: right;font-size:1.8vh" headerText="#{userData.userDDs['DOCUMENT_NUMBER']}">
+                        <h:outputText value="#{subaccReport.id}" style="font-size: 12px"/>
+                    </p:column>
+
+                    <p:column style="width:15vh; text-align: right;font-size:15px" headerText="#{userData.userDDs['NOTE']}">
+                        <h:outputText value="#{subaccReport.remark}" style="font-size: 12px"/>
+                    </p:column>
+
+                    <p:column style="width: 10vh;text-align: right;font-size:1.8vh" headerText="#{userData.userDDs['DEBIT']}">
+                        <h:outputText value="#{subaccReport.debitAmount}" style="font-size: 12px"/>
+                    </p:column>
+
+                    <p:column style="width: 10vh;text-align: right;font-size:1.8vh" headerText="#{userData.userDDs['CREDIT']}">
+                        <h:outputText value="#{subaccReport.creditAmount}" style="font-size: 12px"/>
+                    </p:column>
+
+                    <p:column style="width: 10vh;text-align: right;font-size:1.8vh" headerText="#{userData.userDDs['BALANCE']}">
+                        <h:outputText value="#{subaccReport.balance}" style="font-size: 12px"/>
+                    </p:column>
+
+
+                    <p:columnGroup type="footer">
+                        <p:row>
+                            <p:column colspan="3" style="text-align:right" footerText="#{userData.userDDs['TOTAL']}  :" />
+                            <p:column id="totalDebit" footerText="#{stockMB.totalDebit}" />
+                            <p:column id="totalCredit" footerText="#{stockMB.totalCredit}" />
+                            <p:column />
+                        </p:row>
+                    </p:columnGroup>
+
+                </p:dataTable>
+            </h:form>
+        </h:body>
+    </ui:define>
+</ui:composition>
+

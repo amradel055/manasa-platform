@@ -1,0 +1,541 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form  id="form" dir="#{userData.dir}"  class='formmargin'>
+      
+        
+            <p:fieldset  legend=" #{userData.userDDs['ITEM_SALE_GROUP']}"
+
+                         style=" position: relative">
+
+
+                <div  id="firstSegment" class="ui-g-12 ui-g-nopad firstset">
+                    <div class="ui-g">
+                        
+                        
+    <div class="ui-g-6 ui-xl-6">
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+ <p:autoComplete style="width:34%!important" 
+
+                                                    dropdown="true"
+                                                    converter="#{InvItemSalesReportMB.delegatesSalesConverter}"
+                                                    value="#{InvItemSalesReportMB.invItemSalesSearchBean.salesPersonFrom}"
+
+                                                    var="person"
+                                                    itemLabel="#{person}" 
+                                                    itemValue="#{person}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{InvItemSalesReportMB.completeDelegatesSales}" >
+
+                                    </p:autoComplete>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 105px;" value="#{userData.userDDs['FROM_SALEPER']}"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+     <p:autoComplete style="width:34%!important" 
+
+                                                    dropdown="true"
+                                                    converter="#{InvItemSalesReportMB.delegatesSalesConverter}"
+                                                    value="#{InvItemSalesReportMB.invItemSalesSearchBean.salesPersonTo}"
+
+                                                    var="person"
+                                                    itemLabel="#{person}" 
+                                                    itemValue="#{person}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{InvItemSalesReportMB.completeDelegatesSales}" >
+                                    </p:autoComplete>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 105px" value="#{userData.userDDs['TO_SALEPER']}"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+  <p:autoComplete style="width:34%!important " 
+                                                    dropdown="true"
+                                                    converter="#{InvItemSalesReportMB.invInventoryConverter}"
+                                                    value="#{InvItemSalesReportMB.invItemSalesSearchBean.inventoryFrom}"
+                                                    var="inventory"
+                                                    itemLabel="#{inventory}" 
+                                                    itemValue="#{inventory}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{InvItemSalesReportMB.completeInventory}" >
+                                    </p:autoComplete>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 105px;" value="#{userData.userDDs['FROM_REPOS_NO']}"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+      <p:autoComplete style="width:34%!important " 
+                                                    dropdown="true"
+                                                    converter="#{InvItemSalesReportMB.invInventoryConverter}"
+                                                    value="#{InvItemSalesReportMB.invItemSalesSearchBean.inventoryTo}"
+                                                    var="inventory"
+                                                    itemLabel="#{inventory}" 
+                                                    itemValue="#{inventory}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{InvItemSalesReportMB.completeInventory}" >
+                                    </p:autoComplete>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 105px" value="#{userData.userDDs['TO_REPOS_NO']}"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+ <p:autoComplete id="purchaseIdFrom"
+                                                    style="width:34%!important " 
+                                                    dropdown="true"
+
+                                                    converter="#{InvItemSalesReportMB.invInvoiceSalesConverter}"
+                                                    value="#{InvItemSalesReportMB.invItemSalesSearchBean.salesInvoiceFrom}"
+
+                                                    var="purchasePerson"
+                                                    itemLabel="#{purchasePerson}" 
+                                                    itemValue="#{purchasePerson}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{InvItemSalesReportMB.completeSalesInvoice}">
+                                    </p:autoComplete>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 105px;" value="#{userData.userDDs['FROM_INVOI_NO']}"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+   <p:autoComplete id="purchaseIdTo"
+                                                    style="width:34%!important " 
+                                                    dropdown="true"
+
+                                                    converter="#{InvItemSalesReportMB.invInvoiceSalesConverter}"
+                                                    value="#{InvItemSalesReportMB.invItemSalesSearchBean.salesInvoiceTo}"
+
+                                                    var="purchasePerson"
+                                                    itemLabel="#{purchasePerson}" 
+                                                    itemValue="#{purchasePerson}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{InvItemSalesReportMB.completeSalesInvoice}">
+                                    </p:autoComplete>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 105px" value="#{userData.userDDs['TO_INVOI_NO']}"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+  <p:selectOneMenu style="width:35%!important "
+                                                     id="invoiceTypeFrom" 
+                                                     value ="#{InvItemSalesReportMB.invItemSalesSearchBean.paymentTypeFrom}">                                                             
+                                        <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"/>
+                                        <f:selectItem itemLabel="#{userData.userDDs['CASH']}"  itemValue="0"  />                            
+                                        <f:selectItem itemLabel="#{userData.userDDs['POSTPONE']}" itemValue="1" />
+                                        <f:selectItem itemLabel="#{userData.userDDs['DECOM_CREDIT']}" itemValue="2" />
+                                    </p:selectOneMenu>    
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 105px;" value="#{userData.userDDs['FROM_INVOI_TYP']}"/>
+
+                                </div>
+                            </div>
+                        </div>
+
+                      
+    <div class="ui-g-6 ui-xl-6">
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+   <p:selectOneMenu style="width:35%!important " id="invoiceTypeTo" 
+                                                     value ="#{InvItemSalesReportMB.invItemSalesSearchBean.paymentTypeTo}">    
+                                        <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"/>
+                                        <f:selectItem itemLabel="#{userData.userDDs['CASH']}"  itemValue="0"  />                            
+                                        <f:selectItem itemLabel="#{userData.userDDs['POSTPONE']}" itemValue="1" />
+                                        <f:selectItem itemLabel="#{userData.userDDs['DECOM_CREDIT']}" itemValue="2" />
+                                    </p:selectOneMenu>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 105px" value="#{userData.userDDs['TO_INVOI_TYP']}"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+   <p:calendar pattern="dd/MM/yyyy" 
+                                                value="#{InvItemSalesReportMB.invItemSalesSearchBean.dateFrom}"
+                                                style="width: 50%">
+
+                                    </p:calendar>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel  style="width: 100px;" value="#{userData.userDDs['FROM_DATE']}"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+   <p:calendar pattern="dd/MM/yyyy" 
+                                                value="#{InvItemSalesReportMB.invItemSalesSearchBean.dateTo}"
+                                                style="width: 50%">
+
+                                    </p:calendar>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel  style="width: 100px" value="#{userData.userDDs['TO_DATE']}"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+  <p:selectBooleanCheckbox id="showReportCheck"  value="#{InvItemSalesReportMB.invItemSalesSearchBean.showReport}">
+                                    </p:selectBooleanCheckbox>
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 120px;" value="#{userData.userDDs['TOTAL_SALE_REP']}"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+   <h:panelGroup id="shortReport">
+
+                                    <p:selectBooleanCheckbox id="shortReportCheck" value="#{InvItemSalesReportMB.invItemSalesSearchBean.shortReport}">
+                                    </p:selectBooleanCheckbox>
+
+                                </h:panelGroup> 
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:outputLabel style="width: 105px" value="مجموعة مختصرة"/>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-xl-12">
+                                <div class="ui-g-6 ui-xl-6">
+
+                                </div>
+                                <div class="ui-g-6 ui-xl-6">
+                                    <p:commandButton value="رسم بياني" update="@form" oncomplete="PF('dlg1').show()" style=""/>
+
+                                </div>
+                            </div>
+                         
+                        </div>
+                        
+                    </div>
+                    <p:dialog 
+                                class="ui-dialog"
+                                modal="true"
+                              position='center,center'
+                              
+                              header="رسم بياني" widgetVar="dlg1"
+                              style="left: 50%;top: 50%;">
+
+                        <div  id="donutchart" style="width: 75vw; height: 650px;"></div>
+
+                        <p:commandButton  class="printButton"
+                                          id="PrintC"
+                                          ajax="false"
+                                          onclick="form.target = '_blank'"  
+                                          value="#{userData.userDDs['PRINT']}" 
+                                          actionListener="#{InvItemSalesReportMB.exportChartPDF}"
+                                          title="#{userData.userDDs['PRINT']}"
+                                          immediate="true" />
+                    </p:dialog> 
+                </div>
+
+           
+                        <div style="text-align: center">
+
+                        <p:commandButton   class="searchButtons"  
+                                           title="#{userData.userDDs['SEARCH']}"
+                                           action="#{InvItemSalesReportMB.search()}"
+                                           id="saveB"
+                                           value="#{userData.userDDs['SEARCH']}"
+                                           update="@form" 
+                                             />
+
+                        <p:commandButton  class="newButtons"
+                                          id="NewB"
+                                          title="#{userData.userDDs['NEW']}" 
+                                          immediate="true" 
+                                          action="#{InvItemSalesReportMB.reset()}"
+                                          update="form"
+                                          value="#{userData.userDDs['NEW']}"
+                                         />
+
+                        <p:commandButton  class="printButtons"
+                                          id="PrintB"
+                                          ajax="false"
+                                          onclick="form.target = '_blank'"  
+                                          value="#{userData.userDDs['PRINT']}" 
+                                          actionListener="#{InvItemSalesReportMB.exportPDF}"
+                                          title="#{userData.userDDs['PRINT']}"
+                                          immediate="true" />
+
+                        <p:commandButton  class="closeButtons"
+                                          id="CloseB"
+                                          title="#{userData.userDDs['BACK']}"
+                                          action="exit"
+                                          value="#{userData.userDDs['BACK']}"/>
+                        <h:commandLink  class="sdcreenimg" style="margin-right: 4px;">  
+                            <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                            <p:dataExporter type="xls"
+                                            target="itemSalesReportTable" 
+                                            fileName=" تقرير مبيعات الاصناف"
+                                            postProcessor="#{InvItemSalesReportMB.postProcessXLS}" />  
+                        </h:commandLink>
+
+                        <p:blockUI block="form" trigger="saveB NewB PrintB CloseB shortReportCheck showReportCheck" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI> 
+
+                        </div>
+              
+            </p:fieldset>
+
+            <p:fieldset id="reportDB"  style="margin-top:2%">
+                <p:dataTable 
+                    rendered="#{InvItemSalesReportMB.invItemSalesSearchBean.showReport eq false}"
+                    draggableColumns="true" 
+                    paginator="true"
+                    rows="20"
+                    var="itemSalesReportTable" 
+                    widgetVar="itemSalesReportTable"  
+                    rowKey="#{itemSalesReportTable}"
+                    rowIndexVar="index" 
+                    value="#{InvItemSalesReportMB.itemSalesViewBeanList}" 
+                    dir="rtl" 
+                    emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                    id="itemSalesReportTable"
+                    rowStyleClass="#{not ( itemSalesReportTable.groupName eq null) and InvItemSalesReportMB.invItemSalesSearchBean.shortReport eq false ? 'colored' : null} ">
+                    <f:facet name="header">
+
+
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('itemSalesReportTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+
+                    </f:facet>
+
+                    <p:column   style="width: 10vh;text-align: right;font-size: 2.2vh;border-radius: 0px;" headerText="#{userData.userDDs['GROUP_NAME']}" 
+
+                                filterBy="#{itemSalesReportTable.groupName}" 
+                                filterMatchMode="contains" 
+                                sortBy="#{itemSalesReportTable.groupName}"
+                                filterable="false">
+
+                        <p:outputLabel value="#{itemSalesReportTable.groupName}" />
+                    </p:column>
+
+                    <p:column   style="width: 8vh;text-align: right;font-size: 1.8vh;border-radius: 0px;" headerText="#{userData.userDDs['INVOICE_NO']}" 
+
+                                filterBy="#{itemSalesReportTable.serial}" 
+                                filterMatchMode="contains" 
+                                sortBy="#{itemSalesReportTable.serial}"
+                                filterable="false">
+
+                        <p:outputLabel value="#{itemSalesReportTable.serial}" />
+                    </p:column>
+
+
+                    <p:column style="width: 12vh;text-align: right;font-size: 1.8vh;border-radius: 0px;" 
+                              headerText="#{userData.userDDs['INVOICE_DATE']}"
+
+                              filterBy="#{itemSalesReportTable.date}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{itemSalesReportTable.date}"
+                              filterable="false">
+
+                        <p:outputLabel value="#{itemSalesReportTable.date}">
+                            <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                        </p:outputLabel>
+                    </p:column>
+
+                    <p:column style="width: 12vh;text-align: right;font-size: 1.8vh;border-radius: 0px;" filterStyle="display:none"
+                              headerText="#{userData.userDDs['ITEM_NUMBER']}"
+
+                              filterBy="#{itemSalesReportTable.itemBarcode}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{itemSalesReportTable.itemBarcode}"
+                              filterable="false">
+
+                        <p:outputLabel value="#{itemSalesReportTable.itemBarcode}" />
+                    </p:column>
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh;border-radius: 0px;" 
+                              headerText="#{userData.userDDs['ITEM_NAME']}" 
+
+                              filterBy="#{itemSalesReportTable.itemName}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{itemSalesReportTable.itemName}"
+                              filterable="false">
+
+                        <p:outputLabel value="#{itemSalesReportTable.itemName}" />
+                    </p:column>
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh;border-radius: 0px;" 
+                              headerText="#{userData.userDDs['UNIT']}" 
+
+                              filterBy="#{itemSalesReportTable.detailUnitName}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{itemSalesReportTable.detailUnitName}"
+                              filterable="false">
+
+                        <p:outputLabel value="#{itemSalesReportTable.detailUnitName}" >
+
+                        </p:outputLabel>
+                    </p:column>  
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh;border-radius: 0px;" 
+                              headerText="#{userData.userDDs['QUANTITY']}"
+
+                              filterBy="#{itemSalesReportTable.detailItemQuantity}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{itemSalesReportTable.detailItemQuantity}"
+                              filterable="false">
+
+                        <p:outputLabel value="#{itemSalesReportTable.detailItemQuantity}" >
+                        </p:outputLabel>                           
+                    </p:column>
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh;border-radius: 0px;"  headerText="#{userData.userDDs['UNIT_PRICE']}"
+
+                              filterBy="#{itemSalesReportTable.cost}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{itemSalesReportTable.cost}"
+                              filterable="false">
+
+                        <p:outputLabel value="#{itemSalesReportTable.cost}" />
+
+                    </p:column>
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh;border-radius: 0px;"  headerText="#{userData.userDDs['DISCOUNT']}"
+
+
+                              filterBy="#{itemSalesReportTable.discount}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{itemSalesReportTable.discount}"
+                              filterable="false">
+
+                        <p:outputLabel value="#{itemSalesReportTable.discount}" />
+
+                    </p:column>
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh;border-radius: 0px;"  headerText="#{userData.userDDs['TOTAL']}"
+
+                              filterBy="#{itemSalesReportTable.net}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{itemSalesReportTable.net}"
+                              filterable="false">
+
+                        <p:outputLabel value="#{itemSalesReportTable.net}" />
+                    </p:column>
+                    <p:columnGroup type="footer">
+                        <p:row>
+                            <p:column style="border-radius: 0px;" colspan="9" footerText="#{userData.userDDs['TOTAL']}  :" />
+
+                            <p:column footerText="#{InvItemSalesReportMB.total}"  style="font-size: 1.4vh;border-radius: 0px;" />
+                        </p:row>
+                    </p:columnGroup>
+                </p:dataTable>
+
+
+
+                <p:dataTable style="margin-top: 2%"
+                             rendered="#{InvItemSalesReportMB.invItemSalesSearchBean.showReport eq true}"
+                             draggableColumns="true" 
+                             var="itemSalesReportTable2" 
+                             widgetVar="itemSalesReportTable2"  
+                             rowKey="#{itemSalesReportTable2}"
+                             rowIndexVar="index" 
+                             value="#{InvItemSalesReportMB.itemSalesViewBeanList}" 
+                             dir="rtl" 
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                             id="itemSalesReportTable2"
+                             rowStyleClass="#{not ( itemSalesReportTable2.groupName eq null) and InvItemSalesReportMB.invItemSalesSearchBean.shortReport eq false ? 'colored' : null} ">
+                    <p:column style="width: 12vh;text-align: right;font-size: 1.8vh" filterStyle="display:none"
+                              headerText="#{userData.userDDs['GROUP_NAME']}" >
+                        <p:outputLabel value="#{itemSalesReportTable2.groupName}" />
+                    </p:column>
+                    <p:column   style="width: 8vh;text-align: right;font-size: 1.8vh" headerText="#{userData.userDDs['INVOICE_NO']}" >
+                        <p:outputLabel value="#{itemSalesReportTable2.serial}" />
+                    </p:column>
+
+                    <p:column style="width: 12vh;text-align: right;font-size: 1.8vh" filterStyle="display:none"
+                              headerText="#{userData.userDDs['ITEM_NUMBER']}" >
+                        <p:outputLabel value="#{itemSalesReportTable2.itemCode}" />
+                    </p:column>
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh" 
+                              headerText="#{userData.userDDs['ITEM_NAME']}" >
+                        <p:outputLabel value="#{itemSalesReportTable2.itemName}" />
+                    </p:column>
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh" 
+                              headerText="#{userData.userDDs['UNIT']}" >
+                        <p:outputLabel value="#{itemSalesReportTable2.itemUnitName}" >
+
+                        </p:outputLabel>
+                    </p:column>  
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh" 
+                              headerText="#{userData.userDDs['QUANTITY']}">
+                        <p:outputLabel value="#{itemSalesReportTable2.itemQuantity}" >
+                        </p:outputLabel>                           
+                    </p:column>
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh"  headerText="#{userData.userDDs['TOTAL']}" >
+                        <p:outputLabel value="#{itemSalesReportTable2.net}" />
+                    </p:column>
+                    <p:columnGroup type="footer">
+                        <p:row>
+                            <p:column colspan="6" footerText="#{userData.userDDs['TOTAL']}  :" />
+
+                            <p:column footerText="#{InvItemSalesReportMB.total}"  style="font-size: 1.4vh" />
+                        </p:row>
+                    </p:columnGroup>
+                </p:dataTable>
+
+            </p:fieldset>
+            <script type="text/javascript">
+                google.charts.load("current", {packages: ["corechart"]});
+                google.charts.setOnLoadCallback(drawChart);
+                function drawChart() {
+                    var data = google.visualization.arrayToDataTable(
+                #{InvItemSalesReportMB.pieChartsRows}
+                    );
+
+                    var options = {
+                        title: 'مبيعات الاصناف حسب المحموعات',
+                        pieHole: 0.4,
+                    };
+
+                    var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
+                    chart.draw(data, options);
+                }
+            </script>
+
+        </h:form>
+    </ui:define>
+</ui:composition>

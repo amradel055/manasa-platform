@@ -1,0 +1,158 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+
+
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form dir="RTL" style="margin-right: 20px" id="form" >
+            <p:fieldset  legend="بيان انتاج حسب الفاتوره " id="stages"  style=" position: relative">
+
+                <p:messages id="messages" showDetail="true" closable="true"/> 
+
+
+
+                <div class="ui-g-6 ui-xl-6">
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
+
+
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+
+                            <p:commandButton     class="searchButton" id="search" 
+                                                 value="بحث" 
+                                                 icon="fa fa-fw fa-search"
+                                                 action="#{productionOfInvoiceReportMB.search()}"
+                                                 update="detail messages"
+                                                 >
+
+                            </p:commandButton>
+                            <h:commandLink  class="sdcreenimg">  
+                                <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                                <p:dataExporter type="xls"
+                                                target="detail" 
+                                                fileName="بيان انتاج حسب الفاتوره "
+                                                postProcessor="#{productionOfInvoiceReportMB.postProcessXLS}" />  
+                            </h:commandLink> 
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="ui-g-6 ui-xl-6">
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
+
+                            <p:inputText value="#{productionOfInvoiceReportMB.productionDTO.fromInvoice.serial}" />
+
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel style="width: 50px;margin-right: 1%" value="الفاتوره"/>
+
+
+
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </p:fieldset>
+            <!-- begin table -->
+            <p:fieldset id="fieldSetId" style="margin-bottom:20px" legend="تفاصيل البضاعه">
+                <p:dataTable id="detail"
+                             widgetVar="detail"
+                             style="margin-bottom:20px"
+                             var="detail"
+                             rowIndexVar="index" 
+                             dir="rtl" 
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                             editable="true"
+                             editMode="cell"
+                             selectionMode="single"
+                             sortBy="#{1}" 
+                             rowKey="#{detail}"
+                             value="#{productionOfInvoiceReportMB.proProductionTransactionOfInvoiceList}"
+
+
+                             >
+                    <f:facet name="header" >
+                        <p:commandButton  id="addnew"
+                                          style="float: right"
+                                          icon="fa fa-plus"
+                                          class="saddButton"
+                                          title="#{userData.userDDs['ADD']}"    
+                                          update="detail"
+                                          process="@this"
+                                          />
+                        <h:commandLink  class="sdcreenimg" >  
+                            <p:graphicImage name="/img/excel.jpg" width="25"/>  
+                            <p:dataExporter type="xls"
+                                            target="detail" 
+                                            fileName=' اذن استلام بضاعة' preProcessor="#{invAddingOrderFormMB.preProcessXLS()}"
+                                            postProcessor="#{invAddingOrderFormMB.postProcessXLS}" />  
+                        </h:commandLink>
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('invAddingOrderDetailsTable').filter()" style="width:170px" />
+                        </p:outputPanel>
+
+                    </f:facet>
+                    <p:column  style="width:12vh;font-size:1.6vh;text-align: -webkit-auto"  headerText="الفاتورة  " 
+                               >
+                        <p:outputLabel value="#{detail.invPurchaseInvoiceserial}" />
+                    </p:column>
+
+                    <p:column  style="width:12vh;font-size:1.6vh;text-align: -webkit-auto"  headerText="التاريخ " 
+                               >
+                        <p:outputLabel value="#{detail.date}">
+                            <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                        </p:outputLabel>
+                    </p:column>
+                    <p:column  style="width:12vh;font-size:1.6vh;text-align: -webkit-auto"  headerText="المرحله  " 
+                               >
+                        <p:outputLabel value="#{detail.productionStagesName}" />
+                    </p:column>
+
+                    <p:column  style="width:12vh;font-size:1.6vh;text-align: -webkit-auto"  headerText="الموظف" 
+                               >
+                        <p:outputLabel value="#{detail.userName}"/>
+                    </p:column>
+                    <p:column  style="width:12vh;font-size:1.6vh;text-align: -webkit-auto"  headerText="الصنف "
+
+                               >
+                        <p:outputLabel value="#{detail.itemId}" />
+                    </p:column>
+                    <p:column  style="width:12vh;font-size:1.6vh;text-align: -webkit-auto"  headerText="اسم الصنف" 
+                               >
+                        <p:outputLabel value="#{detail.itemName}"/>
+                    </p:column>
+                    <p:column  style="width:12vh;font-size:1.6vh;text-align: -webkit-auto"  headerText="الكميه المنفذه" 
+                               >
+                        <p:outputLabel value="#{detail.numberExcute}"/>
+                    </p:column>
+                </p:dataTable>
+                <div class="ui-g-12 ui-md-6">
+                    <p:commandButton class="printButton"  icon="fa fa-fw fa-print"
+                                     onclick="form.target = '_blank'" ajax="false"
+                                     value="#{userData.userDDs['PRINT']}"
+                                     actionListener="#{productionOfInvoiceReportMB.exportPDF(actionEvent)}"/>
+                </div>
+
+
+
+            </p:fieldset>
+
+        </h:form>
+
+    </ui:define>
+</ui:composition>
+

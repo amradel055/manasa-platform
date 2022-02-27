@@ -1,0 +1,319 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+     
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form id="form" dir="#{userData.dir}" class='formmargin'>  
+            <div style=" position: absolute;left: 20px"> 
+
+                <p:commandButton  style="z-index: 2;
+                                  margin-top: 22%;
+                                  color: #035c70!important; 
+                                  background-color: #223238!important;
+                                  border: 1px solid #22323a!important;
+                                  background: #22323a 50% 50% repeat-x!important;"
+                                  icon="fa fa-fw fa-home"
+                                  title="#{userData.userDDs['HOME']}"
+                                  class="smhomeButton" 
+                                  action="exit" />  
+            </div>
+            <p:fieldset legend="#{userData.userDDs['REVIEW_ACC_RESTR']}">
+                <div class="ui-g-12 ui-g-nopad">
+
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-4" style="margin-top: 12px;">
+                            <h:panelGroup >
+                                <p:outputLabel  value="مراجعة بالتاريخ" style="margin-right: 2%;"/>
+                            </h:panelGroup>
+                            <h:panelGroup >
+                                <p:selectBooleanCheckbox value="#{generalJournalBean.reviewByDate}" style ="margin-right: 2%">
+                                    <p:ajax   update="@form" />
+                                </p:selectBooleanCheckbox>
+                            </h:panelGroup></div>
+                        <div class="ui-g-12 ui-md-8">
+                            <p:fieldset id="radioLinks"  style="width: 78%;margin-bottom: 18px;margin-top: 0px;border-radius:5px">
+                                <p:selectOneRadio id="console" 
+                                                  value ="#{generalJournalBean.revisionAccount}">
+
+                                    <f:selectItem itemLabel="#{userData.userDDs['NOT_REVIEWED']}"  itemValue="0" />                            
+                                    <f:selectItem itemLabel="#{userData.userDDs['REVIEWED']}" itemValue="1" />
+                                    <f:selectItem itemLabel="#{userData.userDDs['ALL']}" itemValue="2" />
+                                    <p:ajax event="click" listener="#{generalJournalBean.load}" update="form"/> 
+                                </p:selectOneRadio>
+                            </p:fieldset>
+                        </div>
+
+                    </div></div>
+
+                <div class="ui-g-12 ui-g-nopad">
+
+                    <div class="ui-g">
+
+
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup rendered="#{generalJournalBean.reviewByDate}">   
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 91px;;margin-bottom:2%;margin-right: 2.5%;" value="#{userData.userDDs['YEAR_FROM']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:calendar style="width: 49%!important" id="dateFrom" value="#{generalJournalBean.dateFrom}" pattern="dd/MM/yyyy" />
+
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup rendered="#{generalJournalBean.reviewByDate}"> 
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 91px;;margin-bottom:2%" value="#{userData.userDDs['YEAR_TO']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:calendar style="width:49%!important" id="dateTo" value="#{generalJournalBean.dateTo}" pattern="dd/MM/yyyy" />
+
+                                </h:panelGroup>  
+                            </h:panelGroup>   
+
+                        </div>
+                    </div>
+                </div>
+
+            </p:fieldset>
+            <p:fieldset style="margin-top: 20px"> 
+                <div>
+                    <p:messages autoUpdate="true"  id="msg" 
+                                showDetail="true" closable="true" rendered="true"/>
+                </div>
+
+
+                <p:dataTable 
+                    draggableColumns="true"
+                    widgetVar="generalJournaltable" 
+                    id="generallist" 
+                    rows="#{userData.rowListMasterDetails}"  
+
+                    var="general" 
+                    dir="#{userData.dir}" 
+                    selection="#{generalJournalBean.generalReviewList}"                              
+                    rowKey="#{general}" 
+                    value="#{generalJournalBean.generalList}" 
+
+                    paginator="true" 
+                    emptyMessage="#{userData.userDDs['EMPTY_TABLE']}">
+
+                    <p:ajax  event="rowSelect"   listener="#{generalJournalBean.onRowSelect}"  update="@form"/>
+                    <p:ajax event="rowUnselect" listener="#{generalJournalBean.onRowUnselect}"  />
+
+
+
+                    <f:facet name="header">  
+                        <p:commandButton class="reviewdone"
+                                         id="b2"  update="@form"
+                                         value="#{userData.userDDs['REVIEWED']}"
+                                         title="#{userData.userDDs['REVIEWED']}" 
+                                         actionListener="#{generalJournalBean.saveReviewAccounting()}" 
+                                         style="float:right;"  
+                                         rendered="#{userData.userScreens['reviewaccounting'].add or userData.isAdmin}" />
+
+                        <p:commandButton class="cancelreviewbutton" id="b3" 
+                                         value="#{userData.userDDs['CANCEL_REVIEW']}"
+                                         title="#{userData.userDDs['CANCEL_REVIEW']}" 
+                                         actionListener="#{generalJournalBean.undoReview()}"
+                                         style="float:right;" 
+                                         rendered="#{userData.userScreens['reviewaccounting'].add 
+                                                     or userData.isAdmin}" 
+                                         update="@form"/>
+
+                        <p:selectOneMenu id="com" value="#{generalJournalBean.selectedCompany}"  style="float:right" rendered="#{userData.isAdmin}">
+                            <p:ajax listener="#{generalJournalBean.onCompanyChange}" update=":form:generallist" />
+                            <f:selectItem itemLabel="Select Company"  noSelectionOption="true" />
+                            <f:selectItems value="#{generalJournalBean.companies}"  var="com" itemLabel="#{com.name}" itemValue="#{com.id}"/>
+                        </p:selectOneMenu>
+                        <p:outputPanel >
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large;"/>
+                            <p:inputText id="globalFilter" a:autofocus="true" onkeyup="PF('generalJournaltable').filter()" style="height: 25px!important;width: 30%!important;" />
+                        </p:outputPanel>
+                    </f:facet>
+                    <p:column  selectionMode="multiple" toggleable="false"
+                               style="width:2vh;background-color: #fff;padding-right: 5px;"  />
+
+                    <p:column headerText="#{userData.userDDs['GENERAL_NUMBER']}" style="width: 8vh;font-size: 1.4vh;border-radius: 0px" filterMatchMode="contains"
+                              filterBy="#{general.serial}" filterStyle="display:none" sortBy="#{general.serial}">
+                        <h:outputText value="#{general.serial}"  style="font-size: 1.2vh"/>
+
+                    </p:column>
+                    <p:column style="width: 12vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px" filterStyle="display:none" sortBy="#{general.generalData}" filterBy="#{general.generalData}"  filterMatchMode="contains" headerText=" #{userData.userDDs['GENERAL_DATE']} ">
+                        <h:outputText id="datee" value="#{general.generalData}" rendered="#{not general.markEdit}" style="font-size: 1.2vh"> 
+                            <f:convertDateTime id="datee"  pattern="yyyy-MM-dd"/> 
+                        </h:outputText>
+                        <p:calendar id="date" value="#{general.generalData}" pattern="MM/dd/yyyy" rendered="#{general.markEdit}" style="width:100%"/>
+                    </p:column>
+                    <p:column style="width: 12vh;font-size: 1.4vh;text-align: -webkit-auto;border-radius: 0px" filterStyle="display:none" sortBy="#{general.generalType.name}" filterBy="#{general.generalType.name}"  filterMatchMode="contains" headerText="#{userData.userDDs['GERNAL_TYPE']}">
+                        <h:outputText value="#{general.generalType.name}" rendered="#{not general.markEdit}"/>
+                        <p:selectOneMenu style="font-size: 1.2vh" id="acc" filter="true" filterMatchMode="startsWith" value="#{generalJournalBean.selectedDocumentsType}"  rendered="#{general.markEdit}"  >
+                            <p:ajax listener="#{generalJournalBean.ondocumentsTypesChange}" update="generaldocument" />
+                            <f:selectItems value="#{generalJournalBean.documentsTypes}"  var="doc" itemLabel="#{doc.name}" itemValue="#{doc.id}"/>
+                        </p:selectOneMenu>
+                    </p:column>
+                    <p:column style="width: 12vh;font-size: 1.4vh;text-align: -webkit-auto;border-radius: 0px"  filterStyle="display:none" sortBy="#{general.generalDecument}" filterBy="#{general.generalDecument}"  filterMatchMode="contains" headerText="#{userData.userDDs['GERNAL_DECUMENT']}">
+                        <h:outputText id="generaldocument" value="#{generalJournalBean.generalDocument}" rendered="#{ general.markEdit}"/>
+                        <h:outputText value="#{general.generalDecument}" rendered="#{ not general.markEdit}" style="font-size: 1.2vh"/>
+                    </p:column>
+                    <p:column style="width: 15vh;font-size: 1.4vh;text-align: -webkit-auto;border-radius: 0px"   headerText="#{userData.userDDs['GERNAL_STATEMENT']}" filterStyle="display:none" sortBy="#{general.generalStatement}" filterBy="#{general.generalStatement}"  filterMatchMode="contains">
+                        <h:outputText value="#{general.generalStatement}" rendered="#{not general.markEdit}" style="font-size: 1.2vh"/>
+                        <p:inputText value="#{general.generalStatement}" rendered="#{general.markEdit}" style="width:100%"/>
+                    </p:column>
+                    <p:column style="width: 15vh;font-size: 1.4vh;text-align: -webkit-auto;border-radius: 0px"   headerText="#{userData.userDDs['REVIEW']}" filterStyle="display:none" sortBy="#{general.generalStatement}" filterBy="#{general.generalStatement}"  filterMatchMode="contains">
+                        <h:outputText value="#{general.postFlagReview}" rendered="#{not general.markEdit}" style="font-size: 1.2vh"/>
+                    </p:column>
+
+
+                    <p:blockUI block="form" trigger="checkB" animate="true" >
+
+                        <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                    </p:blockUI>
+
+                </p:dataTable>
+
+            </p:fieldset>
+            <p:fieldset id="generalDetailsFeildSet" legend="#{userData.userDDs['GENERAL_JOURNAL_DETAILS']}">
+                <div >
+                    <p:messages autoUpdate="true"  id="msgopp" showDetail="true" closable="true" rendered="#{generalJournalBean.showMessageDetails}"/>
+                </div>
+                <p:dataTable 
+                    draggableColumns="true" 
+                    widgetVar="generalJournalDetailstable" 
+                    id="generalDetails"   
+
+                    rowIndexVar="index" 
+                    var="gendetails" 
+                    dir="rtl" 
+                    selection="#{generalJournalBean.journalDetailSelected}" 
+                    selectionMode="single"   
+                    rowKey="#{gendetails}" 
+                    value="#{generalJournalBean.detailsList}" 
+
+                    scrollRows="20"
+                    scrollable="false"
+                    liveScroll="true"
+                    emptyMessage="#{userData.userDDs['EMPTY_TABLE']}">
+
+                    <p:ajax  event="rowSelect"   listener="#{generalJournalBean.onRowSelectDetails}"
+                             update="@form" />
+                    <p:ajax event="rowUnselect" listener="#{generalJournalBean.onRowUnselect}" />
+
+                    <f:facet name="header">
+                        <p:outputPanel >
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large"/>
+                            <p:inputText id="globalFilter" onkeyup="PF('generalJournalDetailstable').filter()" style="height: 25px!important;width: 30%!important;" />
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:column headerText="#" style="width: 5vh;font-size: 1.4vh;text-align: -webkit-auto;border-radius: 0px" >
+                        <h:outputText value="#{index + 1}" style="font-size: 1.2vh;font-weight: bold"  />
+                    </p:column>
+
+                    <p:column style="width: 8vh;font-size: 1.4vh;text-align: -webkit-auto;border-radius: 0px"  filterStyle="display:none"  filterBy="#{gendetails.glACCOUNTId.accNumber}"  filterMatchMode="contains" headerText="#{userData.userDDs['ACCOUNT_NUMBER']}">
+                        <h:outputText  value="#{gendetails.glACCOUNTId.accNumber}" rendered="#{not gendetails.markEdit}" style="font-size: 1.2vh;"/>
+
+                        <p:selectOneMenu filter="true" filterMatchMode="startsWith" id="acc" value="#{generalJournalBean.selectedAccount}"  style="width:95%" rendered="#{gendetails.markEdit}">
+                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" itemValue="" noSelectionOption="true" />
+                            <p:ajax listener="#{generalJournalBean.onGlAccountChange()}" update=":form:generalDetails:cost :form:generalDetails:cost1 :form:generalDetails:com :form:generalDetails:com1 :form:generalDetails:name :form:generalDetails:accassis :form:generalDetails:accassis4" />
+                            <f:selectItems value="#{generalJournalBean.glAccounts}"  var="acc" itemLabel="#{acc}" itemValue="#{acc.id}"/>
+                        </p:selectOneMenu>
+                    </p:column>
+                    <p:column style="width: 10vh;font-size: 1.4vh;text-align: -webkit-auto;border-radius: 0px"  filterStyle="display:none"  filterBy="#{gendetails.glACCOUNTId.name}"  filterMatchMode="contains" headerText="#{userData.userDDs['ACCOUNT_NAME']}">
+                        <h:outputText   value="#{gendetails.glACCOUNTId.name}" rendered="#{not gendetails.markEdit}" style="font-size: 1.2vh" />
+                        <h:outputText  id="name"  value="#{generalJournalBean.accountName}" rendered="#{gendetails.markEdit}"  style="font-size: 1.2vh"/>
+                    </p:column>
+                    <p:column style="width: 8vh;font-size: 1.4vh;text-align: -webkit-auto;border-radius: 0px"  id="com2" filterStyle="display:none"  filterBy="#{gendetails.costCenterId.code}"  filterMatchMode="contains" headerText="#{userData.userDDs['SINGLE_COST_CENTER']}">
+                        <h:outputText   value="#{gendetails.costCenterId.code}" rendered="#{not gendetails.markEdit}"  style="font-size: 1.2vh"/>
+                        <p:selectOneMenu filter="true" filterMatchMode="startsWith" id="cost1" value="#{generalJournalBean.selectedcostCenter}"  style="float:right" rendered="#{ gendetails.markEdit}">
+                            <p:ajax listener="#{generalJournalBean.onCostCenterChange()}" />
+                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" id="cost"  itemDisabled="#{not generalJournalBean.disableCC}" itemValue="" noSelectionOption="true" />
+                            <f:selectItems value="#{generalJournalBean.costCenterList}"  var="cost" itemLabel="#{cost.name} " itemValue="#{cost.id}"/>
+                        </p:selectOneMenu>
+                    </p:column>
+                    <p:column style="width: 8vh;font-size: 1.4vh;text-align: -webkit-auto;border-radius: 0px"  filterStyle="display:none" filterBy="#{gendetails.adminUnitId.code}"  filterMatchMode="contains" headerText="#{userData.userDDs['ADMIN_UNIT']}">
+                        <h:outputText  value="#{gendetails.adminUnitId.code}" rendered="#{not gendetails.markEdit}"  style="font-size: 1.2vh"/> 
+                        <p:selectOneMenu filter="true" filterMatchMode="startsWith" id="com1"  value="#{generalJournalBean.selectedadminUnit}"  style="width:100%" rendered="#{gendetails.markEdit}"  >
+                            <p:ajax listener="#{generalJournalBean.onAdminUnitChange()}" />
+                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" id="com" itemDisabled="#{not generalJournalBean.disableAdminU}" itemValue="" noSelectionOption="true"  />
+                            <f:selectItems value="#{generalJournalBean.glAdminunitlist}"  var="Admin" itemLabel="#{Admin.name}" itemValue="#{Admin.id}"/>
+                        </p:selectOneMenu>
+                    </p:column>
+                    <p:column style="width: 8vh;font-size: 1.4vh;text-align: -webkit-auto;border-radius: 0px"  id="accassis2" filterStyle="display:none"  filterBy="#{gendetails.glAssistantAccount.accNumber}"  filterMatchMode="contains" headerText="#{userData.userDDs['ASSISTANT_ACCOUNT']}">
+                        <h:outputText  value="#{gendetails.glAssistantAccount.accNumber}" rendered="#{not gendetails.markEdit}"  style="font-size: 1.2vh" /> 
+                        <p:selectOneMenu filter="true" filterMatchMode="startsWith" id="accassis" value="#{generalJournalBean.selectedAccountAssistant}" rendered="#{gendetails.markEdit}"  >
+                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" id="accassis4" itemDisabled="#{not generalJournalBean.disableAccount}" itemValue="" noSelectionOption="true" />
+                            <f:selectItems value="#{generalJournalBean.glAccounts}"  var="acc" itemLabel="#{acc.name}" itemValue="#{acc.id}"/>
+                        </p:selectOneMenu>
+                    </p:column>
+                    <p:column style="width: 10vh;font-size: 1.4vh;text-align: -webkit-auto;border-radius: 0px"  filterStyle="display:none"  filterBy="#{gendetails.debitAmount}"  filterMatchMode="contains" headerText="#{userData.userDDs['DEBIT_AMOUNT']}">
+                        <h:outputText value="#{gendetails.debitAmount}" rendered="#{not gendetails.markEdit}"  style="font-size: 1.2vh"/>
+                        <p:inputNumber id="debit" value="#{gendetails.debitAmount}" valueChangeListener="#{generalJournalBean.debitRender}" disabled="#{generalJournalBean.debitDisabled}" rendered="#{ gendetails.markEdit}"  style="width:100%">
+                            <p:ajax update="credit" />
+                        </p:inputNumber>
+                    </p:column>
+                    <p:column style="width: 10vh;font-size: 1.4vh;text-align: -webkit-auto;border-radius: 0px"  filterStyle="display:none" filterBy="#{gendetails.creditamount}"  filterMatchMode="contains" headerText="#{userData.userDDs['CREDIT_AMOUNT']}">
+                        <h:outputText   value="#{gendetails.creditamount}"  rendered="#{not gendetails.markEdit}"  style="font-size: 1.2vh"/>
+
+                        <p:inputNumber id="credit" value="#{gendetails.creditamount}" disabled="#{generalJournalBean.creditDisabled}" valueChangeListener="#{generalJournalBean.creditRender}" rendered="#{gendetails.markEdit}" style="width:100%" >
+                            <p:ajax update="debit" />
+                        </p:inputNumber>
+                    </p:column>
+                    <p:column style="width: 15vh;font-size: 1.4vh;text-align: -webkit-auto;border-radius: 0px"  headerText="#{userData.userDDs['DESCRIBTION']}">
+                        <h:outputText value="#{gendetails.discribtion}" rendered="#{not gendetails.markEdit}"  style="font-size: 1.2vh"/>
+                        <p:inputText value="#{gendetails.discribtion}" rendered="#{gendetails.markEdit}"  style="font-size: 1.2vh"/>
+                    </p:column>
+
+                    <p:columnGroup type="footer">
+                        <p:row >
+
+                            <p:column  style="border-radius: 0px"/>
+                            <p:column  style="border-radius: 0px"/>
+                            <p:column  style="text-align:right;border-radius: 0px" footerText="#{userData.userDDs['TOTAL']} " />
+                            <p:column  style="border-radius: 0px"/>
+                            <p:column  style="border-radius: 0px"/>
+                            <p:column  style="border-radius: 0px"/>
+                            <p:column style="border-radius: 0px" id="totalQuantity" footerText="#{generalJournalBean.summaryDebit}" />
+                            <p:column style="border-radius: 0px" id="valueSummary" footerText="#{generalJournalBean.summaryCredit}" />
+                            <p:column  style="border-radius: 0px"/>
+                        </p:row>
+                    </p:columnGroup>
+
+                </p:dataTable>
+                <p:panelGrid columns="10" rendered="#{generalJournalBean.view}" >
+                    <h:outputLabel  value="#{userData.userDDs['ADMIN_UNIT']}"  />
+                    <h:outputLabel value="#{generalJournalBean.journalDetailSelected.adminUnitId.name}"  /> 
+                    <h:outputLabel  value="#{userData.userDDs['CS_NAME']}"  />
+                    <h:outputLabel value="#{generalJournalBean.journalDetailSelected.costCenterId.name}" /> 
+
+                    <h:outputLabel value="العملة المحلية"   />
+                    <h:outputLabel value="#{generalJournalBean.journalDetailSelected.creditamountLocal}" 
+                                   rendered="#{generalJournalBean.viewCredit}"  /> 
+
+                    <h:outputLabel value="#{generalJournalBean.journalDetailSelected.debitAmountLocal}" 
+                                   rendered="#{generalJournalBean.viewDebit}" /> 
+
+                    <h:outputLabel value="المعدل"  />
+                    <h:outputLabel value="#{generalJournalBean.journalDetailSelected.rate}" 
+                                   style="width:100%" /> 
+
+                    <h:outputLabel  value="#{userData.userDDs['NAME_CURRENCY']}"   />
+                    <h:outputLabel value="#{generalJournalBean.journalDetailSelected.glACCOUNTId.currencyId.name}"  /> 
+                </p:panelGrid>
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>

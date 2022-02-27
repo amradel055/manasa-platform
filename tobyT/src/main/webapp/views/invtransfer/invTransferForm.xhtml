@@ -1,0 +1,303 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form style="margin-right:20px" id="form"  enctype="multipart/form-data"  dir="#{userData.dir}">
+            <div>
+                <p:messages id="messages" showDetail="true" closable="true" rendered="true"/>
+            </div>
+
+            <p:fieldset legend="#{userData.userDDs['TRANS_REQ_STORE']}" style="margin-bottom:20px">
+
+                <div  id="firstLine" class="ui-g-12 ui-g-nopad">
+
+                    <div class="ui-g">
+
+                        <div class="ui-g-12 ui-md-6">
+
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 55px" value="#{userData.userDDs['REQ_NO']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel id="serialNo" value="#{invTransferFormMB.invTransferDTO.serialNo}"/>
+                                </h:panelGroup>
+                            </h:panelGroup>
+
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 55px" value="#{userData.userDDs['DATEE']}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:calendar style="width: 48%" 
+                                                value="#{invTransferFormMB.invTransferDTO.transferDate}" pattern="dd/MM/yyyy" >
+                                        <p:ajax update="messages"/>
+                                    </p:calendar>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>              
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 55px" value="#{userData.userDDs['FROM_REPOS']}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:83%" id="invfrom" 
+                                                    dropdown="true"
+                                                    converter="#{invTransferFormMB.invInventoryDTOConverter}"
+                                                    value="#{invTransferFormMB.invTransferDTO.invFrom}"
+                                                    var="inventory"
+                                                    itemLabel="#{inventory}" 
+                                                    itemValue="#{inventory}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{invTransferFormMB.completeInventory}" >
+
+                                        <p:ajax  event="itemSelect" listener="#{invTransferFormMB.fillInventoryItem()}" />
+                                        <p:ajax  event="change" listener="#{invTransferFormMB.fillInventoryItem()}" />
+                                    </p:autoComplete>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 55px;margin-top: 15px" value="#{userData.userDDs['TO_REPOS']}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:83%" id="invto"
+                                                    dropdown="true"
+                                                    converter="#{invTransferFormMB.invInventoryDTOConverter}"
+                                                    value="#{invTransferFormMB.invTransferDTO.invTo}"
+                                                    var="inventory"
+                                                    itemLabel="#{inventory}" 
+                                                    itemValue="#{inventory}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{invTransferFormMB.completeInventory}" >
+                                        <p:ajax  event="itemSelect" listener="#{invTransferFormMB.validateChangeInventory()}" update="messages"/>
+                                        <p:ajax  event="change" listener="#{invTransferFormMB.validateChangeInventory()}" update="messages"/>
+                                    </p:autoComplete>
+                                </h:panelGroup>
+                            </h:panelGroup>
+
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 55px" value="#{userData.userDDs['NOTE']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText  style="width: 48%!important"
+                                                  id="ad11" 
+                                                  value="#{invTransferFormMB.invTransferDTO.remarks}" />
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                    </div>
+                </div>
+
+            </p:fieldset>
+
+            <p:fieldset  style="margin-top: 2%">
+
+                <p:dataTable var="invTransferTable"
+                             widgetVar="invTransferTable"
+                             rowIndexVar="index"
+                             selection="#{invTransferFormMB.invTransferDetailDTOSelected}"
+                             rows="#{userData.rowListCount}"
+                             paginator="true"
+                             dir="rtl"
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                             editable="true"
+                             editMode="cell"
+                             rowKey="#{invTransferTable.index}"
+                             value="#{invTransferFormMB.invTransferDTO.invTransferDetailDTOList}"
+                             id="invTransferTable">
+
+                    <f:facet name="header" >
+                        <p:commandButton class="saddButton" id="addnew"
+                                         icon="fa fa-plus"
+                                         action="#{invTransferFormMB.addRow()}"
+                                         title="#{userData.userDDs['ADD']}" 
+                                         style="float:right"
+                                         update="@form"
+                                         />
+
+                        <h:commandLink style="float: left" class="sdcreenimg">  
+                            <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                            <p:dataExporter type="xls"
+                                            target="invTransferTable" 
+                                            fileName=" طلب طلب التحويل"
+                                            postProcessor="#{invTransferFormMB.postProcessXLS}" />  
+                        </h:commandLink>
+
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('invTransferTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:ajax event="cellEdit" listener="#{invTransferFormMB.onCellEdit}" />
+
+                    <p:column style="width: 8vh;font-size: 1.8vh;text-align: -webkit-auto"
+                              id="serail"
+                              headerText="#{userData.userDDs['SERIAL']}">
+                        <h:outputText value="#{invTransferTable.serial}"  />
+                    </p:column>
+
+                    <p:column style="width: 12vh;font-size: 1.8vh;text-align: -webkit-auto" 
+                              id="itemNumber"
+                              headerText="#{userData.userDDs['ITEM_NUMBER']}"
+
+                              filterBy="#{invTransferTable.itemBarcode}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{invTransferTable.itemBarcode}"
+                              filterable="false">
+                        <p:autoComplete id="invItemNameIn"  
+
+                                        style="width:95%"
+                                        converter="#{invTransferFormMB.itemDTOConverter}"
+                                        value="#{invTransferTable.invItemId}" 
+                                        widgetVar="itemNumber"
+                                        var="item"
+                                        itemLabel="#{item}" 
+                                        itemValue="#{item}" 
+                                        forceSelection="true" 
+                                        completeMethod="#{invTransferFormMB.completeItemsData}" >
+                            <p:ajax  event="itemSelect" listener="#{invTransferFormMB.fillUnitItem()}" update="unit" />
+
+                        </p:autoComplete>   
+                    </p:column>
+
+
+                    <p:column headerText="وحدة الصــنف" style="width: 5vh;text-align: -webkit-auto" >
+                        <p:selectOneMenu style="width: 48%" id="unit"   value="#{invTransferTable.unitsItemsSelected}" >                                                             
+                            <f:selectItem itemLabel=" اخترالوحدة"/>
+                            <f:selectItems  value="#{invTransferTable.unitsItemseList}" 
+                                            var="unitDetail" itemValue="#{unitDetail.unitId}" itemLabel="#{unitDetail.unitName}"/>
+                            <p:ajax  event="itemSelect" listener="#{invTransferFormMB.fillUnitsItemsSelected()}" update="unit" />
+                        </p:selectOneMenu> 
+                    </p:column>
+
+                    <p:column style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto" 
+                              id="Quantity" headerText="#{userData.userDDs['QUANTITY']}"
+
+                              filterBy="#{invTransferTable.amount}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{invTransferTable.amount}"
+                              filterable="false">
+
+                        <p:inputText id="QuantityT"  
+                                     value="#{invTransferTable.amount}" 
+                                     style="width:95%">
+                            <p:ajax  event="blur" listener="#{invTransferFormMB.ValidateQuantity()}" update="@form"/>
+                        </p:inputText>   
+                    </p:column>
+
+
+                    <p:column style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto" id="Total" headerText="#{userData.userDDs['SELLING_PRICE']}"
+
+                              filterBy="#{invTransferTable.itemBarcode}" 
+                              filterMatchMode="contains" 
+                              sortBy="#{invTransferTable.itemBarcode}"
+                              filterable="false">
+
+                        <p:outputLabel value="#{invTransferTable.itemBarcode}" />
+                    </p:column>
+
+                    <p:columnGroup type="footer">
+                        <p:row>
+                            <p:column colspan="3" style="text-align:right" footerText="#{userData.userDDs['TOTAL']}  :" />
+                            <p:column id="totalQuantity" footerText="#{invTransferFormMB.invTransferDTO.total}" />
+                            <p:column/>
+                            <p:column/>
+                        </p:row>
+                    </p:columnGroup>
+
+                    <p:column style="width: 10vh;font-size: 1.8vh;text-align: -webkit-auto" >
+                        <p:commandButton  class="saddButton" id="b7" icon="fa fa-plus" title="#{userData.userDDs['ADD']}"
+                                          actionListener="#{invTransferFormMB.addRow()}" 
+                                          update="@form" />
+
+                        <p:commandButton  class="sdeleteButton" update="invTransferTable" title="#{userData.userDDs['DELETE']}"
+                                          action="#{invTransferFormMB.deleteRow()}" icon="fa fa-remove" 
+                                          immediate="true"
+                                          >
+                            <f:setPropertyActionListener value="#{invTransferTable}" 
+                                                         target="#{invTransferFormMB.invTransferDetailDTOSelected}"/>
+                            <p:confirm header="#{userData.userDDs['COFIGRATION']}" 
+                                       message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                        </p:commandButton>
+
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton title="#{userData.userDDs['YES']}"
+                                             type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton title="#{userData.userDDs['NO']}" 
+                                             type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column >
+
+                </p:dataTable>
+
+                <h:panelGroup class="centerButtons" style="margin-top: 1%">
+
+                    <p:commandButton  class="saveButton" id="saveB" 
+                                      title="#{userData.userDDs['SAVE']}" 
+                                      value="#{userData.userDDs['SAVE']}" 
+                                      icon="fa fa-fw fa-save" 
+                                      action="#{invTransferFormMB.save()}" 
+                                      update="@form"/>
+
+                    <p:commandButton  class="newButton" 
+                                      id="newN"
+                                      ajax="false"
+                                      icon="fa fa-fw fa-plus"
+                                      value="#{userData.userDDs['NEW']}" 
+                                      actionListener="#{invTransferFormMB.reset()}"
+                                      update="@form"/>
+
+
+                    <p:commandButton  class="printButton"
+                                      ajax="false"
+                                      onclick="form.target = '_blank'"  
+                                      icon="fa fa-fw fa-print"
+                                      value="#{userData.userDDs['PRINT']}" 
+                                      actionListener="#{invTransferFormMB.exportPDF}"
+                                      title="#{userData.userDDs['PRINT']}"
+                                      immediate="true" />
+
+                    <p:commandButton  class="deleteButton" 
+                                      id="cancel" 
+                                      title="#{userData.userDDs['CANCEL']}"
+                                      value="#{userData.userDDs['CANCEL']}" 
+                                      icon="fa fa-fw fa-backward"  
+                                      action="#{invTransferFormMB.backToList()}" 
+                                      update="@form"/>
+
+
+
+                </h:panelGroup>
+                <p:blockUI block="form" trigger="saveB" animate="true" >
+
+                    <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                </p:blockUI> 
+
+            </p:fieldset>
+
+
+        </h:form>
+    </ui:define>
+</ui:composition>

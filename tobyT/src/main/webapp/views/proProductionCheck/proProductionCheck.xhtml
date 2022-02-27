@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:body>
+            <h:form id="form" dir="RTL" style="margin-right: 20px">
+                <p:fieldset  legend="مرحلة التشيك" 
+                             id="whole"  
+                             style="margin-bottom:20px"
+                             >
+                    <p:dataTable id="table" var="proProductionCheck" value="#{proProductionCkeckMB.invoices}"
+                                 draggableColumns="true"
+                                 paginator="true"
+                                 widgetVar="proProductionCheck" 
+                                 rowIndexVar="index" 
+                                 emptyMessage="EMPTY_TABLE"
+                                 >
+                        <f:facet name="header" class="col-md-12">
+                            <p:outputPanel>
+                                <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large"/>
+                                <p:inputText id="globalFilter" a:autofocus="true" onkeyup="PF('proProductionStages').filter()" style="width:150px" />
+                            </p:outputPanel>
+                        </f:facet>
+                        <p:column filterStyle="display:none" style="width: 7vh;font-size: 1.8vh;text-align: -webkit-auto;" sortBy="#{proProductionCheck.serial}"
+                                  filterBy="#{proProductionCheck.serial}"  filterMatchMode="contains" headerText="الفاتورة" 
+                                  >
+                            <h:outputText value="#{proProductionCheck.serial}" style="font-size: 1.8vh"/>
+                        </p:column>
+
+                        <p:column headerText="الحركة" style="width: 5vh;text-align: center!important;font-size: 1.8vh">
+                            <p:commandButton    value="تم التشيك" 
+                                                action="#{proProductionCkeckMB.save()}"
+                                                update="table"
+                                                > 
+                                <f:setPropertyActionListener value="#{proProductionCheck}"
+                                                             target="#{proProductionCkeckMB.invPurchaseInvoiceDTOSelected}" />
+                            </p:commandButton>
+                            <p:commandButton    value="التفاصيل" 
+                                                action="#{proProductionCkeckMB.goToDetail()}"
+                                                update="table"
+                                                > 
+                                <f:setPropertyActionListener value="#{proProductionCheck}"
+                                                             target="#{proProductionCkeckMB.invPurchaseInvoiceDTOSelected}" />
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton title="YES" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                        <p:commandButton title="NO" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog>
+                </p:fieldset>
+            </h:form>
+        </h:body>
+    </ui:define>
+</ui:composition>
+

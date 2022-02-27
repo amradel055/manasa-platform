@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml" >
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+    <ui:define name="content">
+
+
+        <div class="col-xs-12">
+            <p:messages autoUpdate="true"  showDetail="true" closable="true" rendered="true" />
+        </div>
+        
+         <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <p:fieldset legend='شاشة تقرير البيانات الاساسية للاصناف (حسب المجموعات)' style="margin-bottom:20px">
+
+
+            <h:form id="form" dir="#{userData.dir}" style="margin-right: 20px">
+
+                <h:panelGrid id="pnl" columns="2" class="col-md-12" columnClasses="ui-grid-col-6,ui-grid-col-6">
+
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 45px" value="من مجموعة"/>
+                        </h:panelGroup> 
+
+                        <p:selectCheckboxMenu id="groups" value="#{invItemMainDataByGroupReportMB.invGroupList}" label="المجموعات"
+                                              converter="#{invItemMainDataByGroupReportMB.invGroupConverter}"  panelStyle="width:200px">
+                            <f:selectItems value="#{invItemMainDataByGroupReportMB.itemMainDataByGroupSearchBean.groupSelected}" 
+                                           var="group" itemValue="#{group}" itemLabel="#{group.name}"/>
+                        </p:selectCheckboxMenu>
+                    </h:panelGroup>
+                   <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 45px" value="من  مستودع"/>
+                        </h:panelGroup> 
+
+                        <h:panelGroup>
+                            <p:autoComplete style="width:75%!important " 
+                                            dropdown="true"
+                                            converter="#{invItemMainDataByGroupReportMB.invInventoryConverter}"
+                                            value="#{invItemMainDataByGroupReportMB.itemMainDataByGroupSearchBean.frominventory}"
+                                            var="inventory"
+                                            itemLabel="#{inventory}" 
+                                            itemValue="#{inventory}" 
+                                            forceSelection="true" 
+                                            completeMethod="#{invItemMainDataByGroupReportMB.completInventory}" >
+                            </p:autoComplete>
+                        </h:panelGroup> 
+                    </h:panelGroup>
+                     <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 45px" value="إلى  مستودع"/>
+                        </h:panelGroup> 
+
+                        <h:panelGroup>
+                            <p:autoComplete style="width:75%!important " 
+                                            dropdown="true"
+                                            converter="#{invItemMainDataByGroupReportMB.invInventoryConverter}"
+                                            value="#{invItemMainDataByGroupReportMB.itemMainDataByGroupSearchBean.toinventory}"
+                                            var="inventory"
+                                            itemLabel="#{inventory}" 
+                                            itemValue="#{inventory}" 
+                                            forceSelection="true" 
+                                            completeMethod="#{invItemMainDataByGroupReportMB.completInventory}" >
+                            </p:autoComplete>
+                        </h:panelGroup> 
+                    </h:panelGroup>
+
+
+                </h:panelGrid>
+
+                <h:panelGroup> 
+                    <div  style="margin-top:1% ;margin-right:35%">
+                       
+                        <p:commandButton   style="margin-left:.3%"
+                                           title="بحث"
+                                           action="#{invItemMainDataByGroupReportMB.search()}"
+                                           id="saveB"
+                                           value="بحث"
+                                           update="@form" 
+                                           icon="fa fa-search"  />
+
+                        <p:commandButton  style="margin-left:.3%;"
+                                          title="جديد" 
+                                          immediate="true" 
+                                          action="#{invItemMainDataByGroupReportMB.reset()}"
+                                          update="form"
+                                          value="جديد"
+                                          icon="fa fa-plus"/>
+
+                        <p:commandButton  style="margin-left:.3%;" 
+                                          ajax="false"
+                                          onclick="form.target = '_blank'"  
+                                          icon="fa fa-fw fa-print"
+                                          value="طباعة" 
+                                          actionListener="#{invItemMainDataByGroupReportMB.exportPDF}"
+
+                                          title="طباعة"
+                                          immediate="true" />
+
+                        <p:commandButton  style="margin-left:.3%;"
+                                          icon="fa fa-fw fa-close"  
+                                          title="#{userData.userDDs['EXIT']}"
+                                          action="exit"
+                                          value="الغاء"/>
+                         <h:commandLink>  
+                            <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                            <p:dataExporter type="xls"
+                                            target="ItemMainDataByGroupViewTable" 
+                                            fileName=" تقرير البيانات الأساسية للأصناف حسب المجموعات"
+                                            postProcessor="#{invItemMainDataByGroupReportMB.postProcessXLS}" />  
+                        </h:commandLink>
+                    </div>
+
+                </h:panelGroup> 
+
+                <p:dataTable 
+                    style="margin-top: 2%"
+                    draggableColumns="true" 
+                    var="ItemMainDataByGroupViewTable" 
+                    widgetVar="ItemMainDataByGroupViewTable"  
+                    rowKey="#{ItemMainDataByGroupViewTable}"
+                    rowIndexVar="index" 
+                    value="#{invItemMainDataByGroupReportMB.itemMainDataByGroupBeanList}" 
+                    dir="rtl" 
+                    emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                    id="ItemMainDataByGroupViewTable" >
+
+                    <p:column   style="width: 8vh;text-align: right;font-size: 1.8vh" headerText="اسم المجموعة" >
+                        <p:outputLabel value="#{ItemMainDataByGroupViewTable.groupName}" />
+                    </p:column>
+                    <p:column   style="width: 8vh;text-align: right;font-size: 1.8vh" headerText="رقم الصنف" >
+                        <p:outputLabel value="#{ItemMainDataByGroupViewTable.itemCode}" />
+                    </p:column>
+                    
+                    
+
+                    <p:column   style="width: 8vh;text-align: right;font-size: 1.8vh" headerText="اسم الصنف" >
+                        <p:outputLabel value="#{ItemMainDataByGroupViewTable.itemName}" />
+                    </p:column>
+
+                    <p:column style="width: 12vh;text-align: right;font-size: 1.8vh" filterStyle="display:none"
+                              headerText="الوحدة" >
+                        <p:outputLabel value="#{ItemMainDataByGroupViewTable.itemUnitName}" />
+                    </p:column>
+
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh" 
+                              headerText="التكلفة" >
+                        <p:outputLabel value="#{ItemMainDataByGroupViewTable.costAverage}" />
+                    </p:column>
+                    <p:column style="width: 10vh;text-align: right;font-size: 1.8vh" 
+                              headerText="الكمية بالمستودع" >
+                        <p:outputLabel value="#{ItemMainDataByGroupViewTable.qty}" >
+
+                        </p:outputLabel>
+                    </p:column> 
+
+                </p:dataTable>
+
+
+            </h:form>
+        </p:fieldset>
+    </ui:define>
+</ui:composition>

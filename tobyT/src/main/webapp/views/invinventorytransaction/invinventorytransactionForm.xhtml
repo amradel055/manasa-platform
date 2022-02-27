@@ -1,0 +1,222 @@
+x   <?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <h:form  style="margin-right: 20px" id="form"  enctype="multipart/form-data"  dir="#{userData.dir}">
+
+            <p:fieldset  style="margin-bottom:20px" legend="اذن استلام بضاعه">                           
+                <div  id="firstLine" class="ui-g-12 ui-g-nopad">
+
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 70px" value="السريال :"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 70px" value="#{invinventorytransactionMB.invInventoryTransactionDTO.serial}"/>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div> 
+
+
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['DATEE']}*"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:calendar    style="width:47%" 
+                                                   id="dateFrom" 
+                                                   pattern="MM/dd/yyyy"
+                                                   required="true"
+                                                   value="#{invinventorytransactionMB.invInventoryTransactionDTO.date}"/>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div> 
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 70px"  value="#{userData.userDDs['SUPPLIER_BILL']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup >
+                                    <p:inputText value="#{invinventorytransactionMB.invInventoryTransactionDTO.supplierInvoice}"/>
+
+                                </h:panelGroup>
+
+
+                            </h:panelGroup>
+                        </div> 
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['PURCHASE_OR_NO']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup >
+                                    <p:selectOneMenu style="width: 70px"
+                                                     value="#{invinventorytransactionMB.invInventoryTransactionDTO.purchaseOrderId}" 
+                                                     converter="#{invinventorytransactionMB.invPurchaseOrderDTOConverter}" >
+                                        <f:selectItems value="#{invinventorytransactionMB.invPurchaseOrderDTOList}" var="po"
+                                                       itemValue="#{po}"
+                                                       itemLabel="#{po.id}"/>
+                                    </p:selectOneMenu>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div> 
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 70px" value="#{userData.userDDs['BILL_SUPPLIER_DATE']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup >
+                                    <p:outputLabel  style="width: 70px"  > 
+                                    </p:outputLabel>
+                                </h:panelGroup>
+                                <h:panelGroup >
+
+                                    <p:calendar  style="width:47%"  
+                                                 id="billDateFrom" 
+                                                 pattern="MM/dd/yyyy" 
+                                                 value="#{invinventorytransactionMB.invInventoryTransactionDTO.supplierDate}"/>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div> 
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 65px"  value="ملاحظات"/>
+                                </h:panelGroup>     
+                                <h:panelGroup>
+                                    <p:inputText style="width:48%" id="remarks" value="#{invinventorytransactionMB.invInventoryTransactionDTO.remark}"/>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                    </div>
+                </div>
+            </p:fieldset>
+            <!-- begin table -->
+            <p:fieldset id="fieldSetId" style="margin-bottom:20px" legend="تفاصيل البضاعه">
+                <p:dataTable id="detail"
+                             widgetVar="detail"
+                             style="margin-bottom:20px"
+                             var="detail"
+                             rowIndexVar="index" 
+                             dir="rtl" 
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                             editable="true"
+                             editMode="cell"
+                             selectionMode="single"
+                             sortBy="#{1}" 
+                             rowKey="#{detail}"
+                             selection="#{invinventorytransactionMB.invInventoryTransactionDetailDTOSelected}"
+                             value="#{invinventorytransactionMB.invInventoryTransactionDTO.invInventoryTransactionDetailDTOList}"
+                             >
+                    <f:facet name="header" >
+                        <p:commandButton  id="addnew"
+                                          style="float: right"
+                                          icon="fa fa-plus"
+                                          class="saddButton"
+                                          title="#{userData.userDDs['ADD']}"    
+                                          action="#{invinventorytransactionMB.addRow()}" 
+                                          update="detail"
+                                          process="@this"/>
+                        <h:commandLink  class="sdcreenimg" >  
+                            <p:graphicImage name="/img/excel.jpg" width="25"/>  
+                            <p:dataExporter type="xls"
+                                            target="detail" 
+                                            fileName=' اذن استلام بضاعة' />  
+                        </h:commandLink>
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('detail').filter()" style="width:170px" />
+                        </p:outputPanel>
+                    </f:facet>
+                    <p:column  style="width:12vh;font-size:1.6vh;text-align: -webkit-auto"  headerText="الصنف" 
+                               >
+                        <p:selectOneMenu  
+                            style="width: 150px"
+                            value="#{detail.itemId}"
+                            converter="#{invinventorytransactionMB.itemDTOConverter}" >
+                            <f:selectItem  itemLabel="اختر الصنف" />
+                            <f:selectItems var="items"
+                                           itemLabel="#{items}"
+                                           itemValue="#{items}"
+                                           value="#{invinventorytransactionMB.invItemDTOList}"/>
+                            <p:ajax update="unit sumQuantity " event="itemSelect" />
+
+                        </p:selectOneMenu>
+                    </p:column>
+                    <p:column style="width: 10vh;text-align: -webkit-auto"  headerText="الوحده" >  
+                        <p:outputLabel id="unit" value="#{detail.unitId.name}"/>  
+                    </p:column>
+                    <p:column style="width: 10vh;text-align: -webkit-auto"  headerText="الكميه" 
+                              filterStyle="display:none"
+                              filterBy="#{detail.quantity}"
+                              filterMatchMode="contains" 
+                              sortBy="#{detail.quantity}" 
+                              >
+                        <p:inputNumber id="quantity" value="#{detail.quantity}"  minValue="-1000.999" maxValue="1000" >
+                            <p:ajax update="unit  sumQuantity" event="blur" listener="#{invinventorytransactionMB.sumQuantity()}"  />
+                        </p:inputNumber>  
+                    </p:column>
+                    <p:column style="width:12vh;font-size:1.6vh;text-align: -webkit-auto"  headerText="الحركه" 
+                              > 
+                        <p:commandButton class="sdeleteButton" update="detail" 
+                                         icon="fa fa-remove" 
+                                         title="#{userData.userDDs['DELETE']}" 
+                                         >
+                        </p:commandButton>
+                    </p:column>  
+                    <p:summaryRow>
+                        <p:column colspan="2" style="text-align:right" >
+                            <h:outputText style="text-align:right" value="#{userData.userDDs['TOTAL']}  :" />
+                        </p:column>
+
+                        <p:column>
+                            <h:outputText id="sumQuantity" value="#{invinventorytransactionMB.invInventoryTransactionDTO.sumQuantity}"/>
+                        </p:column>
+
+                    </p:summaryRow>
+
+                </p:dataTable>    
+            </p:fieldset>  
+            <div class="ui-g-12 ui-md-6">
+                <p:commandButton value="Save" style="margin-right:20px;" styleClass="ui-priority-primary" 
+                                 update="@form"
+                                 action="#{invinventorytransactionMB.save()}"/>
+            </div> 
+            <div class="ui-g-12 ui-md-6">
+                <p:commandButton value="Reset" style="margin-right:20px;" styleClass="ui-priority-primary" 
+                                 update="@form"
+                                 action="#{invinventorytransactionMB.reset()}"/>
+            </div> 
+
+        </h:form>
+        <script>
+
+            document.addEventListener("keydown", function (e) {
+                console.log(e.which);
+                if (e.which === 13) {
+                    e.preventDefault();
+                    return false;
+                }
+                ;
+            });
+
+        </script>
+    </ui:define>
+</ui:composition>

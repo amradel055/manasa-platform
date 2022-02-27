@@ -1,0 +1,368 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+
+        <h:form  style="margin-right: 20px" id="form" dir="#{userData.dir}">
+            <p:fieldset id="whole" style="margin-bottom:20px">
+                <div class="col-xs-12">
+                    <p:messages autoUpdate="true"  id="msg" showDetail="true" closable="true" />
+                </div>
+
+                <div class="ui-g-12 ui-g-nopad" id="firstSegment" >
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-6">
+                            <p:fieldset  style="width: 69.5%">
+                                <p:selectOneRadio id="console"  value ="#{patientRegistrationFormMB.hosPatientRegistrationEntity.type}" >
+                                    <f:selectItem itemLabel="مريض"  itemValue="0"  />   
+
+                                    <f:selectItem itemLabel="شركة" itemValue="1" />
+                                    <p:ajax  listener="#{patientRegistrationFormMB.checkVisability}" update="form" />
+                                </p:selectOneRadio>
+                            </p:fieldset>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 60px" value="رمز "/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width: 48%!important"
+                                                 id="SNOSName"
+
+                                                 value="#{patientRegistrationFormMB.hosPatientRegistrationEntity.code}" >
+                                        <p:ajax event="blur" listener="#{patientRegistrationFormMB.validateCode()}" update="@form"/>
+                                    </p:inputText>
+                                </h:panelGroup> 
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 60px" value="اسم "/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText 
+                                                 style="width: 48%!important" 
+                                                 id="custName"
+                                                 value="#{patientRegistrationFormMB.hosPatientRegistrationEntity.name}" />
+                                </h:panelGroup> 
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup> 
+                                    <p:outputLabel style="width: 60px" value="شركة التأمين"
+                                                   rendered="#{not patientRegistrationFormMB.company}"/>
+                                </h:panelGroup>
+                                <h:panelGroup  rendered="#{not patientRegistrationFormMB.company}">
+                                    <p:autoComplete style="width:83%" 
+                                                    dropdown="true"
+                                                    converter="#{patientRegistrationFormMB.companyConvertor}"
+                                                    value="#{patientRegistrationFormMB.hosPatientRegistrationEntity.parent}"
+
+                                                    var="customerVar"
+                                                    itemLabel="#{customerVar}" 
+                                                    itemValue="#{customerVar}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{patientRegistrationFormMB.completeCompanys}" >
+
+                                    </p:autoComplete>
+                                </h:panelGroup>   
+                            </h:panelGroup>  
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup  rendered="#{not patientRegistrationFormMB.company}">
+
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 60px" value="نسبة التحمل"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputNumber  style="width: 48%!important" id="tahml" value="#{patientRegistrationFormMB.hosPatientRegistrationEntity.bearRatio}"/>%
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup  rendered="#{patientRegistrationFormMB.company}">
+
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 60px" value="نسبة الخصم"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputNumber  style="width: 48%!important" id="discount" value="#{patientRegistrationFormMB.hosPatientRegistrationEntity.discountRatio}"/>%
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 60px"
+                                                   value="#{userData.userDDs['ACCOUNT_NUMBER']}" 
+                                                   />
+                                </h:panelGroup>
+
+                                <h:panelGroup >
+                                    <p:autoComplete id="GlAccount_ID" 
+                                                    style="width: 83%" 
+                                                    dropdown="true"
+                                                    converter="#{patientRegistrationFormMB.accountConverter}"
+                                                    value="#{patientRegistrationFormMB.hosPatientRegistrationEntity.accountId}"
+
+                                                    var="account"
+                                                    itemLabel="#{account}" 
+                                                    itemValue="#{account}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{patientRegistrationFormMB.completeGlAccount}" >
+
+                                    </p:autoComplete>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 60px" value="#{userData.userDDs['PHONE1']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText  style="width: 48%!important" id="PHONE1" value="#{patientRegistrationFormMB.hosPatientRegistrationEntity.phone}"/>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel  style="width: 60px" value="#{userData.userDDs['PHONE2']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText  style="width: 48%!important" id="PHONE2" value="#{patientRegistrationFormMB.hosPatientRegistrationEntity.phone2}"/>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 60px" value="#{userData.userDDs['CURRENCY']}" 
+                                                   />
+                                </h:panelGroup>
+                                <h:panelGroup >
+                                    <p:autoComplete id="Currency_ID" 
+                                                    style="width: 83%" 
+                                                    dropdown="true"
+                                                    converter="#{patientRegistrationFormMB.currencyConverter}"
+                                                    value="#{patientRegistrationFormMB.hosPatientRegistrationEntity.currencyId}"
+
+                                                    var="currency"
+                                                    itemLabel="#{currency}" 
+                                                    itemValue="#{currency}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{patientRegistrationFormMB.completeCurrency}">
+
+                                    </p:autoComplete>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 60px" value="#{userData.userDDs['NOTE']}" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width: 48%!important" id="NOTE" value="#{patientRegistrationFormMB.hosPatientRegistrationEntity.remark}"/>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup rendered="#{not patientRegistrationFormMB.company}">
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 60px" value="تاريخ الميلاد" />
+
+                                </h:panelGroup>  
+
+                                <h:panelGroup>
+                                    <p:calendar  style="width: 48% !important" id="dateFrom" value="#{patientRegistrationFormMB.hosPatientRegistrationEntity.birthDay}" pattern="dd/MM/yyyy" >
+                                        <p:ajax event="dateSelect" update="PATIENT_AGE" listener="#{patientRegistrationFormMB.updateAge}"/>
+                                    </p:calendar>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup rendered="#{not patientRegistrationFormMB.company}">
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 60px" value="السن" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 48%!important" id="PATIENT_AGE" value="#{patientRegistrationFormMB.hosPatientRegistrationEntity.age}"/>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 60px;margin-left: 1.5%" value="نشط" />
+
+                                </h:panelGroup>  
+
+                                <h:panelGroup>   
+                                    <p:selectBooleanCheckbox style="width: 30px" value="#{patientRegistrationFormMB.hosPatientRegistrationEntity.active}" />
+                                </h:panelGroup>   
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup rendered="#{not patientRegistrationFormMB.company}">
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 60px" value="الرقم القومي" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width: 48%!important" id="NATIONAL_ID" value="#{patientRegistrationFormMB.hosPatientRegistrationEntity.nationalId}"/>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup rendered="#{not patientRegistrationFormMB.company}">
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 60px" value="الجنسية" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:83%" 
+                                                    dropdown="true"
+                                                    converter="#{patientRegistrationFormMB.nationalityConverter}"
+                                                    value="#{patientRegistrationFormMB.hosPatientRegistrationEntity.nationalityId}"
+
+                                                    var="nationalityVar"
+                                                    itemLabel="#{nationalityVar}" 
+                                                    itemValue="#{nationalityVar}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{patientRegistrationFormMB.completeNationality}" >
+
+                                    </p:autoComplete>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup rendered="#{not patientRegistrationFormMB.company}">
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 60px" value="التاريخ المرضي" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width: 48%!important" id="PATIENT_HISTORY" value="#{patientRegistrationFormMB.hosPatientRegistrationEntity.patientHistory}"/>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 60px" value="العنوان" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width: 48%!important" id="Address" value="#{patientRegistrationFormMB.hosPatientRegistrationEntity.address}"/>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 60px" value="رقم البريد" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width: 48%!important" id="PostBox" value="#{patientRegistrationFormMB.hosPatientRegistrationEntity.postBox}"/>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup rendered="#{not patientRegistrationFormMB.company}">
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 60px" value="الطول" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width: 48%!important" id="PATIENT_HEIGHT" value="#{patientRegistrationFormMB.hosPatientRegistrationEntity.height}"/>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup rendered="#{not patientRegistrationFormMB.company}">
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 60px" value="الوزن" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width: 48%!important" id="PATIENT_WEIGHT" value="#{patientRegistrationFormMB.hosPatientRegistrationEntity.weight}"/>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup rendered="#{not patientRegistrationFormMB.company}">
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 60px" value="النوع" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:selectOneMenu  style="width: 48%!important"  id="gender"  
+                                                      value="#{patientRegistrationFormMB.hosPatientRegistrationEntity.gender}" >                                                             
+                                        <f:selectItem itemLabel="ذكر" itemValue="1"  />
+                                        <f:selectItem itemLabel="انثى" itemValue="0"  />
+                                    </p:selectOneMenu>  
+
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+
+
+
+                        <h:panelGrid class="col-md-12" columns="1" >
+
+                            <h:panelGroup class="centerButtons">
+
+                                <p:commandButton  class="saveButton" id="saveB" title="#{userData.userDDs['SAVE']}" 
+                                                  value="#{userData.userDDs['SAVE']}" icon="fa fa-fw fa-save"
+                                                  action="#{patientRegistrationFormMB.save()}" update="@form"/>
+
+                                <p:commandButton   class="closeButton" title="#{userData.userDDs['CANCEL']}" immediate="true"
+                                                   value="#{userData.userDDs['CANCEL']}" icon="fa fa-fw fa-close"
+                                                   action="#{patientRegistrationFormMB.exit()}"   />
+
+                                <p:blockUI block="form" trigger="saveB" animate="true" >
+
+                                    <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                                </p:blockUI> 
+
+                            </h:panelGroup>
+                        </h:panelGrid>
+
+                    </div>
+                </div>
+            </p:fieldset>          
+        </h:form>
+    </ui:define>
+</ui:composition>

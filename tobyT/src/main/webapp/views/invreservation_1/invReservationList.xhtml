@@ -1,0 +1,131 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <h:form  class='formmargin' dir="#{userData.dir}"  id="form">
+            <f:event listener="#{userData.authorize}" type="preRenderView" />
+            <div style=" position: absolute;left: 20px"> 
+
+                    <p:commandButton  style="z-index: 2;
+                                      margin-top: 24%;
+                                      color: #035c70!important; 
+                                      background-color: #223238!important;
+                                      border: 1px solid #22323a!important;
+                                      background: #22323a 50% 50% repeat-x!important;"
+                                      icon="fa fa-fw fa-home"
+                                      title="#{userData.userDDs['HOME']}"
+                                      class="smhomeButton" 
+                                      action="exit" />
+                       
+                </div>
+            <p:fieldset legend="#{userData.userDDs['RESERVATION_GOODS']}">
+
+                <p:dataTable 
+                    draggableColumns="true" 
+                    var="invReservationTable" widgetVar="bTable"  rowIndexVar="index"
+                    value="#{invReservationListDTOMB.invReservationEntityList}" rows="#{userData.rowListCount}"
+                    paginator="true" emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                    id="invReservationable">
+
+                    <f:facet name="header">
+                        <p:commandButton class="saddButton" icon="fa fa-plus"
+                                         id="addA"
+                                         title="#{userData.userDDs['ADD']}" 
+                                         action="#{invReservationListDTOMB.goToAdd()}" style="float:right"
+                                         rendered="#{userData.userScreens['invreservation_1'].add or userData.isAdmin}"/>
+                        
+                        <p:blockUI block="form" trigger="addA" animate="true" >
+
+                            <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                        </p:blockUI> 
+
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('bTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:column style="width: 8vh;font-size: 1.5vh;text-align: -webkit-auto;border-radius: 0px" filterStyle="display:none" 
+                              filterBy="#{invReservationTable.serial}"
+                              filterMatchMode="contains" headerText="#{userData.userDDs['RESERVA_NO']}" sortBy="#{invReservationTable.serial}">
+                        <p:outputLabel value="#{invReservationTable.serial}" />
+                    </p:column>
+                    <p:column style="width: 12vh;font-size: 1.5vh;text-align: -webkit-auto;border-radius: 0px" filterStyle="display:none" filterBy="#{invReservationTable.reservationDate}"
+                              filterMatchMode="contains" headerText="#{userData.userDDs['RESERV_DATE']}" sortBy="#{invReservationTable.reservationDate}" >
+                        <p:outputLabel value="#{invReservationTable.reservationDate}" >
+                            <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                        </p:outputLabel>
+                    </p:column>
+                    <p:column style="width: 12vh;font-size: 1.5vh;text-align: -webkit-auto;border-radius: 0px" filterStyle="display:none" filterBy="#{invReservationTable.delegator}"
+                              filterMatchMode="contains" headerText="#{userData.userDDs['SEL_REPRES']}" sortBy="#{invReservationTable.delegator}" >
+                        <p:outputLabel value="#{invReservationTable.delegator}"/>
+                    </p:column>
+                    <p:column style="width: 10vh;font-size: 1.5vh;text-align: -webkit-auto;border-radius: 0px" 
+                              filterStyle="display:none" filterBy="#{invReservationTable.inventory.name}"
+                              filterMatchMode="contains" headerText="#{userData.userDDs['REPOSITORY']}" sortBy="#{invReservationTable.inventory.name}" >
+                        <p:outputLabel value="#{invReservationTable.inventory.name}"/>
+                    </p:column>
+                    <p:column style="width: 8vh;font-size: 1.5vh;text-align: -webkit-auto;border-radius: 0px"
+                              filterStyle="display:none" filterBy="#{invReservationTable.site.name}"
+                              filterMatchMode="contains" headerText="#{userData.userDDs['CUSTOMER']}" sortBy="#{invReservationTable.site.name}" >
+                        <p:outputLabel value="#{invReservationTable.site.name}"/>
+                    </p:column>
+                     <p:column style="width: 8vh;font-size: 1.5vh;text-align: -webkit-auto;border-radius: 0px"
+                               filterStyle="display:none" filterBy="#{invReservationTable.createdBy.name}"
+                              filterMatchMode="contains" headerText="مدخل الفاتورة" sortBy="#{invReservationTable.createdBy.name}" >
+                        <p:outputLabel value="#{invReservationTable.createdBy.name}"/>
+                    </p:column>
+                    <p:column style="width: 10vh;font-size: 1.5vh;text-align: -webkit-auto;border-radius: 0px"  filterStyle="display:none" filterBy="#{invReservationTable.remark}"
+                              filterMatchMode="contains" headerText="#{userData.userDDs['REMARK']}" sortBy="#{invReservationTable.remark}" >
+                        <p:outputLabel value="#{invReservationTable.remark}" />
+                    </p:column>
+
+                    <p:column style="width: 10vh!important;font-size: 1.5vh;text-align: center;border-radius: 0px" 
+                              headerText="#{userData.userDDs['TRANSACTION']}" >
+                        
+                        <p:commandButton update="@form" 
+                                         class="seditButtons" 
+                                         icon="fa fa-fw fa-edit" style="background-color: #6a6967;border-radius: 3px;"
+                                         title="#{userData.userDDs['EDIT']}" 
+                                         action="#{invReservationListDTOMB.goToEdit()}"
+                                         rendered="#{userData.userScreens['invreservation_1'].edit or userData.isAdmin}">
+                            
+                            <f:setPropertyActionListener value="#{invReservationTable.id}"  target="#{invReservationListDTOMB.invReservationSelected}" />
+                        </p:commandButton>
+                        
+                        <p:commandButton update="@form" 
+                                             icon="fa fa-fw fa-print" style="background-color: rgb(1, 76, 134);border-radius: 3px;"
+                                             onclick="form.target = '_blank'" 
+                                             ajax="false"
+                                             class="sprintButtons"
+                                             title="#{userData.userDDs['PRINT']}"
+                                             rendered="#{userData.userScreens['invreservation_1'].view or userData.isAdmin}">
+                        </p:commandButton>
+                        
+                        <p:commandButton update="@form"  
+                                         class="sdeleteButtons" 
+                                         icon="fa fa-remove" style="background-color: red;border-radius: 3px;"
+                                         title="#{userData.userDDs['DELETE']}"  
+                                         action="#{invReservationListDTOMB.delete}"
+                                         rendered="#{userData.userScreens['invreservation_1'].delete or userData.isAdmin}">
+                            
+                            <f:setPropertyActionListener value="#{invReservationTable.id}" target="#{invReservationListDTOMB.invReservationSelected}" />
+                            <p:confirm header="Confirmation" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                        </p:commandButton>
+                    </p:column>
+
+                </p:dataTable> 
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                    <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:confirmDialog>
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>

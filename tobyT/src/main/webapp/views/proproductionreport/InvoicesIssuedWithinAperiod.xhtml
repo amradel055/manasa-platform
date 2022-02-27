@@ -1,0 +1,170 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <h:body>
+
+            <h:form dir="RTL" style="margin-right: 20px" id="form" >
+                <p:fieldset  legend="  الفواتير الصادرة خلال فترة " id="stages"  style=" position: relative">
+                    <p:messages id="messages" showDetail="true" closable="true"/> 
+
+
+
+                    <div class="ui-g-6 ui-xl-6">
+
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:calendar style="width: 50%"  id="dateFrom1"
+                                            value="#{invoicesIssuedWithinAperiodReport.issuedWithinAperiod.dateTo}"
+                                            pattern="dd/MM/yyyy"  showButtonPanel="true" >
+
+                                </p:calendar>
+
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:outputLabel style="width: 50px"  value="الى تاريخ" />
+
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:inputText value="#{invoicesIssuedWithinAperiodReport.dayHijriTo}" /> يوم
+                            <p:inputText value="#{invoicesIssuedWithinAperiodReport.monthHijriTo}" />  شهر
+                            <p:inputText value="#{invoicesIssuedWithinAperiodReport.yearHijriTo}" />  سنة
+                            <p:commandButton     class="saveButton" id="excuteTo" 
+                                                 value="تنفيذ" 
+                                                 icon="fa fa-fw fa-save"
+                                                 action="#{invoicesIssuedWithinAperiodReport.convertDateTo()}"
+                                                 update="dateFrom1"
+                                                 />
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel style="width: 50px"  value="إلى تاريخ هجري" />
+                        </div>
+                    </div>
+                    <div class="ui-g-6 ui-xl-6">
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:calendar style="width: 50%"  id="dateFrom"
+                                            value="#{invoicesIssuedWithinAperiodReport.issuedWithinAperiod.dateFrom}"
+                                            pattern="dd/MM/yyyy"  showButtonPanel="true" >
+
+                                </p:calendar>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:outputLabel style="width: 50px"  value="من تاريخ" />
+
+
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:inputText value="#{invoicesIssuedWithinAperiodReport.dayHijriFrom}" /> يوم
+                            <p:inputText value="#{invoicesIssuedWithinAperiodReport.monthHijriFrom}" />  شهر
+                            <p:inputText value="#{invoicesIssuedWithinAperiodReport.yearHijriFrom}" />  سنة
+                            <p:commandButton     class="saveButton" id="excuteFrom" 
+                                                 value="تنفيذ" 
+                                                 icon="fa fa-fw fa-save"
+                                                 action="#{invoicesIssuedWithinAperiodReport.convertDateFrom()}"
+                                                 update="dateFrom"
+                                                 />
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel style="width: 50px"  value="من تاريخ هجري" />
+                        </div>
+                    </div>
+
+                </p:fieldset>
+                <div class="ui-g-12 ui-xl-12">
+
+                    <p:commandButton     class="saveButton" id="saveB" 
+                                         value="بحث" 
+                                         icon="fa fa-fw fa-save"
+                                         action="#{invoicesIssuedWithinAperiodReport.search()}"
+                                         update="table messages"
+                                         >
+
+                    </p:commandButton>
+                    <h:commandLink  class="sdcreenimg">  
+                        <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                        <p:dataExporter type="xls"
+                                        target="table" 
+                                        fileName="الفواتير الصادرة خلال فترة "
+                                        postProcessor="#{invoicesIssuedWithinAperiodReport.postProcessXLS}" />  
+                    </h:commandLink> 
+
+                </div>
+                <p:fieldset  legend="البيانات"   style="margin-bottom:20px">
+                    <p:dataTable  id="table"
+                                  var="data"
+                                  value="#{invoicesIssuedWithinAperiodReport.issuedWithinAperiodList}"
+                                  draggableColumns="true"
+                                  paginator="true"
+                                  widgetVar="data" 
+                                  rowIndexVar="index" 
+                                  rows="30"
+                                  emptyMessage="EMPTY_TABLE"
+                                  >
+
+                        <p:column headerText="  رقم الفاتورة" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.invoiceNumber}" />
+                        </p:column>
+                        <p:column headerText=" التاريخ " style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.date}" />
+                        </p:column>
+                        <p:column headerText=" كود العميل" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.clientCode}" />
+                        </p:column>
+                        <p:column headerText=" اسم العميل" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.clientName}" />
+                        </p:column>
+                        <p:column headerText="قيمة الفاتورة" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.invoiceValue}" />
+                        </p:column>
+                        <p:column headerText="صافى الفاتورة" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.invoiceNet}" />
+                        </p:column>
+                        <p:column headerText="مرتجع" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.bouncedBack}" />
+                        </p:column>
+                        <p:column headerText="المسدد" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.payed}" />
+                        </p:column>
+                        <p:column headerText="الباقى" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.remaining}" />
+                        </p:column>
+                        <p:column headerText="الحالة" style="width: 10vh;text-align: center!important;font-size: 1.8vh">
+                            <h:outputText value="#{data.status}" />
+                        </p:column>
+
+                    </p:dataTable>
+                    <div class="ui-g-12 ui-md-6">
+                        <p:commandButton class="printButton"  icon="fa fa-fw fa-print"
+                                         onclick="form.target = '_blank'" ajax="false"
+                                         value="#{userData.userDDs['PRINT']}"
+                                         actionListener="#{invoicesIssuedWithinAperiodReport.exportPDF(actionEvent)}"/>
+                    </div>
+
+                </p:fieldset>
+            </h:form>
+        </h:body>
+    </ui:define>
+</ui:composition>
+

@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <ui:define name="content">
+
+
+
+        <h:form id="form">
+
+            <p:selectOneRadio value="#{notesReceivablesFormMB1.glBankTransactionsDTO.organizationType}" style="">
+                <p:ajax update="form"/>
+                <f:selectItem itemValue="2" itemLabel="عميل"></f:selectItem>
+                <f:selectItem itemValue="0" itemLabel="مورد"></f:selectItem>
+                <f:selectItem itemValue="1" itemLabel="حساب"></f:selectItem>
+
+            </p:selectOneRadio>
+
+            <!-- شاشه قبض السند-->
+            <h:panelGrid columns="4" dir="RTL" style="font: 200"  >
+
+
+                <h:outputText value="رقم المرجع" />
+                <p:inputText disabled="true" value="#{notesReceivablesFormMB1.glBankTransactionsDTO.serial}"/>
+                <h:outputText value="التاريخ" />
+                <p:calendar pattern="dd/MM/yyyy" value="#{notesReceivablesFormMB1.glBankTransactionsDTO.date}"/>
+
+                <h:outputText  value="المورد " rendered="#{notesReceivablesFormMB1.glBankTransactionsDTO.organizationType == 0}"  />
+                <p:selectOneMenu  rendered="#{notesReceivablesFormMB1.glBankTransactionsDTO.organizationType == 0}"  
+                                  value="#{notesReceivablesFormMB1.glBankTransactionsDTO.glBankTransactionDetail.organizationSiteId}" 
+                                  converter="#{notesReceivablesFormMB1.invOrganizationSiteConverter}" >
+                    <f:selectItem itemLabel=" اختر المورد" itemValue="" />
+                    <f:selectItems value="#{notesReceivablesFormMB1.supplierList}" var="cust" 
+                                   itemValue="#{supplier}"  itemLabel="#{supplier}"/>
+                    <p:ajax listener="#{notesReceivablesFormMB1.updateInvoiceList()}" update="invoice" />
+                </p:selectOneMenu>
+
+
+                <h:outputText  value="العميل" rendered="#{notesReceivablesFormMB1.glBankTransactionsDTO.organizationType == 2}" />
+                
+                
+                <p:selectOneMenu  rendered="#{notesReceivablesFormMB1.glBankTransactionsDTO.organizationType == 2}" 
+                                  
+                                  value="#{notesReceivablesFormMB1.glBankTransactionsDTO.glBankTransactionDetail.organizationSiteId}" 
+                                  converter="#{notesReceivablesFormMB1.invOrganizationSiteConverter}" >
+                    <f:selectItem itemLabel=" اختر العميل" itemValue="" />
+                    <f:selectItems value="#{notesReceivablesFormMB1.customerList}" var="cust" itemValue="#{cust}"  itemLabel="#{cust}"/>
+                    
+                    <p:ajax listener="#{notesReceivablesFormMB1.updateInvoiceList()}" update="invoice" />
+                </p:selectOneMenu>
+
+                <h:outputText value="رقم الفاتوره" />
+                <p:selectOneMenu  id="invoice" value="#{notesReceivablesFormMB1.glBankTransactionsDTO.invoiceId}" converter="#{notesReceivablesFormMB1.invPurchaseInvoiceConverter}" >
+                    <f:selectItem itemLabel=" اختر رقم الفاتورة" itemValue="" />
+                    <f:selectItems value="#{notesReceivablesFormMB1.invPurchaseInvoiceList}" var="inv" itemLabel="#{inv}" itemValue="#{inv}" />
+                </p:selectOneMenu>
+                <h:outputText value="نوع الدفع"/>
+                <p:selectOneMenu value="#{notesReceivablesFormMB1.glBankTransactionsDTO.paymentType}">
+                    <f:selectItem itemValue="0" itemLabel="قبض نقدى"></f:selectItem>
+                    <f:selectItem itemValue="1" itemLabel="قبض شيك"></f:selectItem>
+                    <f:selectItem itemValue="2" itemLabel="قبض شبكه"></f:selectItem>
+                    <f:selectItem itemValue="3" itemLabel="بطاقه فيزا"></f:selectItem>
+                </p:selectOneMenu>
+                <h:outputText value="المبلغ"/>
+                <p:inputText value="#{notesReceivablesFormMB1.glBankTransactionsDTO.value}" />
+                <h:outputText value="ملاحظات"/>
+                <p:inputText value="#{notesReceivablesFormMB1.glBankTransactionsDTO.remark}"/>
+                <h:outputText value="مناولة"/>
+                <p:inputText value="#{notesReceivablesFormMB1.glBankTransactionsDTO.remark2}"/>
+
+                <p:commandButton value="حفظ" action="#{notesReceivablesFormMB1.save()}" ajax="false" />
+            </h:panelGrid>
+        </h:form>
+
+    </ui:define>
+</ui:composition>
