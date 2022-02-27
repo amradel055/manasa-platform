@@ -59,8 +59,8 @@ public class InvItemDTO extends BaseEntityDTO {
     private BigDecimal width;
     private Integer printShow;
     private InvInventoryDTO invInventoryId;
-    private Integer maximum;
-    private Integer minimum;
+    private BigDecimal maximum;
+    private BigDecimal minimum;
 
     /**
      * @return the msg
@@ -650,28 +650,28 @@ public class InvItemDTO extends BaseEntityDTO {
     /**
      * @return the maximum
      */
-    public Integer getMaximum() {
+    public BigDecimal getMaximum() {
         return maximum;
     }
 
     /**
      * @param maximum the maximum to set
      */
-    public void setMaximum(Integer maximum) {
+    public void setMaximum(BigDecimal maximum) {
         this.maximum = maximum;
     }
 
     /**
      * @return the minimum
      */
-    public Integer getMinimum() {
+    public BigDecimal getMinimum() {
         return minimum;
     }
 
     /**
      * @param minimum the minimum to set
      */
-    public void setMinimum(Integer minimum) {
+    public void setMinimum(BigDecimal minimum) {
         this.minimum = minimum;
     }
 }

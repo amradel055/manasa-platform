@@ -203,9 +203,9 @@ public class InvItem extends BaseEntity {
     @Transient
     private BigDecimal storeQuantity;
     @Column(name = "minimum")
-    private Integer minimum;
+    private BigDecimal minimum;
     @Column(name = "maximum")
-    private Integer maximum;
+    private BigDecimal maximum;
 
     public InvItem() {
     }
@@ -747,28 +747,28 @@ public class InvItem extends BaseEntity {
     /**
      * @return the minimum
      */
-    public Integer getMinimum() {
+    public BigDecimal getMinimum() {
         return minimum;
     }
 
     /**
      * @param minimum the minimum to set
      */
-    public void setMinimum(Integer minimum) {
+    public void setMinimum(BigDecimal minimum) {
         this.minimum = minimum;
     }
 
     /**
      * @return the maximum
      */
-    public Integer getMaximum() {
+    public BigDecimal getMaximum() {
         return maximum;
     }
 
     /**
      * @param maximum the maximum to set
      */
-    public void setMaximum(Integer maximum) {
+    public void setMaximum(BigDecimal maximum) {
         this.maximum = maximum;
     }
 

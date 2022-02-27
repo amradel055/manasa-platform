@@ -89,8 +89,8 @@ public class ItemDataEntity implements Serializable {
     private BigDecimal disc1;
     private BigDecimal disc2;
     private BigDecimal disc3;
-    private Integer maximum;
-    private Integer minimum;
+    private BigDecimal maximum;
+    private BigDecimal minimum;
 
     private BigDecimal storeQuantity;
     private Integer printShow;
@@ -704,28 +704,28 @@ public class ItemDataEntity implements Serializable {
     /**
      * @return the maximum
      */
-    public Integer getMaximum() {
+    public BigDecimal getMaximum() {
         return maximum;
     }
 
     /**
      * @param maximum the maximum to set
      */
-    public void setMaximum(Integer maximum) {
+    public void setMaximum(BigDecimal maximum) {
         this.maximum = maximum;
     }
 
     /**
      * @return the minimum
      */
-    public Integer getMinimum() {
+    public BigDecimal getMinimum() {
         return minimum;
     }
 
     /**
      * @param minimum the minimum to set
      */
-    public void setMinimum(Integer minimum) {
+    public void setMinimum(BigDecimal minimum) {
         this.minimum = minimum;
     }
 }

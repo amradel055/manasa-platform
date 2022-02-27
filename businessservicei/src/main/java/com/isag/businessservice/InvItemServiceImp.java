@@ -1002,12 +1002,18 @@ public class InvItemServiceImp implements InvItemService {
         return total;
     }
 
-    public List<MissingReport> FindinvItemsList(List<InvItem> invItemsList) {
-        MissingReport missingReport = new MissingReport();
-        for (InvItem invItem : invItemsList) {
-//            missingReport.setQuantity(quantityItemsStoreAddExitService.getQuantatyItemByinventory(null, invItem.getId(), getInventorySetupDTO().getSellBuy(), null));
-
+    @Override
+    public List<MissingReport> FindinvItemsList(List<InvItem> invItemsList, Integer branchId ) {
+        InventorySetupDTO inventorySetupDTO = inventorySetupService.getInventoryByBranchIdDTO(branchId);
+        MissingReport missingReport = null;
+        List<MissingReport> list = new ArrayList<>();
+        for (InvItem Item : invItemsList) {
+            missingReport = new MissingReport();
+            missingReport.setQuantity(quantityItemsStoreAddExitService.getQuantatyItemByinventory(null, Item.getId(), inventorySetupDTO.getSellBuy(), null));
+            missingReport.setHigh(Item.getMaximum());
+            missingReport.setLow(Item.getMinimum());
+            list.add(missingReport);
         }
-        return null ;
+        return list;
     }
 }
