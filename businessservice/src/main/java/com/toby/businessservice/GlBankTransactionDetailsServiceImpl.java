@@ -304,7 +304,7 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
         Integer SettelMentId = 90000;
         StringBuilder remark = new StringBuilder();
         for (GlBankTransactionDetail entity : details) {
-
+            remark = new StringBuilder();
             remark.append("سند صرف  رقم  ").append(entity.getGlBankTransactionId().getSerial());
             if (entity.getOrganizationSiteId() != null) {
                 remark.append(" عميل رقم ").append(entity.getOrganizationSiteId().getCode()).append(" ").append(entity.getOrganizationSiteId().getName());
@@ -316,7 +316,7 @@ public class GlBankTransactionDetailsServiceImpl implements GlBankTransactionDet
 
             cashId++;
             SettelMentId++;
-            System.err.println("------------ > " + new Date() + " ----------> Number " + xx++);
+            System.err.println("------------ > " + entity.getGlBankTransactionId().getDate() + " ----------> Number " + xx++);
             GeneralJournalDTO journal = null;
 
             if (entity.getGlBankTransactionId().getTransactionType() == 0) {

@@ -191,16 +191,17 @@ public class ImportMB extends Basic implements Serializable {
         List<GeneralJournalDTO> list = invPurchaseInvoiceService_1.tarhilOne(getUserData().getUser());
 
         for (GeneralJournalDTO dto : list) {
+            dto.setId(null);
             generaljournalServiceDTO.addGeneralJournalDTOWithDetail(dto, getUserData().getUser());
         }
     }
 
     public void tarhilCashOne() {
         List<GeneralJournalDTO> list = bankTransactionDetailsService.tarhilOne(getUserData().getUser(), 1);
-        Integer idDtail = 1;
+//        Integer idDtail = 1;
         for (GeneralJournalDTO dto : list) {
-            generaljournalServiceDTO.addGeneralJournalDTOWithDetail(dto, getUserData().getUser(), dto.getSerial(), dto.getId(), idDtail);
-            idDtail = idDtail + 5;
+            generaljournalServiceDTO.addGeneralJournalDTOWithDetail(dto, getUserData().getUser(), dto.getSerial());
+//            idDtail = idDtail + 5;
         }
     }
 
@@ -208,7 +209,7 @@ public class ImportMB extends Basic implements Serializable {
         List<GeneralJournalDTO> list = bankTransactionDetailsService.tarhilOne(getUserData().getUser(), 0);
         Integer idDtail = 600000;
         for (GeneralJournalDTO dto : list) {
-            generaljournalServiceDTO.addGeneralJournalDTOWithDetail(dto, getUserData().getUser(), dto.getSerial(), dto.getId(), idDtail);
+            generaljournalServiceDTO.addGeneralJournalDTOWithDetail(dto, getUserData().getUser(), dto.getSerial());
             idDtail = idDtail + 5;
         }
     }

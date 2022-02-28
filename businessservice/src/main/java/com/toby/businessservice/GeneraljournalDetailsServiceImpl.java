@@ -144,7 +144,7 @@ public class GeneraljournalDetailsServiceImpl implements GeneraljournalDetailsSe
 
 
     @Override
-    public void addGenDetalilsGlobal(List<GeneralJournalDetails> details, TobyUser tobyUser, Integer generalJournalId,Integer idDtail) {
+    public void addGenDetalilsGlobal2(List<GeneralJournalDetails> details, TobyUser tobyUser, Integer generalJournalId) {
         List<GeneralJournalDetails> list = new ArrayList<>();
         GeneralJournalDetails gjd;
         if (details != null && !details.isEmpty()) {
@@ -167,10 +167,10 @@ public class GeneraljournalDetailsServiceImpl implements GeneraljournalDetailsSe
                     journalDetails.setGeneralJournalId(generalJournal);
                 }
 
-                journalDetails.setId(idDtail);
+//                journalDetails.setId(idDtail);
                 dao.saveEntity(journalDetails);
-                idDtail++;
-                System.err.println("---> "+idDtail + " <----"+ new Date());
+//                idDtail++;
+                System.err.println("--->  <----"+ new Date());
             }
         }
 //        return list;
