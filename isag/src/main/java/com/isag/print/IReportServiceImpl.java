@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package com.isag.print;
+
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.common.BitMatrix;
@@ -146,7 +147,6 @@ public class IReportServiceImpl implements IReportService {
         } else {
             hashMap.put("companyImage", null);
         }
-
         return hashMap;
 
     }
@@ -346,7 +346,6 @@ public class IReportServiceImpl implements IReportService {
             hashMap.put("taxValue", invPurchasegmSubscriptionsDTO.getTaxvalue());
             hashMap.put("receiptNumberValue", invPurchasegmSubscriptionsDTO.getSerial());
 
-
             if (invPurchasegmSubscriptionsDTO.getOrganizationSiteId() != null) {
                 hashMap.put("customerName", invPurchasegmSubscriptionsDTO.getOrganizationSiteId().getName());
                 hashMap.put("customerPhone", invPurchasegmSubscriptionsDTO.getOrganizationSiteId().getMobile());
@@ -402,7 +401,7 @@ public class IReportServiceImpl implements IReportService {
             hashMap.put("addressEn", userData.getUserBranch().getAddress2());
             hashMap.put("cashier", invPurchaseInvoiceDTO.getCreatedByName());
 
-            if (invPurchaseInvoiceDTO.getTaxflag()!= null && invPurchaseInvoiceDTO.getTaxflag()) {
+            if (invPurchaseInvoiceDTO.getTaxflag() != null && invPurchaseInvoiceDTO.getTaxflag()) {
                 hashMap.put("taxCodeText", userData.getUserBranch().getTaxCode());
                 if (invPurchaseInvoiceDTO.getPaymentType() == 0) {
                     hashMap.put("salesReceiptText", "فاتورة مبيعات نقدي");
@@ -449,7 +448,7 @@ public class IReportServiceImpl implements IReportService {
             hashMap.put("payedText", "المبلغ المدفوع");
             hashMap.put("remainText", "المبلغ المتبقى");
             hashMap.put("tax", "الضريبةً");
-            hashMap.put("taxValue",new BigDecimal(invPurchaseInvoiceDTO.getTaxvalue().setScale(3, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
+            hashMap.put("taxValue", new BigDecimal(invPurchaseInvoiceDTO.getTaxvalue().setScale(3, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
 //            hashMap.put("totalValue", invPurchaseInvoiceDTO.getTotalNet());
             hashMap.put("totalValue", new BigDecimal(invPurchaseInvoiceDTO.getTotalNet().setScale(3, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
             hashMap.put("totalWithTaxValue", new BigDecimal((invPurchaseInvoiceDTO.getTaxvalue().add(invPurchaseInvoiceDTO.getTotalNet())).setScale(3, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));

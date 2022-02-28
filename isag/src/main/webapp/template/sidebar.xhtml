@@ -111,12 +111,15 @@
                                 </p:submenu>
                                 <p:submenu id="sr_sm22" label="#{userData.userDDs['USERS_REPORT']}" icon="&#xE8D2;"
                                            rendered="#{userData.userScreens['userreport'].view 
-                                                       or userData.userScreens[''].view 
+                                                       or userData.userScreens['actionReport'].view 
                                                        or userData.userScreens[''].view 
                                                        or userData.isAdmin}"
                                            >
                                     <p:menuitem id="sr_lnk221" value="#{userData.userDDs['USERS_REPORT']}" icon="&#xE8D2;" url="/faces/views/accountreport/userreport.xhtml" 
                                                 rendered="#{userData.userScreens['userreport'].view or userData.isAdmin}"
+                                                />
+                                    <p:menuitem id="sr_lnk22198" value="تقرير الاحداث" icon="&#xE8D2;" url="/faces/views/accountreport/actionReport.xhtml" 
+                                                rendered="#{userData.userScreens['actionReport'].view or userData.isAdmin}"
                                                 />
                                 </p:submenu>
                             </p:submenu>
@@ -1144,7 +1147,7 @@
                                     <p:menuitem id="gm_lnk562" value="تقرير القيمة المضافة " icon="&#xE8D2;" url="/faces/views/gmreports/SalesGmReportByValueAdedDetailsReport.xhtml" 
                                                 rendered="#{userData.userScreens['SalesGmReportByValueAdedDetailsReport'].view or userData.isAdmin}"
                                                 />
-                                    <p:menuitem id="gm_lnk563" value="تقرير العملاء المحذوفيين " icon="&#xE8D2;" url="/faces/views/gmreports/gmdeletedsubscriptionsreport.xhtml" 
+                                    <p:menuitem id="gm_lnk563" value="تقرير الاشتراكات المحذوفه " icon="&#xE8D2;" url="/faces/views/gmreports/gmdeletedsubscriptionsreport.xhtml" 
                                                 rendered="#{userData.userScreens['gmdeletedsubscriptionsreport'].view or userData.isAdmin}"
                                                 />
 

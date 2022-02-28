@@ -7,7 +7,9 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:c="http:addInvDetail//xmlns.jcp.org/jsp/jstl/core">
+    
     <ui:define name="content">
+        
         <style>
             .ui-g-6, .ui-xl-6, .ui-g-4, .ui-xl-4 {
                 float: right;
@@ -16,7 +18,7 @@
                 width: 100%;
             }
             
-            @media (max-width: 650px) {
+            @media only screen and (max-width: 650px) {
                 .allRow {
                     width: 100% !important;
                 }
@@ -24,22 +26,23 @@
                     float: right !important;
                     
                 }
-                .ui-datatable-reflow .ui-datatable-data td[role="gridcell"] {
-                    text-align: right;
-                    display: block;
-                    border: 0 none;
-                    min-width: 100%;
-                    -webkit-box-sizing: border-box;
-                    -moz-box-sizing: border-box;
-                    box-sizing: border-box;
-                    float: right;
-                    clear: right;
+                .ui-datatable-reflow .ui-datatable-data > tr > td  {
+                    text-align: right !important;
+                    display: block !important;
+                    border: 0 none !important;
+                    width: 100% !important;
+                    -webkit-box-sizing: border-box !important;
+                    -moz-box-sizing: border-box !important;
+                    box-sizing: border-box !important;
+                    float: right !important;
+                    clear: right !important;
                 }
                 .col-width {
                     min-width: 100% !important;
                     font-size: 14px !important;
                 }
             }
+            
         </style>
 
         <f:event listener="#{userData.authorize}" type="preRenderView" />
@@ -343,7 +346,7 @@
                              style="margin-bottom:20px"
                              var="invPurchaseInvoiceDetailsTable"
                              rowIndexVar="index" 
-                             dir="rtl"  reflow="true"
+                             dir="rtl"  reflow="true" 
                              emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
                              editable="true"
                              editMode="cell"

@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <h:form style="margin-right:20px" id="form"  enctype="multipart/form-data"  dir="#{userData.dir}">
+            <p:fieldset legend="أنواع التفصيلات" style="margin-bottom:20px">
+                <p:messages autoUpdate="true" id="messages" showDetail="true" closable="true"/>   
+               
+                    <div class="ui-g-6 ui-xl-6">
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:inputText   style="width: 49%" id="id" value="#{proDetailTypeFormBean.proDetailTypeDTO.code}" >
+
+                                    <p:ajax event="blur" listener="#{proDetailTypeFormBean.validateCode()}"  />
+
+                                </p:inputText>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:outputLabel style="width: 55px" value="الكود"/>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui-g-6 ui-xl-6">
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:inputText   style="width: 49%!important" id="name"  value="#{proDetailTypeFormBean.proDetailTypeDTO.name}" >
+                                    <p:ajax event="blur" listener="#{proDetailTypeFormBean.validateName()}"  />
+                                </p:inputText>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:outputLabel style="width: 40px" value="#{userData.userDDs['NAME']}"/>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+
+
+ <h:panelGrid id="pnl" columns="2" cellspacing="20" cellpadding="0" >
+
+                </h:panelGrid>
+
+                <h:panelGrid  class="centerButtons col-md-12"  columns="1" >
+
+                    <h:panelGroup > 
+                        <p:commandButton   class="saveButton" 
+                                           id="saveB" 
+                                           title="#{userData.userDDs['SAVE']}"
+                                           value="#{userData.userDDs['SAVE']}" 
+                                           icon="fa fa-fw fa-save"
+                                           action="#{proDetailTypeFormBean.save()}" 
+                                           update="@form"/>
+
+                        <p:commandButton  class="newButton" 
+                                          id="newN"
+                                          ajax="false"
+                                          icon="fa fa-fw fa-plus"
+                                          value="#{userData.userDDs['NEW']}" 
+                                          title="#{userData.userDDs['NEW']}" 
+                                          actionListener="#{proDetailTypeFormBean.reset()}"/>
+
+
+                        <p:commandButton  class="closeButton"
+                                          title="#{userData.userDDs['CANCEL']}" 
+                                          immediate="true"
+                                          value="#{userData.userDDs['CANCEL']}"
+                                          icon="fa fa-fw fa-backward" 
+                                          action="#{proDetailTypeFormBean.exit()}"   />
+
+                    </h:panelGroup> 
+
+                    <p:blockUI block="pnl" trigger="saveB" animate="true" >
+
+                        <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                    </p:blockUI> 
+
+                </h:panelGrid>
+
+
+
+
+            </p:fieldset>
+        </h:form>
+
+    </ui:define>
+</ui:composition>

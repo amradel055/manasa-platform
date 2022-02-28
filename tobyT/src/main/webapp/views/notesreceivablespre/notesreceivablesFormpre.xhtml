@@ -1,0 +1,612 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+
+
+        <h:form style="margin-right: 20px"  id="form" dir="#{userData.dir}">
+            <p:fieldset legend="إذن قبض " id="whole" style="margin-bottom:20px;font-size: 20px!important;">
+
+                <div class="col-xs-12">
+                    <p:messages id="curmsg" showDetail="true" rendered="true" closable="true"/>   
+                </div>
+
+
+
+                <div  id="firstSegment" class="ui-g-12 ui-g-nopad">
+                    <div class="ui-g">
+
+                        <div class="ui-g-12 ui-md-6">
+
+
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 120px;font-size: 16px!important;font-family: bold!important;margin-right: 15px;" value="#{userData.userDDs['NUMB']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel id="settelmentId" value="#{notesReceivablesFormMB.glBankTransactionEntity.serial}"/>
+                                    <p:inputText type="hidden" readonly="true" style="width: 60%" id="settelmentId2" value="#{notesReceivablesFormMB.glBankTransactionEntity.id}" />
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 70px;font-size: 16px!important;" value="#{userData.userDDs['DATEE']}"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:calendar  style="width:60%!important"  id="date" 
+                                                 value="#{notesReceivablesFormMB.glBankTransactionEntity.date}"
+                                                 pattern="dd/MM/yyyy"
+                                                 >
+
+                                        <p:ajax event="dateSelect" update="form" listener="#{notesReceivablesFormMB.updateTransactionRate}" />
+                                    </p:calendar>
+
+                                </h:panelGroup>
+
+
+                            </h:panelGroup>
+
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+
+                                <p:fieldset legend="#{userData.userDDs['TYPE_CAPT']}" style="margin-bottom:20px;width: 75%;margin-right: 15px;">
+                                    <p:selectOneRadio id="paymentType"  disabled="#{not notesReceivablesFormMB.paymentDropDownView}" 
+                                                      value="#{notesReceivablesFormMB.glBankTransactionEntity.paymentType}" >                                                             
+                                        <f:selectItem itemLabel="#{userData.userDDs['CASH']}"  itemValue="0"  />
+                                        <f:selectItem itemLabel="#{userData.userDDs['CHECK']}"  itemValue="1"  />
+                                        <f:selectItem itemLabel="#{userData.userDDs['LIN_CHECK']}"  itemValue="2"  />
+                                        <p:ajax update="form" listener="#{notesReceivablesFormMB.viewPaymentFields}" />
+                                    </p:selectOneRadio>  
+
+                                </p:fieldset>
+
+
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <p:fieldset id="radioLinks" legend="#{userData.userDDs['ORGAN_SIDE_NA']}" style="margin-bottom:20px;width: 75%;margin-right: 5px;">
+                                    <p:selectOneRadio id="console"  disabled="#{notesReceivablesFormMB.glBankTransactionEntity.serial ne null}"
+                                                      value ="#{notesReceivablesFormMB.glBankTransactionEntity.organizationType}" 
+                                                      onclick="PF('dlg1').show();" >
+
+                                        <f:selectItem itemLabel="#{notesReceivablesFormMB.allowAccount ? 'رمز الحساب' : 'البند'}" itemValue="2" />
+                                        <f:selectItem itemLabel="#{userData.userDDs['CUSTOMER']}"  itemValue="0"  />                            
+                                        <f:selectItem itemLabel="#{userData.userDDs['SUPPLIER']}" itemValue="1" />
+
+                                    </p:selectOneRadio>
+
+                                    <p:dialog modal="true"
+                                              position='center,center'
+                                              minHeight="40" minWidth="220"
+                                              header="#{userData.userDDs['WARNING']}" widgetVar="dlg1"
+                                              style="left: 50%;top: 50%;">
+
+                                        <h:outputText value="#{userData.userDDs['ARE_YOU_SU_CH_ORG_SI']}" />
+
+                                        <p:commandButton id="saveIm"
+                                                         title="#{userData.userDDs['YES']}" 
+                                                         value="#{userData.userDDs['YES']}"
+                                                         action="#{notesReceivablesFormMB.changeOrganizationSiteOk()}"
+                                                         icon="fa fa-fw fa-save"
+                                                         validateClient="true" 
+                                                         onclick="PF('dlg1').hide();"
+                                                         style="margin-right: 5px;background-color: #0b64bc"
+                                                         update="radioLinks form" />
+
+                                        <p:commandButton title="#{userData.userDDs['NO']}" 
+                                                         value="#{userData.userDDs['NO']}" 
+                                                         action="#{notesReceivablesFormMB.changeOrganizationSiteCancel()}"
+                                                         icon="fa fa-fw fa-close" 
+                                                         update="radioLinks console"
+                                                         onclick="PF('dlg1').hide();"
+                                                         style="margin:5px;background-color: #0b64bc"/>
+
+                                    </p:dialog> 
+
+                                </p:fieldset>
+
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                             <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 90px;font-size: 16px!important;margin-right: 15px;" value="#{userData.userDDs['AMOUNT']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputNumber style="width: 55%;" id="value"
+                                                   value="#{notesReceivablesFormMB.glBankTransactionEntity.value}">
+
+                                        <p:ajax event="blur" update="valueLocal" listener="#{notesReceivablesFormMB.updateTransactionRate()}" />
+                                    </p:inputNumber>
+
+
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                            
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                           <h:panelGroup>
+
+                                <h:panelGroup> 
+                                    <p:outputLabel style="width: 75px;font-size: 16px!important;" value="#{userData.userDDs['SAFE_NUM']}" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:selectOneMenu style="width: 60%" id="MACUCode" 
+                                                     filter="true" 
+                                                     filterMatchMode="contains"
+                                                     converter="#{notesReceivablesFormMB.bankConverter}"
+                                                     value="#{notesReceivablesFormMB.glBankTransactionEntity.glBank}"> 
+
+                                        <p:ajax listener="#{notesReceivablesFormMB.updateTransactionRate}" update="form" />
+
+                                        <f:selectItems value="#{notesReceivablesFormMB.glBankList}"  
+                                                       var="bank"
+                                                       itemLabel="#{bank}"
+                                                       itemValue="#{bank}"/>
+                                    </p:selectOneMenu> 
+
+                                </h:panelGroup>   
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 90px;font-size: 16px!important;margin-right: 15px;" value="#{userData.userDDs['RATE']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputNumber style="width: 55%"  id="rate"
+                                                   value="#{notesReceivablesFormMB.glBankTransactionEntity.rate}" >
+
+                                        <p:ajax event="blur" update="valueLocal" listener="#{notesReceivablesFormMB.changeRate()}" />
+                                    </p:inputNumber>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+
+                                <h:panelGroup  rendered="#{notesReceivablesFormMB.accountView}"> 
+                                    <p:outputLabel rendered="#{notesReceivablesFormMB.allowAccount}" style="width: 75px;font-size: 16px!important;" value="#{userData.userDDs['ACCOUNT_NUMBER']}" />
+                                    <p:outputLabel rendered="#{!notesReceivablesFormMB.allowAccount}" style="width: 75px;font-size: 16px!important;" value="البند"  />
+
+                                </h:panelGroup>
+                                <h:panelGroup  rendered="#{notesReceivablesFormMB.accountView}">
+                                    <p:selectOneMenu style="width:60%!important;" id="accName"   rendered="#{notesReceivablesFormMB.allowAccount}" 
+                                                     filter="true"
+                                                     filterMatchMode="contains" 
+                                                     value="#{notesReceivablesFormMB.glBankTransactionDetailEntity.accountCreditId}"
+                                                     >
+
+                                        <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" 
+                                                      itemValue=""
+                                                      noSelectionOption="true"/>
+                                        <f:selectItems value="#{notesReceivablesFormMB.glAccountList}"
+                                                       var="acc"
+                                                       itemLabel="#{acc}"
+                                                       itemValue="#{acc.id}"/>
+
+                                    </p:selectOneMenu>
+
+                                    <p:selectOneMenu style="width:60%" id="glitem"   rendered="#{!notesReceivablesFormMB.allowAccount}" 
+                                                     filter="true" converter="#{notesReceivablesFormMB.glItemConverter}"
+                                                     filterMatchMode="contains" 
+                                                     value="#{notesReceivablesFormMB.glBankTransactionDetailEntity.glItems}"
+                                                     >
+
+                                        <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" 
+                                                      itemValue=""
+                                                      noSelectionOption="true"/>
+                                        <f:selectItems value="#{notesReceivablesFormMB.glItemsList}"
+                                                       var="itemList"
+                                                       itemLabel="#{itemList}"
+                                                       itemValue="#{itemList}"/>
+
+                                    </p:selectOneMenu>
+
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 90px;font-size: 16px!important;margin-right: 15px;" value="#{userData.userDDs['RATE*AMOUNT']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputNumber style="width: 55%" id="valueLocal" readonly="true"
+                                                   value="#{notesReceivablesFormMB.glBankTransactionEntity.valueLocal}"/>
+                                </h:panelGroup>
+
+                            </h:panelGroup>    
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            
+                            <h:panelGroup>
+
+                                <h:panelGroup > 
+                                    <p:outputLabel style="width: 75px;font-size: 16px!important;" value="#{userData.userDDs['SINGLE_COST_CENTER']}"  />
+                                </h:panelGroup>
+                                <h:panelGroup  >
+                                    <p:selectOneMenu style="width:60%" id="CostCenter"
+                                                     filter="true" 
+                                                     filterMatchMode="contains"
+                                                     value="#{notesReceivablesFormMB.glBankTransactionDetailEntity.costCenterId}"
+                                                     >
+                                        <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" />
+                                        <f:selectItems value="#{notesReceivablesFormMB.costCenterList}"
+                                                       var="cost" 
+                                                       itemLabel="#{cost}"
+                                                       itemValue="#{cost.id}"/>
+                                    </p:selectOneMenu> 
+
+                                </h:panelGroup>
+
+                            </h:panelGroup>  
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:90px;font-size: 16px!important;margin-right: 15px;" value="#{userData.userDDs['HANDLING']}"/>
+                                </h:panelGroup>
+
+                                <p:inputText style="width: 55%!important" id="notes2"
+                                             value="#{notesReceivablesFormMB.glBankTransactionEntity.remark2}">
+
+                                    <p:ajax event="blur" listener="#{notesReceivablesFormMB.catchValues()}" />
+                                </p:inputText>
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6">
+                           <h:panelGroup>
+
+                                <h:panelGroup > 
+                                    <p:outputLabel style="width: 75px;font-size: 16px!important;" value="#{userData.userDDs['ADMIN_UNIT']}"  />
+                                </h:panelGroup>
+                                <h:panelGroup  >
+                                    <p:selectOneMenu style="width:60%" id="adminUnit"
+                                                     filter="true" 
+                                                     filterMatchMode="contains"
+                                                     value="#{notesReceivablesFormMB.glBankTransactionDetailEntity.adminUnitId}"
+                                                     >
+                                        <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" />
+                                        <f:selectItems value="#{notesReceivablesFormMB.adminUnitList}"
+                                                       var="admin" 
+                                                       itemLabel="#{admin}"
+                                                       itemValue="#{admin.id}"/>
+                                    </p:selectOneMenu> 
+
+                                </h:panelGroup>
+                            </h:panelGroup>  
+                        </div>
+                        
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:90px;font-size: 16px!important;margin-right: 15px;" value="#{userData.userDDs['STATEMENT']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText style="width:55%!important;" id="notes" 
+                                                 value="#{notesReceivablesFormMB.glBankTransactionEntity.remark}">
+                                        <p:ajax event="blur" listener="#{notesReceivablesFormMB.catchValues()}" />
+
+                                    </p:inputText>
+                                    <p:inputText type="hidden" style="width: 40%!important" id="hidden2"
+                                                 value="#{notesReceivablesFormMB.glBankTransactionEntity.hiddenId}"/>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        
+                    </div>
+                </div>
+
+
+
+
+                <h:panelGrid id="fourthSegment"  rendered="#{notesReceivablesFormMB.checkView}">
+
+                    <div  class="ui-g-12 ui-g-nopad">
+                        <div class="ui-g">
+
+                            <div class="ui-g-12 ui-md-6">
+
+                                <h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width:97px;font-size: 16px!important;margin-right: 20px!important;" value="#{userData.userDDs['CHECK_NUM']}"/>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:inputText style="width: 26%!important;margin-right: 40px" value="#{notesReceivablesFormMB.glBankTransactionEntity.chequeNumber}"/>
+                                    </h:panelGroup>
+
+                                </h:panelGroup>
+
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width:97px;font-size: 16px!important;margin-right: 20px!important;" value="#{userData.userDDs['CHECK_DATE']}"/>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:calendar style="width: 26%!important;" value="#{notesReceivablesFormMB.glBankTransactionEntity.chequeDate}"
+                                                    pattern="MM/dd/yyyy"
+                                                    >
+
+                                        </p:calendar>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </div>
+                            <div class="ui-g-12 ui-md-6">
+                                <h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:outputLabel style="width:97px;font-size: 16px!important;margin-right: 20px!important;" value="#{userData.userDDs['DUE_DATE']}"/>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <p:calendar style="width: 26%!important;" value="#{notesReceivablesFormMB.glBankTransactionEntity.chequeDueDate}"
+                                                    pattern="MM/dd/yyyy">
+
+                                        </p:calendar>
+                                    </h:panelGroup>
+
+                                </h:panelGroup>
+                            </div>
+                        </div>
+                    </div>
+
+                </h:panelGrid>
+
+
+
+
+                <h:panelGrid id="fifthSegment" 
+                             rendered="#{notesReceivablesFormMB.checkView || notesReceivablesFormMB.lineCheckView}">
+
+
+                    <div   class="ui-g-12 ui-g-nopad">
+                        <div class="ui-g">
+
+                            <div class="ui-g-12 ui-md-6">
+
+                                <h:panelGroup>
+                                    <p:fieldset legend="#{userData.userDDs['CHECK_STATUS']}" id="radioLinks3" style="width: 50%;margin-right:15px;">
+                                        <p:selectOneRadio id="console3" 
+                                                          disabled="#{not notesReceivablesFormMB.payed}"
+                                                          value ="#{notesReceivablesFormMB.glBankTransactionEntity.chequeStatus}" >
+
+                                            <f:selectItem itemLabel="#{userData.userDDs['NOT_PAID']}"  itemValue="0"  />                            
+                                            <f:selectItem itemLabel="#{userData.userDDs['PAID']}" itemValue="1" />
+                                            <f:selectItem itemLabel="#{userData.userDDs['CANCELLED']}" itemValue="2" />
+                                            <f:selectItem itemLabel="#{userData.userDDs['PARTIAL']}" itemValue="3" />
+
+                                        </p:selectOneRadio>
+                                    </p:fieldset>
+                                </h:panelGroup>
+                            </div>
+                        </div>
+                    </div>
+                </h:panelGrid>
+
+
+
+
+                <div  id="thirdSegment" class="ui-g-12 ui-g-nopad">
+                    <div class="ui-g">
+
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup>
+                                <h:panelGroup rendered="#{notesReceivablesFormMB.customerView}"> 
+                                    <p:outputLabel style="width: 65px;font-size: 16px!important;" value="#{userData.userDDs['CUSTOMER_NUMBER']}"  />
+                                </h:panelGroup>
+
+                                <h:panelGroup rendered="#{notesReceivablesFormMB.supplierView}" > 
+                                    <p:outputLabel style="width: 65px;font-size: 16px!important;" value="#{userData.userDDs['SUPPLIER_NUM']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{notesReceivablesFormMB.customerView || notesReceivablesFormMB.supplierView}" >
+                                    <p:selectOneMenu id="organization"
+                                                     filter="true" 
+                                                     filterMatchMode="contains"
+                                                     converter="#{notesReceivablesFormMB.invOrganizationSiteConverter}"
+                                                     value="#{notesReceivablesFormMB.glBankTransactionDetailEntity.invOrganizationSite}"
+                                                     style="width:50%">
+                                        <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" />
+                                        <f:selectItems value="#{notesReceivablesFormMB.organizationList}"
+                                                       var="sss" 
+                                                       itemLabel="#{sss}"
+                                                       itemValue="#{sss}"/>
+                                        <p:ajax update="form" listener="#{notesReceivablesFormMB.loadInstContract}" />
+
+                                    </p:selectOneMenu> 
+
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup rendered="#{notesReceivablesFormMB.customerView}">    
+                                <h:panelGroup   id="instText1" 
+                                                >
+                                    <p:outputLabel style="width: 80px;font-size: 16px!important;"  value="#{userData.userDDs['INSTALLMENT']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup   
+                                    >
+                                    <p:selectBooleanCheckbox value="#{notesReceivablesFormMB.installment}" style ="margin-right: 2%">
+                                        <p:ajax   update="form" />
+                                    </p:selectBooleanCheckbox>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup rendered="#{notesReceivablesFormMB.installment}">
+                                <h:panelGroup   id="instText">
+                                    <p:outputLabel style="width: 80px;font-size: 16px!important;"  value="#{userData.userDDs['PREMIUMS']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:75%!important"
+                                                    dropdown="true"
+                                                    converter="#{notesReceivablesFormMB.instContractConverter}"
+                                                    value="#{notesReceivablesFormMB.glBankTransactionEntity.instContract}"
+                                                    var="instContract"
+                                                    itemLabel="#{instContract}" 
+                                                    itemValue="#{instContract}"
+                                                    forceSelection="true" 
+                                                    completeMethod="#{notesReceivablesFormMB.completInstContract}"
+                                                    >
+                                        <p:ajax update="@form"
+                                                event="change"
+                                                listener="#{notesReceivablesFormMB.updateInstContractDetails}" />
+                                        <p:ajax update="@form"
+                                                event="itemSelect"
+                                                listener="#{notesReceivablesFormMB.updateInstContractDetails}" />
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+
+                            <h:panelGroup rendered="#{notesReceivablesFormMB.installment}">
+                                <h:panelGroup   id="instDetailText" 
+                                                >
+                                    <p:outputLabel style="width: 80px;font-size: 16px!important;"  value="#{userData.userDDs['PREM_DETAILS']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:75%!important"
+                                                    dropdown="true"
+                                                    converter="#{notesReceivablesFormMB.instTransactionViewConverter}"
+                                                    value="#{notesReceivablesFormMB.glBankTransactionEntity.instTransactionView}"
+                                                    var="instTransactionView"
+                                                    itemLabel="#{instTransactionView}" 
+                                                    itemValue="#{instTransactionView}"
+                                                    forceSelection="true" 
+                                                    completeMethod="#{notesReceivablesFormMB.completInstTransactionView}"
+                                                    >
+                                        <p:ajax update="@form"
+                                                event="change"
+                                                listener="#{notesReceivablesFormMB.updateValueOfInstallment}" />
+                                        <p:ajax update="@form"
+                                                event="itemSelect"
+                                                listener="#{notesReceivablesFormMB.updateValueOfInstallment}" />
+                                    </p:autoComplete>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <h:panelGroup rendered="#{notesReceivablesFormMB.installment}">
+                                <h:panelGroup   id="smsText2"  >
+                                    <p:outputLabel style="width: 80px;font-size: 16px!important;"  value="#{userData.userDDs['TEXT_MESSAGE']}"/>
+                                </h:panelGroup>
+                                <h:panelGroup >
+                                    <p:selectBooleanCheckbox value="#{notesReceivablesFormMB.sendSms}" style ="margin-right: 2%">
+                                        <p:ajax   update="form" />
+                                    </p:selectBooleanCheckbox>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                    </div>
+                </div>
+
+
+                <h:panelGrid class="col-md-12 centerButtons" style="margin-top: 2%">
+                    <h:panelGroup>
+
+                        <p:commandButton  class="saveButton" id="saveB" 
+                                          title="#{userData.userDDs['SAVE']}" 
+                                          value="#{userData.userDDs['SAVE']}" 
+                                          icon="fa fa-fw fa-save"
+                                          action="#{notesReceivablesFormMB.save()}"
+                                          disabled="#{notesReceivablesFormMB.glBankTransactionEntity.postFlag == 1}"
+                                          update="@form"/>
+
+                        <p:commandButton class="newButton" 
+                                         title="#{userData.userDDs['NEW']}" 
+                                         immediate="true"
+                                         value="#{userData.userDDs['NEW']}" 
+                                         id="newA"
+                                         icon="fa fa-plus"
+                                         update="@form"
+                                         actionListener="#{notesReceivablesFormMB.loadThePageAgain}"   />  
+
+                       
+
+                        <p:commandButton  class="printButton"
+                                          ajax="false" onclick="someFunc();
+                                                  form.target = '_blank';"  
+                                          value="#{userData.userDDs['PRINT']}" 
+                                          title="#{userData.userDDs['PRINT']}"
+                                          actionListener="#{notesReceivablesFormMB.exportPDF}"
+                                          icon="fa fa-fw fa-print"
+
+                                          rendered="#{ notesReceivablesFormMB.glBankTransactionEntity.id gt 0}" />
+
+
+
+                        <p:commandButton class="closeButton" 
+                                         title="#{userData.userDDs['CANCEL']}" 
+                                         immediate="true"
+                                         value="#{userData.userDDs['CANCEL']}" 
+                                         icon="fa fa-fw fa-backward"
+                                         action="#{notesReceivablesFormMB.exit()}"   />
+
+                    </h:panelGroup>
+
+                </h:panelGrid>
+
+
+
+            </p:fieldset>   
+
+
+            
+
+            <p:blockUI block="form" trigger="saveB newA" animate="true" >
+
+                <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+            </p:blockUI> 
+
+        </h:form>
+        <script>
+            function someFunc() {
+                var ss = document.getElementById("form:settelmentId2").value;
+                console.log(ss);
+                sessionStorage.setItem(ss, ss);
+                var field = document.getElementById("form:hidden2");
+                field.value = sessionStorage.getItem(ss);
+            }
+        </script>
+
+    </ui:define>
+</ui:composition>

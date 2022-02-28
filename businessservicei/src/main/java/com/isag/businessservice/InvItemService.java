@@ -8,6 +8,7 @@ package com.isag.businessservice;
 import com.isag.businessservice.reports.searchBean.ItemMainDataByGroupSearchBean;
 import com.isag.define.ScreenNameClassEnum;
 import com.isag.dto.InvItemDTO;
+import com.isag.dto.MissingReport;
 import com.isag.entity.InvBarcode;
 import com.isag.entity.InvGroup;
 import com.isag.entity.InvItem;
@@ -38,6 +39,8 @@ public interface InvItemService {
     public List<InvItemDTO> getInvItemListByBranchId(Integer branchId, ScreenNameClassEnum screenNameClassEnum);
 
     public List<InvItem> getInvItemByBranchId(Integer branchId);
+
+    public List<InvItemDTO> getInvItemByBranchIdDTO(Integer branchId);
 
     public List<InvItem> getInvItemByBranchIdForInvItemMainDataByGroupReportMB(Integer branchId);
 
@@ -90,5 +93,7 @@ public interface InvItemService {
     public InvItemDTO mapToDTO(InvItem detail);
 
     public List<InvItem> getInvItemByBranchIdAndGroupIdUpdate(Integer branchId, String groupId);
+
+    public List<MissingReport> FindinvItemsList(List<InvItem> invItemsList, Integer branchId );
 
 }

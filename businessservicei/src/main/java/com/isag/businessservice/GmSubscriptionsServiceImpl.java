@@ -436,7 +436,7 @@ public class GmSubscriptionsServiceImpl implements GmSubscriptionsService {
         builder.append("SELECT s FROM GmSubscriptions s WHERE  s.organizationSiteId.id =:customerId  AND s.endDate >= :date  order by s.id DESC ");
 
         List<GmSubscriptions> details = dao.findListByQuery(builder.toString(), filters);
-        if (details != null) {
+        if (details != null && !details.isEmpty()) {
             return mapToDTO(details.get(0));
         } else {
             return null;

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml" >
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form id="form" dir="#{userData.dir}">
+            <p:fieldset legend="#{userData.userDDs['COMPANY_MANAGEMENT']}" style="margin-bottom:20px">
+                <div >
+                    <p:messages autoUpdate="true"  id="messages" showDetail="true" closable="true"/>   
+                </div>
+                <p:commandButton   class="scloseButton" icon="fa fa-fw fa-close"  style="float: left;" action="exit" />
+                <p:dataTable 
+                    draggableColumns="true" draggableRows="true"
+                    var="company" widgetVar="comTable" value="#{companyListBean.companies}" rowIndexVar="index" 
+                             paginator="true" rows="15"
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}">
+                    <f:facet name="header" >
+                        <p:commandButton  class="saddButton" id="b2" title="#{userData.userDDs['ADD']}" icon="fa fa-plus" action="#{companyListBean.goToAdd()}" style="float:right; "  />
+                        <p:outputPanel  >
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large;" />
+                            <p:inputText id="globalFilter" onkeyup="PF('comTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+                    </f:facet>
+                  
+                    <p:column headerText="#" style="width: 5%;font-size: 15px;text-align: -webkit-auto;" >
+                        <h:outputText value="#{index + 1}" style="width: 5%;font-size: 12px;" />
+                   
+                    </p:column>
+                   
+                    <p:column filterStyle="display:none" sortBy="#{company.code}" style="width: 10%;font-size: 15px" filterBy="#{company.code}"  filterMatchMode="contains" headerText="#{userData.userDDs['COMPANY_CODE']}" >
+                        <h:outputText value="#{company.code}"  style="font-size: 12px" />
+                   
+                    </p:column>
+                    <p:column filterStyle="display:none" sortBy="#{company.name}"  style="font-size: 15px" filterBy="#{company.name}"  filterMatchMode="contains" headerText="#{userData.userDDs['COMPANY_NAME']}" >
+                        <h:outputText value="#{company.name}"  style="font-size: 12px" />
+                    </p:column>
+                   
+                    <p:column filterStyle="display:none" sortBy="#{company.core_business}"  style="font-size: 15px" filterBy="#{company.core_business}"  filterMatchMode="contains" headerText="#{userData.userDDs['COMPANY_ACTIVITIES']}" >
+                        <h:outputText value="#{company.core_business}"  style="font-size: 12px" />
+                    </p:column>
+                   
+                    <p:column filterStyle="display:none" sortBy="#{company.responsible}"  style="font-size: 15px" filterBy="#{company.responsible}"  filterMatchMode="contains" headerText="#{userData.userDDs['RESPONSABLE_PERSON']}" >
+                        <h:outputText value="#{company.responsible}"  style="font-size: 12px" />
+                    </p:column>
+                    <p:column headerText="#{userData.userDDs['TRANSACTION']}"  style="width: 8% ;font-size: 15px" >
+                       
+                        <p:commandButton  class="seditButton" update="@form" icon="fa fa-fw fa-edit"  title="#{userData.userDDs['EDIT']}" action="#{companyListBean.goToEdit()}">
+                            <f:setPropertyActionListener value="#{company.id}" target="#{companyListBean.selectedCompany}" />
+                        </p:commandButton>
+                        
+                        <p:commandButton  class="sdeleteButton" update="@form" title="#{userData.userDDs['DELETE']}" icon="fa fa-remove"  action="#{companyListBean.delete}">
+                            <f:setPropertyActionListener value="#{company.id}" target="#{companyListBean.selectedCompany}" />
+                            <p:confirm header="#{userData.userDDs['COFIGRATION']}" message="#{userData.userDDs['ARE_YOU_SURE']}" icon="ui-icon-alert" />
+                        </p:commandButton>
+
+                    </p:column>
+                </p:dataTable>
+            </p:fieldset>
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
+        </h:form>
+    </ui:define>
+
+
+</ui:composition>

@@ -14,6 +14,7 @@ import com.isag.businessservice.InvPurchaseInvoiceService_1;
 import com.isag.businessservice.InvStripService;
 import com.isag.businessservice.IsagUserInventoryService;
 import com.isag.businessservice.OrganizationSiteService;
+import com.isag.businessservice.QuantityItemsStoreByDateService;
 import com.isag.businessservice.reports.BankBalanceViewService;
 import com.isag.businessservice.reports.SupplierAccountService;
 import com.isag.dto.GlBankDTO;
@@ -108,7 +109,7 @@ public class DashboardMB extends BaseListBean {
     SupplierAccountService supplierAccountService;
     @EJB
     InvStripService invStripService;
-
+  
     @PostConstruct
     @Override
 
@@ -122,7 +123,7 @@ public class DashboardMB extends BaseListBean {
     }
 
     public void loadPer() {
-        fillSales();
+
     }
 
     @Override
@@ -134,38 +135,38 @@ public class DashboardMB extends BaseListBean {
                     case 0:
                         context.getSessionMap().put("ScreenMode", "addInvoice");
                         context.getSessionMap().put("typeActivity", 0);
-                        exit("/faces/views/invsalesinvoice_1/invsalesinvoiceform.xhtml");
+                        exit("/igma/faces/views/invsalesinvoice_1/invsalesinvoiceform.xhtml");
                         return "";
                     case 1:
                         context.getSessionMap().put("ScreenMode", "addInvoice");
                         context.getSessionMap().put("typeActivity", 0);
-                        exit("/faces/views/invreturnsales_1/invreturnsalesform.xhtml");
+                        exit("/igma/faces/views/invreturnsales_1/invreturnsalesform.xhtml");
                         return "";
                     case 2:
                         context.getSessionMap().put("ScreenMode", "addInvoice");
-                        exit("/faces/views/invpurchaseinvoice_1/invpurchaseinvoiceform.xhtml");
+                        exit("/igma/faces/views/invpurchaseinvoice_1/invpurchaseinvoiceform.xhtml");
                         context.getSessionMap().put("typeActivity", 0);
                         return "";
                     case 3:
                         context.getSessionMap().put("ScreenMode", "addInvoice");
-                        exit("/faces/views/invreturnpurchase_1/invreturnpurchaseform.xhtml");
+                        exit("/igma/faces/views/invreturnpurchase_1/invreturnpurchaseform.xhtml");
                         context.getSessionMap().put("typeActivity", 0);
                         return "";
                     case 4:
                         context.getSessionMap().put("ScreenMode", "Add");
-                        exit("/faces/views/settlementdeed/settlementdeedForm.xhtml");
+                        exit("/igma/faces/views/settlementdeed/settlementdeedForm.xhtml");
                         return "";
                     case 5:
                         context.getSessionMap().put("ScreenMode", "Add");
-                        exit("/faces/views/notesreceivables/notesreceivablesForm.xhtml");
+                        exit("/igma/faces/views/notesreceivables/notesreceivablesForm.xhtml");
                         return "";
                     case 6:
                         context.getSessionMap().put("ScreenMode", "Add");
-                        exit("/faces/views/glBankTransaction/glBankTransactionForm.xhtml");
+                        exit("/igma/faces/views/glBankTransaction/glBankTransactionForm.xhtml");
                         return "";
                     case 7:
                         context.getSessionMap().put("ScreenMode", "addGmSubscriptions");
-                        exit("/faces/views/gmsubscriptions/gmsubscriptionsform.xhtml");
+                        exit("/igma/faces/views/gmsubscriptions/gmsubscriptionsform.xhtml");
                         return "";
                     default:
                         break;
@@ -225,7 +226,7 @@ public class DashboardMB extends BaseListBean {
                         Integer id = invPurchaseInvoiceService_1.findInvPurchaseInvoiceBySerialNew(serial, getUserlogin().getBranchId().getId(), 1);
                         if (id != null) {
                             context.getSessionMap().put("invPurchaseInvoiceIdSeclected", id);
-                            exit("/faces/views/invsalesinvoice_1/invsalesinvoiceform.xhtml");
+                            exit("/igma/faces/views/invsalesinvoice_1/invsalesinvoiceform.xhtml");
                         } else {
                             FacesContext.getCurrentInstance().addMessage(null,
                                     new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "غير موجوده"));
@@ -236,7 +237,7 @@ public class DashboardMB extends BaseListBean {
                         Integer id1 = invPurchaseInvoiceService_1.findInvPurchaseInvoiceBySerialNew(serial, getUserlogin().getBranchId().getId(), 3);
                         if (id1 != null) {
                             context.getSessionMap().put("invPurchaseInvoiceIdSeclected", id1);
-                            exit("/faces/views/invreturnsales_1/invreturnsalesform.xhtml");
+                            exit("/igma/faces/views/invreturnsales_1/invreturnsalesform.xhtml");
                         } else {
                             FacesContext.getCurrentInstance().addMessage(null,
                                     new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "غير موجوده"));
@@ -247,7 +248,7 @@ public class DashboardMB extends BaseListBean {
                         Integer id2 = invPurchaseInvoiceService_1.findInvPurchaseInvoiceBySerialNew(serial, getUserlogin().getBranchId().getId(), 0);
                         if (id2 != null) {
                             context.getSessionMap().put("invPurchaseInvoiceIdSeclected", id2);
-                            exit("/faces/views/invpurchaseinvoice_1/invpurchaseinvoiceform.xhtml");
+                            exit("/igma/faces/views/invpurchaseinvoice_1/invpurchaseinvoiceform.xhtml");
                         } else {
                             FacesContext.getCurrentInstance().addMessage(null,
                                     new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "غير موجوده"));
@@ -259,7 +260,7 @@ public class DashboardMB extends BaseListBean {
                         Integer id3 = invPurchaseInvoiceService_1.findInvPurchaseInvoiceBySerialNew(serial, getUserlogin().getBranchId().getId(), 2);
                         if (id3 != null) {
                             context.getSessionMap().put("invPurchaseInvoiceIdSeclected", id3);
-                            exit("/faces/views/invreturnpurchase_1/invreturnpurchaseform.xhtml");
+                            exit("/igma/faces/views/invreturnpurchase_1/invreturnpurchaseform.xhtml");
                         } else {
                             FacesContext.getCurrentInstance().addMessage(null,
                                     new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "غير موجوده"));
@@ -270,7 +271,7 @@ public class DashboardMB extends BaseListBean {
                         Integer id4 = glBankTransactionService.findGlBankTransactionBySerial(serial, getUserlogin().getBranchId().getId(), 0);
                         if (id4 != null) {
                             context.getSessionMap().put("glBankTransactionIdSeclected", id4);
-                            exit("/faces/views/settlementdeed/settlementdeedForm.xhtml");
+                            exit("/igma/faces/views/settlementdeed/settlementdeedForm.xhtml");
                         } else {
                             FacesContext.getCurrentInstance().addMessage(null,
                                     new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "غير موجوده"));
@@ -281,7 +282,7 @@ public class DashboardMB extends BaseListBean {
                         Integer id5 = glBankTransactionService.findGlBankTransactionBySerial(serial, getUserlogin().getBranchId().getId(), 1);
                         if (id5 != null) {
                             context.getSessionMap().put("glBankTransactionIdSeclected", id5);
-                            exit("/faces/views/notesreceivables/notesreceivablesForm.xhtml");
+                            exit("/igma/faces/views/notesreceivables/notesreceivablesForm.xhtml");
                         } else {
                             FacesContext.getCurrentInstance().addMessage(null,
                                     new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "غير موجوده"));
@@ -293,7 +294,7 @@ public class DashboardMB extends BaseListBean {
                         Integer id6 = glBankTransactionService.findGlBankTransactionBySerial(serial, getUserlogin().getBranchId().getId(), 2);
                         if (id6 != null) {
                             context.getSessionMap().put("glBankTransactionIdSeclected", id6);
-                            exit("/faces/views/glBankTransaction/glBankTransactionForm.xhtml");
+                            exit("/igma/faces/views/glBankTransaction/glBankTransactionForm.xhtml");
                         } else {
                             FacesContext.getCurrentInstance().addMessage(null,
                                     new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "غير موجوده"));
@@ -305,7 +306,7 @@ public class DashboardMB extends BaseListBean {
                         Integer id7 = gmSubscriptionsService.findGmSubscriptionsDTOBySerialNew(serial, getUserlogin().getBranchId().getId());
                         if (id7 != null) {
                             context.getSessionMap().put("gmSubscriptionsIdSelected", id7);
-                            exit("/faces/views/gmsubscriptions/gmsubscriptionsform.xhtml");
+                            exit("/igma/faces/views/gmsubscriptions/gmsubscriptionsform.xhtml");
                         } else {
                             FacesContext.getCurrentInstance().addMessage(null,
                                     new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "غير موجوده"));

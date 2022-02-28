@@ -45,7 +45,7 @@
                         <f:facet name="header">
                             <p:commandButton class="saddButton" id="b2" icon="fa fa-plus" title="#{userData.userDDs['ADD']}" action="#{notesReceivablesListMB.goToAdd()}" 
                                              style="float:right" 
-                                             rendered="#{userData.userScreens['notesreceivables'].add or userData.isAdmin}"/>
+                                             rendered="#{userData.userScreens['notesreceivablesdis'].add or userData.isAdmin}"/>
 
                             <p:outputPanel>
                                 <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
@@ -162,7 +162,7 @@
                                              icon="fa fa-fw fa-edit"
                                              title="#{userData.userDDs['EDIT']}" 
                                              action="#{notesReceivablesListMB.goToEdit()}"
-                                             rendered="#{userData.userScreens['notesreceivables'].edit or userData.userScreens['notesreceivables'].view or userData.isAdmin}">
+                                             rendered="#{userData.userScreens['notesreceivablesdis'].view or userData.userScreens['notesreceivablesdis'].view or userData.isAdmin}">
 
                                 <f:setPropertyActionListener value="#{glBankTransactionTable.id}" 
                                                              target="#{notesReceivablesListMB.glBankTransactionIdSeclected}" />
@@ -171,7 +171,7 @@
                                              icon="fa fa-remove" 
                                              title="#{userData.userDDs['DELETE']}" 
                                              action="#{notesReceivablesListMB.delete}"
-                                             rendered="#{userData.userScreens['notesreceivables'].delete or userData.isAdmin}"
+                                             rendered="#{userData.userScreens['notesreceivablesdis'].delete or userData.isAdmin}"
                                              disabled="#{(glBankTransactionTable.postFlag == 1) or  (not userData.isagUserRole.bankUpdate and glBankTransactionTable.documentSerial ne null)}"
 
                                              >
@@ -182,8 +182,8 @@
                             <p:commandButton   class="sprintButton" ajax="false" onclick="form.target = '_blank'" 
                                                icon="fa fa-fw fa-print"
                                                style="background-color:#0A487B;border-radius: 3px;margin-bottom:3px"
-                                               actionListener="#{notesReceivablesListMB.exportPDF}" 
-                                               rendered="#{userData.userScreens['notesreceivables'].view or userData.isAdmin}">
+                                               actionListener="#{notesReceivablesListMB.exportPDFGYM}" 
+                                               rendered="#{userData.userScreens['notesreceivablesdis'].view or userData.isAdmin}">
                                 <f:attribute name="varValue" value="#{glBankTransactionTable}" />
                             </p:commandButton>
                         </p:column>

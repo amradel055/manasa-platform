@@ -1,0 +1,159 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <link rel="stylesheet" type="text/css"
+          href="../../resources/css/main.css" />
+
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:head>
+            <title>#{userData.userDDs['REVISION_BALANCE_REPORT']} </title>
+        </h:head>
+        <h:body>
+            <h:form id="form">
+
+                <h:panelGrid columns="6" cellpadding="10" cellspacing="0">
+                    <h:panelGroup>
+                        <p:outputLabel value="#{userData.userDDs['ACCOUNT_FROM']}" />
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:selectOneMenu id="accountFrom" filter="true" filterMatchMode="startsWith" value="#{revisionBalanceMB.accountIdFrom}">
+                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" itemValue="" noSelectionOption="true" />
+                            <p:ajax update="accountFromCode" />
+                            <f:selectItems value="#{generalJournalBean.glAccounts}" var="accFrom" itemLabel="#{accFrom.name}" itemValue="#{accFrom.id}" />
+                        </p:selectOneMenu>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:selectOneMenu id="accountFromCode" filter="true" filterMatchMode="startsWith" value="#{revisionBalanceMB.accountIdFrom}">
+                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" itemValue="" noSelectionOption="true" />
+                            <p:ajax update="accountFrom" />
+                            <f:selectItems value="#{generalJournalBean.glAccounts}" var="accFrom" itemLabel="#{accFrom.accNumber}" itemValue="#{accFrom.id}" />
+                        </p:selectOneMenu>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:outputLabel value="#{userData.userDDs['ACCOUNT_TO']}" />
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:selectOneMenu id="accountTo" filter="true" filterMatchMode="startsWith" value="#{revisionBalanceMB.accountIdTo}">
+                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" itemValue="" noSelectionOption="true" />
+                            <p:ajax update="accountToCode" />
+                            <f:selectItems value="#{generalJournalBean.glAccounts}" var="accTo" itemLabel="#{accTo.name}" itemValue="#{accTo.id}" />
+                        </p:selectOneMenu>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:selectOneMenu id="accountToCode" filter="true" filterMatchMode="startsWith" value="#{revisionBalanceMB.accountIdTo}">
+                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" itemValue="" noSelectionOption="true" />
+                            <p:ajax update="accountTo" />
+                            <f:selectItems value="#{generalJournalBean.glAccounts}" var="accTo" itemLabel="#{accTo.accNumber}" itemValue="#{accTo.id}" />
+                        </p:selectOneMenu>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:outputLabel value="#{userData.userDDs['ADMIN_UNIT_FROM']}" />
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:selectOneMenu id="adminUnitNameFrom" filter="true" filterMatchMode="startsWith" value="#{revisionBalanceMB.adminUnitFrom}">
+                            <p:ajax update="adminUnitCodeFrom" />
+                            <f:selectItem id="adminUnitFromId" itemLabel="#{userData.userDDs['CHOOSE']}" itemDisabled="#{not generalJournalBean.disableAdminU}" itemValue="" noSelectionOption="true" />
+                            <f:selectItems value="#{generalJournalBean.glAdminunitlist}" var="adminUnitFromVar" itemLabel="#{adminUnitFromVar.name}" itemValue="#{adminUnitFromVar.id}" />
+                        </p:selectOneMenu>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:selectOneMenu id="adminUnitCodeFrom" filter="true" filterMatchMode="startsWith" value="#{revisionBalanceMB.adminUnitFrom}">
+                            <p:ajax update="adminUnitNameFrom" />
+                            <f:selectItem id="adminUnitFromId1" itemLabel="#{userData.userDDs['CHOOSE']}" itemDisabled="#{not generalJournalBean.disableAdminU}" itemValue="" noSelectionOption="true" />
+                            <f:selectItems value="#{generalJournalBean.glAdminunitlist}" var="adminUnitFromVar" itemLabel="#{adminUnitFromVar.code}" itemValue="#{adminUnitFromVar.id}" />
+                        </p:selectOneMenu>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:outputLabel value="#{userData.userDDs['ADMIN_UNIT_TO']}" />
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:selectOneMenu id="adminUnitNameTo" filter="true" filterMatchMode="startsWith" value="#{revisionBalanceMB.adminUnitTo}">
+                            <p:ajax update="adminUnitCodeTo" />
+                            <f:selectItem id="adminUnitTo" itemLabel="#{userData.userDDs['CHOOSE']}" itemDisabled="#{not generalJournalBean.disableAdminU}" itemValue="" noSelectionOption="true" />
+                            <f:selectItems value="#{generalJournalBean.glAdminunitlist}" var="adminUnitToVar" itemLabel="#{adminUnitToVar.name}" itemValue="#{adminUnitToVar.id}" />
+                        </p:selectOneMenu>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:selectOneMenu id="adminUnitCodeTo" filter="true" filterMatchMode="startsWith" value="#{revisionBalanceMB.adminUnitTo}">
+                            <p:ajax update="adminUnitNameTo" />
+                            <f:selectItem id="adminUnitTo1" itemLabel="#{userData.userDDs['CHOOSE']}" itemDisabled="#{not generalJournalBean.disableAdminU}" itemValue="" noSelectionOption="true" />
+                            <f:selectItems value="#{generalJournalBean.glAdminunitlist}" var="adminUnitToVar" itemLabel="#{adminUnitToVar.code}" itemValue="#{adminUnitToVar.id}" />
+                        </p:selectOneMenu>
+                    </h:panelGroup>
+                </h:panelGrid>
+                <h:panelGrid columns="4" cellpadding="10" cellspacing="0">
+                    <h:panelGroup>
+                        <p:outputLabel value="#{userData.userDDs['LEVEL_FROM']}" />
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:inputNumber id="levelFrom" value="#{revisionBalanceMB.levelFrom}"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:outputLabel value="#{userData.userDDs['LEVEL_TO']}" />
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:inputNumber id="levelTo" value="#{revisionBalanceMB.levelTo}"/>
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <p:outputLabel value="#{userData.userDDs['YEAR_FROM']}" />
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:calendar id="dateFrom" value="#{revisionBalanceMB.dateFrom}" pattern="yyyy/MM/dd">
+                            <f:convertDateTime pattern="yyyy/MM/dd"/>
+                        </p:calendar>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:outputLabel value="#{userData.userDDs['YEAR_TO']}" />
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:calendar id="dateTo" value="#{revisionBalanceMB.dateTo}" pattern="yyyy/MM/dd">
+                            <f:convertDateTime pattern="yyyy/MM/dd"/>
+                        </p:calendar>
+                    </h:panelGroup>
+
+                </h:panelGrid>
+                <h:panelGrid columns="3">
+                    <h:panelGroup>
+                        <p:commandButton id="searchBtn" value="#{userData.userDDs['SEARCH']}" action="#{revisionBalanceMB.filter()}" update="revBalDatatable" />
+                        <p:commandButton value="#{userData.userDDs['NEW_SEARCH']}" action="#{revisionBalanceMB.reset()}" update="form" />
+                    </h:panelGroup>
+                </h:panelGrid>
+
+                <p:dataTable id="revBalDatatable" value="#{revisionBalanceMB.revisionBalanceList}" var="revisionBalVal" dir="rtl" rows="15" paginator="true"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" 
+                             rowsPerPageTemplate="5, 10, 15">
+
+                    <f:facet name="header">#{userData.userDDs['REVISION_BALANCE_REPORT']}</f:facet>
+                    <p:column headerText="#{userData.userDDs['ACCOUNT_NUMBER']}">
+                        <h:outputText value="#{revisionBalVal.glAccountNumber }" />
+                    </p:column>
+                    <p:column headerText="#{userData.userDDs['ACCOUNT_NAME']}">
+                        <h:outputText value="#{revisionBalVal.glAccountName}" />
+                    </p:column>
+                    <p:column headerText="#{userData.userDDs['BALANCE_BEFORE']}">
+                        <h:outputText value="0" />
+                    </p:column>
+                    <!-- <p:columnGroup type="header">
+                            <p:row>
+
+                                    <p:column rowspan="2" headerText="رصيد اول المدة" />
+                                    <p:column colspan="2" headerText="اجمالي الحركة للفترة" />
+                            </p:row>
+                            <p:row>
+                                    <p:column headerText="مدين" />
+                                    <p:column headerText="دائن" />
+                            </p:row>
+                    </p:columnGroup> -->
+                </p:dataTable>
+
+            </h:form>
+        </h:body>
+    </ui:define>
+</ui:composition>

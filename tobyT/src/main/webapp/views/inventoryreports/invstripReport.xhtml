@@ -1,0 +1,418 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form id="form"  dir="#{userData.dir}"  class='formmargin'>
+
+            <div class="col-xs-12">
+                <p:messages autoUpdate="true"  showDetail="true" closable="true" rendered="true" />
+            </div>
+
+            <p:fieldset  style=" position: relative" legend="#{userData.userDDs['INV_STORES_REP']}"> 
+
+                <div class="ui-g firstset" id="firstSegment ">
+
+                    <div class="ui-g-6 ui-xl-6">
+       	                <div class="ui-g-12 ui-xl-12">
+
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:autoComplete style="width:40%!important " 
+                                                dropdown="true"
+                                                converter="#{InventoryStripReportMB.groupConverter}"
+                                                value="#{InventoryStripReportMB.invStripSearchBean.groupTo}"
+                                                var="group"
+                                                itemLabel="#{group}" 
+                                                itemValue="#{group}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{InventoryStripReportMB.completInvGroups}" >
+                                </p:autoComplete>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 105px" value="#{userData.userDDs['TO_GROUP']}"/>
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:autoComplete style="width:40%!important " 
+                                                dropdown="true"
+                                                converter="#{InventoryStripReportMB.groupConverter}"
+                                                value="#{InventoryStripReportMB.invStripSearchBean.groupFrom}"
+                                                var="group"
+                                                itemLabel="#{group}" 
+                                                itemValue="#{group}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{InventoryStripReportMB.completInvGroups}" >
+                                </p:autoComplete>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 105px;" value="#{userData.userDDs['FROM_GROUP']}"/>
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:autoComplete style="width:40%!important " 
+                                                dropdown="true"
+                                                converter="#{InventoryStripReportMB.invInventoryConverter}"
+                                                value="#{InventoryStripReportMB.invStripSearchBean.inventoryTo}"
+                                                var="inventory"
+                                                itemLabel="#{inventory}" 
+                                                itemValue="#{inventory}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{InventoryStripReportMB.completInventory}" >
+                                </p:autoComplete>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 105px" value="#{userData.userDDs['TO_REPOS']}"/>
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:autoComplete style="width:40%!important " 
+                                                dropdown="true"
+                                                converter="#{InventoryStripReportMB.invInventoryConverter}"
+                                                value="#{InventoryStripReportMB.invStripSearchBean.inventoryFrom}"
+                                                var="inventory"
+                                                itemLabel="#{inventory}" 
+                                                itemValue="#{inventory}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{InventoryStripReportMB.completInventory}" >
+                                </p:autoComplete>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 105px;" value="#{userData.userDDs['FROM_REPOS']}"/>
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:calendar pattern="dd/MM/yyyy" 
+                                            id="dateTo"
+                                            value="#{InventoryStripReportMB.invStripSearchBean.dateTo}"
+                                            style="width: 50%">
+                                </p:calendar>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel  style="width: 100px;" value="#{userData.userDDs['UNTIL_DATE']}"/>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="ui-g-6 ui-xl-6">
+
+                        <div class="ui-g-12 ui-xl-12">
+
+                            <p:selectBooleanCheckbox value="#{InventoryStripReportMB.isZeroo}" itemLabel="الارصده الصفرية"/>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:selectOneRadio id="evaluationStatus"
+                                                  value="#{InventoryStripReportMB.evaluationStatus}" 
+                                                  style="width:40%!important">                                                             
+                                    <f:selectItem itemLabel="بالتكلفه؟"  itemValue="0"  />
+                                    <f:selectItem itemLabel="بالسعر"  itemValue="1"  />
+                                </p:selectOneRadio>  
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 105px" value="حالة التقييم"/>
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:inputNumber style="width:40%!important" id="weightPrice"
+                                               value="#{InventoryStripReportMB.weightPrice}">
+                                </p:inputNumber>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 105px;" value="سعر الكيلو"/>
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:autoComplete style="width:40%!important " 
+                                                dropdown="true"
+                                                converter="#{InventoryStripReportMB.suplierConverter}"
+                                                value="#{InventoryStripReportMB.invStripSearchBean.suplierTo}"
+                                                var="suplier"
+                                                itemLabel="#{suplier}" 
+                                                itemValue="#{suplier}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{InventoryStripReportMB.completSupliers}" >
+                                </p:autoComplete>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 105px" value="#{userData.userDDs['TO_SUPPLIER']}"/>
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:autoComplete style="width:40%!important " 
+                                                dropdown="true"
+                                                converter="#{InventoryStripReportMB.suplierConverter}"
+                                                value="#{InventoryStripReportMB.invStripSearchBean.suplierFrom}"
+                                                var="suplier"
+                                                itemLabel="#{suplier}" 
+                                                itemValue="#{suplier}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{InventoryStripReportMB.completSupliers}" >
+                                </p:autoComplete>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 105px;" value="#{userData.userDDs['FROM_SUPPLIER']}"/>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+
+                </div>
+
+
+
+                <div id="buttunss" class="asmaa">
+
+                    <p:commandButton     class="searchButtons"
+
+                                         title="#{userData.userDDs['SEARCH']}"
+                                         action="#{InventoryStripReportMB.search()}"
+                                         id="search"
+                                         value="#{userData.userDDs['SEARCH']}"
+                                         update="invStripTable" 
+                                         />
+
+                    <p:commandButton    class="newButton"
+                                        id="NewB"
+                                        title="#{userData.userDDs['NEW']}" 
+                                        immediate="true" 
+                                        action="#{InventoryStripReportMB.reset()}"
+                                        update="@form"
+                                        value="#{userData.userDDs['NEW']}"
+                                        />
+
+                    <p:commandButton     class="printButtons"
+                                         id="PrintB"
+                                         ajax="false"
+                                         onclick="form.target = '_blank'"  
+                                         value="#{userData.userDDs['PRINT']}" 
+                                         actionListener="#{InventoryStripReportMB.exportPDF}"
+                                         title="#{userData.userDDs['PRINT']}"
+                                         immediate="true" />
+
+                    <p:commandButton     class="closeButton"
+                                         id="CloseB"
+                                         title="#{userData.userDDs['BACK']}"
+                                         action="exit"
+                                         value="#{userData.userDDs['BACK']}"/>
+                    <h:commandLink  class="sdcreenimg" style="margin-right: 4px;">  
+                        <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                        <p:dataExporter type="xls"
+                                        target="invStripTable" 
+                                        fileName=" جرد المستودع"
+                                        postProcessor="#{InventoryStripReportMB.postProcessXLS}" />  
+                    </h:commandLink>
+
+                    <p:blockUI block="form" trigger="search NewB PrintB CloseB" animate="true" >
+
+                        <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+                    </p:blockUI> 
+
+                </div>
+            </p:fieldset>
+
+            <p:fieldset  style="margin-top: 2%">
+
+                <p:dataTable id="invStripTable"  paginator="true" rows="15"
+                             var="invStripTable"
+                             widgetVar="invStripTable" 
+                             dir="rtl" 
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                             rowKey="#{invStripTable}"
+                             value="#{InventoryStripReportMB.stripReportViewBeanList}"
+                             rowIndexVar="index" 
+                             rowStyleClass="#{(invStripTable.itemCode eq null) ? 'colored' : null} ">
+
+                    <f:facet name="header">
+
+
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('invStripTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+
+                    </f:facet>
+
+                    <p:columnGroup type="header">
+                        <p:row>
+                            <p:column rowspan="2"
+                                      headerText="#{userData.userDDs['GROUP_NAME']}" 
+                                      style="width: 10vh;font-size: 1.7vh;text-align: center;border-radius: 0px;"
+
+                                      filterBy="#{invStripTable.groupName}" 
+                                      filterMatchMode="contains" 
+                                      sortBy="#{invStripTable.groupName}"
+                                      filterable="false">
+                            </p:column>
+
+
+                            <p:column rowspan="2"
+                                      headerText="#{userData.userDDs['ITEM_NAME']}" 
+                                      style="width: 15vh;font-size: 1.4vh;text-align: center;border-radius: 0px;"
+
+                                      filterBy="#{invStripTable.itemName}" 
+                                      filterMatchMode="contains" 
+                                      sortBy="#{invStripTable.itemName}"
+                                      filterable="false">
+                            </p:column>
+
+                            <p:column rowspan="2"
+                                      headerText="#{userData.userDDs['UNIT']}" 
+                                      style="width: 7vh;font-size: 1.4vh;text-align: center;border-radius: 0px;"
+
+                                      filterBy="#{invStripTable.unitName}" 
+                                      filterMatchMode="contains" 
+                                      sortBy="#{invStripTable.unitName}"
+                                      filterable="false">
+
+                            </p:column>
+
+
+
+                            <p:column colspan="2" headerText="#{userData.userDDs['TOT_REPOS_TRANS']}" 
+                                      style="width: 20vh;font-size: 1.4vh;text-align: center;border-radius: 0px;"/>
+                            <p:column rowspan="2" headerText="#{userData.userDDs['BALAN_AMOUNT']}" 
+                                      style="width: 20vh;font-size: 1.4vh;text-align: center;border-radius: 0px;"
+
+                                      filterBy="#{invStripTable.balance}" 
+                                      filterMatchMode="contains" 
+                                      sortBy="#{invStripTable.balance}"
+                                      filterable="false"/>
+                            <p:column rowspan="2" headerText="الوزن" 
+                                      style="width: 10vh;font-size: 1.4vh;text-align: center;border-radius: 0px;"
+
+                                      filterBy="#{invStripTable.weight}" 
+                                      filterMatchMode="contains" 
+                                      sortBy="#{invStripTable.weight}"
+                                      filterable="false"/>
+                            <p:column rowspan="2" headerText="سعر البيع" 
+                                      style="width: 10vh;font-size: 1.4vh;text-align: center;border-radius: 0px;"
+
+                                      filterBy="#{invStripTable.sellPrice}" 
+                                      filterMatchMode="contains" 
+                                      sortBy="#{invStripTable.sellPrice}"
+                                      filterable="false"/>
+
+                            <p:column rowspan="2" headerText="#{userData.userDDs['COST']}" 
+                                      style="width: 12vh;font-size: 1.4vh;text-align: center;border-radius: 0px;"
+
+                                      filterBy="#{invStripTable.costAverage}" 
+                                      filterMatchMode="contains" 
+                                      sortBy="#{invStripTable.costAverage}"
+                                      filterable="false"/>
+
+                            <p:column rowspan="2" headerText="#{userData.userDDs['TOTAL']}"  
+                                      style="width: 12vh;font-size: 1.4vh;text-align: center;border-radius: 0px;"
+
+                                      filterBy="#{invStripTable.balanceValue}" 
+                                      filterMatchMode="contains" 
+                                      sortBy="#{invStripTable.balanceValue}"
+                                      filterable="false"/>
+
+
+                        </p:row>
+                        <p:row>
+                            <p:column headerText="#{userData.userDDs['IMPORT']}" style="font-size: 1.4vh;text-align: center;border-radius: 0px;"
+
+                                      filterBy="#{invStripTable.qtyIn}" 
+                                      filterMatchMode="contains" 
+                                      sortBy="#{invStripTable.qtyIn}"
+                                      filterable="false"/>
+
+                            <p:column headerText="#{userData.userDDs['EXPORT']}" style="font-size: 1.4vh;text-align: center;border-radius: 0px;"
+
+                                      filterBy="#{invStripTable.qtyOut}" 
+                                      filterMatchMode="contains" 
+                                      sortBy="#{invStripTable.qtyOut}"
+                                      filterable="false"/>
+
+                        </p:row>
+                    </p:columnGroup>
+
+                    <p:column  style="width:10vh;font-size: 1.4vh;text-align: center;border-radius: 0px;" >
+                        <h:outputText value="#{invStripTable.groupName}" style="font-size: 1.4vh"/>
+                    </p:column>
+
+
+                    <p:column   style="width:15vh;font-size: 1.4vh;text-align: center;border-radius: 0px;" >
+                        <h:outputText value="#{invStripTable.itemName}" style="font-size: 1.4vh"/>
+                    </p:column>    
+                    <p:column  style="width:6vh;font-size: 1.4vh;text-align: center;border-radius: 0px;" >
+                        <h:outputText value="#{invStripTable.unitName}" style="font-size: 1.4vh;width: 95%"/>
+                    </p:column>
+
+                    <p:column  style="width:8vh;font-size: 1.4vh;text-align: center;border-radius: 0px;" >
+                        <p:inputNumber readonly="true" value="#{invStripTable.qtyIn}" style="font-size: 1.4vh;width: 90%"/>
+                    </p:column>
+                    <p:column  style="width:8vh;font-size: 1.4vh;text-align: center;border-radius: 0px;">
+                        <p:inputNumber readonly="true" value="#{invStripTable.qtyOut}" style="font-size: 1.4vh;width: 95%"/>
+                    </p:column>
+                    <p:column  style="width:8vh;font-size: 1.4vh;text-align: center;border-radius: 0px;">
+                        <p:inputNumber readonly="true" value="#{invStripTable.balance}" style="font-size: 1.4vh;width: 95%;"/>
+                    </p:column>
+                    <p:column  style="width:8vh;font-size: 1.2vh;text-align: center;border-radius: 0px;">
+                        <p:inputNumber readonly="true" value="#{invStripTable.weight}" style="font-size: 1.4vh;width: 90%;"/>
+                    </p:column>
+                    <p:column  style="width:8vh;font-size: 1.2vh;text-align: center;border-radius: 0px;">
+                        <p:inputNumber readonly="true" value="#{invStripTable.sellPrice}" style="font-size: 1.4vh;width: 90%;"/>
+                    </p:column>
+                    <p:column  style="width:8vh;font-size: 1.4vh;text-align: center;border-radius: 0px;" >
+                        <p:inputNumber readonly="true" value="#{invStripTable.costAverage}" style="font-size: 1.4vh;width: 95%"/>
+                    </p:column>
+                    <p:column  style="width:10vh;font-size: 1.4vh;text-align: center;border-radius: 0px;"  >
+                        <p:inputNumber readonly="true" value="#{invStripTable.balanceValue}" style="font-size: 1.4vh;width: 95%"/>
+                    </p:column>
+                    <p:columnGroup type="footer">
+                        <p:row>
+                            <p:column  style="border-radius: 0px;" colspan="4" footerText="#{userData.userDDs['TOTAL']} " />
+                            <p:column   footerText="#{InventoryStripReportMB.debitValue}" style="font-size: 1.2vh !important;border-radius: 0px;"/>
+                            <p:column   footerText="#{InventoryStripReportMB.creditValue}"  style="font-size: 1.2vh !important;border-radius: 0px;"/>
+                            <p:column   footerText="#{InventoryStripReportMB.balanceValue}" style="font-size: 1.2vh !important;border-radius: 0px;" />
+                            <p:column  style="border-radius: 0px;" colspan="2"  />
+                            <p:column   footerText="#{InventoryStripReportMB.firstValue}" style="font-size: 1.2vh !important;border-radius: 0px;" />
+                            <p:column   footerText="#{InventoryStripReportMB.secondValue}" style="font-size: 1.2vh !important;border-radius: 0px;"/>
+
+                        </p:row>
+                    </p:columnGroup>
+
+                </p:dataTable>
+            </p:fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>

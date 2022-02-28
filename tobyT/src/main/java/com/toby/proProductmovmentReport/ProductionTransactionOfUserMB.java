@@ -1,0 +1,487 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.toby.proProductmovmentReport;
+
+import com.toby.businessservice.ProProductionItemsTransactionService;
+import com.toby.businessservice.ProProductionStagesService;
+import com.toby.businessservice.ProductionTransactionOfUserService;
+import com.toby.businessservice.TobyUserService;
+import com.toby.converter.ProProductionStagesDTOConverter;
+import com.toby.converter.TobyUserDTOConverter;
+import com.toby.dto.PrintProductionDTO;
+import com.toby.dto.ProProductionStagesDTO;
+import com.toby.dto.TobyUserDTO;
+import com.toby.toby.AutoComplete;
+import com.toby.toby.BaseFormBean;
+import com.toby.toby.UserData;
+import com.toby.views.ProductionTransactionOfUser;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
+import javax.faces.view.ViewScoped;
+import javax.inject.Named;
+import net.sf.jasperreports.engine.JRException;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
+
+/**
+ *
+ * @author H
+ */
+@Named(value = "productionTransactionOfUserMB")
+@ViewScoped
+public class ProductionTransactionOfUserMB extends BaseFormBean {
+    private Boolean showMessage = false;
+    private Map<String, String> userDDs;
+
+    private PrintProductionDTO printProductionDTO;
+    private List<TobyUserDTO> tobyUserDTOList;
+    private List<ProProductionStagesDTO> proProductionStagesDTOList;
+    private List<ProductionTransactionOfUser> productionTransactionOfUserList;
+    private TobyUserDTOConverter tobyUserDTOConverter;
+    private ProProductionStagesDTOConverter proProductionStagesDTOConverter;
+    private BigDecimal totalQuantity;
+    private BigDecimal Total;
+
+    private ProProductionStagesDTO productionStagesDTOSelected;
+    private List<ProProductionStagesDTO> productionStagesListSelected;
+
+    private List<ProProductionStagesDTO> productionStagesList;
+    private ProProductionStagesDTOConverter stagesDTOConverter;
+
+    @EJB
+    private TobyUserService tobyUserService;
+    @EJB
+    private ProProductionStagesService proProductionStagesService;
+    @EJB
+    private ProductionTransactionOfUserService productionTransactionOfUserService;
+    @EJB
+    private ProProductionItemsTransactionService proProductionItemsTransactionService;
+
+    public List<ProProductionStagesDTO> completeProProductionId(String query) {
+
+        return AutoComplete.completeProProductionId(query, proProductionStagesDTOList, proProductionStagesDTOConverter);
+
+    }
+
+    public List<TobyUserDTO> completusercode(String query) {
+
+        return AutoComplete.completusercode(query, tobyUserDTOList, tobyUserDTOConverter);
+    }
+
+    public void search() {
+        // if((printProductionDTO.getFromUser()!=null&&printProductionDTO.getToUser()!=null)
+        // ||(printProductionDTO.getFromDate()!=null&&printProductionDTO.getToDate()!=null)
+        //  ||(printProductionDTO.getFromStatus()!=null)&&(printProductionDTO.getToStatus()!=null)){
+         validateSearch();
+         if (!getShowMessage()){
+        totalQuantity = BigDecimal.ZERO;
+        Total = BigDecimal.ZERO;
+        productionTransactionOfUserList = proProductionItemsTransactionService.getProProductionTransactionDTOForAllUsersList(printProductionDTO, getUserData().getUserBranch().getId(), getProductionStagesDTOSelected() == null ? null : getProductionStagesDTOSelected().getSerial(), getProductionStagesListSelected());
+        for (ProductionTransactionOfUser productionTransactionOfUser : productionTransactionOfUserList) {
+            setTotal(productionTransactionOfUser.getTotalNumber().add(getTotal()));
+            setTotalQuantity(productionTransactionOfUser.getNumberExcute().add(getTotalQuantity()));
+        }
+        // }else{
+        //  printProductionDTO.setMsg("ادخل من عامل  الي عامل او من تاريخ الي تاريخ او من مرحله الي مرحله  " );
+        //    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", printProductionDTO.getMsg()));
+
+        //  }
+         }
+    }
+       public void validateSearch() {
+        try {
+            if (getProductionStagesListSelected().isEmpty()) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "يجب اختيار الفئة "));
+                setShowMessage((Boolean) true);
+            }
+//            else if (getPrintProductionDTO().getFromUser()==null) {
+//                  FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "يجب اختيار من عميل  "));
+//                setShowMessage((Boolean) true); 
+//            }
+//             else if (getPrintProductionDTO().getToUser()==null) {
+//                  FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "يجب اختيار الي عميل  "));
+//                setShowMessage((Boolean) true); 
+//            }
+              else if (getPrintProductionDTO().getFromDate()==null) {
+                  FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "يجب اختيار من تاريخ  "));
+                setShowMessage((Boolean) true); 
+            }
+              else if (getPrintProductionDTO().getToDate()==null) {
+                  FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserDDs().get("ERROR"), "يجب اختيار الي  تاريخ  "));
+                setShowMessage((Boolean) true); 
+            }
+            
+            
+            
+        } catch (Exception e) {
+            saveError(e, "invoiceProductionStagesReportMB", "validateSearch");
+        }
+    }
+
+    public void searchItem() {
+        validateSearch();
+        if(!getShowMessage()){
+        totalQuantity = BigDecimal.ZERO;
+        Total = BigDecimal.ZERO;
+        productionTransactionOfUserList = proProductionItemsTransactionService.getProProductionItemOForAllUsersList(printProductionDTO, getUserData().getUserBranch().getId(), getProductionStagesDTOSelected() == null ? null : getProductionStagesDTOSelected().getSerial(), getProductionStagesListSelected());
+        for (ProductionTransactionOfUser productionTransactionOfUser : productionTransactionOfUserList) {
+            setTotalQuantity(productionTransactionOfUser.getNumberExcute().add(getTotalQuantity()));
+        }
+        }
+    }
+
+    public void convertDateFrom() {
+        getPrintProductionDTO().setFromDate(findDateFromHijriFrom());
+    }
+
+    public void convertDateTo() {
+        getPrintProductionDTO().setToDate(findDateFromHijriTo());
+    }
+
+    public void postProcessXLS(Object document) {
+        HSSFWorkbook wb = (HSSFWorkbook) document;
+        HSSFSheet sheet = wb.getSheetAt(0);
+        HSSFRow header = sheet.getRow(0);
+
+        HSSFCellStyle cellStyle = wb.createCellStyle();
+        cellStyle.setFillForegroundColor(HSSFColor.GREEN.index);
+        cellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+
+        for (int i = 0; i < header.getPhysicalNumberOfCells(); i++) {
+            HSSFCell cell = header.getCell(i);
+
+            cell.setCellStyle(cellStyle);
+        }
+    }
+
+    public void exportPDF(ActionEvent actionEvent) throws JRException, IOException {
+        if (productionTransactionOfUserList != null && !productionTransactionOfUserList.isEmpty()) {
+            fillReport(prepareReport(), getUserData().getReportPath() + "productionTransactionOfUser.jasper", productionTransactionOfUserList, "pdf");
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "لا توجد نتائج للطباعة"));
+        }
+    }
+    public void exportPDFItem(ActionEvent actionEvent) throws JRException, IOException {
+        if (productionTransactionOfUserList != null && !productionTransactionOfUserList.isEmpty()) {
+            fillReport(prepareReport(), getUserData().getReportPath() + "productionItemOfUser.jasper", productionTransactionOfUserList, "pdf");
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getUserData().getUserDDs().get("ERROR"), "لا توجد نتائج للطباعة"));
+        }
+    }
+
+    public HashMap prepareReport() {
+        HashMap hashMap = new HashMap();
+
+        hashMap.put("branchName", getUserData().getUserBranch().getNameAr());
+        hashMap.put("PrintedBy", getUserData().getUser().getName());
+        if (isFileExist(getUserData().getImageReportPath())) {
+            hashMap.put("companyImage", getUserData().getImageReportPath());
+        } else {
+            hashMap.put("companyImage", null);
+        }
+
+        hashMap.put("fromStatusText", "من فئة");
+        hashMap.put("fromStatusValue", getPrintProductionDTO().getFromStatus() == null ? null : getPrintProductionDTO().getFromStatus().getName());
+        hashMap.put("toStatusText", "الى فئة");
+        hashMap.put("toStatusValue", getPrintProductionDTO().getToStatus() == null ? null : getPrintProductionDTO().getToStatus().getName());
+        hashMap.put("fromUserText", " من عامل");
+        hashMap.put("fromUserValue", getPrintProductionDTO().getFromUser() == null ? null : getPrintProductionDTO().getFromUser().getName());
+        hashMap.put("toUserText", " الى عامل");
+        hashMap.put("toUserValue", getPrintProductionDTO().getToUser() == null ? null : getPrintProductionDTO().getToUser().getName());
+        hashMap.put("fromDateText", "  من تاريخ");
+        hashMap.put("fromDateValue", printProductionDTO.getFromDate());
+        hashMap.put("toDateText", "  الى تاريخ");
+        hashMap.put("toDateValue", printProductionDTO.getToDate());
+        hashMap.put("productionStagesIdText", " الرقم ");
+        hashMap.put("stageNameText", " الفئة ");
+        hashMap.put("userCodeText", " رقم العامل ");
+        hashMap.put("userNameText", " الموظف ");
+        hashMap.put("priceText", " السعر ");
+        hashMap.put("numberExcuteText", " الكمية ");
+        hashMap.put("totalNumberText", " الاجمالي ");
+        hashMap.put("avarageText", " المتوسط ");
+
+        return hashMap;
+    }
+
+    @Override
+    public String save() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @PostConstruct
+    @Override
+    public void init() {
+
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        setUserData((UserData) context.getSessionMap().get("userLogInData"));
+        getProProductionStagesDTOList();
+        getTobyUserDTOList();
+        setUserDDs(getUserData().getUserDDs());
+        getPrintProductionDTO().setFromDate(new Date());
+        getPrintProductionDTO().setToDate(new Date());
+    }
+
+    @Override
+    public void load() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String getScreenName() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    /**
+     * @return the printProductionDTO
+     */
+    public PrintProductionDTO getPrintProductionDTO() {
+        if (printProductionDTO == null) {
+            printProductionDTO = new PrintProductionDTO();
+
+        }
+        return printProductionDTO;
+    }
+
+    /**
+     * @param printProductionDTO the printProductionDTO to set
+     */
+    public void setPrintProductionDTO(PrintProductionDTO printProductionDTO) {
+        this.printProductionDTO = printProductionDTO;
+    }
+
+    /**
+     * @return the tobyUserDTOList
+     */
+    public List<TobyUserDTO> getTobyUserDTOList() {
+        if (tobyUserDTOList == null || tobyUserDTOList.isEmpty()) {
+            tobyUserDTOList = tobyUserService.getAllUserOfproduction(getUserData().getUser());
+            setTobyUserDTOConverter(new TobyUserDTOConverter(tobyUserDTOList));
+
+        }
+
+        return tobyUserDTOList;
+    }
+
+    /**
+     * @param tobyUserDTOList the tobyUserDTOList to set
+     */
+    public void setTobyUserDTOList(List<TobyUserDTO> tobyUserDTOList) {
+        this.tobyUserDTOList = tobyUserDTOList;
+    }
+
+    /**
+     * @return the tobyUserDTOConverter
+     */
+    public TobyUserDTOConverter getTobyUserDTOConverter() {
+        return tobyUserDTOConverter;
+    }
+
+    /**
+     * @param tobyUserDTOConverter the tobyUserDTOConverter to set
+     */
+    public void setTobyUserDTOConverter(TobyUserDTOConverter tobyUserDTOConverter) {
+        this.tobyUserDTOConverter = tobyUserDTOConverter;
+    }
+
+    /**
+     * @return the proProductionStagesDTOList
+     */
+    public List<ProProductionStagesDTO> getProProductionStagesDTOList() {
+
+        if (proProductionStagesDTOList == null || proProductionStagesDTOList.isEmpty()) {
+            proProductionStagesDTOList = new ArrayList<>();
+            proProductionStagesDTOList = proProductionStagesService.getAllProproductionStages(getUserData().getUser(), getUserData().getUserBranch().getId());
+        }
+        return proProductionStagesDTOList;
+    }
+
+    public void setProProductionStagesDTOList(List<ProProductionStagesDTO> proProductionStagesDTOList) {
+        this.proProductionStagesDTOList = proProductionStagesDTOList;
+    }
+
+    /**
+     * @return the productionTransactionOfUserList
+     */
+    public List<ProductionTransactionOfUser> getProductionTransactionOfUserList() {
+
+        return productionTransactionOfUserList;
+    }
+
+    /**
+     * @param productionTransactionOfUserList the
+     * productionTransactionOfUserList to set
+     */
+    public void setProductionTransactionOfUserList(List<ProductionTransactionOfUser> productionTransactionOfUserList) {
+        this.productionTransactionOfUserList = productionTransactionOfUserList;
+    }
+
+    /**
+     * @return the proProductionStagesDTOConverter
+     */
+    public ProProductionStagesDTOConverter getProProductionStagesDTOConverter() {
+        return proProductionStagesDTOConverter;
+    }
+
+    /**
+     * @param proProductionStagesDTOConverter the
+     * proProductionStagesDTOConverter to set
+     */
+    public void setProProductionStagesDTOConverter(ProProductionStagesDTOConverter proProductionStagesDTOConverter) {
+        this.proProductionStagesDTOConverter = proProductionStagesDTOConverter;
+    }
+
+    /**
+     * @return the totalQuantity
+     */
+    public BigDecimal getTotalQuantity() {
+        if (totalQuantity == null) {
+
+            return BigDecimal.ZERO;
+        }
+        return totalQuantity;
+    }
+
+    /**
+     * @param totalQuantity the totalQuantity to set
+     */
+    public void setTotalQuantity(BigDecimal totalQuantity) {
+        this.totalQuantity = totalQuantity;
+    }
+
+    /**
+     * @return the totalNumber
+     */
+    /**
+     * @return the Total
+     */
+    public BigDecimal getTotal() {
+        if (Total == null) {
+
+            return BigDecimal.ZERO;
+        }
+
+        return Total;
+    }
+
+    /**
+     * @param Total the Total to set
+     */
+    public void setTotal(BigDecimal Total) {
+        this.Total = Total;
+    }
+
+    /**
+     * @return the productionStagesDTOSelected
+     */
+    public ProProductionStagesDTO getProductionStagesDTOSelected() {
+        if (productionStagesDTOSelected == null) {
+            productionStagesDTOSelected = new ProProductionStagesDTO();
+        }
+        return productionStagesDTOSelected;
+    }
+
+    /**
+     * @param productionStagesDTOSelected the productionStagesDTOSelected to set
+     */
+    public void setProductionStagesDTOSelected(ProProductionStagesDTO productionStagesDTOSelected) {
+        this.productionStagesDTOSelected = productionStagesDTOSelected;
+    }
+
+    /**
+     * @return the productionStagesListSelected
+     */
+    public List<ProProductionStagesDTO> getProductionStagesListSelected() {
+        if (productionStagesListSelected == null) {
+            productionStagesListSelected = new ArrayList<>();
+        }
+        return productionStagesListSelected;
+    }
+
+    /**
+     * @param productionStagesListSelected the productionStagesListSelected to
+     * set
+     */
+    public void setProductionStagesListSelected(List<ProProductionStagesDTO> productionStagesListSelected) {
+        this.productionStagesListSelected = productionStagesListSelected;
+    }
+
+    /**
+     * @return the productionStagesList
+     */
+    public List<ProProductionStagesDTO> getProductionStagesList() {
+        if (productionStagesList == null || productionStagesList.isEmpty()) {
+            productionStagesList = proProductionStagesService.getAllProproductionByBranchId(getUserData().getUser());
+            setProProductionStagesDTOConverter(new ProProductionStagesDTOConverter(productionStagesList));
+        }
+        return productionStagesList;
+    }
+
+    /**
+     * @param productionStagesList the productionStagesList to set
+     */
+    public void setProductionStagesList(List<ProProductionStagesDTO> productionStagesList) {
+        this.productionStagesList = productionStagesList;
+    }
+
+    /**
+     * @return the stagesDTOConverter
+     */
+    public ProProductionStagesDTOConverter getStagesDTOConverter() {
+        return stagesDTOConverter;
+    }
+
+    /**
+     * @param stagesDTOConverter the stagesDTOConverter to set
+     */
+    public void setStagesDTOConverter(ProProductionStagesDTOConverter stagesDTOConverter) {
+        this.stagesDTOConverter = stagesDTOConverter;
+    }
+
+    /**
+     * @return the showMessage
+     */
+    public Boolean getShowMessage() {
+        return showMessage;
+    }
+
+    /**
+     * @param showMessage the showMessage to set
+     */
+    public void setShowMessage(Boolean showMessage) {
+        this.showMessage = showMessage;
+    }
+
+    /**
+     * @return the userDDs
+     */
+    public Map<String, String> getUserDDs() {
+        return userDDs;
+    }
+
+    /**
+     * @param userDDs the userDDs to set
+     */
+    public void setUserDDs(Map<String, String> userDDs) {
+        this.userDDs = userDDs;
+    }
+
+}

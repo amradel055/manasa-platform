@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="../../template/newTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <link rel="stylesheet" type="text/css" href="../../resources/css/main.css" />
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:head>
+            <title>#{userData.userDDs['COMPLEX_REVISION_REPORT']}</title>
+        </h:head>
+        <h:body>
+            <h:form id="form" >
+                <h:panelGrid columns="9" cellpadding="5" cellspacing="0">
+                    <h:panelGroup>
+                        <p:outputLabel value="#{userData.userDDs['ADMIN_UNIT_FROM']}"/>
+
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:selectOneMenu id="glUnitCodeFrom" filter="true" filterMatchMode="startsWith"  value="#{glAdminUnitIndexMB.glAdminUnitSearchBean.adminUnitFrom}"  style="float:right" >
+                            <p:ajax update="glUnitNameFrom" />
+                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" id="adminUnit1"   />
+                            <f:selectItems value="#{glAdminUnitIndexMB.glAdminUnitList}"  var="adminUnit" itemLabel="#{adminUnit.code} " itemValue="#{adminUnit.id}"/>
+                        </p:selectOneMenu>
+                    </h:panelGroup>
+                    <h:panelGroup></h:panelGroup>
+                    <h:panelGroup>
+                        <p:selectOneMenu id="glUnitNameFrom" filter="true" filterMatchMode="startsWith"  value="#{glAdminUnitIndexMB.glAdminUnitSearchBean.adminUnitFrom}"  style="float:right" >
+                            <p:ajax update="glUnitCodeFrom" />
+                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" id="adminUnit2"   />
+                            <f:selectItems value="#{glAdminUnitIndexMB.glAdminUnitList}"  var="adminUnit" itemLabel="#{adminUnit.name} " itemValue="#{adminUnit.id}"/>
+                        </p:selectOneMenu>
+                    </h:panelGroup>
+                    <h:panelGroup></h:panelGroup>
+                    <h:panelGroup>
+                        <p:outputLabel value="#{userData.userDDs['ADMIN_UNIT_TO']}"/>
+                    </h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:selectOneMenu id="glUnitCodeTo" filter="true" filterMatchMode="startsWith"  value="#{glAdminUnitIndexMB.glAdminUnitSearchBean.adminUnitTo}"  style="float:right" >
+                                <p:ajax update="glUnitNameTo" />
+                                <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" id="adminUnit3"   />
+                                <f:selectItems value="#{glAdminUnitIndexMB.glAdminUnitList}"  var="adminUnit" itemLabel="#{adminUnit.code} " itemValue="#{adminUnit.id}"/>
+                            </p:selectOneMenu>
+                        </h:panelGroup>
+                    <h:panelGroup></h:panelGroup>
+                    <h:panelGroup>
+                        <p:selectOneMenu id="glUnitNameTo" filter="true" filterMatchMode="startsWith"  value="#{glAdminUnitIndexMB.glAdminUnitSearchBean.adminUnitTo}"  style="float:right" >
+                            <p:ajax update="glUnitCodeTo" />
+                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" id="adminUnit4"   />
+                            <f:selectItems value="#{glAdminUnitIndexMB.glAdminUnitList}"  var="adminUnit" itemLabel="#{adminUnit.name} " itemValue="#{adminUnit.id}"/>
+                        </p:selectOneMenu>
+                    </h:panelGroup>                           
+                </h:panelGrid>
+                <h:panelGrid columns="3">
+                        <h:panelGroup>          
+                            <p:commandButton value="#{userData.userDDs['SEARCH']}" action="#{glAdminUnitIndexMB.search()}" update="dataTable"  />                   
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:commandButton value="#{userData.userDDs['NEW_SEARCH']}" action="#{glAdminUnitIndexMB.reset()}" update="form" />
+                        </h:panelGroup>
+                     <h:panelGroup>
+                            <p:commandButton ajax="false" onclick="form.target='_blank'" value="#{userData.userDDs['PRINT']}" actionListener="#{glAdminUnitIndexMB.exportPDF}"  />
+                        </h:panelGroup>
+                    </h:panelGrid>  
+                <p:dataTable id="dataTable"  
+                             draggableColumns="true" draggableRows="true"
+                             value="#{glAdminUnitIndexMB.adminUnitIndexBeanList}" var="gAdminU" >
+                    <p:column headerText="#{userData.userDDs['CODE']}" >
+                        <h:outputText value="#{gAdminU.code}"/>
+                    </p:column>
+                    <p:column headerText="#{userData.userDDs['UNIT_NAME']}">
+                        <h:outputText value="#{gAdminU.name}"/>
+                    </p:column>
+                    <p:column  headerText="#{userData.userDDs['LEVEL']}">
+                        <h:outputText value="#{gAdminU.level}"/>
+                    </p:column>
+                    <p:column headerText="#{userData.userDDs['SHORT_CODE']}">
+                        <h:outputText value="#{gAdminU.short_code}"/>
+                    </p:column>
+                    <p:column headerText="#{userData.userDDs['ACCOUNT_STATUS']}">
+                        <h:outputText value="#{gAdminU.active}"/>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+        </h:body>
+    </ui:define>
+</ui:composition>
+

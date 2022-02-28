@@ -1,0 +1,502 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <h:form id="form"  enctype="multipart/form-data"  dir="#{userData.dir}">
+            <p:fieldset  style="margin-bottom:20px"> 
+
+                <h:panelGrid id="firstSegment" columns="5" cellspacing="10" cellpadding="0" >
+
+                    <h:panelGroup>
+                        <p:outputLabel value="رقم المتابعة"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:outputLabel id="purchId" value="#{invPurchaseInvoiceFormMB.invPurchaseInvoiceEntity.id}" />
+                    </h:panelGroup>
+
+                    <h:panelGrid  columns="1" cellspacing="2" cellpadding="0" >
+                        <p:fieldset  style="margin-bottom:20px">
+                            <p:selectOneRadio id="console"  value ="#{invPurchaseInvoiceFormMB.invPurchaseInvoiceEntity.paymentType}" >
+                                <f:selectItem itemLabel="نقدي"  itemValue="0"  />                            
+                                <f:selectItem itemLabel="اجل" itemValue="1" />
+                                <f:selectItem itemLabel="اعتماد مستندي" itemValue="2" />
+                            </p:selectOneRadio>
+                        </p:fieldset>
+                    </h:panelGrid>
+
+                    <h:panelGroup>
+                        <p:outputLabel value="#{userData.userDDs['DATE']}*"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:calendar id="dateFrom" 
+                                    value="#{invPurchaseInvoiceFormMB.invPurchaseInvoiceEntity.date}"
+                                    pattern="MM/dd/yyyy"
+                                    required="true"
+                                    style="width:100%"/>
+                    </h:panelGroup>
+                </h:panelGrid>
+
+                <h:panelGrid id="secondSegment" columns="8" cellspacing="10" cellpadding="0" >
+
+                    <h:panelGroup>
+                        <p:outputLabel value="رقم الاستلام"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:inputText id="receivingNumber" value="#{invPurchaseInvoiceFormMB.invPurchaseInvoiceEntity.receivingNumber}" />
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <p:outputLabel value="قيمة فاتورة المورد"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:inputText id="amountInvSupplier" value="#{invPurchaseInvoiceFormMB.invPurchaseInvoiceEntity.amountInvSupplier}" />
+                    </h:panelGroup>
+
+
+                    <h:panelGroup>
+                        <p:outputLabel value="تاريخ الاسنحقاق"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:calendar id="dueDate" 
+                                    value="#{invPurchaseInvoiceFormMB.invPurchaseInvoiceEntity.dueDate}"
+                                    pattern="MM/dd/yyyy"
+                                    style="width:100%"/>
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <p:outputLabel value="#{userData.userDDs['SUPPLIER_BILL']}"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:inputText id="supplierBill" value="#{invPurchaseInvoiceFormMB.invPurchaseInvoiceEntity.supplierId}" />
+                    </h:panelGroup>
+
+                </h:panelGrid>
+
+                <h:panelGrid id="thirdSegment" columns="7" cellspacing="10" cellpadding="0">
+
+                    <h:panelGroup>
+                        <p:outputLabel value="#{userData.userDDs['SUPPLIER']}"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:selectOneMenu id="PURENUCode"    
+                                         filter="true"
+                                         filterMatchMode="startsWith" 
+                                         value="#{invPurchaseInvoiceFormMB.invPurchaseInvoiceEntity.supplierId}" 
+                                         style="float:right" >                        
+                            <p:ajax update="PURENUName" />
+                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"    />
+                            <f:selectItems value="#{invPurchaseInvoiceFormMB.invOrganizationSiteList}"  var="supList" itemLabel="#{supList.code} " itemValue="#{supList.id}"/>
+                        </p:selectOneMenu> 
+                    </h:panelGroup>   
+
+                    <h:panelGroup>
+                        <p:selectOneMenu id="PURENUName" filter="true" filterMatchMode="startsWith"  value="#{invPurchaseInvoiceFormMB.invPurchaseInvoiceEntity.supplierId}"  style="float:right" >                        
+                            <p:ajax update="PURENUCode" />
+                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"    />
+                            <f:selectItems value="#{invPurchaseInvoiceFormMB.invOrganizationSiteList}"  var="supList" itemLabel="#{supList.name} " itemValue="#{supList.id}"/>
+                        </p:selectOneMenu> 
+                    </h:panelGroup> 
+
+
+                    <h:panelGroup>
+                        <p:outputLabel value="ف مورد عملة محلية"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:inputText id="localExtraCost" value="#{invPurchaseInvoiceFormMB.invPurchaseInvoiceEntity.localExtraCost}" />
+                    </h:panelGroup>
+
+
+                    <h:panelGroup>
+                        <p:outputLabel value="خصم على الفاتورة"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:inputText id="discount" value="#{invPurchaseInvoiceFormMB.invPurchaseInvoiceEntity.discount}" />
+                    </h:panelGroup>
+
+                </h:panelGrid>
+
+                <h:panelGrid id="fourthSegment" columns="8" cellspacing="10" cellpadding="0">
+
+                    <h:panelGroup>
+                        <p:outputLabel value="تاريخها*"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:calendar pattern="dd/MM/yyyy" 
+                                    style="width:100%">
+                            <p:ajax event="dateSelect" listener="#{invPurchaseInvoiceFormMB.updateDate(event)}" />
+                        </p:calendar>
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <p:outputLabel value="تكلفة أ مورد"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:inputText id="costCenterId" value="#{invPurchaseInvoiceFormMB.invPurchaseInvoiceEntity.costCenterId}" />
+                    </h:panelGroup>
+
+
+
+
+                    <h:panelGroup>
+                        <p:outputLabel value="#{userData.userDDs['PURCHASE_NUMBER']}"/>
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <p:selectOneMenu id="PURCHASE_NUMBER" 
+                                         filter="true"
+                                         filterMatchMode="startsWith" 
+                                         value="#{invPurchaseInvoiceFormMB.invPurchaseInvoiceEntity.purchuseOrderId}"  
+                                         style="float:right" >                        
+                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"    />
+                            <f:selectItems value="#{invPurchaseInvoiceFormMB.invPurchaseOrderList}"  var="purNum" itemLabel="#{purNum.id} " itemValue="#{purNum.id}"/>
+                        </p:selectOneMenu> 
+                    </h:panelGroup>   
+
+
+                    <h:panelGroup>
+                        <p:outputLabel value="التكلفة الأضافية"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:inputText id="remoteExtraCost" value="#{invPurchaseInvoiceFormMB.invPurchaseInvoiceEntity.remoteExtraCost}" />
+                    </h:panelGroup>
+
+                </h:panelGrid>
+
+                <h:panelGrid id="fiveSegment" columns="15" cellspacing="10" cellpadding="0">
+
+                    <h:panelGroup>
+                        <p:outputLabel value="#{userData.userDDs['CURRENCY']}"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:selectOneMenu id="CurrencyName"
+                                         filter="true"
+                                         filterMatchMode="startsWith"  
+                                         value="#{invPurchaseInvoiceFormMB.invPurchaseInvoiceEntity.currencyId}"
+                                         style="float:right" >                        
+                            <f:selectItems value="#{invPurchaseInvoiceFormMB.currencyList}"
+                                           var="invDel"
+                                           itemLabel="#{invDel.name}"
+                                           itemValue="#{invDel.id}"/>                            
+                            <p:ajax update="CurrencyRate" listener="#{invPurchaseInvoiceFormMB.updateRate()}"/>
+                        </p:selectOneMenu> 
+                    </h:panelGroup>
+
+                    <h:panelGroup></h:panelGroup>
+
+                    <h:panelGroup>
+                        <p:outputLabel value="#{userData.userDDs['SINGLE_COST_CENTER']}"/>                        
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:selectOneMenu id="glCostCenterCodeFrom" filter="true" filterMatchMode="startsWith"  value="#{invPurchaseInvoiceFormMB.invPurchaseInvoiceEntity.costCenterId}"  style="float:right" >
+                            <p:ajax update="glCostCenterameFrom" />
+                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" id="costCenter1"   />
+                            <f:selectItems value="#{invPurchaseInvoiceFormMB.costCenterList}" 
+                                           var="costCenter" 
+                                           itemLabel="#{costCenter.code}"
+                                           itemValue="#{costCenter.id}"/>
+                        </p:selectOneMenu>
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <p:selectOneMenu id="glCostCenterameFrom" filter="true" filterMatchMode="startsWith"  value="#{invPurchaseInvoiceFormMB.invPurchaseInvoiceEntity.costCenterId}"  style="float:right" >
+                            <p:ajax update="glCostCenterCodeFrom" />
+                            <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" id="costCenter2"   />
+                            <f:selectItems value="#{invPurchaseInvoiceFormMB.costCenterList}"  var="costCenter" itemLabel="#{costCenter.name} " itemValue="#{costCenter.id}"/>
+                        </p:selectOneMenu>
+                    </h:panelGroup>
+                </h:panelGrid>
+
+                <h:panelGrid id="sexSegment" columns="10" cellspacing="10" cellpadding="5">
+
+                    <h:panelGroup id="exchangeRate">
+                        <p:outputLabel value="سعر الصرف"/>
+                    </h:panelGroup>
+
+                    <h:panelGroup id="CurrencyRate">
+                        <p:outputLabel value="#{invPurchaseInvoiceFormMB.invPurchaseInvoiceEntity.rate}"/>
+                    </h:panelGroup>
+
+
+                    <h:panelGroup>
+                        <p:outputLabel value="#{userData.userDDs['ADMIN_UNIT']}"/>
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <p:selectOneMenu id="adminUnitCodeFrom"
+                                         filter="true" 
+                                         filterMatchMode="startsWith"  
+                                         value="#{invPurchaseInvoiceFormMB.invPurchaseInvoiceEntity.adminUnitId}" 
+                                         style="width:100%"  >
+
+                            <p:ajax update="adminUnitNameFrom" />
+                            <f:selectItem id="com2" 
+                                          itemLabel="#{userData.userDDs['CHOOSE']}" 
+                                          itemValue=""
+                                          noSelectionOption="true"  />
+
+                            <f:selectItems value="#{invPurchaseInvoiceFormMB.adminUnitList}"
+                                           var="Admin" 
+                                           itemLabel="#{Admin.code}"
+                                           itemValue="#{Admin.id}"/>
+                        </p:selectOneMenu>
+                    </h:panelGroup>
+
+                    <h:panelGroup></h:panelGroup>
+
+                    <h:panelGroup>
+                        <p:selectOneMenu id="adminUnitNameFrom"
+                                         filter="true"
+                                         filterMatchMode="startsWith"  
+                                         value="#{invPurchaseInvoiceFormMB.invPurchaseInvoiceEntity.adminUnitId}" 
+                                         style="width:100%"  >
+
+                            <p:ajax update="adminUnitCodeFrom" />
+                            <f:selectItem id="com1"
+                                          itemLabel="#{userData.userDDs['CHOOSE']}" 
+                                          itemValue="" 
+                                          noSelectionOption="true"  />
+                            <f:selectItems value="#{invPurchaseInvoiceFormMB.adminUnitList}" 
+                                           var="Admin"
+                                           itemLabel="#{Admin.name}" 
+                                           itemValue="#{Admin.id}"/>
+                        </p:selectOneMenu>
+                    </h:panelGroup>
+
+
+
+                </h:panelGrid>
+
+
+                <h:panelGrid id="sevenSegment" columns="10" cellspacing="10" cellpadding="5">
+
+
+                </h:panelGrid>
+            </p:fieldset>
+
+
+
+            <!-- begin table -->
+            <p:fieldset  style="margin-bottom:20px">
+                <div class="col-xs-12">
+                    <p:messages id="curmsg" autoUpdate="true" showDetail="true" rendered="true" closable="true"/>   
+                </div>
+
+                <p:remoteCommand name="onCellEdit" update="invPurchaseInvoiceDetailsTable" />
+
+                <p:dataTable id="invPurchaseInvoiceDetailsTable"
+                             widgetVar="invPurchaseInvoiceDetailsTable"
+                             style="margin-bottom:20px"
+                             var="invPurchaseInvoiceDetailsTable"
+                             rowIndexVar="index" 
+                             dir="rtl" 
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                             editable="true"
+                             editMode="cell"
+                             selectionMode="single"
+                             rowKey="#{invPurchaseInvoiceDetailsTable}"
+                             selection="#{invPurchaseInvoiceFormMB.invPurchaseInvoiceDetailsUpdatedSelected}"
+                             value="#{invPurchaseInvoiceFormMB.invPurchaseInvoiceDetailsEntityList}" >
+
+                    <f:facet name="header" class="col-md-12">
+                        <p:commandButton id="addnew"
+                                         icon="fa fa-plus"
+                                         title="#{userData.userDDs['ADD']}" 
+                                         actionListener="#{invPurchaseInvoiceFormMB.addInvPurchaseInvoiceDetail()}" 
+                                         update="invPurchaseInvoiceDetailsTable" 
+                                         ajax="true"
+                                         style="float:right"/>
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('bTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:ajax event="cellEdit" listener="#{invPurchaseInvoiceFormMB.onCellEdit}" oncomplete="onCellEdit()"  />
+
+                    <p:column headerText="#" class="col-xs-1">
+                        <h:outputText value="#{index + 1}"  />
+                    </p:column>
+
+
+                    <p:column id="itemNum" headerText="#{userData.userDDs['ITEM_NUMBER']}" >
+                        <p:cellEditor >
+                            <f:facet name="output">
+                                <h:outputText value="#{invPurchaseInvoiceDetailsTable.itemId}" />
+                            </f:facet>
+
+                            <f:facet name="input">
+                                <p:selectOneMenu id="itemN"
+                                                 value="#{invPurchaseInvoiceDetailsTable.itemId}" 
+                                                 style="float:right"
+                                                 filter="true" 
+                                                 required="true"
+                                                 filterMatchMode="startsWith" > 
+                                    <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"    /> 
+                                    <f:selectItems value="#{invPurchaseInvoiceFormMB.invItemList}" 
+                                                   var="invItem"
+                                                   itemLabel="#{invItem.id}"
+                                                   itemValue="#{invItem.id}"/>
+
+                                    <p:ajax update="form itemNa"/>
+                                </p:selectOneMenu>
+                            </f:facet>
+
+                        </p:cellEditor>
+                    </p:column>
+
+
+                    <p:column id="itemName"  headerText="#{userData.userDDs['ITEM_NAME']}">
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <p:selectOneMenu
+                                    style="width: fit-content"
+                                    filter="true"
+                                    filterMatchMode="startsWith"
+                                    value="#{invPurchaseInvoiceDetailsTable.itemId}" >
+
+                                    <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"    /> 
+                                    <f:selectItems value="#{invPurchaseInvoiceFormMB.invItemList}" 
+                                                   var="invItem" itemLabel="#{invItem.name}" itemValue="#{invItem.id}"/>
+
+                                    <p:ajax update="form itemN"/>
+                                </p:selectOneMenu>
+                            </f:facet>
+
+                            <f:facet name="input">
+                                <p:selectOneMenu id="itemNa" 
+                                                 filter="true"
+                                                 required="true"
+                                                 filterMatchMode="startsWith"
+                                                 value="#{invPurchaseInvoiceDetailsTable.itemId}" 
+                                                 style="float:right" >
+                                    <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}" /> 
+
+                                    <f:selectItems value="#{invPurchaseInvoiceFormMB.invItemList}" 
+                                                   var="invItem"
+                                                   itemLabel="#{invItem.name}"
+                                                   itemValue="#{invItem.id}"/>
+                                    <p:ajax update="form itemN"/>
+                                </p:selectOneMenu>
+                            </f:facet>
+                        </p:cellEditor>
+                    </p:column>
+
+                    <p:column id="Unit" headerText="#{userData.userDDs['UNIT_NUMBER']}">
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <h:outputText value="#{invPurchaseInvoiceDetailsTable.unitId}" />  
+                            </f:facet>
+
+                            <f:facet name="input">                        
+                                <p:selectOneMenu id="unitTselectip"   value="#{invPurchaseInvoiceDetailsTable.unitId}"  style="float:right" >                                                             
+                                    <f:selectItem itemLabel="#{userData.userDDs['CHOOSE']}"    />
+                                    <f:selectItems value="#{invPurchaseInvoiceFormMB.unitList}"  var="invItem" itemLabel="#{invItem.name} " itemValue="#{invItem.id}"/>
+                                </p:selectOneMenu> 
+                            </f:facet>
+                        </p:cellEditor>                        
+                    </p:column>
+
+
+                    <p:column id="Quantity" headerText="#{userData.userDDs['QUANTITY']}">
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <h:outputText value="#{invPurchaseInvoiceDetailsTable.quantity}"  />
+                            </f:facet>
+
+                            <f:facet name="input">
+                                <p:inputText id="QuantityT" value="#{invPurchaseInvoiceDetailsTable.quantity}" style="width:100%"/>
+
+                            </f:facet>
+                        </p:cellEditor>        
+
+                    </p:column>
+
+                    <p:column id="COST" headerText="#{userData.userDDs['COST']}">
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <h:outputText value="#{invPurchaseInvoiceDetailsTable.cost}"  />
+                            </f:facet>
+
+                            <f:facet name="input">
+                                <p:inputText id="costT" value="#{invPurchaseInvoiceDetailsTable.cost}" style="width:100%"/>
+
+                            </f:facet>
+                        </p:cellEditor>        
+                    </p:column>
+
+                    <p:column id="DISCOUNT" headerText="#{userData.userDDs['DISCOUNT']}">
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <h:outputText value="#{invPurchaseInvoiceDetailsTable.discount} %"  />
+                            </f:facet>
+
+                            <f:facet name="input">
+                                <p:inputText id="discountT" value="#{invPurchaseInvoiceDetailsTable.discount}" style="width:100%"/>
+
+                            </f:facet>
+                        </p:cellEditor>        
+                    </p:column>
+
+                    <p:column id="TOTAL" headerText="ج محلي">
+                        <p:outputLabel  value="#{invPurchaseInvoiceDetailsTable.totalLocal}"  />
+                    </p:column>
+
+
+                    <p:columnGroup type="footer">
+                        <p:row>
+                            <p:column colspan="4" style="text-align:right" footerText="#{userData.userDDs['TOTAL']}  :" />
+                            <p:column id="totalQuantity" footerText="#{invPurchaseInvoiceFormMB.totalQuatity}" />
+                            <p:column id="totalCost" footerText="#{invPurchaseInvoiceFormMB.totalCost}" />
+                            <p:column />
+                            <p:column id="totalSum" footerText="#{invPurchaseInvoiceFormMB.totalSum}" />
+
+                        </p:row>
+                    </p:columnGroup>
+
+                    <p:column style="width: 14%" headerText="#{userData.userDDs['TRANSACTION']}">
+
+                        <p:commandButton id="b7" icon="fa fa-plus"
+                                         title="#{userData.userDDs['ADD']}" 
+                                         actionListener="#{invPurchaseInvoiceFormMB.addInvPurchaseInvoiceDetail}" 
+                                         update="invPurchaseInvoiceDetailsTable"
+                                         ajax="true" />
+
+                        <p:commandButton update="invPurchaseInvoiceDetailsTable"
+                                         title="#{userData.userDDs['DELETE']}" 
+                                         action="#{invPurchaseInvoiceFormMB.deleteInvPurchaseInvoiceDetail()}"
+                                         icon="fa fa-remove" >
+
+                            <f:setPropertyActionListener value="#{invPurchaseInvoiceDetailsTable}"
+                                                         target="#{invPurchaseInvoiceFormMB.invPurchaseInvoiceDetailsEntitySelected}"/>
+                            <p:confirm header="#{userData.userDDs['COFIGRATION']}" 
+                                       message="#{userData.userDDs['ARE_YOU_SURE']}"
+                                       icon="ui-icon-alert" />
+                        </p:commandButton>
+
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column >
+
+                </p:dataTable>
+
+            </p:fieldset> 
+
+            <p:commandButton id="saveB" 
+                             title="#{userData.userDDs['SAVE']}"
+                             value="#{userData.userDDs['SAVE']}" 
+                             icon="fa fa-fw fa-save"
+                             action="#{invPurchaseInvoiceFormMB.save()}"
+                             update="@form"/>
+            <p:commandButton id="cancel" title="#{userData.userDDs['CANCEL']}" value="#{userData.userDDs['CANCEL']}" icon="fa fa-fw fa-save" action="#{invPurchaseInvoiceFormMB.exit()}" update="@form"/>
+
+        </h:form>
+    </ui:define>
+</ui:composition>

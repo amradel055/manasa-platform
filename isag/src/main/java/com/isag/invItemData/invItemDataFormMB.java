@@ -285,6 +285,9 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
                 itemDataEntitySelected.setDateCreateCat(invItem.getCreationDate());
                 itemDataEntitySelected.setEnamelColorId(invItem.getEnamelColor());
                 itemDataEntitySelected.setGroupId(invItem.getGroupId());
+                itemDataEntitySelected.setMaximum(invItem.getMaximum());
+                itemDataEntitySelected.setMinimum(invItem.getMinimum());
+
                 itemDataEntitySelected.setGroupName(invItem.getGroupId() != null ? (invItem.getGroupId().getName() != null ? invItem.getGroupId().getName() : null) : null);
                 itemDataEntitySelected.setImage(invItem.getImage() != null ? invItem.getImage() : null);
                 setFileName(invItem.getImage() != null ? invItem.getImage() : "1.png");
@@ -512,6 +515,8 @@ public class invItemDataFormMB extends BaseFormBean implements Serializable {
                     invItem.setIssell(itemDataEntity.getIsSell());
                     invItem.setIspurchase(itemDataEntity.getIsPurchase());
                     invItem.setPrintShow(itemDataEntity.getPrintShow());
+                    invItem.setMinimum(itemDataEntity.getMinimum());
+                    invItem.setMaximum(itemDataEntity.getMaximum());
 
                     invItem.setHeight(itemDataEntity.getHeight());
                     invItem.setLength(itemDataEntity.getLength());

@@ -310,6 +310,22 @@ public class notesReceivablesListMB extends BaseGlBankListBean {
             saveError(e, "notesReceivablesListMB", "exportPDFDetail");
         }
     }
+    
+    public void exportPDFGYM(ActionEvent actionEvent) throws JRException, IOException {
+        try {
+
+            GlBankTransactionDTO transactionEntity = (GlBankTransactionDTO) actionEvent.getComponent().getAttributes().get("varValue");
+            startPrintingProcess(transactionEntity);
+            List<GlBankTransactionDetailEntity> reportList = listDuplara();
+            if (transactionEntity != null && transactionEntity.getId() != null) {
+                if (reportList != null && !reportList.isEmpty()) {
+                    fillReport(prepareReport(), getUserData().getReportPath() + "notesReceivables.jasper", reportList, "pdf");
+                }
+            }
+        } catch (Exception e) {
+            saveError(e, "notesReceivablesListMB", "exportPDFDetail");
+        }
+    }
 
     private List<GlBankTransactionDetailEntity> listDuplara() throws CloneNotSupportedException {
         List<GlBankTransactionDetailEntity> list = new ArrayList<>();

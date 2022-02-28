@@ -1,0 +1,237 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+        <h:form id="form"  enctype="multipart/form-data"  dir="#{userData.dir}" style="margin-right: 15px">
+            <p:fieldset legend="#{userData.userDDs['ADJUST_INV']}" style="margin-bottom:20px">
+                <div >
+                    <p:messages id="curmsg" 
+                                autoUpdate="true"
+                                showDetail="true" 
+                                rendered="true" closable="true"/>   
+                </div>
+
+                <h:panelGrid id="firstLine" columns="2" cellspacing="10" cellpadding="0" >
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel  style="width: 45px" value="#{userData.userDDs['RESERVA_NO']}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel  style="width: 50%!important" id="serialNo" value="#{invUpdateFormMB.invUpdateEntity.serial}"/>
+                        </h:panelGroup>
+
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel  style="width: 45px" value="#{userData.userDDs['DATEE']}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <p:calendar  style="width: 50%!important"  value="#{invUpdateFormMB.invUpdateEntity.updateDate}" pattern="dd/MM/yyyy" />
+                        </h:panelGroup>
+
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 45px" value="#{userData.userDDs['INVENTORY']}"/>
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:autoComplete style="width:80%" 
+                                            dropdown="true"
+                                            readonly="#{invUpdateFormMB.invUpdateEntity.id != null}"
+                                            converter="#{invUpdateFormMB.invInventoryConverter}"
+                                            value="#{invUpdateFormMB.invUpdateEntity.invInventory}"
+                                            required="true"
+                                            requiredMessage="#{userData.userDDs['STORE_MU_SELE']}"
+                                            var="inventory"
+                                            itemLabel="#{inventory}" 
+                                            itemValue="#{inventory}" 
+                                            forceSelection="true" 
+                                            completeMethod="#{invUpdateFormMB.completInventory}" >
+
+                                <p:ajax update="form curmsg"
+                                        event="change"
+                                        listener="#{invUpdateFormMB.fillItemMap()}" />
+                                <p:ajax update="form curmsg"
+                                        event="itemSelect"
+                                        listener="#{invUpdateFormMB.fillItemMap()}" />
+
+                            </p:autoComplete>
+                        </h:panelGroup>
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel style="width: 45px" value="#{userData.userDDs['INVEN_DOC']}"/>
+                        </h:panelGroup>
+                        <h:panelGroup >
+                            <h:panelGroup>
+                                <p:inputText style="width: 50%!important"  id="stripDocument" value="#{invUpdateFormMB.invUpdateEntity.updateDocument}" />
+                            </h:panelGroup>
+                        </h:panelGroup>
+
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel  style="width: 40px"  value="#{userData.userDDs['NOTE']}"/>
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:inputText style="width: 65%!important"  id="ad11" value="#{invUpdateFormMB.invUpdateEntity.remark}" />
+                        </h:panelGroup>
+                    </h:panelGroup>
+                </h:panelGrid>
+
+
+            </p:fieldset>
+            <p:fieldset  style="margin-bottom:20px">
+                <p:dataTable var="invUpdateTable"
+                             widgetVar="invUpdateTable"
+                             rowIndexVar="index"
+                             rowKey="#{invUpdateTable}"
+                             selectionMode="single"
+                             selection="#{invUpdateFormMB.invUpdateDetailEntitySelection}"
+                             dir="rtl"
+                             sortBy="#{1}"
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                             editable="true"
+                             editMode="cell"
+                             value="#{invUpdateFormMB.invUpdateDetailEntityList}"
+                             id="invUpdateTable">
+
+                   
+                    <f:facet name="header" class="col-md-12">
+
+                        <h:commandLink  style="float: left" class="sdcreenimg">  
+                            <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                            <p:dataExporter type="xls"
+                                target="invUpdateTable" 
+                                fileName="فاتورة المبيعات"  preProcessor="#{invUpdateFormMB.preProcessXLS()}"
+                                postProcessor="#{invUpdateFormMB.postProcessXLS}" />  
+                        </h:commandLink>
+
+                        <p:outputPanel>
+                            <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                            <p:inputText id="globalFilter" onkeyup="PF('invUpdateTable').filter()" style="width:150px" />
+                        </p:outputPanel>
+                    </f:facet>
+
+
+                    <p:column style="width: 8vh;text-align: -webkit-auto;font-size: 1.8vh"   id="serail" 
+                              headerText="#{userData.userDDs['SERIAL']}">
+                        <h:outputText value="#{invUpdateTable.serial}"  />
+                    </p:column>
+
+                    <p:column style="width: 12vh;text-align: -webkit-auto;font-size: 1.8vh" 
+                              id="itemNumber" headerText="#{userData.userDDs['ITEM_NUMBER']}">
+                        <h:outputText value="#{invUpdateTable.invItemId.code}" />
+                    </p:column>
+                    
+                     <p:column style="width: 12vh;text-align: -webkit-auto;font-size: 1.8vh" 
+                              id="itemName" headerText="اسم الصنف">
+                         <h:outputText value="#{invUpdateTable.invItemId.name}" />
+                    </p:column>
+
+
+
+                    <p:column  style="width: 12vh;text-align: -webkit-auto;font-size: 1.8vh"
+                               id="Quantity" headerText="#{userData.userDDs['ACTUAL_INVE']}">
+                        <p:inputText id="QuantityT" value="#{invUpdateTable.oldAmount}"
+                                     rendered="#{invUpdateFormMB.invUpdateEntity.id eq null}"
+                                     style="width:95%">
+                            <p:ajax listener="#{invUpdateFormMB.updateDifference(invUpdateTable)}" 
+                                    event="blur"
+                                    update="difference totalQuantity totalNet"/>
+                        </p:inputText>
+
+                        <p:outputLabel value="#{invUpdateTable.oldAmount}" 
+                                       rendered="#{invUpdateFormMB.invUpdateEntity.id != null}" style="width:95%"/>
+
+                    </p:column>
+
+
+                    <p:column style="width: 12vh;text-align: -webkit-auto;font-size: 1.8vh" id="balance" headerText="#{userData.userDDs['DOC_BALA']}">
+                        <p:outputLabel id="balanceT" value="#{invUpdateTable.newAmount}"  style="width:95%"/>
+                    </p:column>
+
+                    <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.8vh" id="Total" headerText="#{userData.userDDs['DIFFERENCE']}">
+                        <p:outputLabel id="difference" value="#{invUpdateTable.difference}" />
+                    </p:column>
+                    <p:column style="width: 10vh;text-align: -webkit-auto;font-size: 1.8vh" id="valueto" headerText="#{userData.userDDs['VALUE']}">
+                        <p:outputLabel id="valuet" value="#{invUpdateTable.value}" />
+                    </p:column>
+                    <p:summaryRow>
+                        <p:column colspan="3" style="text-align:right">
+                            <h:outputText style="text-align:right" value="#{userData.userDDs['TOTAL']}  :" />
+                        </p:column>
+                        <p:column>
+                            <h:outputText id="totalQuantity" value="#{invUpdateFormMB.totalQuantity}"/>
+                        </p:column>
+                        <p:column>
+                            <h:outputText id="totalNet" value="#{invUpdateFormMB.totalBalance}"/>
+                        </p:column>
+
+
+                    </p:summaryRow>
+
+                    <p:column style="width: 8vh;text-align: -webkit-auto;font-size: 1.8vh" headerText="#{userData.userDDs['TRANSACTION']}" >
+                        <p:commandButton class="sdeleteButton" update="invUpdateTable" title="#{userData.userDDs['DELETE']}"
+                                         disabled="#{invUpdateFormMB.invUpdateEntity.id != null}"
+                                         action="#{invUpdateFormMB.deleteInvUpdateDetail}" icon="fa fa-remove" >
+                            <f:setPropertyActionListener value="#{invUpdateTable}"
+                                                         target="#{invUpdateFormMB.invUpdateDetailEntitySelection}"/>
+                            <p:confirm header="#{userData.userDDs['COFIGRATION']}"
+                                       message="#{userData.userDDs['ARE_YOU_SURE']}"
+                                       icon="ui-icon-alert" />
+                        </p:commandButton>
+
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton title="#{userData.userDDs['YES']}" type="button"
+                                             styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton title="#{userData.userDDs['NO']}" type="button" 
+                                             styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column >
+
+                </p:dataTable>
+                
+                <p:commandButton class="saveButton"
+                             style="margin-right: 45%" id="saveB" 
+                             title="#{userData.userDDs['SAVE']}"
+                             disabled="#{invUpdateFormMB.invUpdateEntity.id != null}"
+                             value="#{userData.userDDs['SAVE']}"
+                             icon="fa fa-fw fa-save" 
+                             action="#{invUpdateFormMB.save()}" 
+                             update="@form"/>
+
+            <p:commandButton class="cancelButton"
+                             id="cancel" 
+                             title="#{userData.userDDs['CANCEL']}" 
+                             value="#{userData.userDDs['CANCEL']}"
+                             icon="fa fa-fw fa-backward" 
+                             action="#{invUpdateFormMB.exit()}" 
+                             update="@form"/>
+            
+            
+            <p:blockUI block="form" trigger="saveB" animate="true" >
+
+                <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+
+            </p:blockUI> 
+            </p:fieldset>
+            
+
+        </h:form>
+    </ui:define>
+</ui:composition>

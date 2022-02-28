@@ -1,0 +1,245 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <h:body>
+
+            <h:form dir="RTL" style="margin-right: 20px" id="form" >
+
+                <p:fieldset  legend="بيان الفواتير حسب الحالة" id="stages"  style=" position: relative">
+                    <p:messages id="messages" showDetail="true" closable="true"/> 
+
+                    <div class="ui-g-6 ui-xl-6">
+
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:calendar style="width: 50%"  id="dateFrom"
+                                            value="#{proInvoiceStatusReportMB1.printProductionDTO.fromDate}"
+                                            pattern="dd/MM/yyyy"  showButtonPanel="true" >
+
+                                </p:calendar>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:outputLabel style="width: 50px"  value="من تاريخ" />
+
+
+
+                            </div>
+                        </div>
+
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:inputText value="#{proInvoiceStatusReportMB1.dayHijriFrom}" /> يوم
+                                <p:inputText value="#{proInvoiceStatusReportMB1.monthHijriFrom}" />  شهر
+                                <p:inputText value="#{proInvoiceStatusReportMB1.yearHijriFrom}" />  سنة
+                                <p:commandButton     class="saveButton" id="excuteFrom" 
+                                                     value="تنفيذ" 
+                                                     icon="fa fa-fw fa-save"
+                                                     action="#{proInvoiceStatusReportMB1.convertDateFrom()}"
+                                                     update="dateFrom"
+                                                     />
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 50px"  value="من تاريخ هجري" />
+                            </div>
+                        </div>
+
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:calendar style="width: 50%"  id="dateTo"
+                                            value="#{proInvoiceStatusReportMB1.printProductionDTO.toDate}"
+                                            pattern="dd/MM/yyyy"  showButtonPanel="true" >
+
+                                </p:calendar>
+
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+
+                                <p:outputLabel style="width: 50px"  value="الى تاريخ" />
+
+
+
+                            </div>
+                        </div>
+
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:inputText value="#{proInvoiceStatusReportMB1.dayHijriTo}" /> يوم
+                                <p:inputText value="#{proInvoiceStatusReportMB1.monthHijriTo}" />  شهر
+                                <p:inputText value="#{proInvoiceStatusReportMB1.yearHijriTo}" />  سنة
+                                <p:commandButton     class="saveButton" id="excuteTo" 
+                                                     value="تنفيذ" 
+                                                     icon="fa fa-fw fa-save"
+                                                     action="#{proInvoiceStatusReportMB1.convertDateTo()}"
+                                                     update="dateTo"
+                                                     />
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 50px"  value="إلى تاريخ هجري" />
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="ui-g-6 ui-xl-6">
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:selectCheckboxMenu id="gallary_From" value="#{proInvoiceStatusReportMB1.printProductionDTO.gallaryListSelected}" 
+                                                      converter="#{proInvoiceStatusReportMB1.gallaryDTOConverters}"
+                                                      label="المعرض" style="width: 15rem"
+                                                      filter="true" filterMatchMode="startsWith" panelStyle="width: 15rem" scrollHeight="250">
+                                    <f:selectItems value="#{proInvoiceStatusReportMB1.gallaryLists}" 
+                                                   var="gallary"
+                                                   itemLabel="#{gallary}"
+                                                   itemValue="#{gallary}"/>
+                                </p:selectCheckboxMenu>
+                            </div>
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel style="width: 50px;margin-right: 1%" value="المعرض"/>
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-xl-12">
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:selectOneMenu id="option" value="#{proInvoiceStatusReportMB1.printProductionDTO.invoiceStatus}" >
+                                    <f:selectItem itemLabel="بالمعرض" itemValue="4"/>
+                                    <f:selectItem itemLabel="بالمشغل" itemValue="0"/>
+                                    <f:selectItem itemLabel="ارسال للمعرض" itemValue="1"/>
+                                    <f:selectItem itemLabel="استلام بالمعرض" itemValue="2"/>
+                                    <f:selectItem itemLabel="تسليم للعميل" itemValue="3"/>
+                                </p:selectOneMenu>
+
+                            </div>
+
+                            <div class="ui-g-6 ui-xl-6">
+                                <p:outputLabel value="الحالة"/>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="ui-g-12 ui-xl-12">
+                        <div class="ui-g-6 ui-xl-6">
+
+
+                            <p:outputLabel style="width: 50px"  value="#{proInvoiceStatusReportMB1.number}" />
+
+
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+
+                            <p:outputLabel style="width: 50px"  value="عدد الفواتير" />
+
+
+
+                        </div>
+                    </div>
+
+
+
+                </p:fieldset>
+
+                <div class="ui-g-12 ui-xl-12">
+                    <div class="ui-g-6 ui-xl-6">
+
+
+                        <p:commandButton     class="saveButton" id="saveB" 
+                                             value="بحث" 
+                                             icon="fa fa-fw fa-save"
+                                             action="#{proInvoiceStatusReportMB1.search()}"
+                                             update="@form"
+                                             >
+
+                        </p:commandButton>
+                        <h:commandLink  class="sdcreenimg">  
+                            <p:graphicImage name="/img/excel.jpg" width="24"/>  
+                            <p:dataExporter type="xls"
+                                            target="table" 
+                                            fileName="بيان الفواتير حسب الحالة"
+                                            postProcessor="#{proInvoiceStatusReportMB1.postProcessXLS}" />  
+                        </h:commandLink> 
+
+
+                    </div>
+                </div>
+                <p:fieldset  legend="البيانات"   style="margin-bottom:20px">
+                    <p:dataTable  id="table"
+                                  var="data"
+                                  value="#{proInvoiceStatusReportMB1.list}"
+                                  draggableColumns="true"
+                                  paginator="true"
+                                  widgetVar="data" 
+                                  rowIndexVar="index" 
+                                  emptyMessage="EMPTY_TABLE"
+                                  rows="20" 
+                                  
+                                  lazy="true"
+                                  editable="true"
+                                  paginatorTemplate="{CurrentPageReport} {FirstPageLink}
+                                  {PreviousPageLink} {PageLinks} {NextPageLink}
+                                  {LastPageLink} {RowsPerPageDropdown}"
+                                  >
+                        <f:facet name="header">
+                            <p:outputPanel  >
+                                <h:outputText value="#{userData.userDDs['SEARCH']} : "  style="font-size: large" />
+                                <p:inputText id="globalFilter" onkeyup="PF('data').filter()" style="width:150px" />
+                            </p:outputPanel>
+                        </f:facet>
+                        <p:column headerText="#" style="width: 10vh;text-align: center!important;font-size: 1.8vh" 
+
+                                  >
+                            <h:outputText 
+                                value="#{index + 1}" />
+                        </p:column>
+                        <p:column headerText="الفاتورة" style="width: 10vh;text-align: center!important;font-size: 1.8vh"   filterBy="#{data.invoiceSerial}" filterMatchMode="contains" filterStyle="display:none">
+                            <h:outputText value="#{data.invoiceSerial}" />
+                        </p:column>
+                        <p:column headerText="الفرع" style="width: 10vh;text-align: center!important;font-size: 1.8vh"   filterBy="#{data.gallaryName}" filterMatchMode="contains" filterStyle="display:none">
+                            <h:outputText value="#{data.gallaryName}" />
+                        </p:column>
+                        <p:column headerText="تاريخ الفاتورة" style="width: 10vh;text-align: center!important;font-size: 1.8vh"   filterBy="#{data.date}" filterMatchMode="contains" filterStyle="display:none">
+                            <h:outputText value="#{data.date}">
+                                <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="كود العميل" style="width: 10vh;text-align: center!important;font-size: 1.8vh"   filterBy="#{data.customerCode}" filterMatchMode="contains" filterStyle="display:none">
+                            <h:outputText value="#{data.customerCode}" />
+                        </p:column>
+                        <p:column headerText="اسم العميل" style="width: 10vh;text-align: center!important;font-size: 1.8vh"   filterBy="#{data.customerName}" filterMatchMode="contains" filterStyle="display:none">
+                            <h:outputText value="#{data.customerName}" />
+                        </p:column>
+                        <p:column headerText="رقم العميل" style="width: 10vh;text-align: center!important;font-size: 1.8vh"   filterBy="#{data.customerMobile}" filterMatchMode="contains" filterStyle="display:none">
+                            <h:outputText value="#{data.customerMobile}" />
+                        </p:column>
+
+                        <p:column headerText="تاريخ الاستحقاق" style="width: 10vh;text-align: center!important;font-size: 1.8vh"   filterBy="#{data.dueDate}" filterMatchMode="contains" filterStyle="display:none">
+                            <h:outputText value="#{data.dueDate}">
+                                <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="عدد التوب" style="width: 10vh;text-align: center!important;font-size: 1.8vh"   filterBy="#{data.numberOfToob}" filterMatchMode="contains" filterStyle="display:none">
+                            <h:outputText value="#{data.numberOfToob}" />
+                        </p:column>
+                    </p:dataTable>
+                    <div class="ui-g-12 ui-md-6">
+                        <p:commandButton class="printButton"  icon="fa fa-fw fa-print"
+                                         onclick="form.target = '_blank'" ajax="false"
+                                         value="#{userData.userDDs['PRINT']}"
+                                         actionListener="#{proInvoiceStatusReportMB1.exportPDF(actionEvent)}"/>
+                    </div>
+
+
+                </p:fieldset>
+
+            </h:form>
+        </h:body>
+    </ui:define>
+</ui:composition>
+

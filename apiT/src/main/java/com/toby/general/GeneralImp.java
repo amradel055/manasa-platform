@@ -1,0 +1,137 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.toby.general;
+
+import com.toby.businessservice.TobyUserService;
+import com.toby.dto.APIDataDTO;
+import com.toby.dto.ApiLoginDTO;
+import com.toby.entity.TobyUser;
+import com.toby.root.LoginRoot;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import java.io.UnsupportedEncodingException;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.Locale;
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+
+/**
+ *
+ * @author ahmedEssam
+ */
+@Stateless
+public class GeneralImp implements GeneralService {
+
+    private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    private static final String secret = "remas@2019@Secret";
+
+    @EJB
+    TobyUserService tobyUserService;
+
+    @Override
+    public ApiLoginDTO authAdmin(LoginRoot loginRoot) {
+        String userName = loginRoot.userName;
+        String password = loginRoot.password;
+
+        TobyUser tobyUser = tobyUserService.authenticateUser(userName, password);
+
+        if (tobyUser != null) {
+            return getUserData(Boolean.TRUE, null, tobyUser);
+        } else {
+            return getUserData(Boolean.FALSE, "اسم المستخدم او كلمة المرور خاطئة", null);
+
+        }
+    }
+
+    private ApiLoginDTO getUserData(Boolean success, String msg, TobyUser tobyUser) {
+        ApiLoginDTO apiLoginDTO = new ApiLoginDTO();
+        apiLoginDTO.setSuccess(success);
+        apiLoginDTO.setMsg(msg);
+        if (success.equals(Boolean.TRUE)) {
+            APIDataDTO aPIDataDTO = new APIDataDTO();
+            if (tobyUser.getBranchId() != null) {
+                aPIDataDTO.setBranchSelected(tobyUser.getBranchId().getId());
+            }
+            if (tobyUser.getCompanyId() != null) {
+                aPIDataDTO.setCompanySelected(tobyUser.getCompanyId().getId());
+            }
+            aPIDataDTO.setName(tobyUser.getName());
+            aPIDataDTO.setId(tobyUser.getId());
+            apiLoginDTO.setData(aPIDataDTO);
+        }
+
+        return apiLoginDTO;
+    }
+
+    private String createJWT() throws UnsupportedEncodingException {
+        LocalDateTime dateTime = LocalDateTime.ofEpochSecond(1593872976, 0, ZoneOffset.UTC);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE,MMMM d,yyyy h:mm,a", Locale.ENGLISH);
+        String formattedDate = dateTime.format(formatter);
+        System.out.println(formattedDate);
+        String tokenid = tokenId();
+        String jwt = Jwts.builder()
+                .setIssuer("http://www.erp_isag.com")
+                .setSubject("isag")
+                .setId(tokenid)
+                .setIssuedAt(new Date())
+                .signWith(SignatureAlgorithm.HS256, secret.getBytes("UTF-8"))
+                .compact();
+        return jwt;
+    }
+
+    @Override
+    public Boolean verifyToken(String token) {
+        try {
+            Jwts.parser()
+                    .setSigningKey(secret.getBytes("UTF-8"))
+                    .parseClaimsJws(token).getBody();
+            return Boolean.TRUE;
+        } catch (Exception e) {
+            return Boolean.FALSE;
+        }
+
+    }
+
+    @Override
+    public String DecodeJWT(String token) throws UnsupportedEncodingException {
+        Claims claims = Jwts.parser()
+                .setSigningKey(secret.getBytes("UTF-8"))
+                .parseClaimsJws(token).getBody();
+        return claims.getId();
+    }
+
+    private String randomAlphaNumeric(int count) {
+        StringBuilder builder = new StringBuilder();
+        while (count-- != 0) {
+            int character = (int) (Math.random() * ALPHA_NUMERIC_STRING.length());
+            builder.append(ALPHA_NUMERIC_STRING.charAt(character));
+        }
+        return builder.toString();
+    }
+
+    private String tokenId() {
+        StringBuilder builder = new StringBuilder();
+        builder.append(randomAlphaNumeric(8));
+        builder.append("-");
+        builder.append(randomAlphaNumeric(4));
+        builder.append("-");
+        builder.append(randomAlphaNumeric(4));
+        builder.append("-");
+        builder.append(randomAlphaNumeric(4));
+        builder.append("-");
+        builder.append(randomAlphaNumeric(4));
+        builder.append("-");
+        builder.append(randomAlphaNumeric(12));
+        builder.append("-");
+        builder.append(new Date().toString());
+        return builder.toString();
+    }
+
+}

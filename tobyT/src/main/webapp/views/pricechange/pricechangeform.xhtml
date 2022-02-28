@@ -1,0 +1,140 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/newTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <h:form id="form"  enctype="multipart/form-data"  dir="#{userData.dir}">
+            <p:fieldset  style="margin-bottom:20px">   
+                <div class="col-xs-12">
+                    <p:messages id="curmsg" showDetail="true" rendered="true" closable="true"/>   
+                </div>
+
+                <h:panelGrid id="firstLine" columns="1"  columnClasses="ui-grid-col-6,ui-grid-col-6" cellspacing="10" cellpadding="0" >
+
+                    <h:panelGroup>
+                        <h:panelGroup>
+                            <p:outputLabel  value="اسماء المجموعات" style="margin-left: .5%" />
+                        </h:panelGroup>
+                        <h:panelGroup></h:panelGroup>
+                        <h:panelGroup></h:panelGroup>
+                        <h:panelGroup></h:panelGroup>
+                        <h:panelGroup>
+                            <p:autoComplete dropdown="true"
+                                            converter="#{PriceChangeMB.invGroupConverter}"
+                                            value="#{PriceChangeMB.invGroupSelected}"
+                                            var="group" 
+                                            itemLabel="#{group}"
+                                            itemValue="#{group}"
+                                            forceSelection="true" 
+                                            completeMethod="#{PriceChangeMB.completeInvGroup}" >
+
+                                <p:ajax update="invItemGroupTable"
+                                        event="itemSelect"
+                                        listener="#{PriceChangeMB.loadItems}" />
+                                <p:ajax update="invItemGroupTable"
+                                        event="change"
+                                        listener="#{PriceChangeMB.loadItems}" />
+
+                            </p:autoComplete>
+                        </h:panelGroup>   
+                    </h:panelGroup>
+                </h:panelGrid>
+            </p:fieldset>
+
+
+
+            <!-- begin table -->
+            <p:fieldset  style="margin-bottom:20px">
+
+
+                <p:remoteCommand name="onCellEdit" update="invItemGroupTable" />
+
+                <p:dataTable id="invItemGroupTable"
+                             var="invItemGroupTable"
+                             widgetVar="invItemGroupTable"
+                             rowIndexVar="index"
+                             rowKey="#{invItemGroupTable}"
+                             selectionMode="single"
+                             selection="#{PriceChangeMB.itemGroupEntitySelected}"
+                             dir="rtl" 
+                             emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                             editable="true"
+                             editMode="cell"
+                             value="#{PriceChangeMB.itemGroupEntityList}"
+                             class="col-xs-12">
+
+                    <p:ajax event="cellEdit" listener="#{PriceChangeMB.onCellEdit}" oncomplete="onCellEdit()"  />
+
+
+                    <p:column style="width: 5%;font-size: 15px;text-align: -webkit-auto" headerText="#" >
+                        <h:outputText value="#{index + 1}"   />
+                    </p:column>
+
+                    <p:column style="width: 10%;font-size: 15px;text-align: -webkit-auto" headerText="التاريخ" >
+                        <h:outputText value="#{invItemGroupTable.date}" style="font-size: 12px">
+                            <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                        </h:outputText>
+                    </p:column>
+
+                    
+                    <p:column headerText="كود الصنف">
+                        <h:outputText value="#{invItemGroupTable.invItemSelected.code}" style="font-size: 12px"  />
+                    </p:column>
+                    
+                    <p:column headerText="اسم الصنف">
+                        <h:outputText value="#{invItemGroupTable.invItemSelected.name}" style="font-size: 12px"  />
+                    </p:column>
+
+                    <p:column id="Unit" headerText="الوحدة">
+                        <h:outputText value="#{invItemGroupTable.invItemSelected.unitId.name}" style="font-size: 12px"  />
+                    </p:column>
+
+                    <p:column id="OldPrice" headerText="سعر قديم">
+                        <h:outputText value="#{invItemGroupTable.invItemSelected.sellPrice}" style="font-size: 12px"  />     
+                    </p:column>
+
+                    <p:column id="NewPrice" headerText="سعر جديد">
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <h:outputText value="#{invItemGroupTable.newPrice}" style="font-size: 12px"  />
+                            </f:facet>
+
+                            <f:facet name="input">
+                                <p:inputText value="#{invItemGroupTable.newPrice}" style="width:100%"/>
+                            </f:facet>
+                        </p:cellEditor>        
+
+                    </p:column>
+
+
+                    <p:column style="width: 7%" headerText="#{userData.userDDs['TRANSACTION']}">
+
+                        <p:commandButton id="b7" icon="fa fa-save"
+                                         title="#{userData.userDDs['SAVE']}" 
+                                         action="#{PriceChangeMB.save}" 
+                                         update="invItemGroupTable form:curmsg "
+                                         ajax="true" >
+
+                            <f:setPropertyActionListener value="#{invItemGroupTable}" 
+                                                         target="#{PriceChangeMB.itemGroupEntitySelected}"/>
+                        </p:commandButton>
+
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton title="#{userData.userDDs['YES']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton title="#{userData.userDDs['NO']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column >
+                </p:dataTable>
+            </p:fieldset> 
+            <div style="margin-right: 40%">
+            </div>
+
+
+        </h:form>
+    </ui:define>
+</ui:composition>

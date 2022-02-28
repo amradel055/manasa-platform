@@ -1,0 +1,128 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns="http://www.w3.org/1999/xhtml" >
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+
+        <h:head>
+            <title>لوحة البيانات الأساسية</title>
+            <a href="dashboard.xhtml"></a>
+        </h:head>
+        <style>
+
+            .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+                border: 1px solid #c5dbec;
+                background:none;
+            }
+
+        </style>
+        <h:form id="form" class='formmargin'>
+
+
+
+            <div style=" position: absolute;left: 20px">
+
+                <p:commandButton  style="z-index: 2;
+                                  margin-top: 3%;
+                                  color: #035c70!important; 
+                                  background-color: #223238!important;
+                                  border: 1px solid #22323a!important;
+                                  background: #22323a 50% 50% repeat-x!important;"
+                                  icon="fa fa-fw fa-home"
+                                  title="#{userData.userDDs['HOME']}"
+                                  class="smhomeButton" 
+                                  action="exit" />
+
+                
+
+
+
+            </div>
+
+            <p:fieldset styleClass="panelColumns" legend="لوحة البيانات الأساسية">
+
+                <p:messages autoUpdate="true"  id="messages" showDetail="true" closable="true" /> 
+
+
+
+                <div id="content2" class="content" dir="#{userData.dir}"  >  
+                    <ui:insert name="content2">
+                        <div class="ui-g-12 ui-g-nopad"  >
+                            <div class="ui-g partOne">
+                                 <div class="ui-g-12 ui-md-12 fromDate">
+                                    <p:outputLabel style="width:99px;margin-right: 3%"  value="من تاريخ" />
+                                    <p:calendar id="datetime11" value="#{crmGlobalChart.fromDate}"  pattern="dd/MM/yyyy">
+                                        <p:ajax  event="dateSelect" listener="#{crmGlobalChart.filterDashboardSearch()}" update="pieModelLearnAboutCompany pieModelLeadStatus pieModelProjectName pieModelEventStatus pieModelEventActivityType pieModelEventPriority numberOfNewLeads numberOfLeads"/>
+                                    </p:calendar>
+                                </div>
+                                <div class="ui-g-12 ui-md-6 toDate" style="margin-top: -1%;padding-bottom: 2%;">
+                                    <p:outputLabel style="width:99px;margin-right: 6%"  value="الي تاريخ" />
+                                    <p:calendar id="datetime2"  value="#{crmGlobalChart.toDate}" pattern="dd/MM/yyyy">
+                                        <p:ajax  event="dateSelect" listener="#{crmGlobalChart.filterDashboardSearch()}" update="pieModelLearnAboutCompany pieModelLeadStatus pieModelProjectName pieModelEventStatus pieModelEventActivityType pieModelEventPriority numberOfNewLeads numberOfLeads"/>
+                                    </p:calendar>
+                                </div>
+                                
+                                
+                                <div class="ui-g-12 ui-md-6">
+                                    <div class="stats" style="background-color: #028a38;">
+                                        <h:panelGroup>
+                                            <h:outputLabel id="numberOfNewLeads" class="labelNumber" for="name" value=" #{crmGlobalChart.numberOfNewLeads}" />
+                                            <h:outputLabel for="name" value="العملاء الجدد " />
+                                        </h:panelGroup>
+                                    </div>
+                                </div>
+                                
+                                <div class="ui-g-12 ui-md-6">
+                                    <div class="stats">
+                                        <h:panelGroup>
+                                            <h:outputLabel id="numberOfLeads" class="labelNumber" for="name" value=" #{crmGlobalChart.numberOfLeads}" />
+                                            <h:outputLabel for="name" value="اجمالي العملاء" />
+                                        </h:panelGroup>
+                                    </div>
+                                </div>
+                                
+                                <p:chart type="pie" id="pieModelLearnAboutCompany" model="#{crmGlobalChart.pieModelLearnAboutCompany}" style="width:320px;height:320px;display:block;margin: 0 auto;" />
+                                <p:chart type="pie" id="pieModelLeadStatus" model="#{crmGlobalChart.pieModelLeadStatus}" style="width:320px;height:320px;display:block;margin: 0 auto;" />
+                                <p:chart type="pie" id="pieModelProjectName" model="#{crmGlobalChart.pieModelProjectName}" style="width:320px;height:320px;display:block;margin: 0 auto;" />
+                                
+                            </div></div>
+                        
+                        <div class="ui-g-12 ui-g-nopad"  >
+                            <div class="ui-g partTwo">
+                                
+                               
+                                
+                                
+                                
+                                <p:chart type="pie" id="pieModelEventStatus" model="#{crmGlobalChart.pieModelEventStatus}" style="width:320px;height:320px;display:block;margin: 0 auto;" />
+                                <p:chart type="pie" id="pieModelEventActivityType" model="#{crmGlobalChart.pieModelEventActivityType}" style="width:320px;height:320px;display:block;margin: 0 auto;" />
+                                <p:chart type="pie" id="pieModelEventPriority" model="#{crmGlobalChart.pieModelEventPriority}" style="width:320px;height:320px;display:block;margin: 0 auto;" />
+                                
+                                
+
+
+                                 
+
+                                
+
+                            </div>
+                        </div>
+                    </ui:insert>
+
+
+                </div>
+
+            </p:fieldset>
+            
+            
+            
+
+        </h:form>
+    </ui:define>
+</ui:composition>

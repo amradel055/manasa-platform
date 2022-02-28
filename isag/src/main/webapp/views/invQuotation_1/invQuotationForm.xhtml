@@ -9,18 +9,7 @@
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <ui:define name="content">
 
-        <style>
-
-            .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
-                border: 1px solid #c5dbec;
-                background:#fff;
-
-            }
-            .ui-dialog {
-                position: absolute !important;
-                left: 1vw!important;
-                top: 25vh!important;}
-            </style>
+        
 
             <h:form id="form" dir="#{userData.dir}" class='formmargin'>
             <div style=" position: absolute;left: 20px"> 
@@ -52,7 +41,7 @@
                                 <h:panelGroup>
 
                                     <p:outputLabel style="width: 95px;margin-right: 6%;" id="purchId" value="#{userData.userDDs['QUOTATION_NO']}" />
-                                    <p:inputText style="width: 35%" 
+                                    <p:inputText style="width: 35%; margin-right: 10%;" 
                                                  id="purchIdVal" readonly="true"
                                                  value="#{invQuotationFormDTOMB.invInvoiceDTO.serial}" />
 
@@ -68,7 +57,7 @@
                                         <p:calendar id="dateFrom" 
                                                     value="#{invQuotationFormDTOMB.invInvoiceDTO.date}"
                                                     pattern="dd/MM/yyyy"
-                                                    style="width:50%!important"/>
+                                                    style="width:50%!important; margin-right: 10%;"/>
                                     </h:panelGroup>
 
                                 </h:panelGroup>
@@ -84,7 +73,7 @@
                                     <h:panelGroup>
                                         <p:calendar id="dueDate" value="#{invQuotationFormDTOMB.invInvoiceDTO.dateEndOffer}"
                                                     pattern="dd/MM/yyyy"
-                                                    style="width:50%"/>
+                                                    style="width:50%; margin-right: 10%;"/>
                                     </h:panelGroup>
 
                                 </h:panelGroup>
@@ -97,7 +86,7 @@
                                     </h:panelGroup> 
 
                                     <h:panelGroup>
-                                        <p:autoComplete style="width:34%!important" 
+                                        <p:autoComplete style="width:34%!important; margin-right: 10%;" 
                                                         dropdown="true"
                                                         converter="#{invQuotationFormDTOMB.organizationSiteDTOConvertor}"
                                                         value="#{invQuotationFormDTOMB.invInvoiceDTO.organizationSiteId}"
@@ -133,7 +122,7 @@
                                     </h:panelGroup> 
 
                                     <h:panelGroup>
-                                        <p:autoComplete style="width:34%!important " 
+                                        <p:autoComplete style="width:34%!important; margin-right: 10%; " 
                                                         dropdown="true"
                                                         converter="#{invQuotationFormDTOMB.invDelegatorDTOConvertor}"
                                                         value="#{invQuotationFormDTOMB.invInvoiceDTO.invDelegatorId}"
@@ -158,7 +147,7 @@
                                     </h:panelGroup>
 
                                     <h:panelGroup>
-                                        <p:inputText style="width:68%"  value="#{invQuotationFormDTOMB.invInvoiceDTO.remarks}"
+                                        <p:inputText style="width:68%; margin-right: 4%;"  value="#{invQuotationFormDTOMB.invInvoiceDTO.remarks}"
                                                      />
                                     </h:panelGroup>
                                 </h:panelGroup>
@@ -402,7 +391,7 @@
 
                                     <h:panelGroup>
                                         <h:outputText id="totalActualWeight" 
-                                                      style="text-align:right" 
+                                                      style="text-align:right; margin-right: 5%;" 
                                                       value="#{invQuotationFormDTOMB.invInvoiceDTO.totalNet}" />
                                     </h:panelGroup>
                                 </h:panelGroup>
@@ -417,7 +406,7 @@
                                             <p:outputLabel style="width: 70px;margin-right: 6%;" value="#{userData.userDDs['DISCOUNT_TYPE']}"/>
                                         </h:panelGroup>
                                         <h:panelGroup>
-                                            <p:selectOneMenu style="width: 50%" id="PURCHASE_NUMBER" 
+                                            <p:selectOneMenu style="width: 50%; margin-right: 5%;" id="PURCHASE_NUMBER" 
 
                                                              value="#{invQuotationFormDTOMB.invInvoiceDTO.discountType}"  >                                                             
                                                 <f:selectItem itemLabel="#{userData.userDDs['VALUE']}"  itemValue="0"  />
@@ -444,7 +433,7 @@
                                     </h:panelGroup>
                                     <h:panelGroup>
                                         <p:inputText id="discount" value="#{invQuotationFormDTOMB.invInvoiceDTO.discount}"  
-                                                     style="width: 50%;display: inline!important" >
+                                                     style="width: 50%;display: inline!important; margin-right: 5%;" >
                                             <p:ajax event="blur"
 
                                                     listener="#{invQuotationFormDTOMB.recalcHeadValues()}"
@@ -470,7 +459,7 @@
 
                                     <h:panelGroup>
                                         <h:outputText id="totalNetAfterDiscount" 
-                                                      style="text-align:right" 
+                                                      style="text-align:right; margin-right: 5%;" 
                                                       value="#{invQuotationFormDTOMB.invInvoiceDTO.totalNetAfterDiscount}" />
                                     </h:panelGroup>
                                 </h:panelGroup>

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="accountjrxml" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="fd244f92-b4e6-4501-918f-3609c84a6ac2">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="account"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value="aXNhZy5nbF9hY2NvdW50ICwxNSwxNSxmNGZhOTNiYS04NGZmLTRiZjUtOWIzMi04MTI2Y2UxMDBj&#xA;ZTk7"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="1000"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="0"/>
+	<queryString>
+		<![CDATA[SELECT toby.gl_account.acc_number as accNumber,
+	toby.gl_account.name as lname,
+	toby.gl_account.parent_acc as parentNumber,
+	toby.gl_account.acc_group as lgroup,
+	toby.gl_account.name as lname,
+	toby.gl_account.level_acc as llevel,
+	toby.gl_account.name as hierarchyType
+FROM toby.gl_account]]>
+	</queryString>
+	<field name="accNumber" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="accNumber"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="gl_account"/>
+	</field>
+	<field name="lname" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="lname"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="gl_account"/>
+	</field>
+	<field name="parentNumber" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="parentNumber"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="gl_account"/>
+	</field>
+	<field name="lgroup" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="lgroup"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="gl_account"/>
+	</field>
+	<field name="hierarchyType" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="lname"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="gl_account"/>
+	</field>
+	<field name="llevel" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="llevel"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="gl_account"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="79" uuid="3b3e0929-6e54-49b0-b2e8-c814dad1cbfe"/>
+				<textElement>
+					<font size="26" isBold="true"/>
+				</textElement>
+				<text><![CDATA[بيان دليل الحاسبات]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="28" splitType="Stretch">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
+			<staticText>
+				<reportElement x="0" y="0" width="95" height="28" uuid="021df659-2062-4502-a5e1-fedfbb6b747e">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="636c8a78-ad60-4c14-8c59-ad9a81175171"/>
+				</reportElement>
+				<text><![CDATA[رمز الحساب]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="95" y="0" width="92" height="28" uuid="a9eedfea-153f-4ec2-affc-36644bd76bc3">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="8563e62b-0774-40d3-a53d-c6b6a98f3c41"/>
+				</reportElement>
+				<text><![CDATA[اسم الحساب]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="187" y="0" width="92" height="28" uuid="8ff4a7a0-db41-452c-9d08-4906a4994034">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7da6467b-fe70-415f-ae8c-e196dfebf970"/>
+				</reportElement>
+				<text><![CDATA[الرئيسى]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="279" y="0" width="92" height="28" uuid="66cd3a5a-efcd-4cb3-ac59-899b5f6363ed">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a76f29ce-f619-4ea5-b4ee-9be89db90704"/>
+				</reportElement>
+				<text><![CDATA[المجموعة]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="371" y="0" width="92" height="28" uuid="e0b3af43-6e3e-4195-9d55-e32c7eb2e75f">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a74901a9-b3db-48af-9b5f-e34d3280c9b4"/>
+				</reportElement>
+				<text><![CDATA[النوع]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="463" y="0" width="92" height="28" uuid="8ca9a3f7-6a10-414b-b83a-62655e0c4dfc">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="99749a74-61a6-41f3-9e83-333438ebd192"/>
+				</reportElement>
+				<text><![CDATA[المستوى]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="32" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="95" height="30" uuid="a56d159b-ad2d-4a56-98fc-0f53f3547068">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="636c8a78-ad60-4c14-8c59-ad9a81175171"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{accNumber}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="95" y="0" width="92" height="30" uuid="6e1db7f8-e88d-47d0-88fb-e1607558527f">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="8563e62b-0774-40d3-a53d-c6b6a98f3c41"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{lname}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="187" y="0" width="92" height="30" uuid="7f3bedb3-b3b1-4096-b168-7b9b0a3d4e87">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7da6467b-fe70-415f-ae8c-e196dfebf970"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{parentNumber}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="279" y="0" width="92" height="30" uuid="8096d720-deba-4bea-b95a-ab626de7e61e">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a76f29ce-f619-4ea5-b4ee-9be89db90704"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{lgroup}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="371" y="0" width="92" height="30" uuid="a35ad5c9-b3de-4103-8345-3d1c4d915066">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a74901a9-b3db-48af-9b5f-e34d3280c9b4"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{hierarchyType}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="463" y="0" width="92" height="30" uuid="587c09ca-88d4-4d60-bb18-211b0d793802">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="99749a74-61a6-41f3-9e83-333438ebd192"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{llevel}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="58" splitType="Stretch">
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="10" y="0" width="100" height="30" uuid="e31b8444-f3ff-4926-92ca-4b5fc1dea9e8"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="430" y="10" width="100" height="30" uuid="a45ed99b-26d8-4db9-9a93-c5996152fd22"/>
+				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

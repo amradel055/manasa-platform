@@ -1,0 +1,510 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+    <ui:define name="content">
+        <f:event listener="#{userData.authorize}" type="preRenderView" />
+
+        <h:form id="ScreenAddEditForm" dir="#{userData.dir}" class='formmargin'>
+            <div style=" position: absolute;left: 20px"> 
+
+                <p:commandButton  style="z-index: 2;
+                                  margin-top: 12%;
+                                  color: #035c70!important; 
+                                  background-color: #223238!important;
+                                  border: 1px solid #22323a!important;
+                                  background: #22323a 50% 50% repeat-x!important;"
+                                  icon="fa fa-fw fa-home"
+                                  title="#{userData.userDDs['HOME']}"
+                                  class="smhomeButton" 
+                                  action="exit" />  
+            </div>
+
+            <p:fieldset legend="تفاصيل الحدث / المهمة" style="margin-bottom:20px">
+                <p:messages autoUpdate="true"  id="messages" showDetail="true" closable="true" /> 
+                <div   class="ui-g-12 ui-g-nopad" style="padding: 0px;">
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px; margin-right: 2.5%; width: 7%">
+                            <h:panelGroup>
+                                <p:outputLabel for="console" value="النوع" />
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px; margin-right: 2.5%; width: 24%">
+                            <h:panelGroup>
+                                <p:selectOneRadio id="console" value="#{crmEventFormDTOMB.crmEventDTO.type}" disabled="#{crmEventFormDTOMB.crmEventDTO.leadStatusActive or crmEventFormDTOMB.crmEventDTO.closeEvent}"  >                                    
+                                    <f:selectItem itemLabel="حدث" itemValue="0" />
+                                    <f:selectItem itemLabel="مهمه" itemValue="1" />
+                                </p:selectOneRadio>
+                            </h:panelGroup>
+                        </div>
+
+
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width: 105px;margin-right: 33%;" value="اسم العميل"/>
+                                </h:panelGroup>
+                                <p:autoComplete style="width:36%!important " 
+                                                dropdown="true"
+                                                converter="#{crmEventFormDTOMB.invOrganizationSiteDTOConverter}"
+                                                value="#{crmEventFormDTOMB.crmEventDTO.customerId}"
+                                                var="lead"
+                                                itemLabel="#{lead}" 
+                                                itemValue="#{lead}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{crmEventFormDTOMB.completeInvOrganizationSiteDTOByLeader}"
+                                                disabled="#{crmEventFormDTOMB.crmEventDTO.leadStatusActive or crmEventFormDTOMB.crmEventDTO.closeEvent}" 
+                                                > 
+                                    <p:ajax update="assignedTo"
+                                            event="blur"
+                                            listener="#{crmEventFormDTOMB.updateAssignedTo}" />
+                                </p:autoComplete>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;">
+                            <h:panelGroup rendered="#{crmEventFormDTOMB.employeeIsSupervisor}">
+                                <h:panelGroup>
+
+                                    <p:outputLabel style="width:105px; margin-right: 5%;"  value="المسئول عنه" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:34% " 
+                                                    dropdown="true"
+                                                    converter="#{crmEventFormDTOMB.employeeDTOConverter}"
+                                                    value="#{crmEventFormDTOMB.crmEventDTO.assignedTo}"
+                                                    var="employee"
+                                                    itemLabel="#{employee}" 
+                                                    itemValue="#{employee}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{crmEventFormDTOMB.completeEmployeeDTO}"
+                                                    id="assignedTo"
+                                                    disabled="#{crmEventFormDTOMB.crmEventDTO.activeAssignedTo or crmEventFormDTOMB.crmEventDTO.closeEvent or  crmEventFormDTOMB.crmEventDTO.leadStatusActive}"
+                                                    >
+
+                                    </p:autoComplete>
+
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;margin-top: 1%;">
+                            <h:panelGroup>
+                                <h:panelGroup> 
+                                    <p:outputLabel style="width:105px; margin-right: 5%; margin-top: 1%;"  value="تاريخ الان" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:selectBooleanCheckbox value="#{crmEventFormDTOMB.crmEventDTO.nowDate}" disabled="#{crmEventFormDTOMB.crmEventDTO.id ne null}">
+                                        <p:ajax update="datetime1"  listener="#{crmEventFormDTOMB.dateNowSelected}" />
+                                    </p:selectBooleanCheckbox>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;margin-top: 1%;">
+                            <h:panelGroup>
+                                <p:outputLabel style="margin-right: 5%; width: 100px;" for="datetime1" value="تاريخ  وتوقيت  البداية" />
+                                <p:calendar id="datetime1" disabled="#{crmEventFormDTOMB.crmEventDTO.id ne null or crmEventFormDTOMB.crmEventDTO.closeEvent}" value="#{crmEventFormDTOMB.crmEventDTO.startDate}" pattern="MM/dd/yyyy HH:mm:ss"
+                                            mindate="#{crmEventFormDTOMB.dateNow}" autocomplete="false" />
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;margin-top: 1%;">
+                            <h:panelGroup>
+                                <p:outputLabel style="margin-right: 5%; width: 100px;"  for="datetime11" value="تاريخ  وتوقيت  النهاية" />
+                                <p:calendar id="datetime11" value="#{crmEventFormDTOMB.crmEventDTO.endDate}" disabled="#{crmEventFormDTOMB.crmEventDTO.closeEvent or crmEventFormDTOMB.crmEventDTO.leadStatusActive}" pattern="MM/dd/yyyy HH:mm:ss" autocomplete="false"  />
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;margin-top: 1%;">
+                            <h:panelGroup>
+                                <h:panelGroup>
+
+                                    <p:outputLabel style="width:100px; margin-right: 5%;"  value="الحالة" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+<!--                                    <p:autoComplete style="width:36.5%!important " 
+                                                    dropdown="true"
+                                                    converter="#/{crmEventFormDTOMB.eventStatusDTOconverter}"
+                                                    value="#/{crmEventFormDTOMB.crmEventDTO.status}"
+                                                    var="eventStatus"
+                                                    itemLabel="#/{eventStatus}" 
+                                                    itemValue="#/{eventStatus}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#/{crmEventFormDTOMB.completeEventStatus}"
+                                                    >
+
+                                    </p:autoComplete>-->
+<p:selectOneMenu   style="width:37%!important  " id="eventstatus"  value="#{crmEventFormDTOMB.crmEventDTO.status}" disabled="#{crmEventFormDTOMB.crmEventDTO.closeEvent or crmEventFormDTOMB.crmEventDTO.status.serial eq 0}" converter="#{crmEventFormDTOMB.eventStatusDTOconverter}">
+                          <f:selectItems value="#{crmEventFormDTOMB.eventStatusDTOList}" var="status" itemLabel="#{status}" itemValue="#{status}"/> 
+                          </p:selectOneMenu>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;margin-top: 0.5%;">
+                            <h:panelGroup>
+                                <h:panelGroup>
+
+                                    <p:outputLabel style="width:105px; margin-right: 5%; margin-top: 1%;"  value="ارسال اشعارات" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:selectBooleanCheckbox value="#{crmEventFormDTOMB.crmEventDTO.sendNotification}" disabled="#{crmEventFormDTOMB.crmEventDTO.closeEvent or crmEventFormDTOMB.crmEventDTO.leadStatusActive}"/>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;margin-top: 1%;">
+                            <h:panelGroup>
+                                <h:panelGroup>
+
+                                    <p:outputLabel style="width:105px; margin-right: 5%;"  value="نوع النشاط" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:36.5%!important " 
+
+                                                    dropdown="true"
+                                                    converter="#{crmEventFormDTOMB.activityTypeDTOconverter}"
+                                                    value="#{crmEventFormDTOMB.crmEventDTO.activityType}"
+                                                    var="activityType"
+                                                    itemLabel="#{activityType}" 
+                                                    itemValue="#{activityType}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{crmEventFormDTOMB.completeActivityType}"
+                                                    disabled="#{crmEventFormDTOMB.crmEventDTO.closeEvent or crmEventFormDTOMB.crmEventDTO.leadStatusActive}"
+                                                    >
+
+                                    </p:autoComplete>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;margin-top: 1%;">
+                            <h:panelGroup>
+                                <h:panelGroup>
+
+                                    <p:outputLabel style="width:100px; margin-right: 5%;"  value="الموقع" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText  style="width: 37%!important"  id="employeeNameEn4"  value="#{crmEventFormDTOMB.crmEventDTO.location}" disabled="#{crmEventFormDTOMB.crmEventDTO.closeEvent or crmEventFormDTOMB.crmEventDTO.leadStatusActive}">
+                                    </p:inputText>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;margin-top: 0.5%;">
+                            <h:panelGroup>
+                                <h:panelGroup>
+
+                                    <p:outputLabel style="width:105px;margin-right: 5%"  value="الأولوية" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:autoComplete style="width:36.5%!important " 
+
+                                                    dropdown="true"
+                                                    converter="#{crmEventFormDTOMB.priorityDTOconverter}"
+                                                    value="#{crmEventFormDTOMB.crmEventDTO.symbolPriority}"
+                                                    var="priority"
+                                                    itemLabel="#{priority}" 
+                                                    itemValue="#{priority}" 
+                                                    forceSelection="true" 
+                                                    completeMethod="#{crmEventFormDTOMB.completepriority}"
+                                                    disabled="#{crmEventFormDTOMB.crmEventDTO.closeEvent or crmEventFormDTOMB.crmEventDTO.leadStatusActive}"
+                                                    >
+
+                                    </p:autoComplete>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;margin-top: 1%;">
+                            <h:panelGroup>
+                                <p:outputLabel style="width:105px;margin-right: 5%; margin-top: 1%;"  value="غلق" />
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:selectBooleanCheckbox value="#{crmEventFormDTOMB.crmEventDTO.closeEvent}" disabled="#{crmEventFormDTOMB.crmEventDTO.closeEvent}"/>
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6" style="padding: 0px;margin-top: 0.5%;">
+                            <h:panelGroup>
+                                <p:outputLabel style="width:105px;margin-right: 5%; margin-top: 1%;"  value="حاله العميل" />
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:autoComplete style="width:36%!important " 
+                                                dropdown="true"
+                                                converter="#{crmEventFormDTOMB.leadStatusDTOconverter}"
+                                                value="#{crmEventFormDTOMB.crmEventDTO.leadStatus}"
+                                                var="leadStatus"
+                                                itemLabel="#{leadStatus}" 
+                                                itemValue="#{leadStatus}" 
+                                                forceSelection="true" 
+                                                completeMethod="#{crmEventFormDTOMB.completeLeadStatus}"
+                                                disabled="#{ crmEventFormDTOMB.crmEventDTO.closeEvent or crmEventFormDTOMB.crmEventDTO.status.serial eq 0}"
+                                                >
+
+                                </p:autoComplete>
+                            </h:panelGroup>
+                        </div>
+
+
+                        <div class="ui-g-12 ui-md-12" style="padding: 0px;">
+                            <h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:94px; margin-right: 2.5%; margin-top:2.5%;"  value="الوصف" />
+                                    <p:inputTextarea  style="width: 69%!important; min-height: 50px; display: block; margin-right: 12% !important; margin-top: -3.5% !important;" maxlength="400"  id="discription"  value="#{crmEventFormDTOMB.crmEventDTO.discription}" disabled="#{crmEventFormDTOMB.crmEventDTO.closeEvent or crmEventFormDTOMB.crmEventDTO.status.serial eq 0}" >
+                                    </p:inputTextarea>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </div>
+
+
+
+
+                    </div>
+                </div>
+            </p:fieldset>
+<!--            <p:fieldset legend="تفاصيل التنبيهات والتكرار" style="margin-bottom:20px">
+                <div   class="ui-g-12 ui-g-nopad" style="padding: 0px;">
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-4"> 
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:70px;margin-right: 5%"  value="تاريخ التبيه" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                                                        <p:selectOneMenu id="notiTimeType" value="#/{crmEventFormDTOMB.crmEventDTO.notificationTimeType}" style="width:53%">
+                                                                            <f:selectItem itemLabel="دقيقة" itemValue="0" />
+                                                                            <f:selectItem itemLabel="ساعة" itemValue="1" />
+                                                                            <f:selectItem itemLabel="يوم" itemValue="2" />
+                                                                        </p:selectOneMenu>
+                                    <p:calendar id="date" value="#/{crmEventFormDTOMB.crmEventDTO.notificationDate}"   mindate="#{crmEventFormDTOMB.dateNow}"  pattern="MM/dd/yyyy HH:mm"/>
+                                </h:panelGroup>
+
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-4"> 
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:70px;margin-right: 5%"  value="العنوان" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText  style="width: 100%!important; float: left; " value="#/{crmEventFormDTOMB.crmEventDTO.notificationTitle}"  id="notiTitle" maxlength="100"/>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-4"> 
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:70px;margin-right: 5%"  value="الرساله" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:inputText  style="width: 100%!important; float: left; " value="#/{crmEventFormDTOMB.crmEventDTO.notificationMessage}"  id="notiMessage" maxlength="300"/>
+                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12 ui-md-4"> 
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel style="width:70px;margin-right: 5%"  value="غلق التنبيه" />
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:selectBooleanCheckbox value="#/{crmEventFormDTOMB.crmEventDTO.closeNotification}"/>                                </h:panelGroup> 
+                            </h:panelGroup>
+                        </div>
+                                                <div class="ui-g-12 ui-md-2" style="margin-right: -10%; margin-top: -4px;">
+                                                    <h:panelGroup>
+                                                        <p:inputText  style="width: 30%!important; float: left; "  id="notiTimenumber"  value="#/{crmEventFormDTOMB.crmEventDTO.notificationNumber}"/>
+                                                    </h:panelGroup>
+                                                </div>
+                                                <div class="ui-g-12 ui-md-2" style="padding: 0px;">
+                        
+                                                    <h:panelGroup>
+                        
+                                                        <p:outputLabel style="width:70px; margin-right: 6%; margin-top: 5%"  value="التكرار" />
+                                                    </h:panelGroup>
+                                                    <h:panelGroup>
+                                                        <p:selectBooleanCheckbox value="#/{crmEventFormDTOMB.crmEventDTO.repeat1}" />
+                                                    </h:panelGroup>
+                                                </div>
+                                                <div class="ui-g-12 ui-md-2" style="padding: 0px; width: 30%">
+                                                    <h:panelGroup>
+                                                        <p:outputLabel style="width:99px;margin-right: 5%; margin-top: 2%;"  value="نوع التوقيت" />
+                                                    </h:panelGroup>
+                                                    <h:panelGroup>
+                                                        <p:selectOneMenu id="repeatiTimeType" value="#/{crmEventFormDTOMB.crmEventDTO.repeattimeType}" style="width:125px">
+                                                            <f:selectItem itemLabel="دقيقة" itemValue="0" />
+                                                            <f:selectItem itemLabel="ساعة" itemValue="1" />
+                                                            <f:selectItem itemLabel="يوم" itemValue="2" />
+                                                        </p:selectOneMenu>
+                                                    </h:panelGroup>
+                                                </div>
+                                                <div class="ui-g-12 ui-md-2" style="padding: 0px; margin-right: -8%; margin-top: 0px;">
+                                                    <h:panelGroup>
+                                                        <p:inputText  style="width: 25%!important"  id="repeatTimenumber"  value="#/{crmEventFormDTOMB.crmEventDTO.repeatPeriod}"/>
+                                                    </h:panelGroup>
+                                                </div>
+                                                <div class="ui-g-12 ui-md-2" style="padding: 0px;">
+                                                    <h:panelGroup>
+                        
+                                                        <p:outputLabel style="width:90px; margin-right: 5%; margin-top: -4px;"  value="عدد مرات التكرار" />
+                                                    </h:panelGroup>
+                                                    <h:panelGroup>
+                                                        <p:inputText  style="width: 35%!important"  id="numberRepeat"  value="#/{crmEventFormDTOMB.crmEventDTO.repeatNumber}"/>
+                                                    </h:panelGroup>
+                        
+                                                </div>
+
+                    </div>
+                </div>
+            </p:fieldset>-->
+
+
+
+
+
+
+            <h:panelGrid id="pn1"   class="centerButtons col-md-12" columns="1"  style="margin-top: 2%">
+
+
+                <h:panelGroup>
+
+
+                    <p:commandButton   class="saveButton"  
+                                       id="saveB" 
+                                       rendered="#{crmEventFormDTOMB.crmEventDTO.status.serial ne 0}"
+                                       title="#{userData.userDDs['SAVE']}"
+                                       value="#{userData.userDDs['SAVE']}" 
+                                       style=""
+                                       action="#{crmEventFormDTOMB.save()}" 
+                                       update="@form"
+                                       disabled="#{crmEventFormDTOMB.crmEventDTO.closeEvent}"/>
+                    <p:commandButton  class="newButton" 
+                                      id="newN"
+                                      ajax="false"
+                                      style=""
+                                      value="#{userData.userDDs['NEW']}" 
+                                      title="#{userData.userDDs['NEW']}"
+                                      onclick="form.target = ''" 
+                                      actionListener="#{crmEventFormDTOMB.resetCrmEventDTO()}"/>
+                    <p:commandButton   class="copyButtons"  
+                                       id="copyB" 
+                                       rendered="#{crmEventFormDTOMB.crmEventDTO.status.serial ne 0}"
+                                       title="#{userData.userDDs['COPY']}"
+                                       value="#{userData.userDDs['COPY']}" 
+                                       style="color: #ecf0f1!important;border-radius: 5px;
+                                       height: 30px;background-color: #270e80f0 !important;margin-left: 5px;"
+                                       action="#{crmEventFormDTOMB.copy()}" 
+                                       update="@form" />
+                    <p:commandButton  class="seditButtons"    
+                                      update="ScreenAddEditForm:activities" 
+                                      icon="fa fa-fw fa-eye" style="background-color: #1a95bb;border-radius: 3px;" 
+                                      title="نشاطات العميل"  
+                                      rendered="#{userData.userScreens['crmTodoEvent'].view or userData.isAdmin}"
+                                      onclick="PF('dlg12').show();" 
+                                      action="#{crmEventFormDTOMB.goToLeadsEventFromList}"
+                                      >
+                        <f:setPropertyActionListener value="#{crmEventFormDTOMB.crmEventDTO.customerId.id}"  target="#{crmEventFormDTOMB.leadSelected}" />
+
+                    </p:commandButton>
+
+                    <p:commandButton class="closeButton" 
+                                     title="#{userData.userDDs['BACK']}" 
+                                     immediate="true" 
+                                     value="#{userData.userDDs['BACK']}" 
+                                     style=""
+                                     action="#{crmEventFormDTOMB.exitCrmEvent()}"   />
+                   <p:commandButton class="seditButtons" update="@form" icon="fa fa-fw fa-plus" style="background-color: #8E6D6F; border-radius: 3px;" 
+                                    title="مهمام العميل" action="#{crmLeadsListMB.goToEdit()}" disabled="#{crmEventFormDTOMB.crmEventDTO.id eq null}" rendered="#{userData.userScreens['crmLeads'].edit or userData.isAdmin}">
+                                <f:setPropertyActionListener value="#{crmEventFormDTOMB.crmEventDTO.customerId.id}"  target="#{crmLeadsListMB.leadSelected}" />
+                            </p:commandButton>
+
+
+
+                </h:panelGroup>
+            </h:panelGrid>
+            <p:blockUI block="ScreenAddEditForm" trigger="saveB newN " animate="true" >
+
+                <p:graphicImage library="img" name="9wcA.gif" ></p:graphicImage>
+            </p:blockUI>
+
+            <p:dialog id="dialog1"  widgetVar="dlg12" >
+                <p:fieldset legend="تفاصيل النشاطات" style="margin-bottom:20px">
+
+                    <p:dataTable id="activities"
+                                 widgetVar="activities"
+                                 style="margin-bottom:20px"
+                                 var="activities"
+                                 rowIndexVar="index" 
+                                 dir="rtl" 
+                                 emptyMessage="#{userData.userDDs['EMPTY_TABLE']}"
+                                 selectionMode="single"
+                                 sortBy="#{1}"
+                                 rowKey="#{activities.index}"
+                                 selection="#{crmEventFormDTOMB.invOrganizationSiteDTO.crmEventDTOSelected}"
+                                 value="#{crmEventFormDTOMB.invOrganizationSiteDTO.crmEventDTOList}" >
+
+                        <p:column headerText="#" style="width: 4vh;text-align:center;border-radius: 0px" >
+                            <h:outputText value="#{index + 1}"  />
+                        </p:column>
+
+                        <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="subject" headerText="الموضوع" 
+                                  filterBy="#{activities.subject}" 
+                                  filterMatchMode="contains" 
+                                  sortBy="#{activities.subject}"
+                                  filterable="false">
+                            <p:outputLabel value="#{activities.subject}" />            
+                        </p:column>
+                        <p:column style="width: 8vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" filterStyle="display:none" 
+                                  filterBy="#{activities.startDate}" 
+                                  filterMatchMode="contains"
+                                  headerText="تاريخ البداية"
+                                  sortBy="#{activities.startDate}" 
+                                  >
+                            <p:outputLabel value="#{activities.startDate}" >
+                                <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                            </p:outputLabel>                           
+                        </p:column>
+                        <p:column style="width: 8vh;font-size: 1.8vh;text-align: -webkit-auto;border-radius: 0px;" filterStyle="display:none" 
+                                  filterBy="#{activities.startDate}" 
+                                  filterMatchMode="contains"
+                                  headerText="توقيت البداية"
+                                  sortBy="#{activities.startDate}" 
+                                  >
+                            <p:outputLabel value="#{activities.startDate}" >
+                                <f:convertDateTime type="date" pattern="hh:mm:ss"/>
+                            </p:outputLabel>                           
+                        </p:column>
+                        <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="activityType" headerText="نوع النشاط" 
+                                  filterBy="#{activities.activityType.name}" 
+                                  filterMatchMode="contains" 
+                                  sortBy="#{activities.activityType.name}"
+                                  filterable="false">
+                            <p:outputLabel value="#{activities.activityType.name}" />            
+                        </p:column>
+                        <p:column style="width: 13vh;text-align: -webkit-auto;border-radius: 0px" id="symbolPriority" headerText="الوصف" 
+                                  filterBy="#{activities.discription}" 
+                                  filterMatchMode="contains" 
+                                  sortBy="#{activities.discription}"
+                                  filterable="false">
+                            <p:outputLabel value="#{activities.discription}" />            
+                        </p:column>
+
+                        <p:column style="width: 13vh;text-align: center;border-radius: 0px" headerText="#{userData.userDDs['TRANSACTION']}">
+                            <p:commandButton  
+                                update="@form" 
+                                class="smsearchButtons" onclick="form.target = '_blank'"  ajax="false"
+                                icon="fa fa-fw fa-search-plus"  style="background-color: rgba(63, 81, 181, 0.88);border-radius: 3px;"
+                                title="#{userData.userDDs['VIEW']}" 
+                                action="#{crmLeadsEventFormDTOMB.goToEventEdit(activities.id)}"  >
+                            </p:commandButton>
+                        </p:column >
+
+                    </p:dataTable>
+
+                </p:fieldset>
+            </p:dialog>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

@@ -58,6 +58,34 @@
 
                         </div>
                     </div>
+                     <div class="ui-g-12 ui-xl-12">
+
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:inputText style="width:50%!important"
+                                         id="itemName1" 
+                                         value="#{itemDataFormMB.itemDataEntity.maximum}"
+                                         requiredMessage="#{userData.userDDs['ITEM_NAME_REQ']}"
+                                         required="true"/>
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel  style="width: 70px;" value="الحد اللأقصي "/>
+
+                        </div>
+                    </div>
+                     <div class="ui-g-12 ui-xl-12">
+
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:inputText style="width:50%!important"
+                                         id="itemName2" 
+                                         value="#{itemDataFormMB.itemDataEntity.minimum}"
+                                         requiredMessage="#{userData.userDDs['ITEM_NAME_REQ']}"
+                                         required="true"/>
+                        </div>
+                        <div class="ui-g-6 ui-xl-6">
+                            <p:outputLabel  style="width: 70px;" value="الحد الأدني "/>
+
+                        </div>
+                    </div>
                     <div class="ui-g-12 ui-xl-12">
 
                         <div class="ui-g-6 ui-xl-6">
