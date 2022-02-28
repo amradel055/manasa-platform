@@ -9,6 +9,7 @@ import com.toby.define.CompanyActivityClassEnum;
 import com.toby.define.ScreenNameClassEnum;
 import com.toby.dto.InvDetailDTO;
 import com.toby.dto.InvInvoiceDTO;
+import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.entity.InvInventory;
 import com.toby.entity.InvItem;
 import com.toby.views.ItemsBarcodesDetailsView;
@@ -70,4 +71,6 @@ public interface InvGlobalService {
     public Integer getDeliveryDaysByGalleryId(Integer galleryId);
 
     public Integer subtractDatefromDueDate(Date date, Date dueDate, Integer duePeroid);
+    
+    public BigDecimal calcDiscount(InvDetailDTO detailEntity, InvOrganizationSiteDTO invOrganizationSiteDTO,ScreenNameClassEnum screenNameClassEnum);
 }

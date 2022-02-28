@@ -522,7 +522,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
     private void afterUpdate(InvDetailDTO detailDTO) {
         detailDTO.setIndexSerial(1);
         detailDTO.setCostBak(detailDTO.getCost());
-        InvDetailDTO detailDTONew = invGlobalService.calcRowAfterCalcTotal(invGlobalService.calcRowTotal(getInvInvoiceDTO().getScreenName(), detailDTO.getNumber(), detailDTO.getCost(), null), detailDTO.getDiscount(), detailDTO);
+        InvDetailDTO detailDTONew = invGlobalService.calcRowAfterCalcTotal(invGlobalService.calcRowTotal(getInvInvoiceDTO().getScreenName(), detailDTO.getNumber(), detailDTO.getCost(), detailDTO.getQuantity()), detailDTO.getDiscount(), detailDTO);
         replacedetail(detailDTONew);
         updateSummitionSmall();
     }
@@ -532,8 +532,9 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
             if (checkdetail(invPurchaseInvoiceDetailsValidate)) {
                 invPurchaseInvoiceDetailsValidate.setMsg(null);
                 invPurchaseInvoiceDetailsValidate.setQuantity(new BigDecimal((invPurchaseInvoiceDetailsValidate.getQuantityInch().multiply(new BigDecimal(0.9))).setScale(3, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()));
-                invPurchaseInvoiceDetailsValidate = invGlobalService.validateQuantityColum(invPurchaseInvoiceDetailsValidate, (getInvInvoiceDTO().getLoadedSerial() != null), getInvInvoiceDTO().getScreenName(), getInvInvoiceDTO().getInventorySetupDTO().getNegativeSell(), getInvInvoiceDTO().getCompanyActivity());
-                afterValidation(invPurchaseInvoiceDetailsValidate, false);
+//                invPurchaseInvoiceDetailsValidate = invGlobalService.validateQuantityColum(invPurchaseInvoiceDetailsValidate, (getInvInvoiceDTO().getLoadedSerial() != null), getInvInvoiceDTO().getScreenName(), getInvInvoiceDTO().getInventorySetupDTO().getNegativeSell(), getInvInvoiceDTO().getCompanyActivity());
+//                afterValidation(invPurchaseInvoiceDetailsValidate, false);
+                afterUpdate(invPurchaseInvoiceDetailsValidate);
             }
         } catch (Exception e) {
             saveError(e, "InvPurchaseInvoiceFormMB", "validateQuantityColum");
@@ -576,6 +577,7 @@ public abstract class InventoryBasicDataForm extends BaseFormBean {
 //                    invPurchaseInvoiceDetailsValidate.setIndexSerial(1);
                 }
                 invPurchaseInvoiceDetailsValidate = invGlobalService.validateItems(invPurchaseInvoiceDetailsValidate, getInvInvoiceDTO(), findCost);
+                invPurchaseInvoiceDetailsValidate.setDiscount(invGlobalService.calcDiscount(invPurchaseInvoiceDetailsValidate, getInvInvoiceDTO().getOrganizationSiteId(), getInvInvoiceDTO().getScreenName()));
                 afterValidation(invPurchaseInvoiceDetailsValidate, true);
             }
         } catch (Exception e) {

@@ -13,6 +13,7 @@ import com.toby.dto.InvDetailDTO;
 import com.toby.dto.InvInventoryDTO;
 import com.toby.dto.InvInvoiceDTO;
 import com.toby.dto.InvItemDTO;
+import com.toby.dto.InvOrganizationSiteDTO;
 import com.toby.dto.SymbolDTO;
 import com.toby.entity.InvInventory;
 import com.toby.entity.InvItem;
@@ -145,6 +146,30 @@ public class InvGlobalServiceImpl implements InvGlobalService {
         }
         return detailEntity.getDiscount() != null ? detailEntity.getDiscount() : BigDecimal.ZERO;
     }
+    
+    @Override
+    public BigDecimal calcDiscount(InvDetailDTO detailEntity, InvOrganizationSiteDTO invOrganizationSiteDTO,ScreenNameClassEnum screenNameClassEnum) {
+//        if (invInventoryId == 70) {
+        if (!ScreenNameClassEnum.INVTRANSFERINVENTORY.equals(screenNameClassEnum)) {
+//            if (invInvoiceDTO.getOfferType() == null) {
+            if (detailEntity.getId() == null && (detailEntity.getItemsBarcodesDetail().getProGroupId() == null
+                    || (detailEntity.getItemsBarcodesDetail().getProGroupId() != null
+                    && detailEntity.getItemsBarcodesDetail().getProGroupId() != 5
+                    && (detailEntity.getItemsBarcodesDetail().getSupplierId() != null
+                    && detailEntity.getItemsBarcodesDetail().getSupplierId() != 203401)
+                    && (detailEntity.getItemId().getIsOfferItem() == 1) //                        && (detailEntity.getItemId().getType() == null || detailEntity.getItemId().getType() != 2)
+                    ))) {
+                if (detailEntity.getDiscount().compareTo(BigDecimal.ZERO) != 1) {
+                    return calaDiscountCustomerCompany(invOrganizationSiteDTO);
+                } else {
+                    return detailEntity.getDiscount();
+                }
+            } else {
+                return detailEntity.getDiscount();
+            }
+        }
+        return detailEntity.getDiscount() != null ? detailEntity.getDiscount() : BigDecimal.ZERO;
+    }
 
     private BigDecimal calaDiscountCustomerCompany(InvInvoiceDTO invInvoiceDTO) {
         BigDecimal discountCustomer = BigDecimal.ZERO;
@@ -154,6 +179,23 @@ public class InvGlobalServiceImpl implements InvGlobalService {
         }
         if (invInvoiceDTO.getOrganizationSiteId() != null && invInvoiceDTO.getOrganizationSiteId().getOfferCompanyDTO() != null) {
             discountCompany = invInvoiceDTO.getOrganizationSiteId().getOfferCompanyDTO().getDiscount();
+        }
+        if (discountCustomer.compareTo(discountCompany) == 1) {
+//            detailEntity.setDiscount(discountCustomer);
+            return discountCustomer;
+        } else {
+//            detailEntity.setDiscount(discountCompany);
+            return discountCompany;
+        }
+    }
+    private BigDecimal calaDiscountCustomerCompany(InvOrganizationSiteDTO invOrganizationSiteDTO) {
+        BigDecimal discountCustomer = BigDecimal.ZERO;
+        BigDecimal discountCompany = BigDecimal.ZERO;
+        if (invOrganizationSiteDTO!= null) {
+            discountCustomer = invOrganizationSiteDTO.getDiscount();
+        }
+        if (invOrganizationSiteDTO != null && invOrganizationSiteDTO.getOfferCompanyDTO() != null) {
+            discountCompany = invOrganizationSiteDTO.getOfferCompanyDTO().getDiscount();
         }
         if (discountCustomer.compareTo(discountCompany) == 1) {
 //            detailEntity.setDiscount(discountCustomer);
